@@ -4,6 +4,8 @@ extends Node3D
 ## opponent cannot move a locked marker. Rendering never decides damage.
 const STYLE := preload("res://scripts/combat/tell_style.gd")
 const WATER_GEOMETRY := preload("res://scripts/vfx/move_effect_geometry.gd")
+const BURST := preload("res://scripts/vfx/vfx_burst.gd")
+const COMBAT_VFX := preload("res://scripts/vfx/combat_vfx.gd")
 var _mesh: ImmediateMesh
 var _body: Node3D
 var _profile: Dictionary
@@ -108,19 +110,12 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	# cone under BurrowWarrens) ~2.6 km from the fight (F04#0 judge).
 	cue.top_level = true
 	body.get_parent().add_child(cue)
-	var material := StandardMaterial3D.new()
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.vertex_color_use_as_albedo = true
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	# A deck or crate must never hide a tell (F04#1): drawn over the floor.
-	material.no_depth_test = true
-	material.render_priority = 1
-	material.albedo_color = colour
+	var material_colour := colour
 	if not cue._soft.is_empty():
 		# The hue moves to the vertices so the core line can be lifted toward
 		# white; the material keeps only the alpha a filling cue tweens.
-		material.albedo_color = Color(1.0, 1.0, 1.0, colour.a)
+		material_colour = Color(1.0, 1.0, 1.0, colour.a)
+	var material := _cue_material(profile, cfg, material_colour)
 	cue._mesh = ImmediateMesh.new()
 	var visual := MeshInstance3D.new()
 	visual.mesh = cue._mesh
@@ -140,11 +135,88 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	cue.aim(origin, heading, marker)
 	var fill_s := float(profile.get("telegraph", 0.0)) if profile.get("cue_fills") == true or water_fan else 0.0
 	if fill_s > 0.0:
-		var faint := material.albedo_color
-		faint.a = colour.a * 0.25
-		material.albedo_color = faint
-		cue.create_tween().tween_property(material, "albedo_color:a", colour.a, fill_s)
+		_set_cue_alpha(material, colour.a * 0.25)
+		cue.create_tween().tween_method(func(value: float) -> void: _set_cue_alpha(material, value),
+			colour.a * 0.25, colour.a, fill_s)
 	return cue
+
+
+## F22#4 tell look (`patterns.presentation.depth_pull_m`; 0 = off): ground
+## shapes other than marker/field discs draw depth-tested, pulled that many
+## metres toward the lens like the charge lane (lunge_lane.gd LANE_SHADER), so
+## the ground cannot eat them but a creature standing on one occludes it. With
+## no_depth_test the cone painted over the attacker's legs and the pilot (GPU
+## judges, 22 Oct: "magenta slabs"). Marker/field discs keep F04#1's
+## no-depth-test rule: they sit at a target's feet on decks a crate can hide.
+const PULLED_CUE_SHADER := """
+shader_type spatial;
+render_mode unshaded, blend_mix, cull_disabled, shadows_disabled, depth_draw_never;
+uniform vec4 albedo : source_color = vec4(1.0);
+uniform float depth_pull = 0.45;
+uniform float crackle = 0.0;
+varying vec4 tint;
+varying vec3 world;
+void vertex() {
+	tint = COLOR;
+	world = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec4 view = MODELVIEW_MATRIX * vec4(VERTEX, 1.0);
+	float dist = length(view.xyz);
+	view.xyz *= max(0.2, 1.0 - depth_pull / max(dist, 0.001));
+	POSITION = PROJECTION_MATRIX * view;
+}
+@CRACKLE@
+void fragment() {
+	float spark = crackle > 0.0 && tint.a > 0.001 ? tb_crackle(world, TIME) * crackle : 0.0;
+	ALBEDO = mix(tint.rgb * albedo.rgb, vec3(1.0), spark * 0.6);
+	ALPHA = clamp(max(tint.a, spark) * albedo.a, 0.0, 1.0);
+}
+"""
+
+
+## One Shader per code string for the process: a strike or tell reuses the
+## compiled shader instead of building a new one (F25#4: per-launch shader
+## and pipeline creation stalls a frame on Forward+).
+static var _shaders: Dictionary = {}
+
+
+static func _cached_shader(key: String, code: String) -> Shader:
+	var shader: Shader = _shaders.get(key)
+	if shader == null:
+		shader = Shader.new()
+		shader.code = code
+		_shaders[key] = shader
+	return shader
+
+
+static func _cue_material(profile: Dictionary, cfg: Dictionary, colour: Color) -> Material:
+	var pull := float(cfg.get("depth_pull_m", 0.0))
+	if pull > 0.0 and not str(profile.get("telegraph_shape", "")) in ["marker", "field"]:
+		var pulled := ShaderMaterial.new()
+		pulled.shader = _cached_shader("pulled_cue", PULLED_CUE_SHADER.replace("@CRACKLE@", STYLE.CRACKLE_GLSL))
+		pulled.set_shader_parameter("depth_pull", pull)
+		pulled.set_shader_parameter("crackle", float(profile.get("cue_crackle", 0.0)))
+		pulled.set_shader_parameter("albedo", colour)
+		pulled.render_priority = 1
+		return pulled
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.vertex_color_use_as_albedo = true
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	# A deck or crate must never hide a tell (F04#1): drawn over the floor.
+	material.no_depth_test = true
+	material.render_priority = 1
+	material.albedo_color = colour
+	return material
+
+
+static func _set_cue_alpha(material: Material, alpha: float) -> void:
+	if material is ShaderMaterial:
+		var tint: Color = (material as ShaderMaterial).get_shader_parameter("albedo")
+		tint.a = alpha
+		(material as ShaderMaterial).set_shader_parameter("albedo", tint)
+	else:
+		(material as StandardMaterial3D).albedo_color.a = alpha
 
 
 func _add_boss_aura() -> void:
@@ -193,6 +265,9 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 		return
 	# `cue_impact_burst` (F22#4, non-water): the same crown in the row's own
 	# hue at the charge's end, e.g. kicked-up earth for a ground charger.
+	if str(profile.get("cue_burst_style", "")) in ["electric", "earth"]:
+		_electric_strike(body, profile, geometry)
+		return
 	var burst_colour := Color(str(profile.get("cue_burst_colour", "#2a93c4")))
 	var burst_foam := str(profile.get("cue_burst_foam", "#f6feff"))
 	var origin: Vector3 = geometry.get("origin", body.global_position)
@@ -257,8 +332,24 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		splash.tween_method(func(value: float) -> void: crown_material.set_shader_parameter("opacity", value),
 			0.95, 0.0, seconds * 0.6).set_delay(seconds * 0.4)
+	# F22#4 Riverwatch r10 (`cue_burst_droplets`, 0 = off): a droplet spray from
+	# vfx.json's hit_spark shape at each crown, so the splash lands as thrown
+	# water rather than a soft sheet (confirming judges, 22 Oct).
+	var droplets := float(profile.get("cue_burst_droplets", 0.0))
+	if droplets > 0.0:
+		var spray_spec: Dictionary = (COMBAT_VFX.config().get("hit_spark", {}) as Dictionary).duplicate()
+		if not spray_spec.is_empty():
+			spray_spec["core_colour"] = burst_foam
+			spray_spec["up_bias"] = float(profile.get("cue_burst_droplet_up_bias", 0.7))
+			for at: Vector3 in crowns:
+				BURST.spawn(burst, at + Vector3.UP * 0.3, spray_spec,
+					Color(str(profile.get("cue_burst_droplet_colour", "#8fd6ff"))), droplets,
+					int(absf(at.x * 53.0 + at.z * 17.0)))
+	var arcs := clampi(int(profile.get("cue_burst_arcs", 0)), 0, 12)
+	if arcs > 0 and not crowns.is_empty():
+		_add_arc_burst(burst, crowns[crowns.size() / 2], arcs, crown_size, profile, seconds)
 	var flash := OmniLight3D.new()
-	flash.light_color = Color("#bff3ff")
+	flash.light_color = Color(str(profile.get("cue_burst_light_colour", "#bff3ff")))
 	flash.light_energy = float(profile.get("cue_water_burst_light_energy", 7.0))
 	flash.omni_range = 6.0
 	flash.shadow_enabled = false
@@ -266,6 +357,189 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 	flash.global_position = crowns[crowns.size() / 2] + Vector3.UP * 1.2 if not crowns.is_empty() else origin
 	burst.create_tween().tween_property(flash, "light_energy", 0.0, seconds * 0.5)
 	burst.get_tree().create_timer(seconds + 0.1).timeout.connect(burst.queue_free)
+
+
+## F22#4 storm impact (`cue_burst_arcs`, 0 = off): forked white-violet arcs
+## thrown out and up from the strike point plus one short downstroke, drawn as
+## view-facing tapered ribbons (the stormwood_lightning.gd bolt technique), so
+## an electric hit lands as a discharge rather than a coloured ring. Lives as
+## long as the burst; presentation only.
+const ARC_SHADER := """
+shader_type spatial;
+render_mode unshaded, blend_add, cull_disabled, depth_draw_never, shadows_disabled, fog_disabled;
+uniform vec4 tint : source_color;
+uniform float fade = 1.0;
+void vertex() {
+	vec3 centre = (MODELVIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec3 tangent = normalize((MODELVIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
+	vec3 across = cross(tangent, -centre / max(length(centre), 0.0001));
+	if (dot(across, across) < 0.0001) { across = vec3(1.0, 0.0, 0.0); }
+	centre += normalize(across) * UV.x * UV.y;
+	POSITION = PROJECTION_MATRIX * vec4(centre, 1.0);
+}
+void fragment() {
+	float d = abs(UV.x);
+	ALBEDO = mix(tint.rgb, vec3(1.0), exp(-10.0 * d * d));
+	ALPHA = exp(-3.5 * d * d) * tint.a * fade;
+}
+"""
+
+
+static func _add_arc_burst(burst: Node3D, at: Vector3, count: int, size: float,
+		profile: Dictionary, seconds: float) -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(absf(at.x) * 131.0 + absf(at.z) * 71.0) + count
+	var reach := clampf(size * float(profile.get("cue_burst_arc_reach", 1.8)), 1.0, 4.5)
+	var paths: Array[PackedVector3Array] = []
+	for index in count:
+		var angle := TAU * float(index) / float(count) + rng.randf_range(-0.35, 0.35)
+		var out := Vector3(cos(angle), 0.0, sin(angle))
+		var path := PackedVector3Array([Vector3.UP * 0.3])
+		var steps := 6
+		for k in range(1, steps + 1):
+			var f := float(k) / float(steps)
+			var side := out.cross(Vector3.UP) * rng.randf_range(-0.28, 0.28) * reach * 0.3
+			path.append(out * reach * f + side + Vector3.UP * (0.3 + sin(f * PI) * reach * 0.45 * rng.randf_range(0.5, 1.0)))
+		paths.append(path)
+	# One short downstroke from above the strike point.
+	var stroke := PackedVector3Array()
+	var top := reach * 2.4
+	for k in 9:
+		var f := float(k) / 8.0
+		stroke.append(Vector3(rng.randf_range(-0.3, 0.3) * (1.0 - f), top * (1.0 - f), rng.randf_range(-0.3, 0.3) * (1.0 - f)))
+	paths.append(stroke)
+	var vertices := PackedVector3Array()
+	var normals := PackedVector3Array()
+	var uvs := PackedVector2Array()
+	var indices := PackedInt32Array()
+	var radius := float(profile.get("cue_burst_arc_radius_m", 0.09))
+	for path_index in paths.size():
+		var points := paths[path_index]
+		var width := radius * (1.6 if path_index == paths.size() - 1 else 1.0)
+		for k in points.size() - 1:
+			var a := vertices.size()
+			var tangent := (points[k + 1] - points[k]).normalized()
+			var taper := width * lerpf(1.0, 0.35, float(k) / float(points.size() - 1))
+			for point: Vector3 in [points[k] - tangent * taper, points[k + 1] + tangent * taper]:
+				for side in [-1.0, 1.0]:
+					vertices.append(point)
+					normals.append(tangent)
+					uvs.append(Vector2(side, taper))
+			indices.append_array(PackedInt32Array([a, a + 1, a + 2, a + 1, a + 3, a + 2]))
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_NORMAL] = normals
+	arrays[Mesh.ARRAY_TEX_UV] = uvs
+	arrays[Mesh.ARRAY_INDEX] = indices
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	var material := ShaderMaterial.new()
+	material.shader = _cached_shader("arc", ARC_SHADER)
+	material.set_shader_parameter("tint", Color(str(profile.get("cue_burst_arc_colour", "#c9a8ff"))))
+	var bolt := MeshInstance3D.new()
+	bolt.name = "ArcBurst"
+	bolt.mesh = mesh
+	bolt.material_override = material
+	bolt.extra_cull_margin = 2.0
+	bolt.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	burst.add_child(bolt)
+	bolt.global_position = at
+	var flicker := burst.create_tween()
+	flicker.tween_method(func(value: float) -> void: material.set_shader_parameter("fade", value),
+		1.0, 0.0, maxf(0.2, seconds * 0.7)).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+
+
+## F22#4 storm impact (`cue_burst_style: "electric"`, or `"earth"` without the
+## arcs): the strike lands as a
+## discharge where it hits instead of the water crown: thick forked arcs and a
+## downstroke (`_add_arc_burst`), a spark spray from vfx.json's hit_spark
+## shape in the row's hue, a scorch mark that fades on the floor and a cold
+## flash. Lane: the charge's nose; marker/field: the marker; cone/fan: the
+## tracked target point, clamped to the shape's range. Presentation only.
+static func _electric_strike(body: Node3D, profile: Dictionary, geometry: Dictionary) -> void:
+	var origin: Vector3 = geometry.get("origin", body.global_position)
+	var heading: Vector3 = geometry.get("heading", -body.global_basis.z)
+	heading = Vector3(heading.x, 0.0, heading.z)
+	heading = heading.normalized() if heading.length_squared() > 0.0001 else Vector3.FORWARD
+	var shape := str(profile.get("telegraph_shape", ""))
+	var at: Vector3
+	if shape == "lane":
+		var reach := float(body.call("body_radius")) if body.has_method("body_radius") else 0.5
+		at = body.global_position + heading * reach
+	else:
+		at = geometry.get("marker", origin + heading * float(profile.get("range", 4.0)) * 0.6)
+		if shape in ["cone", "fan", "ring"]:
+			var offset := Vector3(at.x - origin.x, 0.0, at.z - origin.z)
+			var limit := maxf(0.5, float(profile.get("range", 4.0)))
+			if offset.length() > limit:
+				offset = offset.normalized() * limit
+			at = origin + offset
+	var floor_y := walked_floor(body, at.x, at.z,
+		float(body.call("_ground_height", at.x, at.z)) if body.has_method("_ground_height") else at.y, origin.y)
+	at.y = floor_y if is_finite(floor_y) else at.y
+	var burst := Node3D.new()
+	burst.name = "ElectricStrikeBurst"
+	burst.top_level = true
+	body.get_parent().add_child(burst)
+	var seconds := maxf(0.3, float(profile.get("cue_water_burst_s", 0.8)))
+	var size := clampf(float(profile.get("cue_burst_size_m", 1.4)), 0.6, 3.0)
+	# `earth` (F22#4 Halder): the same discharge without arcs -- stone-chip
+	# debris from the spark spray, the scorch as churned ground, a warm flash.
+	var arcs := clampi(int(profile.get("cue_burst_arcs",
+		8 if str(profile.get("cue_burst_style", "")) == "electric" else 0)), 0, 12)
+	if arcs > 0:
+		_add_arc_burst(burst, at, arcs, size, profile, seconds)
+	var tint := Color(str(profile.get("cue_burst_colour", "#9d7bff")))
+	var spec: Dictionary = (COMBAT_VFX.config().get("hit_spark", {}) as Dictionary).duplicate()
+	if not spec.is_empty():
+		spec["core_colour"] = str(profile.get("cue_burst_foam", "#ffffff"))
+		BURST.spawn(burst, at + Vector3.UP * 0.5, spec, tint,
+			float(profile.get("cue_burst_spark_scale", 2.2)), int(absf(at.x * 97.0 + at.z * 31.0)))
+	_add_scorch(burst, at, size * float(profile.get("cue_burst_scorch_scale", 1.1)),
+		Color(str(profile.get("cue_burst_scorch_colour", "#140c1e"))), seconds * 2.2)
+	var flash := OmniLight3D.new()
+	flash.light_color = Color(str(profile.get("cue_burst_light_colour", "#d9c8ff")))
+	flash.light_energy = float(profile.get("cue_water_burst_light_energy", 10.0))
+	flash.omni_range = 7.0
+	flash.shadow_enabled = false
+	burst.add_child(flash)
+	flash.global_position = at + Vector3.UP * 1.4
+	burst.create_tween().tween_property(flash, "light_energy", 0.0, seconds * 0.5)
+	burst.get_tree().create_timer(seconds * 2.3 + 0.1).timeout.connect(burst.queue_free)
+
+
+static func _add_scorch(burst: Node3D, at: Vector3, radius: float, colour: Color, seconds: float) -> void:
+	var mesh := ImmediateMesh.new()
+	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	var segments := 28
+	for index in segments:
+		var a := TAU * float(index) / float(segments)
+		var b := TAU * float(index + 1) / float(segments)
+		# Ragged rim: the burn reads as scorched ground, not a drawn disc.
+		var ra := radius * (0.75 + 0.25 * sin(a * 5.0 + 1.3) * sin(a * 3.0))
+		var rb := radius * (0.75 + 0.25 * sin(b * 5.0 + 1.3) * sin(b * 3.0))
+		mesh.surface_set_color(Color(colour, 0.7))
+		mesh.surface_add_vertex(Vector3.ZERO)
+		mesh.surface_set_color(Color(colour, 0.0))
+		mesh.surface_add_vertex(Vector3(cos(a) * ra, 0.0, sin(a) * ra))
+		mesh.surface_set_color(Color(colour, 0.0))
+		mesh.surface_add_vertex(Vector3(cos(b) * rb, 0.0, sin(b) * rb))
+	mesh.surface_end()
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.vertex_color_use_as_albedo = true
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var scorch := MeshInstance3D.new()
+	scorch.name = "StrikeScorch"
+	scorch.mesh = mesh
+	scorch.material_override = material
+	scorch.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	burst.add_child(scorch)
+	scorch.global_position = at + Vector3.UP * 0.06
+	burst.create_tween().tween_property(material, "albedo_color:a", 0.0, seconds) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 
 
 func _add_water(rise_s: float) -> void:

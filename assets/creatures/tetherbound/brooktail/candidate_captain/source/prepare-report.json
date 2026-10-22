@@ -1,0 +1,60 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 6473,
+    "spine": 6687,
+    "neck": 2444,
+    "head": 2010,
+    "front_upper_l": 631,
+    "front_lower_l": 1402,
+    "front_upper_r": 694,
+    "front_lower_r": 1520,
+    "tail_1": 1687,
+    "tail_2": 963,
+    "rear_upper_l": 392,
+    "rear_lower_l": 957,
+    "rear_upper_r": 404,
+    "rear_lower_r": 960
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 14050,
+  "align_applied_deg": 0.521,
+  "residual_leg_line_deg": 0.173,
+  "head_centre_x_normalised": -0.0089,
+  "nose_y_normalised": -0.9859,
+  "head_yaw_from_rig_forward_deg": -4.237,
+  "height_m": 2.0997,
+  "length_m": 4.1406,
+  "width_m": 1.3386,
+  "triangles": 27999,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.1531,
+      -0.6419,
+      0.1056
+    ],
+    "front_r": [
+      0.1504,
+      -0.6381,
+      0.1089
+    ],
+    "rear_l": [
+      -0.1693,
+      -0.1416,
+      0.1029
+    ],
+    "rear_r": [
+      0.1696,
+      -0.1399,
+      0.101
+    ]
+  },
+  "leg_split_y_normalised": -0.4699,
+  "tail_start_y_normalised": 0.0822,
+  "tail_length_m": 1.8978,
+  "back_top_normalised": 0.7047,
+  "chin_z_normalised": 0.7203,
+  "method": "brooktail_captain_from_staticub_regen_leg_line_aligned_tail_excluded_leg_columns_chin_line_head_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false
+}
