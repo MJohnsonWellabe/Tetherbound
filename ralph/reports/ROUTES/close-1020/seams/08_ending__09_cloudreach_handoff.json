@@ -1,0 +1,16 @@
+{
+ "consumer": {
+  "commit": "332463278adf2e38f38c5a9935e101172d6f6d08",
+  "from": "l08",
+  "piece": "09_cloudreach_handoff"
+ },
+ "differences": [],
+ "match": true,
+ "method": "producer receipt.after vs consumer receipt.before (day, ending, flags, items, party, player, realm, training, uids)",
+ "producer": {
+  "commit": "332463278adf2e38f38c5a9935e101172d6f6d08",
+  "out": "l08",
+  "piece": "08_ending"
+ },
+ "seam": "08_ending -> 09_cloudreach_handoff"
+}

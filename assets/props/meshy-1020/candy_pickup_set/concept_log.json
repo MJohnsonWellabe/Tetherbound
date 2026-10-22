@@ -1,0 +1,123 @@
+[
+ {
+  "tag": "rare_v1",
+  "task_id": "01a15c3d-b5b1-7333-99d9-f0f368539687",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game pickup item concept: a small bundle of three wrapped sweet candies (twisted wrapper ends) with a sparkling star-shaped candy on top, resting on a folded cream cloth square with gold trim, colour theme rich gold and amber with cream highlights, chunky readable shapes, precious cute collectible about 0.35 m wide. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/candy_tex.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-508a-77b6-b8bc-f440ec3dcdf2_part_0.png?Expires=1792808150&Signature=bXbtSSu4C4oSWc9oeXHIebs1Hi5igC-5bes9-wty-Z5WgV-O9xZcHe0op~tHXLmcksznkXeHAxs-B1LJ-uY1lTH9KY8lW1aMDM5id0GgDJGR2t0ZX~Y30dAnZXwPmxRH8uO~yB-TW6q8KSn9OjYpzcJeA3xNkpKU2615wigOE3858CkXUkQ-wqWh2ApST2K-BvgQCTEiPC7LFw-gPu6hNXWEon~b2cKPxmcJLdKQ5E-kXRtj2bdbaPfvJEGWPp7MVv4EppDVHW3aFjmeAb2zeSdVtnyV8eUVG4hNDCNB0ZqwTS30KUG1xiGeY6YivwoPfwn7TZzfMhgCLUM9ozNy2w__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-508a-77b6-b8bc-f440ec3dcdf2_part_1.png?Expires=1792808150&Signature=ebR4LxrsLEkY2zzB832T32YSS664iDJ7LDUK5S7L8UaAQKcYji7jlXoXX40ubR9R1lPgfuX8btH3Ecdd-OivU9kMUVUQW3gxGWhyAOOjo~7hAcsz7OvArr8JUoN1Uy76BsDS~lLANO7NFTkIbpHh8TYZw3LBxpIBje5-mVHIbCNCV6ILQBwK3C3QEDZ2pa6Rja-Xu~uVLsI82AOFQDRZHiYrnCNxp0YEDmzu99Q8mJoqObB8AHCc9m6n3tHgnyO~kn1BQ1LylpGNhDwjj1TDfOGOd9CRr7JHD7-jqWsH50jKISi-2PZ7RlK5zXY1oxyVWKZhswEpE6gBGLV0QV0q~A__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-508a-77b6-b8bc-f440ec3dcdf2_part_2.png?Expires=1792808150&Signature=Im2dRTmJD6Vj8SMv90jsOdFmx8UstKDq9kfmfgNjZwOevWga6xMHBUfIkfqK-uyaXWFs1IrwRdJQKw5--KfCZVIbQQ1Cv2~Wxzqa3fpF9Y8JvQmoA~b-qcuBdaBzMnjy1cBTVze3moijozWufzQrPrWvwsu2xN93vN1gmzttwTRHOf-LxSKR1hBgBlgUo~J9Tp9LatA6e3tvQs0G8LOOo3mmL3UBX9TCGNAnJxhMM4OFomAV~SuZ7WxGm98Wz5ZxYO8NiZiyghkoB7lb3poHpMsTCeSbG-Gfp3eEm11RPc224Kv4wkdxTTGfttal6M116HzXHbcj91SO1YhVJuLAwA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/rare_v1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/rare_v1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/rare_v1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ },
+ {
+  "tag": "good_v1",
+  "task_id": "01a15c3d-b55b-71ca-a4fe-09b980b1e5a7",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game pickup item concept: a small bundle of three wrapped sweet candies (twisted wrapper ends) resting on a broad fresh green leaf, colour theme bright leaf green with cream highlights, readable chunky shapes, small cute collectible about 0.35 m wide. Matches the leafy green style of the existing candy prop texture (second reference). Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/candy_tex.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3f-5aaf-76e1-8b6e-ab2bbf22b5a5_part_0.png?Expires=1792808219&Signature=eLe2gQguNZrlsuaOn-OEpZsjR91MFT0aKgXjZd2Mg-JUYuMMU05mlvlti7yZv0mtrNJ0On0xyBa3edD8IOzDROiewws5IvxDewdeVGmTR6fSKLO2Kj6UMshOpEOdMZzJcr7ERUE2N7G9WoM79dRxltaBgTxOaauSbY~CNs4CaANEY7j~TvqE-UK~Bt0Yl8FvdfykYvzU5STT-ltynUGhJXKK8BgfY4p-Ayd6eLvN1qt2nZf-8qu5jzZLx1DiXfwVLW0hX2iGtAJ-Bo85z8~MhX29uBPsRRtSm8N1ZnxxWOk9CGiCztvdwEpQvR4lj9lxyt20Rl7oNWc4Hj4tUhEeKg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3f-5aaf-76e1-8b6e-ab2bbf22b5a5_part_1.png?Expires=1792808219&Signature=RbcsFNKpvIGM-vL2stVAYWeTs7iAzd5csFYNr1WDpfq5NHFu0APhLYO5rPuk~cismepYtXGCPd-7T8ZwfkYLFWeDJaFLVEATuILrE1oxl-be5L-h-CBatdURkX5WjxjnuD~EpvlTBmHYSRpLDTJC3FJT3ITxig7jOrS0Yw0FwXT0TRy9s5OT6B8kvdS2Hhe0w1Igwj56TQHJyOuEc2GPHywnHd99Ly3cXU6AnNmPoJyfQ2C67Qfij6MIQFx28H3JAga~M0K8lVawPKxdVzNJdnB05KPQKvTOP4mj3lPI5rE3qsIfTMhbVs~2q69RMr-ESJFyQL6yp2c0FSV7Jc3bDg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3f-5aaf-76e1-8b6e-ab2bbf22b5a5_part_2.png?Expires=1792808219&Signature=Wh9v2kqAWoz3bh0Nqq21SELCrwgFTGz-mkHye4U8mzfsv~SrzSJoCCm3mnUZytRKzsdeBpSO9PLMCa~62yabJuv3N0-SM-e7dPLP3hC5RXxQVc4Un8lkbA2HUvwiBYSMc6bSF5dm4nHI5CSwn2~K-ufWeQpgHA2eILmZegSbetQpT7GOqBBBeru-LrO-s0u~vCcRbF6h8DAU1uRJH9nhKE9kSLlgWaYeosNn9e7R9Kr9sDgs30E9VfG1usInMw92i3iOAEn9fRyJqNQPACnLTzhhQgSpV9w3UdfLF4KFAaFoHF-oRVc9T48TnUW5UxVS3aYkCMeoVyhOnwegD80g3w__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/good_v1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/good_v1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/good_v1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ },
+ {
+  "tag": "great_v1",
+  "task_id": "01a15c3d-b54b-7613-b5dc-eeb08335f404",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game pickup item concept: a small bundle of three wrapped sweet candies (twisted wrapper ends) resting on a folded soft cloth square tied with string, colour theme sky blue (#4aa8e0) with cream highlights, chunky readable shapes, cute collectible about 0.35 m wide. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/candy_tex.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3f-e015-720d-bc40-25003f1d22f3_part_0.png?Expires=1792808253&Signature=DvMkQGfdA0G~acZlVOvjl~993PUZPfdq2VVU96ASWvg~6SJJTaemoBO6-jaTO-drUXTP7EN539b~rE7HeALJ9PutOWI66Ye4zi2Qh-Qrx5PZcIKK2sy08~Apm8pDdShv1zomVjwPU2aZl0ULU83Gqk3thSd2NDQ-tIHEgfHPUqqi6I~gmPTjjPmpCsEu1~mbDN8eb3soXkYaGOC~IzdEjcqMK-mrbPAlSoEA0fMb~TzfAqHe4Qnh0uA0kpdX1MLgQVAJs47L7aIhFC7FQnEp0hd0ii0No0NKJSjuqf~AJcJKPB4KTie6Sxl6onpJY4gJnuINa1OUOZf8q~mmrzX8gg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3f-e015-720d-bc40-25003f1d22f3_part_1.png?Expires=1792808253&Signature=qzeeH~~UUBbsW92f3-EllPpXexobXZQOJIeW8qBO3GYLcaxpjmA8HRR631UotKW4aEHww675z9QxeE3Mzj9g2tAmAgbHDEol610am008Uwu9gbVscYkP1Fcs33LRjWQaEncarzUc-RAk1lSQpK9zaUPtjn~EcKHoUX3RpKtr79kCAvow8DD2XyMH2-YjtOsf3mO6b-qnDWsAtuYoTK2-dnqdr~fkxsI8-lUDpf4of1acbiaObvXMooegxoGZrFapdYxHkfr9cEFXRu3tRKu2i2KFKFtDLsiySUtpNS2xPXtsl3afQkYe5E2hngK1Vbna7YkqWGs-GjWPzK~Uv7C9Gg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3f-e015-720d-bc40-25003f1d22f3_part_2.png?Expires=1792808253&Signature=U4hPh2HkqmkOfUXgxybIjvmST7RY4t~tp4RQ-rDvdtMehitT3pCDQ3vfGi545qQfwSw2iLsh9bUJOvsq4H3n1zlFoA9bsL-EH1o0BR4snmaNr~7uYjA9vu3GYuJ6aywiLWjTF1ZFjghsjtXvXKUKXRFxfGpAoxyM1zvw85NT3B03L-CpG6ygHJb4-d90wHiu2vW4DZfG38T1BWdfWgu0lOSZ7Wg1Dp0wILKcjhKm7KeyEqeejSgPamEy-xGLyPnuXgHKhemIJdPefpm02kLjcaXaIIIVS8UHU1w1ayBsL3ZJAPE99kpCNPGLC8Px9T-EloXpfHGiwdv6MJ2QDL3ybA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/great_v1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/great_v1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/great_v1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ },
+ {
+  "tag": "great_v2",
+  "task_id": "01a15c40-85b7-77bf-a25e-82f2979f81e9",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game pickup item concept, same set, camera angle and presentation as the gold candy bundle reference (resting flat on the ground, seen from a three-quarter elevated angle, not top-down): a small bundle of three wrapped sweet candies (twisted wrapper ends) resting on a folded soft cloth square tied with string, colour theme sky blue (#4aa8e0) with cream highlights, chunky readable shapes, cute collectible about 0.35 m wide. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/rare_v1_0.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c40-ff49-73af-b51b-9859aeed3799_part_0.png?Expires=1792808326&Signature=A70VbpynID8tj3rVaz5RNHhzYl3jxwAYqi7ngSP3QdtIuNjOaVyPMT0Xsfaa7gHtxZnXZBq-6tBxAyBvOrbSZpEdabmFzgAoXi5p7W0pAARgzb~0Yy3Ppa6KW2H1ljfeUMEzvmGIMldETfMtta7hSyCCo7zvdUBN~NyQe0KUtqCnyCKnqZZOeuIjszyL4Fs0rdjhv5LYDLuWKzi5oRYV5d3EQJtidNX0eWhFZCGBp-tPD4~QaoGBhZPeHs~~f7wArWXPPsSS4GDO6XwPBDInjBSGaMpVJGp~yVcfGekT4UPFydeolBFwFaBZdWiQ6NfqW9~nySLiFKCBC3Jy~SUc4w__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c40-ff49-73af-b51b-9859aeed3799_part_1.png?Expires=1792808326&Signature=KwqcoSBjYAZuAGCOuz45zY8fLf5ORbEnFJivRsgiFewyICwOSbI-H2CeQboouIMYYaqxPOBYekCXr231PMJO7gK2Of-s0N0BvDuqfcAQcmweLFyJoCmY5WT6DXlnK4aSCfiSSoFRCcdz9TZjPq95lc5icpQ0mozZdLfdmKQgi-BF0Og4DoP3BJCGA12wm5j0aTA~Su1K-BE-872Rdxls6yoqDOEBfym7dNf6dT4C9MySdX8ndXnydulawtr~Dk4igvh1ukaD-3WQW9eL1OIBs0CfS090CQcLPYsVjHvEEQaRA0NHzaRgw6in8UQOiAFE3YsvdEbIFp9f3HO4j9zu4Q__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c40-ff49-73af-b51b-9859aeed3799_part_2.png?Expires=1792808326&Signature=XN3kwhlSasNUY88afnT8nuOoiR8ya7AyHUVOlYROEyNTmWYKtIx0kFKjM-R0XXA9qYMtyt2pLMiGPAk-KKSYWY7CylzoAy60G8qzzQJzPBqrmK-eJeeh09gPLZ2q2Qh8PO7FOix7pTM9OKDB7NqTP9SufN7My1ra2p5oWgUs~vwhXQKuT4uvYITMNgySQPBMTAFGGRT9Fz1qc9uUJhgx3FMDyQJG0ytIEGkwXpSjkxhECVN~v8fmhSH5~05Wu8XJ2KyFpplrL7NPlE8z0Wh8Q5on~9c1C0JsreQNpssk4uaW8NgZuxmBjx8neeR~yHeWqgh0Qg7x0TD2b7043~jLxg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/great_v2_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/great_v2_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/great_v2_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ },
+ {
+  "tag": "good_v2",
+  "task_id": "01a15c40-7ad3-72f3-8746-60c65ff72541",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game pickup item concept, same set, camera angle and presentation as the gold candy bundle reference (resting flat on the ground, seen from a three-quarter elevated angle, not top-down): a small bundle of three wrapped sweet candies (twisted wrapper ends) resting on a broad fresh green leaf, colour theme bright leaf green with cream highlights, readable chunky shapes, small cute collectible about 0.35 m wide. Matches the leafy green style of the existing candy prop texture (second reference). Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/rare_v1_0.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/candy_tex.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c41-1095-71ff-a791-5a5986147438_part_0.png?Expires=1792808331&Signature=oB0bnf3Anm0EEPkCFrhlkcc04U9FGgKhNV~j65PEQc4l96LZLkX1JQsNBUA5GOGL5tIB7oqk6a8ocRH~6f5dYNd65pmn~Y4aHbKgXkMr9EHmAwdhzPnYIGenBN0kL4VsVR2ntsTkGnOdSx5w3GCX0vxZNgn4JYs1ROXeut36PC0hhxsvHcpw3tfGtWHWktlTA1rpvQ2KgB~CFhx~-tJ9Tgcxuh2IrXSU-SvHHB2ooKrxMy-zz1a~CqOChzcLz-FSZUfCvzk-wNSdUdbge15MABZ8gLFg9ESZMFU4QGkff7vdDZyMiSWoRX~06sWWyhuIKS1D3JQRxFuOZdreMupO8w__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c41-1095-71ff-a791-5a5986147438_part_1.png?Expires=1792808331&Signature=Hxj99y4jh1fiFLcGMhZOK3p5OcvXCBSUjCcJHRx~30mfFJnugsSGkTNYUGtJFVW9rbnbMaui54IohkxDRyQTtDjBF8oj3whvJJHV6S~4lwDIGpMzC19DuMMMkJREt9wKFtuLKePQUzjxJW3eTzVys66~B3AX~TpoyGJZmVBmY20k3T8mZpPlVXKaFiYgXpww5y9Tk657MeWrQ1aKY1Z7mKQBdMeGzrTS5VtzrakQ1icYMqivZDsLFmsj~oJA57RJetIW~zh6Kf4AclVCNFC4lt8ruxYB1UHY-6h2eRgQqQ-fFSxshnC2cOApiq-Y-xxTcOEHoiLJtUioFPGkHkg7jA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c41-1095-71ff-a791-5a5986147438_part_2.png?Expires=1792808331&Signature=I3BXLkxI5cHYjCBLlRSHHwtzZRM13e60SoEtM5XP7LbT3YEJUTW3XX3eWooU872SxPKKd38a-9FNjHHMzJKLV5iDZYeBxzJGkln7rRMAQWryw88fStYARtBhTBAUOMG06UoKkIwL0lDkFH3jBlZd~6qbWMWOdjN6LV3ID7nBwaZc59UrUwiqY0LbvIhV~Nzw7ziLYXdnhmGDAOgzyl2YMrlgLRhrygrV0aG7AwV0pl91Up1l~9zaJgav3dVpOO4eqUyUt7zzuXiw3B-2kOj7PpOFVLFtGiUxIrusbKCIXaCx1UThGy3~-7M14h7qZZlKB4gRI~uhW-AaPzTipk34Tw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/good_v2_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/good_v2_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/good_v2_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]

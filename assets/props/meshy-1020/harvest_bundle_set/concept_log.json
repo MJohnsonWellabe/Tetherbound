@@ -1,0 +1,98 @@
+[
+ {
+  "tag": "berry_v1",
+  "task_id": "01a15c3d-d7b3-741b-aed8-54b87c57b671",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game resource node concept: a small round berry bush about 0.6 m tall, chunky stylised leaf clumps with many clearly visible large glossy blue-purple and pink berries in clusters, a few berries on the ground. Lush meadow style like the bushes in the key art. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/palworld05.jpg"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-7c66-72e5-8603-9be08718c17d_part_0.png?Expires=1792808162&Signature=MQXssT~Yo5ZSTcdAgIIhE5ErRdZJR4dhcW3py0gfo38kblZ8ewfsVfxqRfDknTNs9vBiw3URGijnOkpJ4jep5iV1giyAFAZHhALckJzLO0XkbPR0tIO5fao6p89oAwHe~gHOnuM9PxZgxZeczg4U7Lll3JQYtNE91gqAk7MhWnYBA5zIJFw~6njcKy4bNYuFUnmOC~ROAhYgXXlRun~BdN634somYpdPgb7GeCHVcctiOv~zQMe1z76VMQzMx4F0usjkE6N~p63~apyAbi6xHA3hP2l2nk1~TNXw~JCmojF8qFvhLQ221s2JxzXqKwtNnOqL67r6SsnzBQVWjVUJCw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-7c66-72e5-8603-9be08718c17d_part_1.png?Expires=1792808162&Signature=my3M0NgbkZ4Lk3z3Udxx4t9Jaew3kXT4UoVCsP94dybem4tfYIqRsk3PrSTrmJcdlzjtQibaRqYkv3DN2QMWy2RQlRbgrE~JNR02tacmfpWJ8ALMaHc2iHIeTOWucDqvlgwKqflHQr-~FoK3oizUEK0WZD~Ep9VpldobfNypPyQ4IJpX4q2pv06HROCXlG4QLICaIHuos5mnG1IzbAm9BUQzXzmTHipNNPg2gjhAdZ8551EA-haFmcllk3GcEBx53-dT~G6htsuv7tmFRWwFKTM276A0ydZUf4DxDtQrIKs19uSLTkVULAWafS~1kzA3EHw1tNL1bZlRw3TDeG8OAw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-7c66-72e5-8603-9be08718c17d_part_2.png?Expires=1792808162&Signature=mx0g~M7iCmiGlCfl3ooxW9d01zdIPnCQRocfHTDKl6HGLqiLAT0RDDW1TaOdy0IAJHLnkJ0Gj5z8M0VYxjyAlg3UF2zvsn5gHHTQdZG2B9IciNvS4b5B8KZIMl8K61HhlsEz8ISUs2UeVzMN8yicUdiAQ1rmZFsPylA~cFraITzc0eo7jGiMY32Tw~6ezzY6G8racdvKfBASRRCIUpOdxWgQjtOdO7lcvjxeCkpErjF8pvaqj89JwN9xGAu2G-s4nHrVvlFSoGNjoct3SGwcjboDCo5a8JyxYR8khRmtuogKSCTQqHLiFD-M0I5b87Uvb3N2tupELmLqZa5JE6ywYw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/berry_v1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/berry_v1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/berry_v1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ },
+ {
+  "tag": "hide_v1",
+  "task_id": "01a15c3d-ec0b-726c-8db0-9972471c6977",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game resource node concept: a rolled tan leather hide bundle tied with rope cord in two places, resting on the ground on a few flat stones, with a folded flap visible, about 0.6 m wide. Warm brown leather, chunky stylised. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/palworld05.jpg"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-8689-7401-8151-773339489491_part_0.png?Expires=1792808164&Signature=EvvJhul8HWo23N6h522Ndk3AfZKSCsSFFy8VtGPryUy5VByrJM0Y0~Yh~mJ~TCc9~f1nZSnpicutdYw00~4xKIkg17XPibQiKZOyBNs-pbnUa9ilq2TdQgpFRkO8MjgTZGL5bmVZPSK-3kVSoiVbtFoj~oWqWipBinO8wPkIy2AGOFF5o9uuE7JYCKD6UMaNxHEz5VxdgJbeqoCGHnQ4aELSFEMSLpnO-TpNW7jrDABEldYGISmYKIr0rPREjP-16Nsp5KksIZM-7RK1-Ecp7YC3~H8ZcQBh1-~QkNImmdnCU0gy~l1Rau9bgx4zPKC~i0LnHkGQpQarabPXlRilLw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-8689-7401-8151-773339489491_part_1.png?Expires=1792808164&Signature=nF1fi6y3u6GoQnEuW~z-pinE3wM2M50hvnR~XudApgXIKm7su48vTdWFEk0lX~jsD6bKdXxPy~WRjb-sOR3xnSSeW1~t0qsVOO7wVg3dWy9U2fsVYvQErjeqqOKFv-3mWljFKYA~AfP6v~gsx3gxohf0CTfez3C-iJFBLQDwbxLuClezRolLMBD2gwh3ClD~~Df~P~wc1ETK2rcnAKxH8V5gXRo3gsItJnjLcl00bxldk5HSNvJlNRctFBoehBMYfoKFC~Eo7H2~pX3~OP0jKsk3A~kCKGKmMLu0JXWaFhRfmBthpH0yI1y69bwfDyCyOaAA0yGS79y0xifzwTy6Fw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-8689-7401-8151-773339489491_part_2.png?Expires=1792808164&Signature=IUpXsBi7wjAXiMRCRkd0v58e16z-mk2tiAi84Ud6mvKYvoK~pDMGl0jDoTGrWto3alqAEXhmqQQH0K5q3i4P9Qw~5N-fY7eISmkbj0o6fE1vTZcawbbmVWPGpFtN6ZZ2bcxGyPVFn-pgC6kwBdtCcS3uI3YxoHiAqHXKnGAxVaCfRbIpPCuRP9ODIX0sezYD9LoxPUfeHd3TqfnsBC80pcRCtUS4IHVJG9M7oQQiVL0-IAVxl~C41wGijDXA2rIl8hIYUQvn2dvQbb094y3gwH3mrE8C8UHdVrBL5nDGiQ239YD0MIOeS5iPCrgE08T0oX1vw7fAibU6lNi~H0E8VA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/hide_v1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/hide_v1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/hide_v1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ },
+ {
+  "tag": "satchel_v1",
+  "task_id": "01a15c3d-ff10-71f4-a4cb-5c227da52ce1",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game resource node concept: a weathered leather and canvas travel-pack satchel with buckled straps and a rolled blanket on top, sitting on a short cut oak tree stump with visible rings, about 0.6 m tall overall. Warm browns and cream canvas, chunky stylised. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/palworld05.jpg"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-92d2-76e6-87a8-f952020c6958_part_0.png?Expires=1792808167&Signature=c5Soa-t2UndLTDWSLA1DZ4Q1JEkvMNa6jDNC4wQszl2Dl2WuNuwAJ-eqGZvSAXpOsKxLDhbzH4DZ-wcwh4U6Q7ad9djO6mGo3DwDk~toZp~Q9DeUPUsveq-lUoPEi2R~nofyanWda0PBGVCe91P5rDD2ZazMfVbh757WAn45Du89lb0knhG8-45SXhcPQsbBLdSkKub94dljIQ84hd66BAciUvL2zndE0h4O8ZlwrVOtKKMQekeGvrZ3VxsYopFFBGFMvXbiECpS-Y2nRfQ2bJHLU6Tt1YuFJgqPhd7Fy4XH0eWf47KHzInnIitCtS6CQ9VaGeCWuWOMz8wrxYWxYQ__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-92d2-76e6-87a8-f952020c6958_part_1.png?Expires=1792808167&Signature=l5kTBzbyOhHyN~TK2aTGw0HbGtIy44LFWl2-yH9R2~srfmSdpC6A0a6vbnoPoXm3AojGvYlsUTQ49a0SrYTsoUbNJql97~nlH4t1NHqB1C8TpBAQ0qiMKI32Qsg5I5YvnbYzIWLpmKD84vI-27WaUr7UCMAZ-sfx2b7h~27jgxYe4rlBSLren5fPoaJiacGATAOrkXofGN2n1BetTdKs0Ojr9trl3dOEUyUMofoJ3svsIWxMh82G5jOLVXYwPOEustxGREF9kvJg-1BITUDO2FOZ7YaCiaM7VyN-aB1oP7kPXZuIOi~-AsL9rKtRriqSLNt18c2MEL4XTxhNKOm89g__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-92d2-76e6-87a8-f952020c6958_part_2.png?Expires=1792808167&Signature=mbN5mzGyhoVWECEevPn5pEr41svTA9qVFHKN-zksFMRAxhQzTacAGAl3Pi6cGIl8v2QZ-7bXDLIgx~OnHoNWlsEq1elWiEuTTDkqJV-Hrtu2trQor56HGiQcOe22FmaZs25K2b8KdT8zQHMAoMQQf5v22xN1b0qa7WJbVr9yGMThjeryiBGOorj78Oet62ZTIbjzSxBq~IM0ksXC-l28ifS~QlEfqKrDg0l20a1ZsLZUSfEdeEbvoJIeer8ShmXDJ5zui98ROD4dt52d5twRCs1sVVNVAWYm6-2loQN81l8jDoYAyaDpR0IrVf-QKA6hl5RT623MmOQn~f4olXtBvg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/satchel_v1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/satchel_v1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/satchel_v1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ },
+ {
+  "tag": "orbcache_v1",
+  "task_id": "01a15c3e-1467-7691-b2b0-4dd606975ad3",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game resource node concept: a low round woven-looking basket carved from pale warm stone (#d2c6af) holding a pile of five pale cream-white capture orbs, each orb a smooth sphere with a thin tether-blue (#4aa8e0) band around its middle, about 0.6 m wide. Chunky stylised. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_stone.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-aa70-773f-94bd-fb19cefe1637_part_0.png?Expires=1792808173&Signature=V2LCjIjnqrjHui-drqJ6bwXTcETiSDL0-w6qLUwFh8t7BYEv1xOJ5VDNQn7-PWHglaS4EV2r6J-KhdtuC1KZJsd99b-a3rbtqdog12R3t1vQ0ONUhmlCut3hqIfxVLTSyat2EiUp5PsLJrF-XBGpgFWhzJT8p0qiCY9si~tE8BJEvaSrO1OWUcPZivsCTAAiwhROXQ5cIZwFmA2tGypoDRd8up00oFZ5PTFkEn03IdNDWXUsPYZVFYMDNxU3pggAPokztO~Uaq-EzVVsi3SYJnkGAsF8XxdECm480Sw~Xc7Le0EeqMZdcUBEeHiwbB~Dm7GGCs7qO-K8EJdzsNMj4Q__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-aa70-773f-94bd-fb19cefe1637_part_1.png?Expires=1792808173&Signature=n4k84yftAJFhFmdVmzxQYOvBLDtHtmhhzpn4o~u5qdKEXTW3EYwMLu5V4fUJuK-psAvIIh1pNMtkjXRqAy4iKcyRIyR1IyoxONl4kJFZHSgGH9x5ldwQUIiKKZj6m5fJ9VYSgBqSjgcHyimevleNfrigMj2wy90A2cVNoEtN9d2IcbIxSo~OQn6Pn4gFBwPY9eNpp84JM-sw5BgOhPF29bjDnMntSwHn9-n3ejddJEuWwfwg1d3HUY15zBbOQcPMphBvjBgbsPYDbyaXpXttKxuopIUwI9Vwh0RBso-6KPCZoDDPrjbHkYUfVC~YCwr~VzXBsU0439wURwOc6LCryw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-aa70-773f-94bd-fb19cefe1637_part_2.png?Expires=1792808173&Signature=f28iGp4joOPJIQbNjm~KPR8nWeX9oOdpd2MOJyteO7Ayoj~j13566kkBEDs-dNw43fPahMXKATzdTkzHqF-hZWFhusExXuRM1hnW47S~WktnXo4kdP98MQacehJfc31yiswdz22AtUdEtEDDDQaLEK1QbaUecfUDdwV4EP6bQfOVC4EF705cpZJVpa7dFKFnHVziAAJ369g3vrMcXDYi75bjN1Kbwk7amzUxXn1cn4tdicNuCazLpLD6v6IbOCAeIujX3j3NR420zFD6RBgtv5V4Zx3Z8IU557EFESZY9M-S9C3fo1EhCnp4Mxjc4VrRIocmy7cozw1NLzwXiI-sJQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/orbcache_v1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/orbcache_v1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/orbcache_v1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]

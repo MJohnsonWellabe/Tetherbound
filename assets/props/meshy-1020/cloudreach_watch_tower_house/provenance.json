@@ -1,0 +1,99 @@
+{
+  "asset": "cloudreach_watch_tower_house",
+  "brief_id": "B7",
+  "biome": "cloudreach",
+  "date": "2026-10-21",
+  "author": "Claude (Cloudreach Meshy generation worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro) -> Meshy multi-image-to-3d (latest, quad remesh, PBR)",
+  "target_size_m": "5 m diameter, 14 m tall incl. conical roof",
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "height",
+    "fit_value_m": 14,
+    "raw_extent": [
+      0.8993,
+      1.9026,
+      0.8357
+    ],
+    "scale": 7.3585,
+    "final_min": [
+      -3.309,
+      0.0,
+      -3.075
+    ],
+    "final_max": [
+      3.309,
+      14.0,
+      3.075
+    ],
+    "final_extent_m": [
+      6.62,
+      14.0,
+      6.15
+    ],
+    "triangles": 41583,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3
+  },
+  "files": {
+    "glb_metres": "cloudreach_watch_tower_house.glb",
+    "glb_meshy_raw": "cloudreach_watch_tower_house_meshy_raw.glb",
+    "textures": "textures/",
+    "chosen_concepts": [
+      "concepts/c1_0.png",
+      "concepts/c1_1.png",
+      "concepts/c1_2.png"
+    ],
+    "meshy_thumbnail": "thumbnail.png"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15c3f-046a-75a1-a74a-50156cc53a09",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Round stone tower house, 5 metres in diameter and 14 metres tall, built of coursed pale weathered limestone blocks with a few horizontal string courses. Conical slate-blue tiled roof with a small gold finial. Several pointed-arch windows with warm amber glowing glass panes. A royal-blue fabric banner with a gold trim and pale wing emblem hanging from a gold bracket on one side. Wooden door at the base. Matches the tower, arch window and banner references. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no cast background, no people. Materials: pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, never pure white) with clearly stacked horizontal sedimentary strata and soft moss on the ledges; where present, slate-blue roof tile (#3d4a66), honey-coloured timber, cream plaster, royal-blue banner fabric with a small gold accent. Absolutely no red, no oxblood, no maroon anywhere. Flat ground contact at the base.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/tower_top.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/arch_window.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/banner_pillar.jpg (branch tb/cloudreach @ eb3b9504b)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c1",
+      "task_id": "01a15c49-bde5-7495-a5e2-3e8ae0c3cef4",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "input_task_id": "01a15c3f-046a-75a1-a74a-50156cc53a09"
+      },
+      "params": {
+        "input_task_id": "01a15c3f-046a-75a1-a74a-50156cc53a09",
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 20000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN"
+    }
+  ],
+  "consumed_credits_total": 39,
+  "visual_verdict": "Strong: round coursed-limestone tower, conical slate-blue roof with gold finial and dormers, arched amber windows, blue wing banner on gold bracket; 6.6 m wide incl. banner, 14 m tall. Single material.",
+  "integration_flag": "OFF - candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood requested or observed; blue banners/roofs only"
+}

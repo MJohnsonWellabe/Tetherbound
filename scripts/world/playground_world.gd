@@ -1301,6 +1301,13 @@ func _apply_ground_shader(material: Object) -> void:
 		var overrides: Dictionary = (presentation as Dictionary).get("shader", {})
 		for key: String in overrides.keys():
 			cfg[key] = overrides[key]
+		# A judged look candidate rides beside the shipped overrides and applies
+		# only with its own `enabled` (F04#6/F38: "smeared, blurry ground").
+		var candidate: Dictionary = (presentation as Dictionary).get("shader_candidate", {})
+		if bool(candidate.get("enabled", false)):
+			for key: String in candidate.keys():
+				if key != "enabled" and not key.begins_with("_"):
+					cfg[key] = candidate[key]
 	if cfg.is_empty():
 		# FLAT rather than NOISE, matching the shader's own default, so a missing
 		# config is the old look rather than an unlit void.
@@ -1373,9 +1380,28 @@ func _load_long_water_visual_config() -> Dictionary:
 func _build_texture_list() -> Object:
 	if not ClassDB.class_exists("Terrain3DAssets") or not ClassDB.class_exists("Terrain3DTextureAsset"):
 		return null
-	var entries: Array = _load_terrain_config().get("textures", [])
+	var entries: Array = (_load_terrain_config().get("textures", []) as Array).duplicate(true)
 	if entries.is_empty():
 		return null
+	# A surface's judged look candidate (`candidate`, its own `enabled`) swaps
+	# in its keys only when switched on; OFF leaves the shipped surface as is.
+	# Kept in terrain_presentation.json, not here: this file fingerprints the
+	# terrain and scatter bakes, so a flag flip here would invalidate them.
+	var presentation: Variant = JSON.parse_string(FileAccess.get_file_as_string(GROUND_PRESENTATION_CONFIG))
+	var swaps: Dictionary = (presentation as Dictionary).get("texture_candidates", {}) if presentation is Dictionary else {}
+	# A swap names its surface by its key, or by `_target` when several
+	# candidates exist for one surface (grass, grass_v2); the last enabled wins.
+	var by_surface: Dictionary = {}
+	for swap_key: String in swaps:
+		var swap: Variant = swaps[swap_key]
+		if swap is Dictionary and bool((swap as Dictionary).get("enabled", false)):
+			by_surface[str((swap as Dictionary).get("_target", swap_key))] = swap
+	for entry: Variant in entries:
+		var candidate: Variant = by_surface.get(str((entry as Dictionary).get("name", "")))
+		if candidate is Dictionary and bool((candidate as Dictionary).get("enabled", false)):
+			for key: String in candidate:
+				if key != "enabled" and not key.begins_with("_"):
+					(entry as Dictionary)[key] = (candidate as Dictionary)[key]
 
 	var assets: Object = ClassDB.instantiate("Terrain3DAssets")
 	var index := 0

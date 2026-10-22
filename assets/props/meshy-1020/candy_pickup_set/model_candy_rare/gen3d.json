@@ -1,0 +1,27 @@
+{
+ "model": "candy_rare",
+ "task_id": "01a15c3f-dc02-777b-8150-fd9f2cd2d9e0",
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "ai_model": "latest",
+ "target_polycount": 8000,
+ "topology": "quad",
+ "should_remesh": true,
+ "enable_pbr": true,
+ "input_images": [
+  "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/rare_v1_0.png",
+  "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/rare_v1_1.png",
+  "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/rare_v1_2.png"
+ ],
+ "status": "SUCCEEDED",
+ "task_error": null,
+ "consumed_credits": 30,
+ "files": {
+  "glb": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_rare/candy_rare.glb",
+  "base_color": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_rare/candy_rare_base_color.png",
+  "metallic": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_rare/candy_rare_metallic.png",
+  "roughness": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_rare/candy_rare_roughness.png",
+  "normal": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_rare/candy_rare_normal.png",
+  "thumbnail": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_rare/thumbnail.png"
+ },
+ "date": "2026-10-21"
+}

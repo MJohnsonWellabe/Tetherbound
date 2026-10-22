@@ -1,0 +1,52 @@
+{
+ "1": {
+  "L": "B",
+  "R": "A",
+  "file": "101_upper_cloudreach_place_cliffhold_approach_day.png"
+ },
+ "2": {
+  "L": "A",
+  "R": "B",
+  "file": "102_upper_cloudreach_place_cliffhold_approach_night.png"
+ },
+ "3": {
+  "L": "B",
+  "R": "A",
+  "file": "103_upper_cloudreach_place_cliffhold_court_day.png"
+ },
+ "4": {
+  "L": "A",
+  "R": "B",
+  "file": "104_upper_cloudreach_place_cliffhold_court_night.png"
+ },
+ "5": {
+  "L": "B",
+  "R": "A",
+  "file": "105_upper_cloudreach_place_cliffhold_windwatch_day.png"
+ },
+ "6": {
+  "L": "A",
+  "R": "B",
+  "file": "106_upper_cloudreach_place_cliffhold_windwatch_night.png"
+ },
+ "7": {
+  "L": "A",
+  "R": "B",
+  "file": "107_gate_lower_cliffs_place_galefoot_approach_day.png"
+ },
+ "8": {
+  "L": "B",
+  "R": "A",
+  "file": "108_gate_lower_cliffs_place_galefoot_approach_night.png"
+ },
+ "9": {
+  "L": "A",
+  "R": "B",
+  "file": "109_gate_lower_cliffs_place_galefoot_hearth_day.png"
+ },
+ "10": {
+  "L": "A",
+  "R": "B",
+  "file": "110_gate_lower_cliffs_place_galefoot_hearth_night.png"
+ }
+}

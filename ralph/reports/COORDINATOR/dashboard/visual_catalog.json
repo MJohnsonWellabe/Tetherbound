@@ -76,8 +76,8 @@
      "fix_class": "mesh",
      "biomes": "meadows;tidewake;cloudreach;stormwood",
      "owner": "Codex",
-     "status": "open",
-     "note": "Meadows small potion WEAK on High and Medium"
+     "status": "done",
+     "note": "CPU-provisional 22 Oct: Meshy pickup visuals mapped 6.76 vs shipping 4.74 (yardstick, 4 anchor pairs; ralph/reports/LOOK/close-1022/P2-033-034-items.md on tb/look). GPU confirmation pending; a GPU score below 7.5 reopens."
     },
     {
      "id": "P2-058",
@@ -185,7 +185,7 @@
      "biomes": "meadows",
      "owner": "Codex",
      "status": "open",
-     "note": "Catalog: open"
+     "note": "Improvement 22 Oct: Meshy harvest visuals mapped 6.63 vs 5.47 (CPU), below 6.7; ON as an improvement."
     },
     {
      "id": "P2-059",
@@ -425,7 +425,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Codex",
      "status": "open",
-     "note": "GPU yardstick 22 Oct: mapped 5.96 / 5.94; defect PARTIAL x6 (cap and footing present, still a lone pale panel). Below 7.5: open. ralph/reports/GPU-PASS/P2-094/VERDICT.md"
+     "note": "Improvement 22 Oct: r7 wall mapped 6.50 vs shipping 6.05 (CPU), parked by the gain rule; ON as an improvement. GPU yardstick earlier 5.96/5.94."
     },
     {
      "id": "P2-079",
@@ -539,8 +539,8 @@
      "fix_class": "mesh",
      "biomes": "meadows;tidewake;cloudreach;stormwood",
      "owner": "Codex",
-     "status": "open",
-     "note": "Meadows small potion WEAK on High and Medium"
+     "status": "done",
+     "note": "CPU-provisional 22 Oct: Meshy pickup visuals mapped 6.76 vs shipping 4.74 (yardstick, 4 anchor pairs; ralph/reports/LOOK/close-1022/P2-033-034-items.md on tb/look). GPU confirmation pending; a GPU score below 7.5 reopens."
     },
     {
      "id": "P2-010",
@@ -1086,8 +1086,8 @@
      "fix_class": "mesh",
      "biomes": "meadows;tidewake;cloudreach;stormwood",
      "owner": "Codex",
-     "status": "open",
-     "note": "Meadows small potion WEAK on High and Medium"
+     "status": "done",
+     "note": "CPU-provisional 22 Oct: Meshy pickup visuals mapped 6.76 vs shipping 4.74 (yardstick, 4 anchor pairs; ralph/reports/LOOK/close-1022/P2-033-034-items.md on tb/look). GPU confirmation pending; a GPU score below 7.5 reopens."
     },
     {
      "id": "P2-022",
@@ -1375,7 +1375,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Codex",
      "status": "open",
-     "note": "GPU yardstick 22 Oct: mapped 5.96 / 5.94; defect PARTIAL x6 (cap and footing present, still a lone pale panel). Below 7.5: open. ralph/reports/GPU-PASS/P2-094/VERDICT.md"
+     "note": "Improvement 22 Oct: r7 wall mapped 6.50 vs shipping 6.05 (CPU), parked by the gain rule; ON as an improvement. GPU yardstick earlier 5.96/5.94."
     },
     {
      "id": "P2-106",
@@ -1597,8 +1597,8 @@
      "fix_class": "mesh",
      "biomes": "meadows;tidewake;cloudreach;stormwood",
      "owner": "Codex",
-     "status": "open",
-     "note": "Meadows small potion WEAK on High and Medium"
+     "status": "done",
+     "note": "CPU-provisional 22 Oct: Meshy pickup visuals mapped 6.76 vs shipping 4.74 (yardstick, 4 anchor pairs; ralph/reports/LOOK/close-1022/P2-033-034-items.md on tb/look). GPU confirmation pending; a GPU score below 7.5 reopens."
     },
     {
      "id": "P2-093",
@@ -1946,7 +1946,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Codex",
      "status": "open",
-     "note": "GPU yardstick 22 Oct: mapped 5.96 / 5.94; defect PARTIAL x6 (cap and footing present, still a lone pale panel). Below 7.5: open. ralph/reports/GPU-PASS/P2-094/VERDICT.md"
+     "note": "Improvement 22 Oct: r7 wall mapped 6.50 vs shipping 6.05 (CPU), parked by the gain rule; ON as an improvement. GPU yardstick earlier 5.96/5.94."
     },
     {
      "id": "P2-096",

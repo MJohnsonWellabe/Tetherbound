@@ -733,14 +733,14 @@ func _fight_named_once(body: Node3D, id: String) -> bool:
 	# a deferred frame after the win; it is read through with Interact at a
 	# reader's pace (one line per VICTORY_READ_FRAMES) before world input is
 	# expected back.
-	var victory := not str(_captain_spec.get("victory_conversation", "")).is_empty()
-	var read := not victory
-	for frame in 120 + (VICTORY_READ_FRAMES * 8 if victory else 0):
+	for frame in 120 + VICTORY_READ_FRAMES * 8:
 		if bool(_panel.call("is_open")):
-			read = true
 			if frame % VICTORY_READ_FRAMES == VICTORY_READ_FRAMES - 1:
 				await _input._tap("interact")
-		elif INPUT_OWNER.current(_tree) == null and (read or frame >= 30):
+		# Any trainer's post-fight line opens a deferred frame or more after
+		# the win (stronghold_patrol, no victory_conversation, caught the next
+		# deck walk); give it 90 frames to open and read it before returning.
+		elif INPUT_OWNER.current(_tree) == null and frame >= 90:
 			return true
 		await _tree.physics_frame
 	return _fail("The actual trainer victory did not return ordinary world input: " + id)

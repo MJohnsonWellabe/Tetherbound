@@ -65,6 +65,7 @@ const BUILD_DOOR := preload("res://scripts/build/build_door.gd")
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
+const VEGETATION := preload("res://scripts/world/vegetation.gd")
 const STORMWOOD_ARCH_RULES := preload("res://scripts/world/stormwood_arch_build_rules.gd")
 const STORMWOOD_ARCH_PIECE := preload("res://scripts/build/stormwood_arch_piece.gd")
 const BUILD_GRID := preload("res://scripts/build/build_grid.gd")
@@ -955,7 +956,56 @@ func preview_placement(game: Node, armed: String, raw_spot: Vector3,
 		if not station.ok:
 			result["ok"] = false
 			result["reason"] = _altar_refusal_text(str(station.code))
+	# P2-094 (22 Oct): ordinary pieces were checked only against other placed
+	# buildings and slope, so a floor could be laid straight through a world
+	# boulder or tree. Stations, the altar, the camp and the arch keep their
+	# own pose checks above.
+	if bool(result.get("ok", false)) and armed != CAMP_RULES.ID and armed != "altar" \
+			and armed != "stormglass_arch" and not _station_path(armed) \
+			and _world_occupied(result.position):
+		result["ok"] = false
+		result["reason"] = "Something is already here"
 	return result
+
+
+## Box above the footprint's ground (clear of the steepest legal slope, so the
+## terrain itself never answers) asked of the live physics space.
+const WORLD_CLEARANCE_BOX := Vector3(1.2, 1.0, 1.2)
+
+
+func _world_occupied(spot: Vector3) -> bool:
+	return world_occupied_in(get_world_3d_space(), spot, _ghost)
+
+
+static func world_occupied_in(space: PhysicsDirectSpaceState3D, spot: Vector3, ghost: Node = null) -> bool:
+	if space == null or not spot.is_finite():
+		return false
+	var shape := BoxShape3D.new()
+	shape.size = WORLD_CLEARANCE_BOX
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = shape
+	query.transform = Transform3D(Basis(), spot + Vector3.UP * (MAX_SLOPE_RISE + 0.3 + WORLD_CLEARANCE_BOX.y * 0.5))
+	query.collide_with_areas = false
+	for hit: Dictionary in space.intersect_shape(query, 16):
+		if blocking_world_hit(hit, ghost):
+			return true
+	return false
+
+
+## A hit blocks a build only when it is world scatter: a tree or boulder's
+## streamed collision body (`vegetation.gd` `<model>_Collision`), or a body
+## with no node behind it. Every authored body keeps its own rules: people and
+## creatures, houses and their invisible story gates (Grandpa's DoorGate),
+## placed buildings and the ghost never block here.
+static func blocking_world_hit(hit: Dictionary, ghost: Node = null) -> bool:
+	var collider: Variant = hit.get("collider")
+	if not collider is Node:
+		return true
+	var node := collider as Node
+	if node == ghost:
+		return false
+	return node is StaticBody3D and node.get_parent() is VEGETATION \
+			and String(node.name).ends_with("_Collision")
 
 
 ## Pure legality core shared by the live ghost and `preview_placement`.

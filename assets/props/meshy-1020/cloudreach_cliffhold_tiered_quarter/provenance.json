@@ -1,0 +1,182 @@
+{
+  "asset": "cloudreach_cliffhold_tiered_quarter",
+  "brief": "(b1) tiered Cliffhold quarter: three stone houses on two stratified limestone tiers with stair and plank bridge, F08#3",
+  "criterion": "F08#3 (Cloudreach settlements and cliff identity)",
+  "biome": "cloudreach",
+  "date": "2026-10-21",
+  "author": "Claude (coordinator-side Cloudreach Meshy art worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro, references as data URIs) -> inspected -> Meshy 3D (latest, quad remesh, PBR textures embedded in GLB)",
+  "target_size_m": "32 m wide x 22 m deep x 26 m tall, lower 12 m rock tier",
+  "native_size": {
+    "raw_extent_units": [
+      1.8928,
+      1.6951,
+      1.3988
+    ],
+    "note": "Meshy raw GLB, longest side ~1.9 units"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "width",
+    "fit_value_m": 32,
+    "raw_extent": [
+      1.8928,
+      1.6951,
+      1.3988
+    ],
+    "scale": 16.9059,
+    "final_min": [
+      -16.0,
+      0.0,
+      -11.824
+    ],
+    "final_max": [
+      16.0,
+      28.657,
+      11.824
+    ],
+    "final_extent_m": [
+      32.0,
+      28.66,
+      23.65
+    ],
+    "triangles": 70274,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3,
+    "uniform_scale_to_target": 16.9059,
+    "alternatives": {
+      "fit_height_26m": {
+        "scale": 15.3383,
+        "final_extent_m": [
+          29.03,
+          26.0,
+          21.46
+        ]
+      }
+    }
+  },
+  "files": {
+    "glb_metres": "cloudreach_cliffhold_tiered_quarter.glb",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png",
+      "preview_3view.png (software flat-shaded 3-view, colours sampled per face)"
+    ],
+    "chosen_concepts": [
+      "concepts/c1_0.png"
+    ],
+    "raw_glb": "not published (identical mesh to glb_metres minus the metres_root node)"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15e58-8e12-7787-9218-31acf2a70d09",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Every view shows the complete piece from a slightly elevated three-quarter angle: front three-quarter, side, and rear three-quarter views. A cliff-edge town quarter as ONE single compact object, 32 metres wide, 22 metres deep and 26 metres tall: two stacked tiers of pale stratified limestone rock with horizontal rock layers and moss, the lower 12 metres a solid vertical rock cliff face, the upper tier stepped back. Three two-storey stone houses in exactly the style of the stone row house reference sit on the tiers: one on the lower ledge in front, two on the higher tier behind, all coursed pale limestone ashlar with corner quoins, steep slate-blue tiled gable roofs with dormers, tall pointed-arch windows with warm amber glass, arched honey-timber doors and small honey-timber balconies. A stone stair with a stone baluster balustrade climbs the rock face between the tiers like the terrace stair reference, and one short honey-timber plank bridge with rope rails links the two tiers. A royal-blue wing banner hangs on one house. The back and the lower half are rock, so it reads as built into a cliff edge. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no surrounding landscape beyond the piece itself, no clouds, no sky, no people. Materials: pale warm-grey weathered limestone ashlar (#a89c8a to #c4b8a4, never pure white) in coursed blocks with soft moss in the joints; slate-blue roof tile (#3d4a66); gilded gold ribs and accents (#c9a24a); royal-blue fabric banners with a white and gold wing emblem; honey-coloured timber only for doors, balconies and planks; warm amber window glass as a distinct saturated colour. Absolutely no red, no oxblood, no maroon, no pink anywhere. No half-timbering, no cream plaster, no thatch. Flat ground contact at the base.",
+      "references": [
+        "Meshy thumbnail of published asset cloudreach_stone_row_house: tb/meshy-props assets/props/meshy-1020/cloudreach_stone_row_house/preview_meshy.png, style anchor",
+        "Meshy thumbnail of published asset cloudreach_terrace_wall_stair: tb/meshy-props assets/props/meshy-1020/cloudreach_terrace_wall_stair/preview_meshy.png, style anchor",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/side_view_cliff.jpg (branch tb/cloudreach @ 776441737)",
+        "local: assets_raw/props-1020/cloudreach_watch_tower_house/thumbnail.png (Meshy thumbnail of published asset cloudreach_watch_tower_house on tb/meshy-props, style anchor)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (left panel only, cropped (40,40)-(590,680) -> concepts/c1_0left.png): the only output was a three-panel sheet on black; the left panel is a strong 3/4 view of three row-house-style houses on a rock tier with a balustraded stair; the other two panels were separate rock pillars"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15e63-16df-75ab-9ff5-d026511b2351",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "IMPORTANT: produce three separate views of the SAME single object, each on a plain white background. The object is broad and squat, wider than it is tall (32 metres wide by 26 metres tall), on one continuous rock mass, not separate pillars. The front lower ledge holds one house; the higher back terrace holds two houses side by side; the stair and a short plank bridge both connect the lower ledge to the upper terrace within the same rock mass. Every view shows the complete piece from a slightly elevated three-quarter angle: front three-quarter, side, and rear three-quarter views. A cliff-edge town quarter as ONE single compact object, 32 metres wide, 22 metres deep and 26 metres tall: two stacked tiers of pale stratified limestone rock with horizontal rock layers and moss, the lower 12 metres a solid vertical rock cliff face, the upper tier stepped back. Three two-storey stone houses in exactly the style of the stone row house reference sit on the tiers: one on the lower ledge in front, two on the higher tier behind, all coursed pale limestone ashlar with corner quoins, steep slate-blue tiled gable roofs with dormers, tall pointed-arch windows with warm amber glass, arched honey-timber doors and small honey-timber balconies. A stone stair with a stone baluster balustrade climbs the rock face between the tiers like the terrace stair reference, and one short honey-timber plank bridge with rope rails links the two tiers. A royal-blue wing banner hangs on one house. The back and the lower half are rock, so it reads as built into a cliff edge. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no surrounding landscape beyond the piece itself, no clouds, no sky, no people. Materials: pale warm-grey weathered limestone ashlar (#a89c8a to #c4b8a4, never pure white) in coursed blocks with soft moss in the joints; slate-blue roof tile (#3d4a66); gilded gold ribs and accents (#c9a24a); royal-blue fabric banners with a white and gold wing emblem; honey-coloured timber only for doors, balconies and planks; warm amber window glass as a distinct saturated colour. Absolutely no red, no oxblood, no maroon, no pink anywhere. No half-timbering, no cream plaster, no thatch. Flat ground contact at the base.",
+      "references": [
+        "Meshy thumbnail of published asset cloudreach_stone_row_house: tb/meshy-props assets/props/meshy-1020/cloudreach_stone_row_house/preview_meshy.png, style anchor",
+        "Meshy thumbnail of published asset cloudreach_terrace_wall_stair: tb/meshy-props assets/props/meshy-1020/cloudreach_terrace_wall_stair/preview_meshy.png, style anchor",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/side_view_cliff.jpg (branch tb/cloudreach @ 776441737)"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png",
+        "concepts/c2_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: lost the brief entirely (single house fragments, a chimney stack, background-removal holes)"
+    },
+    {
+      "tag": "c3",
+      "task_id": "01a15e64-f011-758e-9944-9eada5d9af8f",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Keep exactly the houses, stair and rock style of the first reference image, but rebuild it as a BROAD, SQUAT piece that is wider than it is tall: 32 metres wide, 22 metres deep and 26 metres tall, on one continuous stratified limestone rock mass with clear horizontal rock layers. Lower tier: a 12 metre vertical rock cliff face across the whole width with one two-storey stone house standing on a ledge at the front left. Upper tier: a broad flat rock terrace stepped back, holding two two-storey stone houses side by side. A stone stair with a stone baluster balustrade climbs from the lower ledge to the upper terrace, and a short honey-timber plank bridge with rope rails crosses a gap in the rock between the lower ledge and the upper terrace on the right. All houses: coursed pale limestone ashlar with quoins, steep slate-blue tiled gable roofs with dormers, tall pointed-arch windows with warm amber glass, arched honey-timber doors, small honey-timber balconies. One royal-blue wing banner. The back and lower half are rock, so it reads as built into a cliff edge. Each view on a plain white background, the whole object fully in frame. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no surrounding landscape beyond the piece itself, no clouds, no sky, no people. Materials: pale warm-grey weathered limestone ashlar (#a89c8a to #c4b8a4, never pure white) in coursed blocks with soft moss in the joints; slate-blue roof tile (#3d4a66); gilded gold ribs and accents (#c9a24a); royal-blue fabric banners with a white and gold wing emblem; honey-coloured timber only for doors, balconies and planks; warm amber window glass as a distinct saturated colour. Absolutely no red, no oxblood, no maroon, no pink anywhere. No half-timbering, no cream plaster, no thatch. Flat ground contact at the base.",
+      "references": [
+        "local: concepts/c1_0left.png (own earlier concept from this asset, used as shape/style reference)",
+        "Meshy thumbnail of published asset cloudreach_stone_row_house: tb/meshy-props assets/props/meshy-1020/cloudreach_stone_row_house/preview_meshy.png, style anchor",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/side_view_cliff.jpg (branch tb/cloudreach @ 776441737)"
+      ],
+      "outputs": [
+        "concepts/c3_0.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected for the final mesh after test: a strong broad squat concept (three houses, balustrade stair, plank bridge, layered rock) but its model came out with tiny houses and was deeper than wide"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m1_c1left",
+      "task_id": "01a15e64-f146-73e4-b41c-83bb66334ce1",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "source": {
+        "image_files": [
+          "c1_0left.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 36000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN",
+      "kept": "cloudreach_cliffhold_tiered_quarter.glb (metres)"
+    },
+    {
+      "tag": "m1_c3v0",
+      "task_id": "01a15e68-d49a-7122-b0da-996a144e48bb",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "source": {
+        "image_files": [
+          "c3_0.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 36000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "rejected: 32 x 19.9 x 33.0 m (deeper than wide), houses small and soft, plank bridge barely present, bridge leads to a detached rock stub",
+      "kept": "scratch only, not published"
+    }
+  ],
+  "consumed_credits_total": 87,
+  "visual_verdict": "OK: reads as a Cliffhold quarter built onto a cliff edge, in the same family as cloudreach_stone_row_house. Three two-storey limestone houses with slate-blue gable roofs, dormers, chimneys and amber pointed-arch windows: one on the lower ledge at the front and two side by side on the upper terrace. A balustraded stone stair zigzags between the tiers, and a pale stratified rock mass forms the lower third and the back. Final extents 32.0 x 28.66 x 23.65 m against a 32 x 26 x 22 m brief, so 2.7 m too tall and 1.6 m too deep; the rock tier is about 10 m, not 12 m. Main deviation: Meshy added a fourth small house on a detached rock pillar to the right, joined by a rope-and-plank bridge. So the plank bridge links the main mass to that pillar rather than the two tiers, and the 32 m width includes the pillar. Houses have no clear timber balconies. Upper-tier walk surfaces need an in-engine collision check. Single material, 70,274 triangles.",
+  "integration_flag": "flag-off",
+  "integration_note": "candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood/pink requested or observed; pale limestone, slate-blue roofs, amber windows, honey timber doors and bridge planks, royal-blue banners"
+}
