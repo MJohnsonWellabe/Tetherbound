@@ -6,6 +6,7 @@
 - 2026-10-22 13:55Z READY tb/routes c4bb2e1fd Merged tb/routes-b (incl. its f49_portal_travel rename) and restored f20_portal_travel's LESSON_PANEL; every chain runner (earned, tidewake, cloudreach, stormwood) compiles. Land routes and routes-b together at this head or later.
 - 2026-10-22 14:00Z READY tb/routes b7ae385ff Also merges tb/routes-b head 7627675ce (Stormwood pilot swings only within reach, `swing_now`, test_stormwood_pilot_reach.gd per Routes-B: 2 tests pass). Conflict-free merge; adds only those two files over c4bb2e1fd.
 - 2026-10-22 16:00Z READY tb/routes 02fccb2ad Merges tb/routes-b e8cff1d5d (stormwood_chain_runner `_handoff_check` reads items from `inventory` or else `items`; per Routes-B, rowan_visit and rowan_chest pass from training_t5_return). Conflict-free; one file over cc5aad073 (in PR #709).
+- 2026-10-22 17:20Z READY tb/routes ea0892a06 Save-compat game fix 8037f1188: 746fa2a07 (bulk tier materials stack 200, on main) made worlds holding an earlier Master chest delivery refuse to Load ("invalid typed creature training journal": the v2/v3 delivery replay re-stacks rootstone 50+50+20 as one 120 stack). `character_action_delivery.same_after` accepts a different Satchel layout only when every item total, tool durability and every other field match; used by both validators. Test test_delivery_stack_layout.gd; the 27 test files using either validator: 226 tests, 6201 assertions, 0 failed. Plus ea0892a06: the reload recheck accepts a recorded pinned/light transition inside a prefix (second pinned piece). training_t1_master PASS (pinned).
 
 Cloud container, Godot 4.7 headless. Branch tb/routes merged with origin/main 2124b1f6c.
 
@@ -113,7 +114,7 @@ Owner (22 Oct, via coordinator): "We shouldn't be doing full route in one go. It
 | bridge | camp_tournament end | South Bridge far bank | 0105fc978 | PASS |
 | training_t1_earn | bridge end | home, levels to cap 10 funded | 0105fc978 | PASS (76 wins) |
 | training_t1_altar_1..5 | previous end | home, all five L10/cap 10 | 0105fc978 | PASS |
-| training_t1_master | altar_5 end (pinned) | Orin beaten, recipe chest | 3adc7a887 | RUNNING (diagnostic run d12: real master_t1 win, one round) |
+| training_t1_master | altar_5 end (pinned, 0105fc978) | Orin beaten in one round, feast_t1 learned at the chest (storage trip home and back by the bridge/quarry route) | 58b29d287 | PASS (9264 s) |
 | training_t1_kitchen, training_t1_feed | master end | home, feast cooked and fed | – | unproven |
 | training_t2_earn, t2_altar_1..5, t2_master, t2_kitchen, t2_feed, t2_return | t1 feed end | – | – | unproven |
 | warrens, relay, sigils, hall, warden, tidewake_handoff | t2_return end (trained order) | – | – | unproven by this lane |
@@ -134,7 +135,7 @@ Placeholder note: 049dde025 and 93cd0ac29 ran before the asset re-import (creatu
 | 05i → 05j → 05k | `seams/…` | MATCH |
 | 05k_ione_chest → training_t3_preparehome | `seams/05k_ione_chest__training_t3_preparehome.json` | reviewed difference: player position (same save; Load seats the trainer 17 m away; the piece leaves by Home Key) |
 | training_t3_preparehome → … → training_t3_return (9 seams) | `seams/…` | MATCH |
-| training_t1_altar_5 → training_t1_master | written when the pinned piece passes | – |
+| training_t1_altar_5 → training_t1_master | `seams/training_t1_altar_5__training_t1_master.json` | MATCH (pinned start 0105fc978 → 58b29d287) |
 
 ## F47#0 option block (moved from data/config/essence.json)
 Not read by any code. Applying an option means copying its numbers into the live keys (auto_xp_scale, level_cost_bands[].multiplier, masters.json masters[].attuned_per_creature).
@@ -206,3 +207,8 @@ Not read by any code. Applying an option means copying its numbers into the live
  "method": "Estimated clear = agent estimate v2 (8.8-12.5 h, ralph/reports/EVIDENCE/F47-0/AGENT_ESTIMATE.md) + added fights x 1.0-1.5 min each (low: measured 8-21 s duels plus walking; high: the F27 ledger's MINUTES_PER_WILD_REFIGHT 1.5 incl. walking) + attuned gathering +0.5-1 h (PREPARATION_DEPTH_OPTIONS lever 2). Added fights = (new break-even - 0.39) x 1132, break-even found by stepping the engagement fraction 0.01 at a time in tools/f27_route_ledger.mjs runScenario with only these values overridden. Assumes the agent route already engaged about the old break-even share. Arithmetic only: the owner's play pass (F49#1) and a fresh agent route still decide F47#0."
 }
 ```
+
+## Pinned runs since 22 Oct direction
+- training_t1_master PASS on 58b29d287 (pinned from the 0105fc978 altar_5 save): real master_t1 win in one round (Bud, Terrapup L10); chest needed room, so storage trip home (Storage Chest built, 19 free) and back by Orin's travel route (fix 58b29d287: the trip's straight return from the village waystone crossed the gully); feast_t1 learned.
+- training_t1_kitchen first refused its start: the master save's world failed Load (stack-capacity replay bug above; fixed 8037f1188), then "retained cut no longer matches its reviewed prefix" (fixed ea0892a06). Now running on ea0892a06.
+- Tidewake story pieces from the committed fixtures (pinned, `~/edit`): 01_opening 118 s, 02_reedhaven 348 s, 03_brine 682 s, 04_shellwatch 1419 s, 05_tidal 598 s, 07a_salt_bex 1784 s, 07b_calder 864 s PASS (--fixed-fps 60). 07c_venn FAIL under --fixed-fps: the late helper's 50-minute watchdog is wall-clock (`Time.get_ticks_msec`) and fixed-fps runs about 4x slower than real time; rerun at real-time physics PASS (946 s). 08_ending refused the old combined-07 fixture (split route needs a 07d receipt) and 09 refused the stale 08 fixture (no Tidewake relic: made on an old dirty commit with --generate-ending); both rerun from this run's 07d/08 saves.
