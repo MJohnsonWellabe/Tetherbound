@@ -8,12 +8,9 @@
 - On Forward+ the additive rim draws at full strength and the 3.0-energy cyan light dominates the boss's shading. The surface reads as a pale cyan-grey "hologram".
 - On Compatibility the same additive blend renders at a fraction of its strength, as the code's own comments in `telegraph_glow.gd` and `impact_flash.gd` note. Low's otter stays solid.
 
-**A contributing factor (not the cause):** the captain's material is fully metallic.
-- The game's surface override on `creature_brooktail_captain.glb` is `StandardMaterial3D` with `metallic` 1.00 and `roughness` 1.00. The model's own mesh material is the same.
-- The glTF material gives a `metallicRoughnessTexture` but no `metallicFactor`/`roughnessFactor`, so both factors default to 1.0.
-- A fully metallic surface takes the light's colour, so the cyan aura light tints the whole body. Forcing `metallic` to 0 alone only partly reduced the wash; the aura must go or be made far weaker on Forward+.
-- The rest of that material was opaque: transparency DISABLED, depth draw opaque-only, cull disabled, blend mix, albedo alpha 1.0. The alpha-scissor value (0.5) is unused because transparency is off. It had no refraction, SSS, backlight, rim or clearcoat, and emission was additive at energy 0.08.
+**Correction (metallic is not a factor):** the captain's material reports `metallic` 1.00 and `roughness` 1.00, the glTF defaults because the factors are absent. But the glTF binds a `metallicRoughnessTexture` whose blue (metallic) channel averages 0.01, and glTF multiplies the factor by that texture. So the effective metallic is about 0.01: the otter is not metal. That fits the result of forcing `metallic` to 0, which changed almost nothing. An earlier version of this note called metallic a contributing factor; that was wrong, because my runtime dump did not record the bound metallic texture. See `ralph/reports/GPU-PASS/meshy-metallic-audit.txt`.
 
+The rest of that material was opaque: transparency DISABLED, depth draw opaque-only, cull disabled, blend mix, albedo alpha 1.0. The alpha-scissor value (0.5) is unused because transparency is off. It had no refraction, SSS, backlight, rim or clearcoat, and emission was additive at energy 0.08.
 **What did not cause it:**
 - The line-of-sight fade (with its r13 change reverted, still ghostly);
 - the water wall, fan and spray cues (opacities set to 0, still ghostly);
@@ -25,7 +22,7 @@
 |---|---|---|
 | r13 as is | ghost: pale cyan veil, bright cyan rim | solid brown |
 | `cue_boss_aura` false | **solid brown, no rim** | solid brown |
-| captain `metallic` → 0 | slightly browner, still veiled | – |
+| captain `metallic` → 0 | nearly unchanged, still veiled | – |
 | water wall/fan/spray opacity 0 | ghost | – |
 | line-of-sight fade reverted | ghost | – |
 | Low (Compatibility), r13 as is | solid | solid |
@@ -33,7 +30,6 @@
 ## Suggested fix (Fights lane)
 
 1. Make the aura Forward+-aware: drop the OmniLight3D's energy, or drop the light, and cut the rim `strength` on Forward+. Alternatively, use the renderer check `graphics_prefs.forward_plus()` from tb/fplus-grade so both renderers show the same rim weight.
-2. Separately, give the captain's imported material a real metallic value. Set `metallicFactor` 0 in the GLB, or set `metallic` 0.0 in the creature's override, so lights do not tint it like metal.
 
 ## Files
 

@@ -1,0 +1,77 @@
+"""Read-only audit (local GPU-pass tool): every GLB under assets/ whose glTF materials
+resolve to metallic >= 0.9. glTF defaults metallicFactor and roughnessFactor to 1.0
+when absent, which a metallicRoughnessTexture does not change (the texture is
+multiplied by the factor)."""
+import io
+import json
+import struct
+import sys
+from pathlib import Path
+
+from PIL import Image, ImageStat
+
+
+def texture_means(doc, data, n, tex_ref):
+    """Mean blue (metallic) and green (roughness) of a bound metallicRoughness texture, 0-1."""
+    try:
+        tex = doc["textures"][tex_ref["index"]]
+        img = doc["images"][tex["source"]]
+        if "bufferView" not in img:
+            return None
+        view = doc["bufferViews"][img["bufferView"]]
+        bin_start = 20 + n + 8
+        raw = data[bin_start + view.get("byteOffset", 0): bin_start + view.get("byteOffset", 0) + view["byteLength"]]
+        im = Image.open(io.BytesIO(raw)).convert("RGB")
+        im.thumbnail((256, 256))
+        mean = ImageStat.Stat(im).mean
+        return mean[2] / 255.0, mean[1] / 255.0
+    except Exception:
+        return None
+
+root = Path(sys.argv[1])
+out = Path(sys.argv[2])
+rows = []
+scanned = 0
+for glb in sorted(root.rglob("*.glb")):
+    data = glb.read_bytes()
+    if len(data) < 20 or data[:4] != b"glTF":
+        continue
+    scanned += 1
+    n = struct.unpack("<I", data[12:16])[0]
+    try:
+        doc = json.loads(data[20:20 + n])
+    except ValueError:
+        rows.append((str(glb.relative_to(root.parent)), "?", "unparsed", "", "", "", "", ""))
+        continue
+    gen = str(doc.get("asset", {}).get("generator", ""))
+    meshy = "meshy" in str(glb).lower() or "meshy" in gen.lower()
+    for i, m in enumerate(doc.get("materials", [])):
+        pbr = m.get("pbrMetallicRoughness", {})
+        metallic = float(pbr.get("metallicFactor", 1.0))
+        rough = float(pbr.get("roughnessFactor", 1.0))
+        if metallic < 0.9:
+            continue
+        tex = pbr.get("metallicRoughnessTexture")
+        means = texture_means(doc, data, n, tex) if tex else None
+        eff = metallic * means[0] if means else metallic
+        tex_col = ("yes (mean B %.2f, G %.2f)" % means) if means else ("yes (not decoded)" if tex else "no")
+        rows.append((str(glb.relative_to(root.parent)).replace("\\", "/"), m.get("name", f"material_{i}"),
+                     f"{metallic:.2f}" + ("" if "metallicFactor" in pbr else " (default)"),
+                     f"{rough:.2f}" + ("" if "roughnessFactor" in pbr else " (default)"),
+                     tex_col, f"{eff:.2f}",
+                     "meshy" if meshy else "other", gen))
+meshy_rows = [r for r in rows if r[6] == "meshy"]
+hot = [r for r in rows if r[5] and float(r[5]) >= 0.5]
+lines = [
+    "# Meshy/GLB metallic audit (read-only), GPU pass 22 Oct 2026",
+    f"# Scanned {scanned} GLB files under {root.name}/; {len(rows)} materials resolve to metallic >= 0.9 "
+    f"({len(meshy_rows)} in Meshy assets, by path or generator).",
+    "# metallic/roughness '(default)' = factor absent in the glTF, so 1.0 by spec. A bound metallicRoughnessTexture is",
+    "# multiplied by that factor; Godot imports the factor as `metallic` and the texture's blue channel as metallic_texture.",
+    f"# {len(hot)} of them have an EFFECTIVE mean metallic >= 0.5 (factor x texture blue mean): these render as metal.",
+    "# columns: path | material | metallic factor | roughness factor | metallicRoughnessTexture | effective mean metallic | source | generator",
+]
+for r in sorted(rows, key=lambda r: (-(float(r[5]) if r[5] else 0.0), r[0])):
+    lines.append(" | ".join(r))
+out.write_text("\n".join(lines) + "\n", encoding="utf-8")
+print(f"scanned={scanned} flagged={len(rows)} meshy={len(meshy_rows)} effective>=0.5: {len(hot)} -> {out}")
