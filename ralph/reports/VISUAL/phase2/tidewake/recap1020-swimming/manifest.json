@@ -1,0 +1,74 @@
+{
+	"biome": "tidewake",
+	"complete": true,
+	"display_server": "X11",
+	"frames": [
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020-swimming/west_dry_approach.png",
+			"id": "west_dry_approach",
+			"player_position": "(57.36812, 1.931218, 151.5021)",
+			"stamina": 100.0,
+			"state": "dry",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020-swimming/surface_west.png",
+			"id": "surface_west",
+			"player_position": "(66.07633, -0.700431, 174.4994)",
+			"stamina": 97.7133333333333,
+			"state": "swimming",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020-swimming/entry.png",
+			"id": "entry",
+			"player_position": "(66.58588, -0.700044, 175.0195)",
+			"stamina": 96.9666666666667,
+			"state": "swimming",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020-swimming/surface_mid.png",
+			"id": "surface_mid",
+			"player_position": "(76.0551, -0.7, 169.5334)",
+			"stamina": 88.7533333333333,
+			"state": "swimming",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020-swimming/surface_far.png",
+			"id": "surface_far",
+			"player_position": "(86.0446, -0.7, 163.5335)",
+			"stamina": 80.1666666666666,
+			"state": "swimming",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020-swimming/surface_east.png",
+			"id": "surface_east",
+			"player_position": "(118.0819, -0.7, 144.2879)",
+			"stamina": 52.8696999999991,
+			"state": "swimming",
+			"time": "day"
+		},
+		{
+			"file": "res://ralph/reports/VISUAL/phase2/tidewake/recap1020-swimming/east_dry_exit.png",
+			"id": "east_dry_exit",
+			"player_position": "(102.5756, 1.922629, 125.4977)",
+			"stamina": 100.0,
+			"state": "dry",
+			"time": "day"
+		}
+	],
+	"rendering_method": "gl_compatibility",
+	"repro_args": [
+		"--seed=2042"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"seed": 2042,
+	"system": "swimming"
+}

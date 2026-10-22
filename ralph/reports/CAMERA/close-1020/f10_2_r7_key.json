@@ -1,0 +1,26 @@
+{
+ "Ba": {
+  "fight": "hollows_alpha",
+  "A": "control_r7"
+ },
+ "Co": {
+  "fight": "capacitor_alpha",
+  "A": "candidate_r7"
+ },
+ "Du": {
+  "fight": "crown_guardian",
+  "A": "candidate_r7"
+ },
+ "Fe": {
+  "fight": "old_rodfolk_hall_guardian",
+  "A": "control_r7"
+ },
+ "Gi": {
+  "fight": "blackwater_elder",
+  "A": "candidate_r7"
+ },
+ "Ho": {
+  "fight": "glass_field_alpha",
+  "A": "control_r7"
+ }
+}

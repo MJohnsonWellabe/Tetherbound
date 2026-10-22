@@ -173,7 +173,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
      "status": "done",
-     "note": "12 Oct 11:39 AM: no clipping in the current build"
+     "note": "21 Oct: three-judge 7.35 CPU-provisional (ralph/reports/UI/close-1020/NOTE.md); GPU pass confirms 7.5"
     },
     {
      "id": "P2-034",
@@ -292,8 +292,8 @@
      "fix_class": "material",
      "biomes": "meadows;stormwood;cloudreach",
      "owner": "Codex",
-     "status": "open",
-     "note": "Catalog: open"
+     "status": "done",
+     "note": "21 Oct: CPU-provisional PASS 6.83 vs 4.77, FIXED x3 (ralph/reports/SHARED-ART/close-1020/NOTE.md); GPU pass confirms 7.5"
     },
     {
      "id": "P2-020",
@@ -424,8 +424,8 @@
      "fix_class": "mesh",
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Codex",
-     "status": "open",
-     "note": "Catalog: open"
+     "status": "done",
+     "note": "21 Oct: CPU-provisional PASS 6.73 vs 3.5, FIXED x3, ON in #701 (ralph/reports/LOOK/close-1020/F38-items-r1.md); GPU pass confirms 7.5"
     },
     {
      "id": "P2-079",
@@ -449,7 +449,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
      "status": "done",
-     "note": "Catalog: fixed"
+     "note": "21 Oct: three-judge 7.35 CPU-provisional (ralph/reports/UI/close-1020/NOTE.md); GPU pass confirms 7.5"
     },
     {
      "id": "P2-050",
@@ -1183,7 +1183,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
      "status": "done",
-     "note": "12 Oct 11:39 AM: no clipping in the current build"
+     "note": "21 Oct: three-judge 7.35 CPU-provisional (ralph/reports/UI/close-1020/NOTE.md); GPU pass confirms 7.5"
     },
     {
      "id": "P2-060",
@@ -1278,8 +1278,8 @@
      "fix_class": "material",
      "biomes": "meadows;stormwood;cloudreach",
      "owner": "Codex",
-     "status": "open",
-     "note": "Catalog: open"
+     "status": "done",
+     "note": "21 Oct: CPU-provisional PASS 6.83 vs 4.77, FIXED x3 (ralph/reports/SHARED-ART/close-1020/NOTE.md); GPU pass confirms 7.5"
     },
     {
      "id": "P2-025",
@@ -1374,8 +1374,8 @@
      "fix_class": "mesh",
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Codex",
-     "status": "open",
-     "note": "Catalog: open"
+     "status": "done",
+     "note": "21 Oct: CPU-provisional PASS 6.73 vs 3.5, FIXED x3, ON in #701 (ralph/reports/LOOK/close-1020/F38-items-r1.md); GPU pass confirms 7.5"
     },
     {
      "id": "P2-106",
@@ -1399,7 +1399,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
      "status": "done",
-     "note": "Catalog: fixed"
+     "note": "21 Oct: three-judge 7.35 CPU-provisional (ralph/reports/UI/close-1020/NOTE.md); GPU pass confirms 7.5"
     },
     {
      "id": "P2-076",
@@ -1730,7 +1730,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
      "status": "done",
-     "note": "12 Oct 11:39 AM: no clipping in the current build"
+     "note": "21 Oct: three-judge 7.35 CPU-provisional (ralph/reports/UI/close-1020/NOTE.md); GPU pass confirms 7.5"
     },
     {
      "id": "P2-046",
@@ -1849,8 +1849,8 @@
      "fix_class": "material",
      "biomes": "meadows;stormwood;cloudreach",
      "owner": "Codex",
-     "status": "open",
-     "note": "Catalog: open"
+     "status": "done",
+     "note": "21 Oct: CPU-provisional PASS 6.83 vs 4.77, FIXED x3 (ralph/reports/SHARED-ART/close-1020/NOTE.md); GPU pass confirms 7.5"
     },
     {
      "id": "P2-031",
@@ -1945,8 +1945,8 @@
      "fix_class": "mesh",
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Codex",
-     "status": "open",
-     "note": "Catalog: open"
+     "status": "done",
+     "note": "21 Oct: CPU-provisional PASS 6.73 vs 3.5, FIXED x3, ON in #701 (ralph/reports/LOOK/close-1020/F38-items-r1.md); GPU pass confirms 7.5"
     },
     {
      "id": "P2-096",
@@ -1958,7 +1958,7 @@
      "biomes": "meadows;cloudreach;stormwood",
      "owner": "Claude (UI, F42)",
      "status": "done",
-     "note": "Catalog: fixed"
+     "note": "21 Oct: three-judge 7.35 CPU-provisional (ralph/reports/UI/close-1020/NOTE.md); GPU pass confirms 7.5"
     },
     {
      "id": "P2-056",

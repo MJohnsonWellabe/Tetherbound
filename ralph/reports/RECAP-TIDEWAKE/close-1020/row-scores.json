@@ -1,0 +1,2576 @@
+{
+ "schema_version": 1,
+ "criterion": "F39#0",
+ "biome": "Tidewake",
+ "bar": "Bar A 7.5; CPU-provisional 6.7 (owner 17 Oct); rows need not pass for F39#0",
+ "renderer": "Low/Compatibility gl_compatibility on Mesa llvmpipe (CPU), 1920x1080; High/Medium GPU pass owed",
+ "source_commit": "f6e822826d8f6c2d54e8151e51825288b0d24651",
+ "judges": "three independent code-blind Agent subagents per pass; each saw only contact sheets, ART_DIRECTION excerpts (bar.md), docs/reference boards/Palworld shots and the row defect texts",
+ "passes": {
+  "pass1": "230-frame F39 landscape recapture (12 sheets)",
+  "pass2": "supplementals: creatures 91, UI 12, currents 16, swimming 7, mounted swim 17, camps 9, Venn fight 40 (12 sheets)",
+  "pass3": "14 remaining rows: pickups 23, late Venn fight 48 (Riverdrake/Riptusk) (3 sheets)"
+ },
+ "overall": {
+  "pass1": {
+   "bar_a": [
+    4.6,
+    4.1,
+    3.8
+   ],
+   "bar_b": [
+    4.2,
+    3.5,
+    3.2
+   ],
+   "bar_a_mean": 4.17,
+   "bar_b_mean": 3.63,
+   "bar_a_spread": 0.8
+  },
+  "pass2": {
+   "bar_a": [
+    4.8,
+    4.7,
+    5.2
+   ],
+   "bar_b": [
+    4.2,
+    4.2,
+    4.5
+   ],
+   "bar_a_mean": 4.9,
+   "bar_b_mean": 4.3,
+   "bar_a_spread": 0.5
+  },
+  "pass3": {
+   "bar_a": [
+    5.6,
+    5.6,
+    5.4
+   ],
+   "bar_b": [
+    5.0,
+    4.8,
+    4.6
+   ],
+   "bar_a_mean": 5.53,
+   "bar_b_mean": 4.8,
+   "bar_a_spread": 0.2
+  }
+ },
+ "top_changes": {
+  "judge1": {
+   "pass1": [
+    {
+     "change": "Populate named destinations with real landmark structures (Reedhaven woven hall, Shellwatch jetty/dock, Salt Crown shrine, Deep Watch lookout, Lantern Cove arch, a taller Gull Rest spire) plus lived-in dock dressing (boats, nets, lanterns, huts) so each island reads as a destination rather than an empty dune",
+     "kind": "new_art"
+    },
+    {
+     "change": "Rebuild Veilfall as the board's monumental tiered mountain (multiple falls, green ledges, arch/bridge, base spray) and fix the smeared stretched cliff textures and hard light slabs at the cascade and crown destinations",
+     "kind": "new_art"
+    },
+    {
+     "change": "Replace the stepping-disc chain and white dashed guide lines with natural sandbars, rocks and soft foam current streaks; add damp dark shore bands, wet rock outcrops, shrubs and sheltered tree pockets to break up the repeated bare dune domes and flat shadowed slopes",
+     "kind": "scene"
+    }
+   ],
+   "pass2": [
+    {
+     "change": "Replace the live/restored current decals (dashed white lane lines and chevrons that read as road markings) with a flow-foam/ripple surface treatment that follows the channel and visibly calms on restoration, plus a restored-state colour/sandbar change",
+     "kind": "scene"
+    },
+    {
+     "change": "Rebuild Veilfall as a monumental hero landmark: stacked green-capped cliffs with several broad white falls, base spray and an arch entrance per the stronghold board, replacing the dark rectangular tower with one thin streak",
+     "kind": "new_art"
+    },
+    {
+     "change": "Fight presentation cleanup: swap the flat sprawling magenta ellipses for grounded terrain-conforming telegraphs, remove raw debug strings (combat_char..., combat_quick...) and overlapping prompt text, texture the flat gray cliff and soften the hard tiled grass/sand edge in the Venn arena",
+     "kind": "scene"
+    }
+   ],
+   "pass3": [
+    {
+     "change": "Replace the flat magenta rectangle/lane and ring telegraphs in the fight frames (tell-start-059.30, t-084.02, t-090.02, t-105.02, tell-start-110.02) with grounded, terrain-conforming or volumetric telegraphs, and tone down the saturated orange-ochre fight-arena sand toward the pale warm dune palette used in the exploration frames",
+     "kind": "scene"
+    },
+    {
+     "change": "Give every world pickup a real pickup-range silhouette: larger distinct item meshes per class (tonic bottle, berry cluster, orb, TM disc, pack, candy tiers by shape and size) on a small grounded base or marker instead of uniform sparkle glints, plus readable harvest nodes (the sluice metal node is near-invisible)",
+     "kind": "new_art"
+    },
+    {
+     "change": "Add mid-ground and near-rail density to the dune islands: driftwood, dune fencing, reeds, shrub pockets, dock and sluice structures and clutter so the frames are not mostly empty flat sand, and bring Veilfall closer with spray and contrast in the distance",
+     "kind": "new_art"
+    }
+   ]
+  },
+  "judge2": {
+   "pass1": [
+    {
+     "change": "Replace Veilfall with a monumental hero mountain matching the board: stacked green-topped cliffs, multiple broad cascades, spray base and a visible arched entrance; fix the Veilfall cascade/crown approach where stretched grey rock textures smear across the screen and the crown is a featureless noise wall.",
+     "type": "new_art"
+    },
+    {
+     "change": "Build out each named destination with a real landmark set piece (Reedhaven woven hall, Shellwatch jetty, Salt Crown shrine, Lantern Cove arch, Gull Rest spire, Drowned Garden terraces, twin pumps) plus docks, boats and warm inhabited props, so islands stop reading as identical empty dunes.",
+     "type": "new_art"
+    },
+    {
+     "change": "Shore and water material pass: damp darker sand band, wet dark rock outcrops, reeds/shrub pockets and texture on large dune faces; depth-graded water with sea haze between islands; replace dashed white current lines and disc stepping stones with organic foam/flow and irregular sandbars.",
+     "type": "scene"
+    }
+   ],
+   "pass2": [
+    {
+     "change": "Replace the dashed-lane current markings with flowing foam/ripple bands that follow the water (scrolling normal-map streaks, foam trails, debris drift), and give restoration a visible calm-water/sandbar/colour payoff",
+     "type": "scene"
+    },
+    {
+     "change": "Build Veilfall as the board's tiered, vegetated monumental mountain with multiple layered falls, base spray and arched entrance, readable from First Shore",
+     "type": "new_art"
+    },
+    {
+     "change": "Rework shiny materials to a hue-shifted palette that preserves species pattern (no flat magenta), and author distinct swim/hurt/moving/faint/rest poses plus grounded volumetric telegraphs instead of flat pink rings",
+     "type": "scene"
+    }
+   ],
+   "pass3": [
+    {
+     "change": "Give every pickup and harvest node a distinct, 2-3x larger world silhouette (bottle, scroll/disc for TMs, pack, ore vein, candy tiers by shape+size) with a grounded base and restrained glow instead of interchangeable sparkle dots",
+     "kind": "new_art"
+    },
+    {
+     "change": "Break up the flat uniform pale dune plane and fight arena: add dune ridges/wind ripples at scale, damp darker shoreline bands, driftwood, shrubs and wet rock clusters, and replace the hard grass/sand boundary and the bare grey cliff wall in the fight with dressed salt rock and dune-grass transitions",
+     "kind": "scene"
+    },
+    {
+     "change": "De-clutter and shrink the fight HUD (five stacked panels cover ~35% of the frame) and replace the flat magenta outline telegraph rings/rectangles with grounded terrain-conforming decals so creatures and tells read through the frame",
+     "kind": "scene"
+    }
+   ]
+  },
+  "judge3": {
+   "pass1": [
+    {
+     "change": "Build the named destinations as real landmarks: woven hall, drift arch, rescue jetty and docks with lived-in dressing and warm lights, signal spire, terraces, twin pumps, lookout; and replace the Veilfall crag with a tiered, vegetated monumental mountain with several broad falls, arches and base spray per the stronghold board.",
+     "kind": "new_art"
+    },
+    {
+     "change": "Fix the Veilfall cascade and crown areas: remove the badly stretched noisy rock textures and the Meadow-green ground, use wet dark rock and dune/salt materials, add falls spray volume and keep the camera from clipping into rock walls; also stop the brown creature body filling the Tidal Cradle 90-degree view.",
+     "kind": "scene"
+    },
+    {
+     "change": "Break the uniform sand mounds and flat sea: damp darker shore bands, rock outcrops, driftwood, sheltered shrub/woodland pockets and varied dune forms; replace the disc stepping-stones and white guide lines with natural sandbars and foam current; add depth/reef colour variation and sea haze across distant islands.",
+     "kind": "scene"
+    }
+   ],
+   "pass2": [
+    {
+     "change": "Replace the dashed white lane-line/chevron current markings with a flow-mapped water surface (foam ribbons, ripple normals, drifting debris and darker channel colour), and make restoration visibly calm the surface and shoreline instead of only dimming lines.",
+     "type": "scene"
+    },
+    {
+     "change": "Build a hero Veilfall mountain matching the stronghold board: tiered cliff masses with green crowns, several broad falls and base spray, readable from First Shore; add natural shore ecology (rocks, driftwood, shrub pockets, varied sandbar shapes) to the flat dune islands.",
+     "type": "new_art"
+    },
+    {
+     "change": "Fix creature presentation polish: per-species hue-shift shinies instead of flat magenta overrides, distinct moving/hurt/rest poses, a grounded volumetric telegraph instead of thin magenta ellipses, and fight spacing that keeps the trainer out of creature bodies; also remove the floating saddle after dismount and the raw 'combat_char...' label keys in the fight HUD.",
+     "type": "scene"
+    }
+   ],
+   "pass3": [
+    {
+     "change": "Replace the flat magenta wind-up rings and rectangular slabs in the Riptusk/Riverdrake fight (e.g. t-084.02, t-090.02, tell-start-059.30, t-153.00) with grounded, terrain-conforming or volumetric telegraphs; they still read as flat pink decals laid over the sand and break the bar's explicit no-flat-magenta rule.",
+     "kind": "scene"
+    },
+    {
+     "change": "Give pickups a proper pickup-range silhouette: larger per-item meshes (bottle, wrapped candy by tier colour and size, disc for TMs, pack/torch shapes) instead of tiny glowing specks, plus a soft ground ring or light pillar so items read before the label at the normal camera.",
+     "kind": "new_art"
+    },
+    {
+     "change": "Rebalance the fight-arena grade and dressing: the sand goes saturated orange and the grass a flat lime under harsh light, and the arena is an empty open slope. Shift it back to the pale warm dune palette of the travel frames, add near rails (driftwood, salt rock, reeds) and bring Veilfall and the docks into the frame as a distance read.",
+     "kind": "scene"
+    }
+   ]
+  }
+ },
+ "counts": {
+  "SCORED": 33,
+  "NO_CURRENT_EVIDENCE": 11
+ },
+ "rows": [
+  {
+   "item_id": "P2-008",
+   "subject": "shore landforms",
+   "original_defect": "Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions",
+   "judges_scoring": 3,
+   "bar_a_mean": 5.0,
+   "spread": 1.0,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 5,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_01:first_shore_02:0",
+      "day_02:shellwatch_07:0",
+      "day_02:brine_steps_06:0",
+      "day_03:sluice_isle_13:0",
+      "day_06:deep_watch_23:45",
+      "day_03:salt_crown_11:-45"
+     ],
+     "reason": "Grassy domes with gray rock skirts are gone; islands are now pale rippled dune sand with sparse beach-grass clumps, matching the owner dunes ruling. But landforms are still repeated smooth featureless dune domes with no damp dark shore band, wet rock, wrack line, shrubs or sheltered woodland pockets, and some slopes (deep_watch_23, salt_crown_11, tidal_cradle_09) are huge flat walls in heavy uniform shadow. | Islands now read as pale warm dune sand with foam-ringed shallows instead of grassy domes on gray skirts, but the dunes are smooth uniform mounds with sparse grass tufts, little damp-edge darkening or sheltered shrub pockets, so shore ecology is still thin."
+    },
+    "judge2": {
+     "bar_a_score": 4.5,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_01:first_shore_01:0",
+      "day_01:reedhaven_03:0",
+      "day_02:shellwatch_07:0",
+      "day_03:salt_crown_11:-45",
+      "day_06:deep_watch_23:45",
+      "day_05:gull_rest_20:90"
+     ],
+     "reason": "The grassy domes with grey rock skirts are gone and islands now read as pale dunes with sparse beach grass, matching the dunes ruling. But every island is the same smooth unlayered sand mound with no damp darker shore band, wet rock, marsh, shrub pockets or strata, and huge untextured shadowed dune faces (Deep Watch lookout, Salt Crown, Tidal Cradle) read as blank geometry. | Islands now read as pale dune sand with sparse beach-grass clumps and some shrub/tree pockets, matching the dunes ruling; but dunes are smooth untextured mounds with uniform sand colour, no wet dark shore band or salt rock layering, and offshore islets are identical flat sand ovals."
+    },
+    "judge3": {
+     "bar_a_score": 5.5,
+     "severity": 2.5,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_01:first_shore_01:0",
+      "day_02:brine_steps_06:0",
+      "day_02:shellwatch_07:0",
+      "day_03:sluice_isle_13:0",
+      "day_05:gull_rest_20:0",
+      "sup_creatures_1:water__cannonback__idle"
+     ],
+     "reason": "The grassy domes with gray rock skirts are gone; islands are now pale rippled dune sand with sparse beach-grass clusters, matching the dunes ruling. But every island is the same smooth sand mound with no damp darker shore band, no rock, shrub or woodland pockets and abrupt water-to-sand edges, so layered shore ecology is still missing. | Islands now read as broad pale dune sand with sparse upright beach-grass clumps and damp darker shore edges, matching the dunes ruling; the grassy-dome/grey-skirt look is gone. Landforms are still smooth featureless sand humps with few rocks, driftwood or shrub pockets, so shore ecology layering remains thin."
+    }
+   }
+  },
+  {
+   "item_id": "P2-016",
+   "subject": "creature hurt and movement poses",
+   "original_defect": "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename",
+   "judges_scoring": 3,
+   "bar_a_mean": 4.0,
+   "spread": 0,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 4,
+     "severity": 3,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_creatures_3:water__mosshell__idle",
+      "sup_creatures_3:water__mosshell__moving",
+      "sup_creatures_3:water__mosshell__hurt",
+      "sup_creatures_1:water__cannonback__hurt",
+      "sup_creatures_1:water__cannonback__moving",
+      "sup_creatures_3:water__ripplet__hurt"
+     ],
+     "reason": "Mosshell idle, moving and hurt are effectively the same silhouette, and Cannonback/Aquaryn hurt and moving differ only slightly from idle; Ripplet hurt shows a small hunch but states still need the filename to read."
+    },
+    "judge2": {
+     "bar_a_score": 4.0,
+     "severity": 3,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_creatures_3:water__ripplet__idle",
+      "sup_creatures_3:water__ripplet__moving",
+      "sup_creatures_3:water__mosshell__idle",
+      "sup_creatures_3:water__mosshell__moving",
+      "sup_creatures_2:water__cragclaw__moving",
+      "sup_creatures_1:water__cannonback__hurt"
+     ],
+     "reason": "Moving frames for Ripplet, Mosshell, Cragclaw, Torrentoad and Riptusk are near-identical to idle; hurt reads only slightly (Riverdrake, Mangrove Monitor lean) while Mosshell/Cannonback hurt keep the idle silhouette."
+    },
+    "judge3": {
+     "bar_a_score": 4,
+     "severity": 3,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_creatures_1:water__cannonback__idle",
+      "sup_creatures_1:water__cannonback__moving",
+      "sup_creatures_3:water__ripplet__idle",
+      "sup_creatures_3:water__ripplet__moving",
+      "sup_creatures_3:water__riptusk__moving",
+      "sup_creatures_3:water__mosshell__hurt"
+     ],
+     "reason": "Idle and moving cells for Cannonback, Ripplet, Riptusk and Mosshell are near-identical silhouettes; hurt frames differ only slightly (small head tilt), so the state is still unreadable without the label."
+    }
+   }
+  },
+  {
+   "item_id": "P2-002",
+   "subject": "map",
+   "original_defect": "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations",
+   "judges_scoring": 3,
+   "bar_a_mean": 2.0,
+   "spread": 0,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 2,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_ui:menu_map"
+     ],
+     "reason": "The map canvas is a black rectangle with a single position marker and 'Surveyed: 0%'; no terrain, coastline, islands or roads are drawn."
+    },
+    "judge2": {
+     "bar_a_score": 2.0,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_ui:menu_map"
+     ],
+     "reason": "Map canvas is a black rectangle with one octagonal marker and no terrain, coastline, islands or route context; 'Surveyed 0%' leaves it unusable as a picture."
+    },
+    "judge3": {
+     "bar_a_score": 2,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_ui:menu_map"
+     ],
+     "reason": "The Map tab shows a large black canvas with a single hex marker and 'Surveyed: 0%'; no terrain, coastline or route context is drawn."
+    }
+   }
+  },
+  {
+   "item_id": "P2-030",
+   "subject": "shiny creature finish",
+   "original_defect": "Several shiny variants become near-uniform hot magenta and lose their ordinary species material and pattern identity",
+   "judges_scoring": 3,
+   "bar_a_mean": 3.0,
+   "spread": 0,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 3,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_creatures_1:water__abyssal_guardian__shiny_idle",
+      "sup_creatures_2:water__cragclaw__shiny_idle",
+      "sup_creatures_2:water__mangrove_monitor__shiny_idle",
+      "sup_creatures_4:water__riverdrake__shiny_idle",
+      "sup_creatures_4:water__sirenseal__shiny_idle",
+      "sup_creatures_5:water__torrentoad__shiny_idle"
+     ],
+     "reason": "Six of thirteen shinies (Abyssal Guardian, Cragclaw, Mangrove Monitor, Riverdrake, Sirenseal, Torrentoad) are flat saturated hot magenta blobs with no pattern or material identity; Mosshell, Ripplet, Tidecoil and Cannonback shinies keep their species read."
+    },
+    "judge2": {
+     "bar_a_score": 3.0,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_creatures_1:water__abyssal_guardian__shiny_idle",
+      "sup_creatures_2:water__cragclaw__shiny_idle",
+      "sup_creatures_2:water__mangrove_monitor__shiny_idle",
+      "sup_creatures_4:water__riverdrake__shiny_idle",
+      "sup_creatures_4:water__sirenseal__shiny_idle",
+      "sup_creatures_5:water__torrentoad__shiny_idle"
+     ],
+     "reason": "Abyssal Guardian, Cragclaw, Mangrove Monitor, Riverdrake, Sirenseal and Torrentoad shinies are flat saturated hot magenta that erase pattern and material; only Mosshell, Cannonback, Tidecoil and Riptusk keep a species-legible palette shift."
+    },
+    "judge3": {
+     "bar_a_score": 3,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_creatures_1:water__abyssal_guardian__shiny_idle",
+      "sup_creatures_2:water__cragclaw__shiny_idle",
+      "sup_creatures_2:water__mangrove_monitor__shiny_idle",
+      "sup_creatures_4:water__riverdrake__shiny_idle",
+      "sup_creatures_4:water__sirenseal__shiny_idle",
+      "sup_creatures_5:water__torrentoad__shiny_idle"
+     ],
+     "reason": "Abyssal Guardian, Cragclaw, Mangrove Monitor, Riverdrake, Sirenseal and Torrentoad shinies are flat uniform hot magenta that erase all pattern and material; only some (Mosshell orange shell, Ripplet pink, Tidecoil teal, Aquaryn lavender) keep species identity."
+    }
+   }
+  },
+  {
+   "item_id": "P2-033",
+   "subject": "ground pickup identity",
+   "original_defect": "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance",
+   "judges_scoring": 3,
+   "bar_a_mean": 3.67,
+   "spread": 0.5,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 4,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass3"
+     ],
+     "evidence": [
+      "sup_pickups:water__inventory__pickup__attack_tonic",
+      "sup_pickups:water__inventory__pickup__berries",
+      "sup_pickups:water__inventory__pickup__orb_greater",
+      "sup_pickups:water__inventory__pickup__tm_aqua_shot",
+      "sup_pickups:water__inventory__pickup__travel_pack",
+      "sup_pickups:water__inventory__harvest__sluice_metal"
+     ],
+     "reason": "Pickups are still tiny (roughly 10-15 px) sparkle-glow blobs on pale sand; tonic, berries, orb, TMs and travel pack all read as the same small glowing pinprick, and the sluice-metal node is a barely visible grey sliver. Only the pink tide-bloom flower and the black skill candies have a distinct silhouette."
+    },
+    "judge2": {
+     "bar_a_score": 3.5,
+     "severity": 3.5,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass3"
+     ],
+     "evidence": [
+      "day_02:shellwatch_08:180",
+      "day_02:brine_steps_06:0",
+      "day_05:lantern_cove_18:0",
+      "sup_pickups:water__inventory__pickup__berries.jpg",
+      "sup_pickups:water__inventory__pickup__cloudreach_trail_preserve.jpg",
+      "sup_pickups:water__inventory__pickup__orb_greater.jpg"
+     ],
+     "reason": "Only generic crates, barrels and small dark scattered pebbles/props sit on the sand; nothing in frame reads as an identifiable pickup at camera distance. | Most pickups are still tiny (roughly 10-20 px) glowing blobs or sparkles on the sand; trail preserve, TM riptide lance, TM tidal burst and leviathan surge all read as the same small orange-white glowing dot, and travel_pack is barely findable in the grass. Harvest nodes (sluice metal, reef stone) are small grey lumps with no pickup-range silhouette, though tide_bloom's pink flower does read."
+    },
+    "judge3": {
+     "bar_a_score": 3.5,
+     "severity": 3,
+     "assessment": "IMPROVED/PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass3"
+     ],
+     "evidence": [
+      "day_05:lantern_cove_18:45",
+      "day_01:first_shore_01:-45",
+      "day_02:shellwatch_08:90",
+      "sup_pickups:water__inventory__pickup__attack_tonic.jpg",
+      "sup_pickups:water__inventory__pickup__orb_greater.jpg",
+      "sup_pickups:water__inventory__pickup__rare_candy.jpg"
+     ],
+     "reason": "Only tiny dark lumps, small orange specks and generic crates sit on the sand; at the gameplay camera none has a readable item silhouette distinct from scattered pebbles. | Pickups now differ in tint (pink berries, teal tonics, black skill candies, a yellow rare candy), but nearly all are still finger-sized glowing specks a few pixels across at the gameplay camera. Orb_greater, the TMs, torch and travel_pack read as the same small white glow, and sluice_metal is an unreadable dark fleck on the sand."
+    }
+   }
+  },
+  {
+   "item_id": "P2-010",
+   "subject": "Veilfall silhouette",
+   "original_defect": "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks",
+   "judges_scoring": 3,
+   "bar_a_mean": 3.67,
+   "spread": 0.5,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 3.5,
+     "severity": 4,
+     "assessment": "IMPROVED/PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_04:sluice_isle_14:0",
+      "day_05:drowned_garden_21:0",
+      "day_01:first_shore_02:-45",
+      "day_04:veilfall_15:-45",
+      "day_04:veilfall_16:-45",
+      "night_04:veilfall_15:180"
+     ],
+     "reason": "From distance Veilfall is now a faceted stacked-rock pillar with one bright central fall instead of a dark cone, but it is a single narrow streak with no tiers, greenery, arch, bridge or base spray, and it reads small against the board's monumental multi-fall mountain. Up close (veilfall_15/16) the cliff is smeared, stretched gray textures and hard-edged light slabs, and the crown is a noisy black/blue rock wall. | Veilfall reads as a dark near-rectangular rock tower with one thin straight white streak at distance; the close S3 view shows a wider fall against faceted gray rock but no green tiers, multiple cascades, arch or base spray from the stronghold board."
+    },
+    "judge2": {
+     "bar_a_score": 3.5,
+     "severity": 4,
+     "assessment": "IMPROVED/PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_04:sluice_isle_14:0",
+      "day_04:sluice_isle_14:-45",
+      "day_05:drowned_garden_21:0",
+      "day_01:first_shore_02:0",
+      "night_05:drowned_garden_21:0",
+      "sup_current:S2_live_t0"
+     ],
+     "reason": "Veilfall is now a cluster of grey columnar rock pillars rather than a dark cone, visible from First Shore, but it is still a bare stone stack with one thin white stripe, no stacked cascades, greenery, arches, spray base or entrance, and it is small and hazed on the horizon versus the board's monumental waterfall mountain. | Veilfall is a dark blocky rock tower with a single thin white streak from distance and a flat white-quad cascade beside a dark faceted cliff close up; nothing approaches the board's tiered, green-capped, multi-fall monument with arch and spray."
+    },
+    "judge3": {
+     "bar_a_score": 4,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_04:sluice_isle_14:0",
+      "day_05:drowned_garden_21:0",
+      "day_01:first_shore_02:0",
+      "night_04:sluice_isle_14:0",
+      "sup_current:S2_live_t0",
+      "sup_current:S3_live_t0"
+     ],
+     "reason": "Veilfall is no longer a clean geometric cone; it now reads as a faceted gray crag with a single white fall. It is still a small bare rock block with one narrow streak, no tiers, greenery, arches or base spray, far from the board's monumental multi-fall mountain. | Up close (S3) Veilfall shows a broad white fall against dark faceted rock, but at distance (S2, creature sheets) it is still a narrow dark stone column with one thin white streak, nothing like the board's tiered, green-crowned multi-fall mountain."
+    }
+   }
+  },
+  {
+   "item_id": "P2-011",
+   "subject": "named destination read",
+   "original_defect": "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces",
+   "judges_scoring": 3,
+   "bar_a_mean": 2.83,
+   "spread": 0.5,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 3,
+     "severity": 3.5,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_01:reedhaven_03:0",
+      "day_02:shellwatch_07:0",
+      "day_05:gull_rest_19:0",
+      "day_04:lantern_cove_17:0",
+      "day_03:sluice_isle_13:0",
+      "day_05:drowned_garden_21:180"
+     ],
+     "reason": "Reedhaven Woven Hall, Shellwatch Rescue Jetty, Salt Crown Tide Shrine and Deep Watch Lookout show only bare dunes with no hall, jetty, shrine or lookout in any heading; Gull Rest's spire is a small wooden lattice tower, Lantern Cove has a smoke column and blue flag but no arch, and the drowned garden 'terraces' are a few dark steps at the frame edge. Sluice Isle pumps are small rusty props on a far ridge. | The only visible destinations are a small white stone arch, a white dome hut and a small beacon on open sand at First Shore; no distinct halls, terraces or lived-in docks are visible."
+    },
+    "judge2": {
+     "bar_a_score": 3.0,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_01:reedhaven_03:0",
+      "day_02:shellwatch_07:0",
+      "day_04:lantern_cove_17:0",
+      "day_05:gull_rest_19:0",
+      "day_05:drowned_garden_21:180",
+      "day_03:sluice_isle_13:0"
+     ],
+     "reason": "Most named destinations are still empty sand slopes: no woven hall at Reedhaven, no jetty at Shellwatch, no shrine at Salt Crown, no arch at Lantern Cove; Gull Rest's spire is a small lattice crate, the Drowned Garden terraces are a faint grey step block, and Sluice Isle's pumps are a small distant rusty silhouette. | Visible destinations are bare sand ovals with a single tree or small prop; only a lone timber beacon and a stone ring gate appear, with no distinct hall, arch or terrace silhouettes."
+    },
+    "judge3": {
+     "bar_a_score": 2.5,
+     "severity": 3.5,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_01:reedhaven_03:0",
+      "day_02:shellwatch_07:0",
+      "day_04:lantern_cove_17:0",
+      "day_05:gull_rest_19:45",
+      "day_05:drowned_garden_21:180",
+      "day_03:sluice_isle_13:0"
+     ],
+     "reason": "Named destinations still read as empty sand slopes: Reedhaven Woven Hall shows no hall, Lantern Cove Drift Arch no arch, Shellwatch Rescue Jetty no jetty, Deep Watch Lookout is a shaded dune trough; Gull Rest's spire is a small wooden lattice and Drowned Garden's terraces are a few blocky steps at the edge of one frame. | The only named destination glimpsed is First Shore, which reads as a small cluster of a stone ring gate, crates and a tent on open sand; no distinct hall, arch or terrace landmark is legible."
+    }
+   }
+  },
+  {
+   "item_id": "P2-071",
+   "subject": "surface swimming trainer pose",
+   "original_defect": "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming",
+   "judges_scoring": 3,
+   "bar_a_mean": 3.83,
+   "spread": 2,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 3,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_swimming:entry",
+      "sup_swimming:surface_west",
+      "sup_swimming:surface_mid",
+      "sup_swimming:surface_far",
+      "sup_swimming:surface_east"
+     ],
+     "reason": "The trainer is upright in the water with both arms raised straight overhead and boots visible beneath the surface in every swim frame, reading as wading or waving for help rather than a horizontal surface stroke."
+    },
+    "judge2": {
+     "bar_a_score": 3.5,
+     "severity": 4,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_swimming:entry",
+      "sup_swimming:surface_mid",
+      "sup_swimming:surface_far",
+      "sup_swimming:surface_west"
+     ],
+     "reason": "Arms are now raised, but the trainer is still bolt-upright with both hands straight overhead and boots/legs visible below the surface; it reads as a stand-up wave or 'help' gesture, not a horizontal swim stroke."
+    },
+    "judge3": {
+     "bar_a_score": 5,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_swimming:entry",
+      "sup_swimming:surface_mid",
+      "sup_swimming:surface_far",
+      "sup_swimming:surface_west"
+     ],
+     "reason": "The trainer now raises both arms in a stroke-like pose inside a foam ring, which no longer reads as relaxed wading, but the body is still fully vertical with legs/boots visible below the surface, so it reads as treading upright rather than a horizontal surface swim."
+    }
+   }
+  },
+  {
+   "item_id": "P2-028",
+   "subject": "creature faint state",
+   "original_defect": "Several fainted aquatic creatures keep raised alert heads or upright crouches instead of reading as defeated",
+   "judges_scoring": 3,
+   "bar_a_mean": 5.0,
+   "spread": 0,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 5,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_creatures_3:water__ripplet__fainted",
+      "sup_creatures_4:water__tidecoil__fainted",
+      "sup_creatures_4:water__riverdrake__fainted",
+      "sup_creatures_1:water__aquaryn__fainted",
+      "sup_creatures_5:water__torrentoad__fainted",
+      "sup_creatures_1:water__cannonback__fainted"
+     ],
+     "reason": "Tidecoil, Riverdrake, Sirenseal, Aquaryn and Mangrove Monitor now lie flat on the ground, but Ripplet still sits in an alert crouch with head raised, Torrentoad faints belly-up, and fainted Cannonback turns bleached white."
+    },
+    "judge2": {
+     "bar_a_score": 5.0,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_creatures_3:water__ripplet__fainted",
+      "sup_creatures_3:water__riptusk__fainted",
+      "sup_creatures_1:water__aquaryn__fainted",
+      "sup_creatures_4:water__tidecoil__fainted",
+      "sup_creatures_5:water__torrentoad__fainted"
+     ],
+     "reason": "Aquaryn, Riptusk, Torrentoad, Sirenseal and Riverdrake now lie collapsed; Ripplet still sits upright with head raised as in idle and Tidecoil keeps a lifted head curve, so the defeat read is inconsistent."
+    },
+    "judge3": {
+     "bar_a_score": 5,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_creatures_3:water__ripplet__fainted",
+      "sup_creatures_3:water__riptusk__fainted",
+      "sup_creatures_1:water__aquaryn__fainted",
+      "sup_creatures_4:water__tidecoil__fainted",
+      "sup_creatures_5:water__torrentoad__fainted"
+     ],
+     "reason": "Riptusk, Aquaryn, Tidecoil and Torrentoad now lie collapsed on the sand, but Ripplet's faint still sits upright with its head raised and alert, and Torrentoad flips belly-up comically."
+    }
+   }
+  },
+  {
+   "item_id": "P2-001",
+   "subject": "menu shell",
+   "original_defect": "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world",
+   "judges_scoring": 3,
+   "bar_a_mean": 4.67,
+   "spread": 1.0,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 4,
+     "severity": 3,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_ui:menu_backpack",
+      "sup_ui:menu_creatures",
+      "sup_ui:menu_save",
+      "sup_ui:menu_settings"
+     ],
+     "reason": "Every tab is the same dark translucent slate panel with thin borders and small gray text over a dimmed world; the Creatures page has a model render, but headers, focus and gold progression accents are weak so hierarchy is flat."
+    },
+    "judge2": {
+     "bar_a_score": 5.0,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_ui:menu_backpack",
+      "sup_ui:menu_creatures",
+      "sup_ui:menu_build",
+      "sup_ui:menu_save"
+     ],
+     "reason": "Menus are now translucent blue-grey over the live world with tabs, cards and a creature portrait, giving some hierarchy; still small type, uniform panel weight and no illustrated or biome flavour."
+    },
+    "judge3": {
+     "bar_a_score": 5,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_ui:menu_backpack",
+      "sup_ui:menu_creatures",
+      "sup_ui:menu_settings"
+     ],
+     "reason": "Menus are now a translucent blue-grey panel over the blurred world with teal tab underline and a creature portrait, giving some scenic connection; hierarchy is still weak, with uniform small grey text and identical boxed rows."
+    }
+   }
+  },
+  {
+   "item_id": "P2-007",
+   "subject": "secondary menu panels",
+   "original_defect": "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button",
+   "judges_scoring": 3,
+   "bar_a_mean": 4.5,
+   "spread": 1,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 5,
+     "severity": 2,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_ui:menu_build",
+      "sup_ui:menu_players",
+      "sup_ui:menu_quest_log",
+      "sup_ui:menu_save"
+     ],
+     "reason": "Build now shows three illustrated cards (Tent, Campfire, Bedroll) and Save lists five slots, but Quests and Players remain a few thin rows with most of the panel empty."
+    },
+    "judge2": {
+     "bar_a_score": 4.5,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_ui:menu_build",
+      "sup_ui:menu_players",
+      "sup_ui:menu_quest_log",
+      "sup_ui:menu_save"
+     ],
+     "reason": "Build now has three illustrated cards and Save has slot rows, but Quests and Players remain mostly empty dark space around a handful of small text lines."
+    },
+    "judge3": {
+     "bar_a_score": 4,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_ui:menu_build",
+      "sup_ui:menu_players",
+      "sup_ui:menu_quest_log",
+      "sup_ui:menu_save"
+     ],
+     "reason": "Build now has three illustrated cards and Players lists seats, but Quests and Players still leave the lower half empty around a few tiny text lines."
+    }
+   }
+  },
+  {
+   "item_id": "P2-055",
+   "subject": "named character silhouettes",
+   "original_defect": "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes",
+   "judges_scoring": 3,
+   "bar_a_mean": 4.08,
+   "spread": 0.25,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 4,
+     "severity": 3,
+     "assessment": "PERSISTS",
+     "pictured": "partial",
+     "passes": [
+      "pass1"
+     ],
+     "evidence": [
+      "day_02:brine_steps_06:45",
+      "day_02:brine_steps_06:180",
+      "day_02:shellwatch_08:90",
+      "day_02:shellwatch_08:180"
+     ],
+     "reason": "The few visible NPCs at Brine Steps and Shellwatch share the same dark bearded hat-and-coat silhouette at multiple positions; named-role distinction is not readable at this distance, though faces/dialogue are not shown."
+    },
+    "judge2": {
+     "bar_a_score": 4.25,
+     "severity": 3,
+     "assessment": "PERSISTS",
+     "pictured": "partial",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_02:brine_steps_06:45",
+      "day_02:shellwatch_08:90",
+      "day_02:shellwatch_08:180",
+      "sup_ui:exploration_hud",
+      "sup_swimming:west_dry_approach",
+      "sup_camps:water_camp_first_shore__crafting"
+     ],
+     "reason": "The few NPCs visible (two bearded khaki dock hands at Brine Steps, two straw-hat figures at Shellwatch) repeat near-identical outfits and silhouettes; named-role identity cannot be read. | Only a few NPCs appear; they share the same chunky low-detail body and similar brown palettes, and nothing here demonstrates distinct named-role silhouettes."
+    },
+    "judge3": {
+     "bar_a_score": 4,
+     "severity": 3,
+     "assessment": "PERSISTS",
+     "pictured": "partial",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_02:brine_steps_06:45",
+      "day_02:brine_steps_06:90",
+      "day_02:shellwatch_08:90",
+      "sup_ui:exploration_hud",
+      "sup_swimming:west_dry_approach",
+      "sup_camps:water_camp_first_shore__camp"
+     ],
+     "reason": "The Brine Steps NPC group repeats near-identical dark coat and hat silhouettes, and Shellwatch figures are small and similarly dressed; no named-role distinction is readable at this camera. | The few NPCs visible are small; the khaki hat-wearing guide recurs across swimming, mounted and camp frames with the same silhouette, and the First Shore NPCs share similar dark outfits. Named-role differentiation cannot be confirmed."
+    }
+   }
+  },
+  {
+   "item_id": "P2-009",
+   "subject": "water and island depth",
+   "original_defect": "Broad offshore water reads as uniform light cyan with little depth variation across several island routes",
+   "judges_scoring": 3,
+   "bar_a_mean": 5.67,
+   "spread": 0.5,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 6,
+     "severity": 2,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_02:brine_steps_05:45",
+      "day_02:brine_steps_05:90",
+      "day_04:sluice_isle_14:0",
+      "day_05:drowned_garden_21:45",
+      "night_02:brine_steps_05:0",
+      "sup_current:S1_live_t0"
+     ],
+     "reason": "Water now shows a cyan shallows band over sand grading to deeper navy blue offshore with foam at shore edges, and distant islands sit in bluish haze; still somewhat flat with little current direction, wave form or rock-lined shallows, and offshore color is uniform. | Water now grades from pale turquoise shallows and foam-ringed sandbars to deep navy offshore with visible ripples, though the sea is still a fairly uniform plane without reef, kelp or depth-varying features."
+    },
+    "judge2": {
+     "bar_a_score": 5.5,
+     "severity": 2.5,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_02:brine_steps_05:45",
+      "day_02:brine_steps_05:90",
+      "day_04:sluice_isle_14:0",
+      "day_05:drowned_garden_21:0",
+      "night_02:brine_steps_05:0",
+      "sup_current:S1_live_t0"
+     ],
+     "reason": "Water now has a lighter cyan shallows band against deeper blue channels and foam edges at Brine Steps, but open water is still a uniform flat blue with little haze gradient between islands and no readable shore depth or reef shapes; distant islands sit on it like pasted discs. | Water now shows a clear turquoise-shallow to navy-deep gradient with foam halos around sandbars and sun glitter; distance haze and depth variation offshore are still fairly uniform."
+    },
+    "judge3": {
+     "bar_a_score": 5.5,
+     "severity": 2.5,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_02:brine_steps_05:90",
+      "day_05:drowned_garden_21:90",
+      "day_04:sluice_isle_14:0",
+      "night_02:brine_steps_05:0",
+      "sup_current:S1_live_t0",
+      "sup_current:S2_live_t0"
+     ],
+     "reason": "Water now has a pale turquoise shallow band grading to deeper blue offshore and a brighter navy night with foam, but open water is still a flat uniform cyan/blue plane with little sea haze across successive islands and no reef or depth variation. | Water now grades from deep navy offshore to bright turquoise shallows with lighter rings around sandbars, giving real depth read; the gradient is still smooth and synthetic with little reef, rock or colour variation."
+    }
+   }
+  },
+  {
+   "item_id": "P2-063",
+   "subject": "shared fight tell and hit effects",
+   "original_defect": "Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-response silhouettes",
+   "judges_scoring": 3,
+   "bar_a_mean": 3.5,
+   "spread": 1,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 3,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_fight_venn_a:hit-000.70",
+      "sup_fight_venn_a:t-004.02",
+      "sup_fight_venn_a:t-011.00",
+      "sup_fight_venn_b:t-023.02",
+      "sup_fight_venn_b:tell-start-003.73"
+     ],
+     "reason": "Tells are huge flat pink/magenta ellipses sprawling across the arena plus text banners ('incoming - move', 'HEAVY - get clear'); hit frames show only a thin pink line and no impact silhouette."
+    },
+    "judge2": {
+     "bar_a_score": 3.5,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_fight_venn_a:hit-000.70",
+      "sup_fight_venn_a:t-004.02",
+      "sup_fight_venn_a:t-011.00",
+      "sup_fight_venn_b:t-023.02",
+      "sup_fight_venn_b:tell-start-003.73"
+     ],
+     "reason": "Tells are still thin flat pink/magenta ground ellipses plus text banners ('incoming \u2014 move', 'HEAVY \u2014 get clear'); hit frames show a faint pink beam with almost no impact flash or recoil silhouette on Cannonback."
+    },
+    "judge3": {
+     "bar_a_score": 4,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_fight_venn_a:hit-000.70",
+      "sup_fight_venn_a:t-004.02",
+      "sup_fight_venn_a:t-011.00",
+      "sup_fight_venn_b:t-023.02",
+      "sup_fight_venn_b:tell-start-003.73"
+     ],
+     "reason": "The telegraph is now a thin magenta outline ellipse instead of a filled slab, but it remains a flat bright magenta line slicing across both creatures and the HUD, and tells still depend on text banners ('incoming - move', 'HEAVY - get clear'); hit frames show almost no impact silhouette."
+    }
+   }
+  },
+  {
+   "item_id": "P2-060",
+   "subject": "catch effect finish",
+   "original_defect": "The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visible change between rest and shake frames",
+   "judges_scoring": 0,
+   "bar_a_mean": null,
+   "spread": null,
+   "cpu_provisional_6_7": null,
+   "rescore_status": "NO_CURRENT_EVIDENCE",
+   "per_judge": {},
+   "coverage_gap": "phase2_capture_catch.gd loops on \"Engage Mangrove Monitor\" without engaging (1 h timeout, 0 frames); no fresh catch frames.",
+   "judge_dispositions": {
+    "judge1": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge2": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge3": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ]
+   }
+  },
+  {
+   "item_id": "P2-101",
+   "subject": "Riverdrake fight ground contact",
+   "original_defect": "Riverdrake crouch and recoil sink its belly and feet into sand or leave the body hovering above a separate shadow",
+   "judges_scoring": 3,
+   "bar_a_mean": 5.67,
+   "spread": 1,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 6,
+     "severity": 2,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass3"
+     ],
+     "evidence": [
+      "sup_fight_venn_late_2:hit-110.50",
+      "sup_fight_venn_late_2:t-126.02",
+      "sup_fight_venn_late_2:t-129.02",
+      "sup_fight_venn_late_2:t-132.02",
+      "sup_fight_venn_late_2:t-150.00",
+      "sup_fight_venn_late_1:tell-start-110.02"
+     ],
+     "reason": "In the late Riverdrake frames its feet meet the sand/grass with an attached contact shadow and no visible belly sinking or hover at gameplay distance. Contact is hard to verify on the dark slope in t-162/t-165 and no crouch/recoil close-up is shown, so this is improved rather than proven fixed."
+    },
+    "judge2": {
+     "bar_a_score": 6,
+     "severity": 2,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass3"
+     ],
+     "evidence": [
+      "sup_fight_venn_late_2:t-114.02.png",
+      "sup_fight_venn_late_2:t-129.02.png",
+      "sup_fight_venn_late_2:t-132.02.png",
+      "sup_fight_venn_late_2:t-150.00.png",
+      "sup_fight_venn_late_2:tell-start-111.62.png",
+      "sup_fight_venn_late_1:tell-start-110.02.png"
+     ],
+     "reason": "Across the late Riverdrake frames its feet meet the sand/grass with a contact shadow directly under the body and no visible belly sinking; the rearing tell poses also stay planted. No deep crouch/recoil frame is sampled, and on the dark grass slope (t-150, t-159) the shadow merges with terrain so contact is less legible."
+    },
+    "judge3": {
+     "bar_a_score": 5,
+     "severity": 2,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass3"
+     ],
+     "evidence": [
+      "sup_fight_venn_late_2:hit-110.50.png",
+      "sup_fight_venn_late_2:t-111.02.png",
+      "sup_fight_venn_late_2:t-126.02.png",
+      "sup_fight_venn_late_2:t-132.02.png",
+      "sup_fight_venn_late_2:t-159.00.png",
+      "sup_fight_venn_late_2:t-165.00.png"
+     ],
+     "reason": "In the sampled stance and hit frames the Riverdrake's feet meet the sand and grass with an attached contact shadow, and I see no obvious belly sink or hover at this scale. On the dark slope frames (t-162.00, t-165.00) the body and shadow merge into the rock so contact can't be confirmed, and no deep crouch or recoil pose is clearly captured."
+    }
+   }
+  },
+  {
+   "item_id": "P2-004",
+   "subject": "exploration HUD",
+   "original_defect": "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view",
+   "judges_scoring": 3,
+   "bar_a_mean": 5.58,
+   "spread": 0.75,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 5.5,
+     "severity": 2.5,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_01:first_shore_01:0",
+      "day_03:tidal_cradle_09:0",
+      "day_04:veilfall_15:0",
+      "sup_ui:exploration_hud"
+     ],
+     "reason": "The exploration HUD is now a compact set: top-right quest card plus square minimap, hotbar and three-key prompt strip at lower right, and a small health/food box lower left; it is less dominant, but the opaque dark boxes still stack in the lower right near the trainer. | The centre of the view is open, but there are still about eight separate dark boxes (clock, location, main story, minimap, team, hotbar, key prompts, health/food) spread around the edges."
+    },
+    "judge2": {
+     "bar_a_score": 5.25,
+     "severity": 2,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_01:first_shore_01:0",
+      "day_03:tidal_cradle_09:0",
+      "day_04:veilfall_15:0",
+      "sup_ui:exploration_hud"
+     ],
+     "reason": "Exploration HUD is now compact (top quest card, minimap, small hotbar, key strip, health/food) and leaves the view mostly clear, but the hotbar and key-legend boxes sit mid-right over the playfield and the dark boxes clash with the bright beach; still reads as debug-dense versus Palworld's edge-hugging HUD. | Exploration HUD is reduced to a team card, story box, minimap, hotbar and prompt strip around the edges; still several separate dark boxes but the centre view is clear."
+    },
+    "judge3": {
+     "bar_a_score": 6,
+     "severity": 2,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_01:first_shore_01:0",
+      "day_03:sluice_isle_13:0",
+      "sup_ui:exploration_hud"
+     ],
+     "reason": "Exploration HUD is compact: small objective box with minimap top right, five-slot hotbar and M/I/B prompt strip bottom right, health/food bottom left; it no longer dominates, though the objective box plus minimap crowd the upper right and the prompt strip sits mid-frame near the trainer. | Exploration HUD is a set of compact corner panels (time, story objective, minimap, team, five-slot hotbar, health/food); it leaves the centre clear but still uses several dark boxed panels and the floating prompt text is small."
+    }
+   }
+  },
+  {
+   "item_id": "P2-072",
+   "subject": "swimmer water contact",
+   "original_defect": "The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body",
+   "judges_scoring": 3,
+   "bar_a_mean": 5.33,
+   "spread": 1,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 5,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_swimming:entry",
+      "sup_swimming:surface_east",
+      "sup_swimming:surface_far"
+     ],
+     "reason": "A white foam ring now surrounds the swimmer and no hard shadow sits beside the body, but there is no trailing wake or splash, so motion through the water does not read."
+    },
+    "judge2": {
+     "bar_a_score": 5.0,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_swimming:entry",
+      "sup_swimming:surface_east",
+      "sup_swimming:surface_mid"
+     ],
+     "reason": "A pale foam ring now surrounds the swimmer, but it is a uniform flat disc with no trailing wake or splash, and the legs are visible beneath giving no displaced-water read."
+    },
+    "judge3": {
+     "bar_a_score": 6,
+     "severity": 2,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_swimming:entry",
+      "sup_swimming:surface_east",
+      "sup_swimming:surface_mid"
+     ],
+     "reason": "A white foam ring now surrounds the swimmer and no hard dark side-shadow is visible; there is still no trailing wake or splash to show forward motion."
+    }
+   }
+  },
+  {
+   "item_id": "P2-045",
+   "subject": "candy pickup tiers",
+   "original_defect": "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance",
+   "judges_scoring": 3,
+   "bar_a_mean": 4.33,
+   "spread": 1,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 4,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "partial",
+     "passes": [
+      "pass3"
+     ],
+     "evidence": [
+      "sup_pickups:water__inventory__pickup__great_candy",
+      "sup_pickups:water__inventory__pickup__rare_candy",
+      "sup_pickups:water__inventory__pickup__skill_candy_i",
+      "sup_pickups:water__inventory__pickup__skill_candy_ii",
+      "sup_pickups:water__inventory__pickup__skill_candy_iii"
+     ],
+     "reason": "The tiers now differ by colour: Great Candy is a small blue-white glint, Rare Candy a yellow glow, Skill Candy dark wrapped sweets. But they are all still the same tiny scale, and the tier reads only from tint, not form. Good Candy is not pictured."
+    },
+    "judge2": {
+     "bar_a_score": 5,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass3"
+     ],
+     "evidence": [
+      "sup_pickups:water__inventory__pickup__great_candy.jpg",
+      "sup_pickups:water__inventory__pickup__rare_candy.jpg",
+      "sup_pickups:water__inventory__pickup__skill_candy_i.jpg",
+      "sup_pickups:water__inventory__pickup__skill_candy_ii.jpg",
+      "sup_pickups:water__inventory__pickup__skill_candy_iii.jpg"
+     ],
+     "reason": "Candies are no longer one shared green wrapper: great candy is pale blue, rare candy a glowing yellow, skill candy I/II a dark near-black wrapped form. They are still the same tiny wrapped shape at near-identical scale, and skill candy I vs II are indistinguishable, so tier reads only by hue at close range."
+    },
+    "judge3": {
+     "bar_a_score": 4,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "partial",
+     "passes": [
+      "pass3"
+     ],
+     "evidence": [
+      "sup_pickups:water__inventory__pickup__great_candy.jpg",
+      "sup_pickups:water__inventory__pickup__rare_candy.jpg",
+      "sup_pickups:water__inventory__pickup__skill_candy_i.jpg",
+      "sup_pickups:water__inventory__pickup__skill_candy_ii.jpg"
+     ],
+     "reason": "Great Candy (small blue-white) and Rare Candy (yellow glow) are no longer the same green wrap, and Good Candy is not shown. The tiers still share one tiny scale and carry no size or shape escalation, and Skill Candy I and II are identical black wrapped candies."
+    }
+   }
+  },
+  {
+   "item_id": "P2-088",
+   "subject": "fight team roster contrast",
+   "original_defect": "The left team roster fades to pale low-contrast text against terrain during active combat",
+   "judges_scoring": 3,
+   "bar_a_mean": 5.5,
+   "spread": 1,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 6,
+     "severity": 2,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_fight_venn_a:t-000.00",
+      "sup_fight_venn_a:t-016.00",
+      "sup_fight_venn_b:t-028.02"
+     ],
+     "reason": "The team roster now sits on a dark backed panel with green bars and stays legible over grass and sand, though its portraits and bars are tiny."
+    },
+    "judge2": {
+     "bar_a_score": 5.5,
+     "severity": 2,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_fight_venn_a:t-003.02",
+      "sup_fight_venn_a:t-016.00",
+      "sup_fight_venn_b:t-028.02"
+     ],
+     "reason": "The left team roster now sits on a dark backing with teal bars and stays readable over grass and sand, though icons and text are tiny at 1280-class raster."
+    },
+    "judge3": {
+     "bar_a_score": 5,
+     "severity": 2,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_fight_venn_a:t-003.02",
+      "sup_fight_venn_a:t-016.00",
+      "sup_fight_venn_b:t-028.02"
+     ],
+     "reason": "The team roster now sits on a dark backing panel with teal bars, so it no longer fades into terrain, though names and icons are tiny and hard to read."
+    }
+   }
+  },
+  {
+   "item_id": "P2-090",
+   "subject": "fight background creature ground contact",
+   "original_defect": "A small blue creature-like figure remains partly buried in sand behind Ripplett through the Venn fight",
+   "judges_scoring": 3,
+   "bar_a_mean": 6.0,
+   "spread": 0,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 6,
+     "severity": 1,
+     "assessment": "FIXED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_fight_venn_a:t-000.00",
+      "sup_fight_venn_a:t-016.00",
+      "sup_fight_venn_b:t-018.00"
+     ],
+     "reason": "No partly buried blue figure is visible behind Ripplet; the only background figure is a small standing humanoid grounded on the sand."
+    },
+    "judge2": {
+     "bar_a_score": 6.0,
+     "severity": 1,
+     "assessment": "FIXED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_fight_venn_a:t-000.00",
+      "sup_fight_venn_a:t-009.00",
+      "sup_fight_venn_a:t-016.00"
+     ],
+     "reason": "No partially buried blue figure is visible behind Ripplet across the Venn fight frames; only the trainer stands on the sand."
+    },
+    "judge3": {
+     "bar_a_score": 6,
+     "severity": 1,
+     "assessment": "FIXED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_fight_venn_a:t-000.00",
+      "sup_fight_venn_a:t-009.00",
+      "sup_fight_venn_a:t-016.00"
+     ],
+     "reason": "No partly buried blue creature is visible behind Ripplet in any Venn fight frame."
+    }
+   }
+  },
+  {
+   "item_id": "P2-026",
+   "subject": "Veilfall approach shallows",
+   "original_defect": "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows",
+   "judges_scoring": 3,
+   "bar_a_mean": 3.0,
+   "spread": 0,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 3,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_05:drowned_garden_21:0",
+      "day_05:drowned_garden_21:45",
+      "day_04:sluice_isle_14:0",
+      "night_05:drowned_garden_21:45",
+      "day_06:drowned_garden_22:45",
+      "sup_current:S1_live_t0"
+     ],
+     "reason": "The Veilfall approach is still a straight chain of identical tan oval discs with white foam rims, now additionally outlined by a white dashed wireframe-like corridor over the water; it reads as a mechanical debug path rather than natural current shallows. | The shallows ahead are a row of near-identical oval pale sandbars with matching foam rims spaced evenly in a line, which still reads as a manufactured stepping-stone chain."
+    },
+    "judge2": {
+     "bar_a_score": 3.0,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_05:drowned_garden_21:0",
+      "day_05:drowned_garden_21:45",
+      "day_04:sluice_isle_14:0",
+      "night_05:drowned_garden_21:45",
+      "sup_current:S1_live_t0",
+      "sup_current:S2_live_t0"
+     ],
+     "reason": "The Veilfall approach is still a ruler-straight chain of identical pale tan discs with ring halos, now additionally boxed by dashed white guide lines, reading as a UI path overlay rather than natural current shallows. | A straight receding chain of near-identical tan sand ovals with white foam rims runs to the horizon, reading as mechanical stepping stones rather than natural shoals."
+    },
+    "judge3": {
+     "bar_a_score": 3,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_05:drowned_garden_21:0",
+      "day_05:drowned_garden_21:45",
+      "day_06:drowned_garden_22:45",
+      "night_05:drowned_garden_21:0",
+      "sup_current:S1_live_t0",
+      "sup_current:S2_live_t0"
+     ],
+     "reason": "The Drowned Garden approach still shows a straight chain of near-identical pale tan discs with white rims, now additionally outlined by bright white straight guide lines, reading as mechanical stepping stones rather than natural shallows. | The approach still shows a row of near-identical smooth tan oval sandbars with soft white-cyan halos lined up along the current, reading as placed stepping discs rather than natural shallows."
+    }
+   }
+  },
+  {
+   "item_id": "P2-031",
+   "subject": "settings and binding instructions",
+   "original_defect": "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan",
+   "judges_scoring": 3,
+   "bar_a_mean": 5.0,
+   "spread": 0,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 5,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_ui:settings_controls",
+      "sup_ui:quick_bindings",
+      "sup_ui:menu_settings"
+     ],
+     "reason": "Quick bindings is a clean table with pad and key columns, but Controls still opens with a dense gray paragraph and small literal labels ('Left stick up', 'W') with no button glyphs."
+    },
+    "judge2": {
+     "bar_a_score": 5.0,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_ui:settings_controls",
+      "sup_ui:quick_bindings",
+      "sup_ui:menu_map"
+     ],
+     "reason": "Bindings are now laid out in gamepad/keyboard columns with section headers, but text is small grey on navy, uses literal 'Left stick up'/'D-pad left' strings with no glyphs, and the map help line is a dense key list."
+    },
+    "judge3": {
+     "bar_a_score": 5,
+     "severity": 2,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_ui:quick_bindings",
+      "sup_ui:settings_controls",
+      "sup_ui:menu_map"
+     ],
+     "reason": "Quick bindings and controls are now a clean table with Gamepad and Keyboard columns (D-pad up, Left stick up), which scans better; text is still small grey on navy, and the map footer still lists literal key labels like [Minus] and [Comma]/[Period]."
+    }
+   }
+  },
+  {
+   "item_id": "P2-066",
+   "subject": "live current streaks",
+   "original_defect": "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface",
+   "judges_scoring": 3,
+   "bar_a_mean": 2.5,
+   "spread": 0.0,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 2.5,
+     "severity": 4.5,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_01:first_shore_01:-45",
+      "day_01:first_shore_02:45",
+      "day_05:lantern_cove_18:-45",
+      "day_06:drowned_garden_22:45",
+      "day_06:deep_watch_24:0",
+      "night_01:first_shore_01:-45"
+     ],
+     "reason": "Water channels between islands show bright white straight dashed lines and lattice-like hatching across the surface (first shore channel, lantern cove, drowned garden beach, deep watch), still reading as guide lanes rather than organic flow. | Live currents are drawn as bright white dashed lane lines bordering a lighter strip with chevron arrows, literally reading like road markings painted on the sea; t0 and t1 are nearly identical."
+    },
+    "judge2": {
+     "bar_a_score": 2.5,
+     "severity": 4.5,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_05:drowned_garden_21:0",
+      "day_05:drowned_garden_21:45",
+      "day_01:first_shore_01:-45",
+      "day_06:drowned_garden_22:45",
+      "day_04:lantern_cove_17:0",
+      "sup_current:S1_live_t0"
+     ],
+     "reason": "Live currents still read as bright straight white dashed lines and grid wedges laid over the water (Drowned Garden, First Shore, Lantern Cove) like lane markings, not flowing current. | Live currents are bright white dashed lane lines with chevron arrows on a flat lighter strip, literally road markings painted on the sea; t0/t1 are nearly identical."
+    },
+    "judge3": {
+     "bar_a_score": 2.5,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_05:drowned_garden_21:45",
+      "day_01:first_shore_01:-45",
+      "day_04:lantern_cove_17:0",
+      "day_06:deep_watch_24:0",
+      "sup_current:S1_live_t0",
+      "sup_current:S2_live_t0"
+     ],
+     "reason": "Where currents appear they are drawn as long straight thin white lines and grid-like lanes on the water surface, still reading like guide lanes rather than foam and flow. | Live currents are drawn as evenly spaced white dashed lines with chevron arrows on a lighter flat band, literally reading as road lane markings painted on the sea."
+    }
+   }
+  },
+  {
+   "item_id": "P2-067",
+   "subject": "current restoration environment",
+   "original_defect": "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged",
+   "judges_scoring": 3,
+   "bar_a_mean": 2.17,
+   "spread": 0.5,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 2,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_current:S1_live_t0",
+      "sup_current:S1_restored_t0",
+      "sup_current:S3_live_t0",
+      "sup_current:S3_restored_t0",
+      "sup_current:S4_restored_t0"
+     ],
+     "reason": "Restored states only fade the lane strip and dim the dashes, which remain visible; water colour, sandbars and surrounding geometry are unchanged."
+    },
+    "judge2": {
+     "bar_a_score": 2.5,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_current:S1_live_t0",
+      "sup_current:S1_restored_t0",
+      "sup_current:S2_restored_t0",
+      "sup_current:S3_restored_t0",
+      "sup_current:S4_restored_t0"
+     ],
+     "reason": "Restored state only dims the dashed lines (still visible) and removes the lighter strip; sandbars, water colour, foam and surroundings are unchanged, so restoration has no environmental payoff."
+    },
+    "judge3": {
+     "bar_a_score": 2,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_current:S1_restored_t0",
+      "sup_current:S2_restored_t0",
+      "sup_current:S3_restored_t0",
+      "sup_current:S4_restored_t0"
+     ],
+     "reason": "Restored state only dims the dashed lane lines (they remain visible) and drops the lighter band; sandbars, water colour and geometry are unchanged."
+    }
+   }
+  },
+  {
+   "item_id": "P2-073",
+   "subject": "dialogue camera framing",
+   "original_defect": "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker",
+   "judges_scoring": 0,
+   "bar_a_mean": null,
+   "spread": null,
+   "cpu_provisional_6_7": null,
+   "rescore_status": "NO_CURRENT_EVIDENCE",
+   "per_judge": {},
+   "coverage_gap": "phase2_capture_tidewake_dialogue_interaction.gd refuses to run without a true fullscreen 1920x1080 window, which Xvfb does not report (two attempts); no fresh dialogue frames.",
+   "judge_dispositions": {
+    "judge1": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge2": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge3": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ]
+   }
+  },
+  {
+   "item_id": "P2-032",
+   "subject": "map active region",
+   "original_defect": "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab",
+   "judges_scoring": 3,
+   "bar_a_mean": 5.33,
+   "spread": 2.0,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 6,
+     "severity": 1,
+     "assessment": "FIXED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_ui:menu_map"
+     ],
+     "reason": "The TIDEWAKE heading matches the boxed, highlighted Tidewake tab while Meadows is plain."
+    },
+    "judge2": {
+     "bar_a_score": 4.0,
+     "severity": 1,
+     "assessment": "FIXED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_ui:menu_map"
+     ],
+     "reason": "The Tidewake tab is the boxed/active tab under the TIDEWAKE heading, with Meadows plain; the active-region mismatch is gone (map content itself remains empty)."
+    },
+    "judge3": {
+     "bar_a_score": 6,
+     "severity": 1,
+     "assessment": "FIXED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_ui:menu_map"
+     ],
+     "reason": "The map header reads TIDEWAKE and the Tidewake tab is the boxed/highlighted one, with Meadows shown as the inactive tab."
+    }
+   }
+  },
+  {
+   "item_id": "P2-061",
+   "subject": "catch result hierarchy",
+   "original_defect": "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish",
+   "judges_scoring": 0,
+   "bar_a_mean": null,
+   "spread": null,
+   "cpu_provisional_6_7": null,
+   "rescore_status": "NO_CURRENT_EVIDENCE",
+   "per_judge": {},
+   "coverage_gap": "phase2_capture_catch.gd loops on \"Engage Mangrove Monitor\" without engaging (1 h timeout, 0 frames); no fresh catch frames.",
+   "judge_dispositions": {
+    "judge1": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge2": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge3": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ]
+   }
+  },
+  {
+   "item_id": "P2-075",
+   "subject": "dialogue foreground obstruction",
+   "original_defect": "The player head and back overlap the named speaker in several conversation frames",
+   "judges_scoring": 0,
+   "bar_a_mean": null,
+   "spread": null,
+   "cpu_provisional_6_7": null,
+   "rescore_status": "NO_CURRENT_EVIDENCE",
+   "per_judge": {},
+   "coverage_gap": "phase2_capture_tidewake_dialogue_interaction.gd refuses to run without a true fullscreen 1920x1080 window, which Xvfb does not report (two attempts); no fresh dialogue frames.",
+   "judge_dispositions": {
+    "judge1": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge2": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge3": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ]
+   }
+  },
+  {
+   "item_id": "P2-029",
+   "subject": "creature rest poses",
+   "original_defect": "Riptusk and Torrentoad resting poses roll onto their backs with limbs raised and read as distressed rather than settled",
+   "judges_scoring": 3,
+   "bar_a_mean": 3.83,
+   "spread": 0.5,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 4,
+     "severity": 3,
+     "assessment": "PERSISTS",
+     "pictured": "partial",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_creatures_3:water__riptusk__resting",
+      "sup_creatures_5:water__torrentoad__fainted"
+     ],
+     "reason": "Riptusk's resting pose still rolls onto its side/back with pale belly up and limbs splayed, reading distressed; Torrentoad has no resting frame and its fainted frame is also belly-up."
+    },
+    "judge2": {
+     "bar_a_score": 3.5,
+     "severity": 3,
+     "assessment": "PERSISTS",
+     "pictured": "partial",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_creatures_3:water__riptusk__resting",
+      "sup_creatures_4:water__riverdrake__resting",
+      "sup_creatures_4:water__tidecoil__resting"
+     ],
+     "reason": "Riptusk resting still rolls onto its side/back with limbs lifted, reading distressed; Torrentoad resting is not in the sheets."
+    },
+    "judge3": {
+     "bar_a_score": 4,
+     "severity": 3,
+     "assessment": "PERSISTS",
+     "pictured": "partial",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_creatures_3:water__riptusk__resting",
+      "sup_creatures_3:water__ripplet__resting"
+     ],
+     "reason": "Riptusk's resting pose lies on its side with legs out and is nearly indistinguishable from its fainted cell; Torrentoad has no resting frame in these sheets."
+    }
+   }
+  },
+  {
+   "item_id": "P2-069",
+   "subject": "flight and landing pose read",
+   "original_defect": "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut",
+   "judges_scoring": 0,
+   "bar_a_mean": null,
+   "spread": null,
+   "cpu_provisional_6_7": null,
+   "rescore_status": "NO_CURRENT_EVIDENCE",
+   "per_judge": {},
+   "coverage_gap": "phase2_capture_flight.gd is Cloudreach-only; no Tidewake flight capture tool.",
+   "judge_dispositions": {
+    "judge1": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge2": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge3": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ]
+   }
+  },
+  {
+   "item_id": "P2-089",
+   "subject": "fight actor composition",
+   "original_defect": "Close-range fight staging lets allies, enemies and sometimes the trainer intersect, so heads and limbs cover one another in several Venn opponent phases",
+   "judges_scoring": 3,
+   "bar_a_mean": 4.5,
+   "spread": 1,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 5,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_fight_venn_a:hit-000.70",
+      "sup_fight_venn_b:t-020.00",
+      "sup_fight_venn_b:t-022.00",
+      "sup_fight_venn_b:t-026.02"
+     ],
+     "reason": "Ripplet and Cannonback stay mostly side by side without head overlap, but in several frames the trainer stands directly against Ripplet's body and the two creatures touch at the attack line."
+    },
+    "judge2": {
+     "bar_a_score": 4.5,
+     "severity": 3,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_fight_venn_a:hit-000.70",
+      "sup_fight_venn_a:t-014.00",
+      "sup_fight_venn_b:t-024.02",
+      "sup_fight_venn_b:t-028.02",
+      "sup_fight_venn_b:tell-ended-001.32"
+     ],
+     "reason": "Ripplet stays pressed against Cannonback's head with the trainer standing between or behind them, so heads and the trainer overlap at contact; staging is cramped in a corner against a dark cliff wedge."
+    },
+    "judge3": {
+     "bar_a_score": 4,
+     "severity": 3,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_fight_venn_b:t-020.00",
+      "sup_fight_venn_b:t-022.00",
+      "sup_fight_venn_b:t-026.02",
+      "sup_fight_venn_b:tell-ended-001.32",
+      "sup_fight_venn_a:hit-001.08"
+     ],
+     "reason": "The trainer repeatedly stands inside or directly against Ripplet's body and Ripplet presses into Cannonback's head, so limbs and heads overlap in many frames."
+    }
+   }
+  },
+  {
+   "item_id": "P2-091",
+   "subject": "fight boss title overlay",
+   "original_defect": "The upper-center boss title card overlaps part of Cannonback\u2019s shell and head in the opening and tell views",
+   "judges_scoring": 3,
+   "bar_a_mean": 6.0,
+   "spread": 0,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 6,
+     "severity": 1,
+     "assessment": "FIXED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_fight_venn_a:t-000.00",
+      "sup_fight_venn_b:tell-start-000.65"
+     ],
+     "reason": "The boss title card now sits in the upper right and never covers Cannonback's shell or head."
+    },
+    "judge2": {
+     "bar_a_score": 6.0,
+     "severity": 1,
+     "assessment": "FIXED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_fight_venn_a:t-000.00",
+      "sup_fight_venn_a:t-001.00",
+      "sup_fight_venn_b:tell-start-000.65"
+     ],
+     "reason": "The boss title card now sits top-right clear of Cannonback's shell and head in opening and tell frames."
+    },
+    "judge3": {
+     "bar_a_score": 6,
+     "severity": 1,
+     "assessment": "FIXED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_fight_venn_a:t-000.00",
+      "sup_fight_venn_a:hit-000.70",
+      "sup_fight_venn_b:tell-start-000.65"
+     ],
+     "reason": "The boss title card now sits in the upper-right corner and does not overlap Cannonback's shell or head."
+    }
+   }
+  },
+  {
+   "item_id": "P2-057",
+   "subject": "grass around named characters",
+   "original_defect": "Dense pale grass reaches knee to waist height around Tidewake characters and hides much of their costume silhouette in normal-camera post views",
+   "judges_scoring": 3,
+   "bar_a_mean": 4.83,
+   "spread": 0.5,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 5,
+     "severity": 2.5,
+     "assessment": "IMPROVED/PERSISTS",
+     "pictured": "partial",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_02:brine_steps_06:45",
+      "day_02:brine_steps_06:180",
+      "day_01:first_shore_02:0",
+      "day_05:gull_rest_19:0",
+      "sup_camps:water_camp_salt_crown__bed",
+      "sup_camps:water_camp_salt_crown__camp"
+     ],
+     "reason": "Beach grass is now sparse clumps on open sand and the Brine Steps NPCs stand mostly clear, with only shins partly covered; in the denser grass bands (first shore horizon stones, gull rest) the trainer is still covered to the knee. | Named characters are not shown, but at the Salt Crown camp dense uniform pale-green grass reaches the trainer's knees and hides the legs and camp pieces."
+    },
+    "judge2": {
+     "bar_a_score": 4.5,
+     "severity": 2.5,
+     "assessment": "IMPROVED/PERSISTS",
+     "pictured": "partial",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_02:brine_steps_06:45",
+      "day_02:brine_steps_06:90",
+      "day_02:shellwatch_08:180",
+      "sup_camps:water_camp_salt_crown__bed",
+      "sup_camps:water_camp_salt_crown__camp",
+      "sup_camps:water_camp_salt_crown__crafting"
+     ],
+     "reason": "Beach grass around the Brine Steps dock hands is sparse and only shin high, so costumes read; Shellwatch NPCs stand on open sand. Grass no longer swallows silhouettes in these views. | No named characters shown, but at Salt Crown dense tall grass blades reach the trainer's knees/thighs and hide legs and camp pieces, the same occlusion pattern."
+    },
+    "judge3": {
+     "bar_a_score": 5,
+     "severity": 2.5,
+     "assessment": "IMPROVED/PERSISTS",
+     "pictured": "partial",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_02:brine_steps_06:45",
+      "day_02:brine_steps_06:90",
+      "day_02:shellwatch_08:90",
+      "sup_camps:water_camp_salt_crown__bed",
+      "sup_camps:water_camp_salt_crown__crafting",
+      "sup_ui:exploration_hud"
+     ],
+     "reason": "Beach grass is now sparse ankle-to-knee clumps on open sand, and the Brine Steps and Shellwatch figures keep full silhouettes; grass no longer hides costumes, though these are not the specific named-character posts. | Named characters are not shown in grass, but at Salt Crown dense tall pale grass still reaches the trainer's knees and hides lower costume; at First Shore NPCs stand on open sand and read fully."
+    }
+   }
+  },
+  {
+   "item_id": "P2-074",
+   "subject": "dialogue speaker visibility",
+   "original_defect": "Several named conversations show no identifiable speaker near the dialogue panel",
+   "judges_scoring": 0,
+   "bar_a_mean": null,
+   "spread": null,
+   "cpu_provisional_6_7": null,
+   "rescore_status": "NO_CURRENT_EVIDENCE",
+   "per_judge": {},
+   "coverage_gap": "phase2_capture_tidewake_dialogue_interaction.gd refuses to run without a true fullscreen 1920x1080 window, which Xvfb does not report (two attempts); no fresh dialogue frames.",
+   "judge_dispositions": {
+    "judge1": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge2": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge3": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ]
+   }
+  },
+  {
+   "item_id": "P2-103",
+   "subject": "named fight victory hierarchy",
+   "original_defect": "Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little visual focus",
+   "judges_scoring": 0,
+   "bar_a_mean": null,
+   "spread": null,
+   "cpu_provisional_6_7": null,
+   "rescore_status": "NO_CURRENT_EVIDENCE",
+   "per_judge": {},
+   "coverage_gap": "Full Venn fight (75 frames, Cannonback/Riverdrake/Riptusk) hit its capture cap before an observed victory; no victory/aftermath frames.",
+   "judge_dispositions": {
+    "judge1": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge2": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge3": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ]
+   }
+  },
+  {
+   "item_id": "P2-104",
+   "subject": "Riverdrake faint silhouette",
+   "original_defect": "The fainted Riverdrake underside and tail blend with bright grass at the win camera distance",
+   "judges_scoring": 0,
+   "bar_a_mean": null,
+   "spread": null,
+   "cpu_provisional_6_7": null,
+   "rescore_status": "NO_CURRENT_EVIDENCE",
+   "per_judge": {},
+   "coverage_gap": "Full Venn fight (75 frames, Cannonback/Riverdrake/Riptusk) hit its capture cap before an observed victory; no victory/aftermath frames.",
+   "judge_dispositions": {
+    "judge1": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge2": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge3": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ]
+   }
+  },
+  {
+   "item_id": "P2-108",
+   "subject": "Aquaryn mounted-water pose",
+   "original_defect": "The seated Aquaryn rider traverses turquoise water while the mount stays tall and nearly static above the surface with no visible stroke bobbing wake splash or current response",
+   "judges_scoring": 3,
+   "bar_a_mean": 3.0,
+   "spread": 0,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 3,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_mounted:mounted-swim-03-mounted",
+      "sup_mounted:mounted-swim-05-mounted",
+      "sup_mounted:mounted-swim-08-mounted",
+      "sup_mounted:mounted-swim-09-mounted",
+      "sup_mounted:mounted-swim-10-mounted"
+     ],
+     "reason": "Aquaryn stands tall and upright on its legs on the water surface with the rider perched high, identical across frames 08-10, with no wake, splash, bob or stroke."
+    },
+    "judge2": {
+     "bar_a_score": 3.0,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_mounted:mounted-swim-03-mounted",
+      "sup_mounted:mounted-swim-05-mounted",
+      "sup_mounted:mounted-swim-08-mounted",
+      "sup_mounted:mounted-swim-10-mounted"
+     ],
+     "reason": "Aquaryn stands tall and rigid above the surface with the rider perched on top, a hard shadow on the water and no wake, splash or bob; frames 08-10 are nearly identical."
+    },
+    "judge3": {
+     "bar_a_score": 3,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_mounted:mounted-swim-03-mounted",
+      "sup_mounted:mounted-swim-05-mounted",
+      "sup_mounted:mounted-swim-08-mounted",
+      "sup_mounted:mounted-swim-10-mounted"
+     ],
+     "reason": "Aquaryn stands tall and upright on the water in an identical pose across frames 08-10 with a hard dark shadow on the surface and no wake, splash or bob; the rider is a small dark figure on its back."
+    }
+   }
+  },
+  {
+   "item_id": "P2-109",
+   "subject": "Aquaryn dismount camera obstruction",
+   "original_defect": "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action",
+   "judges_scoring": 3,
+   "bar_a_mean": 3.67,
+   "spread": 1.0,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 3,
+     "severity": 4,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_mounted:mounted-swim-11-land",
+      "sup_mounted:mounted-swim-12-land",
+      "sup_mounted:mounted-swim-14-land",
+      "sup_mounted:mounted-swim-16-land"
+     ],
+     "reason": "The camera no longer sits behind Aquaryn's back, but after dismount Aquaryn is absent and a detached gray saddle/harness arch hovers in mid-air in front of the trainer in every land frame, a new obvious artifact."
+    },
+    "judge2": {
+     "bar_a_score": 4.0,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_mounted:mounted-swim-11-land",
+      "sup_mounted:mounted-swim-12-land",
+      "sup_mounted:mounted-swim-14-land",
+      "sup_mounted:mounted-swim-16-land"
+     ],
+     "reason": "The camera now pulls back so the trainer and shore are readable, but a grey horseshoe-shaped arch floats above/behind the trainer in every land frame, an unexplained artefact that dominates the centre."
+    },
+    "judge3": {
+     "bar_a_score": 4,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_mounted:mounted-swim-11-land",
+      "sup_mounted:mounted-swim-12-land",
+      "sup_mounted:mounted-swim-16-land"
+     ],
+     "reason": "The camera no longer sits behind Aquaryn's back; the trainer is clearly framed walking ashore, but a grey U-shaped saddle/harness object floats in mid-air above the trainer in every land frame, a new visible artifact."
+    }
+   }
+  },
+  {
+   "item_id": "P2-113",
+   "subject": "catch camera distance",
+   "original_defect": "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path",
+   "judges_scoring": 0,
+   "bar_a_mean": null,
+   "spread": null,
+   "cpu_provisional_6_7": null,
+   "rescore_status": "NO_CURRENT_EVIDENCE",
+   "per_judge": {},
+   "coverage_gap": "phase2_capture_catch.gd loops on \"Engage Mangrove Monitor\" without engaging (1 h timeout, 0 frames); no fresh catch frames.",
+   "judge_dispositions": {
+    "judge1": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge2": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge3": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ]
+   }
+  },
+  {
+   "item_id": "P2-114",
+   "subject": "catch chance HUD contrast",
+   "original_defect": "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming",
+   "judges_scoring": 0,
+   "bar_a_mean": null,
+   "spread": null,
+   "cpu_provisional_6_7": null,
+   "rescore_status": "NO_CURRENT_EVIDENCE",
+   "per_judge": {},
+   "coverage_gap": "phase2_capture_catch.gd loops on \"Engage Mangrove Monitor\" without engaging (1 h timeout, 0 frames); no fresh catch frames.",
+   "judge_dispositions": {
+    "judge1": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge2": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge3": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ]
+   }
+  },
+  {
+   "item_id": "P2-115",
+   "subject": "authored camp creature bed silhouette",
+   "original_defect": "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place",
+   "judges_scoring": 3,
+   "bar_a_mean": 3.67,
+   "spread": 2,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 3,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_camps:water_camp_first_shore__bed",
+      "sup_camps:water_camp_brine_steps__bed",
+      "sup_camps:water_camp_salt_crown__bed"
+     ],
+     "reason": "The creature bed is still a flat speckled orange-brown oval in a dark raised curb, and at Salt Crown it reads as a thin strip edge-on; there is no bedding volume."
+    },
+    "judge2": {
+     "bar_a_score": 3.0,
+     "severity": 4,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_camps:water_camp_first_shore__bed",
+      "sup_camps:water_camp_brine_steps__bed",
+      "sup_camps:water_camp_salt_crown__bed"
+     ],
+     "reason": "The bed is still a flat speckled brown oval inside an orange-brown curb, becoming a thin ring edge-on at Salt Crown; no bedding shape, and the First Shore view is half-blocked by a large brown creature body in the foreground."
+    },
+    "judge3": {
+     "bar_a_score": 5,
+     "severity": 3,
+     "assessment": "IMPROVED",
+     "pictured": "yes",
+     "passes": [
+      "pass2"
+     ],
+     "evidence": [
+      "sup_camps:water_camp_first_shore__bed",
+      "sup_camps:water_camp_brine_steps__bed",
+      "sup_camps:water_camp_salt_crown__bed"
+     ],
+     "reason": "The bed now reads as a woven basket rim filled with straw-orange bedding, more nest-like, but it is still a flat low oval with no cushion volume, and at Salt Crown it becomes a thin brown strip; the First Shore bed view is also blocked by a large brown creature mesh in the foreground."
+    }
+   }
+  },
+  {
+   "item_id": "P2-116",
+   "subject": "authored camp workbench identity",
+   "original_defect": "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer",
+   "judges_scoring": 3,
+   "bar_a_mean": 3.67,
+   "spread": 0.5,
+   "cpu_provisional_6_7": "BELOW",
+   "rescore_status": "SCORED",
+   "per_judge": {
+    "judge1": {
+     "bar_a_score": 3.5,
+     "severity": 3,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_06:deep_watch_24:180",
+      "day_05:lantern_cove_18:45",
+      "night_06:deep_watch_24:180",
+      "sup_camps:water_camp_brine_steps__crafting",
+      "sup_camps:water_camp_first_shore__crafting",
+      "sup_camps:water_camp_salt_crown__crafting"
+     ],
+     "reason": "The only camp-like setups (Deep Watch beach, Lantern Cove) show a small table/stand with a blue banner and crates; at this distance there is no readable workbench with tools or a work surface, so station identity is still weak. | The workbench is a tiny low plain bench with one small dark tool, hard to identify at camp distance, and the trainer partly covers it in the Brine Steps and First Shore crafting views."
+    },
+    "judge2": {
+     "bar_a_score": 3.5,
+     "severity": 3.5,
+     "assessment": "IMPROVED/PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_06:deep_watch_24:180",
+      "night_06:deep_watch_24:180",
+      "sup_camps:water_camp_brine_steps__crafting",
+      "sup_camps:water_camp_first_shore__crafting",
+      "sup_camps:water_camp_salt_crown__crafting"
+     ],
+     "reason": "The Deep Watch camp shows a cloth-topped board/table station with a blue banner that reads as a station at distance, though it looks more like a notice board than a workbench and has no visible tools. | The workbench is a tiny low plank bench with one small object, dwarfed by the tent and partly hidden by the trainer at Brine Steps and First Shore; no tools or work-surface read."
+    },
+    "judge3": {
+     "bar_a_score": 4,
+     "severity": 3,
+     "assessment": "PERSISTS",
+     "pictured": "yes",
+     "passes": [
+      "pass1",
+      "pass2"
+     ],
+     "evidence": [
+      "day_06:deep_watch_24:180",
+      "night_06:deep_watch_24:180",
+      "day_02:shellwatch_08:90",
+      "sup_camps:water_camp_brine_steps__crafting",
+      "sup_camps:water_camp_first_shore__crafting",
+      "sup_camps:water_camp_salt_crown__crafting"
+     ],
+     "reason": "A small canopy stand with a blue banner and lantern at Deep Watch Beach may be a camp station, and crates sit at Shellwatch, but no recognisable workbench with tools or work surface reads at this distance. | The workbench is still a small narrow wooden table with one tiny vise-like object, dwarfed by the tent; in First Shore and Brine Steps crafting views the trainer and an NPC stand in front of it."
+    }
+   }
+  },
+  {
+   "item_id": "P2-119",
+   "subject": "Fly carrier grip pose",
+   "original_defect": "The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands rather than carrying a person",
+   "judges_scoring": 0,
+   "bar_a_mean": null,
+   "spread": null,
+   "cpu_provisional_6_7": null,
+   "rescore_status": "NO_CURRENT_EVIDENCE",
+   "per_judge": {},
+   "coverage_gap": "phase2_capture_flight.gd is Cloudreach-only; no Tidewake flight capture tool.",
+   "judge_dispositions": {
+    "judge1": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge2": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ],
+    "judge3": [
+     "NOT_PICTURED",
+     "NOT_PICTURED",
+     "NOT_PICTURED"
+    ]
+   }
+  }
+ ]
+}
