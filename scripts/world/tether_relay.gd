@@ -824,14 +824,45 @@ func _build_gate_presentation(holder: Node3D, gate: Dictionary, centre: Vector2,
 	# deeper than the jamb/lintel colliders it dresses, and the fight camera
 	# parked inside its stone. Its own shape, camera-only: the lens stops at
 	# the stone and still passes through the open arch; nobody collides with it.
-	arch.create_trimesh_collision()
-	for child: Node in arch.get_children():
+	# PR #712 (smoke_relay 378 s -> ~35 min): the Meshy hero is ~62k triangles,
+	# far too dense for a per-frame camera shape. With the hero on, the camera
+	# shape stays the fitted kit arch (the same envelope and opening), built
+	# on a hidden helper so only the hero renders.
+	var occluder_source := arch
+	if hero_mesh != null:
+		occluder_source = _kit_arch_occluder_source(root, path, opening, outer_height, outer_depth, clearance)
+	if occluder_source != null:
+		occluder_source.create_trimesh_collision()
+	for child: Node in (occluder_source.get_children() if occluder_source != null else []):
 		if child is StaticBody3D:
 			var occluder := child as StaticBody3D
 			occluder.name = "CameraOccluder"
 			occluder.collision_layer = CAMERA_OCCLUSION_ONLY_LAYER
 			occluder.collision_mask = 0
 	return arch
+
+
+## The fitted kit arch as an invisible MeshInstance3D: the source of the
+## camera-only occluder when the dense Meshy hero gatehouse renders instead.
+func _kit_arch_occluder_source(root: Node3D, path: String, opening: float, outer_height: float,
+		outer_depth: float, clearance: float) -> MeshInstance3D:
+	var kit := load(path) as Mesh
+	if kit == null:
+		return null
+	var fit := gate_presentation_fit(kit, opening, outer_height, outer_depth, clearance)
+	if fit.is_empty():
+		return null
+	var bounds: AABB = (fit["metrics"] as Dictionary)["bounds"]
+	var scale: Vector3 = fit["scale"]
+	var helper := MeshInstance3D.new()
+	helper.name = "GateCameraOccluderSource"
+	helper.mesh = kit
+	helper.scale = scale
+	helper.position = Vector3(-bounds.get_center().x * scale.x,
+		-bounds.position.y * scale.y, -bounds.get_center().z * scale.z)
+	helper.visible = false
+	root.add_child(helper)
+	return helper
 
 
 ## Paired installed-kit standards mounted directly to the approach face. The
