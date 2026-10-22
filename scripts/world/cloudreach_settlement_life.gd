@@ -36,6 +36,7 @@ const PROPS := {
 	"rock_low": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
 	"rock_mid": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
 	"fence": "res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Extension2.gltf",
+	"strata_outcrop": "res://assets/props/meshy-1020/cloudreach_strata_spire_cluster/cloudreach_strata_spire_cluster.glb",
 }
 const MESHY := "res://assets/props/meshy-1020/cloudreach_%s/cloudreach_%s.glb"
 static var _items_loaded := false

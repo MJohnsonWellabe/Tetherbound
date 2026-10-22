@@ -1,7 +1,7 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-settlement-life-candidate",
-  "revision": "f08-3-settlement-life-r16-lamp-window",
+  "revision": "f08-3-settlement-life-r17-outcrops",
   "_scope": "F08#3 candidate, OFF until a three-judge code-blind pass. Local presentation only: lamp posts, market edge, a Cliffhold hearth and edge trees at Galefoot and Cliffhold from installed asset families; warmer darker limestone spires; the Galefoot lantern line no longer plants a pole in the plaza. Coordinates are landmark-local metres; every piece snaps to the authored ground or is skipped. No collision, save field, RPC or route change.",
   "lamp": {
     "post_height_m": 3.6,
@@ -790,8 +790,8 @@
     "night_tint": "#3e4a66"
   },
   "building_tint": "#cfc4b2",
-  "window_colour": "#ffa04a",
-  "window_night_energy": 1.2,
+  "window_colour": "#ff8a2a",
+  "window_night_energy": 0.7,
   "narrow_shoulders": {
     "_why": "Coordinator ruling 21 Oct: drop the ground outside the walkable crowns the fixed cameras look across. Route shoulders near each settlement narrow so their existing outer-edge drop (14-34 m) falls away beside the road; road ribbon and 48 m terrace unchanged.",
     "centres": [
@@ -967,6 +967,46 @@
       "lateral_m": -5.3,
       "height": 1.0,
       "yaw": 0
+    },
+    {
+      "asset": "strata_outcrop",
+      "along_m": 8.0,
+      "lateral_m": 9.0,
+      "height": 3.2,
+      "yaw": 35
+    },
+    {
+      "asset": "strata_outcrop",
+      "along_m": 14.0,
+      "lateral_m": 11.5,
+      "height": 5.0,
+      "yaw": -60
+    },
+    {
+      "asset": "strata_outcrop",
+      "along_m": 8.0,
+      "lateral_m": -9.0,
+      "height": 3.2,
+      "yaw": -35
+    },
+    {
+      "asset": "strata_outcrop",
+      "along_m": 14.0,
+      "lateral_m": -11.5,
+      "height": 5.0,
+      "yaw": 60
     }
-  ]
+  ],
+  "cliffhold_detail_overrides": {
+    "_why": "r17: the Cliffhold door lanterns lit the night court road orange; they now cast the same pale warm white as the lamp posts, and cottage windows glow amber without washing to cream.",
+    "door_lantern": {
+      "colour": "#ffe4c4",
+      "energy": 1.2
+    },
+    "windows": {
+      "colour": "#ff8a2a",
+      "night_energy": 1.2
+    }
+  },
+  "_r17_outcrops": "Pale stratified Meshy outcrops (installed strata_spire_cluster, 3-5 m) frame both sides of every fixed settlement camera's near field, so the lower third reads as cliff-top stone rather than lawn. Visual only, beside the road, no collision."
 }
