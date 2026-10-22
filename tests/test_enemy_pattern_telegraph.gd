@@ -96,3 +96,15 @@ func test_boss_aura_is_weaker_off_compatibility() -> void:
 	var row := {"cue_boss_aura_forward_plus_strength": 0.5, "cue_boss_aura_forward_plus_light": 0.25}
 	assert_eq(TELEGRAPH.aura_renderer_scale(row, "forward_plus"), Vector2(0.5, 0.25))
 	assert_eq(TELEGRAPH.aura_renderer_scale(row, "gl_compatibility"), Vector2.ONE)
+
+
+## F22#4 final: a row's own cue_depth_pull_m draws that row pulled while the
+## shared value stays 0, so only the judged Stormwood named rows change.
+func test_a_row_depth_pull_overrides_the_shared_value() -> void:
+	var shared := {"depth_pull_m": 0.0}
+	var plain: Material = TELEGRAPH._cue_material({"telegraph_shape": "cone"}, shared, Color.WHITE)
+	assert_true(plain is StandardMaterial3D, "no row pull keeps the shared off state")
+	var pulled: Material = TELEGRAPH._cue_material({"telegraph_shape": "cone", "cue_depth_pull_m": 0.45}, shared, Color.WHITE)
+	assert_true(pulled is ShaderMaterial, "the row's pull draws it depth-tested and pulled")
+	var marker: Material = TELEGRAPH._cue_material({"telegraph_shape": "marker", "cue_depth_pull_m": 0.45}, shared, Color.WHITE)
+	assert_true(marker is StandardMaterial3D, "marker discs keep F04#1's no-depth-test")

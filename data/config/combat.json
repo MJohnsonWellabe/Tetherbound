@@ -746,7 +746,7 @@
       ]
     },
     "attacks": {
-      "hollows_alpha_charger_rush": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
+      "hollows_alpha_charger_rush": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85, "cue_lane_colour": "#b48cff", "cue_lane_crackle": 0.85, "cue_impact_burst": true, "cue_burst_colour": "#9d7bff", "cue_burst_foam": "#ffffff", "cue_burst_light_colour": "#d9c8ff", "cue_burst_arcs": 7, "cue_water_burst_light_energy": 10.0, 
         "role": "CHARGER",
         "slot": "quick",
         "telegraph_shape": "lane",
@@ -766,7 +766,7 @@
         "lane_half_width_m": 1.2,
         "power": 10.4
       },
-      "hollows_alpha_charger_double_rush": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
+      "hollows_alpha_charger_double_rush": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85, "cue_lane_colour": "#b48cff", "cue_lane_crackle": 0.85, "cue_impact_burst": true, "cue_burst_colour": "#9d7bff", "cue_burst_foam": "#ffffff", "cue_burst_light_colour": "#d9c8ff", "cue_burst_arcs": 7, "cue_water_burst_light_energy": 10.0, 
         "role": "CHARGER",
         "slot": "charged",
         "telegraph_shape": "lane",
@@ -790,7 +790,7 @@
         "repeat_recovery_s": 0.6,
         "power": 10.4
       },
-      "capacitor_alpha_charger_rush": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
+      "capacitor_alpha_charger_rush": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85, "cue_lane_colour": "#b48cff", "cue_lane_crackle": 0.85, "cue_impact_burst": true, "cue_burst_colour": "#9d7bff", "cue_burst_foam": "#ffffff", "cue_burst_light_colour": "#d9c8ff", "cue_burst_arcs": 7, "cue_water_burst_light_energy": 10.0, 
         "_why_lunge_f10_2": "Tune 2026-10-13 (coordinator, owner-delegated): 5.5 -> 7.5 m so the dive covers Voltarach's 8.7 m visible-extent standoff plus the contact margin (stormwood_encounters.json _why_lunge_f10_2).",
         "role": "DIVER",
         "slot": "quick",
@@ -813,7 +813,7 @@
         "reposition_distance": 7.0,
         "power": 7.2
       },
-      "capacitor_alpha_diver_leap": {
+      "capacitor_alpha_diver_leap": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85,
         "_why_lunge_f10_2": "Tune 2026-10-13 (coordinator, owner-delegated): 5.5 -> 7.5 m so the dive covers Voltarach's 8.7 m visible-extent standoff plus the contact margin (stormwood_encounters.json _why_lunge_f10_2).",
         "role": "DIVER",
         "slot": "charged",
@@ -837,7 +837,7 @@
         "lunge_travels": true,
         "power": 7.2
       },
-      "crown_guardian_wall_check": {
+      "crown_guardian_wall_check": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85,
         "role": "WALL",
         "slot": "quick",
         "telegraph_shape": "cone",
@@ -858,7 +858,7 @@
         "reposition_distance": 2.5,
         "power": 12.0
       },
-      "crown_guardian_wall_slam": {
+      "crown_guardian_wall_slam": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85,
         "role": "WALL",
         "slot": "charged",
         "telegraph_shape": "cone",
@@ -879,7 +879,7 @@
         "reposition_distance": 2.5,
         "power": 12.0
       },
-      "old_rodfolk_hall_guardian_ace_lane": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
+      "old_rodfolk_hall_guardian_ace_lane": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85, "cue_lane_colour": "#b48cff", "cue_lane_crackle": 0.85, "cue_impact_burst": true, "cue_burst_colour": "#9d7bff", "cue_burst_foam": "#ffffff", "cue_burst_light_colour": "#d9c8ff", "cue_burst_arcs": 7, "cue_water_burst_light_energy": 10.0, 
         "role": "ACE",
         "slot": "charged",
         "telegraph_shape": "lane",
@@ -900,7 +900,7 @@
         "first_attack_delay": 2.5,
         "power": 14.4
       },
-      "old_rodfolk_hall_guardian_ace_exam": {
+      "old_rodfolk_hall_guardian_ace_exam": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85,
         "role": "ACE",
         "slot": "charged",
         "telegraph_shape": "cone",
@@ -963,7 +963,7 @@
         "reposition_distance": 2.0,
         "power": 6.4
       },
-      "glass_field_alpha_charger_rush": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
+      "glass_field_alpha_charger_rush": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85, "cue_lane_colour": "#b48cff", "cue_lane_crackle": 0.85, "cue_impact_burst": true, "cue_burst_colour": "#9d7bff", "cue_burst_foam": "#ffffff", "cue_burst_light_colour": "#d9c8ff", "cue_burst_arcs": 7, "cue_water_burst_light_energy": 10.0, 
         "role": "CHARGER",
         "slot": "quick",
         "telegraph_shape": "lane",
@@ -983,7 +983,7 @@
         "lane_half_width_m": 1.2,
         "power": 10.4
       },
-      "glass_field_alpha_charger_double_rush": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
+      "glass_field_alpha_charger_double_rush": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85, "cue_lane_colour": "#b48cff", "cue_lane_crackle": 0.85, "cue_impact_burst": true, "cue_burst_colour": "#9d7bff", "cue_burst_foam": "#ffffff", "cue_burst_light_colour": "#d9c8ff", "cue_burst_arcs": 7, "cue_water_burst_light_energy": 10.0, 
         "role": "CHARGER",
         "slot": "charged",
         "telegraph_shape": "lane",
@@ -2800,7 +2800,7 @@
       }
     },
     "presentation": {
-      "_why_depth_pull_m": "F22#4 tell look (Fights lane, 22 Oct; GPU judges: cones painted over the attacker's legs and the pilot as flat magenta slabs). >0 draws ring/cone/fan/lane pattern shapes depth-tested and pulled this many metres toward the lens (the charge lane's technique), so a creature standing on the shape occludes it; marker/field discs keep F04#1's no-depth-test. 0 = OFF until its fight frames pass a code-blind judge.",
+      "_why_depth_pull_m": "F22#4 tell look (Fights lane, 22 Oct; GPU judges: cones painted over the attacker's legs and the pilot as flat magenta slabs). >0 draws ring/cone/fan/lane pattern shapes depth-tested and pulled this many metres toward the lens (the charge lane's technique), so a creature standing on the shape occludes it; marker/field discs keep F04#1's no-depth-test. Shared value 0 (OFF); a row's own cue_depth_pull_m overrides it. ON (0.45) only on the Stormwood named rows (hollows_alpha, capacitor_alpha, crown_guardian, old_rodfolk_hall_guardian, glass_field_alpha), with their violet #b48cff tells, crackle 0.85 and the arc impact burst: round T2, three code-blind judges on the yardstick, mapped Tanglevolt 5.29 and Voltarach 5.29 vs shipping 4.65 (F22-4-T2.md). An improvement, NOT a 7.5 closure; Stormwood grade is the remaining gap. The judged recipe set the shared value; shipping it per row keeps every other fight as judged.",
       "depth_pull_m": 0.0,
       "ground_lift_m": 0.09,
       "segments": 48,

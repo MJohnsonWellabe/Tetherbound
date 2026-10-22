@@ -191,7 +191,9 @@ static func _cached_shader(key: String, code: String) -> Shader:
 
 
 static func _cue_material(profile: Dictionary, cfg: Dictionary, colour: Color) -> Material:
-	var pull := float(cfg.get("depth_pull_m", 0.0))
+	# A row's own `cue_depth_pull_m` overrides the shared value (F22#4: only the
+	# judged Stormwood named rows draw pulled).
+	var pull := float(profile.get("cue_depth_pull_m", cfg.get("depth_pull_m", 0.0)))
 	if pull > 0.0 and not str(profile.get("telegraph_shape", "")) in ["marker", "field"]:
 		var pulled := ShaderMaterial.new()
 		pulled.shader = _cached_shader("pulled_cue", PULLED_CUE_SHADER.replace("@CRACKLE@", STYLE.CRACKLE_GLSL))
