@@ -273,6 +273,10 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 			for item: Dictionary in spec.get("stand_pattern", []):
 				var local := from + forward * float(item.along_m) + side * float(item.lateral_m) * float(stand.get("mirror", 1.0))
 				var at := _ground(world, holder, local + Vector3.UP * float(stand.get("y", 0.0)))
+				# A ledge piece meant to hang past the rim (`void_ok`) keeps the
+				# stand's authored height where the ground has already fallen away.
+				if at == Vector3.INF and bool(item.get("void_ok", false)):
+					at = local + Vector3.UP * float(stand.get("y", 0.0))
 				if at == Vector3.INF:
 					continue
 				var face := rad_to_deg(atan2(forward.x, forward.z)) + float(item.get("yaw", 0.0))
