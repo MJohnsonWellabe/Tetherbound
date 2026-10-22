@@ -1,0 +1,46 @@
+{
+ "verdict": "PASS",
+ "criterion": "F39#0 (Tidewake): recapture >=200 frames and re-score all catalogue rows against the new bar",
+ "scope": "Read only files in /home/user/f39cap/complete/. Checks were run on all rows and passes, not only a sample.",
+ "checks": {
+  "recapture": {
+   "verdict": "PASS",
+   "basis": "frames_total 230 (clear-day 115 + clear-night 115 of 120 planned each). 230 frame entries, 230 unique frame_ids, 230 unique sha256 values, and unique_image_sha256=230. Renderer recorded: gl_compatibility, preset Low, llvmpipe (LLVM 20.1.2), 1920x1080, graphics_config_sha256 present. source_commit f6e82282 is recorded at the top level and in the renderer block. Failures are disclosed: 10 Tidal Cradle Saddle Camp frames (5 headings x day/night) were refused by Game.debug_teleport_to, both segments have manifest_complete_flag=false, and the disclosure text states the CPU/Low limit and that a GPU pass is still owed. Candidate flags are off."
+  },
+  "ids": {
+   "verdict": "PASS",
+   "basis": "judge_rows.json has 44 unique item_ids. row-scores.json has 44 rows with 44 unique ids, the same set as the catalogue (symmetric difference empty), so no id is missing or extra. Each judge's pass1 and pass2 files cover all 44 ids with no duplicates. Each judge's pass3 file covers the same 14 ids."
+  },
+  "scored_rows": {
+   "verdict": "PASS",
+   "basis": "All 33 SCORED rows were checked, not a sample. For each judge, the per-judge bar_a_score was recomputed as the mean of that judge's raw scores over the passes where the row was pictured (yes/partial). Every value and every passes list matched the raw files. Every SCORED row has judges_scoring=3 and three per_judge entries. Row bar_a_mean (the mean of the three judges) and spread (max minus min) were recomputed and match within 0.01. The cpu_provisional_6_7 flag matches the 6.7 threshold on every row. Example: P2-008 has judge1 5 (pass1 5, pass2 5), judge2 4.5 (4, 5.0) and judge3 5.5 (5, 6), giving a mean of 5.0, a spread of 1.0 and BELOW.",
+   "rows_checked": 33
+  },
+  "no_evidence_rows": {
+   "verdict": "PASS",
+   "basis": "All 11 NO_CURRENT_EVIDENCE rows appear in all 9 raw files (3 judges x 3 passes). In every one, pictured is 'no' and bar_a_score is null, matching the recorded judge_dispositions of NOT_PICTURED x3 per judge, so no raw score was discarded. Each row states a specific missing capture: catch rows P2-060, P2-061, P2-113 and P2-114 (phase2_capture_catch.gd loop, 0 frames); dialogue rows P2-073, P2-074 and P2-075 (fullscreen check under Xvfb); flight rows P2-069 and P2-119 (no Tidewake flight capture tool); and Venn victory/aftermath rows P2-103 and P2-104 (capture cap reached before victory).",
+   "ids": ["P2-060","P2-061","P2-069","P2-073","P2-074","P2-075","P2-103","P2-104","P2-113","P2-114","P2-119"]
+  },
+  "overall": {
+   "verdict": "PASS",
+   "basis": "The per-pass judge bar_a and bar_b arrays match the raw overall blocks. Recomputed values: pass1 bar_a [4.6,4.1,3.8] mean 4.17, spread 0.8, bar_b mean 3.63; pass2 bar_a [4.8,4.7,5.2] mean 4.9, spread 0.5, bar_b mean 4.3; pass3 bar_a [5.6,5.6,5.4] mean 5.53, spread 0.2, bar_b mean 4.8. All match row-scores.json."
+  }
+ },
+ "counts": {
+  "catalogue_ids": 44,
+  "row_scores_ids": 44,
+  "scored": 33,
+  "no_current_evidence": 11,
+  "frames_total": 230,
+  "frames_planned": 240,
+  "unique_sha256": 230,
+  "capture_failures_disclosed": 10,
+  "raw_judge_files": 9
+ },
+ "discrepancies": [],
+ "notes": [
+  "Self-consistency check: in all 9 raw files, pictured='no' occurs exactly when bar_a_score is null.",
+  "Per-judge row scores average a judge's pass1/pass2/pass3 raw scores where pictured. This is a stated aggregation choice, not an invented score.",
+  "No row meets the bar. The criterion requires the recapture and re-scoring, not passing scores. The capture was CPU Low/Compatibility only, so the GPU pass is still owed."
+ ]
+}

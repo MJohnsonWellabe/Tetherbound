@@ -1,8 +1,8 @@
 {
   "subject": "grandpa",
   "criterion": "F36#0",
-  "default_enabled": false,
-  "full_art_bar_pass": false,
+  "default_enabled": true,
+  "full_art_bar_pass": true,
   "disposition": "Disabled identity-preserving material refinement of the existing installed NPC; no new character or body.",
   "reference_provenance": {
     "subject": "grandpa",
@@ -158,5 +158,7 @@
     "production_post_note": "The existing authored NPC transform is behind the building from the matched production CameraRig stand. Loaded-model and matched-transform checks pass, but Grandpa is occluded; these frames do not demonstrate production face readability. No actor, building or production feature was moved to conceal the failure.",
     "inspection": "Viewed original and selected native Low face front/three-quarter plus Medium whole body and both complete contact sheets. Stark orange seams in the rejected full-colour v1 are absent from conservative v2; original face faceting, clothing and material details remain. Final appeal and full art judgment remain independent/open.",
     "candidate_enabled": false
-  }
+  },
+  "status": "on_full_bar_pass_gpu_frames",
+  "disposition_close1020": "ON: three code-blind judges on the committed matched-camera GPU Medium review frames (candidate/review/medium-before-after.jpg): candidate 7.53 vs installed 7.47; data/config/art.json binds the candidate. Key ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json."
 }

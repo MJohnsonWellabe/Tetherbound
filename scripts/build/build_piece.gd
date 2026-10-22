@@ -99,6 +99,10 @@ func _spawn(mesh_path: String, solid: bool, light: Dictionary, model_scale: Vect
 	var combined := AABB()
 	var first := true
 	for mesh_instance in _mesh_instances(_model):
+		# Presentation-only dressing (e.g. the placed-wall hero art) never
+		# widens the piece's collider; the kit module's own bounds decide it.
+		if mesh_instance.has_meta(&"presentation_only"):
+			continue
 		var local_aabb := mesh_instance.mesh.get_aabb()
 		var world_aabb := mesh_instance.transform * local_aabb
 		combined = world_aabb if first else combined.merge(world_aabb)

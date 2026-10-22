@@ -1,0 +1,82 @@
+{
+  "species": "aeriex",
+  "installed": "assets/creatures/tetherbound/aeriex/candidate/models/creature_aeriex_native.glb",
+  "installed_sha256": "7c5a72f8888589e8779bbaa24ae5964a4fc57dfc6c603d5e9282acfc34738fff",
+  "retexture": "assets_raw/aeriex/meshy-r6-1021/ae_r1-01a15d6f-cd08-7625-bbf7-c4982172c989/model.glb",
+  "retexture_sha256": "686a35b240cbecc3eb4e4e825a7b020b68bd75ecf778d8dd5bb2f21f5a0cc340",
+  "output": "assets/creatures/tetherbound/aeriex/candidate_installed_retex/models/creature_aeriex_installed_retex_r6_lod0.glb",
+  "output_sha256": "7ae3f7b91d597cf0dcf5f97d4a24d5188f7165c9fe791571673eba460ed61f88",
+  "unique_uvs": 23702,
+  "uv_sets_identical": true,
+  "profile": {
+    "installed": "assets/creatures/tetherbound/aeriex/candidate/models/creature_aeriex_native.glb",
+    "run": "ae_r1-01a15d6f-cd08-7625-bbf7-c4982172c989",
+    "hue_moves": [],
+    "emissive": null,
+    "roughness_floor": null,
+    "safe_hue": 28.0
+  },
+  "grade": {
+    "red_clamped_texels": 2999
+  },
+  "red_metric_strict_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+    "retexture": 0.0863,
+    "candidate": 0.0148
+  },
+  "kept_unchanged": [
+    "meshes",
+    "accessors",
+    "skins",
+    "nodes",
+    "animations",
+    "scenes",
+    "all non-image bufferView bytes"
+  ],
+  "non_image_buffer_views_byte_identical": 485,
+  "joint_names": [
+    "root",
+    "pelvis",
+    "spine",
+    "neck",
+    "head",
+    "wing_upper_l",
+    "wing_lower_l",
+    "wing_tip_l",
+    "wing_upper_r",
+    "wing_lower_r",
+    "wing_tip_r",
+    "tail_1",
+    "tail_2",
+    "tail_3"
+  ],
+  "material": {
+    "doubleSided": true,
+    "name": "Material_0",
+    "normalTexture": {
+      "index": 0
+    },
+    "pbrMetallicRoughness": {
+      "baseColorTexture": {
+        "index": 1
+      },
+      "metallicFactor": 0.0,
+      "metallicRoughnessTexture": {
+        "index": 2
+      },
+      "roughnessFactor": 1.0
+    }
+  },
+  "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+  ]
+}
