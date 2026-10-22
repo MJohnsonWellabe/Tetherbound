@@ -1,0 +1,82 @@
+extends "res://tools/phase2_capture_locations.gd"
+
+## GPU-pass runtime metallic probe (local only, never committed). Same location
+## capture; once the world is built it dumps, per source asset, the material
+## state actually bound for rendering (metallic, roughness, metallic_texture).
+## TB_METAL0=1 sets metallic 0 on every rendered BaseMaterial3D that is >= 0.9
+## with no metallic texture, every frame, so the capture is a matched comparison.
+var _frames := 0
+var _dumped := false
+var _fixed := {}
+
+
+func _initialize() -> void:
+	RenderingServer.frame_pre_draw.connect(_tick)
+
+
+func _source(node: Node) -> String:
+	var n: Node = node
+	while n != null:
+		if not n.scene_file_path.is_empty() and n.scene_file_path.ends_with(".glb"):
+			return n.scene_file_path
+		n = n.get_parent()
+	var gi := node as MeshInstance3D
+	if gi != null and gi.mesh != null and not gi.mesh.resource_path.is_empty():
+		return gi.mesh.resource_path.get_slice("::", 0)
+	return "(runtime) " + str(node.get_path()).get_slice("/", 2)
+
+
+func _surfaces(gi: GeometryInstance3D) -> Array:
+	var out: Array = []
+	if gi.material_override != null:
+		out.append(gi.material_override)
+		return out
+	var mesh: Mesh = null
+	if gi is MeshInstance3D: mesh = (gi as MeshInstance3D).mesh
+	elif gi is MultiMeshInstance3D and (gi as MultiMeshInstance3D).multimesh != null: mesh = (gi as MultiMeshInstance3D).multimesh.mesh
+	if mesh == null: return out
+	for s in mesh.get_surface_count():
+		var m: Material = (gi as MeshInstance3D).get_active_material(s) if gi is MeshInstance3D else mesh.surface_get_material(s)
+		if m != null: out.append(m)
+	return out
+
+
+func _tick() -> void:
+	_frames += 1
+	if OS.get_environment("TB_METAL0") == "1" and _frames % 30 == 0:
+		for node: Node in get_root().find_children("*", "MeshInstance3D", true, false):
+			var mi := node as MeshInstance3D
+			if mi.mesh == null or mi.material_override != null: continue
+			for s in mi.mesh.get_surface_count():
+				var m := mi.get_active_material(s) as BaseMaterial3D
+				if m == null or _fixed.has(m.get_instance_id()) or m.metallic < 0.9 or m.metallic_texture != null: continue
+				var c := m.duplicate() as BaseMaterial3D
+				c.metallic = 0.0
+				_fixed[c.get_instance_id()] = true
+				mi.set_surface_override_material(s, c)
+	if _frames < 900 or _frames % 300 != 0: return
+	_dumped = true
+	var agg := {}
+	for node: Node in get_root().find_children("*", "GeometryInstance3D", true, false):
+		var gi := node as GeometryInstance3D
+		if not gi.is_visible_in_tree(): continue
+		var src := _source(gi)
+		for m: Material in _surfaces(gi):
+			var key := src
+			var desc := ""
+			if m is BaseMaterial3D:
+				var b := m as BaseMaterial3D
+				desc = "%s metallic=%.2f roughness=%.2f metallic_texture=%s shading=%d" % [b.get_class(), b.metallic, b.roughness,
+					"yes" if b.metallic_texture != null else "no", b.shading_mode]
+			elif m is ShaderMaterial:
+				var sh := (m as ShaderMaterial).shader
+				desc = "ShaderMaterial %s" % (sh.resource_path if sh != null else "inline")
+			else:
+				desc = m.get_class()
+			key += " | " + desc
+			agg[key] = int(agg.get(key, 0)) + 1
+	var keys := agg.keys()
+	keys.sort()
+	print("METAL dump frame=%d unique=%d" % [_frames, keys.size()])
+	for k: String in keys:
+		print("METAL %s | instances=%d" % [k, agg[k]])
