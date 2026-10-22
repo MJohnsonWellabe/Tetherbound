@@ -3,15 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bx143g5ibxwe1"
-path="res://.godot/imported/preview_meshy.png-c472947e781e6e325913097eb435be4c.ctex"
+path.s3tc="res://.godot/imported/preview_meshy.png-c472947e781e6e325913097eb435be4c.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/props/meshy-1020/meadows_hero_summit/preview_meshy.png"
-dest_files=["res://.godot/imported/preview_meshy.png-c472947e781e6e325913097eb435be4c.ctex"]
+dest_files=["res://.godot/imported/preview_meshy.png-c472947e781e6e325913097eb435be4c.s3tc.ctex"]
 
 [params]
 
