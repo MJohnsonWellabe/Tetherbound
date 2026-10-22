@@ -147,7 +147,7 @@ for role, frames in [('idle', 72), ('walk', 40), ('run', 26), ('attack', 24), ('
             # The held rear-back that judged 7.5+ on Meadowhart and Riverdrake (b3).
             e = min(1, t / .12); e = e * e * (3 - 2 * e)
             r = max(0, min(1, (t - .5) / .47)); e *= 1 - r * r * (3 - 2 * r)
-            rotate('spine', -FWD * 16 * e, AXIS); rotate('neck', -FWD * 18 * e, AXIS); rotate('head', FWD * 12 * e, AXIS)
+            rotate('spine', -FWD * 30 * e, AXIS); rotate('neck', -FWD * 32 * e, AXIS); rotate('head', FWD * 18 * e, AXIS)  # b5: hit read as standing
         if role == 'faint':
             ph = min(1, t / .8); ph = ph * ph * (3 - 2 * ph)
             # The hood folds forward and down; the head rests on the ground beside the coil.

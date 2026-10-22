@@ -163,9 +163,10 @@ for role, frames in [('idle', 72), ('walk', 32), ('run', 20), ('attack', 24), ('
         if role == 'hit':
             e = min(1, t / .12); e = e * e * (3 - 2 * e)
             r = max(0, min(1, (t - .5) / .47)); e *= 1 - r * r * (3 - 2 * r)
-            rotate('body', 14 * e)
-            for k in front:
-                lift(k, UP * 40 * e)
+            # b5/b6: hit read as standing; rear the carapace and throw every leg up.
+            rotate('body', 26 * e)
+            for k in legs:
+                lift(k, UP * (70 if k in front else 30) * e)
         if role == 'faint':
             # b4 judges: the flip stood the spider on end at faint mid; finish it by .4.
             ph = min(1, t / .4); ph = ph * ph * (3 - 2 * ph)
