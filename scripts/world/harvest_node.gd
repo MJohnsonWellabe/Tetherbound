@@ -302,7 +302,7 @@ func resource_amount() -> int:
 ## so `_visual` stays a single node whose `.visible` and `.scale` mean "the
 ## whole prop" regardless of how many parts the scene's own root has.
 func _build_visual(spec: Dictionary = {}) -> void:
-	# F38 P2-034 (OFF unless meshy_item_visuals.json enables it): the reward's
+	# F38 P2-034 (meshy_item_visuals.json `enabled`): the reward's
 	# own Meshy model replaces the generic node look; glow/claims unchanged.
 	var hero := MESHY_ITEM_VISUALS.visual_for(_item_id, _realm_id)
 	if hero != null:

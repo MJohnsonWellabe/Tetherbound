@@ -1,6 +1,6 @@
 extends RefCounted
 
-## F38 P2-033 / P2-034 (OFF): Meadows ground pickups and harvest rewards read
+## F38 P2-033 / P2-034 (ON, CPU-provisional): Meadows ground pickups and harvest rewards read
 ## as generic glows, crates or plants. Per item id, a Meshy model (provenance in
 ## its assets/props/meshy-1020 folder) replaces only the visual, fitted to a
 ## height and seated on the ground. Interaction, claims, glow and saves are the

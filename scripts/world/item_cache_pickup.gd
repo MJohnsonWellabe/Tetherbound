@@ -194,7 +194,7 @@ func _build_visual() -> void:
 		var catalogue: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/items/items.json"))
 		if catalogue is Dictionary:
 			definition = (catalogue.get("items", {}) as Dictionary).get(_item_id, {}) as Dictionary
-	# F38 P2-033 (OFF unless meshy_item_visuals.json enables it).
+	# F38 P2-033 (meshy_item_visuals.json `enabled`).
 	_visual = MESHY_ITEM_VISUALS.visual_for(_item_id, _realm_id)
 	if _visual == null:
 		_visual = create_identity_visual(_item_id, definition)

@@ -65,6 +65,7 @@ const BUILD_DOOR := preload("res://scripts/build/build_door.gd")
 const HOME_PROGRESS := preload("res://scripts/build/home_progress.gd")
 const WORLD_RECORDS := preload("res://scripts/world/realm_world_records.gd")
 const BUILD_PIECE := preload("res://scripts/build/build_piece.gd")
+const VEGETATION := preload("res://scripts/world/vegetation.gd")
 const STORMWOOD_ARCH_RULES := preload("res://scripts/world/stormwood_arch_build_rules.gd")
 const STORMWOOD_ARCH_PIECE := preload("res://scripts/build/stormwood_arch_piece.gd")
 const BUILD_GRID := preload("res://scripts/build/build_grid.gd")
@@ -991,23 +992,20 @@ static func world_occupied_in(space: PhysicsDirectSpaceState3D, spot: Vector3, g
 	return false
 
 
-## A hit blocks a build when it is world geometry: not a moving body (player,
-## creature), not an already placed building (its own occupancy rules above
-## decide neighbours), not the ghost. A body with no node behind it is the
-## streamed vegetation collision (trees and rocks), so it blocks.
+## A hit blocks a build only when it is world scatter: a tree or boulder's
+## streamed collision body (`vegetation.gd` `<model>_Collision`), or a body
+## with no node behind it. Every authored body keeps its own rules: people and
+## creatures, houses and their invisible story gates (Grandpa's DoorGate),
+## placed buildings and the ghost never block here.
 static func blocking_world_hit(hit: Dictionary, ghost: Node = null) -> bool:
 	var collider: Variant = hit.get("collider")
 	if not collider is Node:
 		return true
 	var node := collider as Node
-	if node is CharacterBody3D or node is RigidBody3D:
+	if node == ghost:
 		return false
-	var walk: Node = node
-	while walk != null:
-		if walk == ghost or walk.is_in_group(PLACED_GROUP):
-			return false
-		walk = walk.get_parent()
-	return true
+	return node is StaticBody3D and node.get_parent() is VEGETATION \
+			and String(node.name).ends_with("_Collision")
 
 
 ## Pure legality core shared by the live ghost and `preview_placement`.

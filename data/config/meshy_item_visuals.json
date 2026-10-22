@@ -1,6 +1,6 @@
 {
   "enabled": true,
-  "_scope": "F38 P2-033/P2-034 candidate, deterministic presentation only: Meshy models replace the visual of the listed Meadows pickups and harvest rewards (provenance in each assets/props/meshy-1020 folder). Interaction, claims, glow, saves and network unchanged. OFF until a code-blind before/after pass.",
+  "_scope": "F38 P2-033/P2-034 candidate, deterministic presentation only: Meshy models replace the visual of the listed Meadows pickups and harvest rewards (provenance in each assets/props/meshy-1020 folder). Interaction, claims, glow, saves and network unchanged. ON (CPU-provisional, see _why_on); a GPU pass decides.",
   "realms": [
     "meadows"
   ],

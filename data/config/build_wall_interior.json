@@ -126,7 +126,7 @@
     },
     "r7": {
       "enabled": true,
-      "_scope": "F38 P2-094 r7 candidate (OFF until judged): r5 with a much darker infill. Run-fixture judges (r5 6.29) still read the infill as near-white and blown out under noon sun.",
+      "_scope": "F38 P2-094 r7 (ON, CPU-provisional; see _why_on): r5 with a much darker infill. Run-fixture judges (r5 6.29) still read the infill as near-white and blown out under noon sun.",
       "tint": "#6e5a44",
       "backing": {
         "texture": "res://assets/buildings/quaternius_medieval/T_Plaster_BaseColor.png",

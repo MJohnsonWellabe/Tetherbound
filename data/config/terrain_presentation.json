@@ -17,12 +17,6 @@
   },
   "texture_candidates": {
     "_comment": "Presentation-only terrain surface swaps, keyed by terrain_playground.json texture name. Kept out of terrain_playground.json because that file fingerprints the terrain and scatter bakes (a flag flip there invalidates the vegetation bake). Each applies only with its own enabled.",
-    "grass": {
-      "enabled": false,
-      "_scope": "F04#6 r24 / F38 candidate (OFF until judged): every yardstick judge's first ask is the smeared, blurry Meadows ground. The shipped albedo is octave noise with no texel structure; this one keeps its low-frequency colour field and mean and paints short blade-stroke clumps over it (tools/art_pipeline/make_painted_grass.py, seed 7).",
-      "albedo": "res://assets/environment/terrain/stylised/meadow_grass_painted_Color.png",
-      "normal": "res://assets/environment/terrain/stylised/meadow_grass_painted_NormalGL.png"
-    },
     "grass_v2": {
       "enabled": true,
       "_target": "grass",
