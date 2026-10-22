@@ -34,24 +34,43 @@ therefore uses one fixed yardstick, in `tools/visual_judge/`:
 1. **Standard prompt.** Send `JUDGE_PROMPT.md`'s prompt block verbatim. Fill
    only its three slots (judge folder, set list, recorded defects). Never write
    your own prompt, add hints, or name a side, arm or flag.
-2. **Anchors in every batch.** Cut **at least 4 anchor tiles** (2 pairs or
-   more, from at least two different items) with
-   `python3 tools/visual_judge/anchor_tiles.py --out <judge folder> --key <path outside it>`.
-   They come from committed, already-scored sheets in `anchors/anchors.json`,
-   masked and re-lettered, and go into the same folder as the candidate sheets
-   under the same kind of neutral codes, shuffled among them. The same three
-   judges score anchors and candidates in the same batch on one scale. Judges
-   never see `anchors.json`, the anchor key or a reference score.
-3. **Mapping.** After all three verdicts are in, write the batch's per-judge
-   Bar A scores as `{"anchors": {id: [j1, j2, j3]}, "candidates": {label: [j1, j2, j3]}}`
-   and run `python3 tools/visual_judge/calibrate.py <batch.json>`. It fits
-   measured → reference over the anchors, a least-squares line or a mean
-   offset when there are fewer than 3 anchor points or the slope falls outside
-   0.5–2.0, and maps each candidate onto the reference scale, the scale the
-   7.5 bar was set against.
+2. **One blind folder, anchors and candidates alike.** Build the whole batch in
+   one command, into a fresh judge folder, with the key outside it:
+
+   ```bash
+   python3 tools/visual_judge/anchor_tiles.py --out <judge folder> \
+       --key <outside>/key.json --candidates <spec.json> [--include craft]
+   ```
+
+   The spec lists each candidate pair (`label`, side images `a` and `b`, a
+   neutral `brief` written like the anchor briefs, catalog `defects`). The tool
+   adds **at least 3 anchor pairs (6 tiles) from at least two items**, cut from
+   committed, already-scored sheets in `anchors/anchors.json`. It masks their
+   label strips and gives every set, anchor or candidate, the same format: a
+   random code, an A/B caption strip and random side order. `sets.md` lists
+   them in shuffled order for `[SET LIST]`. `recorded_defects.txt` (beside the
+   key) holds every set's defects, or "none", for `[RECORDED DEFECTS]`. The
+   same three judges score everything in the same batch on one scale. Judges
+   never see `anchors.json`, the key or a reference score.
+3. **Mapping.** After all three verdicts are in, use the key to write the
+   batch's per-judge Bar A scores per side as
+   `{"anchors": {id: [j1, j2, j3]}, "candidates": {label: [j1, j2, j3]}}`
+   and run `python3 tools/visual_judge/calibrate.py <batch.json>`. It refuses
+   a batch with fewer than 4 anchor points. It fits measured → reference over
+   the anchors, a least-squares line, or a mean offset (with a warning) when
+   the slope falls outside 0.5–2.0. It maps each candidate onto the reference
+   scale, the scale the 7.5 bar was set against.
 4. **Report mapped scores.** The round's score is the mapped Bar A mean.
-   Record raw and mapped scores, the fit (method, slope, intercept, anchor
-   residual RMSE) and any `warnings` from the output beside them.
+   Record the raw scores, the mapped score with its `above_top_anchor` flag
+   next to it, the fit (method, slope, intercept, anchor residual RMSE) and
+   every `warnings` line from the output.
+5. **Extrapolated passes.** `above_top_anchor` means the mapped score lies
+   beyond the batch's highest anchor reference. A row that meets the bar only
+   that way must be confirmed by a batch whose anchors reach at least 7.35
+   (`--include craft` for the craft "after" side at 7.35, or
+   `--include f36_0_npc:C1` for the Grandpa face pair at 7.47/7.53). A batch
+   that already includes such an anchor counts as that confirmation
+   (`confirming_batch` in the output).
 
 ## Before/after verdicts and scores (all visual work, proof rules v2)
 
@@ -61,13 +80,15 @@ Most visual work is now one catalog item at a time (board Visual catalog tab,
 1. Capture matched before and after frames: same stands, cameras, time and
    weather, covering the item's catalog sightings. A Low/Compatibility capture
    is enough (WORKFLOW §8.1); judge High/Medium only where the criterion asks.
-2. Build one sheet with neutral labels (A/B, sides shuffled) and withhold which
-   side is the change. The judge gets the sheet, the anchor tiles, the item's
-   defect text, the standard prompt and `docs/reference/`, nothing else.
+2. Build the batch with `anchor_tiles.py` (see "The yardstick"): neutral A/B
+   labels, sides shuffled, and the key withheld. The judge gets the set images,
+   `sets.md`, the standard prompt (with every set's defect text in its one
+   defects slot) and `docs/reference/`, nothing else.
 3. Score with **three independent code-blind judges** on the item's **fixed
    camera set** (`tools/visual_judge/camera_sets/<item>.json`, the same stands,
    cameras, time and weather every round), using the standard prompt with at
-   least 4 anchor tiles in the batch (see "The yardstick"). Each judge scores
+   least 3 anchor pairs (6 tiles) from at least two items in the batch (see
+   "The yardstick"). Each judge scores
    both sides out of 10. Map the scores with `calibrate.py`. The round's score
    is the mapped mean; record the spread. Score first against
    our own key art and ART_DIRECTION (Bar A); report Bar B (Palworld/Valheim)
@@ -78,8 +99,8 @@ Most visual work is now one catalog item at a time (board Visual catalog tab,
    captures are for iteration only and can't park an item on their own.
 4. Record one row in `ralph/reports/EVIDENCE/F38-F41/JUDGE.md` (or the
    criterion's evidence file): time in US Central, item, sheet path and
-   branch, renderer, the three raw scores, the mapped mean, the fit and
-   spread, and remaining defects. Keep one `_sheet*.png`. Ask each judge which 2–3 changes would
+   branch, renderer, the three raw scores, the mapped mean with its
+   `above_top_anchor` flag, the fit and spread, and remaining defects. Keep one `_sheet*.png`. Ask each judge which 2–3 changes would
    add the most points, and whether each gap is fixable in the scene or
    needs new art (a Meshy hero asset).
 5. **Gain rule.** Each round should gain at least 0.5 over the best mapped

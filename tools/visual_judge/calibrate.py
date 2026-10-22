@@ -7,12 +7,14 @@ same batch:
     {"anchors":    {"<anchor id from anchors.json>": [j1, j2, j3] or mean, ...},
      "candidates": {"<label>": [j1, j2, j3] or mean, ...}}
 
-Each anchor gives one point (its judges' mean, its reference). With at least
-three points a least-squares line measured -> reference is fitted; with fewer
-points, a degenerate spread, or a slope outside 0.5-2.0, the map falls back to
-the mean offset (reference - measured). Candidates are mapped through it and
-clamped to 0-10. Output is JSON: the fit, per-anchor residuals and the mapped
-candidate scores against the bar.
+Each anchor gives one point (its judges' mean, its reference). A batch with
+fewer than 4 anchor points is refused (exit 2). A least-squares line
+measured -> reference is fitted; with a degenerate spread or a slope outside
+0.5-2.0 the map falls back to the mean offset (reference - measured), with a
+warning. Candidates are mapped through it and clamped to 0-10. Output is JSON:
+the fit, per-anchor residuals and the mapped candidate scores against the bar,
+with above_top_anchor marking any mapped score beyond the batch's highest
+anchor reference (extrapolated on the reference scale).
 
     python3 tools/visual_judge/calibrate.py batch.json [--bar 7.5] [--out mapped.json]
 """
@@ -24,8 +26,10 @@ from pathlib import Path
 
 ANCHORS = Path(__file__).resolve().parent / "anchors" / "anchors.json"
 SLOPE_RANGE = (0.5, 2.0)
-MIN_POINTS = 3
+MIN_POINTS = 3        # fit() alone: fewer points -> mean offset
+MIN_ANCHORS = 4       # calibrate(): fewer anchor points -> refused (the skill requires 4 tiles)
 RMSE_WARN = 0.75
+CONFIRM_TOP = 7.35    # a batch whose anchors reach this confirms an extrapolated pass
 
 
 def mean(x):
@@ -74,6 +78,9 @@ def clamp(v):
 
 
 def calibrate(batch, references, bar=7.5):
+    if len(batch.get("anchors", {})) < MIN_ANCHORS:
+        raise ValueError(f"batch has {len(batch.get('anchors', {}))} anchor points; at least {MIN_ANCHORS} "
+                         "are required (cut them with anchor_tiles.py and score them in the same batch)")
     points, rows = [], []
     for aid, scores in batch["anchors"].items():
         if aid not in references:
@@ -89,6 +96,7 @@ def calibrate(batch, references, bar=7.5):
                           "mapped": round(mapped, 3), "residual": round(ref - mapped, 3)}
     rmse = math.sqrt(mean([r["residual"] ** 2 for r in residuals.values()]))
     lo, hi = min(p[0] for p in points), max(p[0] for p in points)
+    top_ref = max(p[1] for p in points)
     candidates = {}
     for label, scores in batch.get("candidates", {}).items():
         js = as_scores(scores)
@@ -100,12 +108,23 @@ def calibrate(batch, references, bar=7.5):
             "mapped_judges": [round(clamp(apply(f, j)), 2) for j in js],
             "clamped": raw != clamp(raw),
             "outside_anchor_range": not lo - 0.5 <= m <= hi + 0.5,
+            "above_top_anchor": clamp(raw) > top_ref,
             "meets_bar": clamp(raw) >= bar,
         }
     warnings = []
-    if f["fallback_reason"] and "slope" in f["fallback_reason"]:
-        warnings.append("slope fallback: these judges spread the anchors differently from the reference judges, "
-                        "so the map is only a mean offset; mix anchors from more items into the next batch")
+    if f["method"] == "offset":
+        warnings.append(f"offset fallback ({f['fallback_reason']}): the map is only a mean offset; these judges "
+                        "spread the anchors differently from the reference judges")
+    passing_extrapolated = sorted(k for k, c in candidates.items() if c["meets_bar"] and c["above_top_anchor"])
+    if passing_extrapolated:
+        names = ", ".join(passing_extrapolated)
+        if top_ref >= CONFIRM_TOP:
+            warnings.append(f"meets the bar only above the top anchor ({top_ref}): {names}; extrapolated, but this "
+                            f"batch's anchors reach {CONFIRM_TOP} or more, so it is the confirming batch")
+        else:
+            warnings.append(f"meets the bar only above the top anchor ({top_ref}): {names}; extrapolated, confirm in "
+                            f"a batch whose anchors reach at least {CONFIRM_TOP} (anchor_tiles.py --include craft "
+                            "or --include f36_0_npc:C1)")
     if rmse > RMSE_WARN:
         warnings.append(f"anchor residual RMSE {rmse:.2f} > {RMSE_WARN}: these judges do not rank the anchors "
                         "like the reference judges; report the mapped scores with this caveat")
@@ -114,7 +133,9 @@ def calibrate(batch, references, bar=7.5):
     for k in ("slope", "intercept", "pearson_r", "least_squares_slope"):
         if f[k] is not None:
             f[k] = round(f[k], 4)
-    return {"bar": bar, "fit": f, "anchor_rmse": round(rmse, 3), "anchors": residuals,
+    return {"bar": bar, "fit": f, "anchor_rmse": round(rmse, 3), "top_anchor_reference": top_ref,
+            "confirming_batch": top_ref >= CONFIRM_TOP,
+            "anchors": residuals,
             "candidates": candidates, "warnings": warnings}
 
 
@@ -129,7 +150,11 @@ def main(argv=None):
     p.add_argument("--bar", type=float, default=7.5)
     p.add_argument("--out", help="write the result here as well as stdout")
     args = p.parse_args(argv)
-    result = calibrate(json.loads(Path(args.batch).read_text()), references(args.anchors), args.bar)
+    try:
+        result = calibrate(json.loads(Path(args.batch).read_text()), references(args.anchors), args.bar)
+    except (ValueError, KeyError) as e:
+        sys.stderr.write(f"calibrate.py: refused: {e}\n")
+        sys.exit(2)
     text = json.dumps(result, indent=1)
     if args.out:
         Path(args.out).write_text(text + "\n")

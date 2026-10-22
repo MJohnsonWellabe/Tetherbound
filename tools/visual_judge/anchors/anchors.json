@@ -1,12 +1,13 @@
 {
  "version": 1,
- "scale": "Original accepted CPU judges: the three code-blind judges whose scores closed or reopened each row on CPU (Low/Compatibility, llvmpipe) sheets. The 7.5 bar and the 6.7 CPU-provisional bar were set against this scale. 'reference' is that row's three-judge mean for the side.",
+ "scale": "Original judges' scale: the three code-blind judges of each row's original lane round, on the committed sheet (CPU Low/Compatibility frames, except the NPC face round's GPU Medium frames). Some rows were acceptances, others reopened rounds (F10#2 r3, the F36 gap round). The 7.5 bar and the 6.7 CPU-provisional bar were set against this scale. 'reference' is the side's three-judge mean.",
  "rules": [
   "Judges never see this file, any key, any arm name or any reference score.",
   "Use anchor_tiles.py to cut, mask and re-letter tiles; never hand a judge the raw sheet.",
   "box and masks are pixel rectangles [x0, y0, x1, y1] on the committed sheet; masks are blanked before cropping.",
   "Add an anchor only from a committed sheet with a committed key and a recorded three-judge mean."
  ],
+ "not_included": [],
  "anchors": [
   {
    "id": "f10_2_r3_capacitor:control",
@@ -735,6 +736,492 @@
    "defects": [],
    "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.galecrest.A = galecrest_live)",
    "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_npc:C1A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C1",
+   "npc": "grandpa",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 1, Variant A",
+   "arm": "after",
+   "box": [
+    0,
+    32,
+    451,
+    232
+   ],
+   "masks": [],
+   "reference": 7.53,
+   "reference_judges": [
+    7.6,
+    7.4,
+    7.6
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 1'] = grandpa, A = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C1B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C1",
+   "npc": "grandpa",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 1, Variant B",
+   "arm": "before",
+   "box": [
+    0,
+    245,
+    451,
+    443
+   ],
+   "masks": [],
+   "reference": 7.47,
+   "reference_judges": [
+    7.4,
+    7.4,
+    7.6
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 1'] = grandpa, B = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C2A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C2",
+   "npc": "grunt",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 2, Variant A",
+   "arm": "after",
+   "box": [
+    0,
+    475,
+    451,
+    675
+   ],
+   "masks": [],
+   "reference": 6.7,
+   "reference_judges": [
+    6.4,
+    6.8,
+    6.9
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 2'] = grunt, A = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C2B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C2",
+   "npc": "grunt",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 2, Variant B",
+   "arm": "before",
+   "box": [
+    0,
+    688,
+    451,
+    886
+   ],
+   "masks": [],
+   "reference": 6.63,
+   "reference_judges": [
+    6.2,
+    6.8,
+    6.9
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 2'] = grunt, B = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C3A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C3",
+   "npc": "grunt_a",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 3, Variant A",
+   "arm": "before",
+   "box": [
+    0,
+    918,
+    451,
+    1118
+   ],
+   "masks": [],
+   "reference": 4.6,
+   "reference_judges": [
+    4.3,
+    5.0,
+    4.5
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 3'] = grunt_a, A = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C3B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C3",
+   "npc": "grunt_a",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 3, Variant B",
+   "arm": "after",
+   "box": [
+    0,
+    1131,
+    451,
+    1329
+   ],
+   "masks": [],
+   "reference": 4.53,
+   "reference_judges": [
+    4.1,
+    4.9,
+    4.6
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 3'] = grunt_a, B = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C4A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C4",
+   "npc": "grunt_b",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 4, Variant A",
+   "arm": "before",
+   "box": [
+    451,
+    32,
+    902,
+    232
+   ],
+   "masks": [],
+   "reference": 5.83,
+   "reference_judges": [
+    5.4,
+    6.3,
+    5.8
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 4'] = grunt_b, A = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C4B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C4",
+   "npc": "grunt_b",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 4, Variant B",
+   "arm": "after",
+   "box": [
+    451,
+    245,
+    902,
+    443
+   ],
+   "masks": [],
+   "reference": 5.8,
+   "reference_judges": [
+    5.3,
+    6.3,
+    5.8
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 4'] = grunt_b, B = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C5A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C5",
+   "npc": "grunt_c",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 5, Variant A",
+   "arm": "before",
+   "box": [
+    451,
+    475,
+    902,
+    675
+   ],
+   "masks": [],
+   "reference": 5.07,
+   "reference_judges": [
+    4.8,
+    5.4,
+    5.0
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 5'] = grunt_c, A = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C5B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C5",
+   "npc": "grunt_c",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 5, Variant B",
+   "arm": "after",
+   "box": [
+    451,
+    688,
+    902,
+    886
+   ],
+   "masks": [],
+   "reference": 5.03,
+   "reference_judges": [
+    4.7,
+    5.4,
+    5.0
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 5'] = grunt_c, B = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C6A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C6",
+   "npc": "wandering_trainer",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 6, Variant A",
+   "arm": "before",
+   "box": [
+    451,
+    918,
+    902,
+    1118
+   ],
+   "masks": [],
+   "reference": 5.8,
+   "reference_judges": [
+    5.6,
+    5.8,
+    6.0
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 6'] = wandering_trainer, A = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C6B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C6",
+   "npc": "wandering_trainer",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 6, Variant B",
+   "arm": "after",
+   "box": [
+    451,
+    1131,
+    902,
+    1329
+   ],
+   "masks": [],
+   "reference": 5.93,
+   "reference_judges": [
+    5.9,
+    5.9,
+    6.0
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 6'] = wandering_trainer, B = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C7A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C7",
+   "npc": "young_trainer",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 7, Variant A",
+   "arm": "before",
+   "box": [
+    902,
+    32,
+    1353,
+    232
+   ],
+   "masks": [],
+   "reference": 5.97,
+   "reference_judges": [
+    5.7,
+    6.4,
+    5.8
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 7'] = young_trainer, A = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C7B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C7",
+   "npc": "young_trainer",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 7, Variant B",
+   "arm": "after",
+   "box": [
+    902,
+    245,
+    1353,
+    443
+   ],
+   "masks": [],
+   "reference": 5.97,
+   "reference_judges": [
+    5.6,
+    6.4,
+    5.9
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 7'] = young_trainer, B = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C8A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C8",
+   "npc": "trader",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 8, Variant A",
+   "arm": "after",
+   "box": [
+    902,
+    475,
+    1353,
+    675
+   ],
+   "masks": [],
+   "reference": 5.83,
+   "reference_judges": [
+    5.5,
+    6.0,
+    6.0
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 8'] = trader, A = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C8B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C8",
+   "npc": "trader",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 8, Variant B",
+   "arm": "before",
+   "box": [
+    902,
+    688,
+    1353,
+    886
+   ],
+   "masks": [],
+   "reference": 5.7,
+   "reference_judges": [
+    5.0,
+    6.1,
+    6.0
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 8'] = trader, B = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C9A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C9",
+   "npc": "innkeeper",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 9, Variant A",
+   "arm": "after",
+   "box": [
+    902,
+    918,
+    1353,
+    1118
+   ],
+   "masks": [],
+   "reference": 5.83,
+   "reference_judges": [
+    6.0,
+    6.0,
+    5.5
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 9'] = innkeeper, A = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C9B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C9",
+   "npc": "innkeeper",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 9, Variant B",
+   "arm": "before",
+   "box": [
+    902,
+    1131,
+    1353,
+    1329
+   ],
+   "masks": [],
+   "reference": 5.9,
+   "reference_judges": [
+    6.1,
+    6.1,
+    5.5
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 9'] = innkeeper, B = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
   }
  ]
 }

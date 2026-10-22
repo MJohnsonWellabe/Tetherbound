@@ -7,14 +7,16 @@ round's 7.5.
 
 Lane checklist (not sent to the judge):
 
-- The judge folder holds only: the candidate sheets, the anchor tiles that
-  `anchor_tiles.py` wrote (at least 4 tiles from at least two items), `sets.md` (one entry per set code)
-  and a copy of `docs/reference/` as `reference/`. No source, no keys, no notes,
-  no earlier verdicts, and nothing that names a side, an arm, a flag or a change.
-- Candidate sheets use neutral set codes and A/B sides shuffled per set, like the
-  anchor tiles, so a judge cannot tell an anchor from a candidate.
-  The keys (`anchor_key.json` and the candidate key) live outside the judge folder
-  until all three verdicts are in.
+- Build the batch in one run of `anchor_tiles.py --out <judge folder>
+  --key <outside>/key.json --candidates <spec.json>`. It cuts at least 3
+  anchor pairs (6 tiles) from at least two items and composes the candidate
+  pairs in the same format: random code, A/B caption strip, random side order,
+  every set shuffled together in `sets.md`. A judge cannot tell an anchor from
+  a candidate.
+- The judge folder holds only those set images, `sets.md` and a copy of
+  `docs/reference/` as `reference/`. No source, no keys, no notes, no earlier
+  verdicts, and nothing that names a side, an arm, a flag or a change. The key
+  and `recorded_defects.txt` stay outside it until all three verdicts are in.
 - Three fresh judges, each in its own context, each scoring every set.
 - Afterwards run `tools/visual_judge/calibrate.py` on the batch (see the
   `visual-judge` skill) and report mapped scores.
@@ -22,11 +24,12 @@ Lane checklist (not sent to the judge):
 Slots:
 
 - `[JUDGE FOLDER]`: the absolute path of the judge folder.
-- `[SET LIST]`: one line per set code, copied from `sets.md`, saying what the set
-  shows and its layout. Anchor and candidate lines use the same form. Never say
-  which side changed, which is shipping, or which sets are anchors.
-- `[RECORDED DEFECTS]`: the catalog defect text for each set that has one, as
-  `CODE: "defect text"`. Write `none` for a set without a recorded defect.
+- `[SET LIST]`: the contents of `sets.md`, unchanged. Candidate briefs are
+  written in the same neutral form as the anchor briefs. Never say which side
+  changed, which is shipping, or which sets are anchors.
+- `[RECORDED DEFECTS]`: the contents of `recorded_defects.txt`, unchanged:
+  every set's defects, anchors and candidates alike, or `none`. Defects go
+  only here, never in the set list.
 
 ---
 
