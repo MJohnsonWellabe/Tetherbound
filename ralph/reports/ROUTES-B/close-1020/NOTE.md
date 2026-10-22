@@ -42,13 +42,43 @@ This is a cloud container: Godot 4.7-stable headless on CPU, installed by `tools
   - Fixed on main by the coordinator in PR #704 (`_route_join_cap`), after these runs.
 - **Piece change (disclosed, ordinary route):** `06k_return_cliffhold` first navigates to the plateau fork (−180,900,4720) along the summit road. From there the normal navigator takes the circuit through the Observatory from the west (`aster_approach_via` log row).
 
-### T4 homestead pieces (tidewake_piece_runner, exact-SHA b747d98a)
+### T4 homestead pieces, run 1 (exact SHA b747d98a, superseded)
+- training_t4_preparehome PASS (212 s).
+- training_t4_altar_1 was lost twice. The tool's 2 h limit killed it once, then a container restart at ~02:50Z killed it at frame 93k, on the way home with earned ironwood (+3 at (−379.3,2569.8)).
+- Then origin/tb/routes 7b6f376b (hung-relic blueprints) applied to this boundary too, so the T4 lineage was regenerated.
+
+### T4 run 2: regenerated boundary with blueprints (a5223bd1 onward)
+Order changed: the chest opens before the altar slots, because Aster's kit carries the Altar bill.
+
 | Piece | SHA | Wall | Result |
 |---|---|---|---|
-| training_t4_preparehome | b747d98a | 212 s | PASS: Home Key from Aster's perch to Meadows; five retained |
-| training_t4_altar_1 a1 | b747d98a | ~2 h | KILLED by the tool's 2 h background limit (not a piece failure). It was building the Altar from gathered materials: real ironwood +3 at (−379.3,2569.8) over the South Bridge, on the return walk at frame ~49k |
-| training_t4_altar_1 | b747d98a | running | Detached rerun from the same preparehome save, 6 h piece cap |
+| generate cloudreach_t4_aster_independent | a5223bd1 | ~180 s | PASS |
+| 06k_return_cliffhold | a5223bd1 | 1811 s | PASS |
+| 06l_return_aerie | a5223bd1 | 2411 s | PASS, 0 sidesteps (#704 merged) |
+| 06m_aster_duel_only | a5223bd1 | 476 s | PASS: master_t4 won through production input |
+| training_t4_home | a5223bd1 | 350 s | PASS: Home Key from the perch |
+| training_t4_storage a1 | a5223bd1 | 1388 s | FAIL: "Storing stormwood_portal_key was not saved ()". The chest refused the held key with an empty reason after the other stacks stored |
+| training_t4_storage | 9144be95 | 1415 s | PASS: helper keeps key items (homestead_common.gd::storage_trip) |
+| training_t4_return a1 | 9144be95 | 651 s | FAIL: froze 4.8 m from Tam. His onboarding lesson card held input |
+| training_t4_return a2 | 102a18fe | 513 s | FAIL: lesson cards confirmed; then the Cloudreach arch offered nothing |
+| training_t4_return | fd69c0c2 | 679 s | PASS: walks into the Crossing Hall by its entrance; arrival (0,106.4,−260) |
+| 06p_aster_chest a2 | fd69c0c2 | 262 s | FAIL: Fly deploy refused at the biome-entry arrival (the piece expects the aerie lifts) |
+| 06l_return_aerie (from the arrival) | fd69c0c2 | 3109 s | PASS, 5.2 km, 0 sidesteps |
+| 06p_aster_chest a3 | fd69c0c2 | 449 s | **BLOCKED**: "The chest did not teach feast_t4 (Satchel free slots 18)" |
 
-- **Why altar_1 is long:** the Altar costs stone 10, rootstone 4 and ironwood 2. Ione's T3 chest kit carries that bill, so the T3 altar pieces took minutes. Aster's chest is not yet opened (Satchel full), so the first Altar slot gathers the bill across the bridge at about 7.5 simulated frames per wall second on this CPU.
-- **Planned next:** altar_2..5 → storage → return → 06p_aster_chest (merging origin/main with #704 first) → home → kitchen → feed → return → 07_stormward_handoff.
-- **Observatory ledge:** fixed on main by the coordinator in PR #704 (`_route_join_cap`). The 06k detour stays disclosed for the saves above.
+- **Arch diagnosis** (three local diagnostic runs, uncommitted prints, saves discarded):
+  - The trainer walked straight from the plot and stopped outside the Hall's back wall at (102.4,0.9,21.6).
+  - Arch_cloudreach: label "Enter Cloudreach Cliffs…", actionable, view open/character_open, radius 3.2. But `interaction_offer` = {} at 1.7 m, because its line-of-sight ray hit `Village/crossing_hall_shell_12/Collision` at (103.19,1.71,20.78).
+  - Every arch's `Approach` marker (e.g. (104,1.05,17.1)) is inside the hall, with clear line of sight.
+  - Fix in `f49_portal_travel.gd::_hall_entry_via`: from outside the hall, walk 2.5 m outside `entrance`, then `entrance`, then `home_arrival`, then the arch's `Approach`. Inside the hall there are no waypoints, so tidewake_handoff is unchanged.
+- **Lesson-card fix:** `f49_portal_travel.gd::activate` confirms onboarding lesson cards during its walks, the gate_b_tail_segment pattern. Six cards were confirmed at Tam.
+- **BLOCKER (decision needed): Aster's chest kit does not fit.**
+  - `breakthrough.gd::prepare_chest` is all-or-nothing (`chest_pending_make_satchel_room`).
+  - master_t4 needs 19 slots: cliffglass_ore 200/50 = 4, windworn_heartwood 128/50 = 3, skyplume 45/30 = 2, 8 singles, Tether Candy 1, attuned_ground 10 = 1.
+  - The 24-slot Satchel, emptied to the 4 tools + Home Key, has 19 free. The Stormwood portal key, held from Veyra until entering Stormwood, leaves 18.
+  - master_t5 is also 19, so it fits only with nothing but tools and the Home Key.
+  - Options:
+    - (a) Larger stacks for the bulk Master materials.
+    - (b) Smaller kits.
+    - (c) A partial chest delivery that holds the rest. This changes the transaction semantics.
+  - Not chosen here.
