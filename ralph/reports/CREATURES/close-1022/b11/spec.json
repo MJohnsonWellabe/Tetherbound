@@ -1,0 +1,57 @@
+[
+ {
+  "label": "F36 voltarach pose cand1022",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/voltarach-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/voltarach-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature as the game's real look and above all whether the hit reads as a hit (not idle) and the faint reads as down without a label, grounded, with nothing clipping the floor.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, standing or upright)",
+   "Body parts clip through the floor"
+  ]
+ },
+ {
+  "label": "F36 mirejaw pose cand1022",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/mirejaw-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/mirejaw-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature as the game's real look and above all whether the hit reads as a hit (not idle) and the faint reads as down without a label, grounded, with nothing clipping the floor.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, standing or upright)",
+   "Body parts clip through the floor"
+  ]
+ },
+ {
+  "label": "F36 meadowhart pose cand1022",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/meadowhart-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/meadowhart-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature as the game's real look and above all whether the hit reads as a hit (not idle) and the faint reads as down without a label, grounded, with nothing clipping the floor.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, standing or upright)",
+   "Body parts clip through the floor"
+  ]
+ },
+ {
+  "label": "F36 staticub pose cand1022",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/staticub-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/staticub-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature as the game's real look and above all whether the hit reads as a hit (not idle) and the faint reads as down without a label, grounded, with nothing clipping the floor.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, standing or upright)",
+   "Body parts clip through the floor"
+  ]
+ },
+ {
+  "label": "F36 sparkit pose cand1022",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/sparkit-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/sparkit-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature as the game's real look and above all whether the hit reads as a hit (not idle) and the faint reads as down without a label, grounded, with nothing clipping the floor.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, standing or upright)",
+   "Body parts clip through the floor"
+  ]
+ }
+]

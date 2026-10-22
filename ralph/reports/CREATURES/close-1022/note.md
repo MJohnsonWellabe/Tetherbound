@@ -249,3 +249,29 @@ Candidate: species.json `field_emission` (albedo multiply) + `field_rim`: Tangle
 | Voltarach | 5.2/5.3/5.6 | 5.2/5.6/5.5 | 6.13 | 6.20 |
 
 Asks: eyes/faces unreadable on all four; Tanglevolt's belly-up faint reads as a white slab; Fulgocobra's faint end rears like an attack; Voltarach's faint is a modest crouch.
+
+## Batch b11 (23 Oct ~06:30 CT): hit/faint recipes on installed models (corrected prompt): all five >= 6.7
+
+Candidate: `f36_pose_postpass.py --candidate-1022` + `f36_arachnid_profile.py --candidate-1022` (held shove hit gain 1.5 to 0.97; Mirejaw side topple; Voltarach doubled rear + side-tip faint; Meadowhart prone + head laid -45). Base: live recipes, both via the stage tool's `--candidate` preview. Anchors capacitor r3, craft, f04_6_r22, npc C1. Fit linear slope 0.894, intercept 1.403, r 0.849, RMSE 0.645, no warnings. Files `b11/`.
+
+| Species | Live mapped | **Cand mapped** | Hit / faint defects (cand, x3) |
+|---|---|---|---|
+| Staticub | 6.17 | **7.27** | hit FIXED; faint PARTIAL |
+| Meadowhart | 6.77 | **7.09** | hit FIXED; faint PARTIAL/FIXED |
+| Sparkit | 6.62 | **7.06** | hit FIXED; faint FIXED |
+| Voltarach | 5.93 | **7.03** | hit FIXED; faint FIXED (roll-over reads as down) |
+| Mirejaw | 5.81 | **6.77** | hit FIXED; faint FIXED; floor sink PARTIAL |
+
+Landed as live recipes only for the judged species: `LANDED_1022_SHOVE` (Sparkit, Staticub, Mirejaw; Mirejaw back to the side topple) and the arachnid profile's doubled rear + side-tip faint, with Voltarach now in `enabled_species` (the runtime plays a profile only for enabled species). The regenerated file changes exactly those four profiles, each byte-equal to the judged candidate rows. Meadowhart is held for a separate decision (the GPU rejected its earlier recipe).
+
+## Batch b12 (23 Oct ~06:50 CT): stronger Tanglevolt lift; Stormcapra/Stormursa lift: no gain
+
+Candidate: `field_emission`/`field_rim` Tanglevolt 1.8/0.30, Stormcapra 1.3/0.25, Stormursa 1.3/0.25. Fit linear slope 1.037, intercept 0.443, r 0.920, RMSE 0.379, no warnings. Files `b12/`.
+
+| Species | Live mapped | Cand mapped | Note |
+|---|---|---|---|
+| Tanglevolt | 6.14 | 6.32 | 1.8 reads as over-saturated plastic violet; 1.45 (b10, 6.60) stays the best |
+| Stormursa | 6.21 | 5.45 | the multiply pushes its veins to garish magenta: dropped |
+| Stormcapra | **6.73** | 6.59 | live already >= 6.7 CPU on the stage |
+
+All judges: the bar creatures' hits read as standing, and their faints are belly-up flips (Tanglevolt, Stormcapra) or never go down (Stormursa). Next: hit/faint recipes for the bar creatures.
