@@ -72,9 +72,13 @@ WHAT THE ART DIRECTION ASKS FOR
   cozy places with restrained danger, clear foreground/midground/distance
   separation. Not photoreal, not flat low-poly placeholder, not a collage of
   unrelated asset packs.
-- Creatures are the highest-contrast designed subjects: chunky, instantly
-  readable silhouettes with a clear face and eyes, designed colour blocks and
-  soft rim-lit materials. Every creature stands taller than the 1.80 m human
+- Creatures are the highest-contrast subjects: instantly readable
+  silhouettes with a visible face and eyes, values that separate from the
+  ground, and rim-lit materials. The owner's creature style is the
+  naturalistic one: grounded anatomy and real fur, feather, scale and plate
+  detail are on-style. Do not mark a creature down for being naturalistic
+  rather than cartoon-like; judge how well it reads, lights, poses and sits
+  in the scene. Every creature stands taller than the 1.80 m human
   trainer. Hurt and faint poses read without a label and stay grounded.
 - One coherent nature family, one village/architecture family, one prop
   family. Vegetation forms groves, edges and clearings, never a uniform carpet.
