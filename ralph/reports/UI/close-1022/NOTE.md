@@ -1,6 +1,7 @@
 # UI lane close run (tb/ui), 22 Oct 2026
 
 ## TO COORDINATOR
+- 22 Oct 22:00 CT INFO lane stopped on coordinator request (usage). All work pushed on tb/ui; every candidate OFF in committed config. READY tb/ui-land 4b8474c1 (P2-095/096) still stands. See RESUME below.
 - 22 Oct 20:55 CT READY tb/ui-land 4b8474c1 P2-095/096 craft panel ON (compact rows, Craft button with disabled "Missing materials" state, live pad glyphs): CPU yardstick round 2 mapped 7.66 (7.79/7.40/7.79), all three defects FIXED 3/3, confirming batch (anchors to 7.53); evidence tb/ui ralph/reports/UI/close-1022/r2. Also in it: world prompt hides under the fight command bar (GPU F39-0 finding), world status overlays hide with the HUD, L3/stick-direction glyphs, `--gamepad` on the craft and Tidewake fight capture tools. Checks: 4 smokes + 55 unit tests PASS. Please queue GPU confirmation (Low/Compat + Medium) with `phase2_capture_build_systems.gd --biome=stormwood --seed=2042 --gamepad`.
 - 22 Oct 18:25 CT INFO functional fix on tb/ui (not landed): the Stormwood surge tag ("⚡ Calm · Sheltered", a world CanvasLayer) printed through the open pause menu; world status overlays now join `input_owner.WORLD_HUD_OVERLAY_GROUP` and hide with the world HUD. New smoke `tests/smoke_world_hud_overlay_hides.gd` PASS. Also new stick glyphs (agent-drawn, `assets/ui/input_prompts/AGENT_DRAWN.md`): L3 and stick directions now draw glyphs (units 49 tests PASS). Round 2 capture running.
 - 22 Oct 18:15 CT INFO Round 1 on the yardstick (CPU llvmpipe Low, tb/ui 11ce7482 + flags on locally for after). Mapped after means: P2-001 shell 7.37 (above_top_anchor), P2-095 craft 7.37 (above_top_anchor), P2-031 settings 7.26, P2-007 panels 7.11, P2-002 map 6.80, P2-004 HUD 6.51. None at 7.5 yet; all but HUD clear the 6.7 CPU-provisional line. Fit linear slope 1.03, r 0.84, RMSE 0.76 (warning). Working the judges' asks for round 2.
@@ -60,3 +61,21 @@ Round-3 asks:
 - Panels: lower third of Quests empty; Players list is "Open seat" filler.
 - Map: still no terrain on the surveyed Meadows/Cloudreach/Stormwood strips; Tidewake island edges step.
 - HUD: six or more boxed widgets; flat green minimap; the lean variant added a legend tray and did not reduce the box count. Next: one different approach (consolidate widgets) or park at 6.71.
+
+## RESUME (22 Oct 22:00 CT, lane stopped on coordinator request)
+State: all candidates OFF in committed config on tb/ui. Round-3 "after" capture was stopped mid-Cloudreach (Meadows and Tidewake after frames exist locally only, unjudged). Nothing running.
+
+How to run a round: candidates ON locally with the scratchpad `after_on.py` flags (listed per row below), capture with `tools/phase2_capture_ui.gd --biome=<meadows|water|cloudreach|stormwood> --gamepad --tabs=backpack,creatures,map,quest_log,build,players,settings --map-zoom-samples --hud-settle-frames=60 --survey-roads-m=700` (Cloudreach ~50 min, others ~10–30 min on CPU), before side = committed config. Two frames per side per set (`r1/candidates_spec.json` lists the frames and briefs), `anchor_tiles.py --include craft --include f36_0_npc:C1`, standard prompt, three judges, `calibrate.py`.
+
+| Row | Best mapped (round) | Candidate (all OFF) | Next step |
+|---|---|---|---|
+| P2-095/096 craft panel | 7.66 r2, PASS (CPU) | craft_presentation.json `compact_rows`, `craft_button` (ON in tb/ui-land) | Coordinator lands tb/ui-land 4b8474c1; GPU confirmation with `phase2_capture_build_systems.gd --biome=stormwood --seed=2042 --gamepad` |
+| P2-001 menu shell | 7.46 r2 (one low-gain round) | menu.json `shell_scenic` (r3 values + floor art 0.4 + `collapse_status`), `device_hints` | Judge round 3 (collapse_status fixes the clipped equipment list; Satchel hints glyph-only on pad) |
+| P2-007 Quests/Build/Players | 7.34 r2 (one low-gain round) | menu.json `quest_empty_inline`, `players_open_seats`, `shell_scenic` floor art | Judge round 3; remaining ask: empty lower third, "Open seat" filler |
+| P2-031 settings/bindings | 7.30 r2 (one low-gain round) | menu.json `controls_scan` (stick-direction glyphs, flat Reset when unchanged, cell_glyph_px 56) | Judge round 3 (larger direction arrows redrawn) |
+| P2-002 map | 6.91 r2 (one low-gain round) | map.json `fog_veil` sea_lanes/soft_fog/ui_font_labels/glyph_controls/outside_colour + `painted_chart` + `cloud_fog` | Judge round 3; Cloudreach is mostly sky at chart resolution (sampling is correct); terrain read is the remaining ask |
+| P2-004 exploration HUD | 6.71 before / 6.51 r1 / 6.41 r2 after | hud.json `hud_lean` (r3: objective card 460 wide, gold left eyebrow) + `minimap_realm_terrain` (minimap used the Meadows bake in every realm; now each realm's own terrain) | Judge round 3 as the different approach; park at 6.71 if it does not gain |
+| P2-032 map active region | FIXED on both sides | none | Passes with P2-002 |
+| P2-061 catch card, P2-088 fight roster | not judged this run | hud.json `catch_card` | Capture with `tools/phase2_capture_catch.gd` and Tidewake fights `--gamepad` |
+
+Functional fixes: in tb/ui-land (world prompt under the fight command bar, surge tag through the menu, L3/stick-direction glyphs, `--gamepad` capture flags). Still only on tb/ui: `tools/phase2_capture_ui.gd --survey-roads-m` fixture.
