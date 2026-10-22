@@ -684,6 +684,18 @@ var _paused_before: bool = false
 var _presentation: Dictionary = {}
 var _readable_recipe_rows := false
 var _readable_action_hints := false
+## P2-095 GPU follow-up (22 Oct): five-plus recipes on screen instead of three
+## tall cards, and a primary Craft button that greys out with the reason when
+## ingredients are missing. Presentation only; OFF until judged.
+var _compact_rows := false
+var _craft_button_on := false
+var _craft_button: Button
+var _craft_button_label: RichTextLabel
+var _row_tags: Array[Label] = []
+## Glyph hints drawn for the last-used device; redrawn when the player's hands
+## move between keyboard and pad while the panel is open (controller first).
+var _glyph_lines: Array[Dictionary] = []
+var _glyph_gamepad := false
 
 
 func _ready() -> void:
@@ -693,6 +705,8 @@ func _ready() -> void:
 		_presentation = presentation
 	_readable_recipe_rows = bool(_presentation.get("readable_recipe_rows", false))
 	_readable_action_hints = bool(_presentation.get("readable_action_hints", false))
+	_compact_rows = _readable_recipe_rows and bool(_presentation.get("compact_rows", false))
+	_craft_button_on = bool(_presentation.get("craft_button", false))
 	_build()
 	visible = false
 	# RG4: `input_owner.gd`'s own header has claimed since OW10 that this
@@ -821,6 +835,10 @@ func _build() -> void:
 	_rows.clear()
 	_cost_labels.clear()
 	_recipe_ids.clear()
+	_row_tags.clear()
+	_glyph_lines.clear()
+	_craft_button = null
+	_glyph_gamepad = INPUT_GLYPH.using_gamepad()
 
 	_root = Control.new()
 	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -908,8 +926,8 @@ func _build_list_zone() -> Control:
 	_list_scroll = ScrollContainer.new()
 	var list_height := float(LIST_VISIBLE_HEIGHT)
 	if _readable_recipe_rows:
-		var visible_rows := maxi(1, int(_presentation.get("visible_rows", 3)))
-		list_height = visible_rows * float(_presentation.get("row_height", 208)) + (visible_rows - 1) * 8.0
+		var visible_rows := maxi(1, int(_presentation.get("compact_visible_rows" if _compact_rows else "visible_rows", 3)))
+		list_height = visible_rows * _row_height() + (visible_rows - 1) * 8.0
 	if is_instance_valid(_station):
 		# Leave room for the single upgrade line and actual station controls.
 		# Existing explicit D-pad links keep clipped recipe rows reachable.
@@ -954,7 +972,7 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	var button := Button.new()
 	button.custom_minimum_size = Vector2(300, ROW_HEIGHT)
 	if _readable_recipe_rows:
-		button.custom_minimum_size = Vector2(float(_presentation.get("list_width", 480)), float(_presentation.get("row_height", 208)))
+		button.custom_minimum_size = Vector2(float(_presentation.get("list_width", 480)), _row_height())
 	button.focus_mode = Control.FOCUS_ALL
 	button.text = ""
 	button.add_theme_stylebox_override("normal", UITokens.slot_box(false))
@@ -994,6 +1012,11 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	icon.custom_minimum_size = Vector2(ROW_ICON_PX, ROW_ICON_PX)
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.texture = _icon_texture(str(output.get("id", "")))
+	if _compact_rows:
+		var icon_px := float(_presentation.get("compact_icon_px", 56))
+		icon.custom_minimum_size = Vector2(icon_px, icon_px)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(icon)
 
 	var text_col := VBoxContainer.new()
@@ -1040,8 +1063,25 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 		cost_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		cost_label.max_lines_visible = 4
 	cost_label.add_theme_font_size_override("font_size", UITokens.FONT_READ if _readable_recipe_rows else UITokens.FONT_TINY)
+	if _compact_rows:
+		# One-line name, a two-line cost preview at label size; the full
+		# have/need list lives in the detail column for the focused row.
+		name.autowrap_mode = TextServer.AUTOWRAP_OFF
+		name.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		name.max_lines_visible = 1
+		cost_label.max_lines_visible = 2
+		cost_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		cost_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+		text_col.alignment = BoxContainer.ALIGNMENT_CENTER
 	text_col.add_child(cost_label)
 	_cost_labels.append(cost_label)
+	if _compact_rows:
+		var tag := Label.new()
+		tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tag.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		tag.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
+		row.add_child(tag)
+		_row_tags.append(tag)
 
 	button.pressed.connect(func() -> void: _craft(id))
 	var index := _rows.size()
@@ -1115,11 +1155,63 @@ func _build_right_zone() -> Control:
 	_craft_hint.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT if _readable_action_hints else UITokens.FONT_TINY)
 	_craft_hint.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY if _readable_action_hints else UITokens.TEXT_MUTED)
 	side.add_child(_craft_hint)
-	if _presentation.get("glyph_hints") == true:
+	if _craft_button_on:
+		_craft_hint.visible = false
+		side.add_child(_make_craft_button())
+	elif _presentation.get("glyph_hints") == true:
 		_craft_hint.visible = false
 		side.add_child(_glyph_hint("confirm", "Craft"))
 
 	return side
+
+
+func _row_height() -> float:
+	return float(_presentation.get("compact_row_height", 112)) if _compact_rows else float(_presentation.get("row_height", 208))
+
+
+## Primary action for the focused recipe: confirm glyph plus "Craft" on a teal
+## fill, or a greyed "Missing materials" plate the player can read at a glance.
+## Pressing it crafts the focused row, the same call A on that row makes.
+func _make_craft_button() -> Button:
+	_craft_button = Button.new()
+	_craft_button.focus_mode = Control.FOCUS_NONE
+	_craft_button.custom_minimum_size = Vector2(300, float(_presentation.get("craft_button_height", 72)))
+	_craft_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	var on := UITokens.fill_box(Color(UITokens.TEAL, 0.92))
+	var off := UITokens.fill_box(Color(UITokens.BG_PANEL_ALT, 0.95))
+	off.border_color = UITokens.BORDER
+	for box: StyleBoxFlat in [on, off]:
+		box.set_corner_radius_all(10)
+		box.set_border_width_all(2)
+	on.border_color = UITokens.TEAL_SOFT
+	for state: String in ["normal", "hover", "pressed", "focus"]:
+		_craft_button.add_theme_stylebox_override(state, on)
+	_craft_button.add_theme_stylebox_override("disabled", off)
+	_craft_button.pressed.connect(func() -> void:
+		if _selected >= 0 and _selected < _recipe_ids.size(): _craft(_recipe_ids[_selected])
+	)
+	_craft_button_label = RichTextLabel.new()
+	_craft_button_label.bbcode_enabled = true
+	_craft_button_label.scroll_active = false
+	_craft_button_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_craft_button_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_craft_button_label.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_craft_button_label.offset_left = 16
+	_craft_button_label.offset_top = 12
+	_craft_button_label.add_theme_font_size_override("normal_font_size", UITokens.FONT_PROMPT)
+	_craft_button.add_child(_craft_button_label)
+	return _craft_button
+
+
+func _refresh_craft_button(affordable: bool) -> void:
+	if _craft_button == null:
+		return
+	_craft_button.disabled = not affordable
+	var px := int(_presentation.get("hint_glyph_px", 44))
+	if affordable:
+		_craft_button_label.text = "%s  [color=#10191E]Craft[/color]" % INPUT_GLYPH.icon("confirm", px)
+	else:
+		_craft_button_label.text = "%s  [color=#B8C5C4]Missing materials[/color]" % INPUT_GLYPH.icon("confirm", px, Color(1, 1, 1, 0.35))
 
 
 ## P2-096: an action hint as the bound button's prompt glyph plus its verb in
@@ -1134,7 +1226,20 @@ func _glyph_hint(action: String, verb: String) -> RichTextLabel:
 	line.add_theme_font_size_override("normal_font_size", UITokens.FONT_PROMPT)
 	line.add_theme_color_override("default_color", UITokens.TEXT_PRIMARY)
 	line.text = "%s  %s" % [INPUT_GLYPH.icon(action, int(_presentation.get("hint_glyph_px", 44))), verb]
+	_glyph_lines.append({"line": line, "action": action, "verb": verb})
 	return line
+
+
+func _refresh_glyphs() -> void:
+	var pad := INPUT_GLYPH.using_gamepad()
+	if pad == _glyph_gamepad:
+		return
+	_glyph_gamepad = pad
+	for entry: Dictionary in _glyph_lines:
+		var line := entry.line as RichTextLabel
+		if is_instance_valid(line):
+			line.text = "%s  %s" % [INPUT_GLYPH.icon(str(entry.action), int(_presentation.get("hint_glyph_px", 44))), str(entry.verb)]
+	_describe(_selected)
 
 
 func _cancel_glyph() -> String:
@@ -1171,6 +1276,7 @@ func _process(delta: float) -> void:
 		INPUT_OWNER.suppress_pause_reopen(get_tree())
 		close()
 		return
+	_refresh_glyphs()
 	if is_instance_valid(_station):
 		if not _gear_cfg.is_empty() and _gear_context(_station_view()) != _presented_gear_context: _station_view_completed()
 		_refresh_next_upgrade()
@@ -1225,21 +1331,29 @@ func _poll() -> void:
 		if i >= _recipe_ids.size():
 			continue
 		var id := _recipe_ids[i]
-		var affordable: bool = bool(game.call("can_craft", id)) if game != null else false
-		if is_instance_valid(_station):
-			var route := STATION_RULES.recipe_route(STATION_RULES.config(),id,_items().call("recipe",id))
-			var cfg := STATION_RULES.config()
-			var tier := STATION_RULES.effective_tier(cfg,game.get("placed_buildings"),str(_station.get_meta("building_uid", "")))
-			if _station.get_meta("building_id","") == CAMP_RULES.ID:
-				route=CAMP_RULES.recipe(id,_items().call("recipe",id),str(_station.get("camp_part")))
-				tier={"ok":CAMP_RULES.record(game.get("placed_buildings"),str(_station.get_meta("building_uid",""))).get("ok") == true,"effective_tier":0}
-			affordable = affordable and _station_intent.is_empty() and tier.get("ok") == true and route.get("ok") == true and int(tier.get("effective_tier",0)) >= int(route.get("required_tier",9))
+		var affordable := _selected_affordable(id)
 		var colour := UITokens.SUCCESS if affordable else UITokens.DANGER
+		if i < _row_tags.size():
+			_row_tags[i].text = "Ready" if affordable else "Missing"
+			_row_tags[i].add_theme_color_override("font_color", colour)
 		if i < _cost_labels.size():
 			_cost_labels[i].add_theme_color_override("font_color", colour)
 			if _readable_recipe_rows:
 				_cost_labels[i].text = _cost_line(db.call("recipe", id))
 	_describe(_selected)
+
+
+func _selected_affordable(id: String) -> bool:
+	var affordable: bool = bool(game.call("can_craft", id)) if game != null else false
+	if is_instance_valid(_station):
+		var route := STATION_RULES.recipe_route(STATION_RULES.config(),id,_items().call("recipe",id))
+		var cfg := STATION_RULES.config()
+		var tier := STATION_RULES.effective_tier(cfg,game.get("placed_buildings"),str(_station.get_meta("building_uid", "")))
+		if _station.get_meta("building_id","") == CAMP_RULES.ID:
+			route=CAMP_RULES.recipe(id,_items().call("recipe",id),str(_station.get("camp_part")))
+			tier={"ok":CAMP_RULES.record(game.get("placed_buildings"),str(_station.get_meta("building_uid",""))).get("ok") == true,"effective_tier":0}
+		affordable = affordable and _station_intent.is_empty() and tier.get("ok") == true and route.get("ok") == true and int(tier.get("effective_tier",0)) >= int(route.get("required_tier",9))
+	return affordable
 
 
 ## Fills the center hero and right detail columns for recipe `index`.
@@ -1269,6 +1383,8 @@ func _describe(index: int) -> void:
 		var have: int = int(inventory.call("count", item_id)) if inventory != null else 0
 		var enough := have >= need
 		_ingredients_col.add_child(_make_ingredient_row(item_id, need, have, enough))
+	if _craft_button != null:
+		_refresh_craft_button(_selected_affordable(id))
 
 	_output_line.text = "Makes: %s — %s" % [str(recipe.get("name", id)), str(recipe.get("blurb", ""))]
 
@@ -1287,6 +1403,8 @@ func _make_ingredient_row(item_id: String, need: int, have: int, enough: bool) -
 	var name := str(db.call("item_name", item_id)) if db != null else item_id
 	var label := Label.new()
 	label.text = "%s %d / have %d" % [name, need, have]
+	if _craft_button_on:
+		label.text = "%s  %d / %d" % [name, have, need] if enough else "%s  %d / %d  (need %d more)" % [name, have, need, need - have]
 	label.add_theme_font_size_override("font_size", UITokens.FONT_SECTION if _readable_recipe_rows else UITokens.FONT_BODY)
 	label.add_theme_color_override("font_color", UITokens.SUCCESS if enough else UITokens.DANGER)
 	row.add_child(label)
@@ -1307,8 +1425,8 @@ func _cost_line(recipe: Dictionary) -> String:
 		var name := str(db.call("item_name", id)) if db != null else id
 		# Ownership counts remain in the selected recipe's ingredient panel.
 		# The list needs a short, distinguishable preview of every requirement.
-		parts.append("%d %s (have %d)" % [need, name, have])
-	return ", ".join(parts)
+		parts.append("%d %s" % [need, name] if _compact_rows else "%d %s (have %d)" % [need, name, have])
+	return (" · " if _compact_rows else ", ").join(parts)
 
 
 ## `id`'s 64px silhouette from `data/items/items.json`'s own `icon` field, or
