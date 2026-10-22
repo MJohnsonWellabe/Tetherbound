@@ -35,6 +35,9 @@
 - 2026-10-22 15:05 CT INFO Re: Riverwatch r13 Medium "ghost/hologram" Brooktail. Checked the captain GLB: alphaMode is absent (OPAQUE), and the metallicRoughness texture's metal channel is ~0.01 (not metallic), so the material itself is not the cause. The prime suspect is `cue_boss_aura: true` on `oreth_overflow` and `oreth_flood`, inherited from the r9 data. During those tells `enemy_pattern_telegraph._add_boss_aura` puts an additive, unshaded rim shader (`blend_add`, `depth_draw_never`, strength 0.6-1.0 pulsing) as `material_overlay` on every mesh of the double-sided captain model, plus a cyan OmniLight (energy 3). On Forward+, glow and tonemapping can wash that rim into a grey-white veil over the whole body; on Compatibility it reads as a faint rim. Quick split for the GPU lane: on tb/fights-land, set `"cue_boss_aura": false` on both Oreth rows (combat.json, the two `cue_boss_aura` keys inside oreth_overflow / oreth_flood) and recapture Medium. If that clears it, I'll land the aura OFF for Riverwatch (CPU frames barely show it). Second suspect: the water wall/fan sheet (`cue_water_wall_opacity` 0.5, `cue_water_fan_fill_alpha` 0.4) drawn in front of the boss.
 - 2026-10-22 15:05 CT INFO Next for Riverwatch on CPU (row stays open): pull the camera back from r13's close crop, and flatter telegraphs -> water-surface tells. Halder h7 and Vance v2 are judging next.
 
+- 2026-10-22 16:10 CT INFO Batch r8 (`F22-4-R8.md`; r 0.85, top anchor 7.53, no warnings): Halder h7 mapped **6.33** (control 5.27), the second consecutive round under +0.5, so Halder is **parked at 6.33** (below 6.7, stays OFF). Vance v2 (Tuskroot 1.6, wide framing) **5.11 vs control 5.62, rejected**. Every judge's top ask is the same: a real impact burst on a landed charge, plus the HUD band covering the bottom third.
+- 2026-10-22 16:10 CT INFO tb/fights-land feed18aeb: review follow-ups (1) and (2) done (the sight-fade cost comment at foliage_camera_visibility.json and the stale OFF dressing comments in trainer_aftermath.json/.gd; comment-only). Re-proved on the land head before that commit: C2 `smoke_named_fight_hit_avoid --trainer=captain_riverwatch --live-member=captain_riverwatch:4` PASS (player_hits 6, stand 3, dodges 4/4). A Halder land capture shows no pilot mark or sight presentation, so the scope holds. Still waiting on #712 to merge for the vegetation.gd merge and then READY.
+
 ## Rounds
 | Round | Item | Mapped control | Mapped candidate | Note |
 |---|---|---|---|---|
@@ -48,3 +51,4 @@
 | T4 | + leap-lane colour | 4.71 / 4.67 | 5.77 / 5.73 | first round < 0.5 |
 | RW r11-13 | tilt / boss 2.9x / no tilt | 5.81 | 7.00 / 6.97 / **7.03** | parked on CPU at 7.03 (2nd round < 0.5) |
 | Halder h4 | earth strike, amber crackle lane | 5.89 | 5.98 | 3rd round < 0.5; new approach next |
+| r8 | Halder h7 / Vance v2 | 5.27 / 5.62 | 6.33 / 5.11 | `F22-4-R8.md`; Halder parked (2 rounds <0.5); v2 rejected |
