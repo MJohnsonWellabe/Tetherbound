@@ -110,3 +110,22 @@ Asks:
 - weak hit on the bird, spider and ram; the spider's faint mid stands it on end;
 - Mirejaw's face is small and its body barely clears the trainer;
 - Tanglevolt and Stormcapra read cute/plastic (owner steer: stylised realism, not cartoon).
+
+## Batch b5 (22 Oct ~21:00 CT): Fulgocobra remake 6.87, Voltarach remake r2 6.43; Riverdrake growth not visible
+
+Fit: linear, slope 0.880, intercept 1.207, r 0.829, RMSE 0.679, no warnings. Files `b5/`.
+
+| Set | Base raw | Cand raw | Base mapped | **Cand mapped** |
+|---|---|---|---|---|
+| Fulgocobra Meshy-1022 (cobra rig, forward fold faint) | 4.1/4.0/4.5 | 6.5/6.2/6.6 | 4.90 | **6.87** (two-style FIXED x3) |
+| Voltarach Meshy-1022 r2 (flip done by .4) | 4.2/3.7/4.2 | 5.5/6.3/6.0 | 4.75 | **6.43** (faint FIXED x3; one judge: reads as a beetle, not a thunder spider) |
+| Riverdrake c4 (live) vs grown 4.80 m + rim | 6.0/5.9/6.3 | 6.1/6.0/6.3 | 6.54 | 6.60 |
+
+- **Riverdrake:** the stage tool reframes every creature to its own size, so the growth can't show against the
+  ruler, and the rim (`rim_amount` on the finish overlay) is invisible. I reverted the growth; it needs an
+  in-world fixed-camera capture to judge. The same live c4 Riverdrake mapped 7.51 in b3 and 6.54 here, so the
+  b3 pass sat inside batch noise (RMSE 0.43-0.68). The GPU yardstick's 7.39 is the number that counts.
+- **Rim finish:** the rim row turns Meadowhart flat yellow (the overlay drops the base material's colour
+  multiply), so it isn't usable as a generic rim light.
+- **Asks:** a material rim/fresnel pass on creatures (needs a shader-side change, not the overlay); weak hits on
+  the spider and bird; ram faints float.
