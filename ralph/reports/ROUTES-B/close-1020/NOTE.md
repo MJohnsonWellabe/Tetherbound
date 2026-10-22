@@ -1,6 +1,6 @@
 # Routes-B close-1020: Cloudreach and Stormwood pieces (F49#0, earned-checkpoint half of F19#5)
 
-## TO COORDINATOR: FINAL READY tb/routes-b-final __SHA__
+## TO COORDINATOR: FINAL READY tb/routes-b-final d7dc4bcd
 Built from origin/main a4f8a6b7 plus tb/routes-b 9f5c1925. Owner direction: everything on main, without bloat. No file over 200 KB. Only small receipts, seam manifests and this note are added; saves and logs stay out.
 
 **Proven** (accepted pieces from pinned start saves; seams match unless noted):
