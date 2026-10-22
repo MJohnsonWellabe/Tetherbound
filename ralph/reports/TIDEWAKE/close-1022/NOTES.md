@@ -1,5 +1,10 @@
 # Tidewake close-1022 (owner 22 Oct: fix the yardstick, then raise scores)
 
+## TO COORDINATOR
+
+- 2026-10-22 07:40 CT READY: tb/tidewake-land 5b1179976 (P2-109 saddle fade; Aquaryn camera pass-through). Found by coordinator 08:35 CT.
+- 2026-10-22 08:40 CT INFO: candidate day recapture (24 destinations, CPU Low) running; first calibrated batch follows.
+
 Worklist: the GPU findings in `ralph/reports/GPU-PASS/F39-0/VERDICT.md` (branch tb/gpu-pass).
 
 ## Coordinator handoff (send_message refused: "elevated_session_untrusted_device")
