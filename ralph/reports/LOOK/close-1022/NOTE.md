@@ -2,6 +2,7 @@
 
 ## TO COORDINATOR
 
+- 2026-10-22 18:45 CT TO COORDINATOR: FINAL READY tb/look-final bee83ec08, which merges origin/main after #712 (no conflicts) and supersedes cbf6ed70c. The ON/OFF lists and slimming are unchanged. Also adds the overlap-test follow-up (force_update_transform; formerly tb/look 8ed147493). Checks on the merged head: texture policy PASS (726); 128 focused tests, 0 failed (follower fade, crossing hall, F17, burrow, horizon, village, build placer overlap, tether relay).
 - 2026-10-22 19:35 CT TO COORDINATOR: FINAL READY tb/look-final 33f643439 (supersedes ab9fb44e8; slimmed per the owner's size direction). ON and OFF are as below.
   - Evidence: verdict .md, key .json, and at most one sheet per round.
   - Assets: only config-referenced folders (the Hall great-hall set, burrow_hill_mound, wall v2 for land's r6). Previews and concepts are dropped. hill_flank_slope_tile, meadows_hero_summit and team_tether_stronghold_gate are left on tb/look. About 136 MB of assets.
