@@ -132,7 +132,7 @@ Owner (22 Oct, via coordinator): "We shouldn't be doing full route in one go. It
 | training_t1_kitchen | master end (pinned, 58b29d287) | Kitchen, Forge, kitchen_meadows built | ea0892a06 | PASS (489 s) |
 | training_t1_feed | kitchen end (pinned) | five feast_t1_ground cooked (exact bills), five companions fed (stay), all breakthroughs [1] | d64cd9ec1 | PASS (227 s) |
 | training_t2_earn, t2_altar_1..5, t2_master, t2_kitchen, t2_feed, t2_return | t1 feed end | – | – | unproven |
-| warrens | t2_return end (trained order) or a generated boundary | – | – | unproven |
+| warrens | t2_return end (trained order); no usable earlier start yet | – | – | unproven: the committed meadows_chain_ev_fights bridge lacks opening_village in its prefix ("no readable exact receipt for opening_village"), and the runner accepts generated starts only at relay/sigils/hall |
 | relay | generated `relay` boundary | relay disabled, captive rescued | 1c0078796 | PASS (3030 s) |
 | sigils | relay end (generated lineage) | – | – | running |
 | hall | generated `hall` boundary | Hall cleared | ac9a32e22 | PASS (1826 s) |
