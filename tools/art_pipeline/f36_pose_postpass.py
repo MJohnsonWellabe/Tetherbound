@@ -872,6 +872,15 @@ if CANDIDATE_1022:
     SHOVE_RELEASE, SHOVE_END = 0.5, 0.97
     # F29#3 GPU judges: the bears' hit is a crouch and head dip with no recoil.
     HIT_STYLE.update({'stormursa': 'shove', 'staticub': 'shove'})
+# Close-1022 b11/b13 (owner-style prompt, three judges, CPU-provisional): the
+# held shove hit (gain 1.5, held to 0.97) for Sparkit 7.06, Staticub 7.27 and
+# Mirejaw 6.77 (vs live 6.62 / 6.17 / 5.81) and Stormursa 7.54 (vs 6.84), and
+# Mirejaw's faint back to the side topple.
+LANDED_1022_SHOVE = ('sparkit', 'staticub', 'mirejaw', 'stormursa')
+HIT_STYLE.update({s: 'shove' for s in LANDED_1022_SHOVE})
+SHOVE_GAIN_BY.update({s: 1.5 for s in LANDED_1022_SHOVE})
+SHOVE_HOLD_BY.update({s: (0.5, 0.97) for s in LANDED_1022_SHOVE})
+PRONE = tuple(s for s in PRONE if s != 'mirejaw')
 
 
 def clamp_neck(frames, limit=NECK_PITCH_LIMIT):
