@@ -52,6 +52,8 @@ var _water_origin_time := 0.0
 var _aura_meshes: Array[GeometryInstance3D] = []
 var _aura_material: ShaderMaterial = null
 var _aura_light: OmniLight3D = null
+## Renderer weights for the aura (x: rim, y: light); see aura_renderer_scale().
+var _aura_scale := Vector2.ONE
 var _aura_time := 0.0
 const AURA_SHADER_CODE := """
 shader_type spatial;
@@ -234,17 +236,35 @@ func _add_boss_aura() -> void:
 	var art: Node = _body.call("model_pivot") if _body.has_method("model_pivot") else _body
 	if not art is Node3D:
 		return
+	_aura_scale = aura_renderer_scale(_profile, RenderingServer.get_current_rendering_method())
+	_aura_material.set_shader_parameter("strength",
+		float(_profile.get("cue_boss_aura_strength", 1.0)) * _aura_scale.x)
 	for node: Node in art.find_children("*", "GeometryInstance3D", true, false):
 		var geometry := node as GeometryInstance3D
 		if geometry is MeshInstance3D and geometry.visible and geometry.material_overlay == null:
 			geometry.material_overlay = _aura_material
 			_aura_meshes.append(geometry)
+	if _aura_scale.y <= 0.0:
+		return
 	_aura_light = OmniLight3D.new()
 	_aura_light.light_color = Color(str(_profile.get("cue_boss_aura_light_colour", "#6fdcff")))
 	_aura_light.light_energy = float(_profile.get("cue_boss_aura_light_energy", 3.0))
 	_aura_light.omni_range = float(_profile.get("cue_boss_aura_light_range_m", 4.5))
 	_aura_light.shadow_enabled = false
 	add_child(_aura_light)
+
+
+## F22#4 Riverwatch GPU pass (tb/gpu-pass GHOST.md): Compatibility draws the
+## additive rim weakly, which is the look the judges scored. Forward+ (and
+## Mobile) draw it and the cyan omni at full weight, washing the whole boss
+## pale. There the rim takes `cue_boss_aura_forward_plus_strength` of its
+## strength and the light `cue_boss_aura_forward_plus_light` of its energy
+## (0 = no light). Compatibility keeps both at 1.
+static func aura_renderer_scale(profile: Dictionary, rendering_method: String) -> Vector2:
+	if rendering_method == "gl_compatibility":
+		return Vector2.ONE
+	return Vector2(maxf(0.0, float(profile.get("cue_boss_aura_forward_plus_strength", 0.3))),
+		maxf(0.0, float(profile.get("cue_boss_aura_forward_plus_light", 0.0))))
 
 
 func _exit_tree() -> void:
@@ -811,10 +831,10 @@ func _process(delta: float) -> void:
 		_aura_time += delta
 		var pulse := 0.5 + 0.5 * sin(_aura_time * TAU * float(_profile.get("cue_boss_aura_pulse_hz", 2.2)))
 		var strength := float(_profile.get("cue_boss_aura_strength", 1.0))
-		_aura_material.set_shader_parameter("strength", strength * (0.6 + 0.4 * pulse))
+		_aura_material.set_shader_parameter("strength", strength * _aura_scale.x * (0.6 + 0.4 * pulse))
 		if _aura_light != null and is_instance_valid(_body):
 			_aura_light.global_position = _body.global_position + Vector3.UP * 1.4
-			_aura_light.light_energy = float(_profile.get("cue_boss_aura_light_energy", 3.0)) * (0.7 + 0.3 * pulse)
+			_aura_light.light_energy = float(_profile.get("cue_boss_aura_light_energy", 3.0)) * _aura_scale.y * (0.7 + 0.3 * pulse)
 	if not _water_origin.is_empty() and _heading.length_squared() > 0.0:
 		_water_origin_time += delta
 		var radius := clampf(float(_profile.get("cue_water_origin_radius_m", 0.23)), 0.12, 0.38)
