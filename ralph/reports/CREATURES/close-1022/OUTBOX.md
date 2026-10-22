@@ -107,3 +107,4 @@ REDRAFT voltarach (top/front three-quarter, three views): Stormwood thunder spid
   body clears a 1.80 m person.
 - Avoid: no black/yellow wasp hazard pattern, no red. height=4.25.
 - 23 Oct 01:40 CT READY tb/creatures-land2 c62d3eb10: Galecrest/Fulgocobra/Voltarach remakes only (b8). Details in note.md TO COORDINATOR.
+- 23 Oct 03:10 CT CORRECTION: hold land2 c62d3eb10. b9's clean fit maps the shipped remakes at 5.56-5.81, not 6.7+. Galecrest, Fulgocobra and Voltarach are parked on scene work; MESHY redraft asks are in note.md.

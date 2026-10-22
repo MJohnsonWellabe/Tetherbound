@@ -1,6 +1,8 @@
 # Creatures close-1022 (lane tb/creatures)
 
 ## TO COORDINATOR
+- 23 Oct 03:10 CT CORRECTION to READY tb/creatures-land2 c62d3eb10: hold it, don't land it as CPU-provisional. In b9 (clean fit: RMSE 0.53, no warning, confirming batch) the same shipped remake files map to only Galecrest 5.56, Fulgocobra 5.68, Voltarach 5.81. b8's 7.05 / 6.89 / 6.73 came from a fit with RMSE 0.81, so b8 overstated them by about 1.0-1.5. They still beat live (b8 live raw 3.7-4.3 against remake 5.6-6.6, x3 judges), so c62d3eb10 is an improvement over main, but it is not >= 6.7. Your call: land it as an improvement with the row still open, or wait for GPU. I recommend a GPU judgement before any land. The same caveat applies to c7b3a66e3 (b6 also had RMSE > 0.75).
+- 23 Oct 03:10 CT (b9) Face-grow + albedo-lift candidate (meshy1022h: head x1.25/x1.35, gamma 0.72-0.85) gained 0.00-0.06 mapped; none of the three judges saw a difference at strip size. That is the second round under +0.5 for Galecrest, Fulgocobra and Voltarach, so all three are PARKED on scene and material work. The remaining lever is new art: designed lighter colour blocks, bigger eyes or face plates, surface grain. MESHY ask: redraft Galecrest and Fulgocobra with those, plus the Voltarach eight-leg redraft already in OUTBOX.
 - 23 Oct 01:40 CT READY tb/creatures-land2 c62d3eb10 (from origin/main 9c97caa68): Meshy-1022 remakes ON for Galecrest, Fulgocobra and Voltarach only, as judged in b8 (mapped 7.05 / 6.89 / 6.73 vs live 5.24 / 5.11 / 5.06; RMSE 0.81 caveat).
   - Contents: the three GLBs byte-identical to the b8 captures (tb/creatures `<sp>/candidate_meshy1022`), their Meshy raw folders, drafted references and provenance; species.json binds model + `colourway_source_species` `<sp>_meshy1022` + the Voltarach clip map; Fulgocobra's old-texture `ordinary` finish row dropped; Galecrest Fly carrier on the remake; `rig_bird.py --hit-gain` (default 1.0, other birds unchanged). No recipe flags: none of the three is in `enabled_species`, so they play their own clips. No Meadowhart/Riverdrake (005faf1b8), no Tanglevolt/Stormcapra/Mirejaw, no Stormursa growth.
   - Checks on c62d3eb10 itself: Godot `--only=f36_pose,scale_ladder,water,roster,colourway,surface_finish,fly,creature_body,species` 570 tests, 0 failed (scale ladder and grow-only included); test_f36_pose_postpass 8/8 OK (tear checks, water forms included).
@@ -216,3 +218,15 @@ judges ranked the anchors less like the reference judges; read with that caveat.
 All three recorded defects are FIXED x3 on every remake: two styles, hit-as-standing, and no faint.
 Asks: flat, plasticky material with no rim; dark bodies on the dark stage (cobra, spider shell); small faces on
 the bird and spider. Fulgocobra has now had one round under +0.5.
+
+## Batch b9 (23 Oct ~03:00 CT): face-grow + albedo-lift on the three remakes, no visible gain; b8 scores overstated
+
+Candidate: `tools/art_pipeline/meshy1022_head_grade.py`, written to `<sp>_meshy1022h.glb` (OFF). It scales vertices weighted to the leaf head joint (Galecrest x1.25, Fulgocobra x1.35) and lifts the albedo value (gamma 0.85 / 0.75 / 0.72). A finish-overlay value lift was tried first and made the bodies darker (the overlay path loses the sRGB read), so it was dropped. Base = b8 remake frames (`.artifacts/b8c`), candidate = `.artifacts/b9h`, both on the stage tool without `--candidate`. Anchors: craft, f36_0_npc:C1, f36_0_gap:C1, f04_6_r22. Fit: linear, slope 0.934, intercept 0.793, r 0.838, RMSE 0.528, no warnings. Files `b9/`.
+
+| Species | Remake raw | Candidate raw | Remake mapped | Candidate mapped |
+|---|---|---|---|---|
+| Galecrest | 5.3/5.0/5.0 | 5.3/5.0/5.0 | 5.56 | 5.56 |
+| Fulgocobra | 5.4/5.4/4.9 | 5.4/5.5/5.0 | 5.68 | 5.74 |
+| Voltarach | 5.6/5.3/5.2 | 5.6/5.3/5.2 | 5.81 | 5.81 |
+
+All judges: the dark-body, small-face and flat-material defects are PRESENT on both sides; the strips are too small for the face change to read. Their top asks: a lighter stage plus a rim light (the stage is the fixed camera set, so it is not ours to change), and new art with lighter designed colour blocks, bigger eyes and surface grain.
