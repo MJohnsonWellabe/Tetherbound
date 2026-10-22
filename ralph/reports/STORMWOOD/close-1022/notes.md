@@ -30,6 +30,28 @@ Measured (luma over the play area, HUD bands excluded; 0–255):
 | CPU g3 capacitor fight (7 interval frames) | 78.0 | 61.1 | 0.27 |
 | Reference boards (Stormheart a/b, Palworld) | 114–131 | — | 0.37–0.46 |
 
+## Round r11 (22 Oct, about 16:30 CT), first round on the yardstick
+- Candidate: grade candidate above plus `charger_lunge.lane_charged` ON. Control: tb/stormwood e4d7bd176 (origin/main 2e7dd84b1 merged), every candidate OFF.
+- Captures: CPU llvmpipe Compatibility 1280x720. Matrix `capture_stormwood_f10_matrix.gd --phases=calm,break` plus aftermath, with the close-1020 custom stands (8 stands x Calm/Break/aftermath, 24 frames per arm). Fights `capture_named_fights_f10_6.gd --ids=glass_field_alpha,capacitor_alpha --seconds=14 --interval=2.0 --camera-view=north --fixture-seed=1042206 --fixed-fps 20`. Six frames per fight: i00, i03, i06, tell1-c, tell1-e, tell2-d.
+- Measured luma (play area): matrix control 38.1 vs candidate 74.9; fights control 29.6 vs candidate 75.8.
+- Batch: `anchor_tiles.py --pairs 3` (anchors f36_0_npc C5, craft, f36_0_gap C5) plus five A/B candidate sets. Three fresh code-blind judges ran on JUDGE_PROMPT v1 verbatim. Files: `r11/` (spec, sets.md, key, recorded defects, batch, mapped, `_sheet_r11.png`).
+- Fit: linear, slope 1.53, intercept -2.73, r 0.977, anchor RMSE 0.21; confirming batch (top anchor 7.35).
+
+| Set | Control raw (j1/j2/j3) | Control mapped | Candidate raw | Candidate mapped |
+|---|---|---|---|---|
+| F41#3 Calm matrix | 3.5/3.8/3.2 | 2.63 | 6.2/6.0/5.6 | **6.36** |
+| F41#3 Break matrix | 3.6/3.4/3.0 | 2.38 | 6.0/5.9/5.2 | **6.01** |
+| F41#3 aftermath matrix | 3.8/3.7/3.6 | 2.94 | 6.3/6.2/5.6 | **6.52** |
+| F10#2 capacitor_alpha | 4.4/3.9/3.6 | 3.35 | 5.9/5.5/5.2 | **5.75** |
+| F10#2 glass_field_alpha | 4.4/4.1/3.8 | 3.55 | 6.0/5.8/5.5 | **6.11** |
+
+- Below 7.5 on every row: nothing closes. This is the first mapped round, the baseline for the gain rule (best mapped: matrix 6.30 mean of the three phases, fights 5.93).
+- Bar B: no from all three judges on every set.
+- Defects fixed on the candidate (all three judges): murk; Break forest crushed; arena brown; flat magenta strike disc in Break (not seen on either side).
+- Defects partial: magenta lane telegraph (still reads pink/violet); impacts (small white flash); camera in canopy at frame edges; repeating moss tile; Stormheart squat.
+- Defects still present: near-camera occluders (forest-stand trunk; reverse-stand pale-blue root filling the left third); glass-field scar not readable; Break lightning lights the sky but not trunks or ground; flat lavender sky with no fog layering or depth; floating "You backed off" combat text over the enemy; the HUD covers about 40% of the fight frame and the pilot is tiny.
+- Judges' top changes: (scene) make lightning light trunks and ground, add layered blue-violet distance fog and rim light, break up the ground tile with decals and clearings, clear lens occluders; (scene) real lightning/crack telegraphs and spark impact bursts; (new_art) a towering, board-scale Stormheart.
+
 ## To the coordinator
 - Signpost fix (ON, with test) is in f90f2a3ca: `masters.json sign_presentation.visible_range_m` 24 m + 4 m fade; `tests/test_master_sign_visible_range.gd` fails without it. It touches every realm's Master signpost. Ready to land with the next batch.
 - Out of lane: (a) the fight pilot (Lv 42 Sparkit fixture) renders about trainer height; GPU judges say "pilot no taller than the 1.80 m trainer" (hard rule, creatures lane). (b) The HUD bottom band covers roughly 45% of a 1280x720 fight frame (UI lane). (c) Crown clone herds come from hollow_crown wild cluster tables (encounter data); not changed without a ruling.
