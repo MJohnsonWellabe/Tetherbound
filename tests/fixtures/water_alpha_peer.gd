@@ -105,6 +105,26 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			for frame in 30:
 				await physics_frame
 			return {"verdict": "PASS", "detail": "Forged catch result sent over real client transport without a host claim"}
+		"water_alpha_flee":
+			# The guest's own local exit through the production disengage, and
+			# the camera arm over it: solid on Aquaryn while this peer's fight
+			# runs (resolving included), passing through again once it exits.
+			var manager: Node = alpha.world.get_node("CombatManager")
+			if not alpha.get("_local_fight") or not bool(manager.call("try_flee")):
+				return {"verdict": "FAIL", "detail": "No local Alpha fight to leave, or flee refused"}
+			var passed_while_fighting := 0
+			for frame in 600:
+				await physics_frame
+				if alpha.get("_local_fight") and _camera_any(alpha.body):
+					passed_while_fighting += 1
+				if not alpha.get("_local_fight"):
+					break
+			for frame in 3:
+				await physics_frame
+			var ok: bool = not alpha.get("_local_fight") and passed_while_fighting == 0 and _camera_passes(alpha.body)
+			return {"verdict": "PASS" if ok else "FAIL", "detail": "Guest flee exits locally; camera arm solid until exit, passing after",
+				"local_fight": alpha.get("_local_fight"), "passed_while_fighting": passed_while_fighting,
+				"camera_passes": _camera_passes(alpha.body)}
 		"water_alpha_wait_hit":
 			if not alpha.get("_local_fight") or alpha.encounter_record().is_empty():
 				return {"verdict": "FAIL", "detail": "No Alpha fight: unrelated wild damage cannot count"}
@@ -149,4 +169,15 @@ func _execute_probe(msg: Dictionary) -> Variant:
 		"entitled": preload("res://scripts/world/water_alpha_rewards.gd").entitled(game.world, entitlement_character),
 		"entitlement_count": saved_flags.count(entitlement_id),
 		"last_verdict": alpha.last_verdict.duplicate(true),
-		"capture_claims": game.world.water_capture_claims.size()}
+		"capture_claims": game.world.water_capture_claims.size(),
+		"camera_passes": _camera_passes(alpha.body), "camera_any": _camera_any(alpha.body)}
+
+
+## camera_rig PASS_THROUGH_GROUP membership with the camera-inside fade on.
+func _camera_passes(body: Node) -> bool:
+	return body.is_in_group(&"camera_arm_pass_through") and bool(body.get("fades_when_camera_inside"))
+
+
+## Either half on, which must never happen during this peer's fight.
+func _camera_any(body: Node) -> bool:
+	return body.is_in_group(&"camera_arm_pass_through") or bool(body.get("fades_when_camera_inside"))

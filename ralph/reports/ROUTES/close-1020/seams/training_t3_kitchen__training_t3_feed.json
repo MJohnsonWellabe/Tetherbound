@@ -1,0 +1,16 @@
+{
+ "consumer": {
+  "commit": "049dde0256978932acf0beea6c99cfca5e11502d",
+  "from": "t3_kitchen",
+  "piece": "training_t3_feed"
+ },
+ "differences": [],
+ "match": true,
+ "method": "producer receipt.after vs consumer receipt.before (day, ending, flags, items, party, player, realm, training, uids)",
+ "producer": {
+  "commit": "44f4307d7d2e80fe8c3131049a815a0360d325a7",
+  "out": "t3_kitchen",
+  "piece": "training_t3_kitchen"
+ },
+ "seam": "training_t3_kitchen -> training_t3_feed"
+}

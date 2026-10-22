@@ -1,0 +1,22 @@
+{
+  "continuous_fresh_save": false,
+  "disclosure": "Independent F49 T5 proof boundary. Mid-Stormwood at Keeper Ondra's stance (-160, 2697.5) on the Still Grove road, Crown arch unbuilt: the stormwood_crown_build profile's chapter and prior-chapter flags, five template creatures at generated L49/cap50 with prior breakthrough tiers [1,2,3,4], prior T1-T4 Master wins and recipes, hung relics and portal progress, five Tether Candy, and sluice_metal 12 / reef_stone 10 / cliffglass_ore 12 / windworn_heartwood 10 (exactly the Tidewake and Cloudreach Kitchen-attachment bills with their two tidesteel and two skyglass ingots, which a T3/T4 player carries from Ione's and Aster's chests and which no Meadows source supplies) are generated setup, not earned play or transaction receipts. No Rowan win, feast_t5 recipe, Altar payment, Kitchen build or cook, feed, or selected-piece PASS is granted. The Rowan visit and every paid training/Kitchen action must happen through ordinary play and production save.",
+  "kind": "generated_boundary_save",
+  "portal_leg": "",
+  "prior_earned_play": false,
+  "profile": "stormwood_t5_rowan_independent",
+  "profile_sha256": "fa45d5c34cab4604f0e4310c394c89a1f1f59a3db24bf8b054e5ae1c34c2a0e6",
+  "slot": 0,
+  "slot_info": {
+    "day": 20,
+    "legacy": false,
+    "load_result": {
+      "code": "ok",
+      "message": "",
+      "ok": true
+    },
+    "party_size": 5,
+    "realm": "stormwood"
+  },
+  "source": "ed44d191c9ebf516872e67553d59c00d375dd333"
+}

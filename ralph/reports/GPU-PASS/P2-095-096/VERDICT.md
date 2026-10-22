@@ -1,6 +1,6 @@
 # GPU pass: P2-095 craft recipe text / P2-096 craft hint contrast: both defects FIXED, Bar A REOPENED (Medium 6.63, High 6.60)
 
-22 Oct 2026, ~02:45 CT. Remote GPU lane (owner's Windows desktop).
+21 Oct 2026, 22:50 CT. Remote GPU lane (owner's Windows desktop).
 
 - **Renderer:** Forward+ on Vulkan, NVIDIA GeForce GTX 1060 3GB, 1920x1080. Medium and High were set through the tool's look-dev bootstrap.
 - **Source:** origin/main 9db3d2146, unmodified (the readable recipe rows, action hints and glyph hints are ON, as shipped).
@@ -32,3 +32,17 @@ On one scale the GPU frames sit +0.4 above the CPU shipping frames. This prompt 
 Two notes need new art: the Axe and Hoe icons are near-identical T shapes, and the centre preview is just a small icon.
 
 Sheet: `_sheet_p2_095_gpu.png` (Medium | High).
+
+## Yardstick rejudge (22 Oct, morning): mapped 6.72, REOPENED (not GPU-confirmed)
+
+Batch: `anchor_tiles.py --pairs 4 --include f36_0_npc:C1`. Anchors: craft (after/before), F36#0 gap C1, F36 NPC C1, F04#6 r22. The candidates are the overnight GPU frames, Medium vs High as sides A/B (shuffled): P2-018 per biome (normal | shiny grids), the P2-095/096 craft panel, and the P2-094 wall (close + full). Three fresh judges, `JUDGE_PROMPT.md` verbatim. Calibration: linear slope 0.618, intercept 3.218, r 0.813, anchor RMSE 0.563, top anchor 7.53 (a confirming batch), no warnings, `above_top_anchor` false for every candidate. Files in `yardstick/`.
+
+**P2-095/096 GPU craft panel: mapped 6.72** (judges 6.93/6.31/6.93), the same for Medium and High. Recipe text is FIXED in all 6 calls (3 judges × 2 sides); action hints are FIXED in 2 and PARTIAL in 4 (two judges hold out for controller-first glyphs). **Below 7.5: REOPENED.**
+
+The same-batch craft anchor measured 5.53 against its reference 7.35, so this batch's map reads it at 6.64. The pre-yardstick re-mapping that put this row at 7.96 doesn't hold under the standard batch.
+
+The judges' asks, all fixable in scene:
+- Keyboard keycap glyphs instead of controller-first prompts.
+- No teal interaction accent or gold progression (the selection border is grey in the stormwood frame).
+- Only three recipes visible, with tall half-empty rows.
+- The panel covers the campfire scene.
