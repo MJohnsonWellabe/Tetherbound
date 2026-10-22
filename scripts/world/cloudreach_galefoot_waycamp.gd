@@ -35,14 +35,15 @@ func build(materials: Dictionary) -> void:
 	if not parsed is Dictionary:
 		push_error("Galefoot Waycamp visual config is invalid")
 		return
-	var cfg := parsed as Dictionary
+	var cfg := preload("res://scripts/world/cloudreach_settlement_life.gd").apply(parsed as Dictionary, "waycamp")
 	_add_hearth(cfg.get("hearth", {}) as Dictionary, materials)
 	for index in (cfg.get("benches", []) as Array).size():
 		var spec := (cfg.benches as Array)[index] as Dictionary
 		_add_scene("HearthBench%02d" % (index + 1), BENCH, _v3(spec.position),
 			float(spec.get("height_m", 1.15)), float(spec.get("yaw_deg", 0.0)),
 			"hearth_seat")
-	_add_lantern_line(cfg.get("lantern_line", {}) as Dictionary, materials)
+	if bool((cfg.get("lantern_line", {}) as Dictionary).get("enabled", true)):
+		_add_lantern_line(cfg.get("lantern_line", {}) as Dictionary, materials)
 	for index in (cfg.get("supply_corner", []) as Array).size():
 		var spec := (cfg.supply_corner as Array)[index] as Dictionary
 		var packed: PackedScene = CRATE if str(spec.get("asset", "")) == "crate" else BARREL

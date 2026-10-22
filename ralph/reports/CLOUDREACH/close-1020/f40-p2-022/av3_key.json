@@ -1,0 +1,42 @@
+{
+ "1": {
+  "L": "B",
+  "R": "A",
+  "file": "cloudreach__landmark__summit_eyrie_stronghold__day__approach.png"
+ },
+ "2": {
+  "L": "A",
+  "R": "B",
+  "file": "cloudreach__landmark__summit_eyrie_stronghold__day__close.png"
+ },
+ "3": {
+  "L": "B",
+  "R": "A",
+  "file": "cloudreach__landmark__summit_eyrie_stronghold__night__approach.png"
+ },
+ "4": {
+  "L": "A",
+  "R": "B",
+  "file": "cloudreach__landmark__summit_eyrie_stronghold__night__close.png"
+ },
+ "5": {
+  "L": "A",
+  "R": "B",
+  "file": "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach.png"
+ },
+ "6": {
+  "L": "B",
+  "R": "A",
+  "file": "cloudreach__summit_final_stronghold__11__summit_eyrie__day__close.png"
+ },
+ "7": {
+  "L": "A",
+  "R": "B",
+  "file": "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach.png"
+ },
+ "8": {
+  "L": "B",
+  "R": "A",
+  "file": "cloudreach__summit_final_stronghold__11__summit_eyrie__night__close.png"
+ }
+}

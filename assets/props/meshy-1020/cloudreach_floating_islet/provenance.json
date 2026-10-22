@@ -1,0 +1,133 @@
+{
+  "asset": "cloudreach_floating_islet",
+  "brief_id": "A4",
+  "biome": "cloudreach",
+  "date": "2026-10-21",
+  "author": "Claude (Cloudreach Meshy generation worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro) -> Meshy multi-image-to-3d (latest, quad remesh, PBR)",
+  "target_size_m": "10 m wide grassy islet, ~9 m tapering underside, one small tree",
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "maxh",
+    "fit_value_m": 10,
+    "raw_extent": [
+      1.3555,
+      1.8619,
+      1.1532
+    ],
+    "scale": 7.3771,
+    "final_min": [
+      -5.0,
+      0.0,
+      -4.254
+    ],
+    "final_max": [
+      5.0,
+      13.736,
+      4.254
+    ],
+    "final_extent_m": [
+      10.0,
+      13.74,
+      8.51
+    ],
+    "triangles": 39246,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3
+  },
+  "files": {
+    "glb_metres": "cloudreach_floating_islet.glb",
+    "glb_meshy_raw": "cloudreach_floating_islet_meshy_raw.glb",
+    "textures": "textures/",
+    "chosen_concepts": [
+      "concepts/c3_0.png",
+      "concepts/c3_1.png",
+      "concepts/c3_2.png"
+    ],
+    "meshy_thumbnail": "thumbnail.png"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15c3f-03af-77ab-bb79-c4c1bd3c386c",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Small floating sky islet, about 10 metres wide: a round flat grassy top with one small leafy tree, and a tapering underside of stacked horizontal limestone strata narrowing into a jagged rocky point about 9 metres below the grass, like an inverted cone with hanging rock spurs. Same style as the floating islands in the reference. Show the whole islet floating, underside fully visible. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no cast background, no people. Materials: pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, never pure white) with clearly stacked horizontal sedimentary strata and soft moss on the ledges; where present, slate-blue roof tile (#3d4a66), honey-coloured timber, cream plaster, royal-blue banner fabric with a small gold accent. Absolutely no red, no oxblood, no maroon anywhere. Flat ground contact at the base.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/exterior_floating_islands.jpg (branch tb/cloudreach @ eb3b9504b)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: concept added houses"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15c4a-4da6-7106-9a71-b36bc90b341a",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Natural small floating sky islet, about 10 metres wide: a round, gently domed grassy top with exactly ONE small leafy deciduous tree slightly off-centre and nothing else on it, and a tapering underside of stacked horizontal limestone strata narrowing into a jagged rocky point about 9 metres below the grass, with a few hanging rock spurs. Show the whole islet floating, underside fully visible, three-quarter view from slightly below. Stylised-realism game terrain asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight. Pure natural rock and vegetation only: NO buildings, NO houses, NO banners, NO flags, NO props, NO people. Rock is pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, neutral grey with only a slight warm cast, not sandy or tan, never pure white) with clearly stacked horizontal sedimentary strata and soft green moss on the ledges. Absolutely no red anywhere.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/exterior_floating_islands.jpg (branch tb/cloudreach @ eb3b9504b)"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png",
+        "concepts/c2_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: tree missing"
+    },
+    {
+      "tag": "c3",
+      "task_id": "01a15c4b-c184-70ce-b89c-78f2350fa4f7",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Natural small floating sky islet, about 10 metres wide: a round, gently domed grassy top with exactly ONE clearly visible small round-canopy leafy green tree (about 4 metres tall, brown trunk) growing slightly off-centre on the grass, and nothing else on it, and a tapering underside of stacked horizontal limestone strata narrowing into a jagged rocky point about 9 metres below the grass, with a few hanging rock spurs. Show the whole islet floating, underside fully visible, three-quarter view from slightly below. Stylised-realism game terrain asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight. Pure natural rock and vegetation only: NO buildings, NO houses, NO banners, NO flags, NO props, NO people. Rock is pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, neutral grey with only a slight warm cast, not sandy or tan, never pure white) with clearly stacked horizontal sedimentary strata and soft green moss on the ledges. Absolutely no red anywhere.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/exterior_floating_islands.jpg (branch tb/cloudreach @ eb3b9504b)"
+      ],
+      "outputs": [
+        "concepts/c3_0.png",
+        "concepts/c3_1.png",
+        "concepts/c3_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c3",
+      "task_id": "01a15c4c-c906-7705-a474-653a6d522251",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "input_task_id": "01a15c4b-c184-70ce-b89c-78f2350fa4f7"
+      },
+      "params": {
+        "input_task_id": "01a15c4b-c184-70ce-b89c-78f2350fa4f7",
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 20000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN"
+    }
+  ],
+  "consumed_credits_total": 57,
+  "visual_verdict": "Good: grassy disc with one leafy tree and a jagged stratified cone underside; 10 m wide, 13.7 m tall including tree.",
+  "integration_flag": "OFF - candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood requested or observed; blue banners/roofs only"
+}

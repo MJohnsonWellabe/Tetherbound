@@ -1,0 +1,9 @@
+Ru: "warm lamp light tints the night road rust-red"; "window glow blows out to white"; "flat lawn foreground, village does not read as built into the cliffs"
+Yl: none
+Um: "warm lamp light tints the night road rust-red"; "window glow blows out to white"; "flat lawn foreground, village does not read as built into the cliffs"
+Ia: "warm lamp light tints the night road rust-red"; "window glow blows out to white"; "flat lawn foreground, village does not read as built into the cliffs"
+Bk: "warm lamp light tints the night road rust-red"; "window glow blows out to white"; "flat lawn foreground, village does not read as built into the cliffs"
+Xs: none
+Js: "warm lamp light tints the night road rust-red"; "window glow blows out to white"; "flat lawn foreground, village does not read as built into the cliffs"
+Nw: none
+Om: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

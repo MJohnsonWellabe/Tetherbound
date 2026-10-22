@@ -20,6 +20,7 @@ const PICKUP_READABILITY := preload("res://scripts/world/cloudreach_pickup_reada
 const RESOURCE_PATCH := preload("res://scripts/world/cloudreach_resource_patch.gd")
 const LIMESTONE_BUTTRESS := preload("res://assets/environment/cloudreach/cliff_buttress/limestone_buttress.glb")
 const BUILDING_PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const SETTLEMENT_LIFE := preload("res://scripts/world/cloudreach_settlement_life.gd")
 const CLIFFHOLD_DETAIL := preload("res://scripts/world/cloudreach_cliffhold_detail.gd")
 const ROUTE_DETAIL_SCENES := {
 	"bush": preload("res://assets/environment/stylized_nature/Bush_Common.gltf"),
@@ -302,6 +303,19 @@ func _visual_rock_mass(parent: Node3D,label: String,base: Vector3,size: Vector3,
 	root.rotation.y=float(posmod(seed_value*37,360))*PI/180.0
 	parent.add_child(root)
 	var section_config: Dictionary = _visual_config.get("geology", {}).get("rock_sections", {})
+	if material_key in ["haze_near", "haze_far"] or label.begins_with("SettlementRootedButtress"):
+		# F08#3 candidate: reference-backed stratified limestone spires.
+		var spire_scene := SETTLEMENT_LIFE.spire_scene(size)
+		if spire_scene != null:
+			var stack := spire_scene.instantiate() as Node3D
+			var stack_bounds: AABB = BUILDING_PREFABS.new().combined_aabb(stack)
+			stack.scale = SETTLEMENT_LIFE.spire_scale(size, stack_bounds.size)
+			stack.position = -Vector3(stack_bounds.get_center().x, stack_bounds.position.y,
+				stack_bounds.get_center().z) * stack.scale
+			root.add_child(stack)
+			SETTLEMENT_LIFE.tint_rock(stack)
+			_set_geometry_visibility(root, visible_distance)
+			return root
 	var imported_buttress := bool(section_config.get("limestone_buttress_enabled", false)) and (
 		material_key in ["haze_near", "haze_far"] or label.begins_with("SettlementRootedButtress"))
 	if imported_buttress:
@@ -372,6 +386,7 @@ func _ready() -> void:
 	_visual_config = _read_json(VISUAL_CONFIG_PATH)
 	_visual_config = preload("res://scripts/world/cloudreach_visual_candidate.gd").apply(_visual_config, "visual")
 	_visual_config = preload("res://scripts/world/cloudreach_biome_look.gd").apply_visual(_visual_config)
+	_visual_config = preload("res://scripts/world/cloudreach_settlement_life.gd").apply(_visual_config, "visual")
 	# The draw-distance presets put the far plane at 320-900 m, which clipped the
 	# cloud deck (230-330 m under every stand), the distant shelves and the
 	# Aviary sightline out of every Low frame -- the "grey void" below the rims.
@@ -2711,11 +2726,14 @@ func _route_ridge(parent: Node3D, label: String, a: Vector3, b: Vector3,
 		# away from it. 0.53 (the track's own half-width fraction) is still >=
 		# the half_width*0.5 minimum this collider is required to cover.
 		var edge_taper := smoothstep(0.0, 4.0, float(mini(i, station_count - 1 - i)))
-		var width_here := half_width * lerpf(0.53, irregular, edge_taper)
+		# F08#3 terrace candidate (OFF): near a settlement the whole station
+		# narrows smoothly, so the edge drop shows beside the approach road.
+		var settlement_scale := SETTLEMENT_LIFE.shoulder_scale(centre, half_width)
+		var width_here := half_width * lerpf(0.53, irregular, edge_taper) * settlement_scale
 		var left := centre - right * width_here
 		var right_edge := centre + right * width_here
-		left_track.append(centre - right * half_width * 0.53)
-		right_track.append(centre + right * half_width * 0.53)
+		left_track.append(centre - right * half_width * 0.53 * settlement_scale)
+		right_track.append(centre + right * half_width * 0.53 * settlement_scale)
 		# C3. This is the lip a player actually stands on at the causeway and the
 		# arrival reveal -- those stands sit on route shoulders between the
 		# regions, not on a region crown, so the crown terraces never reach
@@ -5767,12 +5785,31 @@ func _mesa(
 	# OP-0905-24/25 closed.
 	var mass_bottom_world := root.global_position.y - size.y * 0.5
 	var airborne := label == "LandmarkLedge" and _is_airborne_mass(mass_bottom_world)
-	if airborne:
+	# P2-023 candidate (OFF): a reference-backed stratified islet underside
+	# replaces the procedural cone root. Visual only, like the root.
+	var underside_scene := SETTLEMENT_LIFE.island_underside() if airborne else null
+	if airborne and underside_scene == null:
 		var root_cfg: Dictionary = _visual_config.get("island_roots", {})
 		var root_depth := minf(size.y * float(root_cfg.get("root_depth_fraction", 0.85)),
 			float(root_cfg.get("root_depth_max_m", 96.0)))
 		_emit_mesa_root(lower_tool, sides, bottom_ring, root_depth,
 			maxi(1, int(root_cfg.get("root_steps", 5))), seed_value)
+	elif underside_scene != null:
+		var reach := 0.0
+		for point: Vector3 in bottom_ring:
+			reach = maxf(reach, Vector2(point.x, point.z).length())
+		var underside := underside_scene.instantiate() as Node3D
+		var source: AABB = BUILDING_PREFABS.new().combined_aabb(underside)
+		var factor := reach * float(SETTLEMENT_LIFE.items_config().get("island_underside_width_factor", 2.15)) \
+			/ maxf(maxf(source.size.x, source.size.z), 0.01)
+		underside.scale = Vector3.ONE * factor
+		underside.rotation.y = float(posmod(seed_value * 53, 360)) * PI / 180.0
+		# Its grassy top hides inside the open bottom of the mass.
+		underside.position = Vector3(-source.get_center().x * factor,
+			-size.y * 0.5 - source.end.y * factor * float(SETTLEMENT_LIFE.items_config().get(
+				"island_underside_top_fraction", 0.86)), -source.get_center().z * factor)
+		root.add_child(underside)
+		SETTLEMENT_LIFE.tint_rock(underside)
 	lower_tool.generate_normals()
 	lower_tool.commit(mesh)
 

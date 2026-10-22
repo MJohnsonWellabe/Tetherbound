@@ -38,9 +38,19 @@ func test_waycamp_presentation_builds_a_lived_in_night_read_without_collision() 
 	assert_eq(int(roles.get("communal_flame", 0)), 1)
 	assert_eq(int(roles.get("hearth_light", 0)), 1)
 	assert_eq(int(roles.get("hearth_seat", 0)), 2)
-	assert_eq(int(roles.get("lantern_bulb", 0)), 7)
-	assert_eq(int(roles.get("lantern_cable", 0)), 6)
-	assert_eq(int(roles.get("lantern_light", 0)), 1)
+	# F08#3 settlement life (judged pass) removes the lantern line: its pole
+	# split the hearth camera. Otherwise the authored line is complete.
+	var effective := preload("res://scripts/world/cloudreach_settlement_life.gd").apply(cfg, "waycamp")
+	var line_on := bool((effective.get("lantern_line", {}) as Dictionary).get("enabled", true))
+	# Shipped state, asserted independently of the code under test: settlement
+	# life ships ON and turns the line off.
+	var life: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_settlement_life.json"))
+	assert_true(bool(life.get("enabled", false)), "F08#3 settlement life ships ON")
+	assert_false(bool(life.waycamp.lantern_line.enabled), "settlement life removes the lantern line")
+	assert_false(line_on)
+	assert_eq(int(roles.get("lantern_bulb", 0)), 7 if line_on else 0)
+	assert_eq(int(roles.get("lantern_cable", 0)), 6 if line_on else 0)
+	assert_eq(int(roles.get("lantern_light", 0)), 1 if line_on else 0)
 	assert_eq(int(roles.get("supply_dressing", 0)), 2)
 	assert_eq(collisions, 0, "visual dressing must not change camp navigation")
 	presentation.free()
