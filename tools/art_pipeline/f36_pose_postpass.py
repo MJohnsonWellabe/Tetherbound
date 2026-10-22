@@ -771,7 +771,7 @@ HIT_STYLE = {s: 'recoil' for s in ('ashtusk', 'sparkit', 'cindercub', 'shadelet'
 HIT_STYLE.update({s: 'recoil' for s in ('mudsnout', 'meadowhart', 'riptusk', 'mangrove_monitor', 'voltwig', 'skyrill')})
 # Close-1020 batch 8 (fight camera): the body-carried shove beat the live hit by 0.37-0.53 on these.
 HIT_STYLE.update({s: 'shove' for s in ('terrapup', 'trailpup', 'burrowback')})
-HIT_STYLE['meadowhart'] = 'shove'  # close-1022 b3, see SHOVE_GAIN_BY
+# Close-1022 b3: Meadowhart's held shove is a candidate (see CANDIDATE_1022 below).
 
 # Per species, the roll the close-1020 batch-1 judges preferred (r1/r2 paired):
 # negative shows the belly, legs and face to the side-on stage camera, positive
@@ -794,9 +794,11 @@ SHOVE_RELEASE, SHOVE_END = 0.35, 0.8
 # shove at gain 1.5, held to .5 and back by .97 so hit recover differs from
 # standing, mapped Meadowhart 6.28 -> 7.56 (with its resting-deer prone faint,
 # dip 2.5, antlers off the floor) and Riverdrake 6.72 -> 7.51.
-SHOVE_GAIN_BY = {'meadowhart': 1.5, 'riverdrake': 1.5}
-SHOVE_HOLD_BY = {'meadowhart': (0.5, 0.97), 'riverdrake': (0.5, 0.97)}
-LIVE_SHOVE_HIT = ('riverdrake',)
+# OFF: the GPU yardstick judged this recipe 7.22-7.28 (Meadowhart) and 7.39
+# (Riverdrake), under 7.5, so it stays a --candidate-1022 recipe (coordinator review).
+SHOVE_GAIN_BY = {}
+SHOVE_HOLD_BY = {}
+LIVE_SHOVE_HIT = ()
 # Close-1022 candidate (OFF until judged; enable with --candidate-1022): the hurt
 # shove above for every recoil species, and Mirejaw's faint as a side topple
 # (GPU pass 22 Oct: its belly-down prone faint reads as standing, all three judges).
@@ -847,12 +849,17 @@ PRONE_DIP = {'ashtusk': 2.0, 'burrowback': 2.0, 'mudsnout': 3.0, 'shadelet': 2.0
 # It keeps the judged side-on topple (F29#3 r8: spike 0.031, grounded).
 PRONE = ('ashtusk', 'burrowback', 'cragclaw', 'mirejaw', 'mudsnout', 'riptusk', 'shadelet', 'skyrill',
          'staticub', 'stormbrush', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
-# Close-1022 b3: Meadowhart lies down like a resting deer (its side-lie put the
-# antlers through the floor) and buckles deep enough mid-fall to read as going down.
-PRONE += ('meadowhart',)
-PRONE_DIP['meadowhart'] = 2.5
 PRONE_HEAD_REST = {}
 if CANDIDATE_1022:
+    # Close-1022 b3 recipe (CPU 7.56/7.51; GPU 7.22-7.28/7.39): held shove for
+    # Meadowhart and Riverdrake; Meadowhart lies down like a resting deer and
+    # buckles deep mid-fall.
+    HIT_STYLE['meadowhart'] = 'shove'
+    SHOVE_GAIN_BY.update({'meadowhart': 1.5, 'riverdrake': 1.5})
+    SHOVE_HOLD_BY.update({'meadowhart': (0.5, 0.97), 'riverdrake': (0.5, 0.97)})
+    LIVE_SHOVE_HIT = ('riverdrake',)
+    PRONE += ('meadowhart',)
+    PRONE_DIP['meadowhart'] = 2.5
     # GPU yardstick r3 (2 of 3 judges): Meadowhart's head-high faint end reads as
     # kneeling or resting. Lay the neck down so the head ends on the ground.
     PRONE_HEAD_REST['meadowhart'] = 60.0

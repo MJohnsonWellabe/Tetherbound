@@ -81,7 +81,8 @@ class PostPass(unittest.TestCase):
         after = json.loads(self.once)
         worst = {}
         for name in after['enabled_species']:
-            row = after['species'].get(name)
+            # Water forms (water_riverdrake) share their source species' row.
+            row = after['species'].get(name) or after['species'].get(name.removeprefix('water_'))
             if row is None or name in postpass.SKIP_SPECIES:
                 continue
             skin = skin_module.Skin(row['model'], row['rig_contract'], row['bones'])
