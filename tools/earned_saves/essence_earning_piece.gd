@@ -39,6 +39,14 @@ var _approach_refusals := 0
 ## site aside, not only the body.
 const REFUSED_SITE_M := 6.0
 var _refused_sites: Array[Vector2] = []
+## The camp_tournament piece builds the player's camp on the practice field
+## (tent (34,-40), campfire (36,-38), creature beds (24..28,-42..-38)). Every
+## tier-2 refusal was an approach threading that camp (the 46-degree face at
+## (24.9,-43.5) is the bed at (24,-42)); once the trainer sat in a hollow at
+## (25.6,0.53,-35.7) and could not walk out. A player trains away from their
+## own camp: wilds within CAMP_CLEAR_M of a built camp piece are skipped.
+const CAMP_PIECES := ["tent", "campfire", "bedroll", "creature_bed"]
+const CAMP_CLEAR_M := 20.0
 var _tier_cap := 10
 
 
@@ -156,6 +164,10 @@ func _training_eligible(body: Node3D, owned: Array[int]) -> bool:
 	var home := _home_xz(body)
 	for site: Vector2 in _refused_sites:
 		if home.distance_to(site) <= REFUSED_SITE_M: return false
+	for piece: Variant in _game.get("world").get("placed_buildings"):
+		if piece is Dictionary and str(piece.get("id", "")) in CAMP_PIECES and piece.get("position") is Array \
+				and home.distance_to(Vector2(float(piece.position[0]), float(piece.position[2]))) <= CAMP_CLEAR_M:
+			return false
 	return home.distance_to(EARN_CENTRE) <= EARN_RADIUS
 
 
