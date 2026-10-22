@@ -1654,10 +1654,10 @@
     },
     {
      "text": "Each effect has a particle budget; a worst-case four-creature fight holds frame rate on the Medium preset capture; nothing depends on an effect the Compatibility preset cannot draw without a fallback.",
-     "status": "in_progress",
-     "evidence": "test_move_effects.gd (budget and light-cap units)",
+     "status": "met",
+     "evidence": "ralph/reports/GPU-PASS/F25-4/ and FIX.md on tb/gpu-pass (GTX 1060, Medium Forward+ and Low); tests/test_material_variant_pin.gd",
      "gap": "Frame-time capture of a worst-case four-creature fight on the Medium preset, plus a Compatibility fallback check.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. The flag is off. Budget arithmetic is unit-tested. No Medium four-creature frame-time capture exists; all captures are llvmpipe or a synthetic arena.",
+     "note": "GPU-proven 22 Oct (owner GTX 1060, Medium Forward+, 1080p): worst case four simultaneous ultimates, starters and heavy sets, 24 volleys cold+warm. Steady 100-118 fps, launch frame 10-30 ms (was 155-350 ms), 0 frames over 33 ms after the material-variant pin and library prewarm (tb/vfx-launch b175bda5c). Particle budget engages over cap (12 ultimates: capped at 384 slots, p95 -2.4 to -2.9 ms, no visible loss). Low/Compatibility draws every effect (failures=0), launch improved.",
      "audit_index": 4
     },
     {
