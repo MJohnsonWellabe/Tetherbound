@@ -38,3 +38,24 @@ Judges' asks (round 2 worklist):
 - Panels: empty lower third (Quests, Players); open-seat rows read placeholder; no focused Build card.
 - HUD: legend text vanishes on pale sand without its plate; quick-slot counts tiny and overlapping the glyph; minimap flat.
 - New art (judges): homestead wall infill (anchor row, not this lane).
+
+## Round 2 (22 Oct, 20:30 CT): yardstick batch, CPU llvmpipe Low/Compatibility
+- Source: tb/ui 46a9def7 (round-2 candidates: stick-direction glyphs and quiet Reset in Settings, cloud beyond the realm on the map, craft tag on the name line, lean HUD legend plate + spaced counts, menu floor art; config values committed OFF, `after_on` locally). Before frames reused from round 1 (same committed-OFF config; the only unconditional code changes since are the L3 glyph and the Stormwood surge tag fix).
+- Batch: `anchor_tiles.py --include craft --include f36_0_npc:C1 --seed 2210` (anchors f10_2_r3_capacitor, craft, f36_0_npc:C1 up to 7.53); prompt `r2/judge_prompt_filled.txt`; three fresh judges. Key `r2/key.json`, raw `r2/batch2.json`, mapped `r2/mapped2.json`, sheet `r2/_sheet_craft_r2.png`.
+- Fit: linear, slope 0.988, intercept 0.583, r 0.844, anchor RMSE 0.742; confirming batch.
+
+| Row | Before mapped | After mapped (j1/j2/j3) | Gain vs r1 | After defect verdicts | Result |
+|---|---|---|---|---|---|
+| P2-095/096 craft | 6.25 | **7.66** (7.79/7.40/7.79), above_top_anchor, confirming batch | +0.29 | recipe text FIXED 3; hints FIXED 3; 3 recipes/disabled Craft FIXED 3 | **PASS (CPU)** → land |
+| P2-001 shell | 5.95 | 7.46 (7.60/7.30/7.50) | +0.09 | generic panel FIXED 6/6; footer FIXED 6/6 | below 7.5 (first low-gain round) |
+| P2-007 panels | 5.80 | 7.34 | +0.23 | empty areas PARTIAL 6/6; focus FIXED 6/6 | below 7.5 (first low-gain round) |
+| P2-031 settings | 5.72 | 7.30 (7.50/7.00/7.40) | +0.04 | rows FIXED 3; glyphs FIXED 3 | below 7.5 (first low-gain round) |
+| P2-002 map | 4.95 | 6.91 | +0.11 | dark canvas PARTIAL 6/6; stair-steps FIXED 3, PARTIAL 3; footer FIXED 6 | below 7.5 (first low-gain round) |
+| P2-004 HUD | 6.71 | 6.41 | −0.10 | boxes PRESENT 3; counts FIXED 2, PARTIAL 1 | below; lean approach not gaining |
+
+Round-3 asks:
+- Shell: clipped worn-equipment list ("Backpack"); in-panel keyboard hints ("G / Drop", "H / Split", "D-pad / arrows") while a pad is active; empty belt rows read as placeholders.
+- Settings: the four stick-direction glyphs look alike (arrow too small); Reset column empty boxes; last row cut at the scroll edge.
+- Panels: lower third of Quests empty; Players list is "Open seat" filler.
+- Map: still no terrain on the surveyed Meadows/Cloudreach/Stormwood strips; Tidewake island edges step.
+- HUD: six or more boxed widgets; flat green minimap; the lean variant added a legend tray and did not reduce the box count. Next: one different approach (consolidate widgets) or park at 6.71.
