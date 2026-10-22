@@ -141,16 +141,16 @@ func _an_opted_in_body_fades_with_the_lens_inside() -> void:
 	if model == null:
 		_fail("aquaryn has no model to fade")
 		return
-	camera.global_position = body.global_position + Vector3(0.0, 1.5, 0.0)
 	for i in 60:
+		camera.global_position = body.global_position + Vector3(0.0, 1.5, 0.0)
 		await process_frame
 	var inside := _dithered(model)
 	if inside.x == 0 or inside.y != inside.x:
 		_fail("lens inside the body: %d of %d model surfaces dithered" % [inside.y, inside.x])
 	else:
 		print("inside: %d/%d model surfaces dithered" % [inside.y, inside.x])
-	camera.global_position = body.global_position + Vector3(0.0, 4.0, 30.0)
 	for i in 60:
+		camera.global_position = body.global_position + Vector3(0.0, 4.0, 30.0)
 		await process_frame
 	if _dithered(model).y != 0:
 		_fail("lens outside the body: surfaces still dithered")

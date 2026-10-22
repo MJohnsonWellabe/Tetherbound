@@ -44,8 +44,10 @@ func _run() -> void:
 		_report()
 		return
 
-	camera.global_position = body.global_position + Vector3(0.0, 1.5, 0.0)
+	# No floor in this world, so the body falls: the lens follows it each
+	# frame or it drops out of the bounds (the one-in-eight flake).
 	for i in 60:
+		camera.global_position = body.global_position + Vector3(0.0, 1.5, 0.0)
 		await process_frame
 	var faded := _surfaces(saddle)
 	if faded.x == 0:
@@ -55,8 +57,8 @@ func _run() -> void:
 	else:
 		print("inside: %d/%d saddle surfaces dithered" % [faded.y, faded.x])
 
-	camera.global_position = body.global_position + Vector3(0.0, 4.0, 30.0)
 	for i in 60:
+		camera.global_position = body.global_position + Vector3(0.0, 4.0, 30.0)
 		await process_frame
 	var after := _surfaces(saddle)
 	if after.y != 0:
