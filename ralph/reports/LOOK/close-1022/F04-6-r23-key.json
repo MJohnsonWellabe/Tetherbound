@@ -1,0 +1,52 @@
+{
+ "Ba": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Lq": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Yg": {
+  "anchor": false,
+  "label": "F04#6 captain_ridge",
+  "A": "/tmp/claude-0/cap/side_captain_ridge_r23.png",
+  "B": "/tmp/claude-0/cap/side_captain_ridge_ship.png"
+ },
+ "Ek": {
+  "anchor": false,
+  "label": "F04#6 captain_field",
+  "A": "/tmp/claude-0/cap/side_captain_field_ship.png",
+  "B": "/tmp/claude-0/cap/side_captain_field_r23.png"
+ },
+ "Hi": {
+  "anchor": false,
+  "label": "F04#6 relay_captain",
+  "A": "/tmp/claude-0/cap/side_relay_captain_r23.png",
+  "B": "/tmp/claude-0/cap/side_relay_captain_ship.png"
+ },
+ "Cq": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Lh": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Gr": {
+  "anchor": false,
+  "label": "F04#6 relay_officer_dell",
+  "A": "/tmp/claude-0/cap/side_relay_officer_dell_r23.png",
+  "B": "/tmp/claude-0/cap/side_relay_officer_dell_ship.png"
+ },
+ "Ym": {
+  "anchor": false,
+  "label": "F04#6 captain_riverwatch",
+  "A": "/tmp/claude-0/cap/side_captain_riverwatch_ship.png",
+  "B": "/tmp/claude-0/cap/side_captain_riverwatch_r23.png"
+ }
+}
