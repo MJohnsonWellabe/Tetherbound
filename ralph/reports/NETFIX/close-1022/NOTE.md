@@ -62,6 +62,22 @@ Lane branch `tb/netfix`, built from `origin/main` at 9c97caa68.
   (Capping the boss's HP does NOT help here: a blow phase ends at the first landed blow whatever the boss's HP, so the
   exposure is set by how many swings it takes to land, not by HP.) My recommendation is (a). Say if you want it.
 
+- 2026-10-22 22:35 UTC READY: tb/netfix-land 59b369aabcd49b6a86165da16cbcfc2b068e38ba = 58235bcc2 + the #1 diagnostics
+  (d0551206c, as you approved). These are one-time notes through the existing once-per-reason helpers
+  (_note_duty_hold, _note_host, _note_ignored, _note_training_stall); there is no behaviour change. They cover:
+  - a progression duty skipped because its admission is unavailable;
+  - a saved owner checkpoint the host cannot commit (retained event changed, reservation refused) or retains as
+    not durable, with the result code;
+  - an owner rejecting its preparation, or a refused checkpoint save;
+  - the host refusing an owner's training ACK (row mismatch, ledger refusal, world save refusal).
+  The gate hold and release points already log through _note_duty_hold.
+  Proof on this exact code (tb/netfix 2172c8fe5 carried d0551206c): boss_rewards 10/10 under load, with no new note
+  printed in healthy runs; owner_passive/ledger_rpc/creature_training units 90 tests, 1498 assertions, 0 failed.
+- 2026-10-22 22:35 UTC Same-scan unit test: not written. I already forced that ordering end to end with the real code
+  (a 3 s scan interval puts the completion gate 2 ms after the round-2 release, as in both CI logs), and 12/12 runs
+  settled normally. A unit fixture of the same ordering would pass, not reproduce the wedge, so it would prove nothing
+  about the bug. I'll write the failing test as soon as the new notes name the branch.
+
 ## #2 f48 guest feast feed
 
 The CI log for run 39817268602 (job 119959298748) shows the guest's feed press got
