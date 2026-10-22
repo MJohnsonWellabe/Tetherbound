@@ -319,6 +319,19 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		splash.tween_method(func(value: float) -> void: crown_material.set_shader_parameter("opacity", value),
 			0.95, 0.0, seconds * 0.6).set_delay(seconds * 0.4)
+	# F22#4 Riverwatch r10 (`cue_burst_droplets`, 0 = off): a droplet spray from
+	# vfx.json's hit_spark shape at each crown, so the splash lands as thrown
+	# water rather than a soft sheet (confirming judges, 22 Oct).
+	var droplets := float(profile.get("cue_burst_droplets", 0.0))
+	if droplets > 0.0:
+		var spray_spec: Dictionary = (COMBAT_VFX.config().get("hit_spark", {}) as Dictionary).duplicate()
+		if not spray_spec.is_empty():
+			spray_spec["core_colour"] = burst_foam
+			spray_spec["up_bias"] = float(profile.get("cue_burst_droplet_up_bias", 0.7))
+			for at: Vector3 in crowns:
+				BURST.spawn(burst, at + Vector3.UP * 0.3, spray_spec,
+					Color(str(profile.get("cue_burst_droplet_colour", "#8fd6ff"))), droplets,
+					int(absf(at.x * 53.0 + at.z * 17.0)))
 	var arcs := clampi(int(profile.get("cue_burst_arcs", 0)), 0, 12)
 	if arcs > 0 and not crowns.is_empty():
 		_add_arc_burst(burst, crowns[crowns.size() / 2], arcs, crown_size, profile, seconds)
