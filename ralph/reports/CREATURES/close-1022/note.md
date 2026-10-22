@@ -180,3 +180,23 @@ Gain rule (mapped, CPU; best per item):
 | Voltarach remake | 6.28 → 6.43 | open |
 
 The clearly different next approach is the stylised-realism redraft (owner steer), not more scene tweaks.
+
+## Batch b8 (23 Oct ~00:30 CT): stronger hits on the remakes: Galecrest 7.05, Fulgocobra 6.89, Voltarach 6.73
+
+Changes:
+- Fulgocobra cobra rig: hit rears 30/32 (was 16/18).
+- Voltarach spider: carapace 26, every leg lifts.
+- Galecrest rig_bird: `--hit-gain 2.0` (new option; the default 1.0 leaves every other bird unchanged).
+
+Fit: linear, slope 0.798, intercept 1.971, r 0.758, RMSE 0.806. **Warning:** RMSE 0.81 > 0.75, so these
+judges ranked the anchors less like the reference judges; read with that caveat. Files `b8/`.
+
+| Species | Live raw | Remake raw | Live mapped | **Remake mapped** | Previous best |
+|---|---|---|---|---|---|
+| Galecrest | 4.3/4.0/4.0 | 6.2/6.3/6.6 | 5.24 | **7.05** | 6.72 |
+| Fulgocobra | 4.0/3.8/4.0 | 6.3/5.8/6.4 | 5.11 | **6.89** | 6.87 |
+| Voltarach | 4.0/3.7/3.9 | 6.0/5.6/6.3 | 5.06 | **6.73** | 6.43 |
+
+All three recorded defects are FIXED x3 on every remake: two styles, hit-as-standing, and no faint.
+Asks: flat, plasticky material with no rim; dark bodies on the dark stage (cobra, spider shell); small faces on
+the bird and spider. Fulgocobra has now had one round under +0.5.
