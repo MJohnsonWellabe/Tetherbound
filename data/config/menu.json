@@ -23,7 +23,8 @@
     "_r7": "UI lane, 21 Oct 2026: larger row text, alternate-row bands and a quieter per-row Default so each label tracks across to its bindings.",
     "row_font_px": 28,
     "stripes": true,
-    "stripe_alpha": 0.5
+    "stripe_alpha": 0.5,
+    "cell_glyph_px": 56
   },
   "shell_board": {
     "_scope": "device_local_presentation",
@@ -65,7 +66,10 @@
     "glyph_footer": true,
     "footer_px": 28,
     "footer_glyph_px": 40,
-    "body_tint": 0.07
+    "body_tint": 0.07,
+    "floor_art_alpha": 0.4,
+    "floor_art_start": 0.5,
+    "_why_floor": "Round 1 yardstick judges (22 Oct): menu bodies flat and identical per tab, lower thirds empty. The chapter's region art fades up from the bottom of the panel behind the content (alpha 0.22 at the bottom edge, transparent above 55% of the screen)."
   },
   "quest_empty_inline": {
     "_scope": "device_local_presentation",

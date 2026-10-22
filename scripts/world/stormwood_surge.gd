@@ -263,6 +263,7 @@ func _ready() -> void:
 		_sky_rng.randomize()
 		var layer := CanvasLayer.new()
 		layer.name = "SurgeStatus"
+		layer.add_to_group(preload("res://scripts/ui/input_owner.gd").WORLD_HUD_OVERLAY_GROUP)
 		add_child(layer)
 		_glyph = Label.new()
 		# F10#6 device profile (code-blind 7-inch judge r2: the tag read at
