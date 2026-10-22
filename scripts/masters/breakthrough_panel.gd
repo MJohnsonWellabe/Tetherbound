@@ -29,6 +29,8 @@ func _ready() -> void:
 	var scroll := ScrollContainer.new()
 	scroll.position = Vector2(80, 60)
 	scroll.size = Vector2(1050, 570)
+	# Keep the focused row on screen; long cook/feed lists run past the view.
+	scroll.follow_focus = true
 	add_child(scroll)
 	_list = VBoxContainer.new()
 	_list.custom_minimum_size = Vector2(1000, 500)
@@ -109,10 +111,25 @@ func _rebuild() -> void:
 					continue
 				_button(label + " · " + def.name, func() -> void: _feed(uid, item, ""))
 	_button("Back", close)
+	_link_focus()
 	for node: Node in _list.get_children():
 		if node is Button and not node.disabled:
 			node.grab_focus()
 			break
+
+## Chain the rows explicitly so up/down always steps to the next enabled row,
+## including rows scrolled out of view (spatial search stopped at the view).
+func _link_focus() -> void:
+	var rows: Array[Button] = []
+	for node: Node in _list.get_children():
+		if node is Button and not node.disabled and not node.is_queued_for_deletion():
+			rows.append(node)
+	for index in rows.size():
+		var row := rows[index]
+		row.focus_neighbor_top = row.get_path_to(rows[index - 1]) if index > 0 else NodePath(".")
+		row.focus_neighbor_bottom = row.get_path_to(rows[index + 1]) if index + 1 < rows.size() else NodePath(".")
+		row.focus_previous = row.focus_neighbor_top
+		row.focus_next = row.focus_neighbor_bottom
 
 ## Only offer a feast at this individual's current locked tier. Level stays
 ## unchanged after feeding, so level alone would re-offer the consumed tier.
