@@ -32,5 +32,20 @@
   "_comment_rock_adjust": "MEADOWS-VISUAL-PASS round 5: the pack's Rocks_Diffuse averages RGB(78,88,64), a dark moss green, and a retint can only multiply it darker -- so the scatter boulders rendered as black, mint or brown blocks whatever colour they were given. Rocks_Diffuse_meadows.png is the same texture desaturated to 40% and lifted to a mean of about RGB(153,154,137) (derived offline from the installed pack file; same UVs and facets), and the per-model tints below separate the three rocks into warm, cool and sandstone greys. A runtime retexture_adjust was tried first and rendered flat white: the derived texture did not survive the scatter's mesh-asset round trip.",
   "retexture": {
     "Rocks": "res://assets/environment/stylized_nature/Rocks_Diffuse_meadows.png"
+  },
+  "candidate": {
+    "enabled": false,
+    "_scope": "F38 P2-094/F04#6 candidate (OFF until judged): every judge names the big scatter boulders as 'waxy, translucent, untextured placeholders' and the brightest objects in frame. The overlay tints (#e6d8cc etc.) lift an already lifted texture to near-white; these keep the warm/cool/sandstone split at a real stone value.",
+    "variant_retint": {
+      "res://assets/environment/stylized_nature/Rock_Medium_1.gltf": {
+        "Rocks": "#a99a8a"
+      },
+      "res://assets/environment/stylized_nature/Rock_Medium_2.gltf": {
+        "Rocks": "#9c9d97"
+      },
+      "res://assets/environment/stylized_nature/Rock_Medium_3.gltf": {
+        "Rocks": "#ae9580"
+      }
+    }
   }
 }
