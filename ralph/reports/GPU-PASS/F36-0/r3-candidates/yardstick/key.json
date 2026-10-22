@@ -1,0 +1,46 @@
+{
+ "Eb": {
+  "anchor": false,
+  "label": "F36#0 r3 riverdrake vs installed",
+  "A": "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-riverdrake-installed.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-riverdrake-candidate.png"
+ },
+ "Vr": {
+  "anchor": false,
+  "label": "F36#0 r3 meadowhart vs live",
+  "A": "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-meadowhart-live.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-meadowhart-candidate.png"
+ },
+ "Ec": {
+  "anchor": false,
+  "label": "F36#0 r3 meadowhart vs installed",
+  "A": "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-meadowhart-candidate.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-meadowhart-installed.png"
+ },
+ "Ti": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Xn": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "To": {
+  "anchor": false,
+  "label": "F36#0 r3 riverdrake vs live",
+  "A": "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-riverdrake-live.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-riverdrake-candidate.png"
+ },
+ "Vb": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Fd": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}
