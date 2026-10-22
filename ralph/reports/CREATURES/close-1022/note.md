@@ -1,6 +1,7 @@
 # Creatures close-1022 (lane tb/creatures)
 
 ## TO COORDINATOR
+- 22 Oct 16:35 CT QUESTION Can the GPU lane judge Riverdrake c3 (shove hit) and Meadowhart c1 (shove + resting-deer faint) against live? On CPU both gain (+0.40 / +0.59 mapped, b2), and the same live rows sit 0.7-1.0 higher on your GPU yardstick (7.33 / 7.19), which projects ~7.7 / ~7.8. Recipes: `python3 tools/art_pipeline/f36_pose_postpass.py --candidate-1022 --topple=meadowhart --shove-hit=riverdrake` (tb/creatures). Capture: `capture_f36_poses.gd --candidate`. Also P2-030 r3 maps 6.80 on CPU (magenta FIXED x3); file `close-1022/p2-030-r3-finishes.json`.
 - 22 Oct 15:05 CT READY tb/creatures-land 7e0e76daa F36#0 Aeriex: removed from enabled_species so it plays its installed clips (your GPU yardstick: installed 7.54 vs recipe 7.16, confirming batch). Check: test_f36_pose_postpass 8/8 OK.
 - 22 Oct 14:40 CT QUESTION Is OUTBOX.md fine for MESHY requests (six MESHY lines and three REDRAFTs are there), or should they move here?
 - 22 Oct 14:40 CT (b1 CPU yardstick) Candidates beat base on every set, but none has reached 7.5: shiny 6.60, poses 6.64, dark palette 6.12, F29#3 6.12 (mapped). Round 2 is capturing now.
@@ -42,3 +43,25 @@ dark melt PARTIAL x3; shiny blotches PARTIAL x3 (Solmane navy wing streaks and e
 cub = adult model PRESENT/PARTIAL (needs new art), bear hit PARTIAL (recover equals standing).
 Asks: lift dark grades further plus a soft rim (Mirejaw's faint end goes near-black; Voltarach melts); a distinct
 juvenile cub mesh (new art); cleaner shiny masks. Fulgocobra keeps its live pose (prone hood-drop dropped unjudged).
+
+## Batch b2 (22 Oct ~16:30 CT): every candidate beats live again; none at 7.5 on CPU
+
+Same capture routes as b1. P2-030 r3 = tb/shared-art ae6bafa24 finishes with `shiny_fallback` ON (13 Tidewake
+shinies, `phase2_capture_creatures.gd --biome=water --poses=shiny_idle`). 4 anchor pairs incl. craft and
+f04_6_r22 (non-creature) and f36_0_npc:C1. Fit: linear, slope 0.936, intercept 0.688, r 0.768, RMSE 0.619,
+top anchor 7.53 (confirming batch). Warning: some candidates lie >0.5 outside the anchors' measured range. Files `b2/`.
+
+| Set | Base raw | Cand raw | Base mapped | **Cand mapped** |
+|---|---|---|---|---|
+| P2-030 r3 Tidewake shinies | 4.0/3.8/4.7 | 6.5/6.5/6.6 | 4.59 | **6.80** (magenta FIXED x3) |
+| P2-018 Solmane+Pebbik c3 | 5.0/5.3/5.6 | 6.3/6.6/6.6 | 5.65 | **6.77** (Pebbik FIXED x3, Solmane PARTIAL: wing streaks, eye dots) |
+| F36 dark c2 (Tanglevolt, Galecrest, Fulgocobra) | 4.8/4.7/5.4 | 5.8/6.0/6.2 | 5.34 | **6.31** (melt FIXED x2) |
+| F36 Mirejaw+Voltarach c2 (pose + lift) | 4.5/4.9/5.2 | 5.6/6.0/6.2 | 5.24 | **6.24** (faint FIXED x3, melt FIXED x3, spider hit PARTIAL) |
+| F36 Meadowhart c1 (shove + resting faint) | 5.6/5.9/6.2 | 6.2/6.6/6.8 | 6.21 | **6.80** (hit FIXED x3, antlers FIXED x2) |
+| F36 Riverdrake c3 (shove hit) | 6.0/6.3/6.6 | 6.6/6.7/6.9 | 6.59 | **6.99** (hit FIXED x3) |
+
+CPU stage vs GPU: the same live Riverdrake and Meadowhart map 6.59 / 6.21 here and 7.33 / 7.19 on the GPU
+yardstick (stage capture, Medium). Adding the CPU gains to the GPU live scores projects Riverdrake c3 ~7.7 and
+Meadowhart c1 ~7.8; only a GPU batch can confirm that.
+Remaining asks: Solmane wing streaks/eye smudges; Galecrest thin spiky silhouette and tangle faint (new art);
+Voltarach hit still weak; faint mid should visibly start to go down; creature faces (new art).

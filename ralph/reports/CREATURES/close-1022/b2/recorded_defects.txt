@@ -1,0 +1,10 @@
+Pm: "Hit react reads as standing"; "Neither creature visibly faints"; "Dark, low-value palettes melt at small size"
+Bw: "Hit react reads as standing"; "Antlers pass through the floor in the faint"
+Fn: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ab: none
+Zt: "Shinies with no authored colourway read as a flat hot-magenta tint that erases the species pattern"
+Oe: none
+Cn: "Hit react reads as standing"
+Ah: "Dark, low-value palettes melt at small size"
+Fs: "Shiny reads as noisy camouflage blotches with dark eye smudges (top row creature)"; "Shiny shows blotching (bottom row creature)"
+Ef: none
