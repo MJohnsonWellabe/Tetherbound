@@ -196,6 +196,9 @@
     "emission_floor": 0.45
    }
   },
+  "fulgocobra": {
+    "ordinary": {"repaint_strength": 0.0, "base_value_scale": 0.85, "accent_hue": 0.115, "accent_saturation": 0.62, "accent_value": 0.9, "accent_source_hue": [0.04, 0.19], "accent_source_value": 0.44, "accent_source_saturation": 0.27, "accent_energy": 0.42}
+  },
   "stormraven": {
    "ordinary": {
     "repaint_strength": 0.0,
