@@ -1378,8 +1378,12 @@ func _build_texture_list() -> Object:
 		return null
 	# A surface's judged look candidate (`candidate`, its own `enabled`) swaps
 	# in its keys only when switched on; OFF leaves the shipped surface as is.
+	# Kept in terrain_presentation.json, not here: this file fingerprints the
+	# terrain and scatter bakes, so a flag flip here would invalidate them.
+	var presentation: Variant = JSON.parse_string(FileAccess.get_file_as_string(GROUND_PRESENTATION_CONFIG))
+	var swaps: Dictionary = (presentation as Dictionary).get("texture_candidates", {}) if presentation is Dictionary else {}
 	for entry: Variant in entries:
-		var candidate: Variant = (entry as Dictionary).get("candidate")
+		var candidate: Variant = swaps.get(str((entry as Dictionary).get("name", "")))
 		if candidate is Dictionary and bool((candidate as Dictionary).get("enabled", false)):
 			for key: String in candidate:
 				if key != "enabled" and not key.begins_with("_"):

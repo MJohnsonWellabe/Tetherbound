@@ -3209,13 +3209,7 @@
       "detiling_rotation": 0.28,
       "detiling_shift": 0.35,
       "tint": "#e9dfc0",
-      "_comment_tint": "WHITE, deliberately, on every surface. These textures are generated to an exact target colour, so the texture carries the colour and there is nothing left for a tint to correct. Every tint in the previous photographic set existed to drag a scan toward a palette it could not reach -- including a LAVENDER grass tint, invented because albedo_color multiplies and the only way to desaturate a green by multiplying is to raise blue relative to it. If a surface ever reads wrong again, re-solve its entry in tools/art_pipeline/stylised_ground_spec.py and regenerate; do not reintroduce a tint here.",
-      "candidate": {
-        "enabled": false,
-        "_scope": "F04#6 r24 / F38 candidate (OFF until judged): every yardstick judge's first ask is the smeared, blurry Meadows ground. The shipped albedo is octave noise with no texel structure; this one keeps its low-frequency colour field and mean and paints short blade-stroke clumps over it (tools/art_pipeline/make_painted_grass.py, seed 7).",
-        "albedo": "res://assets/environment/terrain/stylised/meadow_grass_painted_Color.png",
-        "normal": "res://assets/environment/terrain/stylised/meadow_grass_painted_NormalGL.png"
-      }
+      "_comment_tint": "WHITE, deliberately, on every surface. These textures are generated to an exact target colour, so the texture carries the colour and there is nothing left for a tint to correct. Every tint in the previous photographic set existed to drag a scan toward a palette it could not reach -- including a LAVENDER grass tint, invented because albedo_color multiplies and the only way to desaturate a green by multiplying is to raise blue relative to it. If a surface ever reads wrong again, re-solve its entry in tools/art_pipeline/stylised_ground_spec.py and regenerate; do not reintroduce a tint here."
     },
     {
       "_comment": "GROUND-REBUILD. Dry gold verge grass, and the half-step that makes every grass-to-dirt boundary survivable: the eye sees grass -> dry gold -> dirt as two ~13-point value steps instead of one 27-point cliff, which is what a trampled shoulder actually looks like. Keeps the config name `soil` because the bake's slope bands and apron/drain passes address it by that name; it is no longer a dirt-brown hillside band.",
