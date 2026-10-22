@@ -1,0 +1,33 @@
+{
+ "consumer": {
+  "commit": "44f4307d7d2e80fe8c3131049a815a0360d325a7",
+  "from": "t3_05k",
+  "piece": "training_t3_preparehome"
+ },
+ "differences": [
+  "player"
+ ],
+ "match": false,
+ "method": "producer receipt.after vs consumer receipt.before (day, ending, flags, items, party, player, realm, training, uids)",
+ "producer": {
+  "commit": "44f4307d7d2e80fe8c3131049a815a0360d325a7",
+  "out": "t3_05k",
+  "piece": "05k_ione_chest"
+ },
+ "review": {
+  "consumer_start": [
+   -111.1,
+   13.61,
+   912.36
+  ],
+  "field": "player",
+  "producer_end": [
+   -105.96,
+   21.79,
+   897.74
+  ],
+  "reason": "Same save directory (preparehome --from=t3_05k). Every other field matches; production Load seats the trainer about 17 m from the end-of-piece position recorded by the chest piece (Gull Rest chest ledge). The piece then travels home by Home Key, so the start position does not change its path.",
+  "verdict": "reviewed difference, accepted"
+ },
+ "seam": "05k_ione_chest -> training_t3_preparehome"
+}

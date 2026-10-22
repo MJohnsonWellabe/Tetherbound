@@ -64,6 +64,11 @@ func activate(prompt: Node3D, via: Array[Vector3] = []) -> bool:
 	# exact grounded/provider checks after ordinary world input returns.
 	return await _with_navigation_lessons(_activate_world.bind(prompt, via))
 
+## The parent's walk-time confirmer stands down while this reader owns cards:
+## it records each card's lines for the F46 lesson-witness log.
+func _lessons_read_by_caller() -> bool:
+	return _lesson_active
+
 func _with_navigation_lessons(navigate: Callable) -> bool:
 	if _lesson_active or _lesson_busy: return _fail("F20 navigation re-entered its active lesson reader")
 	var options := lesson_witness_options()

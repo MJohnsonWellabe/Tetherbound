@@ -134,6 +134,7 @@ func _record_round(result: Dictionary, rounds: Array) -> bool:
 func _chest(site: Node3D, master_id: String, definition: Dictionary, args: Dictionary) -> bool:
 	var feast_id := str(definition.get("feast_id", ""))
 	var departure_realm := str(_game.get("current_realm"))
+	var travel: Callable = args.get("travel", Callable())
 	for attempt in 2:
 		if _recipe(feast_id):
 			break
@@ -150,7 +151,11 @@ func _chest(site: Node3D, master_id: String, definition: Dictionary, args: Dicti
 		var storage: Variant = args.get("storage")
 		if attempt == 0 and storage is Script:
 			_receipt("chest_needs_room", {"satchel_free": _free_slots()})
-			var trip: Dictionary = await (storage as Script).new().run(_tree, _world, _game, {"keep": ["home_key"]})
+			# In the Meadows a Master's own travel route (South Bridge, quarry
+			# floor) is the way back; the trip's straight return walk from the
+			# village waystone would cross the gully.
+			var route_back: bool = travel.is_valid() and departure_realm == "meadows"
+			var trip: Dictionary = await (storage as Script).new().run(_tree, _world, _game, {"keep": ["home_key"], "return": not route_back})
 			if not bool(trip.get("passed", false)):
 				return _fail("The storage trip for the chest kit failed: " + str(trip.get("failures", [])))
 			_receipt("storage_return", {"receipts": trip.get("receipts", [])})
@@ -167,6 +172,8 @@ func _chest(site: Node3D, master_id: String, definition: Dictionary, args: Dicti
 			site = _site(master_id)
 			if site == null:
 				return _fail("Storage returned without the mounted Master site")
+			if route_back and not await travel.call(site):
+				return _fail("Ordinary travel did not return to " + master_id + " after storage")
 			continue
 		return _fail("The chest did not teach %s (Satchel free slots %d; the kit needs room)" % [feast_id, _free_slots()])
 	_receipt("chest", {"feast_recipe": feast_id, "satchel_free": _free_slots()})

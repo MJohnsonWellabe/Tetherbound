@@ -1,0 +1,16 @@
+{
+ "consumer": {
+  "commit": "93cd0ac291ca8606c58153d8e8162a94a3917ed6",
+  "from": "t3_feed4",
+  "piece": "training_t3_return"
+ },
+ "differences": [],
+ "match": true,
+ "method": "producer receipt.after vs consumer receipt.before (day, ending, flags, items, party, player, realm, training, uids)",
+ "producer": {
+  "commit": "049dde0256978932acf0beea6c99cfca5e11502d",
+  "out": "t3_feed4",
+  "piece": "training_t3_feed"
+ },
+ "seam": "training_t3_feed -> training_t3_return"
+}

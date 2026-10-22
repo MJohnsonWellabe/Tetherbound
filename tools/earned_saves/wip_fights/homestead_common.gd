@@ -33,7 +33,12 @@ const STORAGE_PANEL := preload("res://scripts/ui/storage_panel.gd")
 const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 ## The homestead plot (stations.json homestead_plot: centre [-4, 19], 40 x 30 m)
 ## minus its exclusions. Candidate build spots, tried in order.
+## Spots three to six (x -10/-6, z 14/10) are the interior plot ground south
+## of the Altar/Kitchen row whose 3 m stance stays inside the village fence;
+## the north spots' stances fall beyond the fence and the west edge is steep
+## (live forge ghost scan, Routes close-1020).
 const PLOT_SPOTS: Array[Vector2] = [Vector2(-12.0, 20.0), Vector2(-8.0, 20.0),
+	Vector2(-10.0, 14.0), Vector2(-6.0, 14.0), Vector2(-10.0, 10.0), Vector2(-6.0, 10.0),
 	Vector2(-16.0, 28.0), Vector2(-8.0, 30.0), Vector2(-18.0, 20.0),
 	Vector2(-12.0, 24.0), Vector2(10.0, 28.0), Vector2(12.0, 22.0), Vector2(-20.0, 8.0), Vector2(-14.0, 6.0)]
 const PLOT_CENTRE := Vector2(-4.0, 19.0)
@@ -87,6 +92,11 @@ func storage_trip(keep: Array, come_back: bool) -> bool:
 	for required: String in ["axe", "pickaxe", "knife", "hammer", "home_key"]:
 		if not keep.has(required):
 			keep.append(required)
+	# Key items (portal keys) stay in the Satchel like the Home Key; the chest
+	# refused a held stormwood_portal_key with no reason, stopping the trip.
+	for id: String in _deposit_ids():
+		if str(_game.get("items").call("kind", id)) == "key" and not keep.has(id):
+			keep.append(id)
 	if not await _go_home():
 		return false
 	var chest := _placed("storage")
@@ -347,7 +357,7 @@ func cook_feed(feast_id: String, choices: Dictionary) -> bool:
 			return _fail_b("Feed saved-record mismatch: " + str(FEAST_RECEIPTS.feed_errors(feed_before, _saved_record(), row)))
 		_receipt("fed", {"exact_saved_transition": true, "uid": uid, "feast": row.item, "choice": row.choice, "breakthroughs": _breakthroughs(uid),
 			"species": _species(uid)})
-	await _tap(&"ui_cancel")
+	await _tap(&"menu_cancel")
 	if not await _until(func() -> bool: return INPUT_OWNER.current(_tree) == null):
 		return _fail_b("Cancel did not close the feed chooser")
 	return true
@@ -389,9 +399,12 @@ func _feed_plan_from_stock(state: Dictionary, stock: Dictionary, feast_id: Strin
 	var mirrors: Dictionary = state.get("redesign_character", {}).get("creatures", {})
 	var names := {}
 	var owned := {}
-	for card: Dictionary in state.get("party", []):
-		var nickname := str(card.get("nickname", card.species_id))
-		names[nickname] = int(names.get(nickname, 0)) + 1
+	var labels := BREAKTHROUGH_PANEL.party_labels(state.get("party", []))
+	var label_of := {}
+	for index in (state.get("party", []) as Array).size():
+		var card: Dictionary = state.party[index]
+		names[labels[index]] = int(names.get(labels[index], 0)) + 1
+		label_of[str(card.uid)] = labels[index]
 		owned[str(card.uid)] = true
 	for uid: Variant in choices:
 		if not owned.has(str(uid)):
@@ -438,7 +451,7 @@ func _feed_plan_from_stock(state: Dictionary, stock: Dictionary, feast_id: Strin
 				continue
 			if not reserve_earned_feast(available, item, catalyst):
 				continue
-			picked = {"target": target, "uid": uid, "nickname": str(card.get("nickname", card.species_id)), "recipe": id,
+			picked = {"target": target, "uid": uid, "nickname": str(label_of.get(uid, "")), "recipe": id,
 				"recipe_name": str(recipe.name), "item": item, "item_name": str(def.name), "choice": choice,
 				"status": BREAKTHROUGH.status(card, mirrors.get(uid, {})),
 				"choice_required": bool(offer.get("choice_required", false))}
@@ -563,7 +576,7 @@ func _go_home() -> bool:
 				var road := Vector3(point.x, float(_world.call("ground_height_at", point.x, point.y)), point.y)
 				if not await _walk_to(road, "the open TrailGate road to the homestead", 2.0):
 					return _fail_b("Ordinary movement did not enter the village by TrailGate")
-	var plot := Vector2(-12.0, 24.0) # Authored PLOT_SPOTS[3], inside the fence.
+	var plot := Vector2(-12.0, 24.0) # Authored interior plot stance, inside the fence.
 	var stance := Vector3(plot.x, float(_world.call("ground_height_at", plot.x, plot.y)), plot.y)
 	if not await _walk_to(stance, "the homestead plot", 3.0):
 		return _fail_b("Ordinary movement did not reach the homestead plot")
@@ -645,6 +658,11 @@ func _gather(need: Dictionary) -> bool:
 		var road := Vector3(point.x, float(_world.call("ground_height_at", point.x, point.y)), point.y)
 		if not await _walk_to(road, "carrying earned materials along Main Street", 2.0):
 			return _fail_b("Ordinary movement could not carry earned materials along Main Street")
+	# The chord from Main Street to a stance beside the plot's stations crosses
+	# Grandpa's crop beds (z 21-23.4); enter by _go_home's interior plot stance.
+	var plot := Vector3(-12.0, float(_world.call("ground_height_at", -12.0, 24.0)), 24.0)
+	if not await _walk_to(plot, "carrying earned materials into the homestead plot", 3.0):
+		return _fail_b("Ordinary movement could not carry earned materials into the homestead plot")
 	if not await _walk_to(back, "carrying earned materials to the original homestead stance", 1.65):
 		return _fail_b("Ordinary movement could not return earned materials to the original homestead stance")
 	return true
@@ -762,7 +780,16 @@ func _place_at(id: String, at: Vector2) -> Node3D:
 	if not await _walk_to(target - _forward() * PLACE_AHEAD, "%s stance at %s" % [id, at], MOVE_EPSILON, true, false):
 		transcript.append("%s stance at %s unreachable" % [id, at])
 		return null
+	var stance := target - _forward() * PLACE_AHEAD
 	if not await _select_piece(id):
+		return null
+	# Opening Build may first step clear of a nearby prompt (the Forge beside
+	# the Kitchen); a green ghost pressed from there places nothing. Carry the
+	# armed piece back to the stance before placing.
+	if Vector2(_player.global_position.x - stance.x, _player.global_position.z - stance.z).length() > 0.5 \
+			and not await _walk_to(stance, "%s stance at %s (armed)" % [id, at], MOVE_EPSILON, true, false):
+		transcript.append("%s stance at %s unreachable with the piece armed" % [id, at])
+		await _stow_piece()
 		return null
 	await _settle(10)
 	var placer := _tree.get_first_node_in_group(&"build_placer")
@@ -810,6 +837,23 @@ func _open_station(station: Node3D, what: String) -> Node:
 ## Move controller focus to the unique enabled Button whose text starts with
 ## `prefix` (or satisfies `matches`) and press it.
 func _press(panel: Node, prefix: String, matches: Callable = Callable()) -> bool:
+	# A panel may rebuild its rows once its asynchronous view arrives (the
+	# Kitchen cook list did), freeing the button focus was steering to. Find
+	# the live button again rather than give up on a replaced one.
+	for _rebuilt in 3:
+		var target := await _find_button(panel, prefix, matches)
+		if target == null:
+			return false
+		if await _focus(panel, target):
+			await _tap(&"ui_accept")
+			await _settle(4)
+			return true
+		if is_instance_valid(target):
+			return _fail_b("Controller focus could not reach '%s'" % target.text)
+	return _fail_b("The '%s' button kept being rebuilt before focus reached it" % prefix)
+
+
+func _find_button(panel: Node, prefix: String, matches: Callable) -> Button:
 	var target: Button = null
 	for _attempt in 60:
 		for node: Node in panel.find_children("*", "Button", true, false):
@@ -819,18 +863,15 @@ func _press(panel: Node, prefix: String, matches: Callable = Callable()) -> bool
 				continue
 			if (matches.is_valid() and matches.call(text)) or (not matches.is_valid() and text.begins_with(prefix)):
 				if target != null:
-					return _fail_b("Ambiguous enabled '%s' buttons; no input sent" % prefix)
+					_fail("Ambiguous enabled '%s' buttons; no input sent" % prefix)
+					return null
 				target = button
 		if target != null:
 			break
 		await _tree.physics_frame
 	if target == null:
-		return _fail_b("No enabled '%s' button on %s" % [prefix, str(panel)])
-	if not await _focus(panel, target):
-		return _fail_b("Controller focus could not reach '%s'" % target.text)
-	await _tap(&"ui_accept")
-	await _settle(4)
-	return true
+		_fail("No enabled '%s' button on %s" % [prefix, str(panel)])
+	return target
 
 
 func _focus(panel: Node, target: Control) -> bool:
