@@ -104,9 +104,15 @@
       "enabled": false,
       "_scope": "F38 P2-094 r6 candidate (OFF until judged): a Meshy remake (assets/props/meshy-1022/homestead_wall_segment_v2, coordinator-generated for the lane's MESHY request, provenance there): ochre wattle-and-daub infill, two braces, real beam depth, a cap with a drip edge and a fieldstone plinth. r5 judges (6.18): flat pale infill, card-thin panel. Fitted to the kit wall bounds like the r4 model; its own textures, so no tint, backing, cap or posts.",
       "model": "res://assets/props/meshy-1022/homestead_wall_segment_v2/homestead_wall_segment_v2.glb",
-      "tint": "#ffffff",
+      "tint": "#a08566",
       "backing": {},
-      "end_posts": {},
+      "end_posts": {
+        "texture": "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png",
+        "tint": "#5a4430",
+        "width_m": 0.22,
+        "proud_m": 0.22,
+        "depth_extra_m": 0.1
+      },
       "footing": {
         "texture": "res://assets/environment/terrain/Ground030_Color.jpg",
         "tint": "#6d5a44",
@@ -115,7 +121,8 @@
         "height_m": 0.06,
         "sink_m": 0.03,
         "uv_per_m": 0.6
-      }
+      },
+      "_why_r6b": "r6 first render (unjudged): the lit ochre infill washed out paler than r5; a warm darkening multiply and r5 dark oak end posts."
     }
   }
 }
