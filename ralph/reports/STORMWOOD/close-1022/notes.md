@@ -53,10 +53,11 @@ Measured (luma over the play area, HUD bands excluded; 0–255):
 - Judges' top changes: (scene) make lightning light trunks and ground, add layered blue-violet distance fog and rim light, break up the ground tile with decals and clearings, clear lens occluders; (scene) real lightning/crack telegraphs and spark impact bursts; (new_art) a towering, board-scale Stormheart.
 
 ## Round r12 candidate (r11 judges' asks)
-- Break bolts light the world: new `sky_lightning.ground_light_energy` (committed 0 = off; candidate 1.6). Each decorative sky bolt pulses the existing StormFlash key on the bolt's own onset; no added flash onsets; reduced motion scales it.
+- Break bolts light the world: new `sky_lightning.ground_light_exposure` (committed 0 = off; candidate 0.45). Each decorative sky bolt lifts the frame exposure on the bolt's own onset; no added flash onsets; reduced motion scales it.
 - Depth and fog: storm horizon and fog bluer (#777292 -> #6f7a9c, aftermath #766e97 -> #6e789c, look rig fog/horizon to match); Calm haze 0.0018 -> 0.0026, aftermath 0.0008 -> 0.0016. The Stormheart silhouette stays fog-exempt.
 - Black pools: the wet-soil patches mirrored the lilac sky (roughness 0.28 / specular 0.38; a diagnostic tint ruled out the terrain slots). New `stormwood_ground_finish.json wet_gloss` hook (committed with no key, so behaviour is unchanged); candidate roughness 0.55, specular 0.2. The pools now read black and wet.
-- Lens occluders: the Meshy giant trees and scarred trunk join `near_lens_fade` and `line_of_sight_fade`. The reverse-stand root no longer fills the lens.
+- Lens occluders: tried adding the Meshy giant trees and scarred trunk to `near_lens_fade` and `line_of_sight_fade`. The reverse-stand root stopped filling the lens, but the dither on whole giant-tree meshes made every frame about 10x slower on llvmpipe (measured: forest Break 98 s without it versus more than 10 min with it). Dropped; the occluder stays open.
+- Also dropped: a first version of the bolt light used the StormFlash directional light per bolt; Compatibility draws an extra light as another pass over all geometry. It now lifts exposure instead (`ground_light_exposure`, candidate 0.45).
 - Tile breakup: moss grass-card density 0.55 -> 0.85; rock slot tint #aaaab3 -> #857f70.
 - Meshy giant trees and scarred trunk retinted warm (`Material_0` #d8c8ae): they read teal-blue.
 - Stormheart hero: height 320 -> 380 m, shape 1.27/1.0/1.5 -> 0.95/1.0/1.05 (judges: squat).
