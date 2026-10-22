@@ -73,3 +73,43 @@ No oxblood leaks onto any friendly creature (all three judges).
    - Scale: mirejaw stands below the trainer; burrowback is borderline; voltarach is very large; fulgocobra's ruler is hidden behind the coil in standing frames.
 
 Sheet: `_sheet_f36_0_gpu_medium_standing.png` (all 16 ON creatures standing, GPU Medium, named). Per-frame captures stay local.
+
+## Round 2 (22 Oct, ~03:00 CT): shipped recipe poses (`--candidate`), all 16 still REOPENED
+
+- **Capture:** the same tool and stage at GPU Medium with `--candidate`, which plays the `f36_candidate/*` enabled recipe clips.
+- **Result:** all 16 species installed their recipe (exit 0, 345 frames). Columns: standing, hit react, hit recover (phase .75), faint mid, faint end.
+- **Judging:** three fresh code-blind judges, the same anchor (gap-round sheet) and the same prompt (`judge_prompt_r2.md`, one row per creature). Scores are in `f36_0_gpu_r2_key.json`.
+
+**Anchor ON variants on this scale:** riverdrake 5.17, tanglevolt 3.57, fulgocobra 3.60, stormcapra 4.17, galecrest 3.67. Round 1 gave 5.27 / 3.80 / 3.97 / 4.27 / 3.53, so the scale is stable across rounds.
+
+| Species | Round 2 j1/j2/j3 | R2 mean | R1 mean | Verdict |
+|---|---|---|---|---|
+| ripplet | 6.8/6.4/6.6 | 6.60 | 6.93 | REOPENED |
+| veridian | 5.3/5.4/6.8 | 5.83 | 6.53 | REOPENED |
+| burrowback | 5.2/5.5/6.0 | 5.57 | 6.27 | REOPENED |
+| meadowhart | 5.4/5.0/6.3 | 5.57 | 5.47 | REOPENED |
+| abyssal_guardian | 5.2/5.5/5.8 | 5.50 | 5.07 | REOPENED |
+| riverdrake | 5.0/5.6/5.5 | 5.37 | 5.27 | REOPENED |
+| aeriex | 4.6/5.3/5.6 | 5.17 | 5.67 | REOPENED |
+| tuskroot | 4.6/5.2/5.0 | 4.93 | 4.67 | REOPENED |
+| stormcapra | 4.3/4.5/4.8 | 4.53 | 4.50 | REOPENED |
+| mirejaw | 4.0/3.8/4.5 | 4.10 | 3.87 | REOPENED |
+| staticub | 4.0/3.8/4.0 | 3.93 | 4.27 | REOPENED |
+| galecrest | 3.6/4.2/3.5 | 3.77 | 3.50 | REOPENED |
+| tanglevolt | 3.5/4.0/3.8 | 3.77 | 3.80 | REOPENED |
+| stormursa | 3.6/3.6/3.3 | 3.50 | 4.20 | REOPENED |
+| voltarach | 3.4/3.5/3.5 | 3.47 | 3.67 | REOPENED |
+| fulgocobra | 3.8/3.4/3.0 | 3.40 | 3.60 | REOPENED |
+
+The roster mean is 4.69 (round 1: 4.83). Bar B: yes on sheet 1 from two of three judges; otherwise no. No oxblood leaks (all three).
+
+**What the recipe poses change.**
+- **Readable faints:** they now read for ripplet (on its side), riverdrake, tuskroot, abyssal_guardian and aeriex.
+- **Still no faint:** voltarach, mirejaw and fulgocobra never visibly faint.
+- **New breakages, fixable in pose:** galecrest's wings splay into a tangle. Veridian's and meadowhart's antlers pass through the floor. Stormcapra's face disappears into the wool.
+
+**Finding (same as F29#3):** stormursa's faint end shows grey, untextured, stretched slabs at the hind leg and forelimbs, all three judges. Staticub's faint end shows smeared flank fur. Tanglevolt's faint material breaks into white and grey patches.
+
+The asks are unchanged from round 1. Top of the list is the split style: about half the ON roster is realistic, sourced meshes with decals beside the stylised ripplet, veridian, burrowback, tuskroot and abyssal_guardian. That needs new art. Faces and unreadable dark palettes follow.
+
+Sheet: `_sheet_f36_0_gpu_r2_standing_faint.png` (round 2, standing | faint end for all 16, named).
