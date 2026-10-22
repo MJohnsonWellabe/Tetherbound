@@ -37,6 +37,8 @@ const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
 ##   marrow_aftermath  marrow then aftermath in ONE process: the Stormheart
 ##                   release dialogue opens only on the live release event, so
 ##                   aftermath cannot drain it after a save/load boundary
+##   marrow_settlement  marrow then settlement in ONE process (same reason):
+##                   the F49 retained-five decline before the Home Key
 
 ##   home_key        personal Home Key used from Stormwood (f49_portal_travel)
 ##   homecoming      Home Key from Stormwood -> hang the Stormwood relic ->
@@ -82,6 +84,7 @@ const PIECES := {
 	"marrow_aftermath": "res://tests/helpers/stormwood_earned_aftermath_segment.gd",
 	"aftermath_reload": "res://tests/helpers/stormwood_aftermath_reload_segment.gd",
 	"settlement": "res://tests/helpers/f49_stormheart_settlement.gd",
+	"marrow_settlement": "res://tests/helpers/f49_stormheart_settlement.gd",
 	"home_key": "res://tests/helpers/f49_portal_travel.gd",
 	"homecoming": "res://tests/helpers/f49_portal_travel.gd",
 	"home_relic": "res://tests/helpers/f49_portal_travel.gd",
@@ -89,7 +92,8 @@ const PIECES := {
 }
 ## The Home Key follows the Stormheart answer: accepted (marrow_aftermath) or,
 ## for the F49 retained five, declined (settlement).
-const HOME_PREDECESSORS := {"homecoming": ["marrow_aftermath", "settlement"], "home_key": ["marrow_aftermath", "settlement"],
+const HOME_PREDECESSORS := {"homecoming": ["marrow_aftermath", "settlement", "marrow_settlement"],
+	"home_key": ["marrow_aftermath", "settlement", "marrow_settlement"],
 	"home_relic": ["home_key"], "home_credits": ["home_relic"]}
 const NAMED_IDS := ["capacitor_alpha", "hollows_alpha", "blackwater_elder",
 	"old_rodfolk_hall_guardian", "glass_field_alpha"]
@@ -178,7 +182,7 @@ func _run() -> void:
 			failures.append("Game.save_game(%d) refused the checkpoint save" % SLOT)
 		elif not CHECKPOINTS.copy_tree(working, out_dir.path_join("save")):
 			failures.append("Could not copy the written save into " + out_dir)
-		elif HOME_PREDECESSORS.has(segment) or segment in ["aftermath", "marrow_aftermath", "aftermath_reload"]:
+		elif HOME_PREDECESSORS.has(segment) or segment in ["aftermath", "marrow_aftermath", "aftermath_reload", "marrow_settlement"]:
 			_verify_saved_owner()
 	CHECKPOINTS.remove_tree(working)
 	_finish(commit)
@@ -367,6 +371,18 @@ func _play() -> void:
 		"marrow_aftermath":
 			# Both helpers unchanged and in order; the second runs only if the
 			# first passed, and both results are kept.
+			var marrow: Dictionary = await (load(PIECES.marrow) as GDScript).new().run(self, world, game)
+			for line: Variant in marrow.get("failures", []):
+				failures.append("marrow: %s" % str(line))
+			if not bool(marrow.get("passed", false)) and failures.is_empty():
+				failures.append("marrow helper returned passed=false")
+			if not failures.is_empty():
+				helper_result = {"passed": false, "failures": [], "marrow": marrow}
+				return
+			helper_result = await script.new().run(self, world, game)
+			helper_result["marrow"] = marrow
+		"marrow_settlement":
+			# As marrow_aftermath, with the F49 decline that keeps the five.
 			var marrow: Dictionary = await (load(PIECES.marrow) as GDScript).new().run(self, world, game)
 			for line: Variant in marrow.get("failures", []):
 				failures.append("marrow: %s" % str(line))
