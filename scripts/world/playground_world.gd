@@ -1301,6 +1301,13 @@ func _apply_ground_shader(material: Object) -> void:
 		var overrides: Dictionary = (presentation as Dictionary).get("shader", {})
 		for key: String in overrides.keys():
 			cfg[key] = overrides[key]
+		# A judged look candidate rides beside the shipped overrides and applies
+		# only with its own `enabled` (F04#6/F38: "smeared, blurry ground").
+		var candidate: Dictionary = (presentation as Dictionary).get("shader_candidate", {})
+		if bool(candidate.get("enabled", false)):
+			for key: String in candidate.keys():
+				if key != "enabled" and not key.begins_with("_"):
+					cfg[key] = candidate[key]
 	if cfg.is_empty():
 		# FLAT rather than NOISE, matching the shader's own default, so a missing
 		# config is the old look rather than an unlit void.

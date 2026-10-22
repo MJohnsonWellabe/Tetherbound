@@ -23,5 +23,13 @@
       "albedo": "res://assets/environment/terrain/stylised/meadow_grass_painted_Color.png",
       "normal": "res://assets/environment/terrain/stylised/meadow_grass_painted_NormalGL.png"
     }
+  },
+  "shader_candidate": {
+    "enabled": false,
+    "_scope": "F04#6 r26 / F38 candidate (OFF until judged): every yardstick judge names the Meadows ground as smeared and blurry. The macro variation multiplies the ground by about 0.8-0.85 in soft noise blobs (the camouflage smear); lighter macro, a sharper terrain mip bias and stronger near-camera grain give the ground crisp texture instead.",
+    "macro_variation1": "#edf1e4",
+    "macro_variation2": "#e4eedd",
+    "mipmap_bias": 0.7,
+    "grain_strength": 0.32
   }
 }
