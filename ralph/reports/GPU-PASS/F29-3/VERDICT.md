@@ -47,3 +47,30 @@ The cub's faint end (`staticub-faint-100`) reads as a grounded collapse with a s
    - On the anchor, Variant A's red-maroon fur drifts toward oxblood. Variant B's brown, which ships, and the GPU colour both avoid it.
 
 Sheet: `_sheet_f29_3_gpu.png` (M = Medium, H = High).
+
+## Re-check after #705 (22 Oct, ~09:30 CT): faint fixed, GPU = CPU r8, still REOPENED
+
+- **Source:** `tb/gpu-pass` edf1435d1, a merge of origin/main 320eb47bf. That includes b8691f02c, "Stormursa faint: back to the judged side-on topple; enabled hurt/faint poses may not tear the mesh".
+- **Re-import, then capture:** same command, renderer and presets as above (`--candidate`, Forward+, Medium and High, 1280x720). Exit 0, 40 frames each.
+- **Judging:** three fresh code-blind judges, the same r8 anchor in the same batch, and the same prompt plus a creature-model score for the GPU rows (`judge_prompt_r2.md`, `f29_3_gpu_r2_key.json`).
+
+| Set | Bar A j1/j2/j3 | Mean | Hit | Faint | Creature (model) |
+|---|---|---|---|---|---|
+| Anchor A, CPU r7 | 4.0/4.4/4.2 | 4.20 | WEAK ×3 | PASS ×3 | |
+| Anchor B, CPU r8 (CPU judges 6.73) | 4.4/5.0/4.5 | **4.63** | WEAK ×3 | PASS ×3 | |
+| **GPU Medium** | 4.4/4.9/4.6 | **4.63** | WEAK ×3 | **PASS ×3** | 4.3/4.8/4.5 = 4.53 |
+| **GPU High** | 4.4/4.9/4.6 | **4.63** | WEAK ×3 | **PASS ×3** | 4.3/4.8/4.5 = 4.53 |
+
+**The torn-geometry finding is resolved.** All three judges now see `stormursa-faint-100` as the same grounded side-on collapse as the r8 anchor, with no grey slabs. On one scale the GPU now equals the CPU r8 frames.
+
+**Bar A 4.63, below 7.5: still REOPENED.**
+
+Remaining asks (all three judges):
+- **Hit, fixable in scene:** hit react is a crouch and head-dip with no recoil, hitstop or flash, and hit recover equals standing.
+- **Faint mid, fixable in scene:** it reads as a lunge, not a buckle.
+- **Growth, fixable in scene:** the cub is about 3.4–3.5 m against the adult's 4.5 m (only about 1.3×).
+- **Cub faint end, fixable in scene:** `staticub-faint-100` is a contorted lump with a leg touching the ruler (two judges).
+- **Faint end texture:** a pale stretched streak on the belly and muzzle (one judge; UVs or texture).
+- **Model, needs new art:** a stylised face with readable blue eyes from the cub concept, plus copper and glass Stormwood accents.
+
+The cub's colour now matches the adult's brown (an improvement noted by two judges). Sheet: `_sheet_f29_3_gpu_r2.png`.
