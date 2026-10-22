@@ -33,6 +33,12 @@ Evidence: `f40-p2-022/r5/`. All three judges, every path set: the candidate fixe
 
 Matched flight pair `tools/phase2_capture_cloudreach_high_perch.gd --seed=2042`, CPU Low, 12 frames per arm (control c1022_p23c, candidate c1022_p23a at cebe87ea; items flag). **No visible landform change.** The two sheets are identical except for random creatures. The islet-underside swap applies only to airborne masses, and none enters these frames. The defect these frames show is the High Perches ledges themselves: flared, cleanly extruded procedural walls (arrival-far, lip). Not sent to judges. New candidate d9a1c1ff (clearly different): stratified Meshy rock buttresses (installed `strata_spire_cluster`) against every LandmarkLedge wall, every fourth side, tops 1.5 m below the rim, visual only. Recapture queued (c1022_p23a2 against the same control).
 
+| Round (22 Oct, CT) | Capture | Fit | Mapped control | Mapped candidate |
+|---|---|---|---|---|
+| r2, ~20:00 | flight pair seed 2042, control c1022_p23c (cebe87ea), candidate c1022_p23a2 (d9a1c1ff + r7 items); 6 sets (each view day over night) | linear, slope 1.227, intercept −1.067, RMSE 0.488, r 0.91, 8 anchors to 7.35, no warnings | **5.18** all six; landform sets (arrival-far, rim-out, lookback) **4.67** | **5.58** all six; landform sets **5.91** (6.05, 5.68, 6.01) |
+
+Evidence: `f40-p2-023/r2/`. All three judges: on the wall-in-frame sets the candidate's stacked moss-capped stratified columns read as authored terrain, and the extrusion and slab defects drop to PARTIAL; the control is "the textbook defect" (one smeared dark cylinder skirt). The arrival-landed set differs mostly by which random creature appears (a ram vs the flat-magenta dragonfly), not by landform. Remaining asks: cover every wall side so no cylinder remains, recolour toward pale stone, and taper the island undersides; the perch pillars are plain cylinders; the day fog is a flat wall. Out of lane, reported: the dragonfly creature's wings render as flat saturated magenta (the creature lane), and in the crown-court frames the unbacked NPC nameplate overlaps the gryphon. Next round: buttresses every second side with a paler tint. Not met (5.58).
+
 ## TO COORDINATOR
 (send_message to the coordinator session is refused here with elevated_session_untrusted_device, so lines go here.)
 
