@@ -115,3 +115,31 @@ The measurement covers the shipping arm, all 108 interval frames (i00–i17) of 
 Frame pair: `_sheet_f10_2_gpu_low_vs_medium_i13.png` (capacitor_alpha i13, shipping, GPU Low left, GPU Medium right; the cameras differ slightly because each run plays the fight a little differently).
 
 Sheet: `_sheet_f10_2_gpu_medium_capacitor.png` (capacitor_alpha, ON top, OFF bottom, 12 matched moments). Per-frame captures stay local.
+
+## Yardstick rejudge (22 Oct, ~11:00 CT): Medium 5.52, Low 5.39 on the reference scale, REOPENED
+
+This rejudge used the coordinator's standard yardstick (tb/judge-yardstick 45d5d7535, merged into tb/gpu-pass at f7c149429). The overnight GPU frames were reused; nothing was re-rendered.
+
+**Batch.** `anchor_tiles.py --pairs 4 --include f36_0_npc:C1`:
+- 4 anchor pairs (8 tiles): F04#6 r22, F36#0 gap C7, P2-094 r4, F36 NPC C1.
+- 12 candidate sets: the six fights × Low and Medium. Each side is a 12-frame grid (i01–i17 odd, tell1-c-late, tell1-e-impact, tell2-e-impact), shipping vs control, with the sides shuffled.
+
+**Judging.** Three fresh judges with `JUDGE_PROMPT.md` verbatim (`yardstick/judge_prompt_filled.txt`). The key and recorded defects were withheld until all verdicts were in.
+
+**Calibration.** `calibrate.py`: linear fit, slope 0.866, intercept 2.052, r 0.853. Anchor RMSE 0.634. The top anchor is 7.53, so this is a confirming batch. No warnings. `yardstick/mapped.json` holds the raw `above_top_anchor` per candidate; all are false.
+
+| Arm | Mapped mean (6 fights) | Range | Occlusion defect calls (judge × fight) |
+|---|---|---|---|
+| **Medium, shipping (fade ON)** | **5.52** | 5.28–5.69 | FIXED ×15, PARTIAL ×3, PRESENT ×0 |
+| Medium, control | 5.29 | 4.94–5.80 | FIXED ×9, PARTIAL ×3, PRESENT ×6 |
+| **Low, shipping** | **5.39** | 5.14–5.66 | FIXED ×10, PARTIAL ×8 |
+| Low, control | 5.31 | 4.94–5.78 | FIXED ×9, PARTIAL ×3, PRESENT ×6 |
+
+**F10#2: mapped 5.52 (Medium) and 5.39 (Low), below 7.5: REOPENED.** On the GPU, the sight-line fade clears the occlusion defect on every Medium fight: no PRESENT call against 6 on the control. The bar is held down by the rest of the frame, which all three judges named:
+- a dark single-value grade with no purple storm sky, lightning or copper/glass;
+- flat magenta slab and cone telegraphs;
+- a HUD covering about 35–40% of the frame;
+- a tiny, low-contrast pilot;
+- Mosshock reading as a faceless shrub.
+
+Evidence: `yardstick/` holds the key, batch, mapped scores, three judge JSONs, `sets.md`, `recorded_defects.txt` and the filled prompt. Sheet: `yardstick/_sheet_f10_2_yardstick_capacitor.png`.

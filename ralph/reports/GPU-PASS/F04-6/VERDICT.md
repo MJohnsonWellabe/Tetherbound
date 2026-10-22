@@ -64,3 +64,27 @@ GPU Medium and High are close to identical for this scene: mean absolute pixel d
    - The grade is fixable in scene. The GPU frames read as "murky, desaturated, teal"; the CPU anchor reads "washed, yellow-green, soft".
 
 Sheet: `_sheet_f04_6_gpu_medium.png` (GPU Medium, per site OFF before | OFF after | ON before | ON after). Per-frame captures stay local.
+
+## Yardstick rejudge (22 Oct, ~11:15 CT): mapped 5.92, REOPENED
+
+This rejudge used the standard yardstick (`tb/judge-yardstick` 45d5d7535). The overnight GPU Medium frames were reused.
+
+**Batch.** `anchor_tiles.py --pairs 4 --include f36_0_npc:C1`:
+- 4 anchor pairs: F36 NPC C1, F36#0 gap C3, F10#2 r3 capacitor, F04#6 r22.
+- Candidates: the five sites (before|after per side, shipping vs control, shuffled) plus F29#3.
+
+Three fresh judges used `JUDGE_PROMPT.md` verbatim.
+
+**Calibration.** Linear fit, slope 0.635, intercept 3.402, r 0.841. Anchor RMSE 0.576. Top anchor 7.53, so this is a confirming batch. No warnings.
+
+| Arm | Mapped mean (5 sites) | Range | Aftermath defect calls (judge × site) |
+|---|---|---|---|
+| **Medium, shipping (flag ON)** | **5.92** | 5.27–6.37 | FIXED ×10, PARTIAL ×5 |
+| Medium, control | 5.50 | 4.99–5.88 | PARTIAL ×2, PRESENT ×13 |
+
+**F04#6: mapped 5.92, below 7.5: REOPENED.** The shipping aftermath clears the recorded defect at 10 of 15 judge-site calls; the control is PRESENT at 13. The judges named the remaining gaps:
+- Generic removal-only changes at the gate site (Dell), with a red banner heap left as debris.
+- The repeated lit-rune-stone payoff at Riverwatch and Ridge.
+- Base-world finish: a smeared ground texture, the stretched tunnel wall and water slab, a uniform grass carpet and flat light with no aerial depth.
+
+Evidence is in `yardstick/`. Sheet: `yardstick/_sheet_f04_6_yardstick_relay_captain.png`.

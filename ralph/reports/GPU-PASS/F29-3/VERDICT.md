@@ -74,3 +74,16 @@ Remaining asks (all three judges):
 - **Model, needs new art:** a stylised face with readable blue eyes from the cub concept, plus copper and glass Stormwood accents.
 
 The cub's colour now matches the adult's brown (an improvement noted by two judges). Sheet: `_sheet_f29_3_gpu_r2.png`.
+
+## Yardstick rejudge (22 Oct, ~11:15 CT): mapped 7.00, REOPENED (0.5 short)
+
+This rejudge ran in the same yardstick batch as F04#6 (see `../F04-6/yardstick/`, copied to `yardstick/`). The candidate was the post-#705 GPU frames, Medium (A or B) vs High, as a single set. Calibration: linear slope 0.635, RMSE 0.576, top anchor 7.53 (a confirming batch), no warnings.
+
+**F29#3 mapped 7.00** (judges 7.21/6.90/6.90; Medium and High identical; `above_top_anchor` false), **below 7.5: REOPENED.**
+
+The judges' asks:
+- The cub reads as nearly the same model and size as the adult, so the evolution step doesn't read.
+- The face and eyes are lost at small size.
+- The veins read as neon decals on a near-realistic bear rather than Palworld-style chunky design.
+
+The poses read and stay grounded (faint PASS after #705).
