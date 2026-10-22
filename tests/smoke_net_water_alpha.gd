@@ -67,6 +67,7 @@ func _run() -> void:
 	check((await step(1, "water_alpha_prepare")).get("verdict") == "PASS", "Client summons owned fixture beside Alpha")
 	var before: Dictionary = await probe(1, "water_alpha")
 	check(not before.stone and not before.resolved, "No Stone or completion is supplied by setup")
+	check(before.get("camera_passes", false), "Before the guest engages, its camera arm passes through Aquaryn with the fade on")
 	var engaged: Dictionary = await step(1, "water_alpha_engage")
 	check(engaged.get("verdict") == "PASS", "Client's engagement is authorized by remote host: " + str(engaged))
 	if engaged.get("verdict") != "PASS":
@@ -78,6 +79,7 @@ func _run() -> void:
 		check(vector(host.player_position).distance_to(vector(client.player_position)) > 1000.0, "Players remain on different islands during client's Alpha fight")
 	check(host.record.get("participants", {}).size() == 1, "Host records only the client as participant")
 	check(not host.local_fight and client.local_fight, "Host stays out of local combat while client owns its combat presentation")
+	check(not client.get("camera_any", true), "On its engage verdict the guest's camera arm stops on Aquaryn, with no fade")
 	check(str(host.record.get("encounter_id", "")) == str(client.record.get("encounter_id", ""))
 		and not str(client.record.get("encounter_id", "")).is_empty(), "Both processes refer to one host encounter")
 	check(absf(float(host.hp) - float(client.hp)) < 0.01, "Client HP replica agrees with host Alpha")
@@ -89,6 +91,9 @@ func _run() -> void:
 	check((await step(1, "water_alpha_wait_hit")).get("verdict") == "PASS", "Real host Alpha strike damages the client's owned creature")
 	client = await probe(1, "water_alpha")
 	check(not client.stone, "An unfinished real fight grants no premature Stone")
+	var fled: Dictionary = await step(1, "water_alpha_flee", {}, 15000)
+	check(fled.get("verdict") == "PASS", "Guest's own local exit returns the camera pass-through only after the fight ends: " + str(fled))
+	check((await step(1, "water_alpha_engage")).get("verdict") == "PASS", "Guest re-engages the unresolved Alpha after its local exit")
 	check((await step(1, "leave")).get("verdict") == "PASS", "Client exits production session during the Alpha fight")
 	for attempt in 120:
 		host = await probe(0, "water_alpha")
