@@ -74,3 +74,13 @@ Meadows chain from a fresh village on 0105fc978 (`~/edit` checkout): opening_vil
 
 ## training_t1_altar_1 PASS (0105fc978), from the passing earn save
 16359 s wall (one container restart in between; rerun from the same earn save). The full homestead path passes: Home Key; supply walk over the bridge; rootstone 4/4 at the quarry; ironwood +3 at the Warrens stand; carried home; paid Altar built; slot 1 (Terrapup) already at cap 10 from earned XP, so no payment was due. Party after: L10/10/10/9/9. Altar 2–5 running (slots 4–5 need one paid level each from earned essence).
+
+## training_t1_altar_2..5 PASS (0105fc978)
+Each from the previous altar's exported save (`~/routes/p07_t1a2` … `p10_t1a5`, F49 DISK HANDOFF commit 0105fc978, `EARNED CHAIN RESULT failures: []`). All five companions end at cap 10; slots 4 and 5 made real compatible-essence payments.
+
+## Tidewake T3 storage → kitchen → feed PASS
+- `training_t3_storage` and `training_t3_kitchen` PASS on 44f4307d7 (Kitchen tier 1 `kitchen_meadows` and tier 2 `kitchen_tidewake` placed; ingots refined).
+- `training_t3_feed` first failed: "Controller focus could not reach 'Ascension Feast 3 (ground) …'". Probe: down-focus stopped at the 14th cook row. Game fix bc4683e4a (`breakthrough_panel.gd::_link_focus`, `follow_focus`): rows chain explicitly.
+- Then the five feasts cooked and fed, and the piece failed on "'ui_cancel' has no physical joypad binding / Cancel did not close the feed chooser". The chooser closed only on built-in ui_cancel; a controller's B is menu_cancel, so a pad player could not leave the Master/Kitchen/feed chooser. Game fix 049dde025 (`is_cancel` accepts menu_cancel, like the Altar panels; tests in `test_breakthrough_panel_labels.gd`, 20 tests/471 assertions with `test_f28_training_boundaries.gd`).
+- **`training_t3_feed` PASS on 049dde025** from `~/tw/t3_kitchen` (224 s): five `feast_t3_ground` cooked (exact saved bill), five companions fed (stay; breakthroughs [1,2,3], exact saved transitions), chooser closed. Receipt `receipts/t3_training_t3_feed.json`. Command: `tidewake_piece_runner.gd -- --segment=training_t3_feed --from=<t3_kitchen> --out=<out>` with `--fixed-fps 60`.
+- Merge note: merging origin/main (f20 gained `LESSON_PANEL`) with tb/routes-b (its parent f49 gained the same const) broke every chain runner's compile; 19ea643d7 drops the child's duplicate.
