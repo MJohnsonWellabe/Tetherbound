@@ -1,0 +1,147 @@
+{
+  "asset": "hall_ceiling_vault_bay",
+  "brief": "(b) modular warm-oak timber barrel-vault ceiling bay with ribs and planks, seen from below, Crossing Hall interior, F17#6",
+  "criterion": "F17#6 (Village and great Hall frames)",
+  "biome": "meadows",
+  "requested_by": "Meadows lane, after three flat F17#6 rounds near 6.25 where judges named these art gaps",
+  "date": "2026-10-21",
+  "author": "Claude (coordinator-side Meshy art worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro, references as data URIs) -> inspected -> Meshy 3D (latest, quad remesh, PBR textures embedded in GLB)",
+  "target_size_m": "6 m span x 4 m long (height not specified)",
+  "native_size": {
+    "raw_extent_units": [
+      1.6792,
+      1.4709,
+      1.8989
+    ],
+    "note": "Meshy raw GLB, longest side ~1.9 units"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "width",
+    "fit_value_m": 6,
+    "raw_extent": [
+      1.6792,
+      1.4709,
+      1.8989
+    ],
+    "scale": 3.573,
+    "scale_y": 3.573,
+    "scale_z": 2.1064,
+    "final_min": [
+      -3.0,
+      0.0,
+      -2.0
+    ],
+    "final_max": [
+      3.0,
+      5.256,
+      2.0
+    ],
+    "final_extent_m": [
+      6.0,
+      5.26,
+      4.0
+    ],
+    "triangles": 55985,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3,
+    "uniform_scale_to_target": 3.573,
+    "alternatives": {
+      "uniform_scale_native_proportions": {
+        "scale": 3.573,
+        "final_extent_m": [
+          6.0,
+          5.26,
+          6.78
+        ],
+        "note": "Meshy native bay length is 1.13x the span; the published wrapper uses scale_z 2.1064 (x/y 3.573) to hit the 4 m bay length. Set metres_root scale z to 3.573 for the uniform 6.78 m bay."
+      }
+    }
+  },
+  "files": {
+    "glb_metres": "hall_ceiling_vault_bay.glb",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png (Meshy thumbnail)",
+      "preview_3view.png (software flat-shaded 3-view, colours sampled per face)"
+    ],
+    "chosen_concepts": [
+      "concepts/c1_0.png"
+    ],
+    "raw_glb": "not published (identical mesh to glb_metres minus the metres_root node)"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15cf6-e408-73fc-b56c-e9755fe2be16",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Game asset concept: one modular bay of a timber barrel-vault ceiling for a great hall, 6 metres span and 4 metres long, shown from below at a low three-quarter angle looking up into the curved underside so the inside of the vault is clearly visible. A semicircular arched tunnel-vault section made of warm honey-oak: three heavy curved laminated oak ribs (one at each open end and one in the middle) springing from two straight oak wall-plate beams along the bottom edges, with long straight oak planks laid lengthwise across the ribs to form the smooth curved ceiling surface, a straight oak ridge purlin along the crown, small dark iron straps and bolts at rib joints, and a small carved tether-blue rune boss at the crown of the middle rib. Both open ends are clean flat cuts so identical bays repeat seamlessly end to end; no end walls, no outer roof tiles. Chunky beams like the oak truss reference. Stylised-realism game asset in the Palworld / Animo art style, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Same family as the carved rune arch, blue banner and oak truss references. Materials: pale warm limestone (#d2c6af to #b8ad9c, never pure white) in chunky bevelled blocks, warm honey-oak timber (#a8743f) with dark iron brackets used sparingly, tether-blue (#4aa8e0) glowing rune inlay and deep tether-blue (#1f5f8f) fabric with cream trim. Absolutely no red, no oxblood, no maroon, no crimson anywhere. Single isolated object, centred, plain neutral grey background, even soft studio daylight, no text, no characters, no ground clutter.",
+      "references": [
+        "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w; palette/style)",
+        "tb/meshy-props assets/props/meshy-1020/hall_roof_truss/model_hall_roof_truss/preview_3view.png (3/4 view; style anchor)",
+        "assets/props/crossing_hall_hero/wall_bay/reference/three_quarter-v1.png (installed Crossing Hall hero reference: pale stone + oak frame)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (view 0 only): warm-oak tunnel vault with curved ribs, lengthwise planking, wall plates, iron strap joints and a ridge purlin, in the hall_roof_truss family; flaws: a Latin-looking 'R' glyph on the crown block and views shown from above rather than below; view 2 reads as a closed crate side and was not used"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15cfb-527b-70e8-8999-cb108288d4e5",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A short, shallow bay: the bay is clearly shorter than it is wide, its length only two-thirds of its span (6 m span, 4 m long), so it reads as a narrow slice of a long tunnel vault; exactly two heavy curved oak ribs, one at each open end, plus one lighter middle rib. Same design, wood and joinery as the vault concept reference (second reference) but shortened, with a round-arched semicircular profile (not pointed) and no letters or text on any surface; the only rune is a small round tether-blue knot boss on the underside of the middle rib at the crown. Shown from a low three-quarter angle below so the underside planking is visible. Game asset concept: one modular bay of a timber barrel-vault ceiling for a great hall, 6 metres span and 4 metres long, shown from below at a low three-quarter angle looking up into the curved underside so the inside of the vault is clearly visible. A semicircular arched tunnel-vault section made of warm honey-oak: three heavy curved laminated oak ribs (one at each open end and one in the middle) springing from two straight oak wall-plate beams along the bottom edges, with long straight oak planks laid lengthwise across the ribs to form the smooth curved ceiling surface, a straight oak ridge purlin along the crown, small dark iron straps and bolts at rib joints, and a small carved tether-blue rune boss at the crown of the middle rib. Both open ends are clean flat cuts so identical bays repeat seamlessly end to end; no end walls, no outer roof tiles. Chunky beams like the oak truss reference. Stylised-realism game asset in the Palworld / Animo art style, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Same family as the carved rune arch, blue banner and oak truss references. Materials: pale warm limestone (#d2c6af to #b8ad9c, never pure white) in chunky bevelled blocks, warm honey-oak timber (#a8743f) with dark iron brackets used sparingly, tether-blue (#4aa8e0) glowing rune inlay and deep tether-blue (#1f5f8f) fabric with cream trim. Absolutely no red, no oxblood, no maroon, no crimson anywhere. Single isolated object, centred, plain neutral grey background, even soft studio daylight, no text, no characters, no ground clutter.",
+      "references": [
+        "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w; palette/style)",
+        "c1_0_vault.png",
+        "tb/meshy-props assets/props/meshy-1020/hall_roof_truss/model_hall_roof_truss/preview_3view.png (3/4 view; style anchor)"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png",
+        "concepts/c2_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: asked for a shorter round-arched bay with no letters; it came out longer than c1 and view 1 closed the bottom into a tube with a floor"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_i3d_c1v0",
+      "task_id": "01a15cf7-babb-7728-832f-ac54068ba48d",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "source": {
+        "image_files": [
+          "c1_0.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 30000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN",
+      "kept": "hall_ceiling_vault_bay.glb (metres)"
+    }
+  ],
+  "consumed_credits_total": 48,
+  "visual_verdict": "Good, usable: warm honey-oak barrel-vault bay with heavy curved end ribs, lengthwise plank ceiling, wall-plate beams along both springing lines and dark iron strap joints, matching the hall_roof_truss family; the underside reads as ribbed planking from the hall floor. Span axis is x (6 m), bay length is z (4 m), crown height 5.26 m above the wall-plate bottoms (the profile is a tall rounded/slightly pointed arch, not a semicircle; scale y at integration if the hall walls need a lower crown). Published with a non-uniform wrapper (x/y 3.573, z 2.1064) because Meshy made the bay 6.78 m long at a 6 m span, so ribs and iron straps are about 41% thinner along z than native; the uniform alternative is recorded. Both ends are open cuts so bays repeat along z, but the two end ribs are not identical, so alternate or mirror bays if the seam shows. A small glowing glyph block that resembles a Latin 'R' sits on the outer face of one end rib at the crown; it hides between abutting bays and should face into the wall or be masked on the first bay. No emissive mask: the rune block is too small to register in the blue-texel mask (0 texels), so the lane can leave it unlit or paint one. 56k triangles, single material.",
+  "integration_flag": "flag-off",
+  "integration_note": "candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood requested or observed; warm oak, dark iron and one tether-blue rune block only"
+}

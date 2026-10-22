@@ -1,0 +1,58 @@
+{
+ "Ez": {
+  "anchor": false,
+  "label": "P2-034 harvest__orb_basic",
+  "A": "/tmp/claude-0/cap/side_harvest__orb_basic_y.png",
+  "B": "/tmp/claude-0/cap/side_harvest__orb_basic_x.png"
+ },
+ "Mz": {
+  "anchor": false,
+  "label": "P2-033 pickup__rare_candy",
+  "A": "/tmp/claude-0/cap/side_pickup__rare_candy_x.png",
+  "B": "/tmp/claude-0/cap/side_pickup__rare_candy_y.png"
+ },
+ "Hh": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Jm": {
+  "anchor": false,
+  "label": "P2-033 pickup__potion_small",
+  "A": "/tmp/claude-0/cap/side_pickup__potion_small_y.png",
+  "B": "/tmp/claude-0/cap/side_pickup__potion_small_x.png"
+ },
+ "Gj": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Tj": {
+  "anchor": false,
+  "label": "P2-033 pickup__good_candy",
+  "A": "/tmp/claude-0/cap/side_pickup__good_candy_y.png",
+  "B": "/tmp/claude-0/cap/side_pickup__good_candy_x.png"
+ },
+ "Az": {
+  "anchor": false,
+  "label": "P2-034 harvest__travel_pack",
+  "A": "/tmp/claude-0/cap/side_harvest__travel_pack_y.png",
+  "B": "/tmp/claude-0/cap/side_harvest__travel_pack_x.png"
+ },
+ "Wi": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Pg": {
+  "anchor": false,
+  "label": "P2-033 pickup__great_candy",
+  "A": "/tmp/claude-0/cap/side_pickup__great_candy_y.png",
+  "B": "/tmp/claude-0/cap/side_pickup__great_candy_x.png"
+ },
+ "Vn": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

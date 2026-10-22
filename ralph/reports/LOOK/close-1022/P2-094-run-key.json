@@ -1,0 +1,34 @@
+{
+ "Yw": {
+  "anchor": false,
+  "label": "P2-094 run",
+  "A": "/tmp/claude-0/cap/side_run_r5.png",
+  "B": "/tmp/claude-0/cap/side_run_ship.png"
+ },
+ "Wy": {
+  "anchor": false,
+  "label": "P2-094 lone",
+  "A": "/tmp/claude-0/cap/side_wall_ship.png",
+  "B": "/tmp/claude-0/cap/side_wall_r5.png"
+ },
+ "Ee": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ },
+ "Sc": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Rp": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Dr": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}

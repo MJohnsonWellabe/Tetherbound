@@ -1,0 +1,26 @@
+[
+ {
+  "tag": "v1",
+  "task_id": "01a15c3d-b448-751d-94fa-11552d0cda57",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game asset concept: a tall hanging cloth tapestry banner (1.2 m wide by 3.2 m tall) hung from a turned warm oak wooden rod with round finials and a cord. Heavy woven cream fabric with a deep tether-blue (#4aa8e0 and darker blue) field and border, and in the centre the emblem from the reference: a cream arched doorway with seven small octagonal dots in an arc above it. Bottom edge cut into a swallowtail with small tassels. Soft cloth folds, slightly thick stylised cloth. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/waymark.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3f-61e4-71ce-ab17-6ac2490b5706_part_0.png?Expires=1792808220&Signature=M7OOzvbhSGaGbPJI-LZ77Xq0Y3wOg9ynj~DuGSlPZGAKDTgYDQmWKM~JSqRQkEcC2DxURKZFNluZZWoeoB9uN3m2Xqs6sqBKUg~syeDcBIyUc7Bos59uIViu-tXiaCsVtf7~~ib6VQAz264MSqN0BFHIqUW8XbMaTjjvqf54IFrv1UaLFlCX4C9V-bOfC~nHzC7wQqAqJ5T7c-wNkiTG8L6l8kyx6CxqJ3qEbMVubqAJZiQE2jaJeUKXchruwVep6~5ZgDfi6VAQEl1Xqf36S~BXB154I2Err9Jsi-lEhdlLn69oQ2Cp6pxqDcL7xkyGMbJZWEeCNu00cWBMLj150w__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3f-61e4-71ce-ab17-6ac2490b5706_part_1.png?Expires=1792808220&Signature=pasjJY7LXLWf-tOBAqMlvZAL1WdnaveaRh9mJheP5XgMTtvR0lrfv3Ypn1W6Tjr-Su4ILBE~wdLpj72m1Y4iOxSHuvzs4rNWrIn~bwEX0lYpY9c1P3lWACMT4E6PxJESPeQS8SY7ib817iS~b3DcRPgtZfAPp8cnyv5NJiYZlYYnHLj76qDwu7rKHeoUfps29v-72bglWfOHODx3LgEIaR9KeXCBXE1VkhXGMxYZ1J3Nbg1my2qyS3mbLgnBrWV356DTSJSrpBc7m1uSloHLFdm6sfSdbG~LwB0cVgLUs2WPg4fRb1EhuCnUXHL0RySIk0mq7pUWYBQszaALq1YnSg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3f-61e4-71ce-ab17-6ac2490b5706_part_2.png?Expires=1792808220&Signature=dKOSBQyCTNruVvMvRM4ei~vb4h10K-BvpgIH9TlSYbr1lHG1j3r1Vr4zzcbL8HEsLuyt3rcwa9VcwjnBmBF5j22B2BVzXAol0AcEW47gz69vH9UPLkmv9VriVYDEqHT8tdqmNoxf6tzi3Aywr3-gVExXJ859culg-iMnMw3ihmCUnEKyXIKbwmUVXgQKOK~wLpDw0OgYX9f1wL4Vl3FOUpJTXqEW4cPk1u7zl5OGndwuD4vAk~wJTqnqYtP38V0V7KzeRGsx6NQo9VhKE8rj0OhpukQRrEUDza4XAUKdfdrNw3KSqJNpfMMS1IyxV2yb554Wqlx7sUhv2AOksUjAwA__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_banner_tapestry/concepts/v1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_banner_tapestry/concepts/v1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/hall_banner_tapestry/concepts/v1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]

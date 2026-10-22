@@ -335,6 +335,7 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 	await _clear_the_ground_the_cave_stands_on(build_budget)
 	await _build_breathe(build_budget)
 	_build_bank()
+	_build_hill_shell()
 	await _build_breathe(build_budget)
 	_build_bank_mouth()
 	await _build_breathe(build_budget)
@@ -3567,6 +3568,138 @@ func _bank_cache_key(bank: Dictionary, min_x: float, min_z: float, max_x: float,
 	return hash(var_to_str([bank, _config, _chambers, _bank_bumps, _bank_mounds, _bank_skirts, _floor_y, _skirt,
 		global_transform, min_x, min_z, max_x, max_z, step, nx, nz, crest_for_norm, moist_sources, moist_radius,
 		_mouth_outer_z(), ground]))
+
+
+## F38 P2-012 (OFF): the procedural bank read as a broad brown wall with
+## straight edges and a dark cut. A Meshy grassy hill shell
+## (assets/props/meshy-1020/burrow_hill_mound, provenance there) covers the
+## dungeon; the bank's own visible surfaces hide, while every bank collider,
+## the mouth and all interiors stay. The shell's own tunnel is clipped past
+## its framing so it never shows inside the real mouth chamber.
+func _build_hill_shell() -> void:
+	var cfg: Dictionary = (_config.get("bank", {}) as Dictionary).get("hill_shell", {})
+	if not bool(cfg.get("enabled", false)):
+		return
+	var packed := load(str(cfg.get("model", ""))) as PackedScene
+	if packed == null:
+		push_warning("burrow_warrens: hill shell model missing")
+		return
+	for node_name: String in cfg.get("hide_nodes", ["Bank", "BankCap"]):
+		var hidden := get_node_or_null(NodePath(node_name)) as Node3D
+		if hidden != null:
+			hidden.visible = false
+	var holder := Node3D.new()
+	holder.name = "HillShell"
+	var at: Array = cfg.get("at", [0, 0, 49])
+	holder.position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+	holder.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 180.0)))
+	add_child(holder)
+	var model := packed.instantiate() as Node3D
+	holder.add_child(model)
+	var scale_raw: Array = cfg.get("scale_xyz", [1, 1, 1])
+	model.scale = Vector3(float(scale_raw[0]), float(scale_raw[1]), float(scale_raw[2]))
+	# fit_to: the shell's scale and footprint come from these nodes' combined
+	# bounds (times fit_pad), so the mound envelops the bank and the chamber
+	# roofs instead of floating at a hand-picked size beside them.
+	var fit_names: Array = cfg.get("fit_to", [])
+	if not fit_names.is_empty():
+		var target := AABB()
+		var have := false
+		for fit_name: String in fit_names:
+			var fit_node := get_node_or_null(NodePath(fit_name))
+			if fit_node == null:
+				continue
+			for raw_fit: Node in [fit_node] + fit_node.find_children("*", "MeshInstance3D", true, false):
+				var fit_mesh := raw_fit as MeshInstance3D
+				if fit_mesh == null or fit_mesh.mesh == null:
+					continue
+				var box := _chain_to_self(fit_mesh) * fit_mesh.mesh.get_aabb()
+				target = box if not have else target.merge(box)
+				have = true
+		var shell := AABB()
+		var have_shell := false
+		model.scale = Vector3.ONE
+		for raw_shell: Node in model.find_children("*", "MeshInstance3D", true, false):
+			var shell_mesh := raw_shell as MeshInstance3D
+			if shell_mesh.mesh == null:
+				continue
+			var shell_box := _chain_to_self(shell_mesh) * shell_mesh.mesh.get_aabb()
+			shell = shell_box if not have_shell else shell.merge(shell_box)
+			have_shell = true
+		if have and have_shell and shell.size.x > 0.01 and shell.size.y > 0.01 and shell.size.z > 0.01:
+			var pad: Array = cfg.get("fit_pad", [1.1, 1.1, 1.1])
+			# Holder yaw is a multiple of 90 degrees in practice; compare sizes in
+			# warrens space, then map back onto the model's own axes.
+			var want := target.size * Vector3(float(pad[0]), float(pad[1]), float(pad[2]))
+			var ratio := want / shell.size
+			var local_ratio := (holder.transform.basis.inverse() * ratio).abs()
+			model.scale = local_ratio
+			var fitted := AABB()
+			var have_fitted := false
+			for raw_fitted: Node in model.find_children("*", "MeshInstance3D", true, false):
+				var fitted_mesh := raw_fitted as MeshInstance3D
+				if fitted_mesh.mesh == null:
+					continue
+				var fitted_box := _chain_to_self(fitted_mesh) * fitted_mesh.mesh.get_aabb()
+				fitted = fitted_box if not have_fitted else fitted.merge(fitted_box)
+				have_fitted = true
+			var centre := target.get_center()
+			var offset: Array = cfg.get("fit_offset", [0, 0, 0])
+			holder.position += Vector3(centre.x - fitted.get_center().x + float(offset[0]),
+				target.position.y - fitted.position.y + float(offset[1]),
+				centre.z - fitted.get_center().z + float(offset[2]))
+			print("[warrens] hill shell fit: target %s, shell scale %s, holder %s" % [target, model.scale, holder.position])
+	var clip: Dictionary = cfg.get("clip_box", {})
+	if not clip.is_empty():
+		var shader := Shader.new()
+		shader.code = """shader_type spatial;
+uniform sampler2D albedo_tex : source_color, filter_linear_mipmap;
+uniform vec3 clip_min;
+uniform vec3 clip_max;
+uniform vec4 tint : source_color = vec4(1.0);
+varying vec3 model_pos;
+void vertex() { model_pos = VERTEX; }
+void fragment() {
+	if (all(greaterThan(model_pos, clip_min)) && all(lessThan(model_pos, clip_max))) discard;
+	ALBEDO = texture(albedo_tex, UV).rgb * tint.rgb;
+	ROUGHNESS = 0.95;
+}
+"""
+		for raw: Node in model.find_children("*", "MeshInstance3D", true, false):
+			var mesh := raw as MeshInstance3D
+			var to_mesh := Transform3D()
+			var walk: Node = mesh
+			while walk != null and walk != model:
+				to_mesh = (walk as Node3D).transform * to_mesh
+				walk = walk.get_parent()
+			to_mesh = to_mesh.affine_inverse()
+			# clip_space "warrens": the box is in this node's own frame (metres,
+			# where the mouth and chambers are authored), not the model's.
+			if str(clip.get("space", "model")) == "warrens":
+				to_mesh = _chain_to_self(mesh).affine_inverse()
+			var a := to_mesh * Vector3(float(clip.min[0]), float(clip.min[1]), float(clip.min[2]))
+			var b := to_mesh * Vector3(float(clip.max[0]), float(clip.max[1]), float(clip.max[2]))
+			for i in mesh.mesh.get_surface_count():
+				var source := mesh.get_active_material(i) as BaseMaterial3D
+				var material := ShaderMaterial.new()
+				material.shader = shader
+				if source != null:
+					material.set_shader_parameter("albedo_tex", source.albedo_texture)
+				material.set_shader_parameter("tint", Color(str(cfg.get("tint", "#ffffff"))))
+				material.set_shader_parameter("clip_min", Vector3(minf(a.x, b.x), minf(a.y, b.y), minf(a.z, b.z)))
+				material.set_shader_parameter("clip_max", Vector3(maxf(a.x, b.x), maxf(a.y, b.y), maxf(a.z, b.z)))
+				mesh.set_surface_override_material(i, material)
+
+
+## `node`'s transform relative to this warrens node, through every parent.
+func _chain_to_self(node: Node3D) -> Transform3D:
+	var out := Transform3D()
+	var walk: Node = node
+	while walk != null and walk != self:
+		if walk is Node3D:
+			out = (walk as Node3D).transform * out
+		walk = walk.get_parent()
+	return out
 
 
 func _build_bank_cap(min_x: float, min_z: float, step: float, nx: int, nz: int,

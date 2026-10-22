@@ -1,6 +1,7 @@
 {
   "hall_hero_assets": {
-    "enabled": false,
+    "_why_on_r8": "ON by owner wind-down direction (22 Oct). F17#6 r8, all five Hall candidates together: mapped 5.92 Bar A vs shipping 5.17 (three code-blind judges, F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/LOOK/close-1022/F17-6.md). Below the 6.7 CPU bar: an improvement, not a closure.",
+    "enabled": true,
     "_scope": "OFF Hall art and authored world-layout candidate. Civic assets and shrine pedestal colliders, plus two sealed slot and two wall-bench moves around the shrine opening. Identical host/guest config required; moved slots retain all presentation, approaches and input children together. IDs, portal states/actions, saves and network writes unchanged. Native clearance, host/guest layout and complete visual proof required before acceptance.",
     "shrine_portal_layout": {
       "_why": "Different architectural approach after turn42/46 flat material-lighting rounds: the 3.2m surrounds at Z-3/+3 overlapped the shrine opening Z[-3,+3]. Move the complete sealed bays onto solid wall sections and seat the existing benches in the clear spaces. CPU bounds only; native access and host/guest agreement unproven.",
@@ -163,7 +164,8 @@
     }
   },
   "hall_lantern_lighting": {
-    "enabled": false,
+    "_why_on_r8": "ON by owner wind-down direction (22 Oct). F17#6 r8, all five Hall candidates together: mapped 5.92 Bar A vs shipping 5.17 (three code-blind judges, F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/LOOK/close-1022/F17-6.md). Below the 6.7 CPU bar: an improvement, not a closure.",
+    "enabled": true,
     "_scope": "Device-local Hall presentation only; no durable state, portal, collision, creature scale or network change. OFF until complete fixed-camera Medium/High blind acceptance.",
     "_why": "F17#6 Pair02 lantern treatment: matched subset Bar A 6.0333, gain 1.5333; not full-bar acceptance. Preserve its exact night lighting for ordinary Hall builds; furnishing/frame/waymark gates stay independent.",
     "interior_ambient": {
@@ -180,7 +182,8 @@
     }
   },
   "hall_waymark": {
-    "enabled": false,
+    "_why_on_r8": "ON by owner wind-down direction (22 Oct). F17#6 r8, all five Hall candidates together: mapped 5.92 Bar A vs shipping 5.17 (three code-blind judges, F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/LOOK/close-1022/F17-6.md). Below the 6.7 CPU bar: an improvement, not a closure.",
+    "enabled": true,
     "_scope": "Device-local Hall destination presentation: rear banner emblems, nave floor, rear wall finish (both faces), timber frame, daytime window lighting and a shallow shrine threshold with no collider. No route, collision, save or network change. Keep OFF until complete Medium/High three-judge acceptance.",
     "_why": "Turn5 forward-view judges preferred material separation (+0.60 Bar A) but found near-black timber and flat daylight. Retain the plaster/stone/emblems, lift wood midtones and direct two window lights across the aisle and far table. This revision is unrendered; turn5 images prove only the prior material source. The existing frame-waymark arm selects the whole game treatment.",
     "texture": "res://assets/ui/hall_waymark.svg",
@@ -234,7 +237,8 @@
   },
   "schema_version": 1,
   "hall_timber_frame": {
-  "enabled": false,
+  "_why_on_r8": "ON by owner wind-down direction (22 Oct). F17#6 r8, all five Hall candidates together: mapped 5.92 Bar A vs shipping 5.17 (three code-blind judges, F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/LOOK/close-1022/F17-6.md). Below the 6.7 CPU bar: an improvement, not a closure.",
+    "enabled": true,
   "_scope": "Device-local presentation only; no durable state, portal or progression change. OFF until matched Medium/High three-judge verdict.",
   "_why": "Hall II three-judge rejection: Roof_FrontSupports is six disconnected blocks, not a beam. Replace only the eight posts and four ties with the installed continuous Corner_Exterior_Wood member. Retain bays, upper braces, aisle, furnishing and OFF gate; native verification required.",
   "_provenance": "Corner_Exterior_Wood POSITION bounds [-0.1050873324,-0.0000001505,-0.1198200509]..[0.1050870940,2.9999997616,0.1198200732]; CPU triangle connectivity confirms one component after coordinate welding. Same MI_WoodTrim installed family. Only architecture transformed; creatures unchanged. Supersedes invalid aggregate-envelope inference for Roof_FrontSupports.",
@@ -759,7 +763,8 @@
   "_why_interior_ceiling": "F17#6 r8 (a whole-nave ceiling at 6.2 m) scored no gain and is reverted to the r7 aisle panels. F17#6 r5 judge: sky and the wings' outer roofs showed through the nave from inside. crossing_hall.gd closes each interior_volumes box with a flat ceiling of the installed Floor_WoodDark kit tiles at its measured wall-top height. Presentation only, no collider.",
   "interior_ceiling": {"enabled": true, "model": "res://assets/buildings/quaternius_medieval/Floor_WoodDark.gltf", "tile_m": 2.0, "min_modules": 4, "drop_m": 0.0, "panels": [{"x": [-7, -3], "z": [-15, 15], "y": 6.2}, {"x": [3, 7], "z": [-15, 15], "y": 6.2}]},
   "_why_hall_furnishing": "F17#6 r9 (judges r7/r8: the nave read as a street of house fronts, no hall furniture; +1.5-2.0): a feast table across the far end and benches in the wall bays between the arches, installed quaternius_fantasy kit at native scale, colliding and keep-clear for the companion. Walking lane x -3..3 and the arch approaches stay clear.",
-  "hall_furnishing": {"enabled": false, "keep_clear_margin_m": 0.4, "pieces": [
+  "hall_furnishing": {"_why_on_r8": "ON by owner wind-down direction (22 Oct). F17#6 r8, all five Hall candidates together: mapped 5.92 Bar A vs shipping 5.17 (three code-blind judges, F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/LOOK/close-1022/F17-6.md). Below the 6.7 CPU bar: an improvement, not a closure.",
+    "enabled": true, "keep_clear_margin_m": 0.4, "pieces": [
     {"name": "FeastTable", "model": "res://assets/props/quaternius_fantasy/Table_Large.gltf", "at": [0, 0.06, 12.3], "yaw_deg": 0},
     {"name": "FeastBenchNear", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [0, 0.06, 11.25], "yaw_deg": 0},
     {"name": "FeastBenchFar", "model": "res://assets/props/quaternius_fantasy/Bench.gltf", "at": [0, 0.06, 13.35], "yaw_deg": 180},
@@ -933,5 +938,693 @@
       ],
       "glow_radius_m": 0.08
     }
+  },
+  "hall_great_hall": {
+    "enabled": false,
+    "_scope": "Device-local Hall presentation only; no collider, route, portal state, save or network change. OFF until a three-judge F17#6 pass.",
+    "_why": "F17#6 close-1020 r2 (r1 judges, all three: the nave reads as an outdoor courtyard between house fronts; night pools have no visible source; no tether landmark or blue accent). One batched interior dressing: woven runner, clerestory hangings over alternate windows, oak wall plates, iron candle rings with their own light and night pools, Shrine Room rune inlay with a hanging tether crystal. TUNABLE.",
+    "runner": {
+      "at": [
+        0,
+        0.085,
+        -1.55
+      ],
+      "width_m": 1.9,
+      "length_m": 23.9,
+      "colour": "#34495e",
+      "border_colour": "#8f7a58"
+    },
+    "hangings": {
+      "width_m": 1.15,
+      "height_m": 2.1,
+      "colour": "#2a4d6e",
+      "border_colour": "#d9c9a3",
+      "rod_colour": "#6b4a2e",
+      "emblem": "res://assets/ui/hall_waymark.svg",
+      "rows": [
+        {
+          "at": [
+            -6.68,
+            6.0,
+            -13
+          ],
+          "yaw_deg": 90
+        },
+        {
+          "at": [
+            -6.68,
+            6.0,
+            -6
+          ],
+          "yaw_deg": 90
+        },
+        {
+          "at": [
+            -6.68,
+            6.0,
+            0
+          ],
+          "yaw_deg": 90
+        },
+        {
+          "at": [
+            -6.68,
+            6.0,
+            6
+          ],
+          "yaw_deg": 90
+        },
+        {
+          "at": [
+            -6.68,
+            6.0,
+            13
+          ],
+          "yaw_deg": 90
+        },
+        {
+          "at": [
+            6.68,
+            6.0,
+            -13
+          ],
+          "yaw_deg": -90
+        },
+        {
+          "at": [
+            6.68,
+            6.0,
+            0
+          ],
+          "yaw_deg": -90
+        },
+        {
+          "at": [
+            6.68,
+            6.0,
+            6
+          ],
+          "yaw_deg": -90
+        },
+        {
+          "at": [
+            6.68,
+            6.0,
+            13
+          ],
+          "yaw_deg": -90
+        },
+        {
+          "at": [
+            9.5,
+            3.25,
+            6.6
+          ],
+          "yaw_deg": 180
+        },
+        {
+          "at": [
+            9.5,
+            3.25,
+            -6.6
+          ],
+          "yaw_deg": 0
+        },
+        {
+          "at": [
+            14.5,
+            3.25,
+            6.6
+          ],
+          "yaw_deg": 180
+        },
+        {
+          "at": [
+            14.5,
+            3.25,
+            -6.6
+          ],
+          "yaw_deg": 0
+        }
+      ],
+      "model": "res://assets/props/meshy-1020/hall_banner_tapestry/model_hall_banner_tapestry/hall_banner_tapestry.glb"
+    },
+    "beams": {
+      "colour": "#8a6a4a",
+      "thick_m": 0.3,
+      "deep_m": 0.36,
+      "rows": [
+        {
+          "from": [
+            -2.9,
+            6.3,
+            -15
+          ],
+          "to": [
+            -2.9,
+            6.3,
+            15
+          ]
+        },
+        {
+          "from": [
+            2.9,
+            6.3,
+            -15
+          ],
+          "to": [
+            2.9,
+            6.3,
+            15
+          ]
+        }
+      ]
+    },
+    "chandelier": {
+      "radius_m": 0.75,
+      "chain_m": 4.4,
+      "candles": 8,
+      "flame_colour": "#ffcf7a",
+      "light_colour": "#ffb664",
+      "range_m": 7.5,
+      "day_energy": 0.9,
+      "night_energy": 1.6,
+      "halo_strength": 0.9,
+      "pool_radius_m": 3.4,
+      "pool_strength": 0.38,
+      "floor_y": 0.1
+    },
+    "chandeliers": [
+      {
+        "at": [
+          0,
+          4.9,
+          -9
+        ]
+      },
+      {
+        "at": [
+          0,
+          4.9,
+          -3
+        ]
+      },
+      {
+        "at": [
+          0,
+          4.9,
+          3
+        ]
+      },
+      {
+        "at": [
+          0,
+          4.9,
+          9
+        ]
+      }
+    ],
+    "rain_weathers": [
+      "rain",
+      "storm"
+    ],
+    "rain_window_scale": 0.35,
+    "rain_ambient": 0.35,
+    "facade_hangings": {
+      "width_m": 1.4,
+      "height_m": 3.4,
+      "colour": "#2a4d6e",
+      "border_colour": "#d9c9a3",
+      "rod_colour": "#6b4a2e",
+      "emblem": "res://assets/ui/hall_waymark.svg",
+      "rows": [],
+      "model": "res://assets/props/meshy-1020/hall_banner_tapestry/model_hall_banner_tapestry/hall_banner_tapestry.glb"
+    },
+    "arch_trim": {
+      "half_width_m": 1.39,
+      "height_m": 3.94,
+      "colour": "#2f86e8",
+      "sealed_strength": 0.6,
+      "live_strength": 1.0,
+      "z_m": 0.5,
+      "spill_radius_m": 1.4,
+      "spill_y_m": -0.06,
+      "spill_z_m": 1.0,
+      "spill_strength": 0.6,
+      "crest_model": "res://assets/props/quaternius_fantasy/Shield_Wooden.gltf",
+      "crest_at": [
+        0,
+        4.95,
+        -0.95
+      ],
+      "crest_scale": 1.6,
+      "band_m": 0.13,
+      "sealed_veil": 0.28,
+      "live_veil": 0.4,
+      "rune_mix": 0.0,
+      "biome_colours": {
+        "tidewake": "#2fc4d8",
+        "cloudreach": "#8fc4ff",
+        "stormwood": "#9a7cff",
+        "biome5": "#4f7fd0",
+        "biome6": "#4f7fd0",
+        "biome7": "#4f7fd0",
+        "biome8": "#4f7fd0"
+      }
+    },
+    "shaft": {
+      "colour": "#fff0d0",
+      "width_m": 1.0,
+      "strength": 0.32
+    },
+    "shafts": [
+      {
+        "from": [
+          -6.8,
+          4.85,
+          -10
+        ],
+        "to": [
+          -1.5,
+          0.1,
+          -8
+        ]
+      },
+      {
+        "from": [
+          -6.8,
+          4.85,
+          -4
+        ],
+        "to": [
+          -1.5,
+          0.1,
+          -2
+        ]
+      },
+      {
+        "from": [
+          -6.8,
+          4.85,
+          4
+        ],
+        "to": [
+          -1.5,
+          0.1,
+          6
+        ]
+      },
+      {
+        "from": [
+          -6.8,
+          4.85,
+          10
+        ],
+        "to": [
+          -1.5,
+          0.1,
+          12
+        ]
+      }
+    ],
+    "hide_nodes": [
+      "HallCivic_wall_bay",
+      "HallCivic_waymark_relief"
+    ],
+    "pieces": [
+      {
+        "model": "res://assets/props/meshy-1020/hall_tether_gate/model_hall_tether_gate/hall_tether_gate.glb",
+        "size_m": [
+          3.6,
+          4.5,
+          0.6
+        ],
+        "at": [
+          0,
+          0.06,
+          14.55
+        ],
+        "yaw_deg": 180,
+        "veil": {
+          "colour": "#3d8fe8",
+          "strength": 0.55,
+          "half_width_m": 1.0,
+          "height_m": 3.3,
+          "z_m": -0.05,
+          "base_m": 0.1
+        }
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_roof_truss/model_hall_roof_truss/hall_roof_truss.glb",
+        "size_m": [
+          13.6,
+          1.3,
+          0.3
+        ],
+        "at": [
+          9.5,
+          4.9,
+          0
+        ],
+        "yaw_deg": 90
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_roof_truss/model_hall_roof_truss/hall_roof_truss.glb",
+        "size_m": [
+          13.6,
+          1.3,
+          0.3
+        ],
+        "at": [
+          14.5,
+          4.9,
+          0
+        ],
+        "yaw_deg": 90
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar.glb",
+        "size_m": [
+          2.4,
+          1.4,
+          2.4
+        ],
+        "at": [
+          12,
+          0.37,
+          5.6
+        ],
+        "yaw_deg": 0,
+        "collider_radius_m": 1.3,
+        "collider_height_m": 1.2,
+        "halo": {
+          "at": [
+            0,
+            1.15,
+            0
+          ],
+          "radius_m": 0.7,
+          "colour": "#4aa8ff",
+          "strength": 0.85,
+          "range_m": 6.0,
+          "energy": 1.2
+        }
+      },
+      {
+        "model": "res://assets/props/meshy-1020/shrine_dais_ring/shrine_dais_ring.glb",
+        "size_m": [
+          2.6,
+          0.3,
+          2.6
+        ],
+        "at": [
+          12,
+          0.07,
+          5.6
+        ]
+      },
+      {
+        "model": "res://assets/props/meshy-1020/crossing_hall_facade_tower/crossing_hall_facade_tower.glb",
+        "size_m": [
+          14.0,
+          16.36,
+          2.2
+        ],
+        "at": [
+          0,
+          0.0,
+          -16.4
+        ],
+        "yaw_deg": 180,
+        "clip_box": {
+          "min": [
+            -1.7,
+            -0.5,
+            -5.0
+          ],
+          "max": [
+            1.7,
+            7.4,
+            3.2
+          ]
+        }
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_ceiling_vault_bay/hall_ceiling_vault_bay.glb",
+        "size_m": [
+          6.0,
+          3.0,
+          4.0
+        ],
+        "at": [
+          0,
+          6.3,
+          -13
+        ],
+        "yaw_deg": 0
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_ceiling_vault_bay/hall_ceiling_vault_bay.glb",
+        "size_m": [
+          6.0,
+          3.0,
+          4.0
+        ],
+        "at": [
+          0,
+          6.3,
+          -9
+        ],
+        "yaw_deg": 180
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_ceiling_vault_bay/hall_ceiling_vault_bay.glb",
+        "size_m": [
+          6.0,
+          3.0,
+          4.0
+        ],
+        "at": [
+          0,
+          6.3,
+          -5
+        ],
+        "yaw_deg": 0
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_ceiling_vault_bay/hall_ceiling_vault_bay.glb",
+        "size_m": [
+          6.0,
+          3.0,
+          4.0
+        ],
+        "at": [
+          0,
+          6.3,
+          -1
+        ],
+        "yaw_deg": 180
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_ceiling_vault_bay/hall_ceiling_vault_bay.glb",
+        "size_m": [
+          6.0,
+          3.0,
+          4.0
+        ],
+        "at": [
+          0,
+          6.3,
+          3
+        ],
+        "yaw_deg": 0
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_ceiling_vault_bay/hall_ceiling_vault_bay.glb",
+        "size_m": [
+          6.0,
+          3.0,
+          4.0
+        ],
+        "at": [
+          0,
+          6.3,
+          7
+        ],
+        "yaw_deg": 180
+      },
+      {
+        "model": "res://assets/props/meshy-1020/hall_ceiling_vault_bay/hall_ceiling_vault_bay.glb",
+        "size_m": [
+          6.0,
+          3.0,
+          4.0
+        ],
+        "at": [
+          0,
+          6.3,
+          11
+        ],
+        "yaw_deg": 0
+      }
+    ]
+  },
+  "hall_dressing": {
+    "enabled": false,
+    "_scope": "F17#6 r9 candidate (OFF, captured but never judged; the r9 round also moved the hall_timber_frame posts from x=+-3.3 to x=+-5.0, out of the camera near field, which is not applied here): device-local Hall presentation from the installed fantasy kit. A woven runner down the nave and into the shrine, warm hanging lanterns on the timber posts, a shrine glow and asymmetric civic clutter in the end bays. No save, portal or network state; clutter pieces collide and join the follower keep-clear group like hall_furnishing.",
+    "_why": "r8 judges (5.92 vs 5.17): the floor was still one bare slab, nothing hung from the posts or ceiling, the shrine lacked a warm focal light and the props stood on a grid.",
+    "keep_clear_margin_m": 0.3,
+    "pieces": [
+      {
+        "name": "NaveRunner",
+        "box": {
+          "size": [
+            2.4,
+            0.02,
+            25.0
+          ],
+          "texture": "res://assets/buildings/quaternius_medieval/T_Plaster_BaseColor.png",
+          "tint": "#4f6e57",
+          "uv_per_m": 0.6
+        },
+        "at": [
+          0,
+          0.07,
+          -1.0
+        ]
+      },
+      {
+        "name": "ShrineRunner",
+        "box": {
+          "size": [
+            8.0,
+            0.02,
+            2.0
+          ],
+          "texture": "res://assets/buildings/quaternius_medieval/T_Plaster_BaseColor.png",
+          "tint": "#4f6e57",
+          "uv_per_m": 0.6
+        },
+        "at": [
+          11.5,
+          0.07,
+          0
+        ]
+      },
+      {
+        "name": "PostLanternW1",
+        "model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf",
+        "at": [
+          -4.7,
+          3.0,
+          -6.0
+        ],
+        "yaw_deg": 90,
+        "collide": false,
+        "light": {
+          "colour": "#ffbe6e",
+          "energy": 1.8,
+          "range": 7.0,
+          "height": 0.2
+        }
+      },
+      {
+        "name": "PostLanternE2",
+        "model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf",
+        "at": [
+          4.7,
+          3.2,
+          6.0
+        ],
+        "yaw_deg": -90,
+        "collide": false,
+        "light": {
+          "colour": "#ffbe6e",
+          "energy": 1.8,
+          "range": 7.0,
+          "height": 0.2
+        }
+      },
+      {
+        "name": "PostLanternW3",
+        "model": "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf",
+        "at": [
+          -4.7,
+          2.9,
+          12.0
+        ],
+        "yaw_deg": 90,
+        "collide": false,
+        "light": {
+          "colour": "#ffbe6e",
+          "energy": 1.8,
+          "range": 7.0,
+          "height": 0.2
+        }
+      },
+      {
+        "name": "ShrineGlow",
+        "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf",
+        "at": [
+          15.6,
+          0.06,
+          -3.0
+        ],
+        "light": {
+          "colour": "#ffb45e",
+          "energy": 2.6,
+          "range": 7.5,
+          "height": 1.6
+        }
+      },
+      {
+        "name": "EndShelfW",
+        "model": "res://assets/props/quaternius_fantasy/Shelf_Simple.gltf",
+        "at": [
+          -6.4,
+          0.06,
+          -12.2
+        ],
+        "yaw_deg": 90
+      },
+      {
+        "name": "EndBucketW",
+        "model": "res://assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+        "at": [
+          -6.1,
+          0.06,
+          10.6
+        ]
+      },
+      {
+        "name": "EndBarrelApplesE",
+        "model": "res://assets/props/quaternius_fantasy/Barrel_Apples.gltf",
+        "at": [
+          6.0,
+          0.06,
+          11.2
+        ]
+      },
+      {
+        "name": "EndCrateE2",
+        "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+        "at": [
+          5.9,
+          0.06,
+          12.4
+        ],
+        "yaw_deg": 17
+      },
+      {
+        "name": "FeastStool",
+        "model": "res://assets/props/quaternius_fantasy/Stool.gltf",
+        "at": [
+          -1.9,
+          0.06,
+          10.5
+        ],
+        "yaw_deg": -12
+      }
+    ]
   }
 }

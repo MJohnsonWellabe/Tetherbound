@@ -1,0 +1,29 @@
+{
+  "asset": "shrine_dais_ring",
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15cf6-e3ff-7490-8b72-be2135f8c285",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Game asset concept: a low round two-step stone dais platform for a shrine in a great hall, 5 metres diameter and only 0.3 metres tall in total, seen from a raised three-quarter angle so the flat top is clearly visible. A wide flat circular platform of pale limestone made of two shallow concentric steps: an outer ring step and a slightly smaller raised top disc, each about 15 centimetres high, the step edges built of chunky bevelled curved stone blocks like the shrine altar reference base. The top disc is a perfectly flat smooth walkable paved floor of fitted radial stone slabs, with a carved circular rune ring inlaid near its edge: a band of tether-blue glowing rune glyphs and a thin glowing tether-blue circle, plus a small looped tether-knot rune at the centre, like the glowing spiral rune on the standing stone. Nothing standing on top of it: no altar, no statue, no pillars, no railings. Very low and wide, like a broad stage, much wider than tall. Stylised-realism game asset in the Palworld / Animo art style, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Same family as the carved rune arch, blue banner and oak truss references. Materials: pale warm limestone (#d2c6af to #b8ad9c, never pure white) in chunky bevelled blocks, warm honey-oak timber (#a8743f) with dark iron brackets used sparingly, tether-blue (#4aa8e0) glowing rune inlay and deep tether-blue (#1f5f8f) fabric with cream trim. Absolutely no red, no oxblood, no maroon, no crimson anywhere. Single isolated object, centred, plain neutral grey background, even soft studio daylight, no text, no characters, no ground clutter.",
+      "references": [
+        "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w; palette/style)",
+        "tb/meshy-props assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/preview_3view.png (3/4 view; style anchor)",
+        "docs/reference/tetherbound-meadows-keyart.png (crop: glowing rune standing stone)",
+        "tb/meshy-props assets/props/meshy-1020/hall_tether_gate/model_hall_tether_gate/preview_3view.png (front view; published hall-family style anchor)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (single view returned): two-step pale limestone dais of curved bevelled blocks, flat radial-slab top, glowing tether-blue rune-glyph ring with double circle and looped tether-knot centre; on-family with hall_shrine_altar and hall_tether_gate"
+    }
+  ],
+  "chosen_concept": "c1",
+  "chosen_views": [
+    0
+  ],
+  "reference_inspection": "All references inspected by the agent before submission: Meadows key art (palette), published hall_tether_gate / hall_banner_tapestry / hall_roof_truss / hall_shrine_altar Meshy previews (family anchors), installed crossing_hall_hero wall_bay reference, key-art rune standing stone crop. The key-art 'Team Tether stronghold (Meadows Hall)' panel was inspected and deliberately NOT used: it is a dark ruined villain fortress with red/oxblood banners, reserved for Team Tether."
+}

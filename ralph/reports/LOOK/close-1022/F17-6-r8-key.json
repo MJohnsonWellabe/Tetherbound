@@ -1,0 +1,40 @@
+{
+ "Hn": {
+  "anchor": false,
+  "label": "F17-6 r8 approach-nave",
+  "A": "/tmp/claude-0/cap/side_f176_approach-nave_ship.png",
+  "B": "/tmp/claude-0/cap/side_f176_approach-nave_all.png"
+ },
+ "Ly": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Oc": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Tn": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Ae": {
+  "anchor": false,
+  "label": "F17-6 r8 nave-sides",
+  "A": "/tmp/claude-0/cap/side_f176_nave-sides_ship.png",
+  "B": "/tmp/claude-0/cap/side_f176_nave-sides_all.png"
+ },
+ "Qe": {
+  "anchor": false,
+  "label": "F17-6 r8 shrine",
+  "A": "/tmp/claude-0/cap/side_f176_shrine_ship.png",
+  "B": "/tmp/claude-0/cap/side_f176_shrine_all.png"
+ },
+ "Vv": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ }
+}

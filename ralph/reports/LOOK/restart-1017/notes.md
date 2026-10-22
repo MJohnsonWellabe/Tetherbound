@@ -1,0 +1,1 @@
+- 2026-10-17 08:50 CT | F17#6 r1 | no game change committed (candidates judged via local config) | proof: 15-view F17-6 CPU capture x2 + 3 code-blind judges | baseline 5.26, all-candidates 5.62 (+0.36), not closed | next: scene-level round 2 on top of candidates: shrine/nave night relight, interior truss ceiling from installed kit, single Sealed plaque, smaller cobble scale

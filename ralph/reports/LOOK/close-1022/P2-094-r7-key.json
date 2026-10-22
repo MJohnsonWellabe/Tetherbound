@@ -1,0 +1,34 @@
+{
+ "Vd": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Oq": {
+  "anchor": false,
+  "label": "P2-094 ship-vs-r7",
+  "A": "/tmp/claude-0/cap/side_run_r7.png",
+  "B": "/tmp/claude-0/cap/side_run_ship.png"
+ },
+ "Wb": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "En": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Tw": {
+  "anchor": false,
+  "label": "P2-094 r5-vs-r7",
+  "A": "/tmp/claude-0/cap/side_run_r7.png",
+  "B": "/tmp/claude-0/cap/side_run_r5.png"
+ },
+ "Zu": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ }
+}
