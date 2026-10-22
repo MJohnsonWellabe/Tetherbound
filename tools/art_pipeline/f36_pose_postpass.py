@@ -657,7 +657,7 @@ def topple_faint(rig, frames, axis, roll=-90.0, curl=0.0, fold=0.0, crouch=0.0):
 # give and the body settles on its belly (.4-.8) with the head down and turned
 # toward the camera. `tuck` folds the hind legs under the body (sphinx);
 # without it they slide out behind (splat).
-def prone_faint(rig, frames, tuck=False, turn=14.0, splay=14.0, dip=1.0):
+def prone_faint(rig, frames, tuck=False, turn=14.0, splay=14.0, dip=1.0, rest_head=0.0):
     """`dip` scales the mid-collapse chest pitch and neck drop (judges: faint
     mid reads as standing); 1.0 keeps the batch-10 judged pose."""
     for f in frames:
@@ -667,8 +667,10 @@ def prone_faint(rig, frames, tuck=False, turn=14.0, splay=14.0, dip=1.0):
         settle = math.sin(math.pi * _ease((p - .78) / .22)) * (1 - _ease((p - .92) / .08))
         turns = {}
         add = _adder(rig, turns)
-        add('neck', mul(rig.yaw(turn * fall), rig.pitch(-16 * dip * buckle * (1 - fall) - 16 * buckle * fall - 6 * fall + 3 * settle)))
-        add('head', rig.pitch(-6 * buckle * (1 - fall) + 10 * fall))
+        # rest_head lays the neck down so the head ends on the floor, the head
+        # tipped back half as far so antlers sweep back rather than dig in.
+        add('neck', mul(rig.yaw(turn * fall), rig.pitch(-16 * dip * buckle * (1 - fall) - 16 * buckle * fall - 6 * fall + 3 * settle - rest_head * fall)))
+        add('head', rig.pitch(-6 * buckle * (1 - fall) + 10 * fall + .5 * rest_head * fall))
         for b in rig.contract:
             g = group(b)
             if g == 'front_upper':
@@ -849,6 +851,11 @@ PRONE = ('ashtusk', 'burrowback', 'cragclaw', 'mirejaw', 'mudsnout', 'riptusk', 
 # antlers through the floor) and buckles deep enough mid-fall to read as going down.
 PRONE += ('meadowhart',)
 PRONE_DIP['meadowhart'] = 2.5
+PRONE_HEAD_REST = {}
+if CANDIDATE_1022:
+    # GPU yardstick r3 (2 of 3 judges): Meadowhart's head-high faint end reads as
+    # kneeling or resting. Lay the neck down so the head ends on the ground.
+    PRONE_HEAD_REST['meadowhart'] = 34.0
 if CANDIDATE_1022:
     PRONE = tuple(s for s in PRONE if s != 'mirejaw')
     # Meadowhart lies down like a resting deer (its side-lie put the antlers
@@ -889,7 +896,7 @@ def _topple(name, row, prof):
     rig = Rig(row['rig_contract'], row['bones'])
     skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
     if name in PRONE:
-        prone_faint(rig, prof['faint']['frames'], dip=PRONE_DIP.get(name, 1.0))
+        prone_faint(rig, prof['faint']['frames'], dip=PRONE_DIP.get(name, 1.0), rest_head=PRONE_HEAD_REST.get(name, 0.0))
     else:
         topple_faint(rig, prof["faint"]["frames"], mesh_long_axis(skin), roll=TOPPLE_ROLL.get(name, -90.0),
                      curl=TOPPLE_CURL.get(name, 0.0), fold=TOPPLE_FOLD.get(name, 0.0),

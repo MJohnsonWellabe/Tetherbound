@@ -117,13 +117,19 @@ def low():
     r = min((e.matrix_world @ v.co).z for v in m.vertices); e.to_mesh_clear(); return r
 
 
-def head_y(angle):
-    reset(); rotate('spine', angle); bpy.context.view_layer.update()
-    y = (rig.matrix_world @ rig.pose.bones['head'].tail).y; reset(); bpy.context.view_layer.update(); return y
+# Fold axis: horizontal, perpendicular to the measured base-to-nose direction,
+# signed so a positive turn of the spine brings the head forward AND down.
+fwd = Vector((nose.x - c_spine.x, nose.y - c_spine.y, 0))
+fwd = fwd.normalized() if fwd.length > 1e-6 else Vector((0, -1, 0))
+AXIS = (fwd.y, -fwd.x, 0.0)
 
 
-# FWD: the pitch sign that moves the head forward (-Y, the facing direction).
-FWD = 1 if head_y(10) < head_y(-10) else -1
+def head_z(angle):
+    reset(); rotate('spine', angle, AXIS); bpy.context.view_layer.update()
+    z = (rig.matrix_world @ rig.pose.bones['head'].tail).z; reset(); bpy.context.view_layer.update(); return z
+
+
+FWD = 1 if head_z(20) < head_z(-20) else -1
 for role, frames in [('idle', 72), ('walk', 40), ('run', 26), ('attack', 24), ('hit', 12), ('faint', 36)]:
     action = bpy.data.actions.new(role); rig.animation_data.action = action
     for f in sorted(set(range(0, frames + 1, 2)) | {frames}):
@@ -136,17 +142,19 @@ for role, frames in [('idle', 72), ('walk', 40), ('run', 26), ('attack', 24), ('
             rotate('neck', -amp * .5 * math.sin(t * 2 * math.pi + 2), (0, 1, 0))
         if role == 'attack':
             pulse = math.sin(math.pi * min(1, t / .6)) if t < .6 else 0
-            rotate('spine', FWD * 20 * pulse); rotate('neck', FWD * 25 * pulse); rotate('head', -FWD * 10 * pulse)
+            rotate('spine', FWD * 20 * pulse, AXIS); rotate('neck', FWD * 25 * pulse, AXIS); rotate('head', -FWD * 10 * pulse, AXIS)
         if role == 'hit':
             # The held rear-back that judged 7.5+ on Meadowhart and Riverdrake (b3).
             e = min(1, t / .12); e = e * e * (3 - 2 * e)
             r = max(0, min(1, (t - .5) / .47)); e *= 1 - r * r * (3 - 2 * r)
-            rotate('spine', -FWD * 16 * e); rotate('neck', -FWD * 18 * e); rotate('head', FWD * 12 * e, (0, 0, 1))
+            rotate('spine', -FWD * 16 * e, AXIS); rotate('neck', -FWD * 18 * e, AXIS); rotate('head', FWD * 12 * e, AXIS)
         if role == 'faint':
             ph = min(1, t / .8); ph = ph * ph * (3 - 2 * ph)
             # The hood folds forward and down; the head rests on the ground beside the coil.
-            rotate('spine', FWD * 55 * ph); rotate('neck', FWD * 45 * ph); rotate('head', FWD * 10 * ph)
-            rotate('spine', 15 * ph, (0, 1, 0))
+            # rotate() sets one turn per bone; the side lean is folded into the spine turn.
+            lean = Quaternion(Vector((fwd.x, fwd.y, 0)), math.radians(15 * ph)) @ Quaternion(Vector(AXIS), math.radians(FWD * 60 * ph))
+            rig.pose.bones['spine'].rotation_quaternion = bases['spine'].inverted() @ lean @ bases['spine']
+            rotate('neck', FWD * 50 * ph, AXIS); rotate('head', -FWD * 15 * ph, AXIS)
         bpy.context.view_layer.update()
         rig.pose.bones['root'].location = bases['root'].inverted() @ Vector((0, 0, -low()))
         bpy.context.view_layer.update()
@@ -170,7 +178,7 @@ bpy.ops.export_scene.gltf(filepath=args[1], export_format='GLB', use_selection=T
                           export_skins=True, export_animations=True, export_animation_mode='NLA_TRACKS')
 lo, hi = quad.bounds(body)
 Path(args[2]).write_text(json.dumps({'height_m': round(hi.z - lo.z, 3), 'length_m': round(hi.y - lo.y, 3),
-                                     'width_m': round(hi.x - lo.x, 3), 'bones': len(groups), 'fwd_sign': FWD,
+                                     'width_m': round(hi.x - lo.x, 3), 'bones': len(groups), 'fwd_sign': FWD, 'fold_axis': [round(a, 3) for a in AXIS],
                                      'method': 'height_band_cobra_chain_local_surface_diffusion',
                                      'candidate_enabled': False}, indent=2))
 print('REPORT done')
