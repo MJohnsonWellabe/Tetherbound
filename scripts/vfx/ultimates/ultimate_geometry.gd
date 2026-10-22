@@ -6,6 +6,7 @@ extends RefCounted
 ## One bounded surface per object; callers cache meshes outside the frame loop.
 const HARD_VERTEX_CAP := 48000
 const F25_GEOMETRY_PATH := "res://scripts/vfx/move_effect_geometry.gd"
+const PIN := preload("res://scripts/vfx/material_variant_pin.gd")
 const F25_SHARED_SHAPES := {
 	"rock": "stone", "water": "rolling_wave", "ice": "ice_crystal", "wind": "vortex",
 }
@@ -69,6 +70,7 @@ static func material(colour: Color, opacity: float = 1.0, lit: bool = true) -> M
 	out.roughness = 0.72 if lit else 1.0
 	out.no_depth_test = false
 	# Geometry/vertex contrast carries identity on Compatibility without bloom.
+	PIN.pin(out)
 	return out
 
 

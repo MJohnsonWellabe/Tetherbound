@@ -7,6 +7,7 @@ const SIGNATURE_GEOMETRY := preload("res://scripts/vfx/ultimates/ultimate_geomet
 const BUDGET := preload("res://scripts/vfx/move_effect_budget.gd")
 const AUDIO := preload("res://scripts/audio/audio_manager.gd")
 const CONTRACT := preload("res://scripts/vfx/move_presentation_contract.gd")
+const PIN := preload("res://scripts/vfx/material_variant_pin.gd")
 const FLASH_SHADER := preload("res://assets/vfx/shaders/impact_flash.gdshader")
 const GROUND_MARK_SHADER := preload("res://assets/vfx/shaders/impact_ground_mark.gdshader")
 ## Launch/contact/aftermath and species-identity meshes share this fixed total
@@ -146,6 +147,7 @@ func _ready() -> void:
 			core_material.emission = core_colour
 			core_material.emission_energy_multiplier = float(core_profile.get("emission_strength", 0.28))
 			core_material.roughness = float(core_profile.get("roughness", 0.82))
+			PIN.pin(core_material)
 			interior.reparent(body, false)
 		for layer: Dictionary in profile.get("layers", []):
 			var component := _mesh_node(GEOMETRY.shape(str(layer.get("shape", "orb")), float(_params.size) * float(layer.get("size_scale", 0.5)), layer),
@@ -829,7 +831,9 @@ func _set_opacity(material: Material, alpha: float) -> void:
 	if material is ShaderMaterial:
 		(material as ShaderMaterial).set_shader_parameter("opacity", alpha)
 	elif material is StandardMaterial3D:
-		(material as StandardMaterial3D).transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		if (material as StandardMaterial3D).transparency != BaseMaterial3D.TRANSPARENCY_ALPHA:
+			(material as StandardMaterial3D).transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+			PIN.pin(material)
 		(material as StandardMaterial3D).albedo_color.a = alpha
 
 func _presentation_material(material: Material) -> Material:

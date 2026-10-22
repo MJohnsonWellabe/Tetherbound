@@ -922,6 +922,9 @@ func _ready() -> void:
 		set_process(false)
 		return
 	_connect_combat_manager_signals()
+	# F25#4: compile the move-effect material variants while the world loads,
+	# not on the frame a fight's first effect launches.
+	MOVE_PROJECTILE.prewarm()
 
 	# `_ready` runs while the parent is still setting up its children, and
 	# add_child() is refused during that. One frame is enough to be out of it.

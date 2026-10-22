@@ -18,6 +18,7 @@ const BUBBLE_SHADER := preload("res://assets/vfx/shaders/bubble_surface.gdshader
 const SHADOW_SHADER := preload("res://assets/vfx/shaders/shadow_surface.gdshader")
 const ROOT_STONE_SHADER := preload("res://assets/vfx/shaders/root_stone_surface.gdshader")
 const ORGANIC := preload("res://scripts/vfx/organic_effect_geometry.gd")
+const PIN := preload("res://scripts/vfx/material_variant_pin.gd")
 
 ## All bodies are real depth-tested meshes on Compatibility as well as
 ## Forward+. No screen-space distortion or GPU particles are required.
@@ -31,6 +32,7 @@ static func material(colour: Color, opacity: float = 1.0, lit: bool = false) -> 
 	out.roughness = 0.8
 	out.vertex_color_use_as_albedo = true
 	out.no_depth_test = false
+	PIN.pin(out)
 	return out
 
 static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
