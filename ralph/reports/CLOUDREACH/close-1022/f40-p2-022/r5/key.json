@@ -1,0 +1,58 @@
+{
+ "Si": {
+  "anchor": false,
+  "label": "F40 P2-022 r5 path_golden",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/av5/sides/path_golden_ava5.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/av5/sides/path_golden_avc5.png"
+ },
+ "Lx": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Li": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Pu": {
+  "anchor": false,
+  "label": "F40 P2-022 r5 court_day",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/av5/sides/court_day_avc5.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/av5/sides/court_day_ava5.png"
+ },
+ "Iz": {
+  "anchor": true,
+  "A": "f36_0_npc:C4A",
+  "B": "f36_0_npc:C4B"
+ },
+ "Sm": {
+  "anchor": false,
+  "label": "F40 P2-022 r5 path_night",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/av5/sides/path_night_avc5.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/av5/sides/path_night_ava5.png"
+ },
+ "Ap": {
+  "anchor": false,
+  "label": "F40 P2-022 r5 path_day",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/av5/sides/path_day_avc5.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/av5/sides/path_day_ava5.png"
+ },
+ "Nb": {
+  "anchor": false,
+  "label": "F40 P2-022 r5 court_golden",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/av5/sides/court_golden_avc5.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/av5/sides/court_golden_ava5.png"
+ },
+ "Iw": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Gz": {
+  "anchor": false,
+  "label": "F40 P2-022 r5 court_night",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/av5/sides/court_night_ava5.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/av5/sides/court_night_avc5.png"
+ }
+}

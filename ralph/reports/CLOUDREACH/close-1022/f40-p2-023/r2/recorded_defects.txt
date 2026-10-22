@@ -1,0 +1,10 @@
+Ea: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
+Qs: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Nz: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
+It: none
+Rh: none
+Hl: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
+Sp: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
+Hm: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
+Rt: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
+Rd: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"

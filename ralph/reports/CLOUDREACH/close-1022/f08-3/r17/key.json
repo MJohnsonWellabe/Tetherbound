@@ -1,0 +1,52 @@
+{
+ "Af": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Rc": {
+  "anchor": false,
+  "label": "F08#3 r17 cliffhold_approach",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/r17/sides/cliffhold_approach_c17.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/r17/sides/cliffhold_approach_a17.png"
+ },
+ "Rh": {
+  "anchor": true,
+  "A": "f36_0_npc:C5B",
+  "B": "f36_0_npc:C5A"
+ },
+ "Zu": {
+  "anchor": false,
+  "label": "F08#3 r17 galefoot_hearth",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/r17/sides/galefoot_hearth_a17.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/r17/sides/galefoot_hearth_c17.png"
+ },
+ "Rg": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Mc": {
+  "anchor": true,
+  "A": "f36_0_gap:C6B",
+  "B": "f36_0_gap:C6A"
+ },
+ "Zh": {
+  "anchor": false,
+  "label": "F08#3 r17 cliffhold_windwatch",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/r17/sides/cliffhold_windwatch_c17.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/r17/sides/cliffhold_windwatch_a17.png"
+ },
+ "Gn": {
+  "anchor": false,
+  "label": "F08#3 r17 galefoot_approach",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/r17/sides/galefoot_approach_c17.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/r17/sides/galefoot_approach_a17.png"
+ },
+ "Mp": {
+  "anchor": false,
+  "label": "F08#3 r17 cliffhold_court",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/r17/sides/cliffhold_court_c17.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/r17/sides/cliffhold_court_a17.png"
+ }
+}

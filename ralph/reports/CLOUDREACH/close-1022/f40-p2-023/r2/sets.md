@@ -1,0 +1,10 @@
+- Ea.png: side A left, side B right. Cloudreach chapter (sky cliffs): landed on the High Perches mesa; top frame day, bottom frame night, same moment of the same flight.
+- Qs.png: side A left, side B right. The crafting panel over the game world, at two resolutions (top 1920x1080, bottom 1280x720). Judge the interface: recipe text readable at a glance, action hints easy to find, fit to the game's UI direction.
+- Nz.png: side A left, side B right. Cloudreach chapter (sky cliffs): flying in toward the High Perches, a cluster of stone perch pillars on a mesa; top frame day, bottom frame night, same moment of the same flight.
+- It.png: side A left, side B right. One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.
+- Rh.png: side A left, side B right. One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.
+- Hl.png: side A left, side B right. Cloudreach chapter (sky cliffs): the High Perches crown court; top frame day, bottom frame night, same moment of the same flight.
+- Sp.png: side A left, side B right. Cloudreach chapter (sky cliffs): arriving at the lip of the High Perches mesa; top frame day, bottom frame night, same moment of the same flight.
+- Hm.png: side A left, side B right. Cloudreach chapter (sky cliffs): looking out from the High Perches rim; top frame day, bottom frame night, same moment of the same flight.
+- Rt.png: side A left, side B right. Cloudreach chapter (sky cliffs): looking back at the High Perches mesa while flying away; top frame day, bottom frame night, same moment of the same flight.
+- Rd.png: side A left, side B right. A placed homestead wall in the Meadows: a close view (top) and the full gameplay view (bottom). Judge whether it reads as a built homestead wall that belongs in the world.

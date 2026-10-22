@@ -1,0 +1,46 @@
+{
+ "Hi": {
+  "anchor": false,
+  "label": "F40 P2-021 r2 gate_road",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p21b/sides/gate_road_p21c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p21b/sides/gate_road_p21a2.png"
+ },
+ "Cp": {
+  "anchor": false,
+  "label": "F40 P2-021 r2 shrine_walk",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p21b/sides/shrine_walk_p21c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p21b/sides/shrine_walk_p21a2.png"
+ },
+ "Cf": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Xo": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Qc": {
+  "anchor": false,
+  "label": "F40 P2-021 r2 gate_crag",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p21b/sides/gate_crag_p21a2.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p21b/sides/gate_crag_p21c.png"
+ },
+ "Ic": {
+  "anchor": false,
+  "label": "F40 P2-021 r2 heartstone",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p21b/sides/heartstone_p21c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p21b/sides/heartstone_p21a2.png"
+ },
+ "Ke": {
+  "anchor": true,
+  "A": "f36_0_gap:C6B",
+  "B": "f36_0_gap:C6A"
+ },
+ "Ek": {
+  "anchor": true,
+  "A": "f36_0_npc:C7A",
+  "B": "f36_0_npc:C7B"
+ }
+}
