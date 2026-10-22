@@ -1549,7 +1549,9 @@ func _accept_creature_training(id: String, revision: int, receipt: String, peer:
 	var world: RefCounted = game.get("world")
 	var row: Variant = world.reward_deliveries.get(id)
 	if character.is_empty() or not WORLD_STATE.training_row_valid(row, world.reward_delivery_namespace, world.world_id) \
-			or row.character_id != character or row.receipt != receipt or int(row.journal_revision) != revision: return false
+			or row.character_id != character or row.receipt != receipt or int(row.journal_revision) != revision:
+		_note_training_stall("ack for %s does not match the journal row" % id.left(40))
+		return false
 	var session: Node = game.get("session")
 	if row.status == "accepted":
 		if session == null or session.call("host_ack_creature_training", peer, row) != true:
@@ -1572,8 +1574,11 @@ func _accept_creature_training(id: String, revision: int, receipt: String, peer:
 	var before_revision := int(world.get("revision"))
 	var before_seq := int(ledger.get("seq"))
 	var verdict: Dictionary = ledger.call("accept_creature_training_delivery", id, character, revision, receipt, peer)
-	if verdict.get("ok") != true: return false
+	if verdict.get("ok") != true:
+		_note_training_stall("ledger refused acceptance (%s)" % str(verdict.get("code", "")))
+		return false
 	if saver.call("save_world_prepared", game, world.world_id) != true:
+		_note_training_stall("world save refused acceptance")
 		if not before.is_empty(): world.call("load_data", before) # {} only inside a step, which cannot refuse.
 		world.set("revision", before_revision)
 		ledger.set("seq", before_seq)
