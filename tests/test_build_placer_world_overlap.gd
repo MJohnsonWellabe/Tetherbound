@@ -29,6 +29,9 @@ func _static_box(parent: Node, at: Vector3, size: Vector3) -> StaticBody3D:
 	body.add_child(shape)
 	parent.add_child(body)
 	body.global_position = at
+	# The physics server only learns the new transform on the next step; the
+	# synchronous query below needs it now.
+	body.force_update_transform()
 	return body
 
 
