@@ -4,6 +4,7 @@
   "_comment_heal": "`heal` is what one use restores on a creature, in HP. Present only on consumables that heal; tunable.",
   "_comment_revive": "D40 (OF32, owner: 'Grandpa should give you revives at the beginning too'). `revive` is the fraction of max HP a Revive restores when used on a FAINTED creature (0.5 == half, tunable) -- creature_instance.gd's revive() reads it, not heal(). As of D40, `heal` items (potions) refuse a fainted creature outright instead of un-fainting it; `revive` items are the only thing that clears `fainted` outside of rest (home_recovery.gd/creature beds, which still heal_fully() -- that is rest, not a potion, and stays untouched).",
   "_comment_stack": "`stack` is the slot cap. GAME_DESIGN.md 19: slot + stack, NO weight limit — there is no `weight` key here and there must never be one.",
+  "_comment_stack_bulk": "Bulk tier materials stack to 200, the largest Master preparation quantity (data/config/masters.json): rootstone, ironwood, windworn_heartwood, cliffglass_ore, skyplume, stormglass, thunderwood, sparkfur, plus reef_stone and sluice_metal in water_crafting.json. Each kit's bulk material is then one stack, so every all-or-nothing Master chest fits the 24-slot Satchel beside the four tools, the Home Key and a held chapter key (tests/test_master_chest_fits_satchel.gd). Stack size is item data, never saved; older saves' smaller stacks load unchanged and top up.",
   "_comment_fiber": "Spelled `fiber`, matching MEADOWS_VERTICAL_SLICE.md section M8 AND the harvest data the gathering work will port from the pre-Godot prototype (git show c45dee5^:src/data/harvest.json), which drops wood, stone, fiber, berries and flint under exactly these ids. The id is what harvesting keys off, so it had to match one of them; it now matches both.",
   "_comment_colour": "`colour` is the slot tile's tint. Placeholder standing in for an icon, and sampled so four resources are told apart at a glance on a 7-inch screen rather than by reading four short words.",
   "_comment_tools": "R2.1. `gathered_with` on a resource names the tool id that gathers it at full amount; a resource with no `gathered_with` (berries) is never tool-gated. item_db.gd's harvest_yield() reads it: the right tool gives the harvest node's full amount, no tool gives a reduced bare-handed amount (BAREHANDED_FRACTION, tunable), and owning some other tool but not the right one gives nothing. Tools themselves are `kind: tool`, `stack: 1` — owned, not consumed. `hammer` and `fishing_rod` exist as items now per this task's own brief but gate nothing yet: the workbench/repair loop (R2.2) and fishing (unscheduled -- R7.6 was re-scoped off fishing and onto the berry farm) are what will read them. R7.6 added a sixth tool, `hoe`, and it is the first one that does NOT appear here: it gates TILLING, a preparation verb, not a gather, so it is named by scripts/world/farm_logic.gd::TILL_TOOL instead of by any resource's `gathered_with`. Berries are still the resource with no `gathered_with`, farmed ones included -- see docs/decisions/D50 for why that was kept deliberately rather than quietly changed the moment berries got a farm.",
@@ -201,7 +202,7 @@
     "windworn_heartwood": {
       "name": "Windworn Heartwood",
       "kind": "resource",
-      "stack": 50,
+      "stack": 200,
       "colour": "#9c7953",
       "icon": "res://assets/ui/icons/items/wood.png",
       "blurb": "Close-grained cliff timber.",
@@ -211,7 +212,7 @@
     "cliffglass_ore": {
       "name": "Cliffglass Ore",
       "kind": "resource",
-      "stack": 50,
+      "stack": 200,
       "colour": "#88b5bd",
       "icon": "res://assets/ui/icons/items/stone.png",
       "blurb": "Pale blue mineral threaded through warm cliffstone.",
@@ -231,7 +232,7 @@
     "skyplume": {
       "name": "Skyplume",
       "kind": "resource",
-      "stack": 30,
+      "stack": 200,
       "colour": "#d3dfea",
       "icon": "res://assets/ui/icons/items/fiber.png",
       "blurb": "A naturally shed highland plume, never a hunting reward.",
@@ -355,7 +356,7 @@
     "rootstone": {
       "name": "Rootstone",
       "kind": "resource",
-      "stack": 50,
+      "stack": 200,
       "colour": "#6f7f6a",
       "gathered_with": "pickaxe",
       "icon": "res://assets/ui/icons/items/stone.png",
@@ -366,7 +367,7 @@
     "ironwood": {
       "name": "Ironwood",
       "kind": "resource",
-      "stack": 50,
+      "stack": 200,
       "colour": "#4a3a2c",
       "gathered_with": "axe",
       "icon": "res://assets/ui/icons/items/ironwood.png",
@@ -1126,7 +1127,7 @@
     "stormglass": {
       "name": "Stormglass",
       "kind": "resource",
-      "stack": 50,
+      "stack": 200,
       "colour": "#78c9df",
       "icon": "res://assets/ui/icons/items/stone.png",
       "blurb": "Lightning-fused glass prised from a charged seam.",
@@ -1137,7 +1138,7 @@
     "thunderwood": {
       "name": "Thunderwood",
       "kind": "resource",
-      "stack": 50,
+      "stack": 200,
       "colour": "#5b4638",
       "icon": "res://assets/ui/icons/items/wood.png",
       "blurb": "Glass-fused timber that still holds a charge.",
@@ -1190,7 +1191,7 @@
     "sparkfur": {
       "name": "Sparkfur",
       "kind": "material",
-      "stack": 30,
+      "stack": 200,
       "colour": "#d7b964",
       "icon": "res://assets/ui/icons/items/fiber.png",
       "blurb": "Shed charged fur earned from Stormwood encounters.",
