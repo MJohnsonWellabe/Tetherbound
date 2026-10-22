@@ -73,9 +73,11 @@ func _rebuild() -> void:
 	if state.is_empty():
 		_message.text = "Character transaction reconciliation is not ready."
 	elif _mode == "duel":
-		for card: Dictionary in state.get("party", []):
+		var duel_names := party_labels(state.get("party", []))
+		for index in (state.get("party", []) as Array).size():
+			var card: Dictionary = state.party[index]
 			var uid := str(card.uid)
-			_button("%s · Lv %d" % [str(card.get("nickname", card.species_id)), int(card.level)],
+			_button("%s · Lv %d" % [duel_names[index], int(card.level)],
 				func() -> void: _duel(uid), bool(card.get("fainted", false)) or bool(card.get("resting", false)))
 	elif _mode == "cook":
 		for id: String in BREAKTHROUGH.feasts().get("recipes", {}):
@@ -84,10 +86,12 @@ func _rebuild() -> void:
 			_button(str(row.name) + " · " + str(row.cost), func() -> void: _cook(id))
 		_button("Feed creatures", _open_feed_from_kitchen)
 	else:
-		for card: Dictionary in state.get("party", []):
+		var feed_names := party_labels(state.get("party", []))
+		for index in (state.get("party", []) as Array).size():
+			var card: Dictionary = state.party[index]
 			var uid := str(card.uid)
 			var mirror: Dictionary = state.redesign_character.creatures.get(uid, {})
-			var label := "%s · %s" % [str(card.get("nickname", card.species_id)), BREAKTHROUGH.status(card, mirror)]
+			var label := "%s · %s" % [feed_names[index], BREAKTHROUGH.status(card, mirror)]
 			for stack: Variant in state.get("inventory", []):
 				if not stack is Dictionary: continue
 				var item := str(stack.id)
@@ -112,6 +116,23 @@ func _rebuild() -> void:
 
 ## Only offer a feast at this individual's current locked tier. Level stays
 ## unchanged after feeding, so level alone would re-offer the consumed tier.
+## A row names its creature: its nickname, or its species when unnamed (an
+## empty nickname used to leave the row blank). Rows that would still read
+## the same, such as two unnamed Bramblebun, carry their party slot.
+static func party_labels(cards: Array) -> Array[String]:
+	var names: Array[String] = []
+	var counts := {}
+	for card: Variant in cards:
+		var nickname := str((card as Dictionary).get("nickname", "")).strip_edges() if card is Dictionary else ""
+		var name := nickname if not nickname.is_empty() else str((card as Dictionary).get("species_id", "")).capitalize() if card is Dictionary else ""
+		names.append(name)
+		counts[name] = int(counts.get(name, 0)) + 1
+	for index in names.size():
+		if int(counts[names[index]]) > 1:
+			names[index] = "%s (%d)" % [names[index], index + 1]
+	return names
+
+
 static func feast_matches_current_cap(card: Dictionary, mirror: Dictionary, definition: Dictionary) -> bool:
 	if definition.get("kind") != "ascension_feast": return false
 	var tiers: Array = mirror.get("breakthroughs", [])

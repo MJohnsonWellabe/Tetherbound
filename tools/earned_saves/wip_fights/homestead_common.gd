@@ -394,9 +394,12 @@ func _feed_plan_from_stock(state: Dictionary, stock: Dictionary, feast_id: Strin
 	var mirrors: Dictionary = state.get("redesign_character", {}).get("creatures", {})
 	var names := {}
 	var owned := {}
-	for card: Dictionary in state.get("party", []):
-		var nickname := str(card.get("nickname", card.species_id))
-		names[nickname] = int(names.get(nickname, 0)) + 1
+	var labels := BREAKTHROUGH_PANEL.party_labels(state.get("party", []))
+	var label_of := {}
+	for index in (state.get("party", []) as Array).size():
+		var card: Dictionary = state.party[index]
+		names[labels[index]] = int(names.get(labels[index], 0)) + 1
+		label_of[str(card.uid)] = labels[index]
 		owned[str(card.uid)] = true
 	for uid: Variant in choices:
 		if not owned.has(str(uid)):
@@ -443,7 +446,7 @@ func _feed_plan_from_stock(state: Dictionary, stock: Dictionary, feast_id: Strin
 				continue
 			if not reserve_earned_feast(available, item, catalyst):
 				continue
-			picked = {"target": target, "uid": uid, "nickname": str(card.get("nickname", card.species_id)), "recipe": id,
+			picked = {"target": target, "uid": uid, "nickname": str(label_of.get(uid, "")), "recipe": id,
 				"recipe_name": str(recipe.name), "item": item, "item_name": str(def.name), "choice": choice,
 				"status": BREAKTHROUGH.status(card, mirrors.get(uid, {})),
 				"choice_required": bool(offer.get("choice_required", false))}
