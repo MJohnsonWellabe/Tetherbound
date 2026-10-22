@@ -17,9 +17,9 @@ RAMPS = {
     # (r2: the r1 full-range ramp turned the feather texture into busy blue-and-white
     # noise; the body now spans silver to pale lavender and only the darkest marks,
     # eyes and nose, reach indigo.)
-    'solmane': [(0.0, (24, 26, 64)), (0.12, (70, 80, 150)), (0.3, (150, 162, 214)), (0.65, (196, 204, 236)), (1.0, (246, 246, 252))],
+    'solmane': [(0.0, (24, 26, 64)), (0.06, (90, 100, 160)), (0.2, (168, 178, 222)), (0.6, (204, 212, 240)), (1.0, (246, 246, 252))],
     # mint quartz: the warm fur goes deep teal -> jade -> mint -> pale cream ...
-    'pebbik': [(0.0, (14, 34, 40)), (0.35, (34, 104, 104)), (0.62, (96, 182, 160)), (0.85, (200, 236, 214)), (1.0, (250, 248, 236))],
+    'pebbik': [(0.0, (14, 34, 40)), (0.12, (60, 140, 130)), (0.45, (130, 200, 180)), (0.8, (206, 238, 222)), (1.0, (250, 248, 236))],
 }
 # ... and its blue stone plates take a second ramp (gold quartz), so the two-tone
 # design survives as two clean blocks instead of collapsing into one value map.
