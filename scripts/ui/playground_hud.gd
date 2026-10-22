@@ -2992,8 +2992,38 @@ func _ensure_minimap_baked() -> void:
 	if game_map == null:
 		return
 	var terrain: Texture2D = baker.call("bake_cached", world)
+	var realm_terrain := _minimap_realm_terrain(world, game_map)
+	if realm_terrain != null:
+		terrain = realm_terrain
 	_minimap.call("configure", game_map, terrain, 90.0)
 	_minimap_baked = true
+
+
+## hud.json `minimap_realm_terrain` (empty = off). `bake_cached` is the
+## Meadows bake, so outside the Meadows the minimap drew Meadows ground
+## stretched over another realm (round 2 judges: a flat green square in
+## Tidewake). With this on, a realm with its own `map_terrain_texture()` uses
+## it and Tidewake uses the map tab's painted chart.
+func _minimap_realm_terrain(world: Node, game_map: RefCounted) -> Texture2D:
+	var cfg: Variant = _hud_config_cached().get("minimap_realm_terrain", {})
+	if not cfg is Dictionary or cfg.get("enabled") != true:
+		return null
+	var realm := str(_game.get("current_realm")) if _game != null else "meadows"
+	if realm == "meadows" or realm.is_empty():
+		return null
+	if world.has_method("map_terrain_texture"):
+		var own: Texture2D = world.call("map_terrain_texture") as Texture2D
+		if own != null:
+			return own
+	var map_cfg: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/map.json"))
+	var chart: Variant = (map_cfg.get("fog_veil", {}) as Dictionary).get("painted_chart", {}) if map_cfg is Dictionary else {}
+	var tab_map: Script = load("res://scripts/ui/tab_map.gd")
+	return tab_map.call("paint_chart", realm, world, tab_map.call("bounds_for_map", game_map), chart if chart is Dictionary else {}) as Texture2D
+
+
+func _hud_config_cached() -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
+	return parsed if parsed is Dictionary else {}
 
 
 ## `player.global_position` and LOOK yaw derived from `CameraRig.planar_basis()`
@@ -3059,8 +3089,8 @@ func _build_objective_block() -> void:
 	block.name = "ObjectiveBlock"
 	_objective_block = block
 	block.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	block.position = Vector2(right - OBJECTIVE_MAX_WIDTH, top)
-	block.size = Vector2(OBJECTIVE_MAX_WIDTH, OBJECTIVE_BLOCK_HEIGHT)
+	block.position = Vector2(right - _objective_width(), top)
+	block.size = Vector2(_objective_width(), OBJECTIVE_BLOCK_HEIGHT)
 	_root.add_child(block)
 
 	var backing := PanelContainer.new()
@@ -3097,17 +3127,22 @@ func _build_objective_block() -> void:
 	## disappear against a moving 3D backdrop.
 	eyebrow.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	if not _lean.is_empty():
+		# hud_lean r3 (round 2 judges): the right-aligned eyebrow ran into the
+		# wrapped quest line; it reads as a gold tier label, left-aligned.
+		eyebrow.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		eyebrow.add_theme_color_override("font_color", UITokens.WARNING)
 	eyebrow.position = Vector2(OBJECTIVE_INSET, OBJECTIVE_INSET)
-	eyebrow.size = Vector2(OBJECTIVE_MAX_WIDTH - OBJECTIVE_INSET * 2.0, maxf(34.0, _min_text(HUD_READABLE_FONT_SIZE + 4) + 2.0))
+	eyebrow.size = Vector2(_objective_width() - OBJECTIVE_INSET * 2.0, maxf(34.0, _min_text(HUD_READABLE_FONT_SIZE + 4) + 2.0))
 	block.add_child(eyebrow)
 	_objective_eyebrow_label = eyebrow
 
 	_objective_text_label = Label.new()
 	_objective_text_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_objective_text_label.position = Vector2(OBJECTIVE_INSET, OBJECTIVE_EYEBROW_ROW + OBJECTIVE_INSET)
+	_objective_text_label.position = Vector2(OBJECTIVE_INSET, _objective_eyebrow_row() + OBJECTIVE_INSET)
 	_objective_text_label.size = Vector2(
-		OBJECTIVE_MAX_WIDTH - OBJECTIVE_INSET * 2.0,
-		OBJECTIVE_BLOCK_HEIGHT - OBJECTIVE_EYEBROW_ROW - OBJECTIVE_INSET * 2.0
+		_objective_width() - OBJECTIVE_INSET * 2.0,
+		OBJECTIVE_BLOCK_HEIGHT - _objective_eyebrow_row() - OBJECTIVE_INSET * 2.0
 	)
 	# HUD-POPUP task 3: was `UITokens.FONT_LABEL` (23, ~10.7 physical px cap
 	# height) -- see this function's own header.
@@ -3217,9 +3252,9 @@ func _soften_vitals_contrast() -> void:
 func _layout_objective_block() -> void:
 	if _objective_block == null or _objective_text_label == null:
 		return
-	var inner_width := OBJECTIVE_MAX_WIDTH - OBJECTIVE_INSET * 2.0
-	var text_top := OBJECTIVE_EYEBROW_ROW + OBJECTIVE_INSET
-	var text_floor := OBJECTIVE_BLOCK_HEIGHT - OBJECTIVE_EYEBROW_ROW \
+	var inner_width := _objective_width() - OBJECTIVE_INSET * 2.0
+	var text_top := _objective_eyebrow_row() + OBJECTIVE_INSET
+	var text_floor := OBJECTIVE_BLOCK_HEIGHT - _objective_eyebrow_row() \
 			- OBJECTIVE_INSET * 2.0
 
 	_objective_text_label.size.x = inner_width
@@ -3229,9 +3264,17 @@ func _layout_objective_block() -> void:
 	_objective_text_label.size = Vector2(inner_width, text_height)
 
 	var height := maxf(OBJECTIVE_BLOCK_HEIGHT, text_top + text_height + OBJECTIVE_INSET)
-	_objective_block.size = Vector2(OBJECTIVE_MAX_WIDTH, height)
+	_objective_block.size = Vector2(_objective_width(), height)
 	if _objective_backing != null:
 		_objective_backing.size = _objective_block.size
+
+
+func _objective_width() -> float:
+	return float(_lean.get("objective_width", OBJECTIVE_MAX_WIDTH)) if not _lean.is_empty() else OBJECTIVE_MAX_WIDTH
+
+
+func _objective_eyebrow_row() -> float:
+	return float(_lean.get("objective_eyebrow_row", OBJECTIVE_EYEBROW_ROW)) if not _lean.is_empty() else OBJECTIVE_EYEBROW_ROW
 
 
 ## A wrapped `Label`'s real height at its current width.

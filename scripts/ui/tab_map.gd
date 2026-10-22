@@ -2389,20 +2389,29 @@ func _paint_cloud_fog(image: Image, visited: PackedByteArray, grid_x: int, grid_
 func _painted_chart(realm_id: String, world: Node) -> Texture2D:
 	if _painted_cache.has(realm_id):
 		return _painted_cache[realm_id]
-	if world == null or realm_id != _player_realm() or not world.has_method("ground_height_at"):
+	if world == null or realm_id != _player_realm():
 		return null
 	if _chart_cfg.has("realms") and not (_chart_cfg.realms as Array).has(realm_id):
 		return null
-	var extent := bounds_for_map(_realm_map_state(realm_id))
+	return paint_chart(realm_id, world, bounds_for_map(_realm_map_state(realm_id)), _chart_cfg)
+
+
+## Shared with the HUD minimap (hud.json `minimap_realm_terrain`): one cached
+## chart per realm, painted from `world` (which must BE that realm).
+static func paint_chart(realm_id: String, world: Node, extent: Dictionary, cfg: Dictionary) -> Texture2D:
+	if _painted_cache.has(realm_id):
+		return _painted_cache[realm_id]
+	if world == null or not world.has_method("ground_height_at"):
+		return null
 	var origin := Vector2(float(extent.get("min_x", 0.0)), float(extent.get("min_z", 0.0)))
 	var span := Vector2(float(extent.get("max_x", 0.0)) - origin.x, float(extent.get("max_z", 0.0)) - origin.y)
 	if span.x <= 0.0 or span.y <= 0.0:
 		return null
-	var long_px := float(_chart_cfg.get("long_side_px", 360))
+	var long_px := float(cfg.get("long_side_px", 360))
 	var step := maxf(span.x, span.y) / long_px
 	var w := maxi(8, int(ceil(span.x / step)))
 	var h := maxi(8, int(ceil(span.y / step)))
-	var palettes: Dictionary = _chart_cfg.get("palettes", {})
+	var palettes: Dictionary = cfg.get("palettes", {})
 	var pal: Dictionary = palettes.get(realm_id, palettes.get("default", {}))
 	var low := Color(str(pal.get("low", "#5f8f4a")))
 	var mid := Color(str(pal.get("mid", "#9aa45e")))
@@ -2433,8 +2442,8 @@ func _painted_chart(realm_id: String, world: Node) -> Texture2D:
 		return null
 	hi = maxf(hi, lo + 1.0)
 	var light := Vector3(-0.55, 0.75, -0.45).normalized()
-	var relief := float(_chart_cfg.get("relief", 2.5))
-	var contour := maxf(1.0, float(_chart_cfg.get("contour_m", (hi - lo) / 10.0)))
+	var relief := float(cfg.get("relief", 2.5))
+	var contour := maxf(1.0, float(cfg.get("contour_m", (hi - lo) / 10.0)))
 	var image := Image.create(w, h, false, Image.FORMAT_RGB8)
 	for z in h:
 		for x in w:
