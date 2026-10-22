@@ -1,0 +1,38 @@
+# Captain Halder h5 overlay (repo root, clean tree): the Riverwatch recipe.
+# Halder r1 data, but default framing (side-on view off: it framed far),
+# Tuskroot grown 1.4 -> 2.2 (grow-only; C2 re-run before ON), a semi-solid amber
+# lane with amber crackle (the soft lane vanished on grass, the solid one read as
+# a pad), a bigger earth strike, and depth-tested tells.
+import json,subprocess
+subprocess.run(['git','apply','ralph/reports/FIGHTS/close-1022/halder_r1.patch.txt'],check=True)
+p='data/config/bands/band4_upper_meadows_ironwood/trainers.json'; s=open(p).read()
+for a,b in [('"camera_boss_side_view": true','"camera_boss_side_view": false'),('"body_scale": 1.4','"body_scale": 2.2')]:
+    assert s.count(a)==1,a; s=s.replace(a,b)
+json.loads(s); open(p,'w').write(s)
+p='data/config/combat.json'; s=open(p).read()
+s=s.replace('"depth_pull_m": 0.0,','"depth_pull_m": 0.45,',1)
+old='''        "cue_lane_solid": true,
+        "cue_lane_fill_alpha": 0.32,
+        "cue_lane_locked_fill_alpha": 0.6,
+        "cue_lane_edge_alpha": 1.0,
+        "cue_impact_burst": true,
+        "cue_burst_colour": "#8a6a44",
+        "cue_burst_foam": "#efe1c0",'''
+new='''        "cue_lane_solid": true,
+        "cue_lane_fill_alpha": 0.2,
+        "cue_lane_locked_fill_alpha": 0.38,
+        "cue_lane_edge_alpha": 1.0,
+        "cue_lane_crackle": 0.9,
+        "cue_crackle": 0.9,
+        "cue_impact_burst": true,
+        "cue_burst_style": "earth",
+        "cue_burst_size_m": 2.2,
+        "cue_burst_spark_scale": 3.2,
+        "cue_burst_scorch_colour": "#2a1d10",
+        "cue_burst_scorch_scale": 1.4,
+        "cue_burst_light_colour": "#ffb35c",
+        "cue_burst_colour": "#8a6a44",
+        "cue_burst_foam": "#efe1c0",'''
+assert s.count(old)==2,s.count(old)
+s=s.replace(old,new).replace('"telegraph_colour": "#f2a33a"','"telegraph_colour": "#e0861a"').replace('"cue_lane_colour": "#f2a33a"','"cue_lane_colour": "#e0861a"')
+json.loads(s); open(p,'w').write(s)
