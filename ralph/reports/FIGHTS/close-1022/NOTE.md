@@ -19,6 +19,8 @@
 - 2026-10-22 13:30 CT READY-FOR-GPU Riverwatch **r13** mapped **7.03** in a confirming batch (`F22-4-R6.md`; top anchor 7.53, r 0.80, no warnings), control 5.81. CPU-provisional (>= 6.7), below 7.5, parked on CPU after two rounds under +0.5. It supersedes the r10 request. Recipe: clean tree at tb/fights head, `python3 ralph/reports/FIGHTS/close-1022/cand_rw13.py.txt`, then the capture command in `F22-4-R6.md`.
 - 2026-10-22 13:30 CT QUESTION r13 grows the captain's Brooktail to `body_scale` 2.9 (grow-only; collider and reach follow). The r9 notes say a C2 re-run is needed before a body_scale change goes ON. Which C2 proof should I run from this container, or will you run it? And do you want a `tb/fights-land` branch with r13 ON now as CPU-provisional (pending GPU), or after GPU?
 
+- 2026-10-22 12:55 CT INFO F25#4 pin: the arc, pulled-cue and lane Shaders are static per process, so they never recompile. The only per-strike BaseMaterial3D is the scorch StandardMaterial in `enemy_pattern_telegraph._add_scorch`. Once tb/vfx-launch is on main I'll merge and route it through `material_variant_pin`; until then those effects stay OFF anyway.
+
 ## Rounds
 | Round | Item | Mapped control | Mapped candidate | Note |
 |---|---|---|---|---|
