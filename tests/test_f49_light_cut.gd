@@ -38,3 +38,19 @@ func test_recorded_light_transition_must_bind_its_pair_and_be_clean() -> void:
 	var anonymous := t.duplicate(true)
 	anonymous.reviewer = ""
 	assert_false(HANDOFF.light_transition_ok(anonymous, "a", "b", "bridge"))
+
+## Owner, 22 Oct 2026: a piece may start from its predecessor's accepted save
+## made on an earlier commit. The recorded transition must bind exactly that
+## producer, this consumer and the imported boundary.
+func test_pinned_start_transition_binds_its_exact_pair() -> void:
+	var a := "a".repeat(40)
+	var b := "b".repeat(40)
+	var ok := {"kind": "f49_pinned_start", "producer_commit": a, "consumer_commit": b, "imported_boundary": "training_t1_altar_5"}
+	assert_true(HANDOFF.pinned_transition_ok(ok, a, b, "training_t1_altar_5"))
+	assert_false(HANDOFF.pinned_transition_ok(ok, b, b, "training_t1_altar_5"))
+	assert_false(HANDOFF.pinned_transition_ok(ok, a, a, "training_t1_altar_5"))
+	assert_false(HANDOFF.pinned_transition_ok(ok, a, b, "training_t1_altar_4"))
+	var light := ok.duplicate()
+	light.kind = "f49_light_cut"
+	assert_false(HANDOFF.pinned_transition_ok(light, a, b, "training_t1_altar_5"))
+	assert_false(HANDOFF.pinned_transition_ok({}, a, b, "training_t1_altar_5"))

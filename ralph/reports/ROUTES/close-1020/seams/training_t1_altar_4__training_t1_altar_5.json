@@ -1,0 +1,63 @@
+{
+ "consumer": {
+  "commit": "0105fc978280f468f7a174f464be20057ae48a30",
+  "piece": "training_t1_altar_5",
+  "predecessor_binding": {
+   "boundary": "training_t1_altar_4",
+   "receipt_sha256": "ef9ac8963aaa4155fa15d0784f8fc01929e48369665699a7793a4d5fdd2cf9f3"
+  }
+ },
+ "differences": [],
+ "end_flags": 84,
+ "end_location": {
+  "player": [
+   {
+    "$tb_float64": "000000c06bf924c0"
+   },
+   {
+    "$tb_float64": "000000e0e9d7ec3f"
+   },
+   {
+    "$tb_float64": "000000c0af533340"
+   }
+  ],
+  "realm": "meadows",
+  "scene": "MeadowsPlayground"
+ },
+ "end_party": [
+  {
+   "level": 10,
+   "species": "terrapup",
+   "uid": "creature-469deace8d5b459c18bc79e53e97056c"
+  },
+  {
+   "level": 10,
+   "species": "bramblebun",
+   "uid": "creature-658c179f8e0b59cf15c8e5c122f2feb7"
+  },
+  {
+   "level": 10,
+   "species": "mudsnout",
+   "uid": "creature-5ad93a9061a2e7887de5ea7d4f4f3dd4"
+  },
+  {
+   "level": 10,
+   "species": "mudsnout",
+   "uid": "creature-9c0109b7863cbe3992b9828b18292f73"
+  },
+  {
+   "level": 9,
+   "species": "bramblebun",
+   "uid": "creature-2ceb493108621b8e141d34fcb100bee8"
+  }
+ ],
+ "end_realm": "meadows",
+ "match": true,
+ "method": "consumer imported the producer's exact save tree (hash-bound receipt); party compared end vs start",
+ "producer": {
+  "commit": "0105fc978280f468f7a174f464be20057ae48a30",
+  "piece": "training_t1_altar_4",
+  "receipt_sha256": "ef9ac8963aaa4155fa15d0784f8fc01929e48369665699a7793a4d5fdd2cf9f3"
+ },
+ "seam": "training_t1_altar_4 -> training_t1_altar_5"
+}
