@@ -2797,6 +2797,8 @@
       }
     },
     "presentation": {
+      "_why_depth_pull_m": "F22#4 tell look (Fights lane, 22 Oct; GPU judges: cones painted over the attacker's legs and the pilot as flat magenta slabs). >0 draws ring/cone/fan/lane pattern shapes depth-tested and pulled this many metres toward the lens (the charge lane's technique), so a creature standing on the shape occludes it; marker/field discs keep F04#1's no-depth-test. 0 = OFF until its fight frames pass a code-blind judge.",
+      "depth_pull_m": 0.0,
       "ground_lift_m": 0.09,
       "segments": 48,
       "fill_alpha": 0.18,

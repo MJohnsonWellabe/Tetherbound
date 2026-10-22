@@ -108,19 +108,12 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	# cone under BurrowWarrens) ~2.6 km from the fight (F04#0 judge).
 	cue.top_level = true
 	body.get_parent().add_child(cue)
-	var material := StandardMaterial3D.new()
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.vertex_color_use_as_albedo = true
-	material.cull_mode = BaseMaterial3D.CULL_DISABLED
-	# A deck or crate must never hide a tell (F04#1): drawn over the floor.
-	material.no_depth_test = true
-	material.render_priority = 1
-	material.albedo_color = colour
+	var material_colour := colour
 	if not cue._soft.is_empty():
 		# The hue moves to the vertices so the core line can be lifted toward
 		# white; the material keeps only the alpha a filling cue tweens.
-		material.albedo_color = Color(1.0, 1.0, 1.0, colour.a)
+		material_colour = Color(1.0, 1.0, 1.0, colour.a)
+	var material := _cue_material(profile, cfg, material_colour)
 	cue._mesh = ImmediateMesh.new()
 	var visual := MeshInstance3D.new()
 	visual.mesh = cue._mesh
@@ -140,11 +133,69 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	cue.aim(origin, heading, marker)
 	var fill_s := float(profile.get("telegraph", 0.0)) if profile.get("cue_fills") == true or water_fan else 0.0
 	if fill_s > 0.0:
-		var faint := material.albedo_color
-		faint.a = colour.a * 0.25
-		material.albedo_color = faint
-		cue.create_tween().tween_property(material, "albedo_color:a", colour.a, fill_s)
+		_set_cue_alpha(material, colour.a * 0.25)
+		cue.create_tween().tween_method(func(value: float) -> void: _set_cue_alpha(material, value),
+			colour.a * 0.25, colour.a, fill_s)
 	return cue
+
+
+## F22#4 tell look (`patterns.presentation.depth_pull_m`; 0 = off): ground
+## shapes other than marker/field discs draw depth-tested, pulled that many
+## metres toward the lens like the charge lane (lunge_lane.gd LANE_SHADER), so
+## the ground cannot eat them but a creature standing on one occludes it. With
+## no_depth_test the cone painted over the attacker's legs and the pilot (GPU
+## judges, 22 Oct: "magenta slabs"). Marker/field discs keep F04#1's
+## no-depth-test rule: they sit at a target's feet on decks a crate can hide.
+const PULLED_CUE_SHADER := """
+shader_type spatial;
+render_mode unshaded, blend_mix, cull_disabled, shadows_disabled, depth_draw_never;
+uniform vec4 albedo : source_color = vec4(1.0);
+uniform float depth_pull = 0.45;
+varying vec4 tint;
+void vertex() {
+	tint = COLOR;
+	vec4 view = MODELVIEW_MATRIX * vec4(VERTEX, 1.0);
+	float dist = length(view.xyz);
+	view.xyz *= max(0.2, 1.0 - depth_pull / max(dist, 0.001));
+	POSITION = PROJECTION_MATRIX * view;
+}
+void fragment() {
+	ALBEDO = tint.rgb * albedo.rgb;
+	ALPHA = tint.a * albedo.a;
+}
+"""
+
+
+static func _cue_material(profile: Dictionary, cfg: Dictionary, colour: Color) -> Material:
+	var pull := float(cfg.get("depth_pull_m", 0.0))
+	if pull > 0.0 and not str(profile.get("telegraph_shape", "")) in ["marker", "field"]:
+		var shader := Shader.new()
+		shader.code = PULLED_CUE_SHADER
+		var pulled := ShaderMaterial.new()
+		pulled.shader = shader
+		pulled.set_shader_parameter("depth_pull", pull)
+		pulled.set_shader_parameter("albedo", colour)
+		pulled.render_priority = 1
+		return pulled
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.vertex_color_use_as_albedo = true
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	# A deck or crate must never hide a tell (F04#1): drawn over the floor.
+	material.no_depth_test = true
+	material.render_priority = 1
+	material.albedo_color = colour
+	return material
+
+
+static func _set_cue_alpha(material: Material, alpha: float) -> void:
+	if material is ShaderMaterial:
+		var tint: Color = (material as ShaderMaterial).get_shader_parameter("albedo")
+		tint.a = alpha
+		(material as ShaderMaterial).set_shader_parameter("albedo", tint)
+	else:
+		(material as StandardMaterial3D).albedo_color.a = alpha
 
 
 func _add_boss_aura() -> void:
@@ -258,7 +309,7 @@ static func strike_burst(body: Node3D, profile: Dictionary, geometry: Dictionary
 		splash.tween_method(func(value: float) -> void: crown_material.set_shader_parameter("opacity", value),
 			0.95, 0.0, seconds * 0.6).set_delay(seconds * 0.4)
 	var flash := OmniLight3D.new()
-	flash.light_color = Color("#bff3ff")
+	flash.light_color = Color(str(profile.get("cue_burst_light_colour", "#bff3ff")))
 	flash.light_energy = float(profile.get("cue_water_burst_light_energy", 7.0))
 	flash.omni_range = 6.0
 	flash.shadow_enabled = false
