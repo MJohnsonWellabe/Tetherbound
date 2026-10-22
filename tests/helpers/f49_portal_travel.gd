@@ -93,7 +93,7 @@ func enter(arch_id: String, realm: String) -> bool:
 		return _fail("F49 missing earned boss-key delivery for still-locked personal arch " + arch_id)
 	var before := _uids()
 	var prompt := arch.get_node_or_null("Interactable") as Node3D
-	if not await activate(prompt): return false
+	if not await activate(prompt, _hall_entry_via(arch)): return false
 	for frame in 720:
 		await tree.process_frame
 		view = game.call("portal_view", arch_id)
@@ -118,7 +118,7 @@ func reenter(arch_id: String, realm: String) -> bool:
 	var view: Dictionary = game.call("portal_view", arch_id)
 	if not return_view_valid(view): return _fail("F49 re-entry requires the saved open personal arch " + arch_id)
 	var before := _uids()
-	if not await activate(arch.get_node_or_null("Interactable") as Node3D): return false
+	if not await activate(arch.get_node_or_null("Interactable") as Node3D, _hall_entry_via(arch)): return false
 	for frame in 7200:
 		await tree.process_frame
 		if _ready_world(realm):
@@ -416,3 +416,30 @@ func _confirm_lesson_cards(serial: int) -> void:
 			await tap("menu_confirm")
 		else:
 			await tree.physics_frame
+
+
+## A straight walk from the village to an arch ends against the Hall's back
+## wall: the prompt sits 0.9 m inside it and the wall blocks its line of sight
+## (training_t4_return: trainer at (102.4,0.9,21.6), Arch_cloudreach offer {}).
+## From outside the Hall, walk in through its authored entrance, as a player
+## does: outside the doorway, the doorway, the home arrival inside, then the
+## arch's own Approach marker. A trainer already inside gets no waypoints.
+func _hall_entry_via(arch: Node3D) -> Array[Vector3]:
+	var via: Array[Vector3] = []
+	var slot := arch.get_parent() as Node3D
+	var hall := slot.get_parent() as Node3D if slot != null else null
+	var approach := slot.get_node_or_null("Approach") as Node3D if slot != null else null
+	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json"))
+	if hall == null or approach == null or not config is Dictionary \
+			or not config.get("entrance") is Array or not config.get("home_arrival") is Array:
+		return via
+	var local := hall.to_local(_player.global_position)
+	var inside := (absf(local.x) < 7.0 and absf(local.z) < 15.0) or (local.x >= 7.0 and local.x < 17.0 and absf(local.z) < 7.0)
+	if inside: return via
+	var entrance := Vector3(float(config.entrance[0]), float(config.entrance[1]), float(config.entrance[2]))
+	var arrival := Vector3(float(config.home_arrival[0]), float(config.home_arrival[1]), float(config.home_arrival[2]))
+	via.append(hall.to_global(entrance + Vector3(0, 0, -2.5)))
+	via.append(hall.to_global(entrance))
+	via.append(hall.to_global(arrival))
+	via.append(approach.global_position)
+	return via
