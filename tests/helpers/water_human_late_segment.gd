@@ -240,6 +240,13 @@ func _venn() -> bool:
 
 
 func _nerissa() -> bool:
+	# 07c's after-Venn camp heals the active creature; a lead that fainted to
+	# Venn stays fainted in 07c's end save (probe: Terrapup 0/256.8 after the
+	# day-17 rest). A player beds it and sleeps before the captain: one camp
+	# night per fainted companion, through the bed and rest prompts.
+	for member: RefCounted in _game.local.party.members():
+		if bool(member.fainted) and not await _bed_night(member, "water_camp_veilfall"):
+			return false
 	var veilfall := _land_route("veilfall_exploration_spine")
 	if veilfall.size() < 3: return _fail("Veilfall exploration spine is incomplete")
 	for index in range(2, veilfall.size()):
@@ -312,6 +319,55 @@ func _rest_on_shoal(id: String) -> void:
 		frames += 1
 	_note("%s rest shoal: idled %.1f s to stamina %.0f/%.0f" % [id, frames / 60.0,
 		float(vitals.stamina) if vitals != null else -1.0, float(vitals.max_stamina) if vitals != null else -1.0])
+
+
+## Bed one companion at a camp and sleep until morning (the base camp step,
+## for a named member instead of the active one). Disclosed as in the base:
+## the clock snaps to night so a rest reaches morning (F47#4).
+func _bed_night(member: RefCounted, camp_id: String) -> bool:
+	var label := "07d begins with a camp night: 07c ends with %s fainted" % str(member.species_id)
+	var rest: Node3D = _camps.camps.get(camp_id) as Node3D
+	var bed: Node3D = _camps.get_node_or_null(camp_id + "_creature_bed") as Node3D
+	var bed_prompt := bed.get_node_or_null("Interactable") as Node3D if bed != null else null
+	var rest_prompt := rest.get_node_or_null("Interactable") as Node3D if rest != null else null
+	if rest == null or bed_prompt == null or rest_prompt == null:
+		return _fail(label + ": camp recovery services are absent")
+	if not await _walk_to(rest.global_position, "camp night", 3.0):
+		return false
+	if _director.ally_body() != null:
+		await _tap(&"creature_recall")
+		await _frames(30)
+	if not await _activate(bed_prompt, "creature bed for " + str(member.species_id)):
+		return false
+	var panel: Node = INPUT_OWNER.current(_tree)
+	var index: int = (_game.local.party.members() as Array).find(member)
+	var rows: Array = panel.get("_rows") if panel != null else []
+	if index < 0 or index >= rows.size():
+		return _fail(label + ": the creature bed lists no row for it")
+	for step in rows.size():
+		if _tree.root.get_viewport().gui_get_focus_owner() == rows[index]: break
+		await _tap(&"ui_down")
+		rows = panel.get("_rows")
+	if _tree.root.get_viewport().gui_get_focus_owner() != rows[index]:
+		return _fail(label + ": controller focus did not reach its bed row")
+	await _tap(&"ui_accept")
+	await _frames(8)
+	if not bool(member.resting):
+		return _fail(label + ": controller input did not bed it")
+	await _tap(&"menu_cancel")
+	await _frames(8)
+	for look: Node in _tree.get_nodes_in_group("day_cycle"):
+		if look.has_method("apply_time"): look.call("apply_time", "night")
+	var day_before := int(_game.day)
+	if not await _activate(rest_prompt, "overnight rest"):
+		return false
+	var deadline := Time.get_ticks_msec() + 15000
+	while int(_game.day) == day_before and Time.get_ticks_msec() < deadline and not _expired():
+		await _frames(1)
+	if int(_game.day) != day_before + 1 or bool(member.fainted) or float(member.hp) < float(member.max_hp) - 0.01:
+		return _fail(label + ": the night did not heal it")
+	_note(label + "; healed %.1f/%.1f on day %d" % [float(member.hp), float(member.max_hp), int(_game.day)])
+	return await _ensure_ally_deployed("after the camp night")
 
 
 ## The retained creature is whichever of the five is active and able.
