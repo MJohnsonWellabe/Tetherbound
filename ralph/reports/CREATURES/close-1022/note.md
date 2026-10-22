@@ -1,6 +1,10 @@
 # Creatures close-1022 (lane tb/creatures)
 
 ## TO COORDINATOR
+- 23 Oct 01:40 CT READY tb/creatures-land2 c62d3eb10 (from origin/main 9c97caa68): Meshy-1022 remakes ON for Galecrest, Fulgocobra and Voltarach only, as judged in b8 (mapped 7.05 / 6.89 / 6.73 vs live 5.24 / 5.11 / 5.06; RMSE 0.81 caveat).
+  - Contents: the three GLBs byte-identical to the b8 captures (tb/creatures `<sp>/candidate_meshy1022`), their Meshy raw folders, drafted references and provenance; species.json binds model + `colourway_source_species` `<sp>_meshy1022` + the Voltarach clip map; Fulgocobra's old-texture `ordinary` finish row dropped; Galecrest Fly carrier on the remake; `rig_bird.py --hit-gain` (default 1.0, other birds unchanged). No recipe flags: none of the three is in `enabled_species`, so they play their own clips. No Meadowhart/Riverdrake (005faf1b8), no Tanglevolt/Stormcapra/Mirejaw, no Stormursa growth.
+  - Checks on c62d3eb10 itself: Godot `--only=f36_pose,scale_ladder,water,roster,colourway,surface_finish,fly,creature_body,species` 570 tests, 0 failed (scale ladder and grow-only included); test_f36_pose_postpass 8/8 OK (tear checks, water forms included).
+  - Judged = shipped: capture the GPU confirmation from c62d3eb10 itself with `capture_f36_poses.gd --whole-body --context --species=galecrest,fulgocobra,voltarach` (no `--candidate`), so the GPU judges see exactly the shipped files. tb/creatures-land c7b3a66e3 (six remakes) is superseded by this branch for these three; the other three stay off.
 - 23 Oct 01:20 CT READY tb/creatures-land e42ddf1ea (on top of c7b3a66e3): shiny fixes ON, CPU-provisional.
   - P2-030 r3: the `shiny_fallback` hue shift ON with the r3 per-species rows (tb/shared-art ae6bafa24); Tidewake shinies are no longer flat magenta. b2: 6.80 mapped vs 4.59, magenta FIXED x3.
   - P2-018: Solmane/Pebbik gradient-map shiny textures with no shift on top. b2: 6.77 mapped vs 5.65.

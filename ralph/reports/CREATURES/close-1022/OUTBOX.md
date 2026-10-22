@@ -106,3 +106,4 @@ REDRAFT voltarach (top/front three-quarter, three views): Stormwood thunder spid
 - Look: stylised realism with plate wear and fine hair tufts at the leg joints, standing tall on its legs so the
   body clears a 1.80 m person.
 - Avoid: no black/yellow wasp hazard pattern, no red. height=4.25.
+- 23 Oct 01:40 CT READY tb/creatures-land2 c62d3eb10: Galecrest/Fulgocobra/Voltarach remakes only (b8). Details in note.md TO COORDINATOR.
