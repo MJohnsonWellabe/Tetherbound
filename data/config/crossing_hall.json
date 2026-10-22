@@ -1479,9 +1479,9 @@
             0.02,
             25.0
           ],
-          "texture": "res://assets/props/quaternius_fantasy/T_Trim_Cloth_BaseColor.png",
-          "tint": "#5d7a63",
-          "uv_per_m": 0.45
+          "texture": "res://assets/buildings/quaternius_medieval/T_Plaster_BaseColor.png",
+          "tint": "#4f6e57",
+          "uv_per_m": 0.6
         },
         "at": [
           0,
@@ -1497,9 +1497,9 @@
             0.02,
             2.0
           ],
-          "texture": "res://assets/props/quaternius_fantasy/T_Trim_Cloth_BaseColor.png",
-          "tint": "#5d7a63",
-          "uv_per_m": 0.45
+          "texture": "res://assets/buildings/quaternius_medieval/T_Plaster_BaseColor.png",
+          "tint": "#4f6e57",
+          "uv_per_m": 0.6
         },
         "at": [
           11.5,
