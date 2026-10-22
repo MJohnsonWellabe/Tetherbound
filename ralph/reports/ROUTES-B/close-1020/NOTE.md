@@ -1,7 +1,41 @@
 # Routes-B close-1020: Cloudreach and Stormwood pieces (F49#0, earned-checkpoint half of F19#5)
 
+## TO COORDINATOR: FINAL READY tb/routes-b-final __SHA__
+Built from origin/main a4f8a6b7 plus tb/routes-b 9f5c1925. Owner direction: everything on main, without bloat. No file over 200 KB. Only small receipts, seam manifests and this note are added; saves and logs stay out.
+
+**Proven** (accepted pieces from pinned start saves; seams match unless noted):
+- **Cloudreach T4:**
+  - Aster: master_t4 won, feast_t4 learned and the kit delivered.
+  - Home Key → storage → portal return → walk back to the aerie.
+  - Home Key before the Altar.
+  - All five Altar slots: five at L40/cap40, paid through production input.
+- **Stormwood T5:**
+  - Rowan: master_t5 won, feast_t5 learned and the kit delivered.
+  - Home Key → storage → portal return → walk back to Rowan.
+  - Home Key before the Altar.
+  - All five Altar slots: five at L50/cap50.
+- **Stormwood ending:**
+  - dynamo (rods, Kestrel, core).
+  - marrow_settlement (Marrow defeated, Stormheart refused, same five).
+  - home_key, then home_relic (Stormwood relic hung, ending receipts matched).
+
+**Open (unproven, not run):**
+- The T4 and T5 Kitchen and feed runs: training_t4_kitchen/feed/return and training_t5_kitchen/feed/return. The T4 Kitchen attempt before the wrap-up failed on the armed-placement walk; the fix is in this branch (homestead_common `_place_at`) but unproven.
+- 07_stormward_handoff.
+- home_credits (Grandpa and credits).
+- The earned Cloudreach and Stormwood route segments before the boundaries used here.
+- One seam with an UNEXPLAINED 8 m Load placement difference: t5_chest__preparehome.
+
+**Code in this branch beyond main** (tooling only, no game code):
+- `stormwood_chain_runner.gd`: the marrow_settlement piece and its home predecessors, and the watchdog counting walking progress.
+- `homestead_common.gd::_place_at`: the armed return via the village road.
+
+**Focused checks on this branch** (Godot 4.7 headless):
+- `--check-only` passes for stormwood_chain_runner, homestead_common, f49_portal_travel, f20_portal_travel, earned_chain_runner, cloudreach_chain_runner and tidewake_piece_runner.
+- `run_tests.gd --only=test_stormwood_pilot_reach,test_homestead_feed_selection,test_generated_arrival_saves,test_f49_training_prefix,test_material_bridge_legs,test_essence_earning_piece`: **23 tests, 165 assertions, 0 failed**.
+
 ## TO COORDINATOR
-- 2026-10-22 22:10Z STOPPED on request (lanes cut to save usage). Nothing is running. Everything is pushed on tb/routes-b.
+- 2026-10-22 22:10Z (superseded by FINAL READY above) STOPPED on request (lanes cut to save usage). Nothing is running. Everything is pushed on tb/routes-b.
 - READY: Cloudreach T4 through altar_5; Stormwood T5 through altar_5; Stormwood ending through home_relic, on the declined-Stormheart (retained five) path. See RESUME.
 - QUESTION: seam t5_chest__preparehome has one UNEXPLAINED difference. Production Load placed the trainer 8.0 m from the saved pose at Rowan's grove: saved (−1113.8,73.3,3001.5), loaded (−1121.3,73.3,3004.3). Everything else is identical. Unverified; probably the load's safe-arrival placement off Rowan's arena.
 
