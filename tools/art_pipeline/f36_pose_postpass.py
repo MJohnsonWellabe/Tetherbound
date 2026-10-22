@@ -836,6 +836,13 @@ PRONE = ('ashtusk', 'burrowback', 'cragclaw', 'mirejaw', 'mudsnout', 'riptusk', 
          'staticub', 'stormbrush', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
 if CANDIDATE_1022:
     PRONE = tuple(s for s in PRONE if s != 'mirejaw')
+    # Meadowhart lies down like a resting deer (its side-lie put the antlers
+    # through the floor); Fulgocobra's hood drops nose-first to the ground
+    # instead of its rearing installed clip.
+    PRONE += ('meadowhart', 'fulgocobra')
+    PRONE_DIP['fulgocobra'] = 3.0
+    TOPPLED += ('fulgocobra',)
+    HIT_STYLE['fulgocobra'] = 'shove'
 
 
 def clamp_neck(frames, limit=NECK_PITCH_LIMIT):

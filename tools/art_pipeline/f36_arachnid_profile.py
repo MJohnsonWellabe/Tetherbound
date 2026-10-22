@@ -33,6 +33,7 @@ ROLE_SPECS = {
     'ride': {'duration_s': 0.8, 'loop': True},
 }
 SAMPLES = 9
+CANDIDATE_1022 = '--candidate-1022' in sys.argv
 
 
 def legs(bones, segment):
@@ -62,6 +63,18 @@ def pose(rig, role, phase):
             if pair(b) <= 2:
                 add(b, rig.abduct(b, (26 if pair(b) == 1 else 14) * e))
                 add(b, rig.swing(12 * e))
+    elif role == 'faint' and CANDIDATE_1022:
+        # Close-1022 candidate (OFF): GPU judges read the belly-down curl as
+        # standing. Tip onto the side with every leg curled tight, head down.
+        e = min(1.0, phase / .7)
+        pivot = rig.roll(72 * e)
+        add('head', rig.pitch(-18 * e))
+        for b in legs(bones, 1):
+            add(b, rig.abduct(b, 10 * e))
+        for b in legs(bones, 2):
+            add(b, rig.abduct(b, -80 * e))
+        for b in legs(bones, 3):
+            add(b, rig.abduct(b, -95 * e))
     elif role == 'faint':
         # Collapse belly-down with every leg curled in under the body.
         e = min(1.0, phase / .7)
@@ -161,7 +174,8 @@ def main():
         print('stale' if after != before else 'current')
         sys.exit(1 if after != before else 0)
     json.loads(after)
-    POST.LIVE.write_text(after)
+    out = next((Path(a.split('=', 1)[1]) for a in sys.argv[1:] if a.startswith('--out=')), POST.LIVE)
+    out.write_text(after)
     print('F36 voltarach arachnid profile written')
 
 
