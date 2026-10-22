@@ -369,8 +369,11 @@ func _built(item_id: String, key: String, badge: Color = Color.WHITE) -> Node3D:
 	var items: Dictionary = _read_json(ITEMS_PATH).get("items", {}) as Dictionary
 	var definition: Dictionary = items.get(item_id, {}) as Dictionary
 	var node: Node3D = ITEM_CACHE_PICKUP.new()
+	# The generic tier look these tests describe ships in every realm except
+	# Meadows, where F38 P2-033 swaps in Meshy candies (meshy_item_visuals.json
+	# `realms`); test_band_pickups_meshy_candy.gd covers that path.
 	node.call("setup", item_id, BAND_PICKUPS.label_for(item_id), str(definition.get("world_model", "")),
-		float(definition.get("world_model_scale", 1.0)), key)
+		float(definition.get("world_model_scale", 1.0)), key, "cloudreach")
 	BAND_PICKUPS.dress(node, item_id, badge)
 	return node
 

@@ -23,6 +23,10 @@ static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
 		return LIBRARY.launch(parent, from, to, spec, context)
 	return LEGACY.launch(parent, from, to, visual, context)
 
+## F25#4: compile effect material variants ahead of the first launch. Idempotent.
+static func prewarm() -> void:
+	LIBRARY.prewarm()
+
 ## Presentation estimate for older callers only. The accepted host schedule
 ## supplies travel_seconds at production birth; this result cannot commit HP.
 static func travel_seconds(from: Vector3, to: Vector3, spec: Dictionary,

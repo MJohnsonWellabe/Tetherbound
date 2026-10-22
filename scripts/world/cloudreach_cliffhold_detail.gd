@@ -25,8 +25,10 @@ static func config() -> Dictionary:
 	_loaded = true
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH))
 	if raw is Dictionary and (bool(raw.get("enabled", false)) or preview_allowed(
-			OS.get_cmdline_args(), OS.get_cmdline_user_args())):
-		_active = raw
+			OS.get_cmdline_args(), OS.get_cmdline_user_args())
+			or bool(preload("res://scripts/world/cloudreach_settlement_life.gd").config().get("cliffhold_detail", false))):
+		# The settlement candidate may retune the cottage lights it turns on.
+		_active = preload("res://scripts/world/cloudreach_settlement_life.gd").apply(raw, "cliffhold_detail_overrides")
 	return _active
 
 

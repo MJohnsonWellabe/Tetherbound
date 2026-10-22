@@ -49,6 +49,10 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 		mat.set_shader_parameter("wet_earth", load("res://assets/environment/terrain/stylised/wet_earth_Color.png"))
 		var seed_value := int(mat.get_shader_parameter("placement_seed"))
 		mat.set_shader_parameter("wet_surface", 1.0 if seed_value == 392891 else (0.45 if seed_value in [391827, 392846, 393865] else 0.0))
+		# Wet-surface gloss (stormwood_ground_finish.json wet_gloss); absent keeps the shader defaults.
+		var gloss: Dictionary = finish.get("wet_gloss", {})
+		if gloss.has("roughness"): mat.set_shader_parameter("wet_roughness", float(gloss.roughness))
+		if gloss.has("specular"): mat.set_shader_parameter("wet_specular", float(gloss.specular))
 
 
 func bind(terrain: Node, camera: Camera3D) -> void:

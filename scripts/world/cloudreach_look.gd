@@ -209,6 +209,9 @@ func dress(world: Node3D) -> void:
 	_dress_trees_and_stones(config_data)
 	if profile_look: print("[cloudreach_look] trees_stones ms=", Time.get_ticks_msec() - phase_started)
 	_dress_settlement_materials()
+	var settlement_life := preload("res://scripts/world/cloudreach_settlement_life.gd").new()
+	add_child(settlement_life)
+	settlement_life.dress(world, _materials)
 	var landmark_lighting := LANDMARK_LIGHTING.new()
 	landmark_lighting.name = "LandmarkLighting"
 	add_child(landmark_lighting)

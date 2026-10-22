@@ -24,6 +24,7 @@ extends Node3D
 ## this is a third THIN PROP wired to the one satchel every pickup already
 ## shares.
 
+const MESHY_ITEM_VISUALS := preload("res://scripts/world/meshy_item_visuals.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const MUSHROOM_PRESENTATION := preload("res://scripts/world/mushroom_pickup_presentation.gd")
@@ -193,7 +194,10 @@ func _build_visual() -> void:
 		var catalogue: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/items/items.json"))
 		if catalogue is Dictionary:
 			definition = (catalogue.get("items", {}) as Dictionary).get(_item_id, {}) as Dictionary
-	_visual = create_identity_visual(_item_id, definition)
+	# F38 P2-033 (meshy_item_visuals.json `enabled`).
+	_visual = MESHY_ITEM_VISUALS.visual_for(_item_id, _realm_id)
+	if _visual == null:
+		_visual = create_identity_visual(_item_id, definition)
 	if _visual == null and _model_path != "" and ResourceLoader.exists(_model_path):
 		var resource: Resource = load(_model_path)
 		if resource is PackedScene:

@@ -1,0 +1,119 @@
+{
+  "asset": "cloudreach_strata_spire_cluster",
+  "brief_id": "A2",
+  "biome": "cloudreach",
+  "date": "2026-10-21",
+  "author": "Claude (Cloudreach Meshy generation worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro) -> Meshy multi-image-to-3d (latest, quad remesh, PBR)",
+  "target_size_m": "3 conjoined stacks 32/25/18 m tall, ~20 m shared base",
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "height",
+    "fit_value_m": 32,
+    "raw_extent": [
+      1.3574,
+      1.9036,
+      0.971
+    ],
+    "scale": 16.8101,
+    "final_min": [
+      -11.409,
+      0.0,
+      -8.161
+    ],
+    "final_max": [
+      11.409,
+      32.0,
+      8.161
+    ],
+    "final_extent_m": [
+      22.82,
+      32.0,
+      16.32
+    ],
+    "triangles": 46486,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3
+  },
+  "files": {
+    "glb_metres": "cloudreach_strata_spire_cluster.glb",
+    "glb_meshy_raw": "cloudreach_strata_spire_cluster_meshy_raw.glb",
+    "textures": "textures/",
+    "chosen_concepts": [
+      "concepts/c2_0.png",
+      "concepts/c2_1.png",
+      "concepts/c2_2.png"
+    ],
+    "meshy_thumbnail": "thumbnail.png"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15c3f-03d3-7650-9ede-452068f08d57",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Cluster of three conjoined limestone rock stacks fused at a shared base about 20 metres wide: one 32 metres tall, one 25 metres tall and one 18 metres tall. Each stack is made of clearly layered horizontal strata beds with mossy ledges, small overhangs and grassy tufts on the flat tops. Same rock language as the references (weathered pale limestone cliffs with moss). Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no cast background, no people. Materials: pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, never pure white) with clearly stacked horizontal sedimentary strata and soft moss on the ledges; where present, slate-blue roof tile (#3d4a66), honey-coloured timber, cream plaster, royal-blue banner fabric with a small gold accent. Absolutely no red, no oxblood, no maroon anywhere. Flat ground contact at the base.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/exterior_cliff_waterfall.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/side_view_cliff.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/assets/environment/cloudreach/cliff_buttress/reference/three_quarter.png"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: concept added houses and banners to the rock"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15c4a-4e68-7148-b2f8-b95f659a3ef7",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Natural rock formation: a cluster of exactly three conjoined limestone sea-stacks fused at one shared base about 20 metres wide. Heights: tallest 32 metres, middle 25 metres, shortest 18 metres, standing side by side and slightly staggered. Each stack is made of clearly layered horizontal strata beds with mossy ledges, small overhangs and grassy tufts on the flat tops. Wild, uninhabited. Stylised-realism game terrain asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight. Pure natural rock and vegetation only: NO buildings, NO houses, NO banners, NO flags, NO props, NO people. Rock is pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, neutral grey with only a slight warm cast, not sandy or tan, never pure white) with clearly stacked horizontal sedimentary strata and soft green moss on the ledges. Absolutely no red anywhere.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/exterior_cliff_waterfall.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/side_view_cliff.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/assets/environment/cloudreach/cliff_buttress/reference/three_quarter.png"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png",
+        "concepts/c2_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c2",
+      "task_id": "01a15c4b-c171-727b-b2d4-afb9d3519684",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "input_task_id": "01a15c4a-4e68-7148-b2f8-b95f659a3ef7"
+      },
+      "params": {
+        "input_task_id": "01a15c4a-4e68-7148-b2f8-b95f659a3ef7",
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 25000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN"
+    }
+  ],
+  "consumed_credits_total": 48,
+  "visual_verdict": "Good: three fused strata stacks with overhang shelves and grassy tops, consistent with A1 family; 22.8 x 16.3 m base at 32 m.",
+  "integration_flag": "OFF - candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood requested or observed; blue banners/roofs only"
+}

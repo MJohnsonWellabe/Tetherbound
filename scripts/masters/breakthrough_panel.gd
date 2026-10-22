@@ -18,6 +18,19 @@ var _duel_generation := 0
 var _preparing_duel := false
 ## A guest's first view is an async request: the list built empty waits for it.
 var _awaiting_view := false
+## A guest's cook/feed refused only for the moment (its own earlier owner
+## checkpoint, such as the cook just before this feed, is still settling) is
+## sent again with the same original intent. Bounded; then the row is released
+## with a retry message, so a press is never silently dropped.
+const RETRY_CODES := ["owner_passive_original_pending", "owner_passive_prior_transaction_pending",
+	"owner_passive_readmit_pending"]
+const RETRY_SECONDS := 1.0
+const RETRIES := 60
+var _retries_left := 0
+var _retry_wait := -1.0
+## The scene the panel was opened in. Leaving it, or closing the panel, ends
+## the resends: a feed never commits after the player has walked away.
+var _retry_scene: WeakRef
 
 func _ready() -> void:
 	add_to_group(INPUT.GROUP)
@@ -55,6 +68,7 @@ func open(service: Node, mode: String, source: Node, master_id: String) -> void:
 	_source = source
 	_mode = mode
 	_master = master_id
+	_retry_scene = weakref(_current_scene()) if _current_scene() != null else null
 	show()
 	_rebuild()
 
@@ -210,6 +224,9 @@ func _send(op: String, intent: Dictionary) -> void:
 	if not _pending_action.is_empty() and (op != _pending_action or intent != _pending_intent):
 		_message.text = "Waiting for your original character transaction to save."
 		return
+	if _pending_action.is_empty():
+		_retries_left = RETRIES
+		_retry_wait = -1.0
 	_pending_action = op
 	_pending_intent = intent.duplicate(true)
 	var result: Dictionary = _service.call("submit", op, intent, _source)
@@ -236,6 +253,16 @@ func accept_completion(action: String, original: Dictionary, result: Dictionary)
 		if action == "feast_cook": _craft_id = ""
 		if is_instance_valid(_message): _message.text = str(result.get("reason", result.get("code", "Character transaction refused.")))
 		return true
+	if action == _pending_action and original == _pending_intent and action in ["feast_cook", "feast_feed"] \
+			and result.get("ok") != true and result.get("terminal_refusal") != true \
+			and str(result.get("code", "")) in RETRY_CODES:
+		if _retries_left > 0 and _retry_context_live():
+			_retries_left -= 1
+			_retry_wait = RETRY_SECONDS
+			if is_instance_valid(_message): _message.text = "Saving your earlier action first…"
+		else:
+			_release_for_retry()
+		return true
 	if action != _pending_action or original != _pending_intent \
 			or result.get("ok") != true or result.get("settled") != true \
 			or result.get("durable") != true or result.get("owner_saved") != true \
@@ -248,6 +275,36 @@ func accept_completion(action: String, original: Dictionary, result: Dictionary)
 		if _mode == "duel": close()
 		else: _rebuild()
 	return true
+
+func _process(delta: float) -> void:
+	if _retry_wait < 0.0: return
+	_retry_wait -= delta
+	if _retry_wait > 0.0: return
+	_retry_wait = -1.0
+	if _pending_action not in ["feast_cook", "feast_feed"]: return
+	if not _retry_context_live():
+		_release_for_retry()
+		return
+	# The same original intent: the host's checkpoint admits it once, so a
+	# resend can never feed or cook twice.
+	_send(_pending_action, _pending_intent.duplicate(true))
+	if not _pending_action.is_empty() and is_instance_valid(_message): _message.text = "Saving your earlier action first…"
+
+## A resend needs the open panel, its producer and source, in the scene it
+## was opened in.
+func _retry_context_live() -> bool:
+	if not visible or not is_instance_valid(_service) or not is_instance_valid(_source): return false
+	return _retry_scene == null or _retry_scene.get_ref() == _current_scene()
+
+func _current_scene() -> Node:
+	return get_tree().current_scene if is_inside_tree() else null
+
+## Out of momentary retries: nothing was saved; free the row for a new press.
+func _release_for_retry() -> void:
+	_retry_wait = -1.0
+	_pending_action = ""
+	_pending_intent = {}
+	if is_instance_valid(_message): _message.text = "Your earlier action is still saving. Press again to retry."
 
 ## The producer's personal view arrived. Rebuild only a list that was built
 ## without one; a shown list keeps its buttons (and re-reading cannot loop).
@@ -272,6 +329,8 @@ func _cancel_duel_preparation() -> void:
 		_pending_intent = {}
 
 func close() -> void:
+	# A refused press waiting to be resent was not admitted: release it now.
+	if _retry_wait >= 0.0: _release_for_retry()
 	_cancel_duel_preparation()
 	INPUT.suppress_pause_reopen(get_tree())
 	hide()

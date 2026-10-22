@@ -1137,7 +1137,8 @@
       "draw_distance": "Normal",
       "volumetric_fog_density": 0.0005,
       "volumetric_fog_length": 96.0,
-      "volumetric_fog_sky_affect": 0.0
+      "volumetric_fog_sky_affect": 0.0,
+      "forward_plus_grade": {"fog_density_scale": 0.5, "exposure_scale": 1.3333333, "saturation_scale": 1.2}
     },
     "High": {
       "cloudreach_rock_candidate": false,
@@ -1150,7 +1151,8 @@
       "draw_distance": "Far",
       "volumetric_fog_density": 0.0005,
       "volumetric_fog_length": 128.0,
-      "volumetric_fog_sky_affect": 0.0
+      "volumetric_fog_sky_affect": 0.0,
+      "forward_plus_grade": {"fog_density_scale": 0.5, "exposure_scale": 1.3333333, "saturation_scale": 1.2}
     },
     "shadow_quality_options": {
       "Off": {

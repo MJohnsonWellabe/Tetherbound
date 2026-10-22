@@ -1,0 +1,65 @@
+{
+ "asset": "potion_pickup",
+ "date": "2026-10-21",
+ "requested_by": "Meadows lane (F17#6, F38)",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until scene passes judging",
+ "workflow": "agent-drafted concept via image-to-image (nano-banana-pro) from repo references, inspected by the agent, then multi-image-to-3d (latest)",
+ "target_size_m": {
+  "h": 0.4
+ },
+ "native_model_units": "Meshy normalises the largest extent to ~1.9 units; scale to target_size_m at integration",
+ "integration_flag": "OFF (not integrated; candidate only)",
+ "concepts": [
+  {
+   "tag": "v1",
+   "task_id": "01a15c3d-b618-725d-96a3-a9c39da08c2e",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept: a round-bellied corked glass potion flask filled with glowing pink liquid (#e86a8a, pink not red), sitting in a woven wicker basket cradle with a leather strap handle, small green leaf sprig tied to the neck, about 0.4 m tall. Style like the potion bottles on the board reference, chunky and readable. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "docs/reference/owner-board-2026-08-15-systems-and-castle.png (crop: potions and items)",
+    "assets/props/potion_plant/potion_plant_0.png"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "potion_pickup/concepts/v1_0.png",
+    "potion_pickup/concepts/v1_1.png",
+    "potion_pickup/concepts/v1_2.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  }
+ ],
+ "models": [
+  {
+   "model": "potion_pickup",
+   "task_id": "01a15c3f-dbab-7349-a078-d4e7e85a1057",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 10000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "potion_pickup/concepts/v1_0.png",
+    "potion_pickup/concepts/v1_1.png",
+    "potion_pickup/concepts/v1_2.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "potion_pickup/model_potion_pickup/potion_pickup.glb",
+    "base_color": "potion_pickup/model_potion_pickup/potion_pickup_base_color.png",
+    "metallic": "potion_pickup/model_potion_pickup/potion_pickup_metallic.png",
+    "roughness": "potion_pickup/model_potion_pickup/potion_pickup_roughness.png",
+    "normal": "potion_pickup/model_potion_pickup/potion_pickup_normal.png",
+    "thumbnail": "potion_pickup/model_potion_pickup/thumbnail.png"
+   }
+  }
+ ],
+ "consumed_credits_total": 39,
+ "agent_visual_verdict": "Strong: pink (#e86a8a-range, not red) corked round flask in a wicker cradle with a leaf sprig; very readable.",
+ "notes": ""
+}

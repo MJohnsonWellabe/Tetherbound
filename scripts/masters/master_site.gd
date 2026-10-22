@@ -156,6 +156,12 @@ func _build_sign(world: Node3D) -> void:
 	words.outline_size = int(presentation.outline_size)
 	words.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	words.position = _vec(_definition.get("sign_text_offset_m", presentation.text_offset_m))
+	# Distant signpost text must not float over fights elsewhere (masters.json).
+	var reach := float(presentation.get("visible_range_m", 0.0))
+	if reach > 0.0:
+		words.visibility_range_end = reach
+		words.visibility_range_end_margin = float(presentation.get("fade_margin_m", 0.0))
+		words.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	sign.add_child(words)
 	var lead := NPC.new()
 	lead.name = "MasterLead"

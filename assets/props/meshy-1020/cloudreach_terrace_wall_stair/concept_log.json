@@ -1,0 +1,49 @@
+{
+  "asset": "cloudreach_terrace_wall_stair",
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15cda-4188-707c-8b53-47e7216368a9",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Long straight stone terrace retaining wall module with a built-in stair for a high cliff-top sky city, 12 metres long, 4 metres tall and about 3 metres deep. A tall battered retaining wall of coursed pale limestone ashlar blocks with buttress pilasters; a straight flight of broad stone steps runs diagonally up along the front face from ground level at one end to the top terrace at the other end. A continuous carved stone balustrade parapet with small round balusters and square posts runs along the top edge and follows the stair, like the bridge reference. One small pointed-arch niche with a gold lantern bracket in the wall face and one royal-blue banner with gold trim and a pale wing emblem hanging on the wall. Flat walkable top surface and flat base. Straight modular ends so pieces can be placed side by side. Same refined castle-town stone family as the gate and bridge references. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no cast background, no people. Materials: pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, never pure white) in coursed ashlar blocks with soft moss in the joints; slate-blue roof tile (#3d4a66), honey-coloured timber only for doors and shutters, royal-blue banner fabric with a small gold accent and pale wing emblem. Absolutely no red, no oxblood, no maroon anywhere. No half-timbering, no cream plaster, no thatch. Flat ground contact at the base.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/bridge_arch.jpg (branch tb/cloudreach @ 776441737)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/front_gate.jpg (branch tb/cloudreach @ 776441737)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/arch_window.jpg (branch tb/cloudreach @ 776441737)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (view 0 only): strong 3/4 view of buttressed limestone retaining wall, diagonal stair with balustrade, top balustrade parapet, arch niche, gold lantern bracket, blue wing banner; view 1 rejected because it split the piece into two separate objects"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15cdf-0645-75d9-affe-f697f57196d3",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "One single connected object in every view, shown from elevated three-quarter angles so the stair depth is clearly visible: front-left three-quarter, front-right three-quarter and top-down three-quarter views of the same piece. Long straight stone terrace retaining wall module with a built-in stair for a high cliff-top sky city, 12 metres long, 4 metres tall and about 3 metres deep. A tall battered retaining wall of coursed pale limestone ashlar blocks with buttress pilasters; a solid straight flight of broad stone steps, built as a 2 metre wide projecting stone block standing in front of the wall face, runs diagonally up along the front from ground level at one end to the top terrace at the other end. A continuous carved stone balustrade parapet with small round balusters and square posts runs along the top edge and follows the stair, like the bridge reference. One small pointed-arch niche with a gold lantern bracket in the wall face and one royal-blue banner with gold trim and a pale wing emblem hanging on the wall. Flat walkable top surface and flat base. Straight modular ends so pieces can be placed side by side. Same refined castle-town stone family as the gate and bridge references. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no cast background, no people. Materials: pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, never pure white) in coursed ashlar blocks with soft moss in the joints; slate-blue roof tile (#3d4a66), honey-coloured timber only for doors and shutters, royal-blue banner fabric with a small gold accent and pale wing emblem. Absolutely no red, no oxblood, no maroon anywhere. No half-timbering, no cream plaster, no thatch. Flat ground contact at the base.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/bridge_arch.jpg (branch tb/cloudreach @ 776441737)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/front_gate.jpg (branch tb/cloudreach @ 776441737)",
+        "local: concepts/c1_0.png (own earlier concept, used as shape reference)"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png",
+        "concepts/c2_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: flat orthographic end views, stair only on one face"
+    }
+  ],
+  "chosen_concept": "c1",
+  "chosen_views": [
+    0
+  ],
+  "reference_inspection": "All references inspected before submission: tower_top.jpg, arch_window.jpg, front_gate.jpg, bridge_arch.jpg (lane meshy_refs) and the published cloudreach_watch_tower_house / cloudreach_cliff_cottage Meshy thumbnails. The cottage's half-timber/plaster upper storey was deliberately excluded because judges said Cliffhold reads as a Meadows village."
+}

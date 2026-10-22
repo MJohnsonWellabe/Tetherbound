@@ -21,6 +21,7 @@ extends Node3D
 ## group (`autoload/game_state.gd::load_game()`), so a save never brings a
 ## gathered node back.
 
+const MESHY_ITEM_VISUALS := preload("res://scripts/world/meshy_item_visuals.gd")
 const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
@@ -301,6 +302,14 @@ func resource_amount() -> int:
 ## so `_visual` stays a single node whose `.visible` and `.scale` mean "the
 ## whole prop" regardless of how many parts the scene's own root has.
 func _build_visual(spec: Dictionary = {}) -> void:
+	# F38 P2-034 (meshy_item_visuals.json `enabled`): the reward's
+	# own Meshy model replaces the generic node look; glow/claims unchanged.
+	var hero := MESHY_ITEM_VISUALS.visual_for(_item_id, _realm_id)
+	if hero != null:
+		_visual = hero
+		add_child(_visual)
+		PICKUP_GLOW.attach(_visual, _item_colour(), -1.0, 1.0, _item_kind())
+		return
 	if _model_path != "" and ResourceLoader.exists(_model_path):
 		var resource: Resource = load(_model_path)
 		if resource is PackedScene:

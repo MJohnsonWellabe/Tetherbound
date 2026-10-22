@@ -1,0 +1,144 @@
+{
+  "asset": "cloudreach_galefoot_cliffface_dwellings",
+  "brief": "(b2) Galefoot dwellings built into a vertical stratified cliff face with zigzag stair and blue awnings, F08#3",
+  "criterion": "F08#3 (Cloudreach settlements and cliff identity)",
+  "biome": "cloudreach",
+  "date": "2026-10-21",
+  "author": "Claude (coordinator-side Cloudreach Meshy art worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro, references as data URIs) -> inspected -> Meshy 3D (latest, quad remesh, PBR textures embedded in GLB)",
+  "target_size_m": "30 m wide x 10 m deep x 24 m tall, flat back, lawn base",
+  "native_size": {
+    "raw_extent_units": [
+      1.8578,
+      1.9019,
+      0.9896
+    ],
+    "note": "Meshy raw GLB, longest side ~1.9 units"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "width",
+    "fit_value_m": 30,
+    "raw_extent": [
+      1.8578,
+      1.9019,
+      0.9896
+    ],
+    "scale": 16.1483,
+    "final_min": [
+      -15.0,
+      0.0,
+      -7.99
+    ],
+    "final_max": [
+      15.0,
+      30.712,
+      7.99
+    ],
+    "final_extent_m": [
+      30.0,
+      30.71,
+      15.98
+    ],
+    "triangles": 70029,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3,
+    "uniform_scale_to_target": 16.1483,
+    "alternatives": {
+      "fit_height_24m": {
+        "scale": 12.619,
+        "final_extent_m": [
+          23.44,
+          24.0,
+          12.49
+        ]
+      }
+    }
+  },
+  "files": {
+    "glb_metres": "cloudreach_galefoot_cliffface_dwellings.glb",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png",
+      "preview_3view.png (software flat-shaded 3-view, colours sampled per face)"
+    ],
+    "chosen_concepts": [
+      "concepts/c1_1.png"
+    ],
+    "raw_glb": "not published (identical mesh to glb_metres minus the metres_root node)"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15e58-8e3f-743b-b19e-ed3173e62b24",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Every view shows the complete piece from a slightly elevated three-quarter angle: front three-quarter, straight front, and side views. Dwellings carved into a vertical stratified pale limestone cliff face, ONE single object 30 metres wide, 10 metres deep and 24 metres tall: a flat vertical rock face with horizontal rock strata and moss, with two levels of house fronts built into it. Each house front is coursed pale limestone ashlar with honey-timber doors, small honey-timber balconies with railings, and pointed-arch windows with warm amber glass, like the stone row house reference, with short slate-blue tiled pent roofs over the doors. Royal-blue cloth awnings on gold poles shade two balconies. A zigzag stone stair with a stone balustrade switches back down the cliff face from the upper level to the ground. The back of the piece is completely flat and vertical, as if cut off where it meets a larger cliff wall. The base is a flat strip of short grass lawn. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no surrounding landscape beyond the piece itself, no clouds, no sky, no people. Materials: pale warm-grey weathered limestone ashlar (#a89c8a to #c4b8a4, never pure white) in coursed blocks with soft moss in the joints; slate-blue roof tile (#3d4a66); gilded gold ribs and accents (#c9a24a); royal-blue fabric banners with a white and gold wing emblem; honey-coloured timber only for doors, balconies and planks; warm amber window glass as a distinct saturated colour. Absolutely no red, no oxblood, no maroon, no pink anywhere. No half-timbering, no cream plaster, no thatch. Flat ground contact at the base.",
+      "references": [
+        "Meshy thumbnail of published asset cloudreach_stone_row_house: tb/meshy-props assets/props/meshy-1020/cloudreach_stone_row_house/preview_meshy.png, style anchor",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/exterior_cliff_waterfall.jpg (branch tb/cloudreach @ 776441737)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/banner_pillar.jpg (branch tb/cloudreach @ 776441737)",
+        "Meshy thumbnail of published asset cloudreach_terrace_wall_stair: tb/meshy-props assets/props/meshy-1020/cloudreach_terrace_wall_stair/preview_meshy.png, style anchor"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (view 1, cropped at x<595 to remove a neighbouring sliver -> concepts/c1_1crop.png): strong 3/4 view of a stratified rock face with two levels of limestone house fronts, honey-timber balconies, amber windows, a blue awning on gold poles and a balustraded zigzag stair on a lawn base; view 2 (front) is consistent; view 0 is a side view"
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15e63-1697-74d8-9a84-a4ce452577bb",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "IMPORTANT PROPORTIONS: wider than it is tall (30 metres wide by 24 metres tall), like a broad slab of cliff. The house fronts spread across the whole width: three or four house fronts on two levels side by side, not a single tall tower. One single object only, plain white background. Every view shows the complete piece from a slightly elevated three-quarter angle: front three-quarter, straight front, and side views. Dwellings carved into a vertical stratified pale limestone cliff face, ONE single object 30 metres wide, 10 metres deep and 24 metres tall: a flat vertical rock face with horizontal rock strata and moss, with two levels of house fronts built into it. Each house front is coursed pale limestone ashlar with honey-timber doors, small honey-timber balconies with railings, and pointed-arch windows with warm amber glass, like the stone row house reference, with short slate-blue tiled pent roofs over the doors. Royal-blue cloth awnings on gold poles shade two balconies. A zigzag stone stair with a stone balustrade switches back down the cliff face from the upper level to the ground. The back of the piece is completely flat and vertical, as if cut off where it meets a larger cliff wall. The base is a flat strip of short grass lawn. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no surrounding landscape beyond the piece itself, no clouds, no sky, no people. Materials: pale warm-grey weathered limestone ashlar (#a89c8a to #c4b8a4, never pure white) in coursed blocks with soft moss in the joints; slate-blue roof tile (#3d4a66); gilded gold ribs and accents (#c9a24a); royal-blue fabric banners with a white and gold wing emblem; honey-coloured timber only for doors, balconies and planks; warm amber window glass as a distinct saturated colour. Absolutely no red, no oxblood, no maroon, no pink anywhere. No half-timbering, no cream plaster, no thatch. Flat ground contact at the base.",
+      "references": [
+        "local: concepts/c1_2.png (own earlier concept from this asset, used as shape/style reference)",
+        "Meshy thumbnail of published asset cloudreach_stone_row_house: tb/meshy-props assets/props/meshy-1020/cloudreach_stone_row_house/preview_meshy.png, style anchor",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/exterior_cliff_waterfall.jpg (branch tb/cloudreach @ 776441737)"
+      ],
+      "outputs": [
+        "concepts/c2_0.png",
+        "concepts/c2_1.png",
+        "concepts/c2_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "rejected: still taller than wide (about 0.75:1) and the rock reads as a free-standing pillar in views 1-2"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m1_c1v1",
+      "task_id": "01a15e63-1694-76f3-83e8-f904b84aa186",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "source": {
+        "image_files": [
+          "c1_1crop.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 36000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN",
+      "kept": "cloudreach_galefoot_cliffface_dwellings.glb (metres)"
+    }
+  ],
+  "consumed_credits_total": 48,
+  "visual_verdict": "Good: two levels of coursed-limestone house fronts built into a stratified, mossy rock face. They have slate-blue roofs, amber pointed-arch windows, honey-timber doors and balconies (one an enclosed timber loggia), a royal-blue awning on gold poles over the upper door, royal-blue wing banners and a long balustraded stone stair that switches back down the front to a flat lawn strip. The back is flat and vertical (ray-checked at five heights, back plane at z = -7.7 m), so it can be set against the existing cliff. Final extents 30.0 x 30.71 x 15.98 m against a 30 x 10 x 24 m brief, so 6.7 m too tall and 6 m too deep (alternative uniform fit to 24 m tall gives 23.4 x 24 x 12.5 m). Only one awning is clearly blue cloth, not two. The rock above the houses is a plain grey block, cooler than the tan Galefoot cliff it should meet, so expect a tint or material match in engine. Single material, 70,029 triangles.",
+  "integration_flag": "flag-off",
+  "integration_note": "candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood/pink requested or observed; pale limestone and rock, slate-blue pent roofs, royal-blue awning and banners (one banner is a very dark navy), amber windows, honey timber balconies and doors"
+}

@@ -4,8 +4,16 @@ extends RefCounted
 const CONFIG_PATH := "res://data/config/vfx.json"
 const EFFECT := preload("res://scripts/vfx/move_effect.gd")
 const CONTRACT := preload("res://scripts/vfx/move_presentation_contract.gd")
+const GEOMETRY := preload("res://scripts/vfx/move_effect_geometry.gd")
+const PIN := preload("res://scripts/vfx/material_variant_pin.gd")
+## Every authored surface move_effect_geometry.authored_material() draws.
+const AUTHORED_KINDS := ["bubble", "root_stone_surface", "shadow_surface", "wind_surface", "fire_explosion",
+	"flame_tongue", "soft_trail", "soft_dust", "water_stream", "rolling_wave", "splash_crown", "ice_crystal",
+	"ion_filament", "electrical_splash", "burning_core", "flame_orb", "fire_bloom", "soft_ember", "soft_foam",
+	"flame_volume", "mist_cone", "stone"]
 
 static var _config: Dictionary = {}
+static var _prewarmed := false
 static var _astra_config: Dictionary = {}
 static var _astra_r2_config: Dictionary = {}
 static var _astra_r3_config: Dictionary = {}
@@ -178,6 +186,25 @@ static func config() -> Dictionary:
 		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
 		if raw is Dictionary: _config = raw
 	return _config.get("move_library", {}) as Dictionary
+
+## F25#4: on Forward+ the first material of a variant compiled its shader on
+## the launch frame (10-43 ms each). Building one of each standard variant and
+## each authored surface while the world loads moves that cost off the fight.
+## Idempotent and presentation-only.
+static func prewarm() -> void:
+	if _prewarmed: return
+	_prewarmed = true
+	PIN.prewarm()
+	for kind: String in AUTHORED_KINDS:
+		GEOMETRY.authored_material(kind, {}, Color.WHITE).get_rid()
+	for style: String in ["painted_flame", "dust"]:
+		GEOMETRY.authored_material("soft_trail", {"style": style}, Color.WHITE).get_rid()
+	# Contact stages (flash, ground mark, spark motes) build their own surfaces.
+	for shader: Shader in [EFFECT.FLASH_SHADER, EFFECT.GROUND_MARK_SHADER, EFFECT.SPARK_SHADER, EFFECT.SPARK_GLOW_SHADER]:
+		var stage := ShaderMaterial.new()
+		stage.shader = shader
+		stage.set_shader_parameter("opacity", 1.0)
+		stage.get_rid()
 
 static func resolve(spec: Dictionary, mastery_rank: int = 1) -> Dictionary:
 	var library := config()

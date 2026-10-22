@@ -1,0 +1,49 @@
+{
+  "enabled": true,
+  "_scope": "F38 P2-033/P2-034 candidate, deterministic presentation only: Meshy models replace the visual of the listed Meadows pickups and harvest rewards (provenance in each assets/props/meshy-1020 folder). Interaction, claims, glow, saves and network unchanged. ON (CPU-provisional, see _why_on); a GPU pass decides.",
+  "realms": [
+    "meadows"
+  ],
+  "items": {
+    "good_candy": {
+      "model": "res://assets/props/meshy-1020/good_candy/good_candy.glb",
+      "length_m": 1.1,
+      "lift_m": -0.02,
+      "yaw_deg": 25.0,
+      "glow_scale": 0.45,
+      "shadow_m": 1.0
+    },
+    "great_candy": {
+      "model": "res://assets/props/meshy-1020/great_candy/great_candy.glb",
+      "length_m": 1.15,
+      "lift_m": -0.02,
+      "yaw_deg": 25.0,
+      "glow_scale": 0.45,
+      "shadow_m": 1.05
+    },
+    "rare_candy": {
+      "model": "res://assets/props/meshy-1020/candy_pickup_set/model_candy_rare/candy_rare.glb",
+      "height_m": 0.9,
+      "glow_scale": 0.45,
+      "shadow_m": 1.1
+    },
+    "potion_small": {
+      "model": "res://assets/props/meshy-1020/potion_pickup/model_potion_pickup/potion_pickup.glb",
+      "height_m": 1.1,
+      "glow_scale": 0.45,
+      "shadow_m": 0.9
+    },
+    "orb_basic": {
+      "model": "res://assets/props/meshy-1020/harvest_bundle_set/model_harvest_orbcache/harvest_orbcache.glb",
+      "height_m": 0.85
+    },
+    "travel_pack": {
+      "model": "res://assets/props/meshy-1020/harvest_bundle_set/model_harvest_satchel/harvest_satchel.glb",
+      "height_m": 0.85
+    }
+  },
+  "_why_r2": "P2-033/034 r1 judges: Meshy hide roll read as a bedroll and the berry basket as mud (original better, dropped); the rest too small and halo-washed: x1.5 size, Meshy candy halo x0.45.",
+  "_why_r3": "P2-033/034 r2 judges (harvest 6.67, pickups 5.33): good/great candy read as a cabbage and a tarp, so they get Meshy single wrapped sweets in the rare candy's finish (assets/props/meshy-1020/good_candy, great_candy), fitted by length; the potion is too small for its frame (0.68 -> 0.85 m).",
+  "_why_r4": "P2-033 r3 judges (6.40 vs 4.34): items too small in the wide frames (x1.3-1.5), no contact shadow, a leftover green halo on the potion, the great candy read end-on as an egg (turned broadside like the good candy).",
+  "_why_on": "ON (CPU-provisional): the r4 state judged 22 Oct by three code-blind judges with anchors (fit slope 1.52, rmse 0.63; ralph/reports/LOOK/close-1022/P2-033-034-items.md). P2-033 pickups map to 6.76 vs shipping 4.74, meeting the 6.7 CPU bar; P2-034 harvest maps to 6.63 vs 5.47, an improvement, not a closure. A GPU pass must confirm 7.5; below that, reopen."
+}

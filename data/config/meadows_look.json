@@ -2,8 +2,10 @@
   "_comment": "MEADOWS-VISUAL-PASS round 5. The Meadows realm's own look, deep-merged over data/config/art.json by world_look.gd (realm_look_path on the Meadows WorldLook). art.json's presets are shared by every realm; what only the Meadows wants lives here.",
   "_comment_environment": "Distance haze. art.json's shared #a6bccb at 0.00055 turned the far plain into a white band under every elevated Meadows view (survey 03: a 'white fog wall'); a bluer, lighter haze keeps the depth cue while the hills and groves still read at a kilometre. Golden, dawn and night keep their own preset fog, which overrides this base. TUNABLE.",
   "environment": {
-    "fog_colour": "#98b2cb",
-    "fog_density": 0.0004
+    "fog_colour": "#9cb7d3",
+    "fog_density": 0.001,
+    "adjustment_contrast": 1.1,
+    "adjustment_saturation": 1.08
   },
   "look_candidate": {
     "enabled": false,
@@ -202,5 +204,11 @@
         }
       }
     }
-  }
+  },
+  "sun": {
+    "energy": 1.5,
+    "colour": "#ffe8c4",
+    "pitch_deg": -38.0
+  },
+  "_why_f04_6_r29": "Environment grade (haze #9cb7d3 at 0.001, contrast 1.1, saturation 1.08) and the warm 38-degree sun: ON (CPU-provisional improvement, not a closure): F04#6 r29 mapped 6.38 Bar A vs shipping 5.91 with three code-blind judges on the fixed F04-6 camera set (Low/Compatibility, llvmpipe; ralph/reports/LOOK/close-1022/F04-6.md). Parked by the gain rule; a GPU pass decides, and a GPU score below the bar reopens it."
 }
