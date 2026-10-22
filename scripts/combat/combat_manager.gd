@@ -62,6 +62,7 @@ const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 const ENEMY_PATTERNS := preload("res://scripts/combat/combat_ai.gd")
 const ENEMY_PATTERN_CAST := preload("res://scripts/combat/enemy_pattern_cast.gd")
+const PATTERN_CUE := preload("res://scripts/combat/enemy_pattern_telegraph.gd")
 const MOVE_MASTERY := preload("res://scripts/creatures/move_mastery.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 var _enemy_strike_connected := false
@@ -5779,6 +5780,8 @@ func _resolve_enemy_strike(cfg: Dictionary, origin: Vector3, facing: Vector3, lu
 	# W09-VFX: the foe's blow carries its own element's hue, sized to the bite it took.
 	_present_local_contact(_ally_body.call("centre"), str(incoming.get("weight", "light")) in ["heavy", "ultimate"],
 		VFX.tint_for_type(_moves.type_of(move_id)), damage / maxf(1.0, float(creature.max_hp) * _gear_hp_scale(creature)), incoming, false)
+	if bool(cfg.get("cue_contact_burst", false)):
+		_present_contact_burst(cfg)
 
 	hit_effectiveness.emit(false, TYPE_CHART.classify(type_mult))
 	if stagger_triggered:
@@ -5910,6 +5913,20 @@ func _present_local_contact(where: Vector3, charged: bool, tint: Variant, hit_fr
 	if receipt.is_empty(): return
 	_play_impact_feel(receipt)
 	if is_instance_valid(struck): _emit_host_impact(on_enemy, receipt, struck)
+
+
+## F22#4 (row opt-in `cue_contact_burst`, OFF): a landed named charge throws
+## dust and debris from the struck creature's feet and kicks the camera by
+## `cue_contact_shake` x the charged nudge. Presentation only, after the hit.
+func _present_contact_burst(cfg: Dictionary) -> void:
+	if not is_instance_valid(_ally_body): return
+	var host: Node = _arena if _arena != null else _ally_body.get_parent()
+	PATTERN_CUE.contact_burst(host, _ally_body.global_position, cfg)
+	var shake := float(cfg.get("cue_contact_shake", 0.0))
+	if shake > 0.0 and _camera_rig != null and _camera_rig.has_method("nudge_combat_impact"):
+		var nudge: Dictionary = (MATH.config().get("charged_camera_nudge", {}) as Dictionary).duplicate()
+		nudge["degrees"] = float(nudge.get("degrees", 0.65)) * shake
+		_camera_rig.call("nudge_combat_impact", nudge)
 
 
 ## F21#3 (COMBAT §11): heavy, stagger-crit and ultimate impacts in the local
