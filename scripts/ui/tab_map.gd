@@ -833,6 +833,10 @@ func _draw_map(canvas: Control) -> void:
 	var map_rect := _map_rect_for_canvas(rect_size)
 
 	canvas.draw_rect(Rect2(Vector2.ZERO, rect_size), _outside_colour)
+	if not _cloud_fog.is_empty():
+		# The canvas beyond the realm's own rectangle is the same cloud cover
+		# (round 1 judges: the Meadows chart sat in empty side bars).
+		canvas.draw_texture_rect(_cloud_tile(), Rect2(Vector2.ZERO, rect_size), true)
 	if _soft_fog:
 		# Linear sampling: fog edges and baked terrain blend instead of
 		# stair-stepping at the 16x/32x local views.
@@ -2258,6 +2262,35 @@ static func label_core_colour(colour: Color) -> Color:
 	var lifted := colour.lerp(Color(1.0, 1.0, 1.0), t)
 	lifted.a = colour.a
 	return lifted
+
+
+var _cloud_tiles: Dictionary = {}
+
+
+## A seamless cloud tile in the displayed realm's fog tones, for the canvas
+## outside the realm rectangle.
+func _cloud_tile() -> Texture2D:
+	var realm := _display_realm()
+	if _cloud_tiles.has(realm):
+		return _cloud_tiles[realm]
+	var tones: Dictionary = _cloud_fog.get("tones", {})
+	var tone: Array = tones.get(realm, tones.get("default", ["#1b2a33", "#3a5361"]))
+	var deep := Color(str(tone[0]))
+	var light := Color(str(tone[1]))
+	var noise := FastNoiseLite.new()
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise.seed = 1022
+	noise.frequency = float(_cloud_fog.get("tile_frequency", 0.012))
+	noise.fractal_octaves = 3
+	var size := int(_cloud_fog.get("tile_px", 256))
+	var gray := noise.get_seamless_image(size, size, false, false, 0.1, true)
+	var image := Image.create(size, size, false, Image.FORMAT_RGB8)
+	for y in size:
+		for x in size:
+			image.set_pixel(x, y, deep.lerp(light, smoothstep(0.25, 0.85, gray.get_pixel(x, y).r)))
+	var tex := ImageTexture.create_from_image(image)
+	_cloud_tiles[realm] = tex
+	return tex
 
 
 ## `cloud_fog`: unsurveyed cells stay opaque (nothing beneath shows, OW3) but

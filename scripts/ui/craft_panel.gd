@@ -1076,11 +1076,21 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	text_col.add_child(cost_label)
 	_cost_labels.append(cost_label)
 	if _compact_rows:
+		# The Ready/Missing tag sits on the name line, so the cost preview
+		# keeps the row's full width (round 1: a long cost wrapped to 3 lines).
+		var name_row := HBoxContainer.new()
+		name_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		name_row.add_theme_constant_override("separation", 10)
+		text_col.remove_child(name)
+		name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		name_row.add_child(name)
 		var tag := Label.new()
 		tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tag.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		tag.add_theme_font_size_override("font_size", UITokens.FONT_TINY)
-		row.add_child(tag)
+		tag.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+		name_row.add_child(tag)
+		text_col.add_child(name_row)
+		text_col.move_child(name_row, 0)
 		_row_tags.append(tag)
 
 	button.pressed.connect(func() -> void: _craft(id))

@@ -303,6 +303,7 @@ var _scenic_rail_left: TextureRect = null
 var _scenic_rail_right: TextureRect = null
 var _scenic_band: PanelContainer = null
 var _scenic_footer: RichTextLabel = null
+var _scenic_floor: TextureRect = null
 var _scenic_footer_default := true
 
 
@@ -399,6 +400,31 @@ func _apply_shell_scenic() -> void:
 		body.add_child(_scenic_band)
 		body.move_child(_scenic_band, header.get_index())
 		header.reparent(_scenic_band)
+	if float(_scenic.get("floor_art_alpha", 0.0)) > 0.0:
+		# The menu body's lower part carries the chapter's own scene, faded up
+		# into the panel (round 1 judges: flat identical bodies, empty lower
+		# thirds). Drawn behind Body, never over text at full strength.
+		var panel_node := get_node_or_null(^"Root/Frame/Panel") as PanelContainer
+		if panel_node != null:
+			_scenic_floor = TextureRect.new()
+			_scenic_floor.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			_scenic_floor.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			_scenic_floor.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+			var fade := ShaderMaterial.new()
+			fade.shader = Shader.new()
+			fade.shader.code = """shader_type canvas_item;
+uniform float alpha = 0.2;
+uniform float start = 0.5;
+void fragment() {
+	vec4 c = texture(TEXTURE, UV);
+	float ramp = smoothstep(start, 1.0, SCREEN_UV.y);
+	COLOR = vec4(c.rgb, c.a * alpha * ramp);
+}"""
+			fade.set_shader_parameter("alpha", float(_scenic.get("floor_art_alpha", 0.2)))
+			fade.set_shader_parameter("start", float(_scenic.get("floor_art_start", 0.5)))
+			_scenic_floor.material = fade
+			panel_node.add_child(_scenic_floor)
+			panel_node.move_child(_scenic_floor, 0)
 	if _scenic.get("glyph_footer") == true:
 		_scenic_footer = RichTextLabel.new()
 		_scenic_footer.bbcode_enabled = true
@@ -518,6 +544,9 @@ func _scenic_refresh() -> void:
 	_title.text = order.display_name(realm)
 	if _scenic_band != null:
 		_scenic_band.add_theme_stylebox_override("panel", _scenic_band_style(realm, accent))
+	if _scenic_floor != null:
+		var floor_path := "res://assets/ui/region_bands/source/%s_raw_16x9.jpg" % realm
+		_scenic_floor.texture = load(floor_path) as Texture2D if ResourceLoader.exists(floor_path) else null
 	_scenic_refresh_footer()
 	var pad := INPUT_GLYPH.using_gamepad()
 	if _scenic_rail_left != null:

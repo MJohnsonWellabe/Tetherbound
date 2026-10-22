@@ -1179,7 +1179,7 @@ func poll() -> void:
 				(record["name_label"] as Label).add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 			var changed := bool(bindings.call("is_overridden", action, "keyboard")) or bool(bindings.call("is_overridden", action, "gamepad"))
 			var reset_button := record["reset"] as Button
-			reset_button.text = "Reset" if changed else "·"
+			reset_button.text = "Reset" if changed else ""
 			reset_button.add_theme_color_override("font_color", COLOUR_CHANGED if changed else Color(COLOUR_QUIET, 0.6))
 		for slot in ["keyboard", "gamepad"]:
 			var cell: Button = record[slot]

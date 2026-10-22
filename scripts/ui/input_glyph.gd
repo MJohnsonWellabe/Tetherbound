@@ -579,7 +579,15 @@ static func glyph_file_for_event(event: InputEvent) -> String:
 	if event is InputEventJoypadButton:
 		return str(_PAD_FILES.get((event as InputEventJoypadButton).button_index, ""))
 	if event is InputEventJoypadMotion:
-		match (event as InputEventJoypadMotion).axis:
+		var motion := event as InputEventJoypadMotion
+		var negative := motion.axis_value < 0.0
+		match motion.axis:
 			JOY_AXIS_TRIGGER_LEFT: return "xbox_lt.png"
 			JOY_AXIS_TRIGGER_RIGHT: return "xbox_rt.png"
+			# Stick directions (agent-drawn, AGENT_DRAWN.md): Godot's Y axes
+			# read negative for up.
+			JOY_AXIS_LEFT_X: return "xbox_stick_l_left.png" if negative else "xbox_stick_l_right.png"
+			JOY_AXIS_LEFT_Y: return "xbox_stick_l_up.png" if negative else "xbox_stick_l_down.png"
+			JOY_AXIS_RIGHT_X: return "xbox_stick_r_left.png" if negative else "xbox_stick_r_right.png"
+			JOY_AXIS_RIGHT_Y: return "xbox_stick_r_up.png" if negative else "xbox_stick_r_down.png"
 	return ""

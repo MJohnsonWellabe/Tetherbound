@@ -1239,6 +1239,21 @@ func _style_hotbar() -> void:
 		chip.add_theme_stylebox_override("panel", slot_box)
 
 
+## `hud_lean` legend: a soft borderless plate (round 1 judges: the legend text
+## vanished over pale sand once its box was removed), same content margins.
+func _lean_legend_box() -> StyleBox:
+	var alpha := float(_lean.get("legend_plate_alpha", 0.0))
+	if alpha <= 0.0:
+		return _lean_empty_box(UITokens.panel_deep_box())
+	var plate := StyleBoxFlat.new()
+	plate.bg_color = Color(UITokens.BG_DEEP, alpha)
+	plate.set_corner_radius_all(12)
+	var boxed := UITokens.panel_deep_box()
+	for side in [SIDE_LEFT, SIDE_TOP, SIDE_RIGHT, SIDE_BOTTOM]:
+		plate.set_content_margin(side, boxed.get_content_margin(side))
+	return plate
+
+
 ## `hud_lean`: no fill or border, but the same content margins, so the
 ## measured widths and slot spacing of the boxed layout still hold.
 func _lean_empty_box(boxed: StyleBox) -> StyleBoxEmpty:
@@ -4167,7 +4182,7 @@ func _build_exploration_legend() -> void:
 	_exploration_legend.size_flags_horizontal = Control.SIZE_SHRINK_END
 	# GATE3-HUD-HIERARCHY: the persistent capability row (with `HotbarPanel`)
 	# recedes on `panel_deep_box()` -- see `_style_hotbar()`'s own header.
-	_exploration_legend.add_theme_stylebox_override("panel", UITokens.panel_deep_box() if _lean.is_empty() else _lean_empty_box(UITokens.panel_deep_box()))
+	_exploration_legend.add_theme_stylebox_override("panel", UITokens.panel_deep_box() if _lean.is_empty() else _lean_legend_box())
 	dock.add_child(_exploration_legend)
 	dock.move_child(_exploration_legend, 1)
 
@@ -4581,7 +4596,7 @@ func _update_hotbar(inventory: RefCounted) -> void:
 					# A pad glyph sits beside the count, smaller than the item.
 					chip = INPUT_GLYPH.icon(COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i],
 						int(_lean.get("pad_glyph_px", 32)))
-				text = "%s\n%s[font_size=%d][outline_size=6][outline_color=#000000][color=#%s] %s[/color][/outline_color][/outline_size][/font_size]" % [
+				text = "%s\n%s[font_size=%d][outline_size=6][outline_color=#000000][color=#%s]  %s[/color][/outline_color][/outline_size][/font_size]" % [
 					lean_icon, chip, int(_lean.get("count_px", 24)), text_colour.to_html(false), count_text]
 		if not _clarity.is_empty() and i < _hotbar_slots.size():
 			# Dim the empty slot's contents, not its frame.
