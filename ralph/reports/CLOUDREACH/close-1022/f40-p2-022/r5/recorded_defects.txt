@@ -1,0 +1,10 @@
+Si: "the aviary reads as a wire cage over a low drum, not a pale stone drum ringed with arched windows"; "the close camera lands against a wall or pier"; "no warm lit windows at night"
+Lx: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Li: none
+Pu: "the aviary reads as a wire cage over a low drum, not a pale stone drum ringed with arched windows"; "the close camera lands against a wall or pier"; "no warm lit windows at night"
+Iz: none
+Sm: "the aviary reads as a wire cage over a low drum, not a pale stone drum ringed with arched windows"; "the close camera lands against a wall or pier"; "no warm lit windows at night"
+Ap: "the aviary reads as a wire cage over a low drum, not a pale stone drum ringed with arched windows"; "the close camera lands against a wall or pier"; "no warm lit windows at night"
+Nb: "the aviary reads as a wire cage over a low drum, not a pale stone drum ringed with arched windows"; "the close camera lands against a wall or pier"; "no warm lit windows at night"
+Iw: none
+Gz: "the aviary reads as a wire cage over a low drum, not a pale stone drum ringed with arched windows"; "the close camera lands against a wall or pier"; "no warm lit windows at night"

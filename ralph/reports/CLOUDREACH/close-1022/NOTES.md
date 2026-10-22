@@ -14,6 +14,16 @@ Evidence: `f08-3/r15/` (key, batch, calibrated output, per-judge scores, `_sheet
 All three judges, candidate side: the warm lamp still tints the night road at the Cliffhold court, windwatch and Galefoot hearth (PARTIAL/PRESENT); the windwatch hall windows blow out to white (PRESENT, all three); flat lawn foreground PRESENT/PARTIAL everywhere. The control keeps the Galefoot lantern-line pole across the hearth camera (candidate already removes it). New candidate defect: at the Cliffhold approach the griffin follower stands behind the trainer, so the wings fan out of the trainer's silhouette. Shared top asks: (1) foregrounds as pale stratified stone terraces/ledges with the cloud-sea drop near camera (scene; terrain); (2) atmosphere: haze between planes, capped window emission, neutral lamp pools (scene); (3) cliff-carved village hero set (new art).
 r16 (c088f639): lamp and door lights cast pale warm white (amber stays on the lantern core), lamp/door glow and window emission lowered. Capturing.
 
+## F40#1 P2-022 summit aviary
+
+Assets (coordinator Meshy, ac1183c6d): `assets/props/meshy-1022/cloudreach_aviary_drum_ring_v2/` (tall drum: 1.25:1 height to width; image-to-3D closed the floor, so `tools/meshy_strip_floor.py` turned 10,980 floor triangles degenerate → `_open.glb`) and `cloudreach_aviary_belvedere_tower/`. Candidate r5 (c088f639, items flag `--cloudreach-f40-items-candidate`): drum fitted to 58 m wide × 54 m tall, four 26 m towers on the pier angles; procedural colliders kept, procedural visuals hidden.
+
+| Round (22 Oct, CT) | Capture | Fit | Mapped control | Mapped candidate |
+|---|---|---|---|---|
+| r5, ~12:30 | `tools/phase2_capture_locations.gd --subset=summit_eyrie`, 12 frames per arm (summit path and stronghold landmark, approach/close, day/golden/night), CPU Low; control avc5 and candidate ava5 at c088f639 | linear, slope 0.898, intercept 0.876, RMSE 0.516, r 0.71, 8 anchors to 7.35 (confirming); warning: some candidates extrapolated >0.5 below the anchors' measured range (the court sets) | 5.13 all six sets; **summit path 5.80** (day 5.97, golden 5.70, night 5.73) | 5.45 all six; **summit path 6.45** (day 6.65, golden 6.30, night 6.39) |
+
+Evidence: `f40-p2-022/r5/`. All three judges, every path set: the candidate fixes the "wire cage" read (pale drum, arched windows, gold-ribbed blue dome, turrets match the board); night windows only faint (PARTIAL). The "summit_eyrie_stronghold" landmark stands (court sets) are not the aviary. Both arms put the camera under the stronghold's floating cobble blocks (3.7–4.6 on both sides, unchanged by the candidate). That is a separate stronghold geometry defect, out of P2-022's sighting. Remaining P2-022 asks: (1) warm window ring at night (scene: next round adds an amber-pane emission mask to the drum); (2) a flat Meadows-style grass summit with no stratified stone, cliff edge or cloud sea below (scene); (3) the black-block Team Tether fort beside the path (scene/kit). Not met: 6.45 < 6.7.
+
 ## TO COORDINATOR
 (send_message to the coordinator session is refused here with elevated_session_untrusted_device, so lines go here.)
 
