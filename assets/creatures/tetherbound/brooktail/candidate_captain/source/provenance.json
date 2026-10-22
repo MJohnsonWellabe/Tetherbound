@@ -1,0 +1,130 @@
+{
+  "subject": "brooktail_captain",
+  "base_species": "brooktail",
+  "variant": "Captain's Brooktail (River Captain boss variant: teal sash harness, brass rivets and chest buckle, tan rope forearm wraps, head-high quadruped stance)",
+  "criterion": "F22#4 Riverwatch named fight (Captain Oreth's final Brooktail)",
+  "default_enabled": false,
+  "status": "rigged_candidate_off_judging_open",
+  "authorization": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; candidate stays flag-off until its scene passes judging. CLAUDE.md art rule (agent-drafted reference, identity kept).",
+  "disposition": "Meshy multi-image-to-3D mesh from the Fights lane's prop batch, rigged on the project's 15-bone quadruped skeleton (same bone names and hierarchy as the installed creature_brooktail_lod0.glb, minus its unused neutral_bone) with the installed six clip names plus charged/rest/swim. Flag-off: installed creature_brooktail_lod0.glb, species.json and trainers.json are unchanged.",
+  "raw_source": "origin/tb/meshy-props:assets/props/meshy-1020/brooktail_captain/brooktail_captain.glb",
+  "raw_model_sha256": "46bd971319a1adcc83299b8b7ac4a7414626433fa7b12a20e133958397e8a6b3",
+  "raw_provenance": "origin/tb/meshy-props:assets/props/meshy-1020/brooktail_captain/provenance.json (full concept prompts, inputs and verdicts)",
+  "model": "res://assets/creatures/tetherbound/brooktail/candidate_captain/models/creature_brooktail_captain.glb",
+  "model_sha256": "4eebcaa41dfe78059c2342dfc2506118d6a4f306828cfed2f87f4bf19b176ae2",
+  "identity_sources": [
+    "assets/creatures/tetherbound/brooktail/reference/front.png",
+    "assets/creatures/tetherbound/brooktail/reference/side.png",
+    "assets/creatures/tetherbound/brooktail/reference/back.png",
+    "assets/creatures/tetherbound/brooktail/reference/three_quarter.png"
+  ],
+  "concept_tasks": [
+    {
+      "tag": "c1",
+      "task_id": "01a15c3e-a407-76fc-a571-6564fc233798",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "status": "SUCCEEDED",
+      "consumed_credits": 9,
+      "chosen_for_3d": false
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15c48-b243-74da-81c3-b55ed6b067f2",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "status": "SUCCEEDED",
+      "consumed_credits": 9,
+      "chosen_for_3d": true
+    },
+    {
+      "tag": "c3",
+      "task_id": "01a15c51-dc54-732f-8e3c-1bf0e34e057b",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "status": "SUCCEEDED",
+      "consumed_credits": 9,
+      "chosen_for_3d": true
+    }
+  ],
+  "model_task": {
+    "task_id": "01a15c5a-dfe3-74c2-a445-21f6f4ff684c",
+    "endpoint": "/openapi/v1/multi-image-to-3d",
+    "status": "SUCCEEDED",
+    "consumed_credits": 30,
+    "params": {
+      "ai_model": "latest",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 30000,
+      "enable_pbr": true,
+      "should_texture": true
+    },
+    "image_inputs": [
+      "c3_view0.png",
+      "c3_view2.png",
+      "c2_view0.png",
+      "c3_view1.png"
+    ]
+  },
+  "consumed_credits_total": 57,
+  "meshy_generation_this_step": "none (rig and clips only)",
+  "rig": {
+    "method": "brooktail_captain_from_staticub_regen_leg_line_aligned_tail_excluded_leg_columns_chin_line_head_anatomical_regions_local_surface_diffusion",
+    "scripts": [
+      "prepare_captain_candidate.py",
+      "author_native_clips.py",
+      "check_captain_deformation.py"
+    ],
+    "derived_from": "assets/creatures/tetherbound/staticub/candidate_regen/source/ (47267739b, 3f0f0eea5) via the Stormursa v3 / Burrowback multiview scripts",
+    "skeleton": "15-bone quadruped: root, pelvis, spine, neck, head, front_upper/lower_l/r, rear_upper/lower_l/r, tail_1, tail_2",
+    "installed_skeleton_match": "same 15 bone names and parents as creature_brooktail_lod0.glb (installed also carries an unweighted neutral_bone)",
+    "clips": {
+      "idle": 72,
+      "walk": 40,
+      "run": 26,
+      "attack": 24,
+      "charged": 42,
+      "hit": 12,
+      "faint": 36,
+      "rest": 36,
+      "swim": 40
+    },
+    "clip_frames_note": "frame counts at 24 fps; attack paws return to the ground at t=0.65 (frame ~16 of 24), so the existing f22_hero_model_attack_contact_phase 0.652174 matches",
+    "otter_specific_changes": [
+      "paddle tail on the ground is excluded before measuring leg columns; front/rear pairs split at the largest foot-band gap",
+      "head = volume above the measured chin line (0.70 of height) in front of the leg gap; throat/chest band below it is the neck",
+      "tail bones follow the measured on-ground tail centreline"
+    ],
+    "rigid_parts": "Harness, sash, brass buckle and rope wraps are surface detail on one welded skin (no separate parts). The chest band is spine/neck weighted and no clip animates the neck, so it moves as one piece; rope wraps sit inside the rigid lower-leg regions.",
+    "unweighted_vertices": 0,
+    "triangles": 27999,
+    "residual_leg_line_deg": 0.173,
+    "head_yaw_from_rig_forward_deg": -4.237,
+    "follow_ratios_30deg": {
+      "front_upper_l": 1.0,
+      "front_upper_r": 1.0,
+      "rear_upper_l": 0.999,
+      "rear_upper_r": 0.999,
+      "neck": 1.0,
+      "head": 1.0
+    }
+  },
+  "scale": {
+    "exported_height_m": 2.0997,
+    "exported_length_m": 4.1406,
+    "exported_width_m": 1.3386,
+    "tail_length_m": 1.8978,
+    "basis": "installed Brooktail species.json placeholder.height 2.10 m (creature_body._fit fits the model to height x body_scale at load; footprint allowance 0.722 x 2 x 8.6 = 12.4 m does not clamp)",
+    "boss_size": "applied in game by the trainer member row's body_scale (Fights lane captures used 1.6, 1.9 and 2.3); e.g. 1.5 gives 3.15 m tall, 6.2 m long",
+    "trainer_m": 1.8,
+    "never_shrink": "2.10 m head height is above the 1.80 m trainer at body_scale 1.0; length follows the uniform scale (no length squash)"
+  },
+  "reports": [
+    "prepare-report.json",
+    "deformation-report.json"
+  ],
+  "pose_check": "Blender pose_check.py idle/walk/run/attack/hit/faint inspected: clean deformation, no tearing, harness and rope wraps intact; sheet kept local (not committed)",
+  "visual_verdict_raw": "Accept as candidate: identity held (chocolate-brown/cream otter, blue eyes, broad flat dark scaled paddle tail, clawed paws), teal sash harness with brass rivets and chest buckle, rope wraps on forearms, confident head-high quadruped stance with all four legs separated; no red.",
+  "activation": "Requires the F22#4 in-world Riverwatch capture and three code-blind judges at Bar A 7.5 (CPU-provisional 6.7); set f22_hero_model_preview true with f22_hero_model_path pointing here and f22_hero_model_length_scale 1.0"
+}
