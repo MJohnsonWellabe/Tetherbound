@@ -5,6 +5,7 @@ extends "res://tests/test_case.gd"
 ## checked. The live preview now refuses world geometry in the footprint.
 
 const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
+const RUNS_IN_INITIALIZED_TREE := true
 
 var _world: Node3D = null
 
