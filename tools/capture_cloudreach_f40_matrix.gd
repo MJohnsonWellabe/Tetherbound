@@ -15,6 +15,7 @@ const FRAMES_PER_PIECE := 4
 var _capture_config: Dictionary = {}
 var _active_weather := "clear"
 var _piece_index := -1
+var _piece_last := -1
 var _full_frame_ids: Array[String] = []
 var _full_plan_sha256 := ""
 var _save_fixture := ""
@@ -62,11 +63,15 @@ func _parse_args() -> bool:
 		return false
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--piece="):
-			var value := argument.trim_prefix("--piece=")
-			if _piece_index != -1 or not value.is_valid_int() or int(value) < 1:
-				push_error("F40 requires exactly one positive integer --piece")
+			# --piece=N or a contiguous span --piece=N-M (one world load for
+			# several pieces on a machine with the memory for it).
+			var span := argument.trim_prefix("--piece=").split("-")
+			if _piece_index != -1 or span.size() > 2 or not span[0].is_valid_int() or int(span[0]) < 1 \
+					or not span[-1].is_valid_int() or int(span[-1]) < int(span[0]):
+				push_error("F40 requires exactly one positive integer --piece or N-M span")
 				return false
-			_piece_index = int(value) - 1
+			_piece_index = int(span[0]) - 1
+			_piece_last = int(span[-1]) - 1
 	if _piece_index == -1:
 		push_error("F40 recapture requires --piece=1..N; unbounded captures are disabled")
 		return false
@@ -149,11 +154,11 @@ func _load_plan() -> bool:
 	for row: Dictionary in _planned:
 		var frame_id := str(row.frame_id)
 		_full_frame_ids.append(frame_id)
-	if _piece_index < 0 or _piece_index >= ceili(float(_planned.size()) / FRAMES_PER_PIECE):
+	if _piece_index < 0 or _piece_last >= ceili(float(_planned.size()) / FRAMES_PER_PIECE):
 		_failures.append("F40 piece is outside the full capture plan")
 		return false
 	var first := _piece_index * FRAMES_PER_PIECE
-	_planned = _planned.slice(first, mini(first + FRAMES_PER_PIECE, _planned.size()))
+	_planned = _planned.slice(first, mini((_piece_last + 1) * FRAMES_PER_PIECE, _planned.size()))
 	return true
 
 
@@ -180,6 +185,7 @@ func _begin_manifest() -> void:
 	_manifest["cliffhold_detail_config_sha256"] = FileAccess.get_file_as_string("res://data/config/cloudreach_cliffhold_detail.json").sha256_text()
 	_manifest["capture_scope"] = "partial_f40_piece"
 	_manifest["piece_number"] = _piece_index + 1
+	_manifest["piece_last"] = _piece_last + 1
 	_manifest["piece_count"] = ceili(float(_full_frame_ids.size()) / FRAMES_PER_PIECE)
 	_manifest["frames_per_piece"] = FRAMES_PER_PIECE
 	_manifest["full_planned_frame_count"] = _full_frame_ids.size()
