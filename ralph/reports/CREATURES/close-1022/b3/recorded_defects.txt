@@ -1,0 +1,8 @@
+Uj: none
+Vh: "Hit react reads as standing"; "Hit recover equals standing"
+Pn: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Rl: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ur: none
+Os: "Hit react reads as standing"; "Neither creature visibly faints"; "Dark, low-value palettes melt at small size"
+Sw: "The cub reads as nearly the same model and size as the adult, so the evolution step doesn't read"; "Hit react is a crouch and head dip with no recoil; hit recover equals standing"
+Io: "Hit react reads as standing"; "Antlers pass through the floor in the faint"; "Faint mid still reads as standing"

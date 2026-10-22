@@ -734,7 +734,7 @@ def recoil_hit(rig, frames, scale=1.0):
 
 
 
-def shove_hit(rig, frames, gain=1.0):
+def shove_hit(rig, frames, gain=1.0, hold=None):
     """Close-1020 batch-7 judges: a doubled recoil whips the head and tears the
     throat. The blow is carried by the body instead: the spine and chest rock
     back and away, the neck stays within 12 degrees, the forelegs lift and the
@@ -742,7 +742,8 @@ def shove_hit(rig, frames, gain=1.0):
     body-carried rock (spine, legs and pivot), never the neck."""
     for f in frames:
         p = f['phase']
-        e = _ease(p / .12) * (1 - _ease((p - SHOVE_RELEASE) / (SHOVE_END - SHOVE_RELEASE)))
+        release, end = hold or (SHOVE_RELEASE, SHOVE_END)
+        e = _ease(p / .12) * (1 - _ease((p - release) / (end - release)))
         b_ = gain * e
         turns = {}
         add = _adder(rig, turns)
@@ -768,6 +769,7 @@ HIT_STYLE = {s: 'recoil' for s in ('ashtusk', 'sparkit', 'cindercub', 'shadelet'
 HIT_STYLE.update({s: 'recoil' for s in ('mudsnout', 'meadowhart', 'riptusk', 'mangrove_monitor', 'voltwig', 'skyrill')})
 # Close-1020 batch 8 (fight camera): the body-carried shove beat the live hit by 0.37-0.53 on these.
 HIT_STYLE.update({s: 'shove' for s in ('terrapup', 'trailpup', 'burrowback')})
+HIT_STYLE['meadowhart'] = 'shove'  # close-1022 b3, see SHOVE_GAIN_BY
 
 # Per species, the roll the close-1020 batch-1 judges preferred (r1/r2 paired):
 # negative shows the belly, legs and face to the side-on stage camera, positive
@@ -786,6 +788,13 @@ HIT_SCALE = {}
 SHOVE_GAIN = 1.0
 # Shove hold: release starts at .35 and is back to stance by .8 (the judged clip).
 SHOVE_RELEASE, SHOVE_END = 0.35, 0.8
+# Close-1022 b3 (CPU yardstick, three judges, confirming batch): the body-carried
+# shove at gain 1.5, held to .5 and back by .97 so hit recover differs from
+# standing, mapped Meadowhart 6.28 -> 7.56 (with its resting-deer prone faint,
+# dip 2.5, antlers off the floor) and Riverdrake 6.72 -> 7.51.
+SHOVE_GAIN_BY = {'meadowhart': 1.5, 'riverdrake': 1.5}
+SHOVE_HOLD_BY = {'meadowhart': (0.5, 0.97), 'riverdrake': (0.5, 0.97)}
+LIVE_SHOVE_HIT = ('riverdrake',)
 # Close-1022 candidate (OFF until judged; enable with --candidate-1022): the hurt
 # shove above for every recoil species, and Mirejaw's faint as a side topple
 # (GPU pass 22 Oct: its belly-down prone faint reads as standing, all three judges).
@@ -836,16 +845,17 @@ PRONE_DIP = {'ashtusk': 2.0, 'burrowback': 2.0, 'mudsnout': 3.0, 'shadelet': 2.0
 # It keeps the judged side-on topple (F29#3 r8: spike 0.031, grounded).
 PRONE = ('ashtusk', 'burrowback', 'cragclaw', 'mirejaw', 'mudsnout', 'riptusk', 'shadelet', 'skyrill',
          'staticub', 'stormbrush', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
+# Close-1022 b3: Meadowhart lies down like a resting deer (its side-lie put the
+# antlers through the floor) and buckles deep enough mid-fall to read as going down.
+PRONE += ('meadowhart',)
+PRONE_DIP['meadowhart'] = 2.5
 if CANDIDATE_1022:
     PRONE = tuple(s for s in PRONE if s != 'mirejaw')
     # Meadowhart lies down like a resting deer (its side-lie put the antlers
     # through the floor). (A Fulgocobra prone hood-drop was tried and dropped
     # unjudged: its quadruped-rig coils lifted the tail off the floor mid-faint.)
-    PRONE += ('meadowhart',)
-    # b2 judges: hit recover equals standing, and Meadowhart's faint mid still
-    # reads as standing. Hold the shove longer and buckle the deer deeper mid-fall.
+    # b2 judges: hit recover equals standing. Hold the shove longer.
     SHOVE_RELEASE, SHOVE_END = 0.5, 0.97
-    PRONE_DIP['meadowhart'] = 2.5
     # F29#3 GPU judges: the bears' hit is a crouch and head dip with no recoil.
     HIT_STYLE.update({'stormursa': 'shove', 'staticub': 'shove'})
 
@@ -892,7 +902,7 @@ def _topple(name, row, prof):
     if HIT_STYLE.get(name) == 'recoil':
         recoil_hit(rig, prof['hit']['frames'], scale=HIT_SCALE.get(name, 1.0))
     elif HIT_STYLE.get(name) == 'shove':
-        shove_hit(rig, prof['hit']['frames'], gain=SHOVE_GAIN)
+        shove_hit(rig, prof['hit']['frames'], gain=SHOVE_GAIN_BY.get(name, SHOVE_GAIN), hold=SHOVE_HOLD_BY.get(name))
     else:
         flinch_hit(rig, prof['hit']['frames'])
     SOLVER.guard_stretch(skin, prof['hit']['frames'])
@@ -1087,6 +1097,10 @@ def rewrite(text):
         refine(name, row, rig, fam, prof)
         if name in TOPPLED:
             topple(name, row, prof)
+        if name in LIVE_SHOVE_HIT:
+            skin = SKIN.Skin(row['model'], row['rig_contract'], row['bones'])
+            shove_hit(rig, prof['hit']['frames'], gain=SHOVE_GAIN_BY.get(name, SHOVE_GAIN), hold=SHOVE_HOLD_BY.get(name))
+            SOLVER.guard_stretch(skin, prof['hit']['frames'])
         if 'hit' in prof:
             clamp_neck(prof['hit']['frames'])
         edited_profiles[pid] = prof

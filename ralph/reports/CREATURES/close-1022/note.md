@@ -65,3 +65,24 @@ yardstick (stage capture, Medium). Adding the CPU gains to the GPU live scores p
 Meadowhart c1 ~7.8; only a GPU batch can confirm that.
 Remaining asks: Solmane wing streaks/eye smudges; Galecrest thin spiky silhouette and tangle faint (new art);
 Voltarach hit still weak; faint mid should visibly start to go down; creature faces (new art).
+
+## Batch b3 (22 Oct ~18:00 CT): Meadowhart 7.56 and Riverdrake 7.51 mapped (CPU), both ON
+
+c4 = `--candidate-1022` plus the longer shove hold (release .5, back by .97) and Meadowhart prone dip 2.5;
+Voltarach hit doubled. Base = live recipes (Stormursa 4.10 m). Anchors: f36_0_npc:C1, p2_094_r4, craft, f36_0_gap:C7.
+Fit: linear, slope 1.323, intercept -1.750, r 0.948, RMSE 0.431, top anchor 7.53. Meadowhart passes only above the
+top anchor, but this batch's anchors reach 7.35 or more, so it is the confirming batch. Files `b3/`.
+
+| Set | Base raw | c4 raw | Base mapped | **c4 mapped** |
+|---|---|---|---|---|
+| Meadowhart (shove + resting-deer prone faint) | 6.4/5.8/6.0 | 7.2/6.9/7.0 | 6.28 | **7.56** (above top anchor, confirming) |
+| Riverdrake (shove hit, held) | 6.6/6.4/6.2 | 7.2/7.0/6.8 | 6.72 | **7.51** |
+| Mirejaw + Voltarach (pose + lift) | 5.2/4.6/4.4 | 6.3/5.8/6.1 | 4.51 | 6.28 |
+| F29#3 (Stormursa 5.00 m + held shove) | 6.2/5.9/5.6 | 6.7/6.4/6.0 | 6.06 | 6.67 |
+
+Meadowhart and Riverdrake are now live on tb/creatures (`SHOVE_GAIN_BY`, `SHOVE_HOLD_BY`, `LIVE_SHOVE_HIT`,
+Meadowhart `PRONE` dip 2.5). The regenerated profiles are byte-identical to the judged c4 ones, and every other
+profile is unchanged.
+Remaining: the Meadowhart faint end overlaps the stage ruler (staging only; the ruler stands beside the
+creature). Mirejaw/Voltarach c2 palettes now read blown-out white and yellow; tone them down. The F29#3 cub is
+the same model as the adult (new art).
