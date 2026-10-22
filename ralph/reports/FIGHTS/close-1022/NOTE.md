@@ -43,6 +43,33 @@
 
 - 2026-10-22 17:30 CT QUESTION Combat HUD band: every fight judge since T1 says the bottom band (Tether Command meter + creature card + move list) covers about a third of the frame, where the pilot and trainer stand. The GPU findings handed to Fights include it, but the band is the shared CombatHUD writer (`scripts/ui/tether_command_meter.gd`, `system_screen.json` combat.command_width, `tether_commands.json` ui), which carries F42#2 UI judge history. May Fights make a compact fight variant (narrower and shorter command lane, smaller type, lower panel alpha), OFF until a Fights round passes and then re-judged with the F42#2 set? Or will the UI lane take it? Until you answer I won't touch HUD files, and I'm keeping the camera-side fix (`screen_tilt_deg`, OFF; it cropped heads at 6 degrees).
 
+- 2026-10-22 23:55 CT FINAL READY tb/fights-final 4c15c0c85 (built from origin/main a4f8a6b7b; merges the reviewed tb/fights-land scope fix plus tb/fights). #712 was not on main when this was built, so there was no vegetation.gd conflict yet; on merge, keep both (`fight_sight_allows` + #712's change).
+  - **ON (judged above shipping; none closes 7.5):**
+    - Riverwatch r13 (captain Brooktail 2.9x hero model, water tells #4aa9c7 + droplet strikes, 14 m camera cap, Meadows sight-line fade for that fight only, river dressing). CPU mapped 7.03 vs 5.81, CPU-provisional. GPU: Low 6.71 vs 5.11, Medium 5.85 vs 4.83 (the Medium ghost was the boss aura; it is now renderer-aware, a GPU re-judge is pending). C2 PASS on this head (player_hits 5, stand 3, dodges 3/4).
+    - Stormwood named tells T2 (violet #b48cff tells with crackle, arc impact burst, depth-tested pull per row via new `cue_depth_pull_m`). Mapped Tanglevolt 5.29 and Voltarach 5.29 vs shipping 4.65. F21#5: 3/3 judges prefer the after side.
+  - **OFF, included:**
+    - Hooks: `cue_contact_burst` (landed-charge dust, debris and camera kick), `screen_tilt_deg`, renderer-aware aura (live wherever an aura row is ON, i.e. Riverwatch).
+    - Stormwood T3/T4 (5.82/6.13, 5.77/5.73): they need a global `pilot_min_screen_fraction` 0.11, which would change the judged Riverwatch fight. Not shipped.
+    - Halder h7 (6.33 vs 5.27, beat shipping): its recipe edits the shared `charger_double_rush` row (also Vance and the Warden), puts a side-view key in the combat profile (breaks test_named_fight_profiles) and sets the global depth pull. It needs a Halder-only row split plus a judged=shipped capture, so it is held OFF and the data is not in this branch. Recipe: `cand_h7.py.txt` on tb/fights.
+    - Halder h8-h10 and Vance v3-v5 were unjudged. Vance v2 5.11 was below its control 5.62 and rejected.
+  - **Tests on this head, 0 failed:** enemy_pattern_telegraph (6), named_fight (20), fight_camera (7), combat_arena (4), combat_manager (3), f22_riverwatch_presentation (3), f22_meadows_sight_scope (3), foliage_camera_visibility (3), foliage_fight_fade (9), trainer_aftermath (16), creature_scale_ladder (2), input_glyph_verbs (14), lunge_lane (4), telegraph (17), stormwood (90 files, 475 tests).
+  - **Size:** only config-referenced binaries ship. The raw meshy-1020/brooktail_captain duplicate and all concept PNGs were dropped (provenance JSON kept). Evidence keeps verdict .md, key/batch/calibrate JSON, the C2 receipt and one sheet per round; the capture-recipe overlays stay on tb/fights.
+
+## RESUME
+- Branches: tb/fights-final (landing candidate), tb/fights (working branch with every `cand_*.py.txt` recipe), tb/fights-land (superseded by final).
+- Open F22#4 rows, all below 7.5:
+  - Riverwatch 7.03 CPU-provisional, GPU Medium re-judge pending after the aura fix.
+  - Stormwood named 5.29-6.13, limited by the Stormwood grade.
+  - Halder 6.33 (parked).
+  - Vance 5.62 control best.
+  - Not started: Vess, Dell, Warden, Nerissa, Veyra and the Stormwood finale.
+- Known defects to pick up:
+  1. Grown named chargers whiff on standing targets. The opening lane charges stop on an obstacle about 1 m in (debug: by=obstacle, gap 8.8 m), and a longer lunge breaks dodging (C2 dodges 0-1/4). Every capture with a per-trainer camera cap also missed its opening strikes more often; unexplained.
+  2. The combat HUD band covers the bottom third (ownership question above).
+  3. The contact burst is unjudged, and it is host/solo only.
+  4. The scorch material should route through material_variant_pin once tb/vfx-launch lands.
+- Next step if resumed: split Halder's rows (halder_double_rush), turn h7 ON with a judged=shipped capture and C2. Then judge the contact burst on a fight whose opening charges land (Riverwatch control hits every strike).
+
 ## Rounds
 | Round | Item | Mapped control | Mapped candidate | Note |
 |---|---|---|---|---|
@@ -57,3 +84,4 @@
 | RW r11-13 | tilt / boss 2.9x / no tilt | 5.81 | 7.00 / 6.97 / **7.03** | parked on CPU at 7.03 (2nd round < 0.5) |
 | Halder h4 | earth strike, amber crackle lane | 5.89 | 5.98 | 3rd round < 0.5; new approach next |
 | r8 | Halder h7 / Vance v2 | 5.27 / 5.62 | 6.33 / 5.11 | `F22-4-R8.md`; Halder parked (2 rounds <0.5); v2 rejected |
+| final | ON: Riverwatch r13, Stormwood T2 | 5.81 / 4.65 | 7.03 / 5.29 | tb/fights-final 4c15c0c85 |
