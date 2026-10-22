@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://brebe6dd0fs3y"
-path="res://.godot/imported/relay_gatehouse_arch_normal.png-04260cebe647a9d173c66c1c3cc224fb.ctex"
+path.s3tc="res://.godot/imported/relay_gatehouse_arch_normal.png-04260cebe647a9d173c66c1c3cc224fb.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "3b6f96914b74677b5a12b8db5feb6f44"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1022/relay_gatehouse_arch/relay_gatehouse_arch_normal.png"
-dest_files=["res://.godot/imported/relay_gatehouse_arch_normal.png-04260cebe647a9d173c66c1c3cc224fb.ctex"]
+dest_files=["res://.godot/imported/relay_gatehouse_arch_normal.png-04260cebe647a9d173c66c1c3cc224fb.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0
