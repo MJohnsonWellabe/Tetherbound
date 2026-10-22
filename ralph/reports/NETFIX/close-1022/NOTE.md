@@ -58,10 +58,9 @@ Lane branch `tb/netfix`, built from `origin/main` at 9c97caa68.
   fail instead. Robust options, none taken yet:
   (a) give peer 0 a second owned creature before the fight and tag-switch to it through the production path when its
       first is low;
-  (b) cap the opening creature's HP (enemy_hp_ceiling) before the blow phases. That still proves "both peers reduce
-      the same host number", but the 231-hp authored-hp_max checks must stay before it;
-  (c) a wire step for the disclosed f48_actor_topup aid. That is new harness work, so it needs your call.
-  My recommendation is (b). Say if you want it.
+  (b) a wire step for the disclosed f48_actor_topup aid. That is new harness work, so it needs your call.
+  (Capping the boss's HP does NOT help here: a blow phase ends at the first landed blow whatever the boss's HP, so the
+  exposure is set by how many swings it takes to land, not by HP.) My recommendation is (a). Say if you want it.
 
 ## #2 f48 guest feast feed
 
