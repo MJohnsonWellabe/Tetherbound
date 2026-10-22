@@ -318,7 +318,12 @@
     "height_max_m": 70.0,
     "rim_drop_m": 1.5,
     "outset_m": 2.0,
-    "_r3": "r3: every second side so no cylinder wall stays in view; items rock tint paler toward the board's pale stratified stone."
+    "_r3": "r3: every second side so no cylinder wall stays in view; items rock tint paler toward the board's pale stratified stone.",
+    "height_jitter_min": 0.6,
+    "height_jitter_max": 1.25,
+    "width_jitter_min": 0.8,
+    "width_jitter_max": 1.4,
+    "_r4": "r4: per-side height (0.6-1.25x) and width (0.8-1.4x) variety, tops kept below the rim, so the stacks stop repeating."
   },
   "stand_pattern": [
     {

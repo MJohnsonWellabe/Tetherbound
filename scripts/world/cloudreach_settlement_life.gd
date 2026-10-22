@@ -118,8 +118,13 @@ static func ledge_buttresses(root: Node3D, top_ring: Array, size: Vector3, seed_
 		root.add_child(holder)
 		var rock := packed.instantiate() as Node3D
 		var source: AABB = BOUNDS.measure(rock)
-		var factor := height / maxf(source.size.y, 0.01)
-		rock.scale = Vector3.ONE * factor
+		# Per-side variety so the stacks stop reading as one repeated drum.
+		var jitter := float(posmod(seed_value * 131 + i * 977, 1000)) / 999.0
+		var varied := height * lerpf(float(cfg.get("height_jitter_min", 1.0)), float(cfg.get("height_jitter_max", 1.0)), jitter)
+		holder.position.y += height - varied
+		var factor := varied / maxf(source.size.y, 0.01)
+		var spread := lerpf(float(cfg.get("width_jitter_min", 1.0)), float(cfg.get("width_jitter_max", 1.0)), 1.0 - jitter)
+		rock.scale = Vector3(factor * spread, factor, factor * spread)
 		rock.position = -Vector3(source.get_center().x, source.position.y, source.get_center().z) * factor
 		holder.add_child(rock)
 		tint_rock(rock)
