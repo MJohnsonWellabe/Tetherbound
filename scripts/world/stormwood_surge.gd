@@ -1452,8 +1452,11 @@ func _advance_bolt_exposure(flash_cfg: Dictionary) -> void:
 	if _bolt_exposure_base < 0.0 or not is_equal_approx(env.tonemap_exposure, _bolt_exposure_written):
 		_bolt_exposure_base = env.tonemap_exposure
 	var scale := float(flash_cfg.get("reduced_motion_scale", 0.15)) if MOTION_PREFS.reduced_motion() else 1.0
-	_bolt_exposure_written = _bolt_exposure_base * (1.0 + bolt_level() * lift * scale)
-	env.tonemap_exposure = _bolt_exposure_written
+	var target := _bolt_exposure_base * (1.0 + bolt_level() * lift * scale)
+	# Write only on change: an Environment write every frame is not free.
+	if not is_equal_approx(target, env.tonemap_exposure):
+		env.tonemap_exposure = target
+	_bolt_exposure_written = target
 
 func bolt_level() -> float:
 	var top := 0.0
