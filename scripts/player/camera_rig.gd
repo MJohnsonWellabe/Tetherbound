@@ -15,6 +15,12 @@ extends SpringArm3D
 const CONFIG_PATH := "res://data/config/movement.json"
 ## Visual enclosure surfaces that must stop a lens but not change traversal.
 const OCCLUSION_ONLY_LAYER := 1 << 31
+## Bodies the arm sweeps straight through: big creatures that fade while the
+## lens is inside them (creature_body.gd's camera fade) rather than letting the
+## arm stop on their flank and drop the lens into the trainer's head. Members
+## manage their own membership; the rig re-applies it every physics tick,
+## because target changes and conversations rebuild the exclusion list.
+const PASS_THROUGH_GROUP := &"camera_arm_pass_through"
 
 ## The conversation push-in (D73 §6 / CL-G10). It resolves who is being talked
 ## to and solves the framing; the blend, the arm and the occlusion probe stay
@@ -520,6 +526,7 @@ func _process(delta: float) -> void:
 ## and `interaction_arbiter.gd` recomputes there, so the shot now ticks on the
 ## same clock as the box it exists for.
 func _physics_process(delta: float) -> void:
+	_sync_pass_through()
 	if not (_talk_active or _talk_leaving):
 		# The follow runs on the idle tick, which can lag several physics
 		# ticks under load; catch a teleport on the first physics tick so the
@@ -530,6 +537,25 @@ func _physics_process(delta: float) -> void:
 		_target = null
 		return
 	_conversation_follow(delta)
+
+
+var _pass_through: Array[RID] = []
+
+
+func _sync_pass_through() -> void:
+	var current: Array[RID] = []
+	for node: Node in get_tree().get_nodes_in_group(PASS_THROUGH_GROUP):
+		if node is CollisionObject3D:
+			current.append((node as CollisionObject3D).get_rid())
+	var keep: Array[RID] = _talk_excluded.duplicate()
+	if _target is CollisionObject3D:
+		keep.append((_target as CollisionObject3D).get_rid())
+	for rid: RID in _pass_through:
+		if not current.has(rid) and not keep.has(rid):
+			remove_excluded_object(rid)
+	for rid: RID in current:
+		add_excluded_object(rid)
+	_pass_through = current
 
 
 func _snap_if_teleported() -> void:
@@ -1138,6 +1164,9 @@ func _free_distance_behind(pivot: Vector3, dir: Vector3, limit: float,
 		var target_rid := (_target as CollisionObject3D).get_rid()
 		if not excluded.has(target_rid):
 			excluded.append(target_rid)
+	for rid: RID in _pass_through:
+		if not excluded.has(rid):
+			excluded.append(rid)
 	query.exclude = excluded
 	var travel: Array = space.cast_motion(query)
 	if travel.size() < 1:

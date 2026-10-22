@@ -107,6 +107,14 @@ func is_encounter_host() -> bool:
 func phase_definition() -> Dictionary:
 	return authority.phase()
 
+## Whether this peer's camera arm may sweep through Aquaryn (camera_rig
+## PASS_THROUGH_GROUP). Local state only: a guest never holds the authority
+## record, and catching/resolving still count as this peer's fight, which
+## `_local_fight` covers from enrolment until the local fight exits. Any other
+## local fight also keeps the arm solid.
+func camera_passes_through() -> bool:
+	return not _local_fight and not (is_instance_valid(_manager) and _manager.is_fighting())
+
 func is_fight_active() -> bool:
 	return str(authority.record().get("phase", "")) == "active"
 

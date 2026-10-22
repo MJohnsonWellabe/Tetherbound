@@ -5,6 +5,7 @@ extends SceneTree
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const CATALOG := preload("res://scripts/creatures/water_species_catalog.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
+const RIG := preload("res://scripts/player/camera_rig.gd")
 var checks := 0
 var failures := 0
 
@@ -53,8 +54,13 @@ func _run() -> void:
 	if not check(director.summon_active_creature(), "Normal summon deploys owned Mosshell"):
 		_finish()
 		return
+	for frame in 3:
+		await physics_frame
+	check(_camera_passes(alpha.body), "Before engage the camera arm passes through Aquaryn and it fades with the lens inside")
 	var before: Vector3 = alpha.body.global_position
 	alpha.request_engage()
+	await physics_frame
+	check(not _camera_solid_violation(alpha.body), "From engage the camera arm stops on Aquaryn and it never fades")
 	check(manager.is_fighting() and manager.encounter_id() == alpha.authority.encounter_id, "Normal local combat binds to host Alpha encounter")
 	check(alpha.body.global_position.distance_to(before) < 0.01, "Combat entry preserves shared enemy position")
 	check(alpha.body.arena == null, "Shared Alpha is not confined to a local arena")
@@ -69,7 +75,12 @@ func _run() -> void:
 	# injection: the manager windup, host geometry and damage roll must execute.
 	var deadline_fight := Time.get_ticks_msec() + 90000
 	var tick := 0
+	var phases_seen := {}
+	var passed_in_fight := []
 	while manager.is_fighting() and Time.get_ticks_msec() < deadline_fight:
+		phases_seen[str(alpha.authority.record().get("phase", ""))] = true
+		if _camera_solid_violation(alpha.body):
+			passed_in_fight.append(str(alpha.authority.record().get("phase", "")))
 		var deployed: Node3D = director.get("_ally_body")
 		if deployed != null:
 			deployed.face_towards(alpha.body.global_position)
@@ -81,6 +92,11 @@ func _run() -> void:
 		await physics_frame
 	Input.action_release("combat_quick")
 	check(not manager.is_fighting(), "Real fight reaches an exit within bounded time")
+	check(passed_in_fight.is_empty() and phases_seen.has("active") and phases_seen.has("resolving"),
+		"Through ACTIVE and RESOLVING the camera arm stays solid on Aquaryn (phases %s, passed in %s)" % [phases_seen.keys(), passed_in_fight])
+	for frame in 3:
+		await physics_frame
+	check(_camera_passes(alpha.body), "After the local fight exits the camera arm passes through Aquaryn again")
 	check(str(alpha.authority.resolution.get("outcome", "")) == "defeated", "Normal attack input defeats actual Alpha")
 	check(game.world.flags.has("water_aquaryn_resolved"), "Defeat is journaled as world progression")
 	check(game.local.flags.has("water_swim_stone_earned"), "Eligible character receives Swim Stone unlock")
@@ -155,6 +171,12 @@ func _complete_saddle_chain(game: Node, world: Node3D, director: Node, player: N
 	check(riding.is_mounted() and riding.mount_body() == director.ally_body() and director.ally_instance() == ally, "Mounted body remains the same owned companion from the Alpha fight")
 	check(game.local.party.members().size() == 1, "The reward chain never adds a hidden creature slot")
 	print("Alpha-to-saddle evidence: dialogue=water_iona_recipe camp=tidal_cradle materials=8reed/6drift/4reef mount=", riding.mount_body().species_id)
+
+func _camera_passes(body: Node) -> bool:
+	return body.is_in_group(RIG.PASS_THROUGH_GROUP) and bool(body.get("fades_when_camera_inside"))
+
+func _camera_solid_violation(body: Node) -> bool:
+	return body.is_in_group(RIG.PASS_THROUGH_GROUP) or bool(body.get("fades_when_camera_inside"))
 
 func _frames(count: int) -> void:
 	for frame in count:
