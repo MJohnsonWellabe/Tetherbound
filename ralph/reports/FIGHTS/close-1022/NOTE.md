@@ -9,6 +9,8 @@
 
 - 2026-10-22 10:15 CT INFO Batch r3 (`F22-4-T3.md`): Riverwatch r9 (rigged Meshy captain at 2.3x, water cues, river dressing, 14 m cap, Meadows fade) mapped **7.09** vs control 5.56. That's at least 6.7 CPU-provisional but above_top_anchor (top 7.03); a confirming batch with --include f36_0_npc:C1 is running next. Stormwood T3 5.82 / 6.13; F21#5 T3 6.17 vs main 4.79 (3/3 prefer after).
 
+- 2026-10-22 10:40 CT INFO Riverwatch r9 confirming batch (C1 included, r 0.93, RMSE 0.45): mapped **6.62** (control 4.83). The r3 7.09 was extrapolation and does not confirm. Next: r10 (thinner spray/fan sheets, droplet water burst).
+
 ## Rounds
 | Round | Item | Mapped control | Mapped candidate | Note |
 |---|---|---|---|---|
@@ -16,5 +18,5 @@
 | T2 | + storm crackle + arc impact | 4.65 / 4.65 | 5.29 / 5.29 | `F22-4-T2.md`; vs T1 best +0.32/-0.08 (1st round <0.5) |
 | F21#5 | hits weighty/readable, main vs T2 | 4.83 | 5.43 | 3/3 prefer after |
 | T3 | + electric strike style, bluer tells, pilot floor 0.11 | 4.87 / 4.75 | 5.82 / 6.13 | `F22-4-T3.md`; gain >= 0.5 |
-| RW r9 | Riverwatch captain (r9 data) | 5.56 | 7.09 (above top anchor) | confirm pending |
+| RW r9 | Riverwatch captain (r9 data) | 5.56 / 4.83 | 7.09 extrapolated / **6.62 confirmed** | confirm batch with C1 |
 | F21#5 | main vs T3 | 4.79 | 6.17 | 3/3 prefer after |
