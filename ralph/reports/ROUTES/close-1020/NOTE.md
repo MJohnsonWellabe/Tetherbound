@@ -2,7 +2,7 @@
 
 ## TO COORDINATOR
 - 2026-10-22 13:40Z READY tb/routes 58b29d287 Game fixes with tests: Master/Kitchen/feed chooser names companions (599214425), chains controller focus past the visible list (bc4683e4a), closes on controller B / menu_cancel (049dde025); Meadows pieces may start from an earlier commit's accepted save, `--pinned-start` (66f0d48d6). Piece set passed: Tidewake T3 loop 05i → training_t3_return (seams/ manifests, 1 reviewed difference).
-- 2026-10-22 13:40Z Unproven (Routes): Meadows training_t1_master (pinned run m12 on 58b29d287 in progress; Orin travel and chest-return fixes 5e27262e2, 58b29d287), training_t1_kitchen, training_t1_feed, training_t2_earn, t2_altar_1..5, t2_master, t2_kitchen, t2_feed, t2_return, warrens, relay, sigils, hall, warden, tidewake_handoff; Tidewake story pieces 01_opening..05d and 06_swimmer..09_cloudreach_handoff (not run by Routes). Passed: Meadows opening_village → training_t1_altar_5 (0105fc978).
+- 2026-10-22 18:00Z Meadows tier 1 complete: training_t1_master, training_t1_kitchen, training_t1_feed PASS as pinned pieces (real master_t1 win and a Kitchen feast cooked and fed; seams MATCH). Unproven (Routes): training_t2_earn, t2_altar_1..5, t2_master, t2_kitchen, t2_feed, t2_return, warrens, relay, sigils, hall, warden, tidewake_handoff; Tidewake story pieces 01_opening..05d and 06_swimmer..09_cloudreach_handoff (not run by Routes). Passed: Meadows opening_village → training_t1_altar_5 (0105fc978).
 - 2026-10-22 13:55Z READY tb/routes c4bb2e1fd Merged tb/routes-b (incl. its f49_portal_travel rename) and restored f20_portal_travel's LESSON_PANEL; every chain runner (earned, tidewake, cloudreach, stormwood) compiles. Land routes and routes-b together at this head or later.
 - 2026-10-22 14:00Z READY tb/routes b7ae385ff Also merges tb/routes-b head 7627675ce (Stormwood pilot swings only within reach, `swing_now`, test_stormwood_pilot_reach.gd per Routes-B: 2 tests pass). Conflict-free merge; adds only those two files over c4bb2e1fd.
 - 2026-10-22 16:00Z READY tb/routes 02fccb2ad Merges tb/routes-b e8cff1d5d (stormwood_chain_runner `_handoff_check` reads items from `inventory` or else `items`; per Routes-B, rowan_visit and rowan_chest pass from training_t5_return). Conflict-free; one file over cc5aad073 (in PR #709).
@@ -115,7 +115,8 @@ Owner (22 Oct, via coordinator): "We shouldn't be doing full route in one go. It
 | training_t1_earn | bridge end | home, levels to cap 10 funded | 0105fc978 | PASS (76 wins) |
 | training_t1_altar_1..5 | previous end | home, all five L10/cap 10 | 0105fc978 | PASS |
 | training_t1_master | altar_5 end (pinned, 0105fc978) | Orin beaten in one round, feast_t1 learned at the chest (storage trip home and back by the bridge/quarry route) | 58b29d287 | PASS (9264 s) |
-| training_t1_kitchen, training_t1_feed | master end | home, feast cooked and fed | – | unproven |
+| training_t1_kitchen | master end (pinned, 58b29d287) | Kitchen, Forge, kitchen_meadows built | ea0892a06 | PASS (489 s) |
+| training_t1_feed | kitchen end (pinned) | five feast_t1_ground cooked (exact bills), five companions fed (stay), all breakthroughs [1] | d64cd9ec1 | PASS (227 s) |
 | training_t2_earn, t2_altar_1..5, t2_master, t2_kitchen, t2_feed, t2_return | t1 feed end | – | – | unproven |
 | warrens, relay, sigils, hall, warden, tidewake_handoff | t2_return end (trained order) | – | – | unproven by this lane |
 | Tidewake 01_opening … 05d, 06_swimmer … 09_cloudreach_handoff | Tidewake handoff / chapter saves | – | – | not run by this lane |
@@ -136,6 +137,8 @@ Placeholder note: 049dde025 and 93cd0ac29 ran before the asset re-import (creatu
 | 05k_ione_chest → training_t3_preparehome | `seams/05k_ione_chest__training_t3_preparehome.json` | reviewed difference: player position (same save; Load seats the trainer 17 m away; the piece leaves by Home Key) |
 | training_t3_preparehome → … → training_t3_return (9 seams) | `seams/…` | MATCH |
 | training_t1_altar_5 → training_t1_master | `seams/training_t1_altar_5__training_t1_master.json` | MATCH (pinned start 0105fc978 → 58b29d287) |
+| training_t1_master → training_t1_kitchen | `seams/training_t1_master__training_t1_kitchen.json` | MATCH (58b29d287 → ea0892a06) |
+| training_t1_kitchen → training_t1_feed | `seams/training_t1_kitchen__training_t1_feed.json` | MATCH (ea0892a06 → d64cd9ec1) |
 
 ## F47#0 option block (moved from data/config/essence.json)
 Not read by any code. Applying an option means copying its numbers into the live keys (auto_xp_scale, level_cost_bands[].multiplier, masters.json masters[].attuned_per_creature).
