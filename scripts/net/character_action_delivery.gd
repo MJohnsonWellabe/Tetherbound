@@ -32,7 +32,7 @@ static func valid(raw: Variant, schema_check: Callable,
 	var proposal := ACTIONS.stage(raw.before, int(raw.character_revision) - 1,
 		raw.action, raw.intent, raw.host_context, schema_check)
 	if raw.action == "master_chest" and (proposal.get("ok") != true \
-			or not ESSENCE._equivalent(proposal.get("state"), raw.after)):
+			or not same_after(proposal.get("state"), raw.after)):
 		# Pre-supplies saves retain their exact candy/recipe-only decision. This
 		# read-only replay still runs every source, identity and schema check;
 		# it cannot retrofit supplies, alter a receipt or commit an inventory.
@@ -51,9 +51,45 @@ static func valid(raw: Variant, schema_check: Callable,
 			proposal = ACTIONS.stage(raw.before, int(raw.character_revision) - 1,
 				raw.action, raw.intent, raw.host_context, schema_check, false, true)
 	return proposal.get("ok") == true and proposal.receipt == raw.receipt \
-		and ESSENCE._equivalent(proposal.state, raw.after) \
+		and same_after(proposal.state, raw.after) \
 		and not raw.before.redesign_character.transaction_receipts.has(raw.receipt) \
 		and raw.after.redesign_character.transaction_receipts.has(raw.receipt)
+
+
+## A replay must reach the saved `after` exactly, except for how the Satchel's
+## stacks are laid out: stack capacity is item data, never saved, so a later
+## capacity change (bulk materials 50 -> 200) re-stacks the same credit into
+## fewer slots. The saved slots must pass the slot schema, every item total
+## and all other stack fields must match, and the rest of the record is
+## compared unchanged. Without this an accepted Master chest
+## row from an earlier build refused its whole world on Load.
+static func same_after(staged: Variant, saved: Variant) -> bool:
+	if ESSENCE._equivalent(staged, saved): return true
+	if not staged is Dictionary or not saved is Dictionary \
+			or not staged.get("inventory") is Array or not saved.get("inventory") is Array: return false
+	var staged_rest: Dictionary = staged.duplicate()
+	var saved_rest: Dictionary = saved.duplicate()
+	staged_rest.erase("inventory")
+	saved_rest.erase("inventory")
+	# The saved layout is never re-staged, so it gets the full slot schema check
+	# (positive integer counts within capacity, no unknown values) itself.
+	return ESSENCE._equivalent(staged_rest, saved_rest) \
+		and (staged.inventory as Array).size() == (saved.inventory as Array).size() \
+		and preload("res://scripts/world/death_satchel_rules.gd").valid_slots(saved.inventory) \
+		and _item_totals(staged.inventory) == _item_totals(saved.inventory)
+
+
+static func _item_totals(slots: Array) -> Dictionary:
+	var totals := {}
+	for stack: Variant in slots:
+		if stack == null: continue
+		if not stack is Dictionary or not stack.get("id") is String: return {"invalid": true}
+		# Every field but the count is identity (id, durability, any extra key).
+		var rest: Dictionary = stack.duplicate()
+		rest.erase("n")
+		var key := JSON.stringify(rest, "", true)
+		totals[key] = int(totals.get(key, 0)) + int(stack.get("n", 0))
+	return totals
 
 
 static func make_record(world: String, world_namespace: String, epoch: String,

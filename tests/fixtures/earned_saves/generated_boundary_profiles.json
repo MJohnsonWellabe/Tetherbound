@@ -2097,6 +2097,68 @@
       },
       "world_portal_unlocks": [],
       "disclosure": "F44#1 endgame rematch witness input (Meadows): the f44_meadows profile plus this character's regional_credits_seen personal flag and the five raised to L58, level with the L58 endgame band (post-credits profiles may reach the Masters' cap ceiling). An L55 team lost this five-creature fight twice (14,607 and 17,792 frames); that balance finding is recorded in the F44#1 evidence. Generated setup only: no ending, credits, rematch receipt, cooldown or payout transaction is fabricated."
+    },
+    "tidewake_late_independent": {
+      "boundary": "tidewake_settled",
+      "realm": "water",
+      "day": 12,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "ground_xz": [
+          713.927,
+          1549.915
+        ]
+      },
+      "party_levels": [
+        31,
+        31,
+        31,
+        31,
+        31
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "realm_heart_meadows_earned",
+        "water_swim_lesson_complete",
+        "water_dock_reedhaven_repaired",
+        "defeated_water_trainer_irva",
+        "defeated_water_trainer_solm",
+        "defeated_water_trainer_tovin",
+        "water_dock_brine_steps_trial_won",
+        "water_shellwatch_residents_freed",
+        "water_shellwatch_pump_disabled",
+        "water_dock_shellwatch_residents_freed_and_pump_disabled",
+        "water_aquaryn_resolved"
+      ],
+      "personal_flags": [
+        "water_chapter_started",
+        "water_swim_lesson_briefed",
+        "water_cordage_recipe_gated"
+      ],
+      "inventory_add": {},
+      "character_fields": {
+        "portal_unlocks": [
+          "tidewake"
+        ],
+        "relics_held": [],
+        "relics_hung": [
+          "meadows"
+        ],
+        "master_wins": [
+          "master_t1",
+          "master_t2",
+          "master_t3"
+        ],
+        "feast_recipes": [
+          "feast_t1",
+          "feast_t2",
+          "feast_t3"
+        ]
+      },
+      "world_portal_unlocks": [
+        "tidewake"
+      ],
+      "disclosure": "Independent F49 Tidewake late-route boundary (07a_salt_bex onward). The Tidal departure pose (713.9,1549.9) and the Tidewake world flags through 05_tidal (Aquaryn resolved; Irva, Solm and Tovin defeated; Brine trial won; Shellwatch residents freed and pump disabled), five template creatures at generated L31 with breakthrough tiers from their level (the state after the Tidewake T3 Master, Altar and feast loop), prior T1-T3 Master wins and recipes and Meadows relic/portal progress are generated setup, not earned play or transactions. The late captains (Nerissa L32-33) are fought at the post-T3 level the chapter expects; the old L20 fixtures predate the level curve. The character's attachment_recipes carry exactly the tier blueprints the declared hung relics grant (the real relic_hang transaction's next_tier_blueprints), so tier-2+ station attachments can be placed."
     }
   }
 }
