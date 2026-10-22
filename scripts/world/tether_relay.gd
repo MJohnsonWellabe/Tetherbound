@@ -409,6 +409,17 @@ func _gate_stone_material() -> ShaderMaterial:
 	return material
 
 
+## The installed arch kit's inset blocks (its second surface). F04#6 r23
+## judges read the oxblood Tether paint there as "purple placeholder slabs";
+## `gate.presentation.inset_finish` = "stone" sets them as darker recessed
+## masonry instead (the `fascia` support variant). Default keeps the paint.
+func _arch_inset_material() -> Material:
+	var presentation := (_config.get("gate", {}) as Dictionary).get("presentation", {}) as Dictionary
+	if str(presentation.get("inset_finish", "tether")) == "stone":
+		return _support_stone_material("fascia")
+	return _works.call("_tether_material")
+
+
 ## The gate can share one masonry response, but the deck, fascia, legs,
 ## undercroft and console are distinct structural layers at close range. A
 ## role variant keeps the same installed textures and shader while changing
@@ -746,7 +757,7 @@ func _build_gate_presentation(holder: Node3D, gate: Dictionary, centre: Vector2,
 	arch.position = Vector3(-bounds.get_center().x * scale.x,
 		-bounds.position.y * scale.y, -bounds.get_center().z * scale.z)
 	arch.set_surface_override_material(0, _gate_stone_material())
-	arch.set_surface_override_material(1, _works.call("_tether_material"))
+	arch.set_surface_override_material(1, _arch_inset_material())
 	root.add_child(arch)
 	# F04#1 (Vance render 5e8c3de3, --lens-probe): the fitted arch is wider and
 	# deeper than the jamb/lintel colliders it dresses, and the fight camera
@@ -1026,7 +1037,7 @@ func _build_deck_massing() -> void:
 			-bounds.position.y * scale.y, -bounds.get_center().z * scale.z)
 		arch.set_surface_override_material(0, _support_stone_material("arch"))
 		if arch_mesh.get_surface_count() > 1:
-			arch.set_surface_override_material(1, _works.call("_tether_material"))
+			arch.set_surface_override_material(1, _arch_inset_material())
 		root.add_child(arch)
 
 
