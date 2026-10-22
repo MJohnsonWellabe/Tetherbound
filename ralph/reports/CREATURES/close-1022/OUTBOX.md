@@ -109,3 +109,4 @@ REDRAFT voltarach (top/front three-quarter, three views): Stormwood thunder spid
 - 23 Oct 01:40 CT READY tb/creatures-land2 c62d3eb10: Galecrest/Fulgocobra/Voltarach remakes only (b8). Details in note.md TO COORDINATOR.
 - 23 Oct 03:10 CT CORRECTION: hold land2 c62d3eb10. b9's clean fit maps the shipped remakes at 5.56-5.81, not 6.7+. Galecrest, Fulgocobra and Voltarach are parked on scene work; MESHY redraft asks are in note.md.
 - 23 Oct 03:50 CT done: texture import policy fixed on tb/creatures, land2 132319491 and land bf1be820e (tests 0 failed). The land2 HOLD still stands.
+- 23 Oct 04:40 CT WITHDRAWN land2 and the remake land commits; READY tb/creatures-land ce8798be2 (shinies only). See note.md.
