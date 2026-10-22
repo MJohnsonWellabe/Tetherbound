@@ -2,7 +2,7 @@
 
 ## TO COORDINATOR
 
-- 2026-10-22 19:10 CT TO COORDINATOR: FINAL READY tb/tidewake-final 5f937c78 This is origin/main a4f8a6b7 plus tb/tidewake plus tb/tidewake-land2.
+- 2026-10-22 19:10 CT TO COORDINATOR: FINAL READY tb/tidewake-final 5f937c78. This is origin/main a4f8a6b7 plus tb/tidewake plus tb/tidewake-land2.
   - **ON by coordinator decision for the 22 Oct wind-down** (`tidewake_look.json` `enabled:true`, exactly the state judged in calibrated batch 2; mapped CPU Bar A vs shipping, all below the bar):
     - F13#5 dock 6.77 (control 3.97); b1 6.74 vs 5.06.
     - P2-011 named destinations 6.13 / 6.23 (control 3.03 / 2.88); best 6.28 (b1).
