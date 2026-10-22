@@ -1,0 +1,12 @@
+{"sets": {
+"Yr": {"A": {"bar_a": 6.5}, "B": {"bar_a": 6.5}},
+"Gl": {"A": {"bar_a": 3.0, "occl": "PARTIAL"}, "B": {"bar_a": 2.5, "occl": "PRESENT"}},
+"Xk": {"A": {"bar_a": 4.0, "occl": "FIXED"}, "B": {"bar_a": 3.2, "occl": "PRESENT"}},
+"Gc": {"A": {"bar_a": 5.0}, "B": {"bar_a": 6.0}},
+"Ps": {"A": {"bar_a": 4.8, "occl": "FIXED"}, "B": {"bar_a": 4.0, "occl": "PRESENT"}},
+"Zg": {"A": {"bar_a": 4.0, "occl": "FIXED"}, "B": {"bar_a": 3.3, "occl": "PRESENT"}},
+"Wr": {"A": {"bar_a": 5.5}, "B": {"bar_a": 5.5}},
+"Di": {"A": {"bar_a": 4.6, "occl": "PARTIAL"}, "B": {"bar_a": 3.9, "occl": "PRESENT"}},
+"Ze": {"A": {"bar_a": 3.0}, "B": {"bar_a": 3.5}},
+"Cm": {"A": {"bar_a": 4.6}, "B": {"bar_a": 3.6}}
+}}
