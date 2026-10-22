@@ -1,0 +1,16 @@
+1	day first_shore_welcome_beacon	items1/cand/water__first_shore__01__first_shore_welcome_beacon__day__heading_0.0.png
+2	day reedhaven_woven_hall	items3/cand/water__reedhaven__03__reedhaven_woven_hall__day__heading_0.0.png
+3	day the_veilfall_cascade	items1/cand/water__veilfall__15__the_veilfall_cascade__day__heading_0.0.png
+4	day brine_steps_east_beach	items4/cand/water__brine_steps__06__brine_steps_east_beach__day__heading_0.0.png
+5	night first_shore_welcome_beacon	matrix/night/water__first_shore__01__first_shore_welcome_beacon__night__heading_0.0.png
+6	night reedhaven_woven_hall	matrix/night/water__reedhaven__03__reedhaven_woven_hall__night__heading_0.0.png
+7	night the_veilfall_cascade	matrix/night/water__veilfall__15__the_veilfall_cascade__night__heading_0.0.png
+8	night brine_steps_east_beach	matrix/night/water__brine_steps__06__brine_steps_east_beach__night__heading_0.0.png
+9	rain first_shore_welcome_beacon	matrix/rain/water__first_shore__01__first_shore_welcome_beacon__day__heading_0.0.png
+10	rain reedhaven_woven_hall	matrix/rain/water__reedhaven__03__reedhaven_woven_hall__day__heading_0.0.png
+11	rain the_veilfall_cascade	matrix/rain/water__veilfall__15__the_veilfall_cascade__day__heading_0.0.png
+12	rain brine_steps_east_beach	matrix/rain/water__brine_steps__06__brine_steps_east_beach__day__heading_0.0.png
+13	fight Venn t-030.02	fight5/cand/venn/t-030.02.png
+14	fight Venn tell-start-061.67	fight5/cand/venn/tell-start-061.67.png
+15	fight Venn hit-062.27	fight5/cand/venn/hit-062.27.png
+16	fight Venn hit-109.83	fight5/cand/venn/hit-109.83.png

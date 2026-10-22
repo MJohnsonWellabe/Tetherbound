@@ -23,7 +23,8 @@ func build(water_world: Node3D) -> void:
 	if not parsed is Dictionary:
 		push_error("water dock residents config is invalid")
 		return
-	var cfg := parsed as Dictionary
+	# The OFF Tidewake look gate may add working hands around a dock hamlet.
+	var cfg := preload("res://scripts/world/tidewake_look_profile.gd").overlay(parsed as Dictionary, "dock_residents")
 	var world_cfg: Dictionary = water_world.get("config")
 	var anchors := {}
 	for anchor: Variant in world_cfg.get("anchors", []):

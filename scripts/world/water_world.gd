@@ -155,6 +155,8 @@ func _ready() -> void:
 	add_child(docks)
 	docks.build(self)
 	var dock_dressing: Node3D = preload("res://scripts/world/water_dock_dressing.gd").new(); dock_dressing.name = "WaterDockDressing"; add_child(dock_dressing); dock_dressing.call("build", self)
+	# F39 P2-011: OFF-gated reference-backed buildings at bare named destinations.
+	var landmark_models: Node3D = preload("res://scripts/world/water_landmark_models.gd").new(); landmark_models.name = "WaterLandmarkModels"; add_child(landmark_models); landmark_models.call("build", self)
 	# F13#5: two installed-cast dock hands at every mandatory dock (presentation only).
 	var dock_residents: Node3D = preload("res://scripts/world/water_dock_residents.gd").new(); dock_residents.name = "WaterDockResidents"; add_child(dock_residents); dock_residents.call("build", self)
 	# F13 physical_ramp return shortcuts: built from the replicated dock flag.
@@ -378,8 +380,13 @@ func _build_materials() -> void:
 	material.set("show_colormap", false)
 	material.set("auto_shader", false)
 	var veilfall: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_veilfall.json"))
+	# F39 candidate under the OFF Tidewake look gate: the Veilfall exclusion can
+	# shrink so its approach takes the chapter's dune sand and coastal rock
+	# instead of the inland meadow ground.
+	var veilfall_rock: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").overlay(
+		veilfall.get("rock_material", {}), "veilfall_rock_material")
 	preload("res://scripts/world/coastal_rock_material.gd").install(terrain,
-		_visual.terrain.get("cliff_material", {}), veilfall.get("rock_material", {}))
+		_visual.terrain.get("cliff_material", {}), veilfall_rock)
 
 
 func _stand_up_ground_cover() -> void:

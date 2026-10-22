@@ -55,6 +55,11 @@ func _wood(label: String, at: Vector3, size: Vector3) -> void:
 		var mesh := child as MeshInstance3D
 		var material := mesh.get_active_material(0).duplicate() as BaseMaterial3D
 		material.albedo_color = Color(0.38, 0.32, 0.24)
+		# F13#5 r2 judges read the multiplied red-brown trim as near-oxblood; the
+		# OFF Tidewake look gate weathers it to grey driftwood.
+		var look := preload("res://scripts/world/tidewake_look_profile.gd").settings()
+		if bool(look.get("enabled", false)) and look.has("notice_post_colour"):
+			material.albedo_color = Color(str(look.notice_post_colour))
 		if label == "Board":
 			material.albedo_texture = null
 			material.albedo_color = Color("294d4a")

@@ -11,7 +11,10 @@ const NODE_NAME := "WaterPaddedBolster"
 
 static func settings() -> Dictionary:
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
-	return raw if raw is Dictionary else {}
+	# The OFF Tidewake look gate may restyle the canvas (F13#5 r1 judges read
+	# the orange mottled bolsters as bread); shape and anchors stay as built.
+	return preload("res://scripts/world/tidewake_look_profile.gd").overlay(
+		raw if raw is Dictionary else {}, "camp_bed")
 
 
 static func attach(bed: Node3D, supplied: Dictionary = {}) -> Node3D:
@@ -53,7 +56,26 @@ static func attach(bed: Node3D, supplied: Dictionary = {}) -> Node3D:
 		pad.material_override = material
 		pad.transform = Transform3D(Basis(Quaternion(Vector3.UP, tangent)), centre)
 		decoration.add_child(pad)
+	if bool(config.get("restyle_bed_canvas", false)):
+		_restyle_canvas(bed, material)
 	return decoration
+
+
+## The shared pad and rim also carry the camp canvas texture; at the Water
+## camps they take the same sailcloth as the bolsters so the bed reads as one
+## cushioned shape. Only the material instance changes, not shape or anchors.
+static func _restyle_canvas(bed: Node3D, cloth: StandardMaterial3D) -> void:
+	for found: Node in bed.find_children("*", "MeshInstance3D", true, false):
+		var instance := found as MeshInstance3D
+		var source := instance.material_override as StandardMaterial3D
+		if source == null or source == cloth or source.albedo_texture == null \
+				or source.albedo_texture.resource_path != BED.PAD_CANVAS_ALBEDO:
+			continue
+		var restyled := source.duplicate() as StandardMaterial3D
+		restyled.albedo_texture = cloth.albedo_texture
+		restyled.albedo_color = cloth.albedo_color
+		restyled.uv1_scale = cloth.uv1_scale
+		instance.material_override = restyled
 
 
 static func _canvas(config: Dictionary) -> StandardMaterial3D:
@@ -61,6 +83,11 @@ static func _canvas(config: Dictionary) -> StandardMaterial3D:
 	var tint: Array = config.get("canvas_tint", [1.65, 1.42, 1.08])
 	material.albedo_color = Color(float(tint[0]), float(tint[1]), float(tint[2])) if tint.size() == 3 else BED.PAD_TINT
 	material.albedo_texture = load(BED.PAD_CANVAS_ALBEDO) as Texture2D
+	# Optional plain sailcloth: the mottled orange canvas map, not its tint,
+	# is what reads as bread; keep the weave in the normal map only.
+	if config.has("canvas_plain_colour"):
+		material.albedo_texture = null
+		material.albedo_color = Color(str(config.canvas_plain_colour))
 	material.normal_enabled = true
 	material.normal_texture = load(BED.PAD_CANVAS_NORMAL) as Texture2D
 	material.normal_scale = 0.55

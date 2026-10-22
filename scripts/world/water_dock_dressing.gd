@@ -10,6 +10,7 @@ const CONFIG_PATH := "res://data/config/water_dock_dressing.json"
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 
 var _built := false
+var _village_builder: Node3D = null
 
 
 func build(water_world: Node3D) -> void:
@@ -24,6 +25,9 @@ func build(water_world: Node3D) -> void:
 	var look := preload("res://scripts/world/tidewake_look_profile.gd").settings()
 	if bool(look.get("enabled", false)):
 		cfg["workplace_candidate"] = look.get("dock_workplace", {})
+		cfg["village_candidate"] = look.get("dock_village", {})
+		# A working-harbour pier (longer, wider, loaded deck) under the same gate.
+		cfg = preload("res://scripts/world/tidewake_look_profile.gd").merge(cfg, look.get("dock_dressing", {}))
 	var world_cfg: Dictionary = water_world.get("config")
 	var anchors := {}
 	for anchor: Variant in world_cfg.get("anchors", []):
@@ -45,7 +49,16 @@ func build(water_world: Node3D) -> void:
 		var site := Node3D.new()
 		site.name = "%sDressing" % str((dock as Dictionary).get("id", "dock"))
 		add_child(site)
-		_dress(site, water_world, anchor, cfg, _side_away_from(anchor, ramp_anchors.get(anchor_id, {})), dock_index)
+		var sign := _side_away_from(anchor, ramp_anchors.get(anchor_id, {}))
+		_dress(site, water_world, anchor, cfg, sign, dock_index)
+		var village: Dictionary = cfg.get("village_candidate", {})
+		if not village.is_empty() and (bool((dock as Dictionary).get("mandatory", false))
+				or not bool(village.get("mandatory_only", true))):
+			if _village_builder == null:
+				_village_builder = preload("res://scripts/world/water_dock_village.gd").new()
+				_village_builder.name = "DockVillageBuilder"
+				add_child(_village_builder)
+			_village_builder.call("build_site", site, water_world, anchor, village, sign, dock_index, self)
 
 
 ## +1 or -1: which side of the safe->shore line the dressing stands on. Away
@@ -129,6 +142,19 @@ func _dress(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary, si
 		prop.position += Vector3(at2.x, deck_y, at2.y)
 		prop.rotation.y = yaw + deg_to_rad(float(spec.get("yaw_deg", 0.0)))
 		site.add_child(prop)
+	# Moored boats on the far side of the pier from the swim lane (presentation
+	# only; afloat at sea level with a draft, no collision).
+	var moored: Array = cfg.get("moored", [])
+	if not moored.is_empty():
+		var boat_spec := moored[dock_index % moored.size()] as Dictionary
+		var along_m := float(boat_spec.get("along_m", 10.0))
+		var at_boat := start + forward * along_m + side * (width * 0.5 + float(boat_spec.get("beyond_pier_m", 1.4)))
+		var boat := _fit_height(str(boat_spec.get("model", "")), float(boat_spec.get("height_m", 0.8)), "MooredBoat")
+		if boat != null:
+			var sea := float(world.get("config").get("terrain", {}).get("sea_level_m", 0.0))
+			boat.position += Vector3(at_boat.x, sea - float(boat_spec.get("draft_m", 0.25)), at_boat.y)
+			boat.rotation.y = yaw + deg_to_rad(float(boat_spec.get("yaw_deg", 90.0)))
+			site.add_child(boat)
 	# Cargo: a working cluster on land, to the pier's side, behind the route.
 	var cargo: Dictionary = cfg.get("cargo", {})
 	var origin := safe - forward * float(cargo.get("back_from_safe_m", 1.0)) \
@@ -181,10 +207,30 @@ func _workplace(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary
 						continue
 					var cloth := source.duplicate() as StandardMaterial3D
 					cloth.albedo_texture = null
+					# COLOR_0 paints this cloth red; a multiply would keep it.
+					cloth.vertex_color_use_as_albedo = false
 					cloth.albedo_color = Color(str(raw.cloth_colour))
 					cloth.roughness = float(raw.cloth_roughness)
 					instance.set_surface_override_material(surface, cloth)
 		site.add_child(prop)
+
+
+func _recolour_material(node: Node, material_name: String, colour: Color) -> void:
+	for found: Node in _meshes(node):
+		var instance := found as MeshInstance3D
+		if instance.mesh == null:
+			continue
+		for surface in instance.mesh.get_surface_count():
+			var source := instance.get_active_material(surface) as StandardMaterial3D
+			if source == null or source.resource_name != material_name:
+				continue
+			var cloth := source.duplicate() as StandardMaterial3D
+			cloth.albedo_texture = null
+			# The kit paints its cloth red through COLOR_0; a multiply would keep
+			# Team Tether's colour on friendly sailcloth.
+			cloth.vertex_color_use_as_albedo = false
+			cloth.albedo_color = colour
+			instance.set_surface_override_material(surface, cloth)
 
 
 func _lantern(site: Node3D, cfg: Dictionary, at: Vector3, yaw: float) -> void:

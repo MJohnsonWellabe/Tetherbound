@@ -1,0 +1,56 @@
+{
+ "pairs": [
+  "water__brine_steps__06__brine_steps_east_beach__day__heading_0.0.png",
+  "water__first_shore__02__first_shore_horizon_stones__day__heading_0.0.png",
+  "water__first_shore__02__first_shore_horizon_stones__day__heading_180.0.png",
+  "water__first_shore__02__first_shore_horizon_stones__day__heading_45.0.png",
+  "water__sluice_isle__14__sluice_channel_bridge__day__heading_0.0.png",
+  "water__sluice_isle__14__sluice_channel_bridge__day__heading_45.0.png",
+  "water__reedhaven__03__reedhaven_woven_hall__day__heading_0.0.png",
+  "water__reedhaven__03__reedhaven_woven_hall__day__heading_45.0.png",
+  "water__veilfall__15__the_veilfall_cascade__day__heading_0.0.png",
+  "water__veilfall__15__the_veilfall_cascade__day__heading_minus45.0.png"
+ ],
+ "mapping": {
+  "water__brine_steps__06__brine_steps_east_beach__day__heading_0.0.png": {
+   "A": "control",
+   "B": "candidate"
+  },
+  "water__first_shore__02__first_shore_horizon_stones__day__heading_0.0.png": {
+   "A": "candidate",
+   "B": "control"
+  },
+  "water__first_shore__02__first_shore_horizon_stones__day__heading_180.0.png": {
+   "A": "control",
+   "B": "candidate"
+  },
+  "water__first_shore__02__first_shore_horizon_stones__day__heading_45.0.png": {
+   "A": "control",
+   "B": "candidate"
+  },
+  "water__sluice_isle__14__sluice_channel_bridge__day__heading_0.0.png": {
+   "A": "control",
+   "B": "candidate"
+  },
+  "water__sluice_isle__14__sluice_channel_bridge__day__heading_45.0.png": {
+   "A": "candidate",
+   "B": "control"
+  },
+  "water__reedhaven__03__reedhaven_woven_hall__day__heading_0.0.png": {
+   "A": "candidate",
+   "B": "control"
+  },
+  "water__reedhaven__03__reedhaven_woven_hall__day__heading_45.0.png": {
+   "A": "candidate",
+   "B": "control"
+  },
+  "water__veilfall__15__the_veilfall_cascade__day__heading_0.0.png": {
+   "A": "control",
+   "B": "candidate"
+  },
+  "water__veilfall__15__the_veilfall_cascade__day__heading_minus45.0.png": {
+   "A": "candidate",
+   "B": "control"
+  }
+ }
+}

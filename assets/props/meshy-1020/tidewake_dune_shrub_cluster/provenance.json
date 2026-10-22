@@ -1,0 +1,79 @@
+{
+  "asset": "tidewake_dune_shrub_cluster",
+  "lane": "Tidewake (F39 look pass) Meshy generation worker",
+  "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; agent-drafted reference-backed concepts (CLAUDE.md art rule). Candidate stays flag-off until its scene passes judging.",
+  "date": "2026-10-21T02:28:08+00:00",
+  "target_size_m": {
+    "description": "about 1.2 m tall, 1.6 m wide",
+    "xyz_extent_m": [
+      1.6,
+      1.6,
+      1.2
+    ]
+  },
+  "references": [
+    "docs/reference/tetherbound-meadows-keyart.png",
+    "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png",
+    "docs/reference/palworld-05-base-building.jpg"
+  ],
+  "concept_task_ids": [
+    "01a15c41-5f90-765d-81ef-69ae76993507",
+    "01a15c43-1c2d-70d5-b034-3109503419f7",
+    "01a15c44-907a-76d9-b4c1-76f4d2f09ccc"
+  ],
+  "chosen_concept": {
+    "task_id": "01a15c44-907a-76d9-b4c1-76f4d2f09ccc",
+    "endpoint": "POST /openapi/v1/image-to-image",
+    "ai_model": "nano-banana-pro",
+    "prompt": "A stylised sheltered dune shrub cluster for Lake Michigan / Sleeping Bear dunes style beaches: low rounded clumps of dusty sage-green and olive leaves (bearberry, sand cherry, juniper-like), a few pale twiggy stems, the base sitting in a small mound of pale warm sand. Stylised chunky leaf clusters, not photoreal. No flowers in red. Real size about about 1.2 m tall, 1.6 m wide. Stylised Palworld/Animo-class game prop concept, one coherent family with Quaternius-style medieval/fantasy wood and stone assets: chunky readable shapes, warm weathered driftwood timber, sun-bleached rope, teal and sea-blue paint accents, cream sailcloth, clean hand-painted PBR finish. Use the attached boards only for palette, mood, maritime timber/stone/blue language and finish quality. Absolutely no red, no oxblood, no crimson anywhere. Single isolated object, full object visible, plain neutral light background, no text, no labels, no people, no creatures. This is pure natural vegetation only: NO driftwood, NO rope, NO cloth, NO painted wood, NO man-made objects; ignore the timber, rope, paint and sailcloth accent instructions, they apply to buildings and props only. It is a low WOODY dune shrub thicket: short twisted brown woody branches densely covered in many small oval and needle leaves grouped into soft irregular stylised leaf clumps, like bearberry, sand cherry and common juniper growing together on a Lake Michigan dune. NOT succulents, NOT rosettes, NOT cactus. Wider than tall, sitting on a small pale sand mound.",
+    "generate_multi_view": true,
+    "files": [
+      "concepts/concept_v3_0.png",
+      "concepts/concept_v3_1.png",
+      "concepts/concept_v3_2.png"
+    ]
+  },
+  "rejected_concepts": [
+    {
+      "task_id": "01a15c41-5f90-765d-81ef-69ae76993507",
+      "status": "SUCCEEDED",
+      "reason": "added teal-painted driftwood, rope and cloth debris; vegetation must be natural only"
+    },
+    {
+      "task_id": "01a15c43-1c2d-70d5-b034-3109503419f7",
+      "status": "SUCCEEDED",
+      "reason": "reads as succulent rosettes, not dune shrubs"
+    }
+  ],
+  "model_tasks": [
+    {
+      "task_id": "01a15c45-ee75-7080-9c88-23f7c0415223",
+      "endpoint": "POST /openapi/v1/multi-image-to-3d",
+      "ai_model": "latest (meshy-7.1)",
+      "params": {
+        "input_task_id": "01a15c44-907a-76d9-b4c1-76f4d2f09ccc",
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 12000,
+        "enable_pbr": true,
+        "should_texture": true,
+        "origin_at": "bottom",
+        "name": "tidewake_dune_shrub_cluster"
+      },
+      "status": "SUCCEEDED",
+      "files": {
+        "glb": "tidewake_dune_shrub_cluster.glb",
+        "tex_base_color": "textures/tidewake_dune_shrub_cluster_base_color.png",
+        "tex_metallic": "textures/tidewake_dune_shrub_cluster_metallic.png",
+        "tex_roughness": "textures/tidewake_dune_shrub_cluster_roughness.png",
+        "tex_normal": "textures/tidewake_dune_shrub_cluster_normal.png",
+        "thumbnail": "thumbnail.png"
+      }
+    }
+  ],
+  "consumed_credits": 57,
+  "credits_note": "From the Meshy API price table (nano-banana-pro image-to-image 9; multi-image-to-3d meshy-7.1 with textures 30); balance is shared with other workers so per-task diffs are not exact.",
+  "scale_check": "Pending at integration: scale GLB to target_size_m extents in Godot; Meshy output is unit-normalised.",
+  "integration_status": "candidate, flag-off"
+}
