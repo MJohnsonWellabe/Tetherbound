@@ -21,7 +21,7 @@ const MASTER_ACTIONS := preload("res://scripts/masters/breakthrough_actions.gd")
 const CARRIED := ["axe", "pickaxe", "knife", "hammer", "home_key", "stormwood_portal_key"]
 const SPARE_SLOTS := 2
 ## Five creatures sharing one primary type: one attuned stack, the kit's
-## ordinary size and the case the 16-slot target is set against.
+## ordinary size; every tier must leave SPARE_SLOTS free beside the carried six.
 const SHARED_TYPE_PARTY := ["terrapup", "bramblebun", "mudsnout", "trailpup", "burrowback"]
 ## Five distinct primary types: five attuned stacks, the largest kit any party
 ## can receive (ground, water, air, electric, dark).
@@ -98,8 +98,8 @@ func test_saves_holding_old_size_bulk_stacks_load_and_top_up() -> void:
 		"the topped-up save is still canonically admissible")
 
 func test_every_master_chest_fits_a_five_distinct_type_party() -> void:
-	# Twelve distinct kit items plus five attuned stacks cannot drop below 17
-	# slots by stack size alone; it must still fit the 18 left by the carried six.
+	# Five attuned stacks: t1 needs exactly 18 slots (its basic wood/stone/fiber
+	# stacks are unchanged) and t3-t5 need 17; each must fit the 18 left by the carried six.
 	var record := _record(MIXED_TYPE_PARTY)
 	for tier: int in range(1, 6):
 		var chest := _claim(record, tier)
