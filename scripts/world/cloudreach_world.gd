@@ -5810,6 +5810,8 @@ func _mesa(
 				"island_underside_top_fraction", 0.86)), -source.get_center().z * factor)
 		root.add_child(underside)
 		SETTLEMENT_LIFE.tint_rock(underside)
+	if label == "LandmarkLedge":
+		SETTLEMENT_LIFE.ledge_buttresses(root, top_ring, size, seed_value)
 	lower_tool.generate_normals()
 	lower_tool.commit(mesh)
 

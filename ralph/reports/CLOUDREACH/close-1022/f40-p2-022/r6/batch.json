@@ -1,0 +1,106 @@
+{
+ "anchors": {
+  "f36_0_gap:C5B": [
+   6.0,
+   5.8,
+   5.0
+  ],
+  "f36_0_gap:C5A": [
+   5.8,
+   5.4,
+   5.3
+  ],
+  "craft:after": [
+   6.4,
+   6.3,
+   6.3
+  ],
+  "craft:before": [
+   4.6,
+   4.7,
+   4.7
+  ],
+  "f36_0_npc:C2B": [
+   6.6,
+   6.4,
+   6.4
+  ],
+  "f36_0_npc:C2A": [
+   6.6,
+   6.4,
+   6.4
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.0,
+   4.6,
+   4.2
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.8,
+   5.3,
+   4.9
+  ]
+ },
+ "candidates": {
+  "F40 P2-022 r6 path_golden ava6": [
+   5.6,
+   5.5,
+   5.7
+  ],
+  "F40 P2-022 r6 path_golden avc5": [
+   5.0,
+   4.9,
+   5.1
+  ],
+  "F40 P2-022 r6 path_day ava6": [
+   5.8,
+   5.8,
+   5.6
+  ],
+  "F40 P2-022 r6 path_day avc5": [
+   5.3,
+   5.2,
+   5.2
+  ],
+  "F40 P2-022 r6 court_golden ava6": [
+   4.3,
+   4.4,
+   4.5
+  ],
+  "F40 P2-022 r6 court_golden avc5": [
+   3.6,
+   3.9,
+   3.9
+  ],
+  "F40 P2-022 r6 court_day avc5": [
+   3.6,
+   3.9,
+   3.8
+  ],
+  "F40 P2-022 r6 court_day ava6": [
+   4.3,
+   4.4,
+   4.4
+  ],
+  "F40 P2-022 r6 path_night avc5": [
+   4.8,
+   4.7,
+   4.8
+  ],
+  "F40 P2-022 r6 path_night ava6": [
+   5.6,
+   5.6,
+   5.8
+  ],
+  "F40 P2-022 r6 court_night avc5": [
+   3.4,
+   3.6,
+   3.6
+  ],
+  "F40 P2-022 r6 court_night ava6": [
+   4.4,
+   4.5,
+   4.6
+  ]
+ }
+}

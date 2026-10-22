@@ -1,0 +1,58 @@
+{
+ "Tg": {
+  "anchor": false,
+  "label": "F40 P2-023 r4 arrival-lip",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p23c4/sides/arrival-lip_p23c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p23c4/sides/arrival-lip_p23a4.png"
+ },
+ "Ez": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Hs": {
+  "anchor": false,
+  "label": "F40 P2-023 r4 arrival-far",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p23c4/sides/arrival-far_p23a4.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p23c4/sides/arrival-far_p23c.png"
+ },
+ "Aa": {
+  "anchor": false,
+  "label": "F40 P2-023 r4 arrival-landed",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p23c4/sides/arrival-landed_p23a4.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p23c4/sides/arrival-landed_p23c.png"
+ },
+ "Fx": {
+  "anchor": false,
+  "label": "F40 P2-023 r4 crown-rim-out",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p23c4/sides/crown-rim-out_p23a4.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p23c4/sides/crown-rim-out_p23c.png"
+ },
+ "Ji": {
+  "anchor": true,
+  "A": "f36_0_npc:C9A",
+  "B": "f36_0_npc:C9B"
+ },
+ "Fm": {
+  "anchor": true,
+  "A": "f36_0_gap:C3B",
+  "B": "f36_0_gap:C3A"
+ },
+ "Nf": {
+  "anchor": false,
+  "label": "F40 P2-023 r4 crown-court",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p23c4/sides/crown-court_p23a4.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p23c4/sides/crown-court_p23c.png"
+ },
+ "Yw": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Gt": {
+  "anchor": false,
+  "label": "F40 P2-023 r4 departure-lookback",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p23c4/sides/departure-lookback_p23c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/cf1a5cde-6c24-5f50-b5a6-2ba89837b38c/scratchpad/p23c4/sides/departure-lookback_p23a4.png"
+ }
+}

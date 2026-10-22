@@ -1,0 +1,224 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8021,
+  "least_squares_slope": 1.1598,
+  "method": "linear",
+  "slope": 1.1598,
+  "intercept": -0.9719,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.701,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:before": {
+   "measured": 5.0,
+   "reference": 4.83,
+   "mapped": 4.827,
+   "residual": 0.003
+  },
+  "craft:after": {
+   "measured": 6.733,
+   "reference": 7.35,
+   "mapped": 6.838,
+   "residual": 0.512
+  },
+  "f36_0_npc:C6A": {
+   "measured": 6.633,
+   "reference": 5.8,
+   "mapped": 6.722,
+   "residual": -0.922
+  },
+  "f36_0_npc:C6B": {
+   "measured": 6.633,
+   "reference": 5.93,
+   "mapped": 6.722,
+   "residual": -0.792
+  },
+  "f36_0_gap:C6B": {
+   "measured": 5.733,
+   "reference": 6.9,
+   "mapped": 5.678,
+   "residual": 1.222
+  },
+  "f36_0_gap:C6A": {
+   "measured": 6.433,
+   "reference": 6.47,
+   "mapped": 6.49,
+   "residual": -0.02
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 6.133,
+   "reference": 6.73,
+   "mapped": 6.142,
+   "residual": 0.588
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.367,
+   "reference": 3.5,
+   "mapped": 4.093,
+   "residual": -0.593
+  }
+ },
+ "candidates": {
+  "F40 P2-022 r7 court_night avc5": {
+   "measured_mean": 3.867,
+   "mapped_mean": 3.51,
+   "mapped_judges": [
+    3.67,
+    3.2,
+    3.67
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-022 r7 court_night ava7": {
+   "measured_mean": 4.967,
+   "mapped_mean": 4.79,
+   "mapped_judges": [
+    4.83,
+    4.71,
+    4.83
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-022 r7 path_night ava7": {
+   "measured_mean": 6.033,
+   "mapped_mean": 6.03,
+   "mapped_judges": [
+    6.22,
+    5.64,
+    6.22
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-022 r7 path_night avc5": {
+   "measured_mean": 5.2,
+   "mapped_mean": 5.06,
+   "mapped_judges": [
+    5.29,
+    4.71,
+    5.18
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-022 r7 court_golden avc5": {
+   "measured_mean": 4.3,
+   "mapped_mean": 4.02,
+   "mapped_judges": [
+    4.36,
+    3.67,
+    4.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-022 r7 court_golden ava7": {
+   "measured_mean": 5.233,
+   "mapped_mean": 5.1,
+   "mapped_judges": [
+    5.18,
+    5.06,
+    5.06
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-022 r7 court_day avc5": {
+   "measured_mean": 4.2,
+   "mapped_mean": 3.9,
+   "mapped_judges": [
+    4.13,
+    3.67,
+    3.9
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-022 r7 court_day ava7": {
+   "measured_mean": 5.067,
+   "mapped_mean": 4.9,
+   "mapped_judges": [
+    5.06,
+    4.83,
+    4.83
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-022 r7 path_day ava7": {
+   "measured_mean": 6.267,
+   "mapped_mean": 6.3,
+   "mapped_judges": [
+    6.45,
+    6.22,
+    6.22
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-022 r7 path_day avc5": {
+   "measured_mean": 5.667,
+   "mapped_mean": 5.6,
+   "mapped_judges": [
+    5.76,
+    5.52,
+    5.52
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-022 r7 path_golden avc5": {
+   "measured_mean": 5.533,
+   "mapped_mean": 5.45,
+   "mapped_judges": [
+    5.52,
+    5.41,
+    5.41
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-022 r7 path_golden ava7": {
+   "measured_mean": 6.3,
+   "mapped_mean": 6.34,
+   "mapped_judges": [
+    6.45,
+    6.22,
+    6.34
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

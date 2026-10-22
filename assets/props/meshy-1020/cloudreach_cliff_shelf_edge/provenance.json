@@ -1,0 +1,98 @@
+{
+  "asset": "cloudreach_cliff_shelf_edge",
+  "brief_id": "A3",
+  "biome": "cloudreach",
+  "date": "2026-10-21",
+  "author": "Claude (Cloudreach Meshy generation worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro) -> Meshy multi-image-to-3d (latest, quad remesh, PBR)",
+  "target_size_m": "30 m wide x 12 m deep x 18 m tall cliff-edge module incl. ~8 m tapering jagged underside",
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "longest_h",
+    "fit_value_m": 30,
+    "raw_extent": [
+      1.0934,
+      1.8854,
+      1.827
+    ],
+    "scale": 16.42,
+    "final_min": [
+      -8.977,
+      0.0,
+      -15.0
+    ],
+    "final_max": [
+      8.977,
+      30.958,
+      15.0
+    ],
+    "final_extent_m": [
+      17.95,
+      30.96,
+      30.0
+    ],
+    "triangles": 46346,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3
+  },
+  "files": {
+    "glb_metres": "cloudreach_cliff_shelf_edge.glb",
+    "glb_meshy_raw": "cloudreach_cliff_shelf_edge_meshy_raw.glb",
+    "textures": "textures/",
+    "chosen_concepts": [
+      "concepts/c1_0.png",
+      "concepts/c1_1.png",
+      "concepts/c1_2.png"
+    ],
+    "meshy_thumbnail": "thumbnail.png"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15c3f-03b5-77cf-8aba-f60a46eae0a6",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Cliff-edge terrain module from a floating sky island: a rectangular chunk 30 metres wide, 12 metres deep and 18 metres tall. Flat grassy top surface with a soft grass lip overhanging the edge. The front face is a near-vertical stratified limestone cliff with stacked horizontal beds and mossy ledges. Below the main face the underside tapers into jagged hanging rock points reaching about 8 metres further down, like the underside of a floating island. Same rock language as the references. Stylised-realism game asset in the Palworld / Animo art style, single isolated object on a plain neutral background, even soft daylight, no cast background, no people. Materials: pale warm-grey weathered limestone (#9a8f80 to #b8ad9c, never pure white) with clearly stacked horizontal sedimentary strata and soft moss on the ledges; where present, slate-blue roof tile (#3d4a66), honey-coloured timber, cream plaster, royal-blue banner fabric with a small gold accent. Absolutely no red, no oxblood, no maroon anywhere. Flat ground contact at the base.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/exterior_floating_islands.jpg (branch tb/cloudreach @ eb3b9504b)",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/tb/cloudreach/assets/environment/cloudreach/meshy_refs/exterior_cliff_waterfall.jpg (branch tb/cloudreach @ eb3b9504b)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c1",
+      "task_id": "01a15c49-bd11-73aa-b5e9-4bcd0cec58a6",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "input_task_id": "01a15c3f-03b5-77cf-8aba-f60a46eae0a6"
+      },
+      "params": {
+        "input_task_id": "01a15c3f-03b5-77cf-8aba-f60a46eae0a6",
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 25000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN"
+    }
+  ],
+  "consumed_credits_total": 39,
+  "visual_verdict": "Good: flat grass top, stratified face, jagged hanging underside. Meshy proportions are near-cubic: at 30 m wide (long axis is Z, not X) it is ~31 m tall and ~18 m deep, so it is taller/deeper than the 30x12x18 brief; non-uniform scale or a deeper terrain bury will be needed.",
+  "integration_flag": "OFF - candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood requested or observed; blue banners/roofs only"
+}

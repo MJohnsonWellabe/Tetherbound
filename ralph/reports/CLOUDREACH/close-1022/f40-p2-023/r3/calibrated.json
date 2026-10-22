@@ -1,0 +1,224 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9011,
+  "least_squares_slope": 1.4063,
+  "method": "linear",
+  "slope": 1.4063,
+  "intercept": -1.7086,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.449,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C5A": {
+   "measured": 5.367,
+   "reference": 5.7,
+   "mapped": 5.838,
+   "residual": -0.138
+  },
+  "f36_0_gap:C5B": {
+   "measured": 5.6,
+   "reference": 6.93,
+   "mapped": 6.167,
+   "residual": 0.763
+  },
+  "craft:before": {
+   "measured": 4.667,
+   "reference": 4.83,
+   "mapped": 4.854,
+   "residual": -0.024
+  },
+  "craft:after": {
+   "measured": 6.733,
+   "reference": 7.35,
+   "mapped": 7.76,
+   "residual": -0.41
+  },
+  "f04_6_r22:control": {
+   "measured": 4.933,
+   "reference": 5.83,
+   "mapped": 5.229,
+   "residual": 0.601
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.9,
+   "reference": 6.75,
+   "mapped": 6.588,
+   "residual": 0.162
+  },
+  "f36_0_npc:C3A": {
+   "measured": 4.8,
+   "reference": 4.6,
+   "mapped": 5.042,
+   "residual": -0.442
+  },
+  "f36_0_npc:C3B": {
+   "measured": 4.8,
+   "reference": 4.53,
+   "mapped": 5.042,
+   "residual": -0.512
+  }
+ },
+ "candidates": {
+  "F40 P2-023 r3 arrival-landed p23a3": {
+   "measured_mean": 5.4,
+   "mapped_mean": 5.89,
+   "mapped_judges": [
+    5.89,
+    6.17,
+    5.6
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-023 r3 arrival-landed p23c": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.32,
+   "mapped_judges": [
+    4.9,
+    5.89,
+    5.18
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-023 r3 arrival-lip p23c": {
+   "measured_mean": 4.8,
+   "mapped_mean": 5.04,
+   "mapped_judges": [
+    5.04,
+    5.04,
+    5.04
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-023 r3 arrival-lip p23a3": {
+   "measured_mean": 4.8,
+   "mapped_mean": 5.04,
+   "mapped_judges": [
+    5.04,
+    5.04,
+    5.04
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-023 r3 arrival-far p23a3": {
+   "measured_mean": 5.6,
+   "mapped_mean": 6.17,
+   "mapped_judges": [
+    6.17,
+    6.17,
+    6.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-023 r3 arrival-far p23c": {
+   "measured_mean": 4.4,
+   "mapped_mean": 4.48,
+   "mapped_judges": [
+    4.48,
+    4.48,
+    4.48
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-023 r3 crown-rim-out p23c": {
+   "measured_mean": 4.7,
+   "mapped_mean": 4.9,
+   "mapped_judges": [
+    4.76,
+    5.18,
+    4.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-023 r3 crown-rim-out p23a3": {
+   "measured_mean": 5.367,
+   "mapped_mean": 5.84,
+   "mapped_judges": [
+    5.74,
+    5.89,
+    5.89
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-023 r3 crown-court p23c": {
+   "measured_mean": 4.933,
+   "mapped_mean": 5.23,
+   "mapped_judges": [
+    5.32,
+    5.32,
+    5.04
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-023 r3 crown-court p23a3": {
+   "measured_mean": 4.933,
+   "mapped_mean": 5.23,
+   "mapped_judges": [
+    5.32,
+    5.32,
+    5.04
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-023 r3 departure-lookback p23a3": {
+   "measured_mean": 5.567,
+   "mapped_mean": 6.12,
+   "mapped_judges": [
+    6.03,
+    6.31,
+    6.03
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-023 r3 departure-lookback p23c": {
+   "measured_mean": 4.2,
+   "mapped_mean": 4.2,
+   "mapped_judges": [
+    4.2,
+    4.2,
+    4.2
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
