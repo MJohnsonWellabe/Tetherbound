@@ -22,6 +22,19 @@
       "_scope": "F04#6 r24 / F38 candidate (OFF until judged): every yardstick judge's first ask is the smeared, blurry Meadows ground. The shipped albedo is octave noise with no texel structure; this one keeps its low-frequency colour field and mean and paints short blade-stroke clumps over it (tools/art_pipeline/make_painted_grass.py, seed 7).",
       "albedo": "res://assets/environment/terrain/stylised/meadow_grass_painted_Color.png",
       "normal": "res://assets/environment/terrain/stylised/meadow_grass_painted_NormalGL.png"
+    },
+    "grass_v2": {
+      "enabled": false,
+      "_target": "grass",
+      "_scope": "F04#6 r27 / F38 (OFF): painted grass v2 (--flat) keeps blade strokes but drops the repeating dark blobs that read as smear at 1-5 m.",
+      "albedo": "res://assets/environment/terrain/stylised/meadow_grass_painted_v2_Color.png",
+      "normal": "res://assets/environment/terrain/stylised/meadow_grass_painted_v2_NormalGL.png"
+    },
+    "soil": {
+      "enabled": false,
+      "_scope": "F04#6 r27 / F38 (OFF): painted dry verge grass (--flat), the soil surface at Vance and Field.",
+      "albedo": "res://assets/environment/terrain/stylised/verge_grass_painted_v2_Color.png",
+      "normal": "res://assets/environment/terrain/stylised/verge_grass_painted_v2_NormalGL.png"
     }
   },
   "shader_candidate": {

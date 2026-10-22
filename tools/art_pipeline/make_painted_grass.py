@@ -3,10 +3,15 @@ the existing meadow colour field (low frequencies kept, smear replaced)."""
 import sys, math, numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 src, out, seed = sys.argv[1], sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 7
+# --flat: keep only the source's mean colour plus a faint (15%) trace of its
+# low-frequency field, so the 5 m tile stops repeating dark blobs (v2).
+flat = '--flat' in sys.argv
 N = 1024; S = 2  # supersample
 rng = np.random.default_rng(seed)
 base = Image.open(src).convert('RGB').resize((N, N))
 low = np.asarray(base.filter(ImageFilter.GaussianBlur(28)), dtype=np.float32)
+if flat:
+    low = low.mean((0, 1)) + (low - low.mean((0, 1))) * 0.15
 # tileable clump mask from wrapped gaussian blobs
 def wrapped_noise(cells, blur):
     a = rng.random((cells, cells)).astype(np.float32)
@@ -18,7 +23,7 @@ clump = wrapped_noise(24, 10)
 clump = (clump - clump.min()) / (clump.max() - clump.min())
 canvas = Image.new('RGB', (N*S, N*S))
 # underlayer: darker soil-green between clumps
-under = (low * (0.62 + 0.25 * clump[..., None])).clip(0, 255).astype(np.uint8)
+under = (low * ((0.8 + 0.1 * clump[..., None]) if flat else (0.62 + 0.25 * clump[..., None]))).clip(0, 255).astype(np.uint8)
 canvas.paste(Image.fromarray(under).resize((N*S, N*S), Image.BILINEAR))
 d = ImageDraw.Draw(canvas)
 count = 190000
@@ -26,12 +31,12 @@ xs = rng.random(count) * N; ys = rng.random(count) * N
 for i in range(count):
     x, y = xs[i], ys[i]
     c = clump[int(y) % N, int(x) % N]
-    if rng.random() > 0.25 + 0.75 * c:
+    if rng.random() > (0.6 + 0.4 * c if flat else 0.25 + 0.75 * c):
         continue
     L = rng.uniform(5, 13) * (0.7 + 0.5 * c)
     ang = -math.pi / 2 + rng.normal(0, 0.55)
     col = low[int(y) % N, int(x) % N]
-    v = rng.uniform(0.78, 1.28) * (0.85 + 0.3 * c)
+    v = rng.uniform(0.78, 1.28) * ((0.95 + 0.1 * c) if flat else (0.85 + 0.3 * c))
     tipcol = np.clip(col * v * np.array([1.02, 1.06, 0.92]), 0, 255)
     w = max(1, int(round(rng.uniform(1.2, 2.4) * S)))
     dx, dy = math.cos(ang) * L, math.sin(ang) * L

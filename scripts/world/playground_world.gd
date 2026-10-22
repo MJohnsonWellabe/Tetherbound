@@ -1389,8 +1389,15 @@ func _build_texture_list() -> Object:
 	# terrain and scatter bakes, so a flag flip here would invalidate them.
 	var presentation: Variant = JSON.parse_string(FileAccess.get_file_as_string(GROUND_PRESENTATION_CONFIG))
 	var swaps: Dictionary = (presentation as Dictionary).get("texture_candidates", {}) if presentation is Dictionary else {}
+	# A swap names its surface by its key, or by `_target` when several
+	# candidates exist for one surface (grass, grass_v2); the last enabled wins.
+	var by_surface: Dictionary = {}
+	for swap_key: String in swaps:
+		var swap: Variant = swaps[swap_key]
+		if swap is Dictionary and bool((swap as Dictionary).get("enabled", false)):
+			by_surface[str((swap as Dictionary).get("_target", swap_key))] = swap
 	for entry: Variant in entries:
-		var candidate: Variant = swaps.get(str((entry as Dictionary).get("name", "")))
+		var candidate: Variant = by_surface.get(str((entry as Dictionary).get("name", "")))
 		if candidate is Dictionary and bool((candidate as Dictionary).get("enabled", false)):
 			for key: String in candidate:
 				if key != "enabled" and not key.begins_with("_"):
