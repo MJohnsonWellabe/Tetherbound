@@ -14,7 +14,7 @@ const CAMERA_RIG := preload("res://scripts/player/camera_rig.gd")
 func _physics_process(delta: float) -> void:
 	if authority_node == null:
 		return
-	_sync_camera_pass_through(not authority_node.is_fight_active())
+	_sync_camera_pass_through(authority_node.camera_passes_through())
 	if not authority_node.is_alpha_authority():
 		if _animator != null:
 			_animator.tick(delta, Vector2(velocity.x, velocity.z).length(), _speed)

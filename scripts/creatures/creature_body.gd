@@ -426,7 +426,11 @@ func _tick_camera_fade(delta: float) -> void:
 		CAMERA_FADE.restore(_camera_fade_state)
 		_camera_fade = 0.0
 		_camera_fade_model = model
-		_camera_fade_bounds = CAMERA_FADE_BOUNDS.measure(model) if model != null else AABB()
+		_camera_fade_bounds = AABB()
+	# Measured until the meshes are there: a model whose surfaces load after
+	# the first tick would otherwise keep empty bounds and never fade.
+	if model != null and _camera_fade_bounds.size == Vector3.ZERO:
+		_camera_fade_bounds = CAMERA_FADE_BOUNDS.measure(model)
 	if model == null or not is_inside_tree() or _camera_fade_bounds.size == Vector3.ZERO:
 		return
 	var camera := get_viewport().get_camera_3d()
