@@ -63,6 +63,42 @@
     },
     "_why_backing": "F38 P2-094 r2 judges (6.15): one brace bay showed sky, and the infill read flat; an inset warm kit-plaster backing closes it and adds texture.",
     "_why_r4": "F38 P2-094 r3 judges (6.40): timber new-orange, plaster flat-bright, no top cap; darker weathered multiply and an oak coping cap.",
-    "_why_enabled": "F38 P2-094 code-blind item pass, 21 Oct 2026 (CPU-provisional): before 3.5 -> after 6.73 (judges 6.9/6.9/6.4, r4), defect FIXED by all three; smoke_free_build PASS with it ON; ralph/reports/LOOK/close-1020/F38-items-r1.md."
+    "_why_enabled": "F38 P2-094 code-blind item pass, 21 Oct 2026 (CPU-provisional): before 3.5 -> after 6.73 (judges 6.9/6.9/6.4, r4), defect FIXED by all three; smoke_free_build PASS with it ON; ralph/reports/LOOK/close-1020/F38-items-r1.md.",
+    "r5": {
+      "enabled": false,
+      "_scope": "F38 P2-094 r5 candidate (OFF until judged): GPU yardstick asks (5.96 mapped) - the infill was the brightest surface in frame, no grounding, a lone segment read as an outhouse door, thin cap.",
+      "tint": "#8c7556",
+      "backing": {
+        "texture": "res://assets/buildings/quaternius_medieval/T_Plaster_BaseColor.png",
+        "tint": "#8f7a5e",
+        "inset_x": 0.94,
+        "inset_y": 0.86,
+        "depth_m": 0.05,
+        "uv_per_m": 1.3,
+        "lift_m": 0.08,
+        "cap": {
+          "texture": "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png",
+          "tint": "#5e4630",
+          "height_m": 0.2,
+          "overhang_m": 0.16
+        }
+      },
+      "end_posts": {
+        "texture": "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png",
+        "tint": "#5a4430",
+        "width_m": 0.22,
+        "proud_m": 0.22,
+        "depth_extra_m": 0.1
+      },
+      "footing": {
+        "texture": "res://assets/environment/terrain/Ground030_Color.jpg",
+        "tint": "#6d5a44",
+        "pad_x_m": 0.5,
+        "pad_z_m": 0.8,
+        "height_m": 0.06,
+        "sink_m": 0.03,
+        "uv_per_m": 0.6
+      }
+    }
   }
 }

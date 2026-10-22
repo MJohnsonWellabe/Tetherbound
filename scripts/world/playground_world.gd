@@ -1373,9 +1373,17 @@ func _load_long_water_visual_config() -> Dictionary:
 func _build_texture_list() -> Object:
 	if not ClassDB.class_exists("Terrain3DAssets") or not ClassDB.class_exists("Terrain3DTextureAsset"):
 		return null
-	var entries: Array = _load_terrain_config().get("textures", [])
+	var entries: Array = (_load_terrain_config().get("textures", []) as Array).duplicate(true)
 	if entries.is_empty():
 		return null
+	# A surface's judged look candidate (`candidate`, its own `enabled`) swaps
+	# in its keys only when switched on; OFF leaves the shipped surface as is.
+	for entry: Variant in entries:
+		var candidate: Variant = (entry as Dictionary).get("candidate")
+		if candidate is Dictionary and bool((candidate as Dictionary).get("enabled", false)):
+			for key: String in candidate:
+				if key != "enabled" and not key.begins_with("_"):
+					(entry as Dictionary)[key] = (candidate as Dictionary)[key]
 
 	var assets: Object = ClassDB.instantiate("Terrain3DAssets")
 	var index := 0
