@@ -1,0 +1,66 @@
+{
+ "keys": {
+  "ripplet": {
+   "A": "n6_recipe",
+   "B": "i6",
+   "C": "n6_topple"
+  },
+  "galewisp": {
+   "A": "n6_recipe",
+   "B": "i6",
+   "C": "n6_topple"
+  },
+  "veridian": {
+   "A": "n6_recipe",
+   "B": "n6_topple",
+   "C": "i6"
+  },
+  "abyssal_guardian": {
+   "A": "n6_recipe",
+   "B": "n6_topple",
+   "C": "i6"
+  },
+  "aeriex": {
+   "A": "bd_n",
+   "B": "n6_topple",
+   "C": "n6_recipe"
+  },
+  "voltarach": {
+   "A": "bd_n",
+   "B": "n6_topple",
+   "C": "n6_recipe"
+  }
+ },
+ "means": {
+  "ripplet": {
+   "recipe": 6.27,
+   "native": 4.6,
+   "topple": 5.43
+  },
+  "galewisp": {
+   "recipe": 5.07,
+   "native": 4.77,
+   "topple": 5.83
+  },
+  "veridian": {
+   "recipe": 6.3,
+   "topple": 6.0,
+   "native": 6.27
+  },
+  "abyssal_guardian": {
+   "recipe": 5.6,
+   "topple": 5.6,
+   "native": 4.37
+  },
+  "aeriex": {
+   "native": 5.2,
+   "topple": 5.6,
+   "recipe": 4.3
+  },
+  "voltarach": {
+   "native": 6.1,
+   "topple": 6.2,
+   "recipe": 4.6
+  }
+ }
+}

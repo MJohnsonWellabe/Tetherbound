@@ -393,6 +393,11 @@ func _ensure_ally() -> void:
 		await director.call("summon_active_creature")
 		return
 	await director.call("adopt_starter", "terrapup")
+	# Same ownership step as tests/smoke_controller_catching.gd: with
+	# combat.json actor_vitals on, a wild fight refuses an unowned fighter.
+	var owned_party: RefCounted = root.get_node(^"Game").get("party")
+	if owned_party != null and int(owned_party.call("size")) == 0 and director.call("ally_instance") != null:
+		owned_party.call("add", director.call("ally_instance"))
 
 
 func _leave_the_farmhouse() -> void:

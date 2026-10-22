@@ -1,0 +1,5 @@
+{"key": "rows 1 (1920x1080) and 2 (1280x720): A = after (main, craft_presentation readable_recipe_rows/readable_action_hints/glyph_hints true), B = before (same three false locally)",
+ "j1": {"1": {"A": 7.4, "B": 4.6, "D1_A": "FIXED", "D1_B": "PRESENT", "D2_A": "FIXED", "D2_B": "PRESENT"}, "2": {"A": 7.3, "B": 4.3, "D1_A": "FIXED", "D1_B": "PRESENT", "D2_A": "FIXED", "D2_B": "PRESENT"}},
+ "j2": {"1": {"A": 7.4, "B": 5.2, "D1_A": "FIXED", "D1_B": "PRESENT", "D2_A": "FIXED", "D2_B": "PRESENT"}, "2": {"A": 7.3, "B": 4.9, "D1_A": "FIXED", "D1_B": "PRESENT", "D2_A": "FIXED", "D2_B": "PRESENT"}},
+ "j3": {"1": {"A": 7.4, "B": 5.2, "D1_A": "FIXED", "D1_B": "PRESENT", "D2_A": "FIXED", "D2_B": "PRESENT"}, "2": {"A": 7.3, "B": 4.8, "D1_A": "FIXED", "D1_B": "PRESENT", "D2_A": "FIXED", "D2_B": "PRESENT"}},
+ "after_mean": 7.35, "before_mean": 4.83}

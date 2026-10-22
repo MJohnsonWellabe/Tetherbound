@@ -1,0 +1,180 @@
+{
+ "note": "F36#0 gap round: installed (live) vs the existing flag-off native candidate at the fight camera, CPU, non-candidate capture mode (each model plays its own clips); creature 8 Galecrest is confirm-only (one variant). Sheet letters per species -> capture dir.",
+ "key": {
+  "mudsnout": {
+   "A": "mudsnout_cand",
+   "B": "mudsnout_live"
+  },
+  "riverdrake": {
+   "A": "riverdrake_live",
+   "B": "riverdrake_cand"
+  },
+  "cloudfang": {
+   "A": "cloudfang_live",
+   "B": "cloudfang_cand"
+  },
+  "tanglevolt": {
+   "A": "tanglevolt_live",
+   "B": "tanglevolt_cand"
+  },
+  "fulgocobra": {
+   "A": "fulgocobra_cand",
+   "B": "fulgocobra_live"
+  },
+  "stormcapra": {
+   "A": "stormcapra_live",
+   "B": "stormcapra_cand"
+  },
+  "ashtusk": {
+   "A": "ashtusk_cand",
+   "B": "ashtusk_live"
+  },
+  "galecrest": {
+   "A": "galecrest_live"
+  }
+ },
+ "scores_by_judge_in_sheet_order": {
+  "mudsnout": [
+   [
+    6.3,
+    5.5
+   ],
+   [
+    6.0,
+    5.0
+   ],
+   [
+    6.0,
+    5.5
+   ]
+  ],
+  "riverdrake": [
+   [
+    6.9,
+    6.6
+   ],
+   [
+    6.6,
+    7.2
+   ],
+   [
+    7.0,
+    6.9
+   ]
+  ],
+  "cloudfang": [
+   [
+    6.4,
+    7.0
+   ],
+   [
+    6.4,
+    7.0
+   ],
+   [
+    6.7,
+    7.2
+   ]
+  ],
+  "tanglevolt": [
+   [
+    6.9,
+    7.1
+   ],
+   [
+    6.6,
+    7.1
+   ],
+   [
+    6.8,
+    7.3
+   ]
+  ],
+  "fulgocobra": [
+   [
+    5.9,
+    6.8
+   ],
+   [
+    5.2,
+    7.0
+   ],
+   [
+    6.0,
+    7.0
+   ]
+  ],
+  "stormcapra": [
+   [
+    6.2,
+    6.9
+   ],
+   [
+    6.5,
+    6.8
+   ],
+   [
+    6.7,
+    7.0
+   ]
+  ],
+  "ashtusk": [
+   [
+    6.9,
+    6.1
+   ],
+   [
+    7.0,
+    6.3
+   ],
+   [
+    7.2,
+    6.5
+   ]
+  ],
+  "galecrest": [
+   [
+    6.6
+   ],
+   [
+    6.4
+   ],
+   [
+    6.4
+   ]
+  ]
+ },
+ "means": {
+  "mudsnout": {
+   "installed": 5.33,
+   "candidate": 6.1
+  },
+  "riverdrake": {
+   "installed": 6.83,
+   "candidate": 6.9
+  },
+  "cloudfang": {
+   "installed": 6.5,
+   "candidate": 7.07
+  },
+  "tanglevolt": {
+   "installed": 6.77,
+   "candidate": 7.17
+  },
+  "fulgocobra": {
+   "installed": 6.93,
+   "candidate": 5.7
+  },
+  "stormcapra": {
+   "installed": 6.47,
+   "candidate": 6.9
+  },
+  "ashtusk": {
+   "installed": 6.3,
+   "candidate": 7.03
+  },
+  "galecrest": {
+   "installed": 6.47
+  }
+ }
+}

@@ -28,5 +28,5 @@
   },
   "base_species": "tuskroot",
   "scope": "presentation_only",
-  "activation": "Enabled close-1020 (F36#0, CPU-provisional): three code-blind judges 7.03 vs 6.60 installed at the fight camera; species.json now points at this retex. A GPU pass must confirm 7.5. Ashtusk keeps candidate/models/creature_tuskroot_native.glb as its aspect base."
+  "activation": "Enabled close-1020 (F36#0, CPU-provisional): three code-blind judges 7.03 vs 6.60 installed at the fight camera; species.json tuskroot uses this retex. A GPU pass must confirm 7.5. Ashtusk (aspect variant) shares this retex GLB, as test_dual_type requires, and creature_body.gd ASHTUSK_NATIVE_MAPS dresses it with its own native albedo, normal and metal/roughness maps, so its look is unchanged."
 }

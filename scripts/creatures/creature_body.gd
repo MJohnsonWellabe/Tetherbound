@@ -938,7 +938,7 @@ func _refresh_shiny_tint() -> void:
 	_refresh_base_colourway()
 	_apply_art_model_emission()
 	_apply_night_floor()
-	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny)
+	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny, _shiny_fallback)
 
 
 ## Keep a named preview's painted coat readable under the same forest light as
@@ -969,6 +969,7 @@ func _apply_art_model_emission() -> void:
 
 
 func _refresh_base_colourway() -> void:
+	_shiny_fallback = false
 	## T1-CREATURE-ART. An Aspect variant REPLACES the vivid/shiny/alpha
 	## ladder outright rather than adding a fourth rung to it -- see
 	## `aspect_variant`'s own comment for why. `alpha` can still be true at
@@ -1030,7 +1031,12 @@ func _refresh_base_colourway() -> void:
 		_apply_alpha_presence()
 		return
 	if shiny and not preload("res://scripts/creatures/creature_surface_finish.gd").has_finish(species_id, true):
-		_apply_variant_tint(_shiny_palette())
+		# P2-030: a shiny with no authored repaint hue-shifts its own texture
+		# (creature_surface_finishes.json `shiny_fallback`) instead of the flat
+		# magenta placeholder, when that fallback is enabled.
+		_shiny_fallback = _has_model and preload("res://scripts/creatures/creature_surface_finish.gd").has_fallback()
+		if not _shiny_fallback:
+			_apply_variant_tint(_shiny_palette())
 	_apply_alpha_presence()
 
 
@@ -1555,6 +1561,9 @@ func _swap_colourway_textures(suffix: String, texture_species: String = "") -> b
 ## threaded through the recursion, which would have to reach the two static
 ## helpers as well for no benefit.
 var _colourway: String = "vivid"
+## True when this shiny has no authored colourway and takes the surface-finish
+## hue shift instead (set in `_refresh_base_colourway`).
+var _shiny_fallback := false
 var _colourway_species: String = ""
 
 ## The alpha's drifting motes, freed and rebuilt whenever the body is re-dressed
@@ -1651,6 +1660,12 @@ const RETEX_LEGACY_MAPS := {
 		"normal": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_normal.jpg",
 		"metallic_roughness": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0_metallic_roughness.png",
 	},
+	"res://assets/creatures/tetherbound/ripplet/candidate_installed_retex/models/creature_ripplet_installed_retex_r6_lod0_base_color_r6.png": {
+		"albedo": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_base_color.png",
+		"emission": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_emissive.png",
+		"normal": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_normal.jpg",
+		"metallic_roughness": "res://assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0_metallic_roughness.png",
+	},
 }
 
 
@@ -1662,6 +1677,10 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 	var legacy: Dictionary = {}
 	if shiny_albedo == null and suffix != "vivid" and source.albedo_texture != null:
 		legacy = RETEX_LEGACY_MAPS.get(source.albedo_texture.resource_path, {})
+		for path: String in legacy.values():
+			if not ResourceLoader.exists(path):
+				legacy = {}
+				break
 		if not legacy.is_empty():
 			shiny_albedo = _texture_for(load(legacy.albedo) as Texture2D, species, suffix, "base_color")
 	if shiny_albedo == null:
