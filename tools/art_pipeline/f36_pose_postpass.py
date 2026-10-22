@@ -784,6 +784,13 @@ HIT_SCALE = {}
 #   HIT_STYLE.update({s: 'shove' for s, style in list(HIT_STYLE.items()) if style == 'recoil'})
 # 1.0 reproduces the judged live shove exactly.
 SHOVE_GAIN = 1.0
+# Close-1022 candidate (OFF until judged; enable with --candidate-1022): the hurt
+# shove above for every recoil species, and Mirejaw's faint as a side topple
+# (GPU pass 22 Oct: its belly-down prone faint reads as standing, all three judges).
+CANDIDATE_1022 = '--candidate-1022' in sys.argv
+if CANDIDATE_1022:
+    HIT_STYLE.update({s: 'shove' for s, style in list(HIT_STYLE.items()) if style == 'recoil'})
+    SHOVE_GAIN = 1.5
 TOPPLE_ROLL = {'staticub': 90.0, 'cindercub': 90.0, 'terrapup': -90.0, 'burrowback': -90.0, 'trailpup': -90.0}
 # Close-1020 fight-pitch round (capture --combat-pitch, the 25-degree fight
 # camera): +90 (back and markings to the camera) beat the live faint by 0.3-1.4
@@ -827,6 +834,8 @@ PRONE_DIP = {'ashtusk': 2.0, 'burrowback': 2.0, 'mudsnout': 3.0, 'shadelet': 2.0
 # It keeps the judged side-on topple (F29#3 r8: spike 0.031, grounded).
 PRONE = ('ashtusk', 'burrowback', 'cragclaw', 'mirejaw', 'mudsnout', 'riptusk', 'shadelet', 'skyrill',
          'staticub', 'stormbrush', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
+if CANDIDATE_1022:
+    PRONE = tuple(s for s in PRONE if s != 'mirejaw')
 
 
 def clamp_neck(frames, limit=NECK_PITCH_LIMIT):

@@ -1,0 +1,9 @@
+{
+  "_comment": "F36#0 close-1022 candidate (OFF: nothing loads this file; a capture merges these `ordinary` rows into creature_surface_finishes.json locally). GPU pass 22 Oct, three judges: Galecrest, Fulgocobra, Voltarach and Tanglevolt melt into near-black at fight distance beside the mid-value stylised roster. A value gamma lifts the body to mid value while keeping every hue, mark and eye. accent_source_saturation 9.0 turns the accent repaint off on rows that had none.",
+  "species": {
+    "tanglevolt": {"ordinary": {"base_value_gamma": 0.72, "base_saturation_scale": 1.15, "accent_source_saturation": 9.0}},
+    "voltarach": {"ordinary": {"base_value_gamma": 0.6, "base_saturation_scale": 1.1, "accent_source_saturation": 9.0}},
+    "galecrest": {"ordinary": {"base_value_gamma": 0.66, "base_saturation_scale": 1.3, "accent_source_saturation": 9.0}},
+    "fulgocobra": {"ordinary": {"base_value_gamma": 0.7, "base_value_scale": 1.0}}
+  }
+}

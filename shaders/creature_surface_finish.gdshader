@@ -18,6 +18,9 @@ uniform float repaint_strength = 0.0;
 uniform vec2 body_source_hue = vec2(0.0, 1.0);
 uniform float body_source_saturation = 0.0;
 uniform float base_value_scale = 1.0;
+// F36#0 close-1022: dark ordinary palettes lift by a value gamma (1.0 = unchanged).
+uniform float base_value_gamma = 1.0;
+uniform float base_saturation_scale = 1.0;
 uniform float body_hue = 0.5;
 uniform float body_saturation = 0.3;
 uniform float body_value_floor = 0.0;
@@ -83,7 +86,10 @@ void fragment() {
     float body_mask = smoothstep(body_source_hue.x - 0.025, body_source_hue.x, hsv.x)
         * (1.0 - smoothstep(body_source_hue.y, body_source_hue.y + 0.025, hsv.x))
         * smoothstep(body_source_saturation - 0.04, body_source_saturation, hsv.y);
-    vec3 base = mix(source.rgb * base_value_scale, body, repaint_strength * body_mask);
+    vec3 lifted = source.rgb;
+    if (base_value_gamma != 1.0 || base_saturation_scale != 1.0)
+        lifted = from_hsv(vec3(hsv.x, clamp(hsv.y * base_saturation_scale, 0.0, 1.0), pow(hsv.z, base_value_gamma)));
+    vec3 base = mix(lifted * base_value_scale, body, repaint_strength * body_mask);
     if (shift_enabled) {
         float grey = 1.0 - smoothstep(0.08, 0.2, hsv.y);
         float saturation = clamp(max(hsv.y * shift_saturation_scale, shift_saturation_floor), 0.0, 0.85);
