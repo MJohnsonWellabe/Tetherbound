@@ -1,17 +1,21 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-settlement-life-candidate",
-  "revision": "f08-3-settlement-life-r15-foreground",
+  "revision": "f08-3-settlement-life-r16-lamp-window",
   "_scope": "F08#3 candidate, OFF until a three-judge code-blind pass. Local presentation only: lamp posts, market edge, a Cliffhold hearth and edge trees at Galefoot and Cliffhold from installed asset families; warmer darker limestone spires; the Galefoot lantern line no longer plants a pole in the plaza. Coordinates are landmark-local metres; every piece snaps to the authored ground or is skipped. No collision, save field, RPC or route change.",
   "lamp": {
     "post_height_m": 3.6,
     "arm_m": 0.9,
     "lantern_height_m": 0.85,
     "colour": "#ffb766",
-    "energy": 3.0,
+    "_light_why": "r16: the light is a pale warm white so the night road keeps its own colour (the amber light read rust-red, near Team Tether oxblood); the amber stays on the glowing lantern core.",
+    "light_colour": "#ffe4c4",
+    "energy": 2.4,
     "range_m": 9.0,
     "attenuation": 1.6,
-    "glow": 3.0,
+    "glow": 2.0,
+    "door_energy": 2.2,
+    "door_glow": 2.5,
     "core_radius_m": 0.22
   },
   "cliffhold_detail": true,
@@ -787,7 +791,7 @@
   },
   "building_tint": "#cfc4b2",
   "window_colour": "#ffa04a",
-  "window_night_energy": 2.5,
+  "window_night_energy": 1.2,
   "narrow_shoulders": {
     "_why": "Coordinator ruling 21 Oct: drop the ground outside the walkable crowns the fixed cameras look across. Route shoulders near each settlement narrow so their existing outer-edge drop (14-34 m) falls away beside the road; road ribbon and 48 m terrace unchanged.",
     "centres": [

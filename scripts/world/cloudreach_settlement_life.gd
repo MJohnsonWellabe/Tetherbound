@@ -312,7 +312,7 @@ func _lamp_post(world: Node3D, parent: Node3D, post: Dictionary, lamp: Dictionar
 	core.position = Vector3(0, height - 0.2 - lantern_h * 0.55, arm)
 	pole.add_child(core)
 	var light := OmniLight3D.new()
-	light.light_color = colour
+	light.light_color = Color(str(lamp.get("light_colour", lamp.get("colour", "#ffc17d"))))
 	light.omni_range = float(lamp.get("range_m", 14.0))
 	light.omni_attenuation = float(lamp.get("attenuation", 1.2))
 	light.position = core.position
@@ -322,8 +322,9 @@ func _lamp_post(world: Node3D, parent: Node3D, post: Dictionary, lamp: Dictionar
 
 
 func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
-	var model := _scene(parent, load(MESHY % [spec.asset, spec.asset]) as PackedScene, at,
-		float(spec.height), float(spec.get("yaw", 0.0)))
+	var path := str(spec.get("glb", MESHY % [spec.asset, spec.asset]))
+	var model := _scene(parent, load(path) as PackedScene, at,
+		float(spec.height), float(spec.get("yaw", 0.0)), float(spec.get("width", 0.0)))
 	if model == null:
 		return
 	_dress_building(model, str(spec.asset))
@@ -340,13 +341,14 @@ func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
 		var light := OmniLight3D.new()
 		var door: Array = spec.door_light
 		light.position = Vector3(float(door[0]), float(door[1]), float(door[2]))
-		light.light_color = Color(str(config().get("lamp", {}).get("colour", "#ffb060")))
+		var lamp_spec: Dictionary = config().get("lamp", {})
+		light.light_color = Color(str(lamp_spec.get("light_colour", lamp_spec.get("colour", "#ffb060"))))
 		light.omni_range = 9.0
 		placement.add_child(light)
 		var glow := StandardMaterial3D.new()
 		glow.albedo_color = light.light_color
 		glow.emission_enabled = true
-		glow.emission = light.light_color
+		glow.emission = Color(str(lamp_spec.get("colour", "#ffb060")))
 		var pane := MeshInstance3D.new()
 		var quad := SphereMesh.new()
 		quad.radius = 0.18
@@ -355,7 +357,8 @@ func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
 		pane.material_override = glow
 		pane.position = light.position
 		placement.add_child(pane)
-		_lamps.append({"light": light, "material": glow, "energy": 3.0, "glow": 6.0, "day_glow": 0.2})
+		_lamps.append({"light": light, "material": glow, "energy": float(lamp_spec.get("door_energy", 3.0)),
+			"glow": float(lamp_spec.get("door_glow", 6.0)), "day_glow": 0.2})
 
 
 ## Weathered stone tint for the clean Meshy facades, and night window glow
@@ -496,18 +499,21 @@ func _ground(world: Node3D, parent: Node3D, local: Vector3) -> Vector3:
 	return parent.to_local(Vector3(global.x, height, global.z))
 
 
-func _scene(parent: Node3D, packed: PackedScene, at: Vector3, height: float, yaw: float) -> Node3D:
+## width > 0 fits the footprint to that width independently of the height
+## (a Meshy building whose proportions miss the brief).
+func _scene(parent: Node3D, packed: PackedScene, at: Vector3, height: float, yaw: float, width := 0.0) -> Node3D:
 	if packed == null:
 		return null
 	var model := packed.instantiate() as Node3D
 	var bounds: AABB = BOUNDS.measure(model)
 	var factor := height / maxf(bounds.size.y, 0.01)
+	var across := width / maxf(maxf(bounds.size.x, bounds.size.z), 0.01) if width > 0.0 else factor
 	var placement := Node3D.new()
 	placement.position = at
 	placement.rotation.y = deg_to_rad(yaw)
 	parent.add_child(placement)
-	model.scale = Vector3.ONE * factor
-	model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
+	model.scale = Vector3(across, factor, across)
+	model.position = -Vector3(bounds.get_center().x * across, bounds.position.y * factor, bounds.get_center().z * across)
 	placement.add_child(model)
 	return model
 

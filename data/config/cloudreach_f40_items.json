@@ -1,13 +1,14 @@
 {
   "enabled": false,
   "preview_arg": "--cloudreach-f40-items-candidate",
-  "revision": "f40-items-r4-hero",
+  "revision": "f40-items-r5-drum-ring-v2",
   "_scope": "F40 #1/#2 Cloudreach item candidates, OFF until a code-blind before/after PASS. P2-022 summit aviary: Meshy gate towers flank both drum entries, eagle statues and an aerie perch platform give the approach a stronghold hierarchy, and warm entry/interior lights give the night a lit sanctuary. Landmark-local metres, ground-snapped. Assets: assets/props/meshy-1020/cloudreach_* (provenance.json each).",
   "lamp": {
     "post_height_m": 3.6,
     "arm_m": 0.9,
     "lantern_height_m": 0.85,
     "colour": "#ff9a3c",
+    "light_colour": "#ffdcb4",
     "energy": 3.0,
     "range_m": 9.0,
     "attenuation": 1.6,
@@ -18,16 +19,66 @@
     "SummitEyrieStronghold": {
       "buildings": [
         {
-          "asset": "aviary_hero_shell",
+          "asset": "aviary_drum_ring_v2",
+          "glb": "res://assets/props/meshy-1022/cloudreach_aviary_drum_ring_v2/cloudreach_aviary_drum_ring_v2_open.glb",
           "at": [
             0.0,
             0.0,
             0.0
           ],
-          "height": 44.0,
+          "height": 54.0,
+          "width": 58.0,
           "yaw": 0.0,
           "collision_fraction": 0.0,
           "no_snap": true
+        },
+        {
+          "asset": "aviary_belvedere_tower",
+          "glb": "res://assets/props/meshy-1022/cloudreach_aviary_belvedere_tower/cloudreach_aviary_belvedere_tower.glb",
+          "at": [
+            17.21,
+            0.0,
+            24.57
+          ],
+          "height": 26.0,
+          "yaw": 35.0,
+          "collision_fraction": 0.0
+        },
+        {
+          "asset": "aviary_belvedere_tower",
+          "glb": "res://assets/props/meshy-1022/cloudreach_aviary_belvedere_tower/cloudreach_aviary_belvedere_tower.glb",
+          "at": [
+            -17.21,
+            0.0,
+            24.57
+          ],
+          "height": 26.0,
+          "yaw": -35.0,
+          "collision_fraction": 0.0
+        },
+        {
+          "asset": "aviary_belvedere_tower",
+          "glb": "res://assets/props/meshy-1022/cloudreach_aviary_belvedere_tower/cloudreach_aviary_belvedere_tower.glb",
+          "at": [
+            -17.21,
+            0.0,
+            -24.57
+          ],
+          "height": 26.0,
+          "yaw": -145.0,
+          "collision_fraction": 0.0
+        },
+        {
+          "asset": "aviary_belvedere_tower",
+          "glb": "res://assets/props/meshy-1022/cloudreach_aviary_belvedere_tower/cloudreach_aviary_belvedere_tower.glb",
+          "at": [
+            17.21,
+            0.0,
+            -24.57
+          ],
+          "height": 26.0,
+          "yaw": -215.0,
+          "collision_fraction": 0.0
         },
         {
           "asset": "eagle_statue_plinth",
@@ -136,5 +187,6 @@
   "island_underside_width_factor": 2.15,
   "island_underside_top_fraction": 0.86,
   "rock_tint": "#a39886",
-  "_p2_023": "Airborne LandmarkLedge masses hang the Meshy stratified islet (assets/props/meshy-1020/cloudreach_floating_islet) as their underside instead of the procedural cone root; scaled to the ledge's widest bottom ring, top hidden inside the open mass bottom. Visual only (collision is the crown)."
+  "_p2_023": "Airborne LandmarkLedge masses hang the Meshy stratified islet (assets/props/meshy-1020/cloudreach_floating_islet) as their underside instead of the procedural cone root; scaled to the ledge's widest bottom ring, top hidden inside the open mass bottom. Visual only (collision is the crown).",
+  "_p2_022_r5": "Meshy drum ring v2 (floor stripped by tools/meshy_strip_floor.py, footprint fitted to 58 m, 54 m to the finial) and four Meshy belvedere towers (26 m) on the existing pier angles replace the r4 hero shell; procedural aviary colliders stay. Assets: assets/props/meshy-1022/ (provenance.jsonl each)."
 }
