@@ -3,7 +3,7 @@
 ## TO COORDINATOR
 - 2026-10-22 13:40Z READY tb/routes 58b29d287 Game fixes with tests: Master/Kitchen/feed chooser names companions (599214425), chains controller focus past the visible list (bc4683e4a), closes on controller B / menu_cancel (049dde025); Meadows pieces may start from an earlier commit's accepted save, `--pinned-start` (66f0d48d6). Piece set passed: Tidewake T3 loop 05i → training_t3_return (seams/ manifests, 1 reviewed difference).
 - 2026-10-22 13:40Z Unproven (Routes): Meadows training_t1_master (pinned run m12 on 58b29d287 in progress; Orin travel and chest-return fixes 5e27262e2, 58b29d287), training_t1_kitchen, training_t1_feed, training_t2_earn, t2_altar_1..5, t2_master, t2_kitchen, t2_feed, t2_return, warrens, relay, sigils, hall, warden, tidewake_handoff; Tidewake story pieces 01_opening..05d and 06_swimmer..09_cloudreach_handoff (not run by Routes). Passed: Meadows opening_village → training_t1_altar_5 (0105fc978).
-- 2026-10-22 13:40Z Pending merge: tb/routes-b's rename of f49_portal_travel lesson members needs f20_portal_travel's own LESSON_PANEL back (19ea643d7 removed it); done with the merge once the running piece frees the checkout.
+- 2026-10-22 13:55Z READY tb/routes c4bb2e1fd Merged tb/routes-b (incl. its f49_portal_travel rename) and restored f20_portal_travel's LESSON_PANEL; every chain runner (earned, tidewake, cloudreach, stormwood) compiles. Land routes and routes-b together at this head or later.
 
 Cloud container, Godot 4.7 headless. Branch tb/routes merged with origin/main 2124b1f6c.
 
