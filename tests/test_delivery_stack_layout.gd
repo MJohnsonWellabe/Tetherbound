@@ -123,3 +123,12 @@ func test_old_layouts_that_change_items_or_break_the_slot_schema_are_refused() -
 	cases["a shorter inventory"] = shorter
 	for label: String in cases:
 		assert_false(_valid(cases[label]), label + " is refused")
+
+func test_a_whole_float_tool_field_keys_like_its_integer() -> void:
+	# The replay stages from `before` (durability 27, an int); a saved `after`
+	# that came back from JSON holds 27.0. _equivalent treats them alike, so
+	# the layout key must too.
+	var old := _old_layout(_row())
+	assert_true(old.after.inventory[0].durability is int, "the staged tool durability is an integer")
+	old.after.inventory[0].durability = 27.0
+	assert_true(_valid(old), "durability 27.0 in the saved layout keys like 27")

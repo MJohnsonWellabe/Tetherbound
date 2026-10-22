@@ -427,6 +427,7 @@ func _watchdog() -> void:
 	var last_fight_hp := -1.0
 	var last_items := ""
 	var last_surge := -1.0
+	var last_walk_at := Vector3.INF
 	while true:
 		var wait_until := Time.get_ticks_msec() + 15000
 		while Time.get_ticks_msec() < wait_until:
@@ -463,6 +464,15 @@ func _watchdog() -> void:
 		if not declared_wait.is_empty() and surge_now > last_surge + 1.0:
 			last_receipt_ms = Time.get_ticks_msec()
 		last_surge = surge_now
+		# A walk that keeps covering ground is progress too: three pieces sharing
+		# this host's CPU made one long road walk outlast 45 wall minutes while
+		# the trainer moved steadily (dynamo, to Sera's stance). A frozen walk,
+		# under 10 m per 15 s check, still trips.
+		var walker := game.call("find_player") as Node3D
+		if walker != null:
+			if last_walk_at != Vector3.INF and walker.global_position.distance_to(last_walk_at) >= 10.0:
+				last_receipt_ms = Time.get_ticks_msec()
+			last_walk_at = walker.global_position
 		var fight_hp := _fight_hp_total()
 		if fight_hp >= 0.0 and not is_equal_approx(fight_hp, last_fight_hp):
 			last_fight_hp = fight_hp
