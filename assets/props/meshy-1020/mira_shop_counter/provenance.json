@@ -1,0 +1,67 @@
+{
+ "asset": "mira_shop_counter",
+ "date": "2026-10-21",
+ "requested_by": "Meadows lane (F17#6, F38)",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until scene passes judging",
+ "workflow": "agent-drafted concept via image-to-image (nano-banana-pro) from repo references, inspected by the agent, then multi-image-to-3d (latest)",
+ "target_size_m": {
+  "w": 2.4,
+  "h": 1.05,
+  "d": 0.7
+ },
+ "native_model_units": "Meshy normalises the largest extent to ~1.9 units; scale to target_size_m at integration",
+ "integration_flag": "OFF (not integrated; candidate only)",
+ "concepts": [
+  {
+   "tag": "v1",
+   "task_id": "01a15c3e-1451-74c1-9ec4-6bc7310039c4",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game prop concept: a village shop counter, long wooden counter 2.4 m wide, 1.05 m tall, 0.7 m deep, warm oak with raised front panelling and a thick worn countertop. On top: glass jars of preserves and sweets, a basket of round bread loaves, folded colourful cloth bolts (cream, sage green and blue), a small brass scale. Cosy friendly village general store, matches the village in the key art. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "docs/reference/tetherbound-meadows-keyart.png (crop: starting settlement)",
+    "docs/reference/palworld-05-base-building.jpg"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "mira_shop_counter/concepts/v1_0.png",
+    "mira_shop_counter/concepts/v1_1.png",
+    "mira_shop_counter/concepts/v1_2.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  }
+ ],
+ "models": [
+  {
+   "model": "mira_shop_counter",
+   "task_id": "01a15c3f-db47-775b-a0ae-97a19e82f86d",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 15000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "mira_shop_counter/concepts/v1_0.png",
+    "mira_shop_counter/concepts/v1_1.png",
+    "mira_shop_counter/concepts/v1_2.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "mira_shop_counter/model_mira_shop_counter/mira_shop_counter.glb",
+    "base_color": "mira_shop_counter/model_mira_shop_counter/mira_shop_counter_base_color.png",
+    "metallic": "mira_shop_counter/model_mira_shop_counter/mira_shop_counter_metallic.png",
+    "roughness": "mira_shop_counter/model_mira_shop_counter/mira_shop_counter_roughness.png",
+    "normal": "mira_shop_counter/model_mira_shop_counter/mira_shop_counter_normal.png",
+    "thumbnail": "mira_shop_counter/model_mira_shop_counter/thumbnail.png"
+   }
+  }
+ ],
+ "consumed_credits_total": 39,
+ "agent_visual_verdict": "Good: panelled oak counter with jars, bread basket, cloth bolts and a brass scale; goods are small but readable.",
+ "notes": ""
+}

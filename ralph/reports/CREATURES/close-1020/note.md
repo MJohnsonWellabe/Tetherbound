@@ -1007,7 +1007,7 @@ Checks:
 **Settle** (`f36-1-settle-key.json`, `_sheet-f36-1-settle.png`):
 - New solver step `settle_descent`. On every frame between standing and the faint end, it folds the lowest propping limb chain until the torso gap is no higher than a smoothstep descent from the standing gap. A limb planted straight down folds about the lateral axis, and a blocked step retries at half size.
 - Measured effect: mid-collapse torso gaps that rose from standing to 0.3–0.47 of height now stay at or under standing on most species. Stormbrush stays stuck at 0.46.
-- Judge round: base (main) vs settle on the 20 species it changes, three code-blind judges. The set went from **6.22 to 6.37**:
+- Judge round: base (main) vs settle on 20 species, three code-blind judges. The set went from **6.22 to 6.37**:
 
 | Species | Change |
 |---|---|
@@ -1021,7 +1021,7 @@ Checks:
 | Riptusk | +0.13 |
 | Brooktail | −0.50 |
 
-- **Adopted for every species except Brooktail** (`SETTLE_SKIP`). The full rewrite from the committed recipes reproduces the file, and Brooktail's faint is byte-identical to main.
+- **Adopted for the 19 judged species other than Brooktail** (`SETTLE_ONLY`). Coordinator landing review, 21 Oct: the first land applied settle to every species but Brooktail, which also changed the faints of 10 enabled species no judge had seen (abyssal_guardian, cragclaw, frostclaw, galewisp, meadowhart, ripplet, stormbrush, stormtrail, stormursa, trailpup). Settle is now restricted to the judged set; those 10, and Brooktail, keep main's faint byte-for-byte. Judge them settled before adopting it there.
 - Still broken in both variants:
   - Brooktail ends belly-up with a dark limb block through the ground.
   - Stormbrush ends belly-up with limbs straight up.

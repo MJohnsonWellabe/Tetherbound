@@ -1,0 +1,10 @@
+{
+ "placed-wall-close_day_clear": {
+  "A": "X",
+  "B": "Y"
+ },
+ "placed-wall_day_clear": {
+  "A": "Y",
+  "B": "X"
+ }
+}

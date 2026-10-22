@@ -125,3 +125,75 @@ func test_installed_timber_decks_keep_collision_without_a_visible_proxy_slab() -
 		assert_eq(surfaces[0].b, b)
 		assert_eq(surfaces[0].half_width, width * 0.5)
 		world.free()
+
+
+## Routes-B 06k a1: a trainer climbing observatory_summit_link stopped dead at
+## (432.5, 919.2, 4519.7), 20 m short of the Old Wind Observatory pad, against
+## a 49-degree `LandmarkLedge` face. The ribbon joined the pad at the 6.6 m
+## landing cap, but the landmark's walkable crown stays flat at its height out
+## to `_landmark_cap_radius` (18 m, the 38x36 `ObservatoryWalkableCrown`), so a
+## climbing ribbon ran 1-2 m under that crown at its rim. Every ground ribbon
+## ending on a landmark must stay at crown height across that whole flat crown.
+const LANDMARK_RIM_STEP_TOLERANCE_M := 0.15
+
+
+func test_ribbons_reach_every_landmark_crown_at_crown_height() -> void:
+	var world := WORLD.new()
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_world.json"))
+	var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_visual.json"))
+	visual = preload("res://scripts/world/cloudreach_visual_candidate.gd").apply(visual, "visual")
+	visual = preload("res://scripts/world/cloudreach_biome_look.gd").apply_visual(visual)
+	world.set("_config", config)
+	world.set("_visual_config", visual)
+	world.call("_collect_all_route_lines")
+	var lines: Array = world.get("_all_route_lines")
+	var checked := {}
+	for landmark: Dictionary in config.get("landmarks", []):
+		if str(landmark.get("category", "")) == "settlement":
+			continue # Its 48x48 terrace is the floor, not a ledge crown.
+		var centre: Vector3 = world.call("_vec3", landmark.position)
+		var cap := float(world.call("_landmark_cap_radius", str(landmark.id)))
+		for route: Dictionary in config.get("routes", []):
+			if str(route.get("traversal_mode", "ground")) != "ground":
+				continue
+			var polyline: Array = route.get("polyline", [])
+			for i in polyline.size():
+				if not (world.call("_vec3", polyline[i]) as Vector3).is_equal_approx(centre):
+					continue
+				for j: int in [i - 1, i + 1]:
+					if j < 0 or j >= polyline.size():
+						continue
+					var away: Vector3 = world.call("_vec3", polyline[j])
+					var direction := Vector3(away.x - centre.x, 0.0, away.z - centre.z).normalized()
+					# The crown box is axis-aligned, so its rim along this
+					# approach is the Chebyshev edge `_landing_join` uses.
+					var rim := cap / maxf(absf(direction.x), absf(direction.z)) - 0.25
+					var lowest := INF
+					var r := 0.5
+					while r <= rim:
+						var at := centre + direction * r
+						var height := _route_height_at(lines, str(route.id), at)
+						if is_finite(height):
+							lowest = minf(lowest, height)
+						r += 0.5
+					var label := "%s %s toward %s" % [str(landmark.id), str(route.id), str(away)]
+					checked[label] = true
+					assert_true(lowest >= centre.y - LANDMARK_RIM_STEP_TOLERANCE_M,
+						"%s: ribbon stays at crown height %.2f across the %.1f m flat crown (lowest %.2f)" % [
+							label, centre.y, rim, lowest])
+	assert_true(checked.has("old_wind_observatory observatory_summit_link toward (450.0, 900.0, 4660.0)"),
+		"the reported observatory_summit_link climb is checked (%s)" % str(checked.keys()))
+	world.free()
+
+
+func _route_height_at(lines: Array, route_id: String, at: Vector3) -> float:
+	for line: Dictionary in lines:
+		if str(line.route_id) != route_id:
+			continue
+		var a: Vector3 = line.a
+		var b: Vector3 = line.b
+		var flat := Vector2(b.x - a.x, b.z - a.z)
+		var t := clampf(Vector2(at.x - a.x, at.z - a.z).dot(flat) / flat.length_squared(), 0.0, 1.0)
+		if Vector2(a.x + flat.x * t - at.x, a.z + flat.y * t - at.z).length() < 0.1:
+			return lerpf(a.y, b.y, t)
+	return INF

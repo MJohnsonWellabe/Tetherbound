@@ -283,12 +283,22 @@ func _miras_cottage_has_an_inside_and_she_is_in_it() -> void:
 	if village == null:
 		_fail("no Village node; nothing was placed")
 		return
+	# OWNER-0912 re-site: village.json now places three cottage_a buildings
+	# (mira_shop plus the generic research and orchard houses), so "the last
+	# cottage_a" is no longer Mira's. Take the one at mira_shop's authored spot.
+	var shop_at := Vector2.INF
+	var layout: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/village.json"))
+	for row: Variant in (layout as Dictionary).get("structures", []) if layout is Dictionary else []:
+		if row is Dictionary and str(row.get("id", "")) == "mira_shop":
+			shop_at = Vector2(float(row.at[0]), float(row.at[1]))
 	var cottage: Node3D = null
 	for child in village.get_children():
-		if str(child.name).begins_with("cottage_a"):
-			cottage = child as Node3D
+		var placed := child as Node3D
+		if placed != null and str(child.name).begins_with("cottage_a") \
+				and Vector2(placed.global_position.x, placed.global_position.z).distance_to(shop_at) < 0.5:
+			cottage = placed
 	if cottage == null:
-		_fail("cottage_a was never placed")
+		_fail("Mira's shop (cottage_a at village.json mira_shop) was never placed")
 		return
 	var interior := cottage.get_node_or_null(^"Interior")
 	if interior == null:

@@ -1,0 +1,25 @@
+{
+ "model": "homestead_wall_segment",
+ "task_id": "01a15c43-0d8b-71bd-8a0c-484f6363b3c3",
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "ai_model": "latest",
+ "target_polycount": 10000,
+ "topology": "quad",
+ "should_remesh": true,
+ "enable_pbr": true,
+ "input_images": [
+  "/home/user/Tetherbound/assets_raw/props-1020/homestead_wall_segment/concepts/v2_0.png"
+ ],
+ "status": "SUCCEEDED",
+ "task_error": null,
+ "consumed_credits": 30,
+ "files": {
+  "glb": "/home/user/Tetherbound/assets_raw/props-1020/homestead_wall_segment/model_homestead_wall_segment/homestead_wall_segment.glb",
+  "base_color": "/home/user/Tetherbound/assets_raw/props-1020/homestead_wall_segment/model_homestead_wall_segment/homestead_wall_segment_base_color.png",
+  "metallic": "/home/user/Tetherbound/assets_raw/props-1020/homestead_wall_segment/model_homestead_wall_segment/homestead_wall_segment_metallic.png",
+  "roughness": "/home/user/Tetherbound/assets_raw/props-1020/homestead_wall_segment/model_homestead_wall_segment/homestead_wall_segment_roughness.png",
+  "normal": "/home/user/Tetherbound/assets_raw/props-1020/homestead_wall_segment/model_homestead_wall_segment/homestead_wall_segment_normal.png",
+  "thumbnail": "/home/user/Tetherbound/assets_raw/props-1020/homestead_wall_segment/model_homestead_wall_segment/thumbnail.png"
+ },
+ "date": "2026-10-21"
+}

@@ -375,6 +375,44 @@ func test_actor_alias_and_pooled_body_rejoin_require_current_unique_generation()
 	body.free()
 
 
+## Rejoining a fight after the creature's canonical HP changed elsewhere (it
+## fought another wild in between) rebinds from that canonical HP. A retained
+## stale row produced a proposal whose hp_before never matched the owner's
+## card, so it could never commit and the record wedged (leaves deferred
+## forever, strikes refused pending_vitals). An in-flight row is untouched.
+func test_rejoin_new_generation_adopts_settled_canonical_hp() -> void:
+	var owned: Dictionary = _portable(_player()).party[0]
+	var host := ENCOUNTER.new()
+	var rec := host.open(1, "meadows", "wild", {"hp": 100.0, "hp_max": 100.0}, owned.uid, "owner_a")
+	var id := str(rec.encounter_id)
+	assert_true(host.join(id, 9, "other_uid", "owner_b").ok, "a second player keeps the fight alive")
+	var body := Node.new()
+	assert_true(host.bind_actor_body(id, 1, "owner_a", owned, body.get_instance_id()).ok)
+	host.leave(id, 1)
+	var hurt := owned.duplicate(true)
+	hurt["hp"] = float(owned.hp) * 0.5
+	var rejoined := host.join(id, 2, owned.uid, "owner_a")
+	assert_true(rejoined.ok, "rejoin " + str(rejoined))
+	var replacement := Node.new()
+	var rebound := host.bind_actor_body(id, 2, "owner_a", hurt, replacement.get_instance_id())
+	assert_true(rebound.ok, "rejoin rebinds " + str(rebound))
+	assert_eq(float(rebound.get("vitals", {}).get("hp", -1.0)), float(hurt.hp),
+		"a new settled generation starts from the canonical HP")
+	assert_eq(int(rebound.get("vitals", {}).get("body_generation", -1)), 2)
+	var again := host.bind_actor_body(id, 2, "owner_a", owned, body.get_instance_id())
+	assert_true(again.ok)
+	assert_eq(float(again.get("vitals", {}).get("hp", -1.0)), float(owned.hp),
+		"each later settled generation follows the card again")
+	var actor: Dictionary = rec.participants[2].actor_vitals[owned.uid]
+	actor.revision = int(actor.settled_revision) + 1
+	var in_flight := host.bind_actor_body(id, 2, "owner_a", hurt, replacement.get_instance_id())
+	assert_true(in_flight.ok)
+	assert_eq(float(in_flight.get("vitals", {}).get("hp", -1.0)), float(owned.hp),
+		"an unsettled revision keeps its row until it settles")
+	replacement.free()
+	body.free()
+
+
 ## F27 flip: a trainer battle's round boundary empties the record and the
 ## host re-seats its participants with no UID (encounter_director
 ## `_resume_trainer_encounter`). The retained participant must keep its bound

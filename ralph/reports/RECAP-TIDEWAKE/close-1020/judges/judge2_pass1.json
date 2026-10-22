@@ -1,0 +1,476 @@
+{
+ "judge_id": "judge2",
+ "overall": {
+  "bar_a": 4.1,
+  "bar_b": 3.5,
+  "top_changes": [
+   {
+    "change": "Replace Veilfall with a monumental hero mountain matching the board: stacked green-topped cliffs, multiple broad cascades, spray base and a visible arched entrance; fix the Veilfall cascade/crown approach where stretched grey rock textures smear across the screen and the crown is a featureless noise wall.",
+    "type": "new_art"
+   },
+   {
+    "change": "Build out each named destination with a real landmark set piece (Reedhaven woven hall, Shellwatch jetty, Salt Crown shrine, Lantern Cove arch, Gull Rest spire, Drowned Garden terraces, twin pumps) plus docks, boats and warm inhabited props, so islands stop reading as identical empty dunes.",
+    "type": "new_art"
+   },
+   {
+    "change": "Shore and water material pass: damp darker sand band, wet dark rock outcrops, reeds/shrub pockets and texture on large dune faces; depth-graded water with sea haze between islands; replace dashed white current lines and disc stepping stones with organic foam/flow and irregular sandbars.",
+    "type": "scene"
+   }
+  ]
+ },
+ "rows": [
+  {
+   "item_id": "P2-008",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 4,
+   "severity": 3,
+   "evidence": [
+    "day_01:first_shore_01:0",
+    "day_01:reedhaven_03:0",
+    "day_02:shellwatch_07:0",
+    "day_03:salt_crown_11:-45",
+    "day_06:deep_watch_23:45",
+    "day_05:gull_rest_20:90"
+   ],
+   "reason": "The grassy domes with grey rock skirts are gone and islands now read as pale dunes with sparse beach grass, matching the dunes ruling. But every island is the same smooth unlayered sand mound with no damp darker shore band, wet rock, marsh, shrub pockets or strata, and huge untextured shadowed dune faces (Deep Watch lookout, Salt Crown, Tidal Cradle) read as blank geometry."
+  },
+  {
+   "item_id": "P2-016",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "Creature hurt/moving poses are not shown; wild creatures in the sheets are static idle props."
+  },
+  {
+   "item_id": "P2-002",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No map menu appears; only the minimap corner widget is visible."
+  },
+  {
+   "item_id": "P2-030",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No shiny variants are shown."
+  },
+  {
+   "item_id": "P2-033",
+   "pictured": "partial",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3,
+   "severity": 3,
+   "evidence": [
+    "day_02:shellwatch_08:180",
+    "day_02:brine_steps_06:0",
+    "day_05:lantern_cove_18:0"
+   ],
+   "reason": "Only generic crates, barrels and small dark scattered pebbles/props sit on the sand; nothing in frame reads as an identifiable pickup at camera distance."
+  },
+  {
+   "item_id": "P2-010",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 4,
+   "severity": 4,
+   "evidence": [
+    "day_04:sluice_isle_14:0",
+    "day_04:sluice_isle_14:-45",
+    "day_05:drowned_garden_21:0",
+    "day_01:first_shore_02:0",
+    "night_05:drowned_garden_21:0"
+   ],
+   "reason": "Veilfall is now a cluster of grey columnar rock pillars rather than a dark cone, visible from First Shore, but it is still a bare stone stack with one thin white stripe, no stacked cascades, greenery, arches, spray base or entrance, and it is small and hazed on the horizon versus the board's monumental waterfall mountain."
+  },
+  {
+   "item_id": "P2-011",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3,
+   "severity": 4,
+   "evidence": [
+    "day_01:reedhaven_03:0",
+    "day_02:shellwatch_07:0",
+    "day_04:lantern_cove_17:0",
+    "day_05:gull_rest_19:0",
+    "day_05:drowned_garden_21:180",
+    "day_03:sluice_isle_13:0",
+    "day_03:salt_crown_11:0"
+   ],
+   "reason": "Most named destinations are still empty sand slopes: no woven hall at Reedhaven, no jetty at Shellwatch, no shrine at Salt Crown, no arch at Lantern Cove; Gull Rest's spire is a small lattice crate, the Drowned Garden terraces are a faint grey step block, and Sluice Isle's pumps are a small distant rusty silhouette."
+  },
+  {
+   "item_id": "P2-071",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No swimming frames."
+  },
+  {
+   "item_id": "P2-028",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No faint state frames."
+  },
+  {
+   "item_id": "P2-001",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No menu screens."
+  },
+  {
+   "item_id": "P2-007",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No menu panels."
+  },
+  {
+   "item_id": "P2-055",
+   "pictured": "partial",
+   "assessment": "PERSISTS",
+   "bar_a_score": 4,
+   "severity": 3,
+   "evidence": [
+    "day_02:brine_steps_06:45",
+    "day_02:shellwatch_08:90",
+    "day_02:shellwatch_08:180"
+   ],
+   "reason": "The few NPCs visible (two bearded khaki dock hands at Brine Steps, two straw-hat figures at Shellwatch) repeat near-identical outfits and silhouettes; named-role identity cannot be read."
+  },
+  {
+   "item_id": "P2-009",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 5,
+   "severity": 3,
+   "evidence": [
+    "day_02:brine_steps_05:45",
+    "day_02:brine_steps_05:90",
+    "day_04:sluice_isle_14:0",
+    "day_05:drowned_garden_21:0",
+    "night_02:brine_steps_05:0"
+   ],
+   "reason": "Water now has a lighter cyan shallows band against deeper blue channels and foam edges at Brine Steps, but open water is still a uniform flat blue with little haze gradient between islands and no readable shore depth or reef shapes; distant islands sit on it like pasted discs."
+  },
+  {
+   "item_id": "P2-063",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No fight frames."
+  },
+  {
+   "item_id": "P2-060",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No catch frames."
+  },
+  {
+   "item_id": "P2-101",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No fight frames."
+  },
+  {
+   "item_id": "P2-004",
+   "pictured": "yes",
+   "assessment": "IMPROVED",
+   "bar_a_score": 5,
+   "severity": 2,
+   "evidence": [
+    "day_01:first_shore_01:0",
+    "day_03:tidal_cradle_09:0",
+    "day_04:veilfall_15:0"
+   ],
+   "reason": "Exploration HUD is now compact (top quest card, minimap, small hotbar, key strip, health/food) and leaves the view mostly clear, but the hotbar and key-legend boxes sit mid-right over the playfield and the dark boxes clash with the bright beach; still reads as debug-dense versus Palworld's edge-hugging HUD."
+  },
+  {
+   "item_id": "P2-072",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No swimming frames."
+  },
+  {
+   "item_id": "P2-045",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No candy pickups."
+  },
+  {
+   "item_id": "P2-088",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No fight frames."
+  },
+  {
+   "item_id": "P2-090",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No fight frames."
+  },
+  {
+   "item_id": "P2-026",
+   "pictured": "yes",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3,
+   "severity": 4,
+   "evidence": [
+    "day_05:drowned_garden_21:0",
+    "day_05:drowned_garden_21:45",
+    "day_04:sluice_isle_14:0",
+    "night_05:drowned_garden_21:45"
+   ],
+   "reason": "The Veilfall approach is still a ruler-straight chain of identical pale tan discs with ring halos, now additionally boxed by dashed white guide lines, reading as a UI path overlay rather than natural current shallows."
+  },
+  {
+   "item_id": "P2-031",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No settings screens."
+  },
+  {
+   "item_id": "P2-066",
+   "pictured": "partial",
+   "assessment": "PERSISTS",
+   "bar_a_score": 3,
+   "severity": 4,
+   "evidence": [
+    "day_05:drowned_garden_21:0",
+    "day_05:drowned_garden_21:45",
+    "day_01:first_shore_01:-45",
+    "day_06:drowned_garden_22:45",
+    "day_04:lantern_cove_17:0"
+   ],
+   "reason": "Live currents still read as bright straight white dashed lines and grid wedges laid over the water (Drowned Garden, First Shore, Lantern Cove) like lane markings, not flowing current."
+  },
+  {
+   "item_id": "P2-067",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No live vs restored current comparison is shown."
+  },
+  {
+   "item_id": "P2-073",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No dialogue frames."
+  },
+  {
+   "item_id": "P2-032",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No map menu."
+  },
+  {
+   "item_id": "P2-061",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No catch frames."
+  },
+  {
+   "item_id": "P2-075",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No dialogue frames."
+  },
+  {
+   "item_id": "P2-029",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No resting poses shown."
+  },
+  {
+   "item_id": "P2-069",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No flight frames."
+  },
+  {
+   "item_id": "P2-089",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No fight frames."
+  },
+  {
+   "item_id": "P2-091",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No fight frames."
+  },
+  {
+   "item_id": "P2-057",
+   "pictured": "partial",
+   "assessment": "IMPROVED",
+   "bar_a_score": 5,
+   "severity": 2,
+   "evidence": [
+    "day_02:brine_steps_06:45",
+    "day_02:brine_steps_06:90",
+    "day_02:shellwatch_08:180"
+   ],
+   "reason": "Beach grass around the Brine Steps dock hands is sparse and only shin high, so costumes read; Shellwatch NPCs stand on open sand. Grass no longer swallows silhouettes in these views."
+  },
+  {
+   "item_id": "P2-074",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No dialogue frames."
+  },
+  {
+   "item_id": "P2-103",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No fight victory frames."
+  },
+  {
+   "item_id": "P2-104",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No fight frames."
+  },
+  {
+   "item_id": "P2-108",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No mounted-swim frames."
+  },
+  {
+   "item_id": "P2-109",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No dismount frames."
+  },
+  {
+   "item_id": "P2-113",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No catch frames."
+  },
+  {
+   "item_id": "P2-114",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No catch frames."
+  },
+  {
+   "item_id": "P2-115",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No camp bed is visible in these frames."
+  },
+  {
+   "item_id": "P2-116",
+   "pictured": "partial",
+   "assessment": "IMPROVED",
+   "bar_a_score": 4,
+   "severity": 3,
+   "evidence": [
+    "day_06:deep_watch_24:180",
+    "night_06:deep_watch_24:180"
+   ],
+   "reason": "The Deep Watch camp shows a cloth-topped board/table station with a blue banner that reads as a station at distance, though it looks more like a notice board than a workbench and has no visible tools."
+  },
+  {
+   "item_id": "P2-119",
+   "pictured": "no",
+   "assessment": "NOT_PICTURED",
+   "bar_a_score": null,
+   "severity": null,
+   "evidence": [],
+   "reason": "No fly frames."
+  }
+ ]
+}

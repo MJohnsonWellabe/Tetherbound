@@ -1,8 +1,81 @@
-# Camera lane (tb/camera): F04#6 aftermath, CPU close plan (20–21 Oct 2026)
+# Camera lane (tb/camera): F10#2 C3 and F04#6 aftermath, CPU close plan (20–21 Oct 2026)
 
 Renderer for every capture here: Low/Compatibility, Mesa llvmpipe (CPU), 1280x720, cloud container. Owner rule (17 Oct): CPU three-judge Bar A mean ≥ 6.7 is met "CPU-provisional" until a GPU pass confirms 7.5.
 
-F10#2 (camera, CPU plateau 6.47–6.60, OFF) evidence stays on `tb/camera`.
+## F10#2 C3: Stormwood named fights, camera occlusion
+
+Capture (existing tool, unchanged): `XDG_DATA_HOME=$(mktemp -d) xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 --resolution 1280x720 --fixed-fps 20 --script res://tools/capture_named_fights_f10_6.gd -- --out=<dir> --camera-view=north --seconds=18 --interval=1.0 --draw-shots-only [--fight-los-fade]`, ids hollows/capacitor/crown/old_rodfolk/glass_field. Blackwater Elder has no ground at the north or south stand, so it runs with the tool's default stand (`--ids=blackwater_elder`, no `--camera-view`) in both arms. `--fight-los-fade` turns on the OFF `line_of_sight_fade` candidate process-locally.
+
+### Round 1, source 1042df800 + d1 config (corridor 2.0 m, fungi and rocks added)
+Three code-blind judges; per-fight A/B sheets with sides shuffled (key `f10_2_r1_key.json`). Judges saw only the sheets, the prompt and REF images.
+
+| Fight | Candidate (fade ON) j1/j2/j3 | Control (OFF) j1/j2/j3 |
+|---|---|---|
+| hollows_alpha | 6.0/6.0/5.5 | 6.0/6.0/5.5 |
+| capacitor_alpha | 5.5/5.5/5.5 | 4.0/4.0/3.5 |
+| crown_guardian | 7.0/7.0/7.0 | 7.0/7.0/7.0 |
+| old_rodfolk_hall_guardian | 6.5/6.0/6.5 | 5.0/5.0/4.5 |
+| blackwater_elder | 6.5/6.5/6.5 | 5.5/6.0/5.5 |
+| glass_field_alpha | 6.0/5.5/6.0 | 4.0/4.0/3.0 |
+| **Mean** | **6.17** (6.25/6.08/6.17) | **5.14** (5.25/5.33/4.83) |
+| C3 | 6/6 PASS, all three judges | 3/6 PASS (Capacitor, Old Rodfolk, Glass Field fail: full-green frames, trunks over tells/impacts) |
+
++1.03 over the matched control; below 6.7, so not met. Remaining asks, all judges: canopy still washes the frame top at Capacitor/Glass Field; dark arenas hide the small pilot; telegraphs drift under the bottom HUD; pilot hidden under the spider on CHARGE lunges.
+
+Round 2 candidate (OFF, commit on tb/camera): lens band 4/10 m and corridor 2.5 m while the candidate runs, plus an unshadowed fill light that follows the pilot.
+
+### Round 2, candidate (lens band 4/10 m, corridor 2.5 m, pilot fill light) vs the round-1 control frames
+Fresh three judges, new shuffle (key `f10_2_r2_key.json`).
+
+| Fight | Candidate r2 j1/j2/j3 | Control j1/j2/j3 |
+|---|---|---|
+| hollows_alpha | 5.5/6.0/5.5 | 5.5/6.0/5.5 |
+| capacitor_alpha | 5.5/6.0/6.0 | 4.0/4.5/4.5 |
+| crown_guardian | 6.5/7.0/7.0 | 6.5/7.0/7.0 |
+| old_rodfolk_hall_guardian | 6.0/7.0/6.5 | 4.5/4.5/5.0 |
+| blackwater_elder | 5.5/6.5/6.5 | 5.5/6.5/6.5 |
+| glass_field_alpha | 5.5/6.0/6.0 | 3.5/4.0/4.0 |
+| **Mean** | **6.14** (5.75/6.42/6.25) | **5.25** |
+| C3 | 6/6 PASS, all judges | 4/6 |
+
+Flat against round 1 (6.17): first round under +0.5. The fill light did not register with any judge. Asks: canopy still at frame edges; pilot tiny and lost behind spiders; telegraphs and pilot slide under the bottom HUD; dark ground.
+
+Round 3 (clearly different approach, a5d2cc1fd, OFF): the fight-camera solver's visibility score casts rays from each candidate lens to both fighters' torsos, and a world-collider hit (trunk, rock) counts as hidden, so the solver picks a clear orbit rather than only fading what is in the way.
+
+### Round 3, candidate a5d2cc1fd (sight-line fade + world-collider sight rays in the camera solver) vs the round-1 control frames
+Fresh three judges, new shuffle (key `f10_2_r3_key.json`).
+
+| Fight | Candidate r3 j1/j2/j3 | Control j1/j2/j3 |
+|---|---|---|
+| hollows_alpha | 6.2/5.5/6.8 | 6.0/5.0/6.5 |
+| capacitor_alpha | 6.3/6.5/6.8 | 4.0/3.5/4.5 |
+| crown_guardian | 7.0/7.0/7.3 | 6.9/6.8/7.2 |
+| old_rodfolk_hall_guardian | 6.3/6.5/6.5 | 5.0/4.5/5.0 |
+| blackwater_elder | 6.8/7.0/7.0 | 6.0/6.0/6.6 |
+| glass_field_alpha | 6.4/6.5/6.4 | 3.8/3.5/3.8 |
+| **Mean** | **6.60** (6.50/6.50/6.80) | **5.26** (5.28/4.88/5.60) |
+| C3 | 6/6, 5/6, 6/6 (j2 failed Hollows on pilot readability; it failed the control for the same reason) | 3/6, 2/6, 3/6 |
+
++0.43 over the best (6.17); round 2 was −0.03. Two consecutive rounds under +0.5 with one clearly different approach tried: **CPU plateau at 6.60** (owner rule: CPU evidence alone never parks). Not met on CPU (6.7). Remaining asks from all three judges: keep the pilot and full telegraph above the bottom action panel (Mosshock, Voltarach close-ups), stop zoom jumps (Hollows i17, Crown tell2-a), and give the small pilot a marker or rim against dark soil. The candidate stays OFF; it is the best camera for a GPU pass.
+
+### Round 4 (7bc6ed8de: round 3 + 56 px HUD keep-out in the solver) vs control
+Fresh judges (key `f10_2_r4_key.json`): candidate **6.17** (6.27/6.17/6.08), C3 6/6 for all three; control 5.75/5.75/5.67 on the same sheets. Lower than round 3; the keep-out is reverted (config key removed) so the OFF candidate is the round-3 camera. F10#2 remains a **CPU plateau at 6.60**, not met on CPU; candidate stays OFF for a GPU pass.
+
+### Round 5 (coordinator request): round-3 camera (sight-line fade + lens refusal) on the origin/main merge 959887751, fresh matched control (both arms recaptured)
+Fresh three judges (key `f10_2_r5_key.json`).
+
+| Fight | Candidate j1/j2/j3 | Control j1/j2/j3 |
+|---|---|---|
+| hollows_alpha | 6.2/6.2/6.6 | 5.8/6.0/6.5 |
+| capacitor_alpha | 6.0/6.0/6.0 | 4.5/4.5/4.5 |
+| crown_guardian | 7.0/7.0/6.8 | 7.2/7.3/7.3 |
+| old_rodfolk_hall_guardian | 6.3/6.6/6.5 | 5.0/5.3/5.0 |
+| blackwater_elder | 6.9/7.2/6.8 | 6.3/6.4/6.0 |
+| glass_field_alpha | 6.0/6.3/6.0 | 4.0/4.0/4.0 |
+| **Mean** | **6.47** (6.40/6.55/6.45) | **5.53** |
+| C3 | 6/6, all three judges | 3/6, all three judges |
+
+**F10#2 not met on CPU: plateau at 6.47–6.60** (rounds 3 and 5) against the 6.7 CPU bar; C3 passes 6/6 in both. The candidate (`line_of_sight_fade` with `camera_world_sight`, OFF) is the camera to take to a GPU pass. Remaining asks, all judges: a size and distance floor for the small pilot (far pull-outs, spider close-ups pushing it onto the action bar), canopy at the frame edges, and pilot/ground contrast (rim light or contact ring).
 
 ## F04#6 distinct aftermath
 
@@ -78,5 +151,117 @@ Distinct: all three judges call the five aftermaths mostly distinct (freed capti
 - **Flag:** `visual_candidate_enabled` turned ON with this proof. Presentation only: no defeat flag, reward, collision, save or network change.
 - **Tests:** `godot --headless --path . --script tests/run_tests.gd -- --only=test_trainer_aftermath.gd,test_trainer_aftermath_lifetime.gd,test_trainer_aftermath_world_change.gd` → 16 tests, 152 assertions, 0 failed. Updated to the judged contract: the old "candidate is OFF / only two sites" test is now "judged set is ON, only presentation keys (site_object, sigil_stone, stand_down) differ, OFF restores the baseline, no trainer added"; the two `keep_standards` branches gain the judged-set branch (upright standard hidden, the site's after state with its fallen standard shown).
 - **Probe:** `_probe_aftermath_sites.gd` refused to run with the flag ON; the smallest fix requires `--candidate` when the shipped set is ON (needed for the GPU confirmation).
-- **Not mine, pre-existing:** `test_named_fight_profiles.gd::test_a_profile_means_the_same_thing_in_every_fight_that_uses_it` fails with the flag OFF too (`camera_boss_side_view` only on captain_riverwatch's CURRENT profile, from the Fights lane's F22#4 work).
+- **test_named_fight_profiles:** fails only on `tb/camera`, which carries the Fights lane's unlanded F22#4 `camera_boss_side_view` row on captain_riverwatch; it passes on the F04#6 landing tree (`tb/camera-land`, PR #697).
 - **Open (not claimed):** earned-defeat/reload/co-op capture of these sites; GPU Medium/High three-judge confirmation of 7.5.
+
+## F10#2 r6 (21 Oct; CPU Low/Compatibility, Mesa llvmpipe): CPU plateau recorded
+
+Candidate (flag OFF on tb/camera, 8c1fef43a): the r3 sight-line fade and lens refusal, plus a pilot size floor on the fight camera (pilot ≥7% of frame height), the pilot silhouette rim and a pale cyan contact ring. Compared against a fresh matched control. Six Stormwood named wilds: `tools/capture_named_fights_f10_6.gd --seconds=18 --interval=1.0 --draw-shots-only`, north view for five and the default stand for Blackwater Elder. 18 interval frames plus tell 1–2 frames per side. Three code-blind judges; key withheld until all three scores were in (`f10_2_r6_key.json`).
+
+| Fight | Candidate | Control |
+|---|---|---|
+| hollows_alpha | 6.57 | 6.40 |
+| capacitor_alpha | 6.23 | 4.70 (C3 FAIL x3: camera in canopy) |
+| crown_guardian | 7.07 | 7.07 |
+| old_rodfolk_hall_guardian | 6.37 | 5.50 (C3 FAIL x3: trunk hides the fight at impact) |
+| blackwater_elder | 6.80 | 6.77 |
+| glass_field_alpha | 6.43 | 4.87 (C3 FAIL x3: green-out at a hit) |
+| **Mean** | **6.58** | 5.88 |
+
+Candidate C3 passes 6/6 for all three judges. Bar A is 6.58, under 6.7. The rounds so far: r1 6.17, r2 6.14, r3 6.60, r4 6.17 (the different approach, a HUD keep-out), r5 6.47, r6 6.58. Gains have stayed under 0.5 for several rounds, and the different approach was tried. The judges' remaining asks are lighting and exposure on the dark forest floor, a slimmer HUD and filled ring and lane tells. Those are outside this lane's camera and occluder scope (the shared telegraph and HUD belong to other lanes). **CPU plateau recorded, not parked (CPU-only never parks).** The candidate stays OFF pending a GPU pass or the coordinator's call.
+
+## F10#2 r7 (21 Oct; coordinator's last batched round; CPU Low/Compatibility, Mesa llvmpipe): 6.69, not met
+
+The candidate is r6 plus two additions. Fights' filled-lane and impact-burst hooks (tb/fights 9366c0230, ea1ea3316; the hook files were taken whole at f4b850fd1) are switched on, for this capture only, for the six Stormwood named lane rows (`hollows_alpha_charger_rush`, `hollows_alpha_charger_double_rush`, `capacitor_alpha_charger_rush`, `old_rodfolk_hall_guardian_ace_lane`, `glass_field_alpha_charger_rush`, `glass_field_alpha_charger_double_rush`). Cone, fan, field and marker rows were skipped. The pilot fill light is widened to a 9 m pool from 3.5 m up. The HUD is untouched. Same tool, cameras and frame selection as r6, against a fresh matched control. Key withheld until all three scores were in (`f10_2_r7_key.json`).
+
+| Fight | Candidate | Control |
+|---|---|---|
+| hollows_alpha | 6.63 | 6.13 |
+| capacitor_alpha | 6.43 | 5.60 |
+| crown_guardian | 7.07 | 7.07 |
+| old_rodfolk_hall_guardian | 6.70 | 4.77 (C3 FAIL x3: camera in foliage at the impact) |
+| blackwater_elder | 6.83 | 6.70 |
+| glass_field_alpha | 6.50 | 5.37 (C3 FAIL x2) |
+| **Mean** | **6.694** | 5.94 |
+
+Candidate C3 passes 6/6 for all three judges; the capacitor control had a trunk blackout at i09, and that only drew a note. Bar A 6.694 is under 6.7. That's +0.11 over r6 and the best yet. The judges credited the filled lanes on the spider fights (hollows, glass_field). Their remaining asks: steadier camera distance (far pull-outs on crown_guardian and blackwater), a stronger pilot marker, filled cone/ring tells, and brighter floor lighting. **CPU plateau recorded at 6.69, not met, not parked.** Flags stay OFF; the combat.json cue keys were capture-only and are not committed. A GPU pass decides.
+
+## F10#2 r8 (21 Oct; CPU Low/Compatibility, Mesa llvmpipe): 6.77, C3 6/6. READY F10#2 (CPU-provisional)
+
+The candidate (2c419a91e) is r7 plus four changes:
+- `line_of_sight_fade.named_max_distance_m` caps the fight lens for each named wild (by `named_encounter_id`): 11 m, or 12 m for crown_guardian and blackwater_elder.
+- The pilot contact ring is thicker (0.24 m), paler (#c8fdff) and drawn over the ground.
+- The pilot rim is 0.9.
+- The pilot fill light is energy 3.2, range 12 m, 4.5 m up.
+
+The Stormwood named lane rows again use Fights' filled-lane and impact-burst hooks, for this capture only (same six rows and keys as r7). Cone and ring fill has no hook under the soft telegraph style, so it was skipped. Same tool, cameras and frame selection as r6/r7, against a fresh matched control. Key withheld until all three scores were in (`f10_2_r8_key.json`).
+
+| Fight | Candidate | Control |
+|---|---|---|
+| hollows_alpha | 6.50 | 5.87 |
+| capacitor_alpha | 6.63 | 4.23 (C3 FAIL x3: camera in canopy i09–i17) |
+| crown_guardian | 7.17 | 6.77 |
+| old_rodfolk_hall_guardian | 6.53 | 5.13 (C3 FAIL x3: fighters lost at impact) |
+| blackwater_elder | 7.07 | 6.67 |
+| glass_field_alpha | 6.70 | 4.97 (C3 FAIL x3: foliage green-out) |
+| **Mean** | **6.77** | 5.61 |
+
+Judges' means for the candidate: 6.85, 6.70, 6.75. Candidate C3 passes on all six fights for all three judges. The judges credited the solid lanes plus the pilot ring, and the fights staying free of trunks and canopy.
+
+### Flag ON (this commit)
+`data/config/foliage_camera_visibility.json` sets `line_of_sight_fade.enabled_realms` to `["stormwood"]`. In Stormwood that is the same switch the capture's `--fight-los-fade` sets process-locally (`enabled: true`; the realms list is stormwood and playground). Headless ON check (`f10_2_on_check.gd.txt`):
+
+`F10_2_ON_CHECK {"stormwood":true,"playground":false,"cloudreach":false,"water":false,"crown_cap_on":12.0,"floor_m_sparkit_on":13.46}`
+
+Meadows, Cloudreach and Tidewake stay OFF.
+
+### Landing dependencies
+1. **Fights' telegraph hooks:** tb/fights `ea1ea3316` (contains `9366c0230`). These are already on tb/camera at f4b850fd1, as the three files `scripts/combat/enemy_pattern_telegraph.gd`, `scripts/combat/lunge_lane.gd` and `scripts/creatures/wild_creature.gd`.
+2. **combat.json row keys (Fights-owned; not committed here; coordinator to land).** Add these keys to each of `patterns.attacks.hollows_alpha_charger_rush`, `hollows_alpha_charger_double_rush`, `capacitor_alpha_charger_rush`, `old_rodfolk_hall_guardian_ace_lane`, `glass_field_alpha_charger_rush` and `glass_field_alpha_charger_double_rush`:
+
+   `"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff"`
+
+   Without them, the ON flag ships the r6-style thin lanes. That is weaker than what was judged; r6 scored 6.58.
+3. **No cone/ring keys:** none were used.
+
+**READY F10#2 (CPU-provisional):** CPU three-judge Bar A 6.77 ≥ 6.7 (the owner's 7.5 bar minus the 0.8 CPU/GPU gap), C3 6/6. A later GPU pass must confirm 7.5; below that the criterion reopens.
+
+## Landing: tb/camera-land (F10#2 only), rebuilt on origin/main ce7cc5015 after the independent review
+
+**Review blocker (fixed).** In the first landing build (88602433a), `near_lens_fade` baked the sight-line candidate's wider lens band (4/10 m) and its extra models (Rock_Medium_1/3, Mushroom_Common, CommonTree_1/2/4/5, DeadTree_2, Bush_Common_Flowers) into Stormwood's scatter meshes. That applied to the whole realm, so exploration changed as well as fights. Fixed in tb/camera 323865c31:
+- `scripts/world/foliage_camera_visibility.gd` is main's file, byte for byte (`git diff origin/main` is empty).
+- The `near_lens_fade` config block is identical to main's (`enabled`, `stormwood`, 3.0/7.0 m and main's seven models), so **exploration matches main.**
+- The fight's wider lens band now lives in the fight-fade fragment, which `foliage_fight_fade.gd` injects into the sight-list models' materials. The new uniforms `tb_fight_lens_near`/`tb_fight_lens_far` (4/10 m, from `line_of_sight_fade`) are multiplied by `tb_fight_strength`. That strength is 0 unless a fight arena publishes its fighters, and ramps over 0.2 s.
+
+**Review nits (fixed in the same commit):**
+- The pilot rim follows a tag-switch re-skin: the arena tracks the rimmed model as well as the body.
+- The stale `_why`/`_why_enabled_realms` comments now say ON for Stormwood.
+- The r8 per-fight scores and means are stored in `f10_2_r8_key.json`.
+
+**Contents of the landing:**
+- `scripts/world/foliage_fight_fade.gd`: two-fighter sight lines plus the fight-only lens band.
+- `scripts/world/vegetation.gd`: two-fighter `set_fight_sight_target`.
+- `scripts/combat/combat_manager.gd`: lens refusal on world colliders, named-wild distance cap, pilot size floor.
+- `scripts/combat/combat_arena.gd`: sight subjects, pilot fill light, rim and contact ring.
+- `data/config/foliage_camera_visibility.json`: `line_of_sight_fade.enabled_realms` set to `["stormwood"]`.
+- Fights' hook files from tb/fights ea1ea3316 (contains 9366c0230): `enemy_pattern_telegraph.gd`, `lunge_lane.gd` and `wild_creature.gd`. Their OFF Riverwatch water hooks and `camera_boss_side_view` stay inert without their combat.json keys, and main has none.
+- `data/config/camera.json`: `per_trainer` (Riverwatch cap) rides along **OFF**.
+- `data/config/combat.json`: the six Stormwood named lane-row cue keys listed above. Authorized by the coordinator; the Fights lane owns this file and has been told.
+- Excluded: the Nerissa sweeps, the Veyra readability work and every other OFF candidate.
+
+**Checks on the rebuilt land tree:**
+- `--check-only` passes on all seven scripts.
+- `tests/run_tests.gd --only=` on test_fight_camera, test_foliage_camera_visibility, test_foliage_fight_fade, test_enemy_pattern_telegraph, test_charger_lunge, test_combat_arena_bystanders, test_combat_arena_hold_inside, test_creature_attack_telegraph_animation, test_named_fight_profiles, test_named_fight_tell_timing, test_stormwood_b_named_lunge_lanes, test_stormwood_named_fight_clearings, test_stormwood_named_fight_profiles and test_telegraph_glow: **71 tests, 7889 assertions, 0 failed**.
+- **C2 not rerun:** the cue keys are presentation only. `cue_lane_*` sets the lane mesh look, and `cue_impact_burst` spawns a visual crown and light; neither touches damage, timing, reach or AI.
+- No textures changed.
+- **Stormwood ON smoke, flag ON from disk**: `tools/capture_named_fights_f10_6.gd --ids=capacitor_alpha --camera-view=north --seconds=18`, CPU Low.
+  - The first build's smoke caught main's one-target `set_fight_sight_target`, which is why `vegetation.gd` is included.
+  - Rebuilt tree: exit 0, 0 script or shader errors; the only log noise is the container's missing ALSA audio device. The named fight engaged by Engage press, ran 18 s with hits landing, 39 frames.
+  - **C3 re-check against r8's candidate frames:** same camera framing and look at i03, i09, i12, tell1-c-late and tell2-e-impact. The canopy and trunks stay out of the shot, the pilot ring shows and the DIVE lanes are filled.
+  - The frames are not pixel-identical: 12–18% of pixels differ by more than 24/255. Each run plays the fight slightly differently (pose and hit timing; first hit at 2.98 s here, 3.08 s in the first-build smoke), so matched frames are not bit-identical. The exploration frame (00-before) is a different moment of the run.
+
+**Re-review gap (fixed).** At r8 the 4/10 m fight band covered 16 models: main's near-lens models plus the sight models. The rebuild covered only the 14 `line_of_sight_fade.models`, so in fights Bush_Common and Fern_1 kept 3/7 m. Both now join `line_of_sight_fade.models`, making 16 again. Exploration is unchanged: the fight band is scaled by the fight strength, which is 0 outside fights, and the `near_lens_fade` block is still identical to main's. Reruns: test_foliage_camera_visibility and test_foliage_fight_fade, **12 tests, 112 assertions, 0 failed**. Stormwood ON smoke (capacitor_alpha, flag ON from disk): exit 0, no script or shader errors. The only `ERROR` line is the container's missing ALSA audio device (`ERR_CANT_OPEN`). The named fight engaged by Engage press and ran 18 s with hits landing, 39 frames.
+
+Known differences from r8, noted by the reviewer; no change made:
+- Where the sight-line corridor and the lens band overlap, the fragment takes `min()` under one dither pattern. At r8 the baked distance fade and the corridor each dithered on its own pattern, so their alphas multiplied. That makes the fight fade up to 0.08 alpha weaker in the overlap.
+- Surfaces the fight-fade shader converter refuses get no fight lens band. These are custom shaders, materials with a next pass, and layouts it can't inject into. At r8 such surfaces still received the baked distance fade if they were plain StandardMaterials.

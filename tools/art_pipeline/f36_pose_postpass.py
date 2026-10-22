@@ -815,11 +815,18 @@ WING_LIFT = {'galewisp': 55.0}
 # F36#1 settle round (three judges, 20 species, base vs settle): folding the
 # propping limbs so a faint's torso only ever sinks lifted the set 6.22 -> 6.37
 # (mudsnout +0.90, terrapup +0.67, skyrill +0.60); brooktail lost 0.50, so it
-# keeps the unsettled collapse.
-SETTLE_SKIP = {'brooktail'}
+# keeps the unsettled collapse. Settle applies only to the judged species; the
+# rest keep their earlier collapse until a judge has seen them settled.
+SETTLE_ONLY = {'ashtusk', 'burrowback', 'cannonback', 'cindercub', 'cliffspike', 'mangrove_monitor',
+               'mosshock', 'mudsnout', 'pebbik', 'riptusk', 'shadelet', 'sirenseal', 'skyrill',
+               'sparkit', 'staticub', 'terrapup', 'thundertunnel', 'torrentoad', 'voltwig'}
 PRONE_DIP = {'ashtusk': 2.0, 'burrowback': 2.0, 'mudsnout': 3.0, 'shadelet': 2.0, 'thundertunnel': 3.0}
+# Stormursa is not prone: its Meshy auto-rig weights the paws to the spine and
+# pelvis rather than the upper legs, so the belly-down sprawl stretched paw edges
+# to ~10x rest (spike 0.258, grey slabs on GPU and CPU) and propped the torso up.
+# It keeps the judged side-on topple (F29#3 r8: spike 0.031, grounded).
 PRONE = ('ashtusk', 'burrowback', 'cragclaw', 'mirejaw', 'mudsnout', 'riptusk', 'shadelet', 'skyrill',
-         'staticub', 'stormbrush', 'stormursa', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
+         'staticub', 'stormbrush', 'terrapup', 'thundertunnel', 'torrentoad', 'trailpup', 'voltwig')
 
 
 def clamp_neck(frames, limit=NECK_PITCH_LIMIT):
@@ -859,7 +866,7 @@ def _topple(name, row, prof):
     SOLVER.guard_stretch(skin, prof['faint']['frames'])
     # Lift the legs that prop the toppled torso off the floor, blended in over the fall.
     SOLVER.ground_faint(skin, prof['faint']['frames'], lambda phase: min(1.0, max(0.0, (phase - .4) / .4)))
-    if name not in SETTLE_SKIP:
+    if name in SETTLE_ONLY:
         SOLVER.settle_descent(skin, prof['faint']['frames'])
     if HIT_STYLE.get(name) == 'recoil':
         recoil_hit(rig, prof['hit']['frames'], scale=HIT_SCALE.get(name, 1.0))
@@ -1004,7 +1011,7 @@ def refine(name, row, rig, fam, prof):
         SOLVER.guard_stretch(skin, prof['faint']['frames'])
     else:
         SOLVER.ground_faint(skin, prof['faint']['frames'], lambda phase: min(1.0, phase / .7))
-        if name not in SETTLE_SKIP:
+        if name in SETTLE_ONLY:
             SOLVER.settle_descent(skin, prof['faint']['frames'])
 
 
