@@ -129,3 +129,22 @@ Fit: linear, slope 0.880, intercept 1.207, r 0.829, RMSE 0.679, no warnings. Fil
   multiply), so it isn't usable as a generic rim light.
 - **Asks:** a material rim/fresnel pass on creatures (needs a shader-side change, not the overlay); weak hits on
   the spider and bird; ram faints float.
+
+## Batch b6 (22 Oct ~22:00 CT): quadruped remakes with back-to-camera faint: Stormcapra 7.20, Mirejaw 6.80, Tanglevolt 6.80
+
+Fit: linear, slope 0.814, intercept 1.884, r 0.794, RMSE 0.754. **Warning:** anchor residual RMSE 0.75 > 0.75
+(these judges ranked the anchors less like the reference judges); report the mapped scores with this caveat. Files `b6/`.
+
+| Species | Live raw | Remake raw | Live mapped | **Remake mapped** |
+|---|---|---|---|---|
+| Stormcapra | 4.4/5.0/4.0 | 6.6/6.5/6.5 | 5.52 | **7.20** |
+| Mirejaw | 3.8/4.6/3.7 | 5.9/6.0/6.2 | 5.17 | **6.80** |
+| Tanglevolt | 4.1/4.8/3.9 | 6.1/5.6/6.4 | 5.36 | **6.80** |
+
+All three recorded defects are FIXED on every remake: two styles, hit reads as standing, and dark faint blob
+(Mirejaw two-style PARTIAL x1).
+Asks:
+- flat, plasticky material with no rim (the `field_rim` round is next);
+- small faces on Stormcapra and Mirejaw;
+- Tanglevolt's saturated royal blue drifts off the Stormwood storm-wolf board (grey/violet with white-violet
+  lightning).

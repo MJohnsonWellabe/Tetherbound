@@ -1,0 +1,7 @@
+{"anchors": {"f36_0_npc:C1B": [7.3, 7.2, 7.0], "f36_0_npc:C1A": [7.3, 7.3, 7.0],
+             "f10_2_r3_capacitor:control": [3.6, 4.5, 3.6], "f10_2_r3_capacitor:candidate_r3": [4.4, 5.2, 4.3],
+             "f36_0_gap:C4B": [4.7, 5.4, 4.3], "f36_0_gap:C4A": [6.0, 6.3, 5.8],
+             "craft:before": [4.6, 4.8, 4.4], "craft:after": [6.6, 6.6, 6.6]},
+ "candidates": {"stormcapra live": [4.4, 5.0, 4.0], "stormcapra meshy1022 r2": [6.6, 6.5, 6.5],
+                "mirejaw live": [3.8, 4.6, 3.7], "mirejaw meshy1022 r2": [5.9, 6.0, 6.2],
+                "tanglevolt live": [4.1, 4.8, 3.9], "tanglevolt meshy1022 r2": [6.1, 5.6, 6.4]}}
