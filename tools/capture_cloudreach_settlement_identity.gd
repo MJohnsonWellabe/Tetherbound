@@ -39,6 +39,13 @@ func _run_matrix() -> void:
 	_manifest_line("# coverage " + ("Windwatch day/night supplement; other 8 judged views retained from37690725109" if _windwatch_only else "full 10-view matrix"))
 	if not _graphics_capture.is_empty():
 		_manifest_line("# graphics_capture " + JSON.stringify(_graphics_capture))
+	# Weather cycles on an unseeded real-time timer, so a slower-building arm
+	# reached rain where its pair stayed clear. Pin clear for like-for-like pairs.
+	var weather := _world.get_node_or_null(^"WorldWeather")
+	if weather != null:
+		weather.call("set_weather", "clear")
+		weather.set_process(false)
+		_manifest_line("# weather pinned clear (cycle stopped)")
 	var number := 100
 	for view: Dictionary in [
 		{"id":"place_cliffhold_approach", "at":Vector3(-267,838,4020.3), "target":Vector3(-340,838,3970), "pitch":5.0},
