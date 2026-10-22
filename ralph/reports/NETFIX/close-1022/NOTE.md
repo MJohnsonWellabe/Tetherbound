@@ -37,6 +37,32 @@ Lane branch `tb/netfix`, built from `origin/main` at 9c97caa68.
       completion settling normally in each (host_duties traces). I won't ship a change to that ordering without a
       failing reproduction: there is no deterministic test that fails today.
 
+- 2026-10-22 22:20 UTC READY: tb/netfix-land 58235bcc29266edc6d0d9c07d68bc15786b167a5 = origin/main a4f8a6b7b + daae68419 +
+  b56138a53 (Kitchen resend and its review fix) + 58235bcc2, the boss_rewards smoke fix for the PR #712 variant: Bryn's
+  creatures' HP is capped with win_trainer_battle's existing enemy_hp_ceiling (20), the allowance smoke_boss uses
+  (also used by shared_boss and f48_four_peer_boss on durable fights) because this smoke is about the payout's wiring, not balance. No
+  assertion changed. Proof: boss_rewards_each_participant 10/10 under load (2 busy loops) on tb/netfix 2172c8fe5
+  (same smoke file).
+- 2026-10-22 22:20 UTC #1 status: three CI failures, two causes.
+  - PR #712 (host creature fainted, outcome lost): FIXED by the cap above.
+  - PRs #706 and #710 (final-round completion never settles, no log line): STILL OPEN. The forced same-scan ordering
+    passes 12/12, so it is not the cause on its own, and there is no deterministic failing test to fix against. tb/netfix
+    d0551206c (one-time notes on the silent branches, no behaviour change) is the way to name it on the next occurrence; it
+    is NOT in tb/netfix-land.
+- 2026-10-22 22:20 UTC Item 3 (shared_boss "peer 0's creature is alive to be swung at (0.0 hp)", PR #711 run
+  39824552283): analysis, not fixed. Peer 0's creature fainted during the two "landed a blow on the SHARED boss" phases,
+  which run against the Warden's uncapped second creature (231 hp, attack 61.6, cooldown 0.765 s). On CI those took 4
+  and 6 swings (peer 1's strikes ~138 frames each); locally they take 1 and 2, and peer 0 reaches the probe at 50 hp.
+  The host then lost (only creature fainted), so the friendly probe and the later whole-team fight both failed.
+  Moving the probe earlier does not help: peer 0 would still die in the blow phases and the final whole-team check would
+  fail instead. Robust options, none taken yet:
+  (a) give peer 0 a second owned creature before the fight and tag-switch to it through the production path when its
+      first is low;
+  (b) cap the opening creature's HP (enemy_hp_ceiling) before the blow phases. That still proves "both peers reduce
+      the same host number", but the 231-hp authored-hp_max checks must stay before it;
+  (c) a wire step for the disclosed f48_actor_topup aid. That is new harness work, so it needs your call.
+  My recommendation is (b). Say if you want it.
+
 ## #2 f48 guest feast feed
 
 The CI log for run 39817268602 (job 119959298748) shows the guest's feed press got
