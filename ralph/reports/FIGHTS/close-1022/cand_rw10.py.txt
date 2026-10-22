@@ -2,7 +2,10 @@
 # 699f2007a data, as rw_r9.patch.txt) + the Meadows sight-line fade, then
 # thinner water sheets over the boss and a droplet spray at each water strike.
 import json,subprocess
-subprocess.run(['git','apply','ralph/reports/FIGHTS/close-1022/rw_r9.patch.txt'],check=True)
+subprocess.run(['git','apply','--exclude=data/config/camera.json','ralph/reports/FIGHTS/close-1022/rw_r9.patch.txt'],check=True)
+p='data/config/camera.json'; s=open(p).read()
+assert s.count('"per_trainer_enabled": false,')==1
+s=s.replace('"per_trainer_enabled": false,','"per_trainer_enabled": true,'); json.loads(s); open(p,'w').write(s)
 p='data/config/foliage_camera_visibility.json'; s=open(p).read()
 s=s.replace('"enabled_realms": ["stormwood"]','"enabled_realms": ["stormwood", "playground"]',1); json.loads(s); open(p,'w').write(s)
 p='data/config/combat.json'; s=open(p).read()
