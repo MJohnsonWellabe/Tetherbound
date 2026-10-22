@@ -1,0 +1,18 @@
+# Applies the T1 tell-look candidate to the working tree (local capture only).
+import json,re,sys
+p='data/config/combat.json'; s=open(p).read()
+s=s.replace('"depth_pull_m": 0.0,','"depth_pull_m": 0.45,',1)
+VIOLET='#b48cff'
+named=['hollows_alpha','capacitor_alpha','crown_guardian','old_rodfolk_hall_guardian','glass_field_alpha']
+def fix(m):
+    key=m.group(1); body=m.group(2)
+    if not any(key.startswith(n) for n in named): return m.group(0)
+    body=body.replace('"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0,',
+        '"cue_lane_colour": "%s",'%VIOLET)
+    return '"%s": {"telegraph_colour": "%s", %s'%(key,VIOLET,body.lstrip())
+s=re.sub(r'"([a-z_]+)": \{((?:"cue[^\n]*)?\n)',fix,s)
+json.loads(s); open(p,'w').write(s)
+s=open(p).read()
+s=s.replace('"cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff",',
+  '"cue_impact_burst": true, "cue_burst_colour": "#9d7bff", "cue_burst_foam": "#ffffff", "cue_burst_light_colour": "#d9c8ff", "cue_water_burst_light_energy": 10.0,')
+json.loads(s); open(p,'w').write(s)
