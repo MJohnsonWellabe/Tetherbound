@@ -53,6 +53,11 @@ They rescored the 11 catalog rows whose evidence is the landscape survey (the CP
 
 **Disposition (as measured):** the F39#0 recapture is delivered on GPU Medium, ≥200 frames (240), with no missing destination. The landscape rows are rescored on GPU. The supplemental rows still carry CPU-only evidence. Whether that closes F39#0 is the coordinator's call.
 
+## Findings (recorded separately; outside the catalog rows)
+
+- **Night creatures render as flat, milky-white ghosts, on GPU Medium (Forward+).** Frame: `night_09 aquaryn_tidal_basin heading -45` (23:00). Aquaryn renders as an unlit, translucent white shape against a lit night scene. All three judges reported it on more night sheets: night_01/02 seal shapes, night_03, night_11, night_16. Shown left in `_sheet_f39_0_gpu_findings.png`.
+- **The camera sits inside the trainer's hair at Aquaryn basin, on GPU Medium.** Frame: `day_09 aquaryn_tidal_basin heading 45` (08:00). The trainer's hair mesh fills the frame and Aquaryn's body fills the left edge. Judges also saw it at day_09 heading 90 and night_09 heading 180. This is a stand/camera-collision defect, not renderer-specific. Shown right in `_sheet_f39_0_gpu_findings.png`.
+
 ## Judges' asks (all three, set S)
 
 1. **Currents and shallows (fixable in scene).**
