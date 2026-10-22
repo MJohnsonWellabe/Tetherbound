@@ -9,6 +9,7 @@ const HALL := preload("res://tests/helpers/meadows_earned_hall_segment.gd")
 const STORAGE := preload("res://tools/earned_saves/wip_fights/storage_trip.gd")
 const INPUT := preload("res://scripts/ui/input_owner.gd")
 const VISIT_PATH := "res://tools/earned_saves/master_visit.gd"
+const ROUTE := preload("res://tests/helpers/meadows_earned_material_segment.gd")
 const LEVELS := {"master_t1": 10, "master_t2": 20}
 const ROUND_FRAMES := 9000
 var _tree: SceneTree
@@ -43,6 +44,9 @@ func run(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = {}) -> D
 		"interact": func(prompt: Node3D) -> bool: return await _travel.activate(prompt),
 		"tap": func(action: String) -> void: await _travel.tap(action),
 		"fight_round": func() -> Dictionary: return await _fight_round(),
+		# Orin stands past the South Bridge gully: travel by the village gates
+		# and the bridge to a stand on the bridge side of the site first.
+		"travel": func(site: Node3D) -> bool: return await _route_to(site),
 		"storage": STORAGE,
 		"rebind": func(returned: Node3D) -> bool:
 			return returned == tree.current_scene and str(game.get("current_realm")) == "meadows" and _travel._bind(),
@@ -72,6 +76,22 @@ static func select_challenger(party: Array, level: int, wanted: String) -> Dicti
 		if selected.is_empty() and (wanted.is_empty() or wanted == uid):
 			selected = card.duplicate(true)
 	return selected
+
+func _route_to(site: Node3D) -> bool:
+	var world := _tree.current_scene as Node3D
+	var player := world.get_node_or_null("Player") as CharacterBody3D
+	var rig := world.get_node_or_null("CameraRig") as Node3D
+	if player == null or rig == null:
+		return false
+	var toward := Vector2(8.0, 1340.0) - Vector2(site.global_position.x, site.global_position.z)
+	var stand := Vector2(site.global_position.x, site.global_position.z) + toward.normalized() * 4.0
+	var walker := ROUTE.new()
+	var arrived: bool = await walker.walk_route(_tree, world, _game, player, rig,
+		Vector3(stand.x, float(world.call("ground_height_at", stand.x, stand.y)), stand.y))
+	_failures.append_array(walker.failures)
+	_receipts.append({"beat": "master_travel", "arrived": arrived, "stand": str(stand), "player": str(player.global_position)})
+	return arrived
+
 
 func _party() -> Array:
 	var cards: Array = []

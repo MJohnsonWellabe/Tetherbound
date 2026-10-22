@@ -18,6 +18,28 @@ var prefer_same_boundary_side := false
 var return_to := Vector3.INF
 
 
+## Ordinary travel only, with this segment's own village-gate and South
+## Bridge routing (no gathering): the Meadows Master visits reach Orin across
+## the gully this way.
+func walk_route(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
+		camera_rig: Node3D, target: Vector3) -> bool:
+	_tree = tree
+	_world = world
+	_game = game
+	_player = player
+	_rig = camera_rig
+	_arbiter = tree.get_first_node_in_group(&"interaction_arbiter")
+	if _arbiter == null or not _resolve_move_bindings():
+		_fail("earned travel lacks its production input dependencies")
+		return false
+	_nav = NAVIGATOR.new(_tree, _player, _rig, _send_stick)
+	_boundary = BOUNDARY.new()
+	_boundary._world = _world
+	_boundary._player = _player
+	_active_walk_purpose = "travel"
+	return await _walk_target(target, _travel_budget(target))
+
+
 func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 		camera_rig: Node3D, lesson_mode: bool = false) -> Dictionary:
 	_tree = tree
