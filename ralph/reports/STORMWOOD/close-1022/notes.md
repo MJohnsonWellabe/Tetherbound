@@ -1,5 +1,54 @@
 # Stormwood lane, close plan from 22 Oct 2026 (F41#1–#3, #5; F10#2; F22#4 Stormwood)
 
+## RESUME (22 Oct, about 22:05 CT; lane stopped by the coordinator to save usage)
+State: no criterion closed. Every candidate is OFF on tb/stormwood and in the land branches. Landed or ready: tb/stormwood-land 6230fcc20 (signpost draw distance plus the inert ground_light_exposure / wet_gloss hooks; in PR #712) and tb/stormwood-land2 90c5e311a (test_stormwood_scar_relief float(null) fix).
+
+| Row | Best mapped (round) | r12 mapped | Control mapped | Bar (CPU-provisional 6.7, GPU 7.5) |
+|---|---|---|---|---|
+| F41#3 Calm matrix | 6.36 (r11) | 5.57 | 2.63 / 3.78 | open |
+| F41#3 Break matrix | 6.01 (r11) | 5.35 | 2.38 / 4.02 | open |
+| F41#3 aftermath matrix | 6.52 (r11) | 5.59 | 2.94 / 3.86 | open |
+| F10#2 capacitor fight | 5.75 (r11) | 5.51 | 3.35 / 4.36 | open (GPU reopened) |
+| F10#2 glass_field fight | 6.11 (r11) | 5.57 | 3.55 / 4.33 | open (GPU reopened) |
+| F41#1/#2/#5, F22#4 Stormwood | not judged separately; #5 defects tracked in the matrix sets | | | open |
+
+r12 raw scores equal r11's; the mapped drop is mostly the anchor draw (r12 fit r 0.73, RMSE 0.70). Gain rule: r12 = round 1 under +0.5.
+
+Best candidate: `candidate-config.patch` (r12 snapshot, commit ac36c4d7b). To restore:
+1. `git apply --exclude='data/scatter/*' ralph/reports/STORMWOOD/close-1022/candidate-config.patch`
+2. `godot --headless --path . --script scripts/world/bake_stormwood_scatter.gd` (required after vegetation config edits, or vegetation fails closed)
+3. Optionally set `charger_lunge.lane_charged.enabled` true in combat.json. That is the Fights-owned lane restyle; hand it to Fights rather than landing it from here.
+
+It holds the close-1020 r10 look plus the grade lift:
+- look rig exposure 1.35, saturation 1.1, ambient #aab0bc, bluer horizon/fog #6f7a9c;
+- surge: Calm haze 0.0026, aftermath 0.0016, `ground_light_exposure` 0.45;
+- ground: `wet_gloss` roughness 0.55 / specular 0.2 (black pools), moss tints #b8a882, forest floor #a89a78, damp #85836f, rock #857f70, grass cards 0.85, wet soil #1e2420/#2a312b;
+- bark #a8977a; Meshy giant tree/scarred trunk `Material_0` retint #d8c8ae;
+- Stormheart hero 380 m, shape 0.95/1.0/1.05.
+
+Measured luma: shipping about 30–38; candidate about 75–78 (Calm 78, Break about 56; a Break bolt frame goes 40 -> 61).
+
+Don't redo:
+- Meshy trees in `near_lens_fade` / `line_of_sight_fade`: about 3x render cost, measured alone.
+- A second directional light per bolt: Compatibility draws an extra pass per light. Use exposure instead.
+- Run one Godot at a time. Kill with `ps -eo pid,args | grep "[g]odot --path"`; `pgrep -f "^/root/godot-bin"` misses it.
+
+Judges' top asks, in order (r11 and r12, three judges each):
+1. Near-camera trunk or root at the forest and reverse stands (exploration camera; the fade route is too costly, so either reframe the fixed stands with the coordinator's agreement or clear scatter near those seats).
+2. Lightning that lights trunks and ground in Break stills: the exposure pulse works but bolts are rarely lit at capture, so time Break captures to a lit bolt (the matrix tool's `_await_sky_bolt` mostly times out).
+3. Light shafts and layered blue-violet fog for depth.
+4. A readable glass-field strike scar.
+5. Tiled moss: decals and clearings.
+6. Squat Stormheart: new art, see the MESHY line in TO COORDINATOR.
+7. Magenta strike disc and lane ring, white-puff impacts (Fights).
+8. HUD about 40% of a fight frame (UI).
+9. Pilot and boar no taller than the trainer (creatures; the owner's 22 Oct creature-style direction applies).
+
+Next steps when resumed:
+1. Merge origin/main and re-judge with the corrected JUDGE_PROMPT (creature style, merged at f1ce3d91a). Use a fixed anchor set (`--include`) so rounds compare.
+2. Take a clearly different approach (composition and hero content: glass scar, Stormheart v3, stand occluders, lit-bolt Break captures), not more grade.
+3. When a row maps 6.7 or above on CPU, land it (configs ON in a land branch from origin/main with the updated pinned tests: test_stormwood_surge_presentation, test_stormwood_vegetation_palette, test_vegetation_shared_retint, plus the scatter rebake) and queue GPU confirmation.
+
 ## TO COORDINATOR
 - 22 Oct 21:20 CT READY tb/stormwood-land2 90c5e311a test_stormwood_scar_relief no longer aborts on float(null): an unset uniform reads as the shader's declared default (from the shader or its #include; headless reports no defaults). Same strictness; all assertions run (2 tests, 14 assertions, 0 failed, no script errors). Built from origin/main.
 - 22 Oct 20:55 CT READY tb/stormwood-land 6230fcc20 Signpost text draw distance (masters.json `sign_presentation.visible_range_m` 24 m + 4 m fade; focused test fails without it). It also adds two inert Stormwood hooks, both off: `sky_lightning.ground_light_exposure` 0, and the `wet_gloss` shader hook with no key, so defaults are unchanged. Built from origin/main 2e7dd84b1. Checks: test_master_sign_visible_range + test_stormwood_surge_presentation 53/0. No Fights-owned file and no Forward+ grade work.
