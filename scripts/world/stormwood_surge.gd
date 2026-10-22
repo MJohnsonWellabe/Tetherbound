@@ -1185,8 +1185,16 @@ func _advance_flash(delta: float) -> void:
 	if _flash > 0.0:
 		_flash = maxf(0.0, _flash - delta / maxf(0.01, float(cfg.get("decay_seconds", 0.35))))
 	if _flash_light != null:
-		_flash_light.visible = _flash > 0.0
-		_flash_light.light_energy = _flash * float(cfg.get("light_energy", 2.2))
+		var energy := _flash * float(cfg.get("light_energy", 2.2))
+		# F41#3 candidate (sky_lightning.ground_light_energy, 0 = off): a sky
+		# bolt also lights trunks and ground through the same key, on the
+		# bolt's own onset (no extra flash onset; reduced motion scales it).
+		var bolt_light := float(_sky_cfg().get("ground_light_energy", 0.0))
+		if bolt_light > 0.0:
+			var scale := float(cfg.get("reduced_motion_scale", 0.15)) if MOTION_PREFS.reduced_motion() else 1.0
+			energy = maxf(energy, bolt_level() * bolt_light * scale)
+		_flash_light.visible = energy > 0.0
+		_flash_light.light_energy = energy
 	if _ceiling_material != null:
 		_ceiling_material.set_shader_parameter("flash", _flash * float(cfg.get("sky_strength", 1.0)))
 		# Sheet lightning: the phase's glow, scaled like any flash under
