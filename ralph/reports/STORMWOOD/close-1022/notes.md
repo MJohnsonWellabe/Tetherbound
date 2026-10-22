@@ -52,6 +52,18 @@ Measured (luma over the play area, HUD bands excluded; 0–255):
 - Defects still present: near-camera occluders (forest-stand trunk; reverse-stand pale-blue root filling the left third); glass-field scar not readable; Break lightning lights the sky but not trunks or ground; flat lavender sky with no fog layering or depth; floating "You backed off" combat text over the enemy; the HUD covers about 40% of the fight frame and the pilot is tiny.
 - Judges' top changes: (scene) make lightning light trunks and ground, add layered blue-violet distance fog and rim light, break up the ground tile with decals and clearings, clear lens occluders; (scene) real lightning/crack telegraphs and spark impact bursts; (new_art) a towering, board-scale Stormheart.
 
+## Round r12 candidate (r11 judges' asks)
+- Break bolts light the world: new `sky_lightning.ground_light_energy` (committed 0 = off; candidate 1.6). Each decorative sky bolt pulses the existing StormFlash key on the bolt's own onset; no added flash onsets; reduced motion scales it.
+- Depth and fog: storm horizon and fog bluer (#777292 -> #6f7a9c, aftermath #766e97 -> #6e789c, look rig fog/horizon to match); Calm haze 0.0018 -> 0.0026, aftermath 0.0008 -> 0.0016. The Stormheart silhouette stays fog-exempt.
+- Black pools: the wet-soil patches mirrored the lilac sky (roughness 0.28 / specular 0.38; a diagnostic tint ruled out the terrain slots). New `stormwood_ground_finish.json wet_gloss` hook (committed with no key, so behaviour is unchanged); candidate roughness 0.55, specular 0.2. The pools now read black and wet.
+- Lens occluders: the Meshy giant trees and scarred trunk join `near_lens_fade` and `line_of_sight_fade`. The reverse-stand root no longer fills the lens.
+- Tile breakup: moss grass-card density 0.55 -> 0.85; rock slot tint #aaaab3 -> #857f70.
+- Meshy giant trees and scarred trunk retinted warm (`Material_0` #d8c8ae): they read teal-blue.
+- Stormheart hero: height 320 -> 380 m, shape 1.27/1.0/1.5 -> 0.95/1.0/1.05 (judges: squat).
+
+## Art ask (for the coordinator's Meshy run): Stormheart v3
+Judges r11 (two of three, new_art): "a towering, board-scale Stormheart (split trunk, platforms, banners); the current one is squat". Reference: `docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png`, crop (8,80)-(614,682) (exterior view: colossal split trunk with a glowing blue lightning cleft, wooden platforms and walkways, navy banners (no red), green crown, waterfall cliff base). Target: about 380 m tall with a height:width of about 1.6:1 (v2 is about 1:1). Read as a single silhouette from 300+ m. Used only beyond `swap_radius_m` 75 m (the procedural shell carries everything near), so scale against the 1.80 m trainer is via the shell. Keep the identity of the existing v2 (V-split with a glowing cleft). Flag stays off until judged.
+
 ## To the coordinator
 - Signpost fix (ON, with test) is in f90f2a3ca: `masters.json sign_presentation.visible_range_m` 24 m + 4 m fade; `tests/test_master_sign_visible_range.gd` fails without it. It touches every realm's Master signpost. Ready to land with the next batch.
 - Out of lane: (a) the fight pilot (Lv 42 Sparkit fixture) renders about trainer height; GPU judges say "pilot no taller than the 1.80 m trainer" (hard rule, creatures lane). (b) The HUD bottom band covers roughly 45% of a 1280x720 fight frame (UI lane). (c) Crown clone herds come from hollow_crown wild cluster tables (encounter data); not changed without a ruling.
