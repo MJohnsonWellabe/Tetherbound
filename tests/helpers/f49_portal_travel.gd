@@ -11,8 +11,8 @@ var _player: CharacterBody3D
 var _rig: Node3D
 var _activated: Object
 var _home_result: Dictionary = {}
-const LESSON_PANEL := preload("res://scripts/onboarding/lesson_panel.gd")
-var _walk_serial := 0
+const _F49_LESSON_PANEL := preload("res://scripts/onboarding/lesson_panel.gd")
+var _f49_walk_serial := 0
 
 func _init(owner: SceneTree, actual_game: Node) -> void:
 	tree = owner
@@ -252,12 +252,12 @@ func activate(prompt: Node3D, via: Array[Vector3] = []) -> bool:
 	var arbiter: Node = tree.current_scene.get_node_or_null("InteractionArbiter")
 	if arbiter == null: return _fail("F49 lacks the actual interaction arbiter")
 	var nav := NAV.new(tree, _player, _rig, _stick)
-	_walk_serial += 1
-	_confirm_lesson_cards(_walk_serial)
+	_f49_walk_serial += 1
+	_f49_confirm_lesson_cards(_f49_walk_serial)
 	for point: Vector3 in via:
 		if not await nav.walk_to(point, maxi(1200, int(_player.global_position.distance_to(point) * 65.0)), 0.8):
 			_stick(0, 0)
-			_walk_serial += 1
+			_f49_walk_serial += 1
 			return _fail("F49 ordinary capsule walk failed to waypoint " + str(point))
 	var distance := _player.global_position.distance_to(prompt.global_position)
 	var recoveries_before := int(_player.get("_unstick_count"))
@@ -265,7 +265,7 @@ func activate(prompt: Node3D, via: Array[Vector3] = []) -> bool:
 	# tests. No floor snap, shape waiver, target relocation or budget relaxation.
 	if not await nav.walk_to(prompt.global_position, maxi(1200, int(distance * 65.0)), 2.5):
 		_stick(0, 0)
-		_walk_serial += 1
+		_f49_walk_serial += 1
 		return _fail("F49 ordinary capsule walk failed to " + str(prompt.get_path()))
 	_stick(0, 0)
 	for frame in 8: await tree.physics_frame
@@ -274,11 +274,11 @@ func activate(prompt: Node3D, via: Array[Vector3] = []) -> bool:
 	if arbiter.call("winning_provider") != prompt:
 		if not await nav.walk_to(prompt.global_position, 600, 1.2):
 			_stick(0, 0)
-			_walk_serial += 1
+			_f49_walk_serial += 1
 			return _fail("F49 ordinary capsule walk failed to close on " + str(prompt.get_path()))
 		_stick(0, 0)
 		for frame in 8: await tree.physics_frame
-	_walk_serial += 1
+	_f49_walk_serial += 1
 	if int(_player.get("_unstick_count")) != recoveries_before:
 		return _fail("F49 unexpected entombment recovery interrupted ordinary capsule travel")
 	if not _player.is_on_floor() or arbiter.call("winning_provider") != prompt:
@@ -408,10 +408,10 @@ func _stick(x: float, y: float) -> void:
 ## themselves when the trainer passes a teacher and own input until confirmed
 ## (the body freezes with the stick pushed). As in gate_b_tail_segment.gd, a
 ## player confirms them with the physical confirm button during the walk.
-func _confirm_lesson_cards(serial: int) -> void:
-	while serial == _walk_serial and tree != null:
+func _f49_confirm_lesson_cards(serial: int) -> void:
+	while serial == _f49_walk_serial and tree != null:
 		var owner: Node = INPUT_OWNER.current(tree)
-		if owner != null and owner.get_script() == LESSON_PANEL:
+		if owner != null and owner.get_script() == _F49_LESSON_PANEL:
 			print("F49 confirmed onboarding lesson card at ", _player.global_position)
 			await tap("menu_confirm")
 		else:

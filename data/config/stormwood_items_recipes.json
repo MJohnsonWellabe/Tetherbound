@@ -6,7 +6,7 @@
     "stormglass": {
       "name": "Stormglass",
       "kind": "resource",
-      "stack": 50,
+      "stack": 200,
       "colour": "#78c9df",
       "icon": "res://assets/ui/icons/items/stone.png",
       "blurb": "Lightning-fused glass prised from a charged seam.",
@@ -16,7 +16,7 @@
     "thunderwood": {
       "name": "Thunderwood",
       "kind": "resource",
-      "stack": 50,
+      "stack": 200,
       "colour": "#5b4638",
       "icon": "res://assets/ui/icons/items/wood.png",
       "blurb": "Glass-fused timber that still holds a charge.",
@@ -57,7 +57,7 @@
     "sparkfur": {
       "name": "Sparkfur",
       "kind": "material",
-      "stack": 30,
+      "stack": 200,
       "colour": "#d7b964",
       "icon": "res://assets/ui/icons/items/fiber.png",
       "blurb": "Shed charged fur earned from Stormwood encounters.",
