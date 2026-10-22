@@ -85,24 +85,24 @@ Sheet: `_sheet_f39_0_gpu_medium_heading0.png` (GPU Medium, heading-0 day frame f
 The coordinator directed this re-run of the CPU supplemental tools on GPU Medium. It covers the 22 rows whose CPU evidence was supplemental. The 11 rows with no CPU evidence are left as they were.
 
 **Renderer and source:** Forward+ on Vulkan, GTX 1060 3GB, 1920x1080, source 9db3d2146 unchanged, seed 2042.
-- **Creatures, UI, inventory:** Medium is set through the look-dev bootstrap (--preset=Medium --source-commit=<sha>).
+- **Creatures, UI, inventory:** Medium is set through the look-dev bootstrap (`--preset=Medium --source-commit=<sha>`).
 - **Camps, current states, mounted swim, swimming, Venn fights:** these tools take no preset argument and render with the isolated device file, which the bootstrap had set to Medium.
 
 | Capture (tool) | GPU frames | CPU receipt | Notes |
 |---|---|---|---|
-| creatures (phase2_capture_creatures --biome=water) | **91**, complete | 90, torrentoad rest incomplete | |
-| UI (phase2_capture_ui --biome=water) | 12 | 12 | |
-| inventory (phase2_capture_world_inventory --biome=water) | 23, exit 1 | 23 | The same 4 stands are refused on both (good_candy, potion_small, orb_prime, driftwood: no camera stand) |
-| camps (phase2_capture_tidewake_camps) | 9 | 9 | |
-| current states (phase2_capture_current_states) | 16 | 16 | Rendered at **1920x1061**: the windowed title bar took 19 px |
-| mounted swim (phase2_capture_tidewake_mounted_swim) | 16 + sheet | 16 | |
-| swimming (phase2_capture_swimming) | 7 | 7 | |
-| Venn fight (phase2_capture_tidewake_fights --trainer=water_trainer_venn) | 40, exit 1 | 40 | Exit 1 is rame_cap, as on CPU |
-| Venn full (same, --interval=3.0 --max-frames=75) | 58, exit 1 | 74 | The tool rejected the run at 117 s with "combat party identity/order changed"; no win was observed, as on CPU |
+| creatures (`phase2_capture_creatures --biome=water`) | **91**, complete | 90, torrentoad rest incomplete | |
+| UI (`phase2_capture_ui --biome=water`) | 12 | 12 | |
+| inventory (`phase2_capture_world_inventory --biome=water`) | 23, exit 1 | 23 | The same 4 stands are refused on both (good_candy, potion_small, orb_prime, driftwood: no camera stand) |
+| camps (`phase2_capture_tidewake_camps`) | 9 | 9 | |
+| current states (`phase2_capture_current_states`) | 16 | 16 | Rendered at **1920x1061**: the windowed title bar took 19 px |
+| mounted swim (`phase2_capture_tidewake_mounted_swim`) | 16 + sheet | 16 | |
+| swimming (`phase2_capture_swimming`) | 7 | 7 | |
+| Venn fight (`phase2_capture_tidewake_fights --trainer=water_trainer_venn`) | 40, exit 1 | 40 | Exit 1 is `frame_cap`, as on CPU |
+| Venn full (same, `--interval=3.0 --max-frames=75`) | 58, exit 1 | 74 | The tool rejected the run at 117 s with "combat party identity/order changed"; no win was observed, as on CPU |
 
 **Anchor:** none. The CPU supplemental frames and sheets were never committed (only receipts), so each row's CPU judge mean is listed for reference only, on the CPU judges' scale.
 
-**Judging:** three fresh code-blind judges, one batch on one scale (judge_prompt_supplemental.md; scores in ow-scores-gpu.json under supplemental_rows).
+**Judging:** three fresh code-blind judges, one batch on one scale (`judge_prompt_supplemental.md`; scores in `row-scores-gpu.json` under `supplemental_rows`).
 
 | Row | Subject | GPU j1/j2/j3 | GPU mean | Verdicts | CPU row mean (CPU judges) |
 |---|---|---|---|---|---|
