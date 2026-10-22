@@ -87,3 +87,26 @@ profile is unchanged.
 Remaining: the Meadowhart faint end overlaps the stage ruler (staging only; the ruler stands beside the
 creature). Mirejaw/Voltarach c2 palettes now read blown-out white and yellow; tone them down. The F29#3 cub is
 the same model as the adult (new art).
+
+## Batch b4 (22 Oct ~20:00 CT): the Meshy-1022 remakes beat the live models by 0.5-1.7; none at 7.5
+
+Capture: `capture_f36_poses.gd --whole-body --context` without `--candidate` (installed clips, as non-enabled
+species ship), live vs remake bound locally (species.json model + colourway source + footprint allowance).
+Remakes are rigged here: measured quadruped (Tanglevolt, Stormcapra, Mirejaw), rig_bird (Galecrest) and new
+cobra/spider rigs (Fulgocobra, Voltarach); their clips carry the held shove hit. Fulgocobra was held back (its
+first faint folded backwards) and is recaptured. Anchors: f36_0_gap:C7, f10_2_r3_capacitor, craft, f36_0_npc:C1.
+Fit: linear, slope 0.897, intercept 1.314, r 0.856, RMSE 0.633, no warnings. Files `b4/`.
+
+| Species | Live raw | Remake raw | Live mapped | **Remake mapped** | Two-style defect |
+|---|---|---|---|---|---|
+| Tanglevolt | 4.7/4.6/4.8 | 6.4/5.6/6.4 | 5.53 | **6.81** | FIXED x3 |
+| Stormcapra | 6.0/5.2/5.3 | 6.4/5.6/6.3 | 6.25 | **6.78** | FIXED x3 |
+| Galecrest | 4.3/3.8/4.2 | 6.3/5.8/6.0 | 4.99 | **6.72** | FIXED x3 |
+| Voltarach | 4.5/4.0/4.0 | 5.8/5.6/5.2 | 5.05 | **6.28** | FIXED x3 |
+| Mirejaw | 4.6/4.2/4.3 | 5.6/5.4/5.3 | 5.23 | **6.19** | PARTIAL x3 |
+
+Asks:
+- faint ends collapse into dark or colourless blobs (side-roll / belly-up shows the unlit underside);
+- weak hit on the bird, spider and ram; the spider's faint mid stands it on end;
+- Mirejaw's face is small and its body barely clears the trainer;
+- Tanglevolt and Stormcapra read cute/plastic (owner steer: stylised realism, not cartoon).
