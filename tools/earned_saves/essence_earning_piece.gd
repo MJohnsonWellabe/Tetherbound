@@ -34,6 +34,11 @@ const MAX_APPROACH_REFUSALS := 3
 const EARN_START := Vector2(96.2, 14.0)
 const ROUTE := preload("res://tests/helpers/meadows_earned_material_segment.gd")
 var _approach_refusals := 0
+## A refused spawn site respawns its wild in place (Wild_mudsnout_1070_1 then
+## _2, beside the dip at (26,-36) once the tier-2 cap admits it): set the
+## site aside, not only the body.
+const REFUSED_SITE_M := 6.0
+var _refused_sites: Array[Vector2] = []
 var _tier_cap := 10
 
 
@@ -83,16 +88,9 @@ func run_earning(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = 
 		_receipt("home_key", {"landed": (_world.get_node("Player") as Node3D).global_position})
 	if not _bind():
 		return result()
-	if Vector2(_player.global_position.x, _player.global_position.z).distance_to(EARN_START) > 20.0:
-		var rig := _world.get_node_or_null("CameraRig") as Node3D
-		var walker := ROUTE.new()
-		var arrived: bool = await walker.walk_route(_tree, _world, _game, _player, rig,
-			Vector3(EARN_START.x, float(_world.call("ground_height_at", EARN_START.x, EARN_START.y)), EARN_START.y))
-		_receipt("walk_to_earning_start", {"arrived": arrived, "player": _player.global_position})
-		if not arrived:
-			_failures.append_array(walker.failures)
-			return result()
-		_nav = NAV.new(_tree, _player, _rig, _stick, true)
+	if Vector2(_player.global_position.x, _player.global_position.z).distance_to(EARN_START) > 20.0 \
+			and not await _walk_to_earning_start():
+		return result()
 	_initial_ids = _party_ids()
 	_tier_cap = int(args.get("tier", 1)) * 10
 	var wins := 0
@@ -123,6 +121,11 @@ func run_earning(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = 
 				"reason": refusal, "number": _approach_refusals})
 			_failures.resize(failures_before)
 			_avoid.append(wild)
+			_refused_sites.append(_home_xz(wild))
+			# A refusal leaves the trainer wherever the approach stopped (off
+			# the ground on the dip); a player steps back to open ground.
+			if not await _walk_to_earning_start():
+				return result()
 			continue
 		if not await _win_live_fight(true):
 			if not _failures.is_empty():
@@ -150,8 +153,27 @@ func _training_eligible(body: Node3D, owned: Array[int]) -> bool:
 	var creature: RefCounted = body.get("instance")
 	if creature == null or owned.has(creature.get_instance_id()) or int(creature.get("level")) > _tier_cap:
 		return false
+	var home := _home_xz(body)
+	for site: Vector2 in _refused_sites:
+		if home.distance_to(site) <= REFUSED_SITE_M: return false
+	return home.distance_to(EARN_CENTRE) <= EARN_RADIUS
+
+
+func _walk_to_earning_start() -> bool:
+	var walker := ROUTE.new()
+	var arrived: bool = await walker.walk_route(_tree, _world, _game, _player, _rig,
+		Vector3(EARN_START.x, float(_world.call("ground_height_at", EARN_START.x, EARN_START.y)), EARN_START.y))
+	_receipt("walk_to_earning_start", {"arrived": arrived, "player": _player.global_position})
+	if not arrived:
+		_failures.append_array(walker.failures)
+		return false
+	_nav = NAV.new(_tree, _player, _rig, _stick, true)
+	return true
+
+
+static func _home_xz(body: Node3D) -> Vector2:
 	var home: Vector3 = body.get("home") if body.get("home") is Vector3 else body.global_position
-	return Vector2(home.x, home.z).distance_to(EARN_CENTRE) <= EARN_RADIUS
+	return Vector2(home.x, home.z)
 
 
 func _bind() -> bool:
