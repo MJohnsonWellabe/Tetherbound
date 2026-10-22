@@ -411,11 +411,17 @@ func _stick(x: float, y: float) -> void:
 func _f49_confirm_lesson_cards(serial: int) -> void:
 	while serial == _f49_walk_serial and tree != null:
 		var owner: Node = INPUT_OWNER.current(tree)
-		if owner != null and owner.get_script() == _F49_LESSON_PANEL:
+		if owner != null and owner.get_script() == _F49_LESSON_PANEL and not _lessons_read_by_caller():
 			print("F49 confirmed onboarding lesson card at ", _player.global_position)
 			await tap("menu_confirm")
 		else:
 			await tree.physics_frame
+
+
+## A subclass that reads lesson cards itself (f20's witnessed lesson reader)
+## returns true while it does, so only one reader presses confirm per card.
+func _lessons_read_by_caller() -> bool:
+	return false
 
 
 ## A straight walk from the village to an arch ends against the Hall's back

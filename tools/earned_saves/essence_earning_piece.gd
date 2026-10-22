@@ -6,9 +6,10 @@ extends "res://tests/helpers/meadows_earned_team_segment.gd"
 ## save holds no essence. A player then trains on the practice meadow: this
 ## piece reuses the team segment's own wild choice, approach, pilot care and
 ## piloted fight, and stops once every retained companion's remaining levels
-## to its cap are covered by its earned XP, compatible essence or Tether
-## Candy. Nothing is granted, written or skipped; each win is a production
-## victory with its own durable essence/XP receipts.
+## to its cap are payable by compatible essence or Tether Candy (each win's XP
+## also raises levels directly, which shrinks that count). Nothing is granted,
+## written or skipped; each win is a production victory with its own durable
+## essence/XP receipts.
 const TRAINING := preload("res://tools/earned_saves/training_handoff.gd")
 const TRAVEL := preload("res://tests/helpers/f20_portal_travel.gd")
 const PROGRESSION_CFG := "res://data/config/progression.json"

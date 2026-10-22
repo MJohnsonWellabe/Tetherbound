@@ -131,8 +131,6 @@ func _link_focus() -> void:
 		row.focus_previous = row.focus_neighbor_top
 		row.focus_next = row.focus_neighbor_bottom
 
-## Only offer a feast at this individual's current locked tier. Level stays
-## unchanged after feeding, so level alone would re-offer the consumed tier.
 ## A row names its creature: its nickname, or its species when unnamed (an
 ## empty nickname used to leave the row blank). Rows that would still read
 ## the same, such as two unnamed Bramblebun, carry their party slot.
@@ -150,6 +148,8 @@ static func party_labels(cards: Array) -> Array[String]:
 	return names
 
 
+## Only offer a feast at this individual's current locked tier. Level stays
+## unchanged after feeding, so level alone would re-offer the consumed tier.
 static func feast_matches_current_cap(card: Dictionary, mirror: Dictionary, definition: Dictionary) -> bool:
 	if definition.get("kind") != "ascension_feast": return false
 	var tiers: Array = mirror.get("breakthroughs", [])

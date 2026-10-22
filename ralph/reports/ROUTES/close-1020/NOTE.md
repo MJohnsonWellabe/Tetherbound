@@ -30,7 +30,7 @@ Meadows: `godot --headless --fixed-fps 60 --path . --script tools/earned_saves/e
 | bridge | p04_bridge | 5e4ccd4f4 | 1481 s | PASS, L8/8/7/5/5 |
 
 ## F47#0 proposal (owner choice, default-off)
-`data/config/essence.json` `_f47_0_clear_time_proposal` (`enabled: false`, read by nothing). Finding: combat XP, not Altar price, dominates leveling (doubling level_cost multipliers moves the ledger break-even from 0.39 to 0.42), so the trickle `auto_xp_scale` is the main lever.
+Moved out of shipping config on review (the live-set rule; it also changed essence.json's F48 pin hash); the full option block is under "F47#0 option block" below. Finding: combat XP, not Altar price, dominates leveling (doubling level_cost multipliers moves the ledger break-even from 0.39 to 0.42), so the trickle `auto_xp_scale` is the main lever.
 - Option A (ledger-safe): auto_xp_scale 0.35→0.28; attuned_per_creature +1 per Master (t1 3, t2 2, t3–t5 3). Break-even wild-site engagement 0.39→0.50 (+125 first-time fights). Estimate **11.4–16.6 h**.
 - Option B (reaches target): auto_xp_scale 0.25; level_cost multipliers L11–60 1.0→2.0; attuned +1. Break-even 0.66 (plausible mismatched team 0.67; all-bodies ceiling still reaches every checkpoint, so no repeat grinding). Estimate **14.4–21.1 h**. Needs the F27 ledger's 0.5 ordinary-engagement assumption moved to 0.66 (owner decision).
 - Method: agent estimate v2 + (new break-even − 0.39) × 1132 main-path wild sites × 1.0–1.5 min + attuned gathering 0.5–1 h; break-even by stepping `runScenario` engagement 0.01 with only these values overridden. Checks with the block present: `node --test tests/test_f27_route_ledger.mjs tests/test_economy_ledger.mjs tests/test_economy_difficulty.mjs tests/test_economy_supply_census.mjs` 27/0; `run_tests.gd --only=essence,altar_service` 24 tests/0 failed.
@@ -134,3 +134,74 @@ Placeholder note: 049dde025 and 93cd0ac29 ran before the asset re-import (creatu
 | 05k_ione_chest → training_t3_preparehome | `seams/05k_ione_chest__training_t3_preparehome.json` | reviewed difference: player position (same save; Load seats the trainer 17 m away; the piece leaves by Home Key) |
 | training_t3_preparehome → … → training_t3_return (9 seams) | `seams/…` | MATCH |
 | training_t1_altar_5 → training_t1_master | written when the pinned piece passes | – |
+
+## F47#0 option block (moved from data/config/essence.json)
+Not read by any code. Applying an option means copying its numbers into the live keys (auto_xp_scale, level_cost_bands[].multiplier, masters.json masters[].attuned_per_creature).
+```json
+{
+ "enabled": false,
+ "status": "Owner choice. Not read by any runtime or ledger code; live values above are unchanged. Applying an option means copying its numbers into the live keys (auto_xp_scale, level_cost_bands[].multiplier, masters.json masters[].attuned_per_creature), then re-running node --test tests/test_f27_route_ledger.mjs tests/test_economy_*.mjs and an agent route measurement.",
+ "baseline": {
+  "auto_xp_scale": 0.35,
+  "level_cost_multiplier_L11_60": 1.0,
+  "attuned_per_creature": {
+   "master_t1": 2,
+   "master_t2": 1,
+   "master_t3": 2,
+   "master_t4": 2,
+   "master_t5": 2
+  },
+  "agent_estimate_hours": [
+   8.8,
+   12.5
+  ],
+  "ledger_break_even_wild_site_fraction": 0.39
+ },
+ "option_a_ledger_safe": {
+  "auto_xp_scale": 0.28,
+  "level_cost_multiplier_L11_60": 1.0,
+  "attuned_per_creature": {
+   "master_t1": 3,
+   "master_t2": 2,
+   "master_t3": 3,
+   "master_t4": 3,
+   "master_t5": 3
+  },
+  "ledger_break_even_wild_site_fraction": 0.5,
+  "ordinary_half_engagement_levels": "tidewake 22.4/20, cloudreach 31/31, stormwood 42/42, finale-ready 56.2/54",
+  "estimated_clear_hours": [
+   11.4,
+   16.6
+  ],
+  "_why": "Combat XP dominates leveling (level_cost multipliers up to 2.0 move break-even only a few points), so the trickle is the lever. At 0.28 the ledger's ordinary player (half the authored wild sites, no repeats) lands on every checkpoint with no margin; the existing F27 primary scenario still passes. Adds (0.50-0.39) x 1132 main-path wild sites = 125 fights."
+ },
+ "option_b_reaches_target": {
+  "auto_xp_scale": 0.25,
+  "level_cost_band_multipliers": [
+   1.0,
+   2.0,
+   2.0,
+   2.0,
+   2.0,
+   2.0
+  ],
+  "attuned_per_creature": {
+   "master_t1": 3,
+   "master_t2": 2,
+   "master_t3": 3,
+   "master_t4": 3,
+   "master_t5": 3
+  },
+  "ledger_break_even_wild_site_fraction": 0.66,
+  "plausible_mismatched_team_break_even": 0.67,
+  "ordinary_half_engagement_levels": "tidewake 21/20, cloudreach 29/31, stormwood 39.2/42, finale-ready 52/54 (short; Altar spend from releases/candy or more authored fights closes it)",
+  "every_authored_body_once_ceiling": "30/20, 40/31, 50/42, 60/54: no repeat grinding is ever required",
+  "estimated_clear_hours": [
+   14.4,
+   21.1
+  ],
+  "_why": "Adds (0.66-0.39) x 1132 = 306 first-time wild fights plus pricier Altar levels, so the normal pace engages about two-thirds of each chapter's authored wild sites. Needs an owner decision because tests/test_f27_route_ledger.mjs's primary ordinary scenario (0.5 engagement) would then fall short at Cloudreach/Stormwood and its assumption must move to 0.66."
+ },
+ "method": "Estimated clear = agent estimate v2 (8.8-12.5 h, ralph/reports/EVIDENCE/F47-0/AGENT_ESTIMATE.md) + added fights x 1.0-1.5 min each (low: measured 8-21 s duels plus walking; high: the F27 ledger's MINUTES_PER_WILD_REFIGHT 1.5 incl. walking) + attuned gathering +0.5-1 h (PREPARATION_DEPTH_OPTIONS lever 2). Added fights = (new break-even - 0.39) x 1132, break-even found by stepping the engagement fraction 0.01 at a time in tools/f27_route_ledger.mjs runScenario with only these values overridden. Assumes the agent route already engaged about the old break-even share. Arithmetic only: the owner's play pass (F49#1) and a fresh agent route still decide F47#0."
+}
+```
