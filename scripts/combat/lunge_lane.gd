@@ -42,6 +42,8 @@ var _half_width := 1.0
 var _colour := Color("#ff40e6")
 var _fill_alpha := 0.22
 var _locked_fill_alpha := 0.42
+## `charger_lunge.lane_charged` when enabled for a solid lane; empty = flat fill.
+var _charged: Dictionary = {}
 var _edge_alpha := 0.9
 var _edge_width := 0.14
 var _end_depth := 0.35
@@ -100,6 +102,10 @@ static func begin(body: Node3D, start: float, length: float, half_width: float,
 	lane._xray_alpha = clampf(float(cfg.get("lane_xray_alpha", 0.0)), 0.0, 1.0)
 	# A named charge may ask for the solid filled lane over the soft outline.
 	lane._soft = {} if cfg.get("lane_solid") == true else STYLE.soft()
+	# F41#5 candidate: the solid lane drawn as charged ground (see CHARGED_SHADER).
+	var charged: Variant = cfg.get("lane_charged", {})
+	if cfg.get("lane_solid") == true and charged is Dictionary and (charged as Dictionary).get("enabled") == true:
+		lane._charged = charged
 	lane.top_level = true
 	body.add_child(lane)
 	return lane
@@ -159,12 +165,59 @@ void fragment() {
 """
 
 
+## F41#5 candidate (`charger_lunge.lane_charged`, solid lanes only): the GPU
+## pass judges read the solid named-fight lane as a flat magenta slab. The
+## same vertex colours (hue, fill and edge alpha, chevrons) are broken up by
+## a world-space crackle that streams along the lane, with the brightest veins
+## lifted toward white, so the fill reads as charged ground. The mean fill
+## stays at `mean_alpha` of the authored alpha; shape, timing and depth rules
+## are the lane's own. Presentation only.
+const CHARGED_SHADER := """
+shader_type spatial;
+render_mode unshaded, blend_mix, cull_disabled, shadows_disabled, depth_draw_never;
+uniform float depth_pull = 0.45;
+uniform float scale = 1.6;
+uniform float speed = 1.4;
+uniform float floor_alpha = 0.35;
+uniform float vein_gain = 1.6;
+uniform float whiten = 0.55;
+varying vec4 tint;
+varying vec3 world;
+float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float noise(vec2 p) {
+	vec2 i = floor(p); vec2 f = fract(p);
+	vec2 u = f * f * (3.0 - 2.0 * f);
+	return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+}
+void vertex() {
+	tint = COLOR;
+	world = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec4 view = MODELVIEW_MATRIX * vec4(VERTEX, 1.0);
+	float dist = length(view.xyz);
+	view.xyz *= max(0.2, 1.0 - depth_pull / max(dist, 0.001));
+	POSITION = PROJECTION_MATRIX * view;
+}
+void fragment() {
+	vec2 p = world.xz * scale;
+	float n = noise(p + vec2(TIME * speed, -TIME * speed * 0.6)) * 0.6 + noise(p * 2.3 - vec2(TIME * speed * 1.3, 0.0)) * 0.4;
+	float vein = 1.0 - abs(n * 2.0 - 1.0);
+	vein = pow(vein, 3.0);
+	float crackle = clamp(floor_alpha + vein * vein_gain, 0.0, 1.6);
+	ALBEDO = mix(tint.rgb, vec3(1.0), clamp(vein * whiten, 0.0, 1.0));
+	ALPHA = clamp(tint.a * crackle, 0.0, 1.0);
+}
+"""
+
+
 func _material() -> Material:
 	var shader := Shader.new()
-	shader.code = LANE_SHADER
+	shader.code = LANE_SHADER if _charged.is_empty() else CHARGED_SHADER
 	var material := ShaderMaterial.new()
 	material.shader = shader
 	material.set_shader_parameter("depth_pull", _depth_pull)
+	for key: String in ["scale", "speed", "floor_alpha", "vein_gain", "whiten"]:
+		if _charged.has(key):
+			material.set_shader_parameter(key, float(_charged[key]))
 	return material
 
 

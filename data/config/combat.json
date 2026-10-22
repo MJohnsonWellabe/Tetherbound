@@ -585,7 +585,9 @@
     "_why_lane_depth_pull": "F04 charger-lunge capture, round 1: the depth-tested lane lifted 9 cm off the sampled ground drew as scattered fragments on the relay approach because the rendered terrain between samples sits above them. The lane's vertices are pulled this many metres toward the camera in view space (stormwood_lightning.gd's technique), which beats the ground without painting through a creature standing in front of it. TUNABLE; presentation only.",
     "lane_depth_pull": 0.45,
     "_why_lane_xray_alpha": "F10#2 C3 judge (2026-10-13): Hollows Alpha's lane was mostly hidden under Voltarach's legs at the fight camera. A faint copy of the same lane, same colour, drawn without the depth test at this fraction of its alpha, so a lane under a large body still reads; the depth-tested lane stays full strength and never paints through a body (P2-093). 0 disables. OFF: at 0.35 and 0.7 the code-blind judge still read the spider lane as hidden (F10#2 c3_rerun, two attempts); kept as an off candidate. TUNABLE; presentation only.",
-    "lane_xray_alpha": 0.0
+    "lane_xray_alpha": 0.0,
+    "_why_lane_charged": "F41#5 candidate (Stormwood lane, 22 Oct 2026): the GPU pass judges read the solid named-fight lanes (cue_lane_solid) as flat magenta slabs. When enabled, a solid lane keeps its hue, shape, timings and authored alphas but its fill is broken by a world-space crackle streaming along the ground (scale per metre, speed), the brightest veins lifted `whiten` toward white; floor_alpha + vein_gain shape the alpha around the authored value. Presentation only. OFF until judged.",
+    "lane_charged": {"enabled": false, "scale": 1.6, "speed": 1.4, "floor_alpha": 0.35, "vein_gain": 1.6, "whiten": 0.55}
   },
   "stagger_feedback": {
     "enabled": true,
