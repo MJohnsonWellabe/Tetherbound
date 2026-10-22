@@ -2,6 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
+uid="uid://dpygeno007rwi"
+path.s3tc="res://.godot/imported/verge_grass_painted_v2_NormalGL.png-0f7ba1ae98b4f23909c1b7d43a603291.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -9,6 +11,8 @@ metadata={
 
 [deps]
 
+source_file="res://assets/environment/terrain/stylised/verge_grass_painted_v2_NormalGL.png"
+dest_files=["res://.godot/imported/verge_grass_painted_v2_NormalGL.png-0f7ba1ae98b4f23909c1b7d43a603291.s3tc.ctex"]
 
 [params]
 
