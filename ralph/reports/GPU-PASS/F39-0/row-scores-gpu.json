@@ -1,0 +1,646 @@
+{
+    "criterion":  "F39#0",
+    "renderer":  "forward_plus Medium, GTX 1060 3GB, 1920x1080",
+    "source_commit":  "9db3d2146d0587d189cf172567b17345f31a0abd",
+    "judges":  3,
+    "sets":  {
+                 "S":  "GPU Medium landscape recapture, 12 sheets, 240 frames",
+                 "X":  "anchor: RECAP-TIDEWAKE/close-1020/_sheet_f39_recapture_heading0.jpg (CPU)"
+             },
+    "overall":  {
+                    "S":  [
+                              4.4,
+                              4.6,
+                              4.3
+                          ],
+                    "S_mean":  4.43,
+                    "X":  [
+                              3.6,
+                              3.8,
+                              3.4
+                          ],
+                    "X_mean":  3.6,
+                    "barB_S":  [
+                                   "yes",
+                                   "yes",
+                                   "no"
+                               ],
+                    "barB_X":  [
+                                   "no",
+                                   "no",
+                                   "no"
+                               ]
+                },
+    "rows":  [
+                 {
+                     "item_id":  "P2-008",
+                     "subject":  "shore landforms",
+                     "gpu_status":  "SCORED",
+                     "gpu_scores":  [
+                                        5.0,
+                                        4.5,
+                                        5.0
+                                    ],
+                     "gpu_mean":  4.83,
+                     "gpu_verdicts":  [
+                                          "IMPROVED",
+                                          "IMPROVED",
+                                          "IMPROVED"
+                                      ],
+                     "anchor_cpu_sheet_scores":  [
+                                                     4.5,
+                                                     4.0,
+                                                     4.3
+                                                 ],
+                     "anchor_mean":  4.27,
+                     "cpu_row_mean":  5.0,
+                     "bar_7_5":  "BELOW"
+                 },
+                 {
+                     "item_id":  "P2-016",
+                     "subject":  "creature hurt and movement poses",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  4.0,
+                     "cpu_evidence_sources":  [
+                                                  "sup_creatures_1",
+                                                  "sup_creatures_2",
+                                                  "sup_creatures_3"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-002",
+                     "subject":  "map",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  2.0,
+                     "cpu_evidence_sources":  [
+                                                  "sup_ui"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-030",
+                     "subject":  "shiny creature finish",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  3.0,
+                     "cpu_evidence_sources":  [
+                                                  "sup_creatures_1",
+                                                  "sup_creatures_2",
+                                                  "sup_creatures_4",
+                                                  "sup_creatures_5"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-033",
+                     "subject":  "ground pickup identity",
+                     "gpu_status":  "SCORED",
+                     "gpu_scores":  [
+                                        3.5,
+                                        3.5,
+                                        3.5
+                                    ],
+                     "gpu_mean":  3.5,
+                     "gpu_verdicts":  [
+                                          "PRESENT",
+                                          "PRESENT",
+                                          "PRESENT"
+                                      ],
+                     "anchor_cpu_sheet_scores":  [
+                                                     null,
+                                                     null,
+                                                     null
+                                                 ],
+                     "anchor_mean":  null,
+                     "cpu_row_mean":  3.67,
+                     "bar_7_5":  "BELOW"
+                 },
+                 {
+                     "item_id":  "P2-010",
+                     "subject":  "Veilfall silhouette",
+                     "gpu_status":  "SCORED",
+                     "gpu_scores":  [
+                                        5.0,
+                                        6.0,
+                                        5.3
+                                    ],
+                     "gpu_mean":  5.43,
+                     "gpu_verdicts":  [
+                                          "IMPROVED",
+                                          "IMPROVED",
+                                          "IMPROVED"
+                                      ],
+                     "anchor_cpu_sheet_scores":  [
+                                                     4.5,
+                                                     5.0,
+                                                     4.5
+                                                 ],
+                     "anchor_mean":  4.67,
+                     "cpu_row_mean":  3.67,
+                     "bar_7_5":  "BELOW"
+                 },
+                 {
+                     "item_id":  "P2-011",
+                     "subject":  "named destination read",
+                     "gpu_status":  "SCORED",
+                     "gpu_scores":  [
+                                        3.5,
+                                        3.0,
+                                        3.0
+                                    ],
+                     "gpu_mean":  3.17,
+                     "gpu_verdicts":  [
+                                          "PRESENT",
+                                          "PRESENT",
+                                          "PRESENT"
+                                      ],
+                     "anchor_cpu_sheet_scores":  [
+                                                     3.0,
+                                                     2.5,
+                                                     2.5
+                                                 ],
+                     "anchor_mean":  2.67,
+                     "cpu_row_mean":  2.83,
+                     "bar_7_5":  "BELOW"
+                 },
+                 {
+                     "item_id":  "P2-071",
+                     "subject":  "surface swimming trainer pose",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  3.83,
+                     "cpu_evidence_sources":  [
+                                                  "sup_swimming"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-028",
+                     "subject":  "creature faint state",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  5.0,
+                     "cpu_evidence_sources":  [
+                                                  "sup_creatures_1",
+                                                  "sup_creatures_3",
+                                                  "sup_creatures_4",
+                                                  "sup_creatures_5"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-001",
+                     "subject":  "menu shell",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  4.67,
+                     "cpu_evidence_sources":  [
+                                                  "sup_ui"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-007",
+                     "subject":  "secondary menu panels",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  4.5,
+                     "cpu_evidence_sources":  [
+                                                  "sup_ui"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-055",
+                     "subject":  "named character silhouettes",
+                     "gpu_status":  "SCORED",
+                     "gpu_scores":  [
+                                        6.0,
+                                        6.0,
+                                        6.0
+                                    ],
+                     "gpu_mean":  6,
+                     "gpu_verdicts":  [
+                                          "IMPROVED",
+                                          "IMPROVED",
+                                          "IMPROVED"
+                                      ],
+                     "anchor_cpu_sheet_scores":  [
+                                                     null,
+                                                     5.0,
+                                                     null
+                                                 ],
+                     "anchor_mean":  5,
+                     "cpu_row_mean":  4.08,
+                     "bar_7_5":  "BELOW"
+                 },
+                 {
+                     "item_id":  "P2-009",
+                     "subject":  "water and island depth",
+                     "gpu_status":  "SCORED",
+                     "gpu_scores":  [
+                                        5.0,
+                                        6.5,
+                                        5.5
+                                    ],
+                     "gpu_mean":  5.67,
+                     "gpu_verdicts":  [
+                                          "IMPROVED",
+                                          "IMPROVED",
+                                          "IMPROVED"
+                                      ],
+                     "anchor_cpu_sheet_scores":  [
+                                                     3.5,
+                                                     4.0,
+                                                     3.8
+                                                 ],
+                     "anchor_mean":  3.77,
+                     "cpu_row_mean":  5.67,
+                     "bar_7_5":  "BELOW"
+                 },
+                 {
+                     "item_id":  "P2-063",
+                     "subject":  "shared fight tell and hit effects",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  3.5,
+                     "cpu_evidence_sources":  [
+                                                  "sup_fight_venn_a",
+                                                  "sup_fight_venn_b"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-060",
+                     "subject":  "catch effect finish",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "NO_CURRENT_EVIDENCE",
+                     "cpu_row_mean":  null,
+                     "cpu_evidence_sources":  [
+
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-101",
+                     "subject":  "Riverdrake fight ground contact",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  5.67,
+                     "cpu_evidence_sources":  [
+                                                  "sup_fight_venn_late_1",
+                                                  "sup_fight_venn_late_2"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-004",
+                     "subject":  "exploration HUD",
+                     "gpu_status":  "SCORED",
+                     "gpu_scores":  [
+                                        6.0,
+                                        5.5,
+                                        5.0
+                                    ],
+                     "gpu_mean":  5.5,
+                     "gpu_verdicts":  [
+                                          "IMPROVED",
+                                          "IMPROVED",
+                                          "PRESENT"
+                                      ],
+                     "anchor_cpu_sheet_scores":  [
+                                                     6.0,
+                                                     5.0,
+                                                     5.0
+                                                 ],
+                     "anchor_mean":  5.33,
+                     "cpu_row_mean":  5.58,
+                     "bar_7_5":  "BELOW"
+                 },
+                 {
+                     "item_id":  "P2-072",
+                     "subject":  "swimmer water contact",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  5.33,
+                     "cpu_evidence_sources":  [
+                                                  "sup_swimming"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-045",
+                     "subject":  "candy pickup tiers",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  4.33,
+                     "cpu_evidence_sources":  [
+                                                  "sup_pickups"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-088",
+                     "subject":  "fight team roster contrast",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  5.5,
+                     "cpu_evidence_sources":  [
+                                                  "sup_fight_venn_a",
+                                                  "sup_fight_venn_b"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-090",
+                     "subject":  "fight background creature ground contact",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  6.0,
+                     "cpu_evidence_sources":  [
+                                                  "sup_fight_venn_a",
+                                                  "sup_fight_venn_b"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-026",
+                     "subject":  "Veilfall approach shallows",
+                     "gpu_status":  "SCORED",
+                     "gpu_scores":  [
+                                        2.5,
+                                        2.5,
+                                        2.5
+                                    ],
+                     "gpu_mean":  2.5,
+                     "gpu_verdicts":  [
+                                          "PRESENT",
+                                          "PRESENT",
+                                          "PRESENT"
+                                      ],
+                     "anchor_cpu_sheet_scores":  [
+                                                     2.5,
+                                                     3.0,
+                                                     null
+                                                 ],
+                     "anchor_mean":  2.75,
+                     "cpu_row_mean":  3.0,
+                     "bar_7_5":  "BELOW"
+                 },
+                 {
+                     "item_id":  "P2-031",
+                     "subject":  "settings and binding instructions",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  5.0,
+                     "cpu_evidence_sources":  [
+                                                  "sup_ui"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-066",
+                     "subject":  "live current streaks",
+                     "gpu_status":  "SCORED",
+                     "gpu_scores":  [
+                                        2.0,
+                                        2.5,
+                                        2.5
+                                    ],
+                     "gpu_mean":  2.33,
+                     "gpu_verdicts":  [
+                                          "PRESENT",
+                                          "PRESENT",
+                                          "PRESENT"
+                                      ],
+                     "anchor_cpu_sheet_scores":  [
+                                                     2.0,
+                                                     3.0,
+                                                     3.0
+                                                 ],
+                     "anchor_mean":  2.67,
+                     "cpu_row_mean":  2.5,
+                     "bar_7_5":  "BELOW"
+                 },
+                 {
+                     "item_id":  "P2-067",
+                     "subject":  "current restoration environment",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  2.17,
+                     "cpu_evidence_sources":  [
+                                                  "sup_current"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-073",
+                     "subject":  "dialogue camera framing",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "NO_CURRENT_EVIDENCE",
+                     "cpu_row_mean":  null,
+                     "cpu_evidence_sources":  [
+
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-032",
+                     "subject":  "map active region",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  5.33,
+                     "cpu_evidence_sources":  [
+                                                  "sup_ui"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-061",
+                     "subject":  "catch result hierarchy",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "NO_CURRENT_EVIDENCE",
+                     "cpu_row_mean":  null,
+                     "cpu_evidence_sources":  [
+
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-075",
+                     "subject":  "dialogue foreground obstruction",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "NO_CURRENT_EVIDENCE",
+                     "cpu_row_mean":  null,
+                     "cpu_evidence_sources":  [
+
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-029",
+                     "subject":  "creature rest poses",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  3.83,
+                     "cpu_evidence_sources":  [
+                                                  "sup_creatures_3",
+                                                  "sup_creatures_4",
+                                                  "sup_creatures_5"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-069",
+                     "subject":  "flight and landing pose read",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "NO_CURRENT_EVIDENCE",
+                     "cpu_row_mean":  null,
+                     "cpu_evidence_sources":  [
+
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-089",
+                     "subject":  "fight actor composition",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  4.5,
+                     "cpu_evidence_sources":  [
+                                                  "sup_fight_venn_a",
+                                                  "sup_fight_venn_b"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-091",
+                     "subject":  "fight boss title overlay",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  6.0,
+                     "cpu_evidence_sources":  [
+                                                  "sup_fight_venn_a",
+                                                  "sup_fight_venn_b"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-057",
+                     "subject":  "grass around named characters",
+                     "gpu_status":  "SCORED",
+                     "gpu_scores":  [
+                                        6.0,
+                                        6.0,
+                                        5.5
+                                    ],
+                     "gpu_mean":  5.83,
+                     "gpu_verdicts":  [
+                                          "IMPROVED",
+                                          "IMPROVED",
+                                          "IMPROVED"
+                                      ],
+                     "anchor_cpu_sheet_scores":  [
+                                                     null,
+                                                     5.5,
+                                                     null
+                                                 ],
+                     "anchor_mean":  5.5,
+                     "cpu_row_mean":  4.83,
+                     "bar_7_5":  "BELOW"
+                 },
+                 {
+                     "item_id":  "P2-074",
+                     "subject":  "dialogue speaker visibility",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "NO_CURRENT_EVIDENCE",
+                     "cpu_row_mean":  null,
+                     "cpu_evidence_sources":  [
+
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-103",
+                     "subject":  "named fight victory hierarchy",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "NO_CURRENT_EVIDENCE",
+                     "cpu_row_mean":  null,
+                     "cpu_evidence_sources":  [
+
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-104",
+                     "subject":  "Riverdrake faint silhouette",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "NO_CURRENT_EVIDENCE",
+                     "cpu_row_mean":  null,
+                     "cpu_evidence_sources":  [
+
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-108",
+                     "subject":  "Aquaryn mounted-water pose",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  3.0,
+                     "cpu_evidence_sources":  [
+                                                  "sup_mounted"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-109",
+                     "subject":  "Aquaryn dismount camera obstruction",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  3.67,
+                     "cpu_evidence_sources":  [
+                                                  "sup_mounted"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-113",
+                     "subject":  "catch camera distance",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "NO_CURRENT_EVIDENCE",
+                     "cpu_row_mean":  null,
+                     "cpu_evidence_sources":  [
+
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-114",
+                     "subject":  "catch chance HUD contrast",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "NO_CURRENT_EVIDENCE",
+                     "cpu_row_mean":  null,
+                     "cpu_evidence_sources":  [
+
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-115",
+                     "subject":  "authored camp creature bed silhouette",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "SCORED",
+                     "cpu_row_mean":  3.67,
+                     "cpu_evidence_sources":  [
+                                                  "sup_camps"
+                                              ]
+                 },
+                 {
+                     "item_id":  "P2-116",
+                     "subject":  "authored camp workbench identity",
+                     "gpu_status":  "NOT_PICTURED",
+                     "gpu_scores":  [
+                                        null,
+                                        null,
+                                        null
+                                    ],
+                     "gpu_mean":  null,
+                     "gpu_verdicts":  [
+                                          "NOT_PICTURED",
+                                          "NOT_PICTURED",
+                                          "NOT_PICTURED"
+                                      ],
+                     "anchor_cpu_sheet_scores":  [
+                                                     null,
+                                                     null,
+                                                     null
+                                                 ],
+                     "anchor_mean":  null,
+                     "cpu_row_mean":  3.67,
+                     "bar_7_5":  "BELOW"
+                 },
+                 {
+                     "item_id":  "P2-119",
+                     "subject":  "Fly carrier grip pose",
+                     "gpu_status":  "NO_GPU_EVIDENCE",
+                     "cpu_status":  "NO_CURRENT_EVIDENCE",
+                     "cpu_row_mean":  null,
+                     "cpu_evidence_sources":  [
+
+                                              ]
+                 }
+             ]
+}
