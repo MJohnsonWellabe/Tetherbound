@@ -1,0 +1,1227 @@
+{
+ "version": 1,
+ "scale": "Original judges' scale: the three code-blind judges of each row's original lane round, on the committed sheet (CPU Low/Compatibility frames, except the NPC face round's GPU Medium frames). Some rows were acceptances, others reopened rounds (F10#2 r3, the F36 gap round). The 7.5 bar and the 6.7 CPU-provisional bar were set against this scale. 'reference' is the side's three-judge mean.",
+ "rules": [
+  "Judges never see this file, any key, any arm name or any reference score.",
+  "Use anchor_tiles.py to cut, mask and re-letter tiles; never hand a judge the raw sheet.",
+  "box and masks are pixel rectangles [x0, y0, x1, y1] on the committed sheet; masks are blanked before cropping.",
+  "Add an anchor only from a committed sheet with a committed key and a recorded three-judge mean."
+ ],
+ "not_included": [],
+ "anchors": [
+  {
+   "id": "f10_2_r3_capacitor:control",
+   "side_on_judged_sheet": "E-A, left half",
+   "arm": "control",
+   "box": [
+    0,
+    0,
+    960,
+    450
+   ],
+   "reference": 4.0,
+   "reference_judges": [
+    4.0,
+    3.5,
+    4.5
+   ],
+   "item": "F10#2",
+   "group": "f10_2_r3_capacitor",
+   "sheet": "ralph/reports/CAMERA/close-1020/_sheet_f10_2_r3_capacitor.png",
+   "judge_brief": "Named wild-creature fight in a dense storm forest (Stormwood): one fight, one-second interval frames (iNN) plus the enemy's telegraphed attacks (tell1/tell2 a-f, start to recovery). Does the fight read on screen - both fighters (the large wild creature and the player's smaller creature) and the telegraphs and impacts clearly visible, without trunks, canopy or foliage blocking or washing out the view - and does it look like an event that belongs to the world?",
+   "defects": [],
+   "masks": [],
+   "key_source": "ralph/reports/CAMERA/close-1020/f10_2_r3_key.json (set E, capacitor_alpha: A = control, B = candidate_r3)",
+   "verdict_source": "ralph/reports/CAMERA/close-1020/NOTE.md, Round 3 table (capacitor_alpha row)"
+  },
+  {
+   "id": "f10_2_r3_capacitor:candidate_r3",
+   "side_on_judged_sheet": "E-B, right half",
+   "arm": "candidate_r3",
+   "box": [
+    960,
+    0,
+    1920,
+    450
+   ],
+   "reference": 6.53,
+   "reference_judges": [
+    6.3,
+    6.5,
+    6.8
+   ],
+   "item": "F10#2",
+   "group": "f10_2_r3_capacitor",
+   "sheet": "ralph/reports/CAMERA/close-1020/_sheet_f10_2_r3_capacitor.png",
+   "judge_brief": "Named wild-creature fight in a dense storm forest (Stormwood): one fight, one-second interval frames (iNN) plus the enemy's telegraphed attacks (tell1/tell2 a-f, start to recovery). Does the fight read on screen - both fighters (the large wild creature and the player's smaller creature) and the telegraphs and impacts clearly visible, without trunks, canopy or foliage blocking or washing out the view - and does it look like an event that belongs to the world?",
+   "defects": [],
+   "masks": [],
+   "key_source": "ralph/reports/CAMERA/close-1020/f10_2_r3_key.json (set E, capacitor_alpha: A = control, B = candidate_r3)",
+   "verdict_source": "ralph/reports/CAMERA/close-1020/NOTE.md, Round 3 table (capacitor_alpha row)"
+  },
+  {
+   "id": "f04_6_r22:control",
+   "side_on_judged_sheet": "columns 1-2 (control before/after)",
+   "arm": "control19",
+   "box": [
+    0,
+    0,
+    720,
+    1012
+   ],
+   "reference": 5.83,
+   "reference_judges": [
+    6.3,
+    5.6,
+    5.6
+   ],
+   "row_references": {
+    "relay_officer_dell": 5.17,
+    "relay_captain": 5.83,
+    "captain_riverwatch": 5.83,
+    "captain_field": 6.33,
+    "captain_ridge": 6.0
+   },
+   "item": "F04#6",
+   "group": "f04_6_r22",
+   "sheet": "ralph/reports/CAMERA/close-1020/_sheet_f04_6_r22.png",
+   "judge_brief": "Five Meadows sites where the player defeats an enemy-faction trainer. Each row is one site: a 'before' frame (enemy holds the site) then an 'after' frame (same camera after the win). Judge whether each after frame reads as a distinct, believable aftermath particular to that site, with no clutter or artefacts, in the key art's world.",
+   "defects": [],
+   "masks": [
+    [
+     0,
+     0,
+     1440,
+     14
+    ],
+    [
+     0,
+     203,
+     1440,
+     217
+    ],
+    [
+     0,
+     405,
+     1440,
+     419
+    ],
+    [
+     0,
+     608,
+     1440,
+     622
+    ],
+    [
+     0,
+     810,
+     1440,
+     824
+    ]
+   ],
+   "key_source": "ralph/reports/CAMERA/close-1020/f04_6_r22_key.json (judge-time per-site sheets: site-1 riverwatch A=r22, site-2 field A=r22, site-3 relay_captain A=r22, site-4 ridge A=control19, site-5 dell A=control19). The committed composite is re-laid out: columns 1-2 control before/after, columns 3-4 r22 before/after, rows dell, relay_captain, riverwatch, field, ridge.",
+   "verdict_source": "ralph/reports/CAMERA/close-1020/NOTE.md, 'F04#6 r22 declutter' table (per-judge means)",
+   "blinding_note": "Each frame's label strip names the arm ('control'/'r22'); the masks blank them."
+  },
+  {
+   "id": "f04_6_r22:r22",
+   "side_on_judged_sheet": "columns 3-4 (r22 before/after)",
+   "arm": "r22",
+   "box": [
+    720,
+    0,
+    1440,
+    1012
+   ],
+   "reference": 6.75,
+   "reference_judges": [
+    7.2,
+    6.5,
+    6.56
+   ],
+   "row_references": {
+    "relay_officer_dell": 5.83,
+    "relay_captain": 7.4,
+    "captain_riverwatch": 7.17,
+    "captain_field": 6.77,
+    "captain_ridge": 6.6
+   },
+   "item": "F04#6",
+   "group": "f04_6_r22",
+   "sheet": "ralph/reports/CAMERA/close-1020/_sheet_f04_6_r22.png",
+   "judge_brief": "Five Meadows sites where the player defeats an enemy-faction trainer. Each row is one site: a 'before' frame (enemy holds the site) then an 'after' frame (same camera after the win). Judge whether each after frame reads as a distinct, believable aftermath particular to that site, with no clutter or artefacts, in the key art's world.",
+   "defects": [],
+   "masks": [
+    [
+     0,
+     0,
+     1440,
+     14
+    ],
+    [
+     0,
+     203,
+     1440,
+     217
+    ],
+    [
+     0,
+     405,
+     1440,
+     419
+    ],
+    [
+     0,
+     608,
+     1440,
+     622
+    ],
+    [
+     0,
+     810,
+     1440,
+     824
+    ]
+   ],
+   "key_source": "ralph/reports/CAMERA/close-1020/f04_6_r22_key.json (judge-time per-site sheets: site-1 riverwatch A=r22, site-2 field A=r22, site-3 relay_captain A=r22, site-4 ridge A=control19, site-5 dell A=control19). The committed composite is re-laid out: columns 1-2 control before/after, columns 3-4 r22 before/after, rows dell, relay_captain, riverwatch, field, ridge.",
+   "verdict_source": "ralph/reports/CAMERA/close-1020/NOTE.md, 'F04#6 r22 declutter' table (per-judge means)",
+   "blinding_note": "Each frame's label strip names the arm ('control'/'r22'); the masks blank them."
+  },
+  {
+   "id": "craft:after",
+   "side_on_judged_sheet": "A, left column (1A, 2A)",
+   "arm": "after (readable rows, hints, glyphs on)",
+   "box": [
+    0,
+    0,
+    695,
+    836
+   ],
+   "reference": 7.35,
+   "reference_judges": [
+    7.35,
+    7.35,
+    7.35
+   ],
+   "item": "P2-095/P2-096",
+   "group": "craft",
+   "sheet": "ralph/reports/UI/close-1020/craft/_sheet_craft.png",
+   "judge_brief": "The crafting panel over the game world, at two resolutions (top 1920x1080, bottom 1280x720). Judge the interface: recipe text readable at a glance, action hints easy to find, fit to the game's UI direction.",
+   "defects": [
+    "recipe text in the craft panel is clipped or too small to read at a glance",
+    "the craft action hints are low-contrast and hard to find"
+   ],
+   "masks": [
+    [
+     0,
+     0,
+     1400,
+     28
+    ],
+    [
+     0,
+     416,
+     1400,
+     446
+    ]
+   ],
+   "key_source": "ralph/reports/UI/close-1020/craft/sheet_craft.jpg.key.json and judges.json (rows 1 and 2: A = after, B = before)",
+   "verdict_source": "ralph/reports/UI/close-1020/craft/judges.json (after_mean 7.35, before_mean 4.83)",
+   "blinding_note": "Panel captions 1A/1B/2A/2B are masked so the tile tool's own A/B letters are the only ones."
+  },
+  {
+   "id": "craft:before",
+   "side_on_judged_sheet": "B, right column (1B, 2B)",
+   "arm": "before",
+   "box": [
+    705,
+    0,
+    1400,
+    836
+   ],
+   "reference": 4.83,
+   "reference_judges": [
+    4.45,
+    5.05,
+    5.0
+   ],
+   "item": "P2-095/P2-096",
+   "group": "craft",
+   "sheet": "ralph/reports/UI/close-1020/craft/_sheet_craft.png",
+   "judge_brief": "The crafting panel over the game world, at two resolutions (top 1920x1080, bottom 1280x720). Judge the interface: recipe text readable at a glance, action hints easy to find, fit to the game's UI direction.",
+   "defects": [
+    "recipe text in the craft panel is clipped or too small to read at a glance",
+    "the craft action hints are low-contrast and hard to find"
+   ],
+   "masks": [
+    [
+     0,
+     0,
+     1400,
+     28
+    ],
+    [
+     0,
+     416,
+     1400,
+     446
+    ]
+   ],
+   "key_source": "ralph/reports/UI/close-1020/craft/sheet_craft.jpg.key.json and judges.json (rows 1 and 2: A = after, B = before)",
+   "verdict_source": "ralph/reports/UI/close-1020/craft/judges.json (after_mean 7.35, before_mean 4.83)",
+   "blinding_note": "Panel captions 1A/1B/2A/2B are masked so the tile tool's own A/B letters are the only ones."
+  },
+  {
+   "id": "p2_094_r4:Y_after",
+   "side_on_judged_sheet": "A, left column",
+   "arm": "Y (meshy wall, r4)",
+   "box": [
+    0,
+    0,
+    481,
+    568
+   ],
+   "reference": 6.73,
+   "reference_judges": [
+    6.9,
+    6.9,
+    6.4
+   ],
+   "item": "P2-094",
+   "group": "p2_094_r4",
+   "sheet": "ralph/reports/LOOK/close-1020/_sheet-F38-P2-094-r4.png",
+   "judge_brief": "A placed homestead wall in the Meadows: a close view (top) and the full gameplay view (bottom). Judge whether it reads as a built homestead wall that belongs in the world.",
+   "defects": [
+    "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+   ],
+   "masks": [
+    [
+     0,
+     0,
+     966,
+     14
+    ],
+    [
+     0,
+     284,
+     966,
+     298
+    ]
+   ],
+   "key_source": "ralph/reports/LOOK/close-1020/F38-P2-094-r4-key.json (both rows: A = Y, B = X)",
+   "verdict_source": "ralph/reports/LOOK/close-1020/F38-items-r1.md, P2-094 rounds 2-3 table, r4 row (after 6.73, before 3.5)"
+  },
+  {
+   "id": "p2_094_r4:X_before",
+   "side_on_judged_sheet": "B, right column",
+   "arm": "X (before)",
+   "box": [
+    486,
+    0,
+    966,
+    568
+   ],
+   "reference": 3.5,
+   "reference_judges": null,
+   "item": "P2-094",
+   "group": "p2_094_r4",
+   "sheet": "ralph/reports/LOOK/close-1020/_sheet-F38-P2-094-r4.png",
+   "judge_brief": "A placed homestead wall in the Meadows: a close view (top) and the full gameplay view (bottom). Judge whether it reads as a built homestead wall that belongs in the world.",
+   "defects": [
+    "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+   ],
+   "masks": [
+    [
+     0,
+     0,
+     966,
+     14
+    ],
+    [
+     0,
+     284,
+     966,
+     298
+    ]
+   ],
+   "key_source": "ralph/reports/LOOK/close-1020/F38-P2-094-r4-key.json (both rows: A = Y, B = X)",
+   "verdict_source": "ralph/reports/LOOK/close-1020/F38-items-r1.md, P2-094 rounds 2-3 table, r4 row (after 6.73, before 3.5)"
+  },
+  {
+   "id": "f36_0_gap:C1A",
+   "item": "F36#0",
+   "group": "f36_0_gap:C1",
+   "species": "mudsnout",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-gap-round.png",
+   "side_on_judged_sheet": "Creature 1, Variant A",
+   "arm": "mudsnout_cand",
+   "box": [
+    0,
+    31,
+    765,
+    163
+   ],
+   "masks": [],
+   "reference": 6.1,
+   "reference_judges": [
+    6.3,
+    6.0,
+    6.0
+   ],
+   "judge_brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.mudsnout.A = mudsnout_cand)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_gap:C1B",
+   "item": "F36#0",
+   "group": "f36_0_gap:C1",
+   "species": "mudsnout",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-gap-round.png",
+   "side_on_judged_sheet": "Creature 1, Variant B",
+   "arm": "mudsnout_live",
+   "box": [
+    0,
+    179,
+    765,
+    310
+   ],
+   "masks": [],
+   "reference": 5.33,
+   "reference_judges": [
+    5.5,
+    5.0,
+    5.5
+   ],
+   "judge_brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.mudsnout.B = mudsnout_live)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_gap:C2A",
+   "item": "F36#0",
+   "group": "f36_0_gap:C2",
+   "species": "riverdrake",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-gap-round.png",
+   "side_on_judged_sheet": "Creature 2, Variant A",
+   "arm": "riverdrake_live",
+   "box": [
+    0,
+    342,
+    765,
+    470
+   ],
+   "masks": [],
+   "reference": 6.83,
+   "reference_judges": [
+    6.9,
+    6.6,
+    7.0
+   ],
+   "judge_brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.riverdrake.A = riverdrake_live)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_gap:C2B",
+   "item": "F36#0",
+   "group": "f36_0_gap:C2",
+   "species": "riverdrake",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-gap-round.png",
+   "side_on_judged_sheet": "Creature 2, Variant B",
+   "arm": "riverdrake_cand",
+   "box": [
+    0,
+    486,
+    765,
+    614
+   ],
+   "masks": [],
+   "reference": 6.9,
+   "reference_judges": [
+    6.6,
+    7.2,
+    6.9
+   ],
+   "judge_brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.riverdrake.B = riverdrake_cand)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_gap:C3A",
+   "item": "F36#0",
+   "group": "f36_0_gap:C3",
+   "species": "cloudfang",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-gap-round.png",
+   "side_on_judged_sheet": "Creature 3, Variant A",
+   "arm": "cloudfang_live",
+   "box": [
+    0,
+    645,
+    765,
+    770
+   ],
+   "masks": [],
+   "reference": 6.5,
+   "reference_judges": [
+    6.4,
+    6.4,
+    6.7
+   ],
+   "judge_brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.cloudfang.A = cloudfang_live)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_gap:C3B",
+   "item": "F36#0",
+   "group": "f36_0_gap:C3",
+   "species": "cloudfang",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-gap-round.png",
+   "side_on_judged_sheet": "Creature 3, Variant B",
+   "arm": "cloudfang_cand",
+   "box": [
+    0,
+    786,
+    765,
+    910
+   ],
+   "masks": [],
+   "reference": 7.07,
+   "reference_judges": [
+    7.0,
+    7.0,
+    7.2
+   ],
+   "judge_brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.cloudfang.B = cloudfang_cand)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_gap:C4A",
+   "item": "F36#0",
+   "group": "f36_0_gap:C4",
+   "species": "tanglevolt",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-gap-round.png",
+   "side_on_judged_sheet": "Creature 4, Variant A",
+   "arm": "tanglevolt_live",
+   "box": [
+    0,
+    942,
+    765,
+    1064
+   ],
+   "masks": [],
+   "reference": 6.77,
+   "reference_judges": [
+    6.9,
+    6.6,
+    6.8
+   ],
+   "judge_brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.tanglevolt.A = tanglevolt_live)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_gap:C4B",
+   "item": "F36#0",
+   "group": "f36_0_gap:C4",
+   "species": "tanglevolt",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-gap-round.png",
+   "side_on_judged_sheet": "Creature 4, Variant B",
+   "arm": "tanglevolt_cand",
+   "box": [
+    0,
+    1079,
+    765,
+    1202
+   ],
+   "masks": [],
+   "reference": 7.17,
+   "reference_judges": [
+    7.1,
+    7.1,
+    7.3
+   ],
+   "judge_brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.tanglevolt.B = tanglevolt_cand)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_gap:C5A",
+   "item": "F36#0",
+   "group": "f36_0_gap:C5",
+   "species": "fulgocobra",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-gap-round.png",
+   "side_on_judged_sheet": "Creature 5, Variant A",
+   "arm": "fulgocobra_cand",
+   "box": [
+    0,
+    1233,
+    765,
+    1419
+   ],
+   "masks": [],
+   "reference": 5.7,
+   "reference_judges": [
+    5.9,
+    5.2,
+    6.0
+   ],
+   "judge_brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.fulgocobra.A = fulgocobra_cand)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_gap:C5B",
+   "item": "F36#0",
+   "group": "f36_0_gap:C5",
+   "species": "fulgocobra",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-gap-round.png",
+   "side_on_judged_sheet": "Creature 5, Variant B",
+   "arm": "fulgocobra_live",
+   "box": [
+    0,
+    1434,
+    765,
+    1620
+   ],
+   "masks": [],
+   "reference": 6.93,
+   "reference_judges": [
+    6.8,
+    7.0,
+    7.0
+   ],
+   "judge_brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.fulgocobra.B = fulgocobra_live)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_gap:C6A",
+   "item": "F36#0",
+   "group": "f36_0_gap:C6",
+   "species": "stormcapra",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-gap-round.png",
+   "side_on_judged_sheet": "Creature 6, Variant A",
+   "arm": "stormcapra_live",
+   "box": [
+    0,
+    1652,
+    765,
+    1809
+   ],
+   "masks": [],
+   "reference": 6.47,
+   "reference_judges": [
+    6.2,
+    6.5,
+    6.7
+   ],
+   "judge_brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.stormcapra.A = stormcapra_live)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_gap:C6B",
+   "item": "F36#0",
+   "group": "f36_0_gap:C6",
+   "species": "stormcapra",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-gap-round.png",
+   "side_on_judged_sheet": "Creature 6, Variant B",
+   "arm": "stormcapra_cand",
+   "box": [
+    0,
+    1824,
+    765,
+    1981
+   ],
+   "masks": [],
+   "reference": 6.9,
+   "reference_judges": [
+    6.9,
+    6.8,
+    7.0
+   ],
+   "judge_brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.stormcapra.B = stormcapra_cand)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_gap:C7A",
+   "item": "F36#0",
+   "group": "f36_0_gap:C7",
+   "species": "ashtusk",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-gap-round.png",
+   "side_on_judged_sheet": "Creature 7, Variant A",
+   "arm": "ashtusk_cand",
+   "box": [
+    0,
+    2012,
+    765,
+    2161
+   ],
+   "masks": [],
+   "reference": 7.03,
+   "reference_judges": [
+    6.9,
+    7.0,
+    7.2
+   ],
+   "judge_brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.ashtusk.A = ashtusk_cand)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_gap:C7B",
+   "item": "F36#0",
+   "group": "f36_0_gap:C7",
+   "species": "ashtusk",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-gap-round.png",
+   "side_on_judged_sheet": "Creature 7, Variant B",
+   "arm": "ashtusk_live",
+   "box": [
+    0,
+    2176,
+    765,
+    2324
+   ],
+   "masks": [],
+   "reference": 6.3,
+   "reference_judges": [
+    6.1,
+    6.3,
+    6.5
+   ],
+   "judge_brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.ashtusk.B = ashtusk_live)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_gap:C8A",
+   "item": "F36#0",
+   "group": "f36_0_gap:C8",
+   "species": "galecrest",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-gap-round.png",
+   "side_on_judged_sheet": "Creature 8, Variant A",
+   "arm": "galecrest_live",
+   "box": [
+    0,
+    2355,
+    765,
+    2524
+   ],
+   "masks": [],
+   "reference": 6.47,
+   "reference_judges": [
+    6.6,
+    6.4,
+    6.4
+   ],
+   "judge_brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json (key.galecrest.A = galecrest_live)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-gap-round-key.json scores_by_judge_in_sheet_order / means"
+  },
+  {
+   "id": "f36_0_npc:C1A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C1",
+   "npc": "grandpa",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 1, Variant A",
+   "arm": "after",
+   "box": [
+    0,
+    32,
+    451,
+    232
+   ],
+   "masks": [],
+   "reference": 7.53,
+   "reference_judges": [
+    7.6,
+    7.4,
+    7.6
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 1'] = grandpa, A = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C1B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C1",
+   "npc": "grandpa",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 1, Variant B",
+   "arm": "before",
+   "box": [
+    0,
+    245,
+    451,
+    443
+   ],
+   "masks": [],
+   "reference": 7.47,
+   "reference_judges": [
+    7.4,
+    7.4,
+    7.6
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 1'] = grandpa, B = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C2A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C2",
+   "npc": "grunt",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 2, Variant A",
+   "arm": "after",
+   "box": [
+    0,
+    475,
+    451,
+    675
+   ],
+   "masks": [],
+   "reference": 6.7,
+   "reference_judges": [
+    6.4,
+    6.8,
+    6.9
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 2'] = grunt, A = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C2B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C2",
+   "npc": "grunt",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 2, Variant B",
+   "arm": "before",
+   "box": [
+    0,
+    688,
+    451,
+    886
+   ],
+   "masks": [],
+   "reference": 6.63,
+   "reference_judges": [
+    6.2,
+    6.8,
+    6.9
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 2'] = grunt, B = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C3A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C3",
+   "npc": "grunt_a",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 3, Variant A",
+   "arm": "before",
+   "box": [
+    0,
+    918,
+    451,
+    1118
+   ],
+   "masks": [],
+   "reference": 4.6,
+   "reference_judges": [
+    4.3,
+    5.0,
+    4.5
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 3'] = grunt_a, A = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C3B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C3",
+   "npc": "grunt_a",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 3, Variant B",
+   "arm": "after",
+   "box": [
+    0,
+    1131,
+    451,
+    1329
+   ],
+   "masks": [],
+   "reference": 4.53,
+   "reference_judges": [
+    4.1,
+    4.9,
+    4.6
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 3'] = grunt_a, B = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C4A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C4",
+   "npc": "grunt_b",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 4, Variant A",
+   "arm": "before",
+   "box": [
+    451,
+    32,
+    902,
+    232
+   ],
+   "masks": [],
+   "reference": 5.83,
+   "reference_judges": [
+    5.4,
+    6.3,
+    5.8
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 4'] = grunt_b, A = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C4B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C4",
+   "npc": "grunt_b",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 4, Variant B",
+   "arm": "after",
+   "box": [
+    451,
+    245,
+    902,
+    443
+   ],
+   "masks": [],
+   "reference": 5.8,
+   "reference_judges": [
+    5.3,
+    6.3,
+    5.8
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 4'] = grunt_b, B = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C5A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C5",
+   "npc": "grunt_c",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 5, Variant A",
+   "arm": "before",
+   "box": [
+    451,
+    475,
+    902,
+    675
+   ],
+   "masks": [],
+   "reference": 5.07,
+   "reference_judges": [
+    4.8,
+    5.4,
+    5.0
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 5'] = grunt_c, A = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C5B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C5",
+   "npc": "grunt_c",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 5, Variant B",
+   "arm": "after",
+   "box": [
+    451,
+    688,
+    902,
+    886
+   ],
+   "masks": [],
+   "reference": 5.03,
+   "reference_judges": [
+    4.7,
+    5.4,
+    5.0
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 5'] = grunt_c, B = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C6A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C6",
+   "npc": "wandering_trainer",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 6, Variant A",
+   "arm": "before",
+   "box": [
+    451,
+    918,
+    902,
+    1118
+   ],
+   "masks": [],
+   "reference": 5.8,
+   "reference_judges": [
+    5.6,
+    5.8,
+    6.0
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 6'] = wandering_trainer, A = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C6B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C6",
+   "npc": "wandering_trainer",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 6, Variant B",
+   "arm": "after",
+   "box": [
+    451,
+    1131,
+    902,
+    1329
+   ],
+   "masks": [],
+   "reference": 5.93,
+   "reference_judges": [
+    5.9,
+    5.9,
+    6.0
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 6'] = wandering_trainer, B = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C7A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C7",
+   "npc": "young_trainer",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 7, Variant A",
+   "arm": "before",
+   "box": [
+    902,
+    32,
+    1353,
+    232
+   ],
+   "masks": [],
+   "reference": 5.97,
+   "reference_judges": [
+    5.7,
+    6.4,
+    5.8
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 7'] = young_trainer, A = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C7B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C7",
+   "npc": "young_trainer",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 7, Variant B",
+   "arm": "after",
+   "box": [
+    902,
+    245,
+    1353,
+    443
+   ],
+   "masks": [],
+   "reference": 5.97,
+   "reference_judges": [
+    5.6,
+    6.4,
+    5.9
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 7'] = young_trainer, B = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C8A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C8",
+   "npc": "trader",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 8, Variant A",
+   "arm": "after",
+   "box": [
+    902,
+    475,
+    1353,
+    675
+   ],
+   "masks": [],
+   "reference": 5.83,
+   "reference_judges": [
+    5.5,
+    6.0,
+    6.0
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 8'] = trader, A = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C8B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C8",
+   "npc": "trader",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 8, Variant B",
+   "arm": "before",
+   "box": [
+    902,
+    688,
+    1353,
+    886
+   ],
+   "masks": [],
+   "reference": 5.7,
+   "reference_judges": [
+    5.0,
+    6.1,
+    6.0
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 8'] = trader, B = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C9A",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C9",
+   "npc": "innkeeper",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 9, Variant A",
+   "arm": "after",
+   "box": [
+    902,
+    918,
+    1353,
+    1118
+   ],
+   "masks": [],
+   "reference": 5.83,
+   "reference_judges": [
+    6.0,
+    6.0,
+    5.5
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 9'] = innkeeper, A = after)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  },
+  {
+   "id": "f36_0_npc:C9B",
+   "item": "F36#0-npc",
+   "group": "f36_0_npc:C9",
+   "npc": "innkeeper",
+   "sheet": "ralph/reports/CREATURES/close-1020/_sheet-f36-0-npc-face-round.png",
+   "side_on_judged_sheet": "Character 9, Variant B",
+   "arm": "before",
+   "box": [
+    902,
+    1131,
+    1353,
+    1329
+   ],
+   "masks": [],
+   "reference": 5.9,
+   "reference_judges": [
+    6.1,
+    6.1,
+    5.5
+   ],
+   "judge_brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+   "defects": [],
+   "key_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json (key['Character 9'] = innkeeper, B = before)",
+   "verdict_source": "ralph/reports/CREATURES/close-1020/f36-0-npc-face-key.json scores_by_judge_A_B / means; note.md 'NPC face round'",
+   "renderer_note": "GPU Medium review frames (native Windows), scored by the original lane's judges"
+  }
+ ]
+}
