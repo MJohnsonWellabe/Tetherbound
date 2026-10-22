@@ -107,11 +107,11 @@ REDRAFT voltarach (top/front three-quarter, three views): Stormwood thunder spid
   body clears a 1.80 m person.
 - Avoid: no black/yellow wasp hazard pattern, no red. height=4.25.
 - 23 Oct 01:40 CT READY tb/creatures-land2 c62d3eb10: Galecrest/Fulgocobra/Voltarach remakes only (b8). Details in note.md TO COORDINATOR.
-- 23 Oct 03:10 CT CORRECTION: hold land2 c62d3eb10. b9's clean fit maps the shipped remakes at 5.56-5.81, not 6.7+. Galecrest, Fulgocobra and Voltarach are parked on scene work; MESHY redraft asks are in note.md.
-- 23 Oct 03:50 CT done: texture import policy fixed on tb/creatures, land2 132319491 and land bf1be820e (tests 0 failed). The land2 HOLD still stands.
-- 23 Oct 04:40 CT WITHDRAWN land2 and the remake land commits; READY tb/creatures-land ce8798be2 (shinies only). See note.md.
+- 22 Oct 15:20 CT CORRECTION: hold land2 c62d3eb10. b9's clean fit maps the shipped remakes at 5.56-5.81, not 6.7+. Galecrest, Fulgocobra and Voltarach are parked on scene work; MESHY redraft asks are in note.md.
+- 22 Oct 15:55 CT done: texture import policy fixed on tb/creatures, land2 132319491 and land bf1be820e (tests 0 failed). The land2 HOLD still stands.
+- 22 Oct 17:00 CT WITHDRAWN land2 and the remake land commits; READY tb/creatures-land ce8798be2 (shinies only). See note.md.
 
-## 23 Oct 05:20 CT: species priority list for the naturalistic pass (your plan step 3)
+## 22 Oct 17:15 CT: species priority list for the naturalistic pass (your plan step 3)
 
 Style bar: Galecrest, Tanglevolt, Stormcapra, Stormursa (installed models; docs/reference/owner-creature-style-bar.png).
 Each row gives: species (installed model), target height in m from species.json, and its identity reference folder `assets/creatures/tetherbound/<sp>/reference/` (front/back/side or native-standing-v1).
