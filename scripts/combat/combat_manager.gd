@@ -2412,6 +2412,19 @@ static func named_fight_camera_cap(opponent: Node, candidate_on: bool) -> float:
 	return float((caps as Dictionary).get(id, 0.0)) if caps is Dictionary and not id.is_empty() else 0.0
 
 
+## F22#4 (camera.json fight.screen_tilt_deg, 0 = OFF): the fight lens pitches
+## down this many degrees about its own position after the solved pose, so the
+## fighters sit higher in the frame, clear of the bottom HUD band (GPU and CPU
+## judges, 22 Oct: "the HUD bottom band covers the pilot and trainer").
+## Restored to level whenever the fight camera is not running.
+func _tilt_fight_lens(degrees: float) -> void:
+	if _camera_rig == null or not is_instance_valid(_camera_rig):
+		return
+	var camera := _camera_rig.get_node_or_null(^"Camera3D") as Camera3D
+	if camera != null and is_finite(degrees):
+		camera.rotation.x = -deg_to_rad(clampf(degrees, 0.0, 15.0))
+
+
 ## The per-trainer fight-camera cap for `opponent` (a trainer's send-out,
 ## named TrainerCreature_<trainer id>_<n>), or {} when the block is off.
 static func fight_camera_trainer_cap(fight: Dictionary, opponent: Node) -> Dictionary:
@@ -2680,6 +2693,7 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 			_camera_rig.call("set_framing_pivot_offset", Vector3.ZERO)
 		if _camera_rig.has_method("set_fight_yaw_target"):
 			_camera_rig.call("set_fight_yaw_target", null)
+		_tilt_fight_lens(0.0)
 		return false
 	if not render_tick: return true
 	var ally := _body_world_bounds(_ally_body)
@@ -2781,6 +2795,7 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	_camera_rig.set("_distance",float(solution.get("requested_distance",solution.distance)))
 	_camera_rig.set("_shoulder",0.0)
 	_camera_rig.call("apply_fight_camera_pose",selected,selected_yaw)
+	_tilt_fight_lens(float(fight.get("screen_tilt_deg", 0.0)))
 	_fight_camera_solution["selected_pivot"] = selected.pivot
 	_fight_camera_solution["selected_distance"] = selected.distance
 	_fight_camera_solution["selected_transform"] = selected.transform
