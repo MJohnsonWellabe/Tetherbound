@@ -7,6 +7,14 @@ Lane branch `tb/netfix`, built from `origin/main` at 9c97caa68.
 - 2026-10-22 18:40 UTC STATUS: the send_message channel was refused (elevated_session_untrusted_device), so status is reported here.
 - 2026-10-22 19:20 UTC READY (#2 only): tb/netfix-land daae6841961608c543c5a147916694d3f05270d6 is origin/main a4f8a6b7b plus the #2 fix and its test, nothing else. Proof: tools/net/run_net_smoke.sh f48_coop_loop passed 10 of 10 under load (2 busy loops, with a boss smoke loop running beside it for most runs), on tb/netfix with the same panel code. Related units (test_f28_training_boundaries + test_breakthrough_panel_labels): 21 tests, 486 assertions, 0 failed.
 - 2026-10-22 19:20 UTC #1 (boss_rewards wedge) is still open. The root cause is not pending_vitals; see below. tb/netfix-land does not touch it.
+- 2026-10-22 21:30 UTC BLOCKED (#1, not closed): there is no local reproduction in about 55 runs across 7 stress variants
+  (listed below, including SIGSTOP stalls of random peers). The CI evidence narrows it to the final round's
+  completion duty stalling on a branch that logs nothing today.
+- 2026-10-22 21:30 UTC QUESTION/OFFER: tb/netfix d0551206c adds one-time notes (existing once-per-reason helpers, no
+  behaviour change) on exactly those silent branches. Landing it would let the next CI occurrence name the
+  branch. Checks: owner_passive/ledger_rpc/creature_training units 90 tests, 1498 assertions, 0 failed;
+  boss_rewards passes and prints none of the new notes when healthy. It is not in tb/netfix-land. Land it
+  separately if you want the evidence; I continue on #1 meanwhile.
 
 ## #2 f48 guest feast feed
 
@@ -82,3 +90,11 @@ there without a log line is silent today:
 Next: keep reproducing. If it stays unreproducible, propose one-time diagnostics on exactly those
 branches, using the existing `_note_host` / `_note_training_stall` convention, so the next CI
 occurrence names the branch.
+
+Additional runs: 10 with random 1-4 s SIGSTOP stalls of either peer. 8 passed. 2 failed only
+"peer 1 returned to normal exploration" within the smoke's fixed 120-frame settle; the guest was still
+settling, and every reward check in those runs passed, so this is not the wedge. An independent
+read-only review of the code found no path that also matches the logs: its top candidate, "actor
+baseline not ready", would have printed once, and it never appears. The remaining silent candidates are
+the ones the d0551206c notes cover. For the host's own missing completion in #710, the prime suspect is
+the scan's silent `admitted_character_state(...).is_empty()` skip.
