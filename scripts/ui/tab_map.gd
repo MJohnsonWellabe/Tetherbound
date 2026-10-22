@@ -2422,6 +2422,9 @@ func _painted_chart(realm_id: String, world: Node) -> Texture2D:
 	for z in h:
 		for x in w:
 			var v := float(world.call("ground_height_at", origin.x + (x + 0.5) * step, origin.y + (z + 0.5) * step))
+			# Off-plate Cloudreach samples read -INF, not NaN: both are void.
+			if not is_finite(v):
+				v = NAN
 			heights[z * w + x] = v
 			if not is_nan(v) and v >= sea_level:
 				lo = minf(lo, v)
