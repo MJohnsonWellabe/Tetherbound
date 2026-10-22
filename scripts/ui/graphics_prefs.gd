@@ -7,6 +7,11 @@ const CONFIG_PATH := "res://data/config/art.json"
 const OVERRIDE_PATH := "user://graphics_override.cfg"
 const PRESETS: Array[String] = ["Low", "Medium", "High"]
 const FEATURES: Array[String] = ["volumetric_fog", "ssao", "ssil", "glow"]
+## GPU-PASS forward-plus-grade: Forward+ renders the shared grade greyer and
+## darker than Compatibility. Each preset may declare `forward_plus_grade`
+## multipliers; they apply only while Forward+ is the running renderer.
+const GRADE_KEYS: Array[String] = ["fog_density_scale", "exposure_scale", "saturation_scale"]
+const GRADE_SCALE_MAX := 4.0
 
 static var _loaded := false
 static var _config: Dictionary = {}
@@ -15,6 +20,8 @@ static var _base := "Low"
 static var _custom: Dictionary = {}
 static var _overlay := false
 static var _applied_shadow_profile := ""
+## Tests only: null reads the live renderer and preset.
+static var _grade_override: Variant = null
 
 
 static func load_preferences() -> void:
@@ -78,6 +85,41 @@ static func values() -> Dictionary:
 		for key: String in FEATURES:
 			out[key] = false
 	return out
+
+
+## Forward+ grade multipliers for the running renderer and selected preset.
+## Empty on Compatibility (and on any preset without a declaration), so the
+## caller writes nothing extra there.
+static func renderer_grade() -> Dictionary:
+	if _grade_override is Dictionary:
+		return _grade_override
+	if not forward_plus():
+		return {}
+	return validated_grade(values().get("forward_plus_grade", {}))
+
+
+## Each key a finite multiplier in (0, GRADE_SCALE_MAX]; anything else is 1.0.
+## Returns empty when every factor is identity.
+static func validated_grade(raw: Variant) -> Dictionary:
+	var out := {}
+	if not raw is Dictionary:
+		return out
+	var identity := true
+	for key: String in GRADE_KEYS:
+		var value: Variant = (raw as Dictionary).get(key, 1.0)
+		var scale := 1.0
+		if (value is float or value is int) and is_finite(float(value)) \
+				and float(value) > 0.0 and float(value) <= GRADE_SCALE_MAX:
+			scale = float(value)
+		elif (raw as Dictionary).has(key):
+			push_warning("graphics_presets forward_plus_grade.%s=%s is invalid; using 1.0" % [key, str(value)])
+		out[key] = scale
+		identity = identity and is_equal_approx(scale, 1.0)
+	return {} if identity else out
+
+
+static func set_grade_override_for_test(grade: Variant) -> void:
+	_grade_override = grade
 
 
 static func choose(preset: String) -> Error:
