@@ -400,9 +400,10 @@ func _refresh_controls_label() -> void:
 		# P2-002 r2: the hint row reads as prompt glyphs at handheld size,
 		# not letters beside 24px trigger chips.
 		var img := "[img=%dx%d]%s%s[/img]"
-		text = "%s Place marker    %s Remove marker    %s Zoom out    %s Zoom in    Right stick  Pan" % [
+		text = "%s Place marker    %s Remove marker    %s Zoom out    %s Zoom in    %s Pan" % [
 			img % [px, px, INPUT_GLYPH.DIR, "xbox_button_a.png"], img % [px, px, INPUT_GLYPH.DIR, "xbox_button_x.png"],
-			INPUT_GLYPH.icon("map_zoom_out", px), INPUT_GLYPH.icon("map_zoom_in", px)]
+			INPUT_GLYPH.icon("map_zoom_out", px), INPUT_GLYPH.icon("map_zoom_in", px),
+			img % [px, px, INPUT_GLYPH.DIR, "xbox_stick_r.png"]]
 	# OP-0905-27: only advertised once there is a second realm to switch to --
 	# an always-on hint for a button that does nothing yet is worse than no
 	# hint, the same reasoning `_refresh_realm_row()` hides the chip row on.

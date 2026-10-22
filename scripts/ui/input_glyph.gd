@@ -65,7 +65,10 @@ const GLYPHS := {
 	## so it stays an empty entry and degrades to the honest "L3" pad-button
 	## text `pad_button_name_for_verb` already produces for that case.
 	"map_realm_next": {"gamepad": "xbox_stick_r_press.png"},
-	"map_realm_prev": {},
+	## L3 had no press glyph in the vendored subset; UI lane (22 Oct) drew
+	## xbox_stick_l_press/xbox_stick_l/xbox_stick_r in the same white
+	## silhouette style (assets/ui/input_prompts/AGENT_DRAWN.md).
+	"map_realm_prev": {"gamepad": "xbox_stick_l_press.png"},
 	## The starting torch (owner playtest report: night is too dark, and the
 	## player must have a torch from the beginning). Manual override on top of
 	## `scripts/player/torch.gd`'s own automatic dusk/dawn behaviour.
@@ -554,7 +557,7 @@ const _PAD_FILES := {
 	JOY_BUTTON_X: "xbox_button_x.png", JOY_BUTTON_Y: "xbox_button_y.png",
 	JOY_BUTTON_LEFT_SHOULDER: "xbox_lb.png", JOY_BUTTON_RIGHT_SHOULDER: "xbox_rb.png",
 	JOY_BUTTON_BACK: "xbox_button_view.png", JOY_BUTTON_START: "xbox_button_start.png",
-	JOY_BUTTON_RIGHT_STICK: "xbox_stick_r_press.png",
+	JOY_BUTTON_RIGHT_STICK: "xbox_stick_r_press.png", JOY_BUTTON_LEFT_STICK: "xbox_stick_l_press.png",
 	JOY_BUTTON_DPAD_UP: "xbox_dpad_up.png", JOY_BUTTON_DPAD_DOWN: "xbox_dpad_down.png",
 	JOY_BUTTON_DPAD_LEFT: "xbox_dpad_left.png", JOY_BUTTON_DPAD_RIGHT: "xbox_dpad_right.png",
 }
