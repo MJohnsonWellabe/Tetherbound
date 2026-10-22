@@ -256,9 +256,13 @@ func view_arrived() -> void:
 		_rebuild()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if visible and event.is_action_pressed("ui_cancel"):
+	if visible and is_cancel(event):
 		get_viewport().set_input_as_handled()
 		close()
+
+## menu_cancel is the controller's B; built-in ui_cancel has no pad binding.
+static func is_cancel(event: InputEvent) -> bool:
+	return event.is_action_pressed("menu_cancel") or event.is_action_pressed("ui_cancel")
 
 func _cancel_duel_preparation() -> void:
 	_duel_generation += 1

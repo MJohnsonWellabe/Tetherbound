@@ -17,9 +17,7 @@ func test_a_nickname_matching_another_row_is_also_disambiguated() -> void:
 ## Rows chain explicitly, skip disabled rows, and the scroll follows focus.
 func test_rows_chain_focus_past_the_visible_list() -> void:
 	var panel = PANEL.new()
-	var host := Control.new()
-	Engine.get_main_loop().root.add_child(host)
-	host.add_child(panel)
+	panel._ready()
 	for index in 20:
 		panel._button("Row %d" % index, func() -> void: pass, index == 5)
 	panel._link_focus()
@@ -29,4 +27,17 @@ func test_rows_chain_focus_past_the_visible_list() -> void:
 		assert_eq(rows[index].get_node(rows[index].focus_neighbor_bottom), rows[index + 1])
 		assert_eq(rows[index + 1].get_node(rows[index + 1].focus_neighbor_top), rows[index])
 	assert_true((panel.get_child(1) as ScrollContainer).follow_focus)
-	host.queue_free()
+	panel.free()
+
+## The controller's B is menu_cancel; the chooser used to close only on the
+## built-in ui_cancel, which has no pad binding, so a pad could not leave it.
+func test_controller_cancel_closes_the_chooser() -> void:
+	for action: StringName in [&"menu_cancel", &"ui_cancel"]:
+		var press := InputEventAction.new()
+		press.action = action
+		press.pressed = true
+		assert_true(PANEL.is_cancel(press), str(action))
+	var accept := InputEventAction.new()
+	accept.action = &"ui_accept"
+	accept.pressed = true
+	assert_false(PANEL.is_cancel(accept))

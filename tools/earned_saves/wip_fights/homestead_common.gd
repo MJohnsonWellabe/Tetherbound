@@ -357,7 +357,7 @@ func cook_feed(feast_id: String, choices: Dictionary) -> bool:
 			return _fail_b("Feed saved-record mismatch: " + str(FEAST_RECEIPTS.feed_errors(feed_before, _saved_record(), row)))
 		_receipt("fed", {"exact_saved_transition": true, "uid": uid, "feast": row.item, "choice": row.choice, "breakthroughs": _breakthroughs(uid),
 			"species": _species(uid)})
-	await _tap(&"ui_cancel")
+	await _tap(&"menu_cancel")
 	if not await _until(func() -> bool: return INPUT_OWNER.current(_tree) == null):
 		return _fail_b("Cancel did not close the feed chooser")
 	return true
