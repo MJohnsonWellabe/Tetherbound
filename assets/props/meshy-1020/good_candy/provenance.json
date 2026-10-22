@@ -1,0 +1,116 @@
+{
+  "asset": "good_candy",
+  "brief": "good_candy ground pickup: single wrapped sweet, bow-tie twisted-ends wrapper, warm green and yellow, glossy; same family as rare_candy, lower tier",
+  "criterion": "P2-033 ground pickup identity (F38-F41 #1)",
+  "lane": "tb/look",
+  "biome": "all (ground pickup)",
+  "date": "2026-10-21",
+  "author": "Claude (coordinator-side Meshy item-prop worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from repo references (Meshy image-to-image nano-banana-pro, references as data URIs) -> inspected -> Meshy 3D (latest, quad remesh, PBR textures embedded in GLB)",
+  "target_size_m": "about 0.25 m along the longest horizontal axis (game scales pickups up for readability)",
+  "native_size": {
+    "raw_extent_units": [
+      1.9015,
+      0.7906,
+      0.7642
+    ],
+    "note": "Meshy raw GLB, longest side ~1.9 units"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+    "fit_axis": "maxh",
+    "fit_value_m": 0.25,
+    "raw_extent": [
+      1.9015,
+      0.7906,
+      0.7642
+    ],
+    "scale": 0.1315,
+    "final_min": [
+      -0.125,
+      0.0,
+      -0.05
+    ],
+    "final_max": [
+      0.125,
+      0.104,
+      0.05
+    ],
+    "final_extent_m": [
+      0.25,
+      0.1,
+      0.1
+    ],
+    "triangles": 13078,
+    "materials": [
+      "Material_0"
+    ],
+    "images": 3,
+    "uniform_scale_to_target": 0.1315,
+    "alternatives": {}
+  },
+  "files": {
+    "glb_metres": "good_candy.glb",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png",
+      "preview_3view.png (software flat-shaded 3-view, colours sampled per face)"
+    ],
+    "chosen_concepts": [
+      "concepts/c1_0.png",
+      "concepts/c1_1.png"
+    ],
+    "raw_glb": "not published (identical mesh to glb_metres minus the metres_root node)"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15e9c-0464-7151-9924-8c6de6251315",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Game pickup item concept: ONE single wrapped hard sweet candy lying on its side, the classic bow-tie candy-wrapper silhouette: a plump rounded oval sweet in the middle with the wrapper twisted tight at both ends and fanning out into two crinkled flared wrapper tails. Wrapper colours: warm leaf green body with bright buttery-yellow stripes and yellow twisted tails, glossy cellophane sheen with soft highlights. The underside is slightly flattened so it rests flat on the ground. Same family and finish as the wrapped gold candies in the first reference (chunky soft-bevelled forms, hand-painted PBR look) but only one sweet: no cloth, no star, no pile. Stylised Palworld-like game prop, chunky readable silhouette that reads clearly from far away, warm natural palette matching the Meadows key art (second reference), about 0.25 m long. Single isolated object, centred, three-quarter elevated view, plain neutral grey background, even studio lighting, no text, no logos, no characters, no ground. Strictly no red, pink, maroon or oxblood anywhere.",
+      "references": [
+        "tb/meshy-props assets/props/meshy-1020/candy_pickup_set/model_candy_rare/preview_3view.png (middle 3/4 panel cropped (360,0)-(720,360), upscaled 2x; local derived file rare_34.png): the published rare_candy pickup, judged 6.90, used as family style reference",
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/tetherbound-meadows-keyart.png (downscaled to 1024 px; local derived file keyart_small.png): Meadows palette and finish"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (views 0 side and 1 end as multi-image input): single plump green sweet with three buttery-yellow stripes and flared yellow twisted tails, glossy; clean grey background, no text, no red/pink; views 0 and 2 are the same side view, no elevated 3/4 view was returned"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c1v01",
+      "task_id": "01a15ea6-6e51-76be-8a24-78e637113f16",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "source": {
+        "image_files": [
+          "c1_0.png",
+          "c1_1.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 6000,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN",
+      "kept": "good_candy.glb (metres)"
+    }
+  ],
+  "consumed_credits_total": 39,
+  "visual_verdict": "Good: one plump glossy green wrapped sweet with three buttery-yellow stripes and two flared, crinkled yellow twisted-end tails, the classic bow-tie candy silhouette, matching the green good_candy UI icon. Chunky and readable; at gameplay distance it reads as a sweet by silhouette and colour. Final extents 0.25 x 0.10 x 0.10 m (x long axis, y up), base at y=0. The underside is the rounded body plus the tail tips, not a machined flat: within 5 mm of the floor it touches along about 0.16 m of its length and 4 cm across, so it sits stably but will need a small sink or a contact shadow. Same wrapped-sweet finish as the rare_candy set, but rare_candy is a gold bundle on a cloth while this is a single sweet, so the family tie is wrapper style and colour coding, not composition. Single material (PBR, textures embedded), 13,078 triangles (about 6.5k quads). Software preview stripe edges look jagged only because it samples one colour per face; the Meshy render shows clean stripes.",
+  "integration_flag": "flag-off",
+  "integration_note": "candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "no red/oxblood/pink requested or observed (base-colour texture scan: 0 red/pink pixels); leaf green body, buttery-yellow stripes and tails"
+}

@@ -1,0 +1,192 @@
+{
+ "asset": "candy_pickup_set",
+ "date": "2026-10-21",
+ "requested_by": "Meadows lane (F17#6, F38)",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until scene passes judging",
+ "workflow": "agent-drafted concept via image-to-image (nano-banana-pro) from repo references, inspected by the agent, then multi-image-to-3d (latest)",
+ "target_size_m": {
+  "w": 0.35
+ },
+ "native_model_units": "Meshy normalises the largest extent to ~1.9 units; scale to target_size_m at integration",
+ "integration_flag": "OFF (not integrated; candidate only)",
+ "concepts": [
+  {
+   "tag": "rare_v1",
+   "task_id": "01a15c3d-b5b1-7333-99d9-f0f368539687",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept: a small bundle of three wrapped sweet candies (twisted wrapper ends) with a sparkling star-shaped candy on top, resting on a folded cream cloth square with gold trim, colour theme rich gold and amber with cream highlights, chunky readable shapes, precious cute collectible about 0.35 m wide. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "assets/props/candy_pickup/candy_pickup_0.png"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "candy_pickup_set/concepts/rare_v1_0.png",
+    "candy_pickup_set/concepts/rare_v1_1.png",
+    "candy_pickup_set/concepts/rare_v1_2.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  },
+  {
+   "tag": "good_v1",
+   "task_id": "01a15c3d-b55b-71ca-a4fe-09b980b1e5a7",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept: a small bundle of three wrapped sweet candies (twisted wrapper ends) resting on a broad fresh green leaf, colour theme bright leaf green with cream highlights, readable chunky shapes, small cute collectible about 0.35 m wide. Matches the leafy green style of the existing candy prop texture (second reference). Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "assets/props/candy_pickup/candy_pickup_0.png"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "candy_pickup_set/concepts/good_v1_0.png",
+    "candy_pickup_set/concepts/good_v1_1.png",
+    "candy_pickup_set/concepts/good_v1_2.png"
+   ],
+   "chosen": false,
+   "consumed_credits": 9
+  },
+  {
+   "tag": "great_v1",
+   "task_id": "01a15c3d-b54b-7613-b5dc-eeb08335f404",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept: a small bundle of three wrapped sweet candies (twisted wrapper ends) resting on a folded soft cloth square tied with string, colour theme sky blue (#4aa8e0) with cream highlights, chunky readable shapes, cute collectible about 0.35 m wide. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "assets/props/candy_pickup/candy_pickup_0.png"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "candy_pickup_set/concepts/great_v1_0.png",
+    "candy_pickup_set/concepts/great_v1_1.png",
+    "candy_pickup_set/concepts/great_v1_2.png"
+   ],
+   "chosen": false,
+   "consumed_credits": 9
+  },
+  {
+   "tag": "great_v2",
+   "task_id": "01a15c40-85b7-77bf-a25e-82f2979f81e9",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept, same set, camera angle and presentation as the gold candy bundle reference (resting flat on the ground, seen from a three-quarter elevated angle, not top-down): a small bundle of three wrapped sweet candies (twisted wrapper ends) resting on a folded soft cloth square tied with string, colour theme sky blue (#4aa8e0) with cream highlights, chunky readable shapes, cute collectible about 0.35 m wide. Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "assets_raw/props-1020/candy_pickup_set/concepts/rare_v1_0.png"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "candy_pickup_set/concepts/great_v2_0.png",
+    "candy_pickup_set/concepts/great_v2_1.png",
+    "candy_pickup_set/concepts/great_v2_2.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  },
+  {
+   "tag": "good_v2",
+   "task_id": "01a15c40-7ad3-72f3-8746-60c65ff72541",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept, same set, camera angle and presentation as the gold candy bundle reference (resting flat on the ground, seen from a three-quarter elevated angle, not top-down): a small bundle of three wrapped sweet candies (twisted wrapper ends) resting on a broad fresh green leaf, colour theme bright leaf green with cream highlights, readable chunky shapes, small cute collectible about 0.35 m wide. Matches the leafy green style of the existing candy prop texture (second reference). Stylised Palworld-like game prop, chunky readable shapes, soft bevelled edges, hand-painted PBR look, warm natural palette matching the Meadows key art (first reference). Single isolated object, centred, neutral grey background, even studio lighting, no text, no characters, no ground clutter.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled 1024w)",
+    "assets_raw/props-1020/candy_pickup_set/concepts/rare_v1_0.png",
+    "assets/props/candy_pickup/candy_pickup_0.png"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "candy_pickup_set/concepts/good_v2_0.png",
+    "candy_pickup_set/concepts/good_v2_1.png",
+    "candy_pickup_set/concepts/good_v2_2.png"
+   ],
+   "chosen": true,
+   "consumed_credits": 9
+  }
+ ],
+ "models": [
+  {
+   "model": "candy_good",
+   "task_id": "01a15c41-7d20-75e4-bae4-d70a56a25426",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 8000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "candy_pickup_set/concepts/good_v2_1.png",
+    "candy_pickup_set/concepts/good_v2_0.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "candy_pickup_set/model_candy_good/candy_good.glb",
+    "base_color": "candy_pickup_set/model_candy_good/candy_good_base_color.png",
+    "metallic": "candy_pickup_set/model_candy_good/candy_good_metallic.png",
+    "roughness": "candy_pickup_set/model_candy_good/candy_good_roughness.png",
+    "normal": "candy_pickup_set/model_candy_good/candy_good_normal.png",
+    "thumbnail": "candy_pickup_set/model_candy_good/thumbnail.png"
+   }
+  },
+  {
+   "model": "candy_great",
+   "task_id": "01a15c41-7ccf-779e-abe0-d85558c33051",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 8000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "candy_pickup_set/concepts/great_v2_1.png",
+    "candy_pickup_set/concepts/great_v2_0.png",
+    "candy_pickup_set/concepts/great_v2_2.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "candy_pickup_set/model_candy_great/candy_great.glb",
+    "base_color": "candy_pickup_set/model_candy_great/candy_great_base_color.png",
+    "metallic": "candy_pickup_set/model_candy_great/candy_great_metallic.png",
+    "roughness": "candy_pickup_set/model_candy_great/candy_great_roughness.png",
+    "normal": "candy_pickup_set/model_candy_great/candy_great_normal.png",
+    "thumbnail": "candy_pickup_set/model_candy_great/thumbnail.png"
+   }
+  },
+  {
+   "model": "candy_rare",
+   "task_id": "01a15c3f-dc02-777b-8150-fd9f2cd2d9e0",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "ai_model": "latest",
+   "topology": "quad",
+   "target_polycount_quads": 8000,
+   "should_remesh": true,
+   "enable_pbr": true,
+   "should_texture": true,
+   "input_images": [
+    "candy_pickup_set/concepts/rare_v1_0.png",
+    "candy_pickup_set/concepts/rare_v1_1.png",
+    "candy_pickup_set/concepts/rare_v1_2.png"
+   ],
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "files": {
+    "glb": "candy_pickup_set/model_candy_rare/candy_rare.glb",
+    "base_color": "candy_pickup_set/model_candy_rare/candy_rare_base_color.png",
+    "metallic": "candy_pickup_set/model_candy_rare/candy_rare_metallic.png",
+    "roughness": "candy_pickup_set/model_candy_rare/candy_rare_roughness.png",
+    "normal": "candy_pickup_set/model_candy_rare/candy_rare_normal.png",
+    "thumbnail": "candy_pickup_set/model_candy_rare/thumbnail.png"
+   }
+  }
+ ],
+ "consumed_credits_total": 135,
+ "agent_visual_verdict": "Good coherent trio (green leaf, blue cloth, gold cloth + star); great also carries a small star, rare stays the most ornate.",
+ "notes": "good_v1/great_v1 were top-down flat-lay views and were rejected for a three-quarter ground presentation."
+}
