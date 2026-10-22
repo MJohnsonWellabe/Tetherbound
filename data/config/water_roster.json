@@ -236,10 +236,11 @@
       "placeholder": {
         "source_species": "paddlenewt",
         "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
-        "model": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native.glb",
+        "model": "res://assets/creatures/tetherbound/mirejaw/candidate_meshy1022/models/creature_mirejaw_meshy1022.glb",
         "fit_candidate": {
-          "enabled": false,
-          "footprint_allowance": 5.21,
+          "enabled": true,
+          "_close1022": "The Meshy-1022 remake is a long-tailed body (length/height ~2.7), so the borrowed 4.8 allowance would shrink it below 3.55 m; 7.8 matches the Meadows binding.",
+          "footprint_allowance": 7.8,
           "_scope": "Presentation fit only: restore specified 3.55m height without changing radius. Native scale/contact and neutral visual review pending."
         },
         "source_height_m": 2.15,
@@ -255,7 +256,7 @@
           "faint": "faint"
         },
         "presentation_intent": "Spotted charcoal taupe body muted coral gills",
-        "replacement_model": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native.glb",
+        "replacement_model": "res://assets/creatures/tetherbound/mirejaw/candidate_meshy1022/models/creature_mirejaw_meshy1022.glb",
         "replacement_binding": "res://data/creatures/species.json#species/mirejaw/placeholder/model",
         "status": "installed_species_mesh",
         "_comment": "Runtime presentation uses the installed species mesh and authored animation bindings. Visual acceptance remains separate."
