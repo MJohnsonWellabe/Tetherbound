@@ -11,7 +11,7 @@ open(p,'w').write(json.dumps(d,indent=2,ensure_ascii=False)+'\n')
 q=R+'data/config/tether_relay.json'
 t0=open(q).read()
 open(q,'w').write(t0.replace('"inset_finish": "tether"','"inset_finish": "stone"'))
-t=R+'data/config/terrain_playground.json'
-d=json.load(open(t)); d['textures'][0]['candidate']['enabled']=True
+t=R+'data/config/terrain_presentation.json'
+d=json.load(open(t)); d['texture_candidates']['grass']['enabled']=True
 open(t,'w').write(json.dumps(d,indent=2,ensure_ascii=False)+'\n')
 print('applied r24')
