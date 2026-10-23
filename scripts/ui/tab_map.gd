@@ -1626,7 +1626,17 @@ var _sea_lane_colour := Color(0.62, 0.86, 0.95, 0.9)
 var _chart_cfg: Dictionary = {}
 var _cloud_fog: Dictionary = {}
 ## Painted charts survive tab rebuilds: the terrain does not change in play.
-static var _painted_cache: Dictionary = {}
+## Held on the Game autoload rather than in a static, so the cache is freed
+## with the scene tree at exit (a static here kept this script and its
+## preloads alive past shutdown: smoke_net_f18_fixture_teaching on #713).
+static func _chart_cache() -> Dictionary:
+	var tree := Engine.get_main_loop() as SceneTree
+	var holder: Node = tree.root.get_node_or_null(^"Game") if tree != null else null
+	if holder == null:
+		return {}
+	if not holder.has_meta(&"painted_chart_cache"):
+		holder.set_meta(&"painted_chart_cache", {})
+	return holder.get_meta(&"painted_chart_cache")
 var _sea_lane_cache: Dictionary = {}
 
 
@@ -2387,8 +2397,9 @@ func _paint_cloud_fog(image: Image, visited: PackedByteArray, grid_x: int, grid_
 ## shading from the north-west, contour lines, a coast rim and the realm's
 ## palette (low/mid/high land, shallow/deep water, void beyond cliff edges).
 func _painted_chart(realm_id: String, world: Node) -> Texture2D:
-	if _painted_cache.has(realm_id):
-		return _painted_cache[realm_id]
+	var cache := _chart_cache()
+	if cache.has(realm_id):
+		return cache[realm_id]
 	if world == null or realm_id != _player_realm():
 		return null
 	if _chart_cfg.has("realms") and not (_chart_cfg.realms as Array).has(realm_id):
@@ -2399,8 +2410,9 @@ func _painted_chart(realm_id: String, world: Node) -> Texture2D:
 ## Shared with the HUD minimap (hud.json `minimap_realm_terrain`): one cached
 ## chart per realm, painted from `world` (which must BE that realm).
 static func paint_chart(realm_id: String, world: Node, extent: Dictionary, cfg: Dictionary) -> Texture2D:
-	if _painted_cache.has(realm_id):
-		return _painted_cache[realm_id]
+	var cache := _chart_cache()
+	if cache.has(realm_id):
+		return cache[realm_id]
 	if world == null or not world.has_method("ground_height_at"):
 		return null
 	var origin := Vector2(float(extent.get("min_x", 0.0)), float(extent.get("min_z", 0.0)))
@@ -2470,7 +2482,7 @@ static func paint_chart(realm_id: String, world: Node, extent: Dictionary, cfg: 
 			image.set_pixel(x, z, colour)
 	image.resize(w * 3, h * 3, Image.INTERPOLATE_BILINEAR)
 	var tex := ImageTexture.create_from_image(image)
-	_painted_cache[realm_id] = tex
+	_chart_cache()[realm_id] = tex
 	return tex
 
 
