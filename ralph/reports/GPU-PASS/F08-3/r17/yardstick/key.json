@@ -1,0 +1,34 @@
+{
+ "Xp": {
+  "anchor": false,
+  "label": "F08#3 r17 GPU Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f08r17\\sides\\F08-3-r17-Medium-control.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f08r17\\sides\\F08-3-r17-Medium-candidate.png"
+ },
+ "Ap": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Iy": {
+  "anchor": false,
+  "label": "F08#3 r17 GPU High",
+  "A": "D:\\tb-gpu-runs\\yard\\f08r17\\sides\\F08-3-r17-High-control.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f08r17\\sides\\F08-3-r17-High-candidate.png"
+ },
+ "Nm": {
+  "anchor": true,
+  "A": "f36_0_gap:C3A",
+  "B": "f36_0_gap:C3B"
+ },
+ "Qn": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Us": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ }
+}
