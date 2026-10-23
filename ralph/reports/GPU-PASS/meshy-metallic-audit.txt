@@ -1,0 +1,164 @@
+# READ-ONLY. Tree audited: main a4f8a6b7b (assets/), plus the F22#4 captain GLB from tb/fights 765bf9d92 (last line).
+# Summary:
+#  - Every Meshy-pipeline asset (props/meshy-1020, generated_camp, realm_gate_meshy, crossing_hall_hero) and every creatures/tetherbound
+#    model leaves metallicFactor absent (1.0) but binds a metallicRoughnessTexture whose blue mean is 0.00-0.40, so effective metallic is
+#    low. They do NOT render as metal (the Riverwatch captain: effective 0.01).
+#  - 48 environment/nature models and every assets/characters/*_lod0 / *_native_face model have factor 1.0 (default) and NO texture:
+#    full metal at file level. This audit does not see runtime materials; if the character/foliage code replaces these materials at
+#    load the factor is moot. A runtime check (dump material.metallic on a spawned villager/tree on Forward+) is the next step.
+# Method: glTF JSON per GLB; effective = factor x mean blue of the bound metallicRoughness texture (thumbnail 256 px).
+# Meshy/GLB metallic audit (read-only), GPU pass 22 Oct 2026
+# Scanned 245 GLB files under assets/; 147 materials resolve to metallic >= 0.9 (11 in Meshy assets, by path or generator).
+# metallic/roughness '(default)' = factor absent in the glTF, so 1.0 by spec. A bound metallicRoughnessTexture is
+# multiplied by that factor; Godot imports the factor as `metallic` and the texture's blue channel as metallic_texture.
+# 90 of them have an EFFECTIVE mean metallic >= 0.5 (factor x texture blue mean): these render as metal.
+# columns: path | material | metallic factor | roughness factor | metallicRoughnessTexture | effective mean metallic | source | generator
+assets/characters/alpha_tracker/alpha_tracker_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/captain_a/captain_a_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v5.0.21
+assets/characters/captain_b/captain_b_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v5.0.21
+assets/characters/courier/courier_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/craftsperson/craftsperson_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/creature_caretaker/creature_caretaker_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/farmer/farmer_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/field_researcher/field_researcher_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/former_tether_member/former_tether_member_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/grandpa/candidate/models/grandpa_native_face.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/characters/grandpa/grandpa_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/characters/grunt/candidate/models/grunt_native_face.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v5.0.21
+assets/characters/grunt/grunt_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v5.0.21
+assets/characters/grunt_a/candidate/models/grunt_a_native_face.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/grunt_a/grunt_a_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/grunt_b/candidate/models/grunt_b_native_face.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/grunt_b/grunt_b_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/grunt_c/candidate/models/grunt_c_native_face.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/grunt_c/grunt_c_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/inn_helper/inn_helper_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/innkeeper/candidate/models/innkeeper_native_face.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/innkeeper/innkeeper_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/kael/kael_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/characters/local_historian/local_historian_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/lost_traveler/lost_traveler_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/lyra/lyra_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/characters/officer_a/officer_a_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/officer_b/officer_b_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v5.0.21
+assets/characters/rival_trainer/rival_trainer_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/sera/sera_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/characters/trader/candidate/models/trader_native_face.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/trader/trader_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/trainer/trainer_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/characters/villager_female/villager_female_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/characters/villager_female/villager_female_lod0.glb | Shins | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/characters/villager_male/villager_male_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/characters/villager_male/villager_male_lod0.glb | Trousers | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/characters/wandering_trainer/candidate/models/wandering_trainer_native_face.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/characters/wandering_trainer/wandering_trainer_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/characters/warden/warden_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v5.0.21
+assets/characters/young_trainer/candidate/models/young_trainer_native_face.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/characters/young_trainer/young_trainer_lod0.glb | Material_1 | 1.00 (default) | 1.00 (default) | no | 1.00 | other | Khronos glTF Blender I/O v4.0.44
+assets/environment/nature/flower_purpleA.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/flower_purpleA.glb | colorPurple | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/flower_redA.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/flower_redA.glb | colorRed | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/flower_yellowA.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/flower_yellowA.glb | colorYellow | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/flower_yellowB.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/flower_yellowB.glb | colorYellow | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/grass.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/grass_large.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/grass_leafs.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/grass_leafsLarge.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/log.glb | woodBark | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/log.glb | woodInner | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/log_large.glb | woodBark | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/log_large.glb | woodInner | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/mushroom_red.glb | _defaultMat | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/mushroom_red.glb | colorRed | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/plant_bush.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/plant_bushDetailed.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/plant_bushLarge.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/plant_bushSmall.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/rock_largeA.glb | dirt | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/rock_largeA.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/rock_largeC.glb | dirt | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/rock_largeC.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/rock_smallA.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/rock_smallA.glb | dirt | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/rock_smallD.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/rock_smallD.glb | dirt | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/rock_tallA.glb | dirt | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/rock_tallA.glb | grass | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/rock_tallA.glb | _defaultMat | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/stump_round.glb | woodBark | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/stump_round.glb | woodInner | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/stump_square.glb | woodBark | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/stump_square.glb | woodInner | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/tree_blocks.glb | woodBark | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/tree_blocks.glb | leafsGreen | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/tree_default.glb | woodBark | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/tree_default.glb | leafsGreen | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/tree_detailed.glb | leafsGreen | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/tree_detailed.glb | woodBark | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/tree_detailed.glb | _defaultMat | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/tree_fat.glb | leafsGreen | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/tree_fat.glb | woodBark | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/tree_oak.glb | leafsGreen | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/environment/nature/tree_oak.glb | woodBark | 1.00 | 1.00 | no | 1.00 | other | UniGLTF-1.27
+assets/props/meshy-1020/intact_tether_cage/model_intact_tether_cage/intact_tether_cage.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.40, G 0.71) | 0.40 | meshy | Khronos glTF Blender I/O v4.4.55
+assets/props/meshy-1020/broken_tether_cage/model_broken_tether_cage/broken_tether_cage.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.15, G 0.74) | 0.15 | meshy | Khronos glTF Blender I/O v4.4.55
+assets/props/meshy-1020/cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.13, G 0.92) | 0.13 | meshy | Khronos glTF Blender I/O v4.4.55
+assets/props/meshy-1020/toppled_tether_banner/model_toppled_tether_banner/toppled_tether_banner.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.13, G 0.89) | 0.13 | meshy | Khronos glTF Blender I/O v4.4.55
+assets/props/crossing_hall_hero/pedestal/models/pedestal-v2.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.05, G 0.57) | 0.05 | other | Khronos glTF Blender I/O v4.4.55
+assets/props/crossing_hall_hero/pedestal/source-v2/model.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.05, G 0.57) | 0.05 | other | Khronos glTF Blender I/O v4.4.55
+assets/props/meshy-1020/mira_shop_counter/model_mira_shop_counter/mira_shop_counter.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.05, G 0.88) | 0.05 | meshy | Khronos glTF Blender I/O v4.4.55
+assets/props/crossing_hall_hero/pedestal/source/model.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.02, G 0.50) | 0.02 | other | Khronos glTF Blender I/O v4.4.55
+assets/props/crossing_hall_hero/portal/models/portal-v2.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.02, G 0.47) | 0.02 | other | Khronos glTF Blender I/O v4.4.55
+assets/props/crossing_hall_hero/portal/source-v2/model.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.02, G 0.47) | 0.02 | other | Khronos glTF Blender I/O v4.4.55
+assets/props/meshy-1020/scorched_ground_patch/model_scorched_ground_patch/scorched_ground_patch.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.02, G 0.95) | 0.02 | meshy | Khronos glTF Blender I/O v4.4.55
+assets/props/crossing_hall_hero/portal/source/model.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.01, G 0.54) | 0.01 | other | Khronos glTF Blender I/O v4.4.55
+assets/props/crossing_hall_hero/waymark_relief/models/waymark_relief.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.01, G 0.56) | 0.01 | other | Khronos glTF Blender I/O v4.4.55
+assets/props/crossing_hall_hero/waymark_relief/source/model.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.01, G 0.56) | 0.01 | other | Khronos glTF Blender I/O v4.4.55
+assets/props/realm_gate_meshy/models/realm_gate_frame.glb | Material_0 | 1.00 (default) | 0.86 | yes (mean B 0.01, G 1.00) | 0.01 | meshy | Khronos glTF Blender I/O v4.2.83
+assets/characters/npc_identity/water_adair/adair_lod0.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.63) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/characters/npc_identity/water_iona/iona_lod0.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.67) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/characters/npc_identity/water_orsen/orsen_lod0.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.69) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/characters/npc_identity/water_otto/otto_lod0.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.69) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.47) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/bramblebun/models/creature_bramblebun_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.67) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/bramblebun_redesign/models/creature_bramblebun_redesign_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.67) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/brooktail/models/creature_brooktail_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.79) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/burrowback/models/creature_burrowback_installed_retex_v2_lod0.glb | material | 1.00 | 1.00 | yes (mean B 0.00, G 0.75) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/burrowback/models/creature_burrowback_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.77) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/cindercub/models/creature_cindercub_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.73) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/duskhush/models/creature_duskhush_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.78) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/frostclaw/models/creature_frostclaw_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.66) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/galewisp/candidate/models/creature_galewisp_native.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.55) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/galewisp/models/creature_galewisp_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.78) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/meadowhart/models/creature_meadowhart_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.77) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/mosshell/models/creature_mosshell_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.73) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/mudsnout/models/creature_mudsnout_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.66) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.75) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/pipwing/models/creature_pipwing_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.80) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/reedwing/models/creature_reedwing_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.72) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/ripplet/candidate/models/creature_ripplet_native.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.33) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.75) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/shadelet/models/creature_shadelet_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.63) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/skyrill/models/creature_skyrill_lod0.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.55) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/sparkit/models/creature_sparkit_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.62) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/stormursa/models/creature_stormursa_lod0.glb | Material_0.001 | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.85) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/stormursa/models/creature_stormursa_v2_lod0.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.60) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/terrapup/candidate/models/creature_terrapup_native.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.67) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.78) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/torrentoad/models/creature_torrentoad_lod0.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.43) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/trailpup/models/creature_trailpup_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.66) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/tuskroot/candidate/models/creature_tuskroot_native_retex.glb | Material_0 | 1.00 | 1.00 | yes (mean B 0.00, G 0.71) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/tuskroot/models/creature_tuskroot_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.80) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/creatures/tetherbound/veridian/models/creature_veridian_lod0.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.63) | 0.00 | other | Khronos glTF Blender I/O v4.2.83
+assets/environment/tidewake/veilfall_terraced_buttress/refined.glb | material_0 | 1.00 | 1.00 | yes (mean B 0.00, G 0.63) | 0.00 | other | pygltflib@v1.16.5
+assets/props/crossing_hall_hero/wall_bay/models/wall_bay.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.56) | 0.00 | other | Khronos glTF Blender I/O v4.4.55
+assets/props/crossing_hall_hero/wall_bay/source/model.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.56) | 0.00 | other | Khronos glTF Blender I/O v4.4.55
+assets/props/generated_camp/camp_firewood.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.74) | 0.00 | meshy | meshy-scene
+assets/props/generated_camp/camp_flame.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.65) | 0.00 | meshy | meshy-scene
+assets/props/generated_camp/campfire_stone_ring.glb | material | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.70) | 0.00 | meshy | meshy-scene
+assets/props/meshy-1020/homestead_wall_segment/model_homestead_wall_segment/homestead_wall_segment.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.00, G 0.85) | 0.00 | meshy | Khronos glTF Blender I/O v4.4.55
+# F22#4 captain (tb/fights 765bf9d92):
+assets/creatures/tetherbound/brooktail/candidate_captain/models/creature_brooktail_captain.glb | Material_0 | 1.00 (default) | 1.00 (default) | yes (mean B 0.01, G 0.91) | 0.01 | other | Khronos glTF Blender I/O v4.2.83

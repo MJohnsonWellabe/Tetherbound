@@ -242,6 +242,9 @@ func _build_visual() -> void:
 ## metres. No Game lookup, claim, restore, highlight or harvest dependency.
 ## Missing installed art and unsupported records return null to the caller.
 static func create_identity_visual(item_id: String, definition: Dictionary) -> Node3D:
+	var authored := _authored_identity(item_id)
+	if authored != null:
+		return authored
 	if item_id == "hide_helm":
 		return _create_padded_helm(definition)
 	if item_id == "berries":
@@ -380,6 +383,54 @@ static func _create_loose_berries(definition: Dictionary) -> Node3D:
 		_identity_mesh(root, berry, material,
 			Vector3(cos(angle) * radius * 1.45, radius, sin(angle) * radius * 1.45))
 	_identity_mesh(root, berry, material, Vector3(0.0, radius * 2.35, 0.0))
+	return root
+
+
+## P2-033: one authored prop per item family (data/config/item_identity_props.json,
+## OFF until judged). Tint and glow are per item, so tiers and elements share a mesh.
+const AUTHORED_IDENTITY := "res://data/config/item_identity_props.json"
+static var _authored_config: Dictionary = {}
+
+
+static func _authored_identity(item_id: String) -> Node3D:
+	if _authored_config.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(AUTHORED_IDENTITY))
+		_authored_config = parsed if parsed is Dictionary else {"enabled": false}
+	if not bool(_authored_config.get("enabled", false)):
+		return null
+	var row: Variant = (_authored_config.get("items", {}) as Dictionary).get(item_id)
+	if not row is Dictionary:
+		return null
+	var spec: Dictionary = row
+	var path := str(spec.get("model", ""))
+	if not ResourceLoader.exists(path):
+		return null
+	var scene := (load(path) as PackedScene).instantiate() as Node3D
+	var root := Node3D.new()
+	root.name = "ItemIdentity"
+	root.add_child(scene)
+	root.scale = Vector3.ONE * float(spec.get("scale", 1.0))
+	var tint := Color(str(spec.get("tint", "#ffffff")))
+	var glow := Color(str(spec.get("glow", "#000000")))
+	var glow_energy := float(spec.get("glow_energy", 0.0))
+	var pending: Array[Node] = [scene]
+	while not pending.is_empty():
+		var node: Node = pending.pop_back()
+		pending.append_array(node.get_children())
+		if not node is MeshInstance3D or (node as MeshInstance3D).mesh == null:
+			continue
+		var instance := node as MeshInstance3D
+		for surface in instance.mesh.get_surface_count():
+			var source := instance.get_active_material(surface) as BaseMaterial3D
+			if source == null:
+				continue
+			var material := source.duplicate() as BaseMaterial3D
+			material.albedo_color = source.albedo_color * tint
+			if glow_energy > 0.0:
+				material.emission_enabled = true
+				material.emission = glow
+				material.emission_energy_multiplier = glow_energy
+			instance.set_surface_override_material(surface, material)
 	return root
 
 

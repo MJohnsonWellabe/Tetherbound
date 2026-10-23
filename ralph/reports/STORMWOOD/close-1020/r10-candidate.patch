@@ -1,0 +1,716 @@
+diff --git a/data/config/stormheart_presentation.json b/data/config/stormheart_presentation.json
+index e88ce9190..efb9da34f 100644
+--- a/data/config/stormheart_presentation.json
++++ b/data/config/stormheart_presentation.json
+@@ -71,5 +71,5 @@
+     "wind_speed": 0.85
+   },
+   "visible_roots": {"enabled": true, "scope": "client_presentation", "reach_m": 132.0, "_comment": "Reference-backed visual roots anchor in actual outer bark, keeping south/east openings and every physical floor/collider unchanged. Full native landmark judgment required."},
+-  "meshy_hero": {"enabled": false, "scope": "client_presentation", "_comment": "F41/P2-037 candidate, OFF until a three-judge matrix passes. Meshy task provenance: assets/props/meshy-1020/stormheart_tree/provenance.json (cand3 recommended). Shown beyond swap_radius_m from the trunk axis; inside it the procedural hollow shell, decks, ascent and colliders are unchanged.", "model": "res://assets/props/meshy-1020/stormheart_tree/cand3/stormheart_tree_cand3.glb", "height_m": 260.0, "shape": [1.25, 1.0, 1.25], "yaw_deg": 0.0, "sink_m": 2.0, "swap_radius_m": 75.0}
++  "meshy_hero": {"enabled": true, "scope": "client_presentation", "_comment": "F41/P2-037 candidate, OFF until a three-judge matrix passes. Meshy task provenance: assets/props/meshy-1020/stormheart_tree/provenance.json (cand3 recommended). Shown beyond swap_radius_m from the trunk axis; inside it the procedural hollow shell, decks, ascent and colliders are unchanged.", "model": "res://assets/props/meshy-1020/stormheart_tree_v2/stormheart_tree_v2.glb", "height_m": 320.0, "shape": [1.27, 1.0, 1.5], "yaw_deg": 180.0, "sink_m": 2.0, "swap_radius_m": 75.0, "hide_decks_at_distance": ["DynamoCore", "CrownChamber"], "albedo_tint": "#ffffff", "fog": false, "hide_seam_at_distance": false}
+ }
+diff --git a/data/config/stormwood_destination_dressing.json b/data/config/stormwood_destination_dressing.json
+index 11ac0b3bc..501ae1669 100644
+--- a/data/config/stormwood_destination_dressing.json
++++ b/data/config/stormwood_destination_dressing.json
+@@ -2,7 +2,7 @@
+   "schema_version": 1,
+   "_scope": "Client static presentation only. No save, network, terrain, actor or collision changes. OFF pending native support, catalogue visibility and separate trunk collision scope.",
+   "fallen_giant": {
+-    "enabled": false,
++    "enabled": true,
+     "asset": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+     "root_xz": [-138.0, 4482.0],
+     "uniform_scale": 2.0,
+diff --git a/data/config/stormwood_glass_field.json b/data/config/stormwood_glass_field.json
+index 27c6e57ca..421944563 100644
+--- a/data/config/stormwood_glass_field.json
++++ b/data/config/stormwood_glass_field.json
+@@ -26,7 +26,7 @@
+   "_why_scorched_scars": "F10#4 scene-art pass (owner 5860380772): strike scars as terrain-following burnt glass-fused patches with the grass cleared, blackened rock-family lumps and low smoked-glass blades. Enabled for Phase 1b; the old spire clusters remain only as a legacy fallback.",
+   "scorched_scars": true,
+   "scar_relief_candidate": {
+-    "enabled": false,
++    "enabled": true,
+     "scope": "client_presentation",
+     "normal_strength": 0.14,
+     "detail_frequency": 2.4,
+@@ -36,5 +36,5 @@
+     {"id":"west_warning", "at":[-21.0,101.0], "height_m":8.0, "yaw_deg":28.0},
+     {"id":"east_warning", "at":[21.0,126.0], "height_m":8.0, "yaw_deg":-24.0}
+   ],
+-  "shard_finish": {"enabled": false, "scope": "client_presentation", "_comment": "F41 round-3 candidate (OFF until judged): taller, brighter fused-glass blades so the Glass Field scar reads at the fixed stand (three round-1 judges: a tiny dark smear). Visual only; no collision or placement change.", "height_scale": 0.62, "emission_energy": 0.45}
++  "shard_finish": {"enabled": true, "scope": "client_presentation", "_comment": "F41 round-3 candidate (OFF until judged): taller, brighter fused-glass blades so the Glass Field scar reads at the fixed stand (three round-1 judges: a tiny dark smear). Visual only; no collision or placement change.", "height_scale": 0.45, "crust_model": "res://assets/props/meshy-1020/scar_crust/v1/scar_crust_v1.glb", "crust_footprint": 0.9, "crust_height_m": 0.45, "emission_energy": 0.45}
+ }
+diff --git a/data/config/stormwood_ground_finish.json b/data/config/stormwood_ground_finish.json
+index c2b6fc48a..5626aee90 100644
+--- a/data/config/stormwood_ground_finish.json
++++ b/data/config/stormwood_ground_finish.json
+@@ -3,13 +3,13 @@
+   "scope": "client_presentation",
+   "_comment": "P2-039 final source repair: rounded moss, three wet curled-leaf shapes, terrain-conforming wet soil and roots anchored to existing baked trees. Living canopy positions define cover islands and open clearings. Shared field shaders, terrain/control data, harvest identity, collision and actor scale are unchanged. Native matched evidence and Claude judgment remain pending.",
+   "grass": {
+-    "height_near": 0.14,
+-    "height_far": 0.2,
++    "height_near": 0.2,
++    "height_far": 0.26,
+     "height_jitter": 0.7,
+     "lattice_jitter": 1.4,
+-    "tint_base": "#25392c",
+-    "tint_tip": "#496344",
+-    "density_gain": 0.16,
++    "tint_base": "#22402f",
++    "tint_tip": "#4f7a5a",
++    "density_gain": 0.55,
+     "clump_contrast": 0.95,
+     "clump_scale": 0.075,
+     "ground_blend": 0.8,
+@@ -23,9 +23,9 @@
+       "fade_out_start": 320.0,
+       "lift": 0.35,
+       "dilate_lift": 1.5,
+-      "strength": 0.24,
+-      "tint_base": "#35412d",
+-      "tint_tip": "#4d5e3e",
++      "strength": 0.42,
++      "tint_base": "#2f4632",
++      "tint_tip": "#4d6b4c",
+       "ground_blend": 0.55,
+       "mottle_scale": 0.34,
+       "mottle_strength": 0.8,
+@@ -117,19 +117,19 @@
+     "_comment": "Bind installed forest-floor grain to living ground and wet earth to the muddy path, using the existing six slot IDs. Texture replacement changes presentation only; the original painted path/control maps and terrain remain authoritative.",
+     "textures": {
+       "grass": {
+-        "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
++        "albedo": "res://assets/props/meshy-1020/ground_wet_moss_floor/ground_wet_moss_floor_albedo_seamless.png",
+         "normal": "res://assets/environment/terrain/stylised/forest_floor_NormalGL.png",
+-        "uv_scale": 0.5,
++        "uv_scale": 0.25,
+         "normal_depth": 0.34,
+-        "tint": "#809165"
++        "tint": "#9aae98"
+       },
+       "soil": {
+         "_comment": "Slot 1 is Terrain3D's default auto-overlay and dominates near-flat Stormwood ground. Restore the baseline forest-floor albedo/tint here; dark wet earth remains in the path, damp and canopy wet-soil layers. Normal binding stays unchanged for the isolated albedo comparison.",
+-        "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
++        "albedo": "res://assets/props/meshy-1020/ground_wet_moss_floor/ground_wet_moss_floor_albedo_seamless.png",
+         "normal": "res://assets/environment/terrain/stylised/wet_earth_NormalGL.png",
+-        "uv_scale": 0.45,
++        "uv_scale": 0.25,
+         "normal_depth": 0.22,
+-        "tint": "#b4b497"
++        "tint": "#9aae98"
+       },
+       "rock": {
+         "uv_scale": 0.24,
+@@ -144,16 +144,17 @@
+         "tint": "#aaa28c"
+       },
+       "damp": {
+-        "uv_scale": 0.5,
++        "uv_scale": 0.3,
+         "normal_depth": 0.18,
+-        "tint": "#535447",
+-        "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
++        "tint": "#a8b2ac",
++        "albedo": "res://assets/props/meshy-1020/ground_dark_root_bark/ground_dark_root_bark_albedo_seamless.png",
+         "normal": "res://assets/environment/terrain/stylised/wet_earth_NormalGL.png"
+       },
+       "forest_floor": {
++        "albedo": "res://assets/props/meshy-1020/ground_wet_moss_floor/ground_wet_moss_floor_albedo_seamless.png",
+         "uv_scale": 0.5,
+         "normal_depth": 0.3,
+-        "tint": "#747863"
++        "tint": "#8c9f8c"
+       }
+     }
+   },
+@@ -181,8 +182,8 @@
+       "drift_gate": 1.0,
+       "patch_start": 0.35,
+       "patch_full": 0.68,
+-      "tint_base": "#302d21",
+-      "tint_tip": "#403b2b",
++      "tint_base": "#141716",
++      "tint_tip": "#1d211f",
+       "ground_blend": 0.12,
+       "contact_darken": 0.08,
+       "sway": 0.0,
+diff --git a/data/config/stormwood_look.json b/data/config/stormwood_look.json
+index 7e60e4eaa..05e7558be 100644
+--- a/data/config/stormwood_look.json
++++ b/data/config/stormwood_look.json
+@@ -1,5 +1,5 @@
+ {
+-  "enabled": false,
++  "enabled": true,
+   "scope": "client_presentation",
+   "_comment": "F41 biome look candidate. One fixed-purple rig at every clock hour; the existing Surge presentation supplies phase, rain, flash and aftermath deltas. OFF until matched Medium/High three-judge Bar A >=8.5. No save, collision, scatter or creature-scale changes.",
+   "rig": {
+@@ -8,12 +8,12 @@
+     "environment": {"ambient_colour": "#a4a8c4", "ambient_energy": 1.65, "ambient_sky_contribution": 0.18, "exposure": 0.82, "fog_density": 0.00028, "fog_colour": "#777292", "fog_sky_affect": 0.0, "aerial_perspective": 0.35, "adjustment_enabled": true, "adjustment_brightness": 1.0, "adjustment_contrast": 1.06, "adjustment_saturation": 0.94, "player_character_rim_scale": 1.0}
+   },
+   "terrain": {
+-    "grass": {"normal_depth": 0.38, "uv_scale": 0.5},
+-    "soil": {"normal_depth": 0.3, "uv_scale": 0.45},
++    "grass": {"normal_depth": 0.38, "uv_scale": 0.5, "detiling_rotation": 0.35, "detiling_shift": 0.5},
++    "soil": {"normal_depth": 0.3, "uv_scale": 0.5, "detiling_rotation": 0.35, "detiling_shift": 0.5},
+     "rock": {"normal_depth": 0.5, "uv_scale": 0.24},
+     "path": {"normal_depth": 0.32, "uv_scale": 0.5},
+     "damp": {"normal_depth": 0.24, "uv_scale": 0.5},
+-    "forest_floor": {"normal_depth": 0.36, "uv_scale": 0.5}
++    "forest_floor": {"normal_depth": 0.36, "uv_scale": 0.5, "detiling_rotation": 0.35, "detiling_shift": 0.5}
+   },
+   "materials": {
+     "_comment": "Installed base textures, alpha masks, authored tint and emission remain authoritative. Metre-based relief and restrained broad variation unify opaque world surfaces; emissive effects and actor materials are excluded.",
+diff --git a/data/config/stormwood_rod_line.json b/data/config/stormwood_rod_line.json
+index debd7d0c3..c23ba28f1 100644
+--- a/data/config/stormwood_rod_line.json
++++ b/data/config/stormwood_rod_line.json
+@@ -5,14 +5,14 @@
+   "start_m": 20.0,
+   "side_offset_m": 8.5,
+   "side_sign": 1,
+-  "pylon_model": "res://assets/environment/team_tether/tether_pylon.glb",
+-  "pylon_height_m": 6.2,
++  "pylon_model": "res://assets/props/meshy-1020/relay_pylon/v1/relay_pylon_v1.glb",
++  "pylon_height_m": 9.0,
+   "sink_m": 0.25,
+-  "cable_attach_m": 5.6,
++  "cable_attach_m": 8.2,
+   "cable_radius_m": 0.07,
+   "cable_sag_m": 1.1,
+   "cable_segments": 8,
+-  "cable_colour": "#b8733a",
++  "cable_colour": "#7aa58f",
+   "cable_metallic": 0.85,
+   "cable_roughness": 0.35,
+   "bead_radius_m": 0.28,
+diff --git a/data/config/stormwood_settlements.json b/data/config/stormwood_settlements.json
+index 764666f5c..17cc49835 100644
+--- a/data/config/stormwood_settlements.json
++++ b/data/config/stormwood_settlements.json
+@@ -2,20 +2,20 @@
+   "realm_id": "stormwood",
+   "_comment": "Root-authored Rodfolk settlement footprints. Reuses the installed civilian prefab family, its real doors and colliders. Services, inhabitants and camp progression are separate runtime work; buildings alone do not satisfy the camp census.",
+   "structures": [
+-    {"id":"ashfoot_shelter","prefab":"ranger_station","at":[-365,460],"yaw_deg":135,"interior":"cottage"},
++    {"id":"ashfoot_shelter","prefab":"ranger_station","at":[-365,460],"yaw_deg":135,"interior":"cottage","retint":{"MI_RoundTiles":{"color":"#5f6b70","texture":"res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"}}},
+     {"id":"ashfoot_cart","prefab":"wagon","at":[-338,461],"yaw_deg":25},
+-    {"id":"pools_shelter","prefab":"ranger_station","at":[-396,1416],"yaw_deg":135,"interior":"cottage"},
++    {"id":"pools_shelter","prefab":"ranger_station","at":[-396,1416],"yaw_deg":135,"interior":"cottage","retint":{"MI_RoundTiles":{"color":"#5f6b70","texture":"res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"}}},
+     {"id":"rodline_workshop","prefab":"workshop","at":[-720,2310],"yaw_deg":110},
+     {"id":"rodline_home","prefab":"cottage_a","at":[-678,2318],"yaw_deg":-125,"interior":"cottage"},
+     {"id":"rodline_well","prefab":"well","at":[-699,2314],"yaw_deg":20},
+     {"id":"rodline_supply_cart","prefab":"wagon","at":[-716,2283],"yaw_deg":-25},
+-    {"id":"still_grove_shelter","prefab":"ranger_station","at":[-183,2707],"yaw_deg":105,"interior":"cottage"},
++    {"id":"still_grove_shelter","prefab":"ranger_station","at":[-183,2707],"yaw_deg":105,"interior":"cottage","retint":{"MI_RoundTiles":{"color":"#5f6b70","texture":"res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"}}},
+     {"id":"crown_old_well","prefab":"well","at":[715,2690],"yaw_deg":35},
+     {"id":"lantern_hollow_inn","prefab":"inn","at":[-473,3980],"yaw_deg":125,"interior":"inn"},
+     {"id":"lantern_hollow_home","prefab":"cottage_b","at":[-428,3974],"yaw_deg":-130,"interior":"cottage"},
+     {"id":"lantern_hollow_workshop","prefab":"workshop","at":[-476,3945],"yaw_deg":75},
+     {"id":"lantern_hollow_well","prefab":"well","at":[-449,3985],"yaw_deg":-15},
+-    {"id":"ember_shelter","prefab":"ranger_station","at":[-130,5275],"yaw_deg":115,"interior":"cottage"},
++    {"id":"ember_shelter","prefab":"ranger_station","at":[-130,5275],"yaw_deg":115,"interior":"cottage","retint":{"MI_RoundTiles":{"color":"#5f6b70","texture":"res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"}}},
+     {"id":"ember_supply_cart","prefab":"wagon","at":[-104,5264],"yaw_deg":15}
+   ]
+ }
+diff --git a/data/config/stormwood_surge.json b/data/config/stormwood_surge.json
+index a2306e540..144ad80ae 100644
+--- a/data/config/stormwood_surge.json
++++ b/data/config/stormwood_surge.json
+@@ -15,7 +15,7 @@
+       "steam": {"max_puffs": 140, "inner_radius_m": 3.0, "outer_radius_m": 12.0, "puff_size_m": 2.8, "colour": "#b1a4ca", "alpha": 0.45}
+     },
+     "_comment_shadow_opacity": "Stormwood's scene authors a 0.68 canopy-shadow floor for its permanent storm. WorldLook reapplies the global sun defaults after scene setup, so every phase must carry that realm-local value explicitly; Break alone returns to fully hard shadows, as the surge brief specifies.",
+-    "shadow_opacity": {"calm":0.68,"building":0.68,"break":1.0,"fading":0.68},
++    "shadow_opacity": {"calm":0.55,"building":0.55,"break":1.0,"fading":0.55},
+     "transition_seconds": 6.0,
+     "_comment_reapply": "WorldLook re-merges its whole look per set_weather call, so the weather layer is re-applied every reapply_fading_seconds during a cross-fade and every reapply_steady_seconds otherwise (to follow the day clock). The ceiling updates every frame.",
+     "reapply_fading_seconds": 0.2,
+@@ -31,7 +31,7 @@
+       "far_layer":{"max_drops":1700,"inner_radius_m":17.0,"outer_radius_m":28.0,"lifetime_s":1.4,"ring_height_m":14.0,"centre_offset_m":3.0,"streak_width_m":0.012,"streak_length_m":0.5,"alpha":0.2,"scale_min":0.6,"scale_max":1.2,"alpha_min_fraction":0.4,"night_floor":0.15,"night_alpha_fraction":0.4},
+       "curtain_layer":{"max_drops":800,"inner_radius_m":32.0,"outer_radius_m":62.0,"lifetime_s":1.6,"ring_height_m":26.0,"centre_offset_m":6.0,"streak_width_m":0.06,"streak_length_m":3.0,"alpha":0.14,"scale_min":0.7,"scale_max":1.3,"alpha_min_fraction":0.4,"night_floor":0.15,"night_alpha_fraction":0.4}},
+     "_comment_telegraph": "Ground warning retains the combat hazard purple and exact strike.radius_m boundary as fine broken marks. Six jagged ground leaders converge on the contact point; bright tips move inward over strike.telegraph_seconds and the final quarter increases charge. No opaque zone disc. Reduced motion retains this continuous countdown without rim modulation. Terrain sampling and depth testing remain; no gameplay changes.",
+-    "telegraph": {"soft_style": {"enabled": false, "_why": "F41#5 candidate, coordinator ruling 21 Oct: keep the settled hazard hue and every timing, restyle the shader so the warning is not a flat placeholder disc (radial gradient fill, ground-noise breakup, travelling rim glow). OFF until judged."}, "_why_fill":"F10#3 round 2 (code-blind judge: an empty dashed outline read as a target selector and t080 looked like t110): a translucent fill from the first frame (fill_alpha), a stronger band the leader heads leave behind as they close on the contact point (charged_fill_alpha), and in the final ramp a solid rim over a brighter zone (final_fill_alpha).","fill_alpha":0.22,"charged_fill_alpha":0.38,"final_fill_alpha":0.65,"final_ramp_seconds":0.4,"leader_count":6,"leader_width_m":0.035,"leader_kink_m":0.18,"leader_head_width_m":0.48,"depth_pull_m":0.28,"rim_width_m":0.085,"rim_intensity":1.6,
++    "telegraph": {"soft_style": {"enabled": true, "_why": "F41#5 candidate, coordinator ruling 21 Oct: keep the settled hazard hue and every timing, restyle the shader so the warning is not a flat placeholder disc (radial gradient fill, ground-noise breakup, travelling rim glow). OFF until judged."}, "_why_fill":"F10#3 round 2 (code-blind judge: an empty dashed outline read as a target selector and t080 looked like t110): a translucent fill from the first frame (fill_alpha), a stronger band the leader heads leave behind as they close on the contact point (charged_fill_alpha), and in the final ramp a solid rim over a brighter zone (final_fill_alpha).","fill_alpha":0.22,"charged_fill_alpha":0.38,"final_fill_alpha":0.65,"final_ramp_seconds":0.4,"leader_count":6,"leader_width_m":0.035,"leader_kink_m":0.18,"leader_head_width_m":0.48,"depth_pull_m":0.28,"rim_width_m":0.085,"rim_intensity":1.6,
+       "edge_falloff_m":0.45,"ground_lift_m":0.07,"segments":48,"pulse_hz_start":2.0,"pulse_hz_end":7.0},
+     "night_scale_floor": 0.12,
+     "_comment_storm_base": "OWNER DIRECTION (WO-F10-08): 'We should not have day and night in stormwood. It should just always be that kind of purple rainy sky regardless of time of day', including after the Long Storm is broken. stormwood_surge.gd hands this realm's WorldLook a config in which every time-of-day preset is reference_time plus overrides, so sky, clouds, fog, ambient, exposure and the key light's angle, energy and colour are the same at every hour; the world clock, is_dark(), night rest and encounter timing keep running. pin_time_of_day false restores the clock-blended look. The overrides keep the painted clouds and sun colour in the purple family.",
+@@ -44,19 +44,19 @@
+     "_why_f10_3_building_fading": "F10#3 (coordinator/owner direction 2026-09-27 13:05, #356): Building and Fading carry distinct presentation, not only more or less of the same. Building's in-cloud sheet flicker rises 0.15 -> 0.22 (the storm gathering). Fading opens gaps where the cloud body is thin (ceiling_breakup 0.38, the shader's existing clearing parameter; the same at every hour), so the sky visibly clears; the ceiling stays opaque elsewhere, so no ghost sun disc shows. Existing shader parameters only.",
+     "_comment_phases": "OWNER DIRECTION (WO-F10-08, round 2): 'I like the building and break pictures. The other two aren't fantastic enough.' Every phase and the aftermath sit in the deep purple family (sky, ceiling, fog, key and ambient); nothing pale lavender or grey. Round 3 (blind judge 8 swapped Calm and Fading twice, so each phase gets a structural signature, not just more or less rain): the sky darkens and saturates monotonically Calm -> Building -> Break (ceiling luminance 0.43 / 0.40 / 0.37, saturation 0.29 / 0.35 / 0.42; Building is never brighter or greyer than Calm). Calm: straight-down light rain (wind 0, rain 0.3, half of Fading's opening rain), slow ceiling, no steam or lightning. Building: heavier slanted rain, fast ceiling, faint in-cloud flicker. Break: full rain with the distant curtain, fastest ceiling, strikes plus decorative sky lightning (sky_lightning) and in-cloud sheet glow. Fading carries Break over and lets it go: its `ramp` ({key: [start, end, power]} over the phase's progress) opens with Break's slant and 0.6 rain and straightens and thins them, while low ground steam (steam block) and a warm-violet afterglow low in the clouds decay to zero (ART_DIRECTION 3.3 'post-strike steam or afterglow'). The aftermath is the still deck: almost no motion but a defined, high-contrast cloud deck with lit rims and thin spots (ceiling_definition / ceiling_rim / ceiling_thin_glow). `intensity` (0..1) is a read-only hook (surge_intensity()). fog_colour follows sky_horizon (art.json's seam rule). No red: oxblood is Team Tether's.",
+     "phases": {
+-      "calm": {"sun_energy_mult":0.42,"ambient_colour":"#9894b4","ambient_energy_mult":0.6,"fog_density_add":0.0008,
++      "calm": {"sun_energy_mult":0.42,"ambient_colour":"#9894b4","ambient_energy_mult":1.0,"fog_density_add":0.0018,
+         "sky_top":"#5a547b","sky_horizon":"#777292","sky_ground_horizon":"#696485",
+         "ceiling_colour":"#706994","ceiling_opacity":1.0,"ceiling_speed":0.008,"ceiling_contrast":0.3,"ceiling_breakup":0.0,
+         "rain_visible":true,"rain_amount":0.3,"flashes":false,"wind":0.0,"sheet_glow":0.0,"sheet_glow_rate":0.0,"steam":0.0,"afterglow":0.0,"intensity":0.25},
+-      "building": {"sun_energy_mult":0.3,"ambient_colour":"#9a94b6","ambient_energy_mult":0.45,"fog_density_add":0.0016,
++      "building": {"sun_energy_mult":0.3,"ambient_colour":"#9a94b6","ambient_energy_mult":0.94,"fog_density_add":0.0026,
+         "sky_top":"#544d7b","sky_horizon":"#706992","sky_ground_horizon":"#635c85",
+         "ceiling_colour":"#696094","ceiling_opacity":1.0,"ceiling_speed":0.03,"ceiling_contrast":0.5,"ceiling_breakup":0.0,
+         "rain_visible":true,"rain_amount":0.65,"flashes":false,"wind":0.85,"sheet_glow":0.22,"sheet_glow_rate":0.35,"steam":0.0,"afterglow":0.0,"intensity":0.65},
+-      "break": {"sun_energy_mult":0.22,"ambient_colour":"#8a88b8","ambient_energy_mult":0.50,"fog_density_add":0.0026,
++      "break": {"sun_energy_mult":0.22,"ambient_colour":"#8a88b8","ambient_energy_mult":0.9,"fog_density_add":0.0036,
+         "sky_top":"#534984","sky_horizon":"#696192","sky_ground_horizon":"#5d5486",
+         "ceiling_colour":"#625897","ceiling_opacity":1.0,"ceiling_speed":0.045,"ceiling_contrast":0.55,"ceiling_breakup":0.0,
+         "rain_visible":true,"rain_amount":1.0,"flashes":true,"wind":1.0,"sheet_glow":0.9,"sheet_glow_rate":0.8,"steam":0.0,"afterglow":0.0,"crawlers":1.0,"intensity":1.0},
+-      "fading": {"sun_energy_mult":0.4,"ambient_colour":"#9894b4","ambient_energy_mult":0.58,"fog_density_add":0.0012,
++      "fading": {"sun_energy_mult":0.4,"ambient_colour":"#9894b4","ambient_energy_mult":0.97,"fog_density_add":0.0022,
+         "sky_top":"#574b7e","sky_horizon":"#736895","sky_ground_horizon":"#655b88",
+         "ceiling_colour":"#6c5f99","ceiling_opacity":1.0,"ceiling_speed":0.014,"ceiling_contrast":0.3,"ceiling_breakup":0.38,
+         "rain_visible":true,"rain_amount":0.6,"flashes":false,"wind":1.0,"sheet_glow":0.0,"sheet_glow_rate":0.0,"steam":1.0,"afterglow":1.0,"intensity":0.4,
+@@ -66,7 +66,7 @@
+     "aftermath_scar": {"colour":"#3b3548","emission_energy":0.0,"_why":"F10#4 (coordinator 13:20, #356): after long_storm_ended the Struck Sentinel's live cyan strike scar cools to a dark violet seam in the purple band and its StrikeAfterglow light goes out; the spent strike reads as a scar, not a live bolt."},
+     "_comment_aftermath": "OWNER RULING (WO-F10-08): Stormwood stays purple after the Long Storm is broken; 'the aftermath shows only through lighter rain, no lightning and the scars'. Every aftermath phase (`all`) is the stillest version: the lightest drizzle (0.08), the gentlest wind (0.3), an almost still ceiling (speed 0.002), no flashes, sheet glow, steam or afterglow (and no ramp), the least fog and a steady key. Round 3 (blind judge 8: 'a flat, blank lavender card'): the still deck gets structure, a defined high-contrast cloud body (ceiling_definition, contrast 0.6) with lit rims and thin spots (ceiling_rim, ceiling_thin_glow), in the deep purple. The shorter aftermath Surge durations (aftermath_seconds) are unchanged gameplay; real strikes in an aftermath Break still telegraph and strike (rules), but no ambient flashes are added.",
+     "aftermath": {
+-      "all": {"sun_energy_mult":0.7,"ambient_colour":"#a29cc8","ambient_energy_mult":0.95,"fog_density_add":0.0002,
++      "all": {"sun_energy_mult":0.7,"ambient_colour":"#a29cc8","ambient_energy_mult":1.0,"fog_density_add":0.0008,
+         "sky_top":"#59507d","sky_horizon":"#766e97","sky_ground_horizon":"#686089",
+         "ceiling_colour":"#6f6597","ceiling_opacity":1.0,"ceiling_speed":0.002,"ceiling_contrast":0.45,"ceiling_breakup":0.0,
+         "ceiling_definition":0.5,"ceiling_rim":0.45,"ceiling_thin_glow":0.3,
+diff --git a/data/config/stormwood_vegetation.json b/data/config/stormwood_vegetation.json
+index 1908a720c..77ff3fc6c 100644
+--- a/data/config/stormwood_vegetation.json
++++ b/data/config/stormwood_vegetation.json
+@@ -1,15 +1,17 @@
+ {
+   "seed": 20260906,
+   "_comment": "Installed nature family with the existing Meadows green leaf replacement: the source twisted-tree texture is crimson and cannot become green through multiplication. Baked route and grove composition; no runtime world generation. storm_mushroom is the installed ground dome Mushroom_Common (WO-F09-05 round 2: the Laetiporus bracket shelf grows on trunks and read as fungus floating in the grass when planted loose).",
+-  "encounter_clearings": {"_comment": "Named fights keep trunk and rock colliders out of their arena: 18 m covers the largest named wildlife envelope (voltarach 13.89 m: fitted body, idle motion, wander) plus the largest baked collider reach (crown_canopy 0.435 m x 6.0) and 1.5 m margin. tests/test_stormwood_named_fight_clearings.gd checks the bake against each species.", "collider_clear_radius_m": 18.0, "sites": [{"id": "hollows_alpha", "at": [-520, 1660]}, {"id": "capacitor_alpha", "at": [-1080, 3020]}, {"id": "crown_guardian", "at": [640, 2700]}, {"id": "old_rodfolk_hall_guardian", "at": [-1605, 4385]}, {"id": "blackwater_elder", "at": [-130, 4450]}, {"id": "glass_field_alpha", "at": [-247, 5078]}]},
++  "encounter_clearings": {"_comment": "Named fights keep trunk and rock colliders out of their arena: 18 m covers the largest named wildlife envelope (voltarach 13.89 m: fitted body, idle motion, wander) plus the largest baked collider reach (crown_canopy 0.435 m x 6.0) and 1.5 m margin. tests/test_stormwood_named_fight_clearings.gd checks the bake against each species.", "collider_clear_radius_m": 19.5, "_why_19_5": "F41 candidate: the Meshy giant_canopy collider reaches 0.14 x 28 = 3.92 m, beyond crown_canopy 0.435 x 6.0; 13.89 + 3.92 + 1.5 = 19.31, rounded up.", "sites": [{"id": "hollows_alpha", "at": [-520, 1660]}, {"id": "capacitor_alpha", "at": [-1080, 3020]}, {"id": "crown_guardian", "at": [640, 2700]}, {"id": "old_rodfolk_hall_guardian", "at": [-1605, 4385]}, {"id": "blackwater_elder", "at": [-130, 4450]}, {"id": "glass_field_alpha", "at": [-247, 5078]}]},
+   "seat_clearings": {"_comment": "Authored seats keep baked colliders off them: no trunk or rock surface (collision_radius x the layer's scale_max) within collider_surface_m of a trainer, NPC, harvest node or pickup position, and no ground cover centred within ground_cover_m. Seats are read from stormwood_trainers/npcs/harvests/pickups.json; only their kind, id and XZ position enter the bake fingerprint. tests/test_stormwood_scatter_clearances.gd checks the committed bake.", "collider_surface_m": {"trainer": 3.5, "npc": 3.5, "harvest": 2.0, "pickup": 2.0}, "ground_cover_m": {"trainer": 3.0, "npc": 3.0, "harvest": 1.5, "pickup": 1.5}},
+   "road_sample_m": 18.0,
+   "background_spacing_m": 55.0,
+   "_comment_dense_stands": "F10#4 round 7 (strict re-check: off-road Deepwood read as the edge of a wood; tools/_probe_deepwood_sightlines.gd measured a median first trunk 56-107 m away at eye level with up to 9 of 21 rays open past 120 m): the three Deepwood stands go from 17 m to 12 m spacing (skip 0.15/0.2 -> 0.1/0.15), a median first trunk of 26-27 m with 1 of 21 rays open past 120 m. 12 m stays above the 9 m tree occupancy cell. F10#4 forest (code-blind judge round 1, V-VIS-1): Deepwood read as an open flower meadow because the background grid plants one tree per background_spacing_m cell. Each dense stand fills its circle on a finer jittered grid (spacing_m, 40% jitter, skip fraction) with its own seed, after the roads and the background grid and through the same clearances (roads, settlements, landmarks, seats, pockets, fight clearings), with understory ferns/mushrooms round an `understory` fraction of the trunks.",
+   "dense_stands": [
+-    {"id": "deepwood_heart", "centre": [-330, 4260], "radius_m": 380, "spacing_m": 12, "skip": 0.1, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.05},
+-    {"id": "deepwood_west", "centre": [-900, 4300], "radius_m": 340, "spacing_m": 12, "skip": 0.1, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.05},
+-    {"id": "deepwood_hall", "centre": [-1380, 4360], "radius_m": 240, "spacing_m": 12, "skip": 0.15, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.05},
++    {"id": "verge_rodline_wood", "_comment": "F41 round-10 candidate: Ash Road walks through storm forest (art direction: little direct sky until the aftermath); road, rod line and seats stay clear via the bake's own clearances.", "centre": [-480, 640], "radius_m": 150, "spacing_m": 14, "skip": 0.15, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.15},
++    {"id": "hollows_wood", "_comment": "F41 round-10 candidate: the Glowmoss Hollows ringed by old storm wood.", "centre": [-470, 1640], "radius_m": 170, "spacing_m": 14, "skip": 0.2, "layer": "storm_canopy", "understory": 0.35, "giant_chance": 0.15},
++    {"id": "deepwood_heart", "centre": [-330, 4260], "radius_m": 380, "spacing_m": 12, "skip": 0.1, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.15},
++    {"id": "deepwood_west", "centre": [-900, 4300], "radius_m": 340, "spacing_m": 12, "skip": 0.1, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.15},
++    {"id": "deepwood_hall", "centre": [-1380, 4360], "radius_m": 240, "spacing_m": 12, "skip": 0.15, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.15},
+     {"id": "fallen_giant_grove", "centre": [-150, 4460], "radius_m": 70, "spacing_m": 24, "skip": 0.1, "layer": "storm_canopy", "understory": 0.5, "giant_chance": 0.6}
+   ],
+   "layers": {
+@@ -29,30 +31,17 @@
+       "lod_range": 850,
+       "lod_fade_margin": 120,
+       "retint": {
+-        "Leaves_TwistedTree": "#a6c4a3",
++        "Leaves_TwistedTree": "#6c9488",
+         "Leaves_NormalTree": "#bbc8b0",
+-        "Bark_TwistedTree": "#8f9580"
++        "Bark_TwistedTree": "#a39a86"
+       },
+       "retexture": {
++        "Bark_TwistedTree": "res://assets/environment/stylized_nature/derived/Bark_TwistedTree_lift175.png",
+         "Leaves_TwistedTree": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png"
+       }
+     },
+-    "giant_canopy": {"_comment": "F10#4 giant trunks (round-1 judge: no giant old trunk is ever the subject). The same installed TwistedTree models and bark/leaf policy as storm_canopy at 2-2.5x its scale, planted only by dense_stands (giant_chance); collider scaled with it.", "models": ["res://assets/environment/stylized_nature/TwistedTree_2.gltf", "res://assets/environment/stylized_nature/TwistedTree_4.gltf"], "stand_only": true, "scale_min": 6.0, "scale_max": 7.5, "collides": true, "collision_radius": 0.62, "harvest_item": "wood", "harvest_fraction": 1.0, "harvest_amount": 6, "casts_shadow": true, "lod_range": 1200, "lod_fade_margin": 150, "retint": {"Leaves_TwistedTree": "#a6c4a3", "Leaves_NormalTree": "#bbc8b0", "Bark_TwistedTree": "#8f9580"}, "retexture": {"Leaves_TwistedTree": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png"}},
+-    "storm_deadwood": {
+-      "models": [
+-        "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+-        "res://assets/environment/stylized_nature/DeadTree_3.gltf"
+-      ],
+-      "scale_min": 2.8,
+-      "scale_max": 4.1,
+-      "collides": true,
+-      "collision_radius": 0.6,
+-      "harvest_item": "wood",
+-      "harvest_fraction": 1.0,
+-      "harvest_amount": 3,
+-      "casts_shadow": true,
+-      "lod_range": 700
+-    },
++    "giant_canopy": {"_comment": "F41 round-4 candidate: reference-backed Meshy giant storm trees (assets/props/meshy-1020/giant_tree_a|b/provenance.json), native ~1.9 units, scale 23-28 for 44-53 m; trunk radius 0.14 native (~3.5 m). Placement, harvest and clearances unchanged.", "models": ["res://assets/props/meshy-1020/giant_tree_a/v1/giant_tree_a_v1.glb", "res://assets/props/meshy-1020/giant_tree_b/v1/giant_tree_b_v1.glb"], "stand_only": true, "scale_min": 23.0, "scale_max": 28.0, "collides": true, "collision_radius": 0.14, "harvest_item": "wood", "harvest_fraction": 1.0, "harvest_amount": 6, "casts_shadow": true, "lod_range": 1200, "lod_fade_margin": 150, "height_offset": 0.953},
++    "storm_deadwood": {"models": ["res://assets/props/meshy-1020/scarred_trunk/v1/scarred_trunk_v1.glb"], "scale_min": 7.0, "scale_max": 9.0, "collides": true, "collision_radius": 0.13, "harvest_item": "wood", "harvest_fraction": 1.0, "harvest_amount": 3, "casts_shadow": true, "lod_range": 700, "height_offset": 0.951, "_comment": "F41 round-7 candidate: Meshy lightning-scarred split trunk, native ~1.9 units, 13-17 m; trunk radius 0.13 native."},
+     "crown_canopy": {
+       "models": [
+         "res://assets/environment/stylized_nature/CommonTree_3.gltf"
+@@ -64,7 +53,7 @@
+       "casts_shadow": true,
+       "lod_range": 1400,
+       "retint": {
+-        "Leaves_NormalTree": "#9fb59f",
++        "Leaves_NormalTree": "#68907f",
+         "Bark_NormalTree": "#746b5b"
+       }
+     },
+@@ -81,16 +70,7 @@
+         "Leaves": "#6f865f"
+       }
+     },
+-    "storm_mushroom": {
+-      "models": [
+-        "res://assets/environment/stylized_nature/Mushroom_Common.gltf"
+-      ],
+-      "scale_min": 1.0,
+-      "scale_max": 2.2,
+-      "collides": false,
+-      "casts_shadow": false,
+-      "lod_range": 150
+-    },
++    "storm_mushroom": {"models": ["res://assets/props/meshy-1020/storm_fungi/v1/storm_fungi_v1.glb"], "scale_min": 0.8, "scale_max": 1.4, "collides": false, "casts_shadow": false, "lod_range": 150, "height_offset": 0.952, "_comment": "F41 round-7 candidate: Meshy storm fungi (cyan-violet caps on mossy stumps), native ~1.9 units, 1.5-2.7 m."},
+     "storm_bush": {
+       "models": [
+         "res://assets/environment/stylized_nature/Bush_Common.gltf"
+diff --git a/data/config/stormwood_voltcap_finish.json b/data/config/stormwood_voltcap_finish.json
+index dc21f3c89..54f325318 100644
+--- a/data/config/stormwood_voltcap_finish.json
++++ b/data/config/stormwood_voltcap_finish.json
+@@ -1,5 +1,5 @@
+ {
+-  "enabled": false,
++  "enabled": true,
+   "scope": "client_presentation",
+   "item": "voltcap",
+   "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",
+diff --git a/data/scatter/stormwood/manifest.json b/data/scatter/stormwood/manifest.json
+index ebb81510d..74b996e9e 100644
+--- a/data/scatter/stormwood/manifest.json
++++ b/data/scatter/stormwood/manifest.json
+@@ -1,11 +1,11 @@
+ {
+   "_comment": "Generated by scripts/world/bake_playground_scatter.gd. Do not hand-edit -- re-run the bake after any change to vegetation.json or terrain_playground.json. See docs/decisions/D53.",
+   "base_seed": 20260906,
+-  "bytes": 1572597,
+-  "config_fingerprint": 8324557723318087,
++  "bytes": 1610391,
++  "config_fingerprint": 6625794181718905,
+   "format_version": 1,
+   "placements_drained": 0,
+-  "placements_kept": 43161,
++  "placements_kept": 44169,
+   "region_size": 512.0,
+   "regions": [
+     [
+diff --git a/data/scatter/stormwood/region_-1_0.bin b/data/scatter/stormwood/region_-1_0.bin
+index 4863802bc..45ae9bc4c 100644
+Binary files a/data/scatter/stormwood/region_-1_0.bin and b/data/scatter/stormwood/region_-1_0.bin differ
+diff --git a/data/scatter/stormwood/region_-1_1.bin b/data/scatter/stormwood/region_-1_1.bin
+index 6b0abd911..c41ba9aa3 100644
+Binary files a/data/scatter/stormwood/region_-1_1.bin and b/data/scatter/stormwood/region_-1_1.bin differ
+diff --git a/data/scatter/stormwood/region_-1_10.bin b/data/scatter/stormwood/region_-1_10.bin
+index e06842829..9e3ddf79a 100644
+Binary files a/data/scatter/stormwood/region_-1_10.bin and b/data/scatter/stormwood/region_-1_10.bin differ
+diff --git a/data/scatter/stormwood/region_-1_11.bin b/data/scatter/stormwood/region_-1_11.bin
+index b8d6d7d13..b8222cf11 100644
+Binary files a/data/scatter/stormwood/region_-1_11.bin and b/data/scatter/stormwood/region_-1_11.bin differ
+diff --git a/data/scatter/stormwood/region_-1_2.bin b/data/scatter/stormwood/region_-1_2.bin
+index 3ae396557..8818f1959 100644
+Binary files a/data/scatter/stormwood/region_-1_2.bin and b/data/scatter/stormwood/region_-1_2.bin differ
+diff --git a/data/scatter/stormwood/region_-1_3.bin b/data/scatter/stormwood/region_-1_3.bin
+index 4caef15ae..ceda7aa9d 100644
+Binary files a/data/scatter/stormwood/region_-1_3.bin and b/data/scatter/stormwood/region_-1_3.bin differ
+diff --git a/data/scatter/stormwood/region_-1_4.bin b/data/scatter/stormwood/region_-1_4.bin
+index 8aac651b4..97f1779e3 100644
+Binary files a/data/scatter/stormwood/region_-1_4.bin and b/data/scatter/stormwood/region_-1_4.bin differ
+diff --git a/data/scatter/stormwood/region_-1_5.bin b/data/scatter/stormwood/region_-1_5.bin
+index c88638b21..5a76dbeb5 100644
+Binary files a/data/scatter/stormwood/region_-1_5.bin and b/data/scatter/stormwood/region_-1_5.bin differ
+diff --git a/data/scatter/stormwood/region_-1_6.bin b/data/scatter/stormwood/region_-1_6.bin
+index 270861664..0f876996e 100644
+Binary files a/data/scatter/stormwood/region_-1_6.bin and b/data/scatter/stormwood/region_-1_6.bin differ
+diff --git a/data/scatter/stormwood/region_-1_7.bin b/data/scatter/stormwood/region_-1_7.bin
+index 75819bc99..056a0dacd 100644
+Binary files a/data/scatter/stormwood/region_-1_7.bin and b/data/scatter/stormwood/region_-1_7.bin differ
+diff --git a/data/scatter/stormwood/region_-1_8.bin b/data/scatter/stormwood/region_-1_8.bin
+index 3b6936ca0..60e71de86 100644
+Binary files a/data/scatter/stormwood/region_-1_8.bin and b/data/scatter/stormwood/region_-1_8.bin differ
+diff --git a/data/scatter/stormwood/region_-1_9.bin b/data/scatter/stormwood/region_-1_9.bin
+index a26dcc2f9..033a9bbcb 100644
+Binary files a/data/scatter/stormwood/region_-1_9.bin and b/data/scatter/stormwood/region_-1_9.bin differ
+diff --git a/data/scatter/stormwood/region_-2_0.bin b/data/scatter/stormwood/region_-2_0.bin
+index 650b2313d..4a4216db2 100644
+Binary files a/data/scatter/stormwood/region_-2_0.bin and b/data/scatter/stormwood/region_-2_0.bin differ
+diff --git a/data/scatter/stormwood/region_-2_1.bin b/data/scatter/stormwood/region_-2_1.bin
+index be27fd9e4..9a1ca29f6 100644
+Binary files a/data/scatter/stormwood/region_-2_1.bin and b/data/scatter/stormwood/region_-2_1.bin differ
+diff --git a/data/scatter/stormwood/region_-2_10.bin b/data/scatter/stormwood/region_-2_10.bin
+index 459dc62a9..fca5fec9b 100644
+Binary files a/data/scatter/stormwood/region_-2_10.bin and b/data/scatter/stormwood/region_-2_10.bin differ
+diff --git a/data/scatter/stormwood/region_-2_11.bin b/data/scatter/stormwood/region_-2_11.bin
+index b99995f5f..2d8f46ebc 100644
+Binary files a/data/scatter/stormwood/region_-2_11.bin and b/data/scatter/stormwood/region_-2_11.bin differ
+diff --git a/data/scatter/stormwood/region_-2_2.bin b/data/scatter/stormwood/region_-2_2.bin
+index a4ef99b29..e95b56931 100644
+Binary files a/data/scatter/stormwood/region_-2_2.bin and b/data/scatter/stormwood/region_-2_2.bin differ
+diff --git a/data/scatter/stormwood/region_-2_3.bin b/data/scatter/stormwood/region_-2_3.bin
+index 87c6a76fd..9000a30e4 100644
+Binary files a/data/scatter/stormwood/region_-2_3.bin and b/data/scatter/stormwood/region_-2_3.bin differ
+diff --git a/data/scatter/stormwood/region_-2_4.bin b/data/scatter/stormwood/region_-2_4.bin
+index ba1b181a0..bf48b84c8 100644
+Binary files a/data/scatter/stormwood/region_-2_4.bin and b/data/scatter/stormwood/region_-2_4.bin differ
+diff --git a/data/scatter/stormwood/region_-2_5.bin b/data/scatter/stormwood/region_-2_5.bin
+index 587769ec4..52189c487 100644
+Binary files a/data/scatter/stormwood/region_-2_5.bin and b/data/scatter/stormwood/region_-2_5.bin differ
+diff --git a/data/scatter/stormwood/region_-2_6.bin b/data/scatter/stormwood/region_-2_6.bin
+index b19d01f0d..4254aeaa8 100644
+Binary files a/data/scatter/stormwood/region_-2_6.bin and b/data/scatter/stormwood/region_-2_6.bin differ
+diff --git a/data/scatter/stormwood/region_-2_7.bin b/data/scatter/stormwood/region_-2_7.bin
+index 50dfae0fa..b4b71eb35 100644
+Binary files a/data/scatter/stormwood/region_-2_7.bin and b/data/scatter/stormwood/region_-2_7.bin differ
+diff --git a/data/scatter/stormwood/region_-2_8.bin b/data/scatter/stormwood/region_-2_8.bin
+index 5c49c15f1..8f1fb823a 100644
+Binary files a/data/scatter/stormwood/region_-2_8.bin and b/data/scatter/stormwood/region_-2_8.bin differ
+diff --git a/data/scatter/stormwood/region_-2_9.bin b/data/scatter/stormwood/region_-2_9.bin
+index 78ec155e5..cb895f492 100644
+Binary files a/data/scatter/stormwood/region_-2_9.bin and b/data/scatter/stormwood/region_-2_9.bin differ
+diff --git a/data/scatter/stormwood/region_-3_0.bin b/data/scatter/stormwood/region_-3_0.bin
+index b1f3dec84..be2a3c8f3 100644
+Binary files a/data/scatter/stormwood/region_-3_0.bin and b/data/scatter/stormwood/region_-3_0.bin differ
+diff --git a/data/scatter/stormwood/region_-3_1.bin b/data/scatter/stormwood/region_-3_1.bin
+index 0c8776587..2b7a8d9bd 100644
+Binary files a/data/scatter/stormwood/region_-3_1.bin and b/data/scatter/stormwood/region_-3_1.bin differ
+diff --git a/data/scatter/stormwood/region_-3_10.bin b/data/scatter/stormwood/region_-3_10.bin
+index f94f76165..6e6fd15e5 100644
+Binary files a/data/scatter/stormwood/region_-3_10.bin and b/data/scatter/stormwood/region_-3_10.bin differ
+diff --git a/data/scatter/stormwood/region_-3_11.bin b/data/scatter/stormwood/region_-3_11.bin
+index f4714112b..e28b33ffb 100644
+Binary files a/data/scatter/stormwood/region_-3_11.bin and b/data/scatter/stormwood/region_-3_11.bin differ
+diff --git a/data/scatter/stormwood/region_-3_2.bin b/data/scatter/stormwood/region_-3_2.bin
+index 3a98e06e5..ffb7cd4de 100644
+Binary files a/data/scatter/stormwood/region_-3_2.bin and b/data/scatter/stormwood/region_-3_2.bin differ
+diff --git a/data/scatter/stormwood/region_-3_3.bin b/data/scatter/stormwood/region_-3_3.bin
+index 7cd2c4be5..73aa1ea4e 100644
+Binary files a/data/scatter/stormwood/region_-3_3.bin and b/data/scatter/stormwood/region_-3_3.bin differ
+diff --git a/data/scatter/stormwood/region_-3_4.bin b/data/scatter/stormwood/region_-3_4.bin
+index ec08038e8..2f97c3fbe 100644
+Binary files a/data/scatter/stormwood/region_-3_4.bin and b/data/scatter/stormwood/region_-3_4.bin differ
+diff --git a/data/scatter/stormwood/region_-3_5.bin b/data/scatter/stormwood/region_-3_5.bin
+index d4906249f..ae6b42be6 100644
+Binary files a/data/scatter/stormwood/region_-3_5.bin and b/data/scatter/stormwood/region_-3_5.bin differ
+diff --git a/data/scatter/stormwood/region_-3_6.bin b/data/scatter/stormwood/region_-3_6.bin
+index 25756047c..dc29b9888 100644
+Binary files a/data/scatter/stormwood/region_-3_6.bin and b/data/scatter/stormwood/region_-3_6.bin differ
+diff --git a/data/scatter/stormwood/region_-3_7.bin b/data/scatter/stormwood/region_-3_7.bin
+index f27afc19a..49a8af155 100644
+Binary files a/data/scatter/stormwood/region_-3_7.bin and b/data/scatter/stormwood/region_-3_7.bin differ
+diff --git a/data/scatter/stormwood/region_-3_8.bin b/data/scatter/stormwood/region_-3_8.bin
+index 06dc6800a..054e9f840 100644
+Binary files a/data/scatter/stormwood/region_-3_8.bin and b/data/scatter/stormwood/region_-3_8.bin differ
+diff --git a/data/scatter/stormwood/region_-3_9.bin b/data/scatter/stormwood/region_-3_9.bin
+index 69ecd676d..3b5f34501 100644
+Binary files a/data/scatter/stormwood/region_-3_9.bin and b/data/scatter/stormwood/region_-3_9.bin differ
+diff --git a/data/scatter/stormwood/region_-4_0.bin b/data/scatter/stormwood/region_-4_0.bin
+index 9e8c11b7a..6a3c7fb3f 100644
+Binary files a/data/scatter/stormwood/region_-4_0.bin and b/data/scatter/stormwood/region_-4_0.bin differ
+diff --git a/data/scatter/stormwood/region_-4_1.bin b/data/scatter/stormwood/region_-4_1.bin
+index 3e5d8feb5..1b4310987 100644
+Binary files a/data/scatter/stormwood/region_-4_1.bin and b/data/scatter/stormwood/region_-4_1.bin differ
+diff --git a/data/scatter/stormwood/region_-4_10.bin b/data/scatter/stormwood/region_-4_10.bin
+index 35dcc10e7..1e264b86a 100644
+Binary files a/data/scatter/stormwood/region_-4_10.bin and b/data/scatter/stormwood/region_-4_10.bin differ
+diff --git a/data/scatter/stormwood/region_-4_11.bin b/data/scatter/stormwood/region_-4_11.bin
+index 05533546a..74ce48630 100644
+Binary files a/data/scatter/stormwood/region_-4_11.bin and b/data/scatter/stormwood/region_-4_11.bin differ
+diff --git a/data/scatter/stormwood/region_-4_2.bin b/data/scatter/stormwood/region_-4_2.bin
+index 33d0933e7..064b403c6 100644
+Binary files a/data/scatter/stormwood/region_-4_2.bin and b/data/scatter/stormwood/region_-4_2.bin differ
+diff --git a/data/scatter/stormwood/region_-4_3.bin b/data/scatter/stormwood/region_-4_3.bin
+index 87f18ff5f..b6108e00e 100644
+Binary files a/data/scatter/stormwood/region_-4_3.bin and b/data/scatter/stormwood/region_-4_3.bin differ
+diff --git a/data/scatter/stormwood/region_-4_4.bin b/data/scatter/stormwood/region_-4_4.bin
+index 2b4831077..0773c707c 100644
+Binary files a/data/scatter/stormwood/region_-4_4.bin and b/data/scatter/stormwood/region_-4_4.bin differ
+diff --git a/data/scatter/stormwood/region_-4_5.bin b/data/scatter/stormwood/region_-4_5.bin
+index ee7650764..5c298bffb 100644
+Binary files a/data/scatter/stormwood/region_-4_5.bin and b/data/scatter/stormwood/region_-4_5.bin differ
+diff --git a/data/scatter/stormwood/region_-4_6.bin b/data/scatter/stormwood/region_-4_6.bin
+index 79d430a00..37fdde0d8 100644
+Binary files a/data/scatter/stormwood/region_-4_6.bin and b/data/scatter/stormwood/region_-4_6.bin differ
+diff --git a/data/scatter/stormwood/region_-4_7.bin b/data/scatter/stormwood/region_-4_7.bin
+index 778f11e8a..94f605d1e 100644
+Binary files a/data/scatter/stormwood/region_-4_7.bin and b/data/scatter/stormwood/region_-4_7.bin differ
+diff --git a/data/scatter/stormwood/region_-4_8.bin b/data/scatter/stormwood/region_-4_8.bin
+index 440763136..18530421f 100644
+Binary files a/data/scatter/stormwood/region_-4_8.bin and b/data/scatter/stormwood/region_-4_8.bin differ
+diff --git a/data/scatter/stormwood/region_-4_9.bin b/data/scatter/stormwood/region_-4_9.bin
+index 75ec23f2c..6a468a7fd 100644
+Binary files a/data/scatter/stormwood/region_-4_9.bin and b/data/scatter/stormwood/region_-4_9.bin differ
+diff --git a/data/scatter/stormwood/region_-5_0.bin b/data/scatter/stormwood/region_-5_0.bin
+index fb31d8af2..38e2df838 100644
+Binary files a/data/scatter/stormwood/region_-5_0.bin and b/data/scatter/stormwood/region_-5_0.bin differ
+diff --git a/data/scatter/stormwood/region_-5_1.bin b/data/scatter/stormwood/region_-5_1.bin
+index 605c6c5da..3a640566c 100644
+Binary files a/data/scatter/stormwood/region_-5_1.bin and b/data/scatter/stormwood/region_-5_1.bin differ
+diff --git a/data/scatter/stormwood/region_-5_10.bin b/data/scatter/stormwood/region_-5_10.bin
+index bcd25eaa1..b9a58881c 100644
+Binary files a/data/scatter/stormwood/region_-5_10.bin and b/data/scatter/stormwood/region_-5_10.bin differ
+diff --git a/data/scatter/stormwood/region_-5_11.bin b/data/scatter/stormwood/region_-5_11.bin
+index d7416e410..4b119ca47 100644
+Binary files a/data/scatter/stormwood/region_-5_11.bin and b/data/scatter/stormwood/region_-5_11.bin differ
+diff --git a/data/scatter/stormwood/region_-5_2.bin b/data/scatter/stormwood/region_-5_2.bin
+index ceaea7fb8..83d89200f 100644
+Binary files a/data/scatter/stormwood/region_-5_2.bin and b/data/scatter/stormwood/region_-5_2.bin differ
+diff --git a/data/scatter/stormwood/region_-5_3.bin b/data/scatter/stormwood/region_-5_3.bin
+index d25893165..1941b8266 100644
+Binary files a/data/scatter/stormwood/region_-5_3.bin and b/data/scatter/stormwood/region_-5_3.bin differ
+diff --git a/data/scatter/stormwood/region_-5_4.bin b/data/scatter/stormwood/region_-5_4.bin
+index 56187c516..be7841c2e 100644
+Binary files a/data/scatter/stormwood/region_-5_4.bin and b/data/scatter/stormwood/region_-5_4.bin differ
+diff --git a/data/scatter/stormwood/region_-5_5.bin b/data/scatter/stormwood/region_-5_5.bin
+index aeb2ae355..4a51a41a1 100644
+Binary files a/data/scatter/stormwood/region_-5_5.bin and b/data/scatter/stormwood/region_-5_5.bin differ
+diff --git a/data/scatter/stormwood/region_-5_6.bin b/data/scatter/stormwood/region_-5_6.bin
+index 5de3a6d31..6f93949f3 100644
+Binary files a/data/scatter/stormwood/region_-5_6.bin and b/data/scatter/stormwood/region_-5_6.bin differ
+diff --git a/data/scatter/stormwood/region_-5_7.bin b/data/scatter/stormwood/region_-5_7.bin
+index e5c7d1926..c2e537b00 100644
+Binary files a/data/scatter/stormwood/region_-5_7.bin and b/data/scatter/stormwood/region_-5_7.bin differ
+diff --git a/data/scatter/stormwood/region_-5_8.bin b/data/scatter/stormwood/region_-5_8.bin
+index 8ac8596e3..fa58780ad 100644
+Binary files a/data/scatter/stormwood/region_-5_8.bin and b/data/scatter/stormwood/region_-5_8.bin differ
+diff --git a/data/scatter/stormwood/region_-5_9.bin b/data/scatter/stormwood/region_-5_9.bin
+index 5bc8d13c5..e88ffad40 100644
+Binary files a/data/scatter/stormwood/region_-5_9.bin and b/data/scatter/stormwood/region_-5_9.bin differ
+diff --git a/data/scatter/stormwood/region_0_0.bin b/data/scatter/stormwood/region_0_0.bin
+index b1359a1cc..c862a9f59 100644
+Binary files a/data/scatter/stormwood/region_0_0.bin and b/data/scatter/stormwood/region_0_0.bin differ
+diff --git a/data/scatter/stormwood/region_0_1.bin b/data/scatter/stormwood/region_0_1.bin
+index 05a6b8757..de28e39f9 100644
+Binary files a/data/scatter/stormwood/region_0_1.bin and b/data/scatter/stormwood/region_0_1.bin differ
+diff --git a/data/scatter/stormwood/region_0_10.bin b/data/scatter/stormwood/region_0_10.bin
+index 0c8f1cddf..93782a17f 100644
+Binary files a/data/scatter/stormwood/region_0_10.bin and b/data/scatter/stormwood/region_0_10.bin differ
+diff --git a/data/scatter/stormwood/region_0_11.bin b/data/scatter/stormwood/region_0_11.bin
+index 7469c463c..15e162963 100644
+Binary files a/data/scatter/stormwood/region_0_11.bin and b/data/scatter/stormwood/region_0_11.bin differ
+diff --git a/data/scatter/stormwood/region_0_2.bin b/data/scatter/stormwood/region_0_2.bin
+index a6aed48f0..ef9e4e1a8 100644
+Binary files a/data/scatter/stormwood/region_0_2.bin and b/data/scatter/stormwood/region_0_2.bin differ
+diff --git a/data/scatter/stormwood/region_0_3.bin b/data/scatter/stormwood/region_0_3.bin
+index 78efc9abc..5888a148b 100644
+Binary files a/data/scatter/stormwood/region_0_3.bin and b/data/scatter/stormwood/region_0_3.bin differ
+diff --git a/data/scatter/stormwood/region_0_4.bin b/data/scatter/stormwood/region_0_4.bin
+index 57d5e6138..ce064a9b0 100644
+Binary files a/data/scatter/stormwood/region_0_4.bin and b/data/scatter/stormwood/region_0_4.bin differ
+diff --git a/data/scatter/stormwood/region_0_5.bin b/data/scatter/stormwood/region_0_5.bin
+index 7bd390642..6117f2102 100644
+Binary files a/data/scatter/stormwood/region_0_5.bin and b/data/scatter/stormwood/region_0_5.bin differ
+diff --git a/data/scatter/stormwood/region_0_6.bin b/data/scatter/stormwood/region_0_6.bin
+index 34c6ed34f..89c0e8d4c 100644
+Binary files a/data/scatter/stormwood/region_0_6.bin and b/data/scatter/stormwood/region_0_6.bin differ
+diff --git a/data/scatter/stormwood/region_0_7.bin b/data/scatter/stormwood/region_0_7.bin
+index e9bbf412c..2d336c8d6 100644
+Binary files a/data/scatter/stormwood/region_0_7.bin and b/data/scatter/stormwood/region_0_7.bin differ
+diff --git a/data/scatter/stormwood/region_0_8.bin b/data/scatter/stormwood/region_0_8.bin
+index f42d45a67..5b6c7ea56 100644
+Binary files a/data/scatter/stormwood/region_0_8.bin and b/data/scatter/stormwood/region_0_8.bin differ
+diff --git a/data/scatter/stormwood/region_0_9.bin b/data/scatter/stormwood/region_0_9.bin
+index eab54278c..38722c212 100644
+Binary files a/data/scatter/stormwood/region_0_9.bin and b/data/scatter/stormwood/region_0_9.bin differ
+diff --git a/data/scatter/stormwood/region_1_0.bin b/data/scatter/stormwood/region_1_0.bin
+index 855debaee..9b409a6f2 100644
+Binary files a/data/scatter/stormwood/region_1_0.bin and b/data/scatter/stormwood/region_1_0.bin differ
+diff --git a/data/scatter/stormwood/region_1_1.bin b/data/scatter/stormwood/region_1_1.bin
+index 3dc6e7e1c..db414ef15 100644
+Binary files a/data/scatter/stormwood/region_1_1.bin and b/data/scatter/stormwood/region_1_1.bin differ
+diff --git a/data/scatter/stormwood/region_1_10.bin b/data/scatter/stormwood/region_1_10.bin
+index c7675dba1..33cb31d73 100644
+Binary files a/data/scatter/stormwood/region_1_10.bin and b/data/scatter/stormwood/region_1_10.bin differ
+diff --git a/data/scatter/stormwood/region_1_11.bin b/data/scatter/stormwood/region_1_11.bin
+index 07d0573b8..63614584c 100644
+Binary files a/data/scatter/stormwood/region_1_11.bin and b/data/scatter/stormwood/region_1_11.bin differ
+diff --git a/data/scatter/stormwood/region_1_2.bin b/data/scatter/stormwood/region_1_2.bin
+index a647a8eba..ca4c05dca 100644
+Binary files a/data/scatter/stormwood/region_1_2.bin and b/data/scatter/stormwood/region_1_2.bin differ
+diff --git a/data/scatter/stormwood/region_1_3.bin b/data/scatter/stormwood/region_1_3.bin
+index 4c6ff6bd4..d2f3c531b 100644
+Binary files a/data/scatter/stormwood/region_1_3.bin and b/data/scatter/stormwood/region_1_3.bin differ
+diff --git a/data/scatter/stormwood/region_1_4.bin b/data/scatter/stormwood/region_1_4.bin
+index 7f1e75fd8..3ecdf417f 100644
+Binary files a/data/scatter/stormwood/region_1_4.bin and b/data/scatter/stormwood/region_1_4.bin differ
+diff --git a/data/scatter/stormwood/region_1_5.bin b/data/scatter/stormwood/region_1_5.bin
+index 85fec22b4..1d935ad78 100644
+Binary files a/data/scatter/stormwood/region_1_5.bin and b/data/scatter/stormwood/region_1_5.bin differ
+diff --git a/data/scatter/stormwood/region_1_6.bin b/data/scatter/stormwood/region_1_6.bin
+index bc9b7002a..ca691b9ec 100644
+Binary files a/data/scatter/stormwood/region_1_6.bin and b/data/scatter/stormwood/region_1_6.bin differ
+diff --git a/data/scatter/stormwood/region_1_7.bin b/data/scatter/stormwood/region_1_7.bin
+index 59af7560c..54d3875ab 100644
+Binary files a/data/scatter/stormwood/region_1_7.bin and b/data/scatter/stormwood/region_1_7.bin differ
+diff --git a/data/scatter/stormwood/region_1_8.bin b/data/scatter/stormwood/region_1_8.bin
+index bf7fc0b80..7021fe123 100644
+Binary files a/data/scatter/stormwood/region_1_8.bin and b/data/scatter/stormwood/region_1_8.bin differ
+diff --git a/data/scatter/stormwood/region_1_9.bin b/data/scatter/stormwood/region_1_9.bin
+index 792ae7eb7..d28a44dc0 100644
+Binary files a/data/scatter/stormwood/region_1_9.bin and b/data/scatter/stormwood/region_1_9.bin differ
+diff --git a/data/scatter/stormwood/region_2_0.bin b/data/scatter/stormwood/region_2_0.bin
+index 284c2b31e..f59965186 100644
+Binary files a/data/scatter/stormwood/region_2_0.bin and b/data/scatter/stormwood/region_2_0.bin differ
+diff --git a/data/scatter/stormwood/region_2_1.bin b/data/scatter/stormwood/region_2_1.bin
+index 71e1cc748..c374b4b1c 100644
+Binary files a/data/scatter/stormwood/region_2_1.bin and b/data/scatter/stormwood/region_2_1.bin differ
+diff --git a/data/scatter/stormwood/region_2_10.bin b/data/scatter/stormwood/region_2_10.bin
+index 7519090e1..64ffd8c55 100644
+Binary files a/data/scatter/stormwood/region_2_10.bin and b/data/scatter/stormwood/region_2_10.bin differ
+diff --git a/data/scatter/stormwood/region_2_11.bin b/data/scatter/stormwood/region_2_11.bin
+index 6384e6178..071844e41 100644
+Binary files a/data/scatter/stormwood/region_2_11.bin and b/data/scatter/stormwood/region_2_11.bin differ
+diff --git a/data/scatter/stormwood/region_2_2.bin b/data/scatter/stormwood/region_2_2.bin
+index eba38da5d..8dca77617 100644
+Binary files a/data/scatter/stormwood/region_2_2.bin and b/data/scatter/stormwood/region_2_2.bin differ
+diff --git a/data/scatter/stormwood/region_2_3.bin b/data/scatter/stormwood/region_2_3.bin
+index 05d1e8625..a8e864272 100644
+Binary files a/data/scatter/stormwood/region_2_3.bin and b/data/scatter/stormwood/region_2_3.bin differ
+diff --git a/data/scatter/stormwood/region_2_4.bin b/data/scatter/stormwood/region_2_4.bin
+index b6d914918..c4dda5d42 100644
+Binary files a/data/scatter/stormwood/region_2_4.bin and b/data/scatter/stormwood/region_2_4.bin differ
+diff --git a/data/scatter/stormwood/region_2_5.bin b/data/scatter/stormwood/region_2_5.bin
+index e2ff7fd65..3e470318c 100644
+Binary files a/data/scatter/stormwood/region_2_5.bin and b/data/scatter/stormwood/region_2_5.bin differ
+diff --git a/data/scatter/stormwood/region_2_6.bin b/data/scatter/stormwood/region_2_6.bin
+index b07a803b3..6f33af70b 100644
+Binary files a/data/scatter/stormwood/region_2_6.bin and b/data/scatter/stormwood/region_2_6.bin differ
+diff --git a/data/scatter/stormwood/region_2_7.bin b/data/scatter/stormwood/region_2_7.bin
+index 7277bcd6b..99d6eb446 100644
+Binary files a/data/scatter/stormwood/region_2_7.bin and b/data/scatter/stormwood/region_2_7.bin differ
+diff --git a/data/scatter/stormwood/region_2_8.bin b/data/scatter/stormwood/region_2_8.bin
+index 4e174623b..e1045b00c 100644
+Binary files a/data/scatter/stormwood/region_2_8.bin and b/data/scatter/stormwood/region_2_8.bin differ
+diff --git a/data/scatter/stormwood/region_2_9.bin b/data/scatter/stormwood/region_2_9.bin
+index 96d4e210c..f942ea7a4 100644
+Binary files a/data/scatter/stormwood/region_2_9.bin and b/data/scatter/stormwood/region_2_9.bin differ
+diff --git a/data/scatter/stormwood/region_3_0.bin b/data/scatter/stormwood/region_3_0.bin
+index 8c8c0a98e..d8de5010d 100644
+Binary files a/data/scatter/stormwood/region_3_0.bin and b/data/scatter/stormwood/region_3_0.bin differ
+diff --git a/data/scatter/stormwood/region_3_1.bin b/data/scatter/stormwood/region_3_1.bin
+index c4d442729..7c2a57900 100644
+Binary files a/data/scatter/stormwood/region_3_1.bin and b/data/scatter/stormwood/region_3_1.bin differ
+diff --git a/data/scatter/stormwood/region_3_10.bin b/data/scatter/stormwood/region_3_10.bin
+index 31f76952c..bcf8650e0 100644
+Binary files a/data/scatter/stormwood/region_3_10.bin and b/data/scatter/stormwood/region_3_10.bin differ
+diff --git a/data/scatter/stormwood/region_3_11.bin b/data/scatter/stormwood/region_3_11.bin
+index 396ff6a55..9be584282 100644
+Binary files a/data/scatter/stormwood/region_3_11.bin and b/data/scatter/stormwood/region_3_11.bin differ
+diff --git a/data/scatter/stormwood/region_3_2.bin b/data/scatter/stormwood/region_3_2.bin
+index 63077784c..598aa1fe7 100644
+Binary files a/data/scatter/stormwood/region_3_2.bin and b/data/scatter/stormwood/region_3_2.bin differ
+diff --git a/data/scatter/stormwood/region_3_3.bin b/data/scatter/stormwood/region_3_3.bin
+index bf18ea4ed..7779da132 100644
+Binary files a/data/scatter/stormwood/region_3_3.bin and b/data/scatter/stormwood/region_3_3.bin differ
+diff --git a/data/scatter/stormwood/region_3_4.bin b/data/scatter/stormwood/region_3_4.bin
+index dcc16ea6b..6dc9fb47d 100644
+Binary files a/data/scatter/stormwood/region_3_4.bin and b/data/scatter/stormwood/region_3_4.bin differ
+diff --git a/data/scatter/stormwood/region_3_5.bin b/data/scatter/stormwood/region_3_5.bin
+index 1c649915c..fe49290d4 100644
+Binary files a/data/scatter/stormwood/region_3_5.bin and b/data/scatter/stormwood/region_3_5.bin differ
+diff --git a/data/scatter/stormwood/region_3_6.bin b/data/scatter/stormwood/region_3_6.bin
+index de3a4b400..022523448 100644
+Binary files a/data/scatter/stormwood/region_3_6.bin and b/data/scatter/stormwood/region_3_6.bin differ
+diff --git a/data/scatter/stormwood/region_3_7.bin b/data/scatter/stormwood/region_3_7.bin
+index d88e72046..78eaf4f42 100644
+Binary files a/data/scatter/stormwood/region_3_7.bin and b/data/scatter/stormwood/region_3_7.bin differ
+diff --git a/data/scatter/stormwood/region_3_8.bin b/data/scatter/stormwood/region_3_8.bin
+index 454311070..ace149abf 100644
+Binary files a/data/scatter/stormwood/region_3_8.bin and b/data/scatter/stormwood/region_3_8.bin differ
+diff --git a/data/scatter/stormwood/region_3_9.bin b/data/scatter/stormwood/region_3_9.bin
+index 2825f9570..861be77fe 100644
+Binary files a/data/scatter/stormwood/region_3_9.bin and b/data/scatter/stormwood/region_3_9.bin differ

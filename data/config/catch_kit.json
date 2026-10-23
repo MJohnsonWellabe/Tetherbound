@@ -13,5 +13,10 @@
  "breakout_shards": 12,
  "ring_mote_m": 0.45,
  "draw_mote_m": 0.38,
- "shake_flare": 3.0
+ "shake_flare": 3.0,
+ "_comment_orb_model": "P2-060 r3 (shared-art, 21 Oct): the Meshy capture orb (assets/props/meshy-1020/capture_orb) replaces the flat lit sphere when orb_model is set. OFF (empty) until judged in-world; to try it, copy _orb_model_candidate into orb_model.",
+ "orb_model": "",
+ "orb_model_diameter_m": 0.3,
+ "orb_self_lit": 0.3,
+ "_orb_model_candidate": "res://assets/props/meshy-1020/capture_orb/model_capture_orb/capture_orb.glb"
 }

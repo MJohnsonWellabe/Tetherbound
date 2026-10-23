@@ -167,6 +167,13 @@ func build(world: Node3D) -> void:
 		var lee: Dictionary = config.lee_pockets[i]
 		var at := FINALE.vec(lee.offset)
 		_hazards.set_shader_parameter("lee%d"%i,Vector3(at.x,at.z,float(lee.radius_m)))
+	# F22#4 Veyra readability candidate (cloudreach_veyra_readability.json, OFF).
+	var readable: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_veyra_readability.json"))
+	if readable is Dictionary and bool((readable as Dictionary).get("enabled", false)):
+		var lanes: Dictionary = (readable as Dictionary).get("wind_lanes", {})
+		_hazards.set_shader_parameter("lane_alpha", float(lanes.get("fill_alpha", 0.21)))
+		_hazards.set_shader_parameter("rim_alpha", float(lanes.get("rim_alpha", 0.0)))
+		_hazards.set_shader_parameter("rim_width", float(lanes.get("rim_width_m", 0.35)))
 	overlay.material_override = _hazards
 	add_child(overlay)
 	_build_state_bindings(world,materials)

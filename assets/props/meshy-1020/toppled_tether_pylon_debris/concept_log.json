@@ -1,0 +1,52 @@
+[
+ {
+  "tag": "c1",
+  "task_id": "01a15cb0-aff7-76a3-a78c-989ab7923efe",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Using the reference images (especially the Tether Energy Pylon board) for faction style and palette, draft a 3D-model concept of a DESTROYED short Team Tether relay pylon lying on its side on the ground after a battle: a dark stone and gunmetal iron pylon shaft about 3 m long with brass fittings and oxblood red trim plates, snapped off at its base with a jagged broken stump end, lying horizontally. The glass energy core is shattered, the large cyan tether crystal at the top is cracked and chipped with a dim cyan glow, and several thick black cables are cut and splayed from the broken end with frayed copper ends. Low and long, about 0.9 m high lying down. Stylised Palworld / Animo-class game prop, chunky exaggerated readable silhouette that reads clearly from 15 m away, hand-painted PBR look, clean shapes, slightly oversized details. Single isolated object, full object visible and centred, plain neutral background, even lighting, no cast shadow, no ground plane, no people, no creatures, no text.",
+  "reference_paths": [
+   "refs/ref13_pylon.png",
+   "refs/keyart_stronghold.png",
+   "refs/palworld05.jpg"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb1-626c-7698-8d9d-ace3502f56a3_part_0.png?Expires=1792815692&Signature=FmGccAZpiqb3GxdLbEbOpsm8PdchRR7VpLI5ctNGzbIc1N~WWzmp1Oy43pb9D0i9IqM1W4bH~o3QVF7OuS2OkIzzWLcq5lKiQ7i1-tVd6r0BlDe6eFax0~ta350ME8UbfTIhGICWwNGJgKzF0J72k4NYWStWlBSpMHB0NArc1tztvtnReHL6nJqsIE7dqIcD6loBVRAxxr7QEhYew7EtnvsiU8swf0eK2XvUwFAiZMnGGdqCAXRqPi0x1fNOBDu8XwMBwdhMUuKiFqk0i~ip5NBn884Q6X9Ro9WNVZPK4TLuEHkpXG-blpP8ck-HHnPkE67qb9wnas1Jh0OAKDSk4g__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb1-626c-7698-8d9d-ace3502f56a3_part_1.png?Expires=1792815692&Signature=H4mt14Ap6Oxy4PpzEHxE2lgU8L7mfBD3017sTfaZFO9cEaK~1XHD2CdswRrk7y83dcTb06tBJD2CCIf6hxaep7WLfLu6~CzkKf16lNwhk3OoNGLMlTiqk5lvHGTVS84bNLZC1fiwpQaBelEPaUFpwchcFrstZUaXwSoEU0ttgClg24FYTb4yph0BtlqM9Iao6UzLZMul3yhC-4hJJU-xiklPu0UztLkOcY64gFGgVc8-ar2zdjHfbbHohzrf2x~fQTa4WQSrjv0X~8JBgBRt784s7XDGMk4~Sug~EBt2rIg8LkD8In5DGGoYpiEjR-qRvRGuyQd1~QNR28QMyy4lNw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb1-626c-7698-8d9d-ace3502f56a3_part_2.png?Expires=1792815692&Signature=V9tHTADSxirk14UOMUlYVzAVrIdvN78IP973bNEdWHBuAMQqJ0wnawi5R58ro97BtME-Iyysjs-zJq22IEs5KSVCg4WaxW0fknLv2Z5Gq08OWaTFY7D9w4WoSTanfy9XFf4tPuj3VxuVG9RRChhNpw-Yt2F7uE4SIDQZqTrWG0Vv~givCV0wPkuS6AghnW0Muh2L9xMPNxAZWxSvc2X7B7oUHEUX0g2ZdWylDlWoFottSg5~WXyI8F78ue181urxLefluuudWm7Mh2MhRQDBi5oTZK1qubAFon5eWiAw-J94fzIcR1sNx8JJKxEYW2bZ9OjSRy-ZNK4eCL7c7MLp2w__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/toppled_tether_pylon_debris/concepts/c1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/toppled_tether_pylon_debris/concepts/c1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/toppled_tether_pylon_debris/concepts/c1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ },
+ {
+  "tag": "c2",
+  "task_id": "01a15cb2-ac2e-7569-9e7d-7a80f199f2fb",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Using the reference images (especially the Tether Energy Pylon board) for faction style and palette, draft a 3D-model concept of a destroyed Team Tether relay pylon LYING HORIZONTALLY ON ITS SIDE ON THE GROUND, shown from a high three-quarter view looking down at it; it lies horizontally in every view. A chunky dark stone and gunmetal iron pylon body about 3 m long and 0.9 m high lying down, with brass bands and fittings, oxblood red trim plates and two bent support fins like the reference pylon. The bottom end is snapped off with a jagged broken stone stump and several thick black cables with frayed copper ends spilling out across the ground. The top end has a smashed glass energy core cage and a big cracked, chipped cyan tether crystal with a dim cyan glow, partly broken off and lying beside it. Stylised Palworld / Animo-class game prop, chunky exaggerated readable silhouette that reads clearly from 15 m away, hand-painted PBR look, clean shapes, slightly oversized details. Single isolated object, full object visible and centred, plain neutral background, even lighting, no cast shadow, no ground plane, no people, no creatures, no text.",
+  "reference_paths": [
+   "refs/ref13_pylon.png",
+   "refs/keyart_stronghold.png",
+   "refs/palworld05.jpg"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb3-1cb3-7724-aebb-c78ad1c75ae8_part_0.png?Expires=1792815805&Signature=R5wHEbmUzEN0037qyMsjvqtgYMMToEjoU5A-iNBUGBOoLEGfcRjEY~SyfZ2ZITkG1LcLSZ1f5XXGD6SIJJgUZ-aonHTdFbVK80G4cXYqlto9HFP1bjq8FMIaSxKFGtMzpDtueJqC8aug3d6K~2IuRU4QaTfc0acq4afoorsuy~OHNcU~x7zgQP7um2eHUba660VECgrcFIeu-wpfvFJiY0F2dLAcpwYMAlfnqvy2JQ~QiVGHjm0Jfr13o7JhvAFu9-QHprIby9LTLkzBl7WFsDst76tAN6sYAvoSsN-T7UJJd7bBZp7L9T5rWn9op27YykERq4x4zr7yeh2hDxIhQg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb3-1cb3-7724-aebb-c78ad1c75ae8_part_1.png?Expires=1792815805&Signature=LBL~p0V0GqI9jNE2yD63YciJm4jHkpQxv3ccO-rcQhDY0sTQjDD5u4JZyMWELiMEvZj-FtcVJp9wNKmX6-~NycZsd7nGmbyGjW9RC4MW40z~alCRXcnhHEJC-WLZGUgd-YO6lKgC7n4LoVguxGabzHerusA6xTOiZpynOt52IPZzHeYi94yugzWrWztZfMh1oyOn46YJPmA9sOpkYWLHqhD1i9rxK-1YDobbMCBwkcqzvOpYDvaFKQRIi-ra5GgYVWnVL0bnrlJctA-kGQO4nFV82eL4FzTlonzhYJVuAGYsuItP5Hiq~CtpIq-9W-c3s9Oh5v7d-4subsWU3f1BQg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb3-1cb3-7724-aebb-c78ad1c75ae8_part_2.png?Expires=1792815805&Signature=aIN4p~9lZkVE69XkjoylsCqUU0uqxTvNsRYDv-Bnz8viYIV0RweTujvtEHJXfbVO~mfjjl7FlEoUwOgxCNMTmLY7rSRg4SYRwAejEr4QzJpFJaI9KfA-GPbkslCbKKo84Q6X3AhO~kG5tW1iT-Hco2TevC9CSPM4OEMdMH0UUQFVkp414oESJ1SR3C1wPceoHI2pk~7mTHmnnBSz3MsLq8c8PWNcpWsvMZHOO3WyBg2QYjc4kP4iXjh4R2rw6cNGxaukTZzlDhczApUGV0X4A~cNUYZ3yOiv48~YTMkPTrysqXmaIr0XdRboY09o88RZdXM-lXtNMLOl607jxCRszQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/toppled_tether_pylon_debris/concepts/c2_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/toppled_tether_pylon_debris/concepts/c2_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/toppled_tether_pylon_debris/concepts/c2_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]

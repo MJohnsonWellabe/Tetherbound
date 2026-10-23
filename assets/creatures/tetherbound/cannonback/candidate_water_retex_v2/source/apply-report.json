@@ -1,0 +1,42 @@
+{
+  "installed": "assets/creatures/tetherbound/cannonback/models/creature_cannonback_lod0.glb",
+  "installed_sha256": "afbecb9a3b083a5b674ef2d89d0b76e48d67f18c16deab1e917a991beafea279",
+  "retexture": "assets_raw/cannonback/meshy-retex-v2-1021/v2_styleC-01a15c72-60c3-7191-b8c4-c003e7dc2ecb/model.glb",
+  "retexture_sha256": "f34f012c550500fb9b51f590f50af77c0eb96510e55b791e55c2e1493eaa793c",
+  "output": "assets/creatures/tetherbound/cannonback/models/creature_cannonback_water_retex_v2_lod0.glb",
+  "output_sha256": "57eabd0ab603a596a3a28013119a599893a293348fbb46c7b8cc7010c57cc304",
+  "unique_uvs": 40405,
+  "uv_sets_identical": true,
+  "kept_unchanged": [
+    "meshes",
+    "accessors",
+    "skins",
+    "nodes",
+    "animations"
+  ],
+  "material": {
+    "doubleSided": true,
+    "name": "Material_0",
+    "pbrMetallicRoughness": {
+      "baseColorTexture": {
+        "index": 0
+      },
+      "metallicFactor": 1.0,
+      "roughnessFactor": 1.0,
+      "metallicRoughnessTexture": {
+        "index": 1
+      }
+    },
+    "normalTexture": {
+      "index": 2
+    }
+  },
+  "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "hit",
+    "faint"
+  ]
+}

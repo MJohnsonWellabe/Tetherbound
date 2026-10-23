@@ -1,0 +1,32 @@
+{
+  "enabled": false,
+  "species": "bramblebun",
+  "candidate_variant": "regen_B",
+  "placeholder": {
+    "colour": "#7a8a3f",
+    "height": 3.0,
+    "radius": 1.26,
+    "footprint_allowance": 5.8,
+    "model": "res://assets/creatures/tetherbound/bramblebun_redesign/candidate_regen/models/creature_bramblebun_regen_b.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+    },
+    "field_emission": 2.5,
+    "field_degreen": 0.0,
+    "colourway_source_species": "bramblebun_regen_b_review"
+  },
+  "scope": "presentation_only",
+  "activation": "Requires the three-judge Bar A 7.5 (6.7 CPU-provisional) and independent F36 art approval; installed creature_bramblebun_redesign_lod0.glb remains the default; the 3.0 m height is this candidate's own fit (catalogue TARGET_HEIGHTS still 2.05 m until activation)"
+}

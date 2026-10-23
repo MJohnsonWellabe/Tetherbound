@@ -1,0 +1,36 @@
+# Forward+ grade round 2 (local): corrected multiplier variants + recipe candidates, plus Tidewake before/after.
+# "param" follows the game's live fog value (world_look mutates the Environment in place).
+$g = "C:\Program Files\Git\cmd\git.exe"
+$sha = "320eb47bf8d9306d12af154e66d5d3206d79fa4b"   # game code identical to the rendered tree (see VERDICT)
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"
+$recipes = [ordered]@{
+    "p_fog05"            = @{ fog = "0.5"; exp = "";    sat = "" }
+    "p_exp09"            = @{ fog = "";    exp = "0.9"; sat = "" }
+    "p_fog05_exp08"      = @{ fog = "0.5"; exp = "0.8"; sat = "" }
+    "p_fog05_exp10"      = @{ fog = "0.5"; exp = "1.0"; sat = "" }
+    "p_fog05_exp08_sat12" = @{ fog = "0.5"; exp = "0.8"; sat = "1.2" }
+}
+$tideRuns = "Low-base", "Medium-base", "Medium-p_fog05_exp08", "Medium-p_fog05_exp10", "Medium-p_fog05_exp08_sat12"
+function Set-Recipe($name) {
+    $env:TB_GRADE_FOG_MUL = ""; $env:TB_GRADE_EXPOSURE = ""; $env:TB_GRADE_SAT = ""
+    if ($name -eq "base") { $env:TB_GRADE_VARIANT = "base"; return }
+    $r = $recipes[$name]; $env:TB_GRADE_VARIANT = "param"
+    $env:TB_GRADE_FOG_MUL = $r.fog; $env:TB_GRADE_EXPOSURE = $r.exp; $env:TB_GRADE_SAT = $r.sat
+}
+function Run-Tide($preset, $name) {
+    Set-Recipe $name
+    & $run -Preset $preset -Script "D:/tb-gpu-runs/tools/grade_loc.gd" -OutDir "D:\tb-gpu-runs\out\grade\tide\$preset-$name" -Resolution "1920x1080" `
+        -UserArgs @("--biome=water", "--subset=tidal_stairstones", "--subset=east_beach", "--times=day", "--views=approach", "--preset=$preset", "--source-commit=$sha", "--output={FRAMES}")
+}
+"-- Tidewake bases"
+Run-Tide "Low" "base"; Run-Tide "Medium" "base"
+foreach ($name in $recipes.Keys) {
+    "-- Medium $name"
+    Set-Recipe $name
+    & $run -Preset Medium -Script "D:/tb-gpu-runs/tools/grade_f10.gd" -OutDir "D:\tb-gpu-runs\out\grade\f10\Medium-$name" `
+        -UserArgs @("--out={FRAMES}", "--ids=capacitor_alpha,glass_field_alpha", "--camera-view=north", "--seconds=6", "--interval=1.0")
+    & $run -Preset Medium -Script "D:/tb-gpu-runs/tools/grade_loc.gd" -OutDir "D:\tb-gpu-runs\out\grade\loc\Medium-$name" -Resolution "1920x1080" `
+        -UserArgs @("--biome=meadows", "--subset=band1", "--times=day", "--views=approach", "--preset=Medium", "--source-commit=$sha", "--output={FRAMES}")
+    if ("Medium-$name" -in $tideRuns) { Run-Tide "Medium" $name }
+}
+"grade queue3 done"

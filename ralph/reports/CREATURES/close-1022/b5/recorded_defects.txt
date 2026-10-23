@@ -1,0 +1,7 @@
+Wa: "Reads as a realistic, sourced mesh with no stylised face, beside the stylised roster (two art styles)"; "The creature never visibly faints"
+Ne: none
+Sq: "Reads as a realistic, sourced mesh with no stylised face, beside the stylised roster (two art styles)"; "Hit react reads as standing"; "The creature never visibly faints"
+Wg: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Fd: "Only the crests clear the 1.80 m trainer; the body reads short"; "Flat material with no rim light"
+Yi: none
+Ei: none

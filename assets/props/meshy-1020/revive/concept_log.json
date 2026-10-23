@@ -1,0 +1,33 @@
+{
+ "asset": "revive",
+ "concepts": [
+  {
+   "tag": "c1",
+   "task_id": "01a15dfe-1a14-7288-afe1-5253834b6e23",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept: a revive item. A clear glass vial, cylindrical with a rounded shoulder, holding a single large golden feather suspended in soft glowing amber-honey liquid, closed with an ornate brass screw cap with a small ring on top, a thin brass band around the base so it stands upright. Warm gold and amber glow, white and pale-blue accents like the revive flower reference (second image). About 0.42 m tall. Stylised Palworld / Animo-class game item prop, deliberately chunky and oversized, exaggerated readable silhouette that still reads clearly from 10-15 metres, soft bevelled edges, soft hand-painted PBR look, natural palette matching the Meadows key-art reference (sage and leaf greens, warm gold, cream, slate blue, teal). Single isolated object standing upright on its flat base, full object visible and centred, plain neutral light-grey background, even studio lighting, no cast shadow, no ground plane, no people, no creatures, no text, no letters, no labels, no red or crimson anywhere.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1024 x 683)",
+    "assets/creatures/tetherbound/revive_flower/reference/front.png (downscaled 768, palette reference)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "revive/concepts/c1_0.png",
+    "revive/concepts/c1_1.png",
+    "revive/concepts/c1_2.png"
+   ],
+   "chosen": true,
+   "verdict": "CHOSEN: stout clear glass vial, golden feather in amber liquid, ornate brass cap with ring and brass base band with cream inlay; all 3 views consistent",
+   "consumed_credits": 9
+  }
+ ],
+ "chosen_concept": "c1",
+ "chosen_views": [
+  0,
+  1,
+  2
+ ],
+ "chosen_concept_png": "model_revive/preview_concept.png (contact sheet of concepts/c1_0.png, concepts/c1_1.png, concepts/c1_2.png)",
+ "reference_inspection": "Key art and revive_flower front reference inspected (white/pale-blue petals, gold glow) and used for palette."
+}

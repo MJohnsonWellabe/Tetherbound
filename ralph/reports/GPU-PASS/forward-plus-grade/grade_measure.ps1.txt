@@ -1,0 +1,42 @@
+# Measures mean Rec.709 luma (0-255) and mean HSV saturation per grade variant (local GPU-pass tool).
+# F10: interval frames i00-i05 of capacitor_alpha and glass_field_alpha, play-area grid (HUD excluded).
+# Meadows: the band1 day approach frame, upper two-thirds grid (HUD-free area).
+param([string] $Root = "D:\tb-gpu-runs\out\grade", [string] $OutCsv = "D:\tb-gpu-runs\out\grade\grade_measure.csv")
+Add-Type -AssemblyName System.Drawing
+function Measure-Frame([string] $f, [int] $x0, [int] $x1, [int] $y0, [int] $y1, [int] $step) {
+    $b = [System.Drawing.Bitmap]::FromFile($f)
+    $sx = $b.Width / 1280.0; $sy = $b.Height / 720.0
+    [double] $l = 0; [double] $s = 0; [int] $n = 0
+    for ($x = [int]($x0 * $sx); $x -lt [int]($x1 * $sx); $x += [int]($step * $sx)) {
+        for ($y = [int]($y0 * $sy); $y -lt [int]($y1 * $sy); $y += [int]($step * $sy)) {
+            $c = $b.GetPixel($x, $y)
+            $l += 0.2126 * $c.R + 0.7152 * $c.G + 0.0722 * $c.B
+            $max = [math]::Max($c.R, [math]::Max($c.G, $c.B)); $min = [math]::Min($c.R, [math]::Min($c.G, $c.B))
+            $s += $(if ($max -gt 0) { ($max - $min) / [double]$max } else { 0 })
+            $n++
+        }
+    }
+    $b.Dispose()
+    return @(($l / $n), ($s / $n))
+}
+$rows = @()
+# Tidewake (tide): same upper two-thirds grid as Meadows.
+foreach ($scene in "f10", "loc", "tide") {
+    if (-not (Test-Path "$Root\$scene")) { continue }
+    foreach ($d in Get-ChildItem "$Root\$scene" -Directory | Sort-Object Name) {
+        $files = if ($scene -eq "f10") {
+            Get-ChildItem "$($d.FullName)\frames" -Recurse -Include "*.png" | Where-Object { $_.Name -match '^(capacitor_alpha|glass_field_alpha)-i0[0-5]\.png$' }
+        } else {
+            Get-ChildItem "$($d.FullName)\frames" -Recurse -Include "*.png", "*.jpg" | Where-Object { $_.Name -notmatch 'manifest' }
+        }
+        if (-not $files) { $rows += [pscustomobject]@{ scene = $scene; run = $d.Name; frames = 0; luma = ""; sat = "" }; continue }
+        [double] $L = 0; [double] $S = 0
+        foreach ($f in $files) {
+            $m = if ($scene -eq "f10") { Measure-Frame $f.FullName 300 900 200 520 16 } else { Measure-Frame $f.FullName 0 1280 0 480 16 }
+            $L += $m[0]; $S += $m[1]
+        }
+        $rows += [pscustomobject]@{ scene = $scene; run = $d.Name; frames = $files.Count; luma = [math]::Round($L / $files.Count, 1); sat = [math]::Round($S / $files.Count, 3) }
+    }
+}
+$rows | Export-Csv -NoTypeInformation -Encoding utf8 $OutCsv
+$rows | Format-Table -AutoSize | Out-String

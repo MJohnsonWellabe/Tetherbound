@@ -1,0 +1,110 @@
+{
+ "asset": "skill_crystal",
+ "date": "2026-10-21",
+ "requested_by": "Shared-art lane via coordinator: catalog rows P2-033 (ground pickup identity, F38-F41 top20) and P2-060 (catch orb finish)",
+ "brief": "P2-033 ground pickup identity: skill crystal, faceted neutral pale crystal shard (element tint in code) in a small carved wooden cradle base",
+ "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until its scene passes judging",
+ "author": "Claude (coordinator-side Meshy prop worker)",
+ "workflow": "agent-drafted multi-view concept via Meshy image-to-image (nano-banana-pro) from repo references, inspected by the agent, then multi-image-to-3d (latest, triangle remesh at low target polycount, PBR textures embedded in GLB)",
+ "target_size_m": {
+  "h": 0.4
+ },
+ "native_size": {
+  "raw_extent_units_xyz": [
+   0.9942,
+   1.902,
+   0.9942
+  ],
+  "note": "Meshy raw GLB units (longest side ~1.9)"
+ },
+ "scale_normalisation": {
+  "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z",
+  "fit_axis": "height",
+  "fit_value_m": 0.4,
+  "uniform_scale": 0.2103,
+  "final_extent_m_xyz": [
+   0.21,
+   0.4,
+   0.21
+  ],
+  "final_min": [
+   -0.105,
+   0.0,
+   -0.105
+  ],
+  "final_max": [
+   0.105,
+   0.4,
+   0.105
+  ]
+ },
+ "triangles": 3553,
+ "materials": [
+  "Material_0"
+ ],
+ "embedded_images": 3,
+ "files": {
+  "glb_metres": "model_skill_crystal/skill_crystal.glb",
+  "concept_log": "concept_log.json",
+  "gen3d": "model_skill_crystal/gen3d.json",
+  "previews": [
+   "model_skill_crystal/preview_meshy.png (Meshy thumbnail)",
+   "model_skill_crystal/preview_3view.png (software flat-shaded front/3-4/side, colours sampled per face)",
+   "model_skill_crystal/preview_concept.png (chosen concept views)"
+  ],
+  "raw_glb": "not published (same mesh minus the metres_root node)",
+  "separate_pbr_maps": "deleted after build (embedded in GLB)"
+ },
+ "concepts": [
+  {
+   "tag": "c1",
+   "task_id": "01a15dfe-1ab6-770b-ad15-9ba574959fe3",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept: a skill crystal. A single large faceted crystal shard, tall and pointed with clean bold flat facets and a few small secondary crystals at its foot, made of neutral pale clear-white quartz with a faint frosted inner glow (neutral, untinted, so it can be colour-tinted later), set upright in a small round carved wooden cradle base with simple leaf carvings and a brass rim. About 0.40 m tall in total. Stylised Palworld / Animo-class game item prop, deliberately chunky and oversized, exaggerated readable silhouette that still reads clearly from 10-15 metres, soft bevelled edges, soft hand-painted PBR look, natural palette matching the Meadows key-art reference (sage and leaf greens, warm gold, cream, slate blue, teal). Single isolated object standing upright on its flat base, full object visible and centred, plain neutral light-grey background, even studio lighting, no cast shadow, no ground plane, no people, no creatures, no text, no letters, no labels, no red or crimson anywhere.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1024 x 683)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "skill_crystal/concepts/c1_0.png",
+    "skill_crystal/concepts/c1_1.png",
+    "skill_crystal/concepts/c1_2.png"
+   ],
+   "chosen": true,
+   "verdict": "CHOSEN: tall faceted pale quartz shard with smaller crystals at its foot, carved wooden cradle with sage leaf carvings and brass rims; 3 consistent views",
+   "consumed_credits": 9
+  }
+ ],
+ "models": [
+  {
+   "tag": "m1",
+   "task_id": "01a15dff-b72e-76c5-bbfc-a6ef3c3554ba",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "source": {
+    "image_files": [
+     "c1_0.png",
+     "c1_1.png",
+     "c1_2.png"
+    ]
+   },
+   "params": {
+    "ai_model": "latest",
+    "should_remesh": true,
+    "topology": "triangle",
+    "target_polycount": 3500,
+    "enable_pbr": true,
+    "should_texture": true
+   },
+   "status": "SUCCEEDED",
+   "consumed_credits": 30,
+   "chosen": true,
+   "verdict": "CHOSEN"
+  }
+ ],
+ "consumed_credits_total": 39,
+ "agent_visual_verdict": "Good: tall faceted pale crystal with smaller crystals at its foot, carved wooden cradle with sage leaves and brass rims. Crystal is pale grey-green, neutral enough to tint per element in code. Cradle rim slopes slightly on one side (from the concept). 0.21 x 0.40 x 0.21 m.",
+ "palette_check": "no red/oxblood requested or observed",
+ "integration_flag": "flag-off",
+ "integration_status": "raw candidate, not imported; OFF until its scene passes three-judge review"
+}

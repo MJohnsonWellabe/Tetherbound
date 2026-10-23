@@ -1,0 +1,27 @@
+{
+ "model": "harvest_hide",
+ "task_id": "01a15c3f-dbe4-726c-9e01-f0360a299fd1",
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "ai_model": "latest",
+ "target_polycount": 10000,
+ "topology": "quad",
+ "should_remesh": true,
+ "enable_pbr": true,
+ "input_images": [
+  "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/hide_v1_0.png",
+  "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/hide_v1_1.png",
+  "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/concepts/hide_v1_2.png"
+ ],
+ "status": "SUCCEEDED",
+ "task_error": null,
+ "consumed_credits": 30,
+ "files": {
+  "glb": "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/model_harvest_hide/harvest_hide.glb",
+  "base_color": "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/model_harvest_hide/harvest_hide_base_color.png",
+  "metallic": "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/model_harvest_hide/harvest_hide_metallic.png",
+  "roughness": "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/model_harvest_hide/harvest_hide_roughness.png",
+  "normal": "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/model_harvest_hide/harvest_hide_normal.png",
+  "thumbnail": "/home/user/Tetherbound/assets_raw/props-1020/harvest_bundle_set/model_harvest_hide/thumbnail.png"
+ },
+ "date": "2026-10-21"
+}

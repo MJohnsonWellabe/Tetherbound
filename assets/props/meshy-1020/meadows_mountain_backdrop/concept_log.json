@@ -1,0 +1,42 @@
+[
+ {
+  "tag": "v1",
+  "task_id": "01a15c3e-145f-718e-8a31-91af0a3d1215",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Game environment backdrop concept: a continuous wide panoramic mountain range strip, very wide and fairly low (about 3.3 to 1 width to height), soft layered rounded ridges stepping back in depth, one taller central snow-capped peak and several smaller snow caps, gentle slopes, green-forested foothills at the base, grey-blue rock, white snow. Smooth stylised painterly forms like the mountains in the key art, no hard isolated facets, no sky, no trees in front. Isolated on grey background. Stylised Palworld-like environment art, hand-painted PBR look.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_mountains.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15c3e-9dc7-740e-af45-8e685c204b19_part_0.png?Expires=1792808170&Signature=hsiwSIxU08JEN4cGFWLtmIc45W66E6CoMP~cMRLvD77M8eCHt780B7LFXJzA99mCwKi913ZjY9WEvV7qPFbTJeTogIu8G5VVxyaqZ6HEd9lgTuqbs2Kz5v2Ix5ROKlxbYz~R4kfcB3jepTxSdpXKIyYZDwFnSg3hS-vXGK3OMhPt8mVAMT6YiWX4KFtekG9sFTuVCLEiJSIb0By5nL~O0P2IWcdOw-rJe5AArmU9vxuKcq4f8r1DKkckIjszroHBENLVK22wTkBV~vTYlmaFERYf5tK7VTuv9DYF~4OpHtMVNpd4TWh1mpVANsJ3c~RCFg2osvyOQecqwI8nKXqNSg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/meadows_mountain_backdrop/concepts/v1_0.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ },
+ {
+  "tag": "v2",
+  "task_id": "01a15c3f-dc06-75a3-94e8-70ba292647c6",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Single front view of one sculpted 3D terrain model: a continuous wide panoramic mountain range strip, very wide and fairly low (about 3.3 to 1 width to height), one unbroken piece. Soft layered rounded ridges stepping back in depth, broad smooth massive forms, one taller central snow-capped peak and two or three lower snow-capped summits, gentle rolling green forested foothills along the bottom edge, soft blue-grey rock, smooth white snow caps. Painterly softened stylised forms like the distant mountains in the key art, rounded erosion shapes, no sharp jagged crags, no hard isolated facets, no sky. Isolated on plain grey background. Stylised Palworld-like environment art, hand-painted look.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_small.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-props/refs/keyart_mountains.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/image_01a15c3f-dc06-75a3-94e8-70ba292647c6_0.png?Expires=1792808275&Signature=oXn1RGfNBGQKPfpc2Dt0J1UBl795KPtfT023yKMs7tcNA0hfp1f5X4qs7VeL7XJcKPD4Pnc6bcYC1UUFYBUJuEZfnetd75W-5XxB-EenP-gXISQpz0-6YZfsEEwZj8SM7KphPXI3fZ0qYKEwZrBLska0KNPUvn4ZD8YBAr1GQ4Ag8pcMJQegju4L0apK4oQ1zcTHGR8Bl1vbq7uPKyhVINE0DqI0dlulSBUBmcBt-SGzoZUvBoEDG0PFoR~CZaADVEFLk-Shb5CjhXEhnmnCCjKv7sMf81Aj7vE~42RL1sgdm-94MrKb3lkpyFe4vxYFumW1JHTk-Pa~VwjenBSjvQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/meadows_mountain_backdrop/concepts/v2_0.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]

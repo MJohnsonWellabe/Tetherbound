@@ -957,6 +957,9 @@ func _apply_accessories(cfg: Dictionary) -> void:
 		var acc := entry as Dictionary
 		if not bool(acc.get("visible", true)):
 			continue
+		if acc.has("scene"):
+			_attach_scene_accessory(acc)
+			continue
 		var shape := str(acc.get("shape", "box"))
 		var mesh := _primitive_mesh(
 			shape,
@@ -987,6 +990,70 @@ func _apply_accessories(cfg: Dictionary) -> void:
 				finish[property] = acc[property]
 		part.set_surface_override_material(
 			0, _shared_variant_material(StandardMaterial3D.new(), name, Color(hex), finish))
+
+
+## P2-055: an authored prop (staff, hat, pack) hung off a bone like the
+## primitive accessories above, so a named role keeps its installed body and
+## gains its own silhouette. `scene` is a GLB whose origin is its grip or
+## attach point; `rotation_degrees`, `scale` and an optional `tint` place it.
+## P2-055: named roles that share a base body each gain authored accessories
+## (data/config/npc_role_accessories.json, OFF until judged).
+const ROLE_ACCESSORIES := "res://data/config/npc_role_accessories.json"
+
+
+static func with_role_accessories(cfg: Dictionary, role_id: String) -> Dictionary:
+	if cfg.is_empty() or role_id.is_empty():
+		return cfg
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(ROLE_ACCESSORIES))
+	if not parsed is Dictionary or not bool((parsed as Dictionary).get("enabled", false)):
+		return cfg
+	var extra: Variant = ((parsed as Dictionary).get("characters", {}) as Dictionary).get(role_id)
+	if not extra is Array or (extra as Array).is_empty():
+		return cfg
+	var result := cfg.duplicate(true)
+	var accessories: Array = (result.get("accessories", []) as Array).duplicate(true)
+	accessories.append_array((extra as Array).duplicate(true))
+	result["accessories"] = accessories
+	return result
+
+
+func _attach_scene_accessory(acc: Dictionary) -> void:
+	var path := str(acc.get("scene", ""))
+	if not ResourceLoader.exists(path):
+		return
+	var offset := Vector3.ZERO
+	var raw_offset: Array = acc.get("offset", [])
+	if raw_offset.size() == 3:
+		offset = Vector3(raw_offset[0], raw_offset[1], raw_offset[2])
+	var holder: Node3D = null
+	if str(acc.get("bone", "")) == "root":
+		# Planted props (staff, cane, pike) stand upright in the character's own
+		# space; a bone frame would tip them with the hips.
+		holder = Node3D.new()
+		holder.name = "accessory_%s" % str(acc.get("name", "prop"))
+		add_child(holder)
+		holder.position = offset
+	else:
+		holder = _attach_part(null, str(acc.get("bone", "Hips")), offset, "accessory_%s" % str(acc.get("name", "prop")))
+	if holder == null:
+		return
+	var prop := (load(path) as PackedScene).instantiate() as Node3D
+	holder.add_child(prop)
+	var raw_rotation: Array = acc.get("rotation_degrees", [])
+	if raw_rotation.size() == 3:
+		prop.rotation_degrees = Vector3(raw_rotation[0], raw_rotation[1], raw_rotation[2])
+	prop.scale = Vector3.ONE * float(acc.get("scale", 1.0))
+	if not acc.has("tint"):
+		return
+	var tint := Color(str(acc.tint))
+	for node: Node in prop.find_children("*", "MeshInstance3D", true, false):
+		var instance := node as MeshInstance3D
+		for surface in instance.mesh.get_surface_count():
+			var source := instance.get_active_material(surface) as BaseMaterial3D
+			if source != null:
+				var material := source.duplicate() as BaseMaterial3D
+				material.albedo_color = source.albedo_color * tint
+				instance.set_surface_override_material(surface, material)
 
 
 func _primitive_mesh(shape: String, size: float, authored_height: float = 0.0) -> PrimitiveMesh:

@@ -1,0 +1,108 @@
+extends RefCounted
+
+## GPU-pass Forward+ grade breakdown (local only, never committed). Forces one
+## environment variant onto every WorldEnvironment right before each frame is
+## drawn, chosen by the TB_GRADE_VARIANT environment variable. Logs the base
+## values once so the report can state what the preset set.
+
+static var _tree: SceneTree
+static var _variant := ""
+static var _last_sig := ""
+static var _frames := 0
+
+
+static func install(tree: SceneTree) -> void:
+	_tree = tree
+	_variant = OS.get_environment("TB_GRADE_VARIANT")
+	if _variant.is_empty():
+		_variant = "base"
+	print("GRADE variant=", _variant)
+	RenderingServer.frame_pre_draw.connect(_apply)
+
+
+static func _apply() -> void:
+	if _tree == null or _tree.root == null:
+		return
+	_frames += 1
+	for node: Node in _tree.root.find_children("*", "WorldEnvironment", true, false):
+		var env: Environment = (node as WorldEnvironment).environment
+		if env == null:
+			continue
+		var sig := "%d|%.3f|%s|%s|%s|%s|%s" % [env.tonemap_mode, env.tonemap_exposure, env.ssao_enabled, env.ssil_enabled, env.glow_enabled, env.volumetric_fog_enabled, env.adjustment_enabled]
+		if _variant == "base" and sig != _last_sig:
+			_last_sig = sig
+			print("GRADE frame=%d live tonemap=%d exposure=%.3f white=%.2f ssao=%s ssil=%s sdfgi=%s glow=%s glow_intensity=%.2f glow_bloom=%.2f fog=%s fog_density=%.5f volfog=%s volfog_density=%.5f adjust=%s sat=%.2f bright=%.2f contrast=%.2f ambient=%.2f" % [
+				_frames, env.tonemap_mode, env.tonemap_exposure, env.tonemap_white, env.ssao_enabled, env.ssil_enabled,
+				env.sdfgi_enabled, env.glow_enabled, env.glow_intensity, env.glow_bloom, env.fog_enabled,
+				env.fog_density, env.volumetric_fog_enabled, env.volumetric_fog_density, env.adjustment_enabled,
+				env.adjustment_saturation, env.adjustment_brightness, env.adjustment_contrast, env.ambient_light_energy])
+		if _frames == 600 and _variant != "base":
+			print("GRADE applied variant=%s at frame %d" % [_variant, _frames])
+		match _variant:
+			"no_volfog":
+				env.volumetric_fog_enabled = false
+			"no_ssao":
+				env.ssao_enabled = false
+			"no_ssil":
+				env.ssil_enabled = false
+			"no_sdfgi":
+				env.sdfgi_enabled = false
+			"no_glow":
+				env.glow_enabled = false
+			"no_fog":
+				env.fog_enabled = false
+			"tm_linear":
+				env.tonemap_mode = Environment.TONE_MAPPER_LINEAR
+			"tm_filmic":
+				env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+			"tm_agx":
+				env.tonemap_mode = Environment.TONE_MAPPER_AGX
+			"exposure_x1_5":
+				if not env.has_meta(&"grade_base_exposure"):
+					env.set_meta(&"grade_base_exposure", env.tonemap_exposure)
+				env.tonemap_exposure = float(env.get_meta(&"grade_base_exposure")) * 1.5
+			"no_adjust":
+				env.adjustment_enabled = false
+			"fog_half":
+				if not env.has_meta(&"grade_base_fog"):
+					env.set_meta(&"grade_base_fog", env.fog_density)
+				env.fog_density = float(env.get_meta(&"grade_base_fog")) * 0.5
+			"fog_aerial0":
+				env.fog_aerial_perspective = 0.0
+			"no_fog_exp1":
+				env.fog_enabled = false
+				env.tonemap_exposure = 1.0
+			"param":
+				_apply_param(env)
+			"all_post_off":
+				env.volumetric_fog_enabled = false
+				env.ssao_enabled = false
+				env.ssil_enabled = false
+				env.glow_enabled = false
+
+
+## Parameterised recipe. world_look.gd mutates the same Environment in place (and
+## may rewrite it on its own clock), so the game's value is re-read whenever it
+## differs from what this override last wrote; multipliers then always apply to
+## the game's current value, never to a pre-world-build one.
+## TB_GRADE_FOG_MUL (x fog_density), TB_GRADE_EXPOSURE (absolute),
+## TB_GRADE_SAT (absolute adjustment_saturation, forces adjustment on).
+static func _apply_param(env: Environment) -> void:
+	var fog_mul := OS.get_environment("TB_GRADE_FOG_MUL")
+	var exposure := OS.get_environment("TB_GRADE_EXPOSURE")
+	var sat := OS.get_environment("TB_GRADE_SAT")
+	if not fog_mul.is_empty():
+		if not env.has_meta(&"grade_w_fog") or not is_equal_approx(env.fog_density, float(env.get_meta(&"grade_w_fog"))):
+			env.set_meta(&"grade_b_fog", env.fog_density)
+		env.fog_density = float(env.get_meta(&"grade_b_fog")) * float(fog_mul)
+		env.set_meta(&"grade_w_fog", env.fog_density)
+	if not exposure.is_empty():
+		env.tonemap_exposure = float(exposure)
+	if not sat.is_empty():
+		env.adjustment_enabled = true
+		env.adjustment_saturation = float(sat)
+	var sig := "%.5f|%.5f|%.3f|%.2f" % [float(env.get_meta(&"grade_b_fog", -1.0)), env.fog_density, env.tonemap_exposure, env.adjustment_saturation]
+	if sig != _last_sig:
+		_last_sig = sig
+		print("GRADE frame=%d param game_fog=%.5f applied_fog=%.5f exposure=%.3f adjust=%s sat=%.2f" % [
+			_frames, float(env.get_meta(&"grade_b_fog", -1.0)), env.fog_density, env.tonemap_exposure, env.adjustment_enabled, env.adjustment_saturation])

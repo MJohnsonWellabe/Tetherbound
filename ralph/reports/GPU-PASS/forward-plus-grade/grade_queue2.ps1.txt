@@ -1,0 +1,16 @@
+# Forward+ grade follow-up (local): fog-focused variants, after the main sweep finishes.
+$fo = '<local task output of the main sweep>'
+while (-not (Select-String -Path $fo -Pattern 'grade queue done' -Quiet)) { Start-Sleep -Seconds 30 }
+while (Get-Process -Name "Godot*" -ErrorAction SilentlyContinue) { Start-Sleep -Seconds 10 }
+$g = "C:\Program Files\Git\cmd\git.exe"
+$sha = (& $g -C D:\tb-gpu-pass rev-parse origin/main).Trim()
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"
+foreach ($v in "fog_half", "fog_aerial0", "no_fog_exp1") {
+    $env:TB_GRADE_VARIANT = $v
+    "-- Medium $v"
+    & $run -Preset Medium -Script "D:/tb-gpu-runs/tools/grade_f10.gd" -OutDir "D:\tb-gpu-runs\out\grade\f10\Medium-$v" `
+        -UserArgs @("--out={FRAMES}", "--ids=capacitor_alpha,glass_field_alpha", "--camera-view=north", "--seconds=6", "--interval=1.0")
+    & $run -Preset Medium -Script "D:/tb-gpu-runs/tools/grade_loc.gd" -OutDir "D:\tb-gpu-runs\out\grade\loc\Medium-$v" -Resolution "1920x1080" `
+        -UserArgs @("--biome=meadows", "--subset=band1", "--times=day", "--views=approach", "--preset=Medium", "--source-commit=$sha", "--output={FRAMES}")
+}
+"grade queue2 done"

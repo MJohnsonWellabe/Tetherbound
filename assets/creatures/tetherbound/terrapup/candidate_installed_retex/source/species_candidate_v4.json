@@ -1,0 +1,55 @@
+{
+  "enabled": false,
+  "species": "terrapup",
+  "placeholder": {
+    "colour": "#8a6138",
+    "height": 3.85,
+    "radius": 1.464004,
+    "rest_roll_deg": 0.0,
+    "rest_use_body_pose": true,
+    "rest_pose": {
+      "clip_role": "rest",
+      "max_height_ratio": 0.85,
+      "min_ground_offset_m": -0.22,
+      "max_ground_offset_m": 0.08,
+      "max_torso_contact_offset_m": 0.2,
+      "model_rotation_deg": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "model_position_offset": [
+        0.0,
+        1.0302,
+        0.0
+      ],
+      "bones": {
+        "root": {
+          "rotation_deg": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    },
+    "model": "res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_installed_retex_v4_lod0.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "field_emission": 0.6,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest"
+    },
+    "colourway_source_species": "terrapup_installed_retex_v4_review"
+  },
+  "base_species": "terrapup",
+  "scope": "presentation_only",
+  "activation": "Requires the three-judge Bar A 7.5 (6.7 CPU-provisional) and independent F36 art approval; creature_terrapup_lod0.glb remains the default; installed_retex v1-v3 stay comparison baselines",
+  "candidate_variant": "installed_retex_v4"
+}

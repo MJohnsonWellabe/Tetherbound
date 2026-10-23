@@ -1,0 +1,10 @@
+Fh: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
+Oq: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
+As: none
+Yv: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Xo: none
+Ow: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
+Dr: none
+Rm: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
+Wl: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"
+Zo: "floating island undersides form blunt dark slabs"; "cliffs and grassy shelves have conspicuous straight extruded edges"

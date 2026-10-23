@@ -1,0 +1,7 @@
+Cv: "Reads as a realistic, sourced mesh with no stylised face, beside the stylised roster (two art styles)"; "Hit react reads as standing"; "Faint end collapses into a dark, colourless blob"
+Nm: none
+Pa: none
+Tb: "Reads as a realistic, sourced mesh with no stylised face, beside the stylised roster (two art styles)"; "Hit react reads as standing"; "Faint end collapses into a dark, colourless blob"
+Bt: "Reads as a realistic, sourced mesh with no stylised face, beside the stylised roster (two art styles)"; "Hit react reads as standing"; "Faint end collapses into a dark, colourless blob"
+St: none
+Fv: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

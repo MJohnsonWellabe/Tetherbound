@@ -1,0 +1,86 @@
+{
+  "installed": "assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb",
+  "installed_sha256": "dfaf9519476da87d485e5ed8ee435989135810bc3b06e05a901d084143f52a21",
+  "retexture": "assets_raw/terrapup/meshy-retex-installed-1021/v2_s2-01a15c91-7407-715a-a287-30c31e54eedd/model.glb",
+  "retexture_sha256": "a58ccf71ebe51f15070c379460f6b137082e745bc74686e47ba55b15e59ddb94",
+  "output": "assets/creatures/tetherbound/terrapup/models/creature_terrapup_installed_retex_lod0.glb",
+  "output_sha256": "66897f54da75aff6996d27817167256b8e9e6edbffcbf1f885e2a4d696cf9b6d",
+  "unique_uvs": 15616,
+  "uv_sets_identical": true,
+  "base_color_red_clamp": {
+    "encoded_as": "image/png",
+    "clamp_mask": "hue <15 or >320, sat >0.45, value >0.35",
+    "recoloured_texels": 0,
+    "red_metric": "hue <15 or >320, sat >0.30, value >0.20 (all texels)",
+    "red_texels_pct_before": 0.8956,
+    "red_texels_pct_after": 0.8956,
+    "clamp_mask_texels_pct_before": 0.0,
+    "clamp_mask_texels_pct_after": 0.0
+  },
+  "kept_unchanged": [
+    "meshes",
+    "accessors",
+    "skins",
+    "nodes",
+    "animations",
+    "scenes",
+    "samplers"
+  ],
+  "non_image_buffer_views_byte_identical": 333,
+  "joint_names": [
+    "root",
+    "pelvis",
+    "spine",
+    "neck",
+    "head",
+    "front_upper_l",
+    "front_lower_l",
+    "front_upper_r",
+    "front_lower_r",
+    "tail_1",
+    "tail_2",
+    "rear_upper_l",
+    "rear_lower_l",
+    "rear_upper_r",
+    "rear_lower_r"
+  ],
+  "material": {
+    "doubleSided": true,
+    "emissiveFactor": [
+      1,
+      1,
+      1
+    ],
+    "emissiveTexture": {
+      "index": 0
+    },
+    "extensions": {
+      "KHR_materials_specular": {
+        "specularFactor": 0.5
+      }
+    },
+    "name": "material",
+    "normalTexture": {
+      "index": 1
+    },
+    "pbrMetallicRoughness": {
+      "baseColorTexture": {
+        "index": 2
+      },
+      "metallicRoughnessTexture": {
+        "index": 3
+      },
+      "metallicFactor": 1.0,
+      "roughnessFactor": 1.0
+    }
+  },
+  "animations": [
+    "faint",
+    "hit",
+    "attack",
+    "run",
+    "walk",
+    "idle",
+    "rest"
+  ]
+}

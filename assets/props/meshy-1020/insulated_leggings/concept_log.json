@@ -1,0 +1,50 @@
+{
+ "asset": "insulated_leggings",
+ "concepts": [
+  {
+   "tag": "c1",
+   "task_id": "01a15dfe-1a86-70cd-9d39-7ff00bffc931",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept: insulated leggings, shown as a neatly folded bundle resting flat. A pair of thick quilted padded travel leggings in muted slate-blue fabric with diamond quilt stitching and cream wool trim at the cuffs, folded into a neat rectangular stack and tied around the middle with a brown leather strap and brass buckle. Low and wide: about 0.25 m tall and 0.5 m long. Soft puffy cloth shapes. Stylised Palworld / Animo-class game item prop, deliberately chunky and oversized, exaggerated readable silhouette that still reads clearly from 10-15 metres, soft bevelled edges, soft hand-painted PBR look, natural palette matching the Meadows key-art reference (sage and leaf greens, warm gold, cream, slate blue, teal). Single isolated object standing upright on its flat base, full object visible and centred, plain neutral light-grey background, even studio lighting, no cast shadow, no ground plane, no people, no creatures, no text, no letters, no labels, no red or crimson anywhere.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1024 x 683)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "insulated_leggings/concepts/c1_0.png",
+    "insulated_leggings/concepts/c1_1.png",
+    "insulated_leggings/concepts/c1_2.png"
+   ],
+   "chosen": false,
+   "verdict": "rejected: good slate-blue quilting, cream trim and leather strap, but the bundle stands upright as a near-cube instead of resting flat 0.5 m long and 0.25 m tall",
+   "consumed_credits": 9
+  },
+  {
+   "tag": "c2",
+   "task_id": "01a15dff-b898-72fd-80e8-50a1875d2a4f",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept: insulated leggings, shown as a folded bundle LYING FLAT and horizontal, like a folded towel resting on a table. A pair of thick quilted padded travel leggings in muted slate-blue fabric with diamond quilt stitching and fluffy cream wool trim along the edges, folded into a long, low, flat rectangular pad that is twice as long as it is wide and only about half as tall as it is wide, tied across the middle with one brown leather strap and a brass buckle on top. Proportions: about 0.5 m long, 0.3 m wide, 0.25 m tall. The bundle rests horizontally on its flat underside. Soft puffy cloth shapes. Views from a slightly elevated angle so the long low shape and the quilted top are both clear. Stylised Palworld / Animo-class game item prop, deliberately chunky and oversized, exaggerated readable silhouette that still reads clearly from 10-15 metres, soft bevelled edges, soft hand-painted PBR look, natural palette matching the Meadows key-art reference (sage and leaf greens, warm gold, cream, slate blue, teal). Single isolated object resting flat on its underside, full object visible and centred, plain neutral light-grey background, even studio lighting, no cast shadow, no ground plane, no people, no creatures, no text, no letters, no labels, no red or crimson anywhere.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1024 x 683)",
+    "insulated_leggings.jpg"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "insulated_leggings/concepts/c2_0.png",
+    "insulated_leggings/concepts/c2_1.png",
+    "insulated_leggings/concepts/c2_2.png"
+   ],
+   "chosen": true,
+   "verdict": "CHOSEN (view 1 only): long low folded bundle with diamond-quilted slate-blue top, cream fleece trim and leather strap with brass buckle; views 0 and 2 rejected for 3D because view 2 redrew it as a roll",
+   "consumed_credits": 9
+  }
+ ],
+ "chosen_concept": "c2",
+ "chosen_views": [
+  1
+ ],
+ "chosen_concept_png": "model_insulated_leggings/preview_concept.png (contact sheet of concepts/c2_1.png)",
+ "reference_inspection": "Key art inspected for palette; c2 also used the c1 contact sheet as a material reference."
+}

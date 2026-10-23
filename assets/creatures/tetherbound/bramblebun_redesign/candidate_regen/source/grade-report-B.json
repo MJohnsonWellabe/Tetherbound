@@ -1,0 +1,44 @@
+{
+  "input": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/meshy-r7/stage/bb/regen_b.glb",
+  "input_sha256": "13ed9271d72fc6063fd20e432b4f63b4637f9ed31021a994178c7f02dec38648",
+  "output": "assets/creatures/tetherbound/bramblebun_redesign/candidate_regen/models/creature_bramblebun_regen_b.glb",
+  "output_sha256": "59d840f91457ff30acf2f5753751f67b8a35a78b6e701a44e90aded765934d34",
+  "grade": {
+    "plum_texels_pct": 4.082,
+    "dark_brown_texels_pct": 15.901,
+    "soft_pink_texels_pct": 1.524
+  },
+  "red_metric_strict_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+    "before": 8.3789,
+    "after": 0.0
+  },
+  "policy_red_pink_rust_h_lt24": {
+    "before": 0.2856,
+    "after": 0.192
+  },
+  "kept_unchanged": [
+    "meshes",
+    "accessors",
+    "skins",
+    "nodes",
+    "animations",
+    "scenes",
+    "scene",
+    "samplers",
+    "normal and metallic-roughness images",
+    "all non-image bufferView bytes"
+  ],
+  "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+  ]
+}

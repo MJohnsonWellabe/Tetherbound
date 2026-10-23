@@ -1,0 +1,34 @@
+# F25#4 four-creature worst case (local): four ultimates fired on one frame, Medium, 1920x1080, vsync off.
+# Sets x budget on/off x 3 repetitions (rep 1 may carry first-use shader compilation), plus one Low run per set.
+param([string] $WaitFor = "")
+if ($WaitFor) { while (-not (Select-String -Path $WaitFor -Pattern 'f36 r3 queue done' -Quiet)) { Start-Sleep -Seconds 30 } }
+while (Get-Process -Name "Godot*" -ErrorAction SilentlyContinue) { Start-Sleep -Seconds 10 }
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"
+$env:TB_GRADE_VARIANT = ""; $env:TB_RUN_TIMEOUT_MIN = "20"
+$sets = [ordered]@{
+    starters = "ultimate_terrapup,ultimate_ripplet,ultimate_galewisp,ultimate_veridian"
+    heavy    = "ultimate_solmane,ultimate_stormursa,ultimate_abyssal_guardian,ultimate_fulgocobra"
+}
+foreach ($rep in 1, 2, 3) {
+    foreach ($s in $sets.Keys) {
+        foreach ($b in "on", "off") {
+            $name = "Medium-$s-budget_$b-r$rep"
+            $dir = "D:\tb-gpu-runs\out\F25-4\$name"
+            New-Item -ItemType Directory -Force $dir | Out-Null
+            $env:TB_VFX_BUDGET = $b; $env:TB_F25_LOG = ($dir -replace '\\', '/') + "/frames_log.csv"
+            "-- $name"
+            & $run -Preset Medium -Script "D:/tb-gpu-runs/tools/f25_four.gd" -OutDir $dir -Resolution "1920x1080" `
+                -UserArgs @("--batch=ultimates", "--medium", "--stage=meadows", "--simultaneous=$($sets[$s])", "--out={FRAMES}")
+        }
+    }
+}
+foreach ($s in $sets.Keys) {
+    $name = "Low-$s-budget_on-r1"
+    $dir = "D:\tb-gpu-runs\out\F25-4\$name"
+    New-Item -ItemType Directory -Force $dir | Out-Null
+    $env:TB_VFX_BUDGET = "on"; $env:TB_F25_LOG = ($dir -replace '\\', '/') + "/frames_log.csv"
+    "-- $name"
+    & $run -Preset Low -Script "D:/tb-gpu-runs/tools/f25_four.gd" -OutDir $dir -Resolution "1920x1080" `
+        -UserArgs @("--batch=ultimates", "--stage=meadows", "--simultaneous=$($sets[$s])", "--out={FRAMES}")
+}
+"f25 queue done"

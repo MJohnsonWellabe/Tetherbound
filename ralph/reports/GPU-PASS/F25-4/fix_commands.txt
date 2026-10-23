@@ -1,0 +1,212 @@
+## Low-heavy-budget_on-prewarm0-r1
+godot --path D:\tb-gpu-wt-lane --rendering-method gl_compatibility --rendering-driver opengl3 --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --batch=ultimates --stage=meadows --simultaneous=ultimate_solmane,ultimate_stormursa,ultimate_abyssal_guardian,ultimate_fulgocobra --out=D:/tb-gpu-runs/out/F25-fix-final/Low-heavy-budget_on-prewarm0-r1/frames
+F25 wrapper budget=on
+F23 actual override assertions=361 failures=0
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=gl_compatibility out=D:/tb-gpu-runs/out/F25-fix-final/Low-heavy-budget_on-prewarm0-r1/frames scope=synthetic_no_combat
+
+## Low-heavy-budget_on-prewarm1-r1
+godot --path D:\tb-gpu-wt-lane --rendering-method gl_compatibility --rendering-driver opengl3 --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --batch=ultimates --stage=meadows --simultaneous=ultimate_solmane,ultimate_stormursa,ultimate_abyssal_guardian,ultimate_fulgocobra --out=D:/tb-gpu-runs/out/F25-fix-final/Low-heavy-budget_on-prewarm1-r1/frames
+F25 wrapper budget=on
+F23 actual override assertions=361 failures=0
+F25 prewarm 14.2 ms
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=gl_compatibility out=D:/tb-gpu-runs/out/F25-fix-final/Low-heavy-budget_on-prewarm1-r1/frames scope=synthetic_no_combat
+
+## Low-starters-budget_on-prewarm0-r1
+godot --path D:\tb-gpu-wt-lane --rendering-method gl_compatibility --rendering-driver opengl3 --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --batch=ultimates --stage=meadows --simultaneous=ultimate_terrapup,ultimate_ripplet,ultimate_galewisp,ultimate_veridian --out=D:/tb-gpu-runs/out/F25-fix-final/Low-starters-budget_on-prewarm0-r1/frames
+F25 wrapper budget=on
+F23 actual override assertions=361 failures=0
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=gl_compatibility out=D:/tb-gpu-runs/out/F25-fix-final/Low-starters-budget_on-prewarm0-r1/frames scope=synthetic_no_combat
+
+## Low-starters-budget_on-prewarm1-r1
+godot --path D:\tb-gpu-wt-lane --rendering-method gl_compatibility --rendering-driver opengl3 --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --batch=ultimates --stage=meadows --simultaneous=ultimate_terrapup,ultimate_ripplet,ultimate_galewisp,ultimate_veridian --out=D:/tb-gpu-runs/out/F25-fix-final/Low-starters-budget_on-prewarm1-r1/frames
+F25 wrapper budget=on
+F23 actual override assertions=361 failures=0
+F25 prewarm 14.2 ms
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=gl_compatibility out=D:/tb-gpu-runs/out/F25-fix-final/Low-starters-budget_on-prewarm1-r1/frames scope=synthetic_no_combat
+
+## Medium-heavy-budget_off-prewarm-r1
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_solmane,ultimate_stormursa,ultimate_abyssal_guardian,ultimate_fulgocobra --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_off-prewarm-r1/frames
+F25 wrapper budget=off
+F23 actual override assertions=361 failures=0
+F25 prewarm 247.2 ms
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_off-prewarm-r1/frames scope=synthetic_no_combat
+
+## Medium-heavy-budget_off-prewarm-r2
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_solmane,ultimate_stormursa,ultimate_abyssal_guardian,ultimate_fulgocobra --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_off-prewarm-r2/frames
+F25 wrapper budget=off
+F23 actual override assertions=361 failures=0
+F25 prewarm 244.7 ms
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_off-prewarm-r2/frames scope=synthetic_no_combat
+
+## Medium-heavy-budget_off-prewarm-r3
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_solmane,ultimate_stormursa,ultimate_abyssal_guardian,ultimate_fulgocobra --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_off-prewarm-r3/frames
+F25 wrapper budget=off
+F23 actual override assertions=361 failures=0
+F25 prewarm 245.5 ms
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_off-prewarm-r3/frames scope=synthetic_no_combat
+
+## Medium-heavy-budget_off-prewarm-x3-r1
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_solmane,ultimate_stormursa,ultimate_abyssal_guardian,ultimate_fulgocobra --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_off-prewarm-x3-r1/frames
+F25 wrapper budget=off
+F23 actual override assertions=361 failures=0
+F25 prewarm 245.0 ms
+F25 volley 1 arrivals=12 duration=2.40s slots_now=0
+F25 volley 2 arrivals=12 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_off-prewarm-x3-r1/frames scope=synthetic_no_combat
+
+## Medium-heavy-budget_on-noprewarm-r1
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_solmane,ultimate_stormursa,ultimate_abyssal_guardian,ultimate_fulgocobra --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_on-noprewarm-r1/frames
+F25 wrapper budget=on
+F23 actual override assertions=361 failures=0
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_on-noprewarm-r1/frames scope=synthetic_no_combat
+
+## Medium-heavy-budget_on-prewarm-r1
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_solmane,ultimate_stormursa,ultimate_abyssal_guardian,ultimate_fulgocobra --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_on-prewarm-r1/frames
+F25 wrapper budget=on
+F23 actual override assertions=361 failures=0
+F25 prewarm 245.2 ms
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_on-prewarm-r1/frames scope=synthetic_no_combat
+
+## Medium-heavy-budget_on-prewarm-r2
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_solmane,ultimate_stormursa,ultimate_abyssal_guardian,ultimate_fulgocobra --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_on-prewarm-r2/frames
+F25 wrapper budget=on
+F23 actual override assertions=361 failures=0
+F25 prewarm 245.8 ms
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_on-prewarm-r2/frames scope=synthetic_no_combat
+
+## Medium-heavy-budget_on-prewarm-r3
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_solmane,ultimate_stormursa,ultimate_abyssal_guardian,ultimate_fulgocobra --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_on-prewarm-r3/frames
+F25 wrapper budget=on
+F23 actual override assertions=361 failures=0
+F25 prewarm 244.3 ms
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_on-prewarm-r3/frames scope=synthetic_no_combat
+
+## Medium-heavy-budget_on-prewarm-x3-r1
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_solmane,ultimate_stormursa,ultimate_abyssal_guardian,ultimate_fulgocobra --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_on-prewarm-x3-r1/frames
+F25 wrapper budget=on
+F23 actual override assertions=361 failures=0
+F25 prewarm 246.0 ms
+F25 volley 1 arrivals=12 duration=2.40s slots_now=0
+F25 volley 2 arrivals=12 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-heavy-budget_on-prewarm-x3-r1/frames scope=synthetic_no_combat
+
+## Medium-starters-budget_off-prewarm-r1
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_terrapup,ultimate_ripplet,ultimate_galewisp,ultimate_veridian --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_off-prewarm-r1/frames
+F25 wrapper budget=off
+F23 actual override assertions=361 failures=0
+F25 prewarm 245.7 ms
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_off-prewarm-r1/frames scope=synthetic_no_combat
+
+## Medium-starters-budget_off-prewarm-r2
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_terrapup,ultimate_ripplet,ultimate_galewisp,ultimate_veridian --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_off-prewarm-r2/frames
+F25 wrapper budget=off
+F23 actual override assertions=361 failures=0
+F25 prewarm 244.3 ms
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_off-prewarm-r2/frames scope=synthetic_no_combat
+
+## Medium-starters-budget_off-prewarm-r3
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_terrapup,ultimate_ripplet,ultimate_galewisp,ultimate_veridian --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_off-prewarm-r3/frames
+F25 wrapper budget=off
+F23 actual override assertions=361 failures=0
+F25 prewarm 243.9 ms
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_off-prewarm-r3/frames scope=synthetic_no_combat
+
+## Medium-starters-budget_off-prewarm-x3-r1
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_terrapup,ultimate_ripplet,ultimate_galewisp,ultimate_veridian --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_off-prewarm-x3-r1/frames
+F25 wrapper budget=off
+F23 actual override assertions=361 failures=0
+F25 prewarm 244.3 ms
+F25 volley 1 arrivals=12 duration=2.40s slots_now=0
+F25 volley 2 arrivals=12 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_off-prewarm-x3-r1/frames scope=synthetic_no_combat
+
+## Medium-starters-budget_on-noprewarm-r1
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_terrapup,ultimate_ripplet,ultimate_galewisp,ultimate_veridian --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_on-noprewarm-r1/frames
+F25 wrapper budget=on
+F23 actual override assertions=361 failures=0
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_on-noprewarm-r1/frames scope=synthetic_no_combat
+
+## Medium-starters-budget_on-prewarm-r1
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_terrapup,ultimate_ripplet,ultimate_galewisp,ultimate_veridian --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_on-prewarm-r1/frames
+F25 wrapper budget=on
+F23 actual override assertions=361 failures=0
+F25 prewarm 248.0 ms
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_on-prewarm-r1/frames scope=synthetic_no_combat
+
+## Medium-starters-budget_on-prewarm-r2
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_terrapup,ultimate_ripplet,ultimate_galewisp,ultimate_veridian --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_on-prewarm-r2/frames
+F25 wrapper budget=on
+F23 actual override assertions=361 failures=0
+F25 prewarm 245.1 ms
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_on-prewarm-r2/frames scope=synthetic_no_combat
+
+## Medium-starters-budget_on-prewarm-r3
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_terrapup,ultimate_ripplet,ultimate_galewisp,ultimate_veridian --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_on-prewarm-r3/frames
+F25 wrapper budget=on
+F23 actual override assertions=361 failures=0
+F25 prewarm 245.0 ms
+F25 volley 1 arrivals=4 duration=2.40s slots_now=0
+F25 volley 2 arrivals=4 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_on-prewarm-r3/frames scope=synthetic_no_combat
+
+## Medium-starters-budget_on-prewarm-x3-r1
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_terrapup,ultimate_ripplet,ultimate_galewisp,ultimate_veridian --out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_on-prewarm-x3-r1/frames
+F25 wrapper budget=on
+F23 actual override assertions=361 failures=0
+F25 prewarm 246.6 ms
+F25 volley 1 arrivals=12 duration=2.40s slots_now=0
+F25 volley 2 arrivals=12 duration=2.40s slots_now=0
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/Medium-starters-budget_on-prewarm-x3-r1/frames scope=synthetic_no_combat
+
+## SNAP-Medium-heavy-budget_off-x3
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_solmane,ultimate_stormursa,ultimate_abyssal_guardian,ultimate_fulgocobra --out=D:/tb-gpu-runs/out/F25-fix-final/SNAP-Medium-heavy-budget_off-x3/frames
+F25 wrapper budget=off
+F23 actual override assertions=361 failures=0
+F25 prewarm 245.7 ms
+F25 volley 1 arrivals=12 duration=2.40s slots_now=0
+F25 volley 2 arrivals=12 duration=2.40s slots_now=138
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/SNAP-Medium-heavy-budget_off-x3/frames scope=synthetic_no_combat
+
+## SNAP-Medium-heavy-budget_on-x3
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script D:/tb-gpu-runs/tools/f25_four.gd -- --medium --batch=ultimates --stage=meadows --simultaneous=ultimate_solmane,ultimate_stormursa,ultimate_abyssal_guardian,ultimate_fulgocobra --out=D:/tb-gpu-runs/out/F25-fix-final/SNAP-Medium-heavy-budget_on-x3/frames
+F25 wrapper budget=on
+F23 actual override assertions=361 failures=0
+F25 prewarm 249.5 ms
+F25 volley 1 arrivals=12 duration=2.40s slots_now=0
+F25 volley 2 arrivals=12 duration=2.40s slots_now=102
+F25 batch=ultimates cases=1 failures=0 renderer=forward_plus out=D:/tb-gpu-runs/out/F25-fix-final/SNAP-Medium-heavy-budget_on-x3/frames scope=synthetic_no_combat
+

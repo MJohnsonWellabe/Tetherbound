@@ -1,0 +1,32 @@
+{
+  "enabled": false,
+  "species": "water_cannonback",
+  "base_species": "cannonback",
+  "candidate_variant": "regen2",
+  "placeholder": {
+    "colour": "#8899aa",
+    "height": 4.456,
+    "radius": 1.796441,
+    "footprint_allowance": 3.0,
+    "model": "res://assets/creatures/tetherbound/cannonback/candidate_regen2/models/creature_cannonback_regen2.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+    },
+    "field_emission": 0.0,
+    "colourway_source_species": "cannonback_regen2_review"
+  },
+  "scope": "presentation_only",
+  "activation": "Requires the three-judge Bar A 7.5 (CPU-provisional 6.7), independent F36 art approval and mount_offset/saddle_offset moved to the measured seat (source/seat-report.json); installed creature_cannonback_lod0.glb remains the default"
+}

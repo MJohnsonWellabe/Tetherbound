@@ -1,0 +1,7 @@
+Ui: none
+Wx: none
+Cm: "Reads as a realistic, sourced mesh with no stylised face, beside the stylised roster (two art styles)"; "Hit react reads as standing"; "Faint end collapses into a dark, colourless blob"
+Dx: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Tp: none
+Ul: "Only the crests clear the 1.80 m trainer; the body reads short"; "Flat material with no rim light"; "Hit react reads as standing"
+Hs: "Reads as a realistic, sourced mesh with no stylised face, beside the stylised roster (two art styles)"; "Hit react reads as standing"; "Faint end collapses into a dark, colourless blob"

@@ -1,0 +1,46 @@
+{
+  "species": "terrapup",
+  "method": "deterministic masked HSV grading of the v1 Meshy retexture base colour (no new Meshy pass)",
+  "input": "assets/creatures/tetherbound/terrapup/models/creature_terrapup_installed_retex_lod0.glb",
+  "input_sha256": "66897f54da75aff6996d27817167256b8e9e6edbffcbf1f885e2a4d696cf9b6d",
+  "output": "assets/creatures/tetherbound/terrapup/models/creature_terrapup_installed_retex_v2_lod0.glb",
+  "output_sha256": "798c724094a6a644b3bccdfae37302ff9d7b24659dbb4f0b796ba2bbf1ccf06c",
+  "grade": {
+    "stone_pct": 15.507,
+    "moss_pct": 5.495,
+    "fur_pct": 63.737,
+    "cream_pct": 13.347,
+    "fur_value_median_before": 0.188,
+    "stone_value_median_before": 0.471,
+    "fur_target": "hue 20-32 (26 centre), sat 0.30-0.55, value 0.40*(v/median)^0.85",
+    "cream_target": "hue 40, sat 0.13-0.24, value kept (0.62-0.93)",
+    "stone_target": "hue 35, sat 0.05, value 0.50*(v/median)^1.3 clipped 0.10-0.72",
+    "moss_target": "hue 72+0.3*(h-59), sat x0.85 (max 0.60), value x0.85"
+  },
+  "red_clamped_texels": 0,
+  "red_metric_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+    "before": 0.8956,
+    "after": 0.0
+  },
+  "policy_red_pink_rust_h_lt24": {
+    "before": 0.4894,
+    "after": 0.0449
+  },
+  "stone_albedo_value_median": {
+    "before": 0.471,
+    "after": 0.5
+  },
+  "base_color_embedding": "PNG, lossless",
+  "kept_unchanged": [
+    "meshes",
+    "accessors",
+    "skins",
+    "nodes",
+    "animations",
+    "scenes",
+    "scene",
+    "samplers",
+    "metallic-roughness, normal and emissive images",
+    "all non-image bufferView bytes"
+  ]
+}

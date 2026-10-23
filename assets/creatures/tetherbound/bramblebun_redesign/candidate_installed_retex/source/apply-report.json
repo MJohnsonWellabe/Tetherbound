@@ -1,0 +1,72 @@
+{
+  "installed": "assets/creatures/tetherbound/bramblebun_redesign/models/creature_bramblebun_redesign_lod0.glb",
+  "installed_sha256": "3375754f9b1f016e4b3bb8e957c947060e4a2ecf7857cf6ad548522b7d3f22ec",
+  "retexture": "assets_raw/bramblebun/meshy-retex-installed-1021/v2_s2-01a15c91-740f-70cc-a4f6-91094c16a015/model.glb",
+  "retexture_sha256": "a75412e9c818b24c4e8d015fb60fff4e78b049ab4e47e98a3d55c93b34c5ae86",
+  "output": "assets/creatures/tetherbound/bramblebun_redesign/models/creature_bramblebun_installed_retex_lod0.glb",
+  "output_sha256": "f1c4c1e30420dd64b75e12253647828e3b9038f3c147ccc8b8d7efb01cf71ed4",
+  "unique_uvs": 37427,
+  "uv_sets_identical": true,
+  "base_color_red_clamp": {
+    "encoded_as": "image/png",
+    "clamp_mask": "hue <15 or >320, sat >0.45, value >0.15",
+    "recoloured_texels": 683,
+    "red_metric": "hue <15 or >320, sat >0.30, value >0.20 (all texels)",
+    "red_texels_pct_before": 0.8289,
+    "red_texels_pct_after": 0.8161,
+    "clamp_mask_texels_pct_before": 0.0163,
+    "clamp_mask_texels_pct_after": 0.0
+  },
+  "kept_unchanged": [
+    "meshes",
+    "accessors",
+    "skins",
+    "nodes",
+    "animations",
+    "scenes",
+    "samplers"
+  ],
+  "non_image_buffer_views_byte_identical": 289,
+  "joint_names": [
+    "root",
+    "pelvis",
+    "spine",
+    "neck",
+    "head",
+    "front_upper_l",
+    "front_lower_l",
+    "front_upper_r",
+    "front_lower_r",
+    "tail_1",
+    "tail_2",
+    "rear_upper_l",
+    "rear_lower_l",
+    "rear_upper_r",
+    "rear_lower_r"
+  ],
+  "material": {
+    "doubleSided": true,
+    "name": "material",
+    "normalTexture": {
+      "index": 0
+    },
+    "pbrMetallicRoughness": {
+      "baseColorTexture": {
+        "index": 1
+      },
+      "metallicRoughnessTexture": {
+        "index": 2
+      },
+      "metallicFactor": 1.0,
+      "roughnessFactor": 1.0
+    }
+  },
+  "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "hit",
+    "faint"
+  ]
+}

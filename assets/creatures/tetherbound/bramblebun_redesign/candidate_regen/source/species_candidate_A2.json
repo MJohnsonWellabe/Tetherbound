@@ -1,0 +1,32 @@
+{
+  "enabled": false,
+  "species": "bramblebun",
+  "candidate_variant": "regen_A2",
+  "placeholder": {
+    "colour": "#7a8a3f",
+    "height": 2.05,
+    "radius": 0.66625,
+    "footprint_allowance": 5.8,
+    "model": "res://assets/creatures/tetherbound/bramblebun_redesign/candidate_regen/models/creature_bramblebun_regen_a2.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+    },
+    "field_emission": 2.5,
+    "field_degreen": 0.75,
+    "colourway_source_species": "bramblebun_regen_a2_review"
+  },
+  "scope": "presentation_only",
+  "activation": "Requires the three-judge Bar A 7.5 and independent F36 art approval; installed creature_bramblebun_redesign_lod0.glb remains the default; regen A stays the comparison baseline"
+}

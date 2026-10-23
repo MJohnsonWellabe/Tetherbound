@@ -1,0 +1,27 @@
+[
+ {
+  "tag": "c1",
+  "task_id": "01a15cb0-b03d-77ef-ba22-339027ddf537",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Using the reference images for faction style and palette, draft a 3D-model concept of a BROKEN Team Tether creature captive cage after a battle: a tall square cage about 2.2 m tall and 1.8 m wide, heavy dark gunmetal iron bars and thick riveted frame, a base plinth and a domed cap with deep oxblood red painted trim plates and a small brass Tether emblem, two cyan tether-glow conduit strips on the corner posts (dim, cracked). The front door is torn off its top hinge and hangs open at a steep angle, and two of the front bars are dramatically bent outward in a wide bulge as if something burst out. Empty inside, a snapped chain dangling. Battle-worn, scratched, dented. Stylised Palworld / Animo-class game prop, chunky exaggerated readable silhouette that reads clearly from 15 m away, hand-painted PBR look, clean shapes, slightly oversized details. Single isolated object, full object visible and centred, plain neutral background, even lighting, no cast shadow, no ground plane, no people, no creatures, no text.",
+  "reference_paths": [
+   "refs/ref13_pylon.png",
+   "refs/keyart_stronghold.png",
+   "refs/palworld05.jpg"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb1-a47d-7577-9e6d-9c96579ea161_part_0.png?Expires=1792815708&Signature=QI-sHHzpKEP7YhFn5YODGf~aNIWavr9n0~3YWTHH3pCBVHtKUA8c9BuTFn3fDUWZotb7whNgcqKv-6YOt0P1xNoIZrp05NOq2Zi2DCsXhcD~UAQrn9nWNhwRhcfHwQE7cJZAVEhPY28sPlW2gkzeLuZJjddvDvLeLwRBEuHtY7MPHv~XmcQxUcQohgGrylgKkx28d0cSvcHlywJNxTfAYeGMHenrA6zKpJKTGht6jc-jPdYbvGOmeFJlUnkuSp3r2x1MIXcUQkkVprFuWP~juDsjmtHsrwVklI87sWL74ljXf7SyKJ3o8XPSrhwCtqgZUIl2SSM67nPU4CxyvtwdpA__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb1-a47d-7577-9e6d-9c96579ea161_part_1.png?Expires=1792815708&Signature=RNZAH3pveca7vOKXW22x7CV7vQkA1PeM-WQ8TiRH2optgEIq0W5otPMxc6gSXZw-kxHwQz~eveFAYxXkiBnlpGYxw1BFxtgCzMk2vmLrCo8jTSdsWjIPu3VaQIyfCCOgI4KrOA8Mrbt~rjqTN0jPeSip8IGdPxM~5zdZaXuMf1kZIZeiOoLNwSVffmEGISmllqFoILoRTFkP8gKM5mqZnfrdUOkcihL3TUrG4B4JvXqdkoBIbHNNU4ycUiUUWv8O-oh9vGJtidebG2Zog4CU2vYPFycshrmwVxGbNWYXyKJ~9W0t8UwW~CPNWFjrIlf57Xg36q6sCUjgY8GpRIZe1w__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb1-a47d-7577-9e6d-9c96579ea161_part_2.png?Expires=1792815708&Signature=hzvPnGyTRkUMK83EcA6UFyqiTMzK5BBxE2Md1v1RwcskF6rHodGb6EBwtwbp8TOGYDaJlNamsQA5eXJ8z6E8C3qMZU~dhjJaEd2LP2VU0YU3WwvFEh~VIaL4Lxt-LqwjV9Ds-AAPuxpcKfjgbWDKVnmBzk6sL8tixm0ZYgbybAVidJWtjNIiSJiBokHcE0hVIKFrNCGNNhJVWjo8UPUDaT~JwMVNh0RidbdKIcnmI72wAZFr7YfXn1CEHjcFlYDM6VP9VQynZGUaNyIT-uYacFjXLBqoKxj~uDIcEEEnUv2jSvdKAZyVTdcCmOiSHWjBrPO0cYrTtvYZzXGwPt70Xg__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/broken_tether_cage/concepts/c1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/broken_tether_cage/concepts/c1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/broken_tether_cage/concepts/c1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]

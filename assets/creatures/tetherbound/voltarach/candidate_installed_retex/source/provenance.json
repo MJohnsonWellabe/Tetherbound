@@ -1,0 +1,296 @@
+{
+ "subject": "voltarach",
+ "variant": "installed_retex_r6",
+ "criterion": "F36#0 (Creatures lane: judges round, fight camera)",
+ "default_enabled": false,
+ "status": "candidate_off_judging_open",
+ "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule (agent-drafted reference)",
+ "method": "deterministic material pass on the installed rigged native GLB's own maps (no Meshy task): the blue eye-cluster texels are pushed brighter and more saturated (hue 232) and written to a new emissive map; base colour re-encoded as PNG with the red clamp; normal and metallic-roughness unchanged. Arachnid rig, not the standard quadruped skeleton; geometry, skin, rig and clips unchanged.",
+ "disposition": "Flag-off candidate beside the installed model; species.json binding and the installed model are unchanged.",
+ "installed": "assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native.glb",
+ "installed_sha256": "c4e90946cc9884e6779283c40716e4c350e375f5a343b9ef4e71876ae70352d7",
+ "model": "res://assets/creatures/tetherbound/voltarach/candidate_installed_retex/models/creature_voltarach_installed_retex_r6_lod0.glb",
+ "model_sha256": "2691c0a52dd41b862ded4cd16733c925c7d69905c6aa61b32924672573222360",
+ "catalogue_height_m": 4.25,
+ "height_note": "Geometry unchanged; placeholder height 4.25 m as installed (trainer 1.80 m); never shrunk.",
+ "judges_asks": [
+  "make the blue eye cluster emissive and visible from the fight camera (emissive mask on the eyes, brighter blue)"
+ ],
+ "asks_met_by_material": [
+  "eye-cluster texels (0.46% of the atlas) brightened/saturated toward #3a4dff and emissive at gain 1.6, visible from the front and 3/4 turntable views"
+ ],
+ "asks_unmet_geometry": [],
+ "identity_sources": [
+  "docs/art/reference/45_Voltarach_Board.png"
+ ],
+ "meshy_tasks": [],
+ "credits_total": 0,
+ "grade": {
+  "hue_move_0_texels_pct": 0.463,
+  "emissive_texels_pct": 0.463,
+  "red_clamped_texels": 12696
+ },
+ "red_metric_pct": {
+  "retexture": 0.9594,
+  "candidate": 0.6567
+ },
+ "checks": {
+  "uv_sets_identical": true,
+  "non_image_buffer_views_byte_identical": 946,
+  "joints": 28,
+  "animations": [
+   "idle",
+   "walk",
+   "run",
+   "attack",
+   "charged",
+   "hit",
+   "faint",
+   "rest",
+   "swim",
+   "fly_grip",
+   "ride"
+  ]
+ },
+ "review": "Blender EEVEE turntable before/after inspected by the worker: the eye cluster now reads as a glowing blue row; carapace and gold lightning unchanged. The red clamp recoloured 12,696 dark warm texels to brown (strict red 0.96% -> 0.66%).",
+ "r7": {
+  "default_enabled": false,
+  "status": "candidate_off_judging_open",
+  "meshy_tasks": [],
+  "credits_total": 0,
+  "authorization": "Standing owner direction 1; CLAUDE.md art rule (agent-drafted reference)",
+  "tool": "source/apply_installed_retex.py <species> r7 (main_r7: masked grade of the r6 maps; refuses unless UVs, meshes, accessors, skins, nodes, animations and every non-image bufferView are byte-identical)",
+  "variant": "installed_retex_r7",
+  "model": "res://assets/creatures/tetherbound/voltarach/candidate_installed_retex/models/creature_voltarach_installed_retex_r7_lod0.glb",
+  "model_sha256": "a451ee1e02c6e7d3296671212379c0037c9869ecee8db898530edfc2a150b4a6",
+  "source_r6_sha256": "2691c0a52dd41b862ded4cd16733c925c7d69905c6aa61b32924672573222360",
+  "installed_sha256": "c4e90946cc9884e6779283c40716e4c350e375f5a343b9ef4e71876ae70352d7",
+  "grade": {
+   "eye_texels_pct": 0.272,
+   "eye_core_texels_pct": 0.627,
+   "eye_halo_texels_pct": 0.548,
+   "red_clamped_texels": 179
+  },
+  "red_metric_pct": {
+   "r6": 0.6567,
+   "candidate": 0.6558
+  },
+  "checks": {
+   "uv_sets_identical": true,
+   "non_image_buffer_views_byte_identical": 946,
+   "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+   ]
+  },
+  "species_candidate": "source/species_candidate_r7.json (enabled false)",
+  "judges_asks": [
+   "blue eye cluster still not visible at the fight camera (r6 scored 6.50): make it read much larger"
+  ],
+  "method": "material only on the arachnid-28 rig: eye texels (hue 210-260) in the head-front box located by bind-pose position; every head texel within 0.12 m (3D) of an eye texel painted saturated blue #3B52FF with a pale specular dot from the brightest original texels, a soft blue halo to 0.40 m; both written to the emissive map, and KHR_materials_emissive_strength 2.5 on the material (the emissive map holds only the eyes). Rest of the base colour, normal and metallic-roughness unchanged; red clamp to brown as in r6.",
+  "asks_met_by_material": [
+   "eye patch ~2.3x the texel area of the original eye texels (0.63% core + 0.55% halo vs 0.27%), emissive strength 2.5"
+  ],
+  "asks_unmet": [],
+  "identity_sources": [
+   "docs/art/reference/45_Voltarach_Board.png"
+  ]
+ },
+ "r8": {
+  "default_enabled": false,
+  "status": "candidate_off_judging_open",
+  "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule (agent-drafted reference)",
+  "tool": "source/apply_installed_retex.py <species> r8 (main_r8; refuses unless UVs, meshes, accessors, skins, nodes, animations and every non-image bufferView are byte-identical)",
+  "variant": "installed_retex_r8",
+  "model": "res://assets/creatures/tetherbound/voltarach/candidate_installed_retex/models/creature_voltarach_installed_retex_r8_lod0.glb",
+  "model_sha256": "4fa7efba99c77c0f425974cd311a1720b24e0c8f8dd3ca81b1eb12a3a4102376",
+  "source": "assets_raw/voltarach/meshy-r8-1021/vo_r8-01a15e00-e429-721e-ae9a-ceb86b1ec766/model.glb",
+  "source_sha256": "a635b76ecacc4e03231d3975bdd209c8799ef3502a2d5bff35031efa71fa3535",
+  "installed_sha256": "c4e90946cc9884e6779283c40716e4c350e375f5a343b9ef4e71876ae70352d7",
+  "grade": {
+   "eye_texels_pct": 0.333,
+   "eye_core_texels_pct": 0.899,
+   "eye_halo_texels_pct": 0.603,
+   "red_clamped_texels": 9
+  },
+  "red_metric_pct": {
+   "source": 0.0043,
+   "candidate": 0.0042
+  },
+  "checks": {
+   "uv_sets_identical": true,
+   "non_image_buffer_views_byte_identical": 946,
+   "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+   ]
+  },
+  "species_candidate": "source/species_candidate_r8.json (enabled false)",
+  "height_note": "Geometry unchanged; never shrunk.",
+  "credits_total": 19,
+  "judges_asks": [
+   "scores: installed 5.40, r6 5.80, r7 5.73",
+   "body reads mostly gold-yellow: wanted a DARK carapace (deep charcoal-navy) with THIN amber/gold circuit lines",
+   "blue eye cluster clearly visible from the fight camera",
+   "abdomen must not read as a pinecone (smoother, fewer high-contrast scale bumps; dark carapace dominates)"
+  ],
+  "method": "Meshy retexture (enable_original_uv, PBR, 2k) of the installed rigged native GLB with a drafted nano-banana-pro style image (dark charcoal-navy carapace, thin gold circuit lines, smooth abdomen, large blue eyes; inspected before submission); base colour, metallic-roughness (metallic factor 0) and normal from the retexture; then the r7 eye treatment on top (head-front eye texels located by bind-pose position, every head texel within 0.12 m of an eye texel painted saturated blue #1F2BFF with a pale-blue specular dot, soft halo to 0.40 m, both written to the emissive map, KHR_materials_emissive_strength 2.5; eye colour more saturated than r7 so it stays blue, not white, under tonemapping); red clamp to brown (9 texels).",
+  "meshy_tasks": [
+   {
+    "label": "style_image",
+    "task_id": "01a15dff-ba09-77d9-b25f-893c2edd2edb",
+    "endpoint": "POST /openapi/v1/image-to-image",
+    "ai_model": "nano-banana-pro",
+    "reference_images": [
+     "Godot render of the installed native GLB, 3/4 view, grey background (scratchpad)",
+     "docs/art/reference/45_Voltarach_Board.png crop (3/4 model reference, 830,720-1170,960)",
+     "docs/art/reference/45_Voltarach_Board.png crop (five-view row, 10,120-1210,330)"
+    ],
+    "prompt": "Voltarach, the thunder spider creature for a stylised 3D creature-collecting action RPG: the SAME character with the same body shape, same eight spiked legs, same pose and same proportions as the 3D model render (first image), repainted to match the board reference art. The whole body is a DARK carapace: deep charcoal-navy (#1c2230 to #262c3a) armour plates covering the head, the body, the abdomen and all eight legs, matte with subtle cool grey edge highlights. Across that dark armour run THIN glowing amber-gold lightning circuit lines (#e0a52a), narrow crisp branching lines only, never wide bands, never gold-filled plates; at least 85 percent of the surface is the dark charcoal-navy. The legs are dark charcoal with only a thin gold line along each segment; the leg tips stay dark, not gold. The abdomen is SMOOTH, broad dark armour plates with a few thin gold lines, not a pinecone, no rows of bumpy high-contrast scales. On the front of the head a cluster of several LARGE round glowing electric-blue eyes (#3a4dff) with a soft blue glow around them, clearly visible. Stylised hand-painted creature-game look, clean readable colour blocks, Palworld / Pokemon Legends style 3D render, not photoreal. Full body in frame, plain flat light grey background, even studio lighting, no scenery, no text. Absolutely no red, pink, maroon, crimson or oxblood anywhere. Single creature only.",
+    "status": "SUCCEEDED",
+    "credits": 9
+   },
+   {
+    "label": "retexture",
+    "task_id": "01a15e00-e429-721e-ae9a-ceb86b1ec766",
+    "endpoint": "POST /openapi/v1/retexture",
+    "params": {
+     "ai_model": "latest",
+     "enable_pbr": true,
+     "enable_original_uv": true,
+     "texture_resolution": "2k",
+     "target_formats": [
+      "glb"
+     ]
+    },
+    "style_image_task_id": "01a15dff-ba09-77d9-b25f-893c2edd2edb",
+    "submitted": "2026-10-21T10:28:02Z",
+    "status": "SUCCEEDED",
+    "credits": 10,
+    "raw_folder": "assets_raw/voltarach/meshy-r8-1021/vo_r8-01a15e00-e429-721e-ae9a-ceb86b1ec766",
+    "raw_model_sha256": "a635b76ecacc4e03231d3975bdd209c8799ef3502a2d5bff35031efa71fa3535"
+   }
+  ],
+  "asks_met_by_material": [
+   "dark charcoal-navy carapace over body, abdomen and legs with thin gold circuit lines (Meshy retexture)",
+   "abdomen painted as broad smooth dark plates",
+   "blue eye cluster emissive (strength 2.5), saturated blue, readable at the fight camera"
+  ],
+  "asks_unmet": [],
+  "identity_sources": [
+   "docs/art/reference/45_Voltarach_Board.png"
+  ]
+ },
+ "r9": {
+  "default_enabled": false,
+  "status": "candidate_off_judging_open",
+  "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule (agent-drafted reference)",
+  "tool": "source/apply_installed_retex.py voltarach r9 (main_r9 = main_r8 with PROFILES_R9; same byte-identity refusals)",
+  "variant": "installed_retex_r9",
+  "model": "res://assets/creatures/tetherbound/voltarach/candidate_installed_retex/models/creature_voltarach_installed_retex_r9_lod0.glb",
+  "model_sha256": "7785b5296d411b2036873647ac9a15caacac66f9f55048c6e0373b1e0b5c1522",
+  "source": "assets_raw/voltarach/meshy-r9-1021/vo_r9-01a15e24-739e-770c-997c-3a6b24b05a3d/model.glb",
+  "source_sha256": "3dc367319c7da4e1082348cdcf0733dbd4787c0353ccebcd9036b7f0cf4024c3",
+  "installed_sha256": "c4e90946cc9884e6779283c40716e4c350e375f5a343b9ef4e71876ae70352d7",
+  "grade": {
+   "eye_texels_pct": 0.707,
+   "eye_core_texels_pct": 1.89,
+   "eye_halo_texels_pct": 1.238,
+   "gold_glow_texels_pct": 0.687,
+   "red_clamped_texels": 34
+  },
+  "red_metric_pct": {
+   "source": 0.0014,
+   "candidate": 0.0006
+  },
+  "checks": {
+   "uv_sets_identical": true,
+   "non_image_buffer_views_byte_identical": 946,
+   "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+   ]
+  },
+  "species_candidate": "source/species_candidate_r9.json (enabled false)",
+  "height_note": "Geometry unchanged; never shrunk.",
+  "credits_total": 19,
+  "judges_asks": [
+   "r8 panel: installed 6.30, r6 6.60, r8 6.40 (pooled r6 6.20)",
+   "judges split on r8's dark carapace vs r6's gold; shared ask: r8's charcoal base with the gold veins about halfway toward r6",
+   "emissive onto the leg tips",
+   "a front cluster of 3-5 bright blue eye orbs"
+  ],
+  "method": "Meshy retexture (enable_original_uv, PBR, 2k) of the installed rigged native GLB with a new drafted nano-banana-pro style image (charcoal-navy carapace, medium-width gold lightning veins about a quarter to a third of the surface, gold-lit leg tips, four large blue eye orbs; inspected before submission, no red); then r8's treatment (r7 eye patch and halo, emissive strength 2.5, red clamp) plus a soft gold emissive on bright gold texels (hue 30-62, sat >= 0.45, value >= 0.72, gain 0.55) so the veins and leg tips read as charged.",
+  "meshy_tasks": [
+   {
+    "label": "style_image",
+    "task_id": "01a15e23-a309-745c-af84-d465f785263c",
+    "endpoint": "POST /openapi/v1/image-to-image",
+    "ai_model": "nano-banana-pro",
+    "reference_images": [
+     "Godot render of the r8 candidate, 3/4 view (scratchpad)",
+     "Godot render of the r7 candidate, 3/4 view (scratchpad)",
+     "docs/art/reference/45_Voltarach_Board.png crop (3/4 model reference)"
+    ],
+    "prompt": "Voltarach, the thunder spider creature for a stylised 3D creature-collecting action RPG: the SAME character with exactly the same body shape, same eight spiked legs, same pose and same proportions as the 3D model in the first image, repainted. Base: a dark deep charcoal-navy armour carapace (#1c2230 to #2a3142) on the head, body, abdomen and all eight legs, matte with cool grey edge highlights, exactly like the first image. Over it, glowing amber-gold lightning veins (#e8aa2c) of MEDIUM width and density: clearly bolder and more numerous than thin hairlines, forming a branching lightning network across every armour plate, so about a quarter to a third of the surface reads gold while the dark armour stays the dominant colour (halfway between the first image and the second image). Each of the eight leg TIPS ends in a bright glowing gold-yellow point (the last 10 percent of each leg), like charged claws. Abdomen: smooth broad dark armour plates with gold veins, not a pinecone. On the front of the head a tight cluster of four LARGE round glowing electric-blue eye orbs (#3a6dff, bright pale-blue centres) with a soft blue glow, clearly separate round orbs, big and readable from a distance. Stylised hand-painted creature-game look, clean readable colour blocks, Palworld / Pokemon Legends style 3D render, not photoreal. Full body in frame, plain flat light grey background, even studio lighting, no scenery, no text. Absolutely no red, pink, maroon, crimson or oxblood anywhere. Single creature only.",
+    "status": "SUCCEEDED",
+    "credits": 9
+   },
+   {
+    "label": "retexture",
+    "task_id": "01a15e24-739e-770c-997c-3a6b24b05a3d",
+    "endpoint": "POST /openapi/v1/retexture",
+    "params": {
+     "ai_model": "latest",
+     "enable_pbr": true,
+     "enable_original_uv": true,
+     "texture_resolution": "2k",
+     "target_formats": [
+      "glb"
+     ]
+    },
+    "style_image_task_id": "01a15e23-a309-745c-af84-d465f785263c",
+    "status": "SUCCEEDED",
+    "credits": 10,
+    "raw_folder": "assets_raw/voltarach/meshy-r9-1021/vo_r9-01a15e24-739e-770c-997c-3a6b24b05a3d",
+    "raw_model_sha256": "3dc367319c7da4e1082348cdcf0733dbd4787c0353ccebcd9036b7f0cf4024c3"
+   }
+  ],
+  "asks_met_by_material": [
+   "charcoal-navy base with medium gold veins (between r8 and r6)",
+   "gold-lit leg tips, emissive",
+   "four large blue eye orbs, emissive strength 2.5"
+  ],
+  "asks_unmet": [],
+  "identity_sources": [
+   "docs/art/reference/45_Voltarach_Board.png"
+  ]
+ }
+}

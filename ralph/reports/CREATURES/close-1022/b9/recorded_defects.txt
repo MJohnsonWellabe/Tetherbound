@@ -1,0 +1,7 @@
+Nh: "Body reads dark and melts into the dark stage"; "Face is small and hard to read at fight distance"; "Flat, plasticky material with no rim or surface variation"
+Nu: "Body reads dark and melts into the dark stage"; "Face is small and hard to read at fight distance"; "Flat, plasticky material with no rim or surface variation"
+Fo: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Mw: none
+Zp: none
+Xr: "Body reads dark and melts into the dark stage"; "Face is small and hard to read at fight distance"; "Flat, plasticky material with no rim or surface variation"
+Jn: none

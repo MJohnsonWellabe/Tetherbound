@@ -1,0 +1,867 @@
+{
+	"capture_finished_utc": "2026-10-23T00:06:40",
+	"capture_started_utc": "2026-10-22T23:58:05",
+	"captured_frame_count": 6,
+	"complete": true,
+	"display_server": "X11",
+	"expected_frame_count": 6,
+	"failures": [],
+	"fixture_disclosure": "Production Meadows scene, Terrain3D, trainer, party, inventory, EncounterDirector and RidingController. Canonical Meadowhart is audit-added to the ephemeral party by default, summoned through EncounterDirector, fitted and mounted only by RidingController.mount(). Camera is framed from the authored seat; authored day/night clock frozen; clear weather and HUD hidden. Night frames use bounded capture-only key/rim evidence lights so the saddle/back and rider/seat interfaces remain judgeable. No rider pose, carrier, saddle transform, creature art, material, world geometry or progression reward injection.",
+	"frames": [
+		{
+			"authored_seat_world": [
+				36.1221199035645,
+				1.24125349521637,
+				-44.5324745178223
+			],
+			"bytes": 2062290,
+			"camera_distance_to_seat_m": 7.01729917526245,
+			"camera_subject_sightline_clear": true,
+			"camera_transform": {
+				"basis_x": [
+					0.242838472127914,
+					0.0,
+					-0.970066785812378
+				],
+				"basis_y": [
+					-0.0968388542532921,
+					0.995004832744598,
+					-0.0242418348789215
+				],
+				"basis_z": [
+					0.965221107006073,
+					0.0998270064592361,
+					0.241625443100929
+				],
+				"origin": [
+					42.8903770446777,
+					1.99125349521637,
+					-42.8381652832031
+				]
+			},
+			"capture_evidence_light": false,
+			"file": "res://ralph/reports/CREATURES/close-1022/ride-nat-r1/01-unsaddled-three-quarter-day.png",
+			"frame": "01-unsaddled-three-quarter-day",
+			"image_size": [
+				1280,
+				800
+			],
+			"meadowhart_bare_body_present": true,
+			"mount_transform": {
+				"basis_x": [
+					0.999100923538208,
+					0.0,
+					-0.042376670986414
+				],
+				"basis_y": [
+					0.0,
+					1.0,
+					0.0
+				],
+				"basis_z": [
+					0.042376670986414,
+					0.0,
+					0.999100923538208
+				],
+				"origin": [
+					30.242696762085,
+					0.369450956583023,
+					-44.9556312561035
+				]
+			},
+			"production_mount_body_matches": false,
+			"production_riding_mounted": false,
+			"saddle_fitted_flag": false,
+			"saddle_visual_present": false,
+			"state": "unsaddled",
+			"time": "day"
+		},
+		{
+			"authored_seat_world": [
+				30.2319984436035,
+				2.55725598335266,
+				-45.2078437805176
+			],
+			"bytes": 1751740,
+			"camera_distance_to_seat_m": 7.01729297637939,
+			"camera_subject_sightline_clear": true,
+			"camera_transform": {
+				"basis_x": [
+					-0.495887637138367,
+					0.0,
+					-0.868386685848236
+				],
+				"basis_y": [
+					-0.0866885185241699,
+					0.995004832744598,
+					0.0495030209422112
+				],
+				"basis_z": [
+					0.864048957824707,
+					0.0998270884156227,
+					-0.493410617113113
+				],
+				"origin": [
+					36.2908172607422,
+					3.30725598335266,
+					-48.6677017211914
+				]
+			},
+			"capture_evidence_light": true,
+			"file": "res://ralph/reports/CREATURES/close-1022/ride-nat-r1/01-unsaddled-three-quarter-night.png",
+			"frame": "01-unsaddled-three-quarter-night",
+			"image_size": [
+				1280,
+				800
+			],
+			"meadowhart_bare_body_present": true,
+			"mount_transform": {
+				"basis_x": [
+					0.999915719032288,
+					0.0,
+					-0.0128009673207998
+				],
+				"basis_y": [
+					0.0,
+					1.0,
+					0.0
+				],
+				"basis_z": [
+					0.0128009673207998,
+					0.0,
+					0.999915719032288
+				],
+				"origin": [
+					29.6009750366211,
+					0.0558156929910183,
+					-36.7504043579102
+				]
+			},
+			"production_mount_body_matches": false,
+			"production_riding_mounted": false,
+			"saddle_fitted_flag": false,
+			"saddle_visual_present": false,
+			"state": "unsaddled",
+			"time": "night"
+		},
+		{
+			"authored_seat_world": [
+				29.619499206543,
+				2.15464377403259,
+				-35.6427688598633
+			],
+			"bytes": 1937755,
+			"camera_distance_to_seat_m": 7.01728200912476,
+			"camera_subject_sightline_clear": true,
+			"camera_transform": {
+				"basis_x": [
+					-0.469361901283264,
+					0.0,
+					-0.883005917072296
+				],
+				"basis_y": [
+					-0.0881480500102043,
+					0.995004773139954,
+					0.0468551069498062
+				],
+				"basis_z": [
+					0.878595113754272,
+					0.0998272523283958,
+					-0.467017352581024
+				],
+				"origin": [
+					35.7803077697754,
+					2.90464377403259,
+					-38.9175491333008
+				]
+			},
+			"capture_evidence_light": false,
+			"file": "res://ralph/reports/CREATURES/close-1022/ride-nat-r1/02-mounted-three-quarter-day.png",
+			"frame": "02-mounted-three-quarter-day",
+			"image_size": [
+				1280,
+				800
+			],
+			"meadowhart_bare_body_present": true,
+			"mount_transform": {
+				"basis_x": [
+					0.99992424249649,
+					0.0,
+					-0.0121007086709142
+				],
+				"basis_y": [
+					0.0,
+					1.0,
+					0.0
+				],
+				"basis_z": [
+					0.0121007086709142,
+					0.0,
+					0.99992424249649
+				],
+				"origin": [
+					29.6225547790527,
+					-0.0331612341105938,
+					-35.3903503417969
+				]
+			},
+			"production_mount_body_matches": true,
+			"production_riding_leg_fit": {
+				"complete": true,
+				"continuous_left": true,
+				"continuous_right": true,
+				"parts": {
+					"LeftBoot": {
+						"stirrup_anchor_local": [
+							0.419999927282333,
+							-0.579999983310699,
+							0.0300000142306089
+						],
+						"target_error_m": 0.0000000614390600617298,
+						"target_local": [
+							0.419999986886978,
+							-0.579999983310699,
+							0.0299999993294477
+						]
+					},
+					"Left_Shin": {
+						"end_local": [
+							0.419999927282333,
+							-0.579999983310699,
+							0.0300000142306089
+						],
+						"start_local": [
+							0.38830691576004,
+							-0.263558268547058,
+							0.226285859942436
+						]
+					},
+					"Left_Thigh": {
+						"end_local": [
+							0.38830691576004,
+							-0.263558268547058,
+							0.226285859942436
+						],
+						"start_local": [
+							0.100965224206448,
+							-0.0817779302597046,
+							0.114894926548004
+						]
+					},
+					"RightBoot": {
+						"stirrup_anchor_local": [
+							-0.419999837875366,
+							-0.580000340938568,
+							0.0299998801201582
+						],
+						"target_error_m": 0.000000405355422117282,
+						"target_local": [
+							-0.419999986886978,
+							-0.579999983310699,
+							0.0299999993294477
+						]
+					},
+					"Right_Shin": {
+						"end_local": [
+							-0.419999837875366,
+							-0.580000340938568,
+							0.0299998801201582
+						],
+						"start_local": [
+							-0.382876545190811,
+							-0.27394711971283,
+							0.214467719197273
+						]
+					},
+					"Right_Thigh": {
+						"end_local": [
+							-0.382876545190811,
+							-0.27394711971283,
+							0.214467719197273
+						],
+						"start_local": [
+							-0.100278794765472,
+							-0.0807662010192871,
+							0.115165747702122
+						]
+					}
+				},
+				"source": "textured_skin_bones"
+			},
+			"production_riding_leg_fit_present": true,
+			"production_riding_mounted": true,
+			"rider_near_leg": {
+				"ankle_below_hip_m": 0.49822211265564,
+				"ankle_to_saddle_origin_m": 0.623618364334106,
+				"ankle_world": [
+					30.039831161499,
+					1.57464385032654,
+					-35.6178512573242
+				],
+				"complete": true,
+				"hip_world": [
+					29.7218456268311,
+					2.07286596298218,
+					-35.5291023254395
+				],
+				"knee_world": [
+					30.0105152130127,
+					1.89108562469482,
+					-35.4211959838867
+				],
+				"side": "left"
+			},
+			"saddle_fitted_flag": true,
+			"saddle_visual_present": true,
+			"state": "mounted",
+			"time": "day"
+		},
+		{
+			"authored_seat_world": [
+				29.619499206543,
+				2.15464377403259,
+				-35.6427688598633
+			],
+			"bytes": 1676939,
+			"camera_distance_to_seat_m": 7.01728200912476,
+			"camera_subject_sightline_clear": true,
+			"camera_transform": {
+				"basis_x": [
+					-0.469361901283264,
+					0.0,
+					-0.883005917072296
+				],
+				"basis_y": [
+					-0.0881480500102043,
+					0.995004773139954,
+					0.0468551069498062
+				],
+				"basis_z": [
+					0.878595113754272,
+					0.0998272523283958,
+					-0.467017352581024
+				],
+				"origin": [
+					35.7803077697754,
+					2.90464377403259,
+					-38.9175491333008
+				]
+			},
+			"capture_evidence_light": true,
+			"file": "res://ralph/reports/CREATURES/close-1022/ride-nat-r1/02-mounted-three-quarter-night.png",
+			"frame": "02-mounted-three-quarter-night",
+			"image_size": [
+				1280,
+				800
+			],
+			"meadowhart_bare_body_present": true,
+			"mount_transform": {
+				"basis_x": [
+					0.99992424249649,
+					0.0,
+					-0.0121007086709142
+				],
+				"basis_y": [
+					0.0,
+					1.0,
+					0.0
+				],
+				"basis_z": [
+					0.0121007086709142,
+					0.0,
+					0.99992424249649
+				],
+				"origin": [
+					29.6225547790527,
+					-0.0331612341105938,
+					-35.3903503417969
+				]
+			},
+			"production_mount_body_matches": true,
+			"production_riding_leg_fit": {
+				"complete": true,
+				"continuous_left": true,
+				"continuous_right": true,
+				"parts": {
+					"LeftBoot": {
+						"stirrup_anchor_local": [
+							0.419999927282333,
+							-0.579999983310699,
+							0.0300000142306089
+						],
+						"target_error_m": 0.0000000614390600617298,
+						"target_local": [
+							0.419999986886978,
+							-0.579999983310699,
+							0.0299999993294477
+						]
+					},
+					"Left_Shin": {
+						"end_local": [
+							0.419999927282333,
+							-0.579999983310699,
+							0.0300000142306089
+						],
+						"start_local": [
+							0.38830691576004,
+							-0.263558268547058,
+							0.226285859942436
+						]
+					},
+					"Left_Thigh": {
+						"end_local": [
+							0.38830691576004,
+							-0.263558268547058,
+							0.226285859942436
+						],
+						"start_local": [
+							0.100965224206448,
+							-0.0817779302597046,
+							0.114894926548004
+						]
+					},
+					"RightBoot": {
+						"stirrup_anchor_local": [
+							-0.419999837875366,
+							-0.580000340938568,
+							0.0299998801201582
+						],
+						"target_error_m": 0.000000405355422117282,
+						"target_local": [
+							-0.419999986886978,
+							-0.579999983310699,
+							0.0299999993294477
+						]
+					},
+					"Right_Shin": {
+						"end_local": [
+							-0.419999837875366,
+							-0.580000340938568,
+							0.0299998801201582
+						],
+						"start_local": [
+							-0.382876545190811,
+							-0.27394711971283,
+							0.214467719197273
+						]
+					},
+					"Right_Thigh": {
+						"end_local": [
+							-0.382876545190811,
+							-0.27394711971283,
+							0.214467719197273
+						],
+						"start_local": [
+							-0.100278794765472,
+							-0.0807662010192871,
+							0.115165747702122
+						]
+					}
+				},
+				"source": "textured_skin_bones"
+			},
+			"production_riding_leg_fit_present": true,
+			"production_riding_mounted": true,
+			"rider_near_leg": {
+				"ankle_below_hip_m": 0.49822211265564,
+				"ankle_to_saddle_origin_m": 0.623618364334106,
+				"ankle_world": [
+					30.039831161499,
+					1.57464385032654,
+					-35.6178512573242
+				],
+				"complete": true,
+				"hip_world": [
+					29.7218456268311,
+					2.07286596298218,
+					-35.5291023254395
+				],
+				"knee_world": [
+					30.0105152130127,
+					1.89108562469482,
+					-35.4211959838867
+				],
+				"side": "left"
+			},
+			"saddle_fitted_flag": true,
+			"saddle_visual_present": true,
+			"state": "mounted",
+			"time": "night"
+		},
+		{
+			"authored_seat_world": [
+				29.619499206543,
+				2.15464377403259,
+				-35.6427688598633
+			],
+			"bytes": 1945247,
+			"camera_distance_to_seat_m": 6.62949132919312,
+			"camera_subject_sightline_clear": true,
+			"camera_transform": {
+				"basis_x": [
+					-0.072569340467453,
+					0.0,
+					-0.997363388538361
+				],
+				"basis_y": [
+					-0.0647241920232773,
+					0.997892081737518,
+					0.00470940861850977
+				],
+				"basis_z": [
+					0.995261013507843,
+					0.0648952946066856,
+					-0.0724163725972176
+				],
+				"origin": [
+					36.2141571044922,
+					2.63464379310608,
+					-36.1226043701172
+				]
+			},
+			"capture_evidence_light": false,
+			"file": "res://ralph/reports/CREATURES/close-1022/ride-nat-r1/03-mounted-side-day.png",
+			"frame": "03-mounted-side-day",
+			"image_size": [
+				1280,
+				800
+			],
+			"meadowhart_bare_body_present": true,
+			"mount_transform": {
+				"basis_x": [
+					0.99992424249649,
+					0.0,
+					-0.0121007086709142
+				],
+				"basis_y": [
+					0.0,
+					1.0,
+					0.0
+				],
+				"basis_z": [
+					0.0121007086709142,
+					0.0,
+					0.99992424249649
+				],
+				"origin": [
+					29.6225547790527,
+					-0.0331612341105938,
+					-35.3903503417969
+				]
+			},
+			"production_mount_body_matches": true,
+			"production_riding_leg_fit": {
+				"complete": true,
+				"continuous_left": true,
+				"continuous_right": true,
+				"parts": {
+					"LeftBoot": {
+						"stirrup_anchor_local": [
+							0.419999927282333,
+							-0.579999983310699,
+							0.0300000142306089
+						],
+						"target_error_m": 0.0000000614390600617298,
+						"target_local": [
+							0.419999986886978,
+							-0.579999983310699,
+							0.0299999993294477
+						]
+					},
+					"Left_Shin": {
+						"end_local": [
+							0.419999927282333,
+							-0.579999983310699,
+							0.0300000142306089
+						],
+						"start_local": [
+							0.38830691576004,
+							-0.263558268547058,
+							0.226285859942436
+						]
+					},
+					"Left_Thigh": {
+						"end_local": [
+							0.38830691576004,
+							-0.263558268547058,
+							0.226285859942436
+						],
+						"start_local": [
+							0.100965224206448,
+							-0.0817779302597046,
+							0.114894926548004
+						]
+					},
+					"RightBoot": {
+						"stirrup_anchor_local": [
+							-0.419999837875366,
+							-0.580000340938568,
+							0.0299998801201582
+						],
+						"target_error_m": 0.000000405355422117282,
+						"target_local": [
+							-0.419999986886978,
+							-0.579999983310699,
+							0.0299999993294477
+						]
+					},
+					"Right_Shin": {
+						"end_local": [
+							-0.419999837875366,
+							-0.580000340938568,
+							0.0299998801201582
+						],
+						"start_local": [
+							-0.382876545190811,
+							-0.27394711971283,
+							0.214467719197273
+						]
+					},
+					"Right_Thigh": {
+						"end_local": [
+							-0.382876545190811,
+							-0.27394711971283,
+							0.214467719197273
+						],
+						"start_local": [
+							-0.100278794765472,
+							-0.0807662010192871,
+							0.115165747702122
+						]
+					}
+				},
+				"source": "textured_skin_bones"
+			},
+			"production_riding_leg_fit_present": true,
+			"production_riding_mounted": true,
+			"rider_near_leg": {
+				"ankle_below_hip_m": 0.49822211265564,
+				"ankle_to_saddle_origin_m": 0.623618364334106,
+				"ankle_world": [
+					30.039831161499,
+					1.57464385032654,
+					-35.6178512573242
+				],
+				"complete": true,
+				"hip_world": [
+					29.7218456268311,
+					2.07286596298218,
+					-35.5291023254395
+				],
+				"knee_world": [
+					30.0105152130127,
+					1.89108562469482,
+					-35.4211959838867
+				],
+				"side": "left"
+			},
+			"saddle_fitted_flag": true,
+			"saddle_visual_present": true,
+			"state": "mounted",
+			"time": "day"
+		},
+		{
+			"authored_seat_world": [
+				29.619499206543,
+				2.15464377403259,
+				-35.6427688598633
+			],
+			"bytes": 1682188,
+			"camera_distance_to_seat_m": 6.62949132919312,
+			"camera_subject_sightline_clear": true,
+			"camera_transform": {
+				"basis_x": [
+					-0.072569340467453,
+					0.0,
+					-0.997363388538361
+				],
+				"basis_y": [
+					-0.0647241920232773,
+					0.997892081737518,
+					0.00470940861850977
+				],
+				"basis_z": [
+					0.995261013507843,
+					0.0648952946066856,
+					-0.0724163725972176
+				],
+				"origin": [
+					36.2141571044922,
+					2.63464379310608,
+					-36.1226043701172
+				]
+			},
+			"capture_evidence_light": true,
+			"file": "res://ralph/reports/CREATURES/close-1022/ride-nat-r1/03-mounted-side-night.png",
+			"frame": "03-mounted-side-night",
+			"image_size": [
+				1280,
+				800
+			],
+			"meadowhart_bare_body_present": true,
+			"mount_transform": {
+				"basis_x": [
+					0.99992424249649,
+					0.0,
+					-0.0121007086709142
+				],
+				"basis_y": [
+					0.0,
+					1.0,
+					0.0
+				],
+				"basis_z": [
+					0.0121007086709142,
+					0.0,
+					0.99992424249649
+				],
+				"origin": [
+					29.6225547790527,
+					-0.0331612341105938,
+					-35.3903503417969
+				]
+			},
+			"production_mount_body_matches": true,
+			"production_riding_leg_fit": {
+				"complete": true,
+				"continuous_left": true,
+				"continuous_right": true,
+				"parts": {
+					"LeftBoot": {
+						"stirrup_anchor_local": [
+							0.419999927282333,
+							-0.579999983310699,
+							0.0300000142306089
+						],
+						"target_error_m": 0.0000000614390600617298,
+						"target_local": [
+							0.419999986886978,
+							-0.579999983310699,
+							0.0299999993294477
+						]
+					},
+					"Left_Shin": {
+						"end_local": [
+							0.419999927282333,
+							-0.579999983310699,
+							0.0300000142306089
+						],
+						"start_local": [
+							0.38830691576004,
+							-0.263558268547058,
+							0.226285859942436
+						]
+					},
+					"Left_Thigh": {
+						"end_local": [
+							0.38830691576004,
+							-0.263558268547058,
+							0.226285859942436
+						],
+						"start_local": [
+							0.100965224206448,
+							-0.0817779302597046,
+							0.114894926548004
+						]
+					},
+					"RightBoot": {
+						"stirrup_anchor_local": [
+							-0.419999837875366,
+							-0.580000340938568,
+							0.0299998801201582
+						],
+						"target_error_m": 0.000000405355422117282,
+						"target_local": [
+							-0.419999986886978,
+							-0.579999983310699,
+							0.0299999993294477
+						]
+					},
+					"Right_Shin": {
+						"end_local": [
+							-0.419999837875366,
+							-0.580000340938568,
+							0.0299998801201582
+						],
+						"start_local": [
+							-0.382876545190811,
+							-0.27394711971283,
+							0.214467719197273
+						]
+					},
+					"Right_Thigh": {
+						"end_local": [
+							-0.382876545190811,
+							-0.27394711971283,
+							0.214467719197273
+						],
+						"start_local": [
+							-0.100278794765472,
+							-0.0807662010192871,
+							0.115165747702122
+						]
+					}
+				},
+				"source": "textured_skin_bones"
+			},
+			"production_riding_leg_fit_present": true,
+			"production_riding_mounted": true,
+			"rider_near_leg": {
+				"ankle_below_hip_m": 0.49822211265564,
+				"ankle_to_saddle_origin_m": 0.623618364334106,
+				"ankle_world": [
+					30.039831161499,
+					1.57464385032654,
+					-35.6178512573242
+				],
+				"complete": true,
+				"hip_world": [
+					29.7218456268311,
+					2.07286596298218,
+					-35.5291023254395
+				],
+				"knee_world": [
+					30.0105152130127,
+					1.89108562469482,
+					-35.4211959838867
+				],
+				"side": "left"
+			},
+			"saddle_fitted_flag": true,
+			"saddle_visual_present": true,
+			"state": "mounted",
+			"time": "night"
+		}
+	],
+	"named_location": "Grandpa's Village practice meadow",
+	"output_directory": "res://ralph/reports/CREATURES/close-1022/ride-nat-r1",
+	"planned_frames": [
+		"01-unsaddled-three-quarter-day",
+		"01-unsaddled-three-quarter-night",
+		"02-mounted-three-quarter-day",
+		"02-mounted-three-quarter-night",
+		"03-mounted-side-day",
+		"03-mounted-side-night"
+	],
+	"production_mount_attempt": {
+		"allowed_surface_distance_m": 6.78188753128052,
+		"body_radius_m": 1.245366,
+		"mount_world": [
+			29.6147136688232,
+			0.00538414949551225,
+			-35.8282661437988
+		],
+		"mountable_body_matches": true,
+		"player_world": [
+			31.7453784942627,
+			-0.248482510447502,
+			-39.5599403381348
+		],
+		"required_item": "saddle",
+		"required_item_count": 1,
+		"riding_allowed": true,
+		"surface_distance_m": 3.05923328512573
+	},
+	"production_scene": "res://scenes/world/meadows_playground.tscn",
+	"species_id": "meadowhart"
+}

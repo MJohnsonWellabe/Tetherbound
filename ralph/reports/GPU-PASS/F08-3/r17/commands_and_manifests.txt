@@ -1,0 +1,32 @@
+## High-candidate
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script res://tools/capture_cloudreach_settlement_identity.gd -- --preset=High --source-commit=ef2db84ccd4aeb6e7e0cd364405358e3919c4ed3 --output=D:/tb-gpu-runs/out/F08-3-r17/High-candidate/frames --cloudreach-settlement-life-candidate
+# Cloudreach settlement identity: 5 existing stands x day/night; production matrix camera/floor/follower; staged five-owned party and progression
+# coverage full 10-view matrix
+# graphics_capture {"adapter":"NVIDIA GeForce GTX 1060 3GB","graphics_config_sha256":"9bb724ed8c1b9de98649515e1bcc22705657fe5586f2ec4b6aeb0a7002d19253","preset":"High","renderer":"forward_plus","resolution":[1920,1080],"source_commit":"ef2db84ccd4aeb6e7e0cd364405358e3919c4ed3"}
+# weather pinned clear (cycle stopped)
+MANIFEST 101_upper_cloudreach_place_cliffhold_approach_day | place_cliffhold_approach | trainer (-267.0, 838.08, 4020.3) | yaw 55.4 pitch 5.0 | target (-340.0, 838.00, 3970.0) | hour 10.00 | stand (-267.0, 838.00, 4020.3) (1/1) | camera (-262.7, 839.37, 4023.2) | trainer on screen (50%, 60%) | companion native follower (-272.5, 837.44, 4017.0); trainer gap 6.45 m | flags boot | Existing settlement identity stand; floor-verified trainer, production rig and native following companion
+
+## High-control
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script res://tools/capture_cloudreach_settlement_identity.gd -- --preset=High --source-commit=ef2db84ccd4aeb6e7e0cd364405358e3919c4ed3 --output=D:/tb-gpu-runs/out/F08-3-r17/High-control/frames
+# Cloudreach settlement identity: 5 existing stands x day/night; production matrix camera/floor/follower; staged five-owned party and progression
+# coverage full 10-view matrix
+# graphics_capture {"adapter":"NVIDIA GeForce GTX 1060 3GB","graphics_config_sha256":"9bb724ed8c1b9de98649515e1bcc22705657fe5586f2ec4b6aeb0a7002d19253","preset":"High","renderer":"forward_plus","resolution":[1920,1080],"source_commit":"ef2db84ccd4aeb6e7e0cd364405358e3919c4ed3"}
+# weather pinned clear (cycle stopped)
+MANIFEST 101_upper_cloudreach_place_cliffhold_approach_day | place_cliffhold_approach | trainer (-267.0, 838.08, 4020.3) | yaw 55.4 pitch 5.0 | target (-340.0, 838.00, 3970.0) | hour 10.00 | stand (-267.0, 838.00, 4020.3) (1/1) | camera (-262.7, 839.37, 4023.2) | trainer on screen (50%, 60%) | companion native follower (-268.2, 837.61, 4013.7); trainer gap 6.70 m | flags boot | Existing settlement identity stand; floor-verified trainer, production rig and native following companion
+
+## Medium-candidate
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script res://tools/capture_cloudreach_settlement_identity.gd -- --preset=Medium --source-commit=ef2db84ccd4aeb6e7e0cd364405358e3919c4ed3 --output=D:/tb-gpu-runs/out/F08-3-r17/Medium-candidate/frames --cloudreach-settlement-life-candidate
+# Cloudreach settlement identity: 5 existing stands x day/night; production matrix camera/floor/follower; staged five-owned party and progression
+# coverage full 10-view matrix
+# graphics_capture {"adapter":"NVIDIA GeForce GTX 1060 3GB","graphics_config_sha256":"9bb724ed8c1b9de98649515e1bcc22705657fe5586f2ec4b6aeb0a7002d19253","preset":"Medium","renderer":"forward_plus","resolution":[1920,1080],"source_commit":"ef2db84ccd4aeb6e7e0cd364405358e3919c4ed3"}
+# weather pinned clear (cycle stopped)
+MANIFEST 101_upper_cloudreach_place_cliffhold_approach_day | place_cliffhold_approach | trainer (-267.0, 838.08, 4020.3) | yaw 55.4 pitch 5.0 | target (-340.0, 838.00, 3970.0) | hour 10.00 | stand (-267.0, 838.00, 4020.3) (1/1) | camera (-262.7, 839.37, 4023.2) | trainer on screen (50%, 60%) | companion native follower (-272.5, 837.44, 4017.0); trainer gap 6.45 m | flags boot | Existing settlement identity stand; floor-verified trainer, production rig and native following companion
+
+## Medium-control
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script res://tools/capture_cloudreach_settlement_identity.gd -- --preset=Medium --source-commit=ef2db84ccd4aeb6e7e0cd364405358e3919c4ed3 --output=D:/tb-gpu-runs/out/F08-3-r17/Medium-control/frames
+# Cloudreach settlement identity: 5 existing stands x day/night; production matrix camera/floor/follower; staged five-owned party and progression
+# coverage full 10-view matrix
+# graphics_capture {"adapter":"NVIDIA GeForce GTX 1060 3GB","graphics_config_sha256":"9bb724ed8c1b9de98649515e1bcc22705657fe5586f2ec4b6aeb0a7002d19253","preset":"Medium","renderer":"forward_plus","resolution":[1920,1080],"source_commit":"ef2db84ccd4aeb6e7e0cd364405358e3919c4ed3"}
+# weather pinned clear (cycle stopped)
+MANIFEST 101_upper_cloudreach_place_cliffhold_approach_day | place_cliffhold_approach | trainer (-267.0, 838.08, 4020.3) | yaw 55.4 pitch 5.0 | target (-340.0, 838.00, 3970.0) | hour 10.00 | stand (-267.0, 838.00, 4020.3) (1/1) | camera (-262.7, 839.37, 4023.2) | trainer on screen (50%, 60%) | companion native follower (-268.2, 837.61, 4013.7); trainer gap 6.70 m | flags boot | Existing settlement identity stand; floor-verified trainer, production rig and native following companion
+

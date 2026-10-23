@@ -1,0 +1,6 @@
+Bl: none
+Es: "The fixed stands' foregrounds are flat lawn or bare dirt, so the settlement does not start at the viewer's feet"; "Some night frames stay flat moon-blue instead of reading as lamp-lit, inhabited settlements"; "Under the warm lamps the night road reads rust-red, close to the oxblood reserved for the enemy faction"; "Window glow blows out to flat white instead of reading as lit windows"
+To: "The fixed stands' foregrounds are flat lawn or bare dirt, so the settlement does not start at the viewer's feet"; "Some night frames stay flat moon-blue instead of reading as lamp-lit, inhabited settlements"; "Under the warm lamps the night road reads rust-red, close to the oxblood reserved for the enemy faction"; "Window glow blows out to flat white instead of reading as lit windows"
+Qr: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Jl: none
+Vr: none

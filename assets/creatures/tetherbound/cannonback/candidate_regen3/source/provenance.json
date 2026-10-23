@@ -1,0 +1,190 @@
+{
+ "subject": "water_cannonback",
+ "base_species": "cannonback",
+ "variant": "regen3 (rugged chunky slate-blue boulder shell with moss, weathered bronze barrels seated into the rock, cream plastron, heavier snapping-turtle head with cream hooked beak, flat stone saddle ledge on top of the pile)",
+ "criterion": "F36#1/F36#0 (code-blind judges at the fight camera: regen1 6.07, regen2 5.87, installed 4.97; bar 6.7 CPU-provisional)",
+ "judges_asks": [
+  "build on regen 1's clean finish and palette",
+  "a RUGGED stacked-rock shell of chunky boulders and slabs with moss as in docs/art/reference/26_Cannonback_Board.png (regen 2's flat brick slabs read wrong)",
+  "a cream plastron",
+  "weathered bronze barrels seated into the rock",
+  "a heavier snapping-turtle head, keeping the cream hooked beak",
+  "a flat saddle ledge between the cannons"
+ ],
+ "default_enabled": false,
+ "status": "native_candidate_off_judging_open",
+ "authorization": "Standing owner direction 1 (Meshy, no generation cap); CLAUDE.md art rule (agent-drafted reference)",
+ "disposition": "Third Meshy multi-image-to-3D mesh rigged on the 15-bone quadruped skeleton beside the installed model, candidate_regen and candidate_regen2; flag-off candidate; installed creature_cannonback_lod0.glb, species.json, water_roster and water_mounts are unchanged.",
+ "raw_folder": "assets_raw/cannonback/meshy-regen3-1021/candidate_B (local, gitignored)",
+ "raw_model_sha256": "d7970fdd3ed3cc7354aa4579ca7b444c228a08d10c20ce63071f1bf166434ea7",
+ "model": "res://assets/creatures/tetherbound/cannonback/candidate_regen3/models/creature_cannonback_regen3.glb",
+ "model_sha256": "37834330e94fb4076990aa9216932a15f2bb6e17c9d4f09715b9a9ba087e3ca6",
+ "identity_sources": [
+  "docs/art/reference/26_Cannonback_Board.png (crops board_hero/board_head/board_cannon as in regen1)",
+  "regen1 concept c3 01a15cac-f8cc-773c-96de-7561369ca265 (style anchor)",
+  "regen1 model renders (3/4 and side) of creature_cannonback_regen.glb (style anchor)"
+ ],
+ "concept_base_prompt": "Cannonback, the shell-sentinel water turtle creature for a stylised 3D creature-collecting action RPG, the SAME character as the reference images, unchanged identity and the same clean polished stylised 3D render finish and colour palette as the clean blue turtle model renders. A massive heavy fortress snapping turtle on four thick sturdy pillar legs with big cream-ivory claws. HEAD: a HEAVY, large, blocky snapping-turtle head, broad skull and thick powerful jaw, a strong brow ridge, set on a thick muscular neck; the snout ends in a broad hooked cream-ivory beak (#eadfc4); lower face, jaw, chin and throat pale cream; upper head and brow covered in ocean-blue scales; warm amber-gold eye with dark pupil; calm, steady, stern expression. SHELL: a RUGGED shell built of STACKED NATURAL ROCK like a small mossy cliff: chunky irregular rounded boulders and thick broken stone slabs piled in overlapping layers, uneven craggy silhouette with deep shadowed cracks, slate blue-grey stone (#5f7894) with lighter grey-blue weathered edges, thick olive-green moss cushions (#6f7436) growing over the tops of the rocks and in the crevices. Not neat tiles, not bricks, not smooth turtle scutes, not flat cut slabs. CANNONS: two BIG BARREL CANNONS of weathered bronze (#a88a58 with darker verdigris-free brown patina and worn lighter rims), short and very wide, heavy rounded rim and a deep dark round bore, SEATED DEEP INTO the rock shell with boulders packed around their bases, one on each side at the front shoulders angled forward-up, and one smaller cannon at the rear top angled up. SADDLE LEDGE: between and just behind the two front cannons, the top of the shell has a clear FLAT LEVEL rock ledge, a broad flat stone platform wide and long enough for a rider to sit, with moss on it; no saddle, no rider. BODY: legs, neck, head and short tail covered in large clean deep ocean-blue scales (#2e5886) over cream skin; a CREAM-IVORY belly plastron (#e6dcc0) clearly visible under the shell rim and on the chest. Stylised hand-painted creature-game look with clean large readable colour blocks, Palworld / Pokemon Legends style 3D render, not photoreal, no speckle, no noise. Neutral four-legged standing stance, all four legs clearly separated from each other and from the belly with visible gaps, head facing forward and level, short tail, full body in frame, plain flat light grey background, even studio lighting, no water, no splash, no scenery, no text. Absolutely no red, pink, coral, maroon or oxblood anywhere. Single creature only.",
+ "concept_tasks": [
+  {
+   "tag": "r1",
+   "task_id": "01a15d3c-dbb9-7235-a491-0d3a340093b9",
+   "type": "image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt_suffix": "Combine the references: take the clean polished render finish, palette, cream hooked beak and bronze barrel cannons of the clean blue turtle model renders (first and second images), and take the rugged stacked boulder-and-slab rock shell with moss and the heavy head from the painted board (third and fourth images). Polished stylised 3D game model, soft sculpted volumes, NOT a 2D cartoon.",
+   "reference_images": [
+    "regen1 concept c3 view 0 (front)",
+    "regen1 model render three_quarter",
+    "board_hero crop",
+    "board_head crop"
+   ],
+   "generate_multi_view": true,
+   "consumed_credits": 9,
+   "verdict": "regen1 palette kept, bronze barrels seated, cream plastron; shell is stacked flat slabs under heavy moss (closer to regen2's slabs than chunky boulders), no clear ledge. Modelled as A, rejected."
+  },
+  {
+   "tag": "r2",
+   "task_id": "01a15d3c-db9f-7524-8857-9a1dddcf9de9",
+   "type": "image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt_suffix": "Use the painted board (first image) for the rugged boulder shell, moss and heavy snapping-turtle head, and the clean model renders (second and third images) for the finish, palette and barrel cannons. Make the shell look like a mossy pile of real rocks with a flat stone seat ledge between the front cannons. Polished stylised 3D game model, NOT a 2D cartoon.",
+   "reference_images": [
+    "board_hero crop",
+    "regen1 concept c3 view 0",
+    "regen1 model render side",
+    "board_cannon crop"
+   ],
+   "generate_multi_view": true,
+   "consumed_credits": 9,
+   "verdict": "grey-brown slab shell, long thin cannons, palette drifted from regen1; not modelled"
+  },
+  {
+   "tag": "r3",
+   "task_id": "01a15d3f-333a-72e8-9cdd-e5633d6335ce",
+   "type": "image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt_suffix": "Combine the references: keep the exact clean polished render finish, blue and cream palette, cream hooked beak, heavy head and the seated weathered bronze barrel cannons of the first image (the previous concept), but rebuild the shell from CHUNKY ROUNDED BOULDERS and thick broken slabs like the painted board (second image): bigger rounder rocks with deep crevices, less flat stacking, moss only in patches on the tops, more grey-blue stone visible. Make the top centre of the shell between the two front cannons a clearly visible FLAT LEVEL stone ledge, like a natural rock bench. Make the head bigger and heavier. Polished stylised 3D game model, NOT a 2D cartoon.",
+   "reference_images": [
+    "r1 concept view 0 (front)",
+    "board_hero crop",
+    "board_head crop",
+    "regen1 model render three_quarter"
+   ],
+   "generate_multi_view": true,
+   "consumed_credits": 9,
+   "verdict": "CHOSEN (model B): chunky rounded slate-blue boulders and broken slabs with moss patches, bronze barrels sunk into the rock at both shoulders plus a small rear barrel, cream plastron and beak, heavier head, flat mossy stone top"
+  }
+ ],
+ "meshy_model_task": {
+  "task_id": "01a15d45-433f-70d1-bee5-46ea92d5f5a4",
+  "type": "multi-image-to-3d",
+  "request": {
+   "input_task_id": "01a15d3f-333a-72e8-9cdd-e5633d6335ce",
+   "ai_model": "latest",
+   "should_remesh": true,
+   "topology": "quad",
+   "target_polycount": 30000,
+   "enable_pbr": false,
+   "should_texture": true
+  },
+  "input_concept": "r3 01a15d3f-333a-72e8-9cdd-e5633d6335ce",
+  "status": "SUCCEEDED",
+  "consumed_credits": 30,
+  "created_at_ms": 1792566183383,
+  "finished_at_ms": 1792566402582,
+  "note": "enable_pbr false: base colour only, no separate PBR maps (disk budget)"
+ },
+ "rejected_model_task": {
+  "task_id": "01a15d3f-3315-72af-a585-3231fbd76093",
+  "input_concept": "r1 01a15d3c-dbb9-7235-a491-0d3a340093b9",
+  "status": "SUCCEEDED",
+  "consumed_credits": 30,
+  "raw_folder": "not kept",
+  "verdict": "moss covers most of the shell and the rocks read as flat grey slabs (regen2's problem); B chosen"
+ },
+ "credits_total": 87,
+ "generation_verdict": "Identity kept (ocean-blue scales over cream skin, cream hooked beak and lower face, amber eye, cream plastron, bronze barrels, olive moss, no red). The shell is now a rugged pile of chunky rounded slate-blue boulders and broken slabs with moss on their tops instead of regen2's flat bricks; the two shoulder barrels and a small rear barrel are sunk into the rock; the head is broader and heavier; the top of the pile is a flat mossy stone ledge. The pile is tall relative to the body, so at the seat-line fit the turtle body is smaller than regen1/regen2 (length 5.94 m vs 6.16/7.41 m).",
+ "preparation": {
+  "scripts": [
+   "source/prepare_regen_candidate.py (copy of ../candidate_regen/source with one constant changed: SPINE_FRACTION 0.62 -> 0.45 so the head region exists under the tall boulder pile; head weights capped at the measured head top, shell and cannons rigid above the spine line, seat-line fit, never shrink)",
+   "source/author_native_clips.py (unchanged copy: 11 roles)",
+   "source/check_regen_deformation.py (unchanged copy)",
+   "source/measure_seat.py (unchanged copy of ../candidate_regen2/source)"
+  ],
+  "blender": "4.2.9 via tools/art_pipeline/setup.sh blender",
+  "commands": [
+   "blender --background --python source/prepare_regen_candidate.py -- assets_raw/cannonback/meshy-regen3-1021/candidate_B/cannonback_regen3_B.glb <scratch>/rig_B.glb source/prepare-report-B.json",
+   "blender --background --python source/author_native_clips.py -- <scratch>/rig_B.glb models/creature_cannonback_regen3.glb",
+   "blender --background --python source/check_regen_deformation.py -- models/creature_cannonback_regen3.glb source/deformation-report.json",
+   "blender --background --python source/measure_seat.py -- models/creature_cannonback_regen3.glb source/seat-report.json"
+  ],
+  "first_attempt": "with the unchanged SPINE_FRACTION 0.62 the head region had 0 vertices (deformation check neck/head null); fixed by the one-constant change above",
+  "pose_test": "tools/art_pipeline/blender/pose_test.py look/stride/crouch/tailflick renders (scratch, not committed): boulders, ledge and all three barrels stay rigid; legs, neck and head bend cleanly. Not a judge verdict.",
+  "reports": [
+   "source/prepare-report-B.json",
+   "source/deformation-report.json",
+   "source/seat-report.json"
+  ]
+ },
+ "rig": {
+  "bones": 15,
+  "triangles": 27999,
+  "unweighted_vertices": 0,
+  "ears": "none"
+ },
+ "deformation": {
+  "front_upper_l": 1.0,
+  "front_upper_r": 1.0,
+  "rear_upper_l": 1.0,
+  "rear_upper_r": 1.0,
+  "neck": 1.0,
+  "head": 0.999
+ },
+ "scale": {
+  "uniform_fit": "centre back line (body mid-length column) on the current 4.14 m seat line, same rule as candidate_regen; never shrink",
+  "height_m": 4.1793,
+  "length_m": 5.9385,
+  "width_m": 4.1614,
+  "centre_back_top_m": 4.14,
+  "top_at_current_mount_column_m": 4.1624,
+  "installed_height_m": 4.15,
+  "regen1_height_m": 4.9376,
+  "regen2_height_m": 4.456,
+  "trainer_height_m": 1.8,
+  "note": "4.18 m tall (installed 4.15 m, trainer 1.80 m). The flat top of the boulder pile is the highest centre-line point, so the seat-line rule puts it at 4.14 m and the body comes out shorter in length than regen1/regen2; if judges find the turtle too small, the lane can raise the seat line (grow, never shrink)."
+ },
+ "seat_anchor": {
+  "source": "source/seat-report.json",
+  "method": "centre-line shell-top scan (15 cm column), lowest top between the front-half peak and the rear-half peak (rear cannon)",
+  "seat_point_godot_xyz": [
+   0.0,
+   4.14,
+   -0.099
+  ],
+  "ledge": "centre-line top stays within 4.04-4.16 m from Blender y -0.20 to +1.29 (Godot z +0.20 to -1.29), a flat ledge about 1.5 m long on top of the pile; the two shoulder barrels sit lower on the flanks (highest points within a quarter length: left 4.07 m, right 4.18 m) and the rear barrel at the back of the pile",
+  "measure_seat_note": "the script's front/rear-peak band is degenerate on this shape (both peaks lie on the ledge), so its seat point is the front of the ledge; the ledge middle (Godot z about -0.55, top 4.15 m) is the better rider anchor",
+  "suggested_water_mounts": {
+   "mount_offset": [
+    0.0,
+    4.15,
+    -0.55
+   ],
+   "saddle_offset": [
+    0.0,
+    3.95,
+    -0.55
+   ],
+   "rule": "same convention as the installed entry (rider hip anchor on the shell-top line, saddle centre 0.20 m below)"
+  },
+  "note": "Suggested only; water_mounts.json is unchanged. Seated contact and water framing need a matched engine capture before activation."
+ },
+ "palette": {
+  "strict_red_pink_h_lt15_gt320_sat_gt030_val_gt020_pct": 0.0,
+  "policy_red_pink_rust_h_lt24_pct": 0.0012
+ },
+ "license": {
+  "source": "Meshy API existing owner credits; no new purchase",
+  "terms": "https://www.meshy.ai/terms-of-use"
+ },
+ "activation": "Requires the three-judge Bar A 7.5 (CPU-provisional 6.7), independent F36 art approval and mount_offset/saddle_offset moved to the measured seat (source/seat-report.json; the flat ledge on top of the boulder pile is the seat); installed creature_cannonback_lod0.glb remains the default"
+}

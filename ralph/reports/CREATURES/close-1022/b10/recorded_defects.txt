@@ -1,0 +1,8 @@
+Uz: "Dark body melts into shadow and the dark stage"; "Face and eyes do not read at fight distance"
+Zx: none
+Ww: none
+Jx: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Bs: "Dark body melts into shadow and the dark stage"; "Face and eyes do not read at fight distance"
+Sy: none
+Nl: "Dark body melts into shadow and the dark stage"; "Face and eyes do not read at fight distance"
+Bc: "Dark body melts into shadow and the dark stage"; "Face and eyes do not read at fight distance"

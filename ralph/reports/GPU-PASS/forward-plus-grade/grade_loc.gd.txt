@@ -1,0 +1,8 @@
+extends "res://tools/phase2_capture_locations.gd"
+
+## GPU-pass grade breakdown wrapper (local only): the unchanged Phase 2 location
+## survey with one environment variant forced each frame (see grade_override.gd).
+
+
+func _initialize() -> void:
+	load("D:/tb-gpu-runs/tools/grade_override.gd").install(self)

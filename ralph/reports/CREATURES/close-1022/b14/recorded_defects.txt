@@ -1,0 +1,8 @@
+Yn: none
+Hr: none
+Gn: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Glossy plastic-looking surface"
+Ta: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Glossy plastic-looking surface"
+Fm: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Glossy plastic-looking surface"
+Ei: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ip: none
+Mw: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Glossy plastic-looking surface"

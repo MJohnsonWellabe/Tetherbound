@@ -177,6 +177,14 @@ func _build_placeholder() -> void:
 		sphere.radial_segments = 32
 		sphere.rings = 16
 		_mesh.material_override = CATCH_KIT.orb_material()
+		# The authored capture orb (two-tone shell, brass band, lit button)
+		# replaces the flat sphere; the band below is its own.
+		var authored := CATCH_KIT.orb_model(_radius)
+		if authored != null:
+			_mesh.mesh = null
+			_mesh.add_child(authored)
+			_build_glows()
+			return
 
 	# A dark equator band, child of the sphere so it tilts with it. A uniform
 	# glowing sphere shows NO rotation: the first captured shake frame was
@@ -194,6 +202,10 @@ func _build_placeholder() -> void:
 	band_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_mesh.add_child(band_mesh)
 
+	_build_glows()
+
+
+func _build_glows() -> void:
 	# A disc with alpha falling to nothing at its rim, rebuilt each frame facing
 	# the camera. It was a QuadMesh with a flat colour, which is exactly what it
 	# looked like: a hard-edged opaque tan SQUARE hanging in the middle of the
