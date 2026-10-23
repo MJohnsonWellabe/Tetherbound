@@ -1,15 +1,14 @@
 extends SceneTree
 
-## Focused regression for the Bramblebun redesign's UV/albedo ownership.
-## The expected texture is read from the installed redesign GLB, not pinned as
-## a duplicate test literal. Ordinary, alpha and shiny all instantiate the
-## actual CreatureBody dressing path.
+## Focused regression for Bramblebun's UV/albedo ownership.
+## The expected texture is read from the GLB species.json ships (the redesign
+## until close-1024, now the naturalistic pilot), not pinned as a duplicate test
+## literal. Ordinary, alpha and shiny all instantiate the actual CreatureBody
+## dressing path.
 
-const REDESIGN_DIR := "res://assets/creatures/tetherbound/bramblebun_redesign/models/"
 const BODY := preload("res://scripts/creatures/creature_body.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
-const REDESIGN_SCENE := preload("res://assets/creatures/tetherbound/bramblebun_redesign/models/creature_bramblebun_redesign_lod0.glb")
 const LEGACY_FRAGMENT := "/bramblebun/models/bramblebun_extracted_"
 
 var _assertions := 0
@@ -22,15 +21,17 @@ func _init() -> void:
 
 func _run() -> void:
 	await process_frame
-	var source_art := REDESIGN_SCENE.instantiate() as Node3D
+	var look: Dictionary = SPECIES.placeholder("bramblebun")
+	var model_path := str(look.get("model", ""))
+	var model_dir := model_path.get_base_dir() + "/"
+	var source_art := (load(model_path) as PackedScene).instantiate() as Node3D
 	root.add_child(source_art)
 	var source_textures := _active_albedo_textures(source_art)
-	_check(source_textures.size() == 1, "redesign source exposes exactly one textured surface")
+	_check(source_textures.size() == 1, "shipped source exposes exactly one textured surface")
 	var expected: Texture2D = source_textures[0] if source_textures.size() == 1 else null
-	_check(expected != null, "redesign source has a base-colour texture")
-	var look: Dictionary = SPECIES.placeholder("bramblebun")
-	_check(BODY.colourway_source_species("bramblebun", look) == "bramblebun_redesign",
-		"resolver owns Bramblebun colourways with redesign source")
+	_check(expected != null, "shipped source has a base-colour texture")
+	_check(BODY.colourway_source_species("bramblebun", look) == "bramblebun_nat1022",
+		"resolver owns Bramblebun colourways with the shipped model's own source")
 
 	for variant: String in ["ordinary", "alpha", "shiny"]:
 		var body := CREATURE_SCENE.instantiate() as Node3D
@@ -45,16 +46,16 @@ func _run() -> void:
 		_check(textures.size() == 1, "%s exposes exactly one textured surface" % variant)
 		if textures.size() == 1 and expected != null:
 			var actual: Texture2D = textures[0]
-			# The redesign's own albedo, or a colourway DERIVED from it: same
+			# The shipped model's own albedo, or a colourway DERIVED from it: same
 			# folder, same aspect (the repaint finish downsamples to 1024, and
 			# UVs are resolution-independent), so the same UV layout. The ordinary look
 			# gained a vivid regrade in the Meadows visual pass
 			# (shiny_colourways.json `bramblebun_redesign`); the legacy atlas
 			# check below is what guards the UV ownership this test exists for.
-			var derived := actual.resource_path.begins_with(REDESIGN_DIR) \
+			var derived := actual.resource_path.begins_with(model_dir) \
 					and is_equal_approx(actual.get_size().aspect(), expected.get_size().aspect())
 			_check(actual == expected or derived,
-				"%s binds the redesign albedo or a colourway derived from it" % variant)
+				"%s binds the shipped albedo or a colourway derived from it" % variant)
 			_check(not actual.resource_path.contains(LEGACY_FRAGMENT),
 				"%s never binds the legacy UV atlas" % variant)
 			print("BRAMBLEBUN_BINDING variant=%s texture_id=%d path=%s expected_id=%d" % [
