@@ -1,6 +1,37 @@
 # Creatures close-1022 (lane tb/creatures)
 
 ## TO COORDINATOR
+- 22 Oct 19:55 CT TO COORDINATOR: FINAL READY tb/creatures-final ce892f75a (plus this note-only commit) (from origin/main fe24cbcb4 + tb/owner-creature-style 8c54d51e6). All scores are CPU mapped on the corrected owner-style prompt unless noted; each ON row equals its judged state.
+  - ON, at or above CPU-provisional 6.7:
+    - P2-030 r3 shiny fallback: 6.80 vs 4.59 (old prompt, b2).
+    - P2-018 Solmane/Pebbik gradient-map shinies: 6.77 vs 5.65 (b2).
+    - Galecrest value lift x1.35 + rim 0.25: 6.82 vs 5.73 (b10).
+    - Held shove hits (b11): Sparkit 7.06 vs 6.62, Staticub 7.27 vs 6.17, Mirejaw 6.77 vs 5.81 (faint back to the side topple).
+    - Stormursa shove hit: 7.54 vs 6.84 (b13, confirming batch); with F29#3 growth 4.10 -> 5.00 m, judged at 5.00.
+    - Tanglevolt recipe enabled: 6.81 vs installed clips 6.02 (b13).
+    - Meadowhart naturalistic pilot: 7.18 vs 6.40 (b14). Seat, saddle and rider fit are unchanged; the production riding capture has 6/6 frames and no failures.
+  - ON by coordinator decision for the wind-down (beat live, below the bar; recorded in `_why` lines):
+    - Tanglevolt lift x1.45 + rim 0.25: 6.60 vs 5.84 (b10).
+    - Fulgocobra recipe: 6.47 vs 5.65 (b13).
+    - Stormcapra recipe: 6.43 vs 6.09 (b13).
+    - Voltarach doubled rear + side-tip faint, legs 30: 5.99 vs 5.84 (b13).
+    - Voltarach lift x1.5 + rim 0.25: 6.20 vs 6.13 (b10, within noise).
+    - Fulgocobra finish value 1.3 + rim 0.25: 6.24 vs 6.20 (b10, within noise).
+  - Untested combination: for Tanglevolt, Fulgocobra and Voltarach the lift and the recipe were judged separately; the combined state is unjudged.
+  - OFF and not on this branch (kept on tb/creatures as the record):
+    - The stylised Meshy-1022 remakes, by owner direction, and the meshy1022h face/grade variants.
+    - The Riverdrake naturalistic pilot: beats live, 6.18 vs 5.49 (b14), but its faint floats and its water-mount geometry is not re-measured.
+    - The Terrapup and Bramblebun pilots: rigged, unjudged.
+    - The raw Ripplet, Galewisp and Meshy folders (`assets_raw/naturalistic`).
+    - Veridian recipe + side topple: 6.36 vs 6.12 (b14), not yet a reproducible live recipe; its antlers keep the head up.
+    - Ripplet roughness: 5.88 vs 5.82, a hand edit of an extracted texture.
+    - Galecrest recipe: 6.43, equal to live.
+    - Stormcapra lift 6.59 vs 6.73 and Stormursa lift 5.45 vs 6.21: both worse than live.
+  - Checks on this head: Godot `--only=f36_pose,creature_pose,creature_body,species,scale_ladder,water,roster,fly,meadowhart,rideable,riding,colourway,shiny,surface_finish,variant,texture_import_policy` 635 tests, 0 failed; test_f36_pose_postpass OK (mesh-tear guard green); postpass and arachnid `--check` current.
+  - GPU confirmation:
+    - Without `--candidate` (they play installed clips): galecrest, meadowhart.
+    - With `--candidate` (recipes): stormursa, staticub, sparkit, mirejaw, tanglevolt, fulgocobra, stormcapra, voltarach.
+    - Shinies: phase2_capture_creatures.
 - 22 Oct 19:25 CT READY tb/creatures-land b75ed79c1 (137e1033a + one commit): F36#0 Meadowhart naturalistic pilot ON. b14 corrected prompt: 7.18 vs 6.40 live recipe (CPU-provisional).
   - Mount check: the pilot's back sits 2.03 m under the unchanged 2.19 m seat (installed 1.94 m); the saddle lands at 2.07 m. The production riding capture `tools/_capture_riding.gd` (ride-nat-r1, `_sheet_ride_nat.jpg`) has 6/6 frames and no failures; the rider sits in the saddle day and night.
   - Riding contract kept: the single skinned mesh is named MeadowhartBareBody (JSON-only rename of the judged GLB; nothing visible changes). The recipe is off because it targets the old mesh. Textures are VRAM-compressed per the import policy.
@@ -56,18 +87,21 @@ Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under x
 judge yardstick (tb/judge-yardstick) to land; until then this lane fixes and captures.
 
 ## RESUME
-- Coordinator messaging is refused from this session (`elevated_session_untrusted_device`); see `OUTBOX.md`.
-- Meshy remakes (two-style split, top GPU ask) are blocked on reference drafts: `remake-briefs.md`.
-- Candidates, all OFF on the branch:
-  - `f36_pose_postpass.py --candidate-1022` (+ `f36_arachnid_profile.py --candidate-1022`): every recoil hit becomes
-    the body-carried shove at gain 1.5; Mirejaw side topple; Meadowhart resting-deer prone (antlers off the floor);
-    Fulgocobra hood-drop prone (dip 3) + shove; Voltarach side-tip with legs curled.
-  - `data/config/creature_surface_finish_1022_candidate.json`: value-gamma lift for Tanglevolt, Voltarach,
-    Galecrest, Fulgocobra (shader uniforms `base_value_gamma`/`base_saturation_scale`, default 1.0 = unchanged).
-  - Solmane / Pebbik shiny gradient maps: `<species>_extracted_base_color_shiny_gm.png`
-    (`solmane/source/shiny_gradient_map.py`); live shiny png and the `shift` rows unchanged.
-  - P2-030 r3 (ported from tb/shared-art ae6bafa24 with the fallback ON): `p2-030-r3-finishes.json`.
-  - F29#3 growth: Stormursa 4.10 -> 5.00 m (species.json height/radius + ladder target) on this branch only.
+- Lane wound down 22 Oct by owner direction (relayed by the coordinator). The final state is tb/creatures-final; tb/creatures keeps the full record: the Meshy-1022 remakes, the meshy1022h variants, the naturalistic pilots (Meadowhart, Riverdrake, Terrapup, Bramblebun rigs) and assets_raw/naturalistic.
+- Open, if the lane restarts:
+  - GPU confirmation of every ON row; a GPU score below 7.5 reopens it.
+  - Riverdrake pilot: ground its faint, then re-measure the water-mount geometry.
+  - The Terrapup (Ride), Ripplet (swim/Dive) and Galewisp (Fly grip) pilots need rigs and mount/grip re-measures.
+  - Veridian: a reproducible topple or prone faint that lays the antlers down.
+  - Ripplet sheen: a roughness/specular change that keeps its recipe hash valid.
+  - Voltarach: a side-tip faint that passes the floor gap without knotted legs.
+  - Eyes and emissive identity: Voltarach's eyes, Fulgocobra's veins, Tanglevolt's lightning.
+  - Authored shiny/alpha colourways for the Meadowhart pilot's UVs.
+- Tools that carry over:
+  - Stage capture: `capture_f36_poses.gd --whole-body --context` (`--candidate` for recipes).
+  - Judging: `anchor_tiles.py` + JUDGE_PROMPT.md + `calibrate.py`.
+  - Quadruped pilot rig: `candidate_nat1022/source/prepare_nat1022_candidate.py` + `author_native_clips.py` (Blender 4.2.9 under xvfb).
+  - Riding check: `tools/_capture_riding.gd --output=res://ralph/reports/...`.
 
 ## Batch b1 (22 Oct ~14:00 CT): yardstick round 1, every candidate beats its base; none at 7.5
 

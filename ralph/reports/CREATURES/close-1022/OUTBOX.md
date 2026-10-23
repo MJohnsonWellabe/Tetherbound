@@ -149,3 +149,4 @@ Must-keep for every row: species, silhouette, painted colour family and signatur
 Your pilot (voltarach, fulgocobra, staticub) is P4. I'd move terrapup, ripplet, galewisp and bramblebun next.
 On arrival I'll inspect, rig, fit and capture each one (installed clips and recipe), then judge it against the current model on the corrected prompt. Each stays OFF until it beats the current model.
 Rider and carrier species also need their mount and grip geometry re-measured before landing.
+- 22 Oct 19:55 CT FINAL READY tb/creatures-final ce1ec08ba (code ce892f75a + note). ON/OFF lists and scores are in note.md TO COORDINATOR. Lane wound down.
