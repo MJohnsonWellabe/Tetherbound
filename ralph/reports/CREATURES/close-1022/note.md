@@ -1,6 +1,12 @@
 # Creatures close-1022 (lane tb/creatures)
 
 ## TO COORDINATOR
+- 22 Oct 19:25 CT READY tb/creatures-land b75ed79c1 (137e1033a + one commit): F36#0 Meadowhart naturalistic pilot ON. b14 corrected prompt: 7.18 vs 6.40 live recipe (CPU-provisional).
+  - Mount check: the pilot's back sits 2.03 m under the unchanged 2.19 m seat (installed 1.94 m); the saddle lands at 2.07 m. The production riding capture `tools/_capture_riding.gd` (ride-nat-r1, `_sheet_ride_nat.jpg`) has 6/6 frames and no failures; the rider sits in the saddle day and night.
+  - Riding contract kept: the single skinned mesh is named MeadowhartBareBody (JSON-only rename of the judged GLB; nothing visible changes). The recipe is off because it targets the old mesh. Textures are VRAM-compressed per the import policy.
+  - Checks on b75ed79c1: Godot `--only=meadowhart,rideable,riding,f36_pose,creature_pose,species,creature_body,scale_ladder,colourway,shiny,texture_import_policy` 74 tests, 0 failed; postpass `--check` current.
+  - GPU confirm: `capture_f36_poses.gd --whole-body --context --species=meadowhart` (no `--candidate`).
+  - Known gap: no authored shiny or alpha colourway on the pilot UVs yet; those take the shiny fallback and finish path.
 - 22 Oct 19:00 CT READY tb/creatures-land 137e1033a (b0c9c0de3 Galecrest + one commit): F36#1 hit/faint quick wins on the corrected prompt, CPU mapped.
   - Stormursa: held shove hit, 7.54 vs 6.84 (b13, confirming batch; at 7.5 even on CPU).
   - Staticub 7.27 (vs 6.17), Sparkit 7.06 (vs 6.62), Mirejaw 6.77 (vs 5.81; faint back to the side topple): b11 shove hits.
