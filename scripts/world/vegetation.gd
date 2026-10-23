@@ -1025,12 +1025,22 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 	# shares one. needs_instance_colour is part of the key too — a jittered
 	# layer and an unjittered one must not share a material even when their
 	# colour/swap are otherwise identical.
-	var cache_key := "%s|%s|%s|%s|%s" % [name, colour, swap, needs_instance_colour, str(adjust)]
+	#
+	# The source texture is part of the key as well: two models whose materials
+	# share a name (every Meshy GLB calls its one material `Material_0`) and a
+	# retint are still different textures. A pack texture keeps one path across
+	# models, so pack materials still share.
+	var standard := source as StandardMaterial3D
+	var source_texture := ""
+	if standard != null and standard.albedo_texture != null:
+		source_texture = standard.albedo_texture.resource_path
+		if source_texture.is_empty():
+			source_texture = str(standard.albedo_texture.get_instance_id())
+	var cache_key := "%s|%s|%s|%s|%s|%s" % [name, colour, swap, needs_instance_colour, str(adjust), source_texture]
 	if _tints.has(cache_key):
 		return _tints[cache_key]
 
 	var material := StandardMaterial3D.new()
-	var standard := source as StandardMaterial3D
 
 	# A TEXTURED source keeps its texture, and the colour modulates it.
 	#

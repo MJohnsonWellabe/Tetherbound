@@ -106,3 +106,23 @@ func test_visibility_same_result_inputs_do_not_conflict() -> void:
 	var enabled := {"enabled": true, "models": [MODEL]}
 	assert_eq(VEGETATION.shared_material_conflicts({"explicit": solid, "default": {"models": [MODEL]}}, {}, enabled), [])
 	assert_eq(VEGETATION.shared_material_conflicts({"a": foliage, "b": foliage.duplicate(true)}, {}, enabled), [])
+
+
+## Two Meshy scatter models both name their one material `Material_0` and share
+## a retint; the tint cache must still give each its own texture (stormwood
+## giant_tree_a, giant_tree_b and scarred_trunk drew one model's bark otherwise).
+func test_same_named_materials_with_different_textures_do_not_share_a_tint() -> void:
+	var vegetation: Node = VEGETATION.new()
+	var first := StandardMaterial3D.new()
+	first.albedo_texture = ImageTexture.create_from_image(Image.create(2, 2, false, Image.FORMAT_RGBA8))
+	var second := StandardMaterial3D.new()
+	second.albedo_texture = ImageTexture.create_from_image(Image.create(2, 2, false, Image.FORMAT_RGBA8))
+	var overrides := {"Material_0": "#d8c8ae"}
+	var a: StandardMaterial3D = vegetation.call("_tint_for", "Material_0", first, overrides)
+	var b: StandardMaterial3D = vegetation.call("_tint_for", "Material_0", second, overrides)
+	assert_true(a != b, "different source textures get different tint materials")
+	assert_eq(a.albedo_texture, first.albedo_texture)
+	assert_eq(b.albedo_texture, second.albedo_texture)
+	var again: StandardMaterial3D = vegetation.call("_tint_for", "Material_0", first, overrides)
+	assert_eq(again, a, "the same source still shares its tint material")
+	vegetation.free()
