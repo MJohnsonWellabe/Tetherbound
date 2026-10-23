@@ -1,0 +1,47 @@
+{
+ "Sa": {
+  "anchor": false,
+  "label": "P2-066/F13#5 currents",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/d82b5901-e763-5c0b-b7f5-02db7fd2957e/scratchpad/b2_sides/cur_cand.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/d82b5901-e763-5c0b-b7f5-02db7fd2957e/scratchpad/b2_sides/cur_ctl.png"
+ },
+ "Si": {
+  "anchor": true,
+  "A": "f36_0_npc:C5A",
+  "B": "f36_0_npc:C5B"
+ },
+ "Jn": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "Gf": {
+  "anchor": false,
+  "label": "P2-011 named destinations A",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/d82b5901-e763-5c0b-b7f5-02db7fd2957e/scratchpad/b2_sides/dest1_ctl.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/d82b5901-e763-5c0b-b7f5-02db7fd2957e/scratchpad/b2_sides/dest1_cand.png"
+ },
+ "Ds": {
+  "anchor": false,
+  "label": "F13#5 dock",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/d82b5901-e763-5c0b-b7f5-02db7fd2957e/scratchpad/b2_sides/docks_ctl.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/d82b5901-e763-5c0b-b7f5-02db7fd2957e/scratchpad/b2_sides/docks_cand.png"
+ },
+ "Qx": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Ys": {
+  "anchor": false,
+  "label": "P2-011 named destinations B",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/d82b5901-e763-5c0b-b7f5-02db7fd2957e/scratchpad/b2_sides/dest2_cand.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/d82b5901-e763-5c0b-b7f5-02db7fd2957e/scratchpad/b2_sides/dest2_ctl.png"
+ },
+ "Bw": {
+  "anchor": false,
+  "label": "P2-026/P2-009 water and shoals",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/d82b5901-e763-5c0b-b7f5-02db7fd2957e/scratchpad/b2_sides/water_cand.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/d82b5901-e763-5c0b-b7f5-02db7fd2957e/scratchpad/b2_sides/water_ctl.png"
+ }
+}

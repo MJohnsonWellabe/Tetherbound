@@ -62,7 +62,8 @@ func build(world_config: Dictionary, config: Dictionary, flags: RefCounted) -> v
 		material.set_shader_parameter(key, Color(str(value)) if value is String else value)
 	material_override = material
 	var visual: Variant = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG))
-	apply_visual_settings(visual if visual is Dictionary else {})
+	apply_visual_settings(preload("res://scripts/world/tidewake_look_profile.gd").overlay(
+		visual if visual is Dictionary else {}, "current_flow_visual"))
 	_refresh(true)
 
 

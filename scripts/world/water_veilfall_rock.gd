@@ -39,6 +39,11 @@ uniform vec3 vf_tone_colour : source_color = vec3(0.40, 0.50, 0.58);
 uniform float vf_tone_start_m = 700.0;
 uniform float vf_tone_end_m = 3800.0;
 uniform float vf_tone_strength = 0.6;
+// Optional reference-backed cliff albedo (F39 candidate, OFF look gate):
+// triplanar on the wet faces; strength 0 keeps the procedural rock exactly.
+uniform sampler2D vf_cliff_texture : source_color, filter_linear_mipmap, repeat_enable;
+uniform float vf_cliff_texture_strength = 0.0;
+uniform float vf_cliff_texture_scale = 0.05;
 
 float vf_hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -77,6 +82,14 @@ const TAIL := """
 			float vf_luma = dot(ALBEDO, vec3(0.299, 0.587, 0.114));
 			vec3 vf_wet = mix(vf_rock_colour, vf_streak_colour, vf_streak)
 				* clamp(1.0 + (vf_luma - 0.5) * 2.0 * vf_detail, 0.45, 1.6) * (1.0 + vf_ledge * vf_strata_lift);
+			if (vf_cliff_texture_strength > 0.0) {
+				vec3 vf_tw = abs(w_normal);
+				vf_tw /= max(vf_tw.x + vf_tw.y + vf_tw.z, 0.001);
+				vec3 vf_tex = texture(vf_cliff_texture, v_vertex.zy * vf_cliff_texture_scale).rgb * vf_tw.x
+					+ texture(vf_cliff_texture, v_vertex.xz * vf_cliff_texture_scale).rgb * vf_tw.y
+					+ texture(vf_cliff_texture, v_vertex.xy * vf_cliff_texture_scale).rgb * vf_tw.z;
+				vf_wet = mix(vf_wet, vf_tex * mix(vf_streak_colour, vf_rock_colour, 0.5) * 2.2, vf_cliff_texture_strength);
+			}
 			ALBEDO = mix(ALBEDO, vf_wet, vf_rock);
 			ROUGHNESS = mix(ROUGHNESS, mix(vf_dry_roughness, vf_wet_roughness, vf_streak), vf_rock);
 			SPECULAR = mix(SPECULAR, vf_wet_specular, vf_rock);
@@ -131,7 +144,9 @@ static func install(terrain: Object, config: Dictionary) -> Dictionary:
 		if key.begins_with("_") or key == "enabled":
 			continue
 		var value: Variant = config[key]
-		if value is String:
+		if key.ends_with("_texture"):
+			value = load(str(value))
+		elif value is String:
 			value = Color(str(value))
 		elif value is Array and (value as Array).size() == 2:
 			value = Vector2(float(value[0]), float(value[1]))

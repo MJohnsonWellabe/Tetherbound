@@ -1,0 +1,56 @@
+{
+ "pairs": [
+  "water__reedhaven__03__reedhaven_woven_hall__day__heading_0.0.png",
+  "water__reedhaven__03__reedhaven_woven_hall__day__heading_45.0.png",
+  "water__reedhaven__03__reedhaven_woven_hall__day__heading_90.0.png",
+  "water__lantern_cove__17__lantern_cove_drift_arch__day__heading_180.0.png",
+  "water__drowned_garden__21__drowned_garden_terraces__day__heading_0.0.png",
+  "water__drowned_garden__21__drowned_garden_terraces__day__heading_90.0.png",
+  "water__drowned_garden__22__drowned_garden_beach__day__heading_0.0.png",
+  "water__lantern_cove__17__lantern_cove_drift_arch__day__heading_0.0.png",
+  "water__gull_rest__19__gull_rest_signal_spire__day__heading_45.0.png",
+  "water__gull_rest__19__gull_rest_signal_spire__day__heading_90.0.png"
+ ],
+ "mapping": {
+  "water__reedhaven__03__reedhaven_woven_hall__day__heading_0.0.png": {
+   "A": "candidate",
+   "B": "control"
+  },
+  "water__reedhaven__03__reedhaven_woven_hall__day__heading_45.0.png": {
+   "A": "control",
+   "B": "candidate"
+  },
+  "water__reedhaven__03__reedhaven_woven_hall__day__heading_90.0.png": {
+   "A": "control",
+   "B": "candidate"
+  },
+  "water__lantern_cove__17__lantern_cove_drift_arch__day__heading_180.0.png": {
+   "A": "candidate",
+   "B": "control"
+  },
+  "water__drowned_garden__21__drowned_garden_terraces__day__heading_0.0.png": {
+   "A": "candidate",
+   "B": "control"
+  },
+  "water__drowned_garden__21__drowned_garden_terraces__day__heading_90.0.png": {
+   "A": "control",
+   "B": "candidate"
+  },
+  "water__drowned_garden__22__drowned_garden_beach__day__heading_0.0.png": {
+   "A": "candidate",
+   "B": "control"
+  },
+  "water__lantern_cove__17__lantern_cove_drift_arch__day__heading_0.0.png": {
+   "A": "candidate",
+   "B": "control"
+  },
+  "water__gull_rest__19__gull_rest_signal_spire__day__heading_45.0.png": {
+   "A": "candidate",
+   "B": "control"
+  },
+  "water__gull_rest__19__gull_rest_signal_spire__day__heading_90.0.png": {
+   "A": "candidate",
+   "B": "control"
+  }
+ }
+}

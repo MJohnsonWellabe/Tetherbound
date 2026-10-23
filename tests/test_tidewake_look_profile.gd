@@ -6,11 +6,29 @@ const CLOCK := preload("res://scripts/world/day_cycle.gd")
 
 func test_disabled_candidate_preserves_the_shipping_inputs() -> void:
 	var config := PROFILE.settings()
-	assert_false(bool(config.enabled), "unjudged Tidewake look must stay off")
+	config.enabled = false
 	var base := CLOCK.load_config()
 	assert_eq(PROFILE.overlay(base, "lighting", config), base)
 	var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_visual.json"))
 	assert_eq(PROFILE.overlay(visual, "surfaces", config), visual)
+
+
+## Coordinator decision (22 Oct wind-down): the judged Tidewake look ships ON; every
+## unjudged section ships in the file but OFF in play (sections_off), and only
+## the explicit capture flag brings it back.
+func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PROFILE.CONFIG))
+	assert_true(bool(raw.enabled), "the judged Tidewake look ships on")
+	var off: Array = raw.get("sections_off", [])
+	for section: String in ["current_flow", "current_flow_visual", "night_creature_floor"]:
+		assert_true(off.has(section), "%s is unjudged and must ship off" % section)
+		assert_true(raw.has(section), "%s ships in the file for capture" % section)
+	var config := PROFILE.settings()
+	for section: Variant in off:
+		assert_false(config.has(str(section)), "%s must not reach play" % section)
+	var base := {"untouched": true}
+	assert_eq(PROFILE.overlay(base, "current_flow", config), base)
+	assert_true(bool(config.enabled))
 
 
 func test_candidate_preserves_clock_and_source_data() -> void:

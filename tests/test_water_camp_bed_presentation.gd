@@ -73,7 +73,16 @@ func test_padding_leaves_entry_and_central_rest_ellipse_clear() -> void:
 			# Front entry corridor (+Z) remains open beyond the rest centre.
 			entry_blocked = entry_blocked or (absf(at.x) < 1.0 and at.z > 0.0)
 		var material := pad.material_override as StandardMaterial3D
-		assert_eq(material.albedo_texture.resource_path, BED.PAD_CANVAS_ALBEDO)
+		# The Tidewake look (camp_bed, ON since 22 Oct) may ask for plain
+		# sailcloth: then the mottled canvas map is gone and the colour is
+		# exactly the configured one; otherwise the shared canvas map is used.
+		var config := _config()
+		if config.has("canvas_plain_colour"):
+			assert_true(material.albedo_texture == null, "plain sailcloth must drop the mottled canvas map")
+			assert_eq(material.albedo_color, Color(str(config.canvas_plain_colour)))
+		else:
+			assert_true(material.albedo_texture != null, "the canvas map must be bound")
+			assert_eq(material.albedo_texture.resource_path, BED.PAD_CANVAS_ALBEDO)
 		assert_eq(material.normal_texture.resource_path, BED.PAD_CANVAS_NORMAL)
 		assert_true(material.uv1_triplanar)
 	assert_true(minimum_central_ellipse >= 1.0)

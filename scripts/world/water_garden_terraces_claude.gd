@@ -23,7 +23,9 @@ func build(world: Node3D) -> void:
 	var k: Variant = JSON.parse_string(FileAccess.get_file_as_string(CLAUDE_CONFIG))
 	if not k is Dictionary or not bool(k.get("garden_terraces_claude_enabled", false)):
 		return
-	_k = k
+	# The OFF Tidewake look gate may restyle presentation keys only (wall
+	# texture/tint, vines); layout, support and colliders read unchanged keys.
+	_k = preload("res://scripts/world/tidewake_look_profile.gd").overlay(k, "garden_terraces")
 	var cfg := _layout(world)
 	if cfg.is_empty():
 		return

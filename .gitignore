@@ -198,3 +198,9 @@ ralph/reports/[!g]*/**/[!_]*.PNG
 ralph/reports/[!g]*/**/[!_]*.JPG
 ralph/reports/[!g]*/**/[!_]*.gif
 ralph/reports/[!g]*/**/*.webm
+# Textures Godot extracts from the Tidewake Meshy GLBs on import; the GLB
+# embeds them and every import regenerates them (coordinator, 21 Oct).
+assets/props/meshy-1020/tidewake_*/tidewake_*_Image_*.jpg
+assets/props/meshy-1020/tidewake_*/tidewake_*_normal.png
+assets/props/meshy-1022/*/*_Image_*.jpg
+assets/props/meshy-1022/*/*_normal.png

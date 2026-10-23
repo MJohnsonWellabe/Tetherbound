@@ -226,11 +226,19 @@ func _build_wayfinding_lure(lure: Dictionary) -> void:
 			for body: Node in fire.find_children("*", "CollisionObject3D", true, false):
 				if is_instance_valid(body):
 					body.free()
+			# The OFF Tidewake look gate thins the column so stacked quads read
+			# as smoke, not a solid grey pillar; its height and landmark job stay.
+			var thin: Dictionary = {}
+			var look := preload("res://scripts/world/tidewake_look_profile.gd").settings()
+			if bool(look.get("enabled", false)):
+				thin = look.get("lure_smoke", {})
 			for glow: Node in fire.find_children("CampfireGlow", "", true, false):
 				glow.call("configure_smoke", float(piece.get("smoke_top_m", 4.6)),
-					float(piece.get("smoke_alpha", 0.3)), float(piece.get("smoke_top_size_m", -1.0)),
-					Color(str(piece.get("smoke_colour", "#00000000"))), float(piece.get("smoke_fade", 0.85)),
-					float(piece.get("smoke_base_size_m", -1.0)))
+					float(piece.get("smoke_alpha", 0.3)) * float(thin.get("alpha_scale", 1.0)),
+					float(piece.get("smoke_top_size_m", -1.0)) * float(thin.get("top_size_scale", 1.0)),
+					Color(str(piece.get("smoke_colour", "#00000000"))),
+					maxf(float(piece.get("smoke_fade", 0.85)), float(thin.get("min_fade", 0.0))),
+					float(piece.get("smoke_base_size_m", -1.0)), float(thin.get("drift_per_m", -1.0)))
 		else:
 			push_error("Water wayfinding lure %s: unknown piece kind %s" % [lure_id, kind])
 

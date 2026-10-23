@@ -1,0 +1,34 @@
+{
+  "asset": "tidewake_reed_hall_porch",
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15dec-8bdb-7122-a622-6712b13576c3",
+      "endpoint": "POST /openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A woven-reed gabled entrance porch for the front of a round marsh-village reed hall: four thick driftwood posts lashed with rope holding a steep gabled roof of golden woven reed thatch, an open front gable with a teal-painted carved timber lintel beam across the front, two small brass hanging lanterns with warm glass hanging from the lintel, three wide wooden plank steps leading up to a low plank floor, woven reed side panels at waist height. Open at the back where it meets the hall. Real size about 4 m wide, 3 m deep, 4.5 m tall. Three-quarter front view. Stylised Palworld/Animo-class game prop concept, same family as the attached Tidewake woven reed hall and dock shelter: chunky readable shapes, warm sun-bleached weathered driftwood timber, golden woven reed and thatch, sun-bleached rope bindings, teal and sea-blue paint accents, cream sailcloth, clean hand-painted PBR finish. Use the attached boards only for palette, mood and finish quality. Absolutely no red, no oxblood, no crimson, no maroon anywhere. Single isolated object, full object visible, plain neutral light background, no text, no labels, no people, no creatures.",
+      "references": [
+        "published Meshy asset tidewake_woven_reed_hall thumbnail (tb/meshy-props assets/props/meshy-1020/tidewake_woven_reed_hall), family anchor",
+        "published Meshy asset tidewake_dock_shelter thumbnail (tb/meshy-props), family anchor",
+        "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1280 px JPEG for submission)",
+        "docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png (downscaled to 1280 px JPEG for submission)",
+        "docs/reference/palworld-05-base-building.jpg (downscaled to 1280 px JPEG for submission)"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (all three views): front 3/4 with carved teal lintel, two brass lanterns, three plank steps; consistent back and side views"
+    }
+  ],
+  "chosen_concept": "c1",
+  "chosen_views": [
+    0,
+    1,
+    2
+  ],
+  "reference_inspection": "All references inspected before submission: tetherbound-meadows-keyart.png, water-veilfall-stronghold-board.png, palworld-05-base-building.jpg (palette, mood, finish only) and the published Tidewake family thumbnails (tidewake_woven_reed_hall, tidewake_dock_shelter; also viewed tidewake_drift_arch, tidewake_current_buoy_marker, tidewake_pier_module, tidewake_signal_lantern_post) for timber, reed, rope and teal/cream language. All concepts inspected before 3D submission."
+}

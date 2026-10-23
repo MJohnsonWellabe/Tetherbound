@@ -38,7 +38,7 @@ func build(world_config: Dictionary, flow_config: Dictionary, flags: RefCounted)
 		var points: Array = current.get("polyline", [])
 		var direction: Array = current.get("flow_direction_xz", [0.0, 0.0])
 		var flow := Vector2(float(direction[0]), float(direction[1])).normalized()
-		if points.size() < 2 or flow == Vector2.ZERO or models.is_empty():
+		if points.size() < 2 or flow == Vector2.ZERO:
 			continue
 		var a := Vector2(float(points[0][0]), float(points[0][2]))
 		var b := Vector2(float(points[points.size() - 1][0]), float(points[points.size() - 1][2]))
@@ -53,7 +53,10 @@ func build(world_config: Dictionary, flow_config: Dictionary, flags: RefCounted)
 		var half_width := float(current.get("width_m", 18.0)) * float(cfg.get("lateral_fraction", 0.35))
 		var strength := clampf(float(current.get("strength_m_s", 0.0)) / full_strength, 0.0, 1.0)
 		var speed := maxf(min_speed, strength * speed_scale)
-		var count := clampi(int(ceil(length / maxf(1.0, float(cfg.get("spacing_m", 40.0))))), 1, int(cfg.get("max_per_lane", 12)))
+		# No floater models (a look that relies on buoys alone) still places the
+		# lane's buoys below.
+		var count := 0 if models.is_empty() else \
+			clampi(int(ceil(length / maxf(1.0, float(cfg.get("spacing_m", 40.0))))), 1, int(cfg.get("max_per_lane", 12)))
 		var side := Vector2(-(b - a).normalized().y, (b - a).normalized().x)
 		for index in count:
 			var spec: Dictionary = models[rng.randi() % models.size()]

@@ -73,6 +73,50 @@ func _add_shoal(shoal: Dictionary, marker: Dictionary, water_world: Node3D) -> v
 	torch.set_meta("rest_shoal_role", "wayfinding_practical")
 	add_child(torch)
 	_add_light(id, torch_at, _ground(water_world, torch_at), marker)
+	_dress_sandbar(id, centre, water_world)
+
+
+## F13#5/F39 candidate under the OFF Tidewake look gate: grass, driftwood and
+## a shrub on the dry rim make the flat shoal read as a sandbar, not a disc.
+## Props stay outside the recovery centre and have no collision.
+func _dress_sandbar(id: String, centre: Vector2, water_world: Node3D) -> void:
+	var look := preload("res://scripts/world/tidewake_look_profile.gd").settings()
+	if not bool(look.get("enabled", false)):
+		return
+	var index := 0
+	for raw: Variant in look.get("rest_shoal_dressing", []):
+		var spec := raw as Dictionary
+		index += 1
+		var angle := deg_to_rad(float(spec.get("angle_deg", 0.0)) + float(id.hash() % 360))
+		var radius := maxf(float(spec.get("radius_m", 8.0)), SAFE_RADIUS_M + 1.0)
+		var at := centre + Vector2(cos(angle), sin(angle)) * radius
+		var ground := _ground(water_world, at)
+		# Lobed shoals have no fixed shore radius: a wet-fringe rock walks
+		# outward (`seek_m`) until it reaches its depth band.
+		var seek := float(spec.get("seek_m", 0.0))
+		while seek > 0.0 and ground > float(spec.get("max_ground_m", INF)):
+			radius += 0.5
+			seek -= 0.5
+			at = centre + Vector2(cos(angle), sin(angle)) * radius
+			ground = _ground(water_world, at)
+		# Wet rocks may stand in the shallow fringe (`min_ground_m` below sea
+		# level), breaking the shoal's round silhouette; dry props keep 0.12.
+		if ground < float(spec.get("min_ground_m", 0.12)) or ground > float(spec.get("max_ground_m", INF)):
+			continue
+		var prop := _fit_height(str(spec.get("model", "")), float(spec.get("height_m", 0.8)),
+			"RestShoalDressing_%s_%d" % [id, index])
+		if prop == null:
+			continue
+		var fitted := prop.scale
+		prop.scale = Vector3.ONE
+		var lift := -RENDER_BOUNDS.measure(prop).position.y * fitted.y
+		prop.scale = fitted
+		# Wake rocks carry a thin foam tail at their base: seat that base on the
+		# sea surface (`sea_level_m`), not on the submerged sand.
+		var base := float(spec.get("sea_level_m", ground)) if spec.has("sea_level_m") else ground
+		prop.position = Vector3(at.x, base + lift - float(spec.get("sink_m", 0.0)), at.y)
+		prop.rotation.y = angle + deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+		add_child(prop)
 
 
 func _ground_node(node: Node3D, bounds: AABB, at: Vector2, water_world: Node3D,
