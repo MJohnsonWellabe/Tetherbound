@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c2cjxt2dgppm5"
-path="res://.godot/imported/npc_acc_net_float_bag_normal.jpg-a2bcf565ec9f81d9ce7e8f7b6536647c.ctex"
+path.s3tc="res://.godot/imported/npc_acc_net_float_bag_normal.jpg-a2bcf565ec9f81d9ce7e8f7b6536647c.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "59562385f62e8caf4eb3d45e3b387294"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1020/npc_acc_net_float_bag/npc_acc_net_float_bag_normal.jpg"
-dest_files=["res://.godot/imported/npc_acc_net_float_bag_normal.jpg-a2bcf565ec9f81d9ce7e8f7b6536647c.ctex"]
+dest_files=["res://.godot/imported/npc_acc_net_float_bag_normal.jpg-a2bcf565ec9f81d9ce7e8f7b6536647c.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

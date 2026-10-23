@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://quogk8lpo3og"
-path="res://.godot/imported/npc_acc_fishing_rod_texture_0_metallic_roughness.jpg-9dcc70cfb92700f9d0654c4b1e395524.ctex"
+path.s3tc="res://.godot/imported/npc_acc_fishing_rod_texture_0_metallic_roughness.jpg-9dcc70cfb92700f9d0654c4b1e395524.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "2d23939dca00518ec48a7c7d9eaa7254"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1020/npc_acc_fishing_rod/npc_acc_fishing_rod_texture_0_metallic_roughness.jpg"
-dest_files=["res://.godot/imported/npc_acc_fishing_rod_texture_0_metallic_roughness.jpg-9dcc70cfb92700f9d0654c4b1e395524.ctex"]
+dest_files=["res://.godot/imported/npc_acc_fishing_rod_texture_0_metallic_roughness.jpg-9dcc70cfb92700f9d0654c4b1e395524.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

@@ -2,20 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cwp4ii5vbsg5c"
-path="res://.godot/imported/thumbnail.png-2dec5413c5f29620a37bc0284026ba73.ctex"
+uid="uid://d4f8krhtbudch"
+path.s3tc="res://.godot/imported/preview_3view.png-4e3d99607ae59dc358318eda6e001b29.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
-source_file="res://assets/props/meshy-1022/relay_gatehouse_arch/thumbnail.png"
-dest_files=["res://.godot/imported/thumbnail.png-2dec5413c5f29620a37bc0284026ba73.ctex"]
+source_file="res://assets/props/meshy-1020/hall_roof_truss/model_hall_roof_truss/preview_3view.png"
+dest_files=["res://.godot/imported/preview_3view.png-4e3d99607ae59dc358318eda6e001b29.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -37,4 +38,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

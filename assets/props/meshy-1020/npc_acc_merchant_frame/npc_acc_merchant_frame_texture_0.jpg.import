@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bjcwxvtfy727h"
-path="res://.godot/imported/npc_acc_merchant_frame_texture_0.jpg-9463f667ec280e13c0c397c8eb012dad.ctex"
+path.s3tc="res://.godot/imported/npc_acc_merchant_frame_texture_0.jpg-9463f667ec280e13c0c397c8eb012dad.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "08893ee78be46adca1b5654e14838077"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1020/npc_acc_merchant_frame/npc_acc_merchant_frame_texture_0.jpg"
-dest_files=["res://.godot/imported/npc_acc_merchant_frame_texture_0.jpg-9463f667ec280e13c0c397c8eb012dad.ctex"]
+dest_files=["res://.godot/imported/npc_acc_merchant_frame_texture_0.jpg-9463f667ec280e13c0c397c8eb012dad.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

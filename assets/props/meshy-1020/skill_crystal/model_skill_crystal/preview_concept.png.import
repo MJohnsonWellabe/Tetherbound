@@ -2,20 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bvx62kb14qkyy"
-path="res://.godot/imported/thumbnail.png-f904b422bf4c876ababcae42b380aa48.ctex"
+uid="uid://rg8r67vuvpud"
+path.s3tc="res://.godot/imported/preview_concept.png-377208a6f3854013fca480be96a41e70.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
-source_file="res://assets/props/meshy-1022/homestead_wall_segment_v2/thumbnail.png"
-dest_files=["res://.godot/imported/thumbnail.png-f904b422bf4c876ababcae42b380aa48.ctex"]
+source_file="res://assets/props/meshy-1020/skill_crystal/model_skill_crystal/preview_concept.png"
+dest_files=["res://.godot/imported/preview_concept.png-377208a6f3854013fca480be96a41e70.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -37,4 +38,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0
