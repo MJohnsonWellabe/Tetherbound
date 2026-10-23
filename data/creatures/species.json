@@ -530,10 +530,10 @@
         "radius": 1.245366,
         "_comment_footprint": "Long-legged deer/mount body -- more footprint than a compact biped, less than Trailpup's low lean canine body.",
         "footprint_allowance": 2.8,
-        "model": "res://assets/creatures/tetherbound/meadowhart/candidate/models/creature_meadowhart_native.glb",
+        "_comment_model_nat1022": "Owner style direction 22 Oct: naturalistic pilot (coordinator Meshy, candidate_nat1022; measured quadruped rig, own clips). b14 corrected prompt: 7.18 mapped vs 6.40 live recipe (CPU-provisional). Seat, saddle and rider fit unchanged: its back sits 2.03 m under the 2.19 m seat (installed 1.94 m).", "model": "res://assets/creatures/tetherbound/meadowhart/candidate_nat1022/models/creature_meadowhart_nat1022.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "colourway_source_species": "meadowhart_native_review",
+        "colourway_source_species": "meadowhart_nat1022",
         "_comment_art": "X04/V4: complete bare Meadowhart skin from an inspected agent-drafted derivative of the established Meadowhart reference. Replaces centroid-based tack removal, which also removed the front legs and torso. Crafted RideSaddle remains the only tack. Provenance and native visual evidence: ralph/reports/VISUAL/MEADOWHART-ANATOMY.md. Height, collider and physical riding seat are unchanged.",
         "animations": {
           "idle": "idle",
