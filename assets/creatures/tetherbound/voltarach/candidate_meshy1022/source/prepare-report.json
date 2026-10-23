@@ -1,9 +1,0 @@
-{
-  "height_m": 4.25,
-  "length_m": 6.276,
-  "width_m": 7.249,
-  "legs_found": 6,
-  "carapace_radius_norm": 0.68,
-  "method": "carapace_radius_angular_leg_columns_local_surface_diffusion",
-  "candidate_enabled": false
-}
