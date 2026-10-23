@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://278tj32m1fip"
-path="res://.godot/imported/npc_acc_rod_staff_normal.jpg-24eb9bb953e06b6d95709668477e1854.ctex"
+path.s3tc="res://.godot/imported/npc_acc_rod_staff_normal.jpg-24eb9bb953e06b6d95709668477e1854.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "38ec0741b96aa326ed2d2df44d94c641"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1020/npc_acc_rod_staff/npc_acc_rod_staff_normal.jpg"
-dest_files=["res://.godot/imported/npc_acc_rod_staff_normal.jpg-24eb9bb953e06b6d95709668477e1854.ctex"]
+dest_files=["res://.godot/imported/npc_acc_rod_staff_normal.jpg-24eb9bb953e06b6d95709668477e1854.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bhe8l44ydcnnx"
-path="res://.godot/imported/npc_acc_lantern_cane_texture_0_metallic_roughness.jpg-6be8b0c005fed151b1a3f79fd12fcdd8.ctex"
+path.s3tc="res://.godot/imported/npc_acc_lantern_cane_texture_0_metallic_roughness.jpg-6be8b0c005fed151b1a3f79fd12fcdd8.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "b3dda5bcfedc4f0cee89b08f61f9149b"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1020/npc_acc_lantern_cane/npc_acc_lantern_cane_texture_0_metallic_roughness.jpg"
-dest_files=["res://.godot/imported/npc_acc_lantern_cane_texture_0_metallic_roughness.jpg-6be8b0c005fed151b1a3f79fd12fcdd8.ctex"]
+dest_files=["res://.godot/imported/npc_acc_lantern_cane_texture_0_metallic_roughness.jpg-6be8b0c005fed151b1a3f79fd12fcdd8.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0
