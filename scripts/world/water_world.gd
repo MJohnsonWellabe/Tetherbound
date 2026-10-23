@@ -42,6 +42,8 @@ var currents: RefCounted
 var config: Dictionary
 var _visual: Dictionary
 var veilfall: Node3D
+## The Tidewake look's models, held once the loader threads hand them over.
+var _look_models_held: Array = []
 
 
 func _ready() -> void:
@@ -51,6 +53,7 @@ func _ready() -> void:
 	_visual = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_PATH))
 	if not simulation_only:
 		_visual = preload("res://scripts/world/tidewake_look_profile.gd").overlay(_visual, "surfaces")
+	var look_models := _request_look_models()
 	field = FIELD.new(config)
 	var traversal: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_swimming.json"))
 	var current_config: Dictionary = CURRENTS.with_closed_gates(config, traversal)
@@ -150,6 +153,7 @@ func _ready() -> void:
 	camps.name = "WaterCamps"
 	add_child(camps)
 	camps.build(self)
+	await _await_look_models(look_models)
 	var docks := DOCKS.new()
 	docks.name = "WaterDocks"
 	add_child(docks)
@@ -231,6 +235,39 @@ func _ready() -> void:
 			game.apply_loaded_player_pose()
 		else:
 			_finish_entry.call_deferred(game)
+
+
+## The Tidewake look's Meshy buildings and props (about 19 GLBs, 180 MB) used to
+## load synchronously, back to back, inside one frame of this build; on a slow
+## host that froze the co-op session past its 15 s heartbeat. They are requested
+## on the loader threads as the build starts and awaited frame by frame before
+## the dock and landmark builders, whose own load() calls then hit the cache.
+static func look_model_paths(look: Dictionary) -> Array[String]:
+	var out: Array[String] = []
+	var pattern := RegEx.create_from_string("res://[^\"]+\\.(glb|gltf)")
+	for found: RegExMatch in pattern.search_all(JSON.stringify(look)):
+		var path := found.get_string()
+		if path not in out and ResourceLoader.exists(path):
+			out.append(path)
+	return out
+
+
+func _request_look_models() -> Array[String]:
+	if simulation_only:
+		return []
+	var paths := look_model_paths(preload("res://scripts/world/tidewake_look_profile.gd").settings())
+	for path: String in paths:
+		if not ResourceLoader.has_cached(path):
+			ResourceLoader.load_threaded_request(path)
+	return paths
+
+
+func _await_look_models(paths: Array[String]) -> void:
+	for path: String in paths:
+		while ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+			await get_tree().process_frame
+		if ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_LOADED:
+			_look_models_held.append(ResourceLoader.load_threaded_get(path))
 
 
 func _finish_entry(game: Node) -> void:
