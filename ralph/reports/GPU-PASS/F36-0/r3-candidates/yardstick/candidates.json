@@ -1,0 +1,38 @@
+[
+    {
+        "label":  "F36#0 r3 riverdrake vs live",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-riverdrake-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-riverdrake-live.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#0 r3 riverdrake vs installed",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-riverdrake-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-riverdrake-installed.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#0 r3 meadowhart vs live",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-meadowhart-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-meadowhart-live.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#0 r3 meadowhart vs installed",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-meadowhart-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36r3\\sides\\F36r3-meadowhart-installed.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    }
+]
