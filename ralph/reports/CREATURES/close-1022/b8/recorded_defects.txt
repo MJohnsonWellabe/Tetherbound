@@ -1,0 +1,7 @@
+Lq: "Reads as a realistic, sourced mesh with no stylised face, beside the stylised roster (two art styles)"; "Hit react reads as standing"; "The creature never visibly faints"
+Gl: "Reads as a realistic, sourced mesh with no stylised face, beside the stylised roster (two art styles)"; "Hit react reads as standing"; "The creature never visibly faints"
+Ex: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Fo: none
+Ri: none
+Ct: "Reads as a realistic, sourced mesh with no stylised face, beside the stylised roster (two art styles)"; "Hit react reads as standing"; "The creature never visibly faints"
+Pb: none

@@ -1,0 +1,191 @@
+{
+ "_comment": "P2-055 named character silhouettes (shared-art lane, 21 Oct 2026). Named roles that share an installed base body (three local_historian, two trader, three wandering_trainer...) each gain one authored silhouette accessory: Meshy batch 2, assets/props/meshy-1020/npc_acc_*, provenance beside each GLB, origin at its grip or attach point. character_model.gd hangs each GLB off the named bone; handheld props rest at the hip so every clip keeps them planted beside the hand. Bodies, faces, names, heights and gameplay are unchanged. OFF until a code-blind PASS.",
+ "enabled": false,
+ "characters": {
+  "rodkeeper_hesk": [
+   {
+    "name": "rod_staff",
+    "scene": "res://assets/props/meshy-1020/npc_acc_rod_staff/npc_acc_rod_staff.glb",
+    "bone": "root",
+    "offset": [
+     -0.36,
+     0.782,
+     0.12
+    ],
+    "scale": 0.85
+   }
+  ],
+  "elder_maud": [
+   {
+    "name": "lantern_cane",
+    "scene": "res://assets/props/meshy-1020/npc_acc_lantern_cane/npc_acc_lantern_cane.glb",
+    "bone": "root",
+    "offset": [
+     -0.36,
+     0.95,
+     0.12
+    ]
+   }
+  ],
+  "warden_elect_bryn": [
+   {
+    "name": "oilskin_hat",
+    "scene": "res://assets/props/meshy-1020/npc_acc_oilskin_hat/npc_acc_oilskin_hat.glb",
+    "bone": "Head",
+    "offset": [
+     0.0,
+     0.17,
+     0.02
+    ]
+   }
+  ],
+  "trader_oswin": [
+   {
+    "name": "merchant_frame",
+    "scene": "res://assets/props/meshy-1020/npc_acc_merchant_frame/npc_acc_merchant_frame.glb",
+    "bone": "Spine02",
+    "offset": [
+     0.0,
+     0.0,
+     -0.17
+    ],
+    "rotation_degrees": [
+     0,
+     180,
+     0
+    ]
+   }
+  ],
+  "trader_fenn": [
+   {
+    "name": "wool_cap_scarf",
+    "scene": "res://assets/props/meshy-1020/npc_acc_wool_cap_scarf/npc_acc_wool_cap_scarf.glb",
+    "bone": "Head",
+    "offset": [
+     0.0,
+     0.17,
+     0.02
+    ]
+   }
+  ],
+  "caretaker_lio": [
+   {
+    "name": "feed_basket",
+    "scene": "res://assets/props/meshy-1020/npc_acc_feed_basket/npc_acc_feed_basket.glb",
+    "bone": "root",
+    "offset": [
+     -0.36,
+     0.72,
+     0.1
+    ]
+   }
+  ],
+  "crown_caretaker_neri": [
+   {
+    "name": "storm_circlet",
+    "scene": "res://assets/props/meshy-1020/npc_acc_storm_circlet/npc_acc_storm_circlet.glb",
+    "bone": "Head",
+    "offset": [
+     0.0,
+     0.21,
+     0.0
+    ],
+    "scale": 1.35
+   }
+  ],
+  "water_otto": [
+   {
+    "name": "rod_pike",
+    "scene": "res://assets/props/meshy-1020/npc_acc_rod_pike/npc_acc_rod_pike.glb",
+    "bone": "root",
+    "offset": [
+     -0.36,
+     0.722,
+     0.12
+    ],
+    "tint": "#ffcf9a",
+    "scale": 0.85
+   }
+  ],
+  "water_orsen": [
+   {
+    "name": "fishing_rod",
+    "scene": "res://assets/props/meshy-1020/npc_acc_fishing_rod/npc_acc_fishing_rod.glb",
+    "bone": "root",
+    "offset": [
+     -0.36,
+     0.9,
+     0.12
+    ]
+   }
+  ],
+  "water_tovin": [
+   {
+    "name": "net_float_bag",
+    "scene": "res://assets/props/meshy-1020/npc_acc_net_float_bag/npc_acc_net_float_bag.glb",
+    "bone": "root",
+    "offset": [
+     0.3,
+     0.92,
+     0.0
+    ],
+    "scale": 0.9
+   }
+  ],
+  "water_iona": [
+   {
+    "name": "spyglass_satchel",
+    "scene": "res://assets/props/meshy-1020/npc_acc_spyglass_satchel/npc_acc_spyglass_satchel.glb",
+    "bone": "root",
+    "offset": [
+     0.3,
+     0.92,
+     0.0
+    ],
+    "scale": 0.8
+   }
+  ],
+  "water_rowan": [
+   {
+    "name": "merchant_frame",
+    "scene": "res://assets/props/meshy-1020/npc_acc_merchant_frame/npc_acc_merchant_frame.glb",
+    "bone": "Spine02",
+    "offset": [
+     0.0,
+     0.0,
+     -0.17
+    ],
+    "rotation_degrees": [
+     0,
+     180,
+     0
+    ]
+   }
+  ],
+  "water_corin": [
+   {
+    "name": "oilskin_hat",
+    "scene": "res://assets/props/meshy-1020/npc_acc_oilskin_hat/npc_acc_oilskin_hat.glb",
+    "bone": "Head",
+    "offset": [
+     0.0,
+     0.27,
+     0.0
+    ],
+    "tint": "#9fc7c2"
+   }
+  ],
+  "water_edda": [
+   {
+    "name": "lantern_cane",
+    "scene": "res://assets/props/meshy-1020/npc_acc_lantern_cane/npc_acc_lantern_cane.glb",
+    "bone": "root",
+    "offset": [
+     -0.36,
+     0.95,
+     0.12
+    ]
+   }
+  ]
+ }
+}

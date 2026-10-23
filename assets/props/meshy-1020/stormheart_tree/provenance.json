@@ -1,0 +1,265 @@
+{
+  "asset": "Stormheart Tree hero (F41#4, P2-037) - three candidates",
+  "feature": "F41#4 / P2-037",
+  "status": "CANDIDATE - flag-off until its scene passes three-judge visual review",
+  "date": "2026-10-21",
+  "generator": "Meshy API (owner's existing license; no purchase). Concept: image-to-image nano-banana-pro drafted from the listed reference crops; model: multi-image-to-3d ai_model=latest.",
+  "target_size_m": {
+    "height": 260,
+    "crown_spread": 250,
+    "trunk_diameter": 60
+  },
+  "native_glb_extent_units": {
+    "cand1": [
+      1.482,
+      1.917,
+      0.981
+    ],
+    "cand2": [
+      1.902,
+      1.777,
+      0.85
+    ],
+    "cand3": [
+      1.301,
+      1.889,
+      1.108
+    ]
+  },
+  "scale_note": "Native GLB is normalised to ~1.9 units tall (Y up). Uniform scale ~137x (cand1/cand3) or ~146x (cand2) gives 260 m height. Crown spread then: cand1 ~203x134 m, cand2 ~278x124 m, cand3 ~178x152 m; reaching 250 m spread needs extra horizontal scale (cand3 ~1.4x X / 1.65x Z) or accepting a narrower crown. Gameplay hollow/passages/rings are NOT modelled - lane-owned geometry stays authoritative.",
+  "visual_verdict_worker": "cand3 (round-in-plan turnaround concept c3) is the recommended primary: closed, dense clumped crown on all sides, readable twisted bark, big buttress roots, platforms/walkways; split glow is weaker (white) and should be reinforced by the existing energy-seam VFX. cand2 (concept c2) has the widest front silhouette but is flat in depth (crown depth ~45% of width). cand1 (concept c1a) reads well from front but has a stray teal crate block at the base on one side and depth ~66% of width. All three fix the previous candidate's torn sheet crown and stretched bark at preview level; none judged in engine yet. Concept c1b was rejected (lollipop tower crown) and not modelled.",
+  "concept_tasks": [
+    {
+      "kind": "concept",
+      "tag": "c1a",
+      "endpoint": "/openapi/v1/image-to-image",
+      "task_id": "01a15c3d-a55f-7443-bcda-b61d72a755c7",
+      "status": "SUCCEEDED",
+      "model": "nano-banana-pro",
+      "prompt": "Using the reference art boards, draft a 3D-model concept sheet of the Stormheart Tree: one colossal ancient tree split vertically down the middle by lightning into two massive trunk halves, with a glowing blue-white electric core channel running up inside the split. Broad, irregular, layered crown made of DENSE CLUMPED rounded leaf masses (big puffy cloud-like foliage clusters, deep blue-green), no thin sheets, no torn flat plates. Thick readable bark with deep vertical ridges and twisted grain, flared buttress roots spreading wide at the base, moss climbing the lower trunk. Wooden ring platforms with railings, plank walkways and rope bridges wrapping the trunk at several heights, small navy-blue banners with a lightning emblem, warm lanterns, an arched entrance at the base. Massive and monumental proportions: crown spread about as wide as the tree is tall, trunk very thick. Show the same tree from front, side and back. Stylised Palworld / Animo-class game asset style, clean readable shapes, hand-painted PBR feel. Palette strictly: cool blue-green moss, wet dark brown-grey bark, aged verdigris copper, glass highlights, white-violet lightning glow. No red, no oxblood, no people, no text, no ground plane, plain background, full object visible, centered, consistent lighting.",
+      "refs": [
+        "a_exterior.jpg",
+        "b_exterior.jpg",
+        "a_front_side.jpg",
+        "b_keyviews.jpg",
+        "palworld.jpg"
+      ],
+      "multi_view": true,
+      "credits": 9,
+      "files": [
+        "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/concepts/c1a_0.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/concepts/c1a_1.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/concepts/c1a_2.png"
+      ],
+      "error": null,
+      "date": "2026-10-21",
+      "selected": true,
+      "reference_paths": [
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png crop (8,80,614,682) exterior view",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (8,80,608,682) exterior view",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png crop (630,104,1066,274) front+side key views",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (626,104,1054,466) key views",
+        "docs/reference/palworld-01-boss-fight-forest.jpg (full)"
+      ]
+    },
+    {
+      "kind": "concept",
+      "tag": "c1b",
+      "endpoint": "/openapi/v1/image-to-image",
+      "task_id": "01a15c3e-6d4a-765c-9b3d-ae4fd2b488fc",
+      "status": "SUCCEEDED",
+      "model": "nano-banana-pro",
+      "prompt": "Using the reference art boards, draft a 3D-model concept sheet of the Stormheart Tree as a compact sculptural game landmark: a gigantic old tree whose trunk is cleaved in two by a lightning strike, the two halves leaning slightly apart like a tuning fork with a bright blue-white glowing energy seam filling the gap. Crown: a wide umbrella of big chunky clumped foliage masses in dark teal-green with lighter blue-green tops, solid and volumetric like Palworld trees, every leaf mass rounded and closed. Bark: chunky stylised plates and deep ridges, dark wet bark with blue-green moss patches, thick buttress roots gripping a rocky base. Wooden platforms, balconies and spiral walkways with railings bolted around both trunk halves, aged-copper braces and lightning rods, navy banners. Very thick trunk, heavy silhouette, readable from far away. Show front, side and back views of the same tree. Stylised Palworld / Animo-class game asset style, clean readable shapes, hand-painted PBR feel. Palette strictly: cool blue-green moss, wet dark brown-grey bark, aged verdigris copper, glass highlights, white-violet lightning glow. No red, no oxblood, no people, no text, no ground plane, plain background, full object visible, centered, consistent lighting.",
+      "refs": [
+        "a_exterior.jpg",
+        "b_exterior.jpg",
+        "a_front_side.jpg",
+        "b_keyviews.jpg",
+        "palworld.jpg"
+      ],
+      "multi_view": true,
+      "credits": 9,
+      "files": [
+        "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/concepts/c1b_0.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/concepts/c1b_1.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/concepts/c1b_2.png"
+      ],
+      "error": null,
+      "date": "2026-10-21",
+      "selected": false,
+      "reference_paths": [
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png crop (8,80,614,682) exterior view",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (8,80,608,682) exterior view",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png crop (630,104,1066,274) front+side key views",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (626,104,1054,466) key views",
+        "docs/reference/palworld-01-boss-fight-forest.jpg (full)"
+      ]
+    },
+    {
+      "kind": "concept",
+      "tag": "c2",
+      "endpoint": "/openapi/v1/image-to-image",
+      "task_id": "01a15c3f-d8ab-7708-9f78-50244ad11615",
+      "status": "SUCCEEDED",
+      "model": "nano-banana-pro",
+      "prompt": "Using the reference art boards (exterior views), draft a 3D-model concept sheet of the Stormheart Tree with a VERY WIDE crown: a colossal ancient tree split vertically down the middle by lightning into two massive leaning trunk halves with a glowing blue-white electric core channel between them. The crown is a huge broad irregular canopy, as wide as the whole tree is tall (about four times wider than the trunk), made of many big dense clumped rounded foliage masses in deep blue-green spread along long heavy horizontal limbs, like a giant oak or baobab-banyan; every foliage mass solid and closed, no thin sheets. Very thick trunk with deep readable twisted bark ridges, huge flared buttress roots spreading wide, blue-green moss on the lower trunk. Wooden ring platforms with railings and plank walkways and rope bridges around the trunk at several heights, navy banners with a lightning emblem, lanterns, aged-copper braces, an arched entrance at the base. Square-ish overall silhouette, roughly as wide as tall. Show front, side and back views of the same tree. Stylised Palworld / Animo-class game asset style, clean readable shapes, hand-painted PBR feel. Palette strictly: cool blue-green moss, wet dark brown-grey bark, aged verdigris copper, glass highlights, white-violet lightning glow. No red, no oxblood, no people, no text, no ground plane, plain background, full object visible, centered, consistent lighting.",
+      "refs": [
+        "a_exterior.jpg",
+        "b_exterior.jpg",
+        "a_front_side.jpg",
+        "b_keyviews.jpg",
+        "palworld.jpg"
+      ],
+      "multi_view": true,
+      "credits": 9,
+      "files": [
+        "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/concepts/c2_0.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/concepts/c2_1.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/concepts/c2_2.png"
+      ],
+      "error": null,
+      "date": "2026-10-21",
+      "selected": true,
+      "reference_paths": [
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png crop (8,80,614,682) exterior view",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (8,80,608,682) exterior view",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png crop (630,104,1066,274) front+side key views",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (626,104,1054,466) key views",
+        "docs/reference/palworld-01-boss-fight-forest.jpg (full)"
+      ]
+    },
+    {
+      "kind": "concept",
+      "tag": "c3",
+      "endpoint": "/openapi/v1/image-to-image",
+      "task_id": "01a15c4b-40db-723d-b4e3-3f36d8e0e37c",
+      "status": "SUCCEEDED",
+      "model": "nano-banana-pro",
+      "prompt": "Using the reference art boards (exterior views and top-view sketch), draft a 3D-model turnaround concept of the Stormheart Tree. IMPORTANT: the crown is ROUND IN PLAN, a huge dome-shaped canopy that is exactly as wide in the side view as in the front view (radially symmetric like the top-view sketch), and about as wide as the tree is tall. The tree: a colossal ancient trunk split vertically down the middle by lightning into two massive halves with a glowing blue-white electric core channel visible in the split; very thick trunk (about a quarter of the crown width) with deep readable twisted bark ridges and huge flared buttress roots spreading in all directions; crown built from many big dense clumped rounded foliage masses in deep blue-green on heavy limbs radiating in every direction, all masses solid and closed. Wooden ring platforms with railings encircling the trunk, plank walkways, rope bridges, navy banners with a lightning emblem, lanterns, aged-copper braces, arched entrance at the base. Show front view, side view (rotated 90 degrees, crown just as wide) and back view of the same tree. Stylised Palworld / Animo-class game asset style, clean readable shapes, hand-painted PBR feel. Palette strictly: cool blue-green moss, wet dark brown-grey bark, aged verdigris copper, glass highlights, white-violet lightning glow. No red, no oxblood, no people, no text, no ground plane, plain background, full object visible, centered, consistent lighting.",
+      "refs": [
+        "a_exterior.jpg",
+        "b_exterior.jpg",
+        "a_front_side.jpg",
+        "b_keyviews.jpg",
+        "palworld.jpg"
+      ],
+      "multi_view": true,
+      "credits": 9,
+      "files": [
+        "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/concepts/c3_0.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/concepts/c3_1.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/concepts/c3_2.png"
+      ],
+      "error": null,
+      "date": "2026-10-21",
+      "selected": true,
+      "reference_paths": [
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png crop (8,80,614,682) exterior view",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (8,80,608,682) exterior view",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png crop (630,104,1066,274) front+side key views",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (626,104,1054,466) key views",
+        "docs/reference/palworld-01-boss-fight-forest.jpg (full)"
+      ]
+    }
+  ],
+  "model_tasks": [
+    {
+      "kind": "model",
+      "tag": "cand1",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "task_id": "01a15c3e-8cec-70b8-9e19-86a4c4031c0d",
+      "input_task_id": "01a15c3d-a55f-7443-bcda-b61d72a755c7",
+      "status": "SUCCEEDED",
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 150000,
+        "enable_pbr": true,
+        "should_texture": true,
+        "texture_resolution": "4k",
+        "input_task_id": "01a15c3d-a55f-7443-bcda-b61d72a755c7"
+      },
+      "image_files": null,
+      "credits": 30,
+      "files": {
+        "glb": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand1/stormheart_tree_cand1.glb",
+        "tex_0_base_color": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand1/textures/0_base_color.png",
+        "tex_0_metallic": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand1/textures/0_metallic.png",
+        "tex_0_roughness": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand1/textures/0_roughness.png",
+        "tex_0_normal": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand1/textures/0_normal.png",
+        "thumb": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand1/thumbnail.png"
+      },
+      "error": null,
+      "date": "2026-10-21",
+      "selected": true,
+      "glb_sha256": "34343a003fbda3084091881b777d9049f746d836ffa62e8fb231c31e65e2c6c3"
+    },
+    {
+      "kind": "model",
+      "tag": "cand2",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "task_id": "01a15c41-98c0-73a6-8752-cc8b89b2c304",
+      "input_task_id": "01a15c3f-d8ab-7708-9f78-50244ad11615",
+      "status": "SUCCEEDED",
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 150000,
+        "enable_pbr": true,
+        "should_texture": true,
+        "texture_resolution": "4k",
+        "input_task_id": "01a15c3f-d8ab-7708-9f78-50244ad11615"
+      },
+      "image_files": null,
+      "credits": 30,
+      "files": {
+        "glb": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand2/stormheart_tree_cand2.glb",
+        "tex_0_base_color": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand2/textures/0_base_color.png",
+        "tex_0_metallic": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand2/textures/0_metallic.png",
+        "tex_0_roughness": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand2/textures/0_roughness.png",
+        "tex_0_normal": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand2/textures/0_normal.png",
+        "thumb": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand2/thumbnail.png"
+      },
+      "error": null,
+      "date": "2026-10-21",
+      "selected": true,
+      "glb_sha256": "3b0d3423d74030b8f67d6af48d82001d4ef6ed8a84d0dbf0abe8cd25b2dc075d"
+    },
+    {
+      "kind": "model",
+      "tag": "cand3",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "task_id": "01a15c4c-147d-77f1-99b0-5d0855a8589a",
+      "input_task_id": "01a15c4b-40db-723d-b4e3-3f36d8e0e37c",
+      "status": "SUCCEEDED",
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 150000,
+        "enable_pbr": true,
+        "should_texture": true,
+        "texture_resolution": "4k",
+        "input_task_id": "01a15c4b-40db-723d-b4e3-3f36d8e0e37c"
+      },
+      "image_files": null,
+      "credits": 30,
+      "files": {
+        "glb": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand3/stormheart_tree_cand3.glb",
+        "tex_0_base_color": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand3/textures/0_base_color.png",
+        "tex_0_metallic": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand3/textures/0_metallic.png",
+        "tex_0_roughness": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand3/textures/0_roughness.png",
+        "tex_0_normal": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand3/textures/0_normal.png",
+        "thumb": "/home/user/Tetherbound/assets_raw/props-1020/stormheart_tree/cand3/thumbnail.png"
+      },
+      "error": null,
+      "date": "2026-10-21",
+      "selected": true,
+      "glb_sha256": "3881ffb9f54c1ce113c74b3e369114af6c4063a14f650b97d5f8c20fe8b5ca26"
+    }
+  ],
+  "credits_consumed_total": 126,
+  "style_brief": "Palworld/Animo-class stylised family; cool blue-green moss, wet dark bark, aged copper, glass highlights, white-violet lightning; no oxblood/red."
+}

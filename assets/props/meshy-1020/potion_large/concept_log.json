@@ -1,0 +1,33 @@
+{
+ "asset": "potion_large",
+ "concepts": [
+  {
+   "tag": "c1",
+   "task_id": "01a15e00-08fe-7011-aae3-1e1c3bdcf9e6",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept: a large healing potion, the bigger sibling of the small potion in the second reference image (same glass, same glowing teal-green liquid, same art style). A tall flask whose lower body is wrapped in woven tan wicker basketry, with an arched woven wicker carry handle over the top, glowing teal-green healing liquid visible in the upper glass, and a big chunky cork stopper. Flat bottom so it stands upright. About 0.48 m tall. Stylised Palworld / Animo-class game item prop, deliberately chunky and oversized, exaggerated readable silhouette that still reads clearly from 10-15 metres, soft bevelled edges, soft hand-painted PBR look, natural palette matching the Meadows key-art reference (sage and leaf greens, warm gold, cream, slate blue, teal). Single isolated object standing upright on its flat base, full object visible and centred, plain neutral light-grey background, even studio lighting, no cast shadow, no ground plane, no people, no creatures, no text, no letters, no labels, no red or crimson anywhere.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1024 x 683)",
+    "assets_raw/props-1020/potion_small/concepts/c1_0.png (own potion_small concept, image-to-image task 01a15dfe-1ac0-763f-bf66-fbd1d23b1f10, family reference)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "potion_large/concepts/c1_0.png",
+    "potion_large/concepts/c1_1.png",
+    "potion_large/concepts/c1_2.png"
+   ],
+   "chosen": true,
+   "verdict": "CHOSEN: tall flask in tan woven wicker basket with arched wicker carry handle, teal-green liquid matching potion_small, big cork; 3 consistent views",
+   "consumed_credits": 9
+  }
+ ],
+ "chosen_concept": "c1",
+ "chosen_views": [
+  0,
+  1,
+  2
+ ],
+ "chosen_concept_png": "model_potion_large/preview_concept.png (contact sheet of concepts/c1_0.png, concepts/c1_1.png, concepts/c1_2.png)",
+ "reference_inspection": "Key art inspected for palette; potion_small chosen concept used as the family reference so both potions share glass, liquid and cork."
+}

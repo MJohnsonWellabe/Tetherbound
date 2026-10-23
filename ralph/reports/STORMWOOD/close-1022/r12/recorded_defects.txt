@@ -1,0 +1,8 @@
+Jh: "dark monochrome brown arena"; "flat magenta slab telegraph"; "floating NPC text over the enemy panel"; "no hit effect at impact"; "camera inside canopy or trunk"
+Ay: none
+Hk: none
+Cn: "frames read as dark brown-black murk"; "near-camera occluder (root or trunk) fills part of the lens"; "bare ground with a single repeating tile"; "Stormheart tree reads ghostly or squat at distance"; "glass field strike scar not readable"
+Nk: "dark monochrome brown arena"; "flat magenta slab telegraph"; "no hit effect at impact"; "HUD covers the trainer or telegraph"; "camera inside canopy or trunk"
+Od: "frames read as dark brown-black murk"; "near-camera occluder (root or trunk) fills part of the lens"
+Aw: "forest views crushed to near-black"; "break only darkens, no lightning light on trunks or ground"; "flat magenta strike warning disc on the ground"
+Hu: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"

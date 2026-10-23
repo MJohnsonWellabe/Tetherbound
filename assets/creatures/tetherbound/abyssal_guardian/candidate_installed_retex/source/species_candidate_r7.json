@@ -1,0 +1,25 @@
+{
+  "enabled": false,
+  "species": "abyssal_guardian",
+  "candidate_variant": "installed_retex_r7",
+  "placeholder": {
+    "colour": "#8899aa",
+    "height": 7.2,
+    "radius": 2.52,
+    "footprint_allowance": 3.7,
+    "model": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r7_lod0.glb",
+    "model_scale": 1.0,
+    "model_yaw": 0.0,
+    "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+    },
+    "colourway_source_species": "abyssal_guardian_installed_retex_r7_review"
+  },
+  "scope": "presentation_only",
+  "activation": "Requires the three-judge Bar A 7.5 and independent F36 art approval; installed creature_abyssal_guardian_lod0.glb remains the default"
+}

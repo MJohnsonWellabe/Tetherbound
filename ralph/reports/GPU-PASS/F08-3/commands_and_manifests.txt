@@ -1,0 +1,24 @@
+## High-a14
+godot --path D:\tb-gpu-wt-cloudreach --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script res://tools/capture_cloudreach_settlement_identity.gd -- --preset=High --source-commit=ff3cc7cfa427d6ebaec276ca3187d1890a1d33c7 --output=D:/tb-gpu-runs/out/F08-3/High-a14/frames --cloudreach-settlement-life-candidate
+# Cloudreach settlement identity: 5 existing stands x day/night; production matrix camera/floor/follower; staged five-owned party and progression
+# coverage full 10-view matrix
+# graphics_capture {"adapter":"NVIDIA GeForce GTX 1060 3GB","graphics_config_sha256":"1616b1c986c9c5196790bd157a5874093906bd97e95f7eae6aca244154ea8d88","preset":"High","renderer":"forward_plus","resolution":[1920,1080],"source_commit":"ff3cc7cfa427d6ebaec276ca3187d1890a1d33c7"}
+
+## High-c14
+godot --path D:\tb-gpu-wt-cloudreach --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script res://tools/capture_cloudreach_settlement_identity.gd -- --preset=High --source-commit=ff3cc7cfa427d6ebaec276ca3187d1890a1d33c7 --output=D:/tb-gpu-runs/out/F08-3/High-c14/frames
+# Cloudreach settlement identity: 5 existing stands x day/night; production matrix camera/floor/follower; staged five-owned party and progression
+# coverage full 10-view matrix
+# graphics_capture {"adapter":"NVIDIA GeForce GTX 1060 3GB","graphics_config_sha256":"1616b1c986c9c5196790bd157a5874093906bd97e95f7eae6aca244154ea8d88","preset":"High","renderer":"forward_plus","resolution":[1920,1080],"source_commit":"ff3cc7cfa427d6ebaec276ca3187d1890a1d33c7"}
+
+## Medium-a14
+godot --path D:\tb-gpu-wt-cloudreach --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script res://tools/capture_cloudreach_settlement_identity.gd -- --preset=Medium --source-commit=ff3cc7cfa427d6ebaec276ca3187d1890a1d33c7 --output=D:/tb-gpu-runs/out/F08-3/Medium-a14/frames --cloudreach-settlement-life-candidate
+# Cloudreach settlement identity: 5 existing stands x day/night; production matrix camera/floor/follower; staged five-owned party and progression
+# coverage full 10-view matrix
+# graphics_capture {"adapter":"NVIDIA GeForce GTX 1060 3GB","graphics_config_sha256":"1616b1c986c9c5196790bd157a5874093906bd97e95f7eae6aca244154ea8d88","preset":"Medium","renderer":"forward_plus","resolution":[1920,1080],"source_commit":"ff3cc7cfa427d6ebaec276ca3187d1890a1d33c7"}
+
+## Medium-c14
+godot --path D:\tb-gpu-wt-cloudreach --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script res://tools/capture_cloudreach_settlement_identity.gd -- --preset=Medium --source-commit=ff3cc7cfa427d6ebaec276ca3187d1890a1d33c7 --output=D:/tb-gpu-runs/out/F08-3/Medium-c14/frames
+# Cloudreach settlement identity: 5 existing stands x day/night; production matrix camera/floor/follower; staged five-owned party and progression
+# coverage full 10-view matrix
+# graphics_capture {"adapter":"NVIDIA GeForce GTX 1060 3GB","graphics_config_sha256":"1616b1c986c9c5196790bd157a5874093906bd97e95f7eae6aca244154ea8d88","preset":"Medium","renderer":"forward_plus","resolution":[1920,1080],"source_commit":"ff3cc7cfa427d6ebaec276ca3187d1890a1d33c7"}
+

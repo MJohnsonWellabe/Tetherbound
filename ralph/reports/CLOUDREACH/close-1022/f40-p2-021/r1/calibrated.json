@@ -1,0 +1,174 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9063,
+  "least_squares_slope": 1.397,
+  "method": "linear",
+  "slope": 1.397,
+  "intercept": -1.9613,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.394,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C3B": {
+   "measured": 6.3,
+   "reference": 7.07,
+   "mapped": 6.84,
+   "residual": 0.23
+  },
+  "f36_0_gap:C3A": {
+   "measured": 6.367,
+   "reference": 6.5,
+   "mapped": 6.933,
+   "residual": -0.433
+  },
+  "f36_0_npc:C5B": {
+   "measured": 5.333,
+   "reference": 5.03,
+   "mapped": 5.489,
+   "residual": -0.459
+  },
+  "f36_0_npc:C5A": {
+   "measured": 5.467,
+   "reference": 5.07,
+   "mapped": 5.675,
+   "residual": -0.605
+  },
+  "f04_6_r22:control": {
+   "measured": 5.3,
+   "reference": 5.83,
+   "mapped": 5.443,
+   "residual": 0.387
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.1,
+   "reference": 6.75,
+   "mapped": 6.56,
+   "residual": 0.19
+  },
+  "craft:after": {
+   "measured": 6.4,
+   "reference": 7.35,
+   "mapped": 6.979,
+   "residual": 0.371
+  },
+  "craft:before": {
+   "measured": 4.633,
+   "reference": 4.83,
+   "mapped": 4.511,
+   "residual": 0.319
+  }
+ },
+ "candidates": {
+  "F40 P2-021 r1 gate_crag p21a": {
+   "measured_mean": 5.233,
+   "mapped_mean": 5.35,
+   "mapped_judges": [
+    5.86,
+    5.44,
+    4.74
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-021 r1 gate_crag p21c": {
+   "measured_mean": 4.5,
+   "mapped_mean": 4.33,
+   "mapped_judges": [
+    4.74,
+    4.6,
+    3.63
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-021 r1 gate_road p21c": {
+   "measured_mean": 5.6,
+   "mapped_mean": 5.86,
+   "mapped_judges": [
+    6.0,
+    6.14,
+    5.44
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-021 r1 gate_road p21a": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.28,
+   "mapped_judges": [
+    6.42,
+    6.28,
+    6.14
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-021 r1 heartstone p21a": {
+   "measured_mean": 5.8,
+   "mapped_mean": 6.14,
+   "mapped_judges": [
+    6.42,
+    6.42,
+    5.58
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-021 r1 heartstone p21c": {
+   "measured_mean": 5.233,
+   "mapped_mean": 5.35,
+   "mapped_judges": [
+    5.72,
+    5.58,
+    4.74
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-021 r1 shrine_walk p21a": {
+   "measured_mean": 5.1,
+   "mapped_mean": 5.16,
+   "mapped_judges": [
+    5.58,
+    5.44,
+    4.46
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F40 P2-021 r1 shrine_walk p21c": {
+   "measured_mean": 3.8,
+   "mapped_mean": 3.35,
+   "mapped_judges": [
+    3.35,
+    3.91,
+    2.79
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "some candidates lie more than 0.5 outside the anchors' measured range (extrapolated)"
+ ]
+}

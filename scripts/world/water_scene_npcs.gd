@@ -86,6 +86,7 @@ func build(world: Node3D) -> Dictionary:
 			push_error("Water NPC installed profile/model mismatch: " + id)
 			continue
 		model = APPEARANCE.resolve(model, profile, str(spec.get("appearance_variant_id", "")))
+		model = CHARACTER.with_role_accessories(model, id)
 		# The resolver admits appearance and portrait together. A disabled or
 		# mismatched candidate keeps this named NPC's installed portrait too.
 		var presentation_spec := spec.duplicate(true)

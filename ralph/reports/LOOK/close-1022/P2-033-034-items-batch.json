@@ -1,0 +1,106 @@
+{
+ "anchors": {
+  "p2_094_r4:X_before": [
+   4.7,
+   4.5,
+   5.0
+  ],
+  "p2_094_r4:Y_after": [
+   6.3,
+   6.0,
+   6.3
+  ],
+  "craft:after": [
+   6.3,
+   6.3,
+   6.6
+  ],
+  "craft:before": [
+   4.9,
+   5.0,
+   5.2
+  ],
+  "f36_0_gap:C1A": [
+   4.9,
+   5.4,
+   6.0
+  ],
+  "f36_0_gap:C1B": [
+   5.8,
+   6.2,
+   6.8
+  ],
+  "f36_0_npc:C1A": [
+   6.9,
+   7.0,
+   7.0
+  ],
+  "f36_0_npc:C1B": [
+   6.9,
+   7.1,
+   7.0
+  ]
+ },
+ "candidates": {
+  "P2-034 harvest__orb_basic meshy": [
+   6.2,
+   6.0,
+   6.3
+  ],
+  "P2-034 harvest__orb_basic ship": [
+   5.9,
+   5.6,
+   6.0
+  ],
+  "P2-033 pickup__rare_candy ship": [
+   5.1,
+   4.8,
+   5.6
+  ],
+  "P2-033 pickup__rare_candy meshy": [
+   6.6,
+   6.4,
+   6.5
+  ],
+  "P2-033 pickup__potion_small meshy": [
+   6.4,
+   6.3,
+   6.5
+  ],
+  "P2-033 pickup__potion_small ship": [
+   5.0,
+   4.8,
+   5.5
+  ],
+  "P2-033 pickup__good_candy meshy": [
+   6.5,
+   6.4,
+   6.5
+  ],
+  "P2-033 pickup__good_candy ship": [
+   5.0,
+   4.7,
+   5.4
+  ],
+  "P2-034 harvest__travel_pack meshy": [
+   6.6,
+   6.5,
+   6.5
+  ],
+  "P2-034 harvest__travel_pack ship": [
+   5.3,
+   5.2,
+   5.5
+  ],
+  "P2-033 pickup__great_candy meshy": [
+   6.4,
+   6.3,
+   6.4
+  ],
+  "P2-033 pickup__great_candy ship": [
+   5.1,
+   4.9,
+   5.4
+  ]
+ }
+}

@@ -1,0 +1,9 @@
+{"anchors": {"f10_2_r3_capacitor:candidate_r3": [4.4, 4.0, 4.6], "f10_2_r3_capacitor:control": [3.9, 3.5, 4.0],
+             "craft:before": [4.8, 4.8, 5.0], "craft:after": [6.5, 6.4, 6.6],
+             "f04_6_r22:r22": [5.5, 5.6, 5.6], "f04_6_r22:control": [4.5, 4.6, 4.9],
+             "f36_0_npc:C1A": [7.0, 7.0, 7.0], "f36_0_npc:C1B": [6.9, 7.0, 7.0]},
+ "candidates": {"sparkit live": [5.8, 5.4, 6.3], "sparkit cand1022": [6.5, 5.9, 6.6],
+                "voltarach live": [5.0, 4.6, 5.6], "voltarach cand1022": [6.5, 6.1, 6.3],
+                "staticub live": [5.3, 4.9, 5.8], "staticub cand1022": [6.8, 6.3, 6.6],
+                "mirejaw live": [5.0, 4.4, 5.4], "mirejaw cand1022": [6.2, 5.6, 6.2],
+                "meadowhart live": [6.0, 5.6, 6.4], "meadowhart cand1022": [6.8, 5.8, 6.5]}}

@@ -1,0 +1,96 @@
+{
+  "species": "abyssal_guardian",
+  "round": "r8",
+  "installed": "assets/creatures/tetherbound/abyssal_guardian/models/creature_abyssal_guardian_lod0.glb",
+  "installed_sha256": "410674ad561ea420896142e1e80c76650967cd76c90ce995cd9d5b07b41673f9",
+  "source": "assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0.glb",
+  "source_sha256": "e6f37ba064d016d0e29c5399e8e458bf18abd0d15d39041ce7a4f0c70833a86f",
+  "output": "assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r8_lod0.glb",
+  "output_sha256": "75e57f08accc51f06d9d3c23dcf10428baabe6b668a9fa83c44442912b722d3a",
+  "unique_uvs": 17794,
+  "uv_sets_identical": true,
+  "profile": {
+    "cream_core_rgb": [
+      0.929,
+      0.89,
+      0.8
+    ],
+    "cream_edge_rgb": [
+      0.886,
+      0.839,
+      0.729
+    ],
+    "edge_darken": 0.9,
+    "pale_sat_max": 0.22,
+    "pale_val_min": 0.6,
+    "geo_ny": [
+      -0.4,
+      -0.65
+    ],
+    "jaw_ny": [
+      -0.15,
+      -0.45
+    ],
+    "up_ny_max": 0.15,
+    "feather_in": 0.02,
+    "feather_out": 0.028,
+    "scale_breakup": 0.25,
+    "lo_res": 1024,
+    "safe_hue": 210.0
+  },
+  "grade": {
+    "cream_texels_pct": 10.668,
+    "cream_feather_texels_pct": 9.562,
+    "r6_pale_texels_pct": 8.449,
+    "up_facing_cream_texels_pct": 0.0,
+    "red_clamped_texels": 0
+  },
+  "red_metric_strict_hue_lt15_gt320_sat_gt030_val_gt020_pct": {
+    "source": 0.0,
+    "candidate": 0.0
+  },
+  "kept_unchanged": [
+    "meshes",
+    "accessors",
+    "skins",
+    "nodes",
+    "animations",
+    "scenes",
+    "all non-image bufferView bytes",
+    "normal, metallic-roughness and emissive maps (r6)"
+  ],
+  "non_image_buffer_views_byte_identical": 289,
+  "material": {
+    "doubleSided": true,
+    "name": "Material_0",
+    "normalTexture": {
+      "index": 0
+    },
+    "pbrMetallicRoughness": {
+      "baseColorTexture": {
+        "index": 1
+      },
+      "metallicRoughnessTexture": {
+        "index": 2
+      },
+      "metallicFactor": 0.0,
+      "roughnessFactor": 1.0
+    },
+    "emissiveTexture": {
+      "index": 3
+    },
+    "emissiveFactor": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "animations": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "hit",
+    "faint"
+  ]
+}

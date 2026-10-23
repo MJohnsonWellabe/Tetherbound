@@ -1,0 +1,33 @@
+{
+ "asset": "travel_pack",
+ "concepts": [
+  {
+   "tag": "c1",
+   "task_id": "01a15dfe-1aa8-702a-ab5e-4555cf18901b",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept: an adventurer's travel backpack standing upright. A chunky rounded leather and tan canvas backpack with a big front pocket, flap closure with brass buckles, two shoulder straps on the back, and a rolled sage-green blanket bedroll strapped horizontally across the top with leather straps. Earthy brown leather and tan canvas like the sack in the second reference, chunky oversized proportions. About 0.55 m tall. Stylised Palworld / Animo-class game item prop, deliberately chunky and oversized, exaggerated readable silhouette that still reads clearly from 10-15 metres, soft bevelled edges, soft hand-painted PBR look, natural palette matching the Meadows key-art reference (sage and leaf greens, warm gold, cream, slate blue, teal). Single isolated object standing upright on its flat base, full object visible and centred, plain neutral light-grey background, even studio lighting, no cast shadow, no ground plane, no people, no creatures, no text, no letters, no labels, no red or crimson anywhere.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1024 x 683)",
+    "software render of assets/props/quaternius_fantasy/Bag.gltf (front/3-4/side), silhouette and material reference"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "travel_pack/concepts/c1_0.png",
+    "travel_pack/concepts/c1_1.png",
+    "travel_pack/concepts/c1_2.png"
+   ],
+   "chosen": true,
+   "verdict": "CHOSEN: chunky tan canvas backpack with brown leather flap, pockets, brass buckles, shoulder straps, sage-green bedroll strapped on top; side, back and front views consistent",
+   "consumed_credits": 9
+  }
+ ],
+ "chosen_concept": "c1",
+ "chosen_views": [
+  0,
+  1,
+  2
+ ],
+ "chosen_concept_png": "model_travel_pack/preview_concept.png (contact sheet of concepts/c1_0.png, concepts/c1_1.png, concepts/c1_2.png)",
+ "reference_inspection": "Key art inspected for palette; Bag.gltf rendered and inspected (tied brown cloth sack, low poly) and sent as the silhouette/material reference."
+}

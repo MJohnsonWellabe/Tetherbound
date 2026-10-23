@@ -44,6 +44,44 @@ static func orb_material() -> ShaderMaterial:
 	material.shader = ORB_SHADER
 	return material
 
+## The authored capture orb, fitted to the orb's diameter. Its materials are
+## self-lit lightly (stored in meta) so the shake beat can flare them.
+static func orb_model(diameter: float) -> Node3D:
+	var path := str(config().get("orb_model", ""))
+	if path.is_empty() or not ResourceLoader.exists(path):
+		return null
+	var scene := (load(path) as PackedScene).instantiate() as Node3D
+	var root := Node3D.new()
+	root.name = "AuthoredOrb"
+	root.add_child(scene)
+	var source_diameter := float(config().get("orb_model_diameter_m", 0.30))
+	root.scale = Vector3.ONE * (diameter / source_diameter)
+	# The GLB rests on its base; centre it on the orb's origin.
+	scene.position.y = -source_diameter * 0.5
+	var lit: Array[BaseMaterial3D] = []
+	var pending: Array[Node] = [scene]
+	while not pending.is_empty():
+		var node: Node = pending.pop_back()
+		pending.append_array(node.get_children())
+		if not node is MeshInstance3D or (node as MeshInstance3D).mesh == null:
+			continue
+		var instance := node as MeshInstance3D
+		instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		for surface in instance.mesh.get_surface_count():
+			var source := instance.get_active_material(surface) as BaseMaterial3D
+			if source == null:
+				continue
+			var material := source.duplicate() as BaseMaterial3D
+			material.emission_enabled = true
+			material.emission = Color.WHITE
+			material.emission_texture = material.albedo_texture
+			material.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
+			material.emission_energy_multiplier = float(config().get("orb_self_lit", 0.3))
+			instance.set_surface_override_material(surface, material)
+			lit.append(material)
+	root.set_meta("flare_materials", lit)
+	return root
+
 static func play(host: Node, key: String, at: Vector3, source: Node3D = null) -> Node3D:
 	if host == null or not enabled() or key not in ["strike", "shake", "caught", "breakout"]: return null
 	var node := (load("res://scripts/vfx/catch_kit.gd") as Script).new() as Node3D
@@ -146,6 +184,11 @@ func _ring(radius: float, life: float) -> void:
 func _flare_orb(glow: float) -> void:
 	if _source == null or not is_instance_valid(_source): return
 	var mesh: Variant = _source.get("_mesh")
+	var authored := (mesh as Node).get_node_or_null(^"AuthoredOrb") if mesh is Node else null
+	if authored != null:
+		for material: BaseMaterial3D in authored.get_meta("flare_materials", []):
+			material.emission_energy_multiplier = float(_cfg.get("orb_self_lit", 0.3)) * maxf(1.0, glow)
+		return
 	if mesh is MeshInstance3D and (mesh as MeshInstance3D).material_override is ShaderMaterial:
 		((mesh as MeshInstance3D).material_override as ShaderMaterial).set_shader_parameter("glow", maxf(1.0, glow))
 

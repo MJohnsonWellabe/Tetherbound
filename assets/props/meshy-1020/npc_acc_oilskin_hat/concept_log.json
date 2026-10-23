@@ -1,0 +1,29 @@
+{
+  "asset": "npc_acc_oilskin_hat",
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15ec1-ba77-72f7-942d-a9514fcad6cc",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A wide-brim oilskin rain hat, slate-blue waxed canvas with a soft rounded crown and a broad slightly drooping brim, a darker slate band around the crown with a small round brass badge in front. Hat only, empty, no head. Style: Palworld / Animo-class stylised game asset, chunky simplified readable silhouette that reads at 15 metres, slightly oversized key shapes, soft hand-painted PBR materials, warm natural palette taken from the reference key art (honey wood, warm brass and copper, slate blue, teal, mustard, moss green, cream). Single isolated object only, floating on a plain flat light-grey background, no ground, no shadow scene, no character, no body, no hands, no mannequin, no text, no logo. Absolutely no red, no oxblood, no maroon, no crimson, no pink anywhere. Show the same object from three views: front, three-quarter and side, consistent design.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/tetherbound-meadows-keyart.png (1536 x 1024 source re-encoded as JPEG q90 at 1536 px; local derived file keyart_1536.jpg): project palette and stylised finish"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (view 0, elevated three-quarter): slate-blue waxed bucket hat, darker band, round brass badge; plain background, no head"
+    }
+  ],
+  "chosen_concept": "c1",
+  "chosen_views": [
+    0
+  ],
+  "reference_inspection": "Reference inspected before any prompt was written: docs/reference/tetherbound-meadows-keyart.png (Meadows key art: stylised Valheim/Palworld-like realism, honey timber, slate-blue roofs, moss greens, warm brass; its palette strip includes two oxblood swatches reserved for Team Tether, so every prompt banned red, oxblood, maroon, crimson and pink explicitly). Each prompt named the object only, on a plain background, with no character body or hands.",
+  "style_block": "Every prompt ended with the shared style block: Palworld/Animo-class stylised game asset, chunky simplified silhouette readable at 15 m, soft hand-painted PBR, warm natural palette from the key art, single isolated object on plain light-grey background, no ground/character/body/hands/mannequin/text/logo, absolutely no red/oxblood/maroon/crimson/pink, three consistent views."
+}

@@ -1,0 +1,32 @@
+{
+ "asset": "attack_tonic",
+ "concepts": [
+  {
+   "tag": "c1",
+   "task_id": "01a15dfe-1a70-755b-8321-c79f5412c352",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game pickup item concept: an attack tonic. A faceted gem-cut glass bottle with bold angular facets, filled with glowing amber-orange liquid (orange and gold, NOT red), closed with a dark bronze metal stopper shaped like three curved claws gripping the neck, flat faceted base so it stands upright. Bold and fierce-looking. About 0.38 m tall. Stylised Palworld / Animo-class game item prop, deliberately chunky and oversized, exaggerated readable silhouette that still reads clearly from 10-15 metres, soft bevelled edges, soft hand-painted PBR look, natural palette matching the Meadows key-art reference (sage and leaf greens, warm gold, cream, slate blue, teal). Single isolated object standing upright on its flat base, full object visible and centred, plain neutral light-grey background, even studio lighting, no cast shadow, no ground plane, no people, no creatures, no text, no letters, no labels, no red or crimson anywhere.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1024 x 683)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "attack_tonic/concepts/c1_0.png",
+    "attack_tonic/concepts/c1_1.png",
+    "attack_tonic/concepts/c1_2.png"
+   ],
+   "chosen": true,
+   "verdict": "CHOSEN: gem-cut faceted bottle, glowing amber-orange liquid, dark bronze three-claw stopper; 3 consistent views; reads orange, not red",
+   "consumed_credits": 9
+  }
+ ],
+ "chosen_concept": "c1",
+ "chosen_views": [
+  0,
+  1,
+  2
+ ],
+ "chosen_concept_png": "model_attack_tonic/preview_concept.png (contact sheet of concepts/c1_0.png, concepts/c1_1.png, concepts/c1_2.png)",
+ "reference_inspection": "Key art inspected for palette. Prompt explicitly orange/amber, not red."
+}

@@ -1,0 +1,174 @@
+{
+  "asset": "npc_acc_oilskin_hat",
+  "brief": "wide-brim oilskin rain hat, slate blue, with a brass badge",
+  "criterion": "P2-055 named character silhouettes (F38/F39/F41 top20)",
+  "lane": "tb/shared-art",
+  "biome": "all (NPC accessory, attaches to installed humanoid cast)",
+  "date": "2026-10-21",
+  "author": "Claude (coordinator-side Meshy NPC-accessory worker), owner-authorized Meshy use (Standing owner direction 1, 15 Oct 2026)",
+  "workflow": "agent-drafted multi-view concept from the repo key art (Meshy image-to-image nano-banana-pro, reference as data URI) -> inspected -> Meshy image-to-3d (latest, quad remesh, target 2500, PBR textures embedded) -> Meshy remesh (triangle topology, target 3600) to meet the <4k-triangle budget -> embedded textures resized to 1024 px JPEG -> lossless metres normalisation -> origin moved to the attach point",
+  "target_size_m": "0.45 m wide",
+  "native_size": {
+    "raw_extent_units": [
+      1.7233,
+      0.9475,
+      1.7447
+    ],
+    "note": "Meshy remesh GLB, longest side ~1.9 units"
+  },
+  "scale_normalisation": {
+    "method": "lossless: GLB scene roots wrapped in node 'metres_root' with uniform scale + translation; base at y=0, footprint centred on x/z, then translation shifted so the attach point is the origin",
+    "fit_axis": "width",
+    "fit_value_m": 0.45,
+    "raw_extent": [
+      1.7233,
+      0.9475,
+      1.7447
+    ],
+    "scale": 0.2611,
+    "final_min": [
+      -0.225,
+      0.0,
+      -0.228
+    ],
+    "final_max": [
+      0.225,
+      0.247,
+      0.228
+    ],
+    "final_extent_m": [
+      0.45,
+      0.25,
+      0.46
+    ],
+    "triangles": 3553,
+    "materials": [
+      "BakedMaterial"
+    ],
+    "images": 3,
+    "source_glb": "Meshy remesh output (triangle topology, target 3600) of the chosen image-to-3d model, textures re-encoded",
+    "texture_repack": {
+      "method": "every embedded image resized to <=1024 px and re-encoded JPEG q92 (Meshy remesh baked 2048-4096 px PNG)",
+      "glb_kb": 823
+    },
+    "uniform_scale_to_target": 0.2611
+  },
+  "origin": {
+    "attach_point": "sits-on-head point inside the crown: crown axis, 0.09 m above the crown base/brim junction (y 0.072 m), i.e. where the top of a head touches the inside of the crown",
+    "attach_point_in_normalised_frame_m": [
+      0.003,
+      0.162,
+      0.0
+    ],
+    "origin_offset_m": [
+      -0.003,
+      -0.162,
+      -0.0
+    ],
+    "metres_root_translation": [
+      -0.0005,
+      -0.0396,
+      -0.0013
+    ],
+    "final_bounds_m": {
+      "min": [
+        -0.228,
+        -0.162,
+        -0.228
+      ],
+      "max": [
+        0.222,
+        0.085,
+        0.228
+      ]
+    },
+    "note": "normalised frame = base at y=0, x/z centred; origin_offset is added to every vertex (glTF +y up, Meshy front faces +z)"
+  },
+  "files": {
+    "glb_metres": "npc_acc_oilskin_hat.glb",
+    "concept_log": "concept_log.json",
+    "previews": [
+      "preview_meshy.png (Meshy thumbnail of the image-to-3d source model)",
+      "preview_3view.png (software flat-shaded 3-view of the final GLB, colours sampled per face)"
+    ],
+    "chosen_concepts": [
+      "concepts/c1_0.png"
+    ],
+    "raw_glb": "not published (Meshy image-to-3d and remesh outputs kept only as task ids)"
+  },
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15ec1-ba77-72f7-942d-a9514fcad6cc",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "A wide-brim oilskin rain hat, slate-blue waxed canvas with a soft rounded crown and a broad slightly drooping brim, a darker slate band around the crown with a small round brass badge in front. Hat only, empty, no head. Style: Palworld / Animo-class stylised game asset, chunky simplified readable silhouette that reads at 15 metres, slightly oversized key shapes, soft hand-painted PBR materials, warm natural palette taken from the reference key art (honey wood, warm brass and copper, slate blue, teal, mustard, moss green, cream). Single isolated object only, floating on a plain flat light-grey background, no ground, no shadow scene, no character, no body, no hands, no mannequin, no text, no logo. Absolutely no red, no oxblood, no maroon, no crimson, no pink anywhere. Show the same object from three views: front, three-quarter and side, consistent design.",
+      "references": [
+        "https://raw.githubusercontent.com/MJohnsonWellabe/Tetherbound/main/docs/reference/tetherbound-meadows-keyart.png (1536 x 1024 source re-encoded as JPEG q90 at 1536 px; local derived file keyart_1536.jpg): project palette and stylised finish"
+      ],
+      "outputs": [
+        "concepts/c1_0.png",
+        "concepts/c1_1.png",
+        "concepts/c1_2.png"
+      ],
+      "consumed_credits": 9,
+      "status": "SUCCEEDED",
+      "verdict": "CHOSEN (view 0, elevated three-quarter): slate-blue waxed bucket hat, darker band, round brass badge; plain background, no head"
+    }
+  ],
+  "models": [
+    {
+      "tag": "m_c1v0",
+      "task_id": "01a15ec4-117c-740e-8833-fafea085663a",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "source": {
+        "image_files": [
+          "c1_0.png"
+        ]
+      },
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 2500,
+        "enable_pbr": true,
+        "should_texture": true
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 30,
+      "verdict": "CHOSEN as source mesh (2,692 tris raw, already under budget) -> remeshed for consistent topology",
+      "kept": "source for remesh r1 only; raw GLB not published"
+    }
+  ],
+  "remesh": [
+    {
+      "tag": "r1",
+      "task_id": "01a15ec9-9041-73d9-a0cd-27e1c06849e4",
+      "endpoint": "/openapi/v1/remesh",
+      "source": {
+        "input_task_id": "01a15ec4-117c-740e-8833-fafea085663a"
+      },
+      "params": {
+        "input_task_id": "01a15ec4-117c-740e-8833-fafea085663a",
+        "target_formats": [
+          "glb"
+        ],
+        "topology": "triangle",
+        "target_polycount": 3600
+      },
+      "status": "SUCCEEDED",
+      "consumed_credits": 5,
+      "verdict": "CHOSEN: final mesh",
+      "kept": "npc_acc_oilskin_hat.glb (metres, origin at attach point)"
+    }
+  ],
+  "consumed_credits_total": 44,
+  "triangles": 3553,
+  "visual_verdict": {
+    "grade": "strong",
+    "text": "Reads clearly as a slate-blue oilskin bucket hat with a broad brim and a darker band; the brass badge is a small gold emblem on the band. The mesh is solid (closed crown underside at 0.072 m), as Meshy hats are, so the head intersects it rather than sitting in a hollow; at hat scale this is invisible."
+  },
+  "integration_flag": "flag-off",
+  "integration_note": "candidate only; stays flag-off until its scene passes code-blind judging",
+  "palette_check": "base-colour texture scan of the final GLB (hue <= 12 or >= 320 deg, sat >= 0.35, val >= 0.2): 0.00% of texels, all dark shaded copper/wood edge texels, no red/oxblood/pink surface"
+}

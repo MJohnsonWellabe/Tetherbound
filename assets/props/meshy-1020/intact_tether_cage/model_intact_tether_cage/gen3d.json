@@ -1,0 +1,23 @@
+{
+ "model": "intact_tether_cage",
+ "task_id": "01a15d9d-7ad2-73ea-a748-533b1518c6a8",
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "ai_model": "latest",
+ "target_polycount": 12000,
+ "topology": "quad",
+ "should_remesh": true,
+ "enable_pbr": true,
+ "input_images": [
+  "/home/user/Tetherbound/assets_raw/props-1020/intact_tether_cage/concepts/c1_0.png",
+  "/home/user/Tetherbound/assets_raw/props-1020/intact_tether_cage/concepts/c1_1.png",
+  "/home/user/Tetherbound/assets_raw/props-1020/intact_tether_cage/concepts/c1_2.png"
+ ],
+ "status": "SUCCEEDED",
+ "task_error": null,
+ "consumed_credits": 30,
+ "files": {
+  "glb": "/home/user/Tetherbound/assets_raw/props-1020/intact_tether_cage/model_intact_tether_cage/intact_tether_cage.glb",
+  "thumbnail": "/home/user/Tetherbound/assets_raw/props-1020/intact_tether_cage/model_intact_tether_cage/thumbnail.png"
+ },
+ "date": "2026-10-21"
+}

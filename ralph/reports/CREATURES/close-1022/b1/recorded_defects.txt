@@ -1,0 +1,7 @@
+Kd: "Shiny reads as noisy cyan and yellow camouflage blotches with dark eye smudges (top row creature)"; "Shiny shows mint and purple blotching (bottom row creature)"
+Em: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Vv: "Hit react reads as standing"; "Mirejaw and Voltarach never visibly faint"; "Meadowhart antlers pass through the floor in the faint"
+Ob: "Dark, low-value palettes melt at small size"
+Es: "The cub reads as nearly the same model and size as the adult, so the evolution step doesn't read"; "Hit react is a crouch and head dip with no recoil; hit recover equals standing"
+Fb: none
+Kk: none

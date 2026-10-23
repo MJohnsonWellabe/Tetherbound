@@ -1,0 +1,27 @@
+[
+ {
+  "tag": "c1",
+  "task_id": "01a15d9c-ccd4-7539-b517-9a9726ca3bca",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Edit the reference images: show the EXACT SAME Team Tether creature captive cage, same model, same proportions and silhouette, but INTACT and LOCKED, before any battle. Keep identical: the tall square cage about 2.2 m tall and 1.8 m wide, the same heavy dark gunmetal iron corner posts and thick riveted frame, the same mossy grey stone base plinth, the same domed cap with deep oxblood red painted trim straps and rivets, the same horizontal crossbars and the same vertical bar spacing, the same dim cyan conduit strips on the corner posts. Changes only: every bar is perfectly straight and evenly spaced (no bent or bulging bars); the front door is closed flush in the front face, fitted in its frame, with the same deep oxblood red door frame and small brass Tether emblem at the top of the door, hinged on the left; a heavy iron chain wraps across the door and the frame post on the right and is locked with a large chunky iron padlock clearly visible at mid-height; latch closed. Empty inside. Clean, sturdy, lightly worn. Stylised Palworld / Animo-class game prop, chunky exaggerated readable silhouette, hand-painted PBR look, same art style and palette as the references. Single isolated object, full object visible and centred, plain neutral background, even lighting, no cast shadow, no ground plane, no people, no creatures, no text.",
+  "reference_paths": [
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/intact-cage/ref/c1_0.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/intact-cage/ref/c1_1.png",
+   "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/intact-cage/ref/c1_2.png"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15d9d-4966-7005-8ebe-4f852f9b39ba_part_0.png?Expires=1792831152&Signature=S--GHZywRR0FD9NlI-rPUE2L7mr7jrPCUZqGr8W9ODPaoDmDfI3Z61zZWL1nM85TYT2BH4g87EtC5j1Foxl0maLx-SHEd9rHlZ0tF88at88A7UZGAnDo7350yF9SWcr4UtieR6NALzX4M6RuxPwtDj37kM76tsSCnB3TAxRdWA~LKlSYQRYOPhz9IEHlCTj65cSGd2y6WknPTb4rc8fkRioh7CKsmyRnCCeLw8Mk08ZsecKQblaQwfo2~TJ64s1HEd4aBOclp9OlC~jZAOFDCRFDmdw26bOVNbIw1cuvjW362f~8TtLcmvWQs~yP5jNyS9LugbVyQ90x0ZtOVdJz9w__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15d9d-4966-7005-8ebe-4f852f9b39ba_part_1.png?Expires=1792831152&Signature=EYknx0B~7PGp6~wqB9IjvtM8pe5GiEjMMzRehLMiYMP62uOp9BzZYuzwVcOu8o0JVJEZO5wejMa4SzbDziQyqfETDG7Y5PXrtjNP7eBpNSvvywwjzK1bhNYPGIVhdoEGaWTNkv9zAuZ5MUtTlbygfEcJefwSNp2buYEX-AthW-GOWK4nQjOnQ9iPkZV4NjJNRcNeaef5rX1bsk2Q5UvY2Mu4KEbWJT-YMNfPb~7jRCyENyjtQrRRxsKfS7g5oOGtPEd7hGC4KI6HLmqWOE-f3N0fKCKS1tR6BhBRgoPLI0IN3UIIJ0K64JQeiWHCKN3vxTIXMgKyTMSe4-6YW4w77w__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15d9d-4966-7005-8ebe-4f852f9b39ba_part_2.png?Expires=1792831152&Signature=jlh6v7B704QiSBR4QcSB5uqPyRos9Vq7dQfKgkLtrk7i416xe0EBYQ5vA2LIsL32CsGmUz-FmXDwsn~24uwqHczUlpNAxat6Q1J3aPYIT~B-NBzlyoxsGvwkl5OFTHPHmLZHaP3cwKoHay~5HO4tNXlant6KwYLEzAfw5nCKt~v-aR5y4pasjWHAHKl~QrsQpUfklGJWfcxMN3fI5kEBxKbrNG1RNLwcSmzWY7aqGsHkaxfRIjmstN3iyZBW~SHIfgqifKzF~Dcpc5He5-02ZMXdVA~wvNHs-dSWzdsBLcXBeknMLl1oQTyU4K~RlMK9M7j17~CBVRQe2JVBWgYzcw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/intact_tether_cage/concepts/c1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/intact_tether_cage/concepts/c1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/intact_tether_cage/concepts/c1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]

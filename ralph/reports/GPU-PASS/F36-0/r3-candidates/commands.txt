@@ -1,0 +1,12 @@
+## installed
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=riverdrake,meadowhart --whole-body --context --out=D:/tb-gpu-runs/out/F36-r3/installed/frames
+
+
+## live
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script res://tools/art_pipeline/capture_f36_poses.gd -- --candidate --species=riverdrake,meadowhart --whole-body --context --out=D:/tb-gpu-runs/out/F36-r3/live/frames
+
+
+## candidate
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script res://tools/art_pipeline/capture_f36_poses.gd -- --candidate --species=riverdrake,meadowhart --whole-body --context --out=D:/tb-gpu-runs/out/F36-r3/candidate/frames
+
+

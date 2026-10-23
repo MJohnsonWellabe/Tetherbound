@@ -1,0 +1,12 @@
+## Low-control
+godot --path D:\tb-gpu-wt-lane --rendering-method gl_compatibility --rendering-driver opengl3 --resolution 1280x720 --script res://tools/art_pipeline/capture_named_fight.gd -- --trainer=captain_riverwatch --live-member=captain_riverwatch:4 --ally=ripplet --frames=12 --interval=0.5 --tell-frames --keep-alive --out=D:/tb-gpu-runs/out/F22-4/Low-control/frames
+
+## Medium-control
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script res://tools/art_pipeline/capture_named_fight.gd -- --trainer=captain_riverwatch --live-member=captain_riverwatch:4 --ally=ripplet --frames=12 --interval=0.5 --tell-frames --keep-alive --out=D:/tb-gpu-runs/out/F22-4/Medium-control/frames
+
+## Low-r13
+godot --path D:\tb-gpu-wt-lane --rendering-method gl_compatibility --rendering-driver opengl3 --resolution 1280x720 --script res://tools/art_pipeline/capture_named_fight.gd -- --trainer=captain_riverwatch --live-member=captain_riverwatch:4 --ally=ripplet --frames=12 --interval=0.5 --tell-frames --keep-alive --out=D:/tb-gpu-runs/out/F22-4/Low-r13/frames
+
+## Medium-r13
+godot --path D:\tb-gpu-wt-lane --rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --script res://tools/art_pipeline/capture_named_fight.gd -- --trainer=captain_riverwatch --live-member=captain_riverwatch:4 --ally=ripplet --frames=12 --interval=0.5 --tell-frames --keep-alive --out=D:/tb-gpu-runs/out/F22-4/Medium-r13/frames
+

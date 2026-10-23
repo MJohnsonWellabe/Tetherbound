@@ -1,0 +1,8 @@
+Ud: "frames read as dark brown-black murk"; "near-camera occluder (root or trunk) fills part of the lens"; "bare ground with a single repeating tile"; "Stormheart tree reads ghostly or squat at distance"; "glass field strike scar not readable"
+It: none
+On: "forest views crushed to near-black"; "break only darkens, no lightning light on trunks or ground"; "flat magenta strike warning disc on the ground"
+Mb: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Pa: "dark monochrome brown arena"; "flat magenta slab telegraph"; "floating NPC text over the enemy panel"; "no hit effect at impact"; "camera inside canopy or trunk"
+Ih: "dark monochrome brown arena"; "flat magenta slab telegraph"; "no hit effect at impact"; "HUD covers the trainer or telegraph"; "camera inside canopy or trunk"
+Dl: none
+Vy: "frames read as dark brown-black murk"; "near-camera occluder (root or trunk) fills part of the lens"

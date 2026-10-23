@@ -1,74 +1,75 @@
 {
- "asset": "broken_tether_cage",
- "date": "2026-10-21",
- "requested_by": "Camera lane",
- "criterion": "F04#6 distinct aftermath per named fight (judges: aftermaths too small/ambiguous at normal distance)",
- "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until its scene passes judging",
- "workflow": "agent-drafted concept via image-to-image (nano-banana-pro) from repo reference images (data URIs), inspected by the agent, then multi-image-to-3d (latest)",
- "target_size_m": {
-  "h": 2.2,
-  "footprint": 1.8
- },
- "scale_note": "Native extent x1.36 y1.90 z1.07 units (Y up); uniform scale ~1.16 for 2.2 m tall (footprint ~1.58 x 1.24 m incl. hanging door).",
- "integration_flag": "flag-off",
- "integration_status": "raw candidate, not imported; OFF until its scene passes three-judge review",
- "team_tether_palette": true,
- "concepts": [
-  {
-   "tag": "c1",
-   "task_id": "01a15cb0-b03d-77ef-ba22-339027ddf537",
-   "endpoint": "/openapi/v1/image-to-image",
-   "ai_model": "nano-banana-pro",
-   "prompt": "Using the reference images for faction style and palette, draft a 3D-model concept of a BROKEN Team Tether creature captive cage after a battle: a tall square cage about 2.2 m tall and 1.8 m wide, heavy dark gunmetal iron bars and thick riveted frame, a base plinth and a domed cap with deep oxblood red painted trim plates and a small brass Tether emblem, two cyan tether-glow conduit strips on the corner posts (dim, cracked). The front door is torn off its top hinge and hangs open at a steep angle, and two of the front bars are dramatically bent outward in a wide bulge as if something burst out. Empty inside, a snapped chain dangling. Battle-worn, scratched, dented. Stylised Palworld / Animo-class game prop, chunky exaggerated readable silhouette that reads clearly from 15 m away, hand-painted PBR look, clean shapes, slightly oversized details. Single isolated object, full object visible and centred, plain neutral background, even lighting, no cast shadow, no ground plane, no people, no creatures, no text.",
-   "reference_paths": [
-    "docs/art/reference/13_Tether_Energy_Pylon.png (downscaled 1024)",
-    "docs/reference/tetherbound-meadows-keyart.png (crop: Team Tether stronghold)",
-    "docs/reference/palworld-05-base-building.jpg"
-   ],
-   "status": "SUCCEEDED",
-   "images": [
-    "broken_tether_cage/concepts/c1_0.png",
-    "broken_tether_cage/concepts/c1_1.png",
-    "broken_tether_cage/concepts/c1_2.png"
-   ],
-   "chosen": true,
-   "consumed_credits": 9
-  }
- ],
- "model": {
-  "model": "broken_tether_cage",
-  "task_id": "01a15cb2-ab34-7631-bc70-2451b35fd9a8",
-  "endpoint": "/openapi/v1/multi-image-to-3d",
-  "ai_model": "latest",
-  "topology": "quad",
-  "target_polycount_quads": 12000,
-  "should_remesh": true,
-  "enable_pbr": true,
-  "should_texture": true,
-  "input_images": [
-   "broken_tether_cage/concepts/c1_0.png",
-   "broken_tether_cage/concepts/c1_1.png",
-   "broken_tether_cage/concepts/c1_2.png"
-  ],
-  "status": "SUCCEEDED",
-  "consumed_credits": 30,
-  "files": {
-   "glb": "broken_tether_cage/model_broken_tether_cage/broken_tether_cage.glb",
-   "base_color": "broken_tether_cage/model_broken_tether_cage/broken_tether_cage_base_color.png",
-   "metallic": "broken_tether_cage/model_broken_tether_cage/broken_tether_cage_metallic.png",
-   "roughness": "broken_tether_cage/model_broken_tether_cage/broken_tether_cage_roughness.png",
-   "normal": "broken_tether_cage/model_broken_tether_cage/broken_tether_cage_normal.png",
-   "thumbnail": "broken_tether_cage/model_broken_tether_cage/thumbnail.png"
+  "asset": "broken_tether_cage",
+  "date": "2026-10-21",
+  "requested_by": "Camera lane",
+  "criterion": "F04#6 distinct aftermath per named fight (judges: aftermaths too small/ambiguous at normal distance)",
+  "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; drafted reference + scale check + provenance; flag-off until its scene passes judging",
+  "workflow": "agent-drafted concept via image-to-image (nano-banana-pro) from repo reference images (data URIs), inspected by the agent, then multi-image-to-3d (latest)",
+  "target_size_m": {
+    "h": 2.2,
+    "footprint": 1.8
   },
-  "native_glb_extent_xyz_units": [
-   1.359,
-   1.896,
-   1.066
+  "scale_note": "Native extent x1.36 y1.90 z1.07 units (Y up); uniform scale ~1.16 for 2.2 m tall (footprint ~1.58 x 1.24 m incl. hanging door).",
+  "integration_flag": "flag-off",
+  "integration_status": "raw candidate, not imported; OFF until its scene passes three-judge review",
+  "team_tether_palette": true,
+  "concepts": [
+    {
+      "tag": "c1",
+      "task_id": "01a15cb0-b03d-77ef-ba22-339027ddf537",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "prompt": "Using the reference images for faction style and palette, draft a 3D-model concept of a BROKEN Team Tether creature captive cage after a battle: a tall square cage about 2.2 m tall and 1.8 m wide, heavy dark gunmetal iron bars and thick riveted frame, a base plinth and a domed cap with deep oxblood red painted trim plates and a small brass Tether emblem, two cyan tether-glow conduit strips on the corner posts (dim, cracked). The front door is torn off its top hinge and hangs open at a steep angle, and two of the front bars are dramatically bent outward in a wide bulge as if something burst out. Empty inside, a snapped chain dangling. Battle-worn, scratched, dented. Stylised Palworld / Animo-class game prop, chunky exaggerated readable silhouette that reads clearly from 15 m away, hand-painted PBR look, clean shapes, slightly oversized details. Single isolated object, full object visible and centred, plain neutral background, even lighting, no cast shadow, no ground plane, no people, no creatures, no text.",
+      "reference_paths": [
+        "docs/art/reference/13_Tether_Energy_Pylon.png (downscaled 1024)",
+        "docs/reference/tetherbound-meadows-keyart.png (crop: Team Tether stronghold)",
+        "docs/reference/palworld-05-base-building.jpg"
+      ],
+      "status": "SUCCEEDED",
+      "images": [
+        "broken_tether_cage/concepts/c1_0.png",
+        "broken_tether_cage/concepts/c1_1.png",
+        "broken_tether_cage/concepts/c1_2.png"
+      ],
+      "chosen": true,
+      "consumed_credits": 9
+    }
   ],
-  "triangles": 32310
- },
- "consumed_credits_total": 39,
- "agent_visual_verdict": "Good: dark gunmetal riveted cage on a mossy stone plinth, oxblood domed cap straps and oxblood door frame with a brass emblem, door torn from its top hinge and hanging askew, two front bars bowed outward, snapped chain inside. Reads clearly as a burst-open Team Tether captive cage.",
- "emissive": "none: the concept's cyan corner conduit strips did not survive texturing (no cyan texels in base colour); add a small emissive strip in-engine only if the scene needs it (a dead cage reads fine without).",
- "notes": "Concept views 0-2 all used."
+  "model": {
+    "model": "broken_tether_cage",
+    "task_id": "01a15cb2-ab34-7631-bc70-2451b35fd9a8",
+    "endpoint": "/openapi/v1/multi-image-to-3d",
+    "ai_model": "latest",
+    "topology": "quad",
+    "target_polycount_quads": 12000,
+    "should_remesh": true,
+    "enable_pbr": true,
+    "should_texture": true,
+    "input_images": [
+      "broken_tether_cage/concepts/c1_0.png",
+      "broken_tether_cage/concepts/c1_1.png",
+      "broken_tether_cage/concepts/c1_2.png"
+    ],
+    "status": "SUCCEEDED",
+    "consumed_credits": 30,
+    "files": {
+      "glb": "broken_tether_cage/model_broken_tether_cage/broken_tether_cage.glb",
+      "base_color": "broken_tether_cage/model_broken_tether_cage/broken_tether_cage_base_color.png",
+      "metallic": "broken_tether_cage/model_broken_tether_cage/broken_tether_cage_metallic.png",
+      "roughness": "broken_tether_cage/model_broken_tether_cage/broken_tether_cage_roughness.png",
+      "normal": "broken_tether_cage/model_broken_tether_cage/broken_tether_cage_normal.png",
+      "thumbnail": "broken_tether_cage/model_broken_tether_cage/thumbnail.png"
+    },
+    "native_glb_extent_xyz_units": [
+      1.359,
+      1.896,
+      1.066
+    ],
+    "triangles": 32310
+  },
+  "consumed_credits_total": 39,
+  "agent_visual_verdict": "Good: dark gunmetal riveted cage on a mossy stone plinth, oxblood domed cap straps and oxblood door frame with a brass emblem, door torn from its top hinge and hanging askew, two front bars bowed outward, snapped chain inside. Reads clearly as a burst-open Team Tether captive cage.",
+  "emissive": "none: the concept's cyan corner conduit strips did not survive texturing (no cyan texels in base colour); add a small emissive strip in-engine only if the scene needs it (a dead cage reads fine without).",
+  "notes": "Concept views 0-2 all used.",
+  "status": "INTEGRATED ON for F04#6 (judged aftermath set, CPU-provisional 6.75; PR #697). GPU pass must confirm 7.5."
 }

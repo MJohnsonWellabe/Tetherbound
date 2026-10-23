@@ -1,0 +1,48 @@
+[
+ {
+  "tag": "c1",
+  "task_id": "01a15cb0-b069-73af-ac5a-415314578d62",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Using the reference images for palette and style, draft a 3D-model concept of a scorched burnt-earth ground patch left after a fight in a green meadow: a flat, irregular roughly round patch about 3 m across and very thin (under 15 cm), dark charcoal-black burnt soil in the centre fading to brown singed earth and a ring of yellowed scorched grass tufts at the ragged edge, grey-white ash drifts, a few small cracked charred pebbles and two or three tiny charred stick fragments, a handful of faintly glowing orange embers in the centre. Seen from a high three-quarter angle so the flat shape is readable. Strong value contrast so it reads as burnt from a distance. No red paint, no blood. Stylised Palworld / Animo-class game prop, chunky exaggerated readable silhouette that reads clearly from 15 m away, hand-painted PBR look, clean shapes, slightly oversized details. Single isolated object, full object visible and centred, plain neutral background, even lighting, no cast shadow, no ground plane, no people, no creatures, no text.",
+  "reference_paths": [
+   "refs/keyart_small.png",
+   "refs/ref19_meadows.png",
+   "refs/palworld05.jpg"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb1-4be7-7729-809a-9546f2a9fae4_part_0.png?Expires=1792815686&Signature=cxjARaienV4D0zcTFSoagz4jV8WJ3kDkuT76~pBEB4q2Ag8Va7i0qaO5XtGREuFzY1nSxS~DKeBjpskF7YCu2oYbXLe51JZnXjVaTMA2FA5kHzqZtBYwbnXf3yRlLvNaxT136XeuEjbHtYuRdFLRhrS~snEmbfhdEYSb7zCOsEmpVTq0N~9ftEBMmkEt3lv7HiZdneMjhhm~N9g4tWDkdh8vCBiYdZvxadBWb9Pw~aLx3o7ZFNcjvDqhenwO~GO5~8vKZHrT0Nen5rMkMy9tywwg~wLi7kn8WMTQGB-uuJaiJnWuKYclSmaXthLdvNbnLCD0mJWLglFOP5yIM5cwfw__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb1-4be7-7729-809a-9546f2a9fae4_part_1.png?Expires=1792815686&Signature=E3lxSkmtKCWSCnHnQH-Mo6oJUlega3B46A49XnD6pY-t3Z0DGW~a3dEGULyG5jHqxrkNdaz4ZSXj0Fm4MiL7JvvwIxeHfKI2MtaqLPPqnJTPyrjLyo0GhtxEJpg5egPMDq8lWnr~h6ZweivF3DmqIt99ee0BVQpoSm1bdAI~wQkraWaDo4VQCUaUoUmLGnFoTTzu7I6whC7U4g8Mwciw4AU87qo~2q~JX7o4m2heRYOyOsSf15EjuzzMH6qJcChk-GUclhjqquzWD4ukDSJ4KICjs6tIuOwZCeO345mXPAA9IDQtontksRMY~6Vwk256PkveEFuq0I18kq4olNX1Vg__&Key-Pair-Id=K1VGYTHIYLM9UM",
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/multi_view_image_01a15cb1-4be7-7729-809a-9546f2a9fae4_part_2.png?Expires=1792815686&Signature=OzRPn6hcRMYRsu1qE6rtKSOW2oSn8xZLPmd5qVZYNg0o0gm-i-3FR9q5l8qK6Q3fSGQ2YyQrSTX4imNkoBwZprGR06fwyIiFuaXWQFbzZMc9BCWnEJlniB1MyeAzYxYwaTjKe6wKhneCvDHGIzpxTPTZschceNcM8ZHaMB1y19OH3KgqkXLQ8hXCG7b6FuMaIOLyRFLy5bUj8k9o-A7NwlbomPNFa1UREBR960QaPEGDqh9cvrweFxMpBRx9R-ta~0Vp-bdnq~L02VjMk1TTW3E5iU1pnzzkozIubRekDznE~gqWXRorHOF-YcuWymlQwbghRYWL0V2YkVt~mjV-kw__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/scorched_ground_patch/concepts/c1_0.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/scorched_ground_patch/concepts/c1_1.png",
+   "/home/user/Tetherbound/assets_raw/props-1020/scorched_ground_patch/concepts/c1_2.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ },
+ {
+  "tag": "c2",
+  "task_id": "01a15cb5-ec1c-73b2-9e9d-14e0d48aab4a",
+  "endpoint": "/openapi/v1/image-to-image",
+  "ai_model": "nano-banana-pro",
+  "prompt": "Using the reference images for palette and style, draft a 3D-model concept of a scorched burnt-earth ground patch left after a fight in a green meadow, shown LYING FLAT ON THE GROUND from a high three-quarter perspective view (camera about 45 degrees above), so it reads as a very thin flat slab of ground about 3 m across and only a few centimetres thick, like a flat irregular round rug of earth. Dark charcoal-black burnt soil in the centre fading to brown singed earth, a ragged ring of short yellowed scorched grass tufts at the edge, grey-white ash drifts, a few small charred pebbles and stick fragments, a handful of faintly glowing orange embers in the centre. Flat, no raised rim, no bowl, no crater. No red paint, no blood. Stylised Palworld / Animo-class game prop, hand-painted PBR look, clean readable shapes, strong value contrast. Single isolated object, plain neutral background, even lighting, no cast shadow, no people, no text.",
+  "reference_paths": [
+   "refs/keyart_small.png",
+   "refs/ref19_meadows.png",
+   "refs/palworld05.jpg"
+  ],
+  "status": "SUCCEEDED",
+  "image_urls": [
+   "https://assets.meshy.ai/d25d3df4-dc36-4213-8ea8-0d7e1d1555db/uploads/image_01a15cb5-ec1c-73b2-9e9d-14e0d48aab4a_0.png?Expires=1792816042&Signature=K1ebX~POM~qDLdu5lx6bZ2cyWaLOAm6vhcONRx1fBEc3rI3GWVVVb~CQPia4eOBnb-wKrItn13aEj5d16OD9bMia6QbXtyx~FPaEhLLA7ak1TjgyQWyRukhesbT9Mkfw3pBYmH9maMVvfYJD1pabvhD8c-nm-SMj6UlReOioYaQ7EN6sJeB4LE19IOo1KtQJ8tTm3mKGZ8x9qch6As8ujoSRSsX-1xP0GyA9w0P8uh1o~TyLegh3p0mhdLS95-RHEkO9yHQCbzsbSpnNsNhDa9LXwdOuCcSmQ-Sw~LX88zE2baBwzlZq12yra5Aqz5m78~y1cTMVQuASfj7xAizwQQ__&Key-Pair-Id=K1VGYTHIYLM9UM"
+  ],
+  "local": [
+   "/home/user/Tetherbound/assets_raw/props-1020/scorched_ground_patch/concepts/c2_0.png"
+  ],
+  "consumed_credits": 9,
+  "date": "2026-10-21"
+ }
+]

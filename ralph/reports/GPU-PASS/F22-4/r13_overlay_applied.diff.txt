@@ -1,0 +1,184 @@
+﻿diff --git a/data/config/bands/band3_the_river_lock/trainers.json b/data/config/bands/band3_the_river_lock/trainers.json
+index e893fb5db..daca3b40c 100644
+--- a/data/config/bands/band3_the_river_lock/trainers.json
++++ b/data/config/bands/band3_the_river_lock/trainers.json
+@@ -329,16 +329,16 @@
+           "species": "brooktail",
+           "level": 16,
+           "_f22_hero_model_scope": "F22#4 Riverwatch final member art preview only. OFF until the generated Brooktail keeps its identity, rig, full size and passes the in-world named-fight visual proof. No combat or collider change.",
+-          "f22_hero_model_preview": false,
+-          "f22_hero_model_path": "res://assets/creatures/tetherbound/brooktail/models/creature_brooktail_f22_hero_preview.glb",
+-          "f22_hero_model_length_scale": 0.4,
+-          "f22_hero_model_emission_scale": 0.5,
++          "f22_hero_model_preview": true,
++          "f22_hero_model_path": "res://assets/creatures/tetherbound/brooktail/candidate_captain/models/creature_brooktail_captain.glb",
++          "f22_hero_model_length_scale": 1.0,
++          "f22_hero_model_emission_scale": 0.0,
+           "f22_hero_model_attack_contact_phase": 0.652174,
+           "_f22_body_scale_scope": "F22#4 Riverwatch final Brooktail boss-size preview. Grows the smaller side so the captain's ace reads larger than the player's creature; collider, reach and art follow (creature_body.gd body_scale). 1.0 = OFF pending in-world C3 judges and a C2 re-run.",
+-          "body_scale": 1.0,
++          "body_scale": 2.9,
+           "combat": {
+             "_scope_camera_boss_side_view": "F22#4 Riverwatch candidate: the fight camera prefers the pair's side-on view so the captain's ace stands at the ally's depth. Presentation only; OFF pending in-world proof.",
+-            "camera_boss_side_view": false,
++            "camera_boss_side_view": true,
+             "attack_cooldown": 0.7,
+             "recovery": 0.55,
+             "reposition_time": 0.5,
+diff --git a/data/config/camera.json b/data/config/camera.json
+index cad3e71de..c471c5be1 100644
+--- a/data/config/camera.json
++++ b/data/config/camera.json
+@@ -53,7 +53,7 @@
+     "_why_per_trainer": "F22#4 (Fights lane, Riverwatch): an oversized signature boss made the side-on solver pull back and up into the canopy (pairs 3-6). per_trainer.<trainer id>.max_distance_m caps the solver's pull-back for that trainer's send-outs only (the lens height follows the capped arm). OFF until that fight's in-world judge passes. TUNABLE.",
+     "_why_screen_tilt_deg": "F22#4 (Fights lane, 22 Oct): pitch the fight lens down this many degrees after the solved pose so the fighters sit above the bottom HUD band (judges: the band covers the pilot and trainer). 0 = OFF until a fights round passes its code-blind judge. Presentation only; clamped 0-15.",
+     "screen_tilt_deg": 0.0,
+-    "per_trainer_enabled": false,
++    "per_trainer_enabled": true,
+     "per_trainer": {"captain_riverwatch": {"max_distance_m": 14.0}},
+     "readability": {
+       "_comment": "Camera-only conservative oriented whole-render envelopes include the trainer and foreground creatures. Actual projected envelope intersection is checked for front-to-back depth, including lower silhouettes; no hidden body, scale/collision change or sparse ellipsoid shortcut. Independent whole-frame pixels remain required.",
+diff --git a/data/config/combat.json b/data/config/combat.json
+index eeaa58704..9311c5530 100644
+--- a/data/config/combat.json
++++ b/data/config/combat.json
+@@ -1507,6 +1507,7 @@
+         "safe_escape": "side"
+       },
+       "oreth_pressure": {
++        "telegraph_colour": "#4aa9c7",
+         "role": "CURRENT",
+         "slot": "quick",
+         "telegraph_shape": "fan",
+@@ -1526,6 +1527,7 @@
+         "projectile_spacing_degrees": 16
+       },
+       "oreth_overflow": {
++        "telegraph_colour": "#4aa9c7",
+         "_why": "F22#4 Riverwatch signature (coordinator decision 2026-10-13; BOSSES \u00a74.3 Oreth): the river lock 'overflows'. Brooktail's pressure volley repeats three times on short tells and names itself, so the closing pressure is one recognisable barrage rather than three more cones. Same fan geometry and power as oreth_pressure. TUNABLE.",
+         "role": "CURRENT",
+         "slot": "quick",
+@@ -1550,25 +1552,25 @@
+         "_scope_cue_water_tint": "F22#4 Riverwatch Overflow preview only. Its existing boss-origin 50-degree fan uses the water warning hue instead of generic magenta, with unchanged fill, hit shape, camera and timing. OFF pending direct named-fight visual proof.",
+         "cue_water_tint": false,
+         "_scope_cue_water_fan": "F22#4 Riverwatch Overflow preview only. The existing 50-degree fan fills with deep-blue water over its wind-up inside a bright water-white rim (no pink/red), still drawn above foliage. Same hit fan, power and 0.9 s tell. OFF pending direct named-fight visual proof.",
+-        "cue_water_fan": false,
+-        "cue_water_fan_colour": "#3a8fd0",
++        "cue_water_fan": true,
++        "cue_water_fan_colour": "#1a5fb0",
+         "cue_water_fan_edge_colour": "#dffaff",
+-        "cue_water_fan_fill_alpha": 0.36,
++        "cue_water_fan_fill_alpha": 0.4,
+         "_scope_cue_water_origin": "F22#4 Riverwatch Overflow preview only. Elevated bubbles charge at Brooktail's muzzle during the tell; no ground footprint, damage or timing change. OFF pending the real named-fight visual proof.",
+-        "cue_water_origin": false,
++        "cue_water_origin": true,
+         "cue_water_origin_radius_m": 0.23,
+         "cue_water_origin_height_m": 1.55,
+         "cue_water_origin_forward_m": 0.45,
+         "_scope_cue_water_spray": "F22#4 Riverwatch Overflow only. Existing authored water-stream geometry previews three boss-origin spray jets inside the unchanged 50-degree fan. OFF pending in-world C3 proof; presentation only.",
+-        "cue_water_spray": false,
+-        "cue_water_spray_radius_m": 0.3,
+-        "cue_water_spray_opacity": 0.55,
++        "cue_water_spray": true,
++        "cue_water_spray_radius_m": 0.48,
++        "cue_water_spray_opacity": 0.6,
+         "_scope_cue_water_spray_from_mouth": "F22#4 Riverwatch candidate: the spray jets start at Brooktail's mouth and arc down onto the far fan. Presentation only; OFF with the spray preview.",
+         "cue_water_spray_from_mouth": false,
+         "_scope_cue_water_wall": "F22#4 Riverwatch Overflow preview only. A full-size cyan fan is present from the first tell frame while one installed rolling-water front travels outward from Brooktail. Presentation only; the authored 50-degree hit fan, damage and 0.9 s tell stay unchanged. OFF pending in-world C3 proof.",
+-        "cue_water_wall": false,
+-        "cue_water_wall_height_m": 1.8,
+-        "cue_water_wall_opacity": 0.85,
++        "cue_water_wall": true,
++        "cue_water_wall_height_m": 1.2,
++        "cue_water_wall_opacity": 0.5,
+         "cue_water_wall_body_opacity_factor": 0.28,
+         "cue_water_wall_end_fraction": 0.72,
+         "cue_water_wall_width_fraction": 0.6,
+@@ -1578,16 +1580,17 @@
+         "cue_water_tell_colour": "#4aa9c7",
+         "cue_water_fill_alpha": 0.08,
+         "_scope_cue_boss_aura": "F22#4 Riverwatch candidate. During this tell Brooktail's own meshes carry a pulsing water-white rim and a cyan light follows it, so the boss visibly authors the attack. Presentation only; OFF pending in-world proof.",
+-        "cue_boss_aura": false,
++        "cue_boss_aura": true,
+         "cue_boss_aura_colour": "#5fd8ff",
+         "cue_boss_aura_strength": 1.0,
+         "cue_boss_aura_light_energy": 3.0,
+         "_scope_cue_water_burst": "F22#4 Riverwatch candidate. When the completed wind-up releases, a short water splash bursts at the hit shape (jets through the fan, a crown at the flood). Never on an interrupted tell; no hit, damage or timing change. OFF pending in-world proof.",
+-        "cue_water_burst": false,
++        "cue_water_burst": true, "cue_burst_droplets": 1.8,
+         "cue_water_burst_s": 0.8,
+         "tell_text": "\u2248  OVERFLOW \u2014 step out of the spray"
+       },
+       "oreth_flood": {
++        "telegraph_colour": "#4aa9c7",
+         "_why": "F22#4 Riverwatch signature, attempt 2 (2026-10-13): the judge read the field's faint marker under the player as hidden next to Brooktail's large feet ring. Oreth's closing field is the lock's flood: the same field shape and timing as current_zone, drawn as a filling cue and named, so the real hit zone is the strongest mark on the ground. TUNABLE; presentation and naming only.",
+         "role": "CURRENT",
+         "slot": "charged",
+@@ -1609,7 +1612,7 @@
+         "field_duration_s": 3,
+         "field_hits_per_cast": 1,
+         "_scope_cue_water_origin": "F22#4 Riverwatch Flood preview only. The same attacker-local elevated charge leaves the target's authoritative field outline and outside escape clear. OFF pending in-world proof.",
+-        "cue_water_origin": false,
++        "cue_water_origin": true,
+         "cue_water_origin_radius_m": 0.23,
+         "cue_water_origin_height_m": 1.55,
+         "cue_water_origin_forward_m": 0.45,
+@@ -1626,7 +1629,7 @@
+         "cue_water_crest_opacity": 0.82,
+         "cue_water_crest_start_scale": 0.7,
+         "_scope_cue_water_wall": "F22#4 Riverwatch Flood preview only. The full existing field footprint and a low broken-foam boundary at its exact radius show the unsafe interior and outside dodge from the first tell frame. Presentation only; locked hit radius, damage and 1.1 s tell stay unchanged. OFF pending in-world C3 proof.",
+-        "cue_water_wall": false,
++        "cue_water_wall": true,
+         "cue_water_wall_height_ratio": 0.55,
+         "cue_water_wall_crown_gap": 0.18,
+         "cue_water_wall_crown_taper": 0.55,
+@@ -1635,7 +1638,7 @@
+         "cue_water_wall_fill_alpha": 0.28,
+         "cue_water_camera_clearance_m": 0.6,
+         "_scope_cue_water_cast": "F22#4 Riverwatch Flood only. Preview a Brooktail-origin current traveling to the full marked field during its unchanged tell. OFF pending in-world C3 proof; presentation only, no hit geometry or timing change.",
+-        "cue_water_cast": false,
++        "cue_water_cast": true,
+         "cue_water_cast_radius_m": 0.24,
+         "cue_water_cast_opacity": 0.92,
+         "cue_water_cast_travel_s": 0.4,
+@@ -1644,12 +1647,12 @@
+         "cue_water_tell_colour": "#4aa9c7",
+         "cue_water_fill_alpha": 0.08,
+         "_scope_cue_boss_aura": "F22#4 Riverwatch candidate. During this tell Brooktail's own meshes carry a pulsing water-white rim and a cyan light follows it, so the boss visibly authors the attack. Presentation only; OFF pending in-world proof.",
+-        "cue_boss_aura": false,
++        "cue_boss_aura": true,
+         "cue_boss_aura_colour": "#5fd8ff",
+         "cue_boss_aura_strength": 1.0,
+         "cue_boss_aura_light_energy": 3.0,
+         "_scope_cue_water_burst": "F22#4 Riverwatch candidate. When the completed wind-up releases, a short water splash bursts at the hit shape (jets through the fan, a crown at the flood). Never on an interrupted tell; no hit, damage or timing change. OFF pending in-world proof.",
+-        "cue_water_burst": false,
++        "cue_water_burst": true, "cue_burst_droplets": 1.8,
+         "cue_water_burst_s": 0.8,
+         "cue_fills": true,
+         "cue_fill_alpha": 0.5,
+diff --git a/data/config/foliage_camera_visibility.json b/data/config/foliage_camera_visibility.json
+index 4d247a62f..4bb374e03 100644
+--- a/data/config/foliage_camera_visibility.json
++++ b/data/config/foliage_camera_visibility.json
+@@ -76,7 +76,7 @@
+     "camera_world_sight": true,
+     "_why_r3": "F10#2 round 2 (three judges, CPU): 6.14 vs round 1 6.17, flat; trunks still hide both fighters at Old Rodfolk's impact and the solver kept blocked orbits. Round 3 (clearly different approach): the fight-camera solver refuses a lens whose line to either fighter's torso meets world colliders (trunks, rocks), choosing a clear orbit; the fade keeps handling non-colliding canopy.",
+     "_why_r4": "F10#2 round 4 (56 px HUD keep-out while the candidate runs) scored 6.17 against round 3's 6.60 with fresh judges; reverted. The code path stays inert without hud_margin_px.",
+-    "enabled_realms": ["stormwood"],
++    "enabled_realms": ["stormwood", "playground"],
+     "_why_enabled_realms": "'enabled' turns this on for every listed realm; 'enabled_realms' for only those. ON for Stormwood (F10#2 READY r8). The Meadows ('playground', F22#4 Riverwatch draw) stays OFF until that fight's in-world judge passes.",
+     "pilot_min_screen_fraction": 0.07,
+     "_why_r8": "r8 (coordinator, after r7 6.694): judges asked for steadier distance, a stronger pilot marker and a brighter floor. named_max_distance_m caps the fight lens for each Stormwood named wild (by named_encounter_id) so the far pull-outs stop; the contact ring is thicker, paler and drawn over the ground; the rim is stronger; the pilot fill light is a wider, brighter pool. Cone/ring tell fill has no hook (soft telegraph style), so it is not part of this round.",
+diff --git a/data/config/trainer_aftermath.json b/data/config/trainer_aftermath.json
+index 854e4bd12..345a2d47f 100644
+--- a/data/config/trainer_aftermath.json
++++ b/data/config/trainer_aftermath.json
+@@ -876,7 +876,7 @@
+     }
+   },
+   "_scope_fight_dressing": "F22#4 Riverwatch fight-ground dressing candidate: a shallow river edge behind Oreth's stand with a timber landing, mooring posts and reeds, flood puddles on the fight floor, and his standard in river teal instead of the shared oxblood. Installed families plus flat water sheets; no collider, no gameplay change. Present in both aftermath states. OFF pending the in-world three-judge proof.",
+-  "fight_dressing_enabled": false,
++  "fight_dressing_enabled": true,
+   "fight_dressing": {
+     "captain_riverwatch": {
+       "standard_prop": {

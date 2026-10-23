@@ -1,0 +1,20 @@
+{
+ "model": "capture_orb",
+ "task_id": "01a15dff-0dcc-7246-bf8a-8e7a8f6c545c",
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "ai_model": "latest",
+ "should_remesh": true,
+ "topology": "triangle",
+ "target_polycount": 3500,
+ "enable_pbr": true,
+ "should_texture": true,
+ "source": {
+  "image_files": [
+   "c1_1.png",
+   "c1_2.png"
+  ]
+ },
+ "status": "SUCCEEDED",
+ "consumed_credits": 30,
+ "date": "2026-10-21"
+}

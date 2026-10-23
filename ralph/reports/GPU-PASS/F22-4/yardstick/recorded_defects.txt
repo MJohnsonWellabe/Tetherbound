@@ -1,0 +1,6 @@
+Wi: none
+Ov: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Yn: none
+Sb: "The captain's creature does not read as a boss: it is not convincingly larger than the player's creature"; "Telegraph rings or lanes are the flat magenta the art direction lists as a defect"; "A landed attack shows no visible impact (no splash, debris or flash where it hits)"
+Ke: none
+On: "The captain's creature does not read as a boss: it is not convincingly larger than the player's creature"; "Telegraph rings or lanes are the flat magenta the art direction lists as a defect"; "A landed attack shows no visible impact (no splash, debris or flash where it hits)"

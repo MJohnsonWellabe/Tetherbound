@@ -1,0 +1,36 @@
+{
+  "_comment": "F22#4 / BOSSES §4.11: Captain Nerissa's Heart Chamber side-channel sweeps. Channel Cycle runs while Cannonback and Mirejaw fight; Pressure Rise begins with Riverdrake (the third send-out). Riptusk (Break Tether) fights without sweeps. Driven by scripts/world/water_nerissa_channels.gd in the process that runs the battle (the host when the host fights); remote participants get the hit through the encounter's host_deliver_enemy_hit and the lane state through WaterVeilfallTransport. Only creatures are struck; the trainer never is. No durable state. OFF until its unit tests, the C2 named-fight check and the in-world three-judge round pass.",
+  "enabled": false,
+  "trainer_id": "water_trainer_nerissa",
+  "phases": {
+    "_why": "BOSSES §4.11 numbers, exactly. send_outs are 0-based roster indices.",
+    "channel_cycle": {"send_outs": [0, 1], "announce_s": 1.2, "active_s": 0.8, "drain_s": 1.6, "alternate_sides": false},
+    "pressure_rise": {"send_outs": [2], "announce_s": 1.0, "active_s": 0.8, "drain_s": 1.2, "alternate_sides": true}
+  },
+  "damage_max_health_fraction": 0.1,
+  "_why_damage": "BOSSES §4.11: 10% of the struck creature's maximum HP, once per wave.",
+  "escape_speed_mps": 5.6,
+  "_why_escape": "BOSSES §4.11: if a creature at 5.6 m/s cannot leave the announced lane during the complete tell from its current legal position, that wave deals no damage.",
+  "gap_s": 1.4,
+  "_why_gap": "Not fixed by BOSSES: quiet time after a wave drains before the next announce may begin (also waits out any creature tell). TUNABLE.",
+  "first_wave_delay_s": 3.0,
+  "_why_first_wave_delay": "Not fixed by BOSSES: each send-out fights alone this long before the first sweep, so the entry beat is never covered. TUNABLE.",
+  "lane": {
+    "_why": "Not fixed by BOSSES beyond 'at least half the 42x44 m Heart Chamber remains safe'. Lanes run the chamber's long axis (z) as strips beside the fight ring's centre, measured in room-local metres from that centre: [inner, outer] offsets along x. Each lane covers under a third of the ring, so far more than half stays safe. TUNABLE.",
+    "inner_m": 2.6,
+    "outer_m": 8.6,
+    "half_length_m": 12.0
+  },
+  "first_side_rule": "ally",
+  "_why_first_side_rule": "Not fixed by BOSSES: Channel Cycle announces on the side the piloted creature is on ('ally'), so a sweep always asks for a move; Pressure Rise then alternates. TUNABLE.",
+  "presentation": {
+    "_why": "Shallow water sheets along the side channel: a pale shimmer with chevrons to the safe edge while announced, a raised blue surge with rolling foam crests while active, then a darker sinking sheet. Round 1 judges read the near-white active slab as a debug quad, so the surge is water-blue. Presentation only.",
+    "announce_colour": "#7fd6ff",
+    "announce_alpha": 0.35,
+    "active_colour": "#2f9fd6",
+    "active_alpha": 0.62,
+    "active_height_m": 0.6,
+    "drain_colour": "#3f8aa8",
+    "drain_alpha": 0.25
+  }
+}

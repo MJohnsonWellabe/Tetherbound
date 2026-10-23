@@ -1,0 +1,42 @@
+[
+ {
+  "label": "F36 tanglevolt value lift + rim",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/tanglevolt-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/tanglevolt-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, light and value separation, face, pose, scale against the ruler - and whether hurt and faint read without a label and stay grounded.",
+  "defects": [
+   "Dark body melts into shadow and the dark stage",
+   "Face and eyes do not read at fight distance"
+  ]
+ },
+ {
+  "label": "F36 voltarach value lift + rim",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/voltarach-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/voltarach-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, light and value separation, face, pose, scale against the ruler - and whether hurt and faint read without a label and stay grounded.",
+  "defects": [
+   "Dark body melts into shadow and the dark stage",
+   "Face and eyes do not read at fight distance"
+  ]
+ },
+ {
+  "label": "F36 fulgocobra value lift + rim",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/fulgocobra-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/fulgocobra-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, light and value separation, face, pose, scale against the ruler - and whether hurt and faint read without a label and stay grounded.",
+  "defects": [
+   "Dark body melts into shadow and the dark stage",
+   "Face and eyes do not read at fight distance"
+  ]
+ },
+ {
+  "label": "F36 galecrest value lift + rim",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/galecrest-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/galecrest-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, light and value separation, face, pose, scale against the ruler - and whether hurt and faint read without a label and stay grounded.",
+  "defects": [
+   "Dark body melts into shadow and the dark stage",
+   "Face and eyes do not read at fight distance"
+  ]
+ }
+]

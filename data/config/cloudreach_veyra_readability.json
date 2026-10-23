@@ -1,0 +1,5 @@
+{
+  "_comment": "F22#4 Captain Veyra (Cloudreach summit) readability candidate. Her Crosswind Command wind lanes (cloudreach_summit_hazards.gdshader) drew at 21% alpha with no edges and melted into the summit paving in the CPU baseline. This raises the lane fill and adds a bright rim along each lane edge; lane geometry, timing, push and safe lee pockets are unchanged (presentation only). OFF until the in-world three-judge round passes.",
+  "enabled": false,
+  "wind_lanes": {"fill_alpha": 0.4, "rim_alpha": 0.85, "rim_width_m": 0.45}
+}

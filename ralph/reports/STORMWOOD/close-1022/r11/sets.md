@@ -1,0 +1,8 @@
+- Ud.png: side A left, side B right. Stormwood storm forest, eight fixed exploration views in the calm storm phase (forest, giant trunks, glass field, rod line road, distant Stormheart tree, reverse road view, Stormheart base, glowmoss hollows).
+- It.png: side A left, side B right. One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.
+- On.png: side A left, side B right. The same eight Stormwood views in the break storm phase (heaviest rain and lightning).
+- Mb.png: side A left, side B right. The crafting panel over the game world, at two resolutions (top 1920x1080, bottom 1280x720). Judge the interface: recipe text readable at a glance, action hints easy to find, fit to the game's UI direction.
+- Pa.png: side A left, side B right. A second named Stormwood wild fight in a grove beside a road, six moments including wind-ups and impacts, gameplay camera with HUD.
+- Ih.png: side A left, side B right. A named Stormwood wild fight (large spider creature against the player's small creature, trainer nearby), six moments including a charge wind-up and its impact, gameplay camera with HUD.
+- Dl.png: side A left, side B right. One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.
+- Vy.png: side A left, side B right. The same eight Stormwood views after the long storm has been broken (still purple sky, light rain).

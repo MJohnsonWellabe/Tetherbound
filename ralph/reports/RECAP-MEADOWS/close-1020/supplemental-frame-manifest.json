@@ -1,0 +1,665 @@
+{
+"fights": {
+"complete_run": true,
+"frames": [
+{
+"file": "south_bridge_grunt-00-before.png",
+"sha256": "b8d18ef284f122de84c98e4af693e4362aa692e89ccb83178e9b5fdfe4cd0f52"
+},
+{
+"file": "south_bridge_grunt-01.png",
+"sha256": "016a39a25206a206a0a93c5ec416c6f39e1496398ea2477c662d2249eddba398"
+},
+{
+"file": "south_bridge_grunt-02.png",
+"sha256": "21f4e29c56ec1914eb42b29ed6c3d9a51aafcba4d82b0057da2b5221bd699633"
+},
+{
+"file": "south_bridge_grunt-03.png",
+"sha256": "17e075241a959bfb3ede11e35dab3d141aac2e920aa033e7a13584b2aa54eab0"
+},
+{
+"file": "south_bridge_grunt-04.png",
+"sha256": "40825b43de78fd6352b36a00e78adc87b2ac1dd6d009151070d101b3759035c8"
+},
+{
+"file": "south_bridge_grunt-05.png",
+"sha256": "1b3192ddfe884782bfe764c8cf3676330beaac3746d54213ba735c027f476510"
+},
+{
+"file": "south_bridge_grunt-06.png",
+"sha256": "e7683903ac7b1eefe9659dc9fd97b3b4de3d299f744c19cb826826fc0285a48f"
+},
+{
+"file": "south_bridge_grunt-07.png",
+"sha256": "71cd4f4ecd44d7da0caf3170dc9f73224fd6f7236fbe5d6af2e186e5e0a04b2a"
+},
+{
+"file": "south_bridge_grunt-08.png",
+"sha256": "1b841e6cbb0ce44d0ded0b9d4225bdc78401a46153da78ed458ca9dbb881bf2b"
+},
+{
+"file": "south_bridge_grunt-99-after.png",
+"sha256": "8faa3e032751e26b51d17fe5d2a353c240634c5ca72ab3cb2ea8f98312ea407f"
+},
+{
+"file": "south_bridge_grunt-a01.png",
+"sha256": "cf517e615c8f834367905dcabda0ab5cd68a8808ff0f611d31bd5e525cc8ceb2"
+},
+{
+"file": "south_bridge_grunt-a02.png",
+"sha256": "630a054b83e1d2057e8cfa44b08de91aed501dc75891e8ff906f0d4f0ea642fe"
+},
+{
+"file": "south_bridge_grunt-a03.png",
+"sha256": "8a8e9e5a99d73e9963c3a58f6f21036ac4222687cea9dbaa3b77a2971b75be0e"
+},
+{
+"file": "south_bridge_grunt-a04.png",
+"sha256": "353b4dea463e6e9059e345336839847f215cd7ba626bd19f5d95385293e312a0"
+},
+{
+"file": "south_bridge_grunt-a05.png",
+"sha256": "b8531b34ced9bfe8800c86ca79960cfe2a26fea6d82d01828f41a45eefeedb56"
+},
+{
+"file": "south_bridge_grunt-a06.png",
+"sha256": "a393f56c8621c54fead106c78c2cd4a2b63921023f77751b7b46995aabbcd167"
+},
+{
+"file": "south_bridge_grunt-r01.png",
+"sha256": "c337118a97cc8bf79a30764e346565d731fd40f01f908866e753192347aa5299"
+},
+{
+"file": "south_bridge_grunt-r02.png",
+"sha256": "2cfe8675290b454ce5e0b3c8d1e746cea023f5872d4fcf9c477ff6c72cb58bf0"
+},
+{
+"file": "south_bridge_grunt-r03.png",
+"sha256": "b1aa02897294c3645bee10dcbf18c3c938d59e30b7dacb9f9e5eeeeba3bbf53d"
+},
+{
+"file": "south_bridge_grunt-r04.png",
+"sha256": "20e4d37175900c7e88ff275b96f2a8d23daa9fa2889855b8663c5cb5cb5a198e"
+},
+{
+"file": "south_bridge_grunt-r05.png",
+"sha256": "96fe764eb5632b2555634b4b068e9213544025347ada70144a5c1e48bb5c0869"
+},
+{
+"file": "south_bridge_grunt-r06.png",
+"sha256": "bcc93babb896beda2802bd57f40b618ee124daf592ff615157c61f2761f331dc"
+},
+{
+"file": "south_bridge_grunt-r07.png",
+"sha256": "fe3d48400a0079c7c5458073de990609d71c76184fbb6dbb05c96f17af8311a9"
+},
+{
+"file": "south_bridge_grunt-t01-stand-mid.png",
+"sha256": "e456d1ba0c57483ed9c0d53dcaab5ad2eeb1a69fcf078d2028ff412833add002"
+},
+{
+"file": "south_bridge_grunt-t01-stand-start.png",
+"sha256": "730ffabbd4b0bf4dd3bcc88be32a50dbfbdcf29f8621274560f5192f59f1700a"
+},
+{
+"file": "south_bridge_grunt-t01-stand-strike.png",
+"sha256": "9706015af9055e2bd91ee847f6aa1eb4fba79d4528c0b9be2a6e81ebcc2cfe7e"
+},
+{
+"file": "south_bridge_grunt-t02-stand-mid.png",
+"sha256": "3fa3c7b9f5b33a29b6fdacb8ebdcc5df50d243b220025ab36963fe56338226c3"
+},
+{
+"file": "south_bridge_grunt-t02-stand-start.png",
+"sha256": "330c5ab54663e2f6f11f8b27ed7a8874f013badd8ce90c25381e240ffe857a45"
+},
+{
+"file": "south_bridge_grunt-t02-stand-strike.png",
+"sha256": "b00441b89ee44f26f89f652ddbb6537e40ce946e9796dfef5ae96b1fb7107d71"
+},
+{
+"file": "warden_aldis-00-before.png",
+"sha256": "5a9bcbc5937302a23f9f9e5e8b3eb88ba0cd4d3a7d5160230d8e35701d2a4c33"
+},
+{
+"file": "warden_aldis-01.png",
+"sha256": "6d95365e000b5d1f18c954e4e2b9f2872cfd85450dfa9725625b0e254dc43273"
+},
+{
+"file": "warden_aldis-02.png",
+"sha256": "b108448879947013c033b3d25944c63ba5675b8413b3b7fc947541533db57ffe"
+},
+{
+"file": "warden_aldis-03.png",
+"sha256": "a2db371e1bd9e44924773959383c8a6847330bd575afc5e73726b3eee49c555c"
+},
+{
+"file": "warden_aldis-04.png",
+"sha256": "e4b52f602df307c1350b6d363634cf8c211e2f20117035f55e515e51e0e15583"
+},
+{
+"file": "warden_aldis-05.png",
+"sha256": "91b43bf79ee9f309b9d2f14a12841ff227e9077dfc952a9869d500fc1ee6365d"
+},
+{
+"file": "warden_aldis-06.png",
+"sha256": "82976f601aa3475ece988ecd69b0b9490f9bf1fc6fb8fc7e778330af4f58f322"
+},
+{
+"file": "warden_aldis-07.png",
+"sha256": "3870d721c4c72c3db42b9ae42215ac5c611c7eb8014e597fd2b37dea93947b78"
+},
+{
+"file": "warden_aldis-08.png",
+"sha256": "6aca8c17d99ac8b01e3350343386f929786022a7f40d833d222d1c705d029206"
+},
+{
+"file": "warden_aldis-99-after.png",
+"sha256": "f28b06deb22e623170de2290156f81223f693346349b07c319d2823348ab3aa5"
+},
+{
+"file": "warden_aldis-a01.png",
+"sha256": "07d0bb53013e46bcd346e1bedba82e5f84fe59fd78e1db90c60749cfeb8d70f7"
+},
+{
+"file": "warden_aldis-a02.png",
+"sha256": "1007f6123ced294453f7d395e4e5b7b0c329071cb67d0d8a0ecc6982166a4d62"
+},
+{
+"file": "warden_aldis-a03.png",
+"sha256": "2de196082ce105893e12c9b942ec61d8e95f1052240a83f42365007a6833b7f4"
+},
+{
+"file": "warden_aldis-a04.png",
+"sha256": "9ada32097834b84ec3d37409fb33a56301ebf9841e7ffee32f17d8c588ec1c8a"
+},
+{
+"file": "warden_aldis-a05.png",
+"sha256": "2fea94510d791f9a145d8cdd2349de304dd014b4df7c765b5184e6d908eee5d1"
+},
+{
+"file": "warden_aldis-a06.png",
+"sha256": "141aaae37ff3e1053946e65fb1e6cad14bf742198f48566f4868119d6c015e8b"
+},
+{
+"file": "warden_aldis-r01.png",
+"sha256": "11da1faa28d44e46aeb157868efd89b7356bca01a4a28309b77ef22cafa3e500"
+},
+{
+"file": "warden_aldis-r02.png",
+"sha256": "16879cdb05c2838667b4b26da531b9f26dcd09d0405f947efe50b45d17ced09d"
+},
+{
+"file": "warden_aldis-r03.png",
+"sha256": "5eec00ac8f97dc09aa2742546a71c7583dbf1c23982ac31a846190291522f685"
+},
+{
+"file": "warden_aldis-r04.png",
+"sha256": "bb45843a351d35c3beeacc788d74199c5f4f39d23ea297be0cc413748d955cfe"
+},
+{
+"file": "warden_aldis-r05.png",
+"sha256": "79b81ef2f2665b90831fefc81394ffc1fe796e47ffc1e75a2d04da5fd66b1ac8"
+},
+{
+"file": "warden_aldis-r06.png",
+"sha256": "0fc4430d0286202ddcc2155aa42d59a8e5e628c8061d14bc020f2c354ec459b4"
+},
+{
+"file": "warden_aldis-r07.png",
+"sha256": "fbb5ab248a95739fd812de23cd286bbf25bc31bfe77c421f8c4bdc89f96277cf"
+},
+{
+"file": "warden_aldis-r08.png",
+"sha256": "51b5753a452db13657ca48566a351c89c58f591a71fbd072d29071087ee5daea"
+},
+{
+"file": "warden_aldis-r09.png",
+"sha256": "e1c0c82b0ad1a802cde801135669aa6597a659ac67f952b81ec1334d28e79a4f"
+},
+{
+"file": "warden_aldis-r10.png",
+"sha256": "89e740070dfad1aa716efa60f4c32337d310eba8213e54b111d6f3e892fafcf2"
+},
+{
+"file": "warden_aldis-r11.png",
+"sha256": "5602724f768c5ea7cac06561f27856709e2e5faa617c5d8251ca82c32612c850"
+},
+{
+"file": "warden_aldis-r12.png",
+"sha256": "e04da4185f69f03a9ed794c3e3f3c67ba71014250ce84590aba6435d7cc8643e"
+},
+{
+"file": "warden_aldis-r13.png",
+"sha256": "74990353d25895d2097e9002ffeb30e8fc93597df547384f2914026e815e56fb"
+},
+{
+"file": "warden_aldis-r14.png",
+"sha256": "10906bb5263849fc382ef3b12a36a1c24040b9ccac613a246d864a31ddbae0dc"
+},
+{
+"file": "warden_aldis-r15.png",
+"sha256": "af20f81abbdba025ed88489f8462f8d7403737e1fd3dd7ec559868eefee1d1ed"
+},
+{
+"file": "warden_aldis-r16.png",
+"sha256": "facb181936b9f4c23f5838988415e8c610fc03690754108a31405d2ec6c39a48"
+},
+{
+"file": "warden_aldis-r17.png",
+"sha256": "4f9ed9e94c955dd908276f6f8f6910e26660694f95ad272af2168fdd98a3c822"
+},
+{
+"file": "warden_aldis-r18.png",
+"sha256": "d399fb73bfcc8c61c29da7279a0aab561d479057470ad1b31b221b8a6cf8ca3f"
+},
+{
+"file": "warden_aldis-r19.png",
+"sha256": "c50c4c40f031459dc4d60a2d8720ad0badf910ea117acca211625488f4613626"
+},
+{
+"file": "warden_aldis-t01-stand-mid.png",
+"sha256": "bdbf3d53a1e96dd685e75fd1b70def2933980fddc1954c7369dea15a7ded305e"
+},
+{
+"file": "warden_aldis-t01-stand-start.png",
+"sha256": "e2227b75944e4fc3997395b70412a06e9f85c40e7cebd519248404cdfd691fec"
+},
+{
+"file": "warden_aldis-t01-stand-strike.png",
+"sha256": "307e0274d35bf3ab9841303be0c52b4d27e135fa70fad62623f25a30481d4edd"
+},
+{
+"file": "warden_aldis-t02-stand-mid.png",
+"sha256": "d96168f5adb5b34096c24b79b57fdb6c80b07cd75815922b699d026f833e1fcc"
+},
+{
+"file": "warden_aldis-t02-stand-start.png",
+"sha256": "1c843736b959523176faa6105086fa864358c4065892178007321dda8335ad93"
+},
+{
+"file": "warden_aldis-t02-stand-strike.png",
+"sha256": "21625b6f4f83e4a2d8dc14f69fdec7c35609334970e5a790f8c4a010477f0f05"
+}
+]
+},
+"creatures": {
+"complete_run": false,
+"frames": [
+{
+"file": "meadows__bramblebun__attacking.jpg",
+"sha256": "1ef238b7d47f1e56ba2cc977e16dfbe148f8e198a1991c915d85d2e742b1bcaf"
+},
+{
+"file": "meadows__bramblebun__fainted.jpg",
+"sha256": "3a7e8ba25e318a2c2cdfc7926d70296ff605ba529ff2d2974c62e7c41d897d6b"
+},
+{
+"file": "meadows__bramblebun__hurt.jpg",
+"sha256": "170cdcc4cab52cd3229649739eb5ce5171d5e2aaee72ea052f4ac8f6d849dd57"
+},
+{
+"file": "meadows__bramblebun__idle.jpg",
+"sha256": "cde3e7d8c97d278fe8e19b5a2775cc6b457b2feb171cec44b6338ac9a52e368b"
+},
+{
+"file": "meadows__bramblebun__moving.jpg",
+"sha256": "b529e1fb426a8f772d33061aab9b64716782d93af7e036e7a01f1a6b8093173b"
+},
+{
+"file": "meadows__bramblebun__resting.jpg",
+"sha256": "91c6625e2fbc20eb1af15cced07412fba43a01ad227a771ad8bd562cd3fb0bb8"
+},
+{
+"file": "meadows__bramblebun__shiny_idle.jpg",
+"sha256": "dcc233571f705b075a4c03c534f5badad684c625e630bef6b1cd4a8a428d63f6"
+},
+{
+"file": "meadows__brooktail__alpha_idle.jpg",
+"sha256": "8d6dbd1cf4aa0fbcefa9a252186ccbe2c055234bb0b1316b85ababcf868c37d6"
+},
+{
+"file": "meadows__brooktail__attacking.jpg",
+"sha256": "28460e4241db13c2f8b75e49575ed967597338193eccb219dce57bf3aa9cacaf"
+},
+{
+"file": "meadows__brooktail__fainted.jpg",
+"sha256": "1e1d034a233c4c42ff526937547d7c77acfbf81862c1c4f8b35b44517a7bb62c"
+},
+{
+"file": "meadows__brooktail__hurt.jpg",
+"sha256": "ba9d468d602f088e13ea08ad47d729dbbef9a13c544aec9799e15e7c902ce58e"
+},
+{
+"file": "meadows__brooktail__idle.jpg",
+"sha256": "374ddfc654cf022bacbbcbf765b8999d7d36f7f0a33e7177b220ff536e6484fa"
+},
+{
+"file": "meadows__brooktail__moving.jpg",
+"sha256": "f2fd4dbb41f7fc7b14bd14e8eee46f1d74495bab711ff7ff04f0f748b970f91a"
+},
+{
+"file": "meadows__brooktail__resting.jpg",
+"sha256": "faa6a615a17b32e6a58befca3c6121d70d3aabb6c53d6c20fdcbc7d3dc52e48d"
+},
+{
+"file": "meadows__brooktail__shiny_idle.jpg",
+"sha256": "f76d807205ffa63f77827704b69273c95f0282817670bde2d34d3ea345b7a28a"
+},
+{
+"file": "meadows__galecrest__alpha_idle.jpg",
+"sha256": "211a46b3f250850014d8e9643cb01647c1c5d665baa2484a58fe97b8648c4141"
+},
+{
+"file": "meadows__galecrest__attacking.jpg",
+"sha256": "b14e298b0b659a620a5ebee7432813b82381353f452813f4d289a868083dcae7"
+},
+{
+"file": "meadows__galecrest__fainted.jpg",
+"sha256": "ad73448d67b8a96e325461a0aab1887300d02d5acf8200cd2ad0574b6c439fb9"
+},
+{
+"file": "meadows__galecrest__hurt.jpg",
+"sha256": "a238ca3163dafc70486492789a3e96b02caef674f45e0ed14c9af56de7212d88"
+},
+{
+"file": "meadows__galecrest__idle.jpg",
+"sha256": "ecc21f07e0a1ac334b7a32fd271b6e8b505ad695a8a9bb295c103310723d7f8c"
+},
+{
+"file": "meadows__galecrest__moving.jpg",
+"sha256": "a0966e44977421deef051e1f33dd43257551fe3bcd8a11b55e518013380d28ab"
+},
+{
+"file": "meadows__galecrest__resting.jpg",
+"sha256": "3effe5ef81bd18cf89a9e1ed22d9914a6df6b05cddbda9b6b05ef329594ec406"
+},
+{
+"file": "meadows__galecrest__shiny_idle.jpg",
+"sha256": "13bfbaf47f3fcede538e4ba4b9ed3eeb3fdb3a5edb6dacca0601cbf167031337"
+},
+{
+"file": "meadows__mosshell__alpha_idle.jpg",
+"sha256": "0a56ff38accc48fbd7e8be555cf5fda66c041014a3e07b43f35aca44f23ae39a"
+},
+{
+"file": "meadows__mosshell__attacking.jpg",
+"sha256": "f185d704ae3d2c3dea042e71eee053a1fc6a51a72cbbdee72c15ce920eba524c"
+},
+{
+"file": "meadows__mosshell__fainted.jpg",
+"sha256": "608647d14667561c77e300ff9433d1bea00ee752ab27515a785b6454e5e76ce8"
+},
+{
+"file": "meadows__mosshell__hurt.jpg",
+"sha256": "954627e1a35699fe45e70c5fb05370ee9703b68045e5913981531e87c13f24dd"
+},
+{
+"file": "meadows__mosshell__idle.jpg",
+"sha256": "d2673c8a5dcdd7273869e0e28b18f31d75a00f0e1662f2c6ebf5b311a8ba6cf1"
+},
+{
+"file": "meadows__mosshell__moving.jpg",
+"sha256": "fc59b05c2a78b7b9806c3551f7aeb32f82314742532be9fb0a85aa78a9c003c7"
+},
+{
+"file": "meadows__mosshell__resting.jpg",
+"sha256": "e189743f4e628cf806ecaefd63bb3b8472810e354671de897dfa4b9af2c6408b"
+},
+{
+"file": "meadows__mosshell__shiny_idle.jpg",
+"sha256": "a1c7d99400e4f190236beb265676a15d201c468c82534963262f55e67248210b"
+},
+{
+"file": "meadows__nightburrow__attacking.jpg",
+"sha256": "2f1b8fd463d0e3e33f21cfab08a2afef420e0200c5a6e77a7a3cc4f9f6099a4b"
+},
+{
+"file": "meadows__nightburrow__fainted.jpg",
+"sha256": "2f62a5c6beb5dfbe42bcd242268cea02364bb0b72a636d9de162d75189d421f5"
+},
+{
+"file": "meadows__nightburrow__hurt.jpg",
+"sha256": "64fb9f05f3d77bd131db47c07a5c96f4d1e1a34537439cffaf4c0de1aab050c7"
+},
+{
+"file": "meadows__nightburrow__idle.jpg",
+"sha256": "388b56bf14badf9605c228c51c26b3c314b6109ffad18e8cfbc55ae7d024a486"
+},
+{
+"file": "meadows__nightburrow__moving.jpg",
+"sha256": "b39e227d5e4ed54593073d6888ba73320febb704e84cd8c57287a69187426c2e"
+},
+{
+"file": "meadows__nightburrow__resting.jpg",
+"sha256": "848b6607919ae9e6070872f5b84801efaf80481bd4dd4fd925263540047f7744"
+},
+{
+"file": "meadows__nightburrow__shiny_idle.jpg",
+"sha256": "e25e523e8c596d50bba659c9ef0e0d737bfe8e43b0f305c5c2fd4ca4699c5e35"
+},
+{
+"file": "meadows__pipwing__attacking.jpg",
+"sha256": "b00abc579adff8fb83f01eb5e8fc52d7720fde9639be53ffc957f9bd46f58d9b"
+},
+{
+"file": "meadows__pipwing__fainted.jpg",
+"sha256": "fe9090cf36b40152129a05764823bf6bec9f882eed8e4672508823de92adfd5c"
+},
+{
+"file": "meadows__pipwing__hurt.jpg",
+"sha256": "35c22ccf1a7a737e272beb7b98e1f7cd17ff1638377cc4eddc99b7ec4225b7e0"
+},
+{
+"file": "meadows__pipwing__idle.jpg",
+"sha256": "458c4cbfd73e289a690bffeb89413701ac9d5cf55d8c7808bedb773ae112e948"
+},
+{
+"file": "meadows__pipwing__moving.jpg",
+"sha256": "37754a3906ffb8a3d1598f51fa0e1c7f4de07a524e8e2dbab8eddfb6f830996b"
+},
+{
+"file": "meadows__pipwing__resting.jpg",
+"sha256": "3d7d099502c4ca72214760723790c1a9c1d5ae23f73e187397f2c50ed91c8f9b"
+},
+{
+"file": "meadows__pipwing__shiny_idle.jpg",
+"sha256": "63ee1eec82de9d6beb3b15584f928628cdb92f1a38f6d0210f1745c7eb72653d"
+},
+{
+"file": "meadows__riftfrill__attacking.jpg",
+"sha256": "f30e5ba6616f2bb3e2db40032906c2631c4901d34a8243e856b2ead7c54fa8f8"
+},
+{
+"file": "meadows__riftfrill__fainted.jpg",
+"sha256": "5fcafb829384886a3f0e1d34a5c6026d0e2a1a63178da9054022814f037b5bcc"
+},
+{
+"file": "meadows__riftfrill__hurt.jpg",
+"sha256": "7141708fc904d5fd3cd9dc5eac51b96515740699f7ff21d7ad018516a41f8dde"
+},
+{
+"file": "meadows__riftfrill__idle.jpg",
+"sha256": "1c42fd096c0be4f18e1d4caddc99558fe5037e6c388a85701208b5ae8c804981"
+},
+{
+"file": "meadows__riftfrill__moving.jpg",
+"sha256": "7a7af61e6dcb73162a2aa3ab798489a9f9fc727a5c9becfd8659ef316f7ea58d"
+},
+{
+"file": "meadows__riftfrill__resting.jpg",
+"sha256": "55cebd81035783d9c585acec446b79215a113dd1d24d1e9c98ad8591d291aae6"
+},
+{
+"file": "meadows__riftfrill__shiny_idle.jpg",
+"sha256": "75f04d3a428bf64a9b04a7e3c973aed35be07c40c4574c41d2f4d8d07a70b220"
+},
+{
+"file": "meadows__stormtrail__attacking.jpg",
+"sha256": "cf9193e68aaaacea8cf8000ff1bfc6f9e4d84fe4fdd0d1690b977a1589dab98b"
+},
+{
+"file": "meadows__stormtrail__fainted.jpg",
+"sha256": "239aa4ac48ec215ec9bc347469a8c6d002699c9ccc5a57db16a51c1081b8c15c"
+},
+{
+"file": "meadows__stormtrail__hurt.jpg",
+"sha256": "0cf6d4f2106215ebe92d460cbbba712fd666142ca9bab54644734f03af442b55"
+},
+{
+"file": "meadows__stormtrail__idle.jpg",
+"sha256": "9429cae153c0a78c2e5a9e2f16860b8fbf8f8d0497f15e0a08de0af298fda6e4"
+},
+{
+"file": "meadows__stormtrail__moving.jpg",
+"sha256": "b92db3df8934fbdf307f377a55abdf1f9a93ef7c2c5affa9090bdcd127fc1ab0"
+},
+{
+"file": "meadows__stormtrail__resting.jpg",
+"sha256": "fc7278e992a25a44aa664469757bf2a651c0da034a60faad50afdcd6e03a5adc"
+},
+{
+"file": "meadows__stormtrail__shiny_idle.jpg",
+"sha256": "3061b0f4911f502dbbcefe7ace171922ba0524b11d808cfdf81bda9260b97558"
+},
+{
+"file": "meadows__terrapup__attacking.jpg",
+"sha256": "e28fc2cb59d8b43114e691df1612e035e0be8c1cc6b692359d5faa706cbf38ce"
+},
+{
+"file": "meadows__terrapup__fainted.jpg",
+"sha256": "b2463ae3a242256925876bedca1dff47fdd1b6a56cdc25a2c8128e86876b39c3"
+},
+{
+"file": "meadows__terrapup__hurt.jpg",
+"sha256": "bf75d688ee86a36b039b1962990493bb94b960425f9336987be0268440319613"
+},
+{
+"file": "meadows__terrapup__idle.jpg",
+"sha256": "34fabd577dcbf02397e27567ae8b25b2c224c4d4cd6117cbe3fb634baf74c098"
+},
+{
+"file": "meadows__terrapup__moving.jpg",
+"sha256": "bddaaeefa0d7dafeae7d96737be543222c61f439325497d4ead1ec14269fa493"
+},
+{
+"file": "meadows__terrapup__shiny_idle.jpg",
+"sha256": "83ba8994fe27f3330f450e43400f60a75790002d17d87a0b395cedf39de30a7d"
+},
+{
+"file": "meadows__trailpup__alpha_idle.jpg",
+"sha256": "db574a544a27185efb33ce71484be48fd2f9db9b08e1c8f2830bb41f9f1c871d"
+},
+{
+"file": "meadows__trailpup__attacking.jpg",
+"sha256": "bd582976dfdb617108751aae039fb36e8801a994c5aa92fbcba3be14a93d62c0"
+},
+{
+"file": "meadows__trailpup__fainted.jpg",
+"sha256": "2c84c435b0c7b398b83729a70c88845ca3a6862e4f7c5bfbe5917e5c15aae620"
+},
+{
+"file": "meadows__trailpup__hurt.jpg",
+"sha256": "c8fce412ab7f33fda19b9998b1d4efdb56963661d01cc2ba00ad5f73020c7c82"
+},
+{
+"file": "meadows__trailpup__idle.jpg",
+"sha256": "97e0f1c75e3056f0c12beedc3f843d933e6d5d42787d49e467811cd8d76c4ba4"
+},
+{
+"file": "meadows__trailpup__moving.jpg",
+"sha256": "bd48fb1f8aac5a815fb9d5905285d3f20cd707fd317190af60f7f9d8d7773344"
+},
+{
+"file": "meadows__trailpup__resting.jpg",
+"sha256": "d6801ffad695a14207308cee42abc97ac83243decb9811f2d3a62db440f78a32"
+},
+{
+"file": "meadows__trailpup__shiny_idle.jpg",
+"sha256": "2bbf6895766b33d2cd2f08c33c5963f9b0e60f9bcb316ffe37c2c4f2f1a2c7b1"
+},
+{
+"file": "meadows__veridian__attacking.jpg",
+"sha256": "fee8770f73ae96e7fb342e07eae59389102ddf44ba790f9540c4269db3fbfc52"
+},
+{
+"file": "meadows__veridian__fainted.jpg",
+"sha256": "eab139f9bc4507f16c42fe3b8caf6d02a39e7b56695b0228b7846d639b51c59f"
+},
+{
+"file": "meadows__veridian__hurt.jpg",
+"sha256": "fbdfdf29afcf35f880f2f5eb0643f02daa0cbe1f968202c1826f8855738b255d"
+},
+{
+"file": "meadows__veridian__idle.jpg",
+"sha256": "0fa60f3ccee157dc7991990c968b106a2bfb655dc4408891cb447946563e7961"
+},
+{
+"file": "meadows__veridian__moving.jpg",
+"sha256": "0f4247b82d35e77fcde3e65fddab3ab8b3b71c837661ed7fc162a7847a0f1c64"
+},
+{
+"file": "meadows__veridian__resting.jpg",
+"sha256": "3f84419f20e02639e95a63ad8ac867abcb7ff671921b03a8f309837c261487cc"
+},
+{
+"file": "meadows__veridian__shiny_idle.jpg",
+"sha256": "0414e1d02971af27049a097b76b943103cbc648e395777a4d8502ba613945616"
+}
+]
+},
+"ui": {
+"complete_run": true,
+"frames": [
+{
+"file": "exploration_hud.jpg",
+"sha256": "2baf73957c3a0a54b606c2b65f0ae7d806ff3e44cb77152eb69d2d72a08cba20"
+},
+{
+"file": "menu_backpack.jpg",
+"sha256": "725c54109740f6ed20ef54e8be0fd2260a41fbdd8744b0c5ee957d2e97de9b16"
+},
+{
+"file": "menu_build.jpg",
+"sha256": "84c3250c767632d9b6c8d8c69dfe55cc867e4989c7f0f8bd1dbad17f77274b26"
+},
+{
+"file": "menu_creatures.jpg",
+"sha256": "10091f68eee6e051744ab58494bfe723ac1b8583930883407f7eb5776ce49eab"
+},
+{
+"file": "menu_map.jpg",
+"sha256": "bc4fa21f1accc8bb508253ac94241a1f9781cdc04c92d420e61d513231624e25"
+},
+{
+"file": "menu_players.jpg",
+"sha256": "9a737424c9ca365ee966ea34ced3dbbab6efb0aa85001b27871d79952dda8149"
+},
+{
+"file": "menu_quest_log.jpg",
+"sha256": "256e8d0e56beeb00bb321c439635ac76eff8491d1066dcbffa02edc3936c6c47"
+},
+{
+"file": "menu_save.jpg",
+"sha256": "1b05a27584f5fd14e10f34076c45073c8086c2eadfa7366f4a217bdb1e295145"
+},
+{
+"file": "menu_settings.jpg",
+"sha256": "544aabc40cb522527466ec4de01a45649d99a3bf5f7246007af770fa02aa07da"
+},
+{
+"file": "menu_skills.jpg",
+"sha256": "659eb51d005e4cf0d70463b6abbbc98def5be69e7414377dcc951497227886cd"
+},
+{
+"file": "quick_bindings.jpg",
+"sha256": "257bc9fce7d80baaffdd6ab93ea64792dbfe8099b784812274b595abf2fe230c"
+},
+{
+"file": "settings_controls.jpg",
+"sha256": "bfd8e048aee91cd576dcb022fd89d9b4855da82ae3db6da2036c425caad65c9d"
+}
+]
+}
+}

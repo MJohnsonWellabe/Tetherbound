@@ -1,0 +1,9 @@
+Vs: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, standing or upright)"; "Body parts clip through the floor"
+No: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, standing or upright)"; "Body parts clip through the floor"
+Rj: none
+Lk: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ry: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, standing or upright)"; "Body parts clip through the floor"
+En: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, standing or upright)"; "Body parts clip through the floor"
+Vn: none
+Sx: none
+Ud: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, standing or upright)"; "Body parts clip through the floor"

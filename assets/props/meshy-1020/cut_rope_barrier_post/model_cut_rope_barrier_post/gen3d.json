@@ -1,0 +1,27 @@
+{
+ "model": "cut_rope_barrier_post",
+ "task_id": "01a15cb2-abad-7091-9221-f5c3a42472d3",
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "ai_model": "latest",
+ "target_polycount": 6000,
+ "topology": "quad",
+ "should_remesh": true,
+ "enable_pbr": true,
+ "input_images": [
+  "/home/user/Tetherbound/assets_raw/props-1020/cut_rope_barrier_post/concepts/c1_0.png",
+  "/home/user/Tetherbound/assets_raw/props-1020/cut_rope_barrier_post/concepts/c1_1.png",
+  "/home/user/Tetherbound/assets_raw/props-1020/cut_rope_barrier_post/concepts/c1_2.png"
+ ],
+ "status": "SUCCEEDED",
+ "task_error": null,
+ "consumed_credits": 30,
+ "files": {
+  "glb": "/home/user/Tetherbound/assets_raw/props-1020/cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post.glb",
+  "base_color": "/home/user/Tetherbound/assets_raw/props-1020/cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post_base_color.png",
+  "metallic": "/home/user/Tetherbound/assets_raw/props-1020/cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post_metallic.png",
+  "roughness": "/home/user/Tetherbound/assets_raw/props-1020/cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post_roughness.png",
+  "normal": "/home/user/Tetherbound/assets_raw/props-1020/cut_rope_barrier_post/model_cut_rope_barrier_post/cut_rope_barrier_post_normal.png",
+  "thumbnail": "/home/user/Tetherbound/assets_raw/props-1020/cut_rope_barrier_post/model_cut_rope_barrier_post/thumbnail.png"
+ },
+ "date": "2026-10-21"
+}

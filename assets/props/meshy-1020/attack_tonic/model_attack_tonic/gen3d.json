@@ -1,0 +1,21 @@
+{
+ "model": "attack_tonic",
+ "task_id": "01a15dff-b83f-72d8-8b7f-ff136c79f2f4",
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "ai_model": "latest",
+ "should_remesh": true,
+ "topology": "triangle",
+ "target_polycount": 3500,
+ "enable_pbr": true,
+ "should_texture": true,
+ "source": {
+  "image_files": [
+   "c1_0.png",
+   "c1_1.png",
+   "c1_2.png"
+  ]
+ },
+ "status": "SUCCEEDED",
+ "consumed_credits": 30,
+ "date": "2026-10-21"
+}

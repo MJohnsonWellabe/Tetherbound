@@ -1,0 +1,32 @@
+{
+ "asset": "capture_orb",
+ "concepts": [
+  {
+   "tag": "c1",
+   "task_id": "01a15dfe-1a5b-75fb-9df4-35a4b6f52646",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Game item concept: the game's Tether capture orb, redesigned from the reference orb (same carved-stone and brass craftsmanship, same art style). A perfect sphere made of two hemispheres: the lower half smooth cream-white glazed stone, the upper half deep teal enamel. A thick polished brass equator band runs all the way around where the halves meet, with a round chunky brass-ringed centre button on the front that has a softly glowing pale-cyan inner disc. Subtle shallow carved rune grooves and swirl glyphs etched into both hemispheres. The orb rests upright on a tiny flat area at the bottom of the sphere. Diameter about 0.30 m. Stylised Palworld / Animo-class game item prop, deliberately chunky and oversized, exaggerated readable silhouette that still reads clearly from 10-15 metres, soft bevelled edges, soft hand-painted PBR look, natural palette matching the Meadows key-art reference (sage and leaf greens, warm gold, cream, slate blue, teal). Single isolated object standing upright on its flat base, full object visible and centred, plain neutral light-grey background, even studio lighting, no cast shadow, no ground plane, no people, no creatures, no text, no letters, no labels, no red or crimson anywhere.",
+   "reference_paths": [
+    "docs/reference/tetherbound-meadows-keyart.png (downscaled to 1024 x 683)",
+    "assets/creatures/tetherbound/tm_orb/reference/three_quarter.png (existing Tether orb reference)"
+   ],
+   "status": "SUCCEEDED",
+   "images": [
+    "capture_orb/concepts/c1_0.png",
+    "capture_orb/concepts/c1_1.png",
+    "capture_orb/concepts/c1_2.png"
+   ],
+   "chosen": true,
+   "verdict": "CHOSEN (views 1-2): teal upper and cream lower hemispheres, ornate brass equator band, brass-ringed glowing cyan centre button, carved runes and swirls; view 0 rejected for 3D because it showed button-like knobs on both sides, inconsistent with views 1-2",
+   "consumed_credits": 9
+  }
+ ],
+ "chosen_concept": "c1",
+ "chosen_views": [
+  1,
+  2
+ ],
+ "chosen_concept_png": "model_capture_orb/preview_concept.png (contact sheet of concepts/c1_1.png, concepts/c1_2.png)",
+ "reference_inspection": "Key art and both tm_orb references (front.png turnaround sheet, three_quarter.png) inspected; three_quarter.png sent for the carved-stone + brass craft language; the brief's two-hemisphere cream/teal scheme overrides its all-cream colouring."
+}

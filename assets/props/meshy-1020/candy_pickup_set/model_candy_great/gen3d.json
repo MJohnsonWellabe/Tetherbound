@@ -1,0 +1,27 @@
+{
+ "model": "candy_great",
+ "task_id": "01a15c41-7ccf-779e-abe0-d85558c33051",
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "ai_model": "latest",
+ "target_polycount": 8000,
+ "topology": "quad",
+ "should_remesh": true,
+ "enable_pbr": true,
+ "input_images": [
+  "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/great_v2_1.png",
+  "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/great_v2_0.png",
+  "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/concepts/great_v2_2.png"
+ ],
+ "status": "SUCCEEDED",
+ "task_error": null,
+ "consumed_credits": 30,
+ "files": {
+  "glb": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_great/candy_great.glb",
+  "base_color": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_great/candy_great_base_color.png",
+  "metallic": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_great/candy_great_metallic.png",
+  "roughness": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_great/candy_great_roughness.png",
+  "normal": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_great/candy_great_normal.png",
+  "thumbnail": "/home/user/Tetherbound/assets_raw/props-1020/candy_pickup_set/model_candy_great/thumbnail.png"
+ },
+ "date": "2026-10-21"
+}
