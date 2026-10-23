@@ -276,13 +276,32 @@ func build() -> void:
 	_fog_undiscovered = FOG_UNDISCOVERED
 	var veil: Variant = map_config.get("fog_veil", {}) if map_config is Dictionary else {}
 	_roads_above_fog = false
+	_sea_lanes = false
+	_soft_fog = false
+	_chart_cfg = {}
+	_cloud_fog = {}
+	_outside_colour = UITokens.BG_DEEP
 	_road_texture_cache.clear()
 	if veil is Dictionary and veil.get("enabled") == true:
+		if veil.has("undiscovered_colour"):
+			_fog_undiscovered = Color(str(veil.get("undiscovered_colour")))
 		_fog_undiscovered.a = clampf(float(veil.get("undiscovered_alpha", 1.0)), 0.0, 1.0)
 		_roads_above_fog = veil.get("roads_above_fog") == true
 		_road_colour = Color(str(veil.get("road_colour", "#dbb87a")))
 		_road_colour.a = clampf(float(veil.get("road_alpha", 0.85)), 0.0, 1.0)
 		_road_width_px = clampf(float(veil.get("road_width_px", 4.0)), 1.0, 16.0)
+		_sea_lanes = veil.get("sea_lanes") == true
+		_soft_fog = veil.get("soft_fog") == true
+		_ui_font_labels = veil.get("ui_font_labels") == true
+		_glyph_controls = veil.get("glyph_controls") == true
+		_region_font = null
+		if veil.has("outside_colour"):
+			_outside_colour = Color(str(veil.get("outside_colour")))
+		var chart: Variant = veil.get("painted_chart", {})
+		_chart_cfg = chart if chart is Dictionary and chart.get("enabled") == true else {}
+		var cloud: Variant = veil.get("cloud_fog", {})
+		_cloud_fog = cloud if cloud is Dictionary and cloud.get("enabled") == true else {}
+	_sea_lane_cache.clear()
 	_fog_tex_revision = -1
 	_icon_cache.clear()
 	_last_map_revision = -1
@@ -372,17 +391,26 @@ func revision() -> int:
 ## `build()` and once every `poll()` tick so this label tracks live input the
 ## same way every other glyph-bearing prompt in the menu does.
 func _refresh_controls_label() -> void:
+	var px := 40 if _glyph_controls else 24
 	var text := "A  Place marker    X  Remove marker    %s Zoom Out    %s Zoom In    Right Stick  Pan" % [
-		INPUT_GLYPH.icon("map_zoom_out", 24),
-		INPUT_GLYPH.icon("map_zoom_in", 24),
+		INPUT_GLYPH.icon("map_zoom_out", px),
+		INPUT_GLYPH.icon("map_zoom_in", px),
 	]
+	if _glyph_controls and INPUT_GLYPH.using_gamepad():
+		# P2-002 r2: the hint row reads as prompt glyphs at handheld size,
+		# not letters beside 24px trigger chips.
+		var img := "[img=%dx%d]%s%s[/img]"
+		text = "%s Place marker    %s Remove marker    %s Zoom out    %s Zoom in    %s Pan" % [
+			img % [px, px, INPUT_GLYPH.DIR, "xbox_button_a.png"], img % [px, px, INPUT_GLYPH.DIR, "xbox_button_x.png"],
+			INPUT_GLYPH.icon("map_zoom_out", px), INPUT_GLYPH.icon("map_zoom_in", px),
+			img % [px, px, INPUT_GLYPH.DIR, "xbox_stick_r.png"]]
 	# OP-0905-27: only advertised once there is a second realm to switch to --
 	# an always-on hint for a button that does nothing yet is worse than no
 	# hint, the same reasoning `_refresh_realm_row()` hides the chip row on.
 	if _available_realms().size() > 1:
 		text += "    %s/%s  View %s" % [
-			INPUT_GLYPH.icon("map_realm_prev", 24),
-			INPUT_GLYPH.icon("map_realm_next", 24),
+			INPUT_GLYPH.icon("map_realm_prev", px),
+			INPUT_GLYPH.icon("map_realm_next", px),
 			_realm_display_name(_other_realm(_display_realm())),
 		]
 	_controls_label.text = text
@@ -804,7 +832,15 @@ func _draw_map(canvas: Control) -> void:
 	# at its ~108px fit width, so even the "zoomed" frame was still a strip.
 	var map_rect := _map_rect_for_canvas(rect_size)
 
-	canvas.draw_rect(Rect2(Vector2.ZERO, rect_size), UITokens.BG_DEEP)
+	canvas.draw_rect(Rect2(Vector2.ZERO, rect_size), _outside_colour)
+	if not _cloud_fog.is_empty():
+		# The canvas beyond the realm's own rectangle is the same cloud cover
+		# (round 1 judges: the Meadows chart sat in empty side bars).
+		canvas.draw_texture_rect(_cloud_tile(), Rect2(Vector2.ZERO, rect_size), true)
+	if _soft_fog:
+		# Linear sampling: fog edges and baked terrain blend instead of
+		# stair-stepping at the 16x/32x local views.
+		canvas.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 
 	var world: Node = null
 	if canvas.is_inside_tree():
@@ -916,9 +952,19 @@ func _draw_map(canvas: Control) -> void:
 ## corridor therefore remains an undistorted strip, while its otherwise-empty
 ## side gutters carry spatial callouts connected to their true Z positions.
 ## This is overview-only: local zoom returns labels and icons to the terrain.
+## The map's canvas text font. `fog_veil.ui_font_labels` swaps the display
+## face for the menu's own body font (round 1: the display face clashed).
+func _canvas_label_font() -> Font:
+	if _ui_font_labels and _canvas != null:
+		var themed := _canvas.get_theme_default_font()
+		if themed != null:
+			return themed
+	return load(UITokens.FONT_PATH) as Font
+
+
 func _draw_overview_callouts(canvas: Control, map_rect: Rect2, map_state: RefCounted) -> void:
 	if _region_font == null:
-		_region_font = load(UITokens.FONT_PATH)
+		_region_font = _canvas_label_font()
 	if _region_font == null:
 		return
 
@@ -1277,6 +1323,12 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, pl
 	var font_size := CANVAS_LABEL_FONT_SIZE
 	var text_size := _region_font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size)
 	var baseline := rect.position + Vector2(0.0, text_size.y - _region_font.get_descent(font_size))
+	if _ui_font_labels:
+		# A soft pill keeps the name readable where it crosses roads/markers.
+		var pill := StyleBoxFlat.new()
+		pill.bg_color = Color(UITokens.BG_DEEP, 0.78)
+		pill.set_corner_radius_all(int(rect.size.y * 0.5))
+		canvas.draw_style_box(pill, rect.grow_individual(14.0, 4.0, 14.0, 4.0))
 	_draw_string_legible(canvas, _region_font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size, UITokens.TEXT_PRIMARY)
 
 
@@ -1285,7 +1337,7 @@ func _draw_region_label(canvas: Control, map_rect: Rect2, region: Dictionary, pl
 ## cannot regress to printing through that icon again.
 func _resolved_region_label_rect(canvas: Control, map_rect: Rect2, region: Dictionary, occupied: Array[Rect2]) -> Rect2:
 	if _region_font == null:
-		_region_font = load(UITokens.FONT_PATH)
+		_region_font = _canvas_label_font()
 	if _region_font == null:
 		return Rect2()
 	var text := str(region.get("display_name", ""))
@@ -1435,7 +1487,7 @@ func _draw_remote_player(canvas: Control, map_rect: Rect2, record: Dictionary) -
 	canvas.draw_arc(point, REMOTE_PLAYER_RADIUS + 2.0, 0.0, TAU, 20,
 		UITokens.TEXT_PRIMARY, 2.0, true)
 	if _region_font == null:
-		_region_font = load(UITokens.FONT_PATH)
+		_region_font = _canvas_label_font()
 	if _region_font != null:
 		_draw_string_legible(canvas, _region_font, point + Vector2(14.0, 8.0),
 			str(record.get("display_name", "Trainer")), HORIZONTAL_ALIGNMENT_LEFT,
@@ -1556,6 +1608,26 @@ var _roads_above_fog := false
 var _road_colour := Color(0.86, 0.72, 0.48, 0.85)
 var _road_texture_cache: Dictionary = {}
 var _road_width_px := 4.0
+## P2-002 Tidewake (`fog_veil.sea_lanes`): dashed main-path sea crossings.
+var _sea_lanes := false
+## P2-002 round 2 (`fog_veil.outside_colour` / `soft_fog`): the canvas beyond
+## the realm reads as the same unexplored fog rather than an empty panel, and
+## fog edges are smoothed.
+var _outside_colour := UITokens.BG_DEEP
+var _soft_fog := false
+var _ui_font_labels := false
+var _glyph_controls := false
+var _sea_lane_colour := Color(0.62, 0.86, 0.95, 0.9)
+## P2-002 GPU pass (22 Oct, `fog_veil.painted_chart` / `cloud_fog`): the map
+## read as a black canvas. Surveyed ground is a painted chart (realm palette,
+## hill shading, contour lines, coast rim) sampled from the realm's own
+## heights; unsurveyed ground stays fully hidden (OW3) but reads as drifting
+## cloud cover in the realm's tone instead of black. Empty = off.
+var _chart_cfg: Dictionary = {}
+var _cloud_fog: Dictionary = {}
+## Painted charts survive tab rebuilds: the terrain does not change in play.
+static var _painted_cache: Dictionary = {}
+var _sea_lane_cache: Dictionary = {}
 
 
 ## One `ImageTexture` baked from the fog grid rather than ~16k individual
@@ -1604,6 +1676,11 @@ func _fog_texture(map_state: RefCounted) -> ImageTexture:
 	# rebuilds when the map tab is opened, so a full repaint is still the right
 	# shape — it just must not cost most of a second to open the map.
 	var visited: PackedByteArray = map_state.call("visited_bytes")
+	if not _cloud_fog.is_empty():
+		_paint_cloud_fog(image, visited, grid_x, grid_z)
+		_fog_tex = ImageTexture.create_from_image(image)
+		_fog_tex_revision = revision
+		return _fog_tex
 	for iz in grid_z:
 		var row := iz * grid_x
 		for ix in grid_x:
@@ -1643,6 +1720,12 @@ func _terrain_texture(world: Node) -> Texture2D:
 ## is actually the Meadows (or vice-versa the day Meadows grows the same hook)
 ## would silently draw one realm's ground under the other's fog.
 func _bake_terrain_for_realm(realm_id: String, world: Node) -> Texture2D:
+	if not _chart_cfg.is_empty():
+		var painted := _painted_chart(realm_id, world)
+		if painted != null:
+			return painted
+	if realm_id == "water" and _sea_lanes:
+		return _tidewake_chart(_realm_map_state(realm_id))
 	if world != null and realm_id == _player_realm() and world.has_method("map_terrain_texture"):
 		return world.call("map_terrain_texture") as Texture2D
 
@@ -1698,6 +1781,17 @@ func _draw_roads(canvas: Control, map_rect: Rect2) -> void:
 		# A dark casing under the light route keeps it readable on any ground.
 		canvas.draw_polyline(points, Color(UITokens.OUTLINE, 0.8), width + 4.0, true)
 		canvas.draw_polyline(points, _road_colour, width, true)
+	if not _sea_lanes:
+		return
+	if not _sea_lane_cache.has(realm_id):
+		_sea_lane_cache[realm_id] = _sea_lane_polylines(realm_id)
+	for raw_lane: Variant in _sea_lane_cache[realm_id]:
+		var lane := raw_lane as PackedVector2Array
+		for index in range(lane.size() - 1):
+			var from := map_rect.position + (lane[index] - origin) / span * map_rect.size
+			var to := map_rect.position + (lane[index + 1] - origin) / span * map_rect.size
+			canvas.draw_dashed_line(from, to, Color(UITokens.OUTLINE, 0.7), width + 3.0, width * 3.0, true, true)
+			canvas.draw_dashed_line(from, to, _sea_lane_colour, width * 0.8, width * 3.0, true, true)
 
 
 ## The realm's canonical road polylines in world XZ: Meadows from
@@ -1733,7 +1827,78 @@ func _road_polylines(realm_id: String) -> Array:
 				line.append(Vector2(float(point[0]), float(point[2])))
 			out.append(line)
 		return out
+	if realm_id == "water" and _sea_lanes:
+		# Tidewake: each island's walked spine, spur and circuit (world XZ).
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
+		var out: Array = []
+		if parsed is Dictionary:
+			for route: Variant in (parsed.get("land_routes", []) as Array) + (parsed.get("land_loops", []) as Array):
+				if route is Dictionary:
+					out.append(_xz_line(route.get("polyline", [])))
+		return out
 	return []
+
+
+## Tidewake's main-path crossings between islands, drawn as dashed sea lanes
+## so the player sees how the islands connect (P2-002, Tidewake has no road
+## network). Optional detours stay off the map until a later reveal exists.
+func _sea_lane_polylines(realm_id: String) -> Array:
+	if realm_id != "water":
+		return []
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
+	var out: Array = []
+	if parsed is Dictionary:
+		for route: Variant in parsed.get("water_routes", []):
+			if route is Dictionary and route.get("main_path") == true and str(route.get("choice", "")) == "sheltered":
+				out.append(_xz_line(route.get("polyline", [])))
+	return out
+
+
+## P2-002 Tidewake: there is no baked heightmap for the archipelago, so the
+## map draws a simple chart from the authored islands (centre, shore radius,
+## beach width): sea, a sand rim and a green interior, at 8 m per pixel.
+func _tidewake_chart(map_state: RefCounted) -> Texture2D:
+	var extent := bounds_for_map(map_state)
+	var origin := Vector2(float(extent.get("min_x", 0.0)), float(extent.get("min_z", 0.0)))
+	var span := Vector2(float(extent.get("max_x", 0.0)) - origin.x, float(extent.get("max_z", 0.0)) - origin.y)
+	if span.x <= 0.0 or span.y <= 0.0:
+		return null
+	var metres := 8.0
+	var size := Vector2i(int(ceil(span.x / metres)), int(ceil(span.y / metres)))
+	var sea := Color("#2c6f86")
+	var shallows := Color("#4fa3b2")
+	var sand := Color("#d8c08a")
+	var grass := Color("#6f9a4e")
+	var image := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
+	image.fill(sea)
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
+	for island: Variant in (parsed.get("islands", []) if parsed is Dictionary else []):
+		if not island is Dictionary:
+			continue
+		var centre_raw: Array = island.get("center_xz_m", [0.0, 0.0])
+		var centre := (Vector2(float(centre_raw[0]), float(centre_raw[1])) - origin) / metres
+		var radius := float(island.get("shore_radius_m", 100.0)) / metres
+		var beach := float(island.get("coast_beach_width_m", 20.0)) / metres
+		var reach := int(ceil(radius + 6.0))
+		for y in range(maxi(0, int(centre.y) - reach), mini(size.y, int(centre.y) + reach + 1)):
+			for x in range(maxi(0, int(centre.x) - reach), mini(size.x, int(centre.x) + reach + 1)):
+				var d := Vector2(x, y).distance_to(centre)
+				if d <= radius - beach:
+					image.set_pixel(x, y, grass)
+				elif d <= radius:
+					image.set_pixel(x, y, sand)
+				elif d <= radius + 5.0:
+					image.set_pixel(x, y, shallows)
+	return ImageTexture.create_from_image(image)
+
+
+static func _xz_line(points: Variant) -> PackedVector2Array:
+	var line := PackedVector2Array()
+	if points is Array:
+		for point: Variant in points:
+			if point is Array and (point as Array).size() >= 3:
+				line.append(Vector2(float(point[0]), float(point[2])))
+	return line
 
 
 func _icon_texture(icon_name: String) -> Texture2D:
@@ -2046,7 +2211,7 @@ func _draw_realm_link(canvas: Control, map_rect: Rect2) -> void:
 	canvas.draw_arc(point, size * 0.62, 0.0, TAU, 24, accent, 2.5, true)
 
 	if _region_font == null:
-		_region_font = load(UITokens.FONT_PATH)
+		_region_font = _canvas_label_font()
 	if _region_font != null:
 		var baseline := point + Vector2(-size * 0.5, size * 0.5 + 24.0)
 		_draw_string_legible(canvas, _region_font, baseline, label, HORIZONTAL_ALIGNMENT_LEFT, 280.0, CANVAS_LABEL_FONT_SIZE, UITokens.TEXT_PRIMARY)
@@ -2097,3 +2262,233 @@ static func label_core_colour(colour: Color) -> Color:
 	var lifted := colour.lerp(Color(1.0, 1.0, 1.0), t)
 	lifted.a = colour.a
 	return lifted
+
+
+var _cloud_tiles: Dictionary = {}
+
+
+## A seamless cloud tile in the displayed realm's fog tones, for the canvas
+## outside the realm rectangle.
+func _cloud_tile() -> Texture2D:
+	var realm := _display_realm()
+	if _cloud_tiles.has(realm):
+		return _cloud_tiles[realm]
+	var tones: Dictionary = _cloud_fog.get("tones", {})
+	var tone: Array = tones.get(realm, tones.get("default", ["#1b2a33", "#3a5361"]))
+	var deep := Color(str(tone[0]))
+	var light := Color(str(tone[1]))
+	var noise := FastNoiseLite.new()
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise.seed = 1022
+	noise.frequency = float(_cloud_fog.get("tile_frequency", 0.012))
+	noise.fractal_octaves = 3
+	var size := int(_cloud_fog.get("tile_px", 256))
+	var gray := noise.get_seamless_image(size, size, false, false, 0.1, true)
+	var image := Image.create(size, size, false, Image.FORMAT_RGB8)
+	for y in size:
+		for x in size:
+			image.set_pixel(x, y, deep.lerp(light, smoothstep(0.25, 0.85, gray.get_pixel(x, y).r)))
+	var tex := ImageTexture.create_from_image(image)
+	_cloud_tiles[realm] = tex
+	return tex
+
+
+## `cloud_fog`: unsurveyed cells stay opaque (nothing beneath shows, OW3) but
+## carry a two-tone cloud pattern in the realm's tone; surveyed cells are clear,
+## and cells bordering them fade so the survey edge reads soft.
+func _paint_cloud_fog(image: Image, visited: PackedByteArray, grid_x: int, grid_z: int) -> void:
+	var tones: Dictionary = _cloud_fog.get("tones", {})
+	var tone: Array = tones.get(_display_realm(), tones.get("default", ["#1b2a33", "#3a5361"]))
+	var deep := Color(str(tone[0]))
+	var light := Color(str(tone[1]))
+	var noise := FastNoiseLite.new()
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise.seed = 1022
+	noise.frequency = float(_cloud_fog.get("frequency", 0.035))
+	noise.fractal_octaves = 3
+	var noise_bytes: PackedByteArray = noise.get_image(grid_x, grid_z, false, false, true).get_data()
+	var palette: Array[Color] = []
+	for i in 16:
+		var t := smoothstep(0.25, 0.85, float(i) / 15.0)
+		palette.append(deep.lerp(light, t))
+	# Feather: alpha ramps up over `feather_cells` from the survey line, from a
+	# chamfer distance computed only inside the surveyed bounding box (plus the
+	# feather), so a large unsurveyed realm costs one plain pass.
+	var feather := maxi(1, int(_cloud_fog.get("feather_cells", 3)))
+	var min_x := grid_x
+	var min_z := grid_z
+	var max_x := -1
+	var max_z := -1
+	for iz in grid_z:
+		var row := iz * grid_x
+		for ix in grid_x:
+			if visited[row + ix] == 1:
+				min_x = mini(min_x, ix)
+				max_x = maxi(max_x, ix)
+				min_z = mini(min_z, iz)
+				max_z = maxi(max_z, iz)
+	var dist := PackedInt32Array()
+	var bx := 0
+	var bz := 0
+	var bw := 0
+	var bh := 0
+	if max_x >= 0:
+		bx = maxi(0, min_x - feather)
+		bz = maxi(0, min_z - feather)
+		bw = mini(grid_x, max_x + feather + 1) - bx
+		bh = mini(grid_z, max_z + feather + 1) - bz
+		dist.resize(bw * bh)
+		var far := 1 << 20
+		for z in bh:
+			for x in bw:
+				dist[z * bw + x] = 0 if visited[(bz + z) * grid_x + bx + x] == 1 else far
+		for z in bh:
+			for x in bw:
+				var d := dist[z * bw + x]
+				if x > 0: d = mini(d, dist[z * bw + x - 1] + 3)
+				if z > 0:
+					d = mini(d, dist[(z - 1) * bw + x] + 3)
+					if x > 0: d = mini(d, dist[(z - 1) * bw + x - 1] + 4)
+					if x + 1 < bw: d = mini(d, dist[(z - 1) * bw + x + 1] + 4)
+				dist[z * bw + x] = d
+		for z in range(bh - 1, -1, -1):
+			for x in range(bw - 1, -1, -1):
+				var d := dist[z * bw + x]
+				if x + 1 < bw: d = mini(d, dist[z * bw + x + 1] + 3)
+				if z + 1 < bh:
+					d = mini(d, dist[(z + 1) * bw + x] + 3)
+					if x + 1 < bw: d = mini(d, dist[(z + 1) * bw + x + 1] + 4)
+					if x > 0: d = mini(d, dist[(z + 1) * bw + x - 1] + 4)
+				dist[z * bw + x] = d
+	var ramp := float(feather * 3)
+	var data := PackedByteArray()
+	data.resize(grid_x * grid_z * 4)
+	for iz in grid_z:
+		var row := iz * grid_x
+		for ix in grid_x:
+			var at := row + ix
+			if visited[at] == 1:
+				continue  # transparent: resize() zero-fills
+			var o := at * 4
+			var colour := palette[noise_bytes[at] >> 4]
+			var alpha := 1.0
+			if ix >= bx and ix < bx + bw and iz >= bz and iz < bz + bh:
+				alpha = clampf(float(dist[(iz - bz) * bw + ix - bx]) / ramp, 0.25, 1.0)
+			data[o] = int(colour.r8)
+			data[o + 1] = int(colour.g8)
+			data[o + 2] = int(colour.b8)
+			data[o + 3] = int(alpha * 255.0)
+	image.set_data(grid_x, grid_z, false, Image.FORMAT_RGBA8, data)
+
+
+## `painted_chart`: the displayed realm's surveyed land as a painted chart,
+## sampled from the loaded world's own `ground_height_at` (only when that world
+## IS the displayed realm; otherwise the existing bake path answers). Hill
+## shading from the north-west, contour lines, a coast rim and the realm's
+## palette (low/mid/high land, shallow/deep water, void beyond cliff edges).
+func _painted_chart(realm_id: String, world: Node) -> Texture2D:
+	if _painted_cache.has(realm_id):
+		return _painted_cache[realm_id]
+	if world == null or realm_id != _player_realm():
+		return null
+	if _chart_cfg.has("realms") and not (_chart_cfg.realms as Array).has(realm_id):
+		return null
+	return paint_chart(realm_id, world, bounds_for_map(_realm_map_state(realm_id)), _chart_cfg)
+
+
+## Shared with the HUD minimap (hud.json `minimap_realm_terrain`): one cached
+## chart per realm, painted from `world` (which must BE that realm).
+static func paint_chart(realm_id: String, world: Node, extent: Dictionary, cfg: Dictionary) -> Texture2D:
+	if _painted_cache.has(realm_id):
+		return _painted_cache[realm_id]
+	if world == null or not world.has_method("ground_height_at"):
+		return null
+	var origin := Vector2(float(extent.get("min_x", 0.0)), float(extent.get("min_z", 0.0)))
+	var span := Vector2(float(extent.get("max_x", 0.0)) - origin.x, float(extent.get("max_z", 0.0)) - origin.y)
+	if span.x <= 0.0 or span.y <= 0.0:
+		return null
+	var long_px := float(cfg.get("long_side_px", 360))
+	var step := maxf(span.x, span.y) / long_px
+	var w := maxi(8, int(ceil(span.x / step)))
+	var h := maxi(8, int(ceil(span.y / step)))
+	var palettes: Dictionary = cfg.get("palettes", {})
+	var pal: Dictionary = palettes.get(realm_id, palettes.get("default", {}))
+	var low := Color(str(pal.get("low", "#5f8f4a")))
+	var mid := Color(str(pal.get("mid", "#9aa45e")))
+	var high := Color(str(pal.get("high", "#d8cfae")))
+	var shallow := Color(str(pal.get("shallow", "#4fa8bf")))
+	var deep := Color(str(pal.get("deep", "#1f5873")))
+	var void_colour := Color(str(pal.get("void", "#9cc6d6")))
+	var sea_level := float(pal.get("sea_level", -INF)) if pal.has("sea_level") else -INF
+	if realm_id == "meadows":
+		var terrain: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+		if terrain is Dictionary and (terrain.get("water", {}) as Dictionary).has("level"):
+			sea_level = float(terrain.water.level)
+	var heights := PackedFloat32Array()
+	heights.resize(w * h)
+	var lo := INF
+	var hi := -INF
+	for z in h:
+		for x in w:
+			var v := float(world.call("ground_height_at", origin.x + (x + 0.5) * step, origin.y + (z + 0.5) * step))
+			# Off-plate Cloudreach samples read -INF, not NaN: both are void.
+			if not is_finite(v):
+				v = NAN
+			heights[z * w + x] = v
+			if not is_nan(v) and v >= sea_level:
+				lo = minf(lo, v)
+				hi = maxf(hi, v)
+	if lo == INF:
+		return null
+	hi = maxf(hi, lo + 1.0)
+	var light := Vector3(-0.55, 0.75, -0.45).normalized()
+	var relief := float(cfg.get("relief", 2.5))
+	var contour := maxf(1.0, float(cfg.get("contour_m", (hi - lo) / 10.0)))
+	var image := Image.create(w, h, false, Image.FORMAT_RGB8)
+	for z in h:
+		for x in w:
+			var v := heights[z * w + x]
+			var colour: Color
+			if is_nan(v):
+				colour = void_colour
+			elif v < sea_level:
+				colour = shallow.lerp(deep, clampf((sea_level - v) / float(pal.get("deep_m", 6.0)), 0.0, 1.0))
+			else:
+				var t := clampf((v - lo) / (hi - lo), 0.0, 1.0)
+				colour = low.lerp(mid, t / 0.5) if t < 0.5 else mid.lerp(high, (t - 0.5) / 0.5)
+				var e := _chart_height(heights, w, h, x + 1, z, v)
+				var wv := _chart_height(heights, w, h, x - 1, z, v)
+				var s := _chart_height(heights, w, h, x, z + 1, v)
+				var n := _chart_height(heights, w, h, x, z - 1, v)
+				var normal := Vector3((wv - e) * relief / (2.0 * step), 1.0, (n - s) * relief / (2.0 * step)).normalized()
+				colour = colour * lerpf(0.66, 1.14, clampf(normal.dot(light), 0.0, 1.0))
+				if floori(v / contour) != floori(e / contour) or floori(v / contour) != floori(s / contour):
+					colour = colour.darkened(0.16)
+				if _chart_is_edge(heights, w, h, x, z, sea_level):
+					colour = colour.darkened(0.38)
+			colour.a = 1.0
+			image.set_pixel(x, z, colour)
+	image.resize(w * 3, h * 3, Image.INTERPOLATE_BILINEAR)
+	var tex := ImageTexture.create_from_image(image)
+	_painted_cache[realm_id] = tex
+	return tex
+
+
+static func _chart_height(heights: PackedFloat32Array, w: int, h: int, x: int, z: int, fallback: float) -> float:
+	if x < 0 or z < 0 or x >= w or z >= h:
+		return fallback
+	var v := heights[z * w + x]
+	return fallback if is_nan(v) else v
+
+
+## Land cell beside water or void: the coast/cliff rim.
+static func _chart_is_edge(heights: PackedFloat32Array, w: int, h: int, x: int, z: int, sea_level: float) -> bool:
+	for d: Vector2i in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		var nx := x + d.x
+		var nz := z + d.y
+		if nx < 0 or nz < 0 or nx >= w or nz >= h:
+			continue
+		var v := heights[nz * w + nx]
+		if is_nan(v) or v < sea_level:
+			return true
+	return false

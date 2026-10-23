@@ -127,6 +127,11 @@ func _capture_row(_row: Dictionary) -> void:
 	if _place(placer, game, "campfire", anchor, active) == null:
 		return
 	await _settle()
+	if OS.get_cmdline_user_args().has("--gamepad"):
+		# Show what a pad player sees (glyphs follow the last device); no input
+		# is synthesised. Same switch as phase2_capture_ui.gd --gamepad.
+		game.set("_last_input_was_gamepad", true)
+		_manifest["gamepad_glyphs"] = true
 	placer.call("_open_craft_panel")
 	_craft_panel = placer.get("_craft_panel") as CanvasLayer
 	if _craft_panel == null:

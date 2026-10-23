@@ -112,6 +112,10 @@ func build() -> void:
 		chip.border_color = UITokens.WARNING
 		chip.set_border_width_all(2)
 		chip.border_width_left = 8
+		if _open_seats_cfg().get("silhouettes") == true:
+			# A notice, not an alarm: one warm edge, no full outline.
+			chip.set_border_width_all(0)
+			chip.border_width_left = 6
 		chip.set_corner_radius_all(8)
 		chip.content_margin_left = 20.0
 		chip.content_margin_right = 14.0
@@ -207,6 +211,20 @@ func _add_open_seats() -> void:
 			mark.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		line.add_child(label)
+		if cfg.get("silhouettes") == true:
+			# P2-007 r3: each open seat is a trainer-sized card with a dark
+			# silhouette where a portrait will be, matching the card above.
+			var shadow := _portrait("trainer")
+			shadow.modulate = Color(0.16, 0.24, 0.28, 1.0)
+			line.remove_child(mark)
+			mark.queue_free()
+			line.add_child(shadow)
+			line.move_child(shadow, 0)
+			label.text = str(cfg.get("label", "Open seat"))
+			label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+			if unavailable:
+				label.text += "\n" + str(cfg.get("unavailable_hint", "Joining is unavailable on this network"))
+				label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 		var card := _panel(line, int(cfg.get("card_margin", 6)))
 		card.modulate = Color(1.0, 1.0, 1.0, float(cfg.get("unavailable_alpha", 0.55) if unavailable else cfg.get("card_alpha", 0.85)))
 		_list.add_child(card)

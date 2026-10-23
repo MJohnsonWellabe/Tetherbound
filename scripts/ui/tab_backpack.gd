@@ -713,6 +713,8 @@ func _build_preview() -> VBoxContainer:
 	panel.add_child(heading)
 	var navigation := Label.new()
 	navigation.text = "D-pad / arrows: choose a slot"
+	if _device_hints_on() and INPUT_GLYPH.using_gamepad():
+		navigation.text = "D-pad: choose a slot"
 	navigation.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 	navigation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	panel.add_child(navigation)
@@ -2822,6 +2824,10 @@ func _verb_hint(id: String, kind: String, def: Dictionary, tool_max: int) -> Str
 ## glyph. Both halves come off the InputMap, so a rebind in Settings cannot
 ## make either one lie.
 func _verb_glyph(action: String) -> String:
+	if _device_hints_on() and INPUT_GLYPH.using_gamepad():
+		# menu.json `device_hints` (P2-001 r3 judges: "G / Drop" keyboard text
+		# while a pad was active): the active device's glyph alone.
+		return INPUT_GLYPH.icon(action, int(_config().get("device_hints", {}).get("glyph_px", 30)), Color.WHITE, "gamepad")
 	return "%s / %s" % [
 		INPUT_GLYPH.key_name_for_action(action),
 		INPUT_GLYPH.icon(action, 22, Color.WHITE, "gamepad"),
@@ -2915,6 +2921,11 @@ func _encounter_director() -> Node:
 	if world == null:
 		return null
 	return world.get_node_or_null(^"EncounterDirector")
+
+
+func _device_hints_on() -> bool:
+	var hints: Variant = _config().get("device_hints", {})
+	return hints is Dictionary and hints.get("enabled") == true
 
 
 func _config() -> Dictionary:

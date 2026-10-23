@@ -69,6 +69,10 @@ func _run() -> void:
 		if not _write_lifecycle_manifest():
 			quit(1)
 			return
+	if "--gamepad" in OS.get_cmdline_user_args():
+		# Controller-first: show what a pad player sees (glyphs follow the
+		# last device; the pilot's action_press synthesises no device event).
+		root.get_node("Game").set("_last_input_was_gamepad", true)
 	seed(_capture_seed)
 	await super._run()
 

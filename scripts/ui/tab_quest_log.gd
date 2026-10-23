@@ -176,6 +176,10 @@ func _section(parent: VBoxContainer, heading_text: String) -> VBoxContainer:
 	heading.text = heading_text
 	heading.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
 	heading.add_theme_color_override("font_color", UITokens.TEXT_MUTED)
+	if _empty_inline_enabled():
+		# P2-007 r2: section headings read as headings at handheld scale.
+		heading.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+		heading.add_theme_color_override("font_color", UITokens.WARNING)
 	parent.add_child(heading)
 
 	var list := VBoxContainer.new()
@@ -253,6 +257,16 @@ func _fill(list: VBoxContainer, entries: Array, empty_text: String, current: int
 	if box != null and inline_empty:
 		if not box.has_meta(&"bordered_style"):
 			box.set_meta(&"bordered_style", box.get_theme_stylebox("panel"))
+		if current >= 0 and not entries.is_empty():
+			# P2-007 r3: the tracked story step is the hero card, with a warm
+			# progression edge, so the panel has one clear focus.
+			var hero := (box.get_meta(&"bordered_style") as StyleBox).duplicate() as StyleBox
+			if hero is StyleBoxFlat:
+				(hero as StyleBoxFlat).border_color = UITokens.WARNING
+				(hero as StyleBoxFlat).border_width_left = 6
+				(hero as StyleBoxFlat).content_margin_top = 18.0
+				(hero as StyleBoxFlat).content_margin_bottom = 18.0
+				box.set_meta(&"bordered_style", hero)
 		# P2-007: an empty section reads as one dim line, not a bordered box.
 		box.add_theme_stylebox_override("panel", StyleBoxEmpty.new() if entries.is_empty() \
 			else box.get_meta(&"bordered_style") as StyleBox)
@@ -271,7 +285,7 @@ func _fill(list: VBoxContainer, entries: Array, empty_text: String, current: int
 		var done := bool(entry.get("done", false))
 		var row := Label.new()
 		row.text = "%s  %s" % [DONE_MARK if done else OPEN_MARK, str(entry.get("label", ""))]
-		row.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+		row.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT if _empty_inline_enabled() else UITokens.FONT_BODY)
 		row.add_theme_color_override(
 			"font_color", UITokens.TEXT_MUTED if done else UITokens.TEXT_PRIMARY
 		)
@@ -291,7 +305,7 @@ func _fill(list: VBoxContainer, entries: Array, empty_text: String, current: int
 		# instruction nobody can read at handheld scale is the OP23-04 defect
 		# happening one layer further in.
 		hint.text = "     %s" % how
-		hint.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+		hint.add_theme_font_size_override("font_size", UITokens.FONT_READ if _empty_inline_enabled() else UITokens.FONT_LABEL)
 		hint.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 		hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL

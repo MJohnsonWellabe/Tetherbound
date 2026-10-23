@@ -65,7 +65,10 @@ const GLYPHS := {
 	## so it stays an empty entry and degrades to the honest "L3" pad-button
 	## text `pad_button_name_for_verb` already produces for that case.
 	"map_realm_next": {"gamepad": "xbox_stick_r_press.png"},
-	"map_realm_prev": {},
+	## L3 had no press glyph in the vendored subset; UI lane (22 Oct) drew
+	## xbox_stick_l_press/xbox_stick_l/xbox_stick_r in the same white
+	## silhouette style (assets/ui/input_prompts/AGENT_DRAWN.md).
+	"map_realm_prev": {"gamepad": "xbox_stick_l_press.png"},
 	## The starting torch (owner playtest report: night is too dark, and the
 	## player must have a torch from the beginning). Manual override on top of
 	## `scripts/player/torch.gd`'s own automatic dusk/dawn behaviour.
@@ -554,7 +557,7 @@ const _PAD_FILES := {
 	JOY_BUTTON_X: "xbox_button_x.png", JOY_BUTTON_Y: "xbox_button_y.png",
 	JOY_BUTTON_LEFT_SHOULDER: "xbox_lb.png", JOY_BUTTON_RIGHT_SHOULDER: "xbox_rb.png",
 	JOY_BUTTON_BACK: "xbox_button_view.png", JOY_BUTTON_START: "xbox_button_start.png",
-	JOY_BUTTON_RIGHT_STICK: "xbox_stick_r_press.png",
+	JOY_BUTTON_RIGHT_STICK: "xbox_stick_r_press.png", JOY_BUTTON_LEFT_STICK: "xbox_stick_l_press.png",
 	JOY_BUTTON_DPAD_UP: "xbox_dpad_up.png", JOY_BUTTON_DPAD_DOWN: "xbox_dpad_down.png",
 	JOY_BUTTON_DPAD_LEFT: "xbox_dpad_left.png", JOY_BUTTON_DPAD_RIGHT: "xbox_dpad_right.png",
 }
@@ -576,7 +579,15 @@ static func glyph_file_for_event(event: InputEvent) -> String:
 	if event is InputEventJoypadButton:
 		return str(_PAD_FILES.get((event as InputEventJoypadButton).button_index, ""))
 	if event is InputEventJoypadMotion:
-		match (event as InputEventJoypadMotion).axis:
+		var motion := event as InputEventJoypadMotion
+		var negative := motion.axis_value < 0.0
+		match motion.axis:
 			JOY_AXIS_TRIGGER_LEFT: return "xbox_lt.png"
 			JOY_AXIS_TRIGGER_RIGHT: return "xbox_rt.png"
+			# Stick directions (agent-drawn, AGENT_DRAWN.md): Godot's Y axes
+			# read negative for up.
+			JOY_AXIS_LEFT_X: return "xbox_stick_l_left.png" if negative else "xbox_stick_l_right.png"
+			JOY_AXIS_LEFT_Y: return "xbox_stick_l_up.png" if negative else "xbox_stick_l_down.png"
+			JOY_AXIS_RIGHT_X: return "xbox_stick_r_left.png" if negative else "xbox_stick_r_right.png"
+			JOY_AXIS_RIGHT_Y: return "xbox_stick_r_up.png" if negative else "xbox_stick_r_down.png"
 	return ""

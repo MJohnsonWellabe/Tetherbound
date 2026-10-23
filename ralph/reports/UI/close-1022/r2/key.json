@@ -1,0 +1,71 @@
+{
+ "Wf": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Na": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Bz": {
+  "anchor": false,
+  "label": "P2-007 panels 1",
+  "A": "P2-007_panels_1_before.jpg",
+  "B": "P2-007_panels_1_after.jpg"
+ },
+ "To": {
+  "anchor": false,
+  "label": "P2-004 HUD",
+  "A": "P2-004_HUD_after.jpg",
+  "B": "P2-004_HUD_before.jpg"
+ },
+ "Ec": {
+  "anchor": false,
+  "label": "P2-031 settings",
+  "A": "P2-031_settings_before.jpg",
+  "B": "P2-031_settings_after.jpg"
+ },
+ "Hf": {
+  "anchor": false,
+  "label": "P2-002 map 2",
+  "A": "P2-002_map_2_after.jpg",
+  "B": "P2-002_map_2_before.jpg"
+ },
+ "Se": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Fm": {
+  "anchor": false,
+  "label": "P2-001 shell 1",
+  "A": "P2-001_shell_1_before.jpg",
+  "B": "P2-001_shell_1_after.jpg"
+ },
+ "Jj": {
+  "anchor": false,
+  "label": "P2-007 panels 2",
+  "A": "P2-007_panels_2_after.jpg",
+  "B": "P2-007_panels_2_before.jpg"
+ },
+ "Ne": {
+  "anchor": false,
+  "label": "P2-095 craft",
+  "A": "P2-095_craft_before.jpg",
+  "B": "P2-095_craft_after.jpg"
+ },
+ "Ny": {
+  "anchor": false,
+  "label": "P2-002 map 1",
+  "A": "P2-002_map_1_before.jpg",
+  "B": "P2-002_map_1_after.jpg"
+ },
+ "Jr": {
+  "anchor": false,
+  "label": "P2-001 shell 2",
+  "A": "P2-001_shell_2_after.jpg",
+  "B": "P2-001_shell_2_before.jpg"
+ }
+}
