@@ -1,0 +1,35 @@
+[
+ {
+  "label": "F36 terrapup b1",
+  "a": "<scratch>/b1/sides/terrapup-live.png",
+  "b": "<scratch>/b1/sides/terrapup-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, surface, face, scale against the ruler - and whether the hit reads as a hit and the faint reads as down without a label, grounded, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+  ]
+ },
+ {
+  "label": "F36 bramblebun b1",
+  "a": "<scratch>/b1/sides/bramblebun-live.png",
+  "b": "<scratch>/b1/sides/bramblebun-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, surface, face, scale against the ruler - and whether the hit reads as a hit and the faint reads as down without a label, grounded, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+  ]
+ },
+ {
+  "label": "F36 riverdrake b1",
+  "a": "<scratch>/b1/sides/riverdrake-live.png",
+  "b": "<scratch>/b1/sides/riverdrake-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, surface, face, scale against the ruler - and whether the hit reads as a hit and the faint reads as down without a label, grounded, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+  ]
+ }
+]
