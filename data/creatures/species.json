@@ -1922,7 +1922,7 @@
         "height": 4.25,
         "radius": 1.4875,
         "footprint_allowance": 5.0,
-        "model": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native.glb",
+        "field_emission": 1.5, "field_rim": 0.25, "_why_field_close1022": "ON by coordinator decision for the 22 Oct wind-down; value lift + rim b10 corrected prompt: 6.20 vs 6.13 live, within judge noise, below the bar.", "model": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "animations": {
@@ -1939,7 +1939,6 @@
           "ride": "ride"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md.",
-        "field_emission": 0.0,
         "rest_model_position_offset": 0.0,
         "colourway_source_species": "voltarach_native_review"
       },
@@ -2172,7 +2171,7 @@
         "height": 3.4,
         "radius": 1.19,
         "footprint_allowance": 3.4,
-        "model": "res://assets/creatures/tetherbound/tanglevolt/candidate/models/creature_tanglevolt_native.glb", "_comment_model_close1020": "F36#0 close-1020 gap round: native candidate (candidate/source/species_candidate.json); three code-blind judges 7.17 vs 6.77 installed at the fight camera (CPU-provisional).",
+        "field_emission": 1.45, "field_rim": 0.25, "_why_field_close1022": "ON by coordinator decision for the 22 Oct wind-down; value lift + rim b10 corrected prompt: 6.60 vs 5.84 live, below the bar.", "model": "res://assets/creatures/tetherbound/tanglevolt/candidate/models/creature_tanglevolt_native.glb", "_comment_model_close1020": "F36#0 close-1020 gap round: native candidate (candidate/source/species_candidate.json); three code-blind judges 7.17 vs 6.77 installed at the fight camera (CPU-provisional).",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "animations": {
@@ -2189,7 +2188,6 @@
           "ride": "ride"
         },
         "_comment_placeholder_stats": "T1-CREATURE-RIG-FIX-2026-09-07: same failure and fix as stormbrush's comment above -- rig_quadruped.py's bone-heat weighting left 100% of vertices unweighted on the raw mesh; strip_textures.py -> cleanup_mesh.py (clean manifold donor) -> rig_quadruped.py on the donor (0 unweighted) -> skin_transfer.py onto the real textured mesh (0 unweighted after transfer) -> animate_quadruped.py, verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md.",
-        "field_emission": 0.0,
         "rest_model_position_offset": 0.0,
         "colourway_source_species": "tanglevolt_native_review"
       },

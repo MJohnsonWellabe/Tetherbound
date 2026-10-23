@@ -197,7 +197,22 @@
    }
   },
   "fulgocobra": {
-    "ordinary": {"repaint_strength": 0.0, "base_value_scale": 0.85, "accent_hue": 0.115, "accent_saturation": 0.62, "accent_value": 0.9, "accent_source_hue": [0.04, 0.19], "accent_source_value": 0.44, "accent_source_saturation": 0.27, "accent_energy": 0.42}
+   "ordinary": {
+    "repaint_strength": 0.0,
+    "base_value_scale": 1.3,
+    "accent_hue": 0.115,
+    "accent_saturation": 0.62,
+    "accent_value": 0.9,
+    "accent_source_hue": [
+     0.04,
+     0.19
+    ],
+    "accent_source_value": 0.44,
+    "accent_source_saturation": 0.27,
+    "accent_energy": 0.42,
+    "rim_amount": 0.25
+   },
+   "_why_close1022": "ON by coordinator decision for the 22 Oct wind-down; ordinary value 0.85 -> 1.3 + rim 0.25, b10 corrected prompt 6.24 vs 6.20 live (within judge noise), below the bar."
   },
   "stormraven": {
    "ordinary": {

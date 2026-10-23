@@ -1,0 +1,52 @@
+{
+ "Tp": {
+  "anchor": false,
+  "label": "F36 voltarach meshy1022",
+  "A": "voltarach-base.png",
+  "B": "voltarach-c.png"
+ },
+ "Hl": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "Lk": {
+  "anchor": false,
+  "label": "F36 mirejaw meshy1022",
+  "A": "mirejaw-c.png",
+  "B": "mirejaw-base.png"
+ },
+ "Hn": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Tg": {
+  "anchor": false,
+  "label": "F36 stormcapra meshy1022",
+  "A": "stormcapra-c.png",
+  "B": "stormcapra-base.png"
+ },
+ "Wm": {
+  "anchor": false,
+  "label": "F36 galecrest meshy1022",
+  "A": "galecrest-base.png",
+  "B": "galecrest-c.png"
+ },
+ "As": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Wn": {
+  "anchor": false,
+  "label": "F36 tanglevolt meshy1022",
+  "A": "tanglevolt-c.png",
+  "B": "tanglevolt-base.png"
+ },
+ "Rb": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}
