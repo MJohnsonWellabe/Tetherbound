@@ -10,6 +10,7 @@ const RENEWABLE_SITES := preload("res://scripts/world/renewable_site_catalog.gd"
 const VOLTCAP_FINISH := preload("res://scripts/world/stormwood_voltcap_finish.gd")
 
 const DATA_PATH := "res://data/config/stormwood_harvests.json"
+const VEGETATION_PATH := "res://data/config/stormwood_vegetation.json"
 const REALM_ID := "stormwood"
 
 var world: Node3D
@@ -177,6 +178,7 @@ func _mount_site(spec: Dictionary) -> void:
 		"realm": REALM_ID,
 	})
 	add_material_cue(node, str(spec.get("item", "")), _catalogue.get("material_cues", {}), _ground_height)
+	apply_scatter_leaf_policy(node.get("_visual") as Node3D, str(spec.get("model", "")))
 	if bool(_voltcap_profile.get("enabled", false)) \
 			and str(spec.get("item", "")) == str(_voltcap_profile.get("item", "voltcap")) \
 			and str(spec.get("model", "")) == str(_voltcap_profile.get("model", "")):
@@ -189,6 +191,42 @@ func _ground_height(x: float, z: float) -> float:
 	if world != null and world.has_method("ground_height_at"):
 		return float(world.call("ground_height_at", x, z))
 	return 0.0
+
+
+## F41#5: Bush_Common's installed leaf sheet is crimson. Scattered bushes get
+## the vegetation layer's green retint/retexture, but harvest nodes mounted the
+## raw model, so a hot-pink bush stood on the Hollows horizon. Reuse the same
+## layer policy (stormwood_vegetation.json) on the node's own visual.
+static func apply_scatter_leaf_policy(visual: Node3D, model: String) -> int:
+	if visual == null:
+		return 0
+	var layers: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(VEGETATION_PATH)) as Dictionary).get("layers", {})
+	var policy: Dictionary = {}
+	for layer: Dictionary in layers.values():
+		if model in (layer.get("models", []) as Array) and not (layer.get("retint", {}) as Dictionary).is_empty():
+			policy = layer
+			break
+	if policy.is_empty():
+		return 0
+	var meshes: Array[Node] = visual.find_children("*", "MeshInstance3D", true, false)
+	if visual is MeshInstance3D:
+		meshes.append(visual)
+	var changed := 0
+	for mesh_node: MeshInstance3D in meshes:
+		if mesh_node.mesh == null:
+			continue
+		for surface in mesh_node.mesh.get_surface_count():
+			var source := mesh_node.mesh.surface_get_material(surface) as BaseMaterial3D
+			if source == null or not (policy.retint as Dictionary).has(source.resource_name):
+				continue
+			var tinted := source.duplicate() as BaseMaterial3D
+			tinted.albedo_color = Color(str(policy.retint[source.resource_name]))
+			var swap := str((policy.get("retexture", {}) as Dictionary).get(source.resource_name, ""))
+			if not swap.is_empty():
+				tinted.albedo_texture = load(swap) as Texture2D
+			mesh_node.set_surface_override_material(surface, tinted)
+			changed += 1
+	return changed
 
 
 ## P2-046: a visual-only cue so a node reads as its named material (a plain
