@@ -6,7 +6,10 @@ const FIELD := preload("res://scripts/world/stormwood_glass_field.gd")
 func test_scar_relief_stays_off_without_changing_existing_scars() -> void:
 	var field := FIELD.new()
 	field.config = JSON.parse_string(FileAccess.get_file_as_string(FIELD.CONFIG_PATH))
-	assert_false(bool(field.config.scar_relief_candidate.enabled))
+	# Ships ON by coordinator decision (22 Oct wind-down: r11 beat control);
+	# the OFF branch must still leave the existing scars exactly as they were.
+	assert_true(bool(field.config.scar_relief_candidate.enabled), "relief ships ON")
+	field.config.scar_relief_candidate.enabled = false
 	assert_true(bool(field.config.scorched_scars), "existing scar presentation retained")
 	var material: ShaderMaterial = field.call("_fused_material")
 	assert_eq(_effective(material, "sw_normal_strength"), 0.0)

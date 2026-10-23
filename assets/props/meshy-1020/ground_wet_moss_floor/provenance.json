@@ -1,0 +1,33 @@
+{
+  "asset": "Tileable wet mossy forest floor (~4 m tile)",
+  "feature": null,
+  "status": "CANDIDATE - flag-off until its scene passes three-judge visual review",
+  "date": "2026-10-21",
+  "generator": "Meshy API (owner's existing license; no purchase). Concept: image-to-image nano-banana-pro drafted from the listed reference crops; model: multi-image-to-3d ai_model=latest.",
+  "target_size_m": {
+    "tile": 4
+  },
+  "native_glb_extent_units": null,
+  "scale_note": "1024x1024 albedo only (no normal/roughness). ground_wet_moss_floor_albedo_seamless.png has a low-frequency edge-match correction (seam diff 7.4/12.1 -> 6.0/9.3 vs interior 3.8).",
+  "visual_verdict_worker": "Good stylised read: blue-green moss, dark soil, roots, olive leaves, pebbles; near-seamless; repetition of moss clumps visible at 2x2, use with macro variation.",
+  "concept_tasks": [
+    {
+      "kind": "texture",
+      "tag": "c1",
+      "endpoint": "/openapi/v1/text-to-image",
+      "task_id": "01a15c40-1ead-7135-a797-243a6877c145",
+      "status": "SUCCEEDED",
+      "model": "nano-banana-pro",
+      "prompt": "Seamless tileable game texture, perfectly top-down orthographic view, flat even diffuse lighting, no shadows from a single light, no perspective, no horizon, no objects sticking up. Wet mossy ancient forest floor: patches of cool blue-green moss, dark damp soil, thin exposed tree roots snaking across, scattered dark wet fallen leaves in muted olive and brown, a few small pebbles. Stylised hand-painted Palworld-like game art, medium detail readable at a distance, even distribution across the whole square so it repeats without visible seams or a focal point. No red, no text.",
+      "credits": 9,
+      "files": [
+        "/home/user/Tetherbound/assets_raw/props-1020/ground_wet_moss_floor/c1_0.png"
+      ],
+      "date": "2026-10-21",
+      "selected": true
+    }
+  ],
+  "model_tasks": [],
+  "credits_consumed_total": 9,
+  "style_brief": "Palworld/Animo-class stylised family; cool blue-green moss, wet dark bark, aged copper, glass highlights, white-violet lightning; no oxblood/red."
+}

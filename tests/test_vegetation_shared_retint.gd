@@ -10,10 +10,12 @@ func test_stormwood_canopies_share_identical_retint_inputs() -> void:
 	var visibility: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
 		"res://data/config/foliage_camera_visibility.json"))
 	assert_eq(VEGETATION.shared_material_conflicts(cfg.layers, {}, visibility), [])
-	assert_eq(cfg.layers.storm_canopy.models, cfg.layers.giant_canopy.models)
+	# The giant canopy may use its own models (the Meshy giant trees, ON since
+	# the 22 Oct wind-down); every model both layers draw keeps one retint.
 	for model: String in cfg.layers.storm_canopy.models:
-		assert_eq(VEGETATION.retint_policy(model, cfg.layers.storm_canopy),
-			VEGETATION.retint_policy(model, cfg.layers.giant_canopy))
+		if model in cfg.layers.giant_canopy.models:
+			assert_eq(VEGETATION.retint_policy(model, cfg.layers.storm_canopy),
+				VEGETATION.retint_policy(model, cfg.layers.giant_canopy))
 
 
 func test_each_conflicting_retint_input_is_reported() -> void:

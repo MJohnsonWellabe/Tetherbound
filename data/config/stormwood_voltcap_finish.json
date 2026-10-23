@@ -1,5 +1,5 @@
 {
-  "enabled": false,
+  "enabled": true,
   "scope": "client_presentation",
   "item": "voltcap",
   "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",

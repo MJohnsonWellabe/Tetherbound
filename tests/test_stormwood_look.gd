@@ -7,7 +7,10 @@ func test_disabled_profile_is_exact_base() -> void:
 	var base := {"pin_time_of_day": true, "reference_time": "day",
 		"overrides": {"sun": {"energy": 1.4}}}
 	var profile := LOOK.read_config()
-	assert_false(bool(profile.enabled), "unjudged candidate ships OFF")
+	# Ships ON by coordinator decision (22 Oct wind-down: r11 beat control);
+	# a disabled profile must still be the exact base.
+	assert_true(bool(profile.enabled), "look ships ON")
+	profile.enabled = false
 	assert_eq(LOOK.rig_overrides(base, profile), base)
 
 

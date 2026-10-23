@@ -40,9 +40,13 @@ func test_canopy_policy_retints_bark_without_replacing_its_texture() -> void:
 	var bark := _material_after_policy(str(layer.models[0]), "Bark_TwistedTree",
 			layer, vegetation)
 	assert_true(bark != null, "TwistedTree bark material is outside the palette policy")
-	assert_true(bark.albedo_color.is_equal_approx(Color("#8f9580")))
+	# 22 Oct wind-down (Stormwood r11 ON): lighter bark tint over a value-lifted
+	# copy of the installed bark texture, never a flat colour.
+	assert_true(bark.albedo_color.is_equal_approx(Color("#a8977a")))
 	assert_true(bark.albedo_texture != null,
-			"Bark retint must preserve the installed bark texture")
+			"Bark retint must keep a bark texture")
+	assert_eq(bark.albedo_texture.resource_path,
+			"res://assets/environment/stylized_nature/derived/Bark_TwistedTree_lift175.png")
 	vegetation.free()
 
 

@@ -7,6 +7,7 @@ extends "res://tests/test_case.gd"
 ## cross-fade jump, strike flashes gated per peer) rather than any one tuning.
 
 const SURGE := preload("res://scripts/world/stormwood_surge.gd")
+const STORMWOOD_LOOK := preload("res://scripts/world/stormwood_look.gd")
 const WORLD_LOOK := preload("res://scripts/world/world_look.gd")
 const LIGHTNING := preload("res://scripts/world/stormwood_lightning.gd")
 const DAY_CYCLE := preload("res://scripts/world/day_cycle.gd")
@@ -1074,6 +1075,9 @@ func test_rain_anchor_holds_through_jumps_and_eases_on_slopes() -> void:
 
 ## Review: the storm pin's off switch really restores the clock blend.
 func test_pin_off_restores_the_clock_look() -> void:
+	# The Stormwood look profile pins the clock by design ("never acquires a
+	# day/night presentation"); with the profile off, pin off restores the clock.
+	STORMWOOD_LOOK.test_disabled = true
 	var surge := SURGE.new()
 	var art := _art()
 	surge.rules.config.presentation.storm_base.pin_time_of_day = false
@@ -1083,6 +1087,15 @@ func test_pin_off_restores_the_clock_look() -> void:
 	var midnight: Dictionary = surge.base_look_at(art, cycle, 0.0)
 	assert_ne((noon.sky_top as Color).to_html(false), (midnight.sky_top as Color).to_html(false), "the clock look is back")
 	assert_true(float(midnight.night_scale) < 1.0, "night scaling applies again")
+	surge.free()
+	STORMWOOD_LOOK.test_disabled = false
+
+
+func test_the_look_profile_keeps_the_clock_pinned() -> void:
+	var surge := SURGE.new()
+	surge.rules.config.presentation.storm_base.pin_time_of_day = false
+	assert_eq(bool(STORMWOOD_LOOK.read_config().enabled), true, "look ships ON")
+	assert_true(bool(surge.storm_base_config().pin_time_of_day), "the look pins the clock even when the base does not")
 	surge.free()
 
 

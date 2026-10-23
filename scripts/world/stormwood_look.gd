@@ -9,6 +9,8 @@ const DETAIL_CALL := "\n\tsw_surface_detail(ALBEDO, NORMAL, ROUGHNESS, (INV_VIEW
 ## Set only by the committed capture harness before the production world mounts.
 ## This process-local preview never writes a config or a save.
 static var capture_preview := false
+## Set only by tests that need the profile off while the shipped config is ON.
+static var test_disabled := false
 var config: Dictionary = {}
 var _materials: Dictionary = {}
 var _meshes: Dictionary = {}
@@ -25,6 +27,8 @@ static func read_config() -> Dictionary:
 		return {}
 	if capture_preview:
 		parsed["enabled"] = true
+	if test_disabled:
+		parsed["enabled"] = false
 	return parsed
 
 

@@ -1,0 +1,121 @@
+{
+  "asset": "Lightning-scarred dead trunk (~15-18 m)",
+  "feature": null,
+  "status": "CANDIDATE - flag-off until its scene passes three-judge visual review",
+  "date": "2026-10-21",
+  "generator": "Meshy API (owner's existing license; no purchase). Concept: image-to-image nano-banana-pro drafted from the listed reference crops; model: multi-image-to-3d ai_model=latest.",
+  "target_size_m": {
+    "height": "15-18"
+  },
+  "native_glb_extent_units": [
+    1.157,
+    1.902,
+    1.032
+  ],
+  "scale_note": "Native ~1.9 units tall; scale ~8.7x for 16.5 m (base ~10 m incl. root flare, trunk ~4-5 m).",
+  "visual_verdict_worker": "Shape good (split hollow snag, charred interior, jagged top, mossy root flare). The concept's violet glowing glass veins did not survive texturing (v1 and the multiview retexture v1_retex both only show a faint violet tint inside the scar); integration needs an emissive violet vein mask/decal.",
+  "concept_tasks": [
+    {
+      "kind": "concept",
+      "tag": "c1",
+      "endpoint": "/openapi/v1/image-to-image",
+      "task_id": "01a15c3e-6e59-72e2-a120-18dcf641a320",
+      "status": "SUCCEEDED",
+      "model": "nano-banana-pro",
+      "prompt": "Using the reference boards for palette and style, draft a 3D-model concept of a lightning-scarred dead tree trunk: a tall broken snag, the trunk split open down the middle by lightning, charred black inner wood, jagged broken top, a few dead stub branches, violet-black glossy fused glass melted into the scar with faint violet glow in cracks, wet grey-brown outer bark with blue-green moss at the base, flared roots. Show front, side and back views of the same trunk. Stylised Palworld / Animo-class game asset style, clean readable shapes, hand-painted PBR feel. Palette strictly: cool blue-green moss, wet dark brown-grey bark, aged verdigris copper, glass highlights, white-violet lightning glow. No red, no oxblood, no people, no text, no ground plane, plain background, full object visible, centered, consistent lighting.",
+      "refs": [
+        "b_exterior.jpg",
+        "roster_biome.jpg",
+        "b_palette.jpg",
+        "palworld.jpg"
+      ],
+      "multi_view": true,
+      "credits": 9,
+      "files": [
+        "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/concepts/c1_0.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/concepts/c1_1.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/concepts/c1_2.png"
+      ],
+      "error": null,
+      "date": "2026-10-21",
+      "selected": true,
+      "reference_paths": [
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (8,80,608,682) exterior view",
+        "docs/reference/boards-2026-09-06/stormwood-creature-roster-board.png crop (0,0,365,325) Stormwood biome panel",
+        "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (818,712,1162,898) material palette",
+        "docs/reference/palworld-01-boss-fight-forest.jpg (full)"
+      ]
+    }
+  ],
+  "model_tasks": [
+    {
+      "kind": "model",
+      "tag": "v1",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "task_id": "01a15c40-3aa1-7620-8dcc-924c2f217a0b",
+      "input_task_id": "01a15c3e-6e59-72e2-a120-18dcf641a320",
+      "status": "SUCCEEDED",
+      "params": {
+        "ai_model": "latest",
+        "should_remesh": true,
+        "topology": "quad",
+        "target_polycount": 20000,
+        "enable_pbr": true,
+        "should_texture": true,
+        "texture_resolution": "2k",
+        "input_task_id": "01a15c3e-6e59-72e2-a120-18dcf641a320"
+      },
+      "image_files": null,
+      "credits": 30,
+      "files": {
+        "glb": "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/v1/scarred_trunk_v1.glb",
+        "tex_0_base_color": "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/v1/textures/0_base_color.png",
+        "tex_0_metallic": "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/v1/textures/0_metallic.png",
+        "tex_0_roughness": "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/v1/textures/0_roughness.png",
+        "tex_0_normal": "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/v1/textures/0_normal.png",
+        "thumb": "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/v1/thumbnail.png"
+      },
+      "error": null,
+      "date": "2026-10-21",
+      "selected": true,
+      "glb_sha256": "80c936bc2081703a4b8271bd5b142e866656f5aac1865f7ffe012fe93d807c1f"
+    },
+    {
+      "kind": "model",
+      "tag": "v1_retex",
+      "endpoint": "/openapi/v1/retexture",
+      "task_id": "01a15c49-f35a-7100-8539-105a601ba677",
+      "input_task_id": "01a15c40-3aa1-7620-8dcc-924c2f217a0b",
+      "status": "SUCCEEDED",
+      "params": {
+        "ai_model": "meshy-7",
+        "enable_original_uv": true,
+        "enable_pbr": true,
+        "texture_resolution": "2k",
+        "target_formats": [
+          "glb"
+        ],
+        "input_task_id": "01a15c40-3aa1-7620-8dcc-924c2f217a0b"
+      },
+      "style_images": [
+        "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/concepts/c1_2.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/concepts/c1_1.png",
+        "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/concepts/c1_0.png"
+      ],
+      "credits": 10,
+      "files": {
+        "glb": "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/v1_retex/scarred_trunk_v1_retex.glb",
+        "tex_0_base_color": "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/v1_retex/textures/0_base_color.png",
+        "tex_0_metallic": "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/v1_retex/textures/0_metallic.png",
+        "tex_0_roughness": "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/v1_retex/textures/0_roughness.png",
+        "tex_0_normal": "/home/user/Tetherbound/assets_raw/props-1020/scarred_trunk/v1_retex/textures/0_normal.png"
+      },
+      "error": null,
+      "date": "2026-10-21",
+      "selected": true,
+      "glb_sha256": "4bc0f6e9d1c812475832b6e01b5a9e4d447920e553cab43024a079237a4dee9e"
+    }
+  ],
+  "credits_consumed_total": 49,
+  "style_brief": "Palworld/Animo-class stylised family; cool blue-green moss, wet dark bark, aged copper, glass highlights, white-violet lightning; no oxblood/red."
+}
