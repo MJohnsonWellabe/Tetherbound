@@ -6,6 +6,8 @@ Land on main only the files in `LANDABLE.txt`: verdict .md, key and score .json,
 
 **Fix branch:** `tb/vfx-launch` at **b175bda5c** is pushed, with the owner's approval in this chat. It holds the F25#4 launch-stall fix and its hardened test. It is not landed; that is yours.
 
+**Cleanup (22 Oct, evening):** removed my own run outputs (`D:\tb-gpu-runs\out`, `yard`, `judge`; all evidence committed), my worktree `D:\tb-gpu-wt-lane`, my `.artifacts\phase2` and the untracked `gpu1022-*` Tidewake capture folders, and the three preset shader caches. That freed about 13.8 GB; D: went from 11.2 to 25.0 GB free. The old D: checkouts were not touched. The keep-awake had already expired.
+
 ### Results by row (yardstick-mapped, confirming batches unless noted; bar 7.5)
 
 | Row | GPU result | Verdict |
