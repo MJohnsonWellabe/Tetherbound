@@ -3168,6 +3168,12 @@ func has_fight_sight_fade() -> bool:
 		CAMERA_VISIBILITY.config().get("line_of_sight_fade", {}))
 
 
+## F22#4: whether this realm's fight presentation runs for `trainer_id`'s fight.
+func fight_sight_allows(trainer_id: String) -> bool:
+	return FIGHT_FADE.allows_fight(_realm_bake_name,
+		CAMERA_VISIBILITY.config().get("line_of_sight_fade", {}), trainer_id)
+
+
 func set_fight_sight_target(owner_id: int, target: Vector3, second: Vector3 = Vector3.INF) -> void:
 	_fight_fade.target(owner_id, target, second)
 

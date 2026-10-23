@@ -63,6 +63,18 @@ static func configured(realm: String, config: Dictionary) -> bool:
 	return on and realm in config.get("realms", []) and not config.get("models", []).is_empty()
 
 
+## F22#4: `realm_trainers` limits a realm's fight presentation (sight lines,
+## pilot mark and light, camera rays) to the named trainers' fights. A realm it
+## does not list allows every fight; a listed realm allows only those trainer
+## ids (a wild fight passes ""). The fade materials still build for the realm;
+## they stay inert at strength 0 outside an allowed fight.
+static func allows_fight(realm: String, config: Dictionary, trainer_id: String) -> bool:
+	var limits: Variant = config.get("realm_trainers", {})
+	if not limits is Dictionary or not (limits as Dictionary).has(realm):
+		return true
+	return trainer_id in ((limits as Dictionary)[realm] as Array)
+
+
 static func eligible(model: String, realm: String, config: Dictionary) -> bool:
 	return configured(realm, config) and model in config.get("models", [])
 

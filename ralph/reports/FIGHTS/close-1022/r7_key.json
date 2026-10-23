@@ -1,0 +1,28 @@
+{
+ "Om": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Wb": {
+  "anchor": false,
+  "label": "Halder h5",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/aaa7d03a-7462-5032-afdb-5190f1cc1627/scratchpad/r6/h_ctl.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/aaa7d03a-7462-5032-afdb-5190f1cc1627/scratchpad/r7/h_h5.png"
+ },
+ "Kl": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Tf": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ye": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ }
+}
