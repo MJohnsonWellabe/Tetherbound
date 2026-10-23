@@ -20,3 +20,20 @@ if "--no-great" not in sys.argv:
     d["hall_great_hall"]["enabled"] = True
 json.dump(d, open(P, "w"), indent=2)
 open(P, "a").write("\n")
+
+# Daylight and trainer exposure (r8 ask: murky blue-grey interior grade):
+# a warm limestone floor instead of the blue-grey #a4afb3, and four warm
+# window shafts (the two west sources brighter, two east mirrors added).
+if "--no-light" not in sys.argv:
+    d = json.load(open(P))
+    m = d["hall_waymark"]["materials"]
+    m["floor"]["color"] = "#c8b89c"
+    dw = d["hall_waymark"]["daylight_windows"]
+    dw["energy"] = 2.6
+    dw["colour"] = "#ffe6c0"
+    dw["sources"] += [
+        {"at": [6.75, 4.85, -6.0], "target": [-0.5, 0.06, -5.0]},
+        {"at": [6.75, 4.85, 6.0], "target": [-0.5, 0.06, 7.0]},
+    ]
+    json.dump(d, open(P, "w"), indent=2)
+    open(P, "a").write("\n")
