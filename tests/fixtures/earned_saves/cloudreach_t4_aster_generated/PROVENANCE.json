@@ -1,0 +1,22 @@
+{
+  "continuous_fresh_save": false,
+  "disclosure": "Independent F49 T4 proof boundary. Restored Cloudreach at the current Warden Aila reward body after the main route, before Home Key/Wings hanging/Stormwood unlock: chapter and prior-chapter flags, five template creatures at generated L39/cap40 with prior breakthrough tiers [1,2,3], prior T1/T2/T3 Master wins and recipes, held/hung relics, portal progress, the next key, five Tether Candy, and sluice_metal 12 / reef_stone 10 (exactly the Tidewake Kitchen-attachment bill with its two tidesteel ingots, which a T3 player carries from Ione's chest and which no Meadows source supplies) are generated setup, not earned play or transaction receipts. No Aster win, feast_t4 recipe, Altar payment, Kitchen build or cook, feed, or selected-piece PASS is granted. The Aster visit and every paid training/Kitchen action must happen through ordinary play and production save. The character's attachment_recipes carry exactly the tier blueprints the declared hung relics grant (the real relic_hang transaction's next_tier_blueprints), so tier-2+ station attachments can be placed.",
+  "kind": "generated_boundary_save",
+  "portal_leg": "",
+  "prior_earned_play": false,
+  "profile": "cloudreach_t4_aster_independent",
+  "profile_sha256": "1377b0d8a46764db451cdd8190b0bee7563cba07f6e6640287f4df7bd6e7db03",
+  "slot": 0,
+  "slot_info": {
+    "day": 16,
+    "legacy": false,
+    "load_result": {
+      "code": "ok",
+      "message": "",
+      "ok": true
+    },
+    "party_size": 5,
+    "realm": "cloudreach"
+  },
+  "source": "698f1a8d46ef063b512100b72eb3bdde95448a08"
+}
