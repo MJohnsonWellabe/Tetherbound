@@ -77,6 +77,16 @@ uniform bool visual_ridges_enabled = false;
 uniform float visual_ridge_spacing_m = 23.0;
 uniform float visual_ridge_width_m = 4.5;
 uniform float visual_ridge_gain = 0.7;
+// F13#5 tide-line candidate (close-1024). Natural current read: where the
+// moving lane meets still sea, an irregular foam seam (continuous, wandering,
+// varying width, broken only in long gaps) drifts with the flow along both
+// banks, and the lane inside carries small choppy wavelet caps. 0 = off.
+uniform float seam_opacity = 0.0;
+uniform float seam_width_m = 1.3;
+uniform float seam_wander_m = 3.5;
+uniform float seam_gap = 0.25;
+uniform float chop_cap_opacity = 0.0;
+uniform float chop_cap_scale_m = 2.2;
 varying vec3 v_world;
 varying float v_distance;
 
@@ -221,6 +231,31 @@ void fragment() {
 		ridge_shadow = smoothstep(width, width + 0.35, phase_m)
 			* (1.0 - smoothstep(width + 0.35, width * 1.8, phase_m)) * gain * 0.3;
 	}
+	float seam_a = 0.0;
+	if (seam_opacity > 0.0 || chop_cap_opacity > 0.0) {
+		float moving_s = along - TIME * speed;
+		// Distance in metres from each bank, along a slowly wandering line.
+		float wander = (noise(vec2(moving_s / 37.0, 1.3)) - 0.5) * 2.0 * seam_wander_m
+			+ (noise(vec2(moving_s / 9.0, 5.1)) - 0.5) * seam_wander_m * 0.35;
+		float ribbon_half = max(fwidth(across_m) / max(fwidth(UV.x), 1e-5) * 0.5, 1.0);
+		float from_edge = (1.0 - across) * ribbon_half - 0.18 * ribbon_half + wander * sign(UV.x - 0.5);
+		float girth = seam_width_m * mix(0.45, 1.25, noise(vec2(moving_s / 6.0, UV.x * 3.0)));
+		float seam = 1.0 - smoothstep(girth * 0.4, girth, abs(from_edge));
+		// Lacy bubble texture inside the seam, and long gaps where it breaks.
+		float lace = smoothstep(0.3, 0.75, noise(vec2(across_m * 1.7, moving_s * 0.9)));
+		float keep = smoothstep(seam_gap - 0.08, seam_gap + 0.08, noise(vec2(moving_s / 28.0, UV.x * 7.0 + 2.0)));
+		seam *= mix(0.55, 1.0, lace) * keep;
+		// Wavelet caps: small crescent whitecaps, denser toward the lane core.
+		vec2 cap_uv = vec2(across_m, moving_s * 1.6) / max(chop_cap_scale_m, 0.5);
+		vec2 cap_cell = floor(cap_uv);
+		vec2 cap_local = fract(cap_uv) - 0.5;
+		float cap_on = step(hash(cap_cell + vec2(4.2, 9.1)), 0.35 * (1.0 - across));
+		float crescent = 1.0 - smoothstep(0.04, 0.12, abs(cap_local.y + cap_local.x * cap_local.x * 1.2 - 0.05));
+		crescent *= 1.0 - smoothstep(0.25, 0.42, abs(cap_local.x));
+		float cap = cap_on * crescent * chop_cap_opacity;
+		foam = clamp(max(foam, cap), 0.0, 1.0);
+		seam_a = clamp(seam * seam_opacity, 0.0, 1.0) * ends * fade;
+	}
 	float band = lane_opacity * mix(0.5, 1.0, strength)
 		* (0.6 + 0.4 * noise(vec2(across_m / 6.0, (along - TIME * speed * 0.5) / 25.0)));
 	if (visual_groups_enabled) {
@@ -230,6 +265,9 @@ void fragment() {
 	float alpha = foam + band * (1.0 - foam);
 	vec3 premult = brightness * (foam_colour.rgb * foam + lane_colour.rgb * band * (1.0 - foam)) * mask;
 	alpha *= mask;
+	// The tide-line seam sits on the banks, outside the soft foam edge mask.
+	premult = premult * (1.0 - seam_a) + brightness * foam_colour.rgb * seam_a;
+	alpha = alpha + seam_a * (1.0 - alpha);
 	if (channel_tint_opacity > 0.0 || channel_edge_opacity > 0.0) {
 		// Under the foam: the dashed rim, then the channel tint. Not dimmed by
 		// the soft foam edge mask, so the bank line sits at the ribbon's edge.
