@@ -253,8 +253,8 @@ static func look_model_paths(look: Dictionary) -> Array[String]:
 
 
 func _request_look_models() -> Array[String]:
-	if simulation_only:
-		return []
+	# Not skipped on a simulation-only shell: the dock dressing still builds
+	# there, and without a held reference every load() re-reads its GLB.
 	var paths := look_model_paths(preload("res://scripts/world/tidewake_look_profile.gd").settings())
 	for path: String in paths:
 		if not ResourceLoader.has_cached(path):
@@ -268,6 +268,8 @@ func _await_look_models(paths: Array[String]) -> void:
 			await get_tree().process_frame
 		if ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_LOADED:
 			_look_models_held.append(ResourceLoader.load_threaded_get(path))
+		elif ResourceLoader.has_cached(path):
+			_look_models_held.append(load(path))
 
 
 func _finish_entry(game: Node) -> void:

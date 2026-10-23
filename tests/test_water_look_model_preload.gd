@@ -21,3 +21,21 @@ func test_the_build_awaits_the_models_before_the_dock_builders() -> void:
 	assert_true(request >= 0 and wait > request, "requested at the start, awaited later")
 	assert_true(wait < source.find("var docks := DOCKS.new()"), "awaited before the dock builders")
 	assert_true(wait < source.find("water_landmark_models.gd\").new()"), "awaited before the landmark models")
+
+
+func test_a_simulation_only_shell_still_requests_the_models() -> void:
+	# The co-op host builds Tidewake simulation-only while its player is
+	# elsewhere, and the dock dressing still builds there. Skipping the request
+	# left nothing holding the scenes, so every dock prop re-read its GLB
+	# (~100 ms each) and the host fell silent (smoke_net_water_alpha on #713).
+	var expected := WATER_WORLD.look_model_paths(
+		preload("res://scripts/world/tidewake_look_profile.gd").settings())
+	var world: Node3D = WATER_WORLD.new()
+	world.simulation_only = true
+	var requested: Array[String] = world._request_look_models()
+	for path: String in requested:
+		if ResourceLoader.load_threaded_get_status(path) != ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+			ResourceLoader.load_threaded_get(path)
+	world.free()
+	assert_false(expected.is_empty(), "the Tidewake look names models")
+	assert_eq(requested, expected)
