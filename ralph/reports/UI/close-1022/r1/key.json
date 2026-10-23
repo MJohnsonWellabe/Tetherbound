@@ -1,0 +1,71 @@
+{
+ "Ks": {
+  "anchor": false,
+  "label": "P2-031 settings",
+  "A": "P2-031_settings_before.jpg",
+  "B": "P2-031_settings_after.jpg"
+ },
+ "Ue": {
+  "anchor": false,
+  "label": "P2-002 map 1",
+  "A": "P2-002_map_1_after.jpg",
+  "B": "P2-002_map_1_before.jpg"
+ },
+ "Wp": {
+  "anchor": false,
+  "label": "P2-007 panels 2",
+  "A": "P2-007_panels_2_before.jpg",
+  "B": "P2-007_panels_2_after.jpg"
+ },
+ "Pl": {
+  "anchor": false,
+  "label": "P2-095 craft",
+  "A": "P2-095_craft_before.jpg",
+  "B": "P2-095_craft_after.jpg"
+ },
+ "Pr": {
+  "anchor": false,
+  "label": "P2-002 map 2",
+  "A": "P2-002_map_2_before.jpg",
+  "B": "P2-002_map_2_after.jpg"
+ },
+ "Ot": {
+  "anchor": false,
+  "label": "P2-004 HUD",
+  "A": "P2-004_HUD_before.jpg",
+  "B": "P2-004_HUD_after.jpg"
+ },
+ "Dc": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Vd": {
+  "anchor": false,
+  "label": "P2-007 panels 1",
+  "A": "P2-007_panels_1_after.jpg",
+  "B": "P2-007_panels_1_before.jpg"
+ },
+ "Hv": {
+  "anchor": false,
+  "label": "P2-001 shell 2",
+  "A": "P2-001_shell_2_before.jpg",
+  "B": "P2-001_shell_2_after.jpg"
+ },
+ "Qq": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Eg": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Nd": {
+  "anchor": false,
+  "label": "P2-001 shell 1",
+  "A": "P2-001_shell_1_after.jpg",
+  "B": "P2-001_shell_1_before.jpg"
+ }
+}

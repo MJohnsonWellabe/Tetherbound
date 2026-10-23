@@ -2,6 +2,7 @@ extends "res://tests/test_case.gd"
 
 const VEGETATION := preload("res://scripts/world/vegetation.gd")
 const CONFIG_PATH := "res://data/config/stormwood_vegetation.json"
+const HARVESTS := preload("res://scripts/world/stormwood_harvest_runtime.gd")
 
 
 func _mesh_in(node: Node) -> Mesh:
@@ -39,9 +40,13 @@ func test_canopy_policy_retints_bark_without_replacing_its_texture() -> void:
 	var bark := _material_after_policy(str(layer.models[0]), "Bark_TwistedTree",
 			layer, vegetation)
 	assert_true(bark != null, "TwistedTree bark material is outside the palette policy")
-	assert_true(bark.albedo_color.is_equal_approx(Color("#8f9580")))
+	# 22 Oct wind-down (Stormwood r11 ON): lighter bark tint over a value-lifted
+	# copy of the installed bark texture, never a flat colour.
+	assert_true(bark.albedo_color.is_equal_approx(Color("#a8977a")))
 	assert_true(bark.albedo_texture != null,
-			"Bark retint must preserve the installed bark texture")
+			"Bark retint must keep a bark texture")
+	assert_eq(bark.albedo_texture.resource_path,
+			"res://assets/environment/stylized_nature/derived/Bark_TwistedTree_lift175.png")
 	vegetation.free()
 
 
@@ -70,3 +75,26 @@ func test_fern_joins_understory_palette_while_mushroom_remains_an_accent() -> vo
 	assert_false((cfg.layers.storm_mushroom as Dictionary).has("retint"),
 			"Mushrooms remain the limited warm colour accent")
 	vegetation.free()
+
+
+func test_harvest_bush_node_wears_the_scatter_bush_policy_not_its_crimson_sheet() -> void:
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	var layer: Dictionary = cfg.layers.storm_bush
+	var model := str(layer.models[0])
+	var root := (load(model) as PackedScene).instantiate() as Node3D
+	var changed := int(HARVESTS.apply_scatter_leaf_policy(root, model))
+	assert_true(changed > 0, "harvest bush visual received no leaf policy")
+	var found := false
+	for node: Node in root.find_children("*", "MeshInstance3D", true, false):
+		var instance := node as MeshInstance3D
+		for surface in instance.mesh.get_surface_count():
+			var source := instance.mesh.surface_get_material(surface)
+			if source == null or source.resource_name != "Leaves_TwistedTree":
+				continue
+			var worn := instance.get_surface_override_material(surface) as StandardMaterial3D
+			assert_true(worn != null)
+			assert_true(worn.albedo_color.is_equal_approx(Color(str(layer.retint.Leaves_TwistedTree))))
+			assert_eq(worn.albedo_texture.resource_path, str(layer.retexture.Leaves_TwistedTree))
+			found = true
+	assert_true(found, "Bush_Common has no leaf surface")
+	root.free()

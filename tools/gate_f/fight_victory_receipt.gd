@@ -15,8 +15,16 @@ func begin(manager: Node) -> bool:
 		return false
 	_manager = manager
 	members = (manager.get("_party") as Array).duplicate()
+	var cfg := PROGRESSION.config()
+	var global_cap := int(cfg.get("level", {}).get("cap", 100))
 	for member: RefCounted in members:
-		before.append({"level": int(member.get("level")), "xp": int(member.get("xp"))})
+		# The game's own admitted cap (training caps/breakthroughs): -1 means the
+		# instance cannot take XP at all, so a won fight legitimately awards none.
+		var cap := global_cap
+		if member.has_method("_admitted_level_cap"):
+			cap = int(member.call("_admitted_level_cap", cfg))
+		var level := int(member.get("level"))
+		before.append({"level": level, "xp": int(member.get("xp")), "capped": cap < 0 or level >= cap})
 	manager.connect("exited", _exited)
 	return true
 
@@ -42,17 +50,26 @@ func finish(still_running: bool) -> Dictionary:
 	if not is_instance_valid(_manager) or members.is_empty():
 		result.why = "victory party readback unavailable"
 		return result
+	# A multi-creature trainer fight re-forms the combat party for each
+	# opponent creature: deployed creature first, then the living bench
+	# (encounter_director.gd::_fight_party). A switch reorders it and a faint
+	# drops a member. Only a creature that was never in the fight's party is a
+	# substitution.
 	var current: Array = _manager.get("_party")
-	if current != members:
+	if current.is_empty():
 		result.why = "combat party identity/order changed"
 		return result
+	for member: Variant in current:
+		if not members.has(member):
+			result.why = "combat party identity/order changed"
+			return result
 	var cap := int(PROGRESSION.config().get("level", {}).get("cap", 100))
 	var all_capped := true
 	for index in members.size():
 		var member: RefCounted = members[index]
 		var level := int(member.get("level"))
 		var xp := int(member.get("xp"))
-		all_capped = all_capped and int(before[index].level) >= cap
+		all_capped = all_capped and (int(before[index].level) >= cap or bool(before[index].capped))
 		if level > int(before[index].level) or (level == int(before[index].level) and xp > int(before[index].xp)):
 			result.xp_progress.append({"index": index, "before": before[index], "level": level, "xp": xp})
 	if result.xp_progress.is_empty() and not all_capped:

@@ -1264,7 +1264,9 @@ func _retry_foundation_events_scan() -> void:
 		# Retained historical duties and in-fight mastery need no new action.
 		# Project/recover authority only after those exclusions; a long fight
 		# can retain hundreds of mastery sources for this same character.
-		if admitted_character_state(peer).is_empty(): continue
+		if admitted_character_state(peer).is_empty():
+			if duty.action in FOUNDATION_RETRY_ORDER.PROGRESSION: _note_duty_hold(duty, "admission unavailable")
+			continue
 		if duty.action == "boss_relic" and (_character_authority.call("state", duty.character_id) as Dictionary).get("redesign_character", {}).get("transaction_receipts", []).has("defeat:boss_%s:%s" % [duty.intent.trainer_id, duty.character_id]):
 			# Legacy personal decisions are complete; preserve their original
 			# identity without starving this character's later owed duties.

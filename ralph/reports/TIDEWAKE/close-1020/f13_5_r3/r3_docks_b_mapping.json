@@ -1,0 +1,21 @@
+{
+ "pairs": [
+  "dock_tidal_cradle.jpg",
+  "dock_salt_crown.jpg",
+  "dock_sluice_isle.jpg"
+ ],
+ "mapping": {
+  "dock_tidal_cradle.jpg": {
+   "A": "candidate",
+   "B": "control"
+  },
+  "dock_salt_crown.jpg": {
+   "A": "candidate",
+   "B": "control"
+  },
+  "dock_sluice_isle.jpg": {
+   "A": "candidate",
+   "B": "control"
+  }
+ }
+}

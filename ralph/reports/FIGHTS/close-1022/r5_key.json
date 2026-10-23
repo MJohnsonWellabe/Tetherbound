@@ -1,0 +1,40 @@
+{
+ "Qs": {
+  "anchor": false,
+  "label": "capacitor_alpha",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/aaa7d03a-7462-5032-afdb-5190f1cc1627/scratchpad/r2/capacitor_alpha_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/aaa7d03a-7462-5032-afdb-5190f1cc1627/scratchpad/r5/capacitor_alpha_t4.png"
+ },
+ "Ib": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Io": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ml": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Xk": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Ow": {
+  "anchor": false,
+  "label": "old_rodfolk_hall_guardian",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/aaa7d03a-7462-5032-afdb-5190f1cc1627/scratchpad/r2/old_rodfolk_hall_guardian_base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/aaa7d03a-7462-5032-afdb-5190f1cc1627/scratchpad/r5/old_rodfolk_hall_guardian_t4.png"
+ },
+ "Ja": {
+  "anchor": false,
+  "label": "Riverwatch",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/aaa7d03a-7462-5032-afdb-5190f1cc1627/scratchpad/r5/rw_r10.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/aaa7d03a-7462-5032-afdb-5190f1cc1627/scratchpad/r3/rw_ctl.png"
+ }
+}

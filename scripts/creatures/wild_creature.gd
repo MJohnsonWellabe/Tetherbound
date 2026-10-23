@@ -1537,7 +1537,9 @@ func camera_trainer_beside_ally() -> bool:
 
 ## F22#4: the fight-composition solver prefers the pair's side-on view.
 func camera_boss_side_view() -> bool:
-	return bool(_enemy_config_for_this_body().get("camera_boss_side_view", false))
+	# A named member row may set it beside body_scale (encounter_director.gd).
+	return bool(get_meta(&"camera_boss_side_view", false)) \
+		or bool(_enemy_config_for_this_body().get("camera_boss_side_view", false))
 
 
 ## Opt-in third render subject for the fight-composition solver.
@@ -1722,10 +1724,10 @@ func _lunge_cfg() -> Dictionary:
 ## row's own `cue_lane_*` presentation keys over it (F22#4 named charges).
 func _lunge_lane_cfg() -> Dictionary:
 	var row := _attack_row()
-	if not row.has("cue_lane_colour") and not row.has("cue_lane_solid"):
+	if not row.has("cue_lane_colour") and not row.has("cue_lane_solid") and not row.has("cue_lane_crackle"):
 		return _lunge_cfg()
 	var cfg := _lunge_cfg().duplicate()
-	for key: String in ["lane_colour", "lane_fill_alpha", "lane_locked_fill_alpha", "lane_edge_alpha", "lane_edge_width", "lane_solid"]:
+	for key: String in ["lane_colour", "lane_fill_alpha", "lane_locked_fill_alpha", "lane_edge_alpha", "lane_edge_width", "lane_solid", "lane_crackle"]:
 		if row.has("cue_" + key):
 			cfg[key] = row["cue_" + key]
 	return cfg

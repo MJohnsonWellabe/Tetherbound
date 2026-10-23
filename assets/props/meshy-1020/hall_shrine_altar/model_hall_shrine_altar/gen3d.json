@@ -1,0 +1,27 @@
+{
+ "model": "hall_shrine_altar",
+ "task_id": "01a15c3f-db9e-7201-83fb-46acf867400c",
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "ai_model": "latest",
+ "target_polycount": 15000,
+ "topology": "quad",
+ "should_remesh": true,
+ "enable_pbr": true,
+ "input_images": [
+  "/home/user/Tetherbound/assets_raw/props-1020/hall_shrine_altar/concepts/v1_0.png",
+  "/home/user/Tetherbound/assets_raw/props-1020/hall_shrine_altar/concepts/v1_1.png",
+  "/home/user/Tetherbound/assets_raw/props-1020/hall_shrine_altar/concepts/v1_2.png"
+ ],
+ "status": "SUCCEEDED",
+ "task_error": null,
+ "consumed_credits": 30,
+ "files": {
+  "glb": "/home/user/Tetherbound/assets_raw/props-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar.glb",
+  "base_color": "/home/user/Tetherbound/assets_raw/props-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar_base_color.png",
+  "metallic": "/home/user/Tetherbound/assets_raw/props-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar_metallic.png",
+  "roughness": "/home/user/Tetherbound/assets_raw/props-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar_roughness.png",
+  "normal": "/home/user/Tetherbound/assets_raw/props-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar_normal.png",
+  "thumbnail": "/home/user/Tetherbound/assets_raw/props-1020/hall_shrine_altar/model_hall_shrine_altar/thumbnail.png"
+ },
+ "date": "2026-10-21"
+}

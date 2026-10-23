@@ -1,0 +1,23 @@
+{"sets": {
+"Sp": {"A": {"bar_a": 5.8, "defects": {}}, "B": {"bar_a": 6.3, "defects": {}}},
+"Oh": {"A": {"bar_a": 3.8, "defects": {"recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT", "the craft action hints are low-contrast and hard to find": "PRESENT"}}, "B": {"bar_a": 6.0, "defects": {"recipe text in the craft panel is clipped or too small to read at a glance": "FIXED", "the craft action hints are low-contrast and hard to find": "PARTIAL"}}},
+"Kp": {"A": {"bar_a": 5.6, "defects": {}}, "B": {"bar_a": 5.5, "defects": {}}},
+"Fm": {"A": {"bar_a": 6.6, "defects": {}}, "B": {"bar_a": 5.6, "defects": {}}},
+"Uh": {"A": {"bar_a": 6.3, "defects": {}}, "B": {"bar_a": 5.5, "defects": {}}},
+"Yd": {"A": {"bar_a": 5.7, "defects": {}}, "B": {"bar_a": 5.2, "defects": {}}},
+"Gg": {"A": {"bar_a": 6.0, "defects": {}}, "B": {"bar_a": 6.2, "defects": {}}},
+"Nt": {"A": {"bar_a": 6.6, "defects": {}}, "B": {"bar_a": 5.6, "defects": {}}},
+"Dk": {"A": {"bar_a": 6.8, "defects": {}}, "B": {"bar_a": 6.8, "defects": {}}},
+"Xa": {"A": {"bar_a": 6.4, "defects": {}}, "B": {"bar_a": 5.6, "defects": {}}},
+"Cs": {"A": {"bar_a": 5.9, "defects": {}}, "B": {"bar_a": 6.1, "defects": {}}},
+"Ku": {"A": {"bar_a": 5.8, "defects": {}}, "B": {"bar_a": 6.2, "defects": {}}},
+"Sw": {"A": {"bar_a": 5.8, "defects": {}}, "B": {"bar_a": 5.8, "defects": {}}},
+"Iw": {"A": {"bar_a": 5.3, "defects": {}}, "B": {"bar_a": 5.5, "defects": {}}},
+"Ew": {"A": {"bar_a": 6.2, "defects": {}}, "B": {"bar_a": 5.0, "defects": {}}},
+"Ug": {"A": {"bar_a": 6.0, "defects": {}}, "B": {"bar_a": 5.4, "defects": {}}},
+"Zo": {"A": {"bar_a": 6.4, "defects": {}}, "B": {"bar_a": 6.4, "defects": {}}},
+"Qk": {"A": {"bar_a": 3.5, "defects": {"the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"}}, "B": {"bar_a": 5.2, "defects": {"the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"}}},
+"Rb": {"A": {"bar_a": 5.5, "defects": {}}, "B": {"bar_a": 5.6, "defects": {}}},
+"Gz": {"A": {"bar_a": 4.8, "defects": {}}, "B": {"bar_a": 6.4, "defects": {}}}
+},
+"top_changes": [{"change": "Fix faint-state rendering and posing: keep full material and attachments through faint, stop antler stretching and floating, make every creature collapse", "kind": "scene"}, {"change": "Rim light and value separation for dark creatures", "kind": "scene"}, {"change": "Proper homestead wall mesh with thickness and textured infill", "kind": "new_art"}]}

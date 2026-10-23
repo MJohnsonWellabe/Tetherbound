@@ -78,8 +78,8 @@ TARGET_HEIGHTS = {
     "terrapup": 3.85,
     "aeriex": 4.00,
     "riverdrake": 4.00,
-    # F29#3 (RD-28): Staticub's L50 evolution, 4.10 m installed; larger than the cub and the trainer.
-    "stormursa": 4.1,
+    # F29#3 (RD-28): Staticub's L50 evolution. 5.00 m (close-1022, GPU judges: 4.10 read only ~1.3x the 3.25 m cub; grow the adult, never shrink the cub).
+    "stormursa": 5.0,
     "tempestwing": 4.15,
     "riptusk": 4.25,
     "voltarach": 4.25,

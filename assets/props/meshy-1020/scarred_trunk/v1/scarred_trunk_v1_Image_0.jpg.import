@@ -1,0 +1,44 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://25f6ue7suvjg"
+path.s3tc="res://.godot/imported/scarred_trunk_v1_Image_0.jpg-e593e9439e8b80aae1b5b3d0349e762f.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+generator_parameters={
+"md5": "297f1cdef44348e1dbee61dda7d4a965"
+}
+
+[deps]
+
+source_file="res://assets/props/meshy-1020/scarred_trunk/v1/scarred_trunk_v1_Image_0.jpg"
+dest_files=["res://.godot/imported/scarred_trunk_v1_Image_0.jpg-e593e9439e8b80aae1b5b3d0349e762f.s3tc.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/channel_remap/red=0
+process/channel_remap/green=1
+process/channel_remap/blue=2
+process/channel_remap/alpha=3
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0

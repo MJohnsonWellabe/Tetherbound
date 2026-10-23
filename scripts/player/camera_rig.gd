@@ -543,6 +543,10 @@ var _pass_through: Array[RID] = []
 
 
 func _sync_pass_through() -> void:
+	# Unit tests tick rigs that were never added to a tree; there is no group
+	# to read there, and nothing in a tree to pass through.
+	if not is_inside_tree():
+		return
 	var current: Array[RID] = []
 	for node: Node in get_tree().get_nodes_in_group(PASS_THROUGH_GROUP):
 		if node is CollisionObject3D:

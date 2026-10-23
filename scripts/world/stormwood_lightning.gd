@@ -573,6 +573,10 @@ uniform float ramp_start = 0.75;
 uniform float fill_alpha = 0.14;
 uniform float charged_fill_alpha = 0.34;
 uniform float final_fill_alpha = 0.5;
+// F41#5 soft style (coordinator ruling 21 Oct: keep the hazard hue, lose the
+// flat placeholder disc): radial gradient fill, ground-noise breakup and a
+// travelling rim glow. 0 keeps the F10#3 look exactly.
+uniform float soft_style = 0.0;
 varying float r;
 varying vec2 ground_xz;
 void vertex() {
@@ -656,6 +660,24 @@ void fragment() {
 	float a_edge = outer * dash_solid * 0.10;
 	float a_fill = inside * (fill_alpha + charged * (charged_fill_alpha - fill_alpha)
 		+ urgency * (final_fill_alpha - charged_fill_alpha) * (1.0 - strike));
+	if (soft_style > 0.5) {
+		// Denser toward the rim and the contact point, thinner between, broken
+		// by ground-scale noise so it reads as charge on the soil, not a decal.
+		float radial_fill = 0.35 + 0.65 * smoothstep(0.25, 1.0, distance_m / rim_radius)
+			+ 0.5 * (1.0 - smoothstep(0.0, 0.9, distance_m));
+		vec2 cell = floor(ground_xz * 2.2);
+		vec2 f = fract(ground_xz * 2.2);
+		f = f * f * (3.0 - 2.0 * f);
+		float n00 = fract(sin(dot(cell, vec2(127.1, 311.7))) * 43758.55);
+		float n10 = fract(sin(dot(cell + vec2(1.0, 0.0), vec2(127.1, 311.7))) * 43758.55);
+		float n01 = fract(sin(dot(cell + vec2(0.0, 1.0), vec2(127.1, 311.7))) * 43758.55);
+		float n11 = fract(sin(dot(cell + vec2(1.0, 1.0), vec2(127.1, 311.7))) * 43758.55);
+		float grain = mix(mix(n00, n10, f.x), mix(n01, n11, f.x), f.y);
+		a_fill *= clamp(radial_fill, 0.0, 1.2) * (0.6 + 0.4 * grain);
+		float travel = 0.8 + 0.35 * pulse_enabled * max(0.0, sin(angle * 3.0 - phase * 6.2832 * 0.5));
+		a_rim *= travel;
+		a_edge *= 1.6;
+	}
 	float white_hot = urgency * (1.0 - strike);
 	vec3 hot = mix(mix(rim_colour, vec3(1.0, 0.9, 1.0), white_hot), vec3(0.92, 0.72, 1.0), strike);
 	vec3 fill_colour = mix(rim_colour * 0.55, vec3(1.0, 0.75, 1.0), white_hot);
@@ -759,6 +781,7 @@ func _telegraph_material() -> ShaderMaterial:
 	material.set_shader_parameter("fill_alpha", float(cfg.get("fill_alpha", 0.14)))
 	material.set_shader_parameter("charged_fill_alpha", float(cfg.get("charged_fill_alpha", 0.34)))
 	material.set_shader_parameter("final_fill_alpha", float(cfg.get("final_fill_alpha", 0.5)))
+	material.set_shader_parameter("soft_style", 1.0 if bool((cfg.get("soft_style", {}) as Dictionary).get("enabled", false)) else 0.0)
 	material.set_shader_parameter("pulse_hz_start", float(cfg.get("pulse_hz_start", 2.0)))
 	material.set_shader_parameter("pulse_hz_end", float(cfg.get("pulse_hz_end", 7.0)))
 	material.set_shader_parameter("telegraph_seconds", float(rules.config.strike.telegraph_seconds))

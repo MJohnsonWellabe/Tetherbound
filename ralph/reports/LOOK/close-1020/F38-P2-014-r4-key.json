@@ -1,0 +1,18 @@
+{
+ "horizon_left_crop": {
+  "A": "X",
+  "B": "Y"
+ },
+ "horizon_right_crop": {
+  "A": "X",
+  "B": "Y"
+ },
+ "route": {
+  "A": "Y",
+  "B": "X"
+ },
+ "warrens_walk": {
+  "A": "X",
+  "B": "Y"
+ }
+}

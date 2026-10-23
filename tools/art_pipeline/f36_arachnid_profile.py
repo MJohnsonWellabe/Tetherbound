@@ -56,23 +56,29 @@ def pose(rig, role, phase):
     if role == 'hit':
         # Rear up from the blow: front pairs lift, the body tips back.
         e = POST.hit_envelope(phase)
-        pivot = rig.pitch(8 * e)
+        # Close-1022 (ON by coordinator decision for the 22 Oct wind-down; b13
+        # corrected prompt 5.99 vs 5.84 installed clips, below the bar): the
+        # doubled rear reads as a hit where the 1x one read as standing.
+        k = 2.0
+        pivot = rig.pitch(8 * k * e)
         add('head', rig.pitch(10 * e))
         for b in legs(bones, 1):
             if pair(b) <= 2:
-                add(b, rig.abduct(b, (26 if pair(b) == 1 else 14) * e))
-                add(b, rig.swing(12 * e))
+                add(b, rig.abduct(b, (26 if pair(b) == 1 else 14) * k * e))
+                add(b, rig.swing(12 * k * e))
     elif role == 'faint':
-        # Collapse belly-down with every leg curled in under the body.
+        # Close-1022 (ON, wind-down): GPU judges read the old belly-down curl as
+        # standing. Tip onto the side with every leg curled tight, head down;
+        # the front pair spread 30 keeps the torso inside the floor-gap limit.
         e = min(1.0, phase / .7)
-        pivot = rig.roll(12 * e)
-        add('head', rig.pitch(-12 * e))
+        pivot = rig.roll(72 * e)
+        add('head', rig.pitch(-18 * e))
         for b in legs(bones, 1):
-            add(b, rig.abduct(b, 18 * e))
+            add(b, rig.abduct(b, 30 * e))
         for b in legs(bones, 2):
-            add(b, rig.abduct(b, -55 * e))
+            add(b, rig.abduct(b, -80 * e))
         for b in legs(bones, 3):
-            add(b, rig.abduct(b, -70 * e))
+            add(b, rig.abduct(b, -95 * e))
     elif role == 'swim':
         # Level body; the pairs sweep in alternating waves.
         add('head', rig.pitch(8))
@@ -151,7 +157,12 @@ def rewrite(text):
     start, end = POST.value_span(text, m.end())
     key_start = m.start() + 5
     text = text[:key_start] + json.dumps(PROFILE) + ': ' + json.dumps(profile, separators=(',', ':')) + text[end:]
-    return text
+    # The runtime plays a profile only for an enabled species.
+    head, rest = text.split('"enabled_species": [', 1)
+    listed, tail = rest.split(']', 1)
+    if json.dumps(SPECIES) not in listed.split(','):
+        listed += ',' + json.dumps(SPECIES)
+    return head + '"enabled_species": [' + listed + ']' + tail
 
 
 def main():

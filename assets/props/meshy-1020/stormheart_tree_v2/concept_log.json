@@ -1,0 +1,169 @@
+{
+ "asset": "stormheart_tree_v2",
+ "concepts": [
+  {
+   "tag": "c2",
+   "task_id": "01a15d5f-2912-748f-9afe-8f414320795f",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Using the reference art boards (exterior views), draft a 3D-model turnaround concept of the Stormheart Tree as a colossal gnarled ancient tree torn apart by lightning: the massive trunk is split from the crown down to near the roots into THREE great twisted limbs that fork apart like a giant trident or a hand, leaning away from each other, with open lightning-scarred clefts between them where you can see through; scorched dark scar wood lining the clefts with a faint cyan crackle glow. Bark is ancient and gnarled: thick twisting ridges, burls, hollows, knots, broken branch stumps, hanging moss. Enormous flared buttress roots gripping a rocky base. Crown: very wide, heavy and dense, built from many big clumped rounded foliage masses in rich DEEP GREENS (dark forest green, moss green, olive, emerald highlights), spreading far out on long heavy horizontal branches like a giant oak, wider than the tree is tall in total, irregular and lumpy, a few tiny cyan glowing storm motes only. The green crown must dominate; foliage is green, never blue or teal. A couple of small wooden platforms and walkways on the limbs, one navy banner, a small arched door in the roots. Show front view, side view rotated 90 degrees and back view of the same tree. Stylised Palworld / Animo-class game asset style, clean readable shapes, hand-painted PBR feel. Palette: deep forest greens, dark wet brown-grey bark, mossy greens, aged copper, faint cyan storm glow. No red, no oxblood, no blue or teal foliage, no people, no text, no ground plane, plain background, full object visible, centered.",
+   "refs": [
+    "a_exterior.jpg",
+    "b_exterior.jpg",
+    "b_keyviews.jpg",
+    "palworld.jpg"
+   ],
+   "reference_paths": [
+    "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png crop (8,80,614,682) exterior view",
+    "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (8,80,608,682) exterior view",
+    "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (626,104,1054,466) key views",
+    "docs/reference/palworld-01-boss-fight-forest.jpg (full)"
+   ],
+   "status": "SUCCEEDED",
+   "credits": 9,
+   "files": [
+    "concepts/c2_0.png",
+    "concepts/c2_1.png",
+    "concepts/c2_2.png"
+   ],
+   "verdict": "View 0 REJECTED (narrow lollipop / tower silhouette). Views 1-2: broad dense deep-green crown on three limbs, split readable but subtle. View 1 modelled as m_c2v1."
+  },
+  {
+   "tag": "c1",
+   "task_id": "01a15d5f-2879-764f-9368-8697d13f3dbe",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Using the reference art boards (exterior views), draft a 3D-model concept sheet of the Stormheart Tree: one enormous ancient storm-split giant tree. The trunk is NOT a column: from a massive flared root base it divides at about one third of its height into TWO great gnarled leaning limbs that diverge outward in a wide V, with a deep jagged lightning-scarred cleft between them; charred black bark edges along the cleft and a faint thin cyan-white electric glow deep inside the scar. Each limb is twisted and knotted with deep spiralling bark ridges, burls and broken stubs, and splits again into heavy crooked branches. Crown: a broad irregular canopy wider than it is tall, made of several separate dense clumped leaf masses sitting on the two limbs with sky gaps between them, DEEP STORM-FOREST GREEN foliage (dark pine green, mossy olive and emerald, lighter yellow-green tops where light hits), only a few small faint cyan glow accents; leaves are green, not blue. Huge gnarled buttress roots spreading wide over rocks, moss and ivy on the lower trunk. A few small wooden platforms with railings and one rope bridge hugging the limbs, one small navy banner. Silhouette of an ancient oak or baobab giant that reads as a tree from far away, wide and asymmetric. Show front, side and back views of the same tree. Stylised Palworld / Animo-class game asset style, clean readable shapes, hand-painted PBR feel. Palette: deep greens, wet dark brown-grey bark, aged copper, faint cyan storm glow. No red, no oxblood, no blue foliage, no people, no text, no ground plane, plain background, full object visible, centered.",
+   "refs": [
+    "a_exterior.jpg",
+    "b_exterior.jpg",
+    "b_keyviews.jpg",
+    "palworld.jpg"
+   ],
+   "reference_paths": [
+    "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png crop (8,80,614,682) exterior view",
+    "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (8,80,608,682) exterior view",
+    "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (626,104,1054,466) key views",
+    "docs/reference/palworld-01-boss-fight-forest.jpg (full)"
+   ],
+   "status": "SUCCEEDED",
+   "credits": 9,
+   "files": [
+    "concepts/c1_0.png",
+    "concepts/c1_1.png",
+    "concepts/c1_2.png"
+   ],
+   "verdict": "Strong V split with lightning-scarred cleft and green crown, but crown sparse; views inconsistent (view 2 a different tree). View 0 modelled as alternate m_c1v0."
+  },
+  {
+   "tag": "c3",
+   "task_id": "01a15d61-84df-72c3-aefe-ef2c58f401df",
+   "endpoint": "/openapi/v1/image-to-image",
+   "ai_model": "nano-banana-pro",
+   "prompt": "Using the two concept images as the design (first: the deep V lightning split; second: the broad dense crown), draft one consistent 3D-model turnaround of the same Stormheart Tree: an enormous ancient storm-split giant tree. From a huge flared root base with gnarled buttress roots over mossy rocks, the trunk splits low, at about one third of its height, into two great twisted gnarled limbs diverging in a wide V, with a deep jagged lightning-scarred cleft between them, charred dark edges and a faint cyan-white electric glow inside the scar; the cleft must be clearly visible from the front and the back. On top of both limbs sits ONE very broad, heavy, dense canopy like the second image: many big clumped rounded foliage masses in rich deep forest greens (dark green, moss green, olive, light green tops), wider than the tree is tall, round in plan so it is just as wide in the side view, with only a few tiny faint cyan storm-glow accents. A few small wooden platforms, one rope bridge across the cleft, one small navy banner, a small arched door in the roots. Show front view, side view rotated 90 degrees (crown equally wide, cleft seen edge-on) and back view of the same tree, all consistent. Stylised Palworld / Animo-class game asset style, clean readable shapes, hand-painted PBR feel. No red, no oxblood, no blue or teal foliage, no people, no text, no ground plane, plain background, full object visible, centered.",
+   "refs": [
+    "c1_0.png",
+    "c2_1.png",
+    "b_exterior.jpg"
+   ],
+   "reference_paths": [
+    "local: concepts/c1_0.png (own concept c1, view 0: deep V lightning split)",
+    "local: concepts/c2_1.png (own concept c2, view 1: broad dense green crown)",
+    "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png crop (8,80,608,682) exterior view"
+   ],
+   "status": "SUCCEEDED",
+   "credits": 9,
+   "files": [
+    "concepts/c3_0.png",
+    "concepts/c3_1.png",
+    "concepts/c3_2.png"
+   ],
+   "verdict": "CHOSEN source: merge of c1 split + c2 crown (refs c1_0, c2_1, b_exterior). View 1 best: deep V lightning cleft with cyan-white glow, one broad dense deep-green canopy with a few faint cyan accents, gnarled bark, buttress roots. View 0 side view narrower (lollipop-leaning) so not used alone."
+  }
+ ],
+ "models": [
+  {
+   "tag": "m_c1v0",
+   "task_id": "01a15d61-8537-7220-aa84-69eb76cb5b25",
+   "endpoint": "/openapi/v1/image-to-3d",
+   "source": {
+    "image_files": [
+     "c1_0.png"
+    ]
+   },
+   "params": {
+    "ai_model": "latest",
+    "should_remesh": true,
+    "topology": "quad",
+    "target_polycount": 150000,
+    "enable_pbr": true,
+    "should_texture": true
+   },
+   "status": "SUCCEEDED",
+   "credits": 30,
+   "verdict": "alternate, not published: most open V split (limbs diverge), but crown thinner and side-flat (depth/width 0.70)."
+  },
+  {
+   "tag": "m_c2v1",
+   "task_id": "01a15d61-8525-7376-9d2f-830099162744",
+   "endpoint": "/openapi/v1/image-to-3d",
+   "source": {
+    "image_files": [
+     "c2_1.png"
+    ]
+   },
+   "params": {
+    "ai_model": "latest",
+    "should_remesh": true,
+    "topology": "quad",
+    "target_polycount": 150000,
+    "enable_pbr": true,
+    "should_texture": true
+   },
+   "status": "SUCCEEDED",
+   "credits": 30,
+   "verdict": "rejected: dense green crown but split hard to read; slab-like side (depth/width 0.64)."
+  },
+  {
+   "tag": "m_c3v1",
+   "task_id": "01a15d62-67b6-74b5-860a-d3737baeead6",
+   "endpoint": "/openapi/v1/image-to-3d",
+   "source": {
+    "image_files": [
+     "c3_1.png"
+    ]
+   },
+   "params": {
+    "ai_model": "latest",
+    "should_remesh": true,
+    "topology": "quad",
+    "target_polycount": 150000,
+    "enable_pbr": true,
+    "should_texture": true
+   },
+   "status": "SUCCEEDED",
+   "credits": 30,
+   "verdict": "CHOSEN: clear V lightning cleft with glowing scar visible front and back, dense deep-green crown, no blue puff, no red; depth/width 0.72."
+  },
+  {
+   "tag": "m_c3multi",
+   "task_id": "01a15d62-684c-73d9-afc7-d1c20d4dfe93",
+   "endpoint": "/openapi/v1/multi-image-to-3d",
+   "source": {
+    "input_task_id": "01a15d61-84df-72c3-aefe-ef2c58f401df"
+   },
+   "params": {
+    "input_task_id": "01a15d61-84df-72c3-aefe-ef2c58f401df",
+    "ai_model": "latest",
+    "should_remesh": true,
+    "topology": "quad",
+    "target_polycount": 150000,
+    "enable_pbr": true,
+    "should_texture": true
+   },
+   "status": "SUCCEEDED",
+   "credits": 30,
+   "verdict": "rejected: see-through split reads well from front, but flattest (depth/width 0.55) and thin tower-like side view."
+  }
+ ]
+}

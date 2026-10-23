@@ -119,3 +119,103 @@ The judged gain is +1.63, with the defect fixed in every row. It is not passed y
 - taller, varied crests with one snow-capped hero peak;
 - a darker, more saturated mid layer for aerial depth;
 - removal of a darker horizontal band at the base.
+
+## P2-033 / P2-034 round 2 (Meshy items scaled about 1.5×, halo 0.45×; berry and hide swaps dropped)
+
+Same capture, 6 sightings plus a close crop of each (12 rows per arm). X has the flag OFF and Y has it ON. Three code-blind judges, shuffled (`F38-P2-033-034-r2-key.json`). Means per item (wide view / crop):
+
+| Item | X | Y | Y defect | |
+|---|---|---|---|---|
+| pickup rare_candy | 3.40 / 3.67 | **6.63 / 7.17** | FIXED ×3 | item mean 6.90 |
+| harvest travel_pack | 4.77 / 5.13 | **6.47 / 6.93** | FIXED ×3 | item mean 6.70 |
+| harvest orb_basic | 5.60 / 5.90 | 6.47 / 6.80 | FIXED ×3 | item mean 6.63 |
+| pickup potion_small | 4.20 / 4.87 | 4.90 / 5.90 | mixed | |
+| pickup great_candy | 3.73 / 3.97 | 4.60 / 4.93 | PRESENT ×3 | |
+| pickup good_candy | 3.37 / 3.53 | 4.13 / 4.40 | PRESENT ×3 | |
+
+Y beats X in every row for every judge. Row means: P2-034 (harvest) X 5.35, Y **6.67**; P2-033 (pickups) X 3.84, Y **5.33**. Neither row passes (both under 6.7). The flag stays OFF.
+
+The rare candy and travel pack pass as single items. What the judges still name:
+- good and great candy read as a cabbage and a blue tarp under the glow; they need the rare candy's wrapped-sweet form in their own colours;
+- the potion is too small for its frame.
+
+r3: Meshy wrapped-sweet good and great candies requested from the coordinator, the potion scaled up, the orb basket kept.
+
+## P2-014 round 3 (taller crests, a snow-capped hero peak, darker mid layer)
+
+Route frame plus two horizon crops; three code-blind judges, shuffled (`F38-P2-014-r3-key.json`).
+
+| | Judge 1 | Judge 2 | Judge 3 | Mean |
+|---|---|---|---|---|
+| X original | 5.83 | 5.80 | 5.63 | 5.76 |
+| Y r3 | 5.87 | 5.80 | 5.83 | **5.83** |
+
+There is no gain over r2 (6.10), so this is the first flat round. The enlarged hero peak reads as a smooth white board, and the tall far crests repeat like cut-outs, with a pale seam at their base.
+
+All three judges ask for:
+- a forested green/blue-green foothill layer between the meadow and the ranges, with stronger aerial-perspective steps (+0.5–0.6);
+- rock and snow breakup on the hero peak (+0.5–0.6);
+- an irregular silhouette rhythm and no vertical streaks (+0.4–0.5).
+
+r4 goes back to the r2 ranges and adds those.
+
+## P2-012 round 2 (larger non-uniform hill-shell fit)
+
+Failed on sight, not judged. In walk_03 the hidden bank leaves the warren chamber roof floating in the open, because the shell no longer covers it. Next: fit the shell to the bank's own bounds and keep the bank cap where the shell leaves a gap.
+
+## P2-014 round 4 (r3 ranges plus a forested foothill band, secondary peaks, ragged snow line, rock strata, smooth colour variation)
+
+Code: optional `horizon_ranges.gd` layer keys `extra_heroes`, `snow_breakup`, `strata`, `smooth_variation` (inert when absent). Fresh control X4 (current main config) and candidate Y4, captured on the same three frames; rows are the route frame, two horizon crops and the warrens walk. Key `F38-P2-014-r4-key.json`; decoded scores in `F38-P2-014-r4-judges.json`.
+
+| | Judge 1 | Judge 2 | Judge 3 | Mean |
+|---|---|---|---|---|
+| X control | 5.85 | 5.13 | 5.30 | 5.42 |
+| Y r4 | 6.05 | 5.45 | 5.68 | **5.73** |
+
+Y wins the crops and the warrens view, with the defect FIXED ×3. All three judges preferred the control on the route frame, whose single tall peak dominates; r4's hero is broader and lower. Gain over the best (r2 6.10): none. That makes two flat rounds (r3, r4).
+
+What all three judges still name:
+- one dominant, sharp snow-capped summit with dark rock faces under crisp snow (+0.4–0.7);
+- the vertical streaking on the faces, which comes from long thin ring triangles (+0.4–0.5);
+- a brighter, more saturated sky with cumulus (+0.3–0.6).
+
+Next is a clearly different approach: a Meshy hero summit mesh (sculpted rock/snow, sharp apex) set into the far ring at the hero bearing, and denser ring rows to cut the streaks. Under the owner rule this CPU evidence cannot park the item.
+
+## P2-033 round 3 (Meshy single wrapped sweets for good/great candy, fitted by length; potion 0.85 m)
+
+Fresh control X3 and candidate Y3 on the four pickup sightings, each as the gameplay frame plus a crop centred on the item (8 rows). Three code-blind judges, shuffled (`F38-P2-033-r3-key.json`, decoded in `F38-P2-033-r3-judges.json`).
+
+| | Judge 1 | Judge 2 | Judge 3 | Mean |
+|---|---|---|---|---|
+| X control | 4.31 | 4.50 | 4.21 | 4.34 |
+| Y r3 | 6.29 | 6.65 | 6.28 | **6.40** |
+
+Per item (Y, frame/crop): good candy 6.13/6.93, great candy 5.67/6.27, potion 5.87/6.87, rare candy 6.37/7.13. The gain over r2 (5.33) is +1.07; the row is not met (6.40 < 6.7). The flag stays OFF.
+
+All three judges name:
+- the items are too small to identify in the wide frames (×1.3–1.5, +0.5–0.8);
+- there is no contact shadow, so the candies float on the grass (+0.5);
+- the potion keeps a green halo;
+- the great candy reads as an egg or ball rather than a wrapped sweet (+0.6 on its rows).
+
+r4: every item scaled up (good 1.1 m, great 1.15 m long; potion 1.1 m; rare 0.9 m), a soft unshaded contact shadow under each (`shadow_m`), the potion halo cut to 0.45×, and the great candy turned broadside like the good candy.
+
+## P2-012 round 3 (hill shell fitted to the bank's bounds, bank kept visible)
+
+Failed on sight, not judged. The bank spans about 144 × 39 × 128 m, so a shell fitted to it swallows the walk_02 camera. In walk_03 the bank wall and the floating chamber roofs are unchanged from the shipped game. That defect belongs to the warrens geometry, and no shell can cover it.
+
+## RESUME (visual paused by owner direction, 21 Oct about 15:05Z, until the GPU remote starts)
+
+All captures were stopped mid-queue: the relay yard control, P2-014 r5 and P2-033 r4 were not rendered. Every candidate is OFF on `tb/look`. P2-051 and P2-094 passed (CPU-provisional) and landed via PR #700.
+
+| Row | Best CPU score (control) | Candidate on tb/look | Flag | Exact next step |
+|---|---|---|---|---|
+| P2-051 Mira counter | 6.84 (4.48) | landed | `building_prefabs.json` meshy_counter ON | **GPU confirmation pass** (needs 7.5) |
+| P2-094 placed wall | 6.73 (3.5) | landed; review follow-ups 07dca0f6c (repeat-apply guard, note 3.5) not yet landed | `build_wall_interior.json` meshy_wall ON | **GPU confirmation pass**; land 07dca0f6c with the next batch |
+| P2-034 harvest items | 6.67 (5.35), r2 | c4dead9bd config (orb basket, travel pack) | `meshy_item_visuals.json` enabled false | GPU pass on the r2 harvest config: at 6.67 on CPU it is the closest open row (rare candy 6.90 and travel pack 6.70 already pass alone) |
+| P2-033 ground pickups | 6.40 (4.34), r3 | r4 config committed in cdef2f6a4 (items about 1.3× larger, contact shadow `shadow_m`, potion halo 0.45×, great candy broadside); unrendered | `meshy_item_visuals.json` enabled false | render r4 (Y4) against the X3 control, then judge. Command: `run_p2033r4` pattern = `phase2_capture_world_inventory.gd --biome=meadows --times=day --subset=pickup__{good,great,rare}_candy --subset=pickup__potion_small` |
+| P2-014 distant mountains | 6.10 (r2; r3 5.83 and r4 5.73 were flat) | r5 = Meshy `meadows_hero_summit` via `horizon_ranges.gd` `hero_model` (6bb3a70c9); full config saved as `F38-P2-014-r5-candidate.json` (copy over `data/config/meadows_horizon.json` for the Y arm): bearing 100°, distance 1800 m, scale (0.6, 0.62, 0.35), sink 60 m, tint #c8d4e6, FarRanges hero_lift 0.3, rows 56, r4 foothills | `meadows_horizon.json` (no hero_model key = OFF) | render r5 against the X4 control (route + warrens frames, `phase2_capture_routes.gd`), then judge. Two flat rounds stand, so r5 is the clearly-different round: one more round under +0.5 parks it (CPU evidence cannot park it by itself) |
+| P2-012 Warrens hillside | not judged (r2 and r3 failed on sight) | shell + `fit_to` / `clip_box.space` code (a7eee40ef) | `burrow_warrens.json` bank.hill_shell enabled false | re-scope: the floating chamber roofs are a warrens-geometry defect (bank or chamber cap), not a dressing one; fix the geometry before any shell round |
+| P2-013 relay yard | not started; the runtime grass clear is already ON on main | none | n/a | capture a relay route_day/vista_dusk control and check whether the baked scatter flowers survive the runtime clear |
+
+Ready for the GPU confirmation pass: P2-051 and P2-094 (landed). P2-034 r2 is worth one GPU look before more CPU rounds. Not ready (unjudged): P2-014 r5 and P2-033 r4.

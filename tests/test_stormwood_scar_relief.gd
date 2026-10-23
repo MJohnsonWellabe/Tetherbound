@@ -6,13 +6,41 @@ const FIELD := preload("res://scripts/world/stormwood_glass_field.gd")
 func test_scar_relief_stays_off_without_changing_existing_scars() -> void:
 	var field := FIELD.new()
 	field.config = JSON.parse_string(FileAccess.get_file_as_string(FIELD.CONFIG_PATH))
-	assert_false(bool(field.config.scar_relief_candidate.enabled))
+	# Ships ON by coordinator decision (22 Oct wind-down: r11 beat control);
+	# the OFF branch must still leave the existing scars exactly as they were.
+	assert_true(bool(field.config.scar_relief_candidate.enabled), "relief ships ON")
+	field.config.scar_relief_candidate.enabled = false
 	assert_true(bool(field.config.scorched_scars), "existing scar presentation retained")
 	var material: ShaderMaterial = field.call("_fused_material")
-	assert_eq(float(material.get_shader_parameter("sw_normal_strength")), 0.0)
-	assert_eq(float(material.get_shader_parameter("sw_detail_strength")), 0.0)
-	assert_eq(float(material.get_shader_parameter("sw_roughness_scale")), 1.0)
+	assert_eq(_effective(material, "sw_normal_strength"), 0.0)
+	assert_eq(_effective(material, "sw_detail_strength"), 0.0)
+	assert_eq(_effective(material, "sw_roughness_scale"), 1.0)
 	field.free()
+
+
+## The value the material renders with: an unset uniform falls back to the
+## shader's declared default (get_shader_parameter returns null for it).
+func _effective(material: ShaderMaterial, uniform: String) -> float:
+	var value: Variant = material.get_shader_parameter(uniform)
+	if value == null and material.shader != null:
+		value = _declared_default(material.shader.code, uniform)
+	assert_true(value != null, "%s has a set value or a shader default" % uniform)
+	return float(value) if value != null else NAN
+
+
+## `uniform float <name> = <value>;` in the shader source or its #include files
+## (the headless renderer reports no parameter defaults).
+func _declared_default(code: String, uniform: String) -> Variant:
+	var sources: Array[String] = [code]
+	var include := RegEx.create_from_string("#include\\s+\"([^\"]+)\"")
+	for found: RegExMatch in include.search_all(code):
+		sources.append(FileAccess.get_file_as_string(found.get_string(1)))
+	var declared := RegEx.create_from_string("uniform\\s+float\\s+%s\\s*(?::[^=;]*)?=\\s*([-0-9.eE]+)\\s*;" % uniform)
+	for source: String in sources:
+		var hit := declared.search(source)
+		if hit != null:
+			return float(hit.get_string(1))
+	return null
 
 
 func test_relief_uses_shared_detail_without_recolour_or_roughness_change() -> void:

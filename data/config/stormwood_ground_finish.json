@@ -3,13 +3,13 @@
   "scope": "client_presentation",
   "_comment": "P2-039 final source repair: rounded moss, three wet curled-leaf shapes, terrain-conforming wet soil and roots anchored to existing baked trees. Living canopy positions define cover islands and open clearings. Shared field shaders, terrain/control data, harvest identity, collision and actor scale are unchanged. Native matched evidence and Claude judgment remain pending.",
   "grass": {
-    "height_near": 0.14,
-    "height_far": 0.2,
+    "height_near": 0.2,
+    "height_far": 0.26,
     "height_jitter": 0.7,
     "lattice_jitter": 1.4,
-    "tint_base": "#25392c",
-    "tint_tip": "#496344",
-    "density_gain": 0.16,
+    "tint_base": "#22402f",
+    "tint_tip": "#4f7a5a",
+    "density_gain": 0.85,
     "clump_contrast": 0.95,
     "clump_scale": 0.075,
     "ground_blend": 0.8,
@@ -23,9 +23,9 @@
       "fade_out_start": 320.0,
       "lift": 0.35,
       "dilate_lift": 1.5,
-      "strength": 0.24,
-      "tint_base": "#35412d",
-      "tint_tip": "#4d5e3e",
+      "strength": 0.42,
+      "tint_base": "#2f4632",
+      "tint_tip": "#4d6b4c",
       "ground_blend": 0.55,
       "mottle_scale": 0.34,
       "mottle_strength": 0.8,
@@ -117,24 +117,24 @@
     "_comment": "Bind installed forest-floor grain to living ground and wet earth to the muddy path, using the existing six slot IDs. Texture replacement changes presentation only; the original painted path/control maps and terrain remain authoritative.",
     "textures": {
       "grass": {
-        "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+        "albedo": "res://assets/props/meshy-1020/ground_wet_moss_floor/ground_wet_moss_floor_albedo_seamless.png",
         "normal": "res://assets/environment/terrain/stylised/forest_floor_NormalGL.png",
-        "uv_scale": 0.5,
+        "uv_scale": 0.25,
         "normal_depth": 0.34,
-        "tint": "#809165"
+        "tint": "#b8a882"
       },
       "soil": {
         "_comment": "Slot 1 is Terrain3D's default auto-overlay and dominates near-flat Stormwood ground. Restore the baseline forest-floor albedo/tint here; dark wet earth remains in the path, damp and canopy wet-soil layers. Normal binding stays unchanged for the isolated albedo comparison.",
-        "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+        "albedo": "res://assets/props/meshy-1020/ground_wet_moss_floor/ground_wet_moss_floor_albedo_seamless.png",
         "normal": "res://assets/environment/terrain/stylised/wet_earth_NormalGL.png",
-        "uv_scale": 0.45,
+        "uv_scale": 0.25,
         "normal_depth": 0.22,
-        "tint": "#b4b497"
+        "tint": "#b8a882"
       },
       "rock": {
         "uv_scale": 0.24,
         "normal_depth": 0.55,
-        "tint": "#aaaab3"
+        "tint": "#857f70"
       },
       "path": {
         "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
@@ -144,16 +144,17 @@
         "tint": "#aaa28c"
       },
       "damp": {
-        "uv_scale": 0.5,
+        "uv_scale": 0.3,
         "normal_depth": 0.18,
-        "tint": "#535447",
-        "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+        "tint": "#85836f",
+        "albedo": "res://assets/props/meshy-1020/ground_dark_root_bark/ground_dark_root_bark_albedo_seamless.png",
         "normal": "res://assets/environment/terrain/stylised/wet_earth_NormalGL.png"
       },
       "forest_floor": {
+        "albedo": "res://assets/props/meshy-1020/ground_wet_moss_floor/ground_wet_moss_floor_albedo_seamless.png",
         "uv_scale": 0.5,
         "normal_depth": 0.3,
-        "tint": "#747863"
+        "tint": "#a89a78"
       }
     }
   },
@@ -163,6 +164,8 @@
     "bush_item_size": 0.8,
     "_comment": "The three rounded moss lobes reach 0.104m local height; canopy understory remains a separate full-height shrub tier. Harvested plants and all gameplay actors retain their own transforms."
   },
+  "_why_wet_gloss": "F41#3 candidate (r11 judges: pale lilac pool slabs): the fully wet soil patches mirrored the purple sky at roughness 0.28 / specular 0.38. A duller sheen keeps them dark and wet.",
+  "wet_gloss": {"roughness": 0.55, "specular": 0.2},
   "forest_layers": [
     {
       "name": "wet_soil",
@@ -181,8 +184,8 @@
       "drift_gate": 1.0,
       "patch_start": 0.35,
       "patch_full": 0.68,
-      "tint_base": "#302d21",
-      "tint_tip": "#403b2b",
+      "tint_base": "#1e2420",
+      "tint_tip": "#2a312b",
       "ground_blend": 0.12,
       "contact_darken": 0.08,
       "sway": 0.0,

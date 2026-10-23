@@ -42,6 +42,8 @@ var currents: RefCounted
 var config: Dictionary
 var _visual: Dictionary
 var veilfall: Node3D
+## The Tidewake look's models, held once the loader threads hand them over.
+var _look_models_held: Array = []
 
 
 func _ready() -> void:
@@ -51,6 +53,7 @@ func _ready() -> void:
 	_visual = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_PATH))
 	if not simulation_only:
 		_visual = preload("res://scripts/world/tidewake_look_profile.gd").overlay(_visual, "surfaces")
+	var look_models := _request_look_models()
 	field = FIELD.new(config)
 	var traversal: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_swimming.json"))
 	var current_config: Dictionary = CURRENTS.with_closed_gates(config, traversal)
@@ -150,11 +153,14 @@ func _ready() -> void:
 	camps.name = "WaterCamps"
 	add_child(camps)
 	camps.build(self)
+	await _await_look_models(look_models)
 	var docks := DOCKS.new()
 	docks.name = "WaterDocks"
 	add_child(docks)
 	docks.build(self)
 	var dock_dressing: Node3D = preload("res://scripts/world/water_dock_dressing.gd").new(); dock_dressing.name = "WaterDockDressing"; add_child(dock_dressing); dock_dressing.call("build", self)
+	# F39 P2-011: OFF-gated reference-backed buildings at bare named destinations.
+	var landmark_models: Node3D = preload("res://scripts/world/water_landmark_models.gd").new(); landmark_models.name = "WaterLandmarkModels"; add_child(landmark_models); landmark_models.call("build", self)
 	# F13#5: two installed-cast dock hands at every mandatory dock (presentation only).
 	var dock_residents: Node3D = preload("res://scripts/world/water_dock_residents.gd").new(); dock_residents.name = "WaterDockResidents"; add_child(dock_residents); dock_residents.call("build", self)
 	# F13 physical_ramp return shortcuts: built from the replicated dock flag.
@@ -229,6 +235,41 @@ func _ready() -> void:
 			game.apply_loaded_player_pose()
 		else:
 			_finish_entry.call_deferred(game)
+
+
+## The Tidewake look's Meshy buildings and props (about 19 GLBs, 180 MB) used to
+## load synchronously, back to back, inside one frame of this build; on a slow
+## host that froze the co-op session past its 15 s heartbeat. They are requested
+## on the loader threads as the build starts and awaited frame by frame before
+## the dock and landmark builders, whose own load() calls then hit the cache.
+static func look_model_paths(look: Dictionary) -> Array[String]:
+	var out: Array[String] = []
+	var pattern := RegEx.create_from_string("res://[^\"]+\\.(glb|gltf)")
+	for found: RegExMatch in pattern.search_all(JSON.stringify(look)):
+		var path := found.get_string()
+		if path not in out and ResourceLoader.exists(path):
+			out.append(path)
+	return out
+
+
+func _request_look_models() -> Array[String]:
+	# Not skipped on a simulation-only shell: the dock dressing still builds
+	# there, and without a held reference every load() re-reads its GLB.
+	var paths := look_model_paths(preload("res://scripts/world/tidewake_look_profile.gd").settings())
+	for path: String in paths:
+		if not ResourceLoader.has_cached(path):
+			ResourceLoader.load_threaded_request(path)
+	return paths
+
+
+func _await_look_models(paths: Array[String]) -> void:
+	for path: String in paths:
+		while ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+			await get_tree().process_frame
+		if ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_LOADED:
+			_look_models_held.append(ResourceLoader.load_threaded_get(path))
+		elif ResourceLoader.has_cached(path):
+			_look_models_held.append(load(path))
 
 
 func _finish_entry(game: Node) -> void:
@@ -378,8 +419,13 @@ func _build_materials() -> void:
 	material.set("show_colormap", false)
 	material.set("auto_shader", false)
 	var veilfall: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_veilfall.json"))
+	# F39 candidate under the OFF Tidewake look gate: the Veilfall exclusion can
+	# shrink so its approach takes the chapter's dune sand and coastal rock
+	# instead of the inland meadow ground.
+	var veilfall_rock: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").overlay(
+		veilfall.get("rock_material", {}), "veilfall_rock_material")
 	preload("res://scripts/world/coastal_rock_material.gd").install(terrain,
-		_visual.terrain.get("cliff_material", {}), veilfall.get("rock_material", {}))
+		_visual.terrain.get("cliff_material", {}), veilfall_rock)
 
 
 func _stand_up_ground_cover() -> void:

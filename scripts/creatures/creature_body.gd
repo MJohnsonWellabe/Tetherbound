@@ -438,6 +438,8 @@ func _tick_camera_fade(delta: float) -> void:
 	if camera != null:
 		var local := model.global_transform.affine_inverse() * camera.global_position
 		inside = _camera_fade_bounds.grow(CAMERA_FADE_MARGIN_M).has_point(local)
+		if not inside and fades_when_camera_inside:
+			inside = _camera_fade_extra(model, camera.global_position)
 	var target := CAMERA_FADE_AMOUNT if inside and fades_when_camera_inside else 0.0
 	var next := move_toward(_camera_fade, target, CAMERA_FADE_SPEED * delta)
 	if is_zero_approx(next) and is_zero_approx(_camera_fade):
@@ -450,6 +452,12 @@ func _tick_camera_fade(delta: float) -> void:
 	var saddle := get_node_or_null(CAMERA_FADE_SADDLE)
 	if saddle != null:
 		CAMERA_FADE.apply(saddle, _camera_fade, _camera_fade_state, eye)
+
+
+## A subclass's further reason to fade while the camera is outside the body
+## (the follower: covering its trainer). Presentation only.
+func _camera_fade_extra(_model: Node3D, _eye: Vector3) -> bool:
+	return false
 
 
 ## The pivot the art hangs off. Procedural motion moves this, never the body:

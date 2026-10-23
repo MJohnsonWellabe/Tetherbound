@@ -1,0 +1,41 @@
+{
+ "Kd": {
+  "anchor": false,
+  "label": "P2-018 shiny c1",
+  "A": "shiny-base.png",
+  "B": "shiny-c1.png"
+ },
+ "Em": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Vv": {
+  "anchor": false,
+  "label": "F36 poses c1",
+  "A": "pose-base.png",
+  "B": "pose-c1.png"
+ },
+ "Ob": {
+  "anchor": false,
+  "label": "F36 dark palette c1",
+  "A": "dark-c1.png",
+  "B": "dark-base.png"
+ },
+ "Es": {
+  "anchor": false,
+  "label": "F29#3 c1",
+  "A": "f29-c1.png",
+  "B": "f29-base.png"
+ },
+ "Fb": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Kk": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

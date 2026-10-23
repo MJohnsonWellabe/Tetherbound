@@ -1,0 +1,40 @@
+{
+ "Zq": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ol": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Es": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Rg": {
+  "anchor": false,
+  "label": "F36 tanglevolt lift r2",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b12/sides/tanglevolt-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b12/sides/tanglevolt-base.png"
+ },
+ "Yx": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Sl": {
+  "anchor": false,
+  "label": "F36 stormursa lift r2",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b12/sides/stormursa-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b12/sides/stormursa-base.png"
+ },
+ "Vu": {
+  "anchor": false,
+  "label": "F36 stormcapra lift r2",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b12/sides/stormcapra-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b12/sides/stormcapra-base.png"
+ }
+}

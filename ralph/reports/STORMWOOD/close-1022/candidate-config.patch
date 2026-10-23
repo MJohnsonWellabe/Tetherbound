@@ -1,0 +1,416 @@
+diff --git a/data/config/combat.json b/data/config/combat.json
+index 5ea83d6e9..8ef82f409 100644
+--- a/data/config/combat.json
++++ b/data/config/combat.json
+@@ -587,7 +587,7 @@
+     "_why_lane_xray_alpha": "F10#2 C3 judge (2026-10-13): Hollows Alpha's lane was mostly hidden under Voltarach's legs at the fight camera. A faint copy of the same lane, same colour, drawn without the depth test at this fraction of its alpha, so a lane under a large body still reads; the depth-tested lane stays full strength and never paints through a body (P2-093). 0 disables. OFF: at 0.35 and 0.7 the code-blind judge still read the spider lane as hidden (F10#2 c3_rerun, two attempts); kept as an off candidate. TUNABLE; presentation only.",
+     "lane_xray_alpha": 0.0,
+     "_why_lane_charged": "F41#5 candidate (Stormwood lane, 22 Oct 2026): the GPU pass judges read the solid named-fight lanes (cue_lane_solid) as flat magenta slabs. When enabled, a solid lane keeps its hue, shape, timings and authored alphas but its fill is broken by a world-space crackle streaming along the ground (scale per metre, speed), the brightest veins lifted `whiten` toward white; floor_alpha + vein_gain shape the alpha around the authored value. Presentation only. OFF until judged.",
+-    "lane_charged": {"enabled": false, "scale": 1.0, "speed": 1.6, "floor_alpha": 0.18, "vein_gain": 2.4, "whiten": 0.8, "edge_soft": 0.55, "vein_sharpness": 7.0}
++    "lane_charged": {"enabled": true, "scale": 1.0, "speed": 1.6, "floor_alpha": 0.18, "vein_gain": 2.4, "whiten": 0.8, "edge_soft": 0.55, "vein_sharpness": 7.0}
+   },
+   "stagger_feedback": {
+     "enabled": true,
+diff --git a/data/config/stormheart_presentation.json b/data/config/stormheart_presentation.json
+index e88ce9190..dc8283bae 100644
+--- a/data/config/stormheart_presentation.json
++++ b/data/config/stormheart_presentation.json
+@@ -71,5 +71,5 @@
+     "wind_speed": 0.85
+   },
+   "visible_roots": {"enabled": true, "scope": "client_presentation", "reach_m": 132.0, "_comment": "Reference-backed visual roots anchor in actual outer bark, keeping south/east openings and every physical floor/collider unchanged. Full native landmark judgment required."},
+-  "meshy_hero": {"enabled": false, "scope": "client_presentation", "_comment": "F41/P2-037 candidate, OFF until a three-judge matrix passes. Meshy task provenance: assets/props/meshy-1020/stormheart_tree/provenance.json (cand3 recommended). Shown beyond swap_radius_m from the trunk axis; inside it the procedural hollow shell, decks, ascent and colliders are unchanged.", "model": "res://assets/props/meshy-1020/stormheart_tree/cand3/stormheart_tree_cand3.glb", "height_m": 260.0, "shape": [1.25, 1.0, 1.25], "yaw_deg": 0.0, "sink_m": 2.0, "swap_radius_m": 75.0}
++  "meshy_hero": {"enabled": true, "scope": "client_presentation", "_comment": "F41/P2-037 candidate, OFF until a three-judge matrix passes. Meshy task provenance: assets/props/meshy-1020/stormheart_tree/provenance.json (cand3 recommended). Shown beyond swap_radius_m from the trunk axis; inside it the procedural hollow shell, decks, ascent and colliders are unchanged.", "model": "res://assets/props/meshy-1020/stormheart_tree_v2/stormheart_tree_v2.glb", "height_m": 380.0, "shape": [0.95, 1.0, 1.05], "yaw_deg": 180.0, "sink_m": 2.0, "swap_radius_m": 75.0, "hide_decks_at_distance": ["DynamoCore", "CrownChamber"], "albedo_tint": "#ffffff", "fog": false, "hide_seam_at_distance": false}
+ }
+diff --git a/data/config/stormwood_destination_dressing.json b/data/config/stormwood_destination_dressing.json
+index 11ac0b3bc..501ae1669 100644
+--- a/data/config/stormwood_destination_dressing.json
++++ b/data/config/stormwood_destination_dressing.json
+@@ -2,7 +2,7 @@
+   "schema_version": 1,
+   "_scope": "Client static presentation only. No save, network, terrain, actor or collision changes. OFF pending native support, catalogue visibility and separate trunk collision scope.",
+   "fallen_giant": {
+-    "enabled": false,
++    "enabled": true,
+     "asset": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
+     "root_xz": [-138.0, 4482.0],
+     "uniform_scale": 2.0,
+diff --git a/data/config/stormwood_glass_field.json b/data/config/stormwood_glass_field.json
+index 27c6e57ca..421944563 100644
+--- a/data/config/stormwood_glass_field.json
++++ b/data/config/stormwood_glass_field.json
+@@ -26,7 +26,7 @@
+   "_why_scorched_scars": "F10#4 scene-art pass (owner 5860380772): strike scars as terrain-following burnt glass-fused patches with the grass cleared, blackened rock-family lumps and low smoked-glass blades. Enabled for Phase 1b; the old spire clusters remain only as a legacy fallback.",
+   "scorched_scars": true,
+   "scar_relief_candidate": {
+-    "enabled": false,
++    "enabled": true,
+     "scope": "client_presentation",
+     "normal_strength": 0.14,
+     "detail_frequency": 2.4,
+@@ -36,5 +36,5 @@
+     {"id":"west_warning", "at":[-21.0,101.0], "height_m":8.0, "yaw_deg":28.0},
+     {"id":"east_warning", "at":[21.0,126.0], "height_m":8.0, "yaw_deg":-24.0}
+   ],
+-  "shard_finish": {"enabled": false, "scope": "client_presentation", "_comment": "F41 round-3 candidate (OFF until judged): taller, brighter fused-glass blades so the Glass Field scar reads at the fixed stand (three round-1 judges: a tiny dark smear). Visual only; no collision or placement change.", "height_scale": 0.62, "emission_energy": 0.45}
++  "shard_finish": {"enabled": true, "scope": "client_presentation", "_comment": "F41 round-3 candidate (OFF until judged): taller, brighter fused-glass blades so the Glass Field scar reads at the fixed stand (three round-1 judges: a tiny dark smear). Visual only; no collision or placement change.", "height_scale": 0.45, "crust_model": "res://assets/props/meshy-1020/scar_crust/v1/scar_crust_v1.glb", "crust_footprint": 0.9, "crust_height_m": 0.45, "emission_energy": 0.45}
+ }
+diff --git a/data/config/stormwood_ground_finish.json b/data/config/stormwood_ground_finish.json
+index c2b6fc48a..39575a51a 100644
+--- a/data/config/stormwood_ground_finish.json
++++ b/data/config/stormwood_ground_finish.json
+@@ -3,13 +3,13 @@
+   "scope": "client_presentation",
+   "_comment": "P2-039 final source repair: rounded moss, three wet curled-leaf shapes, terrain-conforming wet soil and roots anchored to existing baked trees. Living canopy positions define cover islands and open clearings. Shared field shaders, terrain/control data, harvest identity, collision and actor scale are unchanged. Native matched evidence and Claude judgment remain pending.",
+   "grass": {
+-    "height_near": 0.14,
+-    "height_far": 0.2,
++    "height_near": 0.2,
++    "height_far": 0.26,
+     "height_jitter": 0.7,
+     "lattice_jitter": 1.4,
+-    "tint_base": "#25392c",
+-    "tint_tip": "#496344",
+-    "density_gain": 0.16,
++    "tint_base": "#22402f",
++    "tint_tip": "#4f7a5a",
++    "density_gain": 0.85,
+     "clump_contrast": 0.95,
+     "clump_scale": 0.075,
+     "ground_blend": 0.8,
+@@ -23,9 +23,9 @@
+       "fade_out_start": 320.0,
+       "lift": 0.35,
+       "dilate_lift": 1.5,
+-      "strength": 0.24,
+-      "tint_base": "#35412d",
+-      "tint_tip": "#4d5e3e",
++      "strength": 0.42,
++      "tint_base": "#2f4632",
++      "tint_tip": "#4d6b4c",
+       "ground_blend": 0.55,
+       "mottle_scale": 0.34,
+       "mottle_strength": 0.8,
+@@ -117,24 +117,24 @@
+     "_comment": "Bind installed forest-floor grain to living ground and wet earth to the muddy path, using the existing six slot IDs. Texture replacement changes presentation only; the original painted path/control maps and terrain remain authoritative.",
+     "textures": {
+       "grass": {
+-        "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
++        "albedo": "res://assets/props/meshy-1020/ground_wet_moss_floor/ground_wet_moss_floor_albedo_seamless.png",
+         "normal": "res://assets/environment/terrain/stylised/forest_floor_NormalGL.png",
+-        "uv_scale": 0.5,
++        "uv_scale": 0.25,
+         "normal_depth": 0.34,
+-        "tint": "#809165"
++        "tint": "#b8a882"
+       },
+       "soil": {
+         "_comment": "Slot 1 is Terrain3D's default auto-overlay and dominates near-flat Stormwood ground. Restore the baseline forest-floor albedo/tint here; dark wet earth remains in the path, damp and canopy wet-soil layers. Normal binding stays unchanged for the isolated albedo comparison.",
+-        "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
++        "albedo": "res://assets/props/meshy-1020/ground_wet_moss_floor/ground_wet_moss_floor_albedo_seamless.png",
+         "normal": "res://assets/environment/terrain/stylised/wet_earth_NormalGL.png",
+-        "uv_scale": 0.45,
++        "uv_scale": 0.25,
+         "normal_depth": 0.22,
+-        "tint": "#b4b497"
++        "tint": "#b8a882"
+       },
+       "rock": {
+         "uv_scale": 0.24,
+         "normal_depth": 0.55,
+-        "tint": "#aaaab3"
++        "tint": "#857f70"
+       },
+       "path": {
+         "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+@@ -144,16 +144,17 @@
+         "tint": "#aaa28c"
+       },
+       "damp": {
+-        "uv_scale": 0.5,
++        "uv_scale": 0.3,
+         "normal_depth": 0.18,
+-        "tint": "#535447",
+-        "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
++        "tint": "#85836f",
++        "albedo": "res://assets/props/meshy-1020/ground_dark_root_bark/ground_dark_root_bark_albedo_seamless.png",
+         "normal": "res://assets/environment/terrain/stylised/wet_earth_NormalGL.png"
+       },
+       "forest_floor": {
++        "albedo": "res://assets/props/meshy-1020/ground_wet_moss_floor/ground_wet_moss_floor_albedo_seamless.png",
+         "uv_scale": 0.5,
+         "normal_depth": 0.3,
+-        "tint": "#747863"
++        "tint": "#a89a78"
+       }
+     }
+   },
+@@ -163,6 +164,8 @@
+     "bush_item_size": 0.8,
+     "_comment": "The three rounded moss lobes reach 0.104m local height; canopy understory remains a separate full-height shrub tier. Harvested plants and all gameplay actors retain their own transforms."
+   },
++  "_why_wet_gloss": "F41#3 candidate (r11 judges: pale lilac pool slabs): the fully wet soil patches mirrored the purple sky at roughness 0.28 / specular 0.38. A duller sheen keeps them dark and wet.",
++  "wet_gloss": {"roughness": 0.55, "specular": 0.2},
+   "forest_layers": [
+     {
+       "name": "wet_soil",
+@@ -181,8 +184,8 @@
+       "drift_gate": 1.0,
+       "patch_start": 0.35,
+       "patch_full": 0.68,
+-      "tint_base": "#302d21",
+-      "tint_tip": "#403b2b",
++      "tint_base": "#1e2420",
++      "tint_tip": "#2a312b",
+       "ground_blend": 0.12,
+       "contact_darken": 0.08,
+       "sway": 0.0,
+diff --git a/data/config/stormwood_look.json b/data/config/stormwood_look.json
+index 7e60e4eaa..607508364 100644
+--- a/data/config/stormwood_look.json
++++ b/data/config/stormwood_look.json
+@@ -1,19 +1,19 @@
+ {
+-  "enabled": false,
++  "enabled": true,
+   "scope": "client_presentation",
+   "_comment": "F41 biome look candidate. One fixed-purple rig at every clock hour; the existing Surge presentation supplies phase, rain, flash and aftermath deltas. OFF until matched Medium/High three-judge Bar A >=8.5. No save, collision, scatter or creature-scale changes.",
+   "rig": {
+     "sun": {"pitch_deg": -44.0, "yaw_deg": 140.0, "energy": 1.65, "colour": "#ddd9f3", "angular_distance": 2.5},
+-    "sky": {"top_colour": "#51476f", "horizon_colour": "#777292", "ground_horizon_colour": "#696485", "ground_bottom_colour": "#303b3a", "energy": 1.0, "cloud_lit": "#b8b2cc", "cloud_shade": "#7e7896", "cloud_base": "#6c6686", "horizon_haze_colour": "#777292", "sun_colour": "#d8d0ec"},
+-    "environment": {"ambient_colour": "#a4a8c4", "ambient_energy": 1.65, "ambient_sky_contribution": 0.18, "exposure": 0.82, "fog_density": 0.00028, "fog_colour": "#777292", "fog_sky_affect": 0.0, "aerial_perspective": 0.35, "adjustment_enabled": true, "adjustment_brightness": 1.0, "adjustment_contrast": 1.06, "adjustment_saturation": 0.94, "player_character_rim_scale": 1.0}
++    "sky": {"top_colour": "#51476f", "horizon_colour": "#6f7a9c", "ground_horizon_colour": "#696485", "ground_bottom_colour": "#303b3a", "energy": 1.0, "cloud_lit": "#b8b2cc", "cloud_shade": "#7e7896", "cloud_base": "#6c6686", "horizon_haze_colour": "#6f7a9c", "sun_colour": "#d8d0ec"},
++    "environment": {"ambient_colour": "#aab0bc", "ambient_energy": 1.65, "ambient_sky_contribution": 0.18, "exposure": 1.35, "fog_density": 0.00028, "fog_colour": "#6f7a9c", "fog_sky_affect": 0.0, "aerial_perspective": 0.35, "adjustment_enabled": true, "adjustment_brightness": 1.0, "adjustment_contrast": 1.06, "adjustment_saturation": 1.1, "player_character_rim_scale": 1.0}
+   },
+   "terrain": {
+-    "grass": {"normal_depth": 0.38, "uv_scale": 0.5},
+-    "soil": {"normal_depth": 0.3, "uv_scale": 0.45},
++    "grass": {"normal_depth": 0.38, "uv_scale": 0.5, "detiling_rotation": 0.35, "detiling_shift": 0.5},
++    "soil": {"normal_depth": 0.3, "uv_scale": 0.5, "detiling_rotation": 0.35, "detiling_shift": 0.5},
+     "rock": {"normal_depth": 0.5, "uv_scale": 0.24},
+     "path": {"normal_depth": 0.32, "uv_scale": 0.5},
+     "damp": {"normal_depth": 0.24, "uv_scale": 0.5},
+-    "forest_floor": {"normal_depth": 0.36, "uv_scale": 0.5}
++    "forest_floor": {"normal_depth": 0.36, "uv_scale": 0.5, "detiling_rotation": 0.35, "detiling_shift": 0.5}
+   },
+   "materials": {
+     "_comment": "Installed base textures, alpha masks, authored tint and emission remain authoritative. Metre-based relief and restrained broad variation unify opaque world surfaces; emissive effects and actor materials are excluded.",
+diff --git a/data/config/stormwood_rod_line.json b/data/config/stormwood_rod_line.json
+index debd7d0c3..c23ba28f1 100644
+--- a/data/config/stormwood_rod_line.json
++++ b/data/config/stormwood_rod_line.json
+@@ -5,14 +5,14 @@
+   "start_m": 20.0,
+   "side_offset_m": 8.5,
+   "side_sign": 1,
+-  "pylon_model": "res://assets/environment/team_tether/tether_pylon.glb",
+-  "pylon_height_m": 6.2,
++  "pylon_model": "res://assets/props/meshy-1020/relay_pylon/v1/relay_pylon_v1.glb",
++  "pylon_height_m": 9.0,
+   "sink_m": 0.25,
+-  "cable_attach_m": 5.6,
++  "cable_attach_m": 8.2,
+   "cable_radius_m": 0.07,
+   "cable_sag_m": 1.1,
+   "cable_segments": 8,
+-  "cable_colour": "#b8733a",
++  "cable_colour": "#7aa58f",
+   "cable_metallic": 0.85,
+   "cable_roughness": 0.35,
+   "bead_radius_m": 0.28,
+diff --git a/data/config/stormwood_settlements.json b/data/config/stormwood_settlements.json
+index 764666f5c..17cc49835 100644
+--- a/data/config/stormwood_settlements.json
++++ b/data/config/stormwood_settlements.json
+@@ -2,20 +2,20 @@
+   "realm_id": "stormwood",
+   "_comment": "Root-authored Rodfolk settlement footprints. Reuses the installed civilian prefab family, its real doors and colliders. Services, inhabitants and camp progression are separate runtime work; buildings alone do not satisfy the camp census.",
+   "structures": [
+-    {"id":"ashfoot_shelter","prefab":"ranger_station","at":[-365,460],"yaw_deg":135,"interior":"cottage"},
++    {"id":"ashfoot_shelter","prefab":"ranger_station","at":[-365,460],"yaw_deg":135,"interior":"cottage","retint":{"MI_RoundTiles":{"color":"#5f6b70","texture":"res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"}}},
+     {"id":"ashfoot_cart","prefab":"wagon","at":[-338,461],"yaw_deg":25},
+-    {"id":"pools_shelter","prefab":"ranger_station","at":[-396,1416],"yaw_deg":135,"interior":"cottage"},
++    {"id":"pools_shelter","prefab":"ranger_station","at":[-396,1416],"yaw_deg":135,"interior":"cottage","retint":{"MI_RoundTiles":{"color":"#5f6b70","texture":"res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"}}},
+     {"id":"rodline_workshop","prefab":"workshop","at":[-720,2310],"yaw_deg":110},
+     {"id":"rodline_home","prefab":"cottage_a","at":[-678,2318],"yaw_deg":-125,"interior":"cottage"},
+     {"id":"rodline_well","prefab":"well","at":[-699,2314],"yaw_deg":20},
+     {"id":"rodline_supply_cart","prefab":"wagon","at":[-716,2283],"yaw_deg":-25},
+-    {"id":"still_grove_shelter","prefab":"ranger_station","at":[-183,2707],"yaw_deg":105,"interior":"cottage"},
++    {"id":"still_grove_shelter","prefab":"ranger_station","at":[-183,2707],"yaw_deg":105,"interior":"cottage","retint":{"MI_RoundTiles":{"color":"#5f6b70","texture":"res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"}}},
+     {"id":"crown_old_well","prefab":"well","at":[715,2690],"yaw_deg":35},
+     {"id":"lantern_hollow_inn","prefab":"inn","at":[-473,3980],"yaw_deg":125,"interior":"inn"},
+     {"id":"lantern_hollow_home","prefab":"cottage_b","at":[-428,3974],"yaw_deg":-130,"interior":"cottage"},
+     {"id":"lantern_hollow_workshop","prefab":"workshop","at":[-476,3945],"yaw_deg":75},
+     {"id":"lantern_hollow_well","prefab":"well","at":[-449,3985],"yaw_deg":-15},
+-    {"id":"ember_shelter","prefab":"ranger_station","at":[-130,5275],"yaw_deg":115,"interior":"cottage"},
++    {"id":"ember_shelter","prefab":"ranger_station","at":[-130,5275],"yaw_deg":115,"interior":"cottage","retint":{"MI_RoundTiles":{"color":"#5f6b70","texture":"res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"}}},
+     {"id":"ember_supply_cart","prefab":"wagon","at":[-104,5264],"yaw_deg":15}
+   ]
+ }
+diff --git a/data/config/stormwood_surge.json b/data/config/stormwood_surge.json
+index b39f10755..dc9630d5e 100644
+--- a/data/config/stormwood_surge.json
++++ b/data/config/stormwood_surge.json
+@@ -15,7 +15,7 @@
+       "steam": {"max_puffs": 140, "inner_radius_m": 3.0, "outer_radius_m": 12.0, "puff_size_m": 2.8, "colour": "#b1a4ca", "alpha": 0.45}
+     },
+     "_comment_shadow_opacity": "Stormwood's scene authors a 0.68 canopy-shadow floor for its permanent storm. WorldLook reapplies the global sun defaults after scene setup, so every phase must carry that realm-local value explicitly; Break alone returns to fully hard shadows, as the surge brief specifies.",
+-    "shadow_opacity": {"calm":0.68,"building":0.68,"break":1.0,"fading":0.68},
++    "shadow_opacity": {"calm":0.55,"building":0.55,"break":1.0,"fading":0.55},
+     "transition_seconds": 6.0,
+     "_comment_reapply": "WorldLook re-merges its whole look per set_weather call, so the weather layer is re-applied every reapply_fading_seconds during a cross-fade and every reapply_steady_seconds otherwise (to follow the day clock). The ceiling updates every frame.",
+     "reapply_fading_seconds": 0.2,
+@@ -31,7 +31,7 @@
+       "far_layer":{"max_drops":1700,"inner_radius_m":17.0,"outer_radius_m":28.0,"lifetime_s":1.4,"ring_height_m":14.0,"centre_offset_m":3.0,"streak_width_m":0.012,"streak_length_m":0.5,"alpha":0.2,"scale_min":0.6,"scale_max":1.2,"alpha_min_fraction":0.4,"night_floor":0.15,"night_alpha_fraction":0.4},
+       "curtain_layer":{"max_drops":800,"inner_radius_m":32.0,"outer_radius_m":62.0,"lifetime_s":1.6,"ring_height_m":26.0,"centre_offset_m":6.0,"streak_width_m":0.06,"streak_length_m":3.0,"alpha":0.14,"scale_min":0.7,"scale_max":1.3,"alpha_min_fraction":0.4,"night_floor":0.15,"night_alpha_fraction":0.4}},
+     "_comment_telegraph": "Ground warning retains the combat hazard purple and exact strike.radius_m boundary as fine broken marks. Six jagged ground leaders converge on the contact point; bright tips move inward over strike.telegraph_seconds and the final quarter increases charge. No opaque zone disc. Reduced motion retains this continuous countdown without rim modulation. Terrain sampling and depth testing remain; no gameplay changes.",
+-    "telegraph": {"soft_style": {"enabled": false, "_why": "F41#5 candidate, coordinator ruling 21 Oct: keep the settled hazard hue and every timing, restyle the shader so the warning is not a flat placeholder disc (radial gradient fill, ground-noise breakup, travelling rim glow). OFF until judged."}, "_why_fill":"F10#3 round 2 (code-blind judge: an empty dashed outline read as a target selector and t080 looked like t110): a translucent fill from the first frame (fill_alpha), a stronger band the leader heads leave behind as they close on the contact point (charged_fill_alpha), and in the final ramp a solid rim over a brighter zone (final_fill_alpha).","fill_alpha":0.22,"charged_fill_alpha":0.38,"final_fill_alpha":0.65,"final_ramp_seconds":0.4,"leader_count":6,"leader_width_m":0.035,"leader_kink_m":0.18,"leader_head_width_m":0.48,"depth_pull_m":0.28,"rim_width_m":0.085,"rim_intensity":1.6,
++    "telegraph": {"soft_style": {"enabled": true, "_why": "F41#5 candidate, coordinator ruling 21 Oct: keep the settled hazard hue and every timing, restyle the shader so the warning is not a flat placeholder disc (radial gradient fill, ground-noise breakup, travelling rim glow). OFF until judged."}, "_why_fill":"F10#3 round 2 (code-blind judge: an empty dashed outline read as a target selector and t080 looked like t110): a translucent fill from the first frame (fill_alpha), a stronger band the leader heads leave behind as they close on the contact point (charged_fill_alpha), and in the final ramp a solid rim over a brighter zone (final_fill_alpha).","fill_alpha":0.22,"charged_fill_alpha":0.38,"final_fill_alpha":0.65,"final_ramp_seconds":0.4,"leader_count":6,"leader_width_m":0.035,"leader_kink_m":0.18,"leader_head_width_m":0.48,"depth_pull_m":0.28,"rim_width_m":0.085,"rim_intensity":1.6,
+       "edge_falloff_m":0.45,"ground_lift_m":0.07,"segments":48,"pulse_hz_start":2.0,"pulse_hz_end":7.0},
+     "night_scale_floor": 0.12,
+     "_comment_storm_base": "OWNER DIRECTION (WO-F10-08): 'We should not have day and night in stormwood. It should just always be that kind of purple rainy sky regardless of time of day', including after the Long Storm is broken. stormwood_surge.gd hands this realm's WorldLook a config in which every time-of-day preset is reference_time plus overrides, so sky, clouds, fog, ambient, exposure and the key light's angle, energy and colour are the same at every hour; the world clock, is_dark(), night rest and encounter timing keep running. pin_time_of_day false restores the clock-blended look. The overrides keep the painted clouds and sun colour in the purple family.",
+@@ -44,19 +44,19 @@
+     "_why_f10_3_building_fading": "F10#3 (coordinator/owner direction 2026-09-27 13:05, #356): Building and Fading carry distinct presentation, not only more or less of the same. Building's in-cloud sheet flicker rises 0.15 -> 0.22 (the storm gathering). Fading opens gaps where the cloud body is thin (ceiling_breakup 0.38, the shader's existing clearing parameter; the same at every hour), so the sky visibly clears; the ceiling stays opaque elsewhere, so no ghost sun disc shows. Existing shader parameters only.",
+     "_comment_phases": "OWNER DIRECTION (WO-F10-08, round 2): 'I like the building and break pictures. The other two aren't fantastic enough.' Every phase and the aftermath sit in the deep purple family (sky, ceiling, fog, key and ambient); nothing pale lavender or grey. Round 3 (blind judge 8 swapped Calm and Fading twice, so each phase gets a structural signature, not just more or less rain): the sky darkens and saturates monotonically Calm -> Building -> Break (ceiling luminance 0.43 / 0.40 / 0.37, saturation 0.29 / 0.35 / 0.42; Building is never brighter or greyer than Calm). Calm: straight-down light rain (wind 0, rain 0.3, half of Fading's opening rain), slow ceiling, no steam or lightning. Building: heavier slanted rain, fast ceiling, faint in-cloud flicker. Break: full rain with the distant curtain, fastest ceiling, strikes plus decorative sky lightning (sky_lightning) and in-cloud sheet glow. Fading carries Break over and lets it go: its `ramp` ({key: [start, end, power]} over the phase's progress) opens with Break's slant and 0.6 rain and straightens and thins them, while low ground steam (steam block) and a warm-violet afterglow low in the clouds decay to zero (ART_DIRECTION 3.3 'post-strike steam or afterglow'). The aftermath is the still deck: almost no motion but a defined, high-contrast cloud deck with lit rims and thin spots (ceiling_definition / ceiling_rim / ceiling_thin_glow). `intensity` (0..1) is a read-only hook (surge_intensity()). fog_colour follows sky_horizon (art.json's seam rule). No red: oxblood is Team Tether's.",
+     "phases": {
+-      "calm": {"sun_energy_mult":0.42,"ambient_colour":"#9894b4","ambient_energy_mult":0.6,"fog_density_add":0.0008,
+-        "sky_top":"#5a547b","sky_horizon":"#777292","sky_ground_horizon":"#696485",
++      "calm": {"sun_energy_mult":0.42,"ambient_colour":"#9894b4","ambient_energy_mult":1.0,"fog_density_add":0.0026,
++        "sky_top":"#5a547b","sky_horizon":"#6f7a9c","sky_ground_horizon":"#696485",
+         "ceiling_colour":"#706994","ceiling_opacity":1.0,"ceiling_speed":0.008,"ceiling_contrast":0.3,"ceiling_breakup":0.0,
+         "rain_visible":true,"rain_amount":0.3,"flashes":false,"wind":0.0,"sheet_glow":0.0,"sheet_glow_rate":0.0,"steam":0.0,"afterglow":0.0,"intensity":0.25},
+-      "building": {"sun_energy_mult":0.3,"ambient_colour":"#9a94b6","ambient_energy_mult":0.45,"fog_density_add":0.0016,
++      "building": {"sun_energy_mult":0.3,"ambient_colour":"#9a94b6","ambient_energy_mult":0.94,"fog_density_add":0.0026,
+         "sky_top":"#544d7b","sky_horizon":"#706992","sky_ground_horizon":"#635c85",
+         "ceiling_colour":"#696094","ceiling_opacity":1.0,"ceiling_speed":0.03,"ceiling_contrast":0.5,"ceiling_breakup":0.0,
+         "rain_visible":true,"rain_amount":0.65,"flashes":false,"wind":0.85,"sheet_glow":0.22,"sheet_glow_rate":0.35,"steam":0.0,"afterglow":0.0,"intensity":0.65},
+-      "break": {"sun_energy_mult":0.22,"ambient_colour":"#8a88b8","ambient_energy_mult":0.50,"fog_density_add":0.0026,
++      "break": {"sun_energy_mult":0.22,"ambient_colour":"#8a88b8","ambient_energy_mult":0.9,"fog_density_add":0.0036,
+         "sky_top":"#534984","sky_horizon":"#696192","sky_ground_horizon":"#5d5486",
+         "ceiling_colour":"#625897","ceiling_opacity":1.0,"ceiling_speed":0.045,"ceiling_contrast":0.55,"ceiling_breakup":0.0,
+         "rain_visible":true,"rain_amount":1.0,"flashes":true,"wind":1.0,"sheet_glow":0.9,"sheet_glow_rate":0.8,"steam":0.0,"afterglow":0.0,"crawlers":1.0,"intensity":1.0},
+-      "fading": {"sun_energy_mult":0.4,"ambient_colour":"#9894b4","ambient_energy_mult":0.58,"fog_density_add":0.0012,
++      "fading": {"sun_energy_mult":0.4,"ambient_colour":"#9894b4","ambient_energy_mult":0.97,"fog_density_add":0.0022,
+         "sky_top":"#574b7e","sky_horizon":"#736895","sky_ground_horizon":"#655b88",
+         "ceiling_colour":"#6c5f99","ceiling_opacity":1.0,"ceiling_speed":0.014,"ceiling_contrast":0.3,"ceiling_breakup":0.38,
+         "rain_visible":true,"rain_amount":0.6,"flashes":false,"wind":1.0,"sheet_glow":0.0,"sheet_glow_rate":0.0,"steam":1.0,"afterglow":1.0,"intensity":0.4,
+@@ -66,8 +66,8 @@
+     "aftermath_scar": {"colour":"#3b3548","emission_energy":0.0,"_why":"F10#4 (coordinator 13:20, #356): after long_storm_ended the Struck Sentinel's live cyan strike scar cools to a dark violet seam in the purple band and its StrikeAfterglow light goes out; the spent strike reads as a scar, not a live bolt."},
+     "_comment_aftermath": "OWNER RULING (WO-F10-08): Stormwood stays purple after the Long Storm is broken; 'the aftermath shows only through lighter rain, no lightning and the scars'. Every aftermath phase (`all`) is the stillest version: the lightest drizzle (0.08), the gentlest wind (0.3), an almost still ceiling (speed 0.002), no flashes, sheet glow, steam or afterglow (and no ramp), the least fog and a steady key. Round 3 (blind judge 8: 'a flat, blank lavender card'): the still deck gets structure, a defined high-contrast cloud body (ceiling_definition, contrast 0.6) with lit rims and thin spots (ceiling_rim, ceiling_thin_glow), in the deep purple. The shorter aftermath Surge durations (aftermath_seconds) are unchanged gameplay; real strikes in an aftermath Break still telegraph and strike (rules), but no ambient flashes are added.",
+     "aftermath": {
+-      "all": {"sun_energy_mult":0.7,"ambient_colour":"#a29cc8","ambient_energy_mult":0.95,"fog_density_add":0.0002,
+-        "sky_top":"#59507d","sky_horizon":"#766e97","sky_ground_horizon":"#686089",
++      "all": {"sun_energy_mult":0.7,"ambient_colour":"#a29cc8","ambient_energy_mult":1.0,"fog_density_add":0.0016,
++        "sky_top":"#59507d","sky_horizon":"#6e789c","sky_ground_horizon":"#686089",
+         "ceiling_colour":"#6f6597","ceiling_opacity":1.0,"ceiling_speed":0.002,"ceiling_contrast":0.45,"ceiling_breakup":0.0,
+         "ceiling_definition":0.5,"ceiling_rim":0.45,"ceiling_thin_glow":0.3,
+         "rain_visible":true,"rain_amount":0.04,"flashes":false,"wind":0.3,"sheet_glow":0.0,"sheet_glow_rate":0.0,"steam":0.0,"afterglow":0.0,"crawlers":0.0,"ramp":{},"intensity":0.1}
+@@ -76,7 +76,7 @@
+     "steam": {"max_puffs":110,"lifetime_s":5.0,"inner_radius_m":2.0,"outer_radius_m":16.0,"spawn_height_m":0.4,"spread_deg":25.0,
+       "rise_min":0.15,"rise_max":0.45,"scale_min":0.8,"scale_max":1.5,"start_scale":0.45,"puff_size_m":2.6,"puff_aspect":0.6,"colour":"#8e88ac","alpha":0.24},
+     "_comment_sky_lightning": "Round 3 (blind judge 8: Break had no lightning a still or strip could catch; its thin white horizon sliver read as a low sun): decorative Break-only sky lightning, no telegraph and no damage. Every interval_min..interval_max seconds an event: a distant cloud-to-ground bolt (bolt_chance; a jagged ribbon in the strike's white-violet bolt_distance_min_m..max_m away, top fading out of the cloud, lit cloud above it) or an in-cloud flash lighting the cloud body around one direction (cloud_flash_size is its cos-space radius), with flicker_chance of one weaker flicker. The existing whole-scene distant flash (flash block, 9-16 s, <= 0.35) is the occasional scene flash. UX 8 photosensitivity: every flash onset, including echoes and real strikes, counts; decorative onsets are refused while the last second holds max_flashes_per_second (code clamps to <= 3) less strike_reserve, so with a real strike no second ever holds more than 3. Nothing above the horizon band flashes whole-sky white. Reduced motion: cloud flashes are scaled by flash.reduced_motion_scale (0.15), flickers and restrikes are dropped, and bolts stay visible and are held reduced_motion_bolt_hold times longer instead of flickering.",
+-    "sky_lightning": {"_why_ground_light": "F41#3 candidate (r11 judges: Break bolts light the sky but nothing on trunks or ground): each decorative sky bolt lifts the frame exposure by bolt level x ground_light_exposure, on the bolt's own onset (exposure, not a second light: Compatibility draws every extra light as another pass over all geometry) (no added flash onsets; reduced motion uses flash.reduced_motion_scale). 0 = off.", "ground_light_exposure": 0.0, "hold_bolts_during_warning":true,"_why_crawler_hold":"F10#3 round 6 (code-blind strike judge: Break crawler veins read as lightning already striking elsewhere during a ground warning): the same hold puts them out at once (like a decorative bolt already on screen) and brings them back over crawler_in_seconds after it clears.","crawler_in_seconds":1.5,"_why_hold":"F10#3 blind judge: a decorative bolt in view during a real ground warning read as already striking elsewhere; stormwood_lightning.gd holds decorative bolts for the telegraph plus 0.3 s and those events become in-cloud flashes.","interval_min":0.55,"interval_max":1.3,"bolt_chance":0.35,"max_flashes_per_second":3,"strike_reserve":1,
++    "sky_lightning": {"_why_ground_light": "F41#3 candidate (r11 judges: Break bolts light the sky but nothing on trunks or ground): each decorative sky bolt lifts the frame exposure by bolt level x ground_light_exposure, on the bolt's own onset (exposure, not a second light: Compatibility draws every extra light as another pass over all geometry) (no added flash onsets; reduced motion uses flash.reduced_motion_scale). 0 = off.", "ground_light_exposure": 0.45, "hold_bolts_during_warning":true,"_why_crawler_hold":"F10#3 round 6 (code-blind strike judge: Break crawler veins read as lightning already striking elsewhere during a ground warning): the same hold puts them out at once (like a decorative bolt already on screen) and brings them back over crawler_in_seconds after it clears.","crawler_in_seconds":1.5,"_why_hold":"F10#3 blind judge: a decorative bolt in view during a real ground warning read as already striking elsewhere; stormwood_lightning.gd holds decorative bolts for the telegraph plus 0.3 s and those events become in-cloud flashes.","interval_min":0.55,"interval_max":1.3,"bolt_chance":0.35,"max_flashes_per_second":3,"strike_reserve":1,
+       "cloud_strength_min":0.35,"cloud_strength_max":0.7,"cloud_seconds":0.45,"cloud_flash_size":0.06,"cloud_azimuth_deg":110.0,
+       "flicker_chance":0.35,"flicker_gap_min":0.12,"flicker_gap_max":0.2,"flicker_strength":0.6,
+       "bolt_seconds":0.25,"bolt_pool":2,"bolt_cloud_fraction":0.8,"bolt_azimuth_deg":60.0,"bolt_distance_min_m":260.0,"bolt_distance_max_m":520.0,
+diff --git a/data/config/stormwood_vegetation.json b/data/config/stormwood_vegetation.json
+index 1908a720c..36bd6abdb 100644
+--- a/data/config/stormwood_vegetation.json
++++ b/data/config/stormwood_vegetation.json
+@@ -1,15 +1,17 @@
+ {
+   "seed": 20260906,
+   "_comment": "Installed nature family with the existing Meadows green leaf replacement: the source twisted-tree texture is crimson and cannot become green through multiplication. Baked route and grove composition; no runtime world generation. storm_mushroom is the installed ground dome Mushroom_Common (WO-F09-05 round 2: the Laetiporus bracket shelf grows on trunks and read as fungus floating in the grass when planted loose).",
+-  "encounter_clearings": {"_comment": "Named fights keep trunk and rock colliders out of their arena: 18 m covers the largest named wildlife envelope (voltarach 13.89 m: fitted body, idle motion, wander) plus the largest baked collider reach (crown_canopy 0.435 m x 6.0) and 1.5 m margin. tests/test_stormwood_named_fight_clearings.gd checks the bake against each species.", "collider_clear_radius_m": 18.0, "sites": [{"id": "hollows_alpha", "at": [-520, 1660]}, {"id": "capacitor_alpha", "at": [-1080, 3020]}, {"id": "crown_guardian", "at": [640, 2700]}, {"id": "old_rodfolk_hall_guardian", "at": [-1605, 4385]}, {"id": "blackwater_elder", "at": [-130, 4450]}, {"id": "glass_field_alpha", "at": [-247, 5078]}]},
++  "encounter_clearings": {"_comment": "Named fights keep trunk and rock colliders out of their arena: 18 m covers the largest named wildlife envelope (voltarach 13.89 m: fitted body, idle motion, wander) plus the largest baked collider reach (crown_canopy 0.435 m x 6.0) and 1.5 m margin. tests/test_stormwood_named_fight_clearings.gd checks the bake against each species.", "collider_clear_radius_m": 19.5, "_why_19_5": "F41 candidate: the Meshy giant_canopy collider reaches 0.14 x 28 = 3.92 m, beyond crown_canopy 0.435 x 6.0; 13.89 + 3.92 + 1.5 = 19.31, rounded up.", "sites": [{"id": "hollows_alpha", "at": [-520, 1660]}, {"id": "capacitor_alpha", "at": [-1080, 3020]}, {"id": "crown_guardian", "at": [640, 2700]}, {"id": "old_rodfolk_hall_guardian", "at": [-1605, 4385]}, {"id": "blackwater_elder", "at": [-130, 4450]}, {"id": "glass_field_alpha", "at": [-247, 5078]}]},
+   "seat_clearings": {"_comment": "Authored seats keep baked colliders off them: no trunk or rock surface (collision_radius x the layer's scale_max) within collider_surface_m of a trainer, NPC, harvest node or pickup position, and no ground cover centred within ground_cover_m. Seats are read from stormwood_trainers/npcs/harvests/pickups.json; only their kind, id and XZ position enter the bake fingerprint. tests/test_stormwood_scatter_clearances.gd checks the committed bake.", "collider_surface_m": {"trainer": 3.5, "npc": 3.5, "harvest": 2.0, "pickup": 2.0}, "ground_cover_m": {"trainer": 3.0, "npc": 3.0, "harvest": 1.5, "pickup": 1.5}},
+   "road_sample_m": 18.0,
+   "background_spacing_m": 55.0,
+   "_comment_dense_stands": "F10#4 round 7 (strict re-check: off-road Deepwood read as the edge of a wood; tools/_probe_deepwood_sightlines.gd measured a median first trunk 56-107 m away at eye level with up to 9 of 21 rays open past 120 m): the three Deepwood stands go from 17 m to 12 m spacing (skip 0.15/0.2 -> 0.1/0.15), a median first trunk of 26-27 m with 1 of 21 rays open past 120 m. 12 m stays above the 9 m tree occupancy cell. F10#4 forest (code-blind judge round 1, V-VIS-1): Deepwood read as an open flower meadow because the background grid plants one tree per background_spacing_m cell. Each dense stand fills its circle on a finer jittered grid (spacing_m, 40% jitter, skip fraction) with its own seed, after the roads and the background grid and through the same clearances (roads, settlements, landmarks, seats, pockets, fight clearings), with understory ferns/mushrooms round an `understory` fraction of the trunks.",
+   "dense_stands": [
+-    {"id": "deepwood_heart", "centre": [-330, 4260], "radius_m": 380, "spacing_m": 12, "skip": 0.1, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.05},
+-    {"id": "deepwood_west", "centre": [-900, 4300], "radius_m": 340, "spacing_m": 12, "skip": 0.1, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.05},
+-    {"id": "deepwood_hall", "centre": [-1380, 4360], "radius_m": 240, "spacing_m": 12, "skip": 0.15, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.05},
++    {"id": "verge_rodline_wood", "_comment": "F41 round-10 candidate: Ash Road walks through storm forest (art direction: little direct sky until the aftermath); road, rod line and seats stay clear via the bake's own clearances.", "centre": [-480, 640], "radius_m": 150, "spacing_m": 14, "skip": 0.15, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.15},
++    {"id": "hollows_wood", "_comment": "F41 round-10 candidate: the Glowmoss Hollows ringed by old storm wood.", "centre": [-470, 1640], "radius_m": 170, "spacing_m": 14, "skip": 0.2, "layer": "storm_canopy", "understory": 0.35, "giant_chance": 0.15},
++    {"id": "deepwood_heart", "centre": [-330, 4260], "radius_m": 380, "spacing_m": 12, "skip": 0.1, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.15},
++    {"id": "deepwood_west", "centre": [-900, 4300], "radius_m": 340, "spacing_m": 12, "skip": 0.1, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.15},
++    {"id": "deepwood_hall", "centre": [-1380, 4360], "radius_m": 240, "spacing_m": 12, "skip": 0.15, "layer": "storm_canopy", "understory": 0.3, "giant_chance": 0.15},
+     {"id": "fallen_giant_grove", "centre": [-150, 4460], "radius_m": 70, "spacing_m": 24, "skip": 0.1, "layer": "storm_canopy", "understory": 0.5, "giant_chance": 0.6}
+   ],
+   "layers": {
+@@ -29,30 +31,17 @@
+       "lod_range": 850,
+       "lod_fade_margin": 120,
+       "retint": {
+-        "Leaves_TwistedTree": "#a6c4a3",
++        "Leaves_TwistedTree": "#6c9488",
+         "Leaves_NormalTree": "#bbc8b0",
+-        "Bark_TwistedTree": "#8f9580"
++        "Bark_TwistedTree": "#a8977a"
+       },
+       "retexture": {
++        "Bark_TwistedTree": "res://assets/environment/stylized_nature/derived/Bark_TwistedTree_lift175.png",
+         "Leaves_TwistedTree": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png"
+       }
+     },
+-    "giant_canopy": {"_comment": "F10#4 giant trunks (round-1 judge: no giant old trunk is ever the subject). The same installed TwistedTree models and bark/leaf policy as storm_canopy at 2-2.5x its scale, planted only by dense_stands (giant_chance); collider scaled with it.", "models": ["res://assets/environment/stylized_nature/TwistedTree_2.gltf", "res://assets/environment/stylized_nature/TwistedTree_4.gltf"], "stand_only": true, "scale_min": 6.0, "scale_max": 7.5, "collides": true, "collision_radius": 0.62, "harvest_item": "wood", "harvest_fraction": 1.0, "harvest_amount": 6, "casts_shadow": true, "lod_range": 1200, "lod_fade_margin": 150, "retint": {"Leaves_TwistedTree": "#a6c4a3", "Leaves_NormalTree": "#bbc8b0", "Bark_TwistedTree": "#8f9580"}, "retexture": {"Leaves_TwistedTree": "res://assets/environment/stylized_nature/derived/Leaves_NormalTree_C_desat55.png"}},
+-    "storm_deadwood": {
+-      "models": [
+-        "res://assets/environment/stylized_nature/DeadTree_1.gltf",
+-        "res://assets/environment/stylized_nature/DeadTree_3.gltf"
+-      ],
+-      "scale_min": 2.8,
+-      "scale_max": 4.1,
+-      "collides": true,
+-      "collision_radius": 0.6,
+-      "harvest_item": "wood",
+-      "harvest_fraction": 1.0,
+-      "harvest_amount": 3,
+-      "casts_shadow": true,
+-      "lod_range": 700
+-    },
++    "giant_canopy": {"_comment": "F41 round-4 candidate: reference-backed Meshy giant storm trees (assets/props/meshy-1020/giant_tree_a|b/provenance.json), native ~1.9 units, scale 23-28 for 44-53 m; trunk radius 0.14 native (~3.5 m). Placement, harvest and clearances unchanged.", "models": ["res://assets/props/meshy-1020/giant_tree_a/v1/giant_tree_a_v1.glb", "res://assets/props/meshy-1020/giant_tree_b/v1/giant_tree_b_v1.glb"], "stand_only": true, "retint": {"Material_0": "#d8c8ae"}, "scale_min": 23.0, "scale_max": 28.0, "collides": true, "collision_radius": 0.14, "harvest_item": "wood", "harvest_fraction": 1.0, "harvest_amount": 6, "casts_shadow": true, "lod_range": 1200, "lod_fade_margin": 150, "height_offset": 0.953},
++    "storm_deadwood": {"models": ["res://assets/props/meshy-1020/scarred_trunk/v1/scarred_trunk_v1.glb"], "retint": {"Material_0": "#d8c8ae"}, "scale_min": 7.0, "scale_max": 9.0, "collides": true, "collision_radius": 0.13, "harvest_item": "wood", "harvest_fraction": 1.0, "harvest_amount": 3, "casts_shadow": true, "lod_range": 700, "height_offset": 0.951, "_comment": "F41 round-7 candidate: Meshy lightning-scarred split trunk, native ~1.9 units, 13-17 m; trunk radius 0.13 native."},
+     "crown_canopy": {
+       "models": [
+         "res://assets/environment/stylized_nature/CommonTree_3.gltf"
+@@ -64,7 +53,7 @@
+       "casts_shadow": true,
+       "lod_range": 1400,
+       "retint": {
+-        "Leaves_NormalTree": "#9fb59f",
++        "Leaves_NormalTree": "#68907f",
+         "Bark_NormalTree": "#746b5b"
+       }
+     },
+@@ -81,16 +70,7 @@
+         "Leaves": "#6f865f"
+       }
+     },
+-    "storm_mushroom": {
+-      "models": [
+-        "res://assets/environment/stylized_nature/Mushroom_Common.gltf"
+-      ],
+-      "scale_min": 1.0,
+-      "scale_max": 2.2,
+-      "collides": false,
+-      "casts_shadow": false,
+-      "lod_range": 150
+-    },
++    "storm_mushroom": {"models": ["res://assets/props/meshy-1020/storm_fungi/v1/storm_fungi_v1.glb"], "scale_min": 0.8, "scale_max": 1.4, "collides": false, "casts_shadow": false, "lod_range": 150, "height_offset": 0.952, "_comment": "F41 round-7 candidate: Meshy storm fungi (cyan-violet caps on mossy stumps), native ~1.9 units, 1.5-2.7 m."},
+     "storm_bush": {
+       "models": [
+         "res://assets/environment/stylized_nature/Bush_Common.gltf"
+diff --git a/data/config/stormwood_voltcap_finish.json b/data/config/stormwood_voltcap_finish.json
+index dc21f3c89..54f325318 100644
+--- a/data/config/stormwood_voltcap_finish.json
++++ b/data/config/stormwood_voltcap_finish.json
+@@ -1,5 +1,5 @@
+ {
+-  "enabled": false,
++  "enabled": true,
+   "scope": "client_presentation",
+   "item": "voltcap",
+   "model": "res://assets/environment/stylized_nature/Mushroom_Laetiporus.gltf",

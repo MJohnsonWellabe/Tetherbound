@@ -1,0 +1,58 @@
+{
+ "Ri": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Wk": {
+  "anchor": false,
+  "label": "F36 stormursa pose b13",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/stormursa-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/stormursa-c.png"
+ },
+ "Ig": {
+  "anchor": false,
+  "label": "F36 voltarach pose b13",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/voltarach-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/voltarach-base.png"
+ },
+ "Ni": {
+  "anchor": false,
+  "label": "F36 galecrest pose b13",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/galecrest-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/galecrest-base.png"
+ },
+ "Gy": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "At": {
+  "anchor": false,
+  "label": "F36 tanglevolt pose b13",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/tanglevolt-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/tanglevolt-base.png"
+ },
+ "Lr": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Xr": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Fv": {
+  "anchor": false,
+  "label": "F36 stormcapra pose b13",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/stormcapra-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/stormcapra-base.png"
+ },
+ "Cw": {
+  "anchor": false,
+  "label": "F36 fulgocobra pose b13",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/fulgocobra-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b13/sides/fulgocobra-c.png"
+ }
+}

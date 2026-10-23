@@ -184,8 +184,20 @@ func _the_ambience_changes_between_regions() -> void:
 	var before := _playing_layers()
 
 	# Band 2 begins at z = 1360 (the trail's own band boundary, which
-	# world_audio.gd derives from terrain_playground.json). Well inside it.
-	_player.global_position = Vector3(0.0, _player.global_position.y + 2.0, 2000.0)
+	# world_audio.gd derives from terrain_playground.json). Well inside it, on a
+	# Band 2 trail point and its ground. Ground collision there streams in
+	# around the player, so a teleport 1800 m away fell through before it
+	# existed and the fall recovery put the player back in Band 1. Hold the
+	# player on the spot until they stand on it.
+	var on_trail := Vector2(400.0, 1800.0)
+	var target := Vector3(on_trail.x,
+		float(_world.call("ground_height_at", on_trail.x, on_trail.y)) + 1.0, on_trail.y)
+	for i in 600:
+		_player.global_position = target
+		_player.velocity = Vector3.ZERO
+		await physics_frame
+		if _player.is_on_floor():
+			break
 	# Long enough to cover band_fade_seconds; the fade is deliberately slow.
 	for i in 480:
 		await physics_frame

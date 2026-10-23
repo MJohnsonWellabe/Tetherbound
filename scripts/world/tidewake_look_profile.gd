@@ -10,8 +10,13 @@ static func settings() -> Dictionary:
 	if not parsed is Dictionary:
 		return {}
 	# Explicit, process-local capture override; never persisted or replicated.
+	# It also brings back the sections listed in `sections_off` (unjudged
+	# candidates that ship in the file but not in play).
 	if OS.get_cmdline_user_args().has("--tidewake-look-candidate"):
 		parsed.enabled = true
+		return parsed
+	for section: Variant in parsed.get("sections_off", []):
+		parsed.erase(str(section))
 	return parsed
 
 

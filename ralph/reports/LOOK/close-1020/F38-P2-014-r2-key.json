@@ -1,0 +1,14 @@
+{
+ "burrow_warrens__walk_02_left-horizon-crop": {
+  "A": "X",
+  "B": "Y"
+ },
+ "stronghold_approach__route_day": {
+  "A": "X",
+  "B": "Y"
+ },
+ "stronghold_approach__route_day_horizon-crop": {
+  "A": "X",
+  "B": "Y"
+ }
+}

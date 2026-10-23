@@ -293,7 +293,14 @@
       "dither_after_s": 0.2,
       "transparency": 0.75,
       "hidden_points": 1,
-      "speed": 12.0
+      "speed": 12.0,
+      "follow_candidate": {
+        "enabled": true,
+        "_why_on": "ON by owner wind-down direction (22 Oct: land what beats shipping even below the bar). P2-062 r1 mapped 6.11 Bar A vs shipping 5.37 (three code-blind judges, fixed seed-11 Old Bram aftermath, Low/Compatibility llvmpipe; anchor RMSE 0.80 caveat; ralph/reports/LOOK/close-1022/P2-062.md). Below the 6.7 CPU bar: an improvement, not a closure. Judges: the ally now vanishes completely; a lighter partial fade is the next step.",
+        "_why": "F38 P2-062 candidate (OFF until a code-blind before/after pass): after a won fight the following ally parked beside the trainer near the lens and filled half the gameplay view (old_champion_bram a03-a09, 22 Oct). follower_creature.gd also fades the body while the lens is within near_margin_m of its bounds or while it covers the trainer at leader_heights_m. Local presentation only.",
+        "near_margin_m": 1.5,
+        "leader_heights_m": [0.5, 1.0, 1.6]
+      }
     },
     "hud_safe": {
       "_why": "F10#2 C3 (V-SW-3/5, Tidewake's matching finding): the shoulder solver pushes the pivot up to max_shoulder_offset sideways so the foe clears the ally, which slides the ally into the combat HUD's left column (TEAM list + pilot card), where every code-blind judge found it hidden. Each physics frame combat_manager.gd projects the ally's live render bounds through the live camera and caps the shoulder so their left edge stays right of left_column.right wherever they reach below left_column.top (fractions of the viewport). The occlusion swing/dither stays the fallback when the capped shoulder lets the ally hide the foe. Presentation only. TUNABLE.",
@@ -585,7 +592,9 @@
     "_why_lane_depth_pull": "F04 charger-lunge capture, round 1: the depth-tested lane lifted 9 cm off the sampled ground drew as scattered fragments on the relay approach because the rendered terrain between samples sits above them. The lane's vertices are pulled this many metres toward the camera in view space (stormwood_lightning.gd's technique), which beats the ground without painting through a creature standing in front of it. TUNABLE; presentation only.",
     "lane_depth_pull": 0.45,
     "_why_lane_xray_alpha": "F10#2 C3 judge (2026-10-13): Hollows Alpha's lane was mostly hidden under Voltarach's legs at the fight camera. A faint copy of the same lane, same colour, drawn without the depth test at this fraction of its alpha, so a lane under a large body still reads; the depth-tested lane stays full strength and never paints through a body (P2-093). 0 disables. OFF: at 0.35 and 0.7 the code-blind judge still read the spider lane as hidden (F10#2 c3_rerun, two attempts); kept as an off candidate. TUNABLE; presentation only.",
-    "lane_xray_alpha": 0.0
+    "lane_xray_alpha": 0.0,
+    "_why_lane_charged": "F41#5 candidate (Stormwood lane, 22 Oct 2026): the GPU pass judges read the solid named-fight lanes (cue_lane_solid) as flat magenta slabs. When enabled, a solid lane keeps its hue, shape, timings and authored alphas but its fill is broken by a world-space crackle streaming along the ground (scale per metre, speed), the brightest veins lifted `whiten` toward white; floor_alpha + vein_gain shape the alpha around the authored value. Presentation only. OFF until judged.",
+    "lane_charged": {"enabled": false, "scale": 1.0, "speed": 1.6, "floor_alpha": 0.18, "vein_gain": 2.4, "whiten": 0.8, "edge_soft": 0.55, "vein_sharpness": 7.0}
   },
   "stagger_feedback": {
     "enabled": true,
@@ -746,7 +755,7 @@
       ]
     },
     "attacks": {
-      "hollows_alpha_charger_rush": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
+      "hollows_alpha_charger_rush": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85, "cue_lane_colour": "#b48cff", "cue_lane_crackle": 0.85, "cue_impact_burst": true, "cue_burst_colour": "#9d7bff", "cue_burst_foam": "#ffffff", "cue_burst_light_colour": "#d9c8ff", "cue_burst_arcs": 7, "cue_water_burst_light_energy": 10.0, 
         "role": "CHARGER",
         "slot": "quick",
         "telegraph_shape": "lane",
@@ -766,7 +775,7 @@
         "lane_half_width_m": 1.2,
         "power": 10.4
       },
-      "hollows_alpha_charger_double_rush": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
+      "hollows_alpha_charger_double_rush": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85, "cue_lane_colour": "#b48cff", "cue_lane_crackle": 0.85, "cue_impact_burst": true, "cue_burst_colour": "#9d7bff", "cue_burst_foam": "#ffffff", "cue_burst_light_colour": "#d9c8ff", "cue_burst_arcs": 7, "cue_water_burst_light_energy": 10.0, 
         "role": "CHARGER",
         "slot": "charged",
         "telegraph_shape": "lane",
@@ -790,7 +799,7 @@
         "repeat_recovery_s": 0.6,
         "power": 10.4
       },
-      "capacitor_alpha_charger_rush": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
+      "capacitor_alpha_charger_rush": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85, "cue_lane_colour": "#b48cff", "cue_lane_crackle": 0.85, "cue_impact_burst": true, "cue_burst_colour": "#9d7bff", "cue_burst_foam": "#ffffff", "cue_burst_light_colour": "#d9c8ff", "cue_burst_arcs": 7, "cue_water_burst_light_energy": 10.0, 
         "_why_lunge_f10_2": "Tune 2026-10-13 (coordinator, owner-delegated): 5.5 -> 7.5 m so the dive covers Voltarach's 8.7 m visible-extent standoff plus the contact margin (stormwood_encounters.json _why_lunge_f10_2).",
         "role": "DIVER",
         "slot": "quick",
@@ -813,7 +822,7 @@
         "reposition_distance": 7.0,
         "power": 7.2
       },
-      "capacitor_alpha_diver_leap": {
+      "capacitor_alpha_diver_leap": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85,
         "_why_lunge_f10_2": "Tune 2026-10-13 (coordinator, owner-delegated): 5.5 -> 7.5 m so the dive covers Voltarach's 8.7 m visible-extent standoff plus the contact margin (stormwood_encounters.json _why_lunge_f10_2).",
         "role": "DIVER",
         "slot": "charged",
@@ -837,7 +846,7 @@
         "lunge_travels": true,
         "power": 7.2
       },
-      "crown_guardian_wall_check": {
+      "crown_guardian_wall_check": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85,
         "role": "WALL",
         "slot": "quick",
         "telegraph_shape": "cone",
@@ -858,7 +867,7 @@
         "reposition_distance": 2.5,
         "power": 12.0
       },
-      "crown_guardian_wall_slam": {
+      "crown_guardian_wall_slam": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85,
         "role": "WALL",
         "slot": "charged",
         "telegraph_shape": "cone",
@@ -879,7 +888,7 @@
         "reposition_distance": 2.5,
         "power": 12.0
       },
-      "old_rodfolk_hall_guardian_ace_lane": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
+      "old_rodfolk_hall_guardian_ace_lane": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85, "cue_lane_colour": "#b48cff", "cue_lane_crackle": 0.85, "cue_impact_burst": true, "cue_burst_colour": "#9d7bff", "cue_burst_foam": "#ffffff", "cue_burst_light_colour": "#d9c8ff", "cue_burst_arcs": 7, "cue_water_burst_light_energy": 10.0, 
         "role": "ACE",
         "slot": "charged",
         "telegraph_shape": "lane",
@@ -900,7 +909,7 @@
         "first_attack_delay": 2.5,
         "power": 14.4
       },
-      "old_rodfolk_hall_guardian_ace_exam": {
+      "old_rodfolk_hall_guardian_ace_exam": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85,
         "role": "ACE",
         "slot": "charged",
         "telegraph_shape": "cone",
@@ -963,7 +972,7 @@
         "reposition_distance": 2.0,
         "power": 6.4
       },
-      "glass_field_alpha_charger_rush": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
+      "glass_field_alpha_charger_rush": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85, "cue_lane_colour": "#b48cff", "cue_lane_crackle": 0.85, "cue_impact_burst": true, "cue_burst_colour": "#9d7bff", "cue_burst_foam": "#ffffff", "cue_burst_light_colour": "#d9c8ff", "cue_burst_arcs": 7, "cue_water_burst_light_energy": 10.0, 
         "role": "CHARGER",
         "slot": "quick",
         "telegraph_shape": "lane",
@@ -983,7 +992,7 @@
         "lane_half_width_m": 1.2,
         "power": 10.4
       },
-      "glass_field_alpha_charger_double_rush": {"cue_lane_solid": true, "cue_lane_fill_alpha": 0.32, "cue_lane_locked_fill_alpha": 0.6, "cue_lane_edge_alpha": 1.0, "cue_impact_burst": true, "cue_burst_colour": "#6fb8e8", "cue_burst_foam": "#f2fbff", 
+      "glass_field_alpha_charger_double_rush": {"telegraph_colour": "#b48cff", "cue_depth_pull_m": 0.45, "cue_crackle": 0.85, "cue_lane_colour": "#b48cff", "cue_lane_crackle": 0.85, "cue_impact_burst": true, "cue_burst_colour": "#9d7bff", "cue_burst_foam": "#ffffff", "cue_burst_light_colour": "#d9c8ff", "cue_burst_arcs": 7, "cue_water_burst_light_energy": 10.0, 
         "role": "CHARGER",
         "slot": "charged",
         "telegraph_shape": "lane",
@@ -1507,6 +1516,7 @@
         "safe_escape": "side"
       },
       "oreth_pressure": {
+        "telegraph_colour": "#4aa9c7",
         "role": "CURRENT",
         "slot": "quick",
         "telegraph_shape": "fan",
@@ -1526,6 +1536,7 @@
         "projectile_spacing_degrees": 16
       },
       "oreth_overflow": {
+        "telegraph_colour": "#4aa9c7",
         "_why": "F22#4 Riverwatch signature (coordinator decision 2026-10-13; BOSSES \u00a74.3 Oreth): the river lock 'overflows'. Brooktail's pressure volley repeats three times on short tells and names itself, so the closing pressure is one recognisable barrage rather than three more cones. Same fan geometry and power as oreth_pressure. TUNABLE.",
         "role": "CURRENT",
         "slot": "quick",
@@ -1547,21 +1558,28 @@
         "repeat_count": 3,
         "repeat_telegraph_s": 0.9,
         "repeat_recovery_s": 0.75,
-        "_scope_cue_water_tint": "F22#4 Riverwatch Overflow preview only. Its existing boss-origin 50-degree fan uses the water warning hue instead of generic magenta, with unchanged fill, hit shape, camera and timing. OFF pending direct named-fight visual proof.",
+        "_scope_cue_water_tint": "F22#4 Riverwatch Overflow preview only. Its existing boss-origin 50-degree fan uses the water warning hue instead of generic magenta, with unchanged fill, hit shape, camera and timing. OFF (not part of the judged r13 look).",
         "cue_water_tint": false,
-        "_scope_cue_water_origin": "F22#4 Riverwatch Overflow preview only. Elevated bubbles charge at Brooktail's muzzle during the tell; no ground footprint, damage or timing change. OFF pending the real named-fight visual proof.",
-        "cue_water_origin": false,
+        "_scope_cue_water_fan": "F22#4 Riverwatch Overflow preview only. The existing 50-degree fan fills with deep-blue water over its wind-up inside a bright water-white rim (no pink/red), still drawn above foliage. Same hit fan, power and 0.9 s tell. ON for the Riverwatch fight (F22#4 r13, CPU-provisional 7.03 mapped).",
+        "cue_water_fan": true,
+        "cue_water_fan_colour": "#1a5fb0",
+        "cue_water_fan_edge_colour": "#dffaff",
+        "cue_water_fan_fill_alpha": 0.4,
+        "_scope_cue_water_origin": "F22#4 Riverwatch Overflow preview only. Elevated bubbles charge at Brooktail's muzzle during the tell; no ground footprint, damage or timing change. ON for the Riverwatch fight (F22#4 r13, CPU-provisional 7.03 mapped).",
+        "cue_water_origin": true,
         "cue_water_origin_radius_m": 0.23,
         "cue_water_origin_height_m": 1.55,
         "cue_water_origin_forward_m": 0.45,
-        "_scope_cue_water_spray": "F22#4 Riverwatch Overflow only. Existing authored water-stream geometry previews three boss-origin spray jets inside the unchanged 50-degree fan. OFF pending in-world C3 proof; presentation only.",
-        "cue_water_spray": false,
+        "_scope_cue_water_spray": "F22#4 Riverwatch Overflow only. Existing authored water-stream geometry previews three boss-origin spray jets inside the unchanged 50-degree fan. ON for the Riverwatch fight (F22#4 r13, CPU-provisional 7.03 mapped).",
+        "cue_water_spray": true,
         "cue_water_spray_radius_m": 0.48,
-        "cue_water_spray_opacity": 0.85,
-        "_scope_cue_water_wall": "F22#4 Riverwatch Overflow preview only. A full-size cyan fan is present from the first tell frame while one installed rolling-water front travels outward from Brooktail. Presentation only; the authored 50-degree hit fan, damage and 0.9 s tell stay unchanged. OFF pending in-world C3 proof.",
-        "cue_water_wall": false,
-        "cue_water_wall_height_m": 1.8,
-        "cue_water_wall_opacity": 0.85,
+        "cue_water_spray_opacity": 0.6,
+        "_scope_cue_water_spray_from_mouth": "F22#4 Riverwatch candidate: the spray jets start at Brooktail's mouth and arc down onto the far fan. Presentation only; OFF with the spray preview.",
+        "cue_water_spray_from_mouth": false,
+        "_scope_cue_water_wall": "F22#4 Riverwatch Overflow preview only. A full-size cyan fan is present from the first tell frame while one installed rolling-water front travels outward from Brooktail. Presentation only; the authored 50-degree hit fan, damage and 0.9 s tell stay unchanged. ON for the Riverwatch fight (F22#4 r13, CPU-provisional 7.03 mapped).",
+        "cue_water_wall": true,
+        "cue_water_wall_height_m": 1.2,
+        "cue_water_wall_opacity": 0.5,
         "cue_water_wall_body_opacity_factor": 0.28,
         "cue_water_wall_end_fraction": 0.72,
         "cue_water_wall_width_fraction": 0.6,
@@ -1570,9 +1588,18 @@
         "cue_water_camera_clearance_m": 0.6,
         "cue_water_tell_colour": "#4aa9c7",
         "cue_water_fill_alpha": 0.08,
+        "_scope_cue_boss_aura": "F22#4 Riverwatch candidate. During this tell Brooktail's own meshes carry a pulsing water-white rim and a cyan light follows it, so the boss visibly authors the attack. Presentation only; ON for the Riverwatch fight (F22#4 r13, CPU-provisional 7.03 mapped).",
+        "cue_boss_aura": true,
+        "cue_boss_aura_colour": "#5fd8ff",
+        "cue_boss_aura_strength": 1.0,
+        "cue_boss_aura_light_energy": 3.0,
+        "_scope_cue_water_burst": "F22#4 Riverwatch candidate. When the completed wind-up releases, a short water splash bursts at the hit shape (jets through the fan, a crown at the flood). Never on an interrupted tell; no hit, damage or timing change. ON for the Riverwatch fight (F22#4 r13, CPU-provisional 7.03 mapped).",
+        "cue_water_burst": true, "cue_burst_droplets": 1.8,
+        "cue_water_burst_s": 0.8,
         "tell_text": "\u2248  OVERFLOW \u2014 step out of the spray"
       },
       "oreth_flood": {
+        "telegraph_colour": "#4aa9c7",
         "_why": "F22#4 Riverwatch signature, attempt 2 (2026-10-13): the judge read the field's faint marker under the player as hidden next to Brooktail's large feet ring. Oreth's closing field is the lock's flood: the same field shape and timing as current_zone, drawn as a filling cue and named, so the real hit zone is the strongest mark on the ground. TUNABLE; presentation and naming only.",
         "role": "CURRENT",
         "slot": "charged",
@@ -1593,8 +1620,8 @@
         "marker_tracks_fraction": 0.3,
         "field_duration_s": 3,
         "field_hits_per_cast": 1,
-        "_scope_cue_water_origin": "F22#4 Riverwatch Flood preview only. The same attacker-local elevated charge leaves the target's authoritative field outline and outside escape clear. OFF pending in-world proof.",
-        "cue_water_origin": false,
+        "_scope_cue_water_origin": "F22#4 Riverwatch Flood preview only. The same attacker-local elevated charge leaves the target's authoritative field outline and outside escape clear. ON for the Riverwatch fight (F22#4 r13, CPU-provisional 7.03 mapped).",
+        "cue_water_origin": true,
         "cue_water_origin_radius_m": 0.23,
         "cue_water_origin_height_m": 1.55,
         "cue_water_origin_forward_m": 0.45,
@@ -1602,16 +1629,16 @@
         "cue_f22_frame_footprint": false,
         "cue_f22_frame_clearance_m": 1.5,
         "cue_water": true,
-        "_scope_cue_water_spread": "F22#4 Oreth/Brooktail Flood presentation only; no hit geometry or timing change. Candidate stays OFF until the existing in-world capture and three code-blind judges meet Bar A.",
+        "_scope_cue_water_spread": "F22#4 Oreth/Brooktail Flood presentation only; no hit geometry or timing change. Candidate stays OFF (not part of the judged r13 look).",
         "cue_water_spread": false,
-        "_scope_cue_water_crest": "F22#4 Riverwatch Flood only. Full existing hit footprint from the first tell frame plus an outward foaming crest from installed water geometry. OFF pending in-world C3 proof; no damage, timing or hit-radius change.",
+        "_scope_cue_water_crest": "F22#4 Riverwatch Flood only. Full existing hit footprint from the first tell frame plus an outward foaming crest from installed water geometry. OFF (not part of the judged r13 look).",
         "cue_water_crest": false,
         "cue_water_floor_opacity": 0.55,
         "cue_water_crest_height_ratio": 0.9,
         "cue_water_crest_opacity": 0.82,
         "cue_water_crest_start_scale": 0.7,
-        "_scope_cue_water_wall": "F22#4 Riverwatch Flood preview only. The full existing field footprint and a low broken-foam boundary at its exact radius show the unsafe interior and outside dodge from the first tell frame. Presentation only; locked hit radius, damage and 1.1 s tell stay unchanged. OFF pending in-world C3 proof.",
-        "cue_water_wall": false,
+        "_scope_cue_water_wall": "F22#4 Riverwatch Flood preview only. The full existing field footprint and a low broken-foam boundary at its exact radius show the unsafe interior and outside dodge from the first tell frame. Presentation only; locked hit radius, damage and 1.1 s tell stay unchanged. ON for the Riverwatch fight (F22#4 r13, CPU-provisional 7.03 mapped).",
+        "cue_water_wall": true,
         "cue_water_wall_height_ratio": 0.55,
         "cue_water_wall_crown_gap": 0.18,
         "cue_water_wall_crown_taper": 0.55,
@@ -1619,8 +1646,8 @@
         "cue_water_wall_body_opacity_factor": 0.28,
         "cue_water_wall_fill_alpha": 0.28,
         "cue_water_camera_clearance_m": 0.6,
-        "_scope_cue_water_cast": "F22#4 Riverwatch Flood only. Preview a Brooktail-origin current traveling to the full marked field during its unchanged tell. OFF pending in-world C3 proof; presentation only, no hit geometry or timing change.",
-        "cue_water_cast": false,
+        "_scope_cue_water_cast": "F22#4 Riverwatch Flood only. Preview a Brooktail-origin current traveling to the full marked field during its unchanged tell. ON for the Riverwatch fight (F22#4 r13, CPU-provisional 7.03 mapped).",
+        "cue_water_cast": true,
         "cue_water_cast_radius_m": 0.24,
         "cue_water_cast_opacity": 0.92,
         "cue_water_cast_travel_s": 0.4,
@@ -1628,6 +1655,14 @@
         "cue_water_cast_target_height_m": 0.25,
         "cue_water_tell_colour": "#4aa9c7",
         "cue_water_fill_alpha": 0.08,
+        "_scope_cue_boss_aura": "F22#4 Riverwatch candidate. During this tell Brooktail's own meshes carry a pulsing water-white rim and a cyan light follows it, so the boss visibly authors the attack. Presentation only; ON for the Riverwatch fight (F22#4 r13, CPU-provisional 7.03 mapped).",
+        "cue_boss_aura": true,
+        "cue_boss_aura_colour": "#5fd8ff",
+        "cue_boss_aura_strength": 1.0,
+        "cue_boss_aura_light_energy": 3.0,
+        "_scope_cue_water_burst": "F22#4 Riverwatch candidate. When the completed wind-up releases, a short water splash bursts at the hit shape (jets through the fan, a crown at the flood). Never on an interrupted tell; no hit, damage or timing change. ON for the Riverwatch fight (F22#4 r13, CPU-provisional 7.03 mapped).",
+        "cue_water_burst": true, "cue_burst_droplets": 1.8,
+        "cue_water_burst_s": 0.8,
         "cue_fills": true,
         "cue_fill_alpha": 0.5,
         "tell_text": "\u2248  FLOOD \u2014 step off the water"
@@ -2774,6 +2809,8 @@
       }
     },
     "presentation": {
+      "_why_depth_pull_m": "F22#4 tell look (Fights lane, 22 Oct; GPU judges: cones painted over the attacker's legs and the pilot as flat magenta slabs). >0 draws ring/cone/fan/lane pattern shapes depth-tested and pulled this many metres toward the lens (the charge lane's technique), so a creature standing on the shape occludes it; marker/field discs keep F04#1's no-depth-test. Shared value 0 (OFF); a row's own cue_depth_pull_m overrides it. ON (0.45) only on the Stormwood named rows (hollows_alpha, capacitor_alpha, crown_guardian, old_rodfolk_hall_guardian, glass_field_alpha), with their violet #b48cff tells, crackle 0.85 and the arc impact burst: round T2, three code-blind judges on the yardstick, mapped Tanglevolt 5.29 and Voltarach 5.29 vs shipping 4.65 (F22-4-T2.md). ON by coordinator decision for the 22 Oct wind-down; 5.29 vs 4.65, below the 7.5 bar (Stormwood grade is the remaining gap). The judged recipe set the shared value; shipping it per row keeps every other fight as judged.",
+      "depth_pull_m": 0.0,
       "ground_lift_m": 0.09,
       "segments": 48,
       "fill_alpha": 0.18,

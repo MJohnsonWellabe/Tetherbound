@@ -37,7 +37,7 @@ func build(world: Node3D, config: Dictionary, seals: Array[Dictionary], rules: D
 	_world = world
 	_game = get_node("/root/Game")
 	_seals = seals
-	_rules = rules
+	_rules = _presentation(rules)
 	var island_names: Dictionary = {}
 	for island: Dictionary in config.get("islands", []):
 		island_names[str(island.id)] = str(island.get("name", island.id))
@@ -174,6 +174,7 @@ func _annulus(inner: float, outer: float, blend: float) -> ArrayMesh:
 	var circumference_tiles := maxf(1.0, roundf(TAU * inner / TILE_M))
 	var edge_noise := _ring_noise(int(hash(str(inner))) + 3, 0.35)
 	var wobble := minf(float(_rules.get("outline_wobble_m", 2.5)), float(_rules.get("edge_blend_m", 4.0)) * 0.5)
+	var inner_wobble := float(_rules.get("inner_wobble_m", 0.0))
 	for index in segments:
 		for band in 2:
 			var a0 := TAU * float(index) / float(segments)
@@ -186,6 +187,11 @@ func _annulus(inner: float, outer: float, blend: float) -> ArrayMesh:
 				var angle: float = corner[0]
 				var ring: int = corner[1]
 				var radius: float = radii[ring]
+				if ring == 0 and inner_wobble > 0.0:
+					# F39 candidate: the waterline edge wanders too, so a race
+					# around a shaped shoal stops drawing a perfect circle.
+					var shore_probe := Vector2(cos(angle), sin(angle)) * inner / TAU * 2.0
+					radius += inner_wobble * (0.5 + 0.5 * edge_noise.get_noise_2d(shore_probe.x + 40.0, shore_probe.y))
 				if ring > 0:
 					# The race's visible edge wanders like water, not a decal.
 					var probe := Vector2(cos(angle), sin(angle)) * inner / TAU * 2.0
@@ -247,12 +253,56 @@ func _spray(inner: float, outer: float) -> GPUParticles3D:
 
 
 func _spray_sprite() -> Texture2D:
+	if bool(_rules.get("spray_wisps", false)):
+		return _wisp_sprite()
 	var image := Image.create(64, 64, false, Image.FORMAT_RGBA8)
 	for y in 64:
 		for x in 64:
 			var d := Vector2(x - 31.5, y - 31.5).length() / 31.5
 			image.set_pixel(x, y, Color(1, 1, 1, clampf(1.0 - d, 0.0, 1.0) ** 1.5))
 	return ImageTexture.create_from_image(image)
+
+
+## F39 candidate: the GPU judges read the round soft discs as bubble sprites.
+## A torn, noisy plume instead: soft falloff broken up by fractal noise and
+## stretched upward like thrown spray.
+func _wisp_sprite() -> Texture2D:
+	var noise := FastNoiseLite.new()
+	noise.seed = 913
+	noise.frequency = 0.09
+	noise.fractal_octaves = 3
+	var image := Image.create(64, 64, false, Image.FORMAT_RGBA8)
+	for y in 64:
+		for x in 64:
+			var d := Vector2((x - 31.5) / 31.5, (y - 31.5) / 44.0).length()
+			var torn := clampf(noise.get_noise_2d(x, y) * 0.9 + 0.55, 0.0, 1.0)
+			var a := clampf(1.0 - d, 0.0, 1.0) ** 1.2 * smoothstep(0.35, 0.8, torn)
+			image.set_pixel(x, y, Color(1, 1, 1, a))
+	return ImageTexture.create_from_image(image)
+
+
+## The OFF Tidewake look gate may restyle the race (`seal_race` in
+## tidewake_look.json), presentation keys only: width, strength and every key
+## the Fly restriction or current field reads stay the physics config's.
+const PRESENTATION_KEYS := ["foam_alpha", "outline_wobble_m", "inner_wobble_m", "spray_spacing_m",
+	"spray_size_m", "spray_lifetime_s", "spray_speed_min_m_s", "spray_speed_max_m_s", "spray_emission_energy",
+	"spray_wisps", "crests", "trough_colour", "trough_alpha", "wave_face_colour", "shader"]
+
+
+static func _presentation(rules: Dictionary) -> Dictionary:
+	var look := preload("res://scripts/world/tidewake_look_profile.gd").settings()
+	var restyle: Dictionary = look.get("seal_race", {})
+	if not bool(look.get("enabled", false)) or restyle.is_empty():
+		return rules
+	var out := rules.duplicate(true)
+	for key: String in PRESENTATION_KEYS:
+		if not restyle.has(key):
+			continue
+		if out.get(key) is Dictionary and restyle[key] is Dictionary:
+			(out[key] as Dictionary).merge(restyle[key], true)
+		else:
+			out[key] = restyle[key]
+	return out
 
 
 func _trough() -> StandardMaterial3D:

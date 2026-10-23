@@ -1025,12 +1025,22 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 	# shares one. needs_instance_colour is part of the key too — a jittered
 	# layer and an unjittered one must not share a material even when their
 	# colour/swap are otherwise identical.
-	var cache_key := "%s|%s|%s|%s|%s" % [name, colour, swap, needs_instance_colour, str(adjust)]
+	#
+	# The source texture is part of the key as well: two models whose materials
+	# share a name (every Meshy GLB calls its one material `Material_0`) and a
+	# retint are still different textures. A pack texture keeps one path across
+	# models, so pack materials still share.
+	var standard := source as StandardMaterial3D
+	var source_texture := ""
+	if standard != null and standard.albedo_texture != null:
+		source_texture = standard.albedo_texture.resource_path
+		if source_texture.is_empty():
+			source_texture = str(standard.albedo_texture.get_instance_id())
+	var cache_key := "%s|%s|%s|%s|%s|%s" % [name, colour, swap, needs_instance_colour, str(adjust), source_texture]
 	if _tints.has(cache_key):
 		return _tints[cache_key]
 
 	var material := StandardMaterial3D.new()
-	var standard := source as StandardMaterial3D
 
 	# A TEXTURED source keeps its texture, and the colour modulates it.
 	#
@@ -1298,6 +1308,11 @@ func _make_mesh_asset(model_path: String) -> Object:
 	# bushes, rocks and deadfall place themselves on the ground with theirs,
 	# which is the thing shadows are actually for here.
 	asset.set("cast_shadows", bool(layer_cfg.get("casts_shadow", true)))
+	# Models whose origin is at their centre (generated hero trees) declare
+	# the lift to their base in model units; Terrain3D applies it along each
+	# instance's scaled up axis. Absent everywhere else.
+	if layer_cfg.has("height_offset"):
+		asset.set("height_offset", float(layer_cfg.height_offset))
 
 	# PERF-2 / §8.3: `Terrain3DMeshAsset` exposes per-mesh `lod0_range` ..
 	# `lod9_range`, `last_lod`, `shadow_impostor`, `fade_margin` and `density`
@@ -3166,6 +3181,12 @@ func has_fight_sight_fade() -> bool:
 	# Actual vegetation processing remains gated by has_materials().
 	return FIGHT_FADE.configured(_realm_bake_name,
 		CAMERA_VISIBILITY.config().get("line_of_sight_fade", {}))
+
+
+## F22#4: whether this realm's fight presentation runs for `trainer_id`'s fight.
+func fight_sight_allows(trainer_id: String) -> bool:
+	return FIGHT_FADE.allows_fight(_realm_bake_name,
+		CAMERA_VISIBILITY.config().get("line_of_sight_fade", {}), trainer_id)
 
 
 func set_fight_sight_target(owner_id: int, target: Vector3, second: Vector3 = Vector3.INF) -> void:

@@ -549,10 +549,10 @@
    "counts": {
     "met": 4,
     "partial": 0,
-    "in_progress": 0,
+    "in_progress": 1,
     "not_started": 0,
     "blocked": 0,
-    "failing": 1
+    "failing": 0
    },
    "criteria": [
     {
@@ -581,9 +581,9 @@
     },
     {
      "text": "Settlements and cliff identity pass C2 visual matrix",
-     "status": "met",
-     "evidence": "ralph/reports/CLOUDREACH/close-1022/ (r17 calibrated.json), tb/cloudreach-land PROOFS.md",
-     "gap": "PARKED at best 5.85 (scores 5.1 → 5.6 → 5.4 → 5.5; the r9 buttress shader retint 5.85 missed the 6.1 bar). Remaining gap per judge: spire material/colour vs fog, and window glow (12:15 PM CT Tue 13 Oct).",
+     "status": "in_progress",
+     "evidence": "REOPENED by GPU (22 Oct): r17 weather pinned clear in all 40 frames, GTX 1060 Medium and High, candidate 6.57 vs control 5.20, below 7.5 (ralph/reports/GPU-PASS/F08-3/r17/). CPU-provisional pass was 7.13 vs 6.15 (ralph/reports/CLOUDREACH/close-1022/ r17). Settlement life stays ON as an improvement (#712).",
+     "gap": "GPU mapped 6.57 < 7.5; judges' asks in GPU-PASS/F08-3/r17 VERDICT.",
      "note": "CPU-provisional 22 Oct (tb/cloudreach-land 6c1e60035): r17 settlement life mapped 7.13 vs control 6.15 on the yardstick (three judges, 4 anchor pairs, weather pinned clear; ralph/reports/CLOUDREACH/close-1022/ on tb/cloudreach). Route proofs pass with the flag ON (unit, production integration, route blockers, arrival walk, camp recovery). GPU weather-pinned confirmation queued; a GPU score below 7.5 reopens.",
      "audit_index": 4
     },

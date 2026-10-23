@@ -37,6 +37,7 @@ const PROPS := {
 	"rock_mid": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
 	"fence": "res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Extension2.gltf",
 	"strata_outcrop": "res://assets/props/meshy-1020/cloudreach_strata_spire_cluster/cloudreach_strata_spire_cluster.glb",
+	"cliff_shelf": "res://assets/props/meshy-1020/cloudreach_cliff_shelf_edge/cloudreach_cliff_shelf_edge.glb",
 }
 const MESHY := "res://assets/props/meshy-1020/cloudreach_%s/cloudreach_%s.glb"
 static var _items_loaded := false
@@ -94,6 +95,40 @@ static func island_underside() -> PackedScene:
 	if not bool(items_config().get("island_undersides", false)):
 		return null
 	return load(MESHY % ["floating_islet", "floating_islet"]) as PackedScene
+
+
+## P2-023 candidate: stratified rock buttresses (installed Meshy strata
+## cluster) against a landmark ledge's wall, every few sides, so the flared
+## procedural wall stops reading as one clean extrusion. Visual only; the
+## buttress tops stay below the walkable rim.
+static func ledge_buttresses(root: Node3D, top_ring: Array, size: Vector3, seed_value: int) -> void:
+	var cfg: Dictionary = items_config().get("ledge_buttresses", {})
+	if cfg.is_empty():
+		return
+	var packed := load(MESHY % ["strata_spire_cluster", "strata_spire_cluster"]) as PackedScene
+	var step := maxi(1, int(cfg.get("every_nth_side", 4)))
+	var height := minf(size.y * float(cfg.get("height_fraction", 0.6)), float(cfg.get("height_max_m", 70.0)))
+	for i in range(0, top_ring.size(), step):
+		var top: Vector3 = top_ring[i]
+		var outward := Vector3(top.x, 0.0, top.z).normalized()
+		var holder := Node3D.new()
+		holder.name = "LedgeButtress%d" % i
+		holder.position = Vector3(top.x, top.y - float(cfg.get("rim_drop_m", 1.5)) - height, top.z) \
+			+ outward * float(cfg.get("outset_m", 2.0))
+		holder.rotation.y = float(posmod(seed_value * 37 + i * 61, 360)) * PI / 180.0
+		root.add_child(holder)
+		var rock := packed.instantiate() as Node3D
+		var source: AABB = BOUNDS.measure(rock)
+		# Per-side variety so the stacks stop reading as one repeated drum.
+		var jitter := float(posmod(seed_value * 131 + i * 977, 1000)) / 999.0
+		var varied := height * lerpf(float(cfg.get("height_jitter_min", 1.0)), float(cfg.get("height_jitter_max", 1.0)), jitter)
+		holder.position.y += height - varied
+		var factor := varied / maxf(source.size.y, 0.01)
+		var spread := lerpf(float(cfg.get("width_jitter_min", 1.0)), float(cfg.get("width_jitter_max", 1.0)), 1.0 - jitter)
+		rock.scale = Vector3(factor * spread, factor, factor * spread)
+		rock.position = -Vector3(source.get_center().x, source.position.y, source.get_center().z) * factor
+		holder.add_child(rock)
+		tint_rock(rock)
 
 
 static func merge(base: Dictionary, overlay: Dictionary) -> Dictionary:
@@ -159,6 +194,7 @@ func dress(world: Node3D, materials: Dictionary) -> void:
 	var timber: Material = materials.get("weathered_timber", materials.get("wood"))
 	if not items_config().is_empty():
 		_dress_sites(world, items_config(), timber)
+		_dress_vista(world, items_config())
 	var spec := config()
 	if spec.is_empty():
 		_process(0.0)
@@ -214,6 +250,18 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 						mesh.visible = false
 					if child is GeometryInstance3D:
 						(child as GeometryInstance3D).visible = false
+		# A hero shell that encloses the court: hide every older visual inside
+		# its ring (colliders stay), keeping this candidate's own dressing.
+		var within := float(site.get("hide_visual_within_m", 0.0))
+		if within > 0.0:
+			var keep: Array = site.get("keep_visual_prefixes", [])
+			for mesh: GeometryInstance3D in root.find_children("*", "GeometryInstance3D", true, false):
+				var top := str(root.get_path_to(mesh)).get_slice("/", 0)
+				if top == "SettlementLife" or keep.any(func(prefix: String) -> bool: return top.begins_with(prefix)):
+					continue
+				var local := root.to_local(mesh.global_transform * mesh.get_aabb().get_center())
+				if Vector2(local.x, local.z).length() < within and local.y > -4.0:
+					mesh.visible = false
 		# F08#3 r15: dress the near field of each fixed settlement camera
 		# (along/lateral metres from the trainer stand toward its target), so
 		# the frame's lower third is edging, beds and paving, not bare lawn.
@@ -223,8 +271,18 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 			var forward := (to - from).normalized()
 			var side := Vector3.UP.cross(forward).normalized()
 			for item: Dictionary in spec.get("stand_pattern", []):
+				var only: Array = item.get("only_stands", [])
+				if not only.is_empty() and not only.has(str(stand.get("id", ""))):
+					continue
 				var local := from + forward * float(item.along_m) + side * float(item.lateral_m) * float(stand.get("mirror", 1.0))
 				var at := _ground(world, holder, local + Vector3.UP * float(stand.get("y", 0.0)))
+				# A ledge piece meant to hang past the rim (`void_ok`) keeps the
+				# stand's authored height where the ground has already fallen away,
+				# its top `void_top_m` from that height (below the rim, not proud).
+				var hung := false
+				if at == Vector3.INF and bool(item.get("void_ok", false)):
+					at = local + Vector3.UP * float(stand.get("y", 0.0))
+					hung = true
 				if at == Vector3.INF:
 					continue
 				var face := rad_to_deg(atan2(forward.x, forward.z)) + float(item.get("yaw", 0.0))
@@ -233,8 +291,13 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 						"yaw": face + (90.0 if float(item.lateral_m) * float(stand.get("mirror", 1.0)) > 0.0 else -90.0)},
 						spec.get("lamp", {}), timber)
 					continue
-				var model := _scene(holder, load(str(PROPS[item.asset])) as PackedScene, at,
-					float(item.height), face)
+				# Optional per-stand size variety and a raised placement (a ledge
+				# standing proud of the lawn); both default to none.
+				var vary := float(posmod(str(stand.get("id", "")).hash() + int(item.along_m * 7.0), 1000)) / 999.0
+				var size := float(item.height) * lerpf(float(item.get("scale_min", 1.0)), float(item.get("scale_max", 1.0)), vary)
+				var rise := float(item.get("void_top_m", -1.5)) - size if hung else float(item.get("rise_m", 0.0))
+				var model := _scene(holder, load(str(PROPS[item.asset])) as PackedScene,
+					at + Vector3.UP * rise, size, face)
 				if str(item.asset).contains("bush"):
 					world.call("_apply_tree_palette", model, holder.get_child_count())
 				elif str(item.asset).begins_with("rock") or item.asset == "paving":
@@ -271,8 +334,10 @@ func _dress_vista(world: Node3D, spec: Dictionary) -> void:
 		if model != null:
 			tint_rock(model)
 			_set_visibility(model, float(spec.get("vista_range_m", 3000.0)))
-	var ring: Dictionary = spec.get("cloud_ring", {})
-	if not ring.is_empty():
+	var rings: Array = spec.get("cloud_rings", []).duplicate()
+	if not (spec.get("cloud_ring", {}) as Dictionary).is_empty():
+		rings.push_front(spec.cloud_ring)
+	for ring: Dictionary in rings:
 		_cloud_ring(vista, ring)
 
 
@@ -328,7 +393,7 @@ func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
 		float(spec.height), float(spec.get("yaw", 0.0)), float(spec.get("width", 0.0)))
 	if model == null:
 		return
-	_dress_building(model, str(spec.asset))
+	_dress_building(model, str(spec.asset), path, bool(spec.get("double_sided", false)))
 	var placement := model.get_parent() as Node3D
 	var bounds: AABB = BOUNDS.measure(model)
 	var size := bounds.size * (float(spec.height) / maxf(bounds.size.y, 0.01))
@@ -364,10 +429,12 @@ func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
 
 ## Weathered stone tint for the clean Meshy facades, and night window glow
 ## where the asset ships a mask of its baked amber panes.
-func _dress_building(model: Node3D, asset: String) -> void:
+## double_sided: a hollow shell the camera can stand inside (its inner faces
+## would otherwise be culled and the court would open onto the sky).
+func _dress_building(model: Node3D, asset: String, path := "", double_sided := false) -> void:
 	var spec := config() if not config().is_empty() else items_config()
 	var tint := Color(str(spec.get("building_tint", "#ffffff")))
-	var mask_path := (MESHY % [asset, asset]).trim_suffix(".glb") + "_window_mask.png"
+	var mask_path := (path if not path.is_empty() else MESHY % [asset, asset]).trim_suffix(".glb") + "_window_mask.png"
 	var mask: Texture2D = load(mask_path) as Texture2D if ResourceLoader.exists(mask_path) else null
 	var glow := Color(str(spec.get("window_colour", "#ffa04a")))
 	for mesh: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
@@ -379,6 +446,8 @@ func _dress_building(model: Node3D, asset: String) -> void:
 			finish.albedo_color = source.albedo_color * tint
 			# Meshy exports can carry an alpha channel; masonry must be opaque.
 			finish.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+			if double_sided:
+				finish.cull_mode = BaseMaterial3D.CULL_DISABLED
 			if mask != null:
 				finish.emission_enabled = true
 				finish.emission = glow

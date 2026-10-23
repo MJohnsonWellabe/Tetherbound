@@ -6,7 +6,10 @@ const LOOK := preload("res://scripts/world/stormwood_look.gd")
 
 func test_off_profile_leaves_visual_untouched() -> void:
 	var profile := FINISH.read_config()
-	assert_false(bool(profile.enabled), "unjudged material finish ships OFF")
+	# Ships ON by coordinator decision (22 Oct wind-down: r11 beat control);
+	# the OFF profile must still leave the visual untouched.
+	assert_true(bool(profile.enabled), "finish ships ON")
+	profile.enabled = false
 	var visual := MeshInstance3D.new()
 	visual.mesh = BoxMesh.new()
 	var source := StandardMaterial3D.new()

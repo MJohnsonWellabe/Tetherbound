@@ -52,6 +52,8 @@ var _depth_pull := 0.45
 ## pass keeps full strength and still never paints through a body (P2-093);
 ## only this ghost does, at `lane_xray_alpha` of the colour. 0 = off.
 var _xray_alpha := 0.0
+## F22#4 storm tell: STYLE.CRACKLE_GLSL filaments inside the lane (0 = off).
+var _crackle := 0.0
 var _xray: MeshInstance3D = null
 
 ## P2-093/P2-063 soft style (`telegraph.soft_style`; empty = off).
@@ -98,6 +100,7 @@ static func begin(body: Node3D, start: float, length: float, half_width: float,
 	lane._fade = maxf(0.01, float(cfg.get("lane_fade", lane._fade)))
 	lane._depth_pull = maxf(0.0, float(cfg.get("lane_depth_pull", lane._depth_pull)))
 	lane._xray_alpha = clampf(float(cfg.get("lane_xray_alpha", 0.0)), 0.0, 1.0)
+	lane._crackle = clampf(float(cfg.get("lane_crackle", 0.0)), 0.0, 1.0)
 	# A named charge may ask for the solid filled lane over the soft outline.
 	lane._soft = {} if cfg.get("lane_solid") == true else STYLE.soft()
 	lane.top_level = true
@@ -116,7 +119,7 @@ func _ready() -> void:
 		_xray = MeshInstance3D.new()
 		_xray.mesh = _mesh
 		var ghost := Shader.new()
-		ghost.code = LANE_SHADER.replace("depth_draw_never;", "depth_draw_never, depth_test_disabled;") \
+		ghost.code = LANE_SHADER.replace("@CRACKLE@", STYLE.CRACKLE_GLSL).replace("depth_draw_never;", "depth_draw_never, depth_test_disabled;") \
 			.replace("ALPHA = tint.a;", "ALPHA = tint.a * xray_alpha;") \
 			.replace("varying vec4 tint;", "varying vec4 tint;\nuniform float xray_alpha = 0.3;")
 		var ghost_material := ShaderMaterial.new()
@@ -144,27 +147,38 @@ const LANE_SHADER := """
 shader_type spatial;
 render_mode unshaded, blend_mix, cull_disabled, shadows_disabled, depth_draw_never;
 uniform float depth_pull = 0.45;
+uniform float crackle = 0.0;
 varying vec4 tint;
+varying vec3 world;
 void vertex() {
 	tint = COLOR;
+	world = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	vec4 view = MODELVIEW_MATRIX * vec4(VERTEX, 1.0);
 	float dist = length(view.xyz);
 	view.xyz *= max(0.2, 1.0 - depth_pull / max(dist, 0.001));
 	POSITION = PROJECTION_MATRIX * view;
 }
+@CRACKLE@
 void fragment() {
-	ALBEDO = tint.rgb;
-	ALPHA = tint.a;
+	float spark = crackle > 0.0 && tint.a > 0.001 ? tb_crackle(world, TIME) * crackle : 0.0;
+	ALBEDO = mix(tint.rgb, vec3(1.0), spark * 0.6);
+	ALPHA = max(tint.a, spark);
 }
 """
 
 
+## Compiled once per process and shared by every lane (F25#4 launch stalls).
+static var _lane_shader: Shader = null
+
+
 func _material() -> Material:
-	var shader := Shader.new()
-	shader.code = LANE_SHADER
+	if _lane_shader == null:
+		_lane_shader = Shader.new()
+		_lane_shader.code = LANE_SHADER.replace("@CRACKLE@", STYLE.CRACKLE_GLSL)
 	var material := ShaderMaterial.new()
-	material.shader = shader
+	material.shader = _lane_shader
 	material.set_shader_parameter("depth_pull", _depth_pull)
+	material.set_shader_parameter("crackle", _crackle)
 	return material
 
 

@@ -26,7 +26,7 @@
   "_why_scorched_scars": "F10#4 scene-art pass (owner 5860380772): strike scars as terrain-following burnt glass-fused patches with the grass cleared, blackened rock-family lumps and low smoked-glass blades. Enabled for Phase 1b; the old spire clusters remain only as a legacy fallback.",
   "scorched_scars": true,
   "scar_relief_candidate": {
-    "enabled": false,
+    "enabled": true,
     "scope": "client_presentation",
     "normal_strength": 0.14,
     "detail_frequency": 2.4,
@@ -35,5 +35,6 @@
   "tether_standards": [
     {"id":"west_warning", "at":[-21.0,101.0], "height_m":8.0, "yaw_deg":28.0},
     {"id":"east_warning", "at":[21.0,126.0], "height_m":8.0, "yaw_deg":-24.0}
-  ]
+  ],
+  "shard_finish": {"enabled": true, "scope": "client_presentation", "_comment": "F41 round-3 candidate (OFF until judged): taller, brighter fused-glass blades so the Glass Field scar reads at the fixed stand (three round-1 judges: a tiny dark smear). Visual only; no collision or placement change.", "height_scale": 0.45, "crust_model": "res://assets/props/meshy-1020/scar_crust/v1/scar_crust_v1.glb", "crust_footprint": 0.9, "crust_height_m": 0.45, "emission_energy": 0.45}
 }

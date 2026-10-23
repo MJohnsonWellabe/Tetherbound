@@ -1,0 +1,95 @@
+[
+ {
+  "label": "P2-002 map 1",
+  "a": "P2-002_map_1_before.jpg",
+  "b": "P2-002_map_1_after.jpg",
+  "brief": "Full-screen world map tab, controller in hand, at the same 8x local zoom: top Meadows, bottom Tidewake. Does the map read as a designed, legible chart of the world - terrain, routes, explored versus unexplored ground and labels - that belongs to this game?",
+  "defects": [
+   "empty dark canvas: no readable terrain, only markers on black fog",
+   "survey edge reads as hard stair-steps",
+   "keyboard text in footer while a controller is in use"
+  ]
+ },
+ {
+  "label": "P2-002 map 2",
+  "a": "P2-002_map_2_before.jpg",
+  "b": "P2-002_map_2_after.jpg",
+  "brief": "Full-screen world map tab, controller in hand, at the same 8x local zoom: top Cloudreach, bottom Stormwood. Does the map read as a designed, legible chart of the world - terrain, routes, explored versus unexplored ground and labels - that belongs to this game?",
+  "defects": [
+   "empty dark canvas: no readable terrain, only markers on black fog",
+   "survey edge reads as hard stair-steps",
+   "keyboard text in footer while a controller is in use"
+  ]
+ },
+ {
+  "label": "P2-001 shell 1",
+  "a": "P2-001_shell_1_before.jpg",
+  "b": "P2-001_shell_1_after.jpg",
+  "brief": "Pause-menu shell (title, tab rail, footer) over the world, controller in hand: top Meadows, Satchel tab, bottom Tidewake, Creatures tab. Does the menu frame read as one designed, legible interface with clear hierarchy that belongs to this world?",
+  "defects": [
+   "generic flat panel with weak hierarchy and no connection to the chapter",
+   "keyboard text in footer while a controller is in use"
+  ]
+ },
+ {
+  "label": "P2-001 shell 2",
+  "a": "P2-001_shell_2_before.jpg",
+  "b": "P2-001_shell_2_after.jpg",
+  "brief": "Pause-menu shell (title, tab rail, footer) over the world, controller in hand: top Cloudreach, Satchel tab, bottom Stormwood, Creatures tab. Does the menu frame read as one designed, legible interface with clear hierarchy that belongs to this world?",
+  "defects": [
+   "generic flat panel with weak hierarchy and no connection to the chapter",
+   "keyboard text in footer while a controller is in use"
+  ]
+ },
+ {
+  "label": "P2-007 panels 1",
+  "a": "P2-007_panels_1_before.jpg",
+  "b": "P2-007_panels_1_after.jpg",
+  "brief": "Secondary menu tabs, controller in hand: top Meadows, Quests, bottom Tidewake, Players. Do these screens read as designed, filled and legible, with a clear focus, rather than sparse placeholder lists?",
+  "defects": [
+   "large empty areas and placeholder-like sparse lists",
+   "weak hierarchy: no clear focus item"
+  ]
+ },
+ {
+  "label": "P2-007 panels 2",
+  "a": "P2-007_panels_2_before.jpg",
+  "b": "P2-007_panels_2_after.jpg",
+  "brief": "Secondary menu tabs, controller in hand: top Cloudreach, Build, bottom Stormwood, Quests. Do these screens read as designed, filled and legible, with a clear focus, rather than sparse placeholder lists?",
+  "defects": [
+   "large empty areas and placeholder-like sparse lists",
+   "weak hierarchy: no clear focus item"
+  ]
+ },
+ {
+  "label": "P2-031 settings",
+  "a": "P2-031_settings_before.jpg",
+  "b": "P2-031_settings_after.jpg",
+  "brief": "Settings screens, controller in hand: top Meadows controls/bindings section, bottom Stormwood settings. Can a player read and scan the bindings and options at a glance on a handheld screen?",
+  "defects": [
+   "binding rows hard to scan: small text, no row separation",
+   "binding cells shown as keyboard text instead of controller glyphs"
+  ]
+ },
+ {
+  "label": "P2-004 HUD",
+  "a": "P2-004_HUD_before.jpg",
+  "b": "P2-004_HUD_after.jpg",
+  "brief": "Exploration HUD over the world, controller in hand: top Tidewake, bottom Stormwood. Is the HUD legible at a glance, quiet over the scene, and does it leave the world readable?",
+  "defects": [
+   "too many boxed panels compete with the scene",
+   "quick-slot counts cut or hard to read"
+  ]
+ },
+ {
+  "label": "P2-095 craft",
+  "a": "P2-095_craft_before.jpg",
+  "b": "P2-095_craft_after.jpg",
+  "brief": "Crafting station panel opened at a camp in the storm forest, controller in hand. Can the player read the recipes, ingredients and what to press at a glance, and does it read as a designed screen?",
+  "defects": [
+   "recipe text clipped or cut",
+   "action hints low contrast or keyboard-only",
+   "only three recipes visible; no disabled state on Craft"
+  ]
+ }
+]

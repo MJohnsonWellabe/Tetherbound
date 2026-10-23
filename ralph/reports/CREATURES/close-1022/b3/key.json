@@ -1,0 +1,46 @@
+{
+ "Uj": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Vh": {
+  "anchor": false,
+  "label": "F36 riverdrake c4",
+  "A": "rd-base.png",
+  "B": "rd-c.png"
+ },
+ "Pn": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Rl": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Ur": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "Os": {
+  "anchor": false,
+  "label": "F36 mirejaw+voltarach c4",
+  "A": "mv-base.png",
+  "B": "mv-c.png"
+ },
+ "Sw": {
+  "anchor": false,
+  "label": "F29#3 c4",
+  "A": "f29-base.png",
+  "B": "f29-c.png"
+ },
+ "Io": {
+  "anchor": false,
+  "label": "F36 meadowhart c4",
+  "A": "mh-base.png",
+  "B": "mh-c.png"
+ }
+}

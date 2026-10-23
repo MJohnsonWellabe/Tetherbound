@@ -374,9 +374,18 @@ func _stage_client_for_current_opponent() -> Dictionary:
 	var opponent_at := _vec(state.get("opponent_pos", []))
 	if opponent_at == Vector3.INF:
 		return {"verdict": "FAIL", "detail": "host exposed no live opponent position"}
-	var stand_in := await step(1, "place_stand_in", {
-		"at": [opponent_at.x, opponent_at.y, opponent_at.z], "exact": true, "settle": 1,
-	})
+	# The host advances the round first; the client's body for the next roster
+	# member arrives by replication a few frames later. Wait for it (bounded)
+	# rather than racing it on a slow runner.
+	var stand_in: Dictionary = {}
+	for tick in HOSTED_WAIT_FRAMES:
+		stand_in = await step(1, "place_stand_in", {
+			"at": [opponent_at.x, opponent_at.y, opponent_at.z], "exact": true, "settle": 1,
+		})
+		if str(stand_in.get("verdict", "")) == "PASS" \
+				or str(stand_in.get("detail", "")) != "this peer has no opponent body to move":
+			break
+		await step(1, "wait", {"frames": 1})
 	if str(stand_in.get("verdict", "")) != "PASS":
 		return {"verdict": "FAIL", "detail": "client stand-in: " + str(stand_in.get("detail", ""))}
 	var mine := float(state.get("body_radius", 0.0))

@@ -1,0 +1,47 @@
+{
+ "Jh": {
+  "anchor": false,
+  "label": "F10#2 capacitor_alpha",
+  "A": "<scratch>/r11/base/fight_capacitor_alpha.png",
+  "B": "<scratch>/r12/sides/fight_capacitor_alpha.png"
+ },
+ "Ay": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Hk": {
+  "anchor": true,
+  "A": "f36_0_npc:C9B",
+  "B": "f36_0_npc:C9A"
+ },
+ "Cn": {
+  "anchor": false,
+  "label": "F41#3 calm",
+  "A": "<scratch>/r12/sides/matrix_calm.png",
+  "B": "<scratch>/r11/base/matrix_calm.png"
+ },
+ "Nk": {
+  "anchor": false,
+  "label": "F10#2 glass_field_alpha",
+  "A": "<scratch>/r11/base/fight_glass_field_alpha.png",
+  "B": "<scratch>/r12/sides/fight_glass_field_alpha.png"
+ },
+ "Od": {
+  "anchor": false,
+  "label": "F41#3 aftermath",
+  "A": "<scratch>/r11/base/matrix_aftermath_calm.png",
+  "B": "<scratch>/r12/sides/matrix_aftermath_calm.png"
+ },
+ "Aw": {
+  "anchor": false,
+  "label": "F41#3 break",
+  "A": "<scratch>/r11/base/matrix_break.png",
+  "B": "<scratch>/r12/sides/matrix_break.png"
+ },
+ "Hu": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ }
+}

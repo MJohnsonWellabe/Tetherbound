@@ -1,0 +1,140 @@
+{
+  "asset": "riverwatch_dock",
+  "lane": "Fights",
+  "criterion": "F22#4 Riverwatch (Captain Oreth)",
+  "date": "2026-10-21",
+  "authority": "Owner standing direction 1 (15 Oct 2026): Meshy, no generation cap; candidate stays flag-off until its scene passes judging.",
+  "integration_status": "raw candidate, not imported, OFF",
+  "concept_tasks": [
+    {
+      "tag": "c1",
+      "task_id": "01a15c3e-a287-762c-ae62-26252e51e2da",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "status": "SUCCEEDED",
+      "consumed_credits": 9,
+      "prompt": "Concept for a single game-ready 3D environment prop in the exact style and wood family of these reference boards: a small river mooring landing (dock). A rectangular weathered timber plank deck about 4 m long and 2.5 m wide, standing on four thick round wooden piles that extend down below the deck, deck surface 0.6 m above the water line. Two short sturdy wooden mooring bollards on the front edge, each with a coiled tan rope; one wooden lantern post at a back corner with a small iron and glass lantern. Warm weathered wood browns with a few slate-grey stone-blue and muted teal painted trim accents on the edge boards. Stylised hand-painted Tetherbound look, chunky readable shapes, slightly worn. No red, no oxblood. Show only the dock as an isolated object, no water, no ground, no boat, no people, no text, plain background, even lighting, no cast shadow.",
+      "reference_inputs": [
+        "crop of docs/art/reference board: ref_bridge.png",
+        "crop of docs/art/reference board: ref_water.png",
+        "crop of docs/art/reference board: ref_village.png"
+      ],
+      "outputs": [
+        "c1_view0.png",
+        "c1_view1.png",
+        "c1_view2.png"
+      ],
+      "chosen_for_3d": false
+    },
+    {
+      "tag": "c2",
+      "task_id": "01a15c48-b20a-71bd-8700-50eec89227c2",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "status": "SUCCEEDED",
+      "consumed_credits": 9,
+      "prompt": "Concept for a single game-ready 3D environment prop in the exact style and wood family of these reference boards: a small, low river mooring landing (dock). A clearly LONG RECTANGULAR deck of weathered timber planks, 4 m long and 2.5 m wide (length about 1.6 times the width), planks running across the width. The deck sits LOW: four short thick round wooden piles, one at each corner, only about 0.6 m of pile visible under the deck plus a little extra below, so the dock reads as a low platform, not a table. Two short sturdy wooden mooring bollards on the front short edge, each with a coiled tan rope; one wooden lantern post with a hanging iron and glass lantern at one back corner. Warm weathered wood browns with slate-grey and muted teal painted trim on the edge boards. Stylised hand-painted Tetherbound look, chunky readable shapes, slightly worn. No red, no oxblood. Isolated object only, no water, no ground, no boat, no people, no text, plain background, even lighting, no cast shadow.",
+      "reference_inputs": [
+        "crop of docs/art/reference board: ref_bridge.png",
+        "crop of docs/art/reference board: ref_water.png",
+        "crop of docs/art/reference board: ref_village.png",
+        "assets_raw/props-1020/riverwatch_dock/c1_view1.png"
+      ],
+      "outputs": [
+        "c2_view0.png",
+        "c2_view1.png",
+        "c2_view2.png"
+      ],
+      "chosen_for_3d": false
+    },
+    {
+      "tag": "c3",
+      "task_id": "01a15c51-db37-76fb-b698-dfe9a1edead2",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "status": "SUCCEEDED",
+      "consumed_credits": 9,
+      "prompt": "Concept for a single game-ready 3D environment prop in the exact style and wood family of these reference boards: a small river mooring landing seen as a LONG, LOW timber pier section. The deck is a long rectangle, 4 m long and 2.5 m wide, about one and a half times longer than wide, made of weathered planks laid across the width, with a slate-grey and muted teal painted edge board. It rests on exactly four thick round wooden piles at the corners; the piles are short and stubby, showing only a little below the deck, so the whole prop is wide and low, much wider than it is tall (not a table). On the front short edge stand two short sturdy wooden mooring bollards wrapped with coiled tan rope; at one back corner stands a single wooden lantern post with a hanging iron and glass lantern. Warm weathered wood browns, stylised hand-painted Tetherbound look, chunky readable shapes. No red, no oxblood. Isolated object only, no water, no ground, no boat, no people, no text, plain background, even lighting, no cast shadow.",
+      "reference_inputs": [
+        "crop of docs/art/reference board: ref_bridge.png",
+        "crop of docs/art/reference board: ref_water.png",
+        "crop of docs/art/reference board: ref_village.png"
+      ],
+      "outputs": [
+        "c3_view0.png",
+        "c3_view1.png",
+        "c3_view2.png"
+      ],
+      "chosen_for_3d": false
+    },
+    {
+      "tag": "c4",
+      "task_id": "01a15c64-b8c7-758f-ad2b-1ba072d2c9ea",
+      "endpoint": "/openapi/v1/image-to-image",
+      "ai_model": "nano-banana-pro",
+      "status": "SUCCEEDED",
+      "consumed_credits": 9,
+      "prompt": "Multi-view turnaround of this same river mooring dock from the first image, same style, materials and details, with two fixes: (1) the deck is WIDER: 4 m long and 2.5 m wide, so the length is only about 1.6 times the width, planks laid across the width; (2) there is exactly ONE lantern post, at the back right corner, and no second lantern post anywhere. Keep: four short thick round wooden corner piles under a low deck, slate-grey and muted teal painted edge boards, two short wooden mooring bollards with coiled tan rope on the front short edge, one hanging iron and glass lantern. Show the same object from the front-left three-quarter, the right side and the back, always identical. Stylised hand-painted Tetherbound look. No red, no oxblood. Isolated object only, no water, no ground, no text, plain background, even lighting, no cast shadow.",
+      "reference_inputs": [
+        "assets_raw/props-1020/riverwatch_dock/c3_view2.png",
+        "crop of docs/art/reference board: ref_bridge.png",
+        "crop of docs/art/reference board: ref_water.png"
+      ],
+      "outputs": [
+        "concept_c4_view0.png",
+        "concept_c4_view1.png",
+        "concept_c4_view2.png"
+      ],
+      "chosen_for_3d": true
+    }
+  ],
+  "model_task": {
+    "task_id": "01a15c6d-2394-7295-8cb7-7403293a9683",
+    "endpoint": "/openapi/v1/multi-image-to-3d",
+    "status": "SUCCEEDED",
+    "consumed_credits": 30,
+    "params": {
+      "ai_model": "latest",
+      "should_remesh": true,
+      "topology": "quad",
+      "target_polycount": 15000,
+      "enable_pbr": true,
+      "should_texture": true
+    },
+    "image_inputs": [
+      "c4_view0.png"
+    ],
+    "outputs": [
+      "riverwatch_dock.glb",
+      "riverwatch_dock_tex0_base_color.png",
+      "riverwatch_dock_tex0_metallic.png",
+      "riverwatch_dock_tex0_normal.png",
+      "riverwatch_dock_tex0_roughness.png",
+      "riverwatch_dock_thumb.png"
+    ]
+  },
+  "consumed_credits_total": 96,
+  "target_size_m": {
+    "deck_length": 4.0,
+    "deck_width": 2.5,
+    "deck_above_water": 0.6
+  },
+  "raw_extents_m": {
+    "x_length": 1.902,
+    "y_height_incl_lantern": 1.05,
+    "z_width": 0.877
+  },
+  "scale_note": "Uniform 2.10 gives 4.0 m length but 1.84 m width; scale width (z) a further 1.36x to reach 2.5 m, or accept a narrower landing. Sink piles so the deck top sits 0.6 m above water.",
+  "model_input_note": "3D generated from the single concept view concept_c4_view0.png (one lantern post); multi-view inputs gave inconsistent lantern placement.",
+  "triangles": 30876,
+  "visual_verdict": "Accept as candidate with caveat: weathered plank deck, slate/teal painted edge boards, four stubby corner piles, rope-wrapped bollards and one hanging-lantern post read clearly in the Meadows wood family; no red. Deck is narrower than the brief (about 2.2:1 instead of 1.6:1).",
+  "rejected": {
+    "c1,c2": "tall table-like piles, near-square deck",
+    "c3 multi-view model (task 01a15c5a-e124-72e4-8d7d-22092885ca38, 30 credits)": "inconsistent views produced two lantern posts and a 2.7:1 deck; kept in rejected_v1/"
+  },
+  "rejected_model_task": {
+    "task_id": "01a15c5a-e124-72e4-8d7d-22092885ca38",
+    "consumed_credits": 30,
+    "folder": "rejected_v1/"
+  }
+}

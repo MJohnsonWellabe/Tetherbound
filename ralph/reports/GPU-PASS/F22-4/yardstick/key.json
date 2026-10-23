@@ -1,0 +1,34 @@
+{
+ "Wi": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ov": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Yn": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Sb": {
+  "anchor": false,
+  "label": "F22#4 Riverwatch GPU Low",
+  "A": "D:\\tb-gpu-runs\\yard\\f22\\sides\\F22-4-Low-control.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f22\\sides\\F22-4-Low-r13.png"
+ },
+ "Ke": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "On": {
+  "anchor": false,
+  "label": "F22#4 Riverwatch GPU Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f22\\sides\\F22-4-Medium-control.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f22\\sides\\F22-4-Medium-r13.png"
+ }
+}

@@ -1,0 +1,58 @@
+{
+ "Pm": {
+  "anchor": false,
+  "label": "F36 mirejaw+voltarach c2",
+  "A": "mv-base.png",
+  "B": "mv-c.png"
+ },
+ "Bw": {
+  "anchor": false,
+  "label": "F36 meadowhart c1",
+  "A": "mh-c.png",
+  "B": "mh-base.png"
+ },
+ "Fn": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Ab": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Zt": {
+  "anchor": false,
+  "label": "P2-030 r3",
+  "A": "p2030-r3.png",
+  "B": "p2030-base.png"
+ },
+ "Oe": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Cn": {
+  "anchor": false,
+  "label": "F36 riverdrake c3",
+  "A": "rd-base.png",
+  "B": "rd-c.png"
+ },
+ "Ah": {
+  "anchor": false,
+  "label": "F36 dark c2",
+  "A": "dark-c.png",
+  "B": "dark-base.png"
+ },
+ "Fs": {
+  "anchor": false,
+  "label": "P2-018 shiny c3",
+  "A": "shiny-base.png",
+  "B": "shiny-c3.png"
+ },
+ "Ef": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

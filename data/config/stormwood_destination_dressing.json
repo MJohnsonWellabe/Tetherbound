@@ -2,7 +2,7 @@
   "schema_version": 1,
   "_scope": "Client static presentation only. No save, network, terrain, actor or collision changes. OFF pending native support, catalogue visibility and separate trunk collision scope.",
   "fallen_giant": {
-    "enabled": false,
+    "enabled": true,
     "asset": "res://assets/environment/stylized_nature/DeadTree_3.gltf",
     "root_xz": [-138.0, 4482.0],
     "uniform_scale": 2.0,

@@ -1,0 +1,47 @@
+{
+ "Ud": {
+  "anchor": false,
+  "label": "F41#3 calm",
+  "A": "<scratch>/r11/base/matrix_calm.png",
+  "B": "<scratch>/r11/sides/matrix_calm.png"
+ },
+ "It": {
+  "anchor": true,
+  "A": "f36_0_npc:C5A",
+  "B": "f36_0_npc:C5B"
+ },
+ "On": {
+  "anchor": false,
+  "label": "F41#3 break",
+  "A": "<scratch>/r11/sides/matrix_break.png",
+  "B": "<scratch>/r11/base/matrix_break.png"
+ },
+ "Mb": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Pa": {
+  "anchor": false,
+  "label": "F10#2 capacitor_alpha",
+  "A": "<scratch>/r11/sides/fight_capacitor_alpha.png",
+  "B": "<scratch>/r11/base/fight_capacitor_alpha.png"
+ },
+ "Ih": {
+  "anchor": false,
+  "label": "F10#2 glass_field_alpha",
+  "A": "<scratch>/r11/sides/fight_glass_field_alpha.png",
+  "B": "<scratch>/r11/base/fight_glass_field_alpha.png"
+ },
+ "Dl": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Vy": {
+  "anchor": false,
+  "label": "F41#3 aftermath",
+  "A": "<scratch>/r11/sides/matrix_aftermath_calm.png",
+  "B": "<scratch>/r11/base/matrix_aftermath_calm.png"
+ }
+}

@@ -1,0 +1,14 @@
+{
+ "band2_stone_and_root__04__the_burrow_warrens__walk_02_day": {
+  "A": "X",
+  "B": "Y"
+ },
+ "band2_stone_and_root__04__the_burrow_warrens__walk_03_day": {
+  "A": "X",
+  "B": "Y"
+ },
+ "band5_stronghold_approach__09__stronghold_approach__route_day": {
+  "A": "Y",
+  "B": "X"
+ }
+}
