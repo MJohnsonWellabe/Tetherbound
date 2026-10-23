@@ -1,17 +1,91 @@
 # Routes-B close-1020: Cloudreach and Stormwood pieces (F49#0, earned-checkpoint half of F19#5)
 
-## TO COORDINATOR
-- 2026-10-22 13:40Z READY (piece): **06p_aster_chest PASS** at 833b67ee (503 s), from T4.7. feast_t4 learned and the full kit delivered (cliffglass 200, heartwood 128, skyplume 45, Altar bill, candy 2, attuned_ground 10). #706 fixed it.
-- 2026-10-22 13:40Z READY (piece): **rowan_visit PASS** at 833b67ee (5191 s), from T5.0. Ten approach fights won, the named Capacitor Alpha cleared, and Rowan's 1v1 won (master_t5). Before that, the Stormwood pilot fix 8f56994d: it swings only within reach, so approach fights take 4–5 min instead of 8–30.
-- 2026-10-22 13:40Z READY (piece): **training_t5_home PASS** (239 s).
-- 2026-10-22 13:40Z INFO: f08faa7d renames my f49_portal_travel lesson members. After the main merge they clashed with f20_portal_travel's `LESSON_PANEL` and broke compile of any piece that loads f20 (training_t5_storage a1). Routes was told.
-- Running now: training_t5_storage → training_t5_return. Then T4: preparehome → altar_1..5 → kitchen → feed → return, on one SHA.
-- **Unproven pieces:**
-  - T4: preparehome, altar_1..5, kitchen, feed, return, 07_stormward_handoff.
-  - T5: storage, return, the walk back to Rowan, rowan_chest, preparehome, altar_1..5, kitchen, feed, return.
-  - Stormwood route: home_key → home_relic → home_credits.
+## TO COORDINATOR: FINAL READY tb/routes-b-final d7dc4bcd
+Built from origin/main a4f8a6b7 plus tb/routes-b 9f5c1925. Owner direction: everything on main, without bloat. No file over 200 KB. Only small receipts, seam manifests and this note are added; saves and logs stay out.
 
-This is a cloud container: Godot 4.7-stable headless on CPU, installed by `tools/cloud_setup.sh`. Branch `tb/routes-b`, cut from `tb/routes` 0c8fb8ef. Engine flag: every piece runs with `--fixed-fps 60` (disclosed; it gives deterministic 1/60 s frames). Saves stay local under `~/rb/`. Only small receipts are committed, in `receipts/`.
+**Proven** (accepted pieces from pinned start saves; seams match unless noted):
+- **Cloudreach T4:**
+  - Aster: master_t4 won, feast_t4 learned and the kit delivered.
+  - Home Key → storage → portal return → walk back to the aerie.
+  - Home Key before the Altar.
+  - All five Altar slots: five at L40/cap40, paid through production input.
+- **Stormwood T5:**
+  - Rowan: master_t5 won, feast_t5 learned and the kit delivered.
+  - Home Key → storage → portal return → walk back to Rowan.
+  - Home Key before the Altar.
+  - All five Altar slots: five at L50/cap50.
+- **Stormwood ending:**
+  - dynamo (rods, Kestrel, core).
+  - marrow_settlement (Marrow defeated, Stormheart refused, same five).
+  - home_key, then home_relic (Stormwood relic hung, ending receipts matched).
+
+**Open (unproven, not run):**
+- The T4 and T5 Kitchen and feed runs: training_t4_kitchen/feed/return and training_t5_kitchen/feed/return. The T4 Kitchen attempt before the wrap-up failed on the armed-placement walk; the fix is in this branch (homestead_common `_place_at`) but unproven.
+- 07_stormward_handoff.
+- home_credits (Grandpa and credits).
+- The earned Cloudreach and Stormwood route segments before the boundaries used here.
+- One seam with an UNEXPLAINED 8 m Load placement difference: t5_chest__preparehome.
+
+**Code in this branch beyond main** (tooling only, no game code):
+- `stormwood_chain_runner.gd`: the marrow_settlement piece and its home predecessors, and the watchdog counting walking progress.
+- `homestead_common.gd::_place_at`: the armed return via the village road.
+
+**Focused checks on this branch** (Godot 4.7 headless):
+- `--check-only` passes for stormwood_chain_runner, homestead_common, f49_portal_travel, f20_portal_travel, earned_chain_runner, cloudreach_chain_runner and tidewake_piece_runner.
+- `run_tests.gd --only=test_stormwood_pilot_reach,test_homestead_feed_selection,test_generated_arrival_saves,test_f49_training_prefix,test_material_bridge_legs,test_essence_earning_piece`: **23 tests, 165 assertions, 0 failed**.
+
+## TO COORDINATOR
+- 2026-10-22 22:10Z (superseded by FINAL READY above) STOPPED on request (lanes cut to save usage). Nothing is running. Everything is pushed on tb/routes-b.
+- READY: Cloudreach T4 through altar_5; Stormwood T5 through altar_5; Stormwood ending through home_relic, on the declined-Stormheart (retained five) path. See RESUME.
+- QUESTION: seam t5_chest__preparehome has one UNEXPLAINED difference. Production Load placed the trainer 8.0 m from the saved pose at Rowan's grove: saved (−1113.8,73.3,3001.5), loaded (−1121.3,73.3,3004.3). Everything else is identical. Unverified; probably the load's safe-arrival placement off Rowan's arena.
+
+## RESUME
+Saves are container-local in `/root/rb/` and are lost when the container is reclaimed. A new session regenerates each generated boundary (same profile, any SHA) and reruns from the last accepted piece; earlier pieces are not rerun, per the owner rule.
+
+**Passed pieces (accepted end saves):**
+- **Cloudreach T4** (boundary `cloudreach_t4_aster_independent`):
+  - gen, then 06k, then 06l → `c4_…` (runs at a5223bd1)
+  - 06m Aster duel (a5223bd1)
+  - training_t4_home (a5223bd1)
+  - storage (9144be95)
+  - return (fd69c0c2)
+  - 06l from the arrival (fd69c0c2)
+  - 06p_aster_chest (833b67ee) → `/root/rb/c4_06p_aster_chest`
+  - training_t4_preparehome → `/root/rb/c4b_preparehome`
+  - altar_1..5 → `/root/rb/c4b_altar_1..5` (all at f08faa7d)
+- **Stormwood T5** (boundary `stormwood_t5_rowan_independent`):
+  - gen, then rowan_visit (master_t5 won) → home → storage → return
+  - rowan_visit from the arrival → `/root/rb/s5b_rowan_visit`
+  - rowan_chest (feast_t5) → `/root/rb/s5b_rowan_chest`
+  - training_t5_preparehome → `/root/rb/s5c_preparehome`
+  - altar_1..5 → `/root/rb/s5c_altar_1..5` (all at e8cff1d5)
+- **Stormwood ending** (boundary `stormwood_rootgate_crown`):
+  - gen → dynamo (e214d10f) → `/root/rb/sw_dynamo`
+  - marrow_settlement: the Stormheart refused, the five retained (78d263e6) → `/root/rb/sw_marrow_settlement`
+  - home_key → `/root/rb/sw_home_key`
+  - home_relic → `/root/rb/sw_home_relic`
+
+**Unproven pieces, each with its pinned start:**
+- T4: training_t4_kitchen from `c4b_altar_5`, then feed, return, and 07_stormward_handoff.
+  - The last kitchen attempt was stopped for the wrap-up. The one before failed on the armed-placement walk; fix 40588a50, not yet proven.
+- T5: training_t5_kitchen from `s5c_altar_5`, then feed and return. Stopped for the wrap-up; it ran on the pre-40588a50 helper, so rerun it on the current head.
+- Stormwood ending: home_credits from `sw_home_relic` (Grandpa and credits).
+- Not started:
+  - Cloudreach route segments 01–07 from an earned (non-generated) arrival.
+  - Stormwood route pieces before dynamo (arrival_prefix … rootgate) from an earned arrival.
+
+**Fixes this lane made (all reported to Routes):**
+- earned_chain_runner tier map
+- profiles T4/T5
+- 06k detour
+- Aster perch landing
+- storage keeps keys
+- portal walks: lesson cards (renamed f08faa7d) and the Hall entrance
+- Stormwood pilot reach (+ test)
+- cross-runner `items`
+- watchdog walking progress
+- armed return via the village road
+- marrow_settlement and its home predecessors
 
 ## Cloudreach T4 (Aster Windward, master_t4): independent boundary
 
@@ -74,6 +148,20 @@ This is a cloud container: Godot 4.7-stable headless on CPU, installed by `tools
 | T5.0 | generate `stormwood_t5_rowan_independent` | generate_boundary_save | template (generated, disclosed) | ed44d191 | ~200 s | PASS: Still Grove road (−160,2697.5), L49/cap50, tiers [1..4], wins/recipes t1–t4 |
 | T5.1 | rowan_visit | stormwood_chain_runner | T5.0 | 833b67ee | 5191 s | PASS: rest at Still Grove, ten approach wins, Capacitor Alpha cleared, master_t5 won |
 | T5.2 | training_t5_home | tidewake_piece_runner | T5.1 | 833b67ee | 239 s | PASS: Home Key to the Hall home arrival (96.2,0.9,14) |
+| T4.9 | training_t4_preparehome | tidewake_piece_runner | T4.8 | f08faa7d | 388 s | PASS |
+| T4.10–14 | training_t4_altar_1..5 | tidewake_piece_runner | prev | f08faa7d | 529/148/219/160/162 s | PASS: five at L40/cap40, paid |
+| T4.15 | training_t4_kitchen | tidewake_piece_runner | T4.14 | f08faa7d | 18814 s | FAIL: armed-placement walk blocked by GrandpaHouse (fix 40588a50); rerun stopped for the wrap-up |
+| T5.3 | training_t5_storage | tidewake_piece_runner | T5.2 | f08faa7d | 1947 s | PASS |
+| T5.4 | training_t5_return | tidewake_piece_runner | T5.3 | f08faa7d | 613 s | PASS |
+| T5.5 | rowan_visit (from the arrival) | stormwood_chain_runner | T5.4 | e8cff1d5 | 5389 s | PASS |
+| T5.6 | rowan_chest | stormwood_chain_runner | T5.5 | e8cff1d5 | 97 s | PASS: feast_t5 + kit |
+| T5.7 | training_t5_preparehome | tidewake_piece_runner | T5.6 | e8cff1d5 | 166 s | PASS |
+| T5.8–12 | training_t5_altar_1..5 | tidewake_piece_runner | prev | e8cff1d5 | 890/168/166/245/167 s | PASS: five at L50/cap50 |
+| SW.0 | generate `stormwood_rootgate_crown` | generate_boundary_save | template | 7627675c | — | PASS |
+| SW.1 | dynamo | stormwood_chain_runner | SW.0 | e214d10f | 12972 s | PASS: rods, Kestrel, core |
+| SW.2 | marrow_settlement | stormwood_chain_runner | SW.1 | 78d263e6 | 980 s | PASS: Marrow defeated, Stormheart refused, five retained |
+| SW.3 | home_key | stormwood_chain_runner | SW.2 | 78d263e6 | 363 s | PASS |
+| SW.4 | home_relic | stormwood_chain_runner | SW.3 | 78d263e6 | — | PASS: Stormwood relic hung, ending receipts matched |
 
 ## Seam table
 | Seam | Manifest | Result |
@@ -88,18 +176,15 @@ This is a cloud container: Godot 4.7-stable headless on CPU, installed by `tools
 | T4.7 → T4.8 | seams/t4_06l_arrival__06p.json | match, 0 differences |
 | T5.0 → T5.1 | generated start; `receipts/t5_generated_boundary.PROVENANCE.json` | generated boundary (disclosed) |
 | T5.1 → T5.2 | seams/t5_rowan__home.json | match, 0 differences (147 flags) |
+| T4.8 → T4.9 … T4.13 → T4.14 | seams/t4_06p__preparehome, t4_preparehome__altar_1, t4_altar_{1..4}__{2..5} | all match, 0 differences |
+| T5.2 → T5.3 → T5.4 → T5.5 → T5.6 | seams/t5_home__storage, t5_storage__return, t5_return__rowan_visit, t5_rowan_visit__chest | all match, 0 differences |
+| T5.6 → T5.7 | seams/t5_chest__preparehome.json | **1 UNEXPLAINED**: position 8.0 m (see QUESTION) |
+| T5.7 → … → T5.12 | seams/t5_preparehome__altar_1, t5_altar_{1..4}__{2..5} | all match, 0 differences |
+| SW.0 → SW.1 | generated start; receipts/sw_generated_boundary.PROVENANCE.json | generated boundary (disclosed) |
+| SW.1 → SW.2 → SW.3 → SW.4 | seams/sw_dynamo__marrow_settlement, sw_marrow_settlement__home_key, sw_home_key__home_relic | all match, 0 differences |
 
 ## Unproven pieces
-- **Cloudreach T4:**
-  - 06p_aster_chest from T4.7 waits for #706. The Master-kit stack sizes fit 16 slots; coordinator decision (a).
-  - Then: training_t4_preparehome → altar_1..5 → kitchen → feed → training_t4_return.
-  - Then: 07_stormward_handoff.
-- **Stormwood T5:**
-  - rowan_visit from T5.0 is running (8f56994d).
-  - Then: training_t5_home → storage → return.
-  - rowan_chest waits for #706.
-  - Then: preparehome → altar_1..5 → kitchen → feed → return.
-  - Then: the Stormwood route pieces through home_key → home_relic → home_credits.
+See RESUME.
 
 ## History (failed attempts and fixes)
 ### T4 run 1 (superseded) (exact SHA b747d98a, superseded)
