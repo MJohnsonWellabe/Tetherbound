@@ -1,0 +1,6 @@
+{"anchors": {"f36_0_npc:C1A": [7.0, 7.2, 6.8], "f36_0_npc:C1B": [7.0, 7.2, 6.8],
+  "f10_2_r3_capacitor:control": [4.5, 4.4, 4.5], "f10_2_r3_capacitor:candidate_r3": [5.2, 5.0, 5.2],
+  "f04_6_r22:r22": [6.2, 5.6, 6.0], "f04_6_r22:control": [5.5, 4.8, 5.1]},
+ "candidates": {"ship approach-nave": [5.8, 5.3, 5.6], "r9 approach-nave": [6.8, 6.2, 6.8],
+  "ship nave-sides": [5.0, 4.6, 5.0], "r9 nave-sides": [6.2, 6.0, 6.4],
+  "ship shrine": [5.8, 5.0, 5.6], "r9 shrine": [6.0, 5.6, 6.0]}}
