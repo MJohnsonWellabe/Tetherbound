@@ -1,0 +1,46 @@
+{
+ "Uz": {
+  "anchor": false,
+  "label": "F36 tanglevolt value lift + rim",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/tanglevolt-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/tanglevolt-base.png"
+ },
+ "Zx": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ww": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Jx": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Bs": {
+  "anchor": false,
+  "label": "F36 galecrest value lift + rim",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/galecrest-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/galecrest-c.png"
+ },
+ "Sy": {
+  "anchor": true,
+  "A": "f36_0_gap:C3B",
+  "B": "f36_0_gap:C3A"
+ },
+ "Nl": {
+  "anchor": false,
+  "label": "F36 fulgocobra value lift + rim",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/fulgocobra-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/fulgocobra-base.png"
+ },
+ "Bc": {
+  "anchor": false,
+  "label": "F36 voltarach value lift + rim",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/voltarach-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b10/sides/voltarach-c.png"
+ }
+}

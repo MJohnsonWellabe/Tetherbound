@@ -1,0 +1,52 @@
+{
+ "Vs": {
+  "anchor": false,
+  "label": "F36 sparkit pose cand1022",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/sparkit-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/sparkit-c.png"
+ },
+ "No": {
+  "anchor": false,
+  "label": "F36 voltarach pose cand1022",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/voltarach-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/voltarach-c.png"
+ },
+ "Rj": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Lk": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Ry": {
+  "anchor": false,
+  "label": "F36 staticub pose cand1022",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/staticub-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/staticub-base.png"
+ },
+ "En": {
+  "anchor": false,
+  "label": "F36 mirejaw pose cand1022",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/mirejaw-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/mirejaw-base.png"
+ },
+ "Vn": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Sx": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ud": {
+  "anchor": false,
+  "label": "F36 meadowhart pose cand1022",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/meadowhart-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b11/sides/meadowhart-c.png"
+ }
+}

@@ -1,0 +1,40 @@
+{
+ "Wa": {
+  "anchor": false,
+  "label": "F36 fulgocobra meshy1022",
+  "A": "fulgocobra-c.png",
+  "B": "fulgocobra-base.png"
+ },
+ "Ne": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Sq": {
+  "anchor": false,
+  "label": "F36 voltarach meshy1022 r2",
+  "A": "voltarach-base.png",
+  "B": "voltarach-c.png"
+ },
+ "Wg": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Fd": {
+  "anchor": false,
+  "label": "F36 riverdrake c5 grown+rim",
+  "A": "riverdrake-c.png",
+  "B": "riverdrake-base.png"
+ },
+ "Yi": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ei": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ }
+}

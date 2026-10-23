@@ -1,0 +1,40 @@
+{
+ "Nh": {
+  "anchor": false,
+  "label": "F36 galecrest meshy1022 headgrade",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b9/sides/galecrest-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b9/sides/galecrest-c.png"
+ },
+ "Nu": {
+  "anchor": false,
+  "label": "F36 voltarach meshy1022 headgrade",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b9/sides/voltarach-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b9/sides/voltarach-base.png"
+ },
+ "Fo": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Mw": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Zp": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Xr": {
+  "anchor": false,
+  "label": "F36 fulgocobra meshy1022 headgrade",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b9/sides/fulgocobra-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/035294eb-37c5-54a8-8995-aee3ee7b4956/scratchpad/b9/sides/fulgocobra-base.png"
+ },
+ "Jn": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ }
+}
