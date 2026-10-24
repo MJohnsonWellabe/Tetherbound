@@ -3,6 +3,22 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct GPU READY on tb/creatures 05671f929: Mosshell, Bramblebun, Trailpup and Mudsnout on the fixed stage, plus the Terrapup dog3 redraft. See `close-1024/b26` and `b27/judges.md`.
+  - **Stage fix (67882b304):**
+    - fly_grip is shot only for fly carriers (Galecrest, Galewisp), so land species no longer hang in mid-air.
+    - The swim water is rough with no white specular edge, and the ruler stands on the waterline.
+    - Mosshell and Bramblebun have no travel frame now; neither is rideable or a swimmer.
+  - **Trailpup:** shipping albedo, with the touch reverted.
+    - On the fixed stage it maps 7.88 CPU (b27) and 7.73 (b26), both confirming batches.
+    - It is 3.1 m to the ear tips in every build, with the back at about 2 m. That is why it reads close to the ruler at thumbnail size.
+  - **Mudsnout:** the tusk build with bolder hardened hide and snout scar maps 7.51 against shipping 7.04 (b27). Small class kept at 2.0 m.
+  - **Energy seams:** an unshaded shell hook (species `touch_glow`) exists, but b26's three judges read amber seams on fur as gold glitter or an artefact (-0.6). No species uses it now.
+  - **Terrapup dog3:**
+    - The raw redraft measures 1.53 L/H, not 1.3-1.4; dog2 was 1.66. The legs are only slightly longer (belly about 0.35 of height), and the tail still streams back about 20%.
+    - Rigged at 3.20 m (4.90 m long). Faint is the -90 prone (b26: the +90 belly-to-camera faint read as the listed belly-up flip x3). Coat pulled from orange-red to chestnut. Seat 2.58 m at z 0.0, lower and forward.
+    - CPU 7.41 against dog2 7.55: within noise. It reads as a St Bernard; two judges preferred dog2's darker coat.
+  - **Capture:** `godot --path . --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=mosshell,bramblebun,trailpup,mudsnout,terrapup --whole-body --context --out=res://.artifacts/gpu-1024-stage/<preset>`
+  - **Tests (lane state in a full tree):** touch_vfx, hit window, texture_for, rest_pose, rideable, riding, four_biome, scale_ladder, species, water_species, f36_pose, aspect, colourway and night_floor: 111 tests, 0 failed. texture_import_policy passes.
 - 24 Oct READY tb/creatures-land 34a27dd59 (P2-016 hurt poses in real fights; `close-1024/p2016/verdict.md`).
   - Remakes' own held hit clips now start at the wince and hold it through hitstop and movement, like recipes.
   - Tests: 62, 0 failed. On a CPU real-fight capture the wince shows after the fix and not before.
