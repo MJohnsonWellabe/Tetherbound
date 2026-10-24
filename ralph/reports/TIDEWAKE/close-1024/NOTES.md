@@ -17,6 +17,12 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
   - **Checks:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed.
   - **Landing:** this touches `scripts/ui/playground_hud.gd` (the UI lane's file), so it is a small cross-lane fix. Land it with my next head, or hand it to the UI lane, whichever you prefer.
 
+- 2026-10-25 03:40 CT **READY for the GPU lane: T1 currents flow foam (P2-066), `tb/tidewake` 131b098c9 (t1/VERDICT.md).**
+  - **CPU mapped:** currents swim views 3.66 → **5.92** (+2.26), shore views 5.87 → **6.64**. All three judges higher on both; road markings FIXED x3 on the swim views; r 0.961.
+  - **Capture:** T2-current.json, plus F39-look.json `--views=shore-day,lesson-dune`. Each with and without `--tidewake-look-sections=current_flow`, at Medium and High (commands in the verdict).
+  - **Still OFF in play** until the GPU passes it.
+  - **Next:** night lane visibility, and quieter buoy pennants.
+
 - 2026-10-25 02:00 CT **READY for the GPU lane: the Tidewake F39 matrix baseline (owner: worst-first to 6, then 7, then 7.5).**
   - **Capture:** at main (124a7393c or later), once at Medium and once at High, each command with `--capture-size=1920x1080 --preset=<Medium|High> --source-sha=<main sha>`:
     1. Look and weather, all nine stands: `tools/capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json`.
