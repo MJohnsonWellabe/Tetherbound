@@ -1884,7 +1884,11 @@ static func _texture_for(tex: Texture2D, species: String, suffix: String, kind: 
 		# import as a .jpg; tools/generate_aspect_variant_textures.py writes the
 		# variant's albedo and its separate glow map beside it.
 		candidate = "%s_%s%s.png" % [path.get_basename(), "emissive_" if kind == "emissive" else "", suffix]
-	else:
+		# Installed Meshy lod0 GLBs also extract their albedo as a .jpg; their
+		# repaints keep living at the species' extracted path below.
+		if not ResourceLoader.exists(candidate):
+			candidate = ""
+	if candidate == "":
 		candidate = "res://assets/creatures/tetherbound/%s/models/%s_extracted_%s_%s.png" % [
 			species, species, kind, suffix]
 	if not ResourceLoader.exists(candidate):

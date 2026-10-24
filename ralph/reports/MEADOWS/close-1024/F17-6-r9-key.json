@@ -1,0 +1,35 @@
+{
+ "Lv": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Zb": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "St": {
+  "anchor": false,
+  "label": "F17-6 r9 shrine",
+  "A": "/tmp/claude-0/cap/side_r9_shrine_B.png",
+  "B": "/tmp/claude-0/cap/side_r9_shrine_A.png"
+ },
+ "Xc": {
+  "anchor": false,
+  "label": "F17-6 r9 nave-sides",
+  "A": "/tmp/claude-0/cap/side_r9_sides_B.png",
+  "B": "/tmp/claude-0/cap/side_r9_sides_A.png"
+ },
+ "Nx": {
+  "anchor": false,
+  "label": "F17-6 r9 approach-nave",
+  "A": "/tmp/claude-0/cap/side_r9_approach_A.png",
+  "B": "/tmp/claude-0/cap/side_r9_approach_B.png"
+ },
+ "Ge": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ }
+}
