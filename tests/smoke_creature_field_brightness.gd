@@ -18,6 +18,11 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const CREATURE_SCENE := "res://scenes/creatures/creature.tscn"
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
+## A species still on its installed mesh that ships `field_emission` > 0 and no
+## `field_degreen` (the close-1024 naturalistic remakes ship none). Galecrest
+## also ships `field_rim`, so its live surface is the per-body rim copy and its
+## night floor, the chain the night rescale used to miss (close-1024 fix).
+const LIVE_SPECIES := "galecrest"
 
 const SETTLE_FRAMES := 120
 
@@ -42,7 +47,7 @@ func _run() -> void:
 	_report()
 
 
-## Spawns Bramblebun directly at whatever `field_emission` species.json
+## Spawns LIVE_SPECIES directly at whatever `field_emission` species.json
 ## currently ships, reads its brightened surface material's albedo back at the
 ## full daytime scale, dials the scale down the way `world_look.gd` does
 ## entering night, and checks the SAME live material object actually changed
@@ -54,14 +59,14 @@ func _rescale_moves_a_live_material() -> void:
 	CREATURE_BODY.set_field_brightness_scale(1.0)
 	var body: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
 	body.set_script(CREATURE_BODY)
-	body.set("species_id", "bramblebun")
+	body.set("species_id", LIVE_SPECIES)
 	_world.add_child(body)
 	for i in 30:
 		await physics_frame
 
 	var material := _first_field_bright_material(body)
 	if material == null:
-		_fail("bramblebun spawned no _field_bright surface material -- " +
+		_fail("%s spawned no _field_bright surface material -- " % LIVE_SPECIES +
 			"species.json's field_emission must be > 0 for this test to mean anything")
 		body.queue_free()
 		return
@@ -107,7 +112,7 @@ func _degreen_gap_is_independent_of_strength() -> void:
 ## this lane's own header comment on `FIELD_BRIGHT_KNEE` names: the tint must
 ## never cross `field_bright_ceiling` no matter how high `field_emission` is
 ## pushed (the raw-multiply defect that blew Bramblebun's coat out toward
-## white), and Mudsnout's own hue (no `field_degreen`, so a plain uniform
+## white), and LIVE_SPECIES' own hue (no `field_degreen`, so a plain uniform
 ## push) must come out EXACTLY unchanged -- a per-channel curve applied
 ## unevenly, or a bug in the ceiling maths, would show up here as a hue that
 ## moved even though nothing asked it to.
@@ -115,45 +120,39 @@ func _ceiling_never_exceeded_and_hue_survives() -> void:
 	CREATURE_BODY.set_field_brightness_scale(1.0)
 	var ceiling: float = VISUAL.field_bright_ceiling()
 
-	var bramble: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
-	bramble.set_script(CREATURE_BODY)
-	bramble.set("species_id", "bramblebun")
-	_world.add_child(bramble)
-	for i in 30:
-		await physics_frame
-	var bramble_material := _first_field_bright_material(bramble)
-	if bramble_material == null:
-		_fail("bramblebun spawned no _field_bright surface material for the ceiling check")
-	else:
-		var tint: Color = bramble_material.albedo_color
-		var max_channel := maxf(tint.r, maxf(tint.g, tint.b))
-		if max_channel > ceiling + 0.0005:
-			_fail("bramblebun field-bright tint max channel %.4f exceeds field_bright_ceiling %.4f" %
-				[max_channel, ceiling])
-	bramble.queue_free()
+	# Bramblebun's shipped 2.5 emission and 0.75 degreen (the values that blew
+	# its coat out toward white) and a far harder push, through the real
+	# `_apply_field_bright_values`. The naturalistic remakes ship no field
+	# emission, so no live species carries a degreen to spawn.
+	for push: Vector2 in [Vector2(2.5, 0.75), Vector2(2.5, 0.0), Vector2(12.0, 0.75)]:
+		var pushed := _field_tint(push.x, push.y)
+		var pushed_max := maxf(pushed.r, maxf(pushed.g, pushed.b))
+		if pushed_max > ceiling + 0.0005:
+			_fail("field-bright tint at emission %.1f, degreen %.2f: max channel %.4f exceeds field_bright_ceiling %.4f" %
+				[push.x, push.y, pushed_max, ceiling])
 
-	var mud: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
-	mud.set_script(CREATURE_BODY)
-	mud.set("species_id", "mudsnout")
-	_world.add_child(mud)
+	var live: Node3D = (load(CREATURE_SCENE) as PackedScene).instantiate() as Node3D
+	live.set_script(CREATURE_BODY)
+	live.set("species_id", LIVE_SPECIES)
+	_world.add_child(live)
 	for i in 30:
 		await physics_frame
-	var mud_material := _first_field_bright_material(mud)
-	if mud_material == null:
-		_fail("mudsnout spawned no _field_bright surface material for the hue check")
+	var live_material := _first_field_bright_material(live)
+	if live_material == null:
+		_fail("%s spawned no _field_bright surface material for the hue check" % LIVE_SPECIES)
 	else:
-		var tint: Color = mud_material.albedo_color
+		var tint: Color = live_material.albedo_color
 		var max_channel := maxf(tint.r, maxf(tint.g, tint.b))
 		if max_channel > ceiling + 0.0005:
-			_fail("mudsnout field-bright tint max channel %.4f exceeds field_bright_ceiling %.4f" %
-				[max_channel, ceiling])
+			_fail("%s field-bright tint max channel %.4f exceeds field_bright_ceiling %.4f" %
+				[LIVE_SPECIES, max_channel, ceiling])
 		# No `field_degreen` on this species, so R, G and B must all carry the
 		# exact same curve-mapped value -- any per-channel drift here means
 		# the ceiling maths is treating a channel unevenly.
 		if not (is_equal_approx(tint.r, tint.g) and is_equal_approx(tint.g, tint.b)):
-			_fail("mudsnout carries no field_degreen, so its field-bright tint must be perfectly " +
+			_fail("%s carries no field_degreen, so its field-bright tint must be perfectly " % LIVE_SPECIES +
 				"neutral (equal R/G/B) -- got %s" % tint)
-	mud.queue_free()
+	live.queue_free()
 
 
 ## Measured on the real `_apply_field_bright_values`, not a copy of its formula.
