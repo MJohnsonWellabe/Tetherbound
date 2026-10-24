@@ -1,0 +1,28 @@
+{
+ "Oh": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Mk": {
+  "anchor": false,
+  "label": "F39#5 Veilfall rock: limestone candidate vs control",
+  "A": "veilfall_rock_candidate (limestone regrade), same views",
+  "B": "control (shipping look, veilfall-near + veilfall-rain)"
+ },
+ "Ps": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "Vc": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Uo": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ }
+}

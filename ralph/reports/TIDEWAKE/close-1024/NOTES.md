@@ -6,6 +6,18 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 (send_message refused: elevated_session_untrusted_device. Newest first.)
 
+- 2026-10-24 05:00 CT **ROW STATUS, newest** (coordinator's priority order):
+  - **F39#5: NOT MET.** First defect pass over a matrix with weather and a real fight (mx1/). Floating bodies: none. Three defects remain:
+    - **Magenta telegraphs in the fight.** The Fights lane owns this; it is the COMBAT spec's documented must-move colour, so this lane does not change it.
+    - **Veilfall placeholder rock.** The limestone material candidate reduces it from PRESENT to PARTIAL, 4.20 vs 3.35 (vf1/), still OFF. The real fix is Meshy 7-8.
+    - **"Clipping".** On inspection this is the same Veilfall rock seen from the fight camera, plus the camera set's stand against the cliff.
+  - **F39#3: NOT MET** (mx1/). The look views pass at 7.07 (lt2), but rain maps to 5.31 and the real Venn fight to 5.10. The fight's weight is the magenta telegraphs, the HUD and the out-of-frame player creature; none of those are Tidewake scene items.
+  - **F39#1/#2: NOT MET.** 43 items remain, 12 of them Tidewake-scene (table above); the other 31 belong to other lanes.
+  - **F13#5: PARKED and failing.** Currents best 6.20; the Meshy reopening round (mc1/) scored level with r3. Docks map to 6.07 on today's yardstick (dk1/), so neither half is at the bar.
+  - **ON this close:** the time-of-day grade, 7.07 CPU-provisional.
+  - **Re-check request:** F39#4's close-up half maps to 3.35 today (vf1/), against a 7 Oct "met".
+  - **Land branch:** rebuilt below.
+
 - 2026-10-24 03:40 CT INFO: **docks re-measured, and the Meshy buildings judged** (dk1/VERDICT.md). Shipping docks map to **6.07** on the current yardstick (confirming batch, r 0.92, RMSE 0.50), below the 6.7 bar; the close-1022 figure of 6.77 predates the corrected prompt and should not be counted, so **F13#5 has neither half at the CPU bar**. The Meshy 1024 boathouse/smokehouse swap scores 5.97, level with the control, and stays OFF. The judges' ask is not new art: the three hamlets share one template's positions, banner and stall, so the landings read as one copied set however the models change, and the 20 m walk-in is bare sand with nobody working it. Next step is per-dock layouts that differ in placement plus a dressed walk-in (the sloop, nets, racks, residents), with the Meshy buildings scaled up.
 
 - 2026-10-24 03:05 CT INFO (MESHY received, thank you): the six-item day-1 batch from `tb/meshy-1024` 38602bdb0 is in at 28c4e8282, OFF, textures on mode 2 (`texture_import_policy --check` PASS on 18 sidecars), import clean. Fitted from measured GLB bounds against the 1.80 m trainer: boathouse 5.5 m and smokehouse 4.5 m replace the two Medieval cottages per hamlet in `dock_village_candidate` (mixed per dock so the three hamlets stop repeating) with a work cluster by each pier; a 6.5 m sloop moors beside the rowboat in the new OFF `dock_dressing_candidate`; the 3.0 m driftwood log and 2.6 m spar buoys go into the OFF `current_flow` drift markers. Dock and current frames with all of it are capturing for a judged round. 76 tidewake/dock/drift/texture tests, 0 failed.
