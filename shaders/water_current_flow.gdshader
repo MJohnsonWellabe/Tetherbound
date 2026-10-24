@@ -92,6 +92,9 @@ uniform float chop_cap_density = 0.35;
 // head and frays upstream, so a still frame says which way the water runs.
 // Stretch length in metres (0 = untapered seams).
 uniform float seam_taper_m = 0.0;
+// t1b: moonlit foam. A small emission on the foam only, so the lane still
+// reads at night; 0 keeps the lit foam exactly.
+uniform float moon_glint = 0.0;
 // b6: the lane tint fades over a wandering soft edge instead of the ribbon rim.
 uniform bool soft_channel_tint = false;
 varying vec3 v_world;
@@ -310,6 +313,10 @@ void fragment() {
 	}
 	ALBEDO = premult / max(alpha, 0.001);
 	ALBEDO *= 1.0 - ridge_shadow;
+	if (moon_glint > 0.0) {
+		float foam_share = clamp((foam * mask + seam_a) / max(alpha, 0.001), 0.0, 1.0);
+		EMISSION = foam_colour.rgb * foam_share * moon_glint;
+	}
 	ROUGHNESS = 0.7;
 	ALPHA = alpha;
 }
