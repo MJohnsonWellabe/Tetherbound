@@ -1976,6 +1976,13 @@ func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
 	if success:
 		_outcome_left = float(CATCH.config().get("resolve", {}).get("success_banner", 2.4))
 		_catch_focus_left = _outcome_left
+		# Step the finished fight's cards back on the verdict frame itself; the
+		# per-frame update would otherwise leave them up beside the card for
+		# one frame (close-1024 P2-061 judges, verdict frame 02).
+		for panel: Control in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel, _aim_row, _catch_row]:
+			panel.visible = false
+		if is_instance_valid(_system_overlay): _system_overlay.hide()
+		if _strip_fader != null: _strip_fader.visible = false
 	else:
 		_outcome_left = float(cfg.get("breakout_seconds", 1.8))
 

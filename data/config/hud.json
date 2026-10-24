@@ -1,6 +1,6 @@
 {
   "catch_card": {
-    "_why": "P2-061 (UI lane, 21 Oct 2026): catch breakout/success text competed with persistent creature cards, actions and same-species bodies. With this on, the verdict is one framed card in the upper third, clear of the creature: a large headline naming the individual over its traits (success, teal edge) or why it escaped (breakout, warning edge). On success the finished fight's cards and action grid step back while the card holds. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
+    "_why": "P2-061 (UI lane, 21 Oct 2026): catch breakout/success text competed with persistent creature cards, actions and same-species bodies. With this on, the verdict is one framed card in the upper third, clear of the creature: a large headline naming the individual over its traits (success, teal edge) or why it escaped (breakout, warning edge). On success the finished fight's cards and action grid step back while the card holds. PRESENTATION ONLY. Stays OFF until a code-blind PASS. close-1024 r1 (Meadows CPU, three code-blind judges, standard prompt, anchors craft/f36_0_npc:C3/f36_0_gap:C6): mapped 6.34 vs shipping 4.65, defect PARTIAL x3 (the verdict frame kept the target card for one frame, fixed in combat_hud._show_catch_card; the caught creature shows only as the orb). Below 7.5: OFF pending GPU.",
     "enabled": false,
     "headline_px": 40,
     "plate_alpha": 0.94,
