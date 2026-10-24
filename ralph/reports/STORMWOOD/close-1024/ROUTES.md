@@ -16,6 +16,18 @@ Chains:
 | Piece | Runner | From | SHA | Wall | Result |
 |---|---|---|---|---|---|
 | f49_s5_gen | generate_boundary_save `stormwood_rootgate_crown` | generated (disclosed) | 7480d1a27 | 54 s | PASS (d33783708) |
+| f49_s5_dynamo | stormwood_chain_runner dynamo | f49_s5_gen | d33783708 | 10643 s | PASS (a8ea1b504) |
+| f49_s5_marrow_settlement | stormwood_chain_runner | f49_s5_dynamo | a8ea1b504 | 1425 s | PASS (a2fc7e4ef): Stormheart refused, five kept |
+| f49_s5_home_key | stormwood_chain_runner | f49_s5_marrow_settlement | a2fc7e4ef | 1147 s | PASS (a119bec15) |
+| f49_s5_home_relic | stormwood_chain_runner | f49_s5_home_key | a119bec15 | 217 s | PASS (812890f12) |
+| f49_s5_home_credits | stormwood_chain_runner | f49_s5_home_relic | 812890f12 | 678 s | **FAIL**: "F49 homecoming lacks the four actual personal chapter choices" |
+| f49_s3_gen | generate_boundary_save `stormwood_t5_rowan_independent` | generated (disclosed) | 812890f12 | 55 s | PASS (45dad1ad9) |
+
+### S5 home_credits failure and correction
+- `GameState.regional_ending_context()` builds one chapter choice per biome from personal flags (`legendary_joined/refused`, `water:…`, `cloudreach:…`) plus the Stormwood answer; the F49 helper requires four. The regenerated save carries `legendary_refused`, `water:legendary_refused` and the Stormwood answer, but no Cloudreach answer: the disclosed `stormwood_rootgate_crown` profile predates the Solmane offer (owner ruling 2026-09-27, #356: Solmane is offered after Captain Veyra). Even the committed earned Cloudreach fixtures 06/07 carry none (they predate it too).
+- Correction (efb4b5389, smallest, disclosed): that one profile gains personal `cloudreach:legendary_refused` and world `cloudreach:legendary_settled`, the same shape as its Meadows answer; its disclosure text says so. No game code, no other profile, no relaxed check.
+- Next proof: S5 reruns from a regenerated start as `f49_s5b_*` (gen → dynamo → marrow_settlement → home_key → home_relic → home_credits) once the S3 chain finishes (one Godot at a time). The f49_s5_* saves stay committed as the failed attempt's evidence.
 
 ## TO COORDINATOR
+- 24 Oct 10:35Z S5 home_credits FAIL on the stale generated boundary (no Cloudreach Solmane answer, so three chapter choices, not four). Profile corrected in efb4b5389 (disclosed); S5 reruns as f49_s5b_* after S3. Note for Routes: the `stormwood`, `stormwood_t5_rowan_independent` and Cloudreach-late profiles carry no Cloudreach answer either; any piece that reaches the homecoming from them hits the same check.
 - 24 Oct 06:30Z STARTED S5 then S3 on tb/stormwood-routes (send_message still refused here). Seams go below as MATCH-RECEIPT lines as pieces pass.
