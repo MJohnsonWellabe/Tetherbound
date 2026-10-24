@@ -1,0 +1,16 @@
+[
+ {
+  "label": "F36 grandpa_eyes_vs_lod0 b28",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b28/sides/grandpa-lod0.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b28/sides/grandpa-eyes.png",
+  "brief": "One named villager: two face close-ups (front and three-quarter) and two full-body views. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+  "defects": []
+ },
+ {
+  "label": "F36 grandpa_eyes_vs_ship b28",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b28/sides/grandpa-ship.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b28/sides/grandpa-eyes.png",
+  "brief": "One named villager: two face close-ups (front and three-quarter) and two full-body views. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+  "defects": []
+ }
+]
