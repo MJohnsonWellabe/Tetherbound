@@ -128,6 +128,10 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Purpose: replaces the read of "a small dark ruin behind dominant pylons" (P2-003) and the giant flat banners at band5_1.
   - It will be installed flag-off on the `stronghold.json` prefab exterior, then judged on the band5 stands.
 
+- 2026-10-24 23:25 UTC RESULT land4 seats, CPU verification part 1 (`capture_f38_matrix.gd`, day, clear and rain, Low): 38 of 38 rows reached captured, with 0 rejected stands and 0 failures.
+  - Captured: band2_stone_and_root_0 (all 4 views; the GPU run had 0 frames here), band3_the_river_lock_1, band4 ironwood 0 and 1 (all 4 views each), and farm_to_hall.
+  - The run hit its 108-minute CPU limit before village_road, hall_front, hall_nave, shrine_room and arch_home. Those five are recapturing now as part 2.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
