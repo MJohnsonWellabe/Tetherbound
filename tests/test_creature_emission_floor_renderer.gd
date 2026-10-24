@@ -6,9 +6,10 @@ extends "res://tests/test_case.gd"
 const WORLD_LOOK := preload("res://scripts/world/world_look.gd")
 
 
-func test_compatibility_keeps_the_floor_exactly() -> void:
+func test_compatibility_and_other_methods_keep_the_floor_exactly() -> void:
 	var cfg := {"creature_emission_floor": 0.22, "creature_emission_floor_forward_plus_scale": 0.0}
-	assert_almost_eq(WORLD_LOOK.creature_emission_floor_for_renderer(cfg, "gl_compatibility"), 0.22, 0.0001)
+	for method: String in ["gl_compatibility", "dummy", ""]:
+		assert_almost_eq(WORLD_LOOK.creature_emission_floor_for_renderer(cfg, method), 0.22, 0.0001, method)
 
 
 func test_forward_plus_and_mobile_take_the_configured_share() -> void:

@@ -1268,10 +1268,10 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 ## Forward+ (Medium/High) the same additive term washes those creatures milky
 ## grey in daylight (the Riverwatch "ghost" boss: with the floor off alone,
 ## Medium matched Low). Forward+ and Mobile take
-## `creature_emission_floor_forward_plus_scale` of it; Compatibility is
-## unchanged.
+## `creature_emission_floor_forward_plus_scale` of it; Compatibility (and any
+## other method, such as a headless dummy) is unchanged.
 static func creature_emission_floor_for_renderer(cfg: Dictionary, rendering_method: String) -> float:
 	var floor_scale := float(cfg.get("creature_emission_floor", 0.0))
-	if rendering_method == "gl_compatibility":
+	if rendering_method != "forward_plus" and rendering_method != "mobile":
 		return floor_scale
 	return floor_scale * maxf(0.0, float(cfg.get("creature_emission_floor_forward_plus_scale", 1.0)))
