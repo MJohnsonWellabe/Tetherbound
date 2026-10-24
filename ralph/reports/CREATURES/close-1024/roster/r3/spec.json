@@ -1,0 +1,106 @@
+[
+ {
+  "label": "F36r riftfrill r3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/riftfrill.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/riftfrill.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ },
+ {
+  "label": "F36r ashtusk r3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/ashtusk.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/ashtusk.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ },
+ {
+  "label": "F36r sparkit r3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/sparkit.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/sparkit.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ },
+ {
+  "label": "F36r cindercub r3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/cindercub.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/cindercub.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ },
+ {
+  "label": "F36r shadelet r3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/shadelet.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/shadelet.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ },
+ {
+  "label": "F36r frostclaw r3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/frostclaw.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/frostclaw.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ },
+ {
+  "label": "F36r cannonback r3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/cannonback.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/cannonback.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Second row: swimming behind a water plane. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+  ]
+ },
+ {
+  "label": "F36r riptusk r3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/riptusk.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/riptusk.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Second row: swimming behind a water plane. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+  ]
+ },
+ {
+  "label": "F36r mirejaw r3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/mirejaw.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/mirejaw.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Second row: swimming behind a water plane. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+  ]
+ },
+ {
+  "label": "F36r aquaryn r3",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/aquaryn.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/aquaryn.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Second row: swimming behind a water plane. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+  ]
+ }
+]

@@ -1,0 +1,77 @@
+{
+ "Cq": {
+  "anchor": false,
+  "label": "F36r frostclaw r3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/frostclaw.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/frostclaw.png"
+ },
+ "Su": {
+  "anchor": false,
+  "label": "F36r shadelet r3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/shadelet.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/shadelet.png"
+ },
+ "Be": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Qn": {
+  "anchor": false,
+  "label": "F36r cannonback r3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/cannonback.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/cannonback.png"
+ },
+ "Pk": {
+  "anchor": false,
+  "label": "F36r ashtusk r3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/ashtusk.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/ashtusk.png"
+ },
+ "Yb": {
+  "anchor": false,
+  "label": "F36r riptusk r3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/riptusk.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/riptusk.png"
+ },
+ "Vn": {
+  "anchor": false,
+  "label": "F36r aquaryn r3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/aquaryn.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/aquaryn.png"
+ },
+ "Sz": {
+  "anchor": false,
+  "label": "F36r sparkit r3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/sparkit.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/sparkit.png"
+ },
+ "Lp": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ },
+ "Pa": {
+  "anchor": false,
+  "label": "F36r riftfrill r3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/riftfrill.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/riftfrill.png"
+ },
+ "Uw": {
+  "anchor": false,
+  "label": "F36r cindercub r3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/cindercub.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/cindercub.png"
+ },
+ "Pr": {
+  "anchor": false,
+  "label": "F36r mirejaw r3",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/mirejaw.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r3/sides/mirejaw.png"
+ },
+ "Pq": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ }
+}
