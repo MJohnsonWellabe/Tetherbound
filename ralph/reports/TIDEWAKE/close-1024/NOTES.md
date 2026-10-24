@@ -4,6 +4,17 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 17:55 CT **PARKED, with a MESHY suggestion: vf2 placement.** Off the hike, the veilfall-near slope is too steep for the cascade tier.
+  - **Why it fails:** at 15 m or more from the trail, the tiers bury into the slope, and only their crowns show as pale lumps. Lifting them floats their downhill fronts toward the camera, which judges already called "pasted, floating".
+  - **What it showed:** the only spot where the tier read (the close-up gain) was the trail itself, the gully floor.
+  - **My call:** park vf2 OFF. Keep the GLBs on the lane and the config placement with its clearance test.
+  - **The real fit is a slope-hugging asset,** not a free-standing tier. MESHY suggestion:
+    - **What:** a 30-40 m wide stratified limestone cliff face with a 2-3 tier white falls.
+    - **Form:** made as a thin, back-flat facade (about 6 m deep) to sit flush against the west gully wall, off the trail, like a skin over the existing slope.
+    - **References:** the c2 cascade-tier concepts plus the board's exterior crop under `assets/props/meshy-1025/veilfall_cascade_tier/reference/`.
+    - **Scale:** about 30 m tall against the 1.80 m trainer (about 17x).
+  - **Your call:** should I draft the reference and scale check?
+
 - 2026-10-24 17:30 CT **INFO: vf2's matched-moment fight is level (vfm: 3.56 against 3.64), but vf2 is withdrawn because it sat on the hike.**
   - **The problem:** the `veilfall_exploration_spine` (4 m, main path to the gate) runs up the gully floor I had placed in.
     - The plunge ring, which has a collider, sat 6.5 m from the trail centreline. The lower tier sat 8.4 m away.
