@@ -1,46 +1,5 @@
 {
   "_comment": "Owner 24 Oct 2026 creature touches: 'adding some energy, some elemental effects, and some war torn appearance or hardened appearance to give the unique but still realistic look. Don't go overboard.' One or two light touches per species on the existing model, a small part of the body, realistic first; no red/oxblood. Baked into the remake's own albedo by tools/art_pipeline/creature_touch.py (overlays as in tools/creature_overlays.py, placed by the anatomy map: unit y = height, z = length with the head near 0.85-1.0, radial = distance from the body axis).",
-  "trailpup": {
-    "source_model": "trailpup/candidate_nat1024",
-    "overlays": [
-      {
-        "id": "weathered_shoulders",
-        "_why": "Hardened: darker, scuffed coat on the shoulders and forelegs of a trail-worn coyote.",
-        "where": {
-          "z_min": 0.55,
-          "z_max": 0.82,
-          "y_max": 0.75
-        },
-        "mode": "shade",
-        "val_scale": 0.42,
-        "sat_scale": 0.7,
-        "coverage": 0.9,
-        "grain": 3.5,
-        "clump_softness": 0.14,
-        "softness": 0.12
-      },
-      {
-        "id": "flank_scars",
-        "_why": "War-torn: two or three thin pale scar lines on the flank.",
-        "where": {
-          "z_min": 0.35,
-          "z_max": 0.75,
-          "y_min": 0.4,
-          "y_max": 0.85
-        },
-        "mode": "shade",
-        "val_scale": 1.9,
-        "sat_scale": 0.3,
-        "coverage": 0.45,
-        "grain": 5.0,
-        "clump_softness": 0.04,
-        "softness": 0.05,
-        "ring": 3
-      }
-    ],
-    "_why_gpu_1024": "GPU A+C (24 Oct): the first touch was invisible at stage distance. Bolder shoulder contrast and scars, plus an amber flint-line seam along the spine (glow).",
-    "_why_close1024_b26": "b26 (CPU, three judges): the amber seam shell read as gold glitter or an artefact on fur (-0.6 mapped), so the glow is off; the bolder weathering stays for b27."
-  },
   "mudsnout": {
     "source_model": "mudsnout/candidate_nat1024",
     "also": [
@@ -103,5 +62,6 @@
         "softness": 0.05
       }
     ]
-  }
+  },
+  "_why_close1024_b27_trailpup": "b27 (CPU, three judges, confirming batch): Trailpup's bolder weathering mapped 7.51 against shipping 7.88. The pale scar lines read as a texture seam on the shoulder and foreleg. Trailpup stays on its shipping albedo; the b24 light touch was score-neutral and invisible at stage distance."
 }
