@@ -900,7 +900,19 @@ SHOVE_1024 = ('ashtusk', 'cindercub', 'shadelet', 'torrentoad', 'cragclaw', 'peb
 LANDED_1024_SHOVE = ('burrowback', 'frostclaw', 'trailpup', 'aquaryn', 'riptusk', 'sirenseal',
                      'tidecoil', 'voltwig', 'breezetail', 'cliffspike', 'cloudfang', 'craghorn',
                      'pebbik', 'stormbrush', 'stormraven', 'thundertunnel')
-SHOVE_1024_RUN = SHOVE_1024 if CANDIDATE_1024 else LANDED_1024_SHOVE
+# Close-1024 sweep, second half (OFF; enable with --candidate-1024b): the same
+# held shove for the species b2-b4 did not cover, birds and flyers included.
+SHOVE_1024B = ('stormcapra', 'galecrest', 'galewisp', 'brooktail', 'duskhush', 'pipwing', 'reedwing',
+               'glimmermoth', 'aeriex', 'ribbonray', 'tempestwing', 'solmane', 'abyssal_guardian',
+               'ripplet', 'tanglevolt')
+# Close-1024 b8-b9 (CPU, three judges per batch, confirming batches): the held
+# shove from the second half beat the shipping hit at or above the
+# CPU-provisional 6.7 mapped on these. Live recipes; the rest stay OFF.
+LANDED_1024B_SHOVE = ('galecrest', 'aeriex', 'galewisp', 'tanglevolt', 'stormcapra', 'solmane',
+                      'ripplet')
+SHOVE_1024_RUN = (SHOVE_1024 if CANDIDATE_1024 else LANDED_1024_SHOVE) + LANDED_1024B_SHOVE
+if '--candidate-1024b' in sys.argv:
+    SHOVE_1024_RUN = tuple(SHOVE_1024_RUN) + tuple(s for s in SHOVE_1024B if s not in SHOVE_1024_RUN)
 # b2 judges: Tuskroot's limp sprawl rolls belly and feet to the camera and hides
 # its stone back (read as the armour vanishing). Candidate: roll the other way.
 LIMP_ROLL = {}
