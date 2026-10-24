@@ -11,6 +11,7 @@ const P2_033_CANDIDATE_PATH := "res://data/config/cloudreach_pickup_readability.
 const P2_021_CANDIDATE_PATH := "res://data/config/cloudreach_open_terrain_candidate.json"
 const CHAPTER := preload("res://tools/capture_cloudreach_frame_matrix.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
+const VIEW_FALLBACK := preload("res://tools/capture_view_fallback.gd")
 const FRAMES_PER_PIECE := 4
 var _capture_config: Dictionary = {}
 var _active_weather := "clear"
@@ -125,6 +126,8 @@ func _load_plan() -> bool:
 						offset = float(_capture_config.detail_offset_m)
 					row.position_xz = [float(origin[0]) + forward.x * offset,
 						float(origin[1]) + forward.y * offset]
+					row["stand_origin_xz"] = [float(origin[0]), float(origin[1])]
+					row["view_offset_m"] = offset
 					var yaw := atan2(forward.x, forward.y)
 					row.view_heading_deg = rad_to_deg(yaw + (PI if view == "reverse" else 0.0))
 					row.frame_id = str(destination.frame_id).trim_suffix("__" + str(destination.time)) \
@@ -218,6 +221,10 @@ func _finish(complete: bool) -> void:
 
 func _capture_row(row: Dictionary) -> void:
 	_active_weather = str(row.weather)
+	if not _ground_offset_view(row):
+		_failures.append("%s: no grounded approach/detail point within the bounded fallback" % str(row.frame_id))
+		_write_manifest()
+		return
 	var count := _records.size()
 	await super._capture_row(row)
 	if _records.size() == count:
@@ -247,3 +254,26 @@ func _pin_time(time_name: String) -> Dictionary:
 		return {}
 	observed["weather"] = _active_weather
 	return observed
+
+
+## A fixed 12 m approach (or 3 m detail) can back off a ledge into the void,
+## where the production teleport refuses it. Step in toward the stand, then
+## try small turns; the row records the offset and heading actually used.
+func _ground_offset_view(row: Dictionary) -> bool:
+	var offset := float(row.get("view_offset_m", 0.0))
+	if is_zero_approx(offset):
+		return true
+	var game := root.get_node_or_null(^"Game")
+	var grounded := func(point: Vector2) -> bool:
+		return not is_nan(float(_world.call("ground_height_at", point.x, point.y))) and game != null \
+			and bool(game.call("_debug_teleport_walkable", _world, _player, point.x, point.y))
+	var origin := Vector2(float(row.stand_origin_xz[0]), float(row.stand_origin_xz[1]))
+	var yaw := deg_to_rad(float(row.view_heading_deg))
+	var chosen := VIEW_FALLBACK.resolve(origin, Vector2(sin(yaw), cos(yaw)), offset, grounded)
+	if chosen.is_empty():
+		return false
+	if bool(chosen.fallback):
+		row.position_xz = chosen.position_xz
+		row.view_heading_deg = rad_to_deg(atan2(float(chosen.forward[0]), float(chosen.forward[1])))
+		row["view_fallback"] = {"offset_m": chosen.offset_m, "turn_deg": chosen.turn_deg, "planned_offset_m": offset}
+	return true
