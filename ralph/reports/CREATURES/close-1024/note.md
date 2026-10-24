@@ -3,6 +3,10 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct READY tb/creatures-land 5cecc01bd (= b67ec65dc + the admission probe you asked for).
+  - `close-1024/admission/lead_probe_grown.txt`: smoke_arena_contain with the party lead swapped (headless). Cindercub at 3.25 m, Trailpup at 3.1 m and Stormtrail at 3.45 m each seat in the Warrens mouth (6.0 m ring; held to 3.2 m, 6.0 m and 6.0 m inside it) and the Hall elite room (7.0 m). Arena containment is OK on all three. No cap needed.
+  - Scale answer (a) noted: Mudsnout, Paddlenewt and Riftfrill stay in the small class. Any further fix there is presentation (head line), not height.
+  - b17 (`close-1024/b17/judges.md`): the recoil hit loses on Aquaryn and Tidecoil (6.95 vs 7.29 and 6.67 vs 7.04; it reads as idle), so the held shove stays. Next for them: swim stroke, curled Tidecoil faint, value break (art).
 - 24 Oct Frostclaw "dark sphere at the trainer's feet" (GPU F36#1), investigated, no change shipped:
   - It is the tail tip itself: the installed mesh ends in a dark rounded lump of geometry and texture.
   - Separately, the installed skin weights every tail vertex to rear_upper_l and rear_lower_l; none go to tail_1 or tail_2.

@@ -1,0 +1,41 @@
+{
+ "Bk": {
+  "anchor": false,
+  "label": "F36 aquaryn b17",
+  "A": "scratch/b17/sides/aquaryn-c.png",
+  "B": "scratch/b17/sides/aquaryn-base.png"
+ },
+ "Ig": {
+  "anchor": false,
+  "label": "F36 water_aquaryn b17",
+  "A": "scratch/b17/sides/water_aquaryn-c.png",
+  "B": "scratch/b17/sides/water_aquaryn-base.png"
+ },
+ "Xb": {
+  "anchor": false,
+  "label": "F36 water_tidecoil b17",
+  "A": "scratch/b17/sides/water_tidecoil-base.png",
+  "B": "scratch/b17/sides/water_tidecoil-c.png"
+ },
+ "Db": {
+  "anchor": false,
+  "label": "F36 tidecoil b17",
+  "A": "scratch/b17/sides/tidecoil-c.png",
+  "B": "scratch/b17/sides/tidecoil-base.png"
+ },
+ "Ee": {
+  "anchor": true,
+  "A": "f36_0_gap:C3A",
+  "B": "f36_0_gap:C3B"
+ },
+ "Sb": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Xx": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ }
+}
