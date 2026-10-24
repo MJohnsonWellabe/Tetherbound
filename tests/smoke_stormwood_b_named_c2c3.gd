@@ -34,7 +34,13 @@ extends SceneTree
 ## Not covered: terrain/arena geometry, storm strikes, manual switch/burst/Y,
 ## co-op scaling, framing (a rendered capture), an earned-save party.
 
-const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
+## F22#4 (coordinator 24 Oct: the earlier runs predate live pattern
+## activation, b1522e17b): the named wilds fight their authored pattern rows
+## through the same F22 pilot the Meadows and water smokes use, with the
+## context encounter_director.gd::_configure_f22_patterns builds for them.
+const PILOT := preload("res://tests/helpers/f22_pattern_pilot.gd")
+const COMBAT_AI := preload("res://scripts/combat/combat_ai.gd")
+const MATH := preload("res://scripts/combat/combat_math.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
@@ -98,6 +104,23 @@ func _cases(errors: Array[String]) -> Array[Dictionary]:
 	return cases
 
 
+## The production pattern context for a Stormwood named wild: its named
+## pattern by encounter id and its authored behaviour profile as the role
+## (encounter_director.gd::_configure_f22_patterns).
+func _pattern_context(entry: Dictionary) -> Dictionary:
+	var patterns: Dictionary = MATH.config().get("patterns", {})
+	var pattern_id := ""
+	for id: String in patterns.get("named", {}):
+		if str(patterns.named[id].get("encounter_id", "")) == str(entry.id):
+			pattern_id = id
+			break
+	var context := {"chapter": "stormwood", "band": "", "after_south_bridge": true, "pattern_id": pattern_id}
+	var role := COMBAT_AI.normalize_role(str(entry.profile), patterns)
+	if not role.is_empty():
+		context["role"] = role
+	return context
+
+
 func _selected(id: String) -> bool:
 	if _selection.is_empty(): return true
 	for part in _selection.split(",", false):
@@ -139,13 +162,23 @@ func _run() -> void:
 						foes.append(foe)
 					if party.size() != 5 or foes.size() != entry.foes.size(): break
 					var pilot: RefCounted = PILOT.new()
+					pilot.set("context", _pattern_context(entry))
 					var result: Dictionary = await pilot.fight(self, party, foes, false,
-						hash("stormwood/%s/%s/%d" % [entry.id, starter, seed_index]), policy)
+						hash("stormwood/%s/%s/%d" % [entry.id, starter, seed_index]),
+						# COMBAT §7's reader switches on a real mismatch (coordinator ruling
+						# 2026-10-05: the acceptance pilot); rows stay labelled READER.
+						"SWITCH_READER" if policy == "READER" else policy)
 					var tells: Array = []
+					var attacks: Array = []
 					for event: Dictionary in result.get("events", []):
-						if str(event.get("event", "")) == "telegraph": tells.append(float(event.seconds))
+						if str(event.get("event", "")) != "telegraph": continue
+						tells.append(float(event.seconds))
+						# F22#4 evidence: which authored pattern attacks the fight showed.
+						var attack := str((event.get("enemy_config", {}) as Dictionary).get("pattern_attack_id", ""))
+						if not attack.is_empty() and not attacks.has(attack): attacks.append(attack)
 					result.erase("events")
 					result["tells"] = tells
+					result["pattern_attacks"] = attacks
 					result["case"] = entry.id
 					result["starter"] = starter
 					runs.append(result)
