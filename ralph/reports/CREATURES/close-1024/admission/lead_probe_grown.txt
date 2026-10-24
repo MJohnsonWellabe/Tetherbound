@@ -1,0 +1,29 @@
+# Lead admission probe, grown species (24 Oct 2026, CPU headless, land b67ec65dc)
+# tests/smoke_arena_contain.gd with the party lead swapped from terrapup (temporary copy, removed after). Warrens mouth ring 6.0 m, Hall elite room (stronghold tether_approach) 7.0 m.
+## cindercub (lead), height 3.25 m
+burrow warrens / mouth: fight opened at player (-364.4371, 9.188787, 2617.665), arena centre (-362.6569, 9.187845, 2615.657)
+burrow warrens / mouth: arena shrank to 6.0m (room affords 6.0m, flat default is 11.0m)
+burrow warrens / mouth: held to 3.2m against a 6.0m boundary, still inside the room
+stronghold / tether_approach: fight opened at player (10.51542, 6.172883, 7623.066), arena centre (8.0, 6.171943, 7624.0)
+stronghold / tether_approach: arena shrank to 7.0m (room affords 7.0m, flat default is 11.0m)
+stronghold / tether_approach: held to 7.0m against a 7.0m boundary, still inside the room
+all three bodies stand inside the Warden Arena, on its floor, as the fight opened
+arena containment: OK -- Warrens and Stronghold fights FORM inside a reachable, legal room and hold participants inside it.
+## trailpup (lead), height 3.1 m
+burrow warrens / mouth: fight opened at player (-363.5055, 9.188787, 2613.111), arena centre (-362.6569, 9.187845, 2615.657)
+burrow warrens / mouth: arena shrank to 6.0m (room affords 6.0m, flat default is 11.0m)
+burrow warrens / mouth: held to 6.0m against a 6.0m boundary, still inside the room
+stronghold / tether_approach: fight opened at player (10.50731, 6.172883, 7623.044), arena centre (8.0, 6.171943, 7624.0)
+stronghold / tether_approach: arena shrank to 7.0m (room affords 7.0m, flat default is 11.0m)
+stronghold / tether_approach: held to 7.0m against a 7.0m boundary, still inside the room
+all three bodies stand inside the Warden Arena, on its floor, as the fight opened
+arena containment: OK -- Warrens and Stronghold fights FORM inside a reachable, legal room and hold participants inside it.
+## stormtrail (lead), height 3.45 m
+burrow warrens / mouth: fight opened at player (-365.2857, 9.188787, 2615.119), arena centre (-362.6569, 9.187845, 2615.657)
+burrow warrens / mouth: arena shrank to 6.0m (room affords 6.0m, flat default is 11.0m)
+burrow warrens / mouth: held to 6.0m against a 6.0m boundary, still inside the room
+stronghold / tether_approach: fight opened at player (10.50731, 6.172883, 7623.044), arena centre (8.0, 6.171943, 7624.0)
+stronghold / tether_approach: arena shrank to 7.0m (room affords 7.0m, flat default is 11.0m)
+stronghold / tether_approach: held to 7.0m against a 7.0m boundary, still inside the room
+all three bodies stand inside the Warden Arena, on its floor, as the fight opened
+arena containment: OK -- Warrens and Stronghold fights FORM inside a reachable, legal room and hold participants inside it.
