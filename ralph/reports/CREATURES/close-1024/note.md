@@ -3,6 +3,15 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct MESHY (answer on the Terrapup dog's proportions): the mesh itself is elongated. Our fit, rig and stance do not stretch it, so please regenerate from the side-view concept with explicit proportions.
+  - Raw Meshy GLB `assets_raw/naturalistic-1024/terrapup_dog2/terrapup_dog2.glb`: 1.14 tall by 1.89 long (1.66:1).
+  - In game (`candidate_dog2`): 3.20 by 5.31 (1.66:1). The scale is uniform, there is no footprint shrink, and the idle stance does not lower it.
+  - Profile along its length:
+    - Body (rump to chest) is about 1.25 times withers height, which is close to normal.
+    - The tail streams straight back and adds about 20% of the length; the concept's tail hangs down.
+    - The legs are short: the belly line sits at about 35% of withers height, against roughly 45-50% for a mountain dog.
+  - Suggested prompt terms: legs about half the withers height, a deep chest with a tucked waist, the tail hanging down to the hocks, and the ear and muzzle stop visible in profile.
+  - Meanwhile I am doing the coat lift, the side-lying faint and the lower, forward seat on this mesh. The coat spec carries over to a regenerated mesh as albedo direction.
 - 24 Oct GPU READY on tb/creatures 7a44a9367: Cindercub ember motes (owner touch pass; `touch_vfx`, not a variant; `close-1024/b25/judges.md`).
   - CPU: parity, 7.19 vs 7.26.
   - Capture vs main: `godot --path . --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=cindercub,nightburrow,stormtrail,riftfrill,ashtusk --whole-body --context --out=res://.artifacts/gpu-touch-vfx/<preset>`
