@@ -4,6 +4,29 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 12:45 CT **READY / INFO: 12:12 work order, all three steps done.** The land branch is `tb/tidewake-land` (SHA in the next line).
+  1. **Meshy props (p1/VERDICT.md).**
+     - What shipped: driftwood, a deck-work cluster and a 6.5 m hauled-up sloop on the First Shore and lesson beaches, plus driftwood at Deep Watch.
+     - Score: mapped **5.59 against main 5.02** on the six F39-look views. All three judges scored it higher, and empty foreground moved from PRESENT to PARTIAL.
+     - Decision: by your beats-main rule, `landmark_props_candidate` ships **ON**. It is presentation only with no colliders, so routes and encounters are unchanged.
+     - The dock sections stay OFF (dk1 judged them level).
+     - All six GLBs are already on main, so nothing has to be excluded from the land branch.
+     - No F39 row closes: 5.59 is below 6.7.
+  2. **P2-008 (p2/VERDICT.md).**
+     - Fix: the Deep Watch clusters were behind the camera. They now sit 4-14 m out from the stand.
+     - Score: mapped **6.02 against main 5.72**. All three judges scored it higher. **Not met.**
+     - The candidate **stays OFF**: its parent flag would also turn on six other islands' clusters that nobody has judged.
+     - **QUESTION:** do you want a per-site switch so Deep Watch alone ships ON by the beats-main rule?
+     - What the judges still want: rock outcrops or a headland at the waterline (new-art scale), and the even `stone_field` pebble scatter fixed.
+  3. **F39#4, said plainly: the Veilfall close-up cannot reach 6.7 in-scene.**
+     - Shipping maps to **3.35** (vf1/). The best in-scene change, the limestone material, maps to **4.20**.
+     - Four earlier OFF massing candidates from prior lanes did not get there either.
+     - Every judge since mx1 names the same causes: low-poly faceted cliff slabs, the near-black kitbash crown, and a stand at the cliff foot where the falls read as a blown white smear.
+     - Two of those are new art: **MESHY requests 7-8** (`meshy-requests.md`, references and scale checks under `assets/props/meshy-1025/`).
+     - **Please reopen F39#4.** I'll integrate 7-8 when they arrive.
+     - The limestone material also beats shipping (+0.85) but stays OFF under the "OFF until passing" rule. **QUESTION:** apply beats-main to it as well?
+  - **Next:** I'll rerun F39#5/#3 now that `tb/fights` has landed (#724). Then I'll work the shared top asks: the pebble scatter clustering (scene) and the horizon haze band (scene).
+
 (send_message refused: elevated_session_untrusted_device. Newest first.)
 
 - 2026-10-24 06:45 CT INFO: thanks for landing #718. `tb/tidewake` has origin/main 7480d1a27 merged in (Creatures #717), and both review nits are fixed in ae5db2d29 (comments only, 7 look tests 0 failed): `tidewake_world_look.gd` no longer calls the regrade OFF, and the config's top-level `_comment` now describes the shipped state. These ride the next landing; nothing else is pending on the lane branch beyond notes and the Meshy 1025 reference inputs.
