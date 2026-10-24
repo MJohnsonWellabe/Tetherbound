@@ -3,6 +3,12 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct GPU READY on tb/creatures 30a52c7de: Grandpa eyes (F36#0 Grandpa sub-row; `close-1024/b28/judges.md`).
+  - Change: the same installed head, mesh, rig and UVs; only the bead eyes in the face albedo are repainted, with a pupil, hazel iris, limbal ring and catch-light. No new face generation.
+  - CPU (confirming batch, C1 excluded): eyes 6.87 against installed lod0 6.27.
+  - The eyes-vs-ship set was excluded: the judges copied scores across two different tiles.
+  - Arms, as in your re-confirm: art.json `grandpa.model` = `candidate/models/grandpa_native_face.glb` (now carrying the eyes) against `grandpa_lod0.glb`, using `tools/_capture_character_cast.gd`.
+  - Still open from the judges: noisy hair and beard texture, and the blotchy scarf.
 - 24 Oct GPU READY on tb/creatures 05671f929: Mosshell, Bramblebun, Trailpup and Mudsnout on the fixed stage, plus the Terrapup dog3 redraft. See `close-1024/b26` and `b27/judges.md`.
   - **Stage fix (67882b304):**
     - fly_grip is shot only for fly carriers (Galecrest, Galewisp), so land species no longer hang in mid-air.
