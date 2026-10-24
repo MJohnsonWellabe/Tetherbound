@@ -1,0 +1,71 @@
+{
+ "P2-015": [
+  "meadows__terrapup__fainted",
+  "meadows__veridian__fainted",
+  "meadows__veridian__resting",
+  "meadows__trailpup__fainted",
+  "meadows__galecrest__fainted",
+  "meadows__galecrest__resting"
+ ],
+ "P2-016": [
+  "meadows__terrapup__hurt",
+  "meadows__nightburrow__hurt",
+  "meadows__nightburrow__moving",
+  "meadows__bramblebun__hurt",
+  "meadows__stormtrail__moving",
+  "meadows__trailpup__moving"
+ ],
+ "P2-017": [
+  "meadows__brooktail__idle",
+  "meadows__pipwing__idle",
+  "meadows__bramblebun__idle",
+  "meadows__trailpup__idle",
+  "meadows__riftfrill__idle"
+ ],
+ "P2-058": [
+  "meadows__catching__01-aiming-full-health",
+  "meadows__catching__catch_low",
+  "meadows__catching__catch_high",
+  "meadows__catching__07-aiming-weakened"
+ ],
+ "P2-059": [
+  "meadows__catching__03-strike",
+  "meadows__catching__03-absorbing",
+  "meadows__catching__04-orb-resting",
+  "meadows__catching__05-orb-shakes",
+  "meadows__catching__06-breakout",
+  "meadows__catching__08-caught-verdict"
+ ],
+ "P2-060": [
+  "meadows__catching__02-orb-in-flight",
+  "meadows__catching__03-strike",
+  "meadows__catching__03-absorbing",
+  "meadows__catching__04-orb-resting",
+  "meadows__catching__05-orb-shakes",
+  "meadows__catching__06-breakout"
+ ],
+ "P2-018": [
+  "meadows__nightburrow__shiny_idle",
+  "meadows__nightburrow__idle",
+  "meadows__stormtrail__shiny_idle",
+  "meadows__stormtrail__idle",
+  "meadows__riftfrill__shiny_idle",
+  "meadows__riftfrill__idle"
+ ],
+ "P2-020": [
+  "meadows__bramblebun__idle",
+  "meadows__pipwing__idle",
+  "meadows__mosshell__fainted"
+ ],
+ "P2-061": [
+  "meadows__catching__06-breakout",
+  "meadows__catching__08-caught-verdict",
+  "meadows__catching__09-caught-banner"
+ ],
+ "P2-019": [
+  "meadows__trailpup__alpha_idle",
+  "meadows__trailpup__idle",
+  "meadows__brooktail__alpha_idle",
+  "meadows__brooktail__idle"
+ ]
+}
