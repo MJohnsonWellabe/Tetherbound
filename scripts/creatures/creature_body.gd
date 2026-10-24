@@ -263,6 +263,8 @@ var _ordinary_colourway_species: String = ""
 ## The aspect variant's own idle VFX (flame/arcs/motes/embers), rebuilt
 ## whenever the body is re-dressed -- same lifecycle as `_aura` below.
 var _aspect_vfx: Node3D = null
+## Owner touch pass: energy-seam shells over the skinned mesh (`touch_glow`).
+var _touch_glow_shells: Array[MeshInstance3D] = []
 
 var _height: float = 1.0
 var _radius: float = 0.4
@@ -1010,6 +1012,7 @@ func _refresh_shiny_tint() -> void:
 		return  # flags remain current; restore dresses the new model before show
 	_refresh_base_colourway()
 	_apply_aspect_vfx()
+	_apply_touch_glow()
 	_apply_art_model_emission()
 	_apply_night_floor()
 	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny, _shiny_fallback)
@@ -1165,6 +1168,50 @@ func _apply_alpha_presence() -> void:
 ## flame effect is important. Without emissive/VFX treatment, this variant is
 ## not successful." The other three boards ask for the same thing in their
 ## own colour.
+## Owner touch pass (24 Oct 2026): "some energy ... Don't go overboard." A
+## species may name an energy-seam mask (`touch_glow`, an RGBA texture on its
+## own UVs, written by tools/art_pipeline/creature_touch.py). It is drawn as a
+## thin unshaded shell sharing the mesh and skin, so the seams glow at any light
+## without enabling emission on the body material (which would switch off the
+## night floor) and without touching the tracked colourway/flash materials.
+func _apply_touch_glow() -> void:
+	for shell in _touch_glow_shells:
+		if is_instance_valid(shell):
+			shell.queue_free()
+	_touch_glow_shells.clear()
+	if not _has_model:
+		return
+	var path := str(SPECIES.placeholder(species_id).get("touch_glow", ""))
+	if path == "" or not ResourceLoader.exists(path):
+		return
+	var material := StandardMaterial3D.new()
+	material.resource_name = "%s_touch_glow" % species_id
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.albedo_texture = load(path)
+	material.disable_receive_shadows = true
+	material.grow = true
+	material.grow_amount = 0.004
+	var sources: Array[MeshInstance3D] = []
+	var pending: Array[Node] = [_model]
+	while not pending.is_empty():
+		var node: Node = pending.pop_back()
+		pending.append_array(node.get_children())
+		if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+			sources.append(node as MeshInstance3D)
+	for source in sources:
+		var shell := MeshInstance3D.new()
+		shell.name = "TouchGlow"
+		shell.mesh = source.mesh
+		shell.skin = source.skin
+		shell.material_override = material
+		shell.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		source.add_child(shell)
+		if not source.skeleton.is_empty():
+			shell.skeleton = shell.get_path_to(source.get_node(source.skeleton))
+		_touch_glow_shells.append(shell)
+
+
 func _apply_aspect_vfx() -> void:
 	if _aspect_vfx != null:
 		_aspect_vfx.queue_free()

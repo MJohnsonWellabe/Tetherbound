@@ -17,6 +17,13 @@ Spec: data/creatures/creature_touches.json, keyed by species:
    "also": ["<species>/candidate_yyy"]}
 `also` lists builds of the same remake that share its UV layout and albedo
 (Mudsnout's tusk build); each gets the same painted image.
+
+`glow` (optional) lists energy seams in the same overlay vocabulary. They are
+not baked into the albedo: they are written as an RGBA mask,
+`<glb stem>_touch_glow.png` beside the model (colour where the seam is, alpha
+its strength), which species.json names as the placeholder's `touch_glow` and
+creature_body draws as a thin unshaded shell over the skinned mesh. Baking
+emission into the material would switch off the night floor for that surface.
 Overlays are tools/creature_overlays.py overlays (mode "shade" for hardened
 patches and scars), placed by the remake's anatomy map.
 
@@ -127,6 +134,31 @@ def touch(species, entry):
             species, os.path.relpath(glb, ROOT), len(jpeg), hashlib.sha256(jpeg).hexdigest()[:12]))
     for note in notes:
         print("   %s" % note)
+    if entry.get("glow"):
+        _write_glow(species, remake, entry["glow"], source.width)
+
+
+def _write_glow(species, remake, glows, size):
+    """RGBA seam mask: each glow overlay's own colour, alpha its coverage."""
+    rgb = np.zeros((size, size, 3))
+    alpha = np.zeros((size, size))
+    for glow in glows:
+        # Paint the overlay's mask as pure value onto black to read it back.
+        probe = dict(glow, mode="shade", set_val=1.0, set_sat=0.0)
+        probe.pop("match", None)
+        painted, notes = apply_overlays(np.zeros((size, size, 3)), remake, [probe], size)
+        mask = painted.max(axis=-1) * float(glow.get("strength", 1.0))
+        colour = np.array([int(str(glow["color"]).lstrip("#")[i:i + 2], 16) / 255.0 for i in (0, 2, 4)])
+        rgb = rgb * (1.0 - mask[..., None]) + colour * mask[..., None]
+        alpha = np.maximum(alpha, mask)
+        for note in notes:
+            print("   glow %s" % note)
+    out = np.dstack([np.clip(rgb, 0, 1), np.clip(alpha, 0, 1)])
+    models, glb_name, _glb, _gltf, _views = _open(remake)
+    path = os.path.join(models, "%s_touch_glow.png" % os.path.splitext(glb_name)[0])
+    Image.fromarray((out * 255).astype(np.uint8), "RGBA").save(path, optimize=True)
+    print("%s: glow mask %s (%.1f%% of the surface)" % (
+        species, os.path.relpath(path, ROOT), 100.0 * float((alpha > 0.05).mean())))
 
 
 def main():

@@ -59,6 +59,27 @@ func test_touch_vfx_attaches_to_the_ordinary_body_only_where_named() -> void:
 		assert_false(str(child.name).begins_with("AspectVfx_"), "Sparkit carries no touch")
 
 
+func test_touch_glow_masks_exist_and_shell_only_where_named() -> void:
+	var named := ""
+	for id: String in SPECIES.table().keys():
+		var path := str(SPECIES.placeholder(id).get("touch_glow", ""))
+		if path == "":
+			continue
+		assert_true(ResourceLoader.exists(path), "%s touch_glow mask %s exists" % [id, path])
+		if named == "" and ResourceLoader.exists(path):
+			named = id
+	if named == "":
+		return
+	var glowing := _body(named)
+	await _frames(2)
+	assert_true(glowing.find_children("TouchGlow", "MeshInstance3D", true, false).size() >= 1,
+		"%s carries its energy-seam shell" % named)
+	var bare := _body("sparkit")
+	await _frames(2)
+	assert_eq(bare.find_children("TouchGlow", "MeshInstance3D", true, false).size(), 0,
+		"Sparkit carries no seam shell")
+
+
 func _body(id: String) -> Node3D:
 	var body: Node3D = CREATURE_SCENE.instantiate()
 	body.set_script(BODY_SCRIPT)
