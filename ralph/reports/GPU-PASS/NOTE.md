@@ -2,7 +2,7 @@
 
 ## READY (24 Oct): newest first
 
-- **12:00 CT, creature emission floor overlay (Forward+):**
+- **11:17 CT, creature emission floor overlay (Forward+):**
   - **F22#4 with the overlay:** Medium maps to **7.26** (7.34 / 7.18), against 5.08 shipped and 6.53 for Low. The ghost is FIXED ×3. Medium now beats Low but is still below 7.5; the HUD and the hidden player creature remain.
   - **Day:** the wash was roster-wide (Cindercub, Ripplet, Terrapup, Paddlenewt, Bramblebun, Trailpup, Mudsnout all milky). ×0 restores their true colours.
   - **Night sweep:**
@@ -12,7 +12,7 @@
     - **Recommend: base ×0.0, `times.night.environment` ×0.05.**
   - Evidence: `emission-floor/overlay-1024/RESULT.md`.
 
-- **11:00 CT, Tidewake regrade (lt2) on main: REOPENED.**
+- **10:45 CT, Tidewake regrade (lt2) on main: REOPENED.**
   - Scores: **6.12** against control 5.35 (CPU 7.07), the same at Medium and High.
   - Evening and dawn grade: FIXED ×3.
   - Still open:
