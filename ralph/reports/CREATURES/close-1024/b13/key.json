@@ -1,0 +1,77 @@
+{
+ "Kp": {
+  "anchor": false,
+  "label": "F36 water_riptusk b13",
+  "A": "scratch/b13/sides/water_riptusk-base.png",
+  "B": "scratch/b13/sides/water_riptusk-c.png"
+ },
+ "Zn": {
+  "anchor": false,
+  "label": "F36 water_tidecoil b13",
+  "A": "scratch/b13/sides/water_tidecoil-c.png",
+  "B": "scratch/b13/sides/water_tidecoil-base.png"
+ },
+ "Xc": {
+  "anchor": false,
+  "label": "F36 water_abyssal_guardian b13",
+  "A": "scratch/b13/sides/water_abyssal_guardian-base.png",
+  "B": "scratch/b13/sides/water_abyssal_guardian-c.png"
+ },
+ "Vp": {
+  "anchor": false,
+  "label": "F36 water_cannonback b13",
+  "A": "scratch/b13/sides/water_cannonback-c.png",
+  "B": "scratch/b13/sides/water_cannonback-base.png"
+ },
+ "Hk": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "Ah": {
+  "anchor": false,
+  "label": "F36 water_mirejaw b13",
+  "A": "scratch/b13/sides/water_mirejaw-base.png",
+  "B": "scratch/b13/sides/water_mirejaw-c.png"
+ },
+ "Ou": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ml": {
+  "anchor": false,
+  "label": "F36 water_mangrove_monitor b13",
+  "A": "scratch/b13/sides/water_mangrove_monitor-base.png",
+  "B": "scratch/b13/sides/water_mangrove_monitor-c.png"
+ },
+ "Rd": {
+  "anchor": false,
+  "label": "F36 tuskroot b13",
+  "A": "scratch/b13/sides/tuskroot-base.png",
+  "B": "scratch/b13/sides/tuskroot-c.png"
+ },
+ "Mn": {
+  "anchor": false,
+  "label": "F36 mangrove_monitor b13",
+  "A": "scratch/b13/sides/mangrove_monitor-c.png",
+  "B": "scratch/b13/sides/mangrove_monitor-base.png"
+ },
+ "Pg": {
+  "anchor": false,
+  "label": "F36 water_sirenseal b13",
+  "A": "scratch/b13/sides/water_sirenseal-base.png",
+  "B": "scratch/b13/sides/water_sirenseal-c.png"
+ },
+ "Lr": {
+  "anchor": false,
+  "label": "F36 water_aquaryn b13",
+  "A": "scratch/b13/sides/water_aquaryn-c.png",
+  "B": "scratch/b13/sides/water_aquaryn-base.png"
+ },
+ "Bi": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ }
+}

@@ -929,6 +929,14 @@ PRONE = tuple(s for s in PRONE if s not in LANDED_1024_TOPPLE)
 if CANDIDATE_1024:
     PRONE = tuple(s for s in PRONE if s not in PRONE_TO_TOPPLE_1024)
     LIMP_ROLL['tuskroot'] = 90.0
+# F36#1 roster r1 read Tuskroot's limp sprawl as a belly-up flip; it topples
+# like the boars (close-1024 b13: 7.46 vs 6.17 mapped, faint FIXED x3, ON).
+TOPPLED = tuple(TOPPLED) + ('tuskroot',)
+TOPPLE_ROLL['tuskroot'] = 90.0
+# Mangrove Monitor's -90 roll (OFF; --candidate-r13) lost in b13 (5.84 vs 7.03:
+# it rolls belly-up), so its +90 topple stays.
+if '--candidate-r13' in sys.argv:
+    TOPPLE_ROLL['mangrove_monitor'] = -90.0
 LIVE_SHOVE_HIT = tuple(LIVE_SHOVE_HIT) + tuple(s for s in SHOVE_1024_RUN if s not in LIVE_SHOVE_HIT)
 SHOVE_GAIN_BY.update({s: 1.5 for s in SHOVE_1024_RUN})
 SHOVE_HOLD_BY.update({s: (0.5, 0.97) for s in SHOVE_1024_RUN})
