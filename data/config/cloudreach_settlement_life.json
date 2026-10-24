@@ -1012,9 +1012,9 @@
   "candidate": {
     "enabled": false,
     "preview_arg": "--cloudreach-settlement-r18-candidate",
-    "_why": "F08#3 r18 (flag OFF, not judged yet): the three GPU r17 asks (6.57 mapped, ralph/reports/GPU-PASS/F08-3/r17/VERDICT.md). (1) Near field (r18b: the r18 cobbles were removed; the flat paving model scales by height, so two 0.22 m pieces covered the whole foreground in a rubble carpet on the CPU pre-look): low stones and bushes 0.6-3.2 m behind each fixed stand (between the production camera and the trainer, where the c18 control's bottom third is bare lawn/dirt) at 1.2-3.8 m to each side, so the bottom of frame starts with dressing, plus a stronger far haze. (2) Night: moonlit cloud ring #3e4a66 -> #8a93a8 (was a saturated navy blob), settlement night ambient 1.8 #44507a -> 2.3 #57628c and a brighter, paler moon so islets and cliffs keep value instead of going black. (3) Islets: seven islets of 10-56 m at varied heights instead of five of 30-38 m. r18b CPU pre-judge (b1, mapped): 6.49 vs control 6.02 (+0.47); foreground PARTIAL x3, moon-blue nights PRESENT x3. r18c: warm lamp pools instead of a bluer ambient — lamp light #ffe4c4 2.4/9 m -> #ffd6a4 3.4/12 m, settlement windows 0.7 -> 1.3 and Cliffhold windows 1.2 -> 1.8 at night, night ambient #57628c 2.3 -> neutral #4c5470 1.9 and a neutral moon, plus one more lamp beside each fixed stand's near field.",
+    "_why": "F08#3 r18 (flag OFF, not judged yet): the three GPU r17 asks (6.57 mapped, ralph/reports/GPU-PASS/F08-3/r17/VERDICT.md). (1) Near field (r18b: the r18 cobbles were removed; the flat paving model scales by height, so two 0.22 m pieces covered the whole foreground in a rubble carpet on the CPU pre-look): low stones and bushes 0.6-3.2 m behind each fixed stand (between the production camera and the trainer, where the c18 control's bottom third is bare lawn/dirt) at 1.2-3.8 m to each side, so the bottom of frame starts with dressing, plus a stronger far haze. (2) Night: moonlit cloud ring #3e4a66 -> #8a93a8 (was a saturated navy blob), settlement night ambient 1.8 #44507a -> 2.3 #57628c and a brighter, paler moon so islets and cliffs keep value instead of going black. (3) Islets: seven islets of 10-56 m at varied heights instead of five of 30-38 m. r18b CPU pre-judge (b1, mapped): 6.49 vs control 6.02 (+0.47); foreground PARTIAL x3, moon-blue nights PRESENT x3. r18c: warm lamp pools instead of a bluer ambient — lamp light #ffe4c4 2.4/9 m -> #ffd6a4 3.4/12 m, settlement windows 0.7 -> 1.3 and Cliffhold windows 1.2 -> 1.8 at night, night ambient #57628c 2.3 -> neutral #4c5470 1.9 and a neutral moon, plus one more lamp beside each fixed stand's near field. r18c CPU look: the near lamp at 2.5 m behind the stand stood at the frame edge as a dark post on four stands and the pools barely read; r18d puts it 5 m ahead of the stand, 4.2 m to the side, and raises the lamp light to 4.4 / 14 m.",
     "overlay": {
-      "revision": "f08-3-settlement-life-r18c-candidate",
+      "revision": "f08-3-settlement-life-r18d-candidate",
       "stand_pattern": [
         {
           "asset": "paving",
@@ -1255,8 +1255,8 @@
         },
         {
           "asset": "lamp",
-          "along_m": -2.5,
-          "lateral_m": -3.4
+          "along_m": 5.0,
+          "lateral_m": -4.2
         }
       ],
       "vista": [
@@ -1425,8 +1425,8 @@
       },
       "lamp": {
         "light_colour": "#ffd6a4",
-        "energy": 3.4,
-        "range_m": 12.0,
+        "energy": 4.4,
+        "range_m": 14.0,
         "glow": 2.6,
         "door_energy": 3.0
       },
