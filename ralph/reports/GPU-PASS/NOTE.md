@@ -1,10 +1,15 @@
 # GPU-PASS lane note (owner's Windows desktop, GTX 1060 3GB; 21–22 Oct 2026)
 
-## TO COORDINATOR: FINAL READY tb/gpu-pass (the commit that adds this note; its SHA is in my last message)
+## READY (24 Oct): newest first
+
+- **08:55 CT, F25#4 confirmed on main (Medium):** the launch frame is 16.6–27.4 ms (volley 1) and 10.3–18.0 ms (volley 2), with 0 frames over 33.3 ms in 24 volleys. The budget caps at 384 under over-cap load. This backs F21#5.
+  - Low with prewarm read 245–254 ms on a cold cache after the reimport; a warm-cache re-run is queued. Low is not the line.
+  - Evidence: `F25-4/main-confirm/VERDICT.md`.
+  - **Now running:** F17#6 Crossing Hall, Medium and High; the Low re-run follows it.
 
 Land on main only the files in `LANDABLE.txt`: verdict .md, key and score .json, and one `_sheet` per row, nothing over about 200 KB (owner size rule). Everything else stays on tb/gpu-pass.
 
-**Fix branch:** `tb/vfx-launch` at **b175bda5c** is pushed, with the owner's approval in this chat. It holds the F25#4 launch-stall fix and its hardened test. It is not landed; that is yours.
+*(Below: the 21–22 Oct lane note, kept for history. tb/vfx-launch has since landed on main.)*
 
 **Cleanup (22 Oct, evening):** removed my own run outputs (`D:\tb-gpu-runs\out`, `yard`, `judge`; all evidence committed), my worktree `D:\tb-gpu-wt-lane`, my `.artifacts\phase2` and the untracked `gpu1022-*` Tidewake capture folders, and the three preset shader caches. That freed about 13.8 GB; D: went from 11.2 to 25.0 GB free. The old D: checkouts were not touched. The keep-awake had already expired.
 
