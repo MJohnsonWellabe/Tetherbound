@@ -1002,6 +1002,7 @@ func _refresh_shiny_tint() -> void:
 	if _visual_suspended:
 		return  # flags remain current; restore dresses the new model before show
 	_refresh_base_colourway()
+	_apply_aspect_vfx()
 	_apply_art_model_emission()
 	_apply_night_floor()
 	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny, _shiny_fallback)
@@ -1047,7 +1048,6 @@ func _refresh_base_colourway() -> void:
 		var texture_species := _aspect_source_species if _aspect_source_species != "" else species_id
 		if _has_model:
 			_swap_colourway_textures(aspect_variant, texture_species)
-		_apply_aspect_vfx()
 		_apply_alpha_presence()
 		return
 	# P2-030 candidates remain behind a local presentation gate. The old failed
@@ -1162,9 +1162,14 @@ func _apply_aspect_vfx() -> void:
 	if _aspect_vfx != null:
 		_aspect_vfx.queue_free()
 		_aspect_vfx = null
-	if aspect_variant == "" or not _has_model:
+	# Owner touch pass (24 Oct 2026): a species without a variant may name its
+	# own small elemental touch (`touch_vfx`, e.g. Cindercub's embers).
+	var vfx_id := aspect_variant
+	if vfx_id == "":
+		vfx_id = str(SPECIES.definition(species_id).get("touch_vfx", ""))
+	if vfx_id == "" or not _has_model:
 		return
-	_aspect_vfx = ASPECT_VFX.attach(self, aspect_variant, _radius, _height)
+	_aspect_vfx = ASPECT_VFX.attach(self, vfx_id, _radius, _height)
 
 
 ## OWNER DIRECTIVE 2026-08-28 §2b: "creatures need to stand out in the grass.

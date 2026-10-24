@@ -1247,6 +1247,8 @@
     },
     "cindercub": {
       "display_name": "Cindercub",
+      "touch_vfx": "cindercub_embers",
+      "_comment_touch_vfx": "Owner touch pass, 24 Oct 2026: a few faint ember motes off the back (scripts/creatures/vfx/aspect_vfx.gd `cindercub_embers`). Not an Aspect variant, so the shiny/vivid ladder still applies.",
       "type": "fire",
       "type_secondary": "ground",
       "_why": "Sheet 4, brief section 4. Fire/Ground, 'balanced' role and the most even statline of the new creatures on purpose -- the brief asks for 'personality rather than simply functioning as an enemy'. `aggressive` FALSE: 'curious; moderately territorial; not automatically hyper-aggressive... sometimes resting/sleeping near warm objects'. Its charged is Ground (`rootquake`) against a Fire quick so both halves of its typing are visible in play.",

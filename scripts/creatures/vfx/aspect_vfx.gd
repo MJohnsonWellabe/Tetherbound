@@ -113,6 +113,22 @@ const PRESETS := {
 		"eye_colour": Color(1.0, 0.6, 0.2),
 		"tusk_colour": Color(1.0, 0.62, 0.16),
 	},
+	## Owner touch pass (24 Oct 2026): "adding some energy, some elemental
+	## effects ... Don't go overboard." A species' own small elemental touch,
+	## named by its `touch_vfx` in species.json -- not an Aspect variant, so
+	## the shiny/vivid ladder still applies. A few faint embers off the back,
+	## no paw group and no eye glow: realistic first.
+	"cindercub_embers": {
+		"primary_colour": Color(1.0, 0.6, 0.2),
+		"primary_count": 6,
+		"rise_period": 2.8,
+		"orbit_period": 0.0,
+		"jitter": 0.0,
+		"height_bias": 1.25,
+		"radius_scale": 0.55,
+		"size_scale": 0.15,
+		"paw_count": 0,
+	},
 }
 
 var _preset: Dictionary = {}
@@ -217,8 +233,12 @@ func _physics_process(delta: float) -> void:
 			if _rebuild_skip != 0:
 				return
 	var basis := camera.global_transform.basis
-	var right: Vector3 = basis.x
-	var up: Vector3 = basis.y
+	# The discs are built in this node's local space, so face them with the
+	# camera's axes taken into that space. Using the world axes directly drew
+	# them edge-on (thin slivers) on any creature turned side-on to the camera.
+	var to_local := global_transform.basis.inverse()
+	var right: Vector3 = (to_local * basis.x).normalized()
+	var up: Vector3 = (to_local * basis.y).normalized()
 
 	_mesh.clear_surfaces()
 	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -337,6 +357,8 @@ func _draw_paws(right: Vector3, up: Vector3) -> void:
 ## now an optional per-species override in PRESETS (`DEFAULT_EYE_ANCHOR`
 ## when absent) -- Nightburrow's own entry documents its retune.
 func _draw_eyes(right: Vector3, up: Vector3) -> void:
+	if not _preset.has("eye_colour"):
+		return  # a species touch (`touch_vfx`) keeps its own eyes
 	var colour: Color = _preset.get("eye_colour", Color.WHITE)
 	var pulse: float = 0.85 + 0.15 * sin(_life * 3.0)
 	var size: float = _radius * 0.09
