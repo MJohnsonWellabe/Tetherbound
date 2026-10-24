@@ -1,0 +1,59 @@
+{
+ "Kq": {
+  "anchor": false,
+  "label": "F36 tanglevolt b9",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b9/sides/tanglevolt-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b9/sides/tanglevolt-base.png"
+ },
+ "Xl": {
+  "anchor": false,
+  "label": "F36 reedwing b9",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b9/sides/reedwing-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b9/sides/reedwing-base.png"
+ },
+ "Dx": {
+  "anchor": false,
+  "label": "F36 stormcapra b9",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b9/sides/stormcapra-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b9/sides/stormcapra-c.png"
+ },
+ "Mp": {
+  "anchor": true,
+  "A": "f36_0_gap:C4B",
+  "B": "f36_0_gap:C4A"
+ },
+ "By": {
+  "anchor": false,
+  "label": "F36 tempestwing b9",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b9/sides/tempestwing-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b9/sides/tempestwing-c.png"
+ },
+ "Oq": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Zz": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Cx": {
+  "anchor": false,
+  "label": "F36 ribbonray b9",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b9/sides/ribbonray-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b9/sides/ribbonray-base.png"
+ },
+ "Ir": {
+  "anchor": false,
+  "label": "F36 solmane b9",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b9/sides/solmane-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b9/sides/solmane-base.png"
+ },
+ "Fq": {
+  "anchor": false,
+  "label": "F36 ripplet b9",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b9/sides/ripplet-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b9/sides/ripplet-c.png"
+ }
+}
