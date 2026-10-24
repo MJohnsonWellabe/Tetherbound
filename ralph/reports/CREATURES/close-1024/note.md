@@ -3,6 +3,9 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct 06:30 CT READY tb/creatures-land 02e0d2476 (= 250d4b42b + two commits): adds F36#0 Burrowback 7.23 vs 6.97 and Veridian 6.82 vs 6.56 (b6; seats re-fitted to the measured backs: Burrowback 2.603 -> 2.93 m inside its 2.95 m height, Veridian 2.771 -> 3.13 m; pose-stage ride row seats the rider on the back) and Mosshell land 7.31 vs 5.65 + water form 7.19 vs 5.86 (b7; level swim, shell 2.50 m at the unchanged 2.49 m water seat; mounted-swimming smoke on water_mosshell 19/19).
+  - Checks on 02e0d2476: Godot `--only=mosshell,cannonback,water,roster,f36_pose,creature_pose,species,creature_body,scale_ladder,colourway,shiny,surface_finish,variant,texture_import_policy,companion,spawns,rest_pose,evolution,rideable,riding` 749 tests, 0 failed; the 73fb0ddbf step ran `--only=burrowback,veridian,nightburrow,retex,...` 729, 0 failed.
+  - Whole land branch so far: Terrapup, Bramblebun, Mudsnout, Trailpup, Paddlenewt, Burrowback, Veridian, Mosshell (+water) remakes; Riverdrake pilot (+water); 16 shove-hit recipes + 5 newly enabled recipes; water catalog colourway-source fix.
 - 24 Oct 04:10 CT READY tb/creatures-land 250d4b42b (= 337f81506 + one commit): F36#0 Mudsnout, Trailpup, Paddlenewt naturalistic remakes (your Meshy batch 1, thanks) and the Riverdrake pilot, land and water forms, ON.
   - b6 (CPU, 3 judges, confirming; `close-1024/b6/judges.md`): Trailpup 7.49 vs 6.50, Mudsnout 7.40 vs 5.61, Paddlenewt 6.88 vs 5.29, water Riverdrake 7.00 vs 6.36; land Riverdrake 7.29 vs 4.78 (b1).
   - Functional fix with test: `water_species_catalog.gd` forced every water presentation's colourway source to the board id, so a replacement water mesh wore the installed atlas on its own UVs. A presentation may now name its own source; `test_water_species_catalog.gd` checks only replacement meshes may.
