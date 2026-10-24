@@ -170,3 +170,8 @@ F36-1/main-1024/yardstick/b2/mapped.json
 F36-1/main-1024/yardstick/b3/key.json
 F36-1/main-1024/yardstick/b3/batch.json
 F36-1/main-1024/yardstick/b3/mapped.json
+F22-4/main-1024/VERDICT.md
+F22-4/main-1024/_sheet_f22_4_main_ghost.png
+yardstick-b2-1024/key.json
+yardstick-b2-1024/batch.json
+yardstick-b2-1024/mapped.json

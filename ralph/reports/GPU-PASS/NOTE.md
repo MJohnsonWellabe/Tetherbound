@@ -2,7 +2,17 @@
 
 ## READY (24 Oct): newest first
 
-- **10:20 CT, F36#1 held shove hit on main** (the 15 enabled species with CPU ≥ 7.0; recipe vs shipping, Medium):
+- **10:15 CT, F22#4 Riverwatch on main: REOPENED.**
+  - Medium maps to **5.10**, with the ghost still PRESENT ×3; Low maps to **6.39**.
+  - **Root cause, isolated on GPU:**
+    - not the tell aura (the renderer-aware aura works);
+    - it is `art.json` `creature_emission_floor: 0.08`, the always-on additive albedo emission on plain-PBR creatures.
+    - On Forward+ it washes the captain milky grey in every frame. Turning emission off alone gives a solid brown otter that matches Low.
+  - The fix should be renderer-aware, like the aura. The floor likely affects other plain-PBR creatures on Forward+ by day too.
+  - Evidence: `F22-4/main-1024/VERDICT.md`.
+  - **Now running:** the Tidewake regrade (F39-look), Medium and High.
+
+- **10:00 CT, F36#1 held shove hit on main** (the 15 enabled species with CPU ≥ 7.0; recipe vs shipping, Medium):
   - **CONFIRMED: Tanglevolt 7.89, Frostclaw 7.88, Stormcapra 7.79, Cloudfang 7.73, Breezetail 7.69, Craghorn 7.66.**
   - **REOPENED:** Aquaryn 7.49, Tidecoil 7.45, Solmane 7.33 (no gain), Cliffspike 7.03, Thundertunnel 6.91, Voltwig 6.89, Pebbik 6.89.
   - **Recipe scores below shipping:** Galecrest (6.62 vs 6.72) and **Stormraven (5.81 vs 6.09)**. Consider turning these two OFF.
