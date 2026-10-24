@@ -58,6 +58,12 @@ static func config() -> Dictionary:
 	if raw is Dictionary and (bool(raw.get("enabled", false))
 			or OS.get_cmdline_user_args().has(str(raw.get("preview_arg", "--none")))):
 		_active = raw
+		# A judged-next round rides on top of the shipping settings, OFF unless
+		# its `enabled` is set or a capture opts in with its own preview arg.
+		var next: Variant = raw.get("candidate", {})
+		if next is Dictionary and (bool(next.get("enabled", false))
+				or OS.get_cmdline_user_args().has(str(next.get("preview_arg", "--none")))):
+			_active = merge(raw, next.get("overlay", {}))
 	return _active
 
 
