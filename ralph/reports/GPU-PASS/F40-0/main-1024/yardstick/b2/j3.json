@@ -1,0 +1,182 @@
+{
+ "sets": {
+  "Dm": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-049: disconnected black rail-like strips cross the grass and extend into open air above the void": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-049: disconnected black rail-like strips cross the grass and extend into open air above the void": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A flat empty lawn with a lone tree, dark mossy cubes and dark strips reads as a greybox field, not a sky realm; only the reverse view's cloud bank hints at altitude."
+  },
+  "Vc": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared low-resolution ground, tiled tunnel walls and sparse lollipop trees sink it; B's site-specific aftermath (torn banners down, opened cage with freed villager, smoke plume) is the only thing that carries."
+  },
+  "Wl": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL",
+     "P2-025: tall grass intrudes through paving, and repeated grass and simple stone surfaces reduce close-range material distinction": "PRESENT",
+     "P2-102: a yellow mushroom cluster hangs beyond the grassy rim with no ground beneath its stem": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL",
+     "P2-025: tall grass intrudes through paving, and repeated grass and simple stone surfaces reduce close-range material distinction": "PRESENT",
+     "P2-102: a yellow mushroom cluster hangs beyond the grassy rim with no ground beneath its stem": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-ringed perch plaza and giant trunks give an authored landmark, but no visible drop, cloud sea or floating land, flat haze-free light and a dialogue text overflow off the reverse frame keep it below shipping finish."
+  },
+  "Cq": {
+   "A": {
+    "bar_a": 4.7,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-022: the summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary, and its night silhouette stays dark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-022: the summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary, and its night silhouette stays dark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The solid blue-domed rotunda with lit night windows is a real goal landmark, but it sits small at the end of a dirt track across a flat lawn with a grey slab boulder, nowhere near the aviary board's stacked cliffs and cloud sea."
+  },
+  "Oy": {
+   "A": {
+    "bar_a": 4.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Gameplay and reverse frames show the batch's best architecture (stone halls, tower, blue roofs on pale cliffs), but all three approach frames stare into a flat untextured brown wall and the courtyard ground is a flat orange plane."
+  },
+  "Fs": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 2.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's braced timber frame with plank cap and stone footing reads as built, but a lone thin panel beside a flat grey faceted boulder on smeared ground is not Palworld base-building finish; B's blank white board sinks it outright."
+  },
+  "Al": {
+   "A": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, appealing elder villager with big readable eyes, white hair and beard, and a natural green-and-brown outfit that fits the key art's village palette carries it."
+  },
+  "Bp": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's furred, tusked naturalistic boar is on the owner style bar and readable, but its noisy yellow back mottling, a faint-mid pose lifted off its shadow and a body barely taller than the trainer keep it below; A's smooth clay-toy body with moss decals is off-style."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild the Cloudreach sites' terrain from flat lawns into stratified pale-stone tiers and ledges with visible drops, cloud sea and floating islands in frame, breaking up straight extruded shelf edges and removing the dark strips and mossy cubes",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix production cameras and HUD: pull Cliffhold approach cameras out of the wall and off the High Perches trunk, keep the world-space dialogue text inside the frame, and add aerial haze and a time-of-day grade so distance and altitude read",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace off-bar hero pieces: a thick timber-and-stone homestead wall module (A's frame, cap and footing, not B's white board) and naturalistic fur materials for stylised creatures like Bp side A, scaled clearly taller than the trainer",
+   "kind": "new_art"
+  }
+ ]
+}

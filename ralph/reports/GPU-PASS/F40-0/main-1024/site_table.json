@@ -1,0 +1,299 @@
+{
+ "realm_gate_crag": {
+  "defects": {
+   "Flat magenta slabs or rings on the ground": "FIXED",
+   "Placeholder or untextured materials": "PARTIAL",
+   "Floating bodies or props": "FIXED",
+   "Clipping": "FIXED",
+   "P2-021": "PRESENT",
+   "P2-023": "PRESENT"
+  },
+  "High": {
+   "mapped": 5.26,
+   "judges": [
+    5.33,
+    5.14,
+    5.33
+   ]
+  },
+  "Medium": {
+   "mapped": 5.26,
+   "judges": [
+    5.33,
+    5.14,
+    5.33
+   ]
+  }
+ },
+ "sky_shrine": {
+  "defects": {
+   "Flat magenta slabs or rings on the ground": "FIXED",
+   "Placeholder or untextured materials": "PARTIAL",
+   "Floating bodies or props": "FIXED",
+   "Clipping": "FIXED",
+   "P2-021": "PRESENT",
+   "P2-023": "PRESENT",
+   "P2-025": "PRESENT"
+  },
+  "High": {
+   "mapped": 5.2,
+   "judges": [
+    5.51,
+    4.96,
+    5.14
+   ]
+  },
+  "Medium": {
+   "mapped": 5.2,
+   "judges": [
+    5.51,
+    4.96,
+    5.14
+   ]
+  }
+ },
+ "three_bells_bridge": {
+  "defects": {
+   "Flat magenta slabs or rings on the ground": "PARTIAL",
+   "Placeholder or untextured materials": "PARTIAL",
+   "Floating bodies or props": "FIXED",
+   "Clipping": "FIXED",
+   "P2-021": "PRESENT",
+   "P2-023": "PRESENT",
+   "P2-053": "PRESENT"
+  },
+  "High": {
+   "mapped": 5.54,
+   "judges": [
+    5.6,
+    5.51,
+    5.51
+   ]
+  },
+  "Medium": {
+   "mapped": 5.54,
+   "judges": [
+    5.6,
+    5.51,
+    5.51
+   ]
+  }
+ },
+ "galefoot_waycamp": {
+  "defects": {
+   "Flat magenta slabs or rings on the ground": "FIXED",
+   "Placeholder or untextured materials": "FIXED",
+   "Floating bodies or props": "FIXED",
+   "Clipping": "PARTIAL",
+   "P2-021": "PARTIAL",
+   "P2-023": "PARTIAL"
+  },
+  "High": {
+   "mapped": 6.6,
+   "judges": [
+    6.51,
+    6.6,
+    6.7
+   ]
+  },
+  "Medium": {
+   "mapped": 6.6,
+   "judges": [
+    6.51,
+    6.6,
+    6.7
+   ]
+  }
+ },
+ "stormward_overlook": {
+  "defects": {
+   "Flat magenta slabs or rings on the ground": "FIXED",
+   "Placeholder or untextured materials": "PRESENT",
+   "Floating bodies or props": "PRESENT",
+   "Clipping": "FIXED",
+   "P2-021": "PRESENT",
+   "P2-023": "PRESENT",
+   "P2-049": "PRESENT"
+  },
+  "Medium": {
+   "mapped": 4.6,
+   "judges": [
+    4.86,
+    4.48,
+    4.48
+   ]
+  },
+  "High": {
+   "mapped": 4.6,
+   "judges": [
+    4.86,
+    4.48,
+    4.48
+   ]
+  }
+ },
+ "the_high_perches": {
+  "defects": {
+   "Flat magenta slabs or rings on the ground": "FIXED",
+   "Placeholder or untextured materials": "FIXED",
+   "Floating bodies or props": "PARTIAL",
+   "Clipping": "PARTIAL",
+   "P2-021": "PARTIAL",
+   "P2-023": "PARTIAL",
+   "P2-025": "PRESENT",
+   "P2-102": "PARTIAL"
+  },
+  "Medium": {
+   "mapped": 5.43,
+   "judges": [
+    5.62,
+    5.24,
+    5.43
+   ]
+  },
+  "High": {
+   "mapped": 5.52,
+   "judges": [
+    5.71,
+    5.24,
+    5.62
+   ]
+  }
+ },
+ "summit_eyrie": {
+  "defects": {
+   "Flat magenta slabs or rings on the ground": "FIXED",
+   "Placeholder or untextured materials": "PARTIAL",
+   "Floating bodies or props": "FIXED",
+   "Clipping": "FIXED",
+   "P2-021": "PRESENT",
+   "P2-023": "PRESENT",
+   "P2-022": "PARTIAL"
+  },
+  "High": {
+   "mapped": 5.62,
+   "judges": [
+    5.81,
+    5.33,
+    5.71
+   ]
+  },
+  "Medium": {
+   "mapped": 5.62,
+   "judges": [
+    5.81,
+    5.33,
+    5.71
+   ]
+  }
+ },
+ "cliffhold": {
+  "defects": {
+   "Flat magenta slabs or rings on the ground": "FIXED",
+   "Placeholder or untextured materials": "PRESENT",
+   "Floating bodies or props": "FIXED",
+   "Clipping": "PRESENT",
+   "P2-021": "PARTIAL",
+   "P2-023": "PARTIAL"
+  },
+  "High": {
+   "mapped": 5.02,
+   "judges": [
+    5.05,
+    4.86,
+    5.14
+   ]
+  },
+  "Medium": {
+   "mapped": 5.02,
+   "judges": [
+    5.05,
+    4.86,
+    5.14
+   ]
+  }
+ },
+ "old_wind_observatory": {
+  "defects": {
+   "Flat magenta slabs or rings on the ground": "FIXED",
+   "Placeholder or untextured materials": "PARTIAL",
+   "Floating bodies or props": "PRESENT",
+   "Clipping": "PARTIAL",
+   "P2-021": "PRESENT",
+   "P2-023": "PARTIAL",
+   "P2-024": "PRESENT"
+  },
+  "Medium": {
+   "mapped": 4.74,
+   "judges": [
+    4.96,
+    4.63,
+    4.63
+   ]
+  },
+  "High": {
+   "mapped": 4.74,
+   "judges": [
+    4.96,
+    4.63,
+    4.63
+   ]
+  }
+ },
+ "windscar_flight_aerie": {
+  "defects": {
+   "Flat magenta slabs or rings on the ground": "FIXED",
+   "Placeholder or untextured materials": "PARTIAL",
+   "Floating bodies or props": "FIXED",
+   "Clipping": "FIXED",
+   "P2-021": "PRESENT",
+   "P2-023": "PRESENT",
+   "P2-024": "PRESENT",
+   "P2-053": "PARTIAL",
+   "P2-049": "FIXED"
+  },
+  "High": {
+   "mapped": 4.91,
+   "judges": [
+    4.63,
+    5.05,
+    5.05
+   ]
+  },
+  "Medium": {
+   "mapped": 4.91,
+   "judges": [
+    4.63,
+    5.05,
+    5.05
+   ]
+  }
+ },
+ "windscar_beacon": {
+  "defects": {
+   "Flat magenta slabs or rings on the ground": "FIXED",
+   "Placeholder or untextured materials": "PARTIAL",
+   "Floating bodies or props": "FIXED",
+   "Clipping": "FIXED",
+   "P2-021": "PRESENT",
+   "P2-023": "PRESENT",
+   "P2-024": "PRESENT"
+  },
+  "Medium": {
+   "mapped": 5.08,
+   "judges": [
+    4.88,
+    5.3,
+    5.05
+   ]
+  },
+  "High": {
+   "mapped": 5.08,
+   "judges": [
+    4.88,
+    5.3,
+    5.05
+   ]
+  }
+ }
+}

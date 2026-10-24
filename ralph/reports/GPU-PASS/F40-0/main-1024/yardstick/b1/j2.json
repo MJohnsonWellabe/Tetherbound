@@ -1,0 +1,180 @@
+{
+ "sets": {
+  "Zw": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A flat green lawn and dirt strip under a blunt brown mushroom-slab overhang, with flat sky and no layered islands or fog depth, sinks it next to Palworld's dense, lived-in fields."
+  },
+  "Ud": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's bold yellow-black serpent silhouette reads well standing, but its faint poses hang in mid-air above a detached shadow, and A's dark speckled skin turns to mush at small size; neither reaches the owner bar's naturalistic scale or fur-level material finish."
+  },
+  "Is": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager with a readable face and an earthy green/brown palette that fits the key art, though it leans slightly more cartoon-Pixar than stylised realism."
+  },
+  "Up": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-025: tall grass intrudes through the shrine paving, and repeated grass and simple stone surfaces reduce close-range material distinction": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-025: tall grass intrudes through the shrine paving, and repeated grass and simple stone surfaces reduce close-range material distinction": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cloud bank and distant stratified pillars have promise, but every approach frame is an empty flat grass plain with the shrine only appearing in the reverse view, so there is no landmark, density or depth layering."
+  },
+  "Ne": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Both are murky brown-green with no purple storm sky or lightning, and telegraphs are flat magenta outlines; A also loses the fight behind dark trunks and canopy (i11, i13, i15), while B keeps the spider framed throughout but the small player creature is barely visible."
+  },
+  "Pb": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-053: saturated cyan posts, rings and rails compete with the built landmarks": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-053: saturated cyan posts, rings and rails compete with the built landmarks": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The stone tower, sloping bridge and pale rock spires give a real landmark, but a flat grass foreground, a pink blob at the left frame edge and a saturated cyan post in the reverse view keep it below shipping finish."
+  },
+  "Nb": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The half-timbered cottages, stratified pale rock and warm lit windows at night are the closest to the boards, but the sky island read is weak (one cloud bank, no floating land in view), and the straight-cut cliff ledges keep it short of Palworld/Valheim finish."
+  },
+  "Yr": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "B's larger wrapped recipe text, gold ingredient counts and labelled Craft/Leave hints on a blue-grey translucent panel read at a glance like a shipping UI, although the hints still use small keyboard glyphs rather than controller-first prompts."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild the Cloudreach approach compositions (Zw, Up, Pb) so layered floating islands, stratified pale cliffs and rock-ledge shelves lead the route. Break the flat grass plains with groves, rock outcrops and elevation steps, and add atmospheric depth fog and cloud layers between the islands.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix Stormwood combat readability: pull the combat camera clear of trunks and canopy, add the purple storm sky and rim light so both fighters separate from the ground, and replace the flat magenta telegraph outlines with physical ground effects (cracks, dust, lightning).",
+   "kind": "scene"
+  },
+  {
+   "change": "Remodel the creature and island hero assets to the owner bar: a naturalistic serpent with real scale material, grounded faint poses and correct scale against the trainer, plus sculpted floating-island undersides in place of blunt slab and mushroom shapes.",
+   "kind": "new_art"
+  }
+ ]
+}

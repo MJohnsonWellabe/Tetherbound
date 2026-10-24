@@ -1,0 +1,86 @@
+{
+ "anchors": {
+  "f36_0_gap:C5B": [
+   4.3,
+   4.2,
+   5.0
+  ],
+  "f36_0_gap:C5A": [
+   4.0,
+   4.5,
+   4.0
+  ],
+  "f36_0_npc:C1A": [
+   6.8,
+   6.4,
+   6.5
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   6.4,
+   6.5
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.0,
+   3.5,
+   3.5
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.6,
+   4.3,
+   4.5
+  ],
+  "craft:before": [
+   4.5,
+   4.0,
+   4.0
+  ],
+  "craft:after": [
+   6.8,
+   6.3,
+   6.0
+  ]
+ },
+ "candidates": {
+  "F40 Cloudreach realm_gate_crag High|Medium | F40-realm_gate_crag-High": [
+   4.0,
+   3.8,
+   4.0
+  ],
+  "F40 Cloudreach realm_gate_crag High|Medium | F40-realm_gate_crag-Medium": [
+   4.0,
+   3.8,
+   4.0
+  ],
+  "F40 Cloudreach sky_shrine High|Medium | F40-sky_shrine-High": [
+   4.2,
+   3.6,
+   3.8
+  ],
+  "F40 Cloudreach sky_shrine High|Medium | F40-sky_shrine-Medium": [
+   4.2,
+   3.6,
+   3.8
+  ],
+  "F40 Cloudreach three_bells_bridge High|Medium | F40-three_bells_bridge-High": [
+   4.3,
+   4.2,
+   4.2
+  ],
+  "F40 Cloudreach three_bells_bridge High|Medium | F40-three_bells_bridge-Medium": [
+   4.3,
+   4.2,
+   4.2
+  ],
+  "F40 Cloudreach galefoot_waycamp High|Medium | F40-galefoot_waycamp-High": [
+   5.3,
+   5.4,
+   5.5
+  ],
+  "F40 Cloudreach galefoot_waycamp High|Medium | F40-galefoot_waycamp-Medium": [
+   5.3,
+   5.4,
+   5.5
+  ]
+ }
+}

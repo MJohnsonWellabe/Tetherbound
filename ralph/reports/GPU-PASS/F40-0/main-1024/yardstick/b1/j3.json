@@ -1,0 +1,180 @@
+{
+ "sets": {
+  "Zw": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A flat green lawn with a straight dirt stripe under a blunt brown overhang slab, with no floating land or sky depth, sinks it next to Palworld's layered landmark vistas."
+  },
+  "Ud": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's noisy black-gold mottling muddies the coiled silhouette, and B's strong banding reads well until its faint poses hover in mid-air above a detached shadow, so neither reaches the owner creature bar."
+  },
+  "Is": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, appealing elder villager with a readable face and eyes and a warm green-brown palette that suits the key art carries it, though the face is softer and more cartoon-like than the naturalistic creatures."
+  },
+  "Up": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-025: tall grass intrudes through the shrine paving, and repeated grass and simple stone surfaces reduce close-range material distinction": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-025: tall grass intrudes through the shrine paving, and repeated grass and simple stone surfaces reduce close-range material distinction": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "An empty, level grass plain with distant stacked-stone pillars and a shrine gate seen only in the reverse view gives no lived-in density or layered sky land."
+  },
+  "Ne": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky brown-black frames with no purple storm sky, flat magenta outline telegraphs, a near-invisible player creature and a heavy debug-like HUD sink it, and A also loses whole frames to foliage occlusion."
+  },
+  "Pb": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PRESENT",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-053: saturated cyan posts, rings and rails compete with the built landmarks": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PRESENT",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-053: saturated cyan posts, rings and rails compete with the built landmarks": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The stratified sea stacks and the ramped bridge give some sky-realm promise, but flat grass, a square dirt decal, a pink glow and a cyan post keep it at prototype finish."
+  },
+  "Nb": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The timbered village, lantern-lit night and golden grade come closest to the world, but the uniformly layered cliff blocks and missing floating-land vista keep it short of Palworld density and Valheim atmosphere."
+  },
+  "Yr": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "B's large wrapped recipe cards, gold ingredient counts and labelled Craft/Leave hints on a blue-grey translucent panel match a shipping game's UI, while A's tiny clipped text does not."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild the Cloudreach locations (Zw, Up, Pb, Nb) as layered floating land: break up the flat grass plains with elevated ledges, shelves and visible islands across a cloud void, and add atmospheric depth fog and a stronger sky grade.",
+   "kind": "scene"
+  },
+  {
+   "change": "Remodel island undersides and cliff shelves with organic tapering rock instead of blunt slabs and straight extruded strata, and add Sky Aviary-style built landmarks (bridges, towers, banners).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix combat and creature presentation: replace the magenta outline telegraphs with real-object effects, pull the Stormwood camera out of foliage under a purple storm sky with rim light on both fighters, and keep faint poses grounded.",
+   "kind": "scene"
+  }
+ ]
+}

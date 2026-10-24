@@ -1,0 +1,60 @@
+[
+    {
+        "label":  "F40 Cloudreach three_bells_bridge High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-three_bells_bridge-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-three_bells_bridge-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (three bells bridge) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route",
+                        "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges",
+                        "P2-053: saturated cyan posts, rings and rails compete with the built landmarks"
+                    ]
+    },
+    {
+        "label":  "F40 Cloudreach realm_gate_crag High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-realm_gate_crag-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-realm_gate_crag-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (realm gate crag) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route",
+                        "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges"
+                    ]
+    },
+    {
+        "label":  "F40 Cloudreach galefoot_waycamp High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-galefoot_waycamp-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-galefoot_waycamp-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (galefoot waycamp) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route",
+                        "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges"
+                    ]
+    },
+    {
+        "label":  "F40 Cloudreach sky_shrine High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-sky_shrine-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-sky_shrine-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (sky shrine) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route",
+                        "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges",
+                        "P2-025: tall grass intrudes through the shrine paving, and repeated grass and simple stone surfaces reduce close-range material distinction"
+                    ]
+    }
+]

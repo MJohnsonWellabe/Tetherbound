@@ -1,0 +1,49 @@
+[
+    {
+        "label":  "F40 Cloudreach old_wind_observatory High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-old_wind_observatory-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-old_wind_observatory-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (old wind observatory) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route",
+                        "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges",
+                        "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail"
+                    ]
+    },
+    {
+        "label":  "F40 Cloudreach windscar_beacon High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-windscar_beacon-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-windscar_beacon-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (windscar beacon) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route",
+                        "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges",
+                        "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail"
+                    ]
+    },
+    {
+        "label":  "F40 Cloudreach windscar_flight_aerie High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-windscar_flight_aerie-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-windscar_flight_aerie-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (windscar flight aerie) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route",
+                        "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges",
+                        "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail",
+                        "P2-053: saturated cyan posts, rings and rails compete with the built landmarks, and the launch platform adds a bright flat yellow pointer",
+                        "P2-049: disconnected black rail-like strips cross the grass and extend into open air above the void"
+                    ]
+    }
+]

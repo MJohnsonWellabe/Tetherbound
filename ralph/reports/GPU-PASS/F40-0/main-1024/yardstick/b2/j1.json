@@ -1,0 +1,182 @@
+{
+ "sets": {
+  "Dm": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-049: disconnected black rail-like strips cross the grass and extend into open air above the void": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-049: disconnected black rail-like strips cross the grass and extend into open air above the void": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A flat grass lawn with one tree, two banners and floating hedge cubes has no layered sky land, no landmark and no atmospheric depth, so it sank well below Palworld's density and Valheim's light."
+  },
+  "Vc": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths are distinct for each site (opened cage, freed captive, toppled banners, smoke column), but blurry, smeared ground textures, thin scatter and flat haze-free light keep both sides below Palworld finish."
+  },
+  "Wl": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL",
+     "P2-025: tall grass intrudes through paving, and repeated grass and simple stone surfaces reduce close-range material distinction": "PRESENT",
+     "P2-102: a yellow mushroom cluster hangs beyond the grassy rim with no ground beneath its stem": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL",
+     "P2-025: tall grass intrudes through paving, and repeated grass and simple stone surfaces reduce close-range material distinction": "PRESENT",
+     "P2-102: a yellow mushroom cluster hangs beyond the grassy rim with no ground beneath its stem": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The compass-pad shrine with its posts and perches gives the location an authored centre, but the flat grass plateau, the oversized cut-off 'Follow the path' tutorial text and the lack of cloud-layer depth sank it."
+  },
+  "Cq": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-022: the summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary, and its night silhouette stays dark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-022: the summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary, and its night silhouette stays dark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The domed landmark at the end of the path gives a clear goal, and its windows are lit at night, but it sits small on a flat lawn rather than on a layered sky sanctuary, and the island blocks in the reverse view are blunt."
+  },
+  "Oy": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gameplay and reverse views show a believable stone village (tower, arched doors, campfire, pale rock), but in all three approach frames the camera stares into a blank wall, and the plaza is a flat orange-brown slab."
+  },
+  "Fs": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame with a diagonal brace, a cap and a stone footing reads as built, but it is still a lone flat pale panel, and B is a blown-out white board; neither reaches Palworld's base-building finish."
+  },
+  "Al": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The villager has a clean, appealing face with readable eyes, a strong white-hair silhouette and an earthy green-brown costume that fits the Meadows palette, so he would sit comfortably in a Palworld-class game, though he is more cartoon than stylised-realism."
+  },
+  "Bp": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's naturalistic furred boar is on the owner's style bar, but it hovers above its shadow in the faint-mid and faint-end frames and its gold patches read muddy; A's smooth clay body with moss decals is off-style and toy-like."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild the Cloudreach plateaus (Dm, Wl, Cq, Oy) as layered, pale stratified stone shelves and terraces with sculpted, tapering island undersides and cloud layers below, instead of flat grass lawns on blunt slabs",
+   "kind": "new_art"
+  },
+  {
+   "change": "Clean up Cloudreach scene composition: move the Oy approach cameras off the blank wall, remove the floating hedge cubes and stray dark strips in Dm and the overhanging mushroom in Wl, group vegetation into groves and edges, and add distance haze and sky depth for each time of day",
+   "kind": "scene"
+  },
+  {
+   "change": "Raise ground-material fidelity and contrast in the Meadows (Vc smeared grass and dirt textures) and give placed walls a solid, textured infill with a distinct cap and footing (Fs)",
+   "kind": "scene"
+  }
+ ]
+}

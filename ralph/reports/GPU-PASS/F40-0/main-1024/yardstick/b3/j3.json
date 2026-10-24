@@ -1,0 +1,158 @@
+{
+ "sets": {
+  "Qf": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Cameras are boxed in by trunks and pillars over a grass carpet with loose benches and flat blue strips, so no sky realm, floating land or observatory landmark reads, and the light grade is generic."
+  },
+  "Yd": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's braced timber frame, plank cap and stone footing start to read as a built wall, but it is still a lone flat-infill panel beside a faceted grey placeholder rock, well short of Palworld base-building finish."
+  },
+  "Fa": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT",
+     "P2-053: saturated cyan posts, rings and rails compete with the built landmarks, and the launch platform adds a bright flat yellow pointer": "PARTIAL",
+     "P2-049: disconnected black rail-like strips cross the grass and extend into open air above the void": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT",
+     "P2-053: saturated cyan posts, rings and rails compete with the built landmarks, and the launch platform adds a bright flat yellow pointer": "PARTIAL",
+     "P2-049: disconnected black rail-like strips cross the grass and extend into open air above the void": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Golden and night grades do shift the mood, but every frame is one empty green slope and a single tree, with the cliffs and towers pushed into haze, so there is no aerie to see."
+  },
+  "Ff": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's after frames are site-specific (freed cage prisoner, dismantled camp, smoking ruin), but smeared low-res ground textures, a blocky tunnel wall and sparse props keep it below Palworld's lived-in finish; in B the oxblood banners stay up after the win on three sites, which weakens the aftermath."
+  },
+  "Dy": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, appealing elder villager with a strong face, readable eyes, a warm green and brown outfit and a clean silhouette that fits the key art's cozy settlement tone."
+  },
+  "Cs": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's spined, scale-patterned blue drake has a stronger surface and readable hit and faint poses, but both sides barely clear the 1.80 m ruler and look glossier and more toy-like than the furred naturalistic style bar; A's hit react matches its standing pose, its faint mid floats off its shadow, and its faint end shows a flat grey-brown belly."
+  },
+  "Az": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The beacon is a plain wooden arch with two flat banners in a level grass field, and the cliffs in the reverse view have straight extruded edges, so nothing reads as a pale-stone sky realm."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild the Cloudreach destinations (old wind observatory, flight aerie, beacon) as layered pale-stratified-stone shelves with visible floating islands, waterfalls and cloud sea in the midground, replacing the flat grass carpets and pushing cameras off tree trunks",
+   "kind": "scene"
+  },
+  {
+   "change": "Give each Cloudreach site a hero landmark mesh in the Sky Aviary language (stone towers, arches, dome or observatory, banners) instead of a lone wooden arch, benches or distant haze",
+   "kind": "new_art"
+  },
+  {
+   "change": "Raise ground and prop material quality (sharp grass and dirt textures, textured rocks instead of faceted grey blocks, real wall infill) and remove enemy banners in the after frames",
+   "kind": "scene"
+  }
+ ]
+}

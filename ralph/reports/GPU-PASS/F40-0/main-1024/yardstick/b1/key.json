@@ -1,0 +1,46 @@
+{
+ "Zw": {
+  "anchor": false,
+  "label": "F40 Cloudreach realm_gate_crag High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-realm_gate_crag-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-realm_gate_crag-Medium.png"
+ },
+ "Ud": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Is": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Up": {
+  "anchor": false,
+  "label": "F40 Cloudreach sky_shrine High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-sky_shrine-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-sky_shrine-Medium.png"
+ },
+ "Ne": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Pb": {
+  "anchor": false,
+  "label": "F40 Cloudreach three_bells_bridge High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-three_bells_bridge-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-three_bells_bridge-Medium.png"
+ },
+ "Nb": {
+  "anchor": false,
+  "label": "F40 Cloudreach galefoot_waycamp High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-galefoot_waycamp-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-galefoot_waycamp-Medium.png"
+ },
+ "Yr": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}

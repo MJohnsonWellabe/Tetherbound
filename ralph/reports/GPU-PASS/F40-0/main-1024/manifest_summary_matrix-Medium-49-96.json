@@ -1,0 +1,22 @@
+{
+ "captured_frame_count": 192,
+ "piece_number": 49,
+ "piece_last": 96,
+ "complete": false,
+ "f40_revision": "f40-sanctuary-and-route-masses-r1",
+ "candidate_preview": false,
+ "cliffhold_detail_candidate": true,
+ "biome_look_candidate": false,
+ "graphics_capture": {
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "graphics_config_sha256": "7ca8bd9cf38eb8a2bc8b1b94a88e014d50e84536d925daa9642b822b1bbf838b",
+  "preset": "Medium",
+  "renderer": "forward_plus",
+  "resolution": [
+   1920,
+   1080
+  ],
+  "source_commit": "24dfec7b93ab569fbab4b54df5900c34d3c1f091"
+ },
+ "failures": []
+}

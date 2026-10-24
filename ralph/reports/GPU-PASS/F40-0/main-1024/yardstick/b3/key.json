@@ -1,0 +1,40 @@
+{
+ "Qf": {
+  "anchor": false,
+  "label": "F40 Cloudreach old_wind_observatory High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-old_wind_observatory-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-old_wind_observatory-High.png"
+ },
+ "Yd": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Fa": {
+  "anchor": false,
+  "label": "F40 Cloudreach windscar_flight_aerie High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-windscar_flight_aerie-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-windscar_flight_aerie-Medium.png"
+ },
+ "Ff": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Dy": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Cs": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ },
+ "Az": {
+  "anchor": false,
+  "label": "F40 Cloudreach windscar_beacon High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-windscar_beacon-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-windscar_beacon-High.png"
+ }
+}

@@ -1,0 +1,59 @@
+# F40 Cloudreach matrix judging sides (local): one set per stand, High vs Medium on the same frame ids (up to 6 frames),
+# plus the F40 fight High vs Medium. Batches of 4 sets. Recorded defects: the F38#5 generic defects + Cloudreach world-visible catalog items.
+$o = "D:\tb-gpu-runs\out\F40"; $od = "D:\tb-gpu-runs\yard\f40\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out, [int] $cols = 3, [int] $tw = 420) {
+    $s = [ordered]@{ title = ""; cols = $cols; thumb_w = $tw; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_f40.json", ($s | ConvertTo-Json -Depth 5))
+    & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_f40.json" | Out-Null
+    return $out
+}
+$generic = @(
+    "Flat magenta slabs or rings on the ground",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+    "Floating bodies or props (a gap between an object and the ground under it)",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)")
+$world = @(
+    "P2-021: broad level grass fields and sparse ordinary trees dominate where layered elevated land and ledge detail should lead the route",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges")
+$standExtra = @{
+    "summit_eyrie" = @("P2-022: the summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary, and its night silhouette stays dark")
+    "windscar_beacon" = @("P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail")
+    "old_wind_observatory" = @("P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail")
+    "windscar_flight_aerie" = @("P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail", "P2-053: saturated cyan posts, rings and rails compete with the built landmarks, and the launch platform adds a bright flat yellow pointer", "P2-049: disconnected black rail-like strips cross the grass and extend into open air above the void")
+    "three_bells_bridge" = @("P2-053: saturated cyan posts, rings and rails compete with the built landmarks")
+    "stormward_overlook" = @("P2-049: disconnected black rail-like strips cross the grass and extend into open air above the void")
+    "the_high_perches" = @("P2-025: tall grass intrudes through paving, and repeated grass and simple stone surfaces reduce close-range material distinction", "P2-102: a yellow mushroom cluster hangs beyond the grassy rim with no ground beneath its stem")
+    "sky_shrine" = @("P2-025: tall grass intrudes through the shrine paving, and repeated grass and simple stone surfaces reduce close-range material distinction")
+}
+$prefer = @("approach__day__clear", "gameplay__day__clear", "approach__golden__clear", "approach__night__clear", "gameplay__day__rain", "reverse__day__clear", "detail__day__clear", "gameplay__golden__clear", "gameplay__night__clear", "gameplay__dawn__clear")
+function Frames($pr) { $h = @{}; Get-ChildItem $o -Directory -Filter "matrix-$pr-*" | ForEach-Object { Get-ChildItem "$($_.FullName)\frames" -Filter *.png } | ForEach-Object { $h[$_.BaseName] = $_.FullName }; return $h }
+$hi = Frames "High"; $me = Frames "Medium"
+$both = @($hi.Keys | Where-Object { $me.ContainsKey($_) })
+function StandOf($id) { ($id -split '__')[0..3] -join '__' }
+$stands = $both | ForEach-Object { StandOf $_ } | Sort-Object -Unique
+$sets = @(); $cover = @()
+foreach ($st in $stands) {
+    $short = ($st -split '__')[3]
+    $ids = @($both | Where-Object { (StandOf $_) -eq $st })
+    $pick = @(); foreach ($p in $prefer) { $id = "$st" + "__" + $p; if ($ids -contains $id) { $pick += $id }; if ($pick.Count -ge 6) { break } }
+    foreach ($id in ($ids | Sort-Object)) { if ($pick.Count -ge 6) { break }; if ($pick -notcontains $id) { $pick += $id } }
+    $caps = @($pick | ForEach-Object { ($_ -replace "^$st" + "__", '') -replace '__', ' ' })
+    $a = Side @($pick | ForEach-Object { $hi[$_] }) $caps "$od\F40-$short-High.png"
+    $b = Side @($pick | ForEach-Object { $me[$_] }) $caps "$od\F40-$short-Medium.png"
+    $def = @($generic) + $world; if ($standExtra.ContainsKey($short)) { $def += $standExtra[$short] }
+    $brief = "Fixed production-camera views of one Cloudreach location ($($short -replace '_', ' ')) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Cloudreach sky realm: a coherent place of layered floating land, readable landmarks and light that belongs to the world."
+    $sets += [ordered]@{ label = "F40 Cloudreach $short High|Medium"; a = $a; b = $b; brief = $brief; defects = $def }
+    $cover += [ordered]@{ stand = $st; frames_high = @($hi.Keys | Where-Object { (StandOf $_) -eq $st }).Count; frames_medium = @($me.Keys | Where-Object { (StandOf $_) -eq $st }).Count; judged = $pick }
+}
+$fh = "$o\fight-High\frames"; $fm = "$o\fight-Medium\frames"
+if ($env:F40_FIGHT -eq "1" -and (Test-Path $fh) -and (Test-Path $fm)) { $sets = @()
+    $fn = @(Get-ChildItem $fh -Filter *.png | Where-Object { Test-Path (Join-Path $fm $_.Name) } | Sort-Object Name | ForEach-Object Name)
+    if ($fn.Count -gt 18) { $step = [math]::Ceiling($fn.Count / 18); $fn = @(for ($i = 0; $i -lt $fn.Count; $i += $step) { $fn[$i] }) }
+    $a = Side @($fn | ForEach-Object { "$fh\$_" }) @($fn | ForEach-Object { $_ -replace '\.png$', '' }) "$od\F40-fight-High.png" 6 230
+    $b = Side @($fn | ForEach-Object { "$fm\$_" }) @($fn | ForEach-Object { $_ -replace '\.png$', '' }) "$od\F40-fight-Medium.png" 6 230
+    $sets += [ordered]@{ label = "F40 Cloudreach fight High|Medium"; a = $a; b = $b; brief = "A real Cloudreach trainer fight through the production camera with ordinary attack and dodge inputs, with telegraphed attacks. Does the fight read on screen - both fighters, telegraphs and impacts clearly visible - and does it look like an event that belongs to the sky realm?"
+        defects = @("Flat magenta slabs or rings on the ground", "P2-062: the oversized ally fills half the combat view and hides the opponent or player", "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits", "P2-016: hurt and moving frames keep the idle silhouette") }
+}
+$n = [int]("0" + $env:F40_BATCH0); for ($i = 0; $i -lt $sets.Count; $i += 4) { $n++; $chunk = $sets[$i..([math]::Min($i + 3, $sets.Count - 1))]; New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\f40\b$n" | Out-Null; [IO.File]::WriteAllText("D:\tb-gpu-runs\yard\f40\b$n\candidates.json", (ConvertTo-Json -InputObject @($chunk) -Depth 5)) }
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\f40\coverage.json", (ConvertTo-Json -InputObject $cover -Depth 5))
+"f40 sets: $($sets.Count) in $n batches; stands $($stands.Count); frames High $($hi.Count) Medium $($me.Count) both $($both.Count)"

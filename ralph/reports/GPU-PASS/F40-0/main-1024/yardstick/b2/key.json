@@ -1,0 +1,46 @@
+{
+ "Dm": {
+  "anchor": false,
+  "label": "F40 Cloudreach stormward_overlook High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-stormward_overlook-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-stormward_overlook-High.png"
+ },
+ "Vc": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Wl": {
+  "anchor": false,
+  "label": "F40 Cloudreach the_high_perches High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-the_high_perches-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-the_high_perches-High.png"
+ },
+ "Cq": {
+  "anchor": false,
+  "label": "F40 Cloudreach summit_eyrie High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-summit_eyrie-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-summit_eyrie-Medium.png"
+ },
+ "Oy": {
+  "anchor": false,
+  "label": "F40 Cloudreach cliffhold High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-cliffhold-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-cliffhold-Medium.png"
+ },
+ "Fs": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Al": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Bp": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ }
+}
