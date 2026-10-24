@@ -85,7 +85,7 @@ func tick(delta: float, speed: float, top_speed: float) -> void:
 	_hold = maxf(0.0, _hold - delta)
 	if _candidate_impact_pending():
 		return
-	if speed >= STILL_SPEED and _candidate_pose_active and _current == _resolve(HIT):
+	if speed >= STILL_SPEED and (_candidate_pose_active or _has_impact_window()) and _current == _resolve(HIT):
 		# Remote bodies follow a transform rather than calling request_move.
 		# They need the same release into gait after the visible impact sample.
 		_hold = 0.0
@@ -124,10 +124,10 @@ func play_once(role: String) -> void:
 		return
 	_clear_telegraph_attack()
 	_hold = _player.get_animation(clip).length
-	if clip.begins_with("f36_candidate/"):
+	if clip.begins_with("f36_candidate/") or (role == HIT and _has_impact_window()):
 		_current = ""
 	_play(role, false)
-	if role == HIT and clip.begins_with("f36_candidate/"):
+	if role == HIT and _has_impact_window():
 		# Damage can freeze animation immediately, then locomotion cancels the
 		# hold on the first resumed tick. Apply the authored impact sample now
 		# so hitstop shows the wince rather than the clip's neutral lead-in.
@@ -260,7 +260,7 @@ func cancel_hold() -> void:
 ## in the very same physics step as damage. After it, movement resumes gait.
 ## Animation position also respects hitstop without adding a gameplay timer.
 func _candidate_impact_pending() -> bool:
-	if _player == null or not _candidate_pose_active or _current != _resolve(HIT):
+	if _player == null or not (_candidate_pose_active or _has_impact_window()) or _current != _resolve(HIT):
 		return false
 	var start_phase := clampf(float(_clips.get("hit_start_phase", 0.0)), 0.0, 1.0)
 	var release_phase := clampf(float(_clips.get("hit_release_phase", start_phase)), start_phase, 1.0)
@@ -301,8 +301,15 @@ func _play(role: String, looping: bool, playback_speed: float = 1.0) -> void:
 	_player.speed_scale = playback_speed
 	# Blending the old candidate would reapply its unkeyed bones and pivot
 	# after restoration. The installed clip starts from the restored rig.
-	var impact_pose := role == HIT and clip.begins_with("f36_candidate/")
+	var impact_pose := role == HIT and (clip.begins_with("f36_candidate/") or _has_impact_window())
 	_player.play(clip, 0.0 if leaving_candidate or impact_pose else 0.15)
+
+
+## An installed recipe hit, or a remake's own held hit that names its window
+## (`hit_impact` in species.json): either starts at its impact sample and holds
+## it until the release phase, through hitstop and same-step movement.
+func _has_impact_window() -> bool:
+	return _clips.has("hit_start_phase")
 
 
 func _clear_telegraph_attack() -> void:
