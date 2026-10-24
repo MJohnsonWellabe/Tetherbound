@@ -70,3 +70,62 @@ The four batches this close put the Tidewake frames in front of twelve independe
 - **Clipping: nothing in geometry.** Two judges named "a prop clipped by the right frame edge" in the dock rows; that is the fixed camera's framing at the authored stand, not geometry through geometry.
 
 The honest state of the row: this is a scan of the look views, not of F39#5's full matrix, which depends on F39#3's matrix (now capturable under weather, still missing a real fight and the reverse/detail views). The scan on the 9-view matrix with the shipping look is capturing.
+
+## F39#1 / F39#2: exactly what remains (24 Oct, for the coordinator)
+
+F39#1 = every top-20 Tidewake item fixed on main with a before/after code-blind PASS. F39#2 = every other Tidewake item with impact > 12. None of the 39 below has a PASS on the current yardstick yet, so both rows remain open. Owner is by `fix_class` in the catalog; "Tidewake" marks the rows this lane can fix in the Tidewake scene.
+
+### F39#1, top 20
+
+| Item | Impact | Fix class | Owner | State this close |
+|---|---|---|---|---|
+| P2-008 shore landforms | 100 | scene | Tidewake | shore-ecology candidate OFF; judges keep naming even scatter and bare dunes |
+| P2-016 creature hurt and movement poses | 100 | animation | animation (creatures/fights) | needs_capture |
+| P2-002 map | 80 | ui | UI | open |
+| P2-030 shiny creature finish | 80 | material | shared-art / Tidewake | shared-art candidate OFF |
+| P2-033 ground pickup identity | 80 | mesh | shared-art / Meshy | open |
+| P2-010 Veilfall silhouette | 80 | scene | Tidewake | Veilfall: the weakest frame in every batch, new_art from six judges; Meshy 7-8 requested |
+| P2-011 named destination read | 80 | scene | Tidewake | parked 6.13/6.28 (close-1022) |
+| P2-071 surface swimming trainer pose | 80 | animation | animation (creatures/fights) | animation candidate OFF |
+| P2-028 creature faint state | 64 | animation | animation (creatures/fights) | needs_capture |
+| P2-089 fight actor composition | 64 | camera | camera | deferred |
+| P2-108 Aquaryn mounted-water pose | 64 | animation | animation (creatures/fights) | open |
+| P2-113 catch camera distance | 64 | camera | camera | deferred |
+| P2-119 Fly carrier grip pose | 64 | animation | animation (creatures/fights) | open |
+| P2-001 menu shell | 60 | ui | UI | open |
+| P2-007 secondary menu panels | 60 | ui | UI | open |
+| P2-055 named character silhouettes | 60 | mesh | shared-art / Meshy | shared-art candidate OFF |
+| P2-009 water and island depth | 60 | scene | Tidewake | shelf stop 5.90 = control (w1); grade ON 7.07 is the look, not this row |
+| P2-063 shared fight tell and hit effects | 60 | animation | animation (creatures/fights) | open |
+| P2-060 catch effect finish | 48 | material | shared-art / Tidewake | open |
+| P2-101 Riverdrake fight ground contact | 48 | animation | animation (creatures/fights) | open |
+
+### F39#2, the rest with impact > 12
+
+| Item | Impact | Fix class | Owner | State this close |
+|---|---|---|---|---|
+| P2-069 flight and landing pose read | 48 | animation | animation (creatures/fights) | deferred |
+| P2-115 authored camp creature bed silhouette | 48 | mesh | Tidewake | camp bed sailcloth ON since close-1022, unjudged on the current yardstick |
+| P2-116 authored camp workbench identity | 48 | scene | Tidewake | needs_capture |
+| P2-004 exploration HUD | 45 | ui | UI | open |
+| P2-072 swimmer water contact | 45 | material | Tidewake | candidate_off |
+| P2-045 candy pickup tiers | 36 | material | shared-art / Tidewake | open |
+| P2-088 fight team roster contrast | 36 | ui | UI | candidate_off |
+| P2-090 fight background creature ground contact | 36 | scene | Tidewake | needs_capture |
+| P2-026 Veilfall approach shallows | 36 | scene | Tidewake | shoal reshape OFF: gameplay terrain, needs route/swim/heightfield tests and a rebake |
+| P2-031 settings and binding instructions | 36 | ui | UI | open |
+| P2-066 live current streaks | 36 | material | Tidewake | PARKED with F13#5 at 6.20 |
+| P2-067 current restoration environment | 36 | scene | Tidewake | needs_capture |
+| P2-073 dialogue camera framing | 36 | camera | camera | needs_capture |
+| P2-103 named fight victory hierarchy | 36 | ui | UI | candidate_off |
+| P2-109 Aquaryn dismount camera obstruction | 36 | camera | camera | needs_capture |
+| P2-114 catch chance HUD contrast | 36 | ui | UI | candidate_off |
+| P2-032 map active region | 27 | ui | UI | fixed |
+| P2-061 catch result hierarchy | 27 | ui | UI | open |
+| P2-075 dialogue foreground obstruction | 27 | camera | camera | needs_capture |
+| P2-029 creature rest poses | 27 | animation | animation (creatures/fights) | candidate_off |
+| P2-091 fight boss title overlay | 24 | ui | UI | open |
+| P2-057 grass around named characters | 24 | scene | Tidewake | candidate_off |
+| P2-074 dialogue speaker visibility | 18 | camera | camera | needs_capture |
+
+**Count:** 20 top-20 + 23 impact>12 = 43 items; 12 are Tidewake-scene rows this lane can fix, the other 31 belong to the animation, UI, camera and shared-art lanes. Neither row can close until those lanes land PASSes on the same items.
