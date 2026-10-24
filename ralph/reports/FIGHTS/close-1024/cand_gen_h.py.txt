@@ -21,3 +21,12 @@ for a, b in [('"fill_alpha": 0.21,', '"fill_alpha": 0.0,'), ('"rim_alpha": 0.85,
     s = s.replace(a, b)
 json.loads(s); open(p, 'w').write(s)
 print('candidate H applied')
+# Fight camera fallback limit (GPU F39 Venn: a beat-long pop ~37 m out onto a cliff top).
+p = 'data/config/camera.json'; s = open(p).read()
+if '"fallback_max_steps": -1' in s:
+    s = s.replace('"fallback_max_steps": -1', '"fallback_max_steps": 2')
+else:
+    a = '"screen_tilt_deg": 0.0,'; assert s.count(a) == 1
+    s = s.replace(a, a + ' "fallback_max_steps": 2,')
+json.loads(s); open(p, 'w').write(s)
+print('fight camera fallback limit applied')
