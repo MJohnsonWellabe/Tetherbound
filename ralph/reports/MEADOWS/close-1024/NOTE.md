@@ -21,6 +21,16 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
     - net `f48_coop_loop`: ALL CHECKS PASSED (507).
   - A GPU pass must confirm 7.5.
 
+- 2026-10-24 06:30 CT STATUS (replies to your 00:54 and 01:41 messages; send_message from this lane is still refused):
+  - Review nits are done on tb/meadows (03a27a528).
+    - The `daylight_windows._scope` now names all four sources. The east sources sit at x=+6.75 in the wall bays between the east arches, below the upper window row visible in the r9 nave-arches-right frame. Aperture alignment is not measured.
+    - The `crossing_hall_great_hall.gd` header now says ON and that only `collider_radius_m` pieces (the shrine altar, r 1.3 at (12, 0.37, 5.6)) collide.
+    - `smoke_crossing_hall_circuit` covers the shrine: it reached the shrine doorway and all 8 pedestals with the altar collider live (PASS).
+  - Texture policy was applied to the three meadows Meshy heroes: PASS (837).
+  - F04#6 r30 (the three Meshy heroes, OFF) maps 6.20 against 5.99. Field +0.93 and Ridge +0.34; Riverwatch −0.26 ("a hut appears after the win"). r31 (hut in both states, banner down; Dell spilled crates and banner) is with the judges now.
+  - F38#1 P2-059/060 catch: r1 6.42 vs 6.08, r2 5.28 vs 5.39. Parked at r1, OFF.
+  - F38#1 P2-087: the speaker-frame candidate is a no-op on the real path (5.57 vs 5.41), OFF. Gauntlet `*_defeated` lines are talk-to lines, not auto-played.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
