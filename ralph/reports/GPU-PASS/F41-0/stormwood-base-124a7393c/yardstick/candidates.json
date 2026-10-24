@@ -1,0 +1,15 @@
+[
+    {
+        "label":  "SW base named fights High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\sw\\sides\\SW-fight-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\sw\\sides\\SW-fight-Medium.png",
+        "brief":  "Two named wild-creature fights in the Stormwood storm forest (capacitor alpha, glass-field alpha) through the production camera: before, one-second interval frames (iNN), telegraphed attacks (tell start, strike, impact) and after. Does the fight read on screen - both fighters (the large wild creature and the player\u0027s smaller creature) and the telegraphs and impacts clearly visible, without trunks, canopy or foliage blocking or washing out the view - and does it look like an event that belongs to the storm forest?",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits",
+                        "P2-016: hurt and moving frames keep the idle silhouette",
+                        "P2-004: the many dark boxed HUD panels occupy a large share of the view"
+                    ]
+    }
+]

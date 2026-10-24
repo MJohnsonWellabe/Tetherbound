@@ -1,0 +1,100 @@
+{
+ "sets": {
+  "Nu": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's braced timber frame, stone footing and cap read as built, but the wall is still a thin single-bay panel with flat beige infill standing alone on flat-lit grass, nowhere near Palworld-05's lived-in base."
+  },
+  "Mz": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Both have a strong boar silhouette and plated naturalistic hide at the owner-bar scale, but the dark, low-rim-light material crushes the faint frames into a black mass; A's ember cracks give the identity and value lift that B's brown plates lack."
+  },
+  "Xq": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's large type and icon-led Craft/Leave prompts read at a glance on the blue-grey panel, but neither side has teal/gold hierarchy or a prominent controller prompt, and B's tiny truncated text and footnote-sized hints sink it."
+  },
+  "Lr": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, clearly identified elder villager with readable eyes and a meadow-green palette that fits the key art's people; the stylised face sits at a shipping-game finish, held back only by a plain silhouette."
+  },
+  "Oq": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits": "PARTIAL",
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT",
+     "P2-004: the many dark boxed HUD panels occupy a large share of the view": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits": "PARTIAL",
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT",
+     "P2-004: the many dark boxed HUD panels occupy a large share of the view": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The copper-and-glass alpha pops, but the player's creature is lost in a dark uniform moss carpet, dark boxed HUD panels frame every shot, and the purple storm sky shows only in the after frames, so it reads nothing like Palworld-01's boss fight."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Cut and consolidate the Stormwood combat HUD (fewer, smaller translucent panels), lift the player's creature with rim light and value contrast against the moss, and keep the fixed purple storm sky and white-violet lightning in frame during fights",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the homestead wall as a thick, multi-bay timber-and-stone piece with depth, textured plank/wattle infill and a proper footing and cap",
+   "kind": "new_art"
+  },
+  {
+   "change": "Adopt Xq A's type scale everywhere and make the craft action a teal controller-button prompt with gold progression accents; scroll the recipe list instead of clipping it",
+   "kind": "scene"
+  }
+ ]
+}

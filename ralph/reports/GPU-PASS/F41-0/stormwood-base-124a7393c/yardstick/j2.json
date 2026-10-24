@@ -1,0 +1,100 @@
+{
+ "sets": {
+  "Nu": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's timber frame, cap and stone footing help, but the untextured flat infill, the faceted grey placeholder boulder and the flat midday light keep it well short of Palworld's base-building finish."
+  },
+  "Mz": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated boar's model and scale hold up next to the owner bar, but the near-black materials (especially B), the hit react that looks the same as standing, and a faint end that crushes to an unreadable black mass sink it."
+  },
+  "Xq": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-grey translucent panel matches the direction, but it has no teal interaction accent or controller-first prompt bar, and it sits over a murky, flat-lit rain scene that has none of Palworld's clarity."
+  },
+  "Lr": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder with readable eyes, a clear silhouette and a natural green-brown palette matches the finish of Palworld's humans, though the neutral stage gives no lighting or atmosphere test."
+  },
+  "Oq": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits": "PRESENT",
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT",
+     "P2-004: the many dark boxed HUD panels occupy a large share of the view": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits": "PARTIAL",
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT",
+     "P2-004: the many dark boxed HUD panels occupy a large share of the view": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The copper-gold alpha does pop, but a uniform dark moss carpet, a purple storm sky seen only in the after frames, a player creature you cannot find, frozen poses and a frame boxed in by dark HUD panels look nothing like Palworld's readable boss fights."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Reframe Stormwood fights: collapse or shrink the dark boxed HUD panels, pull the camera back so it clears the alpha and the trunks, keep the player's creature in frame with a rim light, and break the uniform moss carpet into a lit clearing under the purple storm sky",
+   "kind": "scene"
+  },
+  {
+   "change": "Give the wild alphas real hurt, move and strike poses plus physical telegraph and impact effects (white-violet lightning arcs, ground cracks, glass shards) so fights read without text",
+   "kind": "new_art"
+  },
+  {
+   "change": "Rebuild the homestead wall as a thick timber-framed panel with textured wattle or plaster infill, a shadowed overhanging cap and a grounded stone footing, and replace the faceted placeholder boulder beside it",
+   "kind": "new_art"
+  }
+ ]
+}

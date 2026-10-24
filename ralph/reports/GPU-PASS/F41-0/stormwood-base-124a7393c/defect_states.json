@@ -1,0 +1,36 @@
+{
+ "SW base named fights High|Medium": {
+  "Flat magenta slabs or rings on the ground": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  },
+  "Clipping": {
+   "state": "PRESENT",
+   "votes": {
+    "PARTIAL": 2,
+    "PRESENT": 4
+   }
+  },
+  "P2-063": {
+   "state": "PARTIAL",
+   "votes": {
+    "PARTIAL": 4,
+    "PRESENT": 2
+   }
+  },
+  "P2-016": {
+   "state": "PRESENT",
+   "votes": {
+    "PRESENT": 6
+   }
+  },
+  "P2-004": {
+   "state": "PRESENT",
+   "votes": {
+    "PRESENT": 6
+   }
+  }
+ }
+}

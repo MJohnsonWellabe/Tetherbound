@@ -1,0 +1,100 @@
+{
+ "sets": {
+  "Nu": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's braced timber frame, cap and stone footing help, but flat untextured infill, a lone panel and a low-poly rock on flat grass keep it below Palworld's base-building finish."
+  },
+  "Mz": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Plate and fur detail is close to naturalistic, but dark muddy values, no rim light, a detached faint-mid shadow and a black faint-end blob keep it under the owner's creature bar."
+  },
+  "Xq": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The deep blue-grey translucent panel fits the direction, but there is no teal interaction accent, the prompts are keyboard-style, and the panel sits over a dim murky scene, so it looks functional rather than shipped."
+  },
+  "Lr": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The appealing, well-finished elder face and Meadows olive-brown palette would sit in a shipping game, though it is only shown on a dark stage, not in world light."
+  },
+  "Oq": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits": "PRESENT",
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT",
+     "P2-004: the many dark boxed HUD panels occupy a large share of the view": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits": "PARTIAL",
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT",
+     "P2-004: the many dark boxed HUD panels occupy a large share of the view": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Dark boxed HUD panels fill a third of the view, the player's creature is lost against a uniform foliage carpet, and the alpha never changes pose, so it reads nothing like Palworld's boss fights despite B's occasional white-violet lightning."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Pull the Stormwood combat camera back and up, collapse the boxed HUD panels, and rim-light or outline the player's creature so both fighters read",
+   "kind": "scene"
+  },
+  {
+   "change": "Author real tell, hurt and move animations plus lightning or shard impact effects for the wild alphas",
+   "kind": "new_art"
+  },
+  {
+   "change": "Crafting panel: combine A's type size with B's list density, use controller-first prompts with a teal interaction accent, and never clip recipe text",
+   "kind": "scene"
+  }
+ ]
+}
