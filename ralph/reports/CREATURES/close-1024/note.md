@@ -3,6 +3,11 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct READY tb/creatures-land 34a27dd59 (P2-016 hurt poses in real fights; `close-1024/p2016/verdict.md`).
+  - Remakes' own held hit clips now start at the wince and hold it through hitstop and movement, like recipes.
+  - Tests: 62, 0 failed. On a CPU real-fight capture the wince shows after the fix and not before.
+  - GPU check: `godot --path . --script res://tools/capture_f38_fight.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=32 --interval=0.15 --attack --dodge --tell-frames --out=res://.artifacts/gpu-p2016/<preset>`. Use 0.15 rather than 0.5: at 0.5 s the 0.25 s wince falls between frames.
+  - Also seen: the tan hit-spark disc covers the struck creature on the impact frame. That is effects work for whoever owns P2-062/063.
 - 24 Oct MESHY (answer on the Terrapup dog's proportions): the mesh itself is elongated. Our fit, rig and stance do not stretch it, so please regenerate from the side-view concept with explicit proportions.
   - Raw Meshy GLB `assets_raw/naturalistic-1024/terrapup_dog2/terrapup_dog2.glb`: 1.14 tall by 1.89 long (1.66:1).
   - In game (`candidate_dog2`): 3.20 by 5.31 (1.66:1). The scale is uniform, there is no footprint shrink, and the idle stance does not lower it.
