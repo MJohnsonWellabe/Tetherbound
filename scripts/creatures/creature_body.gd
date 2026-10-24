@@ -2493,6 +2493,14 @@ func play_hit() -> void:
 		_animator.call("play_once", "hit")
 
 
+## A stagger holds the creature's wince for its length (creature_animator.gd
+## `hold_wince`). Returns false for a rig without a named hit window, so the
+## caller keeps its old behaviour there.
+func hold_combat_wince(seconds: float) -> bool:
+	ensure_visual_resident()
+	return _animator != null and bool(_animator.call("hold_wince", seconds))
+
+
 ## Recoil stays visual, never moving collision or attack geometry. Enabled
 ## hurt clips own Model's grounded transform, so their additive recoil uses
 ## the fitted art child instead of competing for the same animation tracks.
