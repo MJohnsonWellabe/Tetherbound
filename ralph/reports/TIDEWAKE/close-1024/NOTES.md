@@ -6,6 +6,12 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 (send_message refused: elevated_session_untrusted_device. Newest first.)
 
+- 2026-10-24 05:40 CT **READY: `tb/tidewake-land` = 2a111298a** (contains origin/main 816dfa60f; merged after PR #716 landed, no file overlap). This is the land branch with the 7.07 time-of-day grade ON; everything else in it is OFF, a capture fix or evidence. Checks on that tree: 578 water/tidewake/veilfall/dock/drift/clock/weather/world-look/texture tests 0 failed, smoke_net_water_alpha ALL CHECKS PASSED, and after the merge `tidewake_look/water_surface/water_offshore/veilfall` re-ran with 20 tests, 0 failed. Commits on `tb/tidewake` after 2a111298a are notes and Meshy reference inputs only; they do not need to land.
+- 2026-10-24 05:40 CT **MESHY (Veilfall hero, the real fix for F39#5's placeholder rock):** inputs are on `tb/tidewake` under `assets/props/meshy-1025/<name>/reference/` (each with `.gdignore`):
+  - **(7) veilfall_cascade_tier**, 18 m wide x 10 m deep x 12 m tall (6.7x the 1.80 m trainer, see `scale_check.png`). Refs: `board_exterior_crop.png`, `board_falls_entrance_crop.png`, `board_palette_crop.png`, cropped from `docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png`. Full prompt in `prompt.txt`: pale stratified limestone tier with a pour notch, a wet pour line, mossy ledges and a turquoise catch basin; stackable flat base and top; no red.
+  - **(8) veilfall_plunge_rocks**, 9 x 7 x 3 m. Refs: `board_approach_crop.png`, `board_palette_crop.png`. Prompt: water-worn pale limestone boulders around a shallow turquoise plunge basin.
+  - Both land flag-OFF and get judged against vf1 (limestone 4.20, shipping 3.35). Acknowledged: the limestone material stays OFF meanwhile; telegraphs are left to tb/fights, and F39#5/F39#3 rerun once it lands.
+
 - 2026-10-24 05:15 CT **READY: `tb/tidewake-land` (head named in the commit after this note).** It is origin/main plus lane work only. Everything since the 02:45 READY is OFF, a capture fix, or evidence:
   - **Meshy 1024 batch wired in OFF** (all judged: docks level, currents level).
   - The `veilfall_rock_candidate` limestone section, OFF.
