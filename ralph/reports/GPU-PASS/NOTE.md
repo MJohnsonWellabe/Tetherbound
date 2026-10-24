@@ -55,7 +55,9 @@ Each row is CPU-provisional until this pass. Capture at Medium and High, judge w
 1. **F17#6 Crossing Hall r9** (main 816dfa60f; control 5f1f388cc): `tools/visual_judge/capture_camera_set.gd --set=res://tools/visual_judge/camera_sets/F17-6.json` (15 views). CPU was 6.84 vs 5.82 (`ralph/reports/MEADOWS/close-1024/F17-6.md`).
 2. **F36#0 naturalistic creatures** (main after the Creatures landing): `capture_f36_poses.gd --whole-body --context --species=terrapup,bramblebun,mudsnout,trailpup,paddlenewt,burrowback,veridian,mosshell,nightburrow,stormtrail,riftfrill` (no `--candidate`), plus Mosshell's water form. CPU: Bramblebun 7.57, Trailpup 7.49, Mudsnout 7.40, Mosshell 7.31 (water 7.19), Burrowback 7.23, Paddlenewt 6.88, Veridian 6.82 (`ralph/reports/CREATURES/close-1024/`). Terrapup ships at 3.20 m (owner: "Just shrink it"; judged 7.62 at 3.85 m, re-judge at 3.20 m). Nightburrow, Stormtrail and Riftfrill wear their bases' remake meshes (unjudged on them). Riverdrake stays OFF.
 3. **F36#1 held shove hit** (same commit): `capture_f36_poses.gd --candidate --whole-body --context` for the species in `f36_pose_candidates.json` `enabled_species` plus the profiles whose `_why_close1024*` lines record a score (b2-b4, b8-b9). CPU above shipping; the sub-6.7 set is recorded in `_why_close1024_below_bar`.
-4. **Later landings tonight** (Tidewake, Stormwood, Meadows rows): each lane note's READY line names its camera set; the coordinator adds them here when they land.
+4. **Tidewake time-of-day regrade** (main after the Tidewake landing): the `tools/visual_judge/camera_sets/F39-look.json` look views at golden/night (`ralph/reports/TIDEWAKE/close-1024/lt2/`). CPU 7.07 vs 5.84.
+5. **Re-check F39#4** (board says met on 7 Oct): its close-up half maps to 3.35 on today's CPU yardstick (`ralph/reports/TIDEWAKE/close-1024/vf1/`). Confirm or reopen on GPU.
+6. **Later landings tonight** (Tidewake, Stormwood, Meadows rows): each lane note's READY line names its camera set; the coordinator adds them here when they land.
 
 **Rules this lane ran under:**
 - Push only tb/gpu-pass.

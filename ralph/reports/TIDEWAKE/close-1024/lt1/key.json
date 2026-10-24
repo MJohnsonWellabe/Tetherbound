@@ -1,0 +1,28 @@
+{
+ "Mq": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Mk": {
+  "anchor": true,
+  "A": "f36_0_npc:C3B",
+  "B": "f36_0_npc:C3A"
+ },
+ "Xn": {
+  "anchor": false,
+  "label": "F39 look: lighting candidate",
+  "A": "control (main 5f1f388cc, shipping look)",
+  "B": "lighting candidate r1 (3d4fce01d)"
+ },
+ "Ry": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ },
+ "Ub": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ }
+}
