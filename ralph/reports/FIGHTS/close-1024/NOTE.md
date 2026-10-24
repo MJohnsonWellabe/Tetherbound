@@ -1,6 +1,13 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-24 06:45 CT INFO F22#4 Riverwatch CPU re-judge on current main (77447cf25 + tb/fights): mapped **6.89**, CPU-provisional (6.7 or above; 7.5 still needs the GPU).
+  - Batch: confirming (top anchor f36_0_npc C1 7.53), linear fit slope 1.81, r 0.98, RMSE 0.33, not above the top anchor, no warnings.
+  - Main before #722 (88398238a): 6.71. Raw now 6.4/6.3/6.6 vs before 6.3/6.1/6.6.
+  - Renderer-aware boss aura: already on main from 22 Oct (`aura_renderer_scale`: Compatibility 1/1; Forward+ and Mobile rim x0.3, no omni light; test_enemy_pattern_telegraph). That is the GHOST.md fix, so there was nothing new to ship. The GPU Medium re-judge is the open step.
+  - Judges' remaining asks: a real water volume (spray column or wave, foam and an impact splash) instead of the glassy wedge; the HUD covering the lower third.
+  - Capture: `tools/art_pipeline/capture_named_fight.gd --trainer=captain_riverwatch --live-member=captain_riverwatch:4 --ally=ripplet --frames=12 --interval=0.5 --tell-frames`. Frames t01-mid, t02-mid, 04, 08.
+  - Files: rw_{batch,key,spec,calibrate}.json.
 - 2026-10-24 05:30 CT READY tb/fights-land 47eea37f4 (origin/main 77447cf25 + this lane): your review items 1, 3 and 4. No config change, so what ships ON is unchanged from #722.
   1. r3 re-judge of the shipped #b16cff (3 fresh judges, mapped, CPU):
      - Meadows 6.44 vs main-before 5.80; Tidewake 6.39 vs 5.53; Cloudreach 6.28 vs 5.91 (first judged).
