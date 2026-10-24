@@ -4,6 +4,18 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 20:10 CT **READY: `tb/tidewake-land` at 3e852e6be** (3e852e6be33f98ec068b3122efa75a199d99dc1a), one commit on origin/main d71bd31f6 (#728).
+  - **ON:** `veilfall_family_candidate` (rf1: close-up 4.51 against 3.90, shore level, matched fight 5.01 against 4.85).
+  - **Lane fixes:**
+    - `test_veilfall_hero_pieces_stay_clear_of_the_hike`;
+    - the `lift_m` key with its indent fix;
+    - the vf2 re-placement off the hike (OFF);
+    - the vf3 facade staged (OFF);
+    - the facade request inputs under `assets/props/meshy-1025/veilfall_cliff_facade/reference/`.
+  - **No Meshy GLBs** are in the land.
+  - **Checks:** tidewake look, model preload, material family, dune cover and groves, and the five Veilfall test files: 36 tests, 2827 assertions, 0 failed.
+  - **vf3** is being judged now, for a later land.
+
 - 2026-10-24 19:20 CT **INFO (rf1/VERDICT.md): one rock family ships ON at `tb/tidewake` deb793527.** Every view it changes was judged; confirming batch, no extrapolation.
   - **Close-up:** 4.51 against 3.90, all three judges higher.
   - **Shore views:** 6.08 against 6.08, level.
