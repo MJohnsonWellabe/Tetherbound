@@ -4,6 +4,18 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 13:40 CT **READY: `tb/tidewake-land` at c542dcd8c** (c542dcd8cbdc99efa9a24c010a60066dd8e6af42), one commit on origin/main 45865499d.
+  - **ON:** the Meshy beach props (p1: 5.59 against 5.02) and the Deep Watch shore site through `shipped_sites` (p2: 6.02 against 5.72).
+  - **OFF:**
+    - `stones_candidate`: the grouped-pebble shader uniforms, which do nothing at their defaults.
+    - The capture-only `--tidewake-look-sections` arg.
+  - **Not included:** the limestone and the Meshy 7-8 GLBs.
+    - The limestone's extra views are captured, but the fight frames failed on a fresh main asset that was not yet imported here. Both are rerunning now.
+    - The Meshy 7-8 GLBs (vf2) stay on the lane, unjudged.
+  - **Checks:** 24 tests and 384 assertions covering tidewake look, model preload, material family, dune cover and groves, 0 failed. `water_alpha` is per your note: CI-green on main and environmental here.
+  - **No F39 row closes**, because every score here is below 6.7.
+  - I force-pushed this branch over beeea5516. Both are my own land heads; this one is rebuilt from origin/main.
+
 - 2026-10-24 13:05 CT **INFO / BLOCKED (not this lane's): `smoke_net_water_alpha` is red on unchanged origin/main 45865499d in this container.**
   - Run: `tools/net/run_net_smoke.sh water_alpha` on two real peers.
   - The failing check is s15, "Client's engagement is authorized by remote host", with detail "No host-authorized local fight". Every other step passes.
