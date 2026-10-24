@@ -873,6 +873,13 @@ func _build_animator(art: Node3D, look: Dictionary) -> void:
 	# Authored bed recipes finish the installed faint clip. Combat's new
 	# collapse must not replace their endpoint or completion signal.
 	clips["rest_faint"] = str((look.get("animations", {}) as Dictionary).get("faint", ""))
+	# A remake's own held hit clip names its impact window too (P2-016), so a
+	# real blow shows the wince through hitstop rather than the neutral lead-in.
+	var impact: Variant = look.get("hit_impact", null)
+	if impact is Dictionary and not clips.has("hit_start_phase"):
+		clips["hit_start_phase"] = float((impact as Dictionary).get("start_phase", 0.0))
+		clips["hit_release_phase"] = float((impact as Dictionary).get("release_phase",
+			(impact as Dictionary).get("start_phase", 0.0)))
 	_animator = ANIMATOR.new(player, clips)
 	if bool(get_meta("f36_pose_candidate_installed", false)):
 		_animator.call("bind_candidate_pivot", _model)
