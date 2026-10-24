@@ -3,6 +3,16 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct GPU READY (owner tiers, "lowest up to 6 first"): one batched GPU baseline for every F36 subject without an F36 (1) GPU score, on tb/creatures-land 1e83cafa0.
+  - That commit is main 124a7393c plus the two F36 stage commits (no swim row for non-swimmers; carried row only for fly carriers; rough water with the ruler on the waterline). On plain main, land species get a floating carried frame or a swim slab, which docked every judged set.
+  - It is 55 subjects. Recipe species ship their f36 recipe, so they need `--candidate` to capture the shipping state:
+    - Recipe ON (36): `godot --path . --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=abyssal_guardian,aeriex,ashtusk,brooktail,cannonback,cragclaw,fulgocobra,galewisp,glimmermoth,mangrove_monitor,mirejaw,mosshock,ribbonray,riptusk,riverdrake,shadelet,sirenseal,skyrill,sparkit,staticub,stormbrush,stormursa,tempestwing,torrentoad,tuskroot,voltarach,water_abyssal_guardian,water_aquaryn,water_cragclaw,water_mangrove_monitor,water_mirejaw,water_riptusk,water_riverdrake,water_sirenseal,water_tidecoil,water_torrentoad --whole-body --context --candidate --out=res://.artifacts/gpu-baseline-1024/cand/<preset>`
+    - Own or installed clips (19): `godot --path . --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=bramblebun,burrowback,cindercub,duskhush,meadowhart,mosshell,mudsnout,nightburrow,paddlenewt,pipwing,reedwing,riftfrill,ripplet,stormtrail,terrapup,trailpup,veridian,water_cannonback,water_mosshell --whole-body --context --out=res://.artifacts/gpu-baseline-1024/plain/<preset>`
+  - Excluded, because they already have an F36 (1) GPU score (tb/gpu-pass F36-1/main-1024): aquaryn, breezetail, cliffspike, cloudfang, craghorn, frostclaw, galecrest, pebbik, solmane, stormcapra, stormraven, tanglevolt, thundertunnel, tidecoil, voltwig.
+    - Lowest there: stormraven's recipe 5.81, but it is OFF and shipping is 6.09. Galecrest's recipe 6.62 is also OFF.
+  - F36 (0) model rows with no GPU score are inside these lists: Galewisp, Cannonback, Ashtusk. Cloudfang already has its F36 (1) score.
+  - Known sub-6 on GPU: Mudsnout 5.88 and Trailpup 5.73, both on the old stage. The fixed stage alone maps them 7.73 on CPU (b26), and their H candidates are queued (47d097879).
+  - Parked per the tier rule: Mosshell and Aquaryn near-bar polish.
 - 24 Oct GPU READY on tb/creatures 30a52c7de: Grandpa eyes (F36#0 Grandpa sub-row; `close-1024/b28/judges.md`).
   - Change: the same installed head, mesh, rig and UVs; only the bead eyes in the face albedo are repainted, with a pupil, hazel iris, limbal ring and catch-light. No new face generation.
   - CPU (confirming batch, C1 excluded): eyes 6.87 against installed lod0 6.27.
