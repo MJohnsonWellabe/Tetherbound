@@ -1,0 +1,73 @@
+{
+ "G warden_aldis f17-32 Medium cand|ship": {
+  "P2-016": {
+   "state": "PRESENT",
+   "votes": {
+    "PARTIAL": 3,
+    "PRESENT": 3
+   }
+  }
+ },
+ "G warden_aldis f1-16 Medium cand|ship": {
+  "P2-016": {
+   "state": "PARTIAL",
+   "votes": {
+    "PARTIAL": 4,
+    "PRESENT": 2
+   }
+  }
+ },
+ "G south_bridge_grunt f1-16 Medium cand|ship": {
+  "P2-016": {
+   "state": "PARTIAL",
+   "votes": {
+    "PARTIAL": 4,
+    "PRESENT": 2
+   }
+  }
+ },
+ "G south_bridge_grunt f17-32 Medium cand|ship": {
+  "P2-016": {
+   "state": "PARTIAL",
+   "votes": {
+    "PARTIAL": 6
+   }
+  }
+ },
+ "G warden_aldis f1-16 High cand|ship": {
+  "P2-016": {
+   "state": "PRESENT",
+   "votes": {
+    "PRESENT": 3,
+    "PARTIAL": 3
+   }
+  }
+ },
+ "G warden_aldis f17-32 High cand|ship": {
+  "P2-016": {
+   "state": "PARTIAL",
+   "votes": {
+    "PARTIAL": 4,
+    "PRESENT": 2
+   }
+  }
+ },
+ "G south_bridge_grunt f17-32 High cand|ship": {
+  "P2-016": {
+   "state": "PRESENT",
+   "votes": {
+    "PRESENT": 3,
+    "PARTIAL": 3
+   }
+  }
+ },
+ "G south_bridge_grunt f1-16 High cand|ship": {
+  "P2-016": {
+   "state": "PRESENT",
+   "votes": {
+    "PARTIAL": 1,
+    "PRESENT": 5
+   }
+  }
+ }
+}

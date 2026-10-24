@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Ln": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Saturated grass and a well-read armoured badger carry it, but a flat yellow-green grade with no sky, fog or light shafts and a small brown creature on brown dirt sink it below Palworld's finish."
+  },
+  "St": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's standing wolf with glowing veins comes close to the owner style bar, but a bare stage and broken faint poses (A floating with its material failing, B upended nose-down) keep it short of shipping finish."
+  },
+  "Co": {
+   "A": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fight reads, but flat lilac telegraph wedges and puff clouds cover the target and the hit sparks sit on stiff bodies, so the fight lacks Palworld's impact and light."
+  },
+  "Io": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A near top-down camera fills most frames with grass texture and tiny creatures, with no horizon or world, and the camera breaks or snaps late in the sequence."
+  },
+  "Zq": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 2.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Muddy dark brown frames with no purple storm sky, debug panels covering a third of the screen, flat magenta ground decals for telegraphs and (in B) the camera buried in foliage sink it."
+  },
+  "Aj": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The camera cuts between two angles from one frame to the next and huge lavender telegraph rings swamp the creatures, so the fight never reads with Palworld's clarity."
+  },
+  "Af": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "An appealing, well-lit villager with expressive eyes and a palette that fits the key art, but it is shown only on a black void and leans more cartoon than the stylised-realism world."
+  },
+  "Az": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's aftermaths (freed prisoner, smoke, banners down) tell a story, but smeared low-res ground, a flat sky and sparse unlit props read as a prototype next to Palworld, and B leaves enemy banners standing after the win."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Add a real hit-react, stagger and move-lean animation layer (with a brief squash or recoil and a hit flash) to every creature, and rebuild faint poses so they lie grounded on their shadow",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix combat presentation: lock a stable over-shoulder production camera (no top-down views or per-frame cuts), fade trunks and canopy that block it, remove debug panels, and replace flat lilac or magenta telegraph wedges and rings with thin outlines plus grounded dust, stone or lightning impacts",
+   "kind": "scene"
+  },
+  {
+   "change": "Lighting and atmosphere pass: visible sky and cool blue distance fog in Meadows, Stormwood's purple storm sky with violet lightning and rim light on creatures, a wider value range, and higher-resolution varied ground textures with prop clusters",
+   "kind": "scene"
+  }
+ ]
+}

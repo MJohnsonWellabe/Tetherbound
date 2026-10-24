@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Ln": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm meadow palette helps, but the frozen creatures, the cramped HUD-heavy framing and flat lighting with no sky or atmosphere sink it."
+  },
+  "St": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's glowing lightning-fur wolf approaches the style bar, but A's faint material breakdown and B's head-down faint pose are below a shipping finish."
+  },
+  "Co": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Hit markers and lilac telegraph slabs bury rigid creatures, and there is no light or atmosphere to carry the meadow."
+  },
+  "Io": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A top-down camera on a uniform grass carpet shrinks the fighters to dots, with no horizon, sky or depth."
+  },
+  "Zq": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Muddy brown forest with no storm sky, debug HUD over the frame, flat magenta telegraphs and (B) the camera inside foliage."
+  },
+  "Aj": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Only the small creature reacts; the badger stays in its idle pose, and B's huge lilac dodge arc hides the fight."
+  },
+  "Af": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing villager with readable eyes, but too glossy and cartoon against naturalistic Palworld/Valheim-level finish."
+  },
+  "Az": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's site-specific aftermaths read well, but blurry stretched ground, low-poly repeated trees and flat light sink the finish; B leaves enemy banners standing."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give every creature (especially the armoured badger) real hit-flinch, stagger, dodge-lean and faint animations and grounded faint poses instead of idle-pose holds",
+   "kind": "new_art"
+  },
+  {
+   "change": "Reframe the combat camera (no top-down or inside-foliage shots, keep both fighters large) and replace flat lilac/magenta telegraph slabs and oversized hit rings with smaller physical effects; strip debug HUD panels",
+   "kind": "scene"
+  },
+  {
+   "change": "Add Valheim-level lighting and atmosphere (sky, fog depth, sun shafts; Stormwood purple storm sky and lightning) and sharpen the blurry, stretched ground textures",
+   "kind": "scene"
+  }
+ ]
+}

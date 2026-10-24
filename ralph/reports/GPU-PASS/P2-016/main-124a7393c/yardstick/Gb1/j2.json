@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Ln": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Big readable badger and a dense grass foreground help, but the flat olive-yellow grade, no sky or atmosphere, and a near-static fight with flat lavender telegraph slabs sink it."
+  },
+  "St": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The wolf model reaches the owner bar in the standing pose, but A's faint frames break the material into black and white patches and float above the shadow, and B's neon veins and odd upright faint-end pose stop it reading as a finished shipping creature."
+  },
+  "Co": {
+   "A": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Gold hit bursts and a readable badger carry it, but the bodies mostly hold their idle pose under hits, the flat translucent lavender dome and wedge telegraphs read as UI rather than real effects, and the light has no sky, fog or time-of-day mood."
+  },
+  "Io": {
+   "A": {
+    "bar_a": 3.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.1,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A near-top-down camera over a featureless uniform lawn leaves the enemy badger off screen for most frames and shows no horizon, landmark or atmosphere; only B's last three side-view frames read as a fight."
+  },
+  "Zq": {
+   "A": {
+    "bar_a": 2.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 2.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Large debug-style HUD panels cover about half of every frame, the forest is a murky brown with no purple storm sky or blue-green moss, the player's creature is barely findable, the telegraphs are flat magenta outlines, and B's i12-i15 frames are swallowed by trunk and canopy."
+  },
+  "Aj": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Hit sparks, the STAGGER label and a few rear-ups show some life, but A's camera cuts between angles, B's screen-filling lavender dome in f26-f29 hides the creatures, and the grade has no Valheim-style light."
+  },
+  "Af": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing old villager with readable eyes and a palette that fits the meadows, but the toy-like cartoon finish clashes with the naturalistic creatures and Palworld-class characters."
+  },
+  "Az": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's aftermaths are site-specific (fallen banners, an opened cage with a freed captive, a smoking toppled tent), but blurry stretched ground textures, flat lighting, a uniform grass carpet and a tiled stone wall keep it below Palworld finish; B leaves enemy banners standing in its after frames."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give hit and dodge frames real body reactions on every creature (flinch, recoil, lean, stagger) and fix the faint poses so they stay grounded with intact materials, with no floating and no black/white material swap.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Regrade and relight the combat scenes: lower the camera to show sky and distance, add atmospheric fog and a time-of-day grade, cut the olive-yellow cast, and in Stormwood keep trunks and canopy out of the camera and bring in the purple storm sky and blue-green moss.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the flat lavender and magenta telegraph slabs with object-based effects (rock, dust, lightning) that land with an impact, and shrink the Stormwood HUD panels so they no longer cover the fight.",
+   "kind": "scene"
+  }
+ ]
+}

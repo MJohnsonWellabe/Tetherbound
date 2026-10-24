@@ -1,0 +1,136 @@
+{
+ "sets": {
+  "Kd": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Brown, murky forest floor with no purple storm sky, flat magenta telegraph rings/slabs and a near-invisible player creature sank it; the gold-lit spider silhouette is the only thing carrying the frame."
+  },
+  "Po": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Dense warm grass and the armoured badger read well, but a top-down, skyless, olive-muddy grade with no atmosphere or light shafts and frozen idle bodies keep it short of Palworld finish."
+  },
+  "Lb": {
+   "A": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Readable telegraph wedges and hit rings carry the fight, but the uniform grass carpet, absent sky/distance and mostly static creature bodies sink it."
+  },
+  "Oz": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Oversized translucent telegraph domes swallow the small creature and the flat overhead grass with no sky or atmospheric depth sinks it."
+  },
+  "Px": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The small brown creature blends into olive grass in its unchanging idle pose and the dim, skyless grade lacks Valheim-class light, sinking it."
+  },
+  "Sb": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Appealing, well-modelled old villager with clear face, eyes and a natural green/brown palette carries it, though the void staging shows none of the world's light."
+  },
+  "Qi": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Scale and silhouette agree with the ruler, but the very dark low-value plate/fur material collapsing to a black blob in faint end (and B's red glow edging toward faction oxblood) keep it off the owner quality bar."
+  },
+  "Tm": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.9,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's large readable blue-grey panel is on direction, but neither side uses teal/cyan controller-glyph prompts and B's tiny truncated text and grey 'Craft: A / Enter' hint fail the 7-inch glance test."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Author real hit-react, flinch, recoil and movement-lean animation layers for every creature so hurt and moving frames break the idle silhouette (both the large wild creature and the small player creature).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Stormwood fight staging: pull the camera clear of trunks/foliage, add the fixed purple storm sky and cool moss/copper grade, and replace flat magenta ground rings/slabs with physical lightning/stone telegraph effects with impacts; rim-light the player creature.",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows fight grade and composition: lift the camera to include sky and cool blue distance, break the uniform grass carpet into clearings and edges, add warm key light with rim lighting on creatures, keep the right-edge HUD fully on screen and adopt A's large craft-panel text with teal controller-glyph action hints.",
+   "kind": "scene"
+  }
+ ]
+}

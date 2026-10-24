@@ -1,0 +1,136 @@
+{
+ "sets": {
+  "Kd": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky low-value forest with no storm sky or lightning, flat magenta ground telegraphs, a near-invisible player creature and debug HUD panels sink it (A also loses i13/i15 to canopy)."
+  },
+  "Po": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm Meadows grass and a readable badger silhouette help, but rigid creatures under hit bursts and flat lavender telegraphs with no sky or depth fall short of Palworld combat finish."
+  },
+  "Lb": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Badger lunges/rears add some life, but the hedgehog holds its idle pose when hit (a STAGGER label with no stagger) and the framing has no horizon or atmospheric light."
+  },
+  "Oz": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A top-down camera on a flat grass carpet with static creatures reads as a prototype; B's rear in f23 and the fence landmark later help only slightly."
+  },
+  "Px": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The large enemy is off-screen for f01-f13, leaving a cone over a small hedgehog on dark grass, so the fight does not read."
+  },
+  "Sb": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "An appealing, readable elderly villager with expressive eyes and a natural green-brown palette would sit comfortably beside Palworld characters."
+  },
+  "Qi": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's ember-cracked plates give identity that A's near-black mass lacks, but the hit react is the same as standing, faint mid looks lifted off the floor and faint end crushes to black on both."
+  },
+  "Tm": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-grey translucent panel fits the direction, but small pale hints with no teal or controller emphasis (and B's tiny clipped text) miss shipping polish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Add a hit/move reaction animation layer (flinch, recoil, stagger, lean) to every creature so hurt and moving frames leave the idle silhouette",
+   "kind": "new_art"
+  },
+  {
+   "change": "Combat camera that keeps both fighters framed and clear of canopy, hides the debug HUD, and replaces flat magenta/lavender ground shapes with telegraphs and impacts made of real objects (stone, dust, lightning)",
+   "kind": "scene"
+  },
+  {
+   "change": "Lighting and value pass: Stormwood purple storm sky and lightning, creature rim light, lift dark creature materials and faint poses out of near-black, and give Meadows high cameras horizon depth",
+   "kind": "scene"
+  }
+ ]
+}
