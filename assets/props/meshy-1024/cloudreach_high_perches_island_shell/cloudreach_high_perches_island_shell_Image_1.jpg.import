@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://itl75f6gdr4t"
-path="res://.godot/imported/cloudreach_high_perches_island_shell_Image_1.jpg-9517c3d33e6ed88ffa0bcc67edae1d13.ctex"
+path.s3tc="res://.godot/imported/cloudreach_high_perches_island_shell_Image_1.jpg-9517c3d33e6ed88ffa0bcc67edae1d13.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "8bf7034911c26ec7614c735bfdf74f2f"
@@ -14,7 +15,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/props/meshy-1024/cloudreach_high_perches_island_shell/cloudreach_high_perches_island_shell_Image_1.jpg"
-dest_files=["res://.godot/imported/cloudreach_high_perches_island_shell_Image_1.jpg-9517c3d33e6ed88ffa0bcc67edae1d13.ctex"]
+dest_files=["res://.godot/imported/cloudreach_high_perches_island_shell_Image_1.jpg-9517c3d33e6ed88ffa0bcc67edae1d13.s3tc.ctex"]
 
 [params]
 
