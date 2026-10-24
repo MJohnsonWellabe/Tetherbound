@@ -141,3 +141,4 @@ P2-095-096/yardstick/judge_j3.json
 P2-095-096/yardstick/key.json
 P2-095-096/yardstick/mapped.json
 P2-095-096/yardstick/sets.md
+F25-4/main-confirm/VERDICT.md
