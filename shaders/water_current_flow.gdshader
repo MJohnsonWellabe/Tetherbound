@@ -87,6 +87,13 @@ uniform float seam_wander_m = 3.5;
 uniform float seam_gap = 0.25;
 uniform float chop_cap_opacity = 0.0;
 uniform float chop_cap_scale_m = 2.2;
+uniform float chop_cap_density = 0.35;
+// b6: each seam stretch is a foam tongue that brightens toward its downstream
+// head and frays upstream, so a still frame says which way the water runs.
+// Stretch length in metres (0 = untapered seams).
+uniform float seam_taper_m = 0.0;
+// b6: the lane tint fades over a wandering soft edge instead of the ribbon rim.
+uniform bool soft_channel_tint = false;
 varying vec3 v_world;
 varying float v_distance;
 
@@ -245,11 +252,19 @@ void fragment() {
 		float lace = smoothstep(0.3, 0.75, noise(vec2(across_m * 1.7, moving_s * 0.9)));
 		float keep = smoothstep(seam_gap - 0.08, seam_gap + 0.08, noise(vec2(moving_s / 28.0, UV.x * 7.0 + 2.0)));
 		seam *= mix(0.55, 1.0, lace) * keep;
+		if (seam_taper_m > 0.0) {
+			float side_seed = step(0.5, UV.x) * 17.3;
+			float stretch = moving_s / seam_taper_m + hash(vec2(side_seed, 4.1));
+			float stretch_id = floor(stretch);
+			float tongue = fract(stretch);
+			float head = smoothstep(0.05, 0.8, tongue) * (1.0 - smoothstep(0.88, 0.97, tongue));
+			seam *= head * mix(0.6, 1.0, hash(vec2(stretch_id, side_seed + 2.0)));
+		}
 		// Wavelet caps: small crescent whitecaps, denser toward the lane core.
 		vec2 cap_uv = vec2(across_m, moving_s * 1.6) / max(chop_cap_scale_m, 0.5);
 		vec2 cap_cell = floor(cap_uv);
 		vec2 cap_local = fract(cap_uv) - 0.5;
-		float cap_on = step(hash(cap_cell + vec2(4.2, 9.1)), 0.35 * (1.0 - across));
+		float cap_on = step(hash(cap_cell + vec2(4.2, 9.1)), chop_cap_density * (1.0 - across));
 		float crescent = 1.0 - smoothstep(0.04, 0.12, abs(cap_local.y + cap_local.x * cap_local.x * 1.2 - 0.05));
 		crescent *= 1.0 - smoothstep(0.25, 0.42, abs(cap_local.x));
 		float cap = cap_on * crescent * chop_cap_opacity;
@@ -275,6 +290,11 @@ void fragment() {
 		float rim = 1.0 - smoothstep(rim_w * 0.35, rim_w * 0.6, abs(across - (1.0 - rim_w)));
 		rim *= step(0.4, fract((along - TIME * speed) / max(channel_edge_dash_m, 1.0)));
 		float inside = 1.0 - smoothstep(1.0 - rim_w * 0.4, 1.0, across);
+		if (soft_channel_tint) {
+			float tint_edge = noise(vec2(across_m / 7.0, (along - TIME * speed * 0.6) / 21.0));
+			inside = (1.0 - smoothstep(0.45 + tint_edge * 0.25, 0.92, across))
+				* mix(0.7, 1.0, noise(vec2(across_m / 4.0, (along - TIME * speed) / 9.0)));
+		}
 		float base = ends * fade;
 		float rim_a = rim * channel_edge_opacity * base;
 		float tint_a = inside * channel_tint_opacity * base * mix(0.6, 1.0, calm_scale);
