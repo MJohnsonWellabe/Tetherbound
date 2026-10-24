@@ -118,7 +118,7 @@
     "enabled": false,
     "aim": {"distance": 4.9, "height": 2.05, "fov": 58.0, "shoulder_offset": 1.25},
     "resolve_camera": {"distance": 6.0, "height": 0.85, "fov": 44.0, "pitch_start_deg": -30.0, "trainer_share": 0.45, "trainer_margin_m": 3.5, "shoulder_offset": 1.0},
-    "_why_trainer_share": "P2-059 close-1024 r1 judges (6.42 vs 6.08): the resolve shot still cut to a tight downward view of grass with the trainer and companion out of frame. With trainer_share the pivot slides that share from the orb toward the trainer and the lens looks from behind the trainer along the throw, trainer_margin_m past them (combat_manager.gd _trainer_frame_offset). Inside this OFF block only."
+    "_why_trainer_share": "P2-059 close-1024 r1 judges (6.42 vs 6.08): the resolve shot still cut to a tight downward view of grass with the trainer and companion out of frame. With trainer_share the pivot slides that share from the orb toward the trainer and the lens looks from behind the trainer along the throw, trainer_margin_m past them (combat_manager.gd _trainer_frame_offset). Inside this OFF block only. close-1024 r2 judged: mapped 5.28 vs shipping 5.39 (breakout lens inside the strike flash); P2-059/060 parked at r1 (P2-059-060-catch.md)."
   },
   "resolve_camera": {
     "_comment": "camera_rig profile for the wobble: a close-up on the resting orb, entered with a slow glide (retarget_lag) the moment the orb strikes. The whole resolution plays through this shot — the orb is the only actor on stage and the camera says so. Handed back to the creature on a breakout and to the trainer when a catch ends the fight.",

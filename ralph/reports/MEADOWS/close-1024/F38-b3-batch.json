@@ -1,0 +1,6 @@
+{"anchors": {"p2_094_r4:Y_after": [5.6, 6.0, 6.3], "p2_094_r4:X_before": [3.8, 4.3, 4.5],
+  "craft:after": [6.4, 6.6, 6.6], "craft:before": [4.6, 5.3, 5.0],
+  "f36_0_npc:C1B": [6.6, 6.8, 6.8], "f36_0_npc:C1A": [6.6, 6.7, 6.8]},
+ "candidates": {"catch ship breakout": [5.4, 5.6, 5.5], "catch r2 breakout": [4.9, 5.1, 4.7],
+  "catch ship caught": [4.8, 5.4, 5.2], "catch r2 caught": [5.3, 5.9, 5.6],
+  "P2-087 ship real path": [5.0, 5.6, 5.7], "P2-087 cand real path": [4.9, 5.5, 5.6]}}
