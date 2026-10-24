@@ -299,7 +299,7 @@ def render_gantt(_plan_path, heading, hid, blurb, summary=None):
         cs = [x for f in feats for x in _items(f)]
         if not cs:
             return 0.0, 0, 0
-        done = sum(1 for x in cs if norm(x.get("status")) in ("met", "blocked"))
+        done = sum(1 for x in cs if norm(x.get("status")) == "met")  # owner 24 Oct: blocked is not done
         return 100.0 * sum(W.get(norm(x.get("status")), 0) for x in cs) / len(cs), done, len(cs)
 
     # Freeze each bar's starting progress the first time the plan is rendered,
@@ -628,16 +628,14 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
   <input type="radio" name="tab" id="tab-acc" class="tabsel" checked>
   <input type="radio" name="tab" id="tab-plan" class="tabsel">
   <input type="radio" name="tab" id="tab-lanes" class="tabsel">
-  <input type="radio" name="tab" id="tab-vis" class="tabsel">
   <div class="top">
     <span class="eyebrow">Project update · F01–{E(last_id)} acceptance</span>
     <h1>Tetherbound Acceptance Board</h1>
     <p class="meta">Updated {E(crit.get("generated_at") or status.get("updated", ""))} · main <code>{E(crit.get("main_sha", ""))}</code> · batch in flight <code>{E(crit.get("batch4_sha", ""))}</code> · rebuilt hourly by the coordinator</p>
   </div>
-  <nav class="tabs" aria-label="Board views"><label for="tab-acc">Acceptance</label><label for="tab-plan">Delivery plan</label><label for="tab-lanes">Active lanes</label><label for="tab-vis">Visual catalog (F38–F41)</label></nav>
+  <nav class="tabs" aria-label="Board views"><label for="tab-acc">Acceptance</label><label for="tab-plan">Delivery plan</label><label for="tab-lanes">Active lanes</label></nav>
   <div class="pane pane-plan">{plan_html}</div>
   <div class="pane pane-lanes">{active_lanes_html}</div>
-  <div class="pane pane-vis">{visual_html}</div>
   <div class="pane pane-acc">
   <div class="kpis">
     <div class="kpi"><b>{accepted} / {len(crit["rows"])}</b><span>F rows accepted (every criterion met)</span></div>
