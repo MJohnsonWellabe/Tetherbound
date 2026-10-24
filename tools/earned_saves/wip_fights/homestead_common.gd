@@ -739,9 +739,43 @@ func _withdraw_from(chest: Node3D, need: Dictionary) -> bool:
 	return true
 
 
+## A station must not stand on the Kitchen's attachment sockets (station_rules
+## `socket`: tier 1 west, 2 north, 3 east, 4 south). The Forge on the plot spot
+## east of the Kitchen covered its tier-3 socket, so kitchen_cloudreach's ghost
+## was red at every stance (training_t4_kitchen_3, 24 Oct).
+const SOCKET_CLEAR_M := 2.8
+const KITCHEN_SOCKET_TIERS := 4
+
+static func kitchen_sockets(centre: Vector2, yaw_deg: float) -> Array[Vector2]:
+	var out: Array[Vector2] = []
+	var record := {"id": "kitchen", "position": [centre.x, 0.0, centre.y], "yaw_deg": yaw_deg}
+	for tier in range(1, KITCHEN_SOCKET_TIERS + 1):
+		var at: Vector3 = STATION_RULES.socket(STATION_RULES.config(), record, tier)
+		out.append(Vector2(at.x, at.z))
+	return out
+
+static func spot_clear_of_sockets(spot: Vector2, sockets: Array[Vector2]) -> bool:
+	for socket: Vector2 in sockets:
+		if socket.distance_to(spot) < SOCKET_CLEAR_M: return false
+	return true
+
+func _spot_keeps_sockets_clear(id: String, spot: Vector2) -> bool:
+	var placed := placed_buildings(_world, _tree.get_nodes_in_group(&"placed_building"))
+	for node: Node3D in placed:
+		if str(node.get_meta("building_id", "")) == "kitchen" and id != "kitchen":
+			if not spot_clear_of_sockets(spot, kitchen_sockets(Vector2(node.global_position.x, node.global_position.z), rad_to_deg(node.global_rotation.y))):
+				return false
+	if id == "kitchen":
+		var sockets := kitchen_sockets(spot, 0.0)
+		for node: Node3D in placed:
+			if not spot_clear_of_sockets(Vector2(node.global_position.x, node.global_position.z), sockets):
+				return false
+	return true
+
+
 func _place_on_plot(id: String) -> Node3D:
 	for spot: Vector2 in PLOT_SPOTS:
-		if _used_spots.has(spot) or _occupied(spot):
+		if _used_spots.has(spot) or _occupied(spot) or not _spot_keeps_sockets_clear(id, spot):
 			continue
 		var placed := await _place_at(id, spot)
 		if placed != null:

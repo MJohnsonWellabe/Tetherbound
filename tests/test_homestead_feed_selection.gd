@@ -144,3 +144,17 @@ func test_station_candidates_refuse_a_world_queued_for_deletion() -> void:
 	var nodes: Array[Node] = [kitchen]
 	assert_true(HOME.placed_buildings(world, nodes, "kitchen").is_empty())
 	world.free()
+
+## A station placed beside the Kitchen must leave its tier 1-4 attachment
+## sockets clear: the Forge east of it covered tier 3 (training_t4_kitchen_3).
+func test_plot_spots_keep_the_kitchen_attachment_sockets_clear() -> void:
+	var sockets: Array[Vector2] = HOME.kitchen_sockets(Vector2(-10.0, 14.0), 0.0)
+	assert_eq(sockets.size(), 4)
+	assert_true(sockets[0].distance_to(Vector2(-13.0, 14.0)) < 0.01, "tier 1 west")
+	assert_true(sockets[1].distance_to(Vector2(-10.0, 16.5)) < 0.01, "tier 2 north")
+	assert_true(sockets[2].distance_to(Vector2(-7.0, 14.0)) < 0.01, "tier 3 east")
+	assert_true(sockets[3].distance_to(Vector2(-10.0, 11.5)) < 0.01, "tier 4 south")
+	assert_false(HOME.spot_clear_of_sockets(Vector2(-6.0, 14.0), sockets), "the old Forge spot covers tier 3")
+	assert_false(HOME.spot_clear_of_sockets(Vector2(-10.0, 10.0), sockets), "covers tier 4")
+	assert_true(HOME.spot_clear_of_sockets(Vector2(-8.0, 20.0), sockets))
+	assert_true(HOME.spot_clear_of_sockets(Vector2(-12.0, 20.0), sockets), "the Altar spot")
