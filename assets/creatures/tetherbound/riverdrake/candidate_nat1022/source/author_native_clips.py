@@ -62,8 +62,19 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
   reset();t=f/frames;wave=math.sin(t*2*math.pi)
   if role in ['idle','ride']:
    rotate('spine',.7*wave);rotate('head',1.2*wave);rotate('tail_2',4*wave,(0,0,1))
-  if role in ['walk','run','swim']:
-   amplitude={'walk':17,'run':28,'swim':24}[role]
+  if role=='swim':
+   # Close-1024: the walk-cycle swim stood the drake upright in the water (the
+   # installed model swims level). Pitch the chest down to level the torso, keep
+   # the head up out of the water, paddle the forelegs, trail and kick the hind
+   # legs, and sweep the tail side to side.
+   rotate('root',-REAR*12);rotate('neck',-NOD*26);rotate('head',NOD*18)
+   for side,ph in (('l',0),('r',math.pi)):
+    stroke=math.sin(t*2*math.pi+ph)
+    rotate('front_upper_'+side,30*stroke);rotate('front_lower_'+side,-20*max(0,-stroke))
+    rotate('rear_upper_'+side,-38+12*math.sin(t*2*math.pi+ph+math.pi/2));rotate('rear_lower_'+side,18)
+   rotate('tail_1',10*wave,(0,0,1));rotate('tail_2',16*wave,(0,0,1))
+  if role in ['walk','run']:
+   amplitude={'walk':17,'run':28}[role]
    for prefix in ['front','rear']:
     for side in ['l','r']:
      phase=math.pi if (prefix,side) in [('front','r'),('rear','l')] else 0

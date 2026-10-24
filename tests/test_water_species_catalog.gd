@@ -139,10 +139,23 @@ func test_namespaced_water_presentations_reach_their_authored_colourways() -> vo
 	for id: String in ADAPTER.BOARD_IDS:
 		var runtime := ADAPTER.runtime_id(id)
 		var look: Dictionary = result.catalogue[runtime].placeholder
-		assert_eq(CREATURE_BODY.colourway_source_species(runtime, look), id, runtime)
+		var presentation: Dictionary = original_water_presentation(id)
+		var expected := str(presentation.get("colourway_source_species", id))
+		assert_eq(CREATURE_BODY.colourway_source_species(runtime, look), expected, runtime)
+		if expected != id:
+			# Only a replacement mesh (its own UVs and embedded albedo) may name
+			# another source; the installed board mesh keeps its authored atlas.
+			assert_false(str(look.model).begins_with("res://assets/creatures/tetherbound/%s/models/" % id),
+				"%s names its own colourway source but ships the installed mesh" % runtime)
+			continue
 		var fallback := "res://assets/creatures/tetherbound/%s/models/%s_extracted_base_color_vivid.png" % [id, id]
 		var model_stem := str(look.model).get_file().get_basename()
 		var adjacent := str(look.model).get_base_dir().path_join(model_stem + "_base_color_vivid.png")
 		assert_true(ResourceLoader.exists(fallback) or ResourceLoader.exists(adjacent),
 			"%s cannot resolve an authored vivid texture" % runtime)
 	assert_eq(CREATURE_BODY.colourway_source_species("galecrest", {}), "galecrest")
+
+
+func original_water_presentation(id: String) -> Dictionary:
+	var roster: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_roster.json"))
+	return (roster.get("species", {}).get(id, {}) as Dictionary).get("placeholder", {})
