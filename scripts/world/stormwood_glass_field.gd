@@ -20,6 +20,8 @@ const FUSED_GROUND := Color("#182d31")
 const SCAR_SPREAD := 1.45
 ## Tests build the flagged-off scorched pass without editing the config.
 var force_scorched_scars := false
+## Tests build a shard_finish candidate without editing the config.
+var shard_finish_override: Dictionary = {}
 ## Process-local preview; only the dedicated capture harness sets this.
 static var capture_scar_relief_preview := false
 const SCAR_RINGS := 6
@@ -93,6 +95,7 @@ func _build_cluster(spec: Dictionary) -> void:
 	clearing.add_to_group("grass_clear")
 	_add_fused_lumps(root, centre, float(spec.scar_radius_m), str(spec.id).hash())
 	_add_crust(root, centre, scar_radius, str(spec.id).hash())
+	_add_crystals(root, centre, float(spec.height_m), str(spec.id).hash())
 	var count := int(spec.shards)
 	var spread := float(config.shard_spread_m)
 	for index in count:
@@ -256,10 +259,50 @@ func _add_crust(parent: Node3D, centre: Vector2, radius: float, seed_value: int)
 	parent.add_child(crust)
 
 
+## Optional reference-backed fulgurite cluster (shard_finish.crystal_model) at
+## the strike point, uniformly scaled from its own bounds to
+## cluster height x crystal_height_scale and seated on the ground.
+func _add_crystals(parent: Node3D, centre: Vector2, height_m: float, seed_value: int) -> void:
+	var path := str(_shard_finish().get("crystal_model", ""))
+	if path.is_empty():
+		return
+	var scene := load(path) as PackedScene
+	if scene == null:
+		return
+	var crystals := scene.instantiate() as Node3D
+	var box := AABB()
+	var first := true
+	for node: Node in crystals.find_children("*", "MeshInstance3D", true, false):
+		var instance := node as MeshInstance3D
+		var local := _transform_to(crystals, instance) * instance.mesh.get_aabb()
+		box = local if first else box.merge(local)
+		first = false
+	if first or box.size.y <= 0.0:
+		crystals.free()
+		return
+	var factor := height_m * float(_shard_finish().get("crystal_height_scale", 0.35)) / box.size.y
+	crystals.scale = Vector3.ONE * factor
+	crystals.rotation.y = float(seed_value % 360) * PI / 180.0
+	var ground := _local_grounded(centre, 0.0)
+	crystals.position = ground - Vector3(box.get_center().x, box.position.y, box.get_center().z).rotated(Vector3.UP, crystals.rotation.y) * factor
+	crystals.name = "FulguriteCluster"
+	parent.add_child(crystals)
+
+
+static func _transform_to(root: Node3D, node: Node3D) -> Transform3D:
+	var xform := Transform3D.IDENTITY
+	var current: Node = node
+	while current != null and current != root:
+		if current is Node3D:
+			xform = (current as Node3D).transform * xform
+		current = current.get_parent()
+	return xform
+
+
 ## F41 round-3 candidate: optional `shard_finish` {enabled, height_scale,
 ## emission_energy}. Empty (the shipped defaults) unless enabled.
 func _shard_finish() -> Dictionary:
-	var finish: Dictionary = config.get("shard_finish", {})
+	var finish: Dictionary = shard_finish_override if not shard_finish_override.is_empty() else config.get("shard_finish", {})
 	return finish if bool(finish.get("enabled", false)) else {}
 
 
