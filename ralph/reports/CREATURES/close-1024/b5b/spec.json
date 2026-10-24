@@ -1,0 +1,14 @@
+[
+ {
+  "label": "F36 water_riverdrake b5b",
+  "a": "<scratch>/b5b/sides/wr-live.png",
+  "b": "<scratch>/b5b/sides/wr-pilot.png",
+  "brief": "One water creature on a neutral stage beside a 1.80 m human ruler: hit react, faint end, swimming at a water surface (two moments), and carrying the trainer on its back as a swim mount. Judge the creature's model and material as the game's real look - readability, surface, face, scale against the ruler - and whether the hit reads as a hit, the faint reads as down, the swim reads as swimming and the rider sits on its back, without clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim reads as standing or wading rather than swimming",
+   "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+  ]
+ }
+]

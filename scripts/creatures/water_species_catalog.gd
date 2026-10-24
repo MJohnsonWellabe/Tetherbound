@@ -135,7 +135,9 @@ static func _definition(id: String, raw: Dictionary, base: Dictionary, errors: A
 	# id when a GLB embeds its textures and the colourway lookup falls back to
 	# `<species>_extracted_*_<suffix>.png`. Without this, every Water ordinary,
 	# shiny and alpha silently kept the source mesh's unpainted material.
-	look.colourway_source_species = id
+	# A replacement mesh with its own UVs names its own source (as species.json
+	# does), so the board species' authored atlas is never swapped onto it.
+	look.colourway_source_species = str(presentation.get("colourway_source_species", id))
 	var definition: Dictionary = {}
 	for key: String in ["display_name", "type", "base_hp", "base_attack", "base_defence", "catch_rate", "aggressive", "moves", "combat_role", "epithet"]:
 		if raw.has(key):

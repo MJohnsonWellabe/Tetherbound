@@ -380,7 +380,9 @@
       "placeholder": {
         "source_species": "paddlenewt",
         "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
-        "model": "res://assets/creatures/tetherbound/riverdrake/models/creature_riverdrake_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/riverdrake/candidate_nat1022/models/creature_riverdrake_nat1022.glb",
+        "colourway_source_species": "riverdrake_nat1022",
+        "_comment_model_nat1022": "Close-1024: the naturalistic pilot, as the land form, with its own clips (level swim, legs folded). b6 (CPU three-judge yardstick, confirming batch): water form mapped 7.00 vs installed 6.36 (CPU-provisional). Mount and saddle offsets unchanged: the pilot back measures about 2.49 m at the seat at 4.15 m, under the 2.739 m seat; production mounted-swimming smoke on water_riverdrake 19/19 checks.",
         "source_height_m": 2.15,
         "target_height_m": 4.15,
         "model_scale": 1.0,
@@ -390,11 +392,16 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
         },
         "presentation_intent": "Blue back pale chest orange fin tips",
-        "replacement_model": "res://assets/creatures/tetherbound/riverdrake/models/creature_riverdrake_lod0.glb",
+        "replacement_model": "res://assets/creatures/tetherbound/riverdrake/candidate_nat1022/models/creature_riverdrake_nat1022.glb",
         "replacement_binding": "res://data/creatures/species.json#species/riverdrake/placeholder/model",
         "status": "installed_species_mesh",
         "_comment": "Runtime presentation uses the installed species mesh and authored animation bindings. Visual acceptance remains separate."

@@ -901,8 +901,12 @@ LANDED_1024_SHOVE = ('burrowback', 'frostclaw', 'trailpup', 'aquaryn', 'riptusk'
                      'tidecoil', 'voltwig', 'breezetail', 'cliffspike', 'cloudfang', 'craghorn',
                      'pebbik', 'stormbrush', 'stormraven', 'thundertunnel')
 SHOVE_1024_RUN = SHOVE_1024 if CANDIDATE_1024 else LANDED_1024_SHOVE
+# b2 judges: Tuskroot's limp sprawl rolls belly and feet to the camera and hides
+# its stone back (read as the armour vanishing). Candidate: roll the other way.
+LIMP_ROLL = {}
 if CANDIDATE_1024:
     PRONE = tuple(s for s in PRONE if s not in PRONE_TO_TOPPLE_1024)
+    LIMP_ROLL['tuskroot'] = 90.0
 LIVE_SHOVE_HIT = tuple(LIVE_SHOVE_HIT) + tuple(s for s in SHOVE_1024_RUN if s not in LIVE_SHOVE_HIT)
 SHOVE_GAIN_BY.update({s: 1.5 for s in SHOVE_1024_RUN})
 SHOVE_HOLD_BY.update({s: (0.5, 0.97) for s in SHOVE_1024_RUN})
@@ -1105,7 +1109,7 @@ def refine(name, row, rig, fam, prof):
     for role in ROLES:
         SOLVER.guard_stretch(skin, prof[role]['frames'])
     if name in LIMP_SPRAWL:
-        limp_sprawl(rig, prof['faint']['frames'], mesh_long_axis(skin))
+        limp_sprawl(rig, prof['faint']['frames'], mesh_long_axis(skin), roll=LIMP_ROLL.get(name, -90.0))
         SOLVER.guard_stretch(skin, prof['faint']['frames'])
     else:
         SOLVER.ground_faint(skin, prof['faint']['frames'], lambda phase: min(1.0, phase / .7))
