@@ -1699,6 +1699,16 @@ func _show_guard_cone(reach_override: float = 0.0, cone_override: float = 0.0) -
 	_guard_cone.set_meta("reach", reach)
 	_guard_cone.set_meta("cone_degrees", cone)
 	add_child(_guard_cone)
+	if not soft.is_empty() and TELL_STYLE.curtain_height(soft, 1.0) > 0.0:
+		# Bodied tell: the fan's rim stands up as a fading light curtain.
+		var rim := PackedVector3Array()
+		for i in steps + 1:
+			var a := -half + (2.0 * half) * float(i) / float(steps)
+			rim.append(Vector3(sin(a) * reach, 0.05, cos(a) * reach))
+		var curtain := TELL_STYLE.make_curtain(AABB(Vector3(-reach, -1.0, -reach), Vector3(reach * 2.0, 4.0, reach * 2.0)))
+		_guard_cone.add_child(curtain)
+		TELL_STYLE.draw_curtain(curtain, [rim], tell_colour(), float(soft.get("edge_alpha", 0.7))
+			* float(soft.get("curtain_alpha", 0.6)), TELL_STYLE.curtain_height(soft, 1.0), soft, 0.0)
 
 
 func _hide_guard_cone() -> void:
