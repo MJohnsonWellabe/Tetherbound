@@ -109,6 +109,18 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Since judging, the verdict frame steps the cards back on the same frame.
   - GPU capture command: `tools/phase2_capture_catch.gd --biome=meadows --seed=2042`, with `capture_readout_visual.json plate_enabled` and `hud.json catch_card.enabled` on for the candidate side.
 
+- 2026-10-24 22:15 UTC READY tb/meadows-land4 62e64e6bf (from origin/main): the F38 tier-1 camera fixture (L1). Fixture only, no game code.
+  - Changes in `capture-definition.json` and `capture_f38_matrix.gd`:
+    - The wall arches face into the Hall and keep only the in-room detail view.
+    - The nave and shrine stand on the Hall floor.
+    - Ten sites get per-view heading seats from the CPU search.
+    - The tool honours `views`, `prefer_terrain_ground` and `view_headings`.
+  - CPU evidence for the arch, nave and shrine part: 48 Hall frames, 0 void, 0 black; Hall area mapped 6.37 (was 2.09–4.25).
+  - The seated stands' CPU recapture is still running; I'll post the per-stand result here.
+  - Tier-1 stands for the GPU recapture: arch_biome5, arch_biome6, arch_biome7, arch_biome8, arch_cloudreach, arch_tidewake, arch_stormwood, arch_home, hall_nave, shrine_room, hall_front, farm_to_hall and band2_stone_and_root_0. village_road and band3_the_river_lock_1 are parked under the tier rule.
+  - Command: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=arch_ --subset=hall_nave --subset=shrine_room --subset=hall_front --subset=farm_to_hall --subset=band2_stone_and_root_0 --output=res://<round>`
+  - Land together with land3 (4d204e402, F17#6: Forward+ shafts off). The Hall stands judge both, and land3 is not on main yet.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
