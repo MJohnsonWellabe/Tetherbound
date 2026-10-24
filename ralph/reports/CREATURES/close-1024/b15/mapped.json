@@ -1,0 +1,316 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8169,
+  "least_squares_slope": 0.8971,
+  "method": "linear",
+  "slope": 0.8971,
+  "intercept": 1.2403,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.683,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C6B": {
+   "measured": 5.733,
+   "reference": 6.9,
+   "mapped": 6.384,
+   "residual": 0.516
+  },
+  "f36_0_gap:C6A": {
+   "measured": 6.5,
+   "reference": 6.47,
+   "mapped": 7.071,
+   "residual": -0.601
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.967,
+   "reference": 7.53,
+   "mapped": 7.49,
+   "residual": 0.04
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.967,
+   "reference": 7.47,
+   "mapped": 7.49,
+   "residual": -0.02
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.2,
+   "reference": 4.0,
+   "mapped": 5.008,
+   "residual": -1.008
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.7,
+   "reference": 6.53,
+   "mapped": 5.457,
+   "residual": 1.073
+  }
+ },
+ "candidates": {
+  "water_torrentoad cand": {
+   "measured_mean": 5.567,
+   "mapped_mean": 6.23,
+   "mapped_judges": [
+    6.17,
+    6.26,
+    6.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "water_torrentoad live": {
+   "measured_mean": 6.033,
+   "mapped_mean": 6.65,
+   "mapped_judges": [
+    6.44,
+    6.62,
+    6.89
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "riverdrake live": {
+   "measured_mean": 5.533,
+   "mapped_mean": 6.2,
+   "mapped_judges": [
+    6.08,
+    6.44,
+    6.08
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "riverdrake cand": {
+   "measured_mean": 6.2,
+   "mapped_mean": 6.8,
+   "mapped_judges": [
+    6.44,
+    7.16,
+    6.8
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "cannonback live": {
+   "measured_mean": 5.433,
+   "mapped_mean": 6.11,
+   "mapped_judges": [
+    6.26,
+    6.17,
+    5.91
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "cannonback cand": {
+   "measured_mean": 5.433,
+   "mapped_mean": 6.11,
+   "mapped_judges": [
+    6.26,
+    6.17,
+    5.91
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "water_cannonback cand": {
+   "measured_mean": 5.067,
+   "mapped_mean": 5.79,
+   "mapped_judges": [
+    5.91,
+    5.73,
+    5.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "water_cannonback live": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.56,
+   "mapped_judges": [
+    6.62,
+    6.53,
+    6.53
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "water_cragclaw live": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.41,
+   "mapped_judges": [
+    6.44,
+    6.26,
+    6.53
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "water_cragclaw cand": {
+   "measured_mean": 5.333,
+   "mapped_mean": 6.02,
+   "mapped_judges": [
+    5.99,
+    5.99,
+    6.08
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "solmane live": {
+   "measured_mean": 4.933,
+   "mapped_mean": 5.67,
+   "mapped_judges": [
+    5.91,
+    5.37,
+    5.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "solmane cand": {
+   "measured_mean": 4.833,
+   "mapped_mean": 5.58,
+   "mapped_judges": [
+    5.73,
+    5.46,
+    5.55
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "cragclaw live": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.41,
+   "mapped_judges": [
+    6.44,
+    6.26,
+    6.53
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "cragclaw cand": {
+   "measured_mean": 5.333,
+   "mapped_mean": 6.02,
+   "mapped_judges": [
+    5.99,
+    5.99,
+    6.08
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "water_riptusk~rj live": {
+   "measured_mean": 5.233,
+   "mapped_mean": 5.94,
+   "mapped_judges": [
+    5.99,
+    5.91,
+    5.91
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "water_riptusk~rj cand": {
+   "measured_mean": 6.567,
+   "mapped_mean": 7.13,
+   "mapped_judges": [
+    7.25,
+    7.16,
+    6.98
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "torrentoad cand": {
+   "measured_mean": 5.567,
+   "mapped_mean": 6.23,
+   "mapped_judges": [
+    6.17,
+    6.26,
+    6.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "torrentoad live": {
+   "measured_mean": 6.0,
+   "mapped_mean": 6.62,
+   "mapped_judges": [
+    6.35,
+    6.62,
+    6.89
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "tuskroot~rj live": {
+   "measured_mean": 5.633,
+   "mapped_mean": 6.29,
+   "mapped_judges": [
+    6.44,
+    6.26,
+    6.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "tuskroot~rj cand": {
+   "measured_mean": 5.967,
+   "mapped_mean": 6.59,
+   "mapped_judges": [
+    6.62,
+    6.53,
+    6.62
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

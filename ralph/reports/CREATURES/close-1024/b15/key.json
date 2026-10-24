@@ -1,0 +1,77 @@
+{
+ "Ed": {
+  "anchor": false,
+  "label": "F36 water_torrentoad b15",
+  "A": "scratch/b15/sides/water_torrentoad-c.png",
+  "B": "scratch/b15/sides/water_torrentoad-base.png"
+ },
+ "Gc": {
+  "anchor": false,
+  "label": "F36 riverdrake b15",
+  "A": "scratch/b15/sides/riverdrake-base.png",
+  "B": "scratch/b15/sides/riverdrake-c.png"
+ },
+ "Ru": {
+  "anchor": false,
+  "label": "F36 cannonback b15",
+  "A": "scratch/b15/sides/cannonback-base.png",
+  "B": "scratch/b15/sides/cannonback-c.png"
+ },
+ "Ql": {
+  "anchor": false,
+  "label": "F36 water_cannonback b15",
+  "A": "scratch/b15/sides/water_cannonback-c.png",
+  "B": "scratch/b15/sides/water_cannonback-base.png"
+ },
+ "Pj": {
+  "anchor": true,
+  "A": "f36_0_gap:C6B",
+  "B": "f36_0_gap:C6A"
+ },
+ "Ei": {
+  "anchor": false,
+  "label": "F36 water_cragclaw b15",
+  "A": "scratch/b15/sides/water_cragclaw-base.png",
+  "B": "scratch/b15/sides/water_cragclaw-c.png"
+ },
+ "Nv": {
+  "anchor": false,
+  "label": "F36 solmane b15",
+  "A": "scratch/b15/sides/solmane-base.png",
+  "B": "scratch/b15/sides/solmane-c.png"
+ },
+ "Tq": {
+  "anchor": false,
+  "label": "F36 cragclaw b15",
+  "A": "scratch/b15/sides/cragclaw-base.png",
+  "B": "scratch/b15/sides/cragclaw-c.png"
+ },
+ "Aa": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Tg": {
+  "anchor": false,
+  "label": "F36 water_riptusk~rj b15",
+  "A": "scratch/b15/sides/water_riptusk-rj-base.png",
+  "B": "scratch/b15/sides/water_riptusk-rj-c.png"
+ },
+ "Oo": {
+  "anchor": false,
+  "label": "F36 torrentoad b15",
+  "A": "scratch/b15/sides/torrentoad-c.png",
+  "B": "scratch/b15/sides/torrentoad-base.png"
+ },
+ "El": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Ci": {
+  "anchor": false,
+  "label": "F36 tuskroot~rj b15",
+  "A": "scratch/b15/sides/tuskroot-rj-base.png",
+  "B": "scratch/b15/sides/tuskroot-rj-c.png"
+ }
+}
