@@ -1,0 +1,11 @@
+{"sets": {
+"Ag": {"A": {"bar_a": 6.5}, "B": {"bar_a": 6.5}, "bar_b": "yes"},
+"Yx": {"A": {"bar_a": 4.5, "defects": {"boss": "FIXED", "magenta": "FIXED", "impact": "FIXED", "ghost": "PRESENT"}}, "B": {"bar_a": 5.5, "defects": {"boss": "FIXED", "magenta": "FIXED", "impact": "PARTIAL", "ghost": "FIXED"}}, "bar_b": "no"},
+"Vl": {"A": {"bar_a": 5.5}, "B": {"bar_a": 6.0}, "bar_b": "no"},
+"Cv": {"A": {"bar_a": 3.0, "defects": {"wall": "PRESENT"}}, "B": {"bar_a": 4.5, "defects": {"wall": "PARTIAL"}}, "bar_b": "no"},
+"Oc": {"A": {"bar_a": 4.5, "defects": {"bare": "PARTIAL", "posts": "PRESENT", "shrine": "PRESENT"}}, "B": {"bar_a": 4.0, "defects": {"bare": "PARTIAL", "posts": "PRESENT", "shrine": "PRESENT"}}, "bar_b": "no"},
+"Fc": {"A": {"bar_a": 4.0, "defects": {"bare": "PARTIAL", "posts": "PRESENT", "shrine": "PARTIAL"}}, "B": {"bar_a": 3.5, "defects": {"bare": "PARTIAL", "posts": "PRESENT", "shrine": "PARTIAL"}}, "bar_b": "no"},
+"Nv": {"A": {"bar_a": 5.5, "defects": {"boss": "FIXED", "magenta": "FIXED", "impact": "PARTIAL", "ghost": "FIXED"}}, "B": {"bar_a": 4.5, "defects": {"boss": "FIXED", "magenta": "FIXED", "impact": "FIXED", "ghost": "PRESENT"}}, "bar_b": "no"},
+"Ix": {"A": {"bar_a": 5.5}, "B": {"bar_a": 4.0}, "bar_b": "no"},
+"Ko": {"A": {"bar_a": 4.5, "defects": {"bare": "PARTIAL", "posts": "PRESENT", "shrine": "PARTIAL"}}, "B": {"bar_a": 3.5, "defects": {"bare": "PARTIAL", "posts": "PRESENT", "shrine": "PARTIAL"}}, "bar_b": "no"}},
+"note": "Defect keys abbreviated; full names in recorded_defects.txt. Judge 1: ghost sides Yx A / Nv B pale grey-brown semi-transparent otter every frame; muddy olive grade on ghost side; HUD crowds; Hall B white streak sprites; Ko arches cold purple rim glow."}

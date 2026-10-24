@@ -151,3 +151,11 @@ F17-6/yardstick/j1.json
 F17-6/yardstick/j2.json
 F17-6/yardstick/j3.json
 F17-6/yardstick/sets.md
+F36-0/main-1024/VERDICT.md
+F36-0/main-1024/_sheet_f36_0_gpu_main.png
+F36-0/main-1024/yardstick/b1/key.json
+F36-0/main-1024/yardstick/b1/batch.json
+F36-0/main-1024/yardstick/b1/mapped.json
+F36-0/main-1024/yardstick/b2/key.json
+F36-0/main-1024/yardstick/b2/batch.json
+F36-0/main-1024/yardstick/b2/mapped.json

@@ -2,7 +2,19 @@
 
 ## READY (24 Oct): newest first
 
-- **10:05 CT, F17#6 Crossing Hall r9: REOPENED on GPU.** Main r9 maps to **5.83** against a control of 4.98 (5f1f388cc Hall config), the same at Medium and High.
+- **09:40 CT, F36#0 creatures on main:**
+  - **CONFIRMED: Terrapup 7.64 (3.20 m) and Burrowback 7.61.**
+  - **REOPENED:** water_mosshell 7.41, Mosshell 7.36, Ripplet 7.26, Nightburrow 7.01, Bramblebun 6.95, Paddlenewt 6.65, Veridian 6.52, Stormtrail 6.16, Cindercub 6.11, Riftfrill 6.04, Mudsnout 5.88, Trailpup 5.73.
+  - Common asks:
+    - swimmers stand on a flat water slab (the capture's context stage);
+    - five species stand at or below the 1.80 m ruler;
+    - near-black values;
+    - stock-animal reads (Trailpup, Mudsnout).
+  - Two batches, three judges each, both confirming. Evidence: `F36-0/main-1024/VERDICT.md`.
+- **09:40 CT, F17#6 shafts-off diagnostic:** removing `hall_great_hall.shafts` scores +0.95 in the same batch, which puts the Hall at about 5.85. It is still REOPENED. Added to `F17-6/VERDICT.md`.
+- **Now running:** F22#4 Riverwatch on main. Medium maps to 5.10, with the ghost still PRESENT in 3/3, against Low 6.39. A material probe is running before I write it up.
+
+- **09:12 CT, F17#6 Crossing Hall r9: REOPENED on GPU.** Main r9 maps to **5.83** against a control of 4.98 (5f1f388cc Hall config), the same at Medium and High.
   - The cause: r9's `hall_great_hall.shafts` (additive quads) render on Forward+ as hard white bead-streak bars in 6 of the 10 day views. Neon arch rims add to it. All three judges named the shafts as the worst artefact. The CPU sheet shows no shafts at all.
   - The fix needs to be renderer-aware, like the F22#4 aura.
   - A shafts-off diagnostic is queued.
@@ -10,7 +22,7 @@
   - Evidence: `F17-6/VERDICT.md`.
   - **Now running:** F22#4 Riverwatch on main.
 
-- **08:55 CT, F25#4 confirmed on main (Medium):** the launch frame is 16.6–27.4 ms (volley 1) and 10.3–18.0 ms (volley 2), with 0 frames over 33.3 ms in 24 volleys. The budget caps at 384 under over-cap load. This backs F21#5.
+- **08:47 CT, F25#4 confirmed on main (Medium):** the launch frame is 16.6–27.4 ms (volley 1) and 10.3–18.0 ms (volley 2), with 0 frames over 33.3 ms in 24 volleys. The budget caps at 384 under over-cap load. This backs F21#5.
   - Low with prewarm read 245–254 ms on a cold cache after the reimport. **The warm-cache re-run gives 64–78 ms, the same as FIX.md: a cache artefact, not a regression.**
   - Evidence: `F25-4/main-confirm/VERDICT.md`.
   - **Now running:** F17#6 Crossing Hall, Medium and High; the Low re-run follows it.

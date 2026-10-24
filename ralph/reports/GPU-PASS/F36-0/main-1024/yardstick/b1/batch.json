@@ -1,0 +1,116 @@
+{
+ "anchors": {
+  "f36_0_gap:C7A": [
+   5.8,
+   5.8,
+   6.2
+  ],
+  "f36_0_gap:C7B": [
+   6.3,
+   6.4,
+   6.5
+  ],
+  "f36_0_npc:C1B": [
+   6.4,
+   7.0,
+   6.8
+  ],
+  "f36_0_npc:C1A": [
+   6.4,
+   7.0,
+   6.8
+  ],
+  "craft:after": [
+   5.6,
+   6.8,
+   6.0
+  ],
+  "craft:before": [
+   4.4,
+   4.0,
+   4.2
+  ],
+  "p2_094_r4:X_before": [
+   3.8,
+   3.5,
+   3.5
+  ],
+  "p2_094_r4:Y_after": [
+   5.2,
+   5.5,
+   5.3
+  ]
+ },
+ "candidates": {
+  "F36#0 main bramblebun Medium|High | F36main-bramblebun-High": [
+   5.8,
+   6.0,
+   6.7
+  ],
+  "F36#0 main bramblebun Medium|High | F36main-bramblebun-Medium": [
+   5.8,
+   6.0,
+   6.7
+  ],
+  "F36#0 main paddlenewt Medium|High | F36main-paddlenewt-High": [
+   5.9,
+   5.8,
+   6.0
+  ],
+  "F36#0 main paddlenewt Medium|High | F36main-paddlenewt-Medium": [
+   5.9,
+   5.8,
+   6.0
+  ],
+  "F36#0 main trailpup Medium|High | F36main-trailpup-High": [
+   4.8,
+   5.0,
+   5.5
+  ],
+  "F36#0 main trailpup Medium|High | F36main-trailpup-Medium": [
+   4.8,
+   5.0,
+   5.5
+  ],
+  "F36#0 main cindercub Medium|High | F36main-cindercub-Medium": [
+   5.2,
+   5.3,
+   5.8
+  ],
+  "F36#0 main cindercub Medium|High | F36main-cindercub-High": [
+   5.2,
+   5.3,
+   5.8
+  ],
+  "F36#0 main terrapup Medium|High | F36main-terrapup-Medium": [
+   6.3,
+   7.0,
+   7.0
+  ],
+  "F36#0 main terrapup Medium|High | F36main-terrapup-High": [
+   6.3,
+   7.0,
+   7.0
+  ],
+  "F36#0 main mudsnout Medium|High | F36main-mudsnout-Medium": [
+   4.9,
+   4.8,
+   6.0
+  ],
+  "F36#0 main mudsnout Medium|High | F36main-mudsnout-High": [
+   4.9,
+   4.8,
+   6.0
+  ],
+  "F36#0 main ripplet Medium|High | F36main-ripplet-Medium": [
+   6.2,
+   6.5,
+   6.6
+  ],
+  "F36#0 main ripplet Medium|High | F36main-ripplet-High": [
+   6.2,
+   6.5,
+   6.6
+  ]
+ }
+}
