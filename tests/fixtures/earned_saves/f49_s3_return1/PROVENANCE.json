@@ -1,0 +1,12 @@
+{
+ "piece": "f49_s3_return1",
+ "runner": "tide",
+ "segment_or_profile": "training_t5_return",
+ "from": "tests/fixtures/earned_saves/f49_s3_storage",
+ "source_commit": "87249f49a4303126ad66903f4f81953a8f871ace",
+ "wall_seconds": 337,
+ "command": "godot --headless --fixed-fps 60 --path . --script tools/earned_saves/tidewake_piece_runner.gd -- --segment=training_t5_return --from=<rb>/f49_s3_storage --out=<rb>/f49_s3_return1",
+ "lane": "tb/stormwood-routes (Stormwood lane, S3/S5 for F49#0)",
+ "renderer": "Godot 4.7 headless, CPU container",
+ "result": "PASS"
+}
