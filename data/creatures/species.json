@@ -468,9 +468,10 @@
       "rideable": {
         "can_carry": true,
         "requires_item": "saddle",
+        "_comment_mount_nat1024": "Close-1024: the remake's stone-plated back stands 2.90 m at the seat (measured on its ride clip), so the seat rises 2.603 -> 2.93 m, inside its 2.95 m height.",
         "mount_offset": [
           0.0,
-          2.602941,
+          2.93,
           -0.190882
         ],
         "ride_speed_multiplier": 1.5,
@@ -482,21 +483,28 @@
         "radius": 1.068941,
         "_comment_footprint": "Low, broad digging body with heavy forelimbs -- more footprint than a compact biped, similar register to Tuskroot's heavy stance but at Medium rather than Large size class.",
         "footprint_allowance": 3.2,
-        "model": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_installed_retex_v2_lod0.glb",
+        "_comment_model_nat1024": "F36#0 owner style direction 22 Oct: naturalistic remake (coordinator Meshy, candidate_nat1024; measured quadruped rig, own clips; provenance candidate_nat1024/source/meshy_provenance.jsonl, drafted concept reference/nat1024-concept.png). close-1024 b6: mapped 7.23 vs live 6.97 (CPU three-judge yardstick, confirming batch; CPU-provisional).",
+        "model": "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024.glb",
+        "colourway_source_species": "burrowback_nat1024",
         "_comment_model_close1020": "F36#0 close-1020: Meshy installed-rig retex v2 (matte warm grey-brown stones, darker cracks, fur between plates; burrowback/candidate_installed_retex/source/species_candidate_v2.json); three code-blind judges 6.87 vs 5.50 installed at the fight camera (CPU-provisional). Shiny, alpha and Nightburrow keep their earlier repaints via creature_body.gd RETEX_LEGACY_MAPS.",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_field_emission_vp9": "VP9 LIFE round 2 (code-blind judge addendum): 'ridge camp shapes indistinguishable from rocks'. `colour` #6c7061 is a grey-olive rock tone by design (its own sheet: rock-nodule armour), which is exactly why it was reading as scenery rather than a creature next to the ridge camp's actual rocks. Same `field_emission` lever OWNER DIRECTIVE 2026-09-01 set for bramblebun/terrapup/mudsnout (creature_body.gd::_apply_field_brightness()), applied here for the first time -- unmeasured against tools/_probe_grass_separation.gd (no time in this round's budget to run the sweep), so 0.9 is bramblebun's own modest, no-glow value taken as the conservative default rather than terrapup/mudsnout's steeper 1.4 (both of those started BELOW 1.0 on measurement; this species has not been measured at all). TUNABLE, and due a real sweep before it is treated as settled.",
         "_comment_field_emission_0904": "G3-CREATURE-COLOUR-0904. Finally measured, against Gate 2.4's 1.5:1 bar (docs/CURRENT_STATE.md \u00a73 flagged this species as open, never swept). tools/_probe_grass_separation.gd --species=burrowback --time=day, crop box (530,280)-(720,440), same grass reference box CREATURE-LEGIBILITY-0903 used: SHIPPED (0.9) -> creature luma 0.261 vs. grass 0.307 -- this species is DARKER than the field, not brighter, so the creature/grass ratio reads 0.85:1 (below 1.0), and even read as an absolute contrast ratio (max/min) it is only 1.18:1. Swept 1.3->1.03:1, 1.7->1.19:1 -- still under 1.5:1 at either point, and every step toward 1.5 pushes this species further AWAY from the grey-olive 'rock-nodule armour' identity `_comment_field_emission_vp9` above names as the reason `colour` is a rock tone on purpose. Unlike Bramblebun/Mudsnout (both measurably too DARK for their setting, a straight brightness fix), Burrowback's whole design intent is camouflage-adjacent-to-rocks, and a same-direction brightness push here trades that identity for a bar written around a creature meant to stand out in grass, not one meant to blend into a ridge camp's stone. Left at 0.9, unchanged -- this is a design question (does this species still get to read as rock-toned, or does grass-legibility override that everywhere it spawns), not a value nobody chose to measure. Flagged, not fixed.",
-        "field_emission": 0.9,
+        "field_emission": 0.0,
         "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate c). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "animations": {
           "idle": "idle",
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
         }
       },
       "learnset": "burrowback"
@@ -983,9 +991,10 @@
       "rideable": {
         "can_carry": true,
         "requires_item": "",
+        "_comment_mount_nat1024": "Close-1024: the remake's back stands about 2.97 m at the seat (measured on its ride clip), so the seat rises 2.771 -> 3.13 m, 0.16 m above the back as on Meadowhart.",
         "mount_offset": [
           0.0,
-          2.771111,
+          3.13,
           -0.322222
         ],
         "ride_speed_multiplier": 2.8,
@@ -1001,7 +1010,8 @@
         "rest_sink_extra": 1.5,
         "_comment_rest_roll": "BACKLOG-VISUAL-BED-ROSTER-FIT (2026-09-01), owner directive: 'galecrest goes way out of the bed' plus 'grow the ceiling, don't shrink toward it' (archive/owner/OWNER_DIRECTIVES_2026-09-01.md) prompted a full-roster bed-fit measurement, and this 3.6m legendary was the single worst offender measured (1.66x the OLD rim radius even in its default rolled pose, worse than Galecrest). Its idle plants all four legs near the body centreline like a real standing stag (unlike terrapup/trailpup's lifted-paw idle), so rolling it -- at 90, -30, or -45, all measured -- swings the LEGS outward and makes the horizontal footprint WORSE than standing still (measured: roll 0 = 2.95m x 3.04m footprint; roll -45 = 4.63m x 4.63m). `rest_roll_deg: 0` (play_faint(), the same crouch escape hatch as terrapup/galecrest) is the smallest-footprint option found and is what keeps this creature inside a bed of any sane size -- it reads as standing/settled rather than lying flat, a real remaining pose-quality gap for this species that a bed-fit pass is not the place to chase further (this creature towers over any bed regardless of pose; the bed rim was grown -- see creature_bed.gd's RIM_RADIUS_X/Z -- specifically to still contain this footprint).",
         "rest_roll_deg": 0.0,
-        "model": "res://assets/creatures/tetherbound/veridian/candidate_installed_retex/models/creature_veridian_installed_retex_r6_lod0.glb", "_comment_model_close1020": "F36#0 close-1020 art pass 4: installed-rig retex r6 (veridian/candidate_installed_retex/source/species_candidate_r6.json); three code-blind judges 6.90 vs 5.53 installed at the fight camera (CPU-provisional).",
+        "_comment_model_nat1024": "F36#0 owner style direction 22 Oct: naturalistic remake (coordinator Meshy, candidate_nat1024; measured quadruped rig, own clips; provenance candidate_nat1024/source/meshy_provenance.jsonl, drafted concept reference/nat1024-concept.png). close-1024 b6: mapped 6.82 vs live 6.56 (CPU three-judge yardstick, confirming batch; CPU-provisional).",
+        "model": "res://assets/creatures/tetherbound/veridian/candidate_nat1024/models/creature_veridian_nat1024.glb", "_comment_model_close1020": "F36#0 close-1020 art pass 4: installed-rig retex r6 (veridian/candidate_installed_retex/source/species_candidate_r6.json); three code-blind judges 6.90 vs 5.53 installed at the fight camera (CPU-provisional).",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Board 06's Veridian Stag, owner-approved as the legendary's direct source. Antler rack thickened and bent forward per the blind critique \u2014 the generated rack swept backward only, 'which turns a crown into a windblown crest'.",
@@ -1020,7 +1030,7 @@
         },
         "field_emission": 0.0,
         "rest_model_position_offset": 0.0,
-        "colourway_source_species": "veridian_installed_retex_r6_review"
+        "colourway_source_species": "veridian_nat1024"
       },
       "learnset": "veridian"
     },
