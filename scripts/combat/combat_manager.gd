@@ -6820,6 +6820,12 @@ func player_is_staggered() -> bool:
 	return _action == Action.STAGGER
 
 
+## Seconds left on the local player's creature's stagger (0 when not staggered).
+## Its remote proxy publishes this with the hit so other peers hold the wince too.
+func player_stagger_seconds_left() -> float:
+	return maxf(0.0, _action_timer) if _action == Action.STAGGER else 0.0
+
+
 func outcome() -> String:
 	return _outcome
 

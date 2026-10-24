@@ -58,6 +58,8 @@ extends "res://scripts/creatures/creature_body.gd"
 const GROUP := &"remote_creature"
 
 const PRESENTATION := preload("res://scripts/net/remote_presentation.gd")
+## Upper bound on a peer-reported stagger hold (the authored stagger is 0.6 s).
+const MAX_REMOTE_STAGGER_S := 2.0
 const PRESENCE := preload("res://scripts/creatures/companion_presence.gd")
 const AQUATIC_STATE := preload("res://scripts/player/swim_state.gd")
 
@@ -328,6 +330,14 @@ func _publish_presentation() -> void:
 	_sampled = after
 	for raw: Variant in PRESENTATION.diff(before, after):
 		var event: Dictionary = raw
+		# P2-016: a blow that staggered the owner's creature carries the stagger's
+		# remaining length, so every other peer's copy holds the same wince.
+		if str(event.get("kind", "")) == PRESENTATION.KIND_HIT:
+			_ensure_combat_link()
+			if _combat != null and _combat.has_method("player_stagger_seconds_left"):
+				var left := float(_combat.call("player_stagger_seconds_left"))
+				if left > 0.0:
+					event["stagger_seconds"] = left
 		broadcast_presentation(str(event.get("kind", "")), event)
 
 
@@ -577,6 +587,11 @@ func play_presentation(kind: String, payload: Dictionary = {}) -> Node:
 		if _presence != null and is_instance_valid(_presence):
 			_presence.call("_suspend", "hit_pose")
 		play_hit()
+		# The owner's creature was staggered by this blow: hold the wince as the
+		# owner's own copy does. Bounded, since it arrives from another peer.
+		var stagger := float(payload.get("stagger_seconds", 0.0)) if payload.get("stagger_seconds") is float else 0.0
+		if is_finite(stagger) and stagger > 0.0:
+			hold_combat_wince(minf(stagger, MAX_REMOTE_STAGGER_S))
 	elif kind == PRESENTATION.KIND_KNOCKOUT:
 		_apply_remote_faint_pose()
 	presentation_plays += 1
