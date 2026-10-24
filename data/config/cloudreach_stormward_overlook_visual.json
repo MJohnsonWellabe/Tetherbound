@@ -34,5 +34,14 @@
   "beacons": [
     { "position": [-5.5, 0.35, 5.0], "colour": "#72dcdb", "energy": 2.8, "range_m": 17.0 },
     { "position": [5.5, 0.35, 5.0], "colour": "#78b8df", "energy": 2.5, "range_m": 16.0 }
-  ]
+  ],
+  "candidate": {
+    "enabled": false,
+    "preview_arg": "--cloudreach-overlook-cleanup-candidate",
+    "_why": "F40#5 / GPU F40 baseline C5 (24 Oct, stormward_overlook 4.60, worst stand: 'dark mossy hedge cubes float beside the bannered arch', P2-049 dark strips PRESENT). The piers and ruined wings are castle tower/wall meshes in the dark masonry, which read as hedge cubes; the candidate draws them in the pale Cloudreach stone (stone_light). The P2-049 'black rail-like strips' are the flat bronze needle bars lying across the grass; the candidate drops the needle (the compass ring and signal stay). Visual only, collision-free as before. Flag OFF; not judged yet.",
+    "overlay": {
+      "ruin_material": "stone_light",
+      "show_needle": false
+    }
+  }
 }

@@ -578,6 +578,21 @@
           }
         }
       }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-perches-tidy-candidate",
+      "_why": "F40#5 / GPU F40 baseline C5 (24 Oct): at the High Perches the Master signpost's world-space caption ('...Hold your footing. Follow the side path ->') fills and clips the right third of every reverse frame (CPU recapture stand 7 too; b1 judges PRESENT x3). The sign stood 3 m behind and 8 m beside the stand, inside the reverse camera's near field; the candidate moves it to the court edge 14 m to the side (offset [10.6, 9.1] from the Master's sign position, still facing the Master). Visual only. Flag OFF; not judged yet.",
+      "overlay": {
+        "visual": {
+          "master_signpost_offsets": {
+            "high_roost_perches": [
+              10.6,
+              9.1
+            ]
+          }
+        }
+      }
     }
   ]
 }
