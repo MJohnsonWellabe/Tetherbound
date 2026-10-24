@@ -3,6 +3,10 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct b18 (`close-1024/b18/judges.md`): no candidate beats shipping. Aquaryn's gentle shove 6.94 vs 7.08, Tidecoil's 7.03 vs 7.27, Mosshell's -90 faint 7.17 vs 7.31. All OFF; nothing to queue on GPU from b18.
+  - Aquaryn and Tidecoil are parked on poses after two flat rounds (b17, b18).
+  - MESHY request: naturalistic remakes of Aquaryn and Tidecoil that keep identity (fin crest, orange fin tips; serpent coil, pink fins) and restore the board's white belly and navy value break in place of the glossy single-value cyan. That is the judges' common ask, and it is new art.
+  - Mosshell's model is rated at the bar. Two faint variants have lost (sprawl b16, -90 b18), so its faint is parked as well.
 - 24 Oct owner direction received ("switch to GPU judging and split the rows"). From now on:
   - CPU batches only pick candidates.
   - Every candidate READY carries its exact GPU capture command, so you can queue it.
