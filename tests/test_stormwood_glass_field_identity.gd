@@ -97,3 +97,40 @@ func test_scorched_scar_pass_builds_behind_its_flag() -> void:
 	assert_true(field.find_children("GlassShard*", "MeshInstance3D", true, false).size() >= 48)
 	assert_true(field.find_children("*", "CollisionObject3D", true, false).is_empty(), "still non-colliding")
 	world.free()
+
+
+## F41 r14 candidate (shard_finish.crystal_model, unset = off): one Meshy
+## fulgurite cluster per scar, seated on the ground, taller than the 1.80 m
+## trainer, still non-colliding; without the key nothing is added.
+func test_fulgurite_clusters_build_only_with_their_model() -> void:
+	var world := FlatWorld.new()
+	var field := PRESENTATION.new()
+	world.add_child(field)
+	field.force_scorched_scars = true
+	field.shard_finish_override = {"enabled": true,
+		"crystal_model": "res://assets/props/meshy-1024/stormwood_glass_scar_crystals/stormwood_glass_scar_crystals.glb",
+		"crystal_height_scale": 0.35}
+	field.build(world, false)
+	var clusters := field.find_children("FulguriteCluster", "Node3D", true, false)
+	assert_eq(clusters.size(), 8, "one cluster per strike scar")
+	for node: Node in clusters:
+		var cluster := node as Node3D
+		var box := AABB()
+		var first := true
+		for child: Node in cluster.find_children("*", "MeshInstance3D", true, false):
+			var instance := child as MeshInstance3D
+			var aabb := PRESENTATION._transform_to(world, instance) * instance.mesh.get_aabb()
+			box = aabb if first else box.merge(aabb)
+			first = false
+		assert_false(first, "cluster has meshes")
+		assert_true(box.size.y > 1.8, "cluster %.2f m stands taller than the trainer" % box.size.y)
+		assert_almost_eq(box.position.y, 100.0, 0.05, "seated on the ground")
+	assert_true(field.find_children("*", "CollisionObject3D", true, false).is_empty(), "still non-colliding")
+	world.free()
+	var plain := FlatWorld.new()
+	var off := PRESENTATION.new()
+	plain.add_child(off)
+	off.force_scorched_scars = true
+	off.build(plain, false)
+	assert_true(off.find_children("FulguriteCluster", "Node3D", true, false).is_empty(), "off without crystal_model")
+	plain.free()
