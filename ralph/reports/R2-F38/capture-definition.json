@@ -170,7 +170,9 @@
         14
       ],
       "heading_deg": 90,
-      "source": "F17 village/crossing_hall coordinates; strict stand support required"
+      "source": "F17 village/crossing_hall coordinates; strict stand support required",
+      "prefer_terrain_ground": true,
+      "_why_close1024": "F38#5 close-1024: the built-floor resolver stood the trainer on the interior ceiling panels (frames floated in a blue void above the nave); stand on the Hall floor (terrain height) instead."
     },
     {
       "id": "shrine_room",
@@ -180,7 +182,9 @@
         2
       ],
       "heading_deg": 90,
-      "source": "F17 village/crossing_hall coordinates; strict stand support required"
+      "source": "F17 village/crossing_hall coordinates; strict stand support required",
+      "prefer_terrain_ground": true,
+      "_why_close1024": "F38#5 close-1024: the built-floor resolver stood the trainer on the interior ceiling panels (frames floated in a blue void above the nave); stand on the Hall floor (terrain height) instead."
     },
     {
       "id": "arch_home",
@@ -199,8 +203,13 @@
         98,
         19.9
       ],
-      "heading_deg": 180,
-      "source": "crossing_hall.json arches:tidewake"
+      "heading_deg": 0,
+      "source": "crossing_hall.json arches:tidewake",
+      "views": [
+        "gameplay",
+        "detail"
+      ],
+      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room)."
     },
     {
       "id": "arch_cloudreach",
@@ -209,8 +218,13 @@
         104,
         19.9
       ],
-      "heading_deg": 180,
-      "source": "crossing_hall.json arches:cloudreach"
+      "heading_deg": 0,
+      "source": "crossing_hall.json arches:cloudreach",
+      "views": [
+        "gameplay",
+        "detail"
+      ],
+      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room)."
     },
     {
       "id": "arch_stormwood",
@@ -219,8 +233,13 @@
         110,
         19.9
       ],
-      "heading_deg": 180,
-      "source": "crossing_hall.json arches:stormwood"
+      "heading_deg": 0,
+      "source": "crossing_hall.json arches:stormwood",
+      "views": [
+        "gameplay",
+        "detail"
+      ],
+      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room)."
     },
     {
       "id": "arch_biome5",
@@ -229,8 +248,13 @@
         116,
         19.9
       ],
-      "heading_deg": 180,
-      "source": "crossing_hall.json arches:biome5"
+      "heading_deg": 0,
+      "source": "crossing_hall.json arches:biome5",
+      "views": [
+        "gameplay",
+        "detail"
+      ],
+      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room)."
     },
     {
       "id": "arch_biome6",
@@ -239,8 +263,13 @@
         98,
         8.1
       ],
-      "heading_deg": 0,
-      "source": "crossing_hall.json arches:biome6"
+      "heading_deg": 180,
+      "source": "crossing_hall.json arches:biome6",
+      "views": [
+        "gameplay",
+        "detail"
+      ],
+      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room)."
     },
     {
       "id": "arch_biome7",
@@ -249,8 +278,13 @@
         104,
         8.1
       ],
-      "heading_deg": 0,
-      "source": "crossing_hall.json arches:biome7"
+      "heading_deg": 180,
+      "source": "crossing_hall.json arches:biome7",
+      "views": [
+        "gameplay",
+        "detail"
+      ],
+      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room)."
     },
     {
       "id": "arch_biome8",
@@ -259,8 +293,13 @@
         110,
         8.1
       ],
-      "heading_deg": 0,
-      "source": "crossing_hall.json arches:biome8"
+      "heading_deg": 180,
+      "source": "crossing_hall.json arches:biome8",
+      "views": [
+        "gameplay",
+        "detail"
+      ],
+      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room)."
     }
   ],
   "pairing": "Same integrated SHA, seed, character, renderer/preset, time, weather and fixed stand. Baseline/candidate switches only. Reject unmatched player/camera/size or support failure; retain missing rows.",
