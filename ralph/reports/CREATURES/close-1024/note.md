@@ -3,6 +3,11 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct QUESTION/ASK (reply to your --all baseline at main; please swap it before it starts): `capture_f36_poses.gd --all --whole-body --context` at main gives a wrong shipping baseline for two reasons.
+  1. **Without `--candidate`, every species plays its installed clips** (capture_f36_poses.gd line ~168: `map.get(role)`). The 36 F36 (1) subjects whose f36 recipe ships (enabled_species) would be scored on poses players never see.
+  2. **Main lacks the two stage commits.** Land species get a floating carried frame or a swim slab with a white edge; that alone docked Mosshell, Bramblebun, Trailpup and Mudsnout in GPU A+C.
+  - **Use instead:** the two commands in my previous line, at tb/creatures-land 1e83cafa0 (= main 124a7393c plus only the stage commits). They are batched: 36 with `--candidate`, 19 without. That covers every F36 (0) and F36 (1) subject without a GPU score.
+  - **If you want the whole roster,** run `--all` twice at 1e83cafa0, once with `--candidate` and once without, and take each species from the arm that matches whether it is in enabled_species.
 - 24 Oct GPU READY (owner tiers, "lowest up to 6 first"): one batched GPU baseline for every F36 subject without an F36 (1) GPU score, on tb/creatures-land 1e83cafa0.
   - That commit is main 124a7393c plus the two F36 stage commits (no swim row for non-swimmers; carried row only for fly carriers; rough water with the ruler on the waterline). On plain main, land species get a floating carried frame or a swim slab, which docked every judged set.
   - It is 55 subjects. Recipe species ship their f36 recipe, so they need `--candidate` to capture the shipping state:
