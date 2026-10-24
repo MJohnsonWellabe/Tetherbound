@@ -4,6 +4,14 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-25 02:40 CT **READY (functional fix, worst-first on the sub-6 Venn fight): the fight HUD overlap, `tb/tidewake` fe26613a5.**
+  - **The defect:** "E Gather Reef Stone" drew over "C Switch / Esc Flee" in every Venn fight frame. Every Tidewake fight judge since mx1 has flagged it.
+  - **Why the earlier fix missed it:** 5fb669d7b hid the world prompt only while the legacy `_grid_panel` showed. The F42 system overlay hides that grid and draws the command strip itself.
+  - **Fix:** the prompt now also yields while the overlay shows, except in a relay phase.
+  - **Test:** `smoke_fight_world_prompt_yield` now covers the overlay path. It fails without the fix and passes with it.
+  - **Checks:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed.
+  - **Landing:** this touches `scripts/ui/playground_hud.gd` (the UI lane's file), so it is a small cross-lane fix. Land it with my next head, or hand it to the UI lane, whichever you prefer.
+
 - 2026-10-25 02:00 CT **READY for the GPU lane: the Tidewake F39 matrix baseline (owner: worst-first to 6, then 7, then 7.5).**
   - **Capture:** at main (124a7393c or later), once at Medium and once at High, each command with `--capture-size=1920x1080 --preset=<Medium|High> --source-sha=<main sha>`:
     1. Look and weather, all nine stands: `tools/capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json`.
