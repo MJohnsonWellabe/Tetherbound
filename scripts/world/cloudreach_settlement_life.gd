@@ -75,10 +75,11 @@ static func items_config() -> Dictionary:
 	if raw is Dictionary and (bool(raw.get("enabled", false))
 			or OS.get_cmdline_user_args().has(str(raw.get("preview_arg", "--none")))):
 		_items = raw
-		var next: Variant = raw.get("candidate", {})
-		if next is Dictionary and (bool(next.get("enabled", false))
-				or OS.get_cmdline_user_args().has(str(next.get("preview_arg", "--none")))):
-			_items = merge(raw, next.get("overlay", {}))
+		# Judged-next rounds, each OFF unless enabled or passed its preview arg.
+		for next: Variant in raw.get("candidates", []):
+			if next is Dictionary and (bool(next.get("enabled", false))
+					or OS.get_cmdline_user_args().has(str(next.get("preview_arg", "--none")))):
+				_items = merge(_items, next.get("overlay", {}))
 	return _items
 
 
@@ -266,8 +267,19 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 			var under := root.get_node_or_null(NodePath(str(rule.get("under", ""))))
 			if under == null:
 				continue
+			var kept: Array = rule.get("keep_prefixes", [])
 			for child: Node in under.get_children():
-				if (rule.get("prefixes", []) as Array).any(func(prefix: String) -> bool: return str(child.name).begins_with(prefix)):
+				var label := str(child.name)
+				# The walkable crown shares one mesh with its walls: keep the
+				# crown surface(s) and draw the later surfaces with nothing.
+				if label == str(rule.get("surfaces_of", "")) and child is MeshInstance3D:
+					var body := child as MeshInstance3D
+					for surface in range(int(rule.get("hide_surfaces_from", 1)), body.mesh.get_surface_count()):
+						body.set_surface_override_material(surface, _invisible())
+					continue
+				var named := (rule.get("prefixes", []) as Array).any(func(prefix: String) -> bool: return label.begins_with(prefix))
+				var unkept := rule.has("keep_prefixes") and not kept.any(func(prefix: String) -> bool: return label.begins_with(prefix))
+				if named or unkept:
 					for mesh: GeometryInstance3D in child.find_children("*", "GeometryInstance3D", true, false):
 						mesh.visible = false
 					if child is GeometryInstance3D:
@@ -479,6 +491,14 @@ func _dress_building(model: Node3D, asset: String, path := "", double_sided := f
 				_lamps.append({"light": null, "material": finish,
 					"glow": float(spec.get("window_night_energy", 2.5)), "day_glow": 0.0})
 			mesh.set_surface_override_material(surface, finish)
+
+
+static func _invisible() -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.albedo_color = Color(1.0, 1.0, 1.0, 0.0)
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	return material
 
 
 func _collide(placement: Node3D, size: Vector3, fraction: float) -> void:
