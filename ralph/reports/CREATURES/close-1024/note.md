@@ -29,6 +29,11 @@ Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (
 - 23 Oct (b1) Riverdrake pilot 7.29 vs live 4.78 (>= 6.7 CPU). Held on tb/creatures: `water_riverdrake` binds its own model (water_roster/water_mounts), so land and water forms move together after a water-mount re-measure.
 - 23 Oct MESHY: batch 1, ten naturalistic remakes (starters/main path first): `ralph/reports/CREATURES/close-1024/meshy-batch1/REQUEST.md` (identity refs, target heights, prompts; same route as the Meadowhart nat-v1 pilot).
 
+## Status by row (24 Oct)
+- F36#0 (30-row ledger + owner style direction): ON this lane on CPU-provisional judged rounds: Terrapup 7.62, Bramblebun 7.57, Trailpup 7.49, Mudsnout 7.40, Mosshell 7.31 (+water 7.19), Riverdrake 7.29 (+water 7.00), Burrowback 7.23, Paddlenewt 6.88, Veridian 6.82. Open: starters Ripplet (nat-v1 GLB; sitter rig weights lopsided) and Galewisp (batch 2 spread-wing redraft); Sparkit, Staticub, Mirejaw, Pipwing remakes lost (batch 2 redrafts); the six NPC faces (coordinator-owned identity-preserving face regeneration, ledger rows 26-30, unchanged here).
+- F36#1: b2-b4 judged 31 species on hit/faint; 16 held-shove recipes and 5 newly enabled species ON (all >= 6.7, above shipping). 13 below-bar improvements listed for your call. The second half (15 species incl. birds) is being captured now (`--candidate-1024b`).
+- F29#3: Stormursa ships its b13 state (held shove hit, 5.00 m): CPU-provisional 7.54 mapped (close-1022 b13, confirming batch), so >= 6.7 on CPU; the GPU 7.00 was the older 4.10 m / no-shove state. A GPU pass on the current head is needed to confirm 7.5. Cub/adult read improves with the batch-2 Staticub juvenile (veins kept).
+
 ## Worklist
 1. F36#0: judge the archived Terrapup, Bramblebun and Riverdrake naturalistic pilots against live (restored from `tb/archive-2026-10-23^4`, OFF); rig Ripplet and Galewisp nat-v1 GLBs.
 2. F36#1: full shipping pose matrix (58 species) captured, ranked, worst faints fixed (Fulgocobra faint end rears up).
