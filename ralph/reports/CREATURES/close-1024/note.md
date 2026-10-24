@@ -3,6 +3,11 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct Frostclaw "dark sphere at the trainer's feet" (GPU F36#1), investigated, no change shipped:
+  - It is the tail tip itself: the installed mesh ends in a dark rounded lump of geometry and texture.
+  - Separately, the installed skin weights every tail vertex to rear_upper_l and rear_lower_l; none go to tail_1 or tail_2.
+  - I tried a byte-level weight-only rewrite (rig, clips and textures untouched; recipe sha updated). The lump stays, and in the hit the tail swings somewhere worse, so it was reverted.
+  - The fix needs art. MESHY candidate: a Frostclaw tail-tip edit or remake (snow-leopard identity; long tapering tail, no terminal ball; tail skinned to the tail bones). Frostclaw's recipe is GPU-confirmed at 7.88 despite this.
 - 24 Oct READY tb/creatures-land b67ec65dc (= c6985d7a9 + two commits).
   - F36#0 scale (GPU item 2): Trailpup 2.3 -> 3.1 m, Stormtrail 2.55 -> 3.45 m and Cindercub 2.5 -> 3.25 m, radius with height. No footprint warning; Warrens and Hall admission hold.
   - F36#1: Riverdrake's land form plays its recipe (b15: 6.80 vs 6.20; land only, since the lane keeps its pilot).
