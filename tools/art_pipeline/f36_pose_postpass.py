@@ -908,14 +908,15 @@ SHOVE_1024B = ('stormcapra', 'galecrest', 'galewisp', 'brooktail', 'duskhush', '
 # Close-1024 b8-b9 (CPU, three judges per batch, confirming batches): the held
 # shove from the second half beat the shipping hit at or above the
 # CPU-provisional 6.7 mapped on these. Live recipes; the rest stay OFF.
-LANDED_1024B_SHOVE = ('galecrest', 'aeriex', 'galewisp', 'tanglevolt', 'stormcapra', 'solmane',
-                      'ripplet')
+# Ripplet passed too but now plays its naturalistic remake's own clips (b11).
+LANDED_1024B_SHOVE = ('galecrest', 'aeriex', 'galewisp', 'tanglevolt', 'stormcapra', 'solmane')
 # Close-1024 coordinator call (24 Oct, as on 22 Oct): ON where the candidate beat
 # shipping in a confirming batch, under 6.7 mapped, with no judge seeing the
 # faint end still standing (b2-b4, b8-b9). Ashtusk lands with its side topple.
 # Nightburrow, Stormtrail and Riftfrill passed too but follow their bases onto
 # the naturalistic remakes (own clips), so they are not listed.
-LANDED_1024_BELOW_BAR = ('cindercub', 'ashtusk', 'shadelet', 'mosshock', 'abyssal_guardian', 'brooktail',
+# Cindercub passed too but now plays its naturalistic remake's own clips (b11).
+LANDED_1024_BELOW_BAR = ('ashtusk', 'shadelet', 'mosshock', 'abyssal_guardian', 'brooktail',
                          'glimmermoth', 'tempestwing', 'ribbonray')
 LANDED_1024_TOPPLE = ('ashtusk',)
 SHOVE_1024_RUN = (SHOVE_1024 if CANDIDATE_1024 else LANDED_1024_SHOVE) + LANDED_1024B_SHOVE + LANDED_1024_BELOW_BAR

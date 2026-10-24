@@ -57,6 +57,19 @@ def low(skip=(),q=0.0):
 TAIL=('tail_1','tail_2')
 # Faint side roll: negative turns the back to the stage camera, positive the belly.
 FAINT_ROLL=-90
+# F36#1 r1: compose several turns on one bone (rotate() sets it outright).
+def turn(name,parts):
+ basis=bases[name];q=Quaternion((1,0,0,0))
+ for deg,axis in parts:q=Quaternion(Vector(axis),math.radians(deg))@q
+ rig.pose.bones[name].rotation_quaternion=basis.inverted()@q@basis
+def _tail_x(name,angle):
+ b=rig.pose.bones[name];b.rotation_mode='QUATERNION'
+ b.rotation_quaternion=bases[name].inverted()@Quaternion(Vector((0,1,0)),math.radians(angle))@bases[name]
+ bpy.context.view_layer.update();x=abs((rig.matrix_world@b.tail).x)
+ b.rotation_quaternion=Quaternion((1,0,0,0));bpy.context.view_layer.update();return x
+# SPLAY: per side, the sign about the body's length axis that swings the foot outward.
+SPLAY={side:(1 if _tail_x('front_upper_'+side,25)>_tail_x('front_upper_'+side,-25) else -1) for side in ('l','r')}
+H_REST=low((),.999)
 for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('attack',24,False),('charged',42,False),('hit',12,False),('faint',36,False),('rest',36,False),('swim',40,True),('fly_grip',48,True),('ride',72,True)]:
  action=bpy.data.actions.new(role);rig.animation_data.action=action
  for f in sorted(set(range(0,frames+1,2))|{frames}):
@@ -65,15 +78,14 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
   if role in ['idle','ride']:
    rotate('spine',.7*wave);rotate('head',1.2*wave);rotate('tail_2',4*wave,(0,0,1))
   if role=='swim':
-   # Close-1024: the walk-cycle swim stood the drake upright in the water (the
-   # installed model swims level). Pitch the chest down to level the torso, keep
-   # the head up out of the water, paddle the forelegs, trail and kick the hind
-   # legs, and sweep the tail side to side.
+   # F36#1 roster r1 judges: the striding swim stood upright in the water.
+   # Level the torso, fold the legs under the chest with a short paddle and
+   # stream the hind legs back (the Riverdrake water form's judged swim).
    rotate('root',-REAR*12);rotate('neck',-NOD*26);rotate('head',NOD*18)
    for side,ph in (('l',0),('r',math.pi)):
     stroke=math.sin(t*2*math.pi+ph)
-    rotate('front_upper_'+side,30*stroke);rotate('front_lower_'+side,-20*max(0,-stroke))
-    rotate('rear_upper_'+side,-38+12*math.sin(t*2*math.pi+ph+math.pi/2));rotate('rear_lower_'+side,18)
+    rotate('front_upper_'+side,FOLD['front']*(48+10*stroke));rotate('front_lower_'+side,-FOLD['front']*55)
+    rotate('rear_upper_'+side,-FOLD['rear']*(55+8*stroke));rotate('rear_lower_'+side,-FOLD['rear']*20)
    rotate('tail_1',10*wave,(0,0,1));rotate('tail_2',16*wave,(0,0,1))
   if role in ['walk','run']:
    amplitude={'walk':17,'run':28}[role]
@@ -119,7 +131,12 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
      rotate(prefix+'_upper_'+side,-30);rotate(prefix+'_lower_'+side,55)
   bpy.context.view_layer.update()
   # Ground the lowest evaluated surface, never change the body/world position.
-  root=rig.pose.bones['root'];root.location=bases['root'].inverted()@Vector((0,0,-(low(TAIL,.02) if role=='rest' else low(TAIL,.05) if role=='faint' else low())))
+  lo=low(TAIL,.02) if role=='rest' else low(TAIL,.05) if role=='faint' else low()
+  if role=='swim':
+   # F36#1 r1: sink the swimmer so its body's median sits at 0.38 of its height,
+   # half under the surface, rather than standing on its folded feet.
+   lo+=max(0.0,(low((),.5)-lo)-0.38*H_REST)
+  root=rig.pose.bones['root'];root.location=bases['root'].inverted()@Vector((0,0,-lo))
   bpy.context.view_layer.update()
   for b in rig.pose.bones:
    b.keyframe_insert('rotation_quaternion',frame=f)

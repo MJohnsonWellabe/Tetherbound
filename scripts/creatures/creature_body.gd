@@ -1497,8 +1497,8 @@ static func _apply_field_bright_values(info: Dictionary) -> void:
 ## albedo and emission; a night floor owns its emission (the night scale) and
 ## takes the albedo only.
 static func _sync_field_bright_derived(source: BaseMaterial3D, albedo: Color, emission_mult: float) -> void:
-	for ref: WeakRef in _field_bright_derived.get(source.get_instance_id(), []):
-		var copy := ref.get_ref() as BaseMaterial3D
+	for entry: Array in _field_bright_derived.get(source.get_instance_id(), []):
+		var copy := (entry[0] as WeakRef).get_ref() as BaseMaterial3D
 		if copy == null:
 			continue
 		copy.albedo_color = albedo
@@ -1524,14 +1524,15 @@ static func _track_field_bright_copy(source: BaseMaterial3D, copy: BaseMaterial3
 		_field_bright_derived[root] = []
 	var refs := _field_bright_derived[root] as Array
 	# The shared night floor is re-registered by each new body: keep one entry
-	# per live copy and drop freed ones.
+	# ([weakref, instance id]) per live copy and drop freed ones from both maps.
 	for index in range(refs.size() - 1, -1, -1):
-		var held: Object = (refs[index] as WeakRef).get_ref()
+		var held: Object = (refs[index][0] as WeakRef).get_ref()
 		if held == null:
+			_field_bright_root.erase(refs[index][1])
 			refs.remove_at(index)
 		elif held == copy:
 			return
-	refs.append(weakref(copy))
+	refs.append([weakref(copy), copy.get_instance_id()])
 	_field_bright_root[copy.get_instance_id()] = root
 
 

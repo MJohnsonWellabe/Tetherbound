@@ -1,0 +1,77 @@
+{
+ "Ne": {
+  "anchor": false,
+  "label": "F36r sirenseal r4",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/sirenseal.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/sirenseal.png"
+ },
+ "Od": {
+  "anchor": false,
+  "label": "F36r mosshock r4",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/mosshock.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/mosshock.png"
+ },
+ "Ua": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Wn": {
+  "anchor": false,
+  "label": "F36r tidecoil r4",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/tidecoil.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/tidecoil.png"
+ },
+ "Xe": {
+  "anchor": false,
+  "label": "F36r abyssal_guardian r4",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/abyssal_guardian.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/abyssal_guardian.png"
+ },
+ "Gp": {
+  "anchor": false,
+  "label": "F36r staticub r4",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/staticub.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/staticub.png"
+ },
+ "Kn": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Iq": {
+  "anchor": false,
+  "label": "F36r torrentoad r4",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/torrentoad.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/torrentoad.png"
+ },
+ "Gm": {
+  "anchor": false,
+  "label": "F36r cragclaw r4",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/cragclaw.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/cragclaw.png"
+ },
+ "Vk": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Rc": {
+  "anchor": false,
+  "label": "F36r voltwig r4",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/voltwig.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/voltwig.png"
+ },
+ "Rj": {
+  "anchor": false,
+  "label": "F36r mangrove_monitor r4",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/mangrove_monitor.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/mangrove_monitor.png"
+ },
+ "Rv": {
+  "anchor": false,
+  "label": "F36r riverdrake r4",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/riverdrake.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/r4/sides/riverdrake.png"
+ }
+}
