@@ -3,6 +3,12 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct 01:40 CT READY tb/creatures-land 337f81506 (= 7773d93c5 Terrapup/Bramblebun pilots + one commit): F36#1 held shove hit live for 16 species and five more species on their recipe.
+  - b2-b4 (CPU, 3 judges x 3 batches, standard prompt, confirming batches; `close-1024/b2/judges.md`): Craghorn 7.89, Cloudfang 7.82, Breezetail 7.73, Stormraven 7.47, Tidecoil 7.43, Burrowback 7.34, Frostclaw 7.34, Aquaryn 7.29, Thundertunnel 7.22, Cliffspike 7.16, Pebbik 7.09, Trailpup 7.08, Voltwig 7.04, Stormbrush 6.97, Sirenseal 6.97, Riptusk 6.79 mapped, each above shipping. b3 (Aquaryn, Tidecoil, Voltwig, Sirenseal, Riptusk) carries an anchor-RMSE 0.83 caveat.
+  - The regenerated `f36_pose_candidates.json` changes exactly those 16 profiles, each byte-equal to its judged candidate; Aquaryn/Tidecoil/Breezetail/Craghorn/Stormraven join `enabled_species`.
+  - Checks on 337f81506: Godot `--only=f36_pose,creature_pose,creature_body,species,scale_ladder,water,roster,fly,riding,rideable,terrapup,bramblebun,rest_pose,texture_import_policy` 617 tests, 0 failed; `test_f36_pose_postpass.py` 8/8 OK (tear guard); postpass `--check` current.
+  - GPU confirm: `capture_f36_poses.gd --candidate --whole-body --context --species=<the 16>`.
+- 24 Oct QUESTION (your call, as on 22 Oct): these beat shipping but sit under 6.7 mapped, all OFF: Cindercub 6.67, Cragclaw 6.65, Skyrill 6.62, Ashtusk 6.57, Nightburrow 6.52 (+1.03), Shadelet 6.52, Mangrove Monitor 6.51, Cannonback 6.44, Mosshock 6.13, Mudsnout 6.00, Tuskroot 5.95, Stormtrail 5.75, Riftfrill 5.18. ON for the wind-down, or keep OFF? I'll keep iterating their faints meanwhile.
 - 23 Oct 23:59 CT READY tb/creatures-land 7773d93c5 (origin/main 5f1f388cc + one commit): F36#0 Terrapup (starter) and Bramblebun naturalistic pilots ON.
   - b1 (CPU, three judges, standard prompt, confirming batch; `close-1024/b1/`): Terrapup 7.62 vs live 5.30, Bramblebun 7.57 vs live 4.59 mapped. Both clear 7.5 even on CPU; recorded as CPU-provisional until a GPU pass.
   - Integration: Terrapup seat 3.264 -> 3.80 m on the measured plated back, rest offset 1.0302 -> 0 (pilot rest clip grounded, 0.79 height ratio), out of `enabled_species`; Bramblebun lift/degreen off. Provenance jsonl + drafted concept beside each rig. Textures mode 2.
