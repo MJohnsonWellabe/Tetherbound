@@ -60,7 +60,14 @@
         1794.0
       ],
       "heading_deg": 0,
-      "source": "debug_teleport_spots.json:The Old Quarry"
+      "source": "debug_teleport_spots.json:The Old Quarry",
+      "view_headings": {
+        "approach": 45,
+        "gameplay": 45,
+        "reverse": 225,
+        "detail": 45
+      },
+      "_why_view_headings": "F38 L1 close-1024: the fixed stand for these views failed the unchanged production preflight (capsule in quarry props or tree trunks, no physical floor, or the camera pulled in by a wall). A CPU search of 8 headings at the view's own offset, with the same preflight and settled camera checks, found these absolute view headings passing; other views keep the site heading."
     },
     {
       "id": "band2_stone_and_root_1",
@@ -90,7 +97,11 @@
         4170.0
       ],
       "heading_deg": 0,
-      "source": "debug_teleport_spots.json:Old Mill Crossing"
+      "source": "debug_teleport_spots.json:Old Mill Crossing",
+      "view_headings": {
+        "approach": 45
+      },
+      "_why_view_headings": "F38 L1 close-1024: the fixed stand for these views failed the unchanged production preflight (capsule in quarry props or tree trunks, no physical floor, or the camera pulled in by a wall). A CPU search of 8 headings at the view's own offset, with the same preflight and settled camera checks, found these absolute view headings passing; other views keep the site heading."
     },
     {
       "id": "band4_upper_meadows_ironwood_0",
@@ -100,7 +111,11 @@
         5060.0
       ],
       "heading_deg": 0,
-      "source": "debug_teleport_spots.json:The Ironwood Grove"
+      "source": "debug_teleport_spots.json:The Ironwood Grove",
+      "view_headings": {
+        "approach": 45
+      },
+      "_why_view_headings": "F38 L1 close-1024: the fixed stand for these views failed the unchanged production preflight (capsule in quarry props or tree trunks, no physical floor, or the camera pulled in by a wall). A CPU search of 8 headings at the view's own offset, with the same preflight and settled camera checks, found these absolute view headings passing; other views keep the site heading."
     },
     {
       "id": "band4_upper_meadows_ironwood_1",
@@ -110,7 +125,13 @@
         6490.0
       ],
       "heading_deg": 0,
-      "source": "debug_teleport_spots.json:The Ridgeline Watch"
+      "source": "debug_teleport_spots.json:The Ridgeline Watch",
+      "view_headings": {
+        "approach": 45,
+        "gameplay": 45,
+        "detail": 135
+      },
+      "_why_view_headings": "F38 L1 close-1024: the fixed stand for these views failed the unchanged production preflight (capsule in quarry props or tree trunks, no physical floor, or the camera pulled in by a wall). A CPU search of 8 headings at the view's own offset, with the same preflight and settled camera checks, found these absolute view headings passing; other views keep the site heading."
     },
     {
       "id": "band5_stronghold_approach_0",
@@ -140,7 +161,11 @@
         14
       ],
       "heading_deg": 90,
-      "source": "F17 village/crossing_hall coordinates; strict stand support required"
+      "source": "F17 village/crossing_hall coordinates; strict stand support required",
+      "view_headings": {
+        "approach": 135
+      },
+      "_why_view_headings": "F38 L1 close-1024: the fixed stand for these views failed the unchanged production preflight (capsule in quarry props or tree trunks, no physical floor, or the camera pulled in by a wall). A CPU search of 8 headings at the view's own offset, with the same preflight and settled camera checks, found these absolute view headings passing; other views keep the site heading."
     },
     {
       "id": "village_road",
@@ -150,7 +175,13 @@
         14
       ],
       "heading_deg": 90,
-      "source": "F17 village/crossing_hall coordinates; strict stand support required"
+      "source": "F17 village/crossing_hall coordinates; strict stand support required",
+      "view_headings": {
+        "gameplay": 135,
+        "reverse": 315,
+        "detail": 135
+      },
+      "_why_view_headings": "F38 L1 close-1024: the fixed stand for these views failed the unchanged production preflight (capsule in quarry props or tree trunks, no physical floor, or the camera pulled in by a wall). A CPU search of 8 headings at the view's own offset, with the same preflight and settled camera checks, found these absolute view headings passing; other views keep the site heading."
     },
     {
       "id": "hall_front",
@@ -160,7 +191,13 @@
         14
       ],
       "heading_deg": 90,
-      "source": "F17 village/crossing_hall coordinates; strict stand support required"
+      "source": "F17 village/crossing_hall coordinates; strict stand support required",
+      "view_headings": {
+        "approach": 135,
+        "gameplay": 135,
+        "detail": 135
+      },
+      "_why_view_headings": "F38 L1 close-1024: the fixed stand for these views failed the unchanged production preflight (capsule in quarry props or tree trunks, no physical floor, or the camera pulled in by a wall). A CPU search of 8 headings at the view's own offset, with the same preflight and settled camera checks, found these absolute view headings passing; other views keep the site heading."
     },
     {
       "id": "hall_nave",
@@ -172,7 +209,11 @@
       "heading_deg": 90,
       "source": "F17 village/crossing_hall coordinates; strict stand support required",
       "prefer_terrain_ground": true,
-      "_why_close1024": "F38#5 close-1024: the built-floor resolver stood the trainer on the interior ceiling panels (frames floated in a blue void above the nave); stand on the Hall floor (terrain height) instead."
+      "_why_close1024": "F38#5 close-1024: the built-floor resolver stood the trainer on the interior ceiling panels (frames floated in a blue void above the nave); stand on the Hall floor (terrain height) instead.",
+      "view_headings": {
+        "approach": 135
+      },
+      "_why_view_headings": "F38 L1 close-1024: the fixed stand for these views failed the unchanged production preflight (capsule in quarry props or tree trunks, no physical floor, or the camera pulled in by a wall). A CPU search of 8 headings at the view's own offset, with the same preflight and settled camera checks, found these absolute view headings passing; other views keep the site heading."
     },
     {
       "id": "shrine_room",
@@ -184,7 +225,13 @@
       "heading_deg": 90,
       "source": "F17 village/crossing_hall coordinates; strict stand support required",
       "prefer_terrain_ground": true,
-      "_why_close1024": "F38#5 close-1024: the built-floor resolver stood the trainer on the interior ceiling panels (frames floated in a blue void above the nave); stand on the Hall floor (terrain height) instead."
+      "_why_close1024": "F38#5 close-1024: the built-floor resolver stood the trainer on the interior ceiling panels (frames floated in a blue void above the nave); stand on the Hall floor (terrain height) instead.",
+      "view_headings": {
+        "approach": 135,
+        "gameplay": 135,
+        "reverse": 315
+      },
+      "_why_view_headings": "F38 L1 close-1024: the fixed stand for these views failed the unchanged production preflight (capsule in quarry props or tree trunks, no physical floor, or the camera pulled in by a wall). A CPU search of 8 headings at the view's own offset, with the same preflight and settled camera checks, found these absolute view headings passing; other views keep the site heading."
     },
     {
       "id": "arch_home",
@@ -194,7 +241,13 @@
         14
       ],
       "heading_deg": 90,
-      "source": "crossing_hall.json arches:home"
+      "source": "crossing_hall.json arches:home",
+      "view_headings": {
+        "approach": 135,
+        "gameplay": 135,
+        "detail": 180
+      },
+      "_why_view_headings": "F38 L1 close-1024: the fixed stand for these views failed the unchanged production preflight (capsule in quarry props or tree trunks, no physical floor, or the camera pulled in by a wall). A CPU search of 8 headings at the view's own offset, with the same preflight and settled camera checks, found these absolute view headings passing; other views keep the site heading."
     },
     {
       "id": "arch_tidewake",

@@ -48,6 +48,11 @@ func _load_plan() -> bool:
 					if site.has("views") and not (site.views as Array).has(view.id):
 						continue
 					var heading := float(site.heading_deg) + float(view.heading_offset_deg)
+					# A site may re-seat a single view whose fixed stand fails the
+					# production preflight (F38 L1 close-1024): an absolute heading.
+					var seats: Dictionary = site.get("view_headings", {})
+					if seats.has(view.id):
+						heading = float(seats[view.id])
 					_planned.append({
 						"frame_id": "%s__%s__%s__%s" % [site.id, time_name, weather_name, view.id],
 						"identity": site.id, "biome_id": "meadows", "biome_display_name": "Meadows",
