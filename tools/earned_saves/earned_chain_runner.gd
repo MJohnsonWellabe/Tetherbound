@@ -451,11 +451,13 @@ func _resumed_segment() -> void:
 		if training_profile != HANDOFF.TRAINING_PROFILE or not piece_order.has(segment):
 			failures.append("Training piece requires the fixed earned training prefix")
 			return
-		if segment == "training_t2_return":
-			_take(await ALTAR.new().return_to_bridge(self, world, game, previous_training), "passed", segment)
-			return
 		var fields := segment.split("_")
 		var tier := int(fields[1].trim_prefix("t"))
+		if fields[2] == "return":
+			# t1 returns to the South Bridge far bank (the Warrens start); t2,
+			# past the Relay, walks on up the north spine to the Old Mill Crossing.
+			_take(await ALTAR.new().return_to_bridge(self, world, game, previous_training, tier == 2), "passed", segment)
+			return
 		if fields[2] == "earn":
 			_take(await EARN.new().run_earning(self, world, game, {"tier": tier, "previous_training": previous_training}), "passed", segment)
 			return
