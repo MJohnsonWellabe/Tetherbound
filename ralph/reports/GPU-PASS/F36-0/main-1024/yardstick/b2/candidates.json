@@ -1,0 +1,65 @@
+[
+    {
+        "label":  "F36#0 main burrowback Medium|High",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-burrowback-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-burrowback-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying). Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#0 main veridian Medium|High",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-veridian-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-veridian-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying). Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#0 main mosshell Medium|High",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-mosshell-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-mosshell-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying). Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#0 main water_mosshell Medium|High",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-water_mosshell-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-water_mosshell-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying). Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#0 main nightburrow Medium|High",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-nightburrow-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-nightburrow-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying). Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#0 main stormtrail Medium|High",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-stormtrail-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-stormtrail-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying). Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#0 main riftfrill Medium|High",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-riftfrill-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-riftfrill-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying). Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    }
+]

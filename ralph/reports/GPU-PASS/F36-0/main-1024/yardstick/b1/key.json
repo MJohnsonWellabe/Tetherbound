@@ -1,0 +1,64 @@
+{
+ "Wi": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ },
+ "Pe": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Il": {
+  "anchor": false,
+  "label": "F36#0 main bramblebun Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-bramblebun-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-bramblebun-Medium.png"
+ },
+ "Vq": {
+  "anchor": false,
+  "label": "F36#0 main paddlenewt Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-paddlenewt-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-paddlenewt-Medium.png"
+ },
+ "Is": {
+  "anchor": false,
+  "label": "F36#0 main trailpup Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-trailpup-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-trailpup-Medium.png"
+ },
+ "Do": {
+  "anchor": false,
+  "label": "F36#0 main cindercub Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-cindercub-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-cindercub-High.png"
+ },
+ "An": {
+  "anchor": false,
+  "label": "F36#0 main terrapup Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-terrapup-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-terrapup-High.png"
+ },
+ "Wf": {
+  "anchor": false,
+  "label": "F36#0 main mudsnout Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-mudsnout-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-mudsnout-High.png"
+ },
+ "Jh": {
+  "anchor": false,
+  "label": "F36#0 main ripplet Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-ripplet-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-ripplet-High.png"
+ },
+ "Jq": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Bn": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ }
+}

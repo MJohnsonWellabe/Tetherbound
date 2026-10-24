@@ -1,0 +1,38 @@
+"""Apply the coordinator's Forward+ creature-emission-floor overlay to the local checkout (GPU-pass helper).
+
+    python emission_overlay.py apply   # edits data/config/art.json and scripts/world/world_look.gd
+Revert with: git -C D:/tb-gpu-pass checkout -- data/config/art.json scripts/world/world_look.gd
+"""
+import sys
+
+ROOT = r"D:\tb-gpu-pass"
+ART = ROOT + r"\data\config\art.json"
+LOOK = ROOT + r"\scripts\world\world_look.gd"
+
+if not sys.argv[1:] or sys.argv[1] != "apply":
+    raise SystemExit("usage: emission_overlay.py apply [forward_plus_scale]")
+SCALE = sys.argv[2] if len(sys.argv) > 2 else "0.0"
+
+art = open(ART, encoding="utf-8").read()
+anchor = '"creature_emission_floor": 0.08,'
+assert art.count(anchor) == 1, "art.json anchor not unique"
+line_start = art.rfind("\n", 0, art.index(anchor)) + 1
+indent = art[line_start:art.index(anchor)]
+art = art.replace(anchor, anchor + "\n" + indent + '"creature_emission_floor_forward_plus_scale": ' + SCALE + ',', 1)
+open(ART, "w", encoding="utf-8", newline="").write(art)
+
+look = open(LOOK, encoding="utf-8").read()
+old = 'CREATURE_BODY.set_emission_floor_scale(float(cfg.get("creature_emission_floor", 0.0)))'
+new = 'CREATURE_BODY.set_emission_floor_scale(creature_emission_floor_for_renderer(cfg, RenderingServer.get_current_rendering_method()))'
+assert look.count(old) == 1, "world_look anchor not unique"
+look = look.replace(old, new, 1)
+nl = "\r\n" if "\r\n" in look else "\n"
+look = look.rstrip() + nl + nl + nl + nl.join([
+    "static func creature_emission_floor_for_renderer(cfg: Dictionary, rendering_method: String) -> float:",
+    "\tvar floor_scale := float(cfg.get(\"creature_emission_floor\", 0.0))",
+    "\tif rendering_method == \"gl_compatibility\":",
+    "\t\treturn floor_scale",
+    "\treturn floor_scale * maxf(0.0, float(cfg.get(\"creature_emission_floor_forward_plus_scale\", 1.0)))",
+]) + nl
+open(LOOK, "w", encoding="utf-8", newline="").write(look)
+print("overlay applied")

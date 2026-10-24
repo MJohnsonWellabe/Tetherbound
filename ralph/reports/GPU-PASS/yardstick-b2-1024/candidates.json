@@ -1,0 +1,59 @@
+[
+ {
+  "label": "F22#4 Riverwatch main Medium-r1 vs Low-r2",
+  "a": "D:\\tb-gpu-runs\\yard\\f22main\\sides\\F22-main-Medium-r1.png",
+  "b": "D:\\tb-gpu-runs\\yard\\f22main\\sides\\F22-main-Low-r2.png",
+  "brief": "A named trainer fight at a Meadows river lock: the river captain's water creature against the player's smaller creature. Frames: before the fight, twelve half-second frames, after, then three telegraphed attacks (start, mid, strike). Does the fight read on screen - both fighters, the telegraphs and the impacts clearly visible - and does it look like an event that belongs to the world?",
+  "defects": [
+   "The captain's creature does not read as a boss: it is not convincingly larger than the player's creature",
+   "Telegraph rings or lanes are the flat magenta the art direction lists as a defect",
+   "A landed attack shows no visible impact (no splash, debris or flash where it hits)",
+   "The captain's creature renders washed-out, grey or semi-transparent (a ghost or hologram) instead of a solid creature"
+  ]
+ },
+ {
+  "label": "F22#4 Riverwatch main Medium-r2 vs Low-r2",
+  "a": "D:\\tb-gpu-runs\\yard\\f22main\\sides\\F22-main-Medium-r2.png",
+  "b": "D:\\tb-gpu-runs\\yard\\f22main\\sides\\F22-main-Low-r2.png",
+  "brief": "A named trainer fight at a Meadows river lock: the river captain's water creature against the player's smaller creature. Frames: before the fight, twelve half-second frames, after, then three telegraphed attacks (start, mid, strike). Does the fight read on screen - both fighters, the telegraphs and the impacts clearly visible - and does it look like an event that belongs to the world?",
+  "defects": [
+   "The captain's creature does not read as a boss: it is not convincingly larger than the player's creature",
+   "Telegraph rings or lanes are the flat magenta the art direction lists as a defect",
+   "A landed attack shows no visible impact (no splash, debris or flash where it hits)",
+   "The captain's creature renders washed-out, grey or semi-transparent (a ghost or hologram) instead of a solid creature"
+  ]
+ },
+ {
+  "label": "F17#6 noshafts diag Medium approach-nave",
+  "a": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-approach-nave-noshafts.png",
+  "b": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-approach-nave-candidate.png",
+  "brief": "Fixed views of the Crossing Hall in a Meadows village (outside approach, nave, side arches, shrine end) by day and night, one in rain, with the 1.80 m trainer as a ruler. Judge whether the Hall reads as a warm, lived-in great hall that belongs in the key art's world.",
+  "defects": [
+   "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall",
+   "Structural posts sit in the camera's near field and frame or block the views",
+   "The shrine end has no warm focal point that draws the eye"
+  ]
+ },
+ {
+  "label": "F17#6 noshafts diag Medium nave-sides",
+  "a": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-nave-sides-noshafts.png",
+  "b": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-nave-sides-candidate.png",
+  "brief": "Fixed views of the Crossing Hall in a Meadows village (outside approach, nave, side arches, shrine end) by day and night, one in rain, with the 1.80 m trainer as a ruler. Judge whether the Hall reads as a warm, lived-in great hall that belongs in the key art's world.",
+  "defects": [
+   "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall",
+   "Structural posts sit in the camera's near field and frame or block the views",
+   "The shrine end has no warm focal point that draws the eye"
+  ]
+ },
+ {
+  "label": "F17#6 noshafts diag Medium shrine",
+  "a": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-shrine-noshafts.png",
+  "b": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-shrine-candidate.png",
+  "brief": "Fixed views of the Crossing Hall in a Meadows village (outside approach, nave, side arches, shrine end) by day and night, one in rain, with the 1.80 m trainer as a ruler. Judge whether the Hall reads as a warm, lived-in great hall that belongs in the key art's world.",
+  "defects": [
+   "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall",
+   "Structural posts sit in the camera's near field and frame or block the views",
+   "The shrine end has no warm focal point that draws the eye"
+  ]
+ }
+]

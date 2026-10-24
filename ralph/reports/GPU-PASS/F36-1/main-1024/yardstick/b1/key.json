@@ -1,0 +1,52 @@
+{
+ "Ya": {
+  "anchor": false,
+  "label": "F36#1 main cloudfang recipe|shipping Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-cloudfang-shipping.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-cloudfang-candidate.png"
+ },
+ "Wf": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Rk": {
+  "anchor": false,
+  "label": "F36#1 main breezetail recipe|shipping Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-breezetail-shipping.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-breezetail-candidate.png"
+ },
+ "Rt": {
+  "anchor": false,
+  "label": "F36#1 main craghorn recipe|shipping Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-craghorn-shipping.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-craghorn-candidate.png"
+ },
+ "Sm": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ },
+ "Nu": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ke": {
+  "anchor": false,
+  "label": "F36#1 main stormcapra recipe|shipping Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-stormcapra-shipping.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-stormcapra-candidate.png"
+ },
+ "Mi": {
+  "anchor": false,
+  "label": "F36#1 main tanglevolt recipe|shipping Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-tanglevolt-shipping.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-tanglevolt-candidate.png"
+ },
+ "Pr": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ }
+}

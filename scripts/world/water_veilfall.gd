@@ -293,8 +293,8 @@ func _build_distance_presentation() -> void:
 		return
 	var rock_rules: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").overlay(
 		rules.get("rock_material", {}), "veilfall_rock")
-	# F39#5 (close-1024): the pale-limestone regrade is its own unjudged
-	# section, shipped in the file but OFF in play until a round passes it.
+	# F39#5 (close-1024): the pale-limestone regrade is its own section, ON
+	# since round ls1 (scores in `_why_veilfall_rock_candidate`).
 	rock_rules = preload("res://scripts/world/tidewake_look_profile.gd").overlay(rock_rules, "veilfall_rock_candidate")
 	material_receipt = ROCK_MATERIAL.install(world.get("terrain"), rock_rules)
 	var falls := FALLS.new()
