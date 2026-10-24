@@ -1837,6 +1837,17 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 				copy.emission = Color.WHITE
 				copy.emission_texture = native_glow
 				copy.emission_energy_multiplier = VISUAL.emission_scale() * float(ASPECT_EMISSION_BOOST[suffix])
+	elif ASPECT_EMISSION_BOOST.has(suffix) and source.albedo_texture != null \
+			and source.albedo_texture.resource_path.ends_with(".jpg"):
+		# A remake base (no emission channel) takes its variant's glow map the
+		# same way native Ashtusk does.
+		var remake_glow := _texture_for(source.albedo_texture, species, suffix, "emissive")
+		if remake_glow != null:
+			copy.emission_enabled = true
+			copy.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
+			copy.emission = Color.WHITE
+			copy.emission_texture = remake_glow
+			copy.emission_energy_multiplier = VISUAL.emission_scale() * float(ASPECT_EMISSION_BOOST[suffix])
 	_shiny_swap_materials[key] = copy
 	return copy
 
@@ -1868,6 +1879,11 @@ static func _texture_for(tex: Texture2D, species: String, suffix: String, kind: 
 	var candidate := ""
 	if path != "" and path.ends_with(".png"):
 		candidate = "%s_%s.png" % [path.get_basename(), suffix]
+	elif path.ends_with(".jpg"):
+		# Close-1024 naturalistic remakes: the glTF albedo is extracted on
+		# import as a .jpg; tools/generate_aspect_variant_textures.py writes the
+		# variant's albedo and its separate glow map beside it.
+		candidate = "%s_%s%s.png" % [path.get_basename(), "emissive_" if kind == "emissive" else "", suffix]
 	else:
 		candidate = "res://assets/creatures/tetherbound/%s/models/%s_extracted_%s_%s.png" % [
 			species, species, kind, suffix]
