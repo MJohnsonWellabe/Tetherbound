@@ -222,7 +222,7 @@ func _finish(complete: bool) -> void:
 func _capture_row(row: Dictionary) -> void:
 	_active_weather = str(row.weather)
 	if not _ground_offset_view(row):
-		_failures.append("%s: no grounded approach/detail point within the bounded fallback" % str(row.frame_id))
+		_failures.append("%s: no grounded, open approach/detail point within the bounded fallback" % str(row.frame_id))
 		_write_manifest()
 		return
 	var count := _records.size()
@@ -257,17 +257,27 @@ func _pin_time(time_name: String) -> Dictionary:
 
 
 ## A fixed 12 m approach (or 3 m detail) can back off a ledge into the void,
-## where the production teleport refuses it. Step in toward the stand, then
+## where the production teleport refuses it, or stand inside a wall. Step in toward the stand, then
 ## try small turns; the row records the offset and heading actually used.
 func _ground_offset_view(row: Dictionary) -> bool:
 	var offset := float(row.get("view_offset_m", 0.0))
 	if is_zero_approx(offset):
 		return true
 	var game := root.get_node_or_null(^"Game")
-	var grounded := func(point: Vector2) -> bool:
-		return not is_nan(float(_world.call("ground_height_at", point.x, point.y))) and game != null \
-			and bool(game.call("_debug_teleport_walkable", _world, _player, point.x, point.y))
 	var origin := Vector2(float(row.stand_origin_xz[0]), float(row.stand_origin_xz[1]))
+	var space := _world.get_world_3d().direct_space_state
+	var eye := func(point: Vector2) -> Vector3:
+		return Vector3(point.x, float(_world.call("ground_height_at", point.x, point.y)) + 1.6, point.y)
+	# Grounded and walkable (the production teleport checks), and an open
+	# eye-height line to the stand, so the view is not taken from inside a
+	# wall or trunk (GPU F40 baseline: Cliffhold approach on a blank wall).
+	var grounded := func(point: Vector2) -> bool:
+		if is_nan(float(_world.call("ground_height_at", point.x, point.y))) or game == null \
+				or not bool(game.call("_debug_teleport_walkable", _world, _player, point.x, point.y)):
+			return false
+		var query := PhysicsRayQueryParameters3D.create(eye.call(point), eye.call(origin))
+		query.exclude = [_player.get_rid()]
+		return space.intersect_ray(query).is_empty()
 	var yaw := deg_to_rad(float(row.view_heading_deg))
 	var chosen := VIEW_FALLBACK.resolve(origin, Vector2(sin(yaw), cos(yaw)), offset, grounded)
 	if chosen.is_empty():
