@@ -3,6 +3,17 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct READY tb/creatures-land c6985d7a9 (= 078a5f6c4 + Mirejaw fit + Pebbik remake ON + rig sources and raw files + Riptusk held OFF).
+  - Checks:
+    - Full `run_tests`: 6964 tests. 4 failed on cb8b86ca7, all Riptusk; after the hold the affected files (creature_rest_pose, four_biome_roster_population, species, f36_pose, water) pass, 540 tests, 0 failed.
+    - Smokes: catching OK, gate E passed and arena containment OK (all headless: 369 s, 186 s, 106 s). Field brightness PASS, F37 Ripplet PASS and Bramblebun colourway 12/12 (xvfb).
+    - Post-pass `--check` current. Footprint audit: zero shrink warnings.
+    - Note: xvfb smokes now crawl here, because the Terrain3D height map loads after a re-import; headless runs avoid that.
+  - Also on the lane, for the next land: 06beef397, `capture_f36_poses.gd --context` no longer stages a swim row for species that never swim (only water_* and swim mounts). That is your GPU item 1.
+  - GPU F36#0 noted: Terrapup 7.64 and Burrowback 7.61 are GPU-confirmed. Next:
+    - grow the five under-ruler species (Trailpup with Stormtrail, Mudsnout, Cindercub, Paddlenewt with Riftfrill), with footprint and admission checked;
+    - lift values on the dark remakes;
+    - work Mosshell, water Mosshell and Ripplet first.
 - 24 Oct land update, now c6985d7a9 (not ready yet; this replaces the cb8b86ca7 entry below).
   - The full suite on cb8b86ca7 had 4 failures out of 6964, all about Riptusk:
     - test_four_biome_roster_population: water presentations must use the land species mesh.
