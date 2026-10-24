@@ -1,0 +1,126 @@
+{
+ "sets": {
+  "Vo": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's furry white-blue coat approaches the owner's naturalistic bar, but A's broken faint frames and the bare neutral stage leave no Palworld appeal or Valheim light to carry it."
+  },
+  "Nk": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated otter has a clear, distinctive silhouette and a believable ridden pose, but it is dark, low-contrast and has no rim light, so it falls short of Palworld's creature finish."
+  },
+  "Kp": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A well-textured boar, but it is a plain real animal about the trainer's height, and the travel frames (floating with no cargo in A, a flat blue slab in B) sink the finish."
+  },
+  "Jt": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry ground textures, an even grass carpet, a flat tiled stronghold wall and flat midday light are far from Palworld's density and Valheim's atmosphere, even where A's aftermaths read well."
+  },
+  "Fc": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same boar presentation as Kp: good fur-and-hide surface, but a plain real animal at roughly human height, with a floating carry frame and a slab-water swim frame."
+  },
+  "Qq": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised face with readable eyes and a fitting moss-and-leather palette matches a shipping game's character finish, though the cartoon face is softer than the naturalistic creatures."
+  },
+  "Uu": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A near-photoreal plain coyote with no Tetherbound elemental identity, a floating carry frame and slab water reads as a stock animal, not a Palworld-class creature."
+  },
+  "Wy": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Identical presentation to Uu: a stock-looking coyote with no elemental hook, a floating carry frame in A and a hard-edged blue water slab in B."
+  },
+  "Qs": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky one-value frames with no visible purple storm sky or lightning, flat magenta telegraph rings, a tiny unreadable player creature and HUD panels covering a third of the screen sink it (A is also blocked by foliage)."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight presentation: replace flat magenta rings with physical telegraphs (stone, lightning, impacts), raise exposure and rim-light both fighters, keep the camera out of trunks and canopy, and shrink or condense the HUD panels",
+   "kind": "scene"
+  },
+  {
+   "change": "Travel-role staging: ground the carrying pose with visible cargo instead of floating the creature, and replace the flat blue water slab with a real water surface at the waterline",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows site dressing and aftermaths: sharper terrain materials, groves and wildflower clusters instead of an even grass carpet, and enemy banners removed or torn down after the win so each aftermath reads clearly",
+   "kind": "scene"
+  }
+ ]
+}

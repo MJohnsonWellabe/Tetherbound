@@ -1,0 +1,52 @@
+{
+ "Vo": {
+  "anchor": true,
+  "A": "f36_0_gap:C3B",
+  "B": "f36_0_gap:C3A"
+ },
+ "Nk": {
+  "anchor": false,
+  "label": "AC terrapup dog Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\A\\sides\\terrapup-dog-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\A\\sides\\terrapup-dog-Medium.png"
+ },
+ "Kp": {
+  "anchor": false,
+  "label": "AC mudsnout High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\A\\sides\\mudsnout-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\A\\sides\\mudsnout-ship-High.png"
+ },
+ "Jt": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Fc": {
+  "anchor": false,
+  "label": "AC mudsnout Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\A\\sides\\mudsnout-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\A\\sides\\mudsnout-ship-Medium.png"
+ },
+ "Qq": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Uu": {
+  "anchor": false,
+  "label": "AC trailpup High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\A\\sides\\trailpup-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\A\\sides\\trailpup-ship-High.png"
+ },
+ "Wy": {
+  "anchor": false,
+  "label": "AC trailpup Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\A\\sides\\trailpup-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\A\\sides\\trailpup-ship-Medium.png"
+ },
+ "Qs": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ }
+}
