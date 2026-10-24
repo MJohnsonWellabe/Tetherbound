@@ -23,7 +23,7 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 	for section: String in ["current_flow", "current_flow_visual", "night_creature_floor",
 			"dock_village_candidate", "dock_dressing_candidate", "surfaces_candidate",
 			"stones_candidate", "veilfall_hero_candidate",
-			"veilfall_facade_candidate"]:
+			"veilfall_facade_candidate", "forward_plus_candidate"]:
 		assert_true(off.has(section), "%s is unjudged and must ship off" % section)
 		assert_true(raw.has(section), "%s ships in the file for capture" % section)
 	# close-1024 lt2: the time-of-day regrade cleared the CPU-provisional bar
@@ -113,3 +113,21 @@ func test_veilfall_hero_pieces_stay_clear_of_the_hike() -> void:
 		for index in spine.size() - 1:
 			nearest = minf(nearest, at.distance_to(Geometry2D.get_closest_point_to_segment(at, spine[index], spine[index + 1])))
 		assert_true(nearest >= 15.0, "%s sits %.1f m from the hike centreline" % [piece.get("landmark_id", "?"), nearest])
+
+
+## close-1024 GPU asks: `_forward_plus` keys reach only Forward+/Mobile, and
+## every time block of the candidate carries the same keys so keyframe blending
+## never holds one block's value across a transition.
+func test_forward_plus_keys_leave_compatibility_untouched() -> void:
+	const LOOK := preload("res://scripts/world/world_look.gd")
+	var cfg := {"energy": 0.95, "energy_forward_plus": 1.35}
+	assert_eq(LOOK.renderer_overrides(cfg, "gl_compatibility"), cfg, "Compatibility reads the base values")
+	assert_almost_eq(float(LOOK.renderer_overrides(cfg, "forward_plus").energy), 1.35)
+	assert_almost_eq(float(LOOK.renderer_overrides(cfg, "mobile").energy), 1.35)
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PROFILE.CONFIG))
+	var times: Dictionary = raw.get("forward_plus_candidate", {}).get("times", {})
+	for name: String in ["day", "golden", "night", "dawn"]:
+		assert_true(times.has(name), "%s carries the Forward+ keys" % name)
+		for section: String in ["sun", "environment", "sky"]:
+			assert_eq((times[name][section] as Dictionary).keys().size(),
+				(times["night"][section] as Dictionary).keys().size(), "%s.%s has the full key set" % [name, section])
