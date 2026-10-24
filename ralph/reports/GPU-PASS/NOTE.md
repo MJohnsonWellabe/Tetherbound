@@ -48,6 +48,15 @@ Land on main only the files in `LANDABLE.txt`: verdict .md, key and score .json,
 3. Re-confirm F25#4 on main after tb/vfx-launch lands (`F25-4/f25_fix_queue.ps1.txt`, about 12 minutes).
 4. F08#3: judges ask for foreground dressing, a night lighting pass and varied islets (scene work for the Cloudreach lane).
 
+## GPU QUEUE (coordinator, 24 Oct; run top to bottom)
+
+Each row is CPU-provisional until this pass. Capture at Medium and High, judge with the yardstick (`tools/visual_judge/`: standard prompt, at least 3 anchor pairs, `calibrate.py`). A mapped Bar A of 7.5 or above confirms the row; below 7.5 reopens it. Commit verdicts per `LANDABLE.txt` rules.
+
+1. **F17#6 Crossing Hall r9** (main 816dfa60f; control 5f1f388cc): `tools/visual_judge/capture_camera_set.gd --set=res://tools/visual_judge/camera_sets/F17-6.json` (15 views). CPU was 6.84 vs 5.82 (`ralph/reports/MEADOWS/close-1024/F17-6.md`).
+2. **F36#0 naturalistic creatures** (main once tb/creatures-land lands; until then its head): `capture_f36_poses.gd --whole-body --context --species=terrapup,bramblebun,mudsnout,trailpup,paddlenewt,riverdrake` (no `--candidate`). CPU: Terrapup 7.62, Bramblebun 7.57, Trailpup 7.49, Mudsnout 7.40, Riverdrake 7.29 (water 7.00), Paddlenewt 6.88 (`ralph/reports/CREATURES/close-1024/`).
+3. **F36#1 held shove hit, 16 species** (same commit): `capture_f36_poses.gd --candidate --whole-body --context --species=craghorn,cloudfang,breezetail,stormraven,tidecoil,burrowback,frostclaw,aquaryn,thundertunnel,cliffspike,pebbik,trailpup,voltwig,stormbrush,sirenseal,riptusk`. CPU 6.79–7.89.
+4. **Later landings tonight** (Tidewake, Stormwood, Meadows rows): each lane note's READY line names its camera set; the coordinator adds them here when they land.
+
 **Rules this lane ran under:**
 - Push only tb/gpu-pass.
 - Ask the owner before any other push, any deletion of things that are not mine, and any spending.
