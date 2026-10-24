@@ -30,3 +30,11 @@ else:
     s = s.replace(a, a + ' "fallback_max_steps": 2,')
 json.loads(s); open(p, 'w').write(s)
 print('fight camera fallback limit applied')
+# Player's creature lost on dark ground (GPU F41/F39): the pilot rim and fill light in every fight,
+# and no pilot contact ring under the no-outlines direction.
+p = 'data/config/foliage_camera_visibility.json'; s = open(p).read()
+a = '"pilot_mark": {\n      "enabled": true,'
+assert s.count(a) == 1, a
+s = s.replace(a, a + '\n      "all_fights": true,\n      "ring_enabled": false,')
+json.loads(s); open(p, 'w').write(s)
+print('pilot rim all fights applied')
