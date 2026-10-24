@@ -161,14 +161,47 @@ func _charge_case(tell_first: bool) -> Dictionary:
 	var hits_before := int(tally.get("host_hits", 0))
 	var guest_before := int(((await step(1, "f22_enemy_staggers", {})).get("data", {}) as Dictionary).get("count", 0))
 	var hp_before := -1.0
+	# Re-stage on the wild's live centre before either charge: the energy
+	# swings lunge the guest forward and the wild settles, and the host
+	# resolves the charge on its own positions, so a centre read before those
+	# swings can whiff (both cases failed that way on a loaded runner).
+	var live_centre := _vec(((await _pin(false)).get("data", {}) as Dictionary).get("centre", []))
+	if live_centre != Vector3.INF:
+		centre = live_centre
+		var restand := centre + Vector3(0.0, 0.0, STAND_OFF_M)
+		await step(1, "place_creature", {"at": [restand.x, restand.y, restand.z],
+			"face": [centre.x, centre.y, centre.z], "settle": PLACE_SETTLE})
 	if tell_first:
 		pin = (await _pin(false)).get("data", {})
 		out.since_ms = int(pin.get("since_ms", -1))
 		out.poise_before = float(pin.get("poise", 0.0))
 		hp_before = float(pin.get("hp", -1.0))
+		# Strike only once the HOST holds the start and its own clock has
+		# reached `strike_at_ms`, as a production client does (it waits for the
+		# start's acceptance before winding up). Timing the wind-up on the
+		# guest's clock alone let a slow host tick receive the start and the
+		# strike together and refuse the strike as stale_move_start.
+		var guest_view: Dictionary = await probe(1, "session")
+		var guest_id := int(guest_view.get("peer_id", 0))
+		var guest_owned: Dictionary = await probe(1, "original_starter_ownership")
 		_action += 1
-		await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "charged",
-			"action": _action, "settle": 15})
+		var read_action := _action
+		var read_deadline := mini(int(_step_phase_deadline_ms), Time.get_ticks_msec() \
+			+ int(float(_budgets.get("step_budget_frames", DEFAULT_STEP_BUDGET_FRAMES)) \
+			* NOMINAL_MS_PER_PHYSICS_FRAME + WALL_SLACK_MS))
+		var read_start := await _charge_step(1, "strike", {"target": [centre.x, centre.y, centre.z],
+			"slot": "charged", "action": read_action, "start_only": true}, read_deadline)
+		out["start"] = "%s %s" % [str(read_start.get("detail", "")), str(read_start.get("data", {}))]
+		if read_start.get("verdict") != "PASS": return out
+		var read_commit := await _charge_commit(guest_id, read_action, guest_owned, read_deadline, {}, "(a)")
+		if read_commit.is_empty(): return out
+		var read_ready := await _charge_commit(guest_id, read_action, guest_owned, read_deadline,
+			read_commit.move_commit, "(a)")
+		if read_ready.is_empty(): return out
+		var read_struck := await _charge_step(1, "strike", {"target": [centre.x, centre.y, centre.z],
+			"slot": "charged", "action": read_action, "move_start": false, "windup_wait": false,
+			"settle": 15}, read_deadline)
+		out["strike"] = "%s %s" % [str(read_struck.get("detail", "")), str(read_struck.get("data", {}))]
 	else:
 		var session_view: Dictionary = await probe(1, "session")
 		var guest_peer := int(session_view.get("peer_id", 0))
@@ -239,7 +272,7 @@ func _charge_case(tell_first: bool) -> Dictionary:
 func _charge_step(peer: int, command: String, args: Dictionary, deadline: int) -> Dictionary:
 	var remaining := deadline - Time.get_ticks_msec() - int(WALL_SLACK_MS)
 	if remaining <= 0:
-		check(false, "(b) the original charge deadline expired before %s" % command)
+		check(false, "the charge case deadline expired before %s" % command)
 		return {}
 	var budget := mini(int(_budgets.get("step_budget_frames", DEFAULT_STEP_BUDGET_FRAMES)),
 		floori(float(remaining) / NOMINAL_MS_PER_PHYSICS_FRAME))
@@ -249,7 +282,7 @@ func _charge_step(peer: int, command: String, args: Dictionary, deadline: int) -
 ## Read the exact retained host start, never treat the guest's pending reply as
 ## acceptance. On a later observation its identity and frozen timing must match.
 func _charge_commit(peer: int, action: int, owned: Dictionary, deadline: int,
-		original: Dictionary = {}) -> Dictionary:
+		original: Dictionary = {}, case_label: String = "(b)") -> Dictionary:
 	while Time.get_ticks_msec() < deadline - int(WALL_SLACK_MS):
 		var response := await _charge_step(0, "f22_pin_tell", {"encounter_id": _encounter_id,
 			"read_only": true, "commit_peer": peer, "commit_action": action}, deadline)
@@ -272,7 +305,7 @@ func _charge_commit(peer: int, action: int, owned: Dictionary, deadline: int,
 				for key: String in ["action", "peer", "creature_uid", "move_id", "slot", "binding", "started_at_ms", "strike_at_ms"]:
 					matched = matched and committed.get(key) == original.get(key)
 			if not matched:
-				check(false, "(b) the original host charge commitment changed or is not current (%s)" % str(observed))
+				check(false, case_label + " the original host charge commitment changed or is not current (%s)" % str(observed))
 				return {}
 			var remaining := int(committed.strike_at_ms) - int(observed.host_now_ms)
 			if original.is_empty() or remaining <= 0: return observed
@@ -282,11 +315,11 @@ func _charge_commit(peer: int, action: int, owned: Dictionary, deadline: int,
 			if waited.get("verdict") != "PASS": return {}
 		else:
 			if not original.is_empty():
-				check(false, "(b) the original host charge commitment disappeared (%s)" % str(observed))
+				check(false, case_label + " the original host charge commitment disappeared (%s)" % str(observed))
 				return {}
 			var waited := await _charge_step(0, "wait", {"frames": 1}, deadline)
 			if waited.get("verdict") != "PASS": return {}
-	check(false, "(b) the original charge deadline expired awaiting host commitment/readiness")
+	check(false, case_label + " the original charge deadline expired awaiting host commitment/readiness")
 	return {}
 
 

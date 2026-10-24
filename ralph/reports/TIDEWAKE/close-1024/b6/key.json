@@ -1,0 +1,29 @@
+{
+ "Sv": {
+  "anchor": false,
+  "label": "currents: control vs b6",
+  "A": "control (main 5f1f388cc)",
+  "B": "candidate b6 (81f8f630e)"
+ },
+ "Du": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Xq": {
+  "anchor": false,
+  "label": "currents: b5 vs b6",
+  "A": "candidate b6 (81f8f630e)",
+  "B": "candidate b5 (57eadb9f1)"
+ },
+ "Tp": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Al": {
+  "anchor": true,
+  "A": "f36_0_npc:C3A",
+  "B": "f36_0_npc:C3B"
+ }
+}

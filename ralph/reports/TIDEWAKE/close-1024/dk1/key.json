@@ -1,0 +1,28 @@
+{
+ "Fe": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Sy": {
+  "anchor": false,
+  "label": "F13#5 docks: Meshy 1024 vs control",
+  "A": "Meshy 1024 candidate (28c4e8282, --tidewake-look-candidate)",
+  "B": "control (main 5f1f388cc, shipping look)"
+ },
+ "Vp": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Da": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Eq": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

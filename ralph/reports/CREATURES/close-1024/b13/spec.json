@@ -1,0 +1,111 @@
+[
+ {
+  "label": "F36 water_aquaryn b13",
+  "a": "scratch/b13/sides/water_aquaryn-base.png",
+  "b": "scratch/b13/sides/water_aquaryn-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Second row: swimming behind a water plane. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+  ]
+ },
+ {
+  "label": "F36 water_tidecoil b13",
+  "a": "scratch/b13/sides/water_tidecoil-base.png",
+  "b": "scratch/b13/sides/water_tidecoil-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Second row: swimming behind a water plane. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+  ]
+ },
+ {
+  "label": "F36 water_sirenseal b13",
+  "a": "scratch/b13/sides/water_sirenseal-base.png",
+  "b": "scratch/b13/sides/water_sirenseal-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Second row: swimming behind a water plane. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+  ]
+ },
+ {
+  "label": "F36 water_mangrove_monitor b13",
+  "a": "scratch/b13/sides/water_mangrove_monitor-base.png",
+  "b": "scratch/b13/sides/water_mangrove_monitor-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Second row: swimming behind a water plane. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+  ]
+ },
+ {
+  "label": "F36 water_abyssal_guardian b13",
+  "a": "scratch/b13/sides/water_abyssal_guardian-base.png",
+  "b": "scratch/b13/sides/water_abyssal_guardian-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Second row: swimming behind a water plane. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+  ]
+ },
+ {
+  "label": "F36 water_mirejaw b13",
+  "a": "scratch/b13/sides/water_mirejaw-base.png",
+  "b": "scratch/b13/sides/water_mirejaw-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Second row: swimming behind a water plane. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+  ]
+ },
+ {
+  "label": "F36 water_cannonback b13",
+  "a": "scratch/b13/sides/water_cannonback-base.png",
+  "b": "scratch/b13/sides/water_cannonback-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Second row: swimming behind a water plane. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+  ]
+ },
+ {
+  "label": "F36 water_riptusk b13",
+  "a": "scratch/b13/sides/water_riptusk-base.png",
+  "b": "scratch/b13/sides/water_riptusk-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Second row: swimming behind a water plane. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+  ]
+ },
+ {
+  "label": "F36 mangrove_monitor b13",
+  "a": "scratch/b13/sides/mangrove_monitor-base.png",
+  "b": "scratch/b13/sides/mangrove_monitor-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ },
+ {
+  "label": "F36 tuskroot b13",
+  "a": "scratch/b13/sides/tuskroot-base.png",
+  "b": "scratch/b13/sides/tuskroot-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Second row: with the trainer seated on its back (ride). Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Ride: the seated trainer does not sit on the back (floating above it, sunk into it, or off it)"
+  ]
+ }
+]

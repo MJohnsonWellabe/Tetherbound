@@ -1,0 +1,28 @@
+{
+ "Tn": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Zx": {
+  "anchor": true,
+  "A": "f36_0_npc:C5B",
+  "B": "f36_0_npc:C5A"
+ },
+ "Rc": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Vt": {
+  "anchor": false,
+  "label": "P2-009 water depth",
+  "A": "P2-009 shelf candidate (49e4e5e)",
+  "B": "control (main 5f1f388cc, shipping look)"
+ },
+ "Xm": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ }
+}

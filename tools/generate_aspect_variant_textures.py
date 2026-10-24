@@ -294,7 +294,24 @@ def main():
             continue
         entry = spec[variant]
         source = entry["source_species"]
-        textures = find_textures(source)
+        # Close-1024: a base on a naturalistic remake names its folder
+        # (`<species>/candidate_nat1024`). The remake's albedo is the glTF's
+        # base-colour image, extracted on import as `<glb stem>_Image_0.jpg`;
+        # creature_body.gd::_texture_for() reads `<that stem>_<variant>.png`
+        # and `<that stem>_emissive_<variant>.png` beside it.
+        remake = entry.get("source_model", "")
+        if remake:
+            source = remake
+            models = os.path.join(ROOT, "assets", "creatures", "tetherbound", remake, "models")
+            glb = sorted(f for f in os.listdir(models) if f.endswith(".glb"))[0]
+            stem = os.path.join(models, os.path.splitext(glb)[0] + "_Image_0")
+            textures = {"base_color": stem + ".jpg"}
+            albedo_target = "%s_%s.png" % (stem, variant)
+            emissive_target = "%s_emissive_%s.png" % (stem, variant)
+        else:
+            textures = find_textures(source)
+            albedo_target = variant_path(textures["base_color"], variant)
+            emissive_target = variant_path(textures["emissive"], variant)
 
         finish = dict(entry.get("finish", {}))
         finish.setdefault("output_size", OUTPUT_SIZE)
@@ -302,7 +319,7 @@ def main():
         overlays = list(entry.get("overlays", []))
 
         albedo_dst, albedo_share, albedo_notes = repaint(
-            textures["base_color"], rules, variant_path(textures["base_color"], variant),
+            textures["base_color"], rules, albedo_target,
             finish, species=source, overlays=overlays)
         print("%s: base_color -> %s (%.0f%% terrain-hue)" % (
             variant, os.path.relpath(albedo_dst, ROOT), albedo_share * 100.0))
@@ -320,7 +337,7 @@ def main():
         for note in glow_notes:
             print("   glow: %s" % note)
 
-        emissive_dst = variant_path(textures["emissive"], variant)
+        emissive_dst = emissive_target
         alpha = np.full(glow_rgb.shape[:2] + (1,), 255, dtype=np.uint8)
         out = np.concatenate([(glow_rgb * 255).astype(np.uint8), alpha], axis=-1)
         Image.fromarray(out, "RGBA").save(emissive_dst, optimize=True)

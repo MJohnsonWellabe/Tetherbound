@@ -1,0 +1,65 @@
+{
+ "Rt": {
+  "anchor": false,
+  "label": "F36 pipwing b8",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/pipwing-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/pipwing-c.png"
+ },
+ "Ab": {
+  "anchor": false,
+  "label": "F36 glimmermoth b8",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/glimmermoth-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/glimmermoth-c.png"
+ },
+ "Gl": {
+  "anchor": false,
+  "label": "F36 aeriex b8",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/aeriex-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/aeriex-c.png"
+ },
+ "Ck": {
+  "anchor": false,
+  "label": "F36 galecrest b8",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/galecrest-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/galecrest-base.png"
+ },
+ "St": {
+  "anchor": false,
+  "label": "F36 brooktail b8",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/brooktail-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/brooktail-c.png"
+ },
+ "Tj": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Bw": {
+  "anchor": false,
+  "label": "F36 duskhush b8",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/duskhush-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/duskhush-c.png"
+ },
+ "Ca": {
+  "anchor": false,
+  "label": "F36 abyssal_guardian b8",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/abyssal_guardian-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/abyssal_guardian-base.png"
+ },
+ "Qc": {
+  "anchor": false,
+  "label": "F36 galewisp b8",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/galewisp-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b8/sides/galewisp-base.png"
+ },
+ "Ou": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Et": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ }
+}
