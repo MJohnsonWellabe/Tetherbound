@@ -19,9 +19,11 @@ func build(water_world: Node3D) -> void:
 	var landmarks := {}
 	for raw: Variant in (water_world.get("config") as Dictionary).get("landmarks", []):
 		landmarks[str((raw as Dictionary).get("id", ""))] = raw
-	# `landmark_props_candidate` (an unjudged section, OFF in play) adds props
-	# by absolute `position_xz_m` as well as by landmark offset.
-	var specs: Array = (look.get("landmark_models", []) as Array) + (look.get("landmark_props_candidate", []) as Array)
+	# `landmark_props_candidate` (judged, ON) and `veilfall_hero_candidate`
+	# (unjudged, OFF in play) add props by absolute `position_xz_m` as well as
+	# by landmark offset.
+	var specs: Array = (look.get("landmark_models", []) as Array) + (look.get("landmark_props_candidate", []) as Array) \
+		+ (look.get("veilfall_hero_candidate", []) as Array)
 	for raw: Variant in specs:
 		var spec := raw as Dictionary
 		var landmark: Dictionary = landmarks.get(str(spec.get("landmark_id", "")), {})
