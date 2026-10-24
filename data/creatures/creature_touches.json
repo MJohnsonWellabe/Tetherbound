@@ -39,54 +39,7 @@
       }
     ],
     "_why_gpu_1024": "GPU A+C (24 Oct): the first touch was invisible at stage distance. Bolder shoulder contrast and scars, plus an amber flint-line seam along the spine (glow).",
-    "glow": [
-      {
-        "id": "flint_line",
-        "color": "#ffa640",
-        "strength": 1.0,
-        "where": {
-          "x_min": 0.45,
-          "x_max": 0.55,
-          "up_min": 0.2,
-          "z_min": 0.28,
-          "z_max": 0.8
-        },
-        "softness": 0.02,
-        "coverage": 0.8,
-        "grain": 9.0,
-        "clump_softness": 0.05
-      },
-      {
-        "id": "shoulder_cracks",
-        "color": "#ff9a30",
-        "strength": 1.0,
-        "where": {
-          "z_min": 0.55,
-          "z_max": 0.82,
-          "y_min": 0.5
-        },
-        "softness": 0.05,
-        "coverage": 0.35,
-        "grain": 6.0,
-        "clump_softness": 0.03,
-        "ring": 2
-      },
-      {
-        "id": "hip_seams",
-        "color": "#ff9a30",
-        "strength": 0.9,
-        "where": {
-          "z_min": 0.2,
-          "z_max": 0.42,
-          "y_min": 0.5
-        },
-        "softness": 0.05,
-        "coverage": 0.3,
-        "grain": 6.0,
-        "clump_softness": 0.03,
-        "ring": 2
-      }
-    ]
+    "_why_close1024_b26": "b26 (CPU, three judges): the amber seam shell read as gold glitter or an artefact on fur (-0.6 mapped), so the glow is off; the bolder weathering stays for b27."
   },
   "mudsnout": {
     "source_model": "mudsnout/candidate_nat1024",
@@ -129,21 +82,25 @@
       }
     ],
     "_why_gpu_1024": "GPU A+C (24 Oct): invisible at stage distance and 'a plain real-world boar'. Bolder hardened hide and scar, plus amber earth-glow seams cracking the shoulder hide (glow); the tusks are the nat1024t build.",
-    "glow": [
+    "_why_close1024_b26": "b26 (CPU, three judges): the amber seam shell read as gold glitter or an artefact on fur (-0.6 mapped), so the glow is off; the bolder weathering stays for b27."
+  },
+  "terrapup": {
+    "source_model": "terrapup/candidate_dog3",
+    "_why": "b26 judges read dog3's coat as orange-red (red is Team Tether's). Pull the chestnut toward brown: less saturation, value unchanged.",
+    "overlays": [
       {
-        "id": "earth_seams",
-        "color": "#f0a040",
-        "strength": 1.0,
-        "where": {
-          "z_min": 0.42,
-          "z_max": 0.85,
-          "y_min": 0.4
+        "id": "chestnut_not_red",
+        "mode": "shade",
+        "sat_scale": 0.72,
+        "val_scale": 0.97,
+        "match": {
+          "hue": [
+            0,
+            40
+          ],
+          "sat_min": 0.3
         },
-        "softness": 0.05,
-        "coverage": 0.38,
-        "grain": 5.5,
-        "clump_softness": 0.03,
-        "ring": 2
+        "softness": 0.05
       }
     ]
   }

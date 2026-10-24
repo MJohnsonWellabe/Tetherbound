@@ -1,4 +1,4 @@
-"""Terrapup large-dog (dog3) neutral cycles and explicit pose roles (the nat1022 pilot clips: recoil hit, +90 side faint), with world-axis keys.
+"""Terrapup large-dog (dog3) neutral cycles and explicit pose roles (the nat1022 pilot clips: recoil hit, -90 prone faint), with world-axis keys.
 
 Blender --background --python this.py -- rigged.glb output.glb
 All vertices are evaluated for floor correction; this is pose evidence only.
@@ -93,14 +93,14 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
    turn('root',[(REAR*4*e,(1,0,0)),(9*e,(0,1,0))]);rotate('spine',REAR*6*e)
    rotate('neck',NOD*18*e);turn('head',[(NOD*8*e,(1,0,0)),(22*e,(0,0,1))])
   if role=='faint':
-   # GPU 24 Oct (tb/gpu-pass terrapup-dog): the -90 roll laid the plated back to
-   # the stage camera, a plates-up lump with legs and head hidden. Roll +90 so the
-   # belly, legs and face are in view, legs only loosely bent so they read as legs.
+   # close-1024 b26 judges (three of three): the +90 roll (belly, pads and legs to
+   # camera) read as the listed belly-up flip; the -90 roll lying prone with the
+   # plated back to camera read as down (FIXED). Keep -90, legs drawn in.
    phase=phase_of(t)
-   rotate('root',90*phase,(0,1,0));rotate('head',12*phase);rotate('neck',-NOD*12*phase)
+   rotate('root',-90*phase,(0,1,0));rotate('head',12*phase);rotate('neck',-NOD*12*phase)
    for prefix in ['front','rear']:
     for side in ['l','r']:
-     rotate(prefix+'_upper_'+side,18*phase);rotate(prefix+'_lower_'+side,-28*phase)
+     rotate(prefix+'_upper_'+side,45*phase);rotate(prefix+'_lower_'+side,-65*phase)
   if role=='rest':
    # b4 judges: rolling belly-to-camera showed the unlit underside as a dark blob.
    # Roll the other way, so the back and markings face the stage camera (the

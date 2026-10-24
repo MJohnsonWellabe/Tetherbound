@@ -357,7 +357,6 @@
         "value": 0.1
       },
       "placeholder": {
-        "touch_glow": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024/models/creature_mudsnout_nat1024_touch_glow.png",
         "colour": "#6e492c",
         "_comment_tusks_1024": "Owner 24 Oct (GPU F36#0 sheet): Mudsnout close, \"maybe needs a tusk\". candidate_nat1024t = the nat1024 remake plus two small ivory tusks at the snout (source/add_tusks.py, skinned to the head), same clips. close-1024 b20 CPU 7.46 vs 7.33; GPU to decide.",
         "height": 2.0,
@@ -413,7 +412,6 @@
         "value": 0.14
       },
       "placeholder": {
-        "touch_glow": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_touch_glow.png",
         "colour": "#b3925e",
         "_comment_grow_gpu_1024": "GPU F36#0 (24 Oct): the remake stood at or below the 1.80 m trainer; grown 2.3 -> 3.1 m (x1.348), radius with it, per the grow-the-smaller-side rule.",
         "height": 3.1,
