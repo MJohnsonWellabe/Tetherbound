@@ -3,6 +3,14 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct GPU READY (candidate pick on CPU, b19; `close-1024/b19/judges.md`): value lift on tb/creatures 5d9b70894. Cindercub field_emission 0.8 (CPU 7.15 vs 6.88), Stormtrail 1.0 (6.77 vs 6.59), Riftfrill 1.0 (6.21 vs 6.03).
+  - Capture, both arms at Medium and High:
+    - candidate: `godot --path . --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=cindercub,stormtrail,riftfrill --whole-body --context --out=res://.artifacts/gpu_b19/<preset>` at 5d9b70894;
+    - shipping: the same command at main.
+  - Cindercub is the one likely to close.
+  - MESHY requests (owner said "tell me if it needs Meshy"):
+    - Riftfrill: yes. The galaxy/starfield skin on the Paddlenewt mesh reads synthetic and illegible even lifted. Redraft as a naturalistic newt in Riftfrill's own palette, with a readable face and eyes and a lighter belly/value break.
+    - Stormtrail: the recolour on Trailpup's mesh has hard yellow emissive leg bands that read as UV artefacts. Two options: (a) I drop the yellow emissive bands for a soft blue storm line along the spine, done as a data and texture edit here; (b) a Meshy storm-coyote with its own silhouette. I'll try (a) next unless you say (b).
 - 24 Oct b18 (`close-1024/b18/judges.md`): no candidate beats shipping. Aquaryn's gentle shove 6.94 vs 7.08, Tidecoil's 7.03 vs 7.27, Mosshell's -90 faint 7.17 vs 7.31. All OFF; nothing to queue on GPU from b18.
   - Aquaryn and Tidecoil are parked on poses after two flat rounds (b17, b18).
   - MESHY request: naturalistic remakes of Aquaryn and Tidecoil that keep identity (fin crest, orange fin tips; serpent coil, pink fins) and restore the board's white belly and navy value break in place of the glossy single-value cyan. That is the judges' common ask, and it is new art.
