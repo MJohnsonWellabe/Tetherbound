@@ -1522,7 +1522,16 @@ static func _track_field_bright_copy(source: BaseMaterial3D, copy: BaseMaterial3
 		root = source.get_instance_id()
 	if not _field_bright_derived.has(root):
 		_field_bright_derived[root] = []
-	(_field_bright_derived[root] as Array).append(weakref(copy))
+	var refs := _field_bright_derived[root] as Array
+	# The shared night floor is re-registered by each new body: keep one entry
+	# per live copy and drop freed ones.
+	for index in range(refs.size() - 1, -1, -1):
+		var held: Object = (refs[index] as WeakRef).get_ref()
+		if held == null:
+			refs.remove_at(index)
+		elif held == copy:
+			return
+	refs.append(weakref(copy))
 	_field_bright_root[copy.get_instance_id()] = root
 
 
