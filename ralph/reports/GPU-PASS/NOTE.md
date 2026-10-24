@@ -3,7 +3,7 @@
 ## READY (24 Oct): newest first
 
 - **08:55 CT, F25#4 confirmed on main (Medium):** the launch frame is 16.6–27.4 ms (volley 1) and 10.3–18.0 ms (volley 2), with 0 frames over 33.3 ms in 24 volleys. The budget caps at 384 under over-cap load. This backs F21#5.
-  - Low with prewarm read 245–254 ms on a cold cache after the reimport; a warm-cache re-run is queued. Low is not the line.
+  - Low with prewarm read 245–254 ms on a cold cache after the reimport. **The warm-cache re-run gives 64–78 ms, the same as FIX.md: a cache artefact, not a regression.**
   - Evidence: `F25-4/main-confirm/VERDICT.md`.
   - **Now running:** F17#6 Crossing Hall, Medium and High; the Low re-run follows it.
 

@@ -7,7 +7,14 @@
 
 This matches the tb/vfx-launch proof in `../FIX.md`, and it backs the F21#5 closure.
 
-**Low (Compatibility):** without prewarm, the launch frame is 65.8–77.8 ms, the same as FIX.md. With prewarm, the first pass on main gave **245–254 ms** on the launch frame, against 64–74 ms on the fix branch. These were the first Low runs after main's reimport, so they started with a cold shader cache. A warm-cache Low re-run is queued (prewarm off then on, ×2), and its result will be added here. Low is not the F25#4 line, which is Medium.
+**Low (Compatibility): unchanged from FIX.md.**
+- With a warm shader cache, ×2 reps, the launch frame is:
+  - starters: 64.4–66.2 ms;
+  - heavy: 75.4–78.0 ms.
+- Prewarm on and off give the same result.
+- Volley 2 is 10.2–16.8 ms. At most 1 frame per volley goes over 33.3 ms.
+
+The first Low pass on main read 245–254 ms with prewarm on. Those were the first Low runs after main's reimport, so the shader cache was cold. The re-run (`LowB-*`) shows that was a cache artefact, not a regression. Low is not the F25#4 line, which is Medium.
 
 ## Run
 
@@ -44,6 +51,13 @@ This matches the tb/vfx-launch proof in `../FIX.md`, and it backs the F21#5 clos
 |---|---|---|---|
 | starters, prewarm 0 / 1 | 65.8 / 245.0 ms | 10.4 / 10.8 ms | 0 / 2 |
 | heavy, prewarm 0 / 1 | 77.8 / 253.9 ms | 16.1 / 16.8 ms | 1 / 1 |
+
+| Low re-run (warm cache, ×2) | Volley 1 launch | Volley 2 launch | Frames > 33.3 ms per volley |
+|---|---|---|---|
+| starters, prewarm 0 | 65.3, 66.2 ms | 11.5, 10.2 ms | 1, 1 |
+| starters, prewarm 1 | 64.4, 65.7 ms | 10.3, 10.3 ms | 0, 0 |
+| heavy, prewarm 0 | 77.7, 78.0 ms | 16.5, 16.1 ms | 1, 1 |
+| heavy, prewarm 1 | 76.6, 75.4 ms | 16.8, 16.4 ms | 0, 0 |
 
 ## Files
 
