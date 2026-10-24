@@ -6,6 +6,8 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 **Owner, 24 Oct 2026:** "Yes switch to GPU judging and split the rows." Every visual done/not-done verdict is judged on the GPU rig (Medium and High, yardstick, mapped Bar A ≥ 7.5); CPU captures are for iteration only and no longer close a row (the 6.7 CPU-provisional rule is retired; no row was met on it). Board split (bars unchanged): F36 (0) per priority asset (30), F36 (1) per roster subject (70), F38–F41 (1)/(2) per catalog item; each item counted once, closing on its GPU pass in every biome it touches. Board 236/467 (was 235/271; +Burrowback; Grandpa held for yardstick). Owner sheet verdicts: Terrapup is the wrong species ("supposed to be a large dog not a badger", reopened, Meshy redraft); Burrowback and Mosshell good; Trailpup, Bramblebun, Nightburrow and Mudsnout close (one unique touch); Cindercub, Riftfrill, Stormtrail need work; Tidewake sand good, shore cluttered, water next; Hall shafts a bug, rest fine. Stormwood-routes joins Routes.
 
+**Owner, 24 Oct, raise the floor:** visual work runs worst-first: GPU-scored items below 6 to 6, then all to 7, then 7.5 (bar unchanged); unscored areas get a baseline first.
+
 **Owner, 24 Oct, creature touches:** current meshes stay; each species gains light energy, elemental or war-worn touches (CLAUDE.md). GPU Meadows matrix (F38#0/F26#3): no site at 7.5 (best village road 7.09); camera stands inside geometry are the main sink. Cloudreach moved to scene fixes.
 
 **Owner, 22 Oct 2026:** GPU remote started (owner PC, GTX 1060 3 GB, branch `tb/gpu-pass`, evidence `ralph/reports/GPU-PASS/`); visual pause lifted. "Fix the yardstick then get our scores improved til we have a good looking game": every visual verdict uses `tools/visual_judge/` (standard prompt, anchors, `calibrate.py`); done = mapped Bar A ≥ 7.5 (#706). GPU results on the yardstick reopened F10#2 (5.52), F04#6 (5.92), F29#3 (7.00); the standard GPU rejudge reopened P2-095/096 (6.72), P2-018 (5.88/5.94), P2-094 (5.96/5.94) and 15 of 16 F36#0 rows; Ripplet 7.89 did not hold (7.26). F08#3 Cloudreach settlements reopened on GPU (6.57 vs 5.20; CPU was 7.13), settlement life kept ON; F25#4 effect budget met on GPU. Board 236/467 since the 24 Oct split (+F21#5; F39#4, F17#6 reopened). GPU lane stopped (23 Oct). Routes: "pieces that start with what they need proven by handoffs of runs that end at the right spot"; each seam gets a committed manifest, and there are no chain restarts. Owner: naturalistic creatures are the style; stylised remakes stop.
@@ -13,8 +15,6 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 **Owner, 22–23 Oct:** wind-down put all work on main. **Lanes:** Routes, Creatures, Meadows, Tidewake, Stormwood, Cloudreach. **Owner 24 Oct, "Just shrink it":** Terrapup ships at 3.20 m to fit fight rooms (never-shrink exception, Terrapup only). Pick-up guide: `ralph/reports/CONSOLIDATION/README.md`; raw outputs: `tb/archive-2026-10-23`.
 
 **Owner kickoff, 20 Oct 2026 (CT):** weekly close plan (https://claude.ai/artifact/Mt9uR8rvJQZvXrBx3ssgG2) runs without the GPU remote: functional first, then Meshy-batched visuals judged on CPU at 6.7 (CPU-provisional; a GPU pass confirms 7.5). F25#4 and F21#5 frame time wait for a GPU. 17 Oct restart lanes closed 0 and were archived; their work is on `tb/routes`, `tb/fights`, `tb/look`, `tb/creatures`, `tb/creature-art`.
-
-**Owner restart, 17 Oct 2026 (CT):** STOP lifted; baseline `e6f5b9600` (#690 Codex work flag-off, #691 payload cleanup). Board 233/271.
 
 **Coordinator rulings, 17 Oct:** F36#1 judges fly-grip only for Fly-capable species (SYSTEMS §8), swim/ride only where used in play; other roles read "not a game state", never a pass; bar unchanged. CPU-only evidence never parks a visual item. Meshy key is in the coordinator session only (`tb/creature-art`).
 
@@ -24,7 +24,7 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 **Owner direct-run override (14 Oct 8:42 PM CT):** native/GPU proofs run directly from the lane's own pushed checkout (CLAUDE.md standing direction 4); its 14 Oct GPU queue and root turn order were superseded by the 17 Oct restart.
 
-**Preserved proof limits:** all earlier failures, sources and historical queues remain in preservation-index.md and Git; old queues stay stopped.
+**Preserved proof limits:** earlier failures, sources and queues stay in preservation-index.md and Git; old queues stopped.
 
 **Landed baseline/count:** PR#686 merged 14 Oct 2026, 5:05 AM CT as `5e784b4f5edd8aa4c90323fbb9cdb70f5f8c0d76`; full CI `38544221075`: all 21 relevant jobs plus traceability PASS. PR685/e30 remains historical. Board **233/271**, no closure. Cloudreach software-GL112–127s risks120s realm-ready cap; target≤80s, never raise caps/ENet timeouts. Sparse checkouts required; full~30GB exceeds allowance. Only human playtest/Ally need owner.
 

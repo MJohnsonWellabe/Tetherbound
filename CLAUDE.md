@@ -6,6 +6,8 @@ Build the GAME_BIBLE product: a four-chapter creature expedition action RPG in t
 
 ## Standing owner directions (override everything below; newest first)
 
+**Owner, 24 Oct 2026, raise the floor:** "We need to bring all the lowest things up to at least 6 first then when everything is at least at 6 bring everything up to 7. Then when everything is at 7 shoot for 7.5." Visual work runs worst-first in tiers on GPU mapped scores: every scored item below 6 is raised to 6, then everything to 7, then to 7.5. Unscored items get a GPU baseline first. The done bar stays 7.5; a candidate already built may still be judged.
+
 **Owner, 24 Oct 2026, creature touches:** "Let's stick with what we have with adding some energy, some elemental effects, and some war torn appearance or hardened appearance to give the unique but still realistic look. Don't go overboard." Current creature meshes stay (no remake programme); each species gains one or two light touches on its existing model (thin elemental energy seams or veins, a small elemental effect, or scars and hardened or weathered patches), kept subtle and realistic, no red or oxblood. Terrapup is a large dog, not a badger.
 
 **Owner, 24 Oct 2026:** "Yes switch to GPU judging and split the rows." Every visual done/not-done verdict is judged on the GPU rig (Medium and High, the `tools/visual_judge/` yardstick, mapped Bar A of 7.5 or above); lanes keep iterating on CPU, but a CPU score no longer closes a row (this retires the CPU-provisional 6.7 rule below). Large rows are tracked per unit on the board: F36 (0) per priority asset, F36 (1) per roster subject, F38–F41 (1) and (2) per catalog item; each sub-row closes on its own GPU pass and the parent when all do. Bars are unchanged.
