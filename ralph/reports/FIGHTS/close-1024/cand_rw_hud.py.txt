@@ -27,3 +27,12 @@ ground = {"enabled": True, "quick": False, "cue_contact_puffs": 8, "cue_contact_
 s = s.replace(a, a + ' "ground_burst": %s,' % json.dumps(ground))
 json.loads(s); open(p, 'w').write(s)
 print('impact candidate applied')
+# GPU F38/F40 fight asks (generic): a fight lens that shows the horizon (pitch -25 -> -15) and an
+# ally kept off the opponent's line (neutral tracking composition yaw 35 -> 50 deg).
+p = 'data/config/combat.json'; s = open(p).read()
+for a, b in [('"pitch_start_deg": -25.0', '"pitch_start_deg": -15.0'),
+             ('"composition_yaw_deg": 35.0', '"composition_yaw_deg": 50.0')]:
+    assert s.count(a) == 1, a
+    s = s.replace(a, b)
+json.loads(s); open(p, 'w').write(s)
+print('fight camera candidate applied')
