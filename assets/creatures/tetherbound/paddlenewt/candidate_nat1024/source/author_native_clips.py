@@ -57,19 +57,6 @@ def low(skip=(),q=0.0):
 TAIL=('tail_1','tail_2')
 # Faint side roll: negative turns the back to the stage camera, positive the belly.
 FAINT_ROLL=-90
-# F36#1 r1: compose several turns on one bone (rotate() sets it outright).
-def turn(name,parts):
- basis=bases[name];q=Quaternion((1,0,0,0))
- for deg,axis in parts:q=Quaternion(Vector(axis),math.radians(deg))@q
- rig.pose.bones[name].rotation_quaternion=basis.inverted()@q@basis
-def _tail_x(name,angle):
- b=rig.pose.bones[name];b.rotation_mode='QUATERNION'
- b.rotation_quaternion=bases[name].inverted()@Quaternion(Vector((0,1,0)),math.radians(angle))@bases[name]
- bpy.context.view_layer.update();x=abs((rig.matrix_world@b.tail).x)
- b.rotation_quaternion=Quaternion((1,0,0,0));bpy.context.view_layer.update();return x
-# SPLAY: per side, the sign about the body's length axis that swings the foot outward.
-SPLAY_DEG=20  # a newt's legs already point sideways
-SPLAY={side:(1 if _tail_x('front_upper_'+side,25)>_tail_x('front_upper_'+side,-25) else -1) for side in ('l','r')}
 for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('attack',24,False),('charged',42,False),('hit',12,False),('faint',36,False),('rest',36,False),('swim',40,True),('fly_grip',48,True),('ride',72,True)]:
  action=bpy.data.actions.new(role);rig.animation_data.action=action
  for f in sorted(set(range(0,frames+1,2))|{frames}):
@@ -111,14 +98,12 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
    for side in ['l','r']:
     rotate('front_upper_'+side,-26*e);rotate('front_lower_'+side,30*e)
   if role=='faint':
-   # F36#1 roster r1 judges: the side roll read as a crouch or a belly-up flip
-   # on this stocky body. Collapse belly-flat instead: legs splayed sideways,
-   # chest and chin down, grounded on the body.
+   # Close-1024: the side roll (back to camera), grounded on the body (see low()).
    phase=phase_of(t)
-   rotate('neck',-NOD*28*phase);rotate('head',-NOD*14*phase)
+   rotate('root',FAINT_ROLL*phase,(0,1,0));rotate('head',12*phase);rotate('neck',-NOD*12*phase)
    for prefix in ['front','rear']:
     for side in ['l','r']:
-     rotate(prefix+'_upper_'+side,SPLAY[side]*SPLAY_DEG*phase,(0,1,0))
+     rotate(prefix+'_upper_'+side,45*phase);rotate(prefix+'_lower_'+side,-65*phase)
   if role=='rest':
    # b4 judges: rolling belly-to-camera showed the unlit underside as a dark blob.
    # Roll the other way, so the back and markings face the stage camera (the
@@ -134,7 +119,7 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
      rotate(prefix+'_upper_'+side,-30);rotate(prefix+'_lower_'+side,55)
   bpy.context.view_layer.update()
   # Ground the lowest evaluated surface, never change the body/world position.
-  root=rig.pose.bones['root'];root.location=bases['root'].inverted()@Vector((0,0,-(low(TAIL,.02) if role=='rest' else low(TAIL,.01) if role=='faint' else low())))
+  root=rig.pose.bones['root'];root.location=bases['root'].inverted()@Vector((0,0,-(low(TAIL,.02) if role=='rest' else low(TAIL,.05) if role=='faint' else low())))
   bpy.context.view_layer.update()
   for b in rig.pose.bones:
    b.keyframe_insert('rotation_quaternion',frame=f)
