@@ -1,0 +1,13 @@
+# F22#4 Riverwatch HUD/pilot candidate overlay (capture-only; repo root, clean tree):
+#   compact Tether Command lane while no command is usable, and a larger pilot size floor
+#   for the Riverwatch fight only. `git checkout data/config/tether_commands.json data/config/camera.json` restores.
+import json, sys
+fraction = float(sys.argv[1]) if len(sys.argv) > 1 else 0.10
+p = 'data/config/tether_commands.json'; s = open(p).read()
+a = '"compact_when_idle": false'; assert s.count(a) == 1
+s = s.replace(a, '"compact_when_idle": true'); json.loads(s); open(p, 'w').write(s)
+p = 'data/config/camera.json'; s = open(p).read()
+a = '"captain_riverwatch": {"max_distance_m": 14.0}'; assert s.count(a) == 1
+s = s.replace(a, '"captain_riverwatch": {"max_distance_m": 14.0, "pilot_min_screen_fraction": %s}' % fraction)
+json.loads(s); open(p, 'w').write(s)
+print('rw hud candidate applied, pilot fraction', fraction)
