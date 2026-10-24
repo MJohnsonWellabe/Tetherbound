@@ -910,12 +910,20 @@ SHOVE_1024B = ('stormcapra', 'galecrest', 'galewisp', 'brooktail', 'duskhush', '
 # CPU-provisional 6.7 mapped on these. Live recipes; the rest stay OFF.
 LANDED_1024B_SHOVE = ('galecrest', 'aeriex', 'galewisp', 'tanglevolt', 'stormcapra', 'solmane',
                       'ripplet')
-SHOVE_1024_RUN = (SHOVE_1024 if CANDIDATE_1024 else LANDED_1024_SHOVE) + LANDED_1024B_SHOVE
+# Close-1024 coordinator call (24 Oct, as on 22 Oct): ON where the candidate beat
+# shipping in a confirming batch, under 6.7 mapped, with no judge seeing the
+# faint end still standing (b2-b4, b8-b9). Ashtusk lands with its side topple.
+LANDED_1024_BELOW_BAR = ('cindercub', 'ashtusk', 'nightburrow', 'shadelet', 'mosshock', 'stormtrail',
+                         'riftfrill', 'abyssal_guardian', 'brooktail', 'glimmermoth', 'tempestwing',
+                         'ribbonray')
+LANDED_1024_TOPPLE = ('ashtusk',)
+SHOVE_1024_RUN = (SHOVE_1024 if CANDIDATE_1024 else LANDED_1024_SHOVE) + LANDED_1024B_SHOVE + LANDED_1024_BELOW_BAR
 if '--candidate-1024b' in sys.argv:
     SHOVE_1024_RUN = tuple(SHOVE_1024_RUN) + tuple(s for s in SHOVE_1024B if s not in SHOVE_1024_RUN)
 # b2 judges: Tuskroot's limp sprawl rolls belly and feet to the camera and hides
 # its stone back (read as the armour vanishing). Candidate: roll the other way.
 LIMP_ROLL = {}
+PRONE = tuple(s for s in PRONE if s not in LANDED_1024_TOPPLE)
 if CANDIDATE_1024:
     PRONE = tuple(s for s in PRONE if s not in PRONE_TO_TOPPLE_1024)
     LIMP_ROLL['tuskroot'] = 90.0
