@@ -121,6 +121,13 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Command: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=arch_ --subset=hall_nave --subset=shrine_room --subset=hall_front --subset=farm_to_hall --subset=band2_stone_and_root_0 --output=res://<round>`
   - Land together with land3 (4d204e402, F17#6: Forward+ shafts off). The Hall stands judge both, and land3 is not on main yet.
 
+- 2026-10-24 22:30 UTC MESHY (P2-003 hero stronghold, tier 1: band5_stronghold_1 4.59, band5_0 5.66):
+  - Reference: `ralph/reports/MEADOWS/close-1024/meshy/stronghold_hero_ref.png`, cropped from the owner key art's "TEAM TETHER STRONGHOLD (MEADOWS HALL)" panel.
+  - Dimensions: gatehouse facade about 28 m wide x 20 m tall x 12 m deep. It is sized to the existing Hall gate (flanker towers at x ±10.6, about 16–19 m tall). Against the 1.80 m trainer, the gate arch is about 6 m tall and the towers about 10x trainer height.
+  - Prompt: "ruined weathered grey stone gatehouse fortress facade, two tall square flanking towers with broken crenellations, central round-arched wooden gate with iron bands, ivy and moss growing down the stone, narrow hanging dark-oxblood cloth banners with a pale circular emblem, timber scaffolds and iron machinery bolted to the towers, stylised realism, game asset, base at ground level."
+  - Purpose: replaces the read of "a small dark ruin behind dominant pylons" (P2-003) and the giant flat banners at band5_1.
+  - It will be installed flag-off on the `stronghold.json` prefab exterior, then judged on the band5 stands.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
