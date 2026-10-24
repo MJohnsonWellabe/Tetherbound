@@ -80,6 +80,13 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Test: `tests/test_crossing_hall_great_hall_renderer.gd`. The land2 version passed 9 tests with 0 failed. The one edited assertion (shipping rims == 1.0) has not run yet: it is queued for the first gap in the capture queue, and I'll report its result here. You can also run it with `--only=crossing_hall,great_hall_renderer`.
   - GPU capture command: `capture_camera_set.gd --set=res://tools/visual_judge/camera_sets/F17-6.json` at Medium and High.
 
+- 2026-10-24 19:05 UTC STATUS F38#0 pass 2 (`f38-0/README.md`): ten creature and catch rows rescored, 4.14–5.29 mapped. Catch candidates in impact order:
+  - P2-058 (impact 64): a new readout backing plate. `capture_readout_visual.json plate_enabled` is OFF.
+  - P2-061 (impact 27): the UI lane's unjudged `hud.json catch_card`.
+  - Both are queued for one ON catch capture after the supplementals, then judged per row.
+  - The flat magenta wedge in catch_low is the enemy lunge-lane telegraph, not catch UI, so it belongs to the P2-063 fight-tell row.
+  - P2-015/016/017 (creature pose and scale) live in `data/creatures/f36_pose_candidates.json`, which the creatures lane owns. Tell me if those are mine to change for Meadows species.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
