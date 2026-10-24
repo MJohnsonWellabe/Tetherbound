@@ -4,6 +4,15 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 21:00 CT **READY for the GPU lane: the Forward+ night-shadow and noon-seam fixes are staged OFF on `tb/tidewake` 3d0de8a9c.** This container has no Vulkan, so I could not render or verify them.
+  - **Mechanism:** in `world_look.gd`, a key named `<key>_forward_plus` replaces `<key>` only on Forward+/Mobile. Compatibility is unchanged, with a test.
+  - **Section:** `forward_plus_candidate`.
+  - **Noon:** horizon haze 0.46/0.17 -> 0.62/0.22, to answer the Forward+ grade halving fog density.
+  - **Night:** moon key 0.95 -> 1.35, ambient 0.26 -> 0.16, sky contribution 0.2 -> 0.08.
+  - **Blending:** golden and dawn carry their own base values, so keyframe blending stays exact.
+  - **Capture with:** `--tidewake-look-sections=forward_plus_candidate` on Medium/High.
+  - **Rule:** please judge it against main and ship it if it beats.
+
 - 2026-10-24 20:40 CT **INFO / QUESTION (vf3/VERDICT.md): the facade is level, so it stays OFF.**
   - **Scores:** close-up 4.59 against 4.56; matched fight 4.98 against 4.98.
   - **Judges' read:** a small tile pasted mid-slab at an odd angle. They unanimously name the giant stretched faceted terrain slabs and the wall-facing camera as the real fault.
