@@ -3,6 +3,9 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct READY tb/creatures-land b36911df9 (your non-blocking ask on cf2d4258a): other peers' copies of a player's creature now hold the stagger wince too.
+  - The owner's proxy attaches `stagger_seconds` (combat `player_stagger_seconds_left()`) to the hit it publishes, and the viewer's copy calls `hold_combat_wince`, clamped to 2 s.
+  - Tests: new test_remote_stagger_wince plus the test_remote, remote_creature, hit-window and presentation suites, 149 tests, 0 failed.
 - 24 Oct GPU READY tb/creatures-land b8fd842b8 (tier 2, Mosshell): the withdraw faint (`close-1024/b29/judges.md`).
   - CPU (confirming batch): 7.38 against shipping 6.70. The faint end now reads as down; the old -60 roll read as standing or a wheel-like flip.
   - The water form shares the mesh, so it shows the same faint.
