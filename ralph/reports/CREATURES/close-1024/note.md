@@ -3,6 +3,11 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct GPU READY on tb/creatures 1225d1a86: owner touch pass on Trailpup and Mudsnout (weathered shoulders and faint scars, baked into the albedo; the mesh is unchanged; `close-1024/b24/judges.md`).
+  - CPU: score-neutral and light (Trailpup 7.58 vs 7.58, Mudsnout 6.86 vs 6.82). It is the owner-directed look, so the GPU pass decides.
+  - Capture vs main: `godot --path . --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=trailpup,mudsnout --whole-body --context --out=res://.artifacts/gpu-touch/<preset>`
+  - Mudsnout on the lane is the tusk build (0d0d73cf6), which carries the same touched albedo.
+  - Next: energy seams and elemental VFX (Cindercub embers, Bramblebun ground-amber seams), with Nightburrow and Bramblebun touches after.
 - 24 Oct GPU READY on tb/creatures 96c68213c: Aquaryn and Tidecoil b5 remakes, land and water forms on the same mesh (`close-1024/b23/judges.md`).
   - CPU: Tidecoil 7.26 vs 6.39. Aquaryn ties at 7.30 (judges split navy vs cyan).
   - Capture vs main: `godot --path . --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=aquaryn,tidecoil,water_aquaryn,water_tidecoil --whole-body --context --out=res://.artifacts/gpu_b23/<preset>`.
