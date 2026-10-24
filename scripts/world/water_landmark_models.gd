@@ -19,9 +19,11 @@ func build(water_world: Node3D) -> void:
 	var landmarks := {}
 	for raw: Variant in (water_world.get("config") as Dictionary).get("landmarks", []):
 		landmarks[str((raw as Dictionary).get("id", ""))] = raw
-	# `landmark_props_candidate` (judged above main, ON in play) adds props
-	# by absolute `position_xz_m` as well as by landmark offset.
-	var specs: Array = (look.get("landmark_models", []) as Array) + (look.get("landmark_props_candidate", []) as Array)
+	# `landmark_props_candidate` (judged, ON) and `veilfall_hero_candidate`
+	# (unjudged, OFF in play) add props by absolute `position_xz_m` as well as
+	# by landmark offset.
+	var specs: Array = (look.get("landmark_models", []) as Array) + (look.get("landmark_props_candidate", []) as Array) \
+		+ (look.get("veilfall_hero_candidate", []) as Array)
 	for raw: Variant in specs:
 		var spec := raw as Dictionary
 		var landmark: Dictionary = landmarks.get(str(spec.get("landmark_id", "")), {})
@@ -52,7 +54,10 @@ func build(water_world: Node3D) -> void:
 		var yaw := deg_to_rad(float(spec.get("yaw_deg", 0.0)))
 		var half := Vector2(bounds.size.x, bounds.size.z) * factor * 0.5
 		holder.rotation.y = yaw
-		holder.position = Vector3(at.x, _floor(water_world, at, yaw, half) - float(spec.get("sink_m", 0.15)), at.y)
+		# `lift_m` raises a piece set into a steep slope, where the lowest footprint
+		# point would bury most of it (close-1024 vf2, the upper Veilfall tier).
+		holder.position = Vector3(at.x, _floor(water_world, at, yaw, half) - float(spec.get("sink_m", 0.15))
+			+ float(spec.get("lift_m", 0.0)), at.y)
 		add_child(holder)
 		var box: Array = spec.get("collider_fraction", [])
 		if box.size() == 3:
