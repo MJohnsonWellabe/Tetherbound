@@ -39,6 +39,14 @@ func build(world: Node3D, config: Dictionary) -> void:
 	_rules = config
 	_rock_material = _material(Color(str(config.get("rock_tint", "66706b"))),
 		float(config.get("rock_roughness", 0.96)), true)
+	# F39#4 arm 2 (close-1024, OFF until judged): a modest shadow-side fill on the
+	# crag material only, in its own rock colour, so the unlit faces stop reading
+	# near-black. Additive and small, so the lit side keeps its shading.
+	var fill := float(config.get("shadow_fill", 0.0))
+	if fill > 0.0:
+		_rock_material.emission_enabled = true
+		_rock_material.emission = Color(str(config.get("rock_tint", "66706b")))
+		_rock_material.emission_energy_multiplier = fill
 	_cap_material = _material(Color(str(config.get("cap_tint", "587354"))), 0.94, false)
 	for formation: Dictionary in config.get("formations", []):
 		_build_formation(formation)

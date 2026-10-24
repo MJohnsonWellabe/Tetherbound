@@ -199,16 +199,20 @@ func test_crag_relief_stays_inside_the_coarse_shell() -> void:
 	surface.add_vertex(c)
 	var coarse := surface.commit()
 	var normal := (b - a).cross(c - a).normalized()
-	var relief: ArrayMesh = exterior._relief_mesh(coarse, {"subdivisions": 6, "amplitude_m": 1.6,
-		"noise_cell_m": 3.5, "strata_m": 2.5, "strata_weight": 0.45}, 4101)
-	var verts: PackedVector3Array = relief.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
-	assert_true(verts.size() > 3 * 30, "the face is subdivided")
-	var moved := 0
-	for v: Vector3 in verts:
-		var offset := (v - a).dot(normal)
-		assert_true(offset <= 0.0001, "no relief point lies outside the coarse face")
-		assert_true(offset >= -1.6001, "relief depth stays within its amplitude")
-		if offset < -0.01:
-			moved += 1
-	assert_true(moved > 0, "interior points are displaced")
+	# Both shipped arms: arm 1 as configured, arm 2 at the larger amplitude.
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/tidewake_look.json"))
+	for section: String in ["veilfall_formation_relief_candidate", "veilfall_formation_relief_fill_candidate"]:
+		var relief_cfg: Dictionary = cfg[section].exterior_composition.visual_relief
+		var amplitude := float(relief_cfg.amplitude_m)
+		var relief: ArrayMesh = exterior._relief_mesh(coarse, relief_cfg, 4101)
+		var verts: PackedVector3Array = relief.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+		assert_true(verts.size() > 3 * 30, "%s subdivides the face" % section)
+		var moved := 0
+		for v: Vector3 in verts:
+			var offset := (v - a).dot(normal)
+			assert_true(offset <= 0.0001, "%s: no relief point lies outside the coarse face" % section)
+			assert_true(offset >= -amplitude - 0.0001, "%s: relief depth stays within its amplitude" % section)
+			if offset < -0.01:
+				moved += 1
+		assert_true(moved > 0, "%s displaces interior points" % section)
 	exterior.free()

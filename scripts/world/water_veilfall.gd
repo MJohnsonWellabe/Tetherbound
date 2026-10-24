@@ -124,6 +124,10 @@ func build(realm: Node3D) -> void:
 	family = preload("res://scripts/world/tidewake_look_profile.gd").merge(family,
 		preload("res://scripts/world/tidewake_look_profile.gd").settings().get(
 			"veilfall_formation_relief_candidate", {}).get("exterior_composition", {}))
+	# Arm 2 (OFF): larger relief plus a crag-only shadow-side fill.
+	family = preload("res://scripts/world/tidewake_look_profile.gd").merge(family,
+		preload("res://scripts/world/tidewake_look_profile.gd").settings().get(
+			"veilfall_formation_relief_fill_candidate", {}).get("exterior_composition", {}))
 	exterior_presentation.call("build", world,
 		preload("res://scripts/world/tidewake_look_profile.gd").merge(rules.get("exterior_composition", {}), family))
 	_build_distance_presentation()
