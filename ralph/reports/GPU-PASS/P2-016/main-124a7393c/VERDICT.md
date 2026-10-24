@@ -4,7 +4,11 @@
 
 - **Improved at High:** the control's majority call was PRESENT (10 of 12 judge calls); with #733 it becomes PARTIAL (9 of 12).
 - **No change at Medium:** both arms are PARTIAL by majority (#733: 8 PARTIAL / 4 PRESENT; control: 9 / 3).
-- **Where it fails:** the player's small creature now visibly rears, leans and crouches after hits. The large enemy creature, the armoured badger (Mudsnout), still holds its idle silhouette under every hit, even while a STAGGER label is up.
+- **Where it fails:** the small creature now visibly rears, leans and crouches after hits. The large armoured badger still holds its idle silhouette under every hit, even while a STAGGER label is up.
+- **Roles corrected after the first push** (per the Creatures lane, 24 Oct): in the grunt fight the large armoured badger is the **player's** fixture Terrapup (the badger mesh on main), and the small creature is the **enemy** Mudsnout.
+  - So it is the player's Terrapup badger that keeps its idle silhouette, while the enemy reacts.
+  - The first push of this file had the roles the other way round.
+  - G2 (cf2d4258a) targets exactly this: it doubles the badger's recoil.
 - **Tier: 6–7.** The fights themselves map to 5.6–6.7.
 
 ## Run
@@ -67,7 +71,7 @@
 
 ## Path to 7.5 (P2-016 to FIXED; the fight is at 5.6–6.7)
 
-1. **Hit-react layer on the enemy (wild and trainer) creature, not just the player's** (*new_art*, animation): a flinch or recoil on each hit and a real stagger pose while STAGGER shows. The badger is the reason the majority call stays PARTIAL.
+1. **A visible hit reaction on the large armoured badger**, the player's Terrapup (*new_art*, animation): a flinch or recoil on each hit and a real stagger pose while STAGGER shows. The badger is the reason the majority call stays PARTIAL. G2 (cf2d4258a, doubled recoil and a held wince) is queued to measure exactly this.
 2. **Make the wince last on screen** (*scene*, animation tuning): 0.25 s barely survives 0.15 s sampling, and at 30 fps play it is about 7 frames. Lengthen it to around 0.35–0.4 s, or add a squash and recoil key, so it reads.
 3. **Stop the telegraph shapes covering the creature** during its reaction (*scene*, P2-063): thin outlines instead of filled lavender domes.
 4. **Combat camera** (*scene*): keep both fighters framed, with no top-down opening and no per-frame cuts. This is the same as F38 L1 and the F40 fight.
