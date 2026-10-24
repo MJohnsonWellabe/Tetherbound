@@ -1,0 +1,10 @@
+{"anchors": {"f36_0_npc:C5B": [5.0, 6.0, 4.9], "f36_0_npc:C5A": [5.0, 6.0, 5.0],
+  "craft:before": [4.6, 5.0, 4.8], "craft:after": [6.3, 7.0, 6.4],
+  "f36_0_gap:C2B": [4.7, 6.3, 4.9], "f36_0_gap:C2A": [6.4, 7.2, 6.7],
+  "f10_2_r3_capacitor:control": [3.9, 4.6, 4.2], "f10_2_r3_capacitor:candidate_r3": [4.5, 5.2, 4.9]},
+ "candidates": {
+  "aftermath:candidate": [5.0, 5.6, 5.4], "aftermath:control": [4.7, 5.0, 5.0],
+  "calm:control": [4.7, 5.2, 4.9], "calm:candidate": [5.0, 5.5, 5.3],
+  "break:control": [4.2, 4.8, 4.3], "break:candidate": [4.3, 5.0, 4.5],
+  "glass_field_alpha:candidate": [5.4, 6.0, 5.6], "glass_field_alpha:control": [5.4, 6.1, 5.5],
+  "capacitor_alpha:control": [5.4, 6.2, 5.6], "capacitor_alpha:candidate": [5.0, 5.9, 5.2]}}

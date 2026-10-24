@@ -63,7 +63,25 @@ References drafted as crops of the owner boards (`docs/reference/boards-2026-09-
 - `lane_charged` ON in the candidate. Checks with it ON: test_charger_lunge, test_stormwood_b_hosted_lunge_outcome, test_stormwood_b_named_lunge_lanes (+ near-lens, fight ring, sight scope, camera visibility) 36 tests / 188 assertions, the only failure being test_off_by_default (expected: the candidate turns the rule on); smoke_charger_lunge 54 checks, 0 failed.
 - Candidate = r14 + near_lens_hide ON + lane_charged ON (`r15-candidate.patch`). Control: main frames (r13 control).
 
+## Round r15 result (24 Oct, about 06:30 UTC)
+- Same fixed anchors, three fresh code-blind judges, JUDGE_PROMPT v1 verbatim. Files: `r15/` (`_sheet_r15.png` = aftermath set). Fit: linear, slope 1.05, intercept 0.15, r 0.74, anchor RMSE 0.77 (warning > 0.75); confirming batch.
+
+| Set | Control raw (j1/j2/j3) | Control mapped | r15 raw | r15 mapped | Gain |
+|---|---|---|---|---|---|
+| F41#3 Calm | 4.7/5.2/4.9 | 5.33 | 5.0/5.5/5.3 | 5.68 | +0.35 |
+| F41#3 Break | 4.2/4.8/4.3 | 4.81 | 4.3/5.0/4.5 | 4.98 | +0.17 |
+| F41#3 aftermath | 4.7/5.0/5.0 | 5.30 | 5.0/5.6/5.4 | 5.75 | +0.45 |
+| F10#2 glass_field | 5.4/6.1/5.5 | 6.10 | 5.4/6.0/5.6 | 6.10 | 0.00 |
+| F10#2 capacitor | 5.4/6.2/5.6 | 6.17 | 5.0/5.9/5.2 | 5.79 | -0.38 |
+
+- F41#5 near-lens: all three judges still mark "near-camera occluder" PRESENT on both arms. With the swap rule the reverse root at the lens dissolves, but the judges now flag the solid trunks at 5-7 m (forest, giant, frame 8) and the root arch beyond as occluders. Regression: the capacitor candidate's frame 3 has a trunk across the spider (all three judges): dropping the wide near_lens_fade for covered layers also removed the fight camera's existing 3-7 m protection.
+- Verdict: second failed approach on the near-lens defect (whole-instance hide, then narrow-band swap). **Parked** with this evidence; `near_lens_hide` stays OFF on tb/stormwood (cfaf19da2). If resumed: keep the wide near_lens_fade in fights, and treat 5-7 m frame-edge trunks as a camera-framing problem (an exploration camera rule), not an instance rule.
+- Matrix scores sit at the r14 level (r14 candidate 5.75/4.98/5.90 vs r15 5.68/4.98/5.75): F41#3 stays parked, F10#2 stays parked.
+- lane_charged was ON in this candidate (before the coordinator's 04:29Z Fights-lane message reached this session). Judges still mark the magenta outline telegraphs PARTIAL; lane_charged changes only solid lanes. It is not in any committed config or land branch here; Fights owns it.
+
 ## TO COORDINATOR
+- 24 Oct 06:35 UTC PARKED F41#5 (near-lens part) after two approaches: r15 judges (3/3) still mark the near-camera occluder PRESENT; the swap rule dissolves the reverse root at the lens but 5-7 m frame-edge trunks remain, and dropping the wide near-lens dither cost the capacitor fight -0.38. Code is on tb/stormwood (cfaf19da2, near_lens_hide OFF, focused test) and NOT in a land branch. F41#5 magenta: noted your 04:29Z message (arrived here 06:16Z); lane_charged only appeared in the judged r15 candidate, never in committed config; I won't touch it again. Rerun the defect pass after the Fights telegraph change lands.
+- 24 Oct 06:35 UTC Status unchanged: F41#3 and F10#2 parked (best mapped CPU matrix 5.75/4.98/5.90, fights ~6.1); tb/stormwood-land dd722a9c9 still the only READY batch. Stopping the lane here unless a new direction arrives.
 - 24 Oct 04:10 UTC READY (flag-off, no behaviour change) tb/stormwood-land dd722a9c9, from origin/main 5f1f388cc: glass field `shard_finish.crystal_model` (unset = off) + focused test `test_fulgurite_clusters_build_only_with_their_model`; both meshy-1024 Stormwood assets with provenance and texture policy; `_crystal_model_candidate` / `_model_v3_candidate` keys with the r14 scores in `_why`. Checks: test_stormheart_presentation, test_stormwood_glass_field_approach, test_stormwood_glass_field_identity, test_stormwood_scar_relief, test_texture_import_policy = 15 tests, 1569 assertions, 0 failed; texture_import_policy --check PASS (834).
 - 24 Oct 04:10 UTC PARKED F41#3 and F10#2 (gain rule: r12/r13/r14 under +0.5; r14 was new art + fill). Best mapped CPU: matrix Calm 5.75 / Break 4.98 / aftermath 5.90 (r14 candidate, OFF); fights glass_field 5.91 / capacitor 6.34 (r13, within noise of main). No row at 6.7. Details in "Round r14 result".
 - 24 Oct 04:10 UTC BLOCKED F41#5 (not clean): (a) near-lens trunk/root at the fixed giant/reverse/forest stands: needs your call on reframing those `--custom`/F41-look stands, or an exploration near-lens rule for the Meshy giant trees (about 3x render on llvmpipe, measured 22 Oct); (b) magenta lane/ring outlines in the real fights: Fights-owned (`combat.json charger_lunge.lane_charged`, OFF on main). Say if this lane should turn lane_charged on in a judged round.
