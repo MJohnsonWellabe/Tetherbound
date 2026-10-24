@@ -32,6 +32,15 @@ uniform vec4 deep_colour: source_color = vec4(0.11, 0.32, 0.38, 1.0);
 uniform vec4 shallow_colour: source_color = vec4(0.48, 0.68, 0.58, 1.0);
 // How many metres of depth it takes to reach the deep colour.
 uniform float depth_falloff = 1.6;
+// F39 P2-009: a middle band so open water is a gradient from shallow through
+// a mid shelf to the deep colour, instead of one ramp that saturates and then
+// reads as a hard navy band at the shelf edge. mid_depth_m <= 0 keeps the old
+// two-colour ramp exactly. depth_band_break_m breaks the ramp with broad
+// world-space noise so the remaining transition wanders instead of drawing a
+// contour line.
+uniform vec4 mid_colour: source_color = vec4(0.11, 0.32, 0.38, 1.0);
+uniform float mid_depth_m = 0.0;
+uniform float depth_band_break_m = 0.0;
 uniform float alpha_deep = 0.88;
 uniform float alpha_shallow = 0.42;
 // Fade alpha to zero over this many metres of depth right at the shoreline,
@@ -112,9 +121,26 @@ void fragment() {
 	// gradient over a smooth basin renders as visible mach bands at 8 bits
 	// (blind round 2 named the banding), and the same noise that ripples the
 	// normals is exactly the right thing to break it up with.
-	float shallowness = 1.0 - smoothstep(0.0, depth_falloff, depth);
+	float graded_depth = depth;
+	if (depth_band_break_m > 0.0) {
+		// One broad, slow wander (about 40 m across) plus a finer one, so the
+		// shelf edge is a coastline, not a circle. World space: it does not
+		// swim with the camera.
+		float broad = texture(foam_noise, world_pos.xz * 0.025 + vec2(0.17)).r - 0.5;
+		float fine = texture(foam_noise, world_pos.xz * 0.09 + vec2(0.63)).r - 0.5;
+		graded_depth = max(0.0, depth + (broad * 1.6 + fine * 0.6) * depth_band_break_m);
+	}
+	float shallowness = 1.0 - smoothstep(0.0, depth_falloff, graded_depth);
 	shallowness = clamp(shallowness + (n_a.g - 0.5) * 0.05, 0.0, 1.0);
 	vec3 colour = mix(deep_colour.rgb, shallow_colour.rgb, shallowness);
+	if (mid_depth_m > 0.0) {
+		// shallow -> mid over the first mid_depth_m, mid -> deep from there to
+		// depth_falloff. Both legs are smoothstepped, so neither end has a
+		// visible kink where the two meet.
+		float to_mid = smoothstep(0.0, mid_depth_m, graded_depth);
+		float to_deep = smoothstep(mid_depth_m, max(depth_falloff, mid_depth_m + 0.5), graded_depth);
+		colour = mix(mix(shallow_colour.rgb, mid_colour.rgb, to_mid), deep_colour.rgb, to_deep);
+	}
 
 	// View-angle blend toward the sky family — a flat look-down shows the
 	// water's own colour, a grazing look across shows the sky's, which is

@@ -25,7 +25,10 @@ func build(water_world: Node3D) -> void:
 	var look := preload("res://scripts/world/tidewake_look_profile.gd").settings()
 	if bool(look.get("enabled", false)):
 		cfg["workplace_candidate"] = look.get("dock_workplace", {})
-		cfg["village_candidate"] = look.get("dock_village", {})
+		# `dock_village_candidate` (an unjudged section, OFF in play) overrides
+		# keys of the shipping hamlet under the capture flag.
+		cfg["village_candidate"] = preload("res://scripts/world/tidewake_look_profile.gd").merge(
+			look.get("dock_village", {}), look.get("dock_village_candidate", {}))
 		# A working-harbour pier (longer, wider, loaded deck) under the same gate.
 		cfg = preload("res://scripts/world/tidewake_look_profile.gd").merge(cfg, look.get("dock_dressing", {}))
 	var world_cfg: Dictionary = water_world.get("config")

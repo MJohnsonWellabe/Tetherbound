@@ -448,6 +448,11 @@ func _build_material(region: Rect2, tag: String = "pond", mask := PackedByteArra
 	material.set_shader_parameter("deep_colour", Color(str(surface.get("deep_colour", "#1d5261"))))
 	material.set_shader_parameter("shallow_colour", Color(str(surface.get("shallow_colour", "#7ab08e"))))
 	material.set_shader_parameter("depth_falloff", float(surface.get("depth_falloff", 1.6)))
+	# P2-009 shelf gradient. Absent (0) keeps the original two-colour ramp.
+	material.set_shader_parameter("mid_colour", Color(str(surface.get("mid_colour",
+		str(surface.get("deep_colour", "#1d5261"))))))
+	material.set_shader_parameter("mid_depth_m", float(surface.get("mid_depth_m", 0.0)))
+	material.set_shader_parameter("depth_band_break_m", float(surface.get("depth_band_break_m", 0.0)))
 	material.set_shader_parameter("alpha_deep", float(surface.get("alpha_deep", 0.88)))
 	material.set_shader_parameter("alpha_shallow", float(surface.get("alpha_shallow", 0.42)))
 	material.set_shader_parameter("edge_feather", float(surface.get("edge_feather", 0.1)))
