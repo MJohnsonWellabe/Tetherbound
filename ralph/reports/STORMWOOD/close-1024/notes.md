@@ -8,7 +8,60 @@ References drafted as crops of the owner boards (`docs/reference/boards-2026-09-
 1. Stormheart v3 hero: `stormheart_v3_ref_a.jpg` (board a exterior) + `stormheart_v3_ref_b.jpg` (board b exterior). About 380 m tall, height:width 1.6:1; keep v2 identity (V-split trunk with a glowing blue cleft), wooden platforms and walkways, navy banners only (no red), green crown. Used beyond `swap_radius_m` 75 m; scale to the 1.80 m trainer goes through the procedural shell. Purpose: judges r11/r12 call the distant Stormheart squat.
 2. Glass-field strike scar crystals: `glass_scar_ref_details.jpg` (lightning crystal, electric roots) + `glass_scar_ref_palette.jpg`. A cluster of pale-blue fulgurite glass spikes rising from a scorched, fused ground crust, about 4 m wide x 2.5 m tall (taller than the trainer). Purpose: judges cannot read the glass-field scar.
 
+## Round r14 result (24 Oct, about 04:00 UTC)
+- Batch: same fixed anchors (craft, f10_2_r3_capacitor, f36_0_npc:C5, f36_0_gap:C2), three fresh code-blind judges, JUDGE_PROMPT v1 verbatim. Files: `r14/` (`_sheet_r14.png` = Calm set). Control = the r13 control frames (main).
+- Fit: linear, slope 0.92, intercept 0.91, r 0.74, anchor RMSE 0.77 (warning: > 0.75). Confirming batch (top anchor 7.35).
+
+| Set | Control raw (j1/j2/j3) | Control mapped | Candidate raw | Candidate mapped | Gain |
+|---|---|---|---|---|---|
+| F41#3 Calm | 5.2/5.0/4.9 | 5.53 | 5.3/5.3/5.2 | 5.75 | +0.22 |
+| F41#3 Break | 4.7/4.0/4.1 | 4.83 | 4.6/4.3/4.4 | 4.98 | +0.15 |
+| F41#3 aftermath | 5.3/5.1/5.0 | 5.63 | 5.5/5.5/5.3 | 5.90 | +0.27 |
+| F10#2 glass_field | 5.3/5.4/5.6 | 5.90 | 5.6/5.2/5.5 | 5.90 | 0.00 |
+| F10#2 capacitor | 5.2/5.4/5.6 | 5.87 | 5.1/5.3/5.5 | 5.78 | -0.09 |
+
+- What moved: all three judges picked out the Stormheart v3 tower ("closer to the stronghold board"; squat defect PARTIAL from two judges) and the glass crystals (scar PARTIAL from two). Still PRESENT for all three: Break forest near-black, lightning not lighting trunks/ground in the forest stands, near-lens trunk/root (giant, reverse), black foreground patch (forest), repeating ground, flat sky, no shafts or rim light. Fights: one judge flagged the candidate's foreground crystal at the glass_field lens edge.
+- Gain rule: r12, r13, r14 all under +0.5; r14 was the clearly different approach (new art + fill). **F41#3 and F10#2 park** at the mapped scores above (CPU, Compatibility/Low). The r14 candidate beats main on every matrix phase but is not judged passing, so it stays OFF (flag-off land below).
+- Remaining gap, per all six r13/r14 judges, is mostly outside this lane's config surface: fight HUD about 40% of frame (UI), tiny pilot (Creatures), magenta outline telegraphs and spark-sized impacts (Fights: `combat.json charger_lunge.lane_charged` is on main OFF; the feet ring keeps the settled hazard hue), near-lens occluders at the fixed stands (needs a stand reframe or an exploration near-lens rule; the Meshy-tree fade route costs about 3x render), and a real lighting model for the canopy interior (Compatibility has no SSAO/volumetrics; shadow opacity is pinned by the surge design tests).
+
+## F41#5 defect scan (r13 + r14 matrices, six judge passes)
+- Flat magenta strike disc in the matrix: FIXED on both arms (no disc seen in any Break frame).
+- Placeholder materials, floating bodies: none flagged in the matrix sets.
+- Clipping / camera in foliage: near-lens trunk (giant), root (reverse) and a dithered near-lens trunk (forest) PRESENT in the matrix; in the fights, canopy/trunk edges intrude (PARTIAL).
+- Magenta in the real fight: thin magenta lane/ring outlines PARTIAL (Fights-owned telegraph).
+- So F41#5 is not clean. Open items: the near-lens occluders and the fight telegraph outlines.
+
+## F41#1 top-20 (from `ralph/reports/VISUAL/phase2/stormwood/top20.csv`, owner lane as listed there)
+| Item | Subject | Impact | Owner | Status / this lane |
+|---|---|---|---|---|
+| P2-042 | Surge phase presentation | 100 | x04-stormwood | fixed (csv) |
+| P2-015 | creature collapse and rest | 100 | x04-meadows | Creatures |
+| P2-016 | creature hurt/movement poses | 100 | x04-meadows | Creatures |
+| P2-037 | Stormheart finale | 100 | x04-stormwood | r14: v3 tower PARTIAL; `_model_v3_candidate` OFF |
+| P2-092 | named wild fight actor spacing | 100 | x04-stormwood | Fights |
+| P2-002 | map | 80 | x04-meadows | UI |
+| P2-017 | normal creature scale | 80 | x04-meadows | Creatures |
+| P2-030 | shiny creature finish | 80 | x04-tidewake | Creatures |
+| P2-033 | ground pickup identity | 80 | x04-meadows | Shared art (candidate OFF on main) |
+| P2-093 | named wild danger/opening cues | 80 | x04-stormwood | Fights (`lane_charged` OFF) |
+| P2-038 | named destination identities | 80 | x04-stormwood | open, not captured this round |
+| P2-039 | forest ground and distance layers | 80 | x04-stormwood | open; judges: repeating ground PARTIAL |
+| P2-081 | named trainer dialogue identity | 64 | x04-stormwood | UI/dialogue |
+| P2-113 | catch camera distance | 64 | x04-tidewake | Camera |
+| P2-119 | Fly carrier grip pose | 64 | x04-meadows | Creatures |
+| P2-001 | menu shell | 60 | x04-meadows | UI |
+| P2-007 | secondary menu panels | 60 | x04-meadows | UI |
+| P2-055 | named character silhouettes | 60 | x04-tidewake | Shared art (candidate OFF) |
+| P2-063 | shared fight tell and hit effects | 60 | x04-meadows | Fights |
+| P2-095 | craft recipe text | 48 | x04-meadows | UI (the craft anchor's "after" side) |
+- 6 of 20 are Stormwood-lane items; 14 belong to Creatures, UI, Fights, Camera or Shared art. F41#1 cannot close from this lane alone.
+
 ## TO COORDINATOR
+- 24 Oct 04:10 UTC READY (flag-off, no behaviour change) tb/stormwood-land dd722a9c9, from origin/main 5f1f388cc: glass field `shard_finish.crystal_model` (unset = off) + focused test `test_fulgurite_clusters_build_only_with_their_model`; both meshy-1024 Stormwood assets with provenance and texture policy; `_crystal_model_candidate` / `_model_v3_candidate` keys with the r14 scores in `_why`. Checks: test_stormheart_presentation, test_stormwood_glass_field_approach, test_stormwood_glass_field_identity, test_stormwood_scar_relief, test_texture_import_policy = 15 tests, 1569 assertions, 0 failed; texture_import_policy --check PASS (834).
+- 24 Oct 04:10 UTC PARKED F41#3 and F10#2 (gain rule: r12/r13/r14 under +0.5; r14 was new art + fill). Best mapped CPU: matrix Calm 5.75 / Break 4.98 / aftermath 5.90 (r14 candidate, OFF); fights glass_field 5.91 / capacitor 6.34 (r13, within noise of main). No row at 6.7. Details in "Round r14 result".
+- 24 Oct 04:10 UTC BLOCKED F41#5 (not clean): (a) near-lens trunk/root at the fixed giant/reverse/forest stands: needs your call on reframing those `--custom`/F41-look stands, or an exploration near-lens rule for the Meshy giant trees (about 3x render on llvmpipe, measured 22 Oct); (b) magenta lane/ring outlines in the real fights: Fights-owned (`combat.json charger_lunge.lane_charged`, OFF on main). Say if this lane should turn lane_charged on in a judged round.
+- 24 Oct 04:10 UTC F41#1: top-20 listed above; 14 of 20 are other lanes' items (Creatures/UI/Fights/Camera/Shared art). P2-037 moved (v3 tower, PARTIAL). F41#1 and #2 cannot close from this lane.
+- 24 Oct 04:10 UTC Messaging: send_message to your session is still refused here (elevated_session_untrusted_device). Your two messages (Meshy delivery 00:54Z, priorities 03:30Z) arrived. My meshy-refs were pushed at f40da8414 (tb/stormwood) before the request.
 - 23 Oct 22:35 CT MESHY (send_message refused: elevated_session_untrusted_device). (1) Stormheart v3: `ralph/reports/STORMWOOD/close-1024/meshy-refs/stormheart_v3_ref_a.jpg` + `_b.jpg`, ~380 m, h:w 1.6:1, far LOD only, keep v2 V-split cleft, navy banners, no red. (2) Glass-scar crystal cluster: `meshy-refs/glass_scar_ref_details.jpg` + `glass_scar_ref_palette.jpg`, ~4 m wide x 2.5 m tall, pale-blue fulgurite on scorched crust. Return GLB paths on a branch; both stay flag-off until judged.
 
 ## Round r13 (in progress, 23 Oct)
