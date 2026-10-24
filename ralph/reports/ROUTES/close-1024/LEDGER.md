@@ -30,13 +30,13 @@ The committed fixtures are the older chain from before the training loop: genera
 | C3 | 04 → 05/06_veyra_relay | GENERATED (`cloudreach_05_generated_veyra_boundary`, L40) | |
 | C4 | 06 → 07_stormward_handoff | MATCH-SAVED | fixtures cloudreach_06, 07 |
 | C5 | 07 → T4 loop (06k … Aster … altar_5) | GENERATED start (`cloudreach_t4_aster_independent`, L39); inner seams to altar_5 MATCH-RECEIPT, real master_t4 | ROUTES-B close-1020 |
-| C6 | t4_altar_5 → t4_kitchen → t4_feed → t4_return | MISSING; **running now** (regenerating the lost start chain) | |
-| C7 | t4_return → 07_stormward_handoff (trained) | MISSING; queued after C6 | |
+| C6 | t4_altar_5 → t4_kitchen → t4_feed → t4_return | MISSING; owner Routes; start chain regenerated and committed (`tests/fixtures/earned_saves/f49_c4_*`), Kitchen running | |
+| C7 | t4_return → 07_stormward_handoff (trained) | MISSING; owner Routes; queued after C6 | |
 | S1 | cloudreach 07 → stormwood 01_arrival_prefix → 02 → 03 → 04 → 05_rootgate → 06_dynamo → 07_marrow_aftermath | MATCH-SAVED (no training state; 07 accepts the Stormheart and releases slot 4, which breaks the five) | fixtures stormwood_01..07 |
 | S2 | rootgate → T5 loop (Rowan … altar_5) | GENERATED start (`stormwood_t5_rowan_independent`, L49); inner seams MATCH-RECEIPT except t5_chest → preparehome (8 m Load placement, UNEXPLAINED), real master_t5 | ROUTES-B |
-| S3 | t5_altar_5 → t5_kitchen → t5_feed → t5_return | MISSING | |
+| S3 | t5_altar_5 → t5_kitchen → t5_feed → t5_return | MISSING; **owner: Stormwood lane (tb/stormwood-routes)** | |
 | S4 | ending: dynamo → marrow_settlement (Stormheart refused, five kept) → home_key → home_relic | GENERATED start (`stormwood_rootgate_crown`); inner seams MATCH-RECEIPT | ROUTES-B |
-| S5 | home_relic → home_credits | MISSING | |
+| S5 | home_relic → home_credits | MISSING; **owner: Stormwood lane (tb/stormwood-routes)** | |
 
 ## Per-chapter Master and feast (cooked and fed)
 - Meadows: T1 proven (Orin; Kitchen; five feasts fed).
@@ -46,3 +46,5 @@ The committed fixtures are the older chain from before the training loop: genera
 
 ## Count
 Missing pieces: M3, M4, M6, C6, C7, S3, S5. Generated seams no run proves: M5, M7, T1, T3, T4, C1, C3, C5, S2, S4. A generated seam closes only by running the left piece's real end save into the right piece. The bulk of that is level: generated L29/L31/L39/L49 against earned L20/L31/L40.
+
+Owners (coordinator, 24 Oct 06:21Z): Routes owns C6, C7 and the Meadows rows (M3–M7); the Stormwood lane owns S3 and S5.
