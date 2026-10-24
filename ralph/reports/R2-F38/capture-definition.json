@@ -206,10 +206,10 @@
       "heading_deg": 0,
       "source": "crossing_hall.json arches:tidewake",
       "views": [
-        "gameplay",
         "detail"
       ],
-      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room)."
+      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room).",
+      "_why_close1024_tidewake": "F38#5 close-1024 recapture: the 8 m gameplay stand for this arch puts the production camera inside the wall geometry behind it (all four frames black); only the 3 m detail view stays in the room."
     },
     {
       "id": "arch_cloudreach",
