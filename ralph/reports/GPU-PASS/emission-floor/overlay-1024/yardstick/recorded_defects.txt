@@ -1,0 +1,6 @@
+Bn: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ci: none
+Sg: "The captain's creature does not read as a boss: it is not convincingly larger than the player's creature"; "Telegraph rings or lanes are the flat magenta the art direction lists as a defect"; "A landed attack shows no visible impact (no splash, debris or flash where it hits)"; "The captain's creature renders washed-out, grey or semi-transparent (a ghost or hologram) instead of a solid creature"
+Nr: none
+Tz: none
+Ov: "The captain's creature does not read as a boss: it is not convincingly larger than the player's creature"; "Telegraph rings or lanes are the flat magenta the art direction lists as a defect"; "A landed attack shows no visible impact (no splash, debris or flash where it hits)"; "The captain's creature renders washed-out, grey or semi-transparent (a ghost or hologram) instead of a solid creature"

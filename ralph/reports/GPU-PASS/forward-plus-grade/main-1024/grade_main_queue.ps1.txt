@@ -1,0 +1,14 @@
+﻿# Forward+ grade re-measure on main (local): Meadows (fog 0.001, #712), Stormwood F10 and Tidewake at Low, Medium and High; same scenes and grid as forward-plus-grade/branch.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $root = "D:\tb-gpu-runs\out\grade-main"; $proj = "D:\tb-gpu-pass"
+$sha = "45865499d4830a9c2281f82da4f18311e1e646a8"
+$env:TB_GRADE_VARIANT = "base"; $env:TB_RUN_TIMEOUT_MIN = "30"; $env:TB_FORCE_OPAQUE = ""; $env:TB_FORCE_METAL0 = ""; $env:TB_FORCE_MATTE = ""
+foreach ($preset in "Low", "Medium", "High") {
+    $name = "main-$preset"
+    "-- $name"
+    & $run -Preset $preset -Script "D:/tb-gpu-runs/tools/grade_f10.gd" -OutDir "$root\f10\$name" -ProjectPath $proj -UserArgs @("--out={FRAMES}", "--ids=capacitor_alpha,glass_field_alpha", "--camera-view=north", "--seconds=6", "--interval=1.0")
+    & $run -Preset $preset -Script "D:/tb-gpu-runs/tools/grade_loc.gd" -OutDir "$root\loc\$name" -Resolution "1920x1080" -ProjectPath $proj -UserArgs @("--biome=meadows", "--subset=band1", "--times=day", "--views=approach", "--preset=$preset", "--source-commit=$sha", "--output={FRAMES}")
+    & $run -Preset $preset -Script "D:/tb-gpu-runs/tools/grade_loc.gd" -OutDir "$root\tide\$name" -Resolution "1920x1080" -ProjectPath $proj -UserArgs @("--biome=water", "--subset=tidal_stairstones", "--subset=east_beach", "--times=day", "--views=approach", "--preset=$preset", "--source-commit=$sha", "--output={FRAMES}")
+}
+$env:TB_GRADE_VARIANT = ""
+& D:\tb-gpu-runs\tools\grade_measure.ps1 -Root $root -OutCsv "$root\grade_main_measure.csv"
+"grade main done"

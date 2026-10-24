@@ -1,0 +1,24 @@
+[
+    {
+        "label":  "Tidewake lt2 regrade GPU Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f39look\\sides\\F39-look-Medium-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f39look\\sides\\F39-look-Medium-control.png",
+        "brief":  "Six fixed views of a water-chapter coast (First Shore at noon, evening and night; a dune at noon and dawn; a waterfall cliff up close) with the 1.80 m trainer as a ruler. Judge whether the biome reads as the key art\u0027s open water chapter, with each time of day lit as its own mood.",
+        "defects":  [
+                        "Evening and dawn are graded like midday (same light and colour, only the sky changes)",
+                        "The sea meets the sky on a razor seam with no haze or falloff into distance",
+                        "The night beach is flat ambient: nothing casts a shadow"
+                    ]
+    },
+    {
+        "label":  "Tidewake lt2 regrade GPU High",
+        "a":  "D:\\tb-gpu-runs\\yard\\f39look\\sides\\F39-look-High-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f39look\\sides\\F39-look-High-control.png",
+        "brief":  "Six fixed views of a water-chapter coast (First Shore at noon, evening and night; a dune at noon and dawn; a waterfall cliff up close) with the 1.80 m trainer as a ruler. Judge whether the biome reads as the key art\u0027s open water chapter, with each time of day lit as its own mood.",
+        "defects":  [
+                        "Evening and dawn are graded like midday (same light and colour, only the sky changes)",
+                        "The sea meets the sky on a razor seam with no haze or falloff into distance",
+                        "The night beach is flat ambient: nothing casts a shadow"
+                    ]
+    }
+]

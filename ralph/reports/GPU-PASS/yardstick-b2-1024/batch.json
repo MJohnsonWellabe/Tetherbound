@@ -1,0 +1,96 @@
+{
+ "anchors": {
+  "f36_0_npc:C1B": [
+   6.5,
+   6.4,
+   7.0
+  ],
+  "f36_0_npc:C1A": [
+   6.5,
+   6.3,
+   7.0
+  ],
+  "f36_0_gap:C2A": [
+   5.5,
+   6.8,
+   6.0
+  ],
+  "f36_0_gap:C2B": [
+   6.0,
+   5.6,
+   6.2
+  ],
+  "p2_094_r4:X_before": [
+   3.0,
+   3.0,
+   3.5
+  ],
+  "p2_094_r4:Y_after": [
+   4.5,
+   5.0,
+   5.0
+  ],
+  "craft:after": [
+   5.5,
+   5.8,
+   6.0
+  ],
+  "craft:before": [
+   4.0,
+   3.8,
+   4.0
+  ]
+ },
+ "candidates": {
+  "F22#4 Riverwatch main Medium-r1 vs Low-r2 | F22-main-Medium-r1": [
+   4.5,
+   4.0,
+   4.0
+  ],
+  "F22#4 Riverwatch main Medium-r1 vs Low-r2 | F22-main-Low-r2": [
+   5.5,
+   5.3,
+   5.3
+  ],
+  "F17#6 noshafts diag Medium approach-nave | F17-6-Medium-approach-nave-noshafts": [
+   4.5,
+   5.5,
+   5.0
+  ],
+  "F17#6 noshafts diag Medium approach-nave | F17-6-Medium-approach-nave-candidate": [
+   4.0,
+   4.3,
+   4.4
+  ],
+  "F17#6 noshafts diag Medium shrine | F17-6-Medium-shrine-noshafts": [
+   4.0,
+   5.0,
+   4.8
+  ],
+  "F17#6 noshafts diag Medium shrine | F17-6-Medium-shrine-candidate": [
+   3.5,
+   4.2,
+   4.4
+  ],
+  "F22#4 Riverwatch main Medium-r2 vs Low-r2 | F22-main-Low-r2": [
+   5.5,
+   5.3,
+   5.3
+  ],
+  "F22#4 Riverwatch main Medium-r2 vs Low-r2 | F22-main-Medium-r2": [
+   4.5,
+   4.0,
+   4.0
+  ],
+  "F17#6 noshafts diag Medium nave-sides | F17-6-Medium-nave-sides-noshafts": [
+   4.5,
+   5.5,
+   5.0
+  ],
+  "F17#6 noshafts diag Medium nave-sides | F17-6-Medium-nave-sides-candidate": [
+   3.5,
+   3.8,
+   3.8
+  ]
+ }
+}

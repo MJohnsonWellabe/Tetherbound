@@ -2,7 +2,62 @@
 
 ## READY (24 Oct): newest first
 
-- **10:05 CT, F17#6 Crossing Hall r9: REOPENED on GPU.** Main r9 maps to **5.83** against a control of 4.98 (5f1f388cc Hall config), the same at Medium and High.
+- **11:17 CT, creature emission floor overlay (Forward+):**
+  - **F22#4 with the overlay:** Medium maps to **7.26** (7.34 / 7.18), against 5.08 shipped and 6.53 for Low. The ghost is FIXED ×3. Medium now beats Low but is still below 7.5; the HUD and the hidden player creature remain.
+  - **Day:** the wash was roster-wide (Cindercub, Ripplet, Terrapup, Paddlenewt, Bramblebun, Trailpup, Mudsnout all milky). ×0 restores their true colours.
+  - **Night sweep:**
+    - ×1, ×0.5 and ×0.25 are all white ghosts;
+    - ×0.1 whitens Ripplet;
+    - **×0.05 (night floor 0.011) keeps Cindercub readable with no whitening.**
+    - **Recommend: base ×0.0, `times.night.environment` ×0.05.**
+  - Evidence: `emission-floor/overlay-1024/RESULT.md`.
+
+- **10:45 CT, Tidewake regrade (lt2) on main: REOPENED.**
+  - Scores: **6.12** against control 5.35 (CPU 7.07), the same at Medium and High.
+  - Evening and dawn grade: FIXED ×3.
+  - Still open:
+    - the night beach casts nothing (PRESENT ×3);
+    - the noon seam is only softened;
+    - the Veilfall close-up is `new_art`.
+  - Evidence: `F39-look-lt2/main-1024/VERDICT.md`.
+  - **Now running:** the emission-floor overlay checks.
+
+- **10:40 CT, Forward+ grade re-measure on main (with #712 Meadows fog 0.001):** luma Medium vs Low:
+  - **Meadows 102.6 vs 106.8 (96%, was 87.6)**;
+  - **Tidewake 165.2 vs 163.5 (parity)**;
+  - Stormwood F10 63.2 vs 73.1 (86%, more saturated).
+  - Matched frames read as one look across presets. Evidence: `forward-plus-grade/main-1024/RESULT.md`.
+  - **Now running:** the Tidewake regrade capture, then the emission-floor overlay checks (F22#4 at Medium, night and day creatures).
+
+- **10:08 CT, F22#4 Riverwatch on main: REOPENED.**
+  - Medium maps to **5.10**, with the ghost still PRESENT ×3; Low maps to **6.39**.
+  - **Root cause, isolated on GPU:**
+    - not the tell aura (the renderer-aware aura works);
+    - it is `art.json` `creature_emission_floor: 0.08`, the always-on additive albedo emission on plain-PBR creatures.
+    - On Forward+ it washes the captain milky grey in every frame. Turning emission off alone gives a solid brown otter that matches Low.
+  - The fix should be renderer-aware, like the aura. The floor likely affects other plain-PBR creatures on Forward+ by day too.
+  - Evidence: `F22-4/main-1024/VERDICT.md`.
+  - **Now running:** the Tidewake regrade (F39-look), Medium and High.
+
+- **10:00 CT, F36#1 held shove hit on main** (the 15 enabled species with CPU ≥ 7.0; recipe vs shipping, Medium):
+  - **CONFIRMED: Tanglevolt 7.89, Frostclaw 7.88, Stormcapra 7.79, Cloudfang 7.73, Breezetail 7.69, Craghorn 7.66.**
+  - **REOPENED:** Aquaryn 7.49, Tidecoil 7.45, Solmane 7.33 (no gain), Cliffspike 7.03, Thundertunnel 6.91, Voltwig 6.89, Pebbik 6.89.
+  - **Recipe scores below shipping:** Galecrest (6.62 vs 6.72) and **Stormraven (5.81 vs 6.09)**. Consider turning these two OFF.
+  - Evidence: `F36-1/main-1024/VERDICT.md`.
+
+- **09:40 CT, F36#0 creatures on main:**
+  - **CONFIRMED: Terrapup 7.64 (3.20 m) and Burrowback 7.61.**
+  - **REOPENED:** water_mosshell 7.41, Mosshell 7.36, Ripplet 7.26, Nightburrow 7.01, Bramblebun 6.95, Paddlenewt 6.65, Veridian 6.52, Stormtrail 6.16, Cindercub 6.11, Riftfrill 6.04, Mudsnout 5.88, Trailpup 5.73.
+  - Common asks:
+    - swimmers stand on a flat water slab (the capture's context stage);
+    - five species stand at or below the 1.80 m ruler;
+    - near-black values;
+    - stock-animal reads (Trailpup, Mudsnout).
+  - Two batches, three judges each, both confirming. Evidence: `F36-0/main-1024/VERDICT.md`.
+- **09:40 CT, F17#6 shafts-off diagnostic:** removing `hall_great_hall.shafts` scores +0.95 in the same batch, which puts the Hall at about 5.85. It is still REOPENED. Added to `F17-6/VERDICT.md`.
+- **Now running:** F22#4 Riverwatch on main. Medium maps to 5.10, with the ghost still PRESENT in 3/3, against Low 6.39. A material probe is running before I write it up.
+
+- **09:12 CT, F17#6 Crossing Hall r9: REOPENED on GPU.** Main r9 maps to **5.83** against a control of 4.98 (5f1f388cc Hall config), the same at Medium and High.
   - The cause: r9's `hall_great_hall.shafts` (additive quads) render on Forward+ as hard white bead-streak bars in 6 of the 10 day views. Neon arch rims add to it. All three judges named the shafts as the worst artefact. The CPU sheet shows no shafts at all.
   - The fix needs to be renderer-aware, like the F22#4 aura.
   - A shafts-off diagnostic is queued.
@@ -10,7 +65,7 @@
   - Evidence: `F17-6/VERDICT.md`.
   - **Now running:** F22#4 Riverwatch on main.
 
-- **08:55 CT, F25#4 confirmed on main (Medium):** the launch frame is 16.6–27.4 ms (volley 1) and 10.3–18.0 ms (volley 2), with 0 frames over 33.3 ms in 24 volleys. The budget caps at 384 under over-cap load. This backs F21#5.
+- **08:47 CT, F25#4 confirmed on main (Medium):** the launch frame is 16.6–27.4 ms (volley 1) and 10.3–18.0 ms (volley 2), with 0 frames over 33.3 ms in 24 volleys. The budget caps at 384 under over-cap load. This backs F21#5.
   - Low with prewarm read 245–254 ms on a cold cache after the reimport. **The warm-cache re-run gives 64–78 ms, the same as FIX.md: a cache artefact, not a regression.**
   - Evidence: `F25-4/main-confirm/VERDICT.md`.
   - **Now running:** F17#6 Crossing Hall, Medium and High; the Low re-run follows it.

@@ -75,7 +75,27 @@ Make the shafts renderer-aware, as `enemy_pattern_telegraph.aura_renderer_scale(
 
 The arch rim strips probably need the same treatment.
 
-A shafts-off Medium diagnostic (`hall_great_hall.shafts = []`) is queued on this lane, to show what the rest of r9 scores on GPU. It will be added here as `noshafts/`.
+## Shafts-off diagnostic (Medium, judged in batch b2)
+
+- **Arm:** main r9 with `hall_great_hall.shafts` set to `[]`, which removes the DaylightShaft planes. Nothing else changed, and the file was restored afterwards.
+- **Batch:** judged in `../yardstick-b2-1024/`, paired side by side with the r9 frames (Medium).
+- **Calibration:** slope 1.076, intercept 0.614, r 0.94, anchor RMSE 0.45. Confirming batch, no warnings.
+
+| Set | r9 as shipped | **r9, no shafts** |
+|---|---|---|
+| approach-nave | 5.17 | **5.99** |
+| nave-sides | 4.59 | **5.99** |
+| shrine | 4.95 | **5.56** |
+| **mean** | 4.90 | **5.85** |
+
+- **What the shafts cost:** about **+0.95** within the batch. The shipped r9 mapped 5.83 in batch 1 and 4.90 here; the gap is calibration drift between batches, so only the in-batch difference counts.
+- **Without the shafts the row still sits about 1.6 below 7.5.** The judges name the same remaining items:
+  - an empty nave floor;
+  - posts in the near field (nave-forward, arches);
+  - a cool-blue fountain instead of a warm shrine focal point;
+  - the cold purple rims on the arches.
+
+**Shafts-off frames:** `D:\tb-gpu-runs\out\F17-6b\noshafts-Medium` (local only).
 
 ## Files
 

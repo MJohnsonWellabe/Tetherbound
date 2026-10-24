@@ -1,0 +1,96 @@
+{
+ "anchors": {
+  "craft:after": [
+   6.3,
+   6.3,
+   6.6
+  ],
+  "craft:before": [
+   4.3,
+   3.8,
+   4.4
+  ],
+  "f36_0_npc:C1A": [
+   6.6,
+   6.8,
+   7.0
+  ],
+  "f36_0_npc:C1B": [
+   6.6,
+   6.8,
+   7.0
+  ],
+  "p2_094_r4:X_before": [
+   3.5,
+   3.4,
+   3.6
+  ],
+  "p2_094_r4:Y_after": [
+   5.6,
+   5.4,
+   5.8
+  ],
+  "f36_0_gap:C1A": [
+   5.6,
+   5.1,
+   5.2
+  ],
+  "f36_0_gap:C1B": [
+   4.6,
+   4.7,
+   5.0
+  ]
+ },
+ "candidates": {
+  "F36#1 main solmane recipe|shipping Medium | F36-1-solmane-candidate": [
+   6.6,
+   6.6,
+   6.2
+  ],
+  "F36#1 main solmane recipe|shipping Medium | F36-1-solmane-shipping": [
+   6.3,
+   6.2,
+   6.7
+  ],
+  "F36#1 main stormraven recipe|shipping Medium | F36-1-stormraven-shipping": [
+   5.3,
+   5.0,
+   5.9
+  ],
+  "F36#1 main stormraven recipe|shipping Medium | F36-1-stormraven-candidate": [
+   5.0,
+   4.8,
+   5.7
+  ],
+  "F36#1 main tidecoil recipe|shipping Medium | F36-1-tidecoil-candidate": [
+   6.4,
+   6.5,
+   6.8
+  ],
+  "F36#1 main tidecoil recipe|shipping Medium | F36-1-tidecoil-shipping": [
+   5.4,
+   5.4,
+   5.6
+  ],
+  "F36#1 main aquaryn recipe|shipping Medium | F36-1-aquaryn-candidate": [
+   6.5,
+   6.5,
+   6.8
+  ],
+  "F36#1 main aquaryn recipe|shipping Medium | F36-1-aquaryn-shipping": [
+   5.5,
+   5.3,
+   5.6
+  ],
+  "F36#1 main frostclaw recipe|shipping Medium | F36-1-frostclaw-candidate": [
+   6.8,
+   7.0,
+   7.0
+  ],
+  "F36#1 main frostclaw recipe|shipping Medium | F36-1-frostclaw-shipping": [
+   5.8,
+   6.0,
+   5.9
+  ]
+ }
+}
