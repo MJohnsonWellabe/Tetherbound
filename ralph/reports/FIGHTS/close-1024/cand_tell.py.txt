@@ -23,13 +23,15 @@ ARMS = {
                       "dust_hz": 1.1, "dust_colour": "#cdb894", "tell_aura": 0.3},
           "colour": "#8c6cff",
           "set": {"edge_alpha": 0.32, "locked_edge_alpha": 0.6, "core_alpha": 0.75, "build_start_alpha": 0.4}},
+    # the committed config as is (E ON at hue #b16cff): r3 captures
+    "F": {"curtain": {}, "colour": None},
 }
 spec = ARMS[arm]
 path = "data/config/combat.json"
 text = open(path).read()
 json.loads(text)
 anchor = '"outer_feather_m": 0.1'
-assert text.count(anchor) == 1
+assert text.count(anchor) == 1 or not spec["curtain"]
 extra = "".join(', "%s": %s' % (k, json.dumps(v)) for k, v in spec["curtain"].items())
 text = text.replace(anchor, anchor + extra)
 if spec["colour"]:
