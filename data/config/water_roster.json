@@ -238,7 +238,8 @@
         "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
         "model": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native.glb",
         "fit_candidate": {
-          "enabled": false,
+          "enabled": true,
+          "_enabled_close1024": "Coordinator 25 Oct: the shipped mesh logged a silent 8% footprint shrink (3.28 m instead of its declared 3.55 m); the fit grows it back to the declared height, per the scale hard rule.",
           "footprint_allowance": 5.21,
           "_scope": "Presentation fit only: restore specified 3.55m height without changing radius. Native scale/contact and neutral visual review pending."
         },
