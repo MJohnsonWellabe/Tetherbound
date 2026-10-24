@@ -1,0 +1,74 @@
+[
+    {
+        "destination":  "shore",
+        "preset":  "High",
+        "frames":  4,
+        "planned":  4
+    },
+    {
+        "destination":  "shore",
+        "preset":  "Medium",
+        "frames":  4,
+        "planned":  4
+    },
+    {
+        "destination":  "lesson-dune",
+        "preset":  "High",
+        "frames":  3,
+        "planned":  3
+    },
+    {
+        "destination":  "lesson-dune",
+        "preset":  "Medium",
+        "frames":  3,
+        "planned":  3
+    },
+    {
+        "destination":  "veilfall",
+        "preset":  "High",
+        "frames":  2,
+        "planned":  2
+    },
+    {
+        "destination":  "veilfall",
+        "preset":  "Medium",
+        "frames":  2,
+        "planned":  2
+    },
+    {
+        "destination":  "currents",
+        "preset":  "High",
+        "frames":  3,
+        "planned":  3
+    },
+    {
+        "destination":  "currents",
+        "preset":  "Medium",
+        "frames":  3,
+        "planned":  3
+    },
+    {
+        "destination":  "shore-landforms",
+        "preset":  "High",
+        "frames":  2,
+        "planned":  2
+    },
+    {
+        "destination":  "shore-landforms",
+        "preset":  "Medium",
+        "frames":  2,
+        "planned":  2
+    },
+    {
+        "destination":  "venn-fight",
+        "preset":  "High",
+        "frames":  7,
+        "planned":  7
+    },
+    {
+        "destination":  "venn-fight",
+        "preset":  "Medium",
+        "frames":  7,
+        "planned":  7
+    }
+]

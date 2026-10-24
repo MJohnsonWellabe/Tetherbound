@@ -1,0 +1,106 @@
+{
+ "anchors": {
+  "f36_0_npc:C1A": [
+   7.0,
+   6.5,
+   6.5
+  ],
+  "f36_0_npc:C1B": [
+   7.0,
+   6.5,
+   6.5
+  ],
+  "f36_0_gap:C4A": [
+   6.0,
+   6.0,
+   5.9
+  ],
+  "f36_0_gap:C4B": [
+   6.3,
+   4.5,
+   5.2
+  ],
+  "p2_094_r4:Y_after": [
+   5.6,
+   5.0,
+   5.8
+  ],
+  "p2_094_r4:X_before": [
+   4.0,
+   2.5,
+   3.2
+  ],
+  "craft:before": [
+   4.4,
+   4.0,
+   4.0
+  ],
+  "craft:after": [
+   6.8,
+   6.0,
+   6.3
+  ]
+ },
+ "candidates": {
+  "TW base shore-landforms High|Medium | TW-shore-landforms-High": [
+   4.8,
+   4.0,
+   3.6
+  ],
+  "TW base shore-landforms High|Medium | TW-shore-landforms-Medium": [
+   4.8,
+   4.0,
+   3.6
+  ],
+  "TW base veilfall High|Medium | TW-veilfall-Medium": [
+   3.0,
+   2.5,
+   2.4
+  ],
+  "TW base veilfall High|Medium | TW-veilfall-High": [
+   3.0,
+   2.5,
+   2.4
+  ],
+  "TW base Venn fight High|Medium | TW-venn-High": [
+   4.8,
+   3.5,
+   4.0
+  ],
+  "TW base Venn fight High|Medium | TW-venn-Medium": [
+   4.2,
+   3.0,
+   3.4
+  ],
+  "TW base shore High|Medium | TW-shore-Medium": [
+   5.3,
+   4.5,
+   4.2
+  ],
+  "TW base shore High|Medium | TW-shore-High": [
+   5.3,
+   4.5,
+   4.2
+  ],
+  "TW base currents High|Medium | TW-currents-Medium": [
+   3.5,
+   2.5,
+   3.0
+  ],
+  "TW base currents High|Medium | TW-currents-High": [
+   3.5,
+   2.5,
+   3.0
+  ],
+  "TW base lesson-dune High|Medium | TW-lesson-dune-High": [
+   5.2,
+   4.5,
+   4.2
+  ],
+  "TW base lesson-dune High|Medium | TW-lesson-dune-Medium": [
+   5.2,
+   4.5,
+   4.4
+  ]
+ }
+}

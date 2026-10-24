@@ -1,0 +1,238 @@
+{
+ "sets": {
+  "To": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-008: repeated grassy domes with steep smooth grey rock skirts lack layered shore ecology and clear grass-to-sand transitions": "PRESENT",
+     "P2-009: broad offshore water reads as uniform light cyan with little depth variation": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-008: repeated grassy domes with steep smooth grey rock skirts lack layered shore ecology and clear grass-to-sand transitions": "PRESENT",
+     "P2-009: broad offshore water reads as uniform light cyan with little depth variation": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Empty sand with evenly scattered grass tufts, flat light-cyan water striped with white lane marks and a bare distant grass dome sink it; the night grade is the only thing that has any atmosphere."
+  },
+  "Oo": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-010: the distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PRESENT",
+     "P2-009: broad offshore water reads as uniform light cyan with little depth variation": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-010: the distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PRESENT",
+     "P2-009: broad offshore water reads as uniform light cyan with little depth variation": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The camera is jammed against huge faceted low-poly brown and blue-grey rock with no sea, no falls and no trainer visible, so nothing of the board's Veilfall comes through."
+  },
+  "Yp": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder with clear face and eyes and a natural green/brown palette carries it, though he is more toon-styled than the naturalistic creatures."
+  },
+  "Ya": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Tanglevolt wolf model holds the style bar's silhouette and fur read, but A is oversaturated electric blue all over and B's faint poses hover above their shadows."
+  },
+  "Ff": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "P2-062: the oversized ally fills half the combat view and hides the opponent or player": "FIXED",
+     "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits": "PARTIAL",
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT",
+     "P2-101: Riverdrake crouch and recoil sink its belly and feet into sand or leave the body hovering above a separate shadow": "PARTIAL",
+     "P2-090: a small blue creature-like figure stays partly buried in sand behind the player creature": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "P2-062: the oversized ally fills half the combat view and hides the opponent or player": "FIXED",
+     "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits": "PARTIAL",
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT",
+     "P2-101: Riverdrake crouch and recoil sink its belly and feet into sand or leave the body hovering above a separate shadow": "PARTIAL",
+     "P2-090: a small blue creature-like figure stays partly buried in sand behind the player creature": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Tiny fighters on a flat sand plane under heavy HUD panels, with thin pale-lilac arc lines in place of real projectiles and impacts; B's t-006.02 frame even drops the camera into a dark seabed."
+  },
+  "Lj": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's braced timber frame with cap and stone footing reads as built, but a lone thin panel beside a faceted untextured boulder in a sparse field is far from Palworld base density."
+  },
+  "Kz": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "B's large, wrapped recipe rows, bold ingredient counts and icon-led Craft/Leave hints on a blue-grey translucent panel read like a shipping UI; A's tiny truncated text does not."
+  },
+  "Jo": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-008: repeated grassy domes with steep smooth grey rock skirts lack layered shore ecology and clear grass-to-sand transitions": "PARTIAL",
+     "P2-009: broad offshore water reads as uniform light cyan with little depth variation": "PRESENT",
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-008: repeated grassy domes with steep smooth grey rock skirts lack layered shore ecology and clear grass-to-sand transitions": "PARTIAL",
+     "P2-009: broad offshore water reads as uniform light cyan with little depth variation": "PRESENT",
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The sky, golden-hour and night grades are pleasant and the dock and crates hint at life, but bare pale dunes, flat cyan water and no landmark leave it well short of Palworld density."
+  },
+  "Tx": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-066: live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water": "PRESENT",
+     "P2-071: the swimming trainer stays upright with relaxed arms and visible boots, so it reads as wading rather than swimming": "PRESENT",
+     "P2-072: the swimmer leaves little wake, splash or displaced-water ring, and a hard dark shadow sits beside the body": "PARTIAL",
+     "P2-009: broad offshore water reads as uniform light cyan with little depth variation": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-066: live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water": "PRESENT",
+     "P2-071: the swimming trainer stays upright with relaxed arms and visible boots, so it reads as wading rather than swimming": "PRESENT",
+     "P2-072: the swimmer leaves little wake, splash or displaced-water ring, and a hard dark shadow sits beside the body": "PARTIAL",
+     "P2-009: broad offshore water reads as uniform light cyan with little depth variation": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Giant opaque white bars and yellow dashes painted across the sea read like road markings and swamp the swimmer, which sits in a flat white disc rather than water."
+  },
+  "Op": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-008: repeated grassy domes with steep smooth grey rock skirts lack layered shore ecology and clear grass-to-sand transitions": "PARTIAL",
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-008: repeated grassy domes with steep smooth grey rock skirts lack layered shore ecology and clear grass-to-sand transitions": "PARTIAL",
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The dawn sun and pink sky give real time-of-day mood, but a vast empty rippled-sand foreground with evenly scattered pebbles and tiny creatures against a flat sea reads sparse and unfinished."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the white/yellow parallel current bars and flat light-cyan sea with a depth-graded water material (navy offshore to turquoise shallows, foam only at shorelines and wakes) and organic current flow cues.",
+   "kind": "scene"
+  },
+  {
+   "change": "Dress the Tidewake shores in layered ecology and clutter (dune grass groves, driftwood, rock clusters, nets and huts in clumps rather than even scatter) so foregrounds stop reading as empty sand planes.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build authored Tidewake landmarks - a real Veilfall mountain with broad white falls and arches, and distinct halls/terraces at named destinations - to replace faceted cones and generic structures.",
+   "kind": "new_art"
+  }
+ ]
+}

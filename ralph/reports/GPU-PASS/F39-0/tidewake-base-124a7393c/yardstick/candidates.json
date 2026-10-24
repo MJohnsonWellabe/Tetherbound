@@ -1,0 +1,89 @@
+[
+    {
+        "label":  "TW base shore High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-shore-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-shore-Medium.png",
+        "brief":  "Fixed production-camera views of one Tidewake location (the first shore) across times of day and weather, with the trainer as a 1.80 m ruler. Judge whether it reads as the key art\u0027s Tidewake: open sea and shore, believable water, a coherent lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-008: repeated grassy domes with steep smooth grey rock skirts lack layered shore ecology and clear grass-to-sand transitions",
+                        "P2-009: broad offshore water reads as uniform light cyan with little depth variation",
+                        "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces"
+                    ]
+    },
+    {
+        "label":  "TW base lesson-dune High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-lesson-dune-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-lesson-dune-Medium.png",
+        "brief":  "Fixed production-camera views of one Tidewake location (the lesson dune) across times of day and weather, with the trainer as a 1.80 m ruler. Judge whether it reads as the key art\u0027s Tidewake: open sea and shore, believable water, a coherent lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-008: repeated grassy domes with steep smooth grey rock skirts lack layered shore ecology and clear grass-to-sand transitions",
+                        "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces"
+                    ]
+    },
+    {
+        "label":  "TW base veilfall High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-veilfall-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-veilfall-Medium.png",
+        "brief":  "Fixed production-camera views of one Tidewake location (Veilfall) across times of day and weather, with the trainer as a 1.80 m ruler. Judge whether it reads as the key art\u0027s Tidewake: open sea and shore, believable water, a coherent lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-010: the distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks",
+                        "P2-009: broad offshore water reads as uniform light cyan with little depth variation"
+                    ]
+    },
+    {
+        "label":  "TW base currents High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-currents-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-currents-Medium.png",
+        "brief":  "Fixed production-camera views of one Tidewake location (the swimming currents and docks) across times of day and weather, with the trainer as a 1.80 m ruler. Judge whether it reads as the key art\u0027s Tidewake: open sea and shore, believable water, a coherent lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-066: live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water",
+                        "P2-071: the swimming trainer stays upright with relaxed arms and visible boots, so it reads as wading rather than swimming",
+                        "P2-072: the swimmer leaves little wake, splash or displaced-water ring, and a hard dark shadow sits beside the body",
+                        "P2-009: broad offshore water reads as uniform light cyan with little depth variation"
+                    ]
+    },
+    {
+        "label":  "TW base shore-landforms High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-shore-landforms-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-shore-landforms-Medium.png",
+        "brief":  "Fixed production-camera views of one Tidewake location (the deep-watch shore landforms) across times of day and weather, with the trainer as a 1.80 m ruler. Judge whether it reads as the key art\u0027s Tidewake: open sea and shore, believable water, a coherent lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-008: repeated grassy domes with steep smooth grey rock skirts lack layered shore ecology and clear grass-to-sand transitions",
+                        "P2-009: broad offshore water reads as uniform light cyan with little depth variation"
+                    ]
+    },
+    {
+        "label":  "TW base Venn fight High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-venn-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-venn-Medium.png",
+        "brief":  "A real Tidewake trainer fight (Venn) through the production camera with ordinary attack and dodge inputs: matched moments (tell start, the hits, tell ended) and a few live beats. Does the fight read on screen - both fighters, telegraphs and impacts clearly visible - and does it look like an event that belongs to the shore?",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "P2-062: the oversized ally fills half the combat view and hides the opponent or player",
+                        "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits",
+                        "P2-016: hurt and moving frames keep the idle silhouette",
+                        "P2-101: Riverdrake crouch and recoil sink its belly and feet into sand or leave the body hovering above a separate shadow",
+                        "P2-090: a small blue creature-like figure stays partly buried in sand behind the player creature"
+                    ]
+    }
+]

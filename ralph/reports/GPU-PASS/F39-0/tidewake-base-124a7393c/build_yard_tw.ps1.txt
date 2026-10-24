@@ -1,0 +1,39 @@
+# Tidewake F39 baseline (local, main 124a7393c): one set per destination, High vs Medium on the same views, plus the Venn fight
+# on its matched state frames (tell start 0.65 s, hits 0.70 / 1.08 s, tell ended 1.32 s) and a few live beats. One batch of 6.
+$o = "D:\tb-gpu-runs\out\TW-base"; $od = "D:\tb-gpu-runs\yard\tw\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out, [int] $cols = 3, [int] $tw = 440) {
+    $s = [ordered]@{ title = ""; cols = $cols; thumb_w = $tw; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_tw.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_tw.json" | Out-Null; return $out
+}
+$generic = @("Flat magenta slabs or rings on the ground", "Placeholder or untextured materials (flat grey, checker or faceted blocks)", "Floating bodies or props (a gap between an object and the ground under it)", "Clipping (geometry passing through geometry, or the camera inside geometry)")
+$dest = @(
+    @{ key = "shore"; set = "F39-look"; views = @("shore-day", "shore-golden", "shore-night", "shore-rain"); name = "the first shore"; extra = @("P2-008: repeated grassy domes with steep smooth grey rock skirts lack layered shore ecology and clear grass-to-sand transitions", "P2-009: broad offshore water reads as uniform light cyan with little depth variation", "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces") },
+    @{ key = "lesson-dune"; set = "F39-look"; views = @("lesson-dune", "lesson-dawn", "lesson-rain"); name = "the lesson dune"; extra = @("P2-008: repeated grassy domes with steep smooth grey rock skirts lack layered shore ecology and clear grass-to-sand transitions", "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces") },
+    @{ key = "veilfall"; set = "F39-look"; views = @("veilfall-near", "veilfall-rain"); name = "Veilfall"; extra = @("P2-010: the distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks", "P2-009: broad offshore water reads as uniform light cyan with little depth variation") },
+    @{ key = "currents"; set = "T2-current"; views = @("swim-across-day", "swim-away-day", "swim-away-night"); name = "the swimming currents and docks"; extra = @("P2-066: live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water", "P2-071: the swimming trainer stays upright with relaxed arms and visible boots, so it reads as wading rather than swimming", "P2-072: the swimmer leaves little wake, splash or displaced-water ring, and a hard dark shadow sits beside the body", "P2-009: broad offshore water reads as uniform light cyan with little depth variation") },
+    @{ key = "shore-landforms"; set = "P2-008-shore"; views = @("deep-watch-shore-day", "deep-watch-shore-night"); name = "the deep-watch shore landforms"; extra = @("P2-008: repeated grassy domes with steep smooth grey rock skirts lack layered shore ecology and clear grass-to-sand transitions", "P2-009: broad offshore water reads as uniform light cyan with little depth variation") })
+$sets = @(); $cover = @()
+foreach ($d in $dest) {
+    $sd = @{}
+    foreach ($pr in "High", "Medium") {
+        $files = @($d.views | ForEach-Object { "$o\$($d.set)-$pr\frames\$_.jpg" } | Where-Object { Test-Path $_ })
+        $sd[$pr] = Side $files @($files | ForEach-Object { [IO.Path]::GetFileNameWithoutExtension($_) }) "$od\TW-$($d.key)-$pr.png"
+        $cover += [ordered]@{ destination = $d.key; preset = $pr; frames = $files.Count; planned = $d.views.Count }
+    }
+    $brief = "Fixed production-camera views of one Tidewake location ($($d.name)) across times of day and weather, with the trainer as a 1.80 m ruler. Judge whether it reads as the key art's Tidewake: open sea and shore, believable water, a coherent lived-in place with readable landmarks and light that belongs to the world."
+    $sets += [ordered]@{ label = "TW base $($d.key) High|Medium"; a = $sd["High"]; b = $sd["Medium"]; brief = $brief; defects = @($generic) + $d.extra }
+}
+$vf = @("tell-start-000.6*", "hit-000.70", "hit-001.08", "tell-ended-001.3*", "t-006.02", "t-012.00", "t-020.00")
+$sd = @{}
+foreach ($pr in "High", "Medium") {
+    $files = @($vf | ForEach-Object { Get-ChildItem "$o\venn-$pr\frames\venn" -Filter "$_.png" | Select-Object -First 1 -ExpandProperty FullName })
+    $sd[$pr] = Side $files @($files | ForEach-Object { [IO.Path]::GetFileNameWithoutExtension($_) }) "$od\TW-venn-$pr.png" 4 400
+    $cover += [ordered]@{ destination = "venn-fight"; preset = $pr; frames = $files.Count; planned = $vf.Count }
+}
+$sets += [ordered]@{ label = "TW base Venn fight High|Medium"; a = $sd["High"]; b = $sd["Medium"]
+    brief = "A real Tidewake trainer fight (Venn) through the production camera with ordinary attack and dodge inputs: matched moments (tell start, the hits, tell ended) and a few live beats. Does the fight read on screen - both fighters, telegraphs and impacts clearly visible - and does it look like an event that belongs to the shore?"
+    defects = @("Flat magenta slabs or rings on the ground", "P2-062: the oversized ally fills half the combat view and hides the opponent or player", "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits", "P2-016: hurt and moving frames keep the idle silhouette", "P2-101: Riverdrake crouch and recoil sink its belly and feet into sand or leave the body hovering above a separate shadow", "P2-090: a small blue creature-like figure stays partly buried in sand behind the player creature") }
+New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\tw\b1" | Out-Null
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\tw\b1\candidates.json", (ConvertTo-Json -InputObject @($sets) -Depth 5))
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\tw\coverage.json", (ConvertTo-Json -InputObject @($cover) -Depth 4))
+"tw sets: $($sets.Count)"

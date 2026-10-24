@@ -1,0 +1,58 @@
+{
+ "To": {
+  "anchor": false,
+  "label": "TW base shore-landforms High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-shore-landforms-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-shore-landforms-Medium.png"
+ },
+ "Oo": {
+  "anchor": false,
+  "label": "TW base veilfall High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-veilfall-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-veilfall-High.png"
+ },
+ "Yp": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ya": {
+  "anchor": true,
+  "A": "f36_0_gap:C4A",
+  "B": "f36_0_gap:C4B"
+ },
+ "Ff": {
+  "anchor": false,
+  "label": "TW base Venn fight High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-venn-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-venn-Medium.png"
+ },
+ "Lj": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Kz": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Jo": {
+  "anchor": false,
+  "label": "TW base shore High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-shore-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-shore-High.png"
+ },
+ "Tx": {
+  "anchor": false,
+  "label": "TW base currents High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-currents-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-currents-High.png"
+ },
+ "Op": {
+  "anchor": false,
+  "label": "TW base lesson-dune High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-lesson-dune-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\tw\\sides\\TW-lesson-dune-Medium.png"
+ }
+}

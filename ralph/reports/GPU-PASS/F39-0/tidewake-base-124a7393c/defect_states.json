@@ -1,0 +1,261 @@
+{
+ "TW base shore-landforms High|Medium": {
+  "Flat magenta slabs or rings on the ground": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  },
+  "Placeholder or untextured materials": {
+   "state": "PARTIAL",
+   "votes": {
+    "PARTIAL": 4,
+    "PRESENT": 2
+   }
+  },
+  "Floating bodies or props": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  },
+  "Clipping": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  },
+  "P2-008": {
+   "state": "PRESENT",
+   "votes": {
+    "PRESENT": 6
+   }
+  },
+  "P2-009": {
+   "state": "PRESENT",
+   "votes": {
+    "PRESENT": 6
+   }
+  }
+ },
+ "TW base veilfall High|Medium": {
+  "Flat magenta slabs or rings on the ground": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  },
+  "Placeholder or untextured materials": {
+   "state": "PRESENT",
+   "votes": {
+    "PRESENT": 6
+   }
+  },
+  "Floating bodies or props": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  },
+  "Clipping": {
+   "state": "PARTIAL",
+   "votes": {
+    "PRESENT": 2,
+    "PARTIAL": 4
+   }
+  },
+  "P2-010": {
+   "state": "PRESENT",
+   "votes": {
+    "PRESENT": 6
+   }
+  },
+  "P2-009": {
+   "state": "PRESENT",
+   "votes": {
+    "PRESENT": 4,
+    "FIXED": 2
+   }
+  }
+ },
+ "TW base Venn fight High|Medium": {
+  "Flat magenta slabs or rings on the ground": {
+   "state": "PARTIAL",
+   "votes": {
+    "PARTIAL": 6
+   }
+  },
+  "P2-062": {
+   "state": "PRESENT",
+   "votes": {
+    "FIXED": 2,
+    "PRESENT": 2,
+    "PARTIAL": 2
+   }
+  },
+  "P2-063": {
+   "state": "PRESENT",
+   "votes": {
+    "PARTIAL": 2,
+    "PRESENT": 4
+   }
+  },
+  "P2-016": {
+   "state": "PRESENT",
+   "votes": {
+    "PRESENT": 6
+   }
+  },
+  "P2-101": {
+   "state": "FIXED",
+   "votes": {
+    "PARTIAL": 2,
+    "FIXED": 4
+   }
+  },
+  "P2-090": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  }
+ },
+ "TW base shore High|Medium": {
+  "Flat magenta slabs or rings on the ground": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  },
+  "Placeholder or untextured materials": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 4,
+    "PARTIAL": 2
+   }
+  },
+  "Floating bodies or props": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  },
+  "Clipping": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  },
+  "P2-008": {
+   "state": "PARTIAL",
+   "votes": {
+    "PARTIAL": 4,
+    "PRESENT": 2
+   }
+  },
+  "P2-009": {
+   "state": "PRESENT",
+   "votes": {
+    "PRESENT": 6
+   }
+  },
+  "P2-011": {
+   "state": "PRESENT",
+   "votes": {
+    "PRESENT": 6
+   }
+  }
+ },
+ "TW base currents High|Medium": {
+  "Flat magenta slabs or rings on the ground": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  },
+  "Placeholder or untextured materials": {
+   "state": "PARTIAL",
+   "votes": {
+    "PARTIAL": 4,
+    "FIXED": 2
+   }
+  },
+  "Floating bodies or props": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  },
+  "Clipping": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  },
+  "P2-066": {
+   "state": "PRESENT",
+   "votes": {
+    "PRESENT": 6
+   }
+  },
+  "P2-071": {
+   "state": "PRESENT",
+   "votes": {
+    "PRESENT": 4,
+    "PARTIAL": 2
+   }
+  },
+  "P2-072": {
+   "state": "PARTIAL",
+   "votes": {
+    "PARTIAL": 6
+   }
+  },
+  "P2-009": {
+   "state": "PARTIAL",
+   "votes": {
+    "PRESENT": 2,
+    "PARTIAL": 4
+   }
+  }
+ },
+ "TW base lesson-dune High|Medium": {
+  "Flat magenta slabs or rings on the ground": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  },
+  "Placeholder or untextured materials": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 4,
+    "PARTIAL": 2
+   }
+  },
+  "Floating bodies or props": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  },
+  "Clipping": {
+   "state": "FIXED",
+   "votes": {
+    "FIXED": 6
+   }
+  },
+  "P2-008": {
+   "state": "PARTIAL",
+   "votes": {
+    "PARTIAL": 6
+   }
+  },
+  "P2-011": {
+   "state": "PRESENT",
+   "votes": {
+    "PRESENT": 6
+   }
+  }
+ }
+}
