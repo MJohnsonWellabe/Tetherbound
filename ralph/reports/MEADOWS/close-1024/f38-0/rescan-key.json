@@ -1,0 +1,29 @@
+{
+ "Dd": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Wc": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Kd": {
+  "anchor": true,
+  "A": "f36_0_gap:C4A",
+  "B": "f36_0_gap:C4B"
+ },
+ "Xa": {
+  "anchor": false,
+  "label": "F38 matrix rescan band3 river lock (relay yard)",
+  "A": "/tmp/claude-0/cap/area2/area1.png",
+  "B": "/tmp/claude-0/cap/area2/area1.png"
+ },
+ "Us": {
+  "anchor": false,
+  "label": "F38 matrix rescan Hall nave, shrine room and travel arches",
+  "A": "/tmp/claude-0/cap/area2/area0.png",
+  "B": "/tmp/claude-0/cap/area2/area0.png"
+ }
+}

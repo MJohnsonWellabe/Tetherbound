@@ -43,3 +43,26 @@
 - A translucent cyan trainer in the shrine-room rain frame (#14). This is probably the trainer seen through an occluder, the x-ray silhouette.
 
 **4. Not F38#5 classes:** murky nights and rain, the uniform grass carpet, the dark stronghold courtyard. These are Bar A asks for F38#3.
+
+## F38#5 rescan after the fixture correction (close-1024, CPU)
+
+**Captured:** `shots/f38_1024_hall` holds 48 Hall frames: nave, shrine room and 8 arches, the arches with the detail view only. `shots/f38_1024_relay` holds 16 relay-yard frames, captured after the relay ground-pad change (cell 1.0, lift 0.08). Both were captured with `capture_f38_matrix.gd` at Low/CPU. Every planned stand was accepted: 0 void frames and 0 black frames.
+
+**Judging:** one-sided sets. Three fresh code-blind judges used the standard prompt with three anchor pairs: craft, f10_2_r3_capacitor, f36_0_gap:C4. Calibration is linear: slope 1.29, r 0.90, RMSE 0.54, with no warnings. Files: `rescan-batch.json`, `rescan-key.json`, `rescan-mapped.json`.
+
+| Area | Raw j1/j2/j3 | Mapped | Before | F38#5 defect (j1/j2/j3) |
+|---|---|---|---|---|
+| Hall nave, shrine room and 8 arches | 5.8/5.6/5.5 | **6.37** | nave 4.25, arches 2.80 and 2.09 | PARTIAL x3 |
+| band3 relay yard | 5.5/5.0/5.2 | **5.85** | 5.19 | PRESENT/PARTIAL/PRESENT |
+
+**Fixed:**
+- The blue void, the floating chandeliers and the black frames with the camera inside geometry. No judge saw void or magenta.
+- The flat yellow hex decals on the relay floor. No judge named them.
+
+**Still open (F38#5 not clean):**
+1. The relay gameplay stand is #03, 07, 11 and 15: `band3_the_river_lock_0__*__gameplay`. The trainer stands in the gate arch with a wall pier filling half the frame, and the detail frames #06 and #14 have a timber corner.
+   - The production camera is not inside geometry here, because it sees the trainer through the arch. It is the framing the player gets standing on that spot.
+   - Fix candidate: the camera's occluder handling for thin piers. That is shared camera code, outside this lane's paths, so it is reported, not changed.
+2. The Hall arch rims (#17-20, 25-30) read as "neon placeholder glows" to all three judges. On Compatibility the rims are full weight. Forward+ already takes 0.35 (land2). A CPU candidate dimming the Compatibility rims is the next in-scope step.
+3. Arch detail frames #05-08 and #31-32 have a near wall or pillar at the frame edge, because the nave is about 12 m wide. Shrine room night #47-48 is washed near-white.
+4. Not F38#5 classes: repetitive wall modules, and indoor day/night/rain that barely differ. These are Bar A asks.
