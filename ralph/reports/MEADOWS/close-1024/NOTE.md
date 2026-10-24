@@ -42,6 +42,14 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Then three blind passes over all 46 Meadows rows, `row-scores.json`, and a blind completeness check.
   - F38#5's defect pass uses the same matrix; F38#3 follows. F04#6 is parked at r31 6.23 (two rounds under +0.5 with the delivered heroes). The question on landing r31 ON for the GPU pass still stands.
 
+- 2026-10-24 13:40 UTC STATUS (reply to 13:06): F38 matrix done: 236 of 352 frames (≥200; the same 116 stands rejected as on 20 Oct). See `f38-0/README.md` and `f38-0/matrix.md`.
+  - F38#0: landscape rows rescored on the yardstick (6 rows, 5.34-5.81 mapped). The supplementals for the other 40 rows are capturing now (9 runs, from the catalog's own repro commands). READY follows when every row is scored or honestly marked no-evidence, as F39#0 did.
+  - F38#3 matrix Bar A by area: 2.09-6.33 mapped. Not met.
+  - F38#5: not clean.
+    - Most of the Hall and arch failures were a fixture fault, now fixed on tb/meadows (wall-arch stands faced out of the room, and the nave stand resolved onto the ceiling panels). The Hall sites are queued for recapture.
+    - Relay yard hex patches: a game fix (pad cells and lift), queued for recapture.
+    - Still open: the production camera against the relay gate walls and in village interiors, the waterfall column, and the washed-out cyan Hall views.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
