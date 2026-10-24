@@ -3,6 +3,8 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct MESHY batch 4 request: `close-1024/meshy-batch4/REQUEST.md` (Mosshock salamander redraft per your identity call, plus Pebbik and Riptusk, which fail F36#1 on material, not pose). Each has a drafted prompt, identity references, target height and max length inside its footprint allowance and the rings, no red or oxblood, and stays flag-off until judged. Deliver to `tb/meshy-1024` `assets_raw/naturalistic-1024/<species>_b4/`.
+- 25 Oct F36#1 WHOLE-ROSTER VERDICT (`close-1024/roster/verdict.md`; r1-r7, 70 subjects, CPU, three judges, every batch confirming): **not met, 31 of 70 pass**. 24 fail on a pose (clip work here: b13 Mangrove Monitor/Tuskroot topples via `--candidate-r13`, now on the lane OFF; b14 enables the water_* recipes, of which 5 have no swim clip and play the base-rig fallback). 15 fail on score only (materials, F36#0 remakes; Meshy batch 4 covers three). r6: Cloudfang 7.28, Skyrill 7.14, Breezetail 7.10, Aeriex 7.07 and Cliffspike 6.86 pass. r7: only water_mosshell passes (7.32).
 - 25 Oct 09:30 CT READY tb/creatures-land 2a5300916 (= c74eb3908 + your two tb/ev-coordinator merges + one commit).
   - **F36#1 fixes ON** (b12, CPU, 3 judges, confirming; `close-1024/b12/judges.md`). Base = the roster shipping tiles:
     - Bramblebun recoil hit: 8.02 vs 7.71.

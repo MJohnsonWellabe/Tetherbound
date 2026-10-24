@@ -1,0 +1,77 @@
+{
+ "Ln": {
+  "anchor": false,
+  "label": "F36r water_mosshell r7",
+  "A": "scratch/r7/sides/water_mosshell.png",
+  "B": "scratch/r7/sides/water_mosshell.png"
+ },
+ "Ps": {
+  "anchor": false,
+  "label": "F36r water_cragclaw r7",
+  "A": "scratch/r7/sides/water_cragclaw.png",
+  "B": "scratch/r7/sides/water_cragclaw.png"
+ },
+ "Vq": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "We": {
+  "anchor": false,
+  "label": "F36r water_torrentoad r7",
+  "A": "scratch/r7/sides/water_torrentoad.png",
+  "B": "scratch/r7/sides/water_torrentoad.png"
+ },
+ "Cb": {
+  "anchor": false,
+  "label": "F36r water_mangrove_monitor r7",
+  "A": "scratch/r7/sides/water_mangrove_monitor.png",
+  "B": "scratch/r7/sides/water_mangrove_monitor.png"
+ },
+ "Ob": {
+  "anchor": false,
+  "label": "F36r water_mirejaw r7",
+  "A": "scratch/r7/sides/water_mirejaw.png",
+  "B": "scratch/r7/sides/water_mirejaw.png"
+ },
+ "Ep": {
+  "anchor": false,
+  "label": "F36r water_tidecoil r7",
+  "A": "scratch/r7/sides/water_tidecoil.png",
+  "B": "scratch/r7/sides/water_tidecoil.png"
+ },
+ "Ie": {
+  "anchor": false,
+  "label": "F36r water_aquaryn r7",
+  "A": "scratch/r7/sides/water_aquaryn.png",
+  "B": "scratch/r7/sides/water_aquaryn.png"
+ },
+ "Qf": {
+  "anchor": false,
+  "label": "F36r water_abyssal_guardian r7",
+  "A": "scratch/r7/sides/water_abyssal_guardian.png",
+  "B": "scratch/r7/sides/water_abyssal_guardian.png"
+ },
+ "Mn": {
+  "anchor": false,
+  "label": "F36r water_sirenseal r7",
+  "A": "scratch/r7/sides/water_sirenseal.png",
+  "B": "scratch/r7/sides/water_sirenseal.png"
+ },
+ "Cz": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Nn": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Bm": {
+  "anchor": false,
+  "label": "F36r water_riverdrake r7",
+  "A": "scratch/r7/sides/water_riverdrake.png",
+  "B": "scratch/r7/sides/water_riverdrake.png"
+ }
+}

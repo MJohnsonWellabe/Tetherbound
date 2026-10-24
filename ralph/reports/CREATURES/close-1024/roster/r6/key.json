@@ -1,0 +1,77 @@
+{
+ "Ha": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Kk": {
+  "anchor": false,
+  "label": "F36r aeriex r6",
+  "A": "scratch/r6/sides/aeriex.png",
+  "B": "scratch/r6/sides/aeriex.png"
+ },
+ "Gx": {
+  "anchor": false,
+  "label": "F36r ribbonray r6",
+  "A": "scratch/r6/sides/ribbonray.png",
+  "B": "scratch/r6/sides/ribbonray.png"
+ },
+ "Am": {
+  "anchor": false,
+  "label": "F36r water_cannonback r6",
+  "A": "scratch/r6/sides/water_cannonback.png",
+  "B": "scratch/r6/sides/water_cannonback.png"
+ },
+ "Kc": {
+  "anchor": false,
+  "label": "F36r cliffspike r6",
+  "A": "scratch/r6/sides/cliffspike.png",
+  "B": "scratch/r6/sides/cliffspike.png"
+ },
+ "Bf": {
+  "anchor": false,
+  "label": "F36r breezetail r6",
+  "A": "scratch/r6/sides/breezetail.png",
+  "B": "scratch/r6/sides/breezetail.png"
+ },
+ "Oq": {
+  "anchor": false,
+  "label": "F36r skyrill r6",
+  "A": "scratch/r6/sides/skyrill.png",
+  "B": "scratch/r6/sides/skyrill.png"
+ },
+ "Kn": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Vb": {
+  "anchor": false,
+  "label": "F36r solmane r6",
+  "A": "scratch/r6/sides/solmane.png",
+  "B": "scratch/r6/sides/solmane.png"
+ },
+ "Zp": {
+  "anchor": false,
+  "label": "F36r water_riptusk r6",
+  "A": "scratch/r6/sides/water_riptusk.png",
+  "B": "scratch/r6/sides/water_riptusk.png"
+ },
+ "Hy": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Vx": {
+  "anchor": false,
+  "label": "F36r tempestwing r6",
+  "A": "scratch/r6/sides/tempestwing.png",
+  "B": "scratch/r6/sides/tempestwing.png"
+ },
+ "Bb": {
+  "anchor": false,
+  "label": "F36r cloudfang r6",
+  "A": "scratch/r6/sides/cloudfang.png",
+  "B": "scratch/r6/sides/cloudfang.png"
+ }
+}
