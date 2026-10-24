@@ -59,7 +59,8 @@ var _curtain: MeshInstance3D = null
 ## Round-2 kicked dust round the rim and the attacker's rim glow
 ## (STYLE.draw_dust / STYLE.apply_aura; null/empty = off).
 var _dust: MultiMeshInstance3D = null
-var _aura_taken: Array = []
+## The body whose tell aura this ring holds a share of (STYLE.apply_aura).
+var _aura_body: Node3D = null
 var _wind_up := false
 ## Heights belong to one mesh rebuild, never to a later pulse or moved body.
 var _ground_seen: Dictionary = {}
@@ -166,8 +167,8 @@ func _material() -> StandardMaterial3D:
 func follow_state(body: Node3D, active: Callable) -> void:
 	_follow_body = body
 	_state_active = active
-	if _wind_up and not _soft.is_empty() and _aura_taken.is_empty():
-		_aura_taken = STYLE.apply_aura(body, _colour, _soft)
+	if _wind_up and not _soft.is_empty() and _aura_body == null:
+		_aura_body = STYLE.apply_aura(body, _colour, _soft)
 	if is_instance_valid(body) and body.has_method("body_radius"):
 		# The inner edge (72% of radius) must clear the live footprint.
 		_radius = maxf(_radius, float(body.call("body_radius")) * 1.5)
@@ -303,4 +304,5 @@ func _draw_ring(radius: float, alpha: float) -> void:
 
 
 func _exit_tree() -> void:
-	STYLE.clear_aura(_aura_taken)
+	STYLE.clear_aura(_aura_body)
+	_aura_body = null
