@@ -31,6 +31,12 @@ func build(world: Node3D, veilfall: Node3D, preview: Dictionary = {}) -> void:
 	if not cfg is Dictionary or not bool(cfg.get("crag_kitbash_enabled", false)) or bool(world.get("simulation_only")):
 		return
 	_k = cfg
+	# close-1024 `veilfall_family_candidate` (OFF in play): the crown crags'
+	# shader colours toward the shipped limestone, so the mountain is one rock family.
+	var family: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get(
+		"veilfall_family_candidate", {}).get("crag_kitbash", {})
+	if not family.is_empty():
+		_k = preload("res://scripts/world/tidewake_look_profile.gd").merge(_k, family)
 	# F13#5: one reference-backed upper cliff candidate, using the same slot,
 	# fitting, random sequence and near-entrance restore as its installed piece.
 	var look := preload("res://scripts/world/tidewake_look_profile.gd").settings()

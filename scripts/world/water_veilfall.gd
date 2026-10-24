@@ -116,7 +116,12 @@ func build(realm: Node3D) -> void:
 	exterior_presentation = EXTERIOR_PRESENTATION.new()
 	exterior_presentation.name = "VeilfallExteriorComposition"
 	exterior.add_child(exterior_presentation)
-	exterior_presentation.call("build", world, rules.get("exterior_composition", {}))
+	# close-1024 `veilfall_family_candidate` (OFF in play): the gate formations'
+	# tint toward the shipped limestone; geometry, collision and clearances unchanged.
+	var family: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get(
+		"veilfall_family_candidate", {}).get("exterior_composition", {})
+	exterior_presentation.call("build", world,
+		preload("res://scripts/world/tidewake_look_profile.gd").merge(rules.get("exterior_composition", {}), family))
 	_build_distance_presentation()
 	var ridge_blockout := preload("res://scripts/world/water_veilfall_ridge_blockout.gd").new()
 	ridge_blockout.name = "VeilfallRidgeBlockout"
