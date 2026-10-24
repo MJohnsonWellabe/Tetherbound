@@ -6,6 +6,7 @@ extends Node3D
 const PROJECTILE := preload("res://scripts/combat/move_projectile.gd")
 const CUE := preload("res://scripts/combat/enemy_pattern_telegraph.gd")
 const AI := preload("res://scripts/combat/combat_ai.gd")
+const MATH := preload("res://scripts/combat/combat_math.gd")
 var _owner: Node
 var _profile: Dictionary
 var _geometry: Dictionary
@@ -49,7 +50,7 @@ static func begin(owner: Node, profile: Dictionary, geometry: Dictionary,
 			cast.queue_free()
 			return null
 		cast._cue = CUE.begin(body, profile, geometry.origin, geometry.heading,
-			geometry.marker, cfg.get("presentation", {}), Color(str(cfg.get("colour", "#ff40e6"))))
+			geometry.marker, cfg.get("presentation", {}), field_colour(profile))
 	else:
 		var count := maxi(1, int(profile.get("projectile_count", 1)))
 		var separation := deg_to_rad(float(profile.get("projectile_spacing_degrees", 20.0)))
@@ -102,3 +103,15 @@ func _exit_tree() -> void:
 		_tidecoil_body.call("cancel_tidecoil_sweep", _tidecoil_serial)
 	if is_instance_valid(_cue):
 		_cue.queue_free()
+
+
+## The lingering field's hue: the same rule as the wind-up that cast it
+## (wild_creature.gd::tell_colour), the row's own `telegraph_colour`, else the
+## shared `telegraph.colour`. It read `patterns.colour`, which no config sets,
+## so every field fell back to magenta whatever the tell's hue (F40#5 fight
+## frames: a magenta ring at the target after a violet wind-up).
+static func field_colour(profile: Dictionary) -> Color:
+	var authored := str(profile.get("telegraph_colour", ""))
+	if authored.is_empty():
+		authored = str(MATH.config().get("telegraph", {}).get("colour", "#ff40e6"))
+	return Color(authored)

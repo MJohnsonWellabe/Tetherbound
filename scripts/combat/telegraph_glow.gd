@@ -60,6 +60,7 @@ var _curtain: MeshInstance3D = null
 ## (STYLE.draw_dust / STYLE.apply_aura; null/empty = off).
 var _dust: MultiMeshInstance3D = null
 var _aura_taken: Array = []
+var _wind_up := false
 ## Heights belong to one mesh rebuild, never to a later pulse or moved body.
 var _ground_seen: Dictionary = {}
 var _drawn: Array = []
@@ -71,12 +72,16 @@ var _draw_has_water := false
 
 ## `at` is the creature's feet, not its centre — this is a ring on the ground,
 ## not a billboard on the body.
-static func begin(parent: Node, at: Vector3, colour: Color, radius: float, duration: float) -> Node3D:
+## `wind_up`: an opponent's wind-up, which also takes the bodied-tell extras
+## (curtain, kicked dust, attacker glow); other rings (stagger) stay plain.
+static func begin(parent: Node, at: Vector3, colour: Color, radius: float, duration: float,
+		wind_up: bool = false) -> Node3D:
 	var glow := new()
 	glow._colour = colour
 	glow._radius = radius
 	glow._duration = duration
 	glow._soft = STYLE.soft()
+	glow._wind_up = wind_up
 	parent.add_child(glow)
 	# Same guard `vfx_burst.gd::spawn` carries: a unit fixture hosts the ring
 	# under a bare Node3D with no tree, where `global_position` has no meaning.
@@ -98,10 +103,10 @@ func _ready() -> void:
 	# water surface above it (see `_ground_vertex`).
 	_ring.custom_aabb = AABB(Vector3(-reach, -0.2, -reach), Vector3(reach * 2.0, reach + 6.0, reach * 2.0))
 	add_child(_ring)
-	if not _soft.is_empty() and STYLE.curtain_height(_soft, 1.0) > 0.0:
+	if _wind_up and not _soft.is_empty() and STYLE.curtain_height(_soft, 1.0) > 0.0:
 		_curtain = STYLE.make_curtain(_ring.custom_aabb)
 		_ring.add_child(_curtain)
-	if not _soft.is_empty() and STYLE.dust_enabled(_soft):
+	if _wind_up and not _soft.is_empty() and STYLE.dust_enabled(_soft):
 		_dust = STYLE.make_dust()
 		_dust.custom_aabb = _ring.custom_aabb
 		_ring.add_child(_dust)
@@ -161,7 +166,7 @@ func _material() -> StandardMaterial3D:
 func follow_state(body: Node3D, active: Callable) -> void:
 	_follow_body = body
 	_state_active = active
-	if not _soft.is_empty() and _aura_taken.is_empty():
+	if _wind_up and not _soft.is_empty() and _aura_taken.is_empty():
 		_aura_taken = STYLE.apply_aura(body, _colour, _soft)
 	if is_instance_valid(body) and body.has_method("body_radius"):
 		# The inner edge (72% of radius) must clear the live footprint.
