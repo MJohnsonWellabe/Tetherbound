@@ -946,7 +946,7 @@
   "hall_great_hall": {
     "_why_on_r9": "F17#6 r9 (24 Oct, CPU-provisional): mapped Bar A 6.84 vs shipping 5.82 (three fresh code-blind judges, JUDGE_PROMPT v1, 3 anchor pairs incl. f36_0_npc:C1 (confirming batch), calibrate.py linear slope 1.11 r 0.89 RMSE 0.55; F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/F17-6.md). Meets the 6.7 CPU-provisional bar; a GPU pass must confirm 7.5.",
     "enabled": true,
-    "_scope": "Device-local Hall presentation only; no collider, route, portal state, save or network change. OFF until a three-judge F17#6 pass.",
+    "_scope": "Device-local Hall presentation only; ON since F17#6 r9 (CPU-provisional 6.84 mapped, close-1024). Only the shrine altar collides (radius 1.3); no route, portal state, save or network change.",
     "_why": "F17#6 close-1020 r2 (r1 judges, all three: the nave reads as an outdoor courtyard between house fronts; night pools have no visible source; no tether landmark or blue accent). One batched interior dressing: woven runner, clerestory hangings over alternate windows, oak wall plates, iron candle rings with their own light and night pools, Shrine Room rune inlay with a hanging tether crystal. TUNABLE.",
     "runner": {
       "at": [
@@ -1477,7 +1477,7 @@
   "hall_dressing": {
     "_why_on_r9": "F17#6 r9 (24 Oct, CPU-provisional): mapped Bar A 6.84 vs shipping 5.82 (three fresh code-blind judges, JUDGE_PROMPT v1, 3 anchor pairs incl. f36_0_npc:C1 (confirming batch), calibrate.py linear slope 1.11 r 0.89 RMSE 0.55; F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/F17-6.md). Meets the 6.7 CPU-provisional bar; a GPU pass must confirm 7.5. The two plaster runners below are left out (hall_great_hall's woven runner replaces them).",
     "enabled": true,
-    "_scope": "F17#6 r9 candidate (OFF, captured but never judged; the r9 round also moved the hall_timber_frame posts from x=+-3.3 to x=+-5.0, out of the camera near field, which is not applied here): device-local Hall presentation from the installed fantasy kit. A woven runner down the nave and into the shrine, warm hanging lanterns on the timber posts, a shrine glow and asymmetric civic clutter in the end bays. No save, portal or network state; clutter pieces collide and join the follower keep-clear group like hall_furnishing.",
+    "_scope": "F17#6 r9, ON (CPU-provisional 6.84 mapped vs 5.82, close-1024; the plaster runners are dropped, and hall_timber_frame posts stand at x=+-5.0 out of the camera near field): device-local Hall presentation from the installed fantasy kit. A woven runner down the nave and into the shrine, warm hanging lanterns on the timber posts, a shrine glow and asymmetric civic clutter in the end bays. No save, portal or network state; clutter pieces collide and join the follower keep-clear group like hall_furnishing.",
     "_why": "r8 judges (5.92 vs 5.17): the floor was still one bare slab, nothing hung from the posts or ceiling, the shrine lacked a warm focal light and the props stood on a grid.",
     "keep_clear_margin_m": 0.3,
     "pieces": [

@@ -1098,11 +1098,11 @@
    "title": "Village road and the Crossing Hall",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/hub",
-   "pct": 86,
+   "pct": 100,
    "counts": {
-    "met": 6,
+    "met": 7,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -1158,9 +1158,9 @@
     },
     {
      "text": "Village and Hall frames pass the new visual bar (ACCEPTANCE §4: Palworld/Animo creatures and world, Valheim lighting and atmosphere) with a code-blind judge.",
-     "status": "in_progress",
-     "evidence": "Code-blind r2 5:01 AM CT 12 Oct (tb/ev-coop-chapters c7d491457): the exterior village and Hall destination PASS at Low in day, golden hour, night and rain; no reserved red (teal banners). | Pair02 2f04551faf: three blind judges prefer frame-lantern-lit candidate; BarA6.033333/BarB5.5 vs concurrent original4.5/3.633333. ART_DIRECTION supplied; portable proof: ralph/reports/EVIDENCE/takeover-native/hall-lantern-2f/proof.md.",
-     "gap": "Pair02 candidate gains1.533333 BarA against concurrent baseline but stays OFF below8.5. Improve daylight/trainer exposure, grounded contact and Hall focal/material identity; complete required Medium/High fixed-camera matrix. Diagnostic subset is not full F17#6 acceptance.",
+     "status": "met",
+     "evidence": "CPU-provisional met (24 Oct 2026, tb/meadows-land 6cb3e6c0b): Crossing Hall r9 mapped Bar A 6.84 vs shipping 5.82, three fresh code-blind judges, standard yardstick prompt, three anchor pairs, confirming batch, linear calibration r 0.89 RMSE 0.55 (ralph/reports/MEADOWS/close-1024/F17-6.md). A GPU pass must confirm 7.5. | Code-blind r2 5:01 AM CT 12 Oct (tb/ev-coop-chapters c7d491457): the exterior village and Hall destination PASS at Low in day, golden hour, night and rain; no reserved red (teal banners). | Pair02 2f04551faf: three blind judges prefer frame-lantern-lit candidate; BarA6.033333/BarB5.5 vs concurrent original4.5/3.633333. ART_DIRECTION supplied; portable proof: ralph/reports/EVIDENCE/takeover-native/hall-lantern-2f/proof.md.",
+     "gap": "GPU confirmation at 7.5 (Medium/High fixed camera set); a GPU score below 7.5 reopens.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No full Bars A/B village/Hall matrix judged. The Low capture failed and the Forward+ pilot crashed before capture. | Pair02 is not directly comparable to prior reference-only4.067. Original historical scores/approach dispositions remain in their evidence; no closure or fresh full-matrix trend.",
      "audit_index": 6
     }
