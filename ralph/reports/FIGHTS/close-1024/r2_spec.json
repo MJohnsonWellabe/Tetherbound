@@ -1,0 +1,32 @@
+[
+ {
+  "label": "tell-r2 meadows",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r2/meadows_ctl.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r2/meadows_E.png",
+  "brief": "Meadows named-trainer fight on open grass: four frames at an opponent's wind-up and charge",
+  "defects": [
+   "flat magenta ring or slab telegraph on the ground",
+   "wind-up warning does not show where and when to move"
+  ]
+ },
+ {
+  "label": "tell-r2 tidewake",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r2/tidewake_ctl.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r2/tidewake_E.png",
+  "brief": "Tidewake beach trainer fight: four frames around an opponent's wind-up",
+  "defects": [
+   "flat magenta ring or slab telegraph on the ground",
+   "wind-up warning does not show where and when to move"
+  ]
+ },
+ {
+  "label": "tell-r2 stormwood",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r2/stormwood_ctl.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r2/stormwood_E.png",
+  "brief": "Stormwood forest named-wild fight: four frames at an opponent's wind-ups",
+  "defects": [
+   "flat magenta ring or slab telegraph on the ground",
+   "wind-up warning does not show where and when to move"
+  ]
+ }
+]
