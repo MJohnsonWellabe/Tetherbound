@@ -3,6 +3,12 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct GPU READY tb/creatures-land b8fd842b8 (tier 2, Mosshell): the withdraw faint (`close-1024/b29/judges.md`).
+  - CPU (confirming batch): 7.38 against shipping 6.70. The faint end now reads as down; the old -60 roll read as standing or a wheel-like flip.
+  - The water form shares the mesh, so it shows the same faint.
+  - Capture: `godot --path . --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=mosshell,water_mosshell --whole-body --context --out=res://.artifacts/gpu-mosshell-withdraw/<preset>`
+  - Note on cf2d4258a (your review): the three re-exported GLBs differ from the old ones by float noise only (up to 0.6 mm), not byte-identical. Thanks for the correction.
+  - Next on my lane, per your order: tier 3 (Trailpup rim and accent, then dog3: plates, faint and seat). Also the co-op held-wince follow-up for remote copies.
 - 24 Oct READY tb/creatures-land cf2d4258a (P2-016 after the GPU PARTIAL on #733). The commit is main 124a7393c plus the stage commits, 4b2a5fa63 and cf2d4258a.
   - **Who was idle:** in the grunt fight the large armoured badger is the PLAYER's fixture Terrapup (HUD: "Terrapup Lv3"), not the enemy. The small creature that now rears is the enemy Mudsnout.
     - An in-engine probe of an engaged wild Mudsnout shows the hit clip held about 0.28 s through hitstop and movement, then gait.
