@@ -1,0 +1,30 @@
+[
+    {
+        "label":  "F38 Meadows village_road High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-village_road-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-village_road-Medium.png",
+        "brief":  "Fixed production-camera views of one Meadows location (village road) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges",
+                        "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes",
+                        "P2-006: nearby settlements have little lit life or detail"
+                    ]
+    },
+    {
+        "label":  "F38 Meadows fight High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-fight-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-fight-Medium.png",
+        "brief":  "A real Meadows trainer fight (the bridge grunt, then the Warden) through the production camera with ordinary attack and dodge inputs, with telegraphed attacks. Does the fight read on screen - both fighters, telegraphs and impacts clearly visible - and does it look like an event that belongs to the world?",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "P2-062: the oversized ally fills half the combat view and hides the opponent or player",
+                        "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits",
+                        "P2-064: thick straight turquoise rails outline the Warden floor and cross creature silhouettes",
+                        "P2-016: hurt and moving frames keep the idle silhouette"
+                    ]
+    }
+]

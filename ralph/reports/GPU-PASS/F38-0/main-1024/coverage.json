@@ -1,0 +1,233 @@
+[
+    {
+        "site":  "arch_biome5",
+        "frames":  [
+                       "arch_biome5__day__clear__gameplay",
+                       "arch_biome5__day__clear__reverse",
+                       "arch_biome5__day__clear__detail",
+                       "arch_biome5__golden__clear__gameplay",
+                       "arch_biome5__night__clear__gameplay",
+                       "arch_biome5__day__rain__detail"
+                   ]
+    },
+    {
+        "site":  "arch_biome6",
+        "frames":  [
+                       "arch_biome6__day__clear__approach",
+                       "arch_biome6__day__clear__gameplay",
+                       "arch_biome6__golden__clear__approach",
+                       "arch_biome6__night__clear__approach",
+                       "arch_biome6__day__rain__approach",
+                       "arch_biome6__day__clear__reverse"
+                   ]
+    },
+    {
+        "site":  "arch_biome7",
+        "frames":  [
+                       "arch_biome7__day__clear__reverse",
+                       "arch_biome7__day__clear__detail",
+                       "arch_biome7__day__rain__detail",
+                       "arch_biome7__day__rain__reverse",
+                       "arch_biome7__golden__clear__detail",
+                       "arch_biome7__golden__clear__reverse"
+                   ]
+    },
+    {
+        "site":  "arch_biome8",
+        "frames":  [
+                       "arch_biome8__day__clear__approach",
+                       "arch_biome8__golden__clear__approach",
+                       "arch_biome8__night__clear__approach",
+                       "arch_biome8__day__rain__approach",
+                       "arch_biome8__day__clear__reverse",
+                       "arch_biome8__day__clear__detail"
+                   ]
+    },
+    {
+        "site":  "arch_cloudreach",
+        "frames":  [
+                       "arch_cloudreach__day__clear__gameplay",
+                       "arch_cloudreach__day__clear__reverse",
+                       "arch_cloudreach__day__clear__detail",
+                       "arch_cloudreach__golden__clear__gameplay",
+                       "arch_cloudreach__night__clear__gameplay",
+                       "arch_cloudreach__day__rain__detail"
+                   ]
+    },
+    {
+        "site":  "arch_home",
+        "frames":  [
+                       "arch_home__day__clear__reverse",
+                       "arch_home__day__rain__reverse",
+                       "arch_home__golden__clear__reverse",
+                       "arch_home__golden__rain__reverse",
+                       "arch_home__night__clear__reverse",
+                       "arch_home__night__rain__reverse"
+                   ]
+    },
+    {
+        "site":  "arch_stormwood",
+        "frames":  [
+                       "arch_stormwood__day__clear__approach",
+                       "arch_stormwood__day__clear__gameplay",
+                       "arch_stormwood__golden__clear__approach",
+                       "arch_stormwood__night__clear__approach",
+                       "arch_stormwood__day__rain__approach",
+                       "arch_stormwood__day__clear__reverse"
+                   ]
+    },
+    {
+        "site":  "arch_tidewake",
+        "frames":  [
+                       "arch_tidewake__day__clear__gameplay",
+                       "arch_tidewake__day__clear__reverse",
+                       "arch_tidewake__day__clear__detail",
+                       "arch_tidewake__golden__clear__gameplay",
+                       "arch_tidewake__night__clear__gameplay",
+                       "arch_tidewake__day__rain__detail"
+                   ]
+    },
+    {
+        "site":  "band1_lower_meadows_1",
+        "frames":  [
+                       "band1_lower_meadows_1__day__clear__approach",
+                       "band1_lower_meadows_1__day__clear__gameplay",
+                       "band1_lower_meadows_1__golden__clear__approach",
+                       "band1_lower_meadows_1__night__clear__approach",
+                       "band1_lower_meadows_1__day__rain__approach",
+                       "band1_lower_meadows_1__day__clear__reverse"
+                   ]
+    },
+    {
+        "site":  "band2_stone_and_root_1",
+        "frames":  [
+                       "band2_stone_and_root_1__day__clear__approach",
+                       "band2_stone_and_root_1__day__clear__gameplay",
+                       "band2_stone_and_root_1__golden__clear__approach",
+                       "band2_stone_and_root_1__night__clear__approach",
+                       "band2_stone_and_root_1__day__rain__approach",
+                       "band2_stone_and_root_1__day__clear__reverse"
+                   ]
+    },
+    {
+        "site":  "band3_the_river_lock_0",
+        "frames":  [
+                       "band3_the_river_lock_0__day__clear__approach",
+                       "band3_the_river_lock_0__day__clear__gameplay",
+                       "band3_the_river_lock_0__golden__clear__approach",
+                       "band3_the_river_lock_0__night__clear__approach",
+                       "band3_the_river_lock_0__day__rain__approach",
+                       "band3_the_river_lock_0__day__clear__reverse"
+                   ]
+    },
+    {
+        "site":  "band3_the_river_lock_1",
+        "frames":  [
+                       "band3_the_river_lock_1__day__clear__gameplay",
+                       "band3_the_river_lock_1__day__clear__reverse",
+                       "band3_the_river_lock_1__day__clear__detail",
+                       "band3_the_river_lock_1__golden__clear__gameplay",
+                       "band3_the_river_lock_1__night__clear__gameplay",
+                       "band3_the_river_lock_1__day__rain__detail"
+                   ]
+    },
+    {
+        "site":  "band4_upper_meadows_ironwood_0",
+        "frames":  [
+                       "band4_upper_meadows_ironwood_0__day__clear__gameplay",
+                       "band4_upper_meadows_ironwood_0__day__clear__reverse",
+                       "band4_upper_meadows_ironwood_0__day__clear__detail",
+                       "band4_upper_meadows_ironwood_0__golden__clear__gameplay",
+                       "band4_upper_meadows_ironwood_0__night__clear__gameplay",
+                       "band4_upper_meadows_ironwood_0__day__rain__detail"
+                   ]
+    },
+    {
+        "site":  "band4_upper_meadows_ironwood_1",
+        "frames":  [
+                       "band4_upper_meadows_ironwood_1__day__clear__reverse",
+                       "band4_upper_meadows_ironwood_1__day__rain__reverse",
+                       "band4_upper_meadows_ironwood_1__golden__clear__reverse",
+                       "band4_upper_meadows_ironwood_1__golden__rain__reverse",
+                       "band4_upper_meadows_ironwood_1__night__clear__reverse",
+                       "band4_upper_meadows_ironwood_1__night__rain__reverse"
+                   ]
+    },
+    {
+        "site":  "band5_stronghold_approach_0",
+        "frames":  [
+                       "band5_stronghold_approach_0__day__clear__approach",
+                       "band5_stronghold_approach_0__day__clear__gameplay",
+                       "band5_stronghold_approach_0__golden__clear__approach",
+                       "band5_stronghold_approach_0__night__clear__approach",
+                       "band5_stronghold_approach_0__day__rain__approach",
+                       "band5_stronghold_approach_0__day__clear__reverse"
+                   ]
+    },
+    {
+        "site":  "band5_stronghold_approach_1",
+        "frames":  [
+                       "band5_stronghold_approach_1__day__clear__approach",
+                       "band5_stronghold_approach_1__day__clear__gameplay",
+                       "band5_stronghold_approach_1__golden__clear__approach",
+                       "band5_stronghold_approach_1__night__clear__approach",
+                       "band5_stronghold_approach_1__day__rain__approach",
+                       "band5_stronghold_approach_1__day__clear__reverse"
+                   ]
+    },
+    {
+        "site":  "farm_to_hall",
+        "frames":  [
+                       "farm_to_hall__day__clear__gameplay",
+                       "farm_to_hall__day__clear__reverse",
+                       "farm_to_hall__day__clear__detail",
+                       "farm_to_hall__golden__clear__gameplay",
+                       "farm_to_hall__night__clear__gameplay",
+                       "farm_to_hall__day__rain__detail"
+                   ]
+    },
+    {
+        "site":  "hall_front",
+        "frames":  [
+                       "hall_front__day__clear__reverse",
+                       "hall_front__day__rain__reverse",
+                       "hall_front__golden__clear__reverse",
+                       "hall_front__golden__rain__reverse",
+                       "hall_front__night__clear__reverse",
+                       "hall_front__night__rain__reverse"
+                   ]
+    },
+    {
+        "site":  "hall_nave",
+        "frames":  [
+                       "hall_nave__day__clear__gameplay",
+                       "hall_nave__day__clear__reverse",
+                       "hall_nave__day__clear__detail",
+                       "hall_nave__golden__clear__gameplay",
+                       "hall_nave__night__clear__gameplay",
+                       "hall_nave__day__rain__detail"
+                   ]
+    },
+    {
+        "site":  "shrine_room",
+        "frames":  [
+                       "shrine_room__day__clear__detail",
+                       "shrine_room__day__rain__detail",
+                       "shrine_room__golden__clear__detail",
+                       "shrine_room__golden__rain__detail",
+                       "shrine_room__night__clear__detail",
+                       "shrine_room__night__rain__detail"
+                   ]
+    },
+    {
+        "site":  "village_road",
+        "frames":  [
+                       "village_road__day__clear__approach",
+                       "village_road__golden__clear__approach",
+                       "village_road__night__clear__approach",
+                       "village_road__day__rain__approach",
+                       "village_road__golden__rain__approach",
+                       "village_road__night__rain__approach"
+                   ]
+    }
+]

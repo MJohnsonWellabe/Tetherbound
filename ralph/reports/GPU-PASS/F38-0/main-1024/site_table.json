@@ -1,0 +1,156 @@
+[
+ [
+  "village_road",
+  6.73,
+  7.09,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=FIXED; Floating bodies or props=FIXED; Clipping=FIXED; P2-014=FIXED; P2-005=PARTIAL; P2-006=PARTIAL"
+ ],
+ [
+  "band3_the_river_lock_1",
+  6.89,
+  6.86,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PARTIAL; Floating bodies or props=FIXED; Clipping=FIXED; P2-014=FIXED; P2-005=PARTIAL; P2-006=PARTIAL"
+ ],
+ [
+  "band1_lower_meadows_1",
+  6.32,
+  6.32,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=FIXED; Floating bodies or props=FIXED; Clipping=FIXED; P2-014=PARTIAL; P2-005=PARTIAL"
+ ],
+ [
+  "band4_upper_meadows_ironwood_0",
+  6.29,
+  6.2,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PARTIAL; Floating bodies or props=FIXED; Clipping=FIXED; P2-014=FIXED; P2-005=PARTIAL"
+ ],
+ [
+  "band4_upper_meadows_ironwood_1",
+  5.97,
+  6.12,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PARTIAL; Floating bodies or props=FIXED; Clipping=FIXED; P2-014=FIXED; P2-005=PARTIAL"
+ ],
+ [
+  "arch_home",
+  5.85,
+  5.85,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=FIXED; Floating bodies or props=FIXED; Clipping=PARTIAL"
+ ],
+ [
+  "band2_stone_and_root_1",
+  5.82,
+  5.82,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PARTIAL; Floating bodies or props=FIXED; Clipping=FIXED; P2-014=PRESENT; P2-005=PRESENT"
+ ],
+ [
+  "hall_front",
+  5.82,
+  5.82,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=FIXED; Floating bodies or props=PARTIAL; Clipping=FIXED"
+ ],
+ [
+  "band5_stronghold_approach_0",
+  5.66,
+  5.63,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PARTIAL; Floating bodies or props=FIXED; Clipping=FIXED; P2-014=FIXED; P2-005=PRESENT; P2-003=PRESENT"
+ ],
+ [
+  "farm_to_hall",
+  5.6,
+  5.6,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PARTIAL; Floating bodies or props=FIXED; Clipping=PARTIAL; P2-014=FIXED; P2-005=PARTIAL"
+ ],
+ [
+  "fight",
+  5.34,
+  5.55,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=PARTIAL; P2-062=PARTIAL; P2-063=PARTIAL; P2-064=PARTIAL; P2-016=PRESENT"
+ ],
+ [
+  "shrine_room",
+  5.53,
+  5.53,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PARTIAL; Floating bodies or props=FIXED; Clipping=FIXED"
+ ],
+ [
+  "band3_the_river_lock_0",
+  5.29,
+  5.29,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PRESENT; Floating bodies or props=FIXED; Clipping=PRESENT; P2-014=FIXED; P2-005=PRESENT; P2-006=PRESENT"
+ ],
+ [
+  "arch_biome8",
+  5.26,
+  5.26,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PARTIAL; Floating bodies or props=FIXED; Clipping=PRESENT"
+ ],
+ [
+  "arch_stormwood",
+  4.87,
+  4.87,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PARTIAL; Floating bodies or props=FIXED; Clipping=PARTIAL"
+ ],
+ [
+  "hall_nave",
+  4.77,
+  4.77,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PRESENT; Floating bodies or props=FIXED; Clipping=PRESENT"
+ ],
+ [
+  "arch_tidewake",
+  4.62,
+  4.62,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PARTIAL; Floating bodies or props=FIXED; Clipping=PRESENT"
+ ],
+ [
+  "band5_stronghold_approach_1",
+  4.59,
+  4.59,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PARTIAL; Floating bodies or props=PARTIAL; Clipping=PARTIAL; P2-014=FIXED; P2-005=PARTIAL; P2-003=PARTIAL"
+ ],
+ [
+  "arch_cloudreach",
+  4.29,
+  4.29,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PRESENT; Floating bodies or props=FIXED; Clipping=PRESENT"
+ ],
+ [
+  "arch_biome5",
+  4.15,
+  4.15,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PRESENT; Floating bodies or props=FIXED; Clipping=PRESENT"
+ ],
+ [
+  "arch_biome7",
+  3.99,
+  3.99,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PARTIAL; Floating bodies or props=FIXED; Clipping=PRESENT"
+ ],
+ [
+  "arch_biome6",
+  3.53,
+  3.53,
+  "FAIL",
+  "Flat magenta slabs or rings on the ground=FIXED; Placeholder or untextured materials=PARTIAL; Floating bodies or props=FIXED; Clipping=PRESENT"
+ ]
+]

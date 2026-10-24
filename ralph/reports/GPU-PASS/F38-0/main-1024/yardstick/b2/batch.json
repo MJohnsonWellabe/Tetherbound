@@ -1,0 +1,96 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:control": [
+   3.4,
+   3.5,
+   3.0
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.2,
+   4.5,
+   3.8
+  ],
+  "craft:after": [
+   5.4,
+   6.0,
+   5.5
+  ],
+  "craft:before": [
+   3.8,
+   3.5,
+   3.8
+  ],
+  "f36_0_npc:C1B": [
+   6.4,
+   6.5,
+   6.2
+  ],
+  "f36_0_npc:C1A": [
+   6.4,
+   6.5,
+   6.2
+  ],
+  "f36_0_gap:C5A": [
+   3.8,
+   4.0,
+   3.5
+  ],
+  "f36_0_gap:C5B": [
+   5.9,
+   6.0,
+   6.0
+  ]
+ },
+ "candidates": {
+  "F38 Meadows band1_lower_meadows_1 High|Medium | F38-band1_lower_meadows_1-High": [
+   5.0,
+   5.0,
+   4.8
+  ],
+  "F38 Meadows band1_lower_meadows_1 High|Medium | F38-band1_lower_meadows_1-Medium": [
+   5.0,
+   5.0,
+   4.8
+  ],
+  "F38 Meadows arch_tidewake High|Medium | F38-arch_tidewake-Medium": [
+   3.3,
+   3.0,
+   3.0
+  ],
+  "F38 Meadows arch_tidewake High|Medium | F38-arch_tidewake-High": [
+   3.3,
+   3.0,
+   3.0
+  ],
+  "F38 Meadows arch_stormwood High|Medium | F38-arch_stormwood-Medium": [
+   3.4,
+   3.5,
+   3.2
+  ],
+  "F38 Meadows arch_stormwood High|Medium | F38-arch_stormwood-High": [
+   3.4,
+   3.5,
+   3.2
+  ],
+  "F38 Meadows arch_home High|Medium | F38-arch_home-High": [
+   4.8,
+   4.0,
+   4.5
+  ],
+  "F38 Meadows arch_home High|Medium | F38-arch_home-Medium": [
+   4.8,
+   4.0,
+   4.5
+  ],
+  "F38 Meadows band2_stone_and_root_1 High|Medium | F38-band2_stone_and_root_1-High": [
+   4.4,
+   4.5,
+   4.3
+  ],
+  "F38 Meadows band2_stone_and_root_1 High|Medium | F38-band2_stone_and_root_1-Medium": [
+   4.4,
+   4.5,
+   4.3
+  ]
+ }
+}

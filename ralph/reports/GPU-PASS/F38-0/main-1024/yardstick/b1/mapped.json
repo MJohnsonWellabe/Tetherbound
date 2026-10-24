@@ -1,0 +1,200 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.93,
+  "least_squares_slope": 0.809,
+  "method": "linear",
+  "slope": 0.809,
+  "intercept": 2.2356,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.355,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1A": {
+   "measured": 6.667,
+   "reference": 7.53,
+   "mapped": 7.629,
+   "residual": -0.099
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.667,
+   "reference": 7.47,
+   "mapped": 7.629,
+   "residual": -0.159
+  },
+  "craft:after": {
+   "measured": 5.6,
+   "reference": 7.35,
+   "mapped": 6.766,
+   "residual": 0.584
+  },
+  "craft:before": {
+   "measured": 3.767,
+   "reference": 4.83,
+   "mapped": 5.283,
+   "residual": -0.453
+  },
+  "f36_0_gap:C1A": {
+   "measured": 5.4,
+   "reference": 6.1,
+   "mapped": 6.604,
+   "residual": -0.504
+  },
+  "f36_0_gap:C1B": {
+   "measured": 3.767,
+   "reference": 5.33,
+   "mapped": 5.283,
+   "residual": 0.047
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.233,
+   "reference": 6.75,
+   "mapped": 6.47,
+   "residual": 0.28
+  },
+  "f04_6_r22:control": {
+   "measured": 4.067,
+   "reference": 5.83,
+   "mapped": 5.526,
+   "residual": 0.304
+  }
+ },
+ "candidates": {
+  "F38 Meadows arch_cloudreach High|Medium | F38-arch_cloudreach-Medium": {
+   "measured_mean": 2.533,
+   "mapped_mean": 4.29,
+   "mapped_judges": [
+    4.34,
+    4.26,
+    4.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38 Meadows arch_cloudreach High|Medium | F38-arch_cloudreach-High": {
+   "measured_mean": 2.533,
+   "mapped_mean": 4.29,
+   "mapped_judges": [
+    4.34,
+    4.26,
+    4.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38 Meadows arch_biome8 High|Medium | F38-arch_biome8-High": {
+   "measured_mean": 3.733,
+   "mapped_mean": 5.26,
+   "mapped_judges": [
+    5.63,
+    5.47,
+    4.66
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38 Meadows arch_biome8 High|Medium | F38-arch_biome8-Medium": {
+   "measured_mean": 3.733,
+   "mapped_mean": 5.26,
+   "mapped_judges": [
+    5.63,
+    5.47,
+    4.66
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38 Meadows arch_biome5 High|Medium | F38-arch_biome5-Medium": {
+   "measured_mean": 2.367,
+   "mapped_mean": 4.15,
+   "mapped_judges": [
+    4.18,
+    4.26,
+    4.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38 Meadows arch_biome5 High|Medium | F38-arch_biome5-High": {
+   "measured_mean": 2.367,
+   "mapped_mean": 4.15,
+   "mapped_judges": [
+    4.18,
+    4.26,
+    4.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38 Meadows arch_biome6 High|Medium | F38-arch_biome6-Medium": {
+   "measured_mean": 1.6,
+   "mapped_mean": 3.53,
+   "mapped_judges": [
+    3.53,
+    3.85,
+    3.21
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38 Meadows arch_biome6 High|Medium | F38-arch_biome6-High": {
+   "measured_mean": 1.6,
+   "mapped_mean": 3.53,
+   "mapped_judges": [
+    3.53,
+    3.85,
+    3.21
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38 Meadows arch_biome7 High|Medium | F38-arch_biome7-High": {
+   "measured_mean": 2.167,
+   "mapped_mean": 3.99,
+   "mapped_judges": [
+    4.02,
+    4.26,
+    3.69
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F38 Meadows arch_biome7 High|Medium | F38-arch_biome7-Medium": {
+   "measured_mean": 2.167,
+   "mapped_mean": 3.99,
+   "mapped_judges": [
+    4.02,
+    4.26,
+    3.69
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "some candidates lie more than 0.5 outside the anchors' measured range (extrapolated)"
+ ]
+}

@@ -1,0 +1,182 @@
+{
+ "sets": {
+  "Zu": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable elder villager with clear eyes and a Meadows-green palette would sit in a shipping stylised game; only the slightly stiff full-body stance holds it back."
+  },
+  "Fx": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The deep blue-grey panel fits the direction, but tiny or orange-on-teal recipe lines, no teal/gold accents and plain text hints fall short of Palworld's HUD hierarchy."
+  },
+  "Kv": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's furry naturalistic boar nearly reaches the owner bar but only matches the trainer in height and lifts off the ground in faint mid; B's smooth clay piggy-bank boar is off-style."
+  },
+  "Gf": {
+   "A": {
+    "bar_a": 2.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 2.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Every frame is a flat plaster wall over a bare lawn with no sky or depth, and blown white slabs float in the reverse view."
+  },
+  "Vq": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The approach view has real sky, trees, flowers and a time-of-day grade, but the black reverse frame and the boxy hall with glowing white slabs sink it."
+  },
+  "Xq": {
+   "A": {
+    "bar_a": 2.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 2.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A blank wall over an empty lawn fills every frame, and the reverse camera sits inside dark geometry."
+  },
+  "Lp": {
+   "A": {
+    "bar_a": 1.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 1.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Four approach frames are a camera pressed against a rock and the reverse is black, so only one frame shows the world at all."
+  },
+  "Xd": {
+   "A": {
+    "bar_a": 2.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 2.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Three of six frames are black reverse cameras, and the enclosed courtyard has no sky and has blown white slabs floating in the doorway."
+  },
+  "Hu": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's site-specific aftermaths (cage opened, tent collapsed and smoking, banners down) carry it, but smeared grey ground textures and a blocky tunnel wall sit below Palworld's finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-seat the production cameras so no reverse or approach view starts inside or against geometry (black or rock-filled frames in Gf, Vq, Xq, Lp and Xd).",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the blown-out white emissive slabs and the blank untextured plaster walls with textured facades, real lamps or window light, and some sky or distance in each frame.",
+   "kind": "scene"
+  },
+  {
+   "change": "Break the bare lawns with groves, props and lived-in clutter, and add fog for cool blue distance so each location reads as the key art's Meadows.",
+   "kind": "scene"
+  }
+ ]
+}

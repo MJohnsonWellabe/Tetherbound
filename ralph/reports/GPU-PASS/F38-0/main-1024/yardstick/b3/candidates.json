@@ -1,0 +1,75 @@
+[
+    {
+        "label":  "F38 Meadows band3_the_river_lock_0 High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-band3_the_river_lock_0-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-band3_the_river_lock_0-Medium.png",
+        "brief":  "Fixed production-camera views of one Meadows location (band3 the river lock 0) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges",
+                        "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes",
+                        "P2-006: the mill water is a broad flat blue surface with abrupt sparse banks"
+                    ]
+    },
+    {
+        "label":  "F38 Meadows band3_the_river_lock_1 High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-band3_the_river_lock_1-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-band3_the_river_lock_1-Medium.png",
+        "brief":  "Fixed production-camera views of one Meadows location (band3 the river lock 1) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges",
+                        "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes",
+                        "P2-006: the mill water is a broad flat blue surface with abrupt sparse banks"
+                    ]
+    },
+    {
+        "label":  "F38 Meadows band4_upper_meadows_ironwood_0 High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-band4_upper_meadows_ironwood_0-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-band4_upper_meadows_ironwood_0-Medium.png",
+        "brief":  "Fixed production-camera views of one Meadows location (band4 upper meadows ironwood 0) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges",
+                        "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes"
+                    ]
+    },
+    {
+        "label":  "F38 Meadows band4_upper_meadows_ironwood_1 High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-band4_upper_meadows_ironwood_1-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-band4_upper_meadows_ironwood_1-Medium.png",
+        "brief":  "Fixed production-camera views of one Meadows location (band4 upper meadows ironwood 1) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges",
+                        "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes"
+                    ]
+    },
+    {
+        "label":  "F38 Meadows band5_stronghold_approach_0 High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-band5_stronghold_approach_0-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-band5_stronghold_approach_0-Medium.png",
+        "brief":  "Fixed production-camera views of one Meadows location (band5 stronghold approach 0) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges",
+                        "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes",
+                        "P2-003: the stronghold reads as a small dark ruin behind dominant pylons rather than a fortified base"
+                    ]
+    }
+]

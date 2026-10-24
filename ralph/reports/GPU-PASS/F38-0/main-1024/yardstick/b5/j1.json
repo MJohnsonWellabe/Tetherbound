@@ -1,0 +1,124 @@
+{
+ "sets": {
+  "Rw": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A polished, readable stylised villager with clear face, eyes and earthy palette that would sit beside Palworld's humans; the slightly cartoon face is the only stretch against stylised realism."
+  },
+  "Cd": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's panel is legible and on-direction, but it is a plain list box over a dark, murky world frame without the icon richness and finish of a shipping UI."
+  },
+  "Az": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths (opened cage, toppled tent with smoke, fallen banner) tell the story, but smeared ground textures, flat tiled walls and uniform lollipop trees sink both sides well below Palworld and Valheim finish."
+  },
+  "Jq": {
+   "A": {
+    "bar_a": 4.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "P2-062: the oversized ally fills half the combat view and hides the opponent or player": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits": "PARTIAL",
+     "P2-064: thick straight turquoise rails outline the Warden floor and cross creature silhouettes": "FIXED",
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "P2-062: the oversized ally fills half the combat view and hides the opponent or player": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits": "PARTIAL",
+     "P2-064: thick straight turquoise rails outline the Warden floor and cross creature silhouettes": "FIXED",
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A bottom-third HUD slab, an ally that blocks the view and flat outline telegraphs with a gold flash disc make it read as a debug fight, not Palworld's readable field battles."
+  },
+  "Mx": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's furred boar approaches the owner's naturalistic bar but its odd yellow coin spots and roughly head-height scale hold it back; B's glossy clay piggy-bank with moss decals reads as a toy, not a Palworld-class creature."
+  },
+  "Zz": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL",
+     "P2-006: nearby settlements have little lit life or detail": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL",
+     "P2-006: nearby settlements have little lit life or detail": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The timbered village and the golden-hour grade come close, but the empty road with no villagers, the night-rain frames that read as grey overcast day, and the missing blue distance keep it short of Valheim-class atmosphere."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild the combat view: shrink and move the bottom HUD slab, frame or scale the ally so the opponent and player stay visible, and replace flat outline and flash-disc telegraphs with grounded VFX (dust, stone, sparks) plus distinct hurt and move poses",
+   "kind": "scene"
+  },
+  {
+   "change": "Bring the Meadows ground and world up to the key art: replace smeared tiled ground and wall textures and uniform lollipop trees with clustered grass and wildflower patches, oak groves and edges, cool blue distance, and villagers and lit life on the village road; make night-rain read as night",
+   "kind": "scene"
+  },
+  {
+   "change": "Remodel creatures that miss the owner's naturalistic bar (the clay-toy boar on Mx side B) with real fur and plate detail, and scale every creature above the 1.80 m trainer",
+   "kind": "new_art"
+  }
+ ]
+}

@@ -1,0 +1,190 @@
+{
+ "sets": {
+  "Oa": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "PARTIAL",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "PARTIAL",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The path, tree edge and distant village read as Meadows with a working time-of-day grade, but the uniform grass carpet, sparse props and thin atmosphere sit well below Palworld density and Valheim light."
+  },
+  "Hq": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Every view is a flat featureless wall with a stamped window row, and the reverse camera sits inside dark rock, so there is no place, depth or atmosphere to compare."
+  },
+  "Wj": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The approach frames are a featureless grass bank, the gameplay frame is a blank wall, and the reverse frame shows hard white light-shaft slabs, so nothing here reads as a finished place."
+  },
+  "Fc": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spider boss is visible, but the flat magenta ground telegraphs, a near-invisible player creature, a muddy dark grade and a crowded HUD are far from Palworld's readable, effect-rich boss fight."
+  },
+  "Le": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The deep blue-grey translucent panel fits the UI direction and side A is legible, but the flat single-panel layout, missing teal and gold accents and plain text hints are short of a shipping crafting UI."
+  },
+  "Sx": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The warm timber hall is authored and cozy, but the hard white light-shaft slabs crossing the wall and the near-identical interior light at day, golden and night sink it."
+  },
+  "It": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "PRESENT",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "PRESENT",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The pale faceted cliff blocks and the unbroken grass carpet with even flower scatter read as generated terrain rather than Palworld-class authored ground."
+  },
+  "Hz": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, appealing elder villager with a readable face and eyes, an earthy green-brown palette and a strong full-body silhouette, at a finish comparable to Palworld's stylised humans."
+  },
+  "Xg": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's scaled, mottled naturalistic serpent nearly reaches the owner's creature bar, but A's smooth toy-like banding and its faint poses floating well above their shadows keep the set short of it."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the hard white light-shaft slab meshes with soft volumetric or fog-card shafts, and move the reverse cameras out of rock and wall geometry (Hq, Wj, Sx).",
+   "kind": "scene"
+  },
+  {
+   "change": "Break the uniform Meadows grass carpet into authored groves, edges and clearings with clustered wildflower and texture patches, and add props and landmarks that make the location feel lived-in (Oa, It, Wj).",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the flat magenta ground telegraphs with grounded physical effects (stone, lightning, dust) that land on impact, and frame and rim-light the player's creature so it separates from the dark forest floor (Fc).",
+   "kind": "scene"
+  }
+ ]
+}

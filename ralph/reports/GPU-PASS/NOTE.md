@@ -2,6 +2,16 @@
 
 ## READY (24 Oct): newest first
 
+- **F38#0 / F26#3 Meadows matrix on main 779422f10.** The matrix evidence is DELIVERED (High 354/528 and Medium 355/528 frames, plus the fight at 84/85). **F26#3 (Meadows) is REOPENED.**
+  - **Scores:** no site reaches 7.5. Best: village_road 6.73 High / 7.09 Medium and river_lock_1 6.89 / 6.86. The arch stands score 3.5–5.3.
+  - **Fix first:**
+    1. Production cameras: clipping is PRESENT at 8 sites, with arch reverse views inside geometry.
+    2. Hall white shaft quads and orb chains, plus flat interior grades.
+    3. The P2-005 ground carpet, at every exterior site.
+    4. The P2-003 stronghold.
+    5. River lock 0 blockout.
+  - Per-site table and defect scan: `F38-0/main-1024/VERDICT.md`.
+
 - **11:17 CT, creature emission floor overlay (Forward+):**
   - **F22#4 with the overlay:** Medium maps to **7.26** (7.34 / 7.18), against 5.08 shipped and 6.53 for Low. The ghost is FIXED ×3. Medium now beats Low but is still below 7.5; the HUD and the hidden player creature remain.
   - **Day:** the wash was roster-wide (Cindercub, Ripplet, Terrapup, Paddlenewt, Bramblebun, Trailpup, Mudsnout all milky). ×0 restores their true colours.

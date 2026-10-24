@@ -1,0 +1,67 @@
+[
+    {
+        "label":  "F38 Meadows band5_stronghold_approach_1 High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-band5_stronghold_approach_1-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-band5_stronghold_approach_1-Medium.png",
+        "brief":  "Fixed production-camera views of one Meadows location (band5 stronghold approach 1) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges",
+                        "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes",
+                        "P2-003: the stronghold reads as a small dark ruin behind dominant pylons rather than a fortified base"
+                    ]
+    },
+    {
+        "label":  "F38 Meadows farm_to_hall High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-farm_to_hall-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-farm_to_hall-Medium.png",
+        "brief":  "Fixed production-camera views of one Meadows location (farm to hall) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges",
+                        "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes"
+                    ]
+    },
+    {
+        "label":  "F38 Meadows hall_front High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-hall_front-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-hall_front-Medium.png",
+        "brief":  "Fixed production-camera views of one Meadows location (hall front) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)"
+                    ]
+    },
+    {
+        "label":  "F38 Meadows hall_nave High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-hall_nave-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-hall_nave-Medium.png",
+        "brief":  "Fixed production-camera views of one Meadows location (hall nave) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)"
+                    ]
+    },
+    {
+        "label":  "F38 Meadows shrine_room High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-shrine_room-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-shrine_room-Medium.png",
+        "brief":  "Fixed production-camera views of one Meadows location (shrine room) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)"
+                    ]
+    }
+]

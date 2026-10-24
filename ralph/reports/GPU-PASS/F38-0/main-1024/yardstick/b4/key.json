@@ -1,0 +1,52 @@
+{
+ "Qu": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Sz": {
+  "anchor": false,
+  "label": "F38 Meadows farm_to_hall High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-farm_to_hall-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-farm_to_hall-High.png"
+ },
+ "Hv": {
+  "anchor": false,
+  "label": "F38 Meadows hall_front High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-hall_front-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-hall_front-Medium.png"
+ },
+ "Ij": {
+  "anchor": false,
+  "label": "F38 Meadows band5_stronghold_approach_1 High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-band5_stronghold_approach_1-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-band5_stronghold_approach_1-High.png"
+ },
+ "Sj": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Yt": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Dv": {
+  "anchor": false,
+  "label": "F38 Meadows shrine_room High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-shrine_room-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-shrine_room-High.png"
+ },
+ "Dh": {
+  "anchor": false,
+  "label": "F38 Meadows hall_nave High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-hall_nave-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-hall_nave-High.png"
+ },
+ "Jm": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ }
+}

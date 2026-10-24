@@ -1,0 +1,54 @@
+# F38#0 / F26#3 Meadows matrix judging sides (local): one set per site, High vs Medium on the same frame ids (up to 6 frames),
+# plus the F38 fight High vs Medium. Batches of 5 sets. Recorded defects: the F38#5 generic defects + world-visible catalog items.
+$o = "D:\tb-gpu-runs\out\F38"; $od = "D:\tb-gpu-runs\yard\f38\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out, [int] $cols = 3, [int] $tw = 420) {
+    $s = [ordered]@{ title = ""; cols = $cols; thumb_w = $tw; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out }
+    $s | ConvertTo-Json -Depth 5 | Set-Content -Encoding utf8 "D:\tb-gpu-runs\_spec_yard_f38.json"
+    & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_f38.json" | Out-Null
+    return $out
+}
+$generic = @(
+    "Flat magenta slabs or rings on the ground",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+    "Floating bodies or props (a gap between an object and the ground under it)",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)")
+$world = @(
+    "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges",
+    "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes")
+$siteExtra = @{
+    "band5_stronghold_approach" = "P2-003: the stronghold reads as a small dark ruin behind dominant pylons rather than a fortified base"
+    "band3_the_river_lock" = "P2-006: the mill water is a broad flat blue surface with abrupt sparse banks"
+    "village_road" = "P2-006: nearby settlements have little lit life or detail"
+}
+$prefer = @("day__clear__approach", "day__clear__gameplay", "golden__clear__approach", "night__clear__approach", "day__rain__approach", "day__clear__reverse", "day__clear__detail", "golden__clear__gameplay", "night__clear__gameplay")
+$hi = @{}; Get-ChildItem "$o\matrix-High\frames" -Filter *.jpg | ForEach-Object { $hi[$_.BaseName] = $_.FullName }
+$me = @{}; Get-ChildItem "$o\matrix-Medium\frames" -Filter *.jpg | ForEach-Object { $me[$_.BaseName] = $_.FullName }
+$both = @($hi.Keys | Where-Object { $me.ContainsKey($_) })
+$sites = $both | ForEach-Object { ($_ -split '__')[0] } | Sort-Object -Unique
+$sets = @(); $cover = @()
+foreach ($site in $sites) {
+    $ids = @($both | Where-Object { ($_ -split '__')[0] -eq $site })
+    $pick = @(); foreach ($p in $prefer) { $id = "$site__$p" -replace '__+', '__'; $id = "$site" + "__" + $p; if ($ids -contains $id) { $pick += $id } ; if ($pick.Count -ge 6) { break } }
+    foreach ($id in ($ids | Sort-Object)) { if ($pick.Count -ge 6) { break }; if ($pick -notcontains $id) { $pick += $id } }
+    $caps = @($pick | ForEach-Object { ($_ -replace "^$site" + "__", '') -replace '__', ' ' })
+    $a = Side @($pick | ForEach-Object { $hi[$_] }) $caps "$od\F38-$site-High.png"
+    $b = Side @($pick | ForEach-Object { $me[$_] }) $caps "$od\F38-$site-Medium.png"
+    $def = @($generic) + $(if ($site -like "arch_*" -or $site -like "hall_*" -or $site -like "shrine_*") { @() } else { $world })
+    foreach ($k in $siteExtra.Keys) { if ($site -like "$k*") { $def += $siteExtra[$k] } }
+    $brief = "Fixed production-camera views of one Meadows location ($($site -replace '_', ' ')) across times of day and weather, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world."
+    $sets += [ordered]@{ label = "F38 Meadows $site High|Medium"; a = $a; b = $b; brief = $brief; defects = $def }
+    $cover += [ordered]@{ site = $site; frames = $pick }
+}
+# Fight: High vs Medium, same frame names.
+$fh = "$o\fight-High\frames"; $fm = "$o\fight-Medium\frames"
+if ((Test-Path $fh) -and (Test-Path $fm)) {
+    $fn = @(Get-ChildItem $fh -Filter *.png | Where-Object { Test-Path (Join-Path $fm $_.Name) } | Sort-Object Name | ForEach-Object Name)
+    if ($fn.Count -gt 18) { $step = [math]::Ceiling($fn.Count / 18); $fn = @(for ($i = 0; $i -lt $fn.Count; $i += $step) { $fn[$i] }) }
+    $a = Side @($fn | ForEach-Object { "$fh\$_" }) @($fn | ForEach-Object { $_ -replace '\.png$', '' }) "$od\F38-fight-High.png" 6 230
+    $b = Side @($fn | ForEach-Object { "$fm\$_" }) @($fn | ForEach-Object { $_ -replace '\.png$', '' }) "$od\F38-fight-Medium.png" 6 230
+    $sets += [ordered]@{ label = "F38 Meadows fight High|Medium"; a = $a; b = $b; brief = "A real Meadows trainer fight (the bridge grunt, then the Warden) through the production camera with ordinary attack and dodge inputs, with telegraphed attacks. Does the fight read on screen - both fighters, telegraphs and impacts clearly visible - and does it look like an event that belongs to the world?"
+        defects = @("Flat magenta slabs or rings on the ground", "P2-062: the oversized ally fills half the combat view and hides the opponent or player", "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits", "P2-064: thick straight turquoise rails outline the Warden floor and cross creature silhouettes", "P2-016: hurt and moving frames keep the idle silhouette") }
+}
+$n = 0; for ($i = 0; $i -lt $sets.Count; $i += 5) { $n++; $chunk = $sets[$i..([math]::Min($i + 4, $sets.Count - 1))]; New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\f38\b$n" | Out-Null; [IO.File]::WriteAllText("D:\tb-gpu-runs\yard\f38\b$n\candidates.json", (ConvertTo-Json -InputObject @($chunk) -Depth 5)) }
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\f38\coverage.json", (ConvertTo-Json -InputObject $cover -Depth 5))
+"f38 sets: $($sets.Count) in $n batches; sites $($sites.Count); frames High $($hi.Count) Medium $($me.Count) both $($both.Count)"

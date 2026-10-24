@@ -1,0 +1,17 @@
+﻿# F38#0 / F26#3 Meadows matrix on main (local): import, then the shipping matrix (catalog presentation ships enabled) and the real fight, High and Medium.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $root = "D:\tb-gpu-runs\out\F38"; $proj = "D:\tb-gpu-pass"; $sha = "779422f10454ba1436117a5b2252035fd1c71974"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_RUN_TIMEOUT_MIN = "120"; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""
+if (Test-Path $root) { cmd /c "rmdir /s /q $root" }
+New-Item -ItemType Directory -Force $root | Out-Null
+$env:APPDATA = "D:\tb-gpu-runs\appdata-Medium"
+$p = Start-Process -FilePath $godot -ArgumentList "--headless --path $proj --import" -NoNewWindow -PassThru -RedirectStandardOutput "$root\import.log" -RedirectStandardError "$root\import.err.log"
+$null = $p.Handle; if (-not $p.WaitForExit(5400000)) { Stop-Process -Id $p.Id -Force; "import killed" }; "import exit=$($p.ExitCode)"
+foreach ($pr in "High", "Medium") {
+    & $run -Preset $pr -Script "res://tools/capture_f38_matrix.gd" -OutDir "$root\matrix-$pr" -Resolution "1920x1080" -ProjectPath $proj -UserArgs @("--seed=2042", "--f38-preset=$pr", "--output={FRAMES}")
+}
+$env:TB_RUN_TIMEOUT_MIN = "40"
+foreach ($pr in "High", "Medium") {
+    & $run -Preset $pr -Script "res://tools/capture_f38_fight.gd" -OutDir "$root\fight-$pr" -Resolution "1920x1080" -ProjectPath $proj -UserArgs @("--trainer=south_bridge_grunt,warden_aldis", "--frames=32", "--interval=0.5", "--attack", "--dodge", "--tell-frames", "--f38-preset=$pr", "--preset=$pr", "--source-commit=$sha", "--out={FRAMES}")
+}
+"f38 done"

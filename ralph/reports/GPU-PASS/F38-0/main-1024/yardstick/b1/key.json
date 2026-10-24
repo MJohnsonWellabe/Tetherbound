@@ -1,0 +1,52 @@
+{
+ "Zu": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Fx": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Kv": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Gf": {
+  "anchor": false,
+  "label": "F38 Meadows arch_cloudreach High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-arch_cloudreach-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-arch_cloudreach-High.png"
+ },
+ "Vq": {
+  "anchor": false,
+  "label": "F38 Meadows arch_biome8 High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-arch_biome8-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-arch_biome8-Medium.png"
+ },
+ "Xq": {
+  "anchor": false,
+  "label": "F38 Meadows arch_biome5 High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-arch_biome5-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-arch_biome5-High.png"
+ },
+ "Lp": {
+  "anchor": false,
+  "label": "F38 Meadows arch_biome6 High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-arch_biome6-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-arch_biome6-High.png"
+ },
+ "Xd": {
+  "anchor": false,
+  "label": "F38 Meadows arch_biome7 High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-arch_biome7-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f38\\sides\\F38-arch_biome7-Medium.png"
+ },
+ "Hu": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ }
+}

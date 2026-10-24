@@ -1,0 +1,190 @@
+{
+ "sets": {
+  "Qu": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, saturated blue drake with a strong crest is close to Palworld appeal, but stage-only lighting with no rim and A's folded faint-end pose keep it short of shipping finish."
+  },
+  "Sz": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The exterior reverse frame is cozy and on-palette, but five of six frames are one sparse orange interior where day, golden, night and rain are indistinguishable."
+  },
+  "Hv": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm timber, chandelier and cyan-rimmed doors give a readable hall, but the flat interior grade barely shifts across time and weather and the hard white orb chain reads as debug rather than Valheim-class atmosphere."
+  },
+  "Ij": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons rather than a fortified base": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons rather than a fortified base": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Oxblood banners brand the enemy base clearly, but a crushed near-black value range, a flat dark-green ground and no visible sky make day and night read the same."
+  },
+  "Sj": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Site-specific aftermaths such as smoke, an opened cage and a revealed emblem stone help, but smeared low-resolution ground textures, sparse props and flat light keep it well below Palworld finish."
+  },
+  "Yt": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The appealing, readable elder with a warm earthy palette fits the cozy village, but the large-eyed animated-film face sits a step more cartoon than the key art's stylised realism and has no in-world light."
+  },
+  "Dv": {
+   "A": {
+    "bar_a": 5.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Cobbles, stone and timber make a coherent space, but opaque white shaft quads and night frames as bright as day undercut any Valheim-class light."
+  },
+  "Dh": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The long nave with banners and a blue runner is a strong landmark, but blown-out white stripe quads slash across the trainer in gameplay frames and sink it."
+  },
+  "Jm": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's braced half-timber wall with cap and stone footing belongs to the village family, but a lone panel beside a blurry faceted boulder in thin grass is still short of Palworld build-mode finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the opaque white light-shaft quads and hard orb chains in the hall nave, hall front and shrine room with soft volumetric shafts, and give the interiors a real time-of-day and weather grade so night and rain read differently from day.",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-light and dress the band5 stronghold approach: open the value range with sky and fill light, break the flat dark-green ground with clustered grass, dirt and stone, and push the walls into a fortified mass.",
+   "kind": "scene"
+  },
+  {
+   "change": "Make every enemy-site aftermath consistent: strike all Team Tether banners and cages after the win, add site-specific debris and smoke, and replace the smeared low-resolution ground textures at those sites.",
+   "kind": "scene"
+  }
+ ]
+}

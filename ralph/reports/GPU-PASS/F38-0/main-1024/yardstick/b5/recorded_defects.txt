@@ -1,0 +1,6 @@
+Rw: none
+Cd: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Az: none
+Jq: "Flat magenta slabs or rings on the ground"; "P2-062: the oversized ally fills half the combat view and hides the opponent or player"; "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits"; "P2-064: thick straight turquoise rails outline the Warden floor and cross creature silhouettes"; "P2-016: hurt and moving frames keep the idle silhouette"
+Mx: none
+Zz: "Flat magenta slabs or rings on the ground"; "Placeholder or untextured materials (flat grey, checker or faceted blocks)"; "Floating bodies or props (a gap between an object and the ground under it)"; "Clipping (geometry passing through geometry, or the camera inside geometry)"; "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges"; "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes"; "P2-006: nearby settlements have little lit life or detail"

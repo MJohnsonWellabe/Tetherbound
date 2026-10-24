@@ -1,0 +1,208 @@
+{
+ "sets": {
+  "Jl": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The wolf model is close to the Tanglevolt bar, but A drowns the fur in emissive blue veins and B's faint poses float in the air above their shadows, so neither reads at shipping finish."
+  },
+  "Ri": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Dense grass helps, but crumpled blobby tree canopies, a flat uniform sky and dark low-contrast ground with no haze or distance layering sink it next to Palworld fields."
+  },
+  "Gb": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing, well-shaded villager with readable face and eyes and on-palette greens and browns; its glossy toy-like cartoon finish is a step more stylised than the naturalistic creatures, though close to Palworld's human finish."
+  },
+  "Mi": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-grey translucent panel matches the UI direction, but even the larger layout has muted grey hints with no teal or gold accent and a recipe list cut off at the panel edge, short of Palworld's crisp HUD hierarchy."
+  },
+  "Eb": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons rather than a fortified base": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons rather than a fortified base": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "An empty, even grass plain with two lone trees, scattered small props and a tiny dark stronghold speck on a flat horizon gives no landmark or depth layering to set beside Palworld's plateau shots."
+  },
+  "Rd": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ironwood grove has believable trunks and undergrowth, but it is a dark mid-tone mass with no sun shafts, fog or sky glimpses, and the small trainer is barely readable, so it reads gloomy rather than Valheim-lit."
+  },
+  "Ft": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL",
+     "P2-006: the mill water is a broad flat blue surface with abrupt sparse banks": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL",
+     "P2-006: the mill water is a broad flat blue surface with abrupt sparse banks": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The closest Meadows read in the batch (winding path, tree edges, a lit tower landmark, water glimpsed behind), but the water is still a flat blue band, the sky and distance have no haze, and the trees are a uniform wall of one shape."
+  },
+  "As": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold spider boss reads, but the player's creature is tiny or lost, the telegraphs are flat magenta rings and arrows, the HUD covers about a third of each frame, and the dark brown floor shows no purple storm sky or lightning; B also puts the camera in foliage."
+  },
+  "Rk": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PRESENT",
+     "P2-006: the mill water is a broad flat blue surface with abrupt sparse banks": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PRESENT",
+     "P2-006: the mill water is a broad flat blue surface with abrupt sparse banks": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Pale bald dirt with sparse tufts, flat faceted tan slabs on the reverse ground, a featureless pale water plane beside a wall that fills the frame, and props that look like separate asset packs sink it well below Palworld finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Recompose Meadows ground and vegetation into authored groves, edges and clearings with varied tree silhouettes, replace the bare dirt, flat water planes and faceted slabs at the river lock with textured banks and reed/rock edges, and add aerial haze plus layered distant hills for depth",
+   "kind": "scene"
+  },
+  {
+   "change": "Fight presentation in Stormwood: camera collision and fade for trunks and canopy (As B i12-i16), the purple storm sky and lightning grade, a slimmer HUD, a readable player creature, and real-object telegraph/impact effects in place of the flat magenta rings",
+   "kind": "scene"
+  },
+  {
+   "change": "A hero-scale Team Tether stronghold mesh (walls, gate, banners) that dominates the band5 approach skyline instead of a tiny dark ruin behind pylons",
+   "kind": "new_art"
+  }
+ ]
+}

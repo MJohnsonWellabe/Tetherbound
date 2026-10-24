@@ -1,0 +1,182 @@
+{
+ "sets": {
+  "Zu": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable stylised elder with clear eyes and a Meadows green/brown palette carries it, though he leans more cartoon than the owner's naturalistic creatures."
+  },
+  "Fx": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-grey translucent panel fits the direction, but it has no teal or gold hierarchy and its small orange-on-teal text is far below Palworld's crisp, controller-first HUD finish."
+  },
+  "Kv": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Neither boar reaches the owner bar: A's noisy yellow-spotted surface lifts off the ground at faint mid, and B is a smooth clay-toy pig with a nose-planted faint end, both no taller than the trainer."
+  },
+  "Gf": {
+   "A": {
+    "bar_a": 2.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 2.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Every frame is a blank plaster wall over flat lawn, with no sky, depth or Meadows life, and blown-out white emissive slabs and a camera jammed against a pillar in the reverse view."
+  },
+  "Vq": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The approach frames show some sky, hills and wildflowers, but foreground foliage chokes the camera, the reverse frame is pure black, and the detail courtyard has glowing white slab cards."
+  },
+  "Xq": {
+   "A": {
+    "bar_a": 2.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 2.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A featureless long wall over empty grass gives no landmark or depth, and the reverse camera sits inside dark untextured geometry."
+  },
+  "Lp": {
+   "A": {
+    "bar_a": 1.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 1.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Five of six frames are the camera buried in a faceted low-poly rock or black void, so only one wall-hugging frame shows any world."
+  },
+  "Xd": {
+   "A": {
+    "bar_a": 1.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 1.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Half the frames are black or brown voids, and the remaining enclosed cobble courtyard has flat white emissive slabs and no sky or Meadows at all."
+  },
+  "Hu": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's site-specific aftermaths (banner torn down, cage opened, tent burned to smoke) carry the story, but blurry smeared ground textures, flat skies and evenly scattered trees sink the finish against Palworld."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-author the arch-location production cameras so no camera sits inside rock, walls or foliage or faces a blank wall: frame the landmark with sky, a grove edge and a cool blue distance (Gf, Vq, Xq, Lp, Xd)",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the blown-out white emissive slab cards in the arch doorways and windows with real light sources or warm window glow, and dress the arch surroundings with paths, props, groves and clearings so they read as lived-in Meadows",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the boar creature to the owner's naturalistic bar (real fur and clean colour blocking, not noisy spots or a clay-toy look), scale it above the 1.80 m trainer and keep its faint poses grounded",
+   "kind": "new_art"
+  }
+ ]
+}

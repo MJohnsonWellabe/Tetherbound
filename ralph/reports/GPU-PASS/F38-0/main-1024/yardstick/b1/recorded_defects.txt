@@ -1,0 +1,9 @@
+Zu: none
+Fx: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Kv: none
+Gf: "Flat magenta slabs or rings on the ground"; "Placeholder or untextured materials (flat grey, checker or faceted blocks)"; "Floating bodies or props (a gap between an object and the ground under it)"; "Clipping (geometry passing through geometry, or the camera inside geometry)"
+Vq: "Flat magenta slabs or rings on the ground"; "Placeholder or untextured materials (flat grey, checker or faceted blocks)"; "Floating bodies or props (a gap between an object and the ground under it)"; "Clipping (geometry passing through geometry, or the camera inside geometry)"
+Xq: "Flat magenta slabs or rings on the ground"; "Placeholder or untextured materials (flat grey, checker or faceted blocks)"; "Floating bodies or props (a gap between an object and the ground under it)"; "Clipping (geometry passing through geometry, or the camera inside geometry)"
+Lp: "Flat magenta slabs or rings on the ground"; "Placeholder or untextured materials (flat grey, checker or faceted blocks)"; "Floating bodies or props (a gap between an object and the ground under it)"; "Clipping (geometry passing through geometry, or the camera inside geometry)"
+Xd: "Flat magenta slabs or rings on the ground"; "Placeholder or untextured materials (flat grey, checker or faceted blocks)"; "Floating bodies or props (a gap between an object and the ground under it)"; "Clipping (geometry passing through geometry, or the camera inside geometry)"
+Hu: none

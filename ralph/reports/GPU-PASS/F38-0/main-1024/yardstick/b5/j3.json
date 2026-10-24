@@ -1,0 +1,124 @@
+{
+ "sets": {
+  "Rw": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, warmly lit elder villager in a Meadows green/brown palette with a readable face carries it, though the big-eyed animated-film face sits a little more cartoon than the key art's stylised realism."
+  },
+  "Cd": {
+   "A": {
+    "bar_a": 3.9,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger wrapped text and glyph prompts are readable, but the panel has no teal interaction accent, its tall rows show only three recipes, and it sits over a murky unlit world, so it reads as a functional prototype rather than a shipping UI."
+  },
+  "Az": {
+   "A": {
+    "bar_a": 4.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's site-specific aftermaths (opened cage with a freed villager, fallen banner, smoking dead campfire) tell the story, but blurry stretched ground textures, flat terrain, the tiled stone wall in row 1 and small sparse props sink the finish."
+  },
+  "Jq": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "P2-062: the oversized ally fills half the combat view and hides the opponent or player": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits": "PARTIAL",
+     "P2-064: thick straight turquoise rails outline the Warden floor and cross creature silhouettes": "PARTIAL",
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "P2-062: the oversized ally fills half the combat view and hides the opponent or player": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits": "PARTIAL",
+     "P2-064: thick straight turquoise rails outline the Warden floor and cross creature silhouettes": "FIXED",
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fight is hard to read: a dense HUD covers the bottom quarter of every frame, small trainers sit behind a large ally, and the hits are carried by pale flat floor outlines and a gold burst decal rather than real effects with impact."
+  },
+  "Mx": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's furred, spotted boar is close to the naturalistic owner bar but is only about the trainer's height and its hit react matches its standing pose; B's smooth clay body with moss decals reads as a toy and falls off-style."
+  },
+  "Zz": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL",
+     "P2-006: nearby settlements have little lit life or detail": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: the mountain backdrop has hard isolated facets and dark slash shapes instead of continuous ranges": "FIXED",
+     "P2-005: thin grass and the same tall white flowers repeat over broad slopes with few clustered colour or texture changes": "PARTIAL",
+     "P2-006: nearby settlements have little lit life or detail": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The timber-and-stone village with a chapel landmark and a readable golden-hour grade is close, but the place has no people or smoke, the rain frames wash out to a flat grey horizon, and there is no fog depth or light shafts, so it stops short of Valheim-class atmosphere."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the blurry stretched ground textures and flat even grass on Meadows terrain (Az, Jq) with clustered grass, flowers, dirt patches and terrain undulation, and add aerial-perspective fog and sun shafts so distance reads",
+   "kind": "scene"
+  },
+  {
+   "change": "Clear the combat read: shrink and collapse the bottom combat HUD, scale or offset the ally so both trainers stay visible, and swap the flat floor-outline telegraphs and gold burst decal for real-object effects (stone, dust, sparks) with hurt poses",
+   "kind": "scene"
+  },
+  {
+   "change": "Bring every creature to the naturalistic owner bar and above the 1.80 m ruler: Mx side B's clay-smooth boar needs a real fur/hide material and mesh, and both boars need more height",
+   "kind": "new_art"
+  }
+ ]
+}
