@@ -141,3 +141,13 @@ P2-095-096/yardstick/judge_j3.json
 P2-095-096/yardstick/key.json
 P2-095-096/yardstick/mapped.json
 P2-095-096/yardstick/sets.md
+F25-4/main-confirm/VERDICT.md
+F17-6/VERDICT.md
+F17-6/_sheet_f17_6_r9_gpu.png
+F17-6/yardstick/key.json
+F17-6/yardstick/batch.json
+F17-6/yardstick/mapped.json
+F17-6/yardstick/j1.json
+F17-6/yardstick/j2.json
+F17-6/yardstick/j3.json
+F17-6/yardstick/sets.md
