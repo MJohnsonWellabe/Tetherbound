@@ -59,3 +59,25 @@
   - Cracking ground or stones lifting along the lane, beyond dust.
   - The camera and the HUD covering the lower third (Camera/UI-owned).
   - The judges' readability note: a fainter lane reads "where" less clearly than magenta did.
+
+### r3 (24 Oct, CPU llvmpipe Compatibility): shipped config (#b16cff) vs shipping main
+- Arm F is the committed config as is (ac8a016d8 onward); control is origin/main before this lane. Captures:
+  - Meadows and Tidewake: the r1/r2 commands.
+  - Cloudreach: `tools/phase2_capture_cloudreach_live_fight.gd --seed=7` (1920x1080, captain Veyra; frames live-1722/1902/2082/2262; 40 min cap). It includes the lingering-field colour fix.
+- Batch: same anchors (seed 1024), three fresh judges, JUDGE_PROMPT v1 verbatim. Fit: linear, slope 1.61, intercept -2.89, r 0.88, RMSE 0.48, top anchor 6.90, no warnings.
+
+| Set | Control raw | Control mapped | F raw | F mapped | Slab defect (F) |
+|---|---|---|---|---|---|
+| Meadows | 5.3/5.6/5.3 | 5.80 | 5.8/6.0/5.6 | **6.44** | PARTIAL x3 |
+| Tidewake | 5.5/5.0/5.2 | 5.53 | 5.9/5.6/5.8 | **6.39** | PARTIAL x3 |
+| Cloudreach | 5.5/5.5/5.4 | 5.91 | 5.8/5.7/5.6 | **6.28** | PARTIAL x3 (control PRESENT x3) |
+
+- The shipped hue holds the r2 result, and all three judges prefer it on every set.
+- Gain rule (telegraph rounds, mapped best):
+  - Meadows: r2 +0.03, r3 -0.10, two rounds under +0.5, so PARKED at 6.54.
+  - Tidewake: r3 +0.01 (round 1 under).
+  - Stormwood: parked at 6.21 (r2 -0.08 after r1 +0.15).
+  - Cloudreach: first judged here at 6.28.
+- Still open in every biome: F38#5-F41#5 (slab defect PARTIAL, not FIXED) and the 7.5 bar.
+- Judges' next asks, the same in all three rounds: cracked ground or stones lifting along the lane plus a timing fill (new art or effects); camera and HUD (Camera/UI lanes).
+- Sheet: `_sheet_r3.png` (Meadows and Cloudreach, control left, F right).
