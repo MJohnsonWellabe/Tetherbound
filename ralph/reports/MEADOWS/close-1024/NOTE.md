@@ -50,6 +50,12 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
     - Relay yard hex patches: a game fix (pad cells and lift), queued for recapture.
     - Still open: the production camera against the relay gate walls and in village interiors, the waterfall column, and the washed-out cyan Hall views.
 
+- 2026-10-24 17:10 UTC FOR THE GPU MATRIX: `ralph/reports/R2-F38/capture-definition.json` and `tools/capture_f38_matrix.gd` on tb/meadows (head of this push) fix the matrix fixture.
+  - The old definition placed every Hall wall-arch stand outside the Hall (blue void, black frames). It also stood the trainer on the nave's ceiling panels.
+  - The fixed definition faces the arches into the room, keeps only their 3 m detail view (the 8 m stand's camera lands inside the opposite wall), and stands the nave and shrine on the floor.
+  - Please capture the High/Medium matrix from this definition, or the Hall rows will be void again. CPU recapture with it: 48 of the Hall frames are valid, with 0 void and 0 black.
+- 2026-10-24 17:10 UTC F17#6: the renderer-aware shafts and rims are in 4ad2d6d24 (test `test_crossing_hall_great_hall_renderer.gd`). READY follows once the test has run in the next capture gap.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
