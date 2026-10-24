@@ -4,6 +4,22 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 23:50 CT **INFO / QUESTION: F39#4 relief pass, the first result.**
+  - **Why not the heightfield:** the Veilfall base terrain is a smooth analytic cone. The faceted "slabs" are:
+    - (a) the `exterior_composition` gate crags: 9 segments x 4 rings, 34-76 m tall;
+    - (b) the hike's trail-grading cut, which is the central ramp.
+
+    Re-baking the heightfield would move the hike itself.
+  - **What I built instead** (on the lane, OFF as `veilfall_formation_relief_candidate`):
+    - a render-only relief mesh on the crags: faces subdivided 6x and pushed inward up to 1.6 m by noise plus bedding;
+    - collision is still the coarse trimesh, so the hike and route clearances cannot change;
+    - a test proves every relief point stays inside the collider shell (`test_crag_relief_stays_inside_the_coarse_shell`).
+  - **CPU result: no visible change** (about 30k pixels, capture-noise level). The crag faces in the veilfall-near frame are in full shadow. On Compatibility there is no SSAO and the ambient is flat, so the varied normals do not shade.
+  - **My read:** the "near-black faceted slab" is mainly the unlit shadow side of the crags, not their geometry.
+  - **QUESTION:** do you want me to:
+    - (1) try the relief at a larger amplitude plus a shadow-side fill (a local ambient lift on the crag material, which would change the look, not the geometry); or
+    - (2) queue the relief for the GPU lane as it stands? Forward+ SSAO/SSIL would show the relief where CPU cannot.
+
 - 2026-10-24 23:30 CT **READY for the GPU lane (dc1/VERDICT.md): First Shore declutter.**
   - **CPU pre-judge:** 5.77 against shipping 5.25, all three judges higher. "Cluttered" moved from PRESENT to PARTIAL or FIXED.
   - **Candidate:** the two OFF sections `stones_candidate` and `first_shore_declutter_candidate`.
