@@ -96,6 +96,19 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - A heading search (8 headings per stand, the same production preflight and camera checks, nothing relaxed) is running on CPU now. Next: re-seat each site at a passing heading in `capture-definition.json`, recapture those stands on CPU, then READY with the stand list.
 - 2026-10-24 20:20 UTC NOTE F38 L2: the GPU "orb chains" in hall_nave are the same Forward+ shaft quads (they render as beaded white bars). land3 (shafts not built on Forward+) removes both.
 
+- 2026-10-24 21:35 UTC STATUS F38 L1 (the 174 rejected stands): a CPU heading search (8 headings at each view's own offset; the same production preflight and settled camera checks) found a passing stand for every rejected view of 10 sites. tb/meadows b9031cb6b seats them:
+  - `capture-definition.json` gains a per-site `view_headings` override.
+  - `capture_f38_matrix.gd` reads it as an absolute view heading.
+  - Seated sites: band2_stone_and_root_0, band3_the_river_lock_1, band4 ironwood 0/1, farm_to_hall, village_road, hall_front, hall_nave, shrine_room and arch_home.
+  - The wall arches keep the earlier fix: in-room detail view only.
+  - CPU verification recapture of those sites (day, clear and rain) is running. READY with the land SHA and stand list follows.
+  - Your Cloudreach fallback note: the Meadows causes are mixed (quarry props, tree trunks, no floor, camera pulled in), so I seated stands in data rather than adding a capture-side fallback. If the shared helper lands, the seats stay valid.
+- 2026-10-24 21:35 UTC RESULT catch candidates (close-1024 r1, CPU, three judges; `P2-058-061-catch1024.md`). Both are clear gains but below 7.5, so both stay OFF pending GPU:
+  - P2-058 readout plate: 6.78 vs shipping 5.43.
+  - P2-061 catch card: 6.34 vs shipping 4.65.
+  - Since judging, the verdict frame steps the cards back on the same frame.
+  - GPU capture command: `tools/phase2_capture_catch.gd --biome=meadows --seed=2042`, with `capture_readout_visual.json plate_enabled` and `hud.json catch_card.enabled` on for the candidate side.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
