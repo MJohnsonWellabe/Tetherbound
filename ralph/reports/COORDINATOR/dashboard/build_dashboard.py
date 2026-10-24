@@ -618,9 +618,9 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
 .tabs{{display:flex;gap:6px;border-bottom:1px solid var(--line)}}
 .tabs label{{font:600 14px Figtree,sans-serif;padding:8px 14px;border-radius:8px 8px 0 0;cursor:pointer;color:var(--muted);border:1px solid transparent;border-bottom:none}}
 .tabsel{{position:absolute;opacity:0;pointer-events:none}}
-#tab-acc:checked ~ .tabs label[for=tab-acc], #tab-plan:checked ~ .tabs label[for=tab-plan], #tab-lanes:checked ~ .tabs label[for=tab-lanes], #tab-vis:checked ~ .tabs label[for=tab-vis]{{color:var(--ink);background:var(--panel);border-color:var(--line)}}
-#tab-acc:focus-visible ~ .tabs label[for=tab-acc], #tab-plan:focus-visible ~ .tabs label[for=tab-plan], #tab-lanes:focus-visible ~ .tabs label[for=tab-lanes], #tab-vis:focus-visible ~ .tabs label[for=tab-vis]{{outline:2px solid var(--accent)}}
-.pane{{display:none;gap:28px;grid-template-columns:minmax(0,1fr)}} .wrap,.panel{{grid-template-columns:minmax(0,1fr)}} #tab-acc:checked ~ .pane-acc, #tab-plan:checked ~ .pane-plan, #tab-lanes:checked ~ .pane-lanes, #tab-vis:checked ~ .pane-vis{{display:grid}}
+#tab-acc:checked ~ .tabs label[for=tab-acc], #tab-plan:checked ~ .tabs label[for=tab-plan], #tab-lanes:checked ~ .tabs label[for=tab-lanes]{{color:var(--ink);background:var(--panel);border-color:var(--line)}}
+#tab-acc:focus-visible ~ .tabs label[for=tab-acc], #tab-plan:focus-visible ~ .tabs label[for=tab-plan], #tab-lanes:focus-visible ~ .tabs label[for=tab-lanes]{{outline:2px solid var(--accent)}}
+.pane{{display:none;gap:28px;grid-template-columns:minmax(0,1fr)}} .wrap,.panel{{grid-template-columns:minmax(0,1fr)}} #tab-acc:checked ~ .pane-acc, #tab-plan:checked ~ .pane-plan, #tab-lanes:checked ~ .pane-lanes{{display:grid}}
 .gscroll{{overflow-x:auto}} .gantt{{min-width:980px;display:grid;gap:6px}}
 .glane{{display:grid;grid-template-columns:190px minmax(0,1fr);gap:10px;align-items:center}}
 .gname{{font-weight:600;font-size:13px;display:grid}} .gname .meta{{font-weight:400;font-size:11.5px}}

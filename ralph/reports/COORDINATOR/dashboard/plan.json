@@ -20,7 +20,7 @@
   "2026-10-14 5:41:42 PM CDT (owner restart Tetherbound): all bars shifted equally to actual verified restart. Four fixed lanes from origin/main 6b13cc0851; durations/order unchanged. App permission mismatch corrected by resuming same four tasks with explicit never/danger-full-access.",
   "2026-10-16 4:45 AM CDT: owner shut Codex down; no criterion closed in the restart. Bars shifted 4.38 sprints to now so nothing reads LATE while stopped; they re-anchor to the actual restart time when lanes restart.",
   "2026-10-17 7:22 AM CDT (owner restart, new Claude coordinator): all bars shifted 3.33 sprints so the first bar starts at the actual restart; four lanes now run as cloud sessions. Durations and order unchanged.",
-  "2026-10-24 3:30 PM CDT (owner: \"fix the delivery plan to something reasonable\"): rebaselined from now over every open criterion (231, each catalog item once). Eight lanes: Creatures, Meadows, Tidewake, Cloudreach, Stormwood, Fights, Routes and the GPU judge; owner items follow. Visual bars are sized at about 4 catalog items or 10 creature items per 8-hour sprint, which assumes the GPU judges each READY batch within a sprint. The visual catalog plan is folded into this one."
+  "2026-10-24 3:30 PM CDT (owner: \"fix the delivery plan to something reasonable\"): rebaselined from now over every open criterion (231, each catalog item once: 228 in lane bars, 3 owner items), plus the chapter exit cards and release-wide rows on the Routes bar. Eight lanes: Creatures, Meadows, Tidewake, Cloudreach, Stormwood, Fights, Routes and the GPU judge; owner items follow. Visual bars are sized at about 4 catalog items or 10 creature items per 8-hour sprint, which assumes the GPU judges each READY batch within a sprint. The visual catalog plan is folded into this one."
  ],
  "lanes": [
   {
@@ -391,7 +391,7 @@
      "features": [],
      "start": 0.0,
      "end": 1.0,
-     "note": "Then hands remaining route pieces to Routes.",
+     "note": "Route piece only (F49#0 is measured on the Routes bar); then hands remaining pieces to Routes.",
      "baseline_pct": 0.0
     },
     {
@@ -471,12 +471,14 @@
      "label": "F49#0 and F19#5 route pieces (Cloudreach, Stormwood, homecoming)",
      "features": [
       "F49#0",
-      "F19#5"
+      "F19#5",
+      "CARDS",
+      "XCUT"
      ],
      "start": 0.0,
      "end": 4.0,
-     "note": "Pieces with matched saves; never a full run.",
-     "baseline_pct": 0.0
+     "note": "Pieces with matched saves; never a full run. Also measures the 13 chapter exit cards and the release-wide rows.",
+     "baseline_pct": 47.4
     },
     {
      "label": "F47#0 agent clear-time estimate",
