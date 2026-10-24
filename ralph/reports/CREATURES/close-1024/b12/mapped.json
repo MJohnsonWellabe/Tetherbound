@@ -1,0 +1,266 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9701,
+  "least_squares_slope": 1.3058,
+  "method": "linear",
+  "slope": 1.3058,
+  "intercept": -1.342,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.263,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.533,
+   "reference": 7.35,
+   "mapped": 7.189,
+   "residual": 0.161
+  },
+  "craft:before": {
+   "measured": 4.9,
+   "reference": 4.83,
+   "mapped": 5.057,
+   "residual": -0.227
+  },
+  "f36_0_gap:C1A": {
+   "measured": 6.033,
+   "reference": 6.1,
+   "mapped": 6.537,
+   "residual": -0.437
+  },
+  "f36_0_gap:C1B": {
+   "measured": 4.833,
+   "reference": 5.33,
+   "mapped": 4.97,
+   "residual": 0.36
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.733,
+   "reference": 7.47,
+   "mapped": 7.451,
+   "residual": 0.019
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.7,
+   "reference": 7.53,
+   "mapped": 7.407,
+   "residual": 0.123
+  }
+ },
+ "candidates": {
+  "torrentoad cand": {
+   "measured_mean": 5.967,
+   "mapped_mean": 6.45,
+   "mapped_judges": [
+    5.97,
+    6.88,
+    6.49
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "torrentoad live": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.19,
+   "mapped_judges": [
+    5.45,
+    6.49,
+    6.62
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "mosshock cand": {
+   "measured_mean": 6.5,
+   "mapped_mean": 7.15,
+   "mapped_judges": [
+    7.02,
+    7.28,
+    7.15
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "mosshock live": {
+   "measured_mean": 4.433,
+   "mapped_mean": 4.45,
+   "mapped_judges": [
+    4.27,
+    4.66,
+    4.4
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "bramblebun live": {
+   "measured_mean": 6.933,
+   "mapped_mean": 7.71,
+   "mapped_judges": [
+    7.28,
+    8.06,
+    7.8
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "bramblebun cand": {
+   "measured_mean": 7.167,
+   "mapped_mean": 8.02,
+   "mapped_judges": [
+    7.67,
+    8.32,
+    8.06
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "burrowback cand": {
+   "measured_mean": 6.567,
+   "mapped_mean": 7.23,
+   "mapped_judges": [
+    7.02,
+    7.54,
+    7.15
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "burrowback live": {
+   "measured_mean": 6.333,
+   "mapped_mean": 6.93,
+   "mapped_judges": [
+    7.28,
+    7.28,
+    6.23
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "ripplet live": {
+   "measured_mean": 6.667,
+   "mapped_mean": 7.36,
+   "mapped_judges": [
+    7.15,
+    7.41,
+    7.54
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "ripplet cand": {
+   "measured_mean": 6.767,
+   "mapped_mean": 7.49,
+   "mapped_judges": [
+    7.28,
+    7.54,
+    7.67
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "paddlenewt cand": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.19,
+   "mapped_judges": [
+    5.97,
+    6.75,
+    5.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "paddlenewt live": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.19,
+   "mapped_judges": [
+    5.71,
+    6.88,
+    5.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "terrapup live": {
+   "measured_mean": 6.4,
+   "mapped_mean": 7.02,
+   "mapped_judges": [
+    6.88,
+    7.28,
+    6.88
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "terrapup cand": {
+   "measured_mean": 6.6,
+   "mapped_mean": 7.28,
+   "mapped_judges": [
+    7.28,
+    7.41,
+    7.15
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "cannonback live": {
+   "measured_mean": 5.533,
+   "mapped_mean": 5.88,
+   "mapped_judges": [
+    5.71,
+    6.49,
+    5.45
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "cannonback cand": {
+   "measured_mean": 5.667,
+   "mapped_mean": 6.06,
+   "mapped_judges": [
+    5.58,
+    6.75,
+    5.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "meets the bar only above the top anchor (7.53): bramblebun cand, bramblebun live; extrapolated, but this batch's anchors reach 7.35 or more, so it is the confirming batch"
+ ]
+}
