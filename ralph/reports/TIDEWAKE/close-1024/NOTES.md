@@ -4,6 +4,11 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 18:15 CT **MESHY: `assets/props/meshy-1025/veilfall_cliff_facade/reference/`, 35 m wide x 30 m tall x 6 m deep (flat back), a slope-hugging Veilfall gully-wall cliff facade with a 2-3 tier white falls.**
+  - **Placement:** flush on the west gully wall at (338.0, 3836.0), normal (0.902, -0.431), yaw 115.5. Clearance from the hike: 35.8 m at the centre, 24.8 m minimum at the front face.
+  - **Inputs:** board crops (text, figures and structures removed), stone swatches, `prompt.txt`, `scale_check.png` (about 17x the 1.80 m trainer) and `placement.md`.
+  - **Gate:** OFF until judged.
+
 - 2026-10-24 17:55 CT **PARKED, with a MESHY suggestion: vf2 placement.** Off the hike, the veilfall-near slope is too steep for the cascade tier.
   - **Why it fails:** at 15 m or more from the trail, the tiers bury into the slope, and only their crowns show as pale lumps. Lifting them floats their downhill fronts toward the camera, which judges already called "pasted, floating".
   - **What it showed:** the only spot where the tier read (the close-up gain) was the trail itself, the gully floor.
