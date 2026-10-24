@@ -4,6 +4,13 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-25 01:30 CT **READY for the GPU lane: F39#4 heightfield relief (hf1/VERDICT.md), `tb/tidewake` 2ea20e386.**
+  - **CPU-visible:** close-up 4.39 against 4.17, matched Venn fight 5.72 against 5.36 (both all three judges higher), shore views level. The fight's black slab moved from PRESENT to PARTIAL.
+  - **Gameplay:** the hike's walk band is byte-identical with the relief on and off (new `test_water_veilfall_relief_walk`). The route-grade audit is identical. Anchors and gate are unchanged.
+  - **Bake:** only the six Veilfall terrain regions changed (3.8 MB).
+  - **Capture command:** in the verdict.
+  - **Not in any land head until GPU passes.**
+
 - 2026-10-25 00:20 CT **READY for the GPU lane: F39#4 relief, two arms, on `tb/tidewake` dba5f5e8a.**
   - **Command:** `capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --views=veilfall-near,veilfall-rain`, on Medium and High.
   - **Control:** no `--tidewake-look-sections`.
