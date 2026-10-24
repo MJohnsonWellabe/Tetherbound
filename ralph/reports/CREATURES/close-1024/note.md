@@ -3,6 +3,12 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct owner direction received ("switch to GPU judging and split the rows"). From now on:
+  - CPU batches only pick candidates.
+  - Every candidate READY carries its exact GPU capture command, so you can queue it.
+  - Rows count per unit: F36#0 per ledger asset, F36#1 per roster subject.
+  - Working order: Aquaryn (7.49), water Mosshell (7.41), Mosshell (7.36), Tidecoil (7.45), Ripplet (7.26).
+  - The CPU-provisional labels in close-1024 verdicts are now history, not closures.
 - 24 Oct READY tb/creatures-land 5cecc01bd (= b67ec65dc + the admission probe you asked for).
   - `close-1024/admission/lead_probe_grown.txt`: smoke_arena_contain with the party lead swapped (headless). Cindercub at 3.25 m, Trailpup at 3.1 m and Stormtrail at 3.45 m each seat in the Warrens mouth (6.0 m ring; held to 3.2 m, 6.0 m and 6.0 m inside it) and the Hall elite room (7.0 m). Arena containment is OK on all three. No cap needed.
   - Scale answer (a) noted: Mudsnout, Paddlenewt and Riftfrill stay in the small class. Any further fix there is presentation (head line), not height.
