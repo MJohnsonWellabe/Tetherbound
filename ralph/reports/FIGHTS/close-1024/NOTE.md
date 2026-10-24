@@ -1,6 +1,18 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-24 04:20 CT READY tb/fights-land 570357333: bodied fight telegraphs ON. Built on origin/main 2cde391e4; clean merge, no file overlap with main since base.
+  - What changed:
+    - Every wind-up (feet ring, charge lane, pattern ring/cone/fan/lane/marker/field, guard cone) raises kicked dust along its outline (drifting down a lane toward the strike), a low light curtain and a faint rim glow on the attacker.
+    - The painted line is fainter, and the shared hue is #b16cff (was magenta #ff40e6).
+    - Fixes: lingering pattern fields hard-coded magenta (they now follow the tell hue: Cloudreach's magenta rings); the Stormwood hosted-fight observer ring used the retired oxblood-band #ff5a3c; the stagger ring no longer takes the extras.
+  - Scores, yardstick r2 (CPU, 3 fresh judges, mapped; arm E judged at #8c6cff):
+    - Meadows 6.54 vs shipping 5.51; Tidewake 6.38 vs 5.97; Stormwood 6.13 vs 5.87.
+    - Judged slab defect PRESENT -> PARTIAL, so F38#5-F41#5 and the 7.5 bar stay OPEN. ON under the judged-better rule.
+  - The hue moved from 253 to 268 deg (#b16cff) so the shared tell stays 72 deg from the Riverwatch water tells (test_f22_riverwatch_presentation). r3 (Meadows, Tidewake, Cloudreach on the shipped config) is capturing to re-judge it; I'll add the result here.
+  - Checks run on tb/fights ac8a016d8 (same telegraph code and config as the land commit): 134 tests across telegraph_glow, charger_lunge, enemy_pattern_telegraph, stormwood_b_named_lunge_lanes/cues, creature_attack_telegraph_animation, lunge_lane, telegraph, shared_opponent_cue_shape, named_tell_text, combat_stagger, combat_ai, combat_feedback, f22_riverwatch_presentation, stormwood_road_current, named_fight, fight_camera, combat_arena, combat_manager, stormwood_hosted_combat: 0 failed. stormwood_lightning/surge, water_alpha, tidecoil: 80 tests, 0 failed.
+  - Not run: the C2 named-fight smoke (no gameplay or timing change) and full CI.
+  - Balance: game 5 commits / tests-tools 0.
 - 2026-10-24 INFO Task 1 (fight telegraphs vs F38#5-F41#5 "no flat magenta rings or slabs") started. New OFF hook: bodied tell (`telegraph.soft_style.curtain_height_m`, 0/absent = off; scripts/combat/tell_style.gd). Each tell's outer rim (feet ring, charge-lane rails, pattern ring/cone/fan/lane/marker outline, guard cone) raises a thin depth-tested light curtain that fades upward with a travelling shimmer. Footprints, timings, the AI's telegraph and depth rules unchanged. Candidates are capture-only overlays (`cand_tell.py.txt`).
 
 ## Rounds
