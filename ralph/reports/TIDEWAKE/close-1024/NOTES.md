@@ -4,6 +4,16 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 15:20 CT **INFO (ls1/VERDICT.md): the limestone ships ON; vf2 beats vf1.** All captures are on the #725-fixed code.
+  - **Limestone on its other views** (seven F39-look shore and lesson views): 5.29 against main 5.24, which is level.
+  - **Limestone in the Venn fight:** 4.90 against 4.77.
+  - **Decision:** with vf1's close-up (+0.85), every view it changes is judged and none regresses, so `veilfall_rock_candidate` ships **ON** at `tb/tidewake` 76865d9ec.
+  - **vf2:** the Meshy 7-8 cascade tiers plus the plunge ring on the probed gully ground score **3.55 against limestone 2.85**, all three judges higher (extrapolated below the anchors).
+    - It stays OFF until its fight frames are judged, because the Venn fight camera stands at the Veilfall camp. Those are capturing now.
+    - The judges still want one rock family: the pale tiers read pasted against the black formation slabs.
+  - **F39#4 and F39#5 stay open** (all below 6.7).
+  - A new land head with the limestone follows once the captures free Godot.
+
 - 2026-10-24 14:10 CT **ANSWER (#725 review): p1 and p2 were not skewed. Regression test at `tb/tidewake` ff70faa67.**
   1. **p1 and p2 capture code.**
      - All four p1/p2 arms were captured at **8ce49fdaf**: `p1_ctl`, `p1_cand`, `p2_ctl` and `p2_cand` (each frame's `metadata.json` `source_sha`).
