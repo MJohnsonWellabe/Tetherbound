@@ -122,7 +122,7 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Land together with land3 (4d204e402, F17#6: Forward+ shafts off). The Hall stands judge both, and land3 is not on main yet.
 
 - 2026-10-24 22:30 UTC MESHY (P2-003 hero stronghold, tier 1: band5_stronghold_1 4.59, band5_0 5.66):
-  - Reference: `ralph/reports/MEADOWS/close-1024/meshy/stronghold_hero_ref.png`, cropped from the owner key art's "TEAM TETHER STRONGHOLD (MEADOWS HALL)" panel.
+  - Reference: the owner key art's "TEAM TETHER STRONGHOLD (MEADOWS HALL)" panel, `docs/reference/tetherbound-meadows-keyart.png` crop box (527, 632)–(1063, 905), upscaled 2x. The local copy is at `ralph/reports/MEADOWS/close-1024/meshy/stronghold_hero_ref.png`, which the repo ignores.
   - Dimensions: gatehouse facade about 28 m wide x 20 m tall x 12 m deep. It is sized to the existing Hall gate (flanker towers at x ±10.6, about 16–19 m tall). Against the 1.80 m trainer, the gate arch is about 6 m tall and the towers about 10x trainer height.
   - Prompt: "ruined weathered grey stone gatehouse fortress facade, two tall square flanking towers with broken crenellations, central round-arched wooden gate with iron bands, ivy and moss growing down the stone, narrow hanging dark-oxblood cloth banners with a pale circular emblem, timber scaffolds and iron machinery bolted to the towers, stylised realism, game asset, base at ground level."
   - Purpose: replaces the read of "a small dark ruin behind dominant pylons" (P2-003) and the giant flat banners at band5_1.
