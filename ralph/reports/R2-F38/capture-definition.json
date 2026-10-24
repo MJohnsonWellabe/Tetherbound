@@ -208,8 +208,7 @@
       "views": [
         "detail"
       ],
-      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room).",
-      "_why_close1024_tidewake": "F38#5 close-1024 recapture: the 8 m gameplay stand for this arch puts the production camera inside the wall geometry behind it (all four frames black); only the 3 m detail view stays in the room."
+      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch. The nave is ~12 m wide, so even the 8 m gameplay stand puts the production camera inside the opposite wall (the close-1024 recapture rendered it black for every wall arch); only the 3 m detail view stays in the room."
     },
     {
       "id": "arch_cloudreach",
@@ -221,10 +220,9 @@
       "heading_deg": 0,
       "source": "crossing_hall.json arches:cloudreach",
       "views": [
-        "gameplay",
         "detail"
       ],
-      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room)."
+      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch. The nave is ~12 m wide, so even the 8 m gameplay stand puts the production camera inside the opposite wall (the close-1024 recapture rendered it black for every wall arch); only the 3 m detail view stays in the room."
     },
     {
       "id": "arch_stormwood",
@@ -236,10 +234,9 @@
       "heading_deg": 0,
       "source": "crossing_hall.json arches:stormwood",
       "views": [
-        "gameplay",
         "detail"
       ],
-      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room)."
+      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch. The nave is ~12 m wide, so even the 8 m gameplay stand puts the production camera inside the opposite wall (the close-1024 recapture rendered it black for every wall arch); only the 3 m detail view stays in the room."
     },
     {
       "id": "arch_biome5",
@@ -251,10 +248,9 @@
       "heading_deg": 0,
       "source": "crossing_hall.json arches:biome5",
       "views": [
-        "gameplay",
         "detail"
       ],
-      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room)."
+      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch. The nave is ~12 m wide, so even the 8 m gameplay stand puts the production camera inside the opposite wall (the close-1024 recapture rendered it black for every wall arch); only the 3 m detail view stays in the room."
     },
     {
       "id": "arch_biome6",
@@ -266,10 +262,9 @@
       "heading_deg": 180,
       "source": "crossing_hall.json arches:biome6",
       "views": [
-        "gameplay",
         "detail"
       ],
-      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room)."
+      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch. The nave is ~12 m wide, so even the 8 m gameplay stand puts the production camera inside the opposite wall (the close-1024 recapture rendered it black for every wall arch); only the 3 m detail view stays in the room."
     },
     {
       "id": "arch_biome7",
@@ -281,10 +276,9 @@
       "heading_deg": 180,
       "source": "crossing_hall.json arches:biome7",
       "views": [
-        "gameplay",
         "detail"
       ],
-      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room)."
+      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch. The nave is ~12 m wide, so even the 8 m gameplay stand puts the production camera inside the opposite wall (the close-1024 recapture rendered it black for every wall arch); only the 3 m detail view stays in the room."
     },
     {
       "id": "arch_biome8",
@@ -296,10 +290,9 @@
       "heading_deg": 180,
       "source": "crossing_hall.json arches:biome8",
       "views": [
-        "gameplay",
         "detail"
       ],
-      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch; only the in-room views remain (an approach or reverse stand for a wall arch is outside the playable room)."
+      "_why_close1024": "F38#5 close-1024: the stand is at = site - forward*offset, so the old heading put every view beyond the Hall wall (blue void, black inside-geometry frames). Heading now points from the nave to the arch. The nave is ~12 m wide, so even the 8 m gameplay stand puts the production camera inside the opposite wall (the close-1024 recapture rendered it black for every wall arch); only the 3 m detail view stays in the room."
     }
   ],
   "pairing": "Same integrated SHA, seed, character, renderer/preset, time, weather and fixed stand. Baseline/candidate switches only. Reject unmatched player/camera/size or support failure; retain missing rows.",
