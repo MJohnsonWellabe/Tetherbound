@@ -1,0 +1,118 @@
+{
+ "sets": {
+  "Oe": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A naturalistic, well-furred hare with a moss cloak that clears the 1.80 m ruler would sit beside Palworld creatures, though the travel-role frame (a flat blue water slab on A, a floating hare carrying nothing on B) lets it down."
+  },
+  "At": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing, earthy-palette elder with readable eyes and a clean silhouette matches the stylised finish, even if he is a little more cartoon than the naturalistic creatures."
+  },
+  "Ll": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The mossy-shelled turtle has convincing plate and skin detail and is clearly larger than the trainer, but the travel frames (a turtle floating mid-air on A, a flat blue slab on B) look unfinished."
+  },
+  "Ij": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared, low-resolution ground and cliff textures, a uniform grass carpet and flat, shaft-less light sink it next to Palworld's dense fields, although B's aftermath staging (torn-down banners, an opened cage, smoke) carries each site better than A's."
+  },
+  "Qv": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The storm wolf matches the owner's Tanglevolt bar in its standing frames, and B's glowing lightning veins hold through the faint, while on A the fur breaks into black-and-white blotches and the body floats in the faint frames."
+  },
+  "Od": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's braced timber frame, cap and stone footing read as a built wall, but the flat painted mountain backdrop, blurry low-poly rock and smeared path keep the scene below Palworld finish, and B's blown-out white panel looks like a placeholder."
+  },
+  "Bw": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "This is the same naturalistic moss-cloaked hare as Oe and reads well at small size, but the flat water slab on A and the floating carry on B undercut the travel role."
+  },
+  "Wz": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "This is the same strong mossy turtle as Ll, held back by the flat blue swim slab with its blown white edge on A and the mid-air carry pose with a detached shadow on B."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild the Meadows world-frame materials and light: higher-resolution ground and cliff textures, grass grouped into groves and edges instead of a uniform carpet, warmer directional light with shafts and cool blue distance fog (Ij, Od).",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix the travel-role presentation: a real water surface with a waterline on the creature instead of the flat blue slab with a blown white edge, and a grounded carrying pose with a visible load and an attached shadow instead of a creature floating mid-air (Oe, Bw, Ll, Wz).",
+   "kind": "scene"
+  },
+  {
+   "change": "Keep the creature material and ground contact through hurt and faint states (Qv A breaks into black-and-white blotches and floats), and on aftermath frames take down or wreck the enemy oxblood banners so each site reads as won (Ij A).",
+   "kind": "scene"
+  }
+ ]
+}

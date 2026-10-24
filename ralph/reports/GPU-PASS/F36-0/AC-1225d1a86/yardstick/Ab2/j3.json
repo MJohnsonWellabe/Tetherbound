@@ -1,0 +1,118 @@
+{
+ "sets": {
+  "Oe": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The mossy hare is a believable naturalistic model, but on a grey stage with a flat blue swim slab (A) or a creature levitating far above its shadow (B) there is no world light or atmosphere to put it beside Palworld."
+  },
+  "At": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing elder with a Meadows palette, but the smooth plastic, big-eyed animated-film look clashes with the naturalistic creature bar and stylised-realism key art, and there is no lit scene."
+  },
+  "Ll": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The large mossy turtle has good scale and surface, but the floating carry pose (A) and the flat blue swim slab with a blown white edge (B) on a neutral stage sink the finish."
+  },
+  "Ij": {
+   "A": {
+    "bar_a": 3.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry smeared ground textures, flat box-like cave walls, lollipop trees, flat noon light and no fog or atmosphere read as a prototype rather than a Palworld-class lived-in world, although B's aftermath storytelling helps."
+  },
+  "Qv": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's glowing lightning-veined wolf is close to the owner's Tanglevolt bar, but on a neutral stage with no Valheim-class light, and A's floating faint frames with a mottled white material break it."
+  },
+  "Od": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The grass, sky and mountains get close to the Meadows palette, but flat lighting, a backdrop-like mountain range, a low-detail pale boulder and B's glowing white card wall keep it short of the Palworld finish."
+  },
+  "Bw": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The same mossy hare reads well on its own, but the flat swim slab (A) and the levitating carry frame (B) on a grey stage give no world light or grounding to match Palworld."
+  },
+  "Wz": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The turtle model has the right scale and naturalistic shell, but the flat swim slab (A) and the floating carry pose (B) on a neutral stage keep it at test-render finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Ground the travel-role frames: replace the flat blue swim slab with its blown white edge with a real water surface (waterline, ripples, submerged tint), and put carrying creatures on the ground with a contact shadow instead of hovering",
+   "kind": "scene"
+  },
+  {
+   "change": "Raise the Meadows world finish in the trainer-site and homestead views: sharper ground and path materials, broken-up vegetation into groves and clearings, warm directional light with aerial perspective and blue distance fog, and replace the flat cave walls and backdrop mountains with modelled forms",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the villager character in the naturalistic stylised-realism style of the creature bar (real skin and cloth materials, less animated-film eyes and proportions)",
+   "kind": "new_art"
+  }
+ ]
+}

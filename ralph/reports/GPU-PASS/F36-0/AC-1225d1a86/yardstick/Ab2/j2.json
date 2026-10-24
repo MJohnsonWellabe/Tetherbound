@@ -1,0 +1,118 @@
+{
+ "sets": {
+  "Oe": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The naturalistic moss-backed hare is a Palworld-finish creature model that clearly towers over the ruler, held back only by the flat blue/white swim slab (A) and the hovering carry pose (B)."
+  },
+  "At": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable elder villager with an earthy green/brown palette that sits comfortably beside Palworld's stylised humans and the key art's settlement."
+  },
+  "Ll": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The large mossy-shelled tortoise has a grounded anatomy and surface detail at the bar's level, dented by the floating carry frame (A) and the flat blue slab with a blown-white edge in the swim frame (B)."
+  },
+  "Ij": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared low-resolution ground, a flat sky, sparse lollipop trees and a blocky tiled tunnel wall have none of Palworld's density or Valheim's light, though B's freed captive, smoke and torn banners do give each aftermath a story."
+  },
+  "Qv": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's lightning-veined wolf matches the Tanglevolt bar, but A's material switches to a pied black/white look and floats in the faint frames, and B's faint end tips the wolf onto its nose."
+  },
+  "Od": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame with a brace, a cap and a stone footing reads as built, but the faceted low-res boulder, flat lake and plain grade keep the scene well below Palworld base-building finish, and B's blown-white card sinks it."
+  },
+  "Bw": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Same strong naturalistic hare model as Oe, held back by the flat swim slab (A) and the hovering carry (B)."
+  },
+  "Wz": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Same convincing mossy tortoise as Ll; the swim slab with a blown-white edge (A) and the airborne carry (B) are the only things breaking the read."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the flat blue gradient swim slab (with its blown-white right edge) with a real water surface at the waterline, and ground the carrying poses so creatures do not hover above their shadows",
+   "kind": "scene"
+  },
+  {
+   "change": "Raise the Meadows ground and set dressing in the world sets (Ij, Od): sharper terrain materials in place of smeared ground, grove/edge vegetation density, atmospheric fog and a warm sun grade, and replace the low-res faceted boulder and blocky tunnel walls",
+   "kind": "scene"
+  },
+  {
+   "change": "Lock each creature to one material across all states (Qv A's faint frames switch to pied black/white) and fix faint-end poses that float or tip onto the nose (Qv A/B)",
+   "kind": "scene"
+  }
+ ]
+}

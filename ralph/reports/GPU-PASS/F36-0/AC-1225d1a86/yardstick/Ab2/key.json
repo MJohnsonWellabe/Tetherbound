@@ -1,0 +1,46 @@
+{
+ "Oe": {
+  "anchor": false,
+  "label": "AC bramblebun Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\A\\sides\\bramblebun-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\A\\sides\\bramblebun-cand-Medium.png"
+ },
+ "At": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ll": {
+  "anchor": false,
+  "label": "AC mosshell High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\A\\sides\\mosshell-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\A\\sides\\mosshell-ship-High.png"
+ },
+ "Ij": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Qv": {
+  "anchor": true,
+  "A": "f36_0_gap:C4B",
+  "B": "f36_0_gap:C4A"
+ },
+ "Od": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Bw": {
+  "anchor": false,
+  "label": "AC bramblebun High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\A\\sides\\bramblebun-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\A\\sides\\bramblebun-cand-High.png"
+ },
+ "Wz": {
+  "anchor": false,
+  "label": "AC mosshell Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\A\\sides\\mosshell-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\A\\sides\\mosshell-cand-Medium.png"
+ }
+}

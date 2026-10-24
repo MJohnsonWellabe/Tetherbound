@@ -1,0 +1,126 @@
+{
+ "sets": {
+  "Vo": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's furred white-blue wolf reaches toward the creature bar, but A's smooth gradient fur and broken black-paw faint-end slab, plus the bare grey stage, keep both short of Palworld finish."
+  },
+  "Nk": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The leaf-plated otter has a distinct naturalistic silhouette and a working ride pose, but its dark brown body sinks into the dark stage and it lacks the rim light and face read of the bar."
+  },
+  "Kp": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The shaggy boar is on-style naturalistic, but it barely clears the trainer's height, and the travel frames break it: A floats mid-air when carrying, and B stands on top of a staged water slab with a hard white edge."
+  },
+  "Jt": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry, low-res smeared ground, stretched stone wall textures and flat noon light keep the sites far below the key art; A's freed captive and smoke plume give site-specific aftermaths, while B leaves oxblood banners standing after the win."
+  },
+  "Fc": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "These frames are identical to Kp, with the same verdict: a good naturalistic boar undone by a floating carry pose (A) and a placeholder water slab where it walks on the surface (B)."
+  },
+  "Qq": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The appealing stylised elder, with readable eyes, a mossy green vest and a clear silhouette, would sit comfortably beside Palworld's characters and fits the cozy Meadows palette."
+  },
+  "Uu": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A plain, realistic tan coyote with no Tetherbound accent or rim light reads as a stock animal; the carry frame floats in A and B stands on a hard-edged water slab."
+  },
+  "Wy": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "These frames are identical to Uu: a stock-realistic coyote with no type identity, a floating carry pose (A) and a placeholder swim slab (B)."
+  },
+  "Qs": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fight reads as murky brown-green with no purple storm sky or lightning, flat magenta ring telegraphs and a dense HUD covering the left third; A also loses several frames (i11, i13, i15) to the camera sitting inside canopy."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight readability: keep the camera out of trunks and canopy, lift the storm-sky grade with white-violet lightning and rim light on both fighters, replace the flat magenta telegraph rings with real-object effects and an impact, and slim the left HUD stack",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix travel-role staging for every creature: grounded carrying pose instead of floating, partial submersion and a finite, edge-blended water surface for swimming",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows ground and light pass at the trainer sites: higher-resolution, less smeared ground and wall materials, grass groves and edges instead of a carpet, a warm key light with a cool blue distance haze, and enemy oxblood banners removed after the win",
+   "kind": "scene"
+  }
+ ]
+}

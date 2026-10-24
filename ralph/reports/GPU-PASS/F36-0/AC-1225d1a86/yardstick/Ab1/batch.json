@@ -1,0 +1,96 @@
+{
+ "anchors": {
+  "f36_0_gap:C3B": [
+   5.4,
+   5.0,
+   5.0
+  ],
+  "f36_0_gap:C3A": [
+   6.3,
+   6.2,
+   6.0
+  ],
+  "f04_6_r22:r22": [
+   5.0,
+   4.8,
+   5.0
+  ],
+  "f04_6_r22:control": [
+   4.3,
+   4.2,
+   4.4
+  ],
+  "f36_0_npc:C1B": [
+   7.0,
+   6.5,
+   7.0
+  ],
+  "f36_0_npc:C1A": [
+   6.9,
+   6.5,
+   7.0
+  ],
+  "f10_2_r3_capacitor:control": [
+   3.0,
+   2.8,
+   3.5
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   3.8,
+   3.6,
+   4.3
+  ]
+ },
+ "candidates": {
+  "AC terrapup dog Medium|High | terrapup-dog-High": [
+   6.2,
+   6.0,
+   6.0
+  ],
+  "AC terrapup dog Medium|High | terrapup-dog-Medium": [
+   6.2,
+   6.0,
+   6.0
+  ],
+  "AC mudsnout High cand|ship | mudsnout-cand-High": [
+   5.3,
+   5.5,
+   5.2
+  ],
+  "AC mudsnout High cand|ship | mudsnout-ship-High": [
+   5.5,
+   5.5,
+   5.5
+  ],
+  "AC mudsnout Medium cand|ship | mudsnout-cand-Medium": [
+   5.3,
+   5.5,
+   5.2
+  ],
+  "AC mudsnout Medium cand|ship | mudsnout-ship-Medium": [
+   5.5,
+   5.5,
+   5.5
+  ],
+  "AC trailpup High cand|ship | trailpup-cand-High": [
+   5.0,
+   5.2,
+   4.8
+  ],
+  "AC trailpup High cand|ship | trailpup-ship-High": [
+   5.2,
+   5.2,
+   5.2
+  ],
+  "AC trailpup Medium cand|ship | trailpup-cand-Medium": [
+   5.0,
+   5.2,
+   4.8
+  ],
+  "AC trailpup Medium cand|ship | trailpup-ship-Medium": [
+   5.2,
+   5.2,
+   5.2
+  ]
+ }
+}

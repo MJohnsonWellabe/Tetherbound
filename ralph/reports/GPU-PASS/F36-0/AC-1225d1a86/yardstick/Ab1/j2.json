@@ -1,0 +1,126 @@
+{
+ "sets": {
+  "Vo": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's dense white-blue fur reads as a naturalistic Palworld-class beast, but A's flat blue gradient and broken faint-end material (black/grey patches) and the bare stage keep the set short of shipped finish."
+  },
+  "Nk": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The furred body with mossy back plates is a clear, grounded creature, but it is low-contrast against the dark stage and the ridden frame shrinks the rider to a speck."
+  },
+  "Kp": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A well-textured but plain real-world boar barely taller than the trainer, with travel frames that break the read (floating mid-air in A, a flat blue slab with a white cut-off edge in B)."
+  },
+  "Jt": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared, blurry ground textures, a flat boxy tiled wall and uniform grass carpets sit well below the key art; A's freed captive and smoking wreckage carry some story, while B keeps enemy banners standing after the win."
+  },
+  "Fc": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same boar frames as Kp: good fur surface but a generic animal identity and broken travel frames (floating carry in A, slab water with a hard white edge in B)."
+  },
+  "Qq": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder villager with readable eyes and an earthy green/brown palette that fits the key art's settlers, though the face is more toon-rounded than the naturalistic creatures."
+  },
+  "Uu": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A convincing but generic real coyote with no fantasy identity, about trainer height, and travel frames that float (A) or stand on a flat blue slab with a white cut-off edge (B)."
+  },
+  "Wy": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same coyote frames as Uu: decent fur and pose reads, but generic identity and broken carrying/swimming frames."
+  },
+  "Qs": {
+   "A": {
+    "bar_a": 2.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown forest with no purple storm sky or lightning, flat magenta ring/slab telegraphs, a dense panel HUD covering the left and bottom, and a barely visible player creature; A also loses the fight to canopy and trunks in i11, i13 and i15."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace flat magenta ring/slab telegraphs with physical effects (lightning, thrown debris, ground cracks) and cut the Stormwood fight HUD to a compact corner; keep the camera out of canopy and trunks and grade the scene to the purple storm sky with white-violet lightning",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix creature travel frames: attach carrying creatures to the ground instead of floating, and replace the flat blue swim slab with a real water surface that partially submerges the creature",
+   "kind": "scene"
+  },
+  {
+   "change": "Give the plain real-world animals (boar, coyote) Tetherbound identity features such as elemental markings, plates or glow accents, and scale them clearly above the 1.80 m trainer",
+   "kind": "new_art"
+  }
+ ]
+}
