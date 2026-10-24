@@ -177,3 +177,8 @@ yardstick-b2-1024/batch.json
 yardstick-b2-1024/mapped.json
 forward-plus-grade/main-1024/RESULT.md
 forward-plus-grade/main-1024/_sheet_fplus_grade_main.png
+F39-look-lt2/main-1024/VERDICT.md
+F39-look-lt2/main-1024/_sheet_f39_lt2_gpu.png
+F39-look-lt2/main-1024/yardstick/key.json
+F39-look-lt2/main-1024/yardstick/batch.json
+F39-look-lt2/main-1024/yardstick/mapped.json

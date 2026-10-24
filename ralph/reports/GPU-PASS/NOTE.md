@@ -2,6 +2,16 @@
 
 ## READY (24 Oct): newest first
 
+- **11:00 CT, Tidewake regrade (lt2) on main: REOPENED.**
+  - Scores: **6.12** against control 5.35 (CPU 7.07), the same at Medium and High.
+  - Evening and dawn grade: FIXED ×3.
+  - Still open:
+    - the night beach casts nothing (PRESENT ×3);
+    - the noon seam is only softened;
+    - the Veilfall close-up is `new_art`.
+  - Evidence: `F39-look-lt2/main-1024/VERDICT.md`.
+  - **Now running:** the emission-floor overlay checks.
+
 - **10:40 CT, Forward+ grade re-measure on main (with #712 Meadows fog 0.001):** luma Medium vs Low:
   - **Meadows 102.6 vs 106.8 (96%, was 87.6)**;
   - **Tidewake 165.2 vs 163.5 (parity)**;
