@@ -323,14 +323,14 @@
       "deep_watch": [
         {
           "id": "f26_deep_watch_beach_transition",
-          "_comment": "Bounded P2-008 candidate from retained source-122 Deep Watch Beach frames water__deep_watch__24__deep_watch_beach__day/night: broad smooth sand with isolated rocks and grass. Centered on the authored Deep Watch landing sector; disabled with the parent candidate pending matched review.",
+          "_comment": "Bounded P2-008 candidate from retained source-122 Deep Watch Beach frames water__deep_watch__24__deep_watch_beach__day/night: broad smooth sand with isolated rocks and grass. Centered on the authored Deep Watch landing sector; disabled with the parent candidate pending matched review. close-1024 p2: the P2-008-shore stand is itself 18 m inland on this bearing and looks out to sea, so the old 18-34 m offsets put every cluster behind the camera (control and candidate frames were identical). Offsets now 4-14 m, between the stand and the waterline, with a wider span and one more cluster so the colonies sit in the judged view.",
           "bearing_deg": -132.797,
-          "half_span_deg": 10.0,
+          "half_span_deg": 14.0,
           "shore_offset_m": [
-            18.0,
-            34.0
+            4.0,
+            14.0
           ],
-          "clusters": 2,
+          "clusters": 3,
           "layers": [
             "stone_pockets",
             "strand_grass"
