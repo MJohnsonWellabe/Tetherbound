@@ -257,7 +257,7 @@
      "status": "met",
      "evidence": "ralph/reports/VISUAL-PROOF/F04-0/ (tb/ev-captures 7ef5e574, render on tb/ev-coordinator a8899257): smoke_warrens --guardian-attacks --guardian-settled-approach PASS (Q,C,Q,C; 1 hit, 2 misses) + code-blind judge PASS: the Earth Fist reads as a filled orange 72-degree wedge you can step out of sideways; the quick strike is a distinct violet outline; a hit and a dodge are visible",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (code-blind PASS 12:46 PM CT Sun 11 Oct). Real game fix behind it: F22 pattern cues were drawn about 2.6 km from fights whose parent is translated (enemy_pattern_telegraph top_level order), plus the Earth Fist fill, Commands meter at bottom-centre and den cairn moved off the arena. Disclosed: the dodge is the smoke's 4 m fixture step. Polish notes (not blocking): faint quick-strike outline on brown floor; wedge runs under the HUD bar. Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (code-blind PASS 12:46 PM CT Sun 11 Oct). Real game fix behind it: F22 pattern cues were drawn about 2.6 km from fights whose parent is translated (enemy_pattern_telegraph top_level order), plus the Earth Fist fill, Commands meter at bottom-centre and den cairn moved off the arena. Disclosed: the dodge is the smoke's 4 m fixture step. Polish notes (not blocking): faint quick-strike outline on brown floor; wedge runs under the HUD bar. Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
@@ -273,7 +273,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F04-1-2/JUDGE.md; ralph/reports/VISUAL-PROOF/F04-2/",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator. Code-blind PASS 2:36 PM CT: Halder lane, Vess field, Oreth cone each readable at the normal camera, with hit and miss outcomes. Non-blocking: small landing disc, banner occlusion.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator. Code-blind PASS 2:36 PM CT: Halder lane, Vess field, Oreth cone each readable at the normal camera, with hit and miss outcomes. Non-blocking: small landing disc, banner occlusion.",
      "audit_index": 2
     },
     {
@@ -434,7 +434,7 @@
      "status": "met",
      "evidence": "ralph/reports/EV-HOME-KEY/F06-0.md (smoke_cloudreach_foot_regions_witness EXIT=0 at a44e2509)",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (3:17 PM CT). All six Cloudreach regions reached on foot from the disclosed generated Cloudreach save; no sealed or gated entry. Disclosed: walker helper alignments 6a8bc44e/d50b3329; logging-only prints in the passing run; 2 of 4 runs stalled in the helper's 0.3 m re-centre (helper-only, open).",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (3:17 PM CT). All six Cloudreach regions reached on foot from the disclosed generated Cloudreach save; no sealed or gated entry. Disclosed: walker helper alignments 6a8bc44e/d50b3329; logging-only prints in the passing run; 2 of 4 runs stalled in the helper's 0.3 m re-centre (helper-only, open).",
      "audit_index": 1
     },
     {
@@ -560,7 +560,7 @@
      "status": "met",
      "evidence": "tests/smoke_cloudreach_veyra_exam_witness.gd --live-combat (home-key lane e6f05dc6): live input, 0 FAIL, exit 0. One Veyra victory; three relays struck by the piloted creature; stages crosswind_command, anchor_overload, break_the_eye; wind lanes and the relay arc pushed the body; the lee pocket held",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (2:09 PM CT Sun 11 Oct). Started from the disclosed generated cloudreach_veyra save (proof rules v2). No game or test change needed. Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (2:09 PM CT Sun 11 Oct). Started from the disclosed generated cloudreach_veyra save (proof rules v2). No game or test change needed. Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
@@ -686,7 +686,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F10-1/ (coop-chapters cdba89fb): two-process proof stormwood_f10_side_chain_receipts exit 0: all six Stormwood chains' receipts reach both peers, persist through save/reload in the world and character files, and are never granted twice",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (Sun 11 Oct, ~1:40 PM CT). Test alignments (pre-approved, disclosed): RD-17 guest-first portal migration, _tap process_frame flush, two stale Rook press counts. Slow-host wall-clock scaling disclosed. Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (Sun 11 Oct, ~1:40 PM CT). Test alignments (pre-approved, disclosed): RD-17 guest-first portal migration, _tap process_frame flush, two stale Rook press counts. Slow-host wall-clock scaling disclosed. Lands with the consolidated PR.",
      "audit_index": 1
     },
     {
@@ -718,7 +718,7 @@
      "status": "met",
      "evidence": "ralph/reports/VISUAL-PROOF/F10-5/ (smoke_stormwood_surge_audio 20/0, 89/89 cues played=true); ralph/reports/AUDIO/stormwood-nine/ (spectral and loop checks)",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (4:46 PM CT). All nine cues fire in the production Stormwood scene at the right phase and strike timing; sound quality is checked offline per owner decision #5 (no owner listen). Disclosed: the smoke's own fixtures (pinned trainer, Surge clock set near each boundary).",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (4:46 PM CT). All nine cues fire in the production Stormwood scene at the right phase and strike timing; sound quality is checked offline per owner decision #5 (no owner listen). Disclosed: the smoke's own fixtures (pinned trainer, Surge clock set near each boundary).",
      "audit_index": 5
     },
     {
@@ -758,7 +758,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F11-1/ (three two-process PASS runs: mirror, guest-at-five releases a belt, host-at-five lets it go)",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (f8a9848c0, 2:25 PM CT). Disclosed: fixtures, guest-first setup crossing, _tap process_frame flush, party_grant before join. Open finding routed: host-first portal crossing leaves the guest uncorrelated.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (f8a9848c0, 2:25 PM CT). Disclosed: fixtures, guest-first setup crossing, _tap process_frame flush, party_grant before join. Open finding routed: host-first portal crossing leaves the guest uncorrelated.",
      "audit_index": 1
     },
     {
@@ -766,7 +766,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F11-2/ (coop-loop ad7ad2ee on tb/ev-coordinator 19b70236): two-process proof stormwood_f11_disconnect_guest_rejoins_answers_once, verdict PASS, exit 0: the guest drops with the Stormheart offer owed, rejoins and answers once; a second drop and both reloads grant nothing; one Stormheart each, on disk",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (2:05 PM CT Sun 11 Oct). Disclosed: RD-17 guest-first portal fixture (bc150ca5 pattern), slow-host wall-clock scaling (budget_s x3, scratch copy). Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (2:05 PM CT Sun 11 Oct). Disclosed: RD-17 guest-first portal fixture (bc150ca5 pattern), slow-host wall-clock scaling (budget_s x3, scratch copy). Lands with the consolidated PR.",
      "audit_index": 2
     },
     {
@@ -1005,7 +1005,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F15-0/: two-process ENet proof f15_dock_exchange_once, exit 0, 43 PASS/0 FAIL: guest pays the Reedhaven repair once (memory and disk), host never charged, stale resends charge nothing, host's saved world holds both actions",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (coop-chapters 810cd705, 11:16 AM CT Sun 11 Oct). Disclosed: declared-start host save and portal fixture from the scenario itself; slow-host wall-clock deadlines scaled in a scratch copy only (pre-approved; no step, expectation or peer-side sim budget changed). Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (coop-chapters 810cd705, 11:16 AM CT Sun 11 Oct). Disclosed: declared-start host save and portal fixture from the scenario itself; slow-host wall-clock deadlines scaled in a scratch copy only (pre-approved; no step, expectation or peer-side sim budget changed). Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
@@ -1340,7 +1340,7 @@
      "status": "met",
      "evidence": "tests/smoke_f20_ending.gd (home-key lane c4359f23): 68/0, counts_as_f20_3_proof=true: after credits, reload resumes the completed world with bounties, rematch admission and remaining activities available",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (home-key c4359f23, 12:37 PM CT Sun 11 Oct), the same ending smoke run as F44#1, with the same disclosed fixtures. Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (home-key c4359f23, 12:37 PM CT Sun 11 Oct), the same ending smoke run as F44#1, with the same disclosed fixtures. Lands with the consolidated PR.",
      "audit_index": 3
     },
     {
@@ -1405,7 +1405,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F21-4/JUDGE.md; ralph/reports/VISUAL-PROOF/F21-4/ (matrix.json 9/9, overlap 0)",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator. Size matrix on clear ground, code-blind PASS 3:39 PM CT. Disclosed shared staging offset. Live matrix and Medium not producible on llvmpipe.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator. Size matrix on clear ground, code-blind PASS 3:39 PM CT. Disclosed shared staging offset. Live matrix and Medium not producible on llvmpipe.",
      "audit_index": 4
     },
     {
@@ -1600,7 +1600,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F24-5/: test_f24_host_commands (forged other-character command refused by host.commit_tether_command; Rally affects only the commander's creature) + 2-peer ENet smoke owner_passive_rejoin ALL CHECKS PASSED (guest Item goes through the host; never buffs the other player's creature)",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (systems-a 408438850, 10:43 AM CT Sun 11 Oct). Own-creature-only and host validation are both shown on real peers and at unit level. Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (systems-a 408438850, 10:43 AM CT Sun 11 Oct). Own-creature-only and host validation are both shown on real peers and at unit level. Lands with the consolidated PR.",
      "audit_index": 5
     }
    ]
@@ -1763,7 +1763,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F27-1/: engine smokes for all six sources on the production path: wild defeat, attuned node, release, essence crop (53/53), Den groom (5/5: pays once, same creature refused, daily cap refused, next day pays) and research claim through the Journal (+5 essence, receipt, no second payout); units 95/0",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (systems-a bfeb15c6, 12:11 PM CT Sun 11 Oct). Two new smokes authorized for the groom and research sources. Disclosed: groom cap reached via a seeded count; research task completion seeded. Game fix b6c266ad: the host's own saved groom was never announced, so a solo/host Den panel stuck on 'Retry original transaction'. Coordinator re-ran groom/essence/master units (54 tests, 0 failed). Open UX nit: the Den panel shows raw refusal codes. Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (systems-a bfeb15c6, 12:11 PM CT Sun 11 Oct). Two new smokes authorized for the groom and research sources. Disclosed: groom cap reached via a seeded count; research task completion seeded. Game fix b6c266ad: the host's own saved groom was never announced, so a solo/host Den panel stuck on 'Retry original transaction'. Coordinator re-ran groom/essence/master units (54 tests, 0 failed). Open UX nit: the Den panel shows raw refusal codes. Lands with the consolidated PR.",
      "audit_index": 1
     },
     {
@@ -1852,7 +1852,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F28-4/: 2-peer ENet smoke f28_masters ALL CHECKS PASSED (88 PASS): host and guest each win master_t1 and hold feast_t1 exactly once, unchanged across a second chest, reconnect, save/reload and chest replay",
      "gap": "Follow-up (not this criterion): the guest's first chest press right after the duel is refused while its checkpoints settle, with no auto-retry; the recipe lands on the second press.",
-     "note": "Landed: Evidenced on tb/ev-coordinator (systems-a d40a5aba, 10:54 AM CT Sun 11 Oct). Coordinator read the check list: per-participant grant and no regrant are each asserted on real peers. Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (systems-a d40a5aba, 10:54 AM CT Sun 11 Oct). Coordinator read the check list: per-participant grant and no regrant are each asserted on real peers. Lands with the consolidated PR.",
      "audit_index": 4
     },
     {
@@ -2015,7 +2015,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F31-2/: smoke_f31_relic_hang_power 17/17 (real Shrine Room hang grants exactly the 4 Tidewake attachment recipes once with a receipt; one power chosen in the real chooser; re-open and a second hang never stack; save/load keeps relics, 8 recipes and the one power) + Meadows attachment paid-path smoke on a fresh world; units test_relic_hang_attachment_blueprints (each relic unlocks the next tier, Stormwood the reserved fifth, once) and test_relic_power_selection (one at a time, save/reload, guest owner install): 15 tests/0 failed (coordinator re-run)",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (systems-a ba4c8568, 12:00 PM CT Sun 11 Oct). Two-peer rejoin of a relic hang is already proven under F48#1 (met); the chosen power's own two-peer rejoin isn't separately shown. Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (systems-a ba4c8568, 12:00 PM CT Sun 11 Oct). Two-peer rejoin of a relic hang is already proven under F48#1 (met); the chosen power's own two-peer rejoin isn't separately shown. Lands with the consolidated PR.",
      "audit_index": 2
     },
     {
@@ -2137,7 +2137,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F33#0/EVIDENCE.md: tests/test_creature_gear.gd 8 tests/303 assertions/0 failed (four tiers x harness/charm x +0..+3, all 24 upgrade links, den equip + forge upgrade path)",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (systems-b deddb6a6d, 10:45 AM CT Sun 11 Oct). Coordinator re-read the test list against the criterion: slots, four tiers and +1..+3 upgrades are each asserted. Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (systems-b deddb6a6d, 10:45 AM CT Sun 11 Oct). Coordinator re-read the test list against the criterion: slots, four tiers and +1..+3 upgrades are each asserted. Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
@@ -2153,7 +2153,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F33#2/VERDICT.md (tb/ev-fights cf197ec1): at 24 seeds every finale's matching tier passes C2 (Nerissa tidesteel x3; Marrow stormglass after F22#4 lever 2; Veyra skyglass; Warden rootiron), Terrapup vs Veyra/Marrow via COMBAT §7 advantaged rule ((b) 0.18 / 0.38 ≤ 0.55); the prior tier costs more for every pilot. Coordinator re-check 2:50 AM CT Tue 13 Oct.",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-fights (lands in the next consolidated PR).",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-fights (lands in the next consolidated PR).",
      "audit_index": 2
     },
     {
@@ -2169,7 +2169,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F33#4/: pouch tiers bind Tether Commands per tier (test_f24_host_commands pouch tests, 0 failed); 2-peer harness_max_hp extended with a production leave, wipe and returning join: ALL CHECKS PASSED 42/0 (guest's creature gear written to its own file, restored from file on rejoin, no duplicate, host applies it to the guest's creature only, host's own creature never has it); reconnect_keeps_character ALL PASSED (84) for trainer gear",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (systems-b 2f4a69d4, 12:17 PM CT Sun 11 Oct). Disclosed: slow-host wall-clock budgets raised locally, uncommitted (coordinator-approved); harness_unwear isolation step re-wears the guest's gear before the leave. Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (systems-b 2f4a69d4, 12:17 PM CT Sun 11 Oct). Disclosed: slow-host wall-clock budgets raised locally, uncommitted (coordinator-approved); harness_unwear isolation step re-wears the guest's gear before the leave. Lands with the consolidated PR.",
      "audit_index": 4
     }
    ]
@@ -2259,7 +2259,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F35-1-3/JUDGE.md; ralph/reports/VISUAL-PROOF/F35-1-3/ (smoke 24 cases 0 fail)",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator. All 12 uniques incl. stormursa fire and arrive with ultimates enabled; reworked Veridian/Fulgocobra/Solmane code-blind PASS 3:02 PM CT.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator. All 12 uniques incl. stormursa fire and arrive with ultimates enabled; reworked Veridian/Fulgocobra/Solmane code-blind PASS 3:02 PM CT.",
      "audit_index": 1
     },
     {
@@ -2275,7 +2275,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F35-1-3/JUDGE.md; ralph/reports/VISUAL-PROOF/F35-3/ (4/4 arrivals, all attackers posed)",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator. Four-at-once code-blind PASS 3:37 PM CT after harness fix e6fef6aad (attackers no longer fall through the stage); timing 2.4 s (unit). Frame time stays with F25#4.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator. Four-at-once code-blind PASS 3:37 PM CT after harness fix e6fef6aad (attackers no longer fall through the stage); timing 2.4 s (unit). Frame time stays with F25#4.",
      "audit_index": 3
     },
     {
@@ -3373,7 +3373,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F37-4/: two-peer proof f37_ripplet_rejoin (first run) PASS: mounted mid-dive disk save, link drop, character wiped, returning join restores the same Ripplet ride (swim mode 2, host agrees, nothing stale) and a fresh Jump resumes the saved dive; f12_remote_rider_identity_reconnect (saddled Aquaryn) control also PASS",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (systems-a d2044ea2, 12:00 PM CT Sun 11 Oct). Two game fixes: restore_swim_mount no longer re-selects an already-active mount during rejoin admission; the Ripplet motion validator re-anchors on a connection's first host-approved mount (open finding: one 1 s validation window passes unjudged once per connection). Approved test change: the saddle check skips the saddle-less Ripplet ride only. Coordinator re-ran test_f37_ripplet_traversal + water encounter units (22 tests, 0 failed). Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (systems-a d2044ea2, 12:00 PM CT Sun 11 Oct). Two game fixes: restore_swim_mount no longer re-selects an already-active mount during rejoin admission; the Ripplet motion validator re-anchors on a connection's first host-approved mount (open finding: one 1 s validation window passes unjudged once per connection). Approved test change: the saddle check skips the saddle-less Ripplet ride only. Coordinator re-ran test_f37_ripplet_traversal + water encounter units (22 tests, 0 failed). Lands with the consolidated PR.",
      "audit_index": 4
     }
    ]
@@ -5129,7 +5129,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F44#0/EVIDENCE.md; ralph/reports/EV-REMATCH-WIRING/README.md (Tidewake/Cloudreach); systems lane F44 receipts (Meadows captain_riverwatch r1 21/21, Stormwood officer_maren 24/24) at fda1c9b5",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (4:04 PM CT). All four biomes: rematch admitted through ordinary input, tier levels, reward paid once, no repay after reload, cooldown kept. Game fixes: 11af2aff (Tidewake/Cloudreach rematch sources), 57ac1753 (Stormwood director sent rematch specs to the chapter hub, dropping them). 7 withdrawn Meadows patrol profiles left for the owner.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (4:04 PM CT). All four biomes: rematch admitted through ordinary input, tier levels, reward paid once, no repay after reload, cooldown kept. Game fixes: 11af2aff (Tidewake/Cloudreach rematch sources), 57ac1753 (Stormwood director sent rematch specs to the chapter hub, dropping them). 7 withdrawn Meadows patrol profiles left for the owner.",
      "audit_index": 0
     },
     {
@@ -5137,7 +5137,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F44#0/ (meadows_captain_riverwatch_endgame.json, stormwood_officer_maren_endgame.json); ralph/reports/EV-REMATCH-WIRING/ (Tidewake Yara and Cloudreach Voss endgame)",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (3a4ccad13, 7:39 PM CT). Endgame rematches in all four biomes at L55-60: won, unique reward paid once, no change on reload, cooldown kept (Meadows 21/21 L58, Stormwood 24/24 L58, Tidewake 21/21 L55, Cloudreach 21/21 L58). Disclosed: generated post-credits profiles (generator allows up to the cap ceiling of 60). Balance note: an L55 team lost the Meadows endgame twice, so endgame rematches assume post-credits leveling.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (3a4ccad13, 7:39 PM CT). Endgame rematches in all four biomes at L55-60: won, unique reward paid once, no change on reload, cooldown kept (Meadows 21/21 L58, Stormwood 24/24 L58, Tidewake 21/21 L55, Cloudreach 21/21 L58). Disclosed: generated post-credits profiles (generator allows up to the cap ceiling of 60). Balance note: an L55 team lost the Meadows endgame twice, so endgame rematches assume post-credits leveling.",
      "audit_index": 1
     },
     {
@@ -5227,7 +5227,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F46-0/ (systems-a c9707f79): new test_onboarding_lesson_triggers (each of the 8 lessons becomes due only on its own unlock, in authored order, once; 2 tests/150 assertions, coordinator re-ran 0 failed) + smoke_modal_stacking (all 8 lessons skip at every line) + smoke_opening (Grandpa's real Home Key lesson read with the pad)",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (12:45 PM CT Sun 11 Oct) under proof rules v2: unlock triggers and per-line skip are proven for all eight, and in-world delivery shown for the Home Key lesson; the other seven's in-world delivery rides the route chunks. Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (12:45 PM CT Sun 11 Oct) under proof rules v2: unlock triggers and per-line skip are proven for all eight, and in-world delivery shown for the Home Key lesson; the other seven's in-world delivery rides the route chunks. Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
@@ -5235,7 +5235,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F46-1/ (systems-a 66570ed2): the game's own next goal (journal, HUD, hint) recorded at generated chapter gates and judged code-blind: Upper Meadows, Meadows to Tidewake, Tidewake to Cloudreach and Cloudreach to Stormwood all PASS; units 49/0",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (1:17 PM CT Sun 11 Oct) under proof rules v2. UX fix 4e9be6c6: the capped-Master goal names its place ('Challenge Mira Emberlane at Ironwood Ridge...') and a held next-realm key shows as a secondary 'Then:' line. Minor note: at home, the Meadows to Tidewake line doesn't say to return to Meadows. Unobserved minor gates are listed in the evidence. Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (1:17 PM CT Sun 11 Oct) under proof rules v2. UX fix 4e9be6c6: the capped-Master goal names its place ('Challenge Mira Emberlane at Ironwood Ridge...') and a held next-realm key shows as a secondary 'Then:' line. Minor note: at home, the Meadows to Tidewake line doesn't say to return to Meadows. Unobserved minor gates are listed in the evidence. Lands with the consolidated PR.",
      "audit_index": 1
     },
     {
@@ -5276,7 +5276,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F47-1/ (systems-a 46b83a39 on tb/ev-coordinator bc0f5631): tests/test_f27_route_ledger.mjs 7/7 within 27/27 node tests: the main path reaches each band's entry with no mandatory grinding and no deficits; optional grinding measurably speeds progress in every biome (Stormwood 2.2 lvl/h). Node ledger tests are now wired into CI (ci.yml changes job)",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (1:30 PM CT Sun 11 Oct) after owner ruling A: Cloudreach Senn/Maela XP bonus reverted; the Cloudreach ledger reads F27's entry team (essence-led levelling, RD-03); test_cloudreach_route_ledger 10/10; Voss re-won live from a generated L40 boundary. Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (1:30 PM CT Sun 11 Oct) after owner ruling A: Cloudreach Senn/Maela XP bonus reverted; the Cloudreach ledger reads F27's entry team (essence-led levelling, RD-03); test_cloudreach_route_ledger 10/10; Voss re-won live from a generated L40 boundary. Lands with the consolidated PR.",
      "audit_index": 1
     },
     {
@@ -5284,7 +5284,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F47-2/ (systems-a 4f0c3ce6): tools/economy_supply_census.mjs + tests/test_economy_supply_census.mjs (data-only, coordinator re-ran 0 failed). All four bands are solvent for four characters against required demand (matching gear tier at +0; +1 also solvent), counting site stock and every configured non-site source (Master chests, trainer rewards, Warrens, chains, bounties, vendors, shed)",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (12:52 PM CT Sun 11 Oct). Caveats for the owner: solvency depends on each character winning its own Master chest (without them berries, cliffglass_ore, windworn_heartwood, skyplume and sparkfur fall short); the optional +3-everything column is short only Cloudreach skyplume (185 of 200). Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (12:52 PM CT Sun 11 Oct). Caveats for the owner: solvency depends on each character winning its own Master chest (without them berries, cliffglass_ore, windworn_heartwood, skyplume and sparkfur fall short); the optional +3-everything column is short only Cloudreach skyplume (185 of 200). Lands with the consolidated PR.",
      "audit_index": 2
     },
     {
@@ -5325,7 +5325,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F48-0/ (coop-loop 01260f57): new two-peer net smoke tests/smoke_net_f48_coop_loop.gd ALL CHECKS PASSED (500 checks, 0 failures): hub (Home Key) -> homestead crafting at the host Kitchen -> portal (Hall arch to Meadows) -> Master (each wins and opens its own chest) -> feast -> Warden boss (each gets its own key and relic) -> relic hang, with per-leg checks that receipts are separate, single and not duplicated; then a host save/reload and guest rejoin with identical state",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (1:35 PM CT Sun 11 Oct). Registered in CI net shards (SHARD_COUNT 13 to 14; ci.yml matrix; test_ci_net_shards 15/15). Disclosed: setup fixtures and teleports between legs (proof rules v2); slow-host wall-clock budgets raised locally, uncommitted; 977 s here against a 1200 s CI timeout. Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (1:35 PM CT Sun 11 Oct). Registered in CI net shards (SHARD_COUNT 13 to 14; ci.yml matrix; test_ci_net_shards 15/15). Disclosed: setup fixtures and teleports between legs (proof rules v2); slow-host wall-clock budgets raised locally, uncommitted; 977 s here against a 1200 s CI timeout. Lands with the consolidated PR.",
      "audit_index": 0
     },
     {
@@ -5349,7 +5349,7 @@
      "status": "met",
      "evidence": "ralph/reports/EVIDENCE/F48#3/ (systems-b 91b4fba3): 2-peer f48_behind_friend ALL CHECKS PASSED 34/0 (0/2 before the fix): the guest follows the host through the unlocked arch honestly; owner_passive_sync + replay units 62 tests/1116 assertions, 0 failed (coordinator re-ran)",
      "gap": "",
-     "note": "Landed: Evidenced on tb/ev-coordinator (1:06 PM CT Sun 11 Oct). Game fix in owner_passive_sync._inputs_host_batch: a guest's travel-reset input that arrives before the host's proof is held, bounded by multiplayer.json owner_passive_travel_reset_wait_s = 60, and matches only its own travel's proof; past the bound the original travel_baseline_mismatch refusal applies. All original refusal asserts are kept, plus a new no-proof case. Previously this stream error blocked every owner-gated guest action, including the Home Key. Disclosed: slow-host wall-clock budgets raised locally, uncommitted. Lands with the consolidated PR.",
+     "note": "Landed on main through the consolidated coordinator PRs of 13-15 Oct (#682-#689). Original record: Evidenced on tb/ev-coordinator (1:06 PM CT Sun 11 Oct). Game fix in owner_passive_sync._inputs_host_batch: a guest's travel-reset input that arrives before the host's proof is held, bounded by multiplayer.json owner_passive_travel_reset_wait_s = 60, and matches only its own travel's proof; past the bound the original travel_baseline_mismatch refusal applies. All original refusal asserts are kept, plus a new no-proof case. Previously this stream error blocked every owner-gated guest action, including the Home Key. Disclosed: slow-host wall-clock budgets raised locally, uncommitted. Lands with the consolidated PR.",
      "audit_index": 3
     }
    ]
