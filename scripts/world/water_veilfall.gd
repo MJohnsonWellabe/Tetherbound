@@ -301,6 +301,10 @@ func _build_distance_presentation() -> void:
 	# F39#5 (close-1024): the pale-limestone regrade is its own section, ON
 	# since round ls1 (scores in `_why_veilfall_rock_candidate`).
 	rock_rules = preload("res://scripts/world/tidewake_look_profile.gd").overlay(rock_rules, "veilfall_rock_candidate")
+	# F39#4 (close-1024, coordinator: fix the gully terrain, not the camera): finer
+	# cliff texture, shorter runnels and tighter bedding so the steep faces stop
+	# reading as one stretched smear. Material only; OFF until judged.
+	rock_rules = preload("res://scripts/world/tidewake_look_profile.gd").overlay(rock_rules, "veilfall_rock_detail_candidate")
 	material_receipt = ROCK_MATERIAL.install(world.get("terrain"), rock_rules)
 	var falls := FALLS.new()
 	falls.name = "VeilfallWhiteFalls"
