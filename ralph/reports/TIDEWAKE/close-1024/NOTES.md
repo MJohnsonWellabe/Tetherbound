@@ -4,6 +4,41 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 15:20 CT **INFO (ls1/VERDICT.md): the limestone ships ON; vf2 beats vf1.** All captures are on the #725-fixed code.
+  - **Limestone on its other views** (seven F39-look shore and lesson views): 5.29 against main 5.24, which is level.
+  - **Limestone in the Venn fight:** 4.90 against 4.77.
+  - **Decision:** with vf1's close-up (+0.85), every view it changes is judged and none regresses, so `veilfall_rock_candidate` ships **ON** at `tb/tidewake` 76865d9ec.
+  - **vf2:** the Meshy 7-8 cascade tiers plus the plunge ring on the probed gully ground score **3.55 against limestone 2.85**, all three judges higher (extrapolated below the anchors).
+    - It stays OFF until its fight frames are judged, because the Venn fight camera stands at the Veilfall camp. Those are capturing now.
+    - The judges still want one rock family: the pale tiers read pasted against the black formation slabs.
+  - **F39#4 and F39#5 stay open** (all below 6.7).
+  - A new land head with the limestone follows once the captures free Godot.
+
+- 2026-10-24 14:10 CT **ANSWER (#725 review): p1 and p2 were not skewed. Regression test at `tb/tidewake` ff70faa67.**
+  1. **p1 and p2 capture code.**
+     - All four p1/p2 arms were captured at **8ce49fdaf**: `p1_ctl`, `p1_cand`, `p2_ctl` and `p2_cand` (each frame's `metadata.json` `source_sha`).
+     - At that commit `shaders/stone_field.gdshader` has no `clump_patch`/`tide_band` uniforms, and `_build_stones` has no such keys. The grouping code first appears at 46d30d74d.
+     - So neither arm rendered grouped pebbles. The 5.59 against 5.02 and 6.02 against 5.72 deltas are the props and the Deep Watch clusters alone.
+     - The only frames that carried the bug are my limestone `ls_ctl`/`ls_cand` captures (46d30d74d), in both arms, and they have not been judged. I am recapturing them on the fixed code before judging.
+  2. **The fix** is cherry-picked onto the lane as cabf2caab.
+  3. **The regression test** is `test_water_dune_cover.gd::test_stone_grouping_never_inherits_the_grass_profile_keys`.
+     - It builds the stone tier from the real shipping Tidewake profile, which sets grass `clump_patch_*` at the top level and has no stones override.
+     - It asserts all five stone uniforms stay at the shader's 0.0 default.
+     - It also asserts that a `stones` override still reaches the shader.
+     - It **fails on the pre-fix `grass_field.gd` and passes on the fix**. `test_water_dune_cover`: 10 tests, 168 assertions, 0 failed.
+
+- 2026-10-24 13:40 CT **READY: `tb/tidewake-land` at c542dcd8c** (c542dcd8cbdc99efa9a24c010a60066dd8e6af42), one commit on origin/main 45865499d.
+  - **ON:** the Meshy beach props (p1: 5.59 against 5.02) and the Deep Watch shore site through `shipped_sites` (p2: 6.02 against 5.72).
+  - **OFF:**
+    - `stones_candidate`: the grouped-pebble shader uniforms, which do nothing at their defaults.
+    - The capture-only `--tidewake-look-sections` arg.
+  - **Not included:** the limestone and the Meshy 7-8 GLBs.
+    - The limestone's extra views are captured, but the fight frames failed on a fresh main asset that was not yet imported here. Both are rerunning now.
+    - The Meshy 7-8 GLBs (vf2) stay on the lane, unjudged.
+  - **Checks:** 24 tests and 384 assertions covering tidewake look, model preload, material family, dune cover and groves, 0 failed. `water_alpha` is per your note: CI-green on main and environmental here.
+  - **No F39 row closes**, because every score here is below 6.7.
+  - I force-pushed this branch over beeea5516. Both are my own land heads; this one is rebuilt from origin/main.
+
 - 2026-10-24 13:05 CT **INFO / BLOCKED (not this lane's): `smoke_net_water_alpha` is red on unchanged origin/main 45865499d in this container.**
   - Run: `tools/net/run_net_smoke.sh water_alpha` on two real peers.
   - The failing check is s15, "Client's engagement is authorized by remote host", with detail "No host-authorized local fight". Every other step passes.
