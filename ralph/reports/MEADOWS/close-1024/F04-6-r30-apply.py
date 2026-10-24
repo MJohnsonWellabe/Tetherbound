@@ -18,8 +18,8 @@ S["captain_riverwatch"]["pieces"].append({"model": "meadows_riverwatch_hut", "di
     "offset": [4.2, 1.0], "scale": 2.22, "yaw_deg": -30.0, "sink_m": -1.65, "state": "after"})
 drop_banner("captain_ridge")
 S["captain_ridge"]["pieces"].append({"model": "meadows_ridge_pylon", "dir": M + "meadows_ridge_pylon",
-    "offset": [2.6, 0.8], "scale": 3.43, "yaw_deg": 70.0, "sink_m": -0.63, "state": "after"})
+    "offset": [3.2, 1.6], "scale": 3.43, "yaw_deg": 250.0, "sink_m": -0.63, "state": "after"})
 S["captain_field"]["pieces"].append({"model": "meadows_field_tent", "dir": M + "meadows_field_tent",
-    "offset": [-7.2, 2.6], "scale": 2.25, "yaw_deg": 25.0, "sink_m": -0.92, "state": "after"})
+    "offset": [-6.2, 1.8], "scale": 2.25, "yaw_deg": 25.0, "sink_m": -0.92, "state": "after"})
 open(P, "w").write(json.dumps(d, indent=2, ensure_ascii=False) + "\n")
 print("applied r30")
