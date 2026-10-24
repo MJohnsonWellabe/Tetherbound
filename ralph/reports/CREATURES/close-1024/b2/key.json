@@ -1,0 +1,83 @@
+{
+ "Sw": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Uw": {
+  "anchor": false,
+  "label": "F36 trailpup b2",
+  "A": "<scratch>/b2/sides/trailpup-base.png",
+  "B": "<scratch>/b2/sides/trailpup-c.png"
+ },
+ "Zu": {
+  "anchor": false,
+  "label": "F36 frostclaw b2",
+  "A": "<scratch>/b2/sides/frostclaw-c.png",
+  "B": "<scratch>/b2/sides/frostclaw-base.png"
+ },
+ "Ay": {
+  "anchor": false,
+  "label": "F36 mudsnout b2",
+  "A": "<scratch>/b2/sides/mudsnout-base.png",
+  "B": "<scratch>/b2/sides/mudsnout-c.png"
+ },
+ "Mb": {
+  "anchor": false,
+  "label": "F36 stormtrail b2",
+  "A": "<scratch>/b2/sides/stormtrail-base.png",
+  "B": "<scratch>/b2/sides/stormtrail-c.png"
+ },
+ "Vi": {
+  "anchor": false,
+  "label": "F36 burrowback b2",
+  "A": "<scratch>/b2/sides/burrowback-base.png",
+  "B": "<scratch>/b2/sides/burrowback-c.png"
+ },
+ "Ns": {
+  "anchor": false,
+  "label": "F36 cindercub b2",
+  "A": "<scratch>/b2/sides/cindercub-c.png",
+  "B": "<scratch>/b2/sides/cindercub-base.png"
+ },
+ "Jl": {
+  "anchor": false,
+  "label": "F36 shadelet b2",
+  "A": "<scratch>/b2/sides/shadelet-base.png",
+  "B": "<scratch>/b2/sides/shadelet-c.png"
+ },
+ "Xy": {
+  "anchor": false,
+  "label": "F36 ashtusk b2",
+  "A": "<scratch>/b2/sides/ashtusk-base.png",
+  "B": "<scratch>/b2/sides/ashtusk-c.png"
+ },
+ "Bn": {
+  "anchor": false,
+  "label": "F36 tuskroot b2",
+  "A": "<scratch>/b2/sides/tuskroot-c.png",
+  "B": "<scratch>/b2/sides/tuskroot-base.png"
+ },
+ "Ti": {
+  "anchor": false,
+  "label": "F36 nightburrow b2",
+  "A": "<scratch>/b2/sides/nightburrow-base.png",
+  "B": "<scratch>/b2/sides/nightburrow-c.png"
+ },
+ "Ly": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Ch": {
+  "anchor": false,
+  "label": "F36 riftfrill b2",
+  "A": "<scratch>/b2/sides/riftfrill-c.png",
+  "B": "<scratch>/b2/sides/riftfrill-base.png"
+ },
+ "Gs": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ }
+}

@@ -272,7 +272,7 @@ func _charge_case(tell_first: bool) -> Dictionary:
 func _charge_step(peer: int, command: String, args: Dictionary, deadline: int) -> Dictionary:
 	var remaining := deadline - Time.get_ticks_msec() - int(WALL_SLACK_MS)
 	if remaining <= 0:
-		check(false, "(b) the original charge deadline expired before %s" % command)
+		check(false, "the charge case deadline expired before %s" % command)
 		return {}
 	var budget := mini(int(_budgets.get("step_budget_frames", DEFAULT_STEP_BUDGET_FRAMES)),
 		floori(float(remaining) / NOMINAL_MS_PER_PHYSICS_FRAME))

@@ -1,0 +1,13 @@
+Pv: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+Vy: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+In: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+Lh: none
+Ng: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+Fh: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+Ow: none
+Em: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+Vi: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+Gg: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+Ml: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+Vg: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Swim reads as standing or wading rather than swimming"; "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+Ji: none
