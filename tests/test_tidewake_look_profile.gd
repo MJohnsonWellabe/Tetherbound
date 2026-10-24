@@ -22,8 +22,7 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 	var off: Array = raw.get("sections_off", [])
 	for section: String in ["current_flow", "current_flow_visual", "night_creature_floor",
 			"dock_village_candidate", "dock_dressing_candidate", "surfaces_candidate",
-			"veilfall_rock_candidate", "stones_candidate",
-			"veilfall_hero_candidate"]:
+			"stones_candidate", "veilfall_hero_candidate"]:
 		assert_true(off.has(section), "%s is unjudged and must ship off" % section)
 		assert_true(raw.has(section), "%s ships in the file for capture" % section)
 	# close-1024 lt2: the time-of-day regrade cleared the CPU-provisional bar
@@ -42,6 +41,11 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 		"the props' mapped score is recorded in the config")
 	assert_false((PROFILE.settings().get("landmark_props_candidate", []) as Array).is_empty(),
 		"the beach props reach play")
+	# close-1024 ls1: the limestone beat shipping on the close-up and held level
+	# on every other view it changes, so it ships ON with its scores beside it.
+	assert_false(off.has("veilfall_rock_candidate"), "the judged limestone ships on")
+	assert_true(str(raw.get("_why_veilfall_rock_candidate", "")).contains("4.20"),
+		"the limestone's mapped score is recorded in the config")
 	var config := PROFILE.settings()
 	for section: Variant in off:
 		assert_false(config.has(str(section)), "%s must not reach play" % section)
