@@ -20,9 +20,19 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PROFILE.CONFIG))
 	assert_true(bool(raw.enabled), "the judged Tidewake look ships on")
 	var off: Array = raw.get("sections_off", [])
-	for section: String in ["current_flow", "current_flow_visual", "night_creature_floor"]:
+	for section: String in ["current_flow", "current_flow_visual", "night_creature_floor",
+			"dock_village_candidate", "surfaces_candidate"]:
 		assert_true(off.has(section), "%s is unjudged and must ship off" % section)
 		assert_true(raw.has(section), "%s ships in the file for capture" % section)
+	# close-1024 lt2: the time-of-day regrade cleared the CPU-provisional bar
+	# (mapped 7.07 in a confirming batch), so it ships ON and must stay out of
+	# sections_off, with its score recorded beside it.
+	assert_true(raw.has("lighting_candidate"), "the judged regrade ships in the file")
+	assert_false(off.has("lighting_candidate"), "the judged regrade ships on")
+	assert_true(str(raw.get("_why_lighting_candidate", "")).contains("7.07"),
+		"the regrade's mapped score is recorded in the config")
+	var regraded: Dictionary = PROFILE.settings().get("lighting_candidate", {})
+	assert_true(regraded.get("times", {}).has("golden"), "the regrade reaches play")
 	var config := PROFILE.settings()
 	for section: Variant in off:
 		assert_false(config.has(str(section)), "%s must not reach play" % section)

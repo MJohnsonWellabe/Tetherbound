@@ -462,8 +462,23 @@ func _fixed_views(look: Node) -> void:
 	for view: Dictionary in parsed.views:
 		if not _arg("views").is_empty() and not str(view.id) in _arg("views").split(","):
 			continue
-		if str(view.weather) != "clear":
-			_fail("This bounded look set only supports explicit clear weather")
+		# F39#3 needs the biome matrix under weather as well as clear, and this
+		# path used to refuse anything but clear outright. The view's own
+		# declared preset is applied to the same frozen WorldWeather the clear
+		# path already pins (processing stays off, so nothing drifts between
+		# frames), and the preset is recorded per frame below. An unknown name
+		# still fails rather than capturing a frame that silently says "clear".
+		var view_weather := str(view.weather)
+		if weather != null:
+			weather.call("set_weather", view_weather)
+			# set_weather() falls back to "clear" for a name the realm does not
+			# have, so read it back: a frame must never be captured under a
+			# different preset from the one the camera set asked for.
+			if str(weather.call("weather")) != view_weather:
+				_fail("Fixed view asks for a weather preset this realm has not got: " + view_weather)
+				return
+		elif view_weather != "clear":
+			_fail("Fixed view asks for weather but the realm has no WorldWeather")
 			return
 		var stand: Array = view.stand
 		player.global_position = Vector3(float(stand[0]), float(stand[1]), float(stand[2]))
@@ -480,7 +495,7 @@ func _fixed_views(look: Node) -> void:
 		var clock: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/art.json"))
 		look.call("resume_at_elapsed", float(view.time) / 24.0 * float(clock.day_length_seconds))
 		look.call("set_clock_frozen", true)
-		await _settle(45)
+		await _settle(45 if view_weather == "clear" else 70)
 		var record := view.duplicate(true)
 		record["actual_stand"] = [player.global_position.x, player.global_position.y, player.global_position.z]
 		if bool(view.get("require_swimming", false)):
