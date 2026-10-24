@@ -263,10 +263,15 @@ void fragment() {
 		// Wavelet caps: small crescent whitecaps, denser toward the lane core.
 		vec2 cap_uv = vec2(across_m, moving_s * 1.6) / max(chop_cap_scale_m, 0.5);
 		vec2 cap_cell = floor(cap_uv);
-		vec2 cap_local = fract(cap_uv) - 0.5;
+		// Each cap is jittered, sized and faded per cell so the field never
+		// reads as a regular grid of arcs.
+		vec2 cap_jitter = vec2(hash(cap_cell + vec2(1.7, 3.3)), hash(cap_cell + vec2(8.1, 2.9))) - 0.5;
+		float cap_size = mix(0.55, 1.0, hash(cap_cell + vec2(6.6, 0.4)));
+		vec2 cap_local = (fract(cap_uv) - 0.5 - cap_jitter * 0.45) / cap_size;
 		float cap_on = step(hash(cap_cell + vec2(4.2, 9.1)), chop_cap_density * (1.0 - across));
 		float crescent = 1.0 - smoothstep(0.04, 0.12, abs(cap_local.y + cap_local.x * cap_local.x * 1.2 - 0.05));
 		crescent *= 1.0 - smoothstep(0.25, 0.42, abs(cap_local.x));
+		crescent *= mix(0.35, 1.0, lace) * mix(0.4, 1.0, hash(cap_cell + vec2(2.2, 7.7)));
 		float cap = cap_on * crescent * chop_cap_opacity;
 		foam = clamp(max(foam, cap), 0.0, 1.0);
 		seam_a = clamp(seam * seam_opacity, 0.0, 1.0) * ends * fade;
