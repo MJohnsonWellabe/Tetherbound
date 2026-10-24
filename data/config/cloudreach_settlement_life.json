@@ -1012,9 +1012,9 @@
   "candidate": {
     "enabled": false,
     "preview_arg": "--cloudreach-settlement-r18-candidate",
-    "_why": "F08#3 r18 (flag OFF, not judged yet): the three GPU r17 asks (6.57 mapped, ralph/reports/GPU-PASS/F08-3/r17/VERDICT.md). (1) Near field: cobbles, low stones and bushes 0.6-3.2 m behind each fixed stand (between the production camera and the trainer, where the c18 control's bottom third is bare lawn/dirt) at 1.2-3.8 m to each side, so the bottom of frame starts with dressing, plus a stronger far haze. (2) Night: moonlit cloud ring #3e4a66 -> #8a93a8 (was a saturated navy blob), settlement night ambient 1.8 #44507a -> 2.3 #57628c and a brighter, paler moon so islets and cliffs keep value instead of going black. (3) Islets: seven islets of 10-56 m at varied heights instead of five of 30-38 m.",
+    "_why": "F08#3 r18 (flag OFF, not judged yet): the three GPU r17 asks (6.57 mapped, ralph/reports/GPU-PASS/F08-3/r17/VERDICT.md). (1) Near field (r18b: the r18 cobbles were removed; the flat paving model scales by height, so two 0.22 m pieces covered the whole foreground in a rubble carpet on the CPU pre-look): low stones and bushes 0.6-3.2 m behind each fixed stand (between the production camera and the trainer, where the c18 control's bottom third is bare lawn/dirt) at 1.2-3.8 m to each side, so the bottom of frame starts with dressing, plus a stronger far haze. (2) Night: moonlit cloud ring #3e4a66 -> #8a93a8 (was a saturated navy blob), settlement night ambient 1.8 #44507a -> 2.3 #57628c and a brighter, paler moon so islets and cliffs keep value instead of going black. (3) Islets: seven islets of 10-56 m at varied heights instead of five of 30-38 m.",
     "overlay": {
-      "revision": "f08-3-settlement-life-r18-candidate",
+      "revision": "f08-3-settlement-life-r18b-candidate",
       "stand_pattern": [
         {
           "asset": "paving",
@@ -1202,20 +1202,6 @@
           "lateral_m": -11.5,
           "height": 5.0,
           "yaw": 60
-        },
-        {
-          "asset": "paving",
-          "along_m": -1.4,
-          "lateral_m": 1.3,
-          "height": 0.22,
-          "yaw": 40.0
-        },
-        {
-          "asset": "paving",
-          "along_m": -2.6,
-          "lateral_m": -1.2,
-          "height": 0.22,
-          "yaw": 160.0
         },
         {
           "asset": "rock_low",
