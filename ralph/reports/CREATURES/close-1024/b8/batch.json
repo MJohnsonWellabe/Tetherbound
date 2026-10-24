@@ -1,0 +1,116 @@
+{
+ "anchors": {
+  "f36_0_npc:C1A": [
+   7.2,
+   7.3,
+   7.2
+  ],
+  "f36_0_npc:C1B": [
+   7.2,
+   7.2,
+   7.3
+  ],
+  "craft:before": [
+   5.2,
+   5.5,
+   5.2
+  ],
+  "craft:after": [
+   6.6,
+   6.9,
+   6.6
+  ],
+  "f36_0_gap:C1A": [
+   6.4,
+   5.5,
+   6.3
+  ],
+  "f36_0_gap:C1B": [
+   5.8,
+   5.3,
+   5.8
+  ]
+ },
+ "candidates": {
+  "pipwing live": [
+   6.3,
+   6.3,
+   6.0
+  ],
+  "pipwing cand": [
+   6.4,
+   6.5,
+   5.6
+  ],
+  "glimmermoth live": [
+   6.0,
+   6.2,
+   5.9
+  ],
+  "glimmermoth cand": [
+   6.5,
+   6.6,
+   6.4
+  ],
+  "aeriex live": [
+   6.2,
+   6.3,
+   6.1
+  ],
+  "aeriex cand": [
+   6.6,
+   6.8,
+   6.5
+  ],
+  "galecrest cand": [
+   6.3,
+   7.4,
+   6.6
+  ],
+  "galecrest live": [
+   6.6,
+   7.1,
+   6.3
+  ],
+  "brooktail live": [
+   6.2,
+   5.9,
+   5.9
+  ],
+  "brooktail cand": [
+   6.6,
+   6.3,
+   6.5
+  ],
+  "duskhush live": [
+   6.4,
+   6.8,
+   6.0
+  ],
+  "duskhush cand": [
+   6.8,
+   6.6,
+   5.9
+  ],
+  "abyssal_guardian cand": [
+   6.0,
+   6.3,
+   6.4
+  ],
+  "abyssal_guardian live": [
+   5.7,
+   6.0,
+   6.0
+  ],
+  "galewisp cand": [
+   6.4,
+   6.8,
+   6.5
+  ],
+  "galewisp live": [
+   6.1,
+   6.4,
+   6.0
+  ]
+ }
+}

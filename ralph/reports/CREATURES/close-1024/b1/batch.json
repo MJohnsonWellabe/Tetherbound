@@ -1,0 +1,6 @@
+{"anchors": {"f36_0_gap:C3B": [6.2, 6.2, 5.4], "f36_0_gap:C3A": [6.6, 6.6, 6.3],
+             "p2_094_r4:Y_after": [5.8, 5.8, 6.3], "p2_094_r4:X_before": [4.3, 4.3, 4.2],
+             "f36_0_npc:C1A": [7.0, 7.0, 6.8], "f36_0_npc:C1B": [7.0, 7.0, 6.8]},
+ "candidates": {"bramblebun live": [5.0, 4.8, 4.5], "bramblebun nat pilot": [6.8, 7.0, 6.8],
+                "terrapup live": [5.4, 5.4, 5.0], "terrapup nat pilot": [6.9, 6.9, 6.9],
+                "riverdrake live": [5.2, 4.9, 4.6], "riverdrake nat pilot": [6.6, 6.9, 6.5]}}

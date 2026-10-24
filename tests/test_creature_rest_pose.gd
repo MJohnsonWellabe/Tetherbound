@@ -169,8 +169,8 @@ func test_terrapup_authored_prone_rest_is_idempotent_and_reversible() -> void:
 	assert_true(_pivot().transform.basis.is_equal_approx(pivot_before.basis),
 		"the complete fitted model is neither tipped nor scaled")
 	var model_offset := _body.call("_rest_vector", config.get("model_position_offset", [])) as Vector3
-	assert_almost_eq(model_offset.y, 1.0302, 0.001,
-		"the live-skin probe grounds the final 90-degree flank at -0.100m")
+	assert_almost_eq(model_offset.y, 0.0, 0.001,
+		"the naturalistic pilot's rest clip is grounded in its own keys (close-1024)")
 	var deform := config.get("torso_vertex_contact_deform", {}) as Dictionary
 	assert_true(deform.is_empty(), "the authored clip needs no runtime mesh deformation")
 	var applied_root := skeleton.get_bone_pose(skeleton.find_bone("root"))
