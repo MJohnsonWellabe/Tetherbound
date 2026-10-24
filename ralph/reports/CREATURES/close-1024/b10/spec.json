@@ -1,0 +1,11 @@
+[
+ {
+  "label": "F36 bramblebun grass b10",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b10/sides/bramblebun-grass-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b10/sides/bramblebun-grass-c.png",
+  "brief": "A wild creature in real Meadows grass at catch-throwing range, gameplay camera and HUD. Judge whether the creature reads clearly against the grass at a glance - silhouette, value and colour separation from the ground, visible face - and its model and material as the game's real look.",
+  "defects": [
+   "the creature blends into the grass (too little value or colour separation from the ground to read at a glance)"
+  ]
+ }
+]
