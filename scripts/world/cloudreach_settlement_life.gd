@@ -75,6 +75,10 @@ static func items_config() -> Dictionary:
 	if raw is Dictionary and (bool(raw.get("enabled", false))
 			or OS.get_cmdline_user_args().has(str(raw.get("preview_arg", "--none")))):
 		_items = raw
+		var next: Variant = raw.get("candidate", {})
+		if next is Dictionary and (bool(next.get("enabled", false))
+				or OS.get_cmdline_user_args().has(str(next.get("preview_arg", "--none")))):
+			_items = merge(raw, next.get("overlay", {}))
 	return _items
 
 
@@ -256,6 +260,18 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 						mesh.visible = false
 					if child is GeometryInstance3D:
 						(child as GeometryInstance3D).visible = false
+		# A hero piece that replaces part of a procedural mass: hide the named
+		# children under one node (colliders and the walkable crown stay).
+		for rule: Dictionary in site.get("hide_child_visuals", []):
+			var under := root.get_node_or_null(NodePath(str(rule.get("under", ""))))
+			if under == null:
+				continue
+			for child: Node in under.get_children():
+				if (rule.get("prefixes", []) as Array).any(func(prefix: String) -> bool: return str(child.name).begins_with(prefix)):
+					for mesh: GeometryInstance3D in child.find_children("*", "GeometryInstance3D", true, false):
+						mesh.visible = false
+					if child is GeometryInstance3D:
+						(child as GeometryInstance3D).visible = false
 		# A hero shell that encloses the court: hide every older visual inside
 		# its ring (colliders stay), keeping this candidate's own dressing.
 		var within := float(site.get("hide_visual_within_m", 0.0))
@@ -399,7 +415,7 @@ func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
 		float(spec.height), float(spec.get("yaw", 0.0)), float(spec.get("width", 0.0)))
 	if model == null:
 		return
-	_dress_building(model, str(spec.asset), path, bool(spec.get("double_sided", false)))
+	_dress_building(model, str(spec.asset), path, bool(spec.get("double_sided", false)), str(spec.get("tint", "")))
 	var placement := model.get_parent() as Node3D
 	var bounds: AABB = BOUNDS.measure(model)
 	var size := bounds.size * (float(spec.height) / maxf(bounds.size.y, 0.01))
@@ -437,9 +453,9 @@ func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
 ## where the asset ships a mask of its baked amber panes.
 ## double_sided: a hollow shell the camera can stand inside (its inner faces
 ## would otherwise be culled and the court would open onto the sky).
-func _dress_building(model: Node3D, asset: String, path := "", double_sided := false) -> void:
+func _dress_building(model: Node3D, asset: String, path := "", double_sided := false, tint_override := "") -> void:
 	var spec := config() if not config().is_empty() else items_config()
-	var tint := Color(str(spec.get("building_tint", "#ffffff")))
+	var tint := Color(tint_override if not tint_override.is_empty() else str(spec.get("building_tint", "#ffffff")))
 	var mask_path := (path if not path.is_empty() else MESHY % [asset, asset]).trim_suffix(".glb") + "_window_mask.png"
 	var mask: Texture2D = load(mask_path) as Texture2D if ResourceLoader.exists(mask_path) else null
 	var glow := Color(str(spec.get("window_colour", "#ffa04a")))

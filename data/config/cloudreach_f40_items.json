@@ -507,5 +507,36 @@
     }
   ],
   "_p2_021_r3": "r3: near stack moved to 13 m along / 14 m out so it no longer crowds the trainer; a second, higher ledge tier at 44 m; the shrine cloud ring dropped to 55-110 m so its dithered base sits below the plateau rim.",
-  "_stand_pattern_void_note": "P2-021 r5: past the shrine plateau rim the walk cameras saw only sky. Island spires (installed strata spire cluster) stand in the void beyond the rim (void_ok: stand height, top void_top_m above it, only on the walk stands), their bases sunk in a cloud sea just below the rim. r4's rim-hung shelves sat under the sightline and one read as a floating slab, so they are gone."
+  "_stand_pattern_void_note": "P2-021 r5: past the shrine plateau rim the walk cameras saw only sky. Island spires (installed strata spire cluster) stand in the void beyond the rim (void_ok: stand height, top void_top_m above it, only on the walk stands), their bases sunk in a cloud sea just below the rim. r4's rim-hung shelves sat under the sightline and one read as a floating slab, so they are gone.",
+  "candidate": {
+    "enabled": false,
+    "preview_arg": "--cloudreach-f40-heartstone-candidate",
+    "_why": "F40 P2-021 (impact 100; parked at CPU mapped 6.37, every judge named the smooth untextured cyan egg): the coordinator's Meshy heartstone (assets/props/meshy-1024/cloudreach_sky_shrine_heartstone, task ids in provenance.jsonl, drafted reference assets/environment/cloudreach/meshy_refs/sky_shrine/heartstone_ref.jpg) replaces the procedural HeartSocketGlow sphere and the two AncientWindArmature tori at the same centre (local y 8.5), 5.8 m tall (crystal ~3.8 m, 2.1x the 1.80 m trainer). Untinted (the settlement building tint would grey the crystal), visual only, no collision; the heartstone focal light and suspension arms stay. Flag OFF; not judged yet.",
+    "overlay": {
+      "settlements": {
+        "SkyShrineHeartstone": {
+          "buildings": [
+            {
+              "asset": "sky_shrine_heartstone",
+              "glb": "res://assets/props/meshy-1024/cloudreach_sky_shrine_heartstone/cloudreach_sky_shrine_heartstone.glb",
+              "at": [
+                0.0,
+                5.6,
+                0.0
+              ],
+              "height": 5.8,
+              "yaw": 0.0,
+              "collision_fraction": 0.0,
+              "no_snap": true,
+              "tint": "#ffffff"
+            }
+          ],
+          "hide_visual_prefixes": [
+            "HeartSocketGlow",
+            "AncientWindArmature"
+          ]
+        }
+      }
+    }
+  }
 }
