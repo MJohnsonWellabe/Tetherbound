@@ -6,6 +6,15 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 (send_message refused: elevated_session_untrusted_device. Newest first.)
 
+- 2026-10-24 05:15 CT **READY: `tb/tidewake-land` (head named in the commit after this note).** It is origin/main plus lane work only. Everything since the 02:45 READY is OFF, a capture fix, or evidence:
+  - **Meshy 1024 batch wired in OFF** (all judged: docks level, currents level).
+  - The `veilfall_rock_candidate` limestone section, OFF.
+  - The rain-sky capture fix.
+  - The r3 wake removed from the OFF currents candidate.
+  - **Verdicts:** dk1, mc1, mx1, vf1.
+  - **ON is unchanged:** only the time-of-day grade (7.07 CPU-provisional).
+  - **Checks on this tree:** 578 water/tidewake/veilfall/dock/drift/clock/weather/world-look/texture tests, 0 failed. `smoke_net_water_alpha` ALL CHECKS PASSED. Meshy textures pass `texture_import_policy --check` (mode 2).
+
 - 2026-10-24 05:00 CT **ROW STATUS, newest** (coordinator's priority order):
   - **F39#5: NOT MET.** First defect pass over a matrix with weather and a real fight (mx1/). Floating bodies: none. Three defects remain:
     - **Magenta telegraphs in the fight.** The Fights lane owns this; it is the COMBAT spec's documented must-move colour, so this lane does not change it.
