@@ -913,9 +913,10 @@ LANDED_1024B_SHOVE = ('galecrest', 'aeriex', 'galewisp', 'tanglevolt', 'stormcap
 # Close-1024 coordinator call (24 Oct, as on 22 Oct): ON where the candidate beat
 # shipping in a confirming batch, under 6.7 mapped, with no judge seeing the
 # faint end still standing (b2-b4, b8-b9). Ashtusk lands with its side topple.
-LANDED_1024_BELOW_BAR = ('cindercub', 'ashtusk', 'nightburrow', 'shadelet', 'mosshock', 'stormtrail',
-                         'riftfrill', 'abyssal_guardian', 'brooktail', 'glimmermoth', 'tempestwing',
-                         'ribbonray')
+# Nightburrow, Stormtrail and Riftfrill passed too but follow their bases onto
+# the naturalistic remakes (own clips), so they are not listed.
+LANDED_1024_BELOW_BAR = ('cindercub', 'ashtusk', 'shadelet', 'mosshock', 'abyssal_guardian', 'brooktail',
+                         'glimmermoth', 'tempestwing', 'ribbonray')
 LANDED_1024_TOPPLE = ('ashtusk',)
 SHOVE_1024_RUN = (SHOVE_1024 if CANDIDATE_1024 else LANDED_1024_SHOVE) + LANDED_1024B_SHOVE + LANDED_1024_BELOW_BAR
 if '--candidate-1024b' in sys.argv:

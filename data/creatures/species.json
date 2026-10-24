@@ -87,7 +87,7 @@
         "can_carry": true,
         "requires_item": "saddle",
         "_comment_shrink_owner_1024": "Owner 24 Oct: Just shrink it (exception to the never-shrink rule for this naturalistic pilot only). At 3.85 m the pilot is 6.84 m nose to tail and combat admission could not seat it in the Warrens mouth (6.0 m ring) or the Hall elite room (7.0 m) with the 0.6 m clearance, so the elite fight never formed. Uniform scale 3.85 -> 3.20 m (x0.8312): radius, seat and dismount distance scaled by the same ratio; still well above the 1.80 m trainer. Terrapup has no evolution line, so no ladder order changes.",
-        "_comment_mount_nat1022": "Close-1024: the naturalistic pilot's stone-plated back stands 3.71 m at the seat (measured on its ride clip; installed back about 3.10 m), so the seat rises 3.264 -> 3.80 m, 0.09 m above the plates and inside the 3.85 m declared height (test_rideable_roster).",
+        "_comment_mount_nat1022": "Close-1024: the naturalistic pilot's stone-plated back stands 3.71 m at the seat (measured on its ride clip; installed back about 3.10 m), so the seat rose 3.264 -> 3.80 m at 3.85 m; after the owner's 24 Oct shrink to 3.20 m the back measures 3.08 m and the seat is 3.16 m, inside the declared height (test_rideable_roster).",
         "mount_offset": [0.0, 3.16, -0.208696],
         "ride_speed_multiplier": 1.7,
         "dismount_distance": 2.226087
