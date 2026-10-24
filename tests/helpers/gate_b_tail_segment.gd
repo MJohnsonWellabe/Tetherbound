@@ -1203,8 +1203,13 @@ func _clear_of_every_offer() -> bool:
 			away = -_forward()
 		# Fan out: straight away first, then progressively wider either side.
 		var lean := deg_to_rad(35.0 * float((attempt + 1) / 2) * (1.0 if attempt % 2 == 0 else -1.0))
-		var heading := _open_heading(away.normalized().rotated(Vector3.UP, lean), CLEAR_STEP_M)
-		var step := _player.global_position + heading * CLEAR_STEP_M
+		# Lengthen the step each pair of attempts (3.5 -> 8 m): on the built
+		# homestead plot the Forge, Kitchen and Altar prompts sit about 4 m
+		# apart, and a 3.5 m step only hopped from one prompt into the next
+		# (training_t4_kitchen, 24 Oct).
+		var length := CLEAR_STEP_M + 1.5 * float(attempt / 2)
+		var heading := _open_heading(away.normalized().rotated(Vector3.UP, lean), length)
+		var step := _player.global_position + heading * length
 		await _walk_to(step, "clear of the '%s' prompt" % str(offer.get("label", "")), 0.8, false)
 	_fail("could not get clear of the interact line; Build cannot be opened from here. "
 		+ "winner=%s provider=%s" % [str(_arbiter.call("winner")),
