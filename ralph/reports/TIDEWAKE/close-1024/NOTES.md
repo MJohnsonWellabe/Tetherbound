@@ -4,6 +4,17 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-25 00:20 CT **READY for the GPU lane: F39#4 relief, two arms, on `tb/tidewake` dba5f5e8a.**
+  - **Command:** `capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --views=veilfall-near,veilfall-rain`, on Medium and High.
+  - **Control:** no `--tidewake-look-sections`.
+  - **Arm 1:** `--tidewake-look-sections=veilfall_formation_relief_candidate`.
+  - **Arm 2:** `--tidewake-look-sections=veilfall_formation_relief_fill_candidate` (judge it alone).
+  - **Both arms are verified live in game:** each gate crag renders about 10k relief vertices instead of the coarse ~190, and arm 2's crag material carries the 0.14 fill. The inside-the-collider test covers both amplitudes.
+  - **Plainly, though:** on CPU neither arm changes the veilfall-near frame (pixel diff at noise level).
+    - The crags sit mostly behind or inside the terrain from that stand.
+    - The huge dark faceted planes that fill the frame are Terrain3D, per the raycast probe: the hike's graded corridor and the steep cone flanks.
+    - So the GPU arms may show little. The heightfield is the real target, as you said. I'm on it next, under the hike walk and route constraints.
+
 - 2026-10-24 23:50 CT **INFO / QUESTION: F39#4 relief pass, the first result.**
   - **Why not the heightfield:** the Veilfall base terrain is a smooth analytic cone. The faceted "slabs" are:
     - (a) the `exterior_composition` gate crags: 9 segments x 4 rings, 34-76 m tall;
