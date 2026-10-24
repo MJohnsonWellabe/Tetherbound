@@ -1,0 +1,136 @@
+{
+ "anchors": {
+  "f36_0_gap:C7B": [
+   5.6,
+   5.5,
+   6.0
+  ],
+  "f36_0_gap:C7A": [
+   6.0,
+   6.0,
+   6.2
+  ],
+  "f36_0_npc:C1A": [
+   7.0,
+   7.0,
+   7.2
+  ],
+  "f36_0_npc:C1B": [
+   7.0,
+   7.0,
+   7.2
+  ],
+  "p2_094_r4:Y_after": [
+   6.0,
+   6.3,
+   6.3
+  ],
+  "p2_094_r4:X_before": [
+   4.2,
+   4.6,
+   4.3
+  ]
+ },
+ "candidates": {
+  "water_riptusk live": [
+   5.6,
+   5.6,
+   5.6
+  ],
+  "water_riptusk cand": [
+   6.8,
+   6.8,
+   6.8
+  ],
+  "water_tidecoil cand": [
+   6.2,
+   6.5,
+   6.5
+  ],
+  "water_tidecoil live": [
+   5.0,
+   5.4,
+   5.4
+  ],
+  "water_abyssal_guardian live": [
+   5.4,
+   5.3,
+   5.3
+  ],
+  "water_abyssal_guardian cand": [
+   6.6,
+   7.0,
+   6.6
+  ],
+  "water_cannonback cand": [
+   5.3,
+   5.3,
+   5.7
+  ],
+  "water_cannonback live": [
+   5.6,
+   5.8,
+   6.0
+  ],
+  "water_mirejaw live": [
+   4.6,
+   4.6,
+   4.6
+  ],
+  "water_mirejaw cand": [
+   5.6,
+   5.7,
+   5.8
+  ],
+  "water_mangrove_monitor live": [
+   5.3,
+   5.2,
+   5.2
+  ],
+  "water_mangrove_monitor cand": [
+   6.2,
+   6.7,
+   6.4
+  ],
+  "tuskroot live": [
+   6.2,
+   5.6,
+   5.9
+  ],
+  "tuskroot cand": [
+   6.8,
+   6.8,
+   6.8
+  ],
+  "mangrove_monitor cand": [
+   5.6,
+   5.5,
+   5.9
+  ],
+  "mangrove_monitor live": [
+   6.2,
+   6.7,
+   6.6
+  ],
+  "water_sirenseal live": [
+   5.4,
+   5.2,
+   5.2
+  ],
+  "water_sirenseal cand": [
+   6.5,
+   6.5,
+   6.3
+  ],
+  "water_aquaryn cand": [
+   6.6,
+   6.7,
+   6.4
+  ],
+  "water_aquaryn live": [
+   5.6,
+   5.3,
+   5.3
+  ]
+ }
+}
