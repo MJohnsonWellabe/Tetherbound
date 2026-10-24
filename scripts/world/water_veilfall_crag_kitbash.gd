@@ -31,7 +31,7 @@ func build(world: Node3D, veilfall: Node3D, preview: Dictionary = {}) -> void:
 	if not cfg is Dictionary or not bool(cfg.get("crag_kitbash_enabled", false)) or bool(world.get("simulation_only")):
 		return
 	_k = cfg
-	# close-1024 `veilfall_family_candidate` (OFF in play): the crown crags'
+	# close-1024 `veilfall_family_candidate` (ON since rf1): the crown crags'
 	# shader colours toward the shipped limestone, so the mountain is one rock family.
 	var family: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get(
 		"veilfall_family_candidate", {}).get("crag_kitbash", {})
