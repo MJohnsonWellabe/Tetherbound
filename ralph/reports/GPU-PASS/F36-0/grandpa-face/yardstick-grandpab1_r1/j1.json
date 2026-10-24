@@ -1,0 +1,23 @@
+{"sets": {"Ll": {"A": {"bar_a": 3.0, "defects": {}},
+                    "B": {"bar_a": 3.6, "defects": {}},
+                    "bar_b": "no", "bar_b_note": "A murky brown-black frame with no purple storm sky, light shafts or lightning, flat magenta telegraph shapes instead of real effects, and a HUD that covers about a third of every frame sink it well below the Palworld boss-fight shot."},
+          "Fv": {"A": {"bar_a": 6.6, "defects": {}},
+                 "B": {"bar_a": 6.8, "defects": {}},
+                 "bar_b": "yes", "bar_b_note": "A clear, appealing old-villager design with a strong silhouette and a Meadows olive and brown palette would sit beside Palworld's humans, though the grey stage shows nothing of Valheim-class light."},
+          "Yi": {"A": {"bar_a": 3.8, "defects": {}},
+                 "B": {"bar_a": 5.4, "defects": {}},
+                 "bar_b": "no", "bar_b_note": "B's furry boar is on the right track, but A's clay-toy boar and both versions' small, ungrounded faint poses fall short of the owner's Stormursa and Stormcapra bar."},
+          "Ji": {"A": {"bar_a": 5.6, "defects": {}},
+                 "B": {"bar_a": 5.6, "defects": {}},
+                 "bar_b": "no", "bar_b_note": "The ochre coat and hat silhouette read well, but the flat, mask-like face with tiny dark eyes and the near-black lighting look a finish tier below Palworld's characters."},
+          "Zx": {"A": {"bar_a": 6.6, "defects": {}},
+                 "B": {"bar_a": 6.8, "defects": {}},
+                 "bar_b": "yes", "bar_b_note": "The same strong elder-villager model as Fv, with appealing proportions and a natural palette, holds up at Palworld character finish, although no atmosphere is shown."},
+          "Ml": {"A": {"bar_a": 5.0, "defects": {}},
+                 "B": {"bar_a": 4.2, "defects": {}},
+                 "bar_b": "no", "bar_b_note": "Smeared, blurry ground textures, a flat unlit sky with little haze, and low-detail tiled walls at the tunnel site look like an early prototype next to Palworld's dense, lit meadows."}},
+ "top_changes": [
+   {"change": "Stormwood fight: keep canopy and trunks out of the camera (fade or cull occluders), lift the creatures with rim light against the dark floor, add the purple storm sky and lightning grade, slim the HUD so the fight fills the frame, and replace the flat magenta telegraph rings and slabs with real ground effects (cracks, stones, lightning) that land with an impact.", "kind": "scene"},
+   {"change": "Meadows ground and sky: replace the smeared, stretched grass and dirt ground textures with crisp, layered grass cards and clumped groves, and add Valheim-style aerial haze, a sky gradient and warm sun grading so the aftermath sites read as the key art's world. Make every after frame remove the enemy banner and leave a clear, site-specific aftermath.", "kind": "scene"},
+   {"change": "Rebuild the boar (Yi) to the owner's naturalistic bar: real fur, visible legs and hooves, scaled taller than the 1.80 m trainer, with grounded faint poses. Also give the Ji ranger a modelled face with readable eyes in place of the flat mask-like head.", "kind": "new_art"}
+ ]}

@@ -1,0 +1,123 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8293,
+  "least_squares_slope": 0.991,
+  "method": "linear",
+  "slope": 0.991,
+  "intercept": 1.1114,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.579,
+ "top_anchor_reference": 7.03,
+ "confirming_batch": false,
+ "anchors": {
+  "f36_0_gap:C7B": {
+   "measured": 5.633,
+   "reference": 6.3,
+   "mapped": 6.694,
+   "residual": -0.394
+  },
+  "f36_0_gap:C7A": {
+   "measured": 6.267,
+   "reference": 7.03,
+   "mapped": 7.321,
+   "residual": -0.291
+  },
+  "f36_0_npc:C4B": {
+   "measured": 5.0,
+   "reference": 5.8,
+   "mapped": 6.066,
+   "residual": -0.266
+  },
+  "f36_0_npc:C4A": {
+   "measured": 4.967,
+   "reference": 5.83,
+   "mapped": 6.033,
+   "residual": -0.203
+  },
+  "f04_6_r22:control": {
+   "measured": 3.867,
+   "reference": 5.83,
+   "mapped": 4.943,
+   "residual": 0.887
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.033,
+   "reference": 6.75,
+   "mapped": 6.099,
+   "residual": 0.651
+  },
+  "p2_094_r4:X_before": {
+   "measured": 3.333,
+   "reference": 3.5,
+   "mapped": 4.415,
+   "residual": -0.915
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 5.133,
+   "reference": 6.73,
+   "mapped": 6.198,
+   "residual": 0.532
+  }
+ },
+ "candidates": {
+  "Grandpa face Medium cand|ctl | grandpa-ctl-Medium": {
+   "measured_mean": 6.833,
+   "mapped_mean": 7.88,
+   "mapped_judges": [
+    7.85,
+    7.95,
+    7.85
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "Grandpa face Medium cand|ctl | grandpa-cand-Medium": {
+   "measured_mean": 7.033,
+   "mapped_mean": 8.08,
+   "mapped_judges": [
+    8.05,
+    8.15,
+    8.05
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "Grandpa face High cand|ctl | grandpa-ctl-High": {
+   "measured_mean": 6.833,
+   "mapped_mean": 7.88,
+   "mapped_judges": [
+    7.85,
+    7.95,
+    7.85
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "Grandpa face High cand|ctl | grandpa-cand-High": {
+   "measured_mean": 7.033,
+   "mapped_mean": 8.08,
+   "mapped_judges": [
+    8.05,
+    8.15,
+    8.05
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": true,
+   "meets_bar": true
+  }
+ },
+ "warnings": [
+  "meets the bar only above the top anchor (7.03): Grandpa face High cand|ctl | grandpa-cand-High, Grandpa face High cand|ctl | grandpa-ctl-High, Grandpa face Medium cand|ctl | grandpa-cand-Medium, Grandpa face Medium cand|ctl | grandpa-ctl-Medium; extrapolated, confirm in a batch whose anchors reach at least 7.35 (anchor_tiles.py --include craft or --include f36_0_npc:C1)",
+  "some candidates lie more than 0.5 outside the anchors' measured range (extrapolated)"
+ ]
+}

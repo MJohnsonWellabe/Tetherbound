@@ -1,0 +1,34 @@
+{
+ "Ll": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Fv": {
+  "anchor": false,
+  "label": "Grandpa face High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\grandpa\\sides\\grandpa-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\grandpa\\sides\\grandpa-cand-High.png"
+ },
+ "Yi": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Ji": {
+  "anchor": true,
+  "A": "f36_0_npc:C6B",
+  "B": "f36_0_npc:C6A"
+ },
+ "Zx": {
+  "anchor": false,
+  "label": "Grandpa face Medium cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\grandpa\\sides\\grandpa-ctl-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\grandpa\\sides\\grandpa-cand-Medium.png"
+ },
+ "Ml": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ }
+}
