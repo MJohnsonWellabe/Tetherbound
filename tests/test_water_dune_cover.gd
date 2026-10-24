@@ -186,3 +186,33 @@ func test_pioneer_eligibility_tracks_only_the_requested_shore_texture() -> void:
 	assert_eq(GRASS.pioneer_ground_mask(["grass", "shore", "rock"], cfg), 0)
 	cfg.dune_colony_shape = false
 	assert_eq(GRASS.pioneer_ground_mask(["grass", "shore", "rock"], cfg), 0)
+
+
+class ShorePlacementProbe extends "res://scripts/world/water_vegetation.gd":
+	var placed_layers: Array = []
+
+	func _accept(point: Vector2, _centre: Vector2, _radius: float, _layer: Dictionary) -> Dictionary:
+		return {"valid": true, "position": Vector3(point.x, 2.0, point.y), "normal": Vector3.UP}
+
+	func _append_batch(_batches: Dictionary, _model_path: String, island_id: String,
+			_position: Vector3, _entry: Dictionary, layer: String = "") -> void:
+		placed_layers.append("%s/%s" % [island_id, layer])
+
+
+## close-1024 p2: the shore-ecology candidate stays OFF as a whole, but a site
+## listed in `shipped_sites` (judged better than shipping) places on its own.
+func test_shipped_shore_site_places_while_the_candidate_stays_off() -> void:
+	var settings := DUNES.config()
+	var candidate: Dictionary = settings.get("shore_ecology_candidate", {})
+	assert_false(bool(candidate.get("enabled", true)), "the whole shore-ecology candidate ships off")
+	var shipped: Array = candidate.get("shipped_sites", [])
+	assert_eq(shipped, ["f26_deep_watch_beach_transition"], "only the judged Deep Watch site ships")
+	assert_true(str(candidate.get("_why_shipped_sites", "")).contains("6.02"), "its score is recorded")
+	var probe := ShorePlacementProbe.new()
+	probe._dune_settings = settings
+	for island_id: String in ["deep_watch", "first_shore"]:
+		probe._place_shore_ecology_candidate({"scatter_seed": 7}, {}, Vector2.ZERO, 120.0, island_id)
+	assert_true(probe.placed_layers.size() > 0, "the shipped Deep Watch site places")
+	for entry: String in probe.placed_layers:
+		assert_true(entry.begins_with("deep_watch/"), "an unjudged island's site stays off: %s" % entry)
+	probe.free()

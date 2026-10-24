@@ -157,6 +157,10 @@
   "shore_ecology_candidate": {
     "_comment": "P2-008 authored coastal composition candidate. Disabled until matched before/after blind review. Small, irregular rock, strand-grass and flowering-scrub colonies sit in selected shoreline arcs; route, landmark, camp, NPC and encounter clearances plus terrain support checks remain authoritative.",
     "enabled": false,
+    "_why_shipped_sites": "close-1024 p2 (24 Oct 2026; coordinator: ship Deep Watch alone under beats-main): the Deep Watch site mapped 6.02 against shipping 5.72 on the P2-008-shore day/night views, all three code-blind judges higher (confirming batch, slope 0.991, r 0.86, anchor RMSE 0.62). CPU-provisional evidence only, below the 6.7 bar, so P2-008 is not met. The other islands' sites stay OFF until judged. Evidence: ralph/reports/TIDEWAKE/close-1024/p2.",
+    "shipped_sites": [
+      "f26_deep_watch_beach_transition"
+    ],
     "preserve_islands": [
       "veilfall"
     ],
