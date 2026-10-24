@@ -4,6 +4,20 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-25 02:00 CT **READY for the GPU lane: the Tidewake F39 matrix baseline (owner: worst-first to 6, then 7, then 7.5).**
+  - **Capture:** at main (124a7393c or later), once at Medium and once at High, each command with `--capture-size=1920x1080 --preset=<Medium|High> --source-sha=<main sha>`:
+    1. Look and weather, all nine stands: `tools/capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json`.
+       - First Shore at 12:00, 18:00, 23:00 and in rain.
+       - The swim-lesson dune at 12:00, 05:00 and in rain.
+       - The Veilfall close-up, clear and in rain.
+    2. Currents and docks, the F13#5 stands: `tools/capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/T2-current.json`.
+    3. Shore landforms: `tools/capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/P2-008-shore.json` (Deep Watch day and night).
+    4. A real fight: `tools/phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn --seed=2042 --expected-resolution=1920x1080`.
+       - The output must be a fresh `res://ralph/reports/VISUAL/phase2/tidewake/<dir>`.
+       - Judge four matched-moment state frames: tell-start 0.65, hit 0.70, hit 1.08 and tell-ended 1.32 s, which all seeded runs share.
+  - **Known sub-6 on CPU:** the Veilfall close-up (4.2-4.4, with the heightfield relief F queued) and the Venn fight (5.4-5.7).
+  - **Still queued:** declutter D and the Forward+ fixes.
+
 - 2026-10-25 01:30 CT **READY for the GPU lane: F39#4 heightfield relief (hf1/VERDICT.md), `tb/tidewake` 2ea20e386.**
   - **CPU-visible:** close-up 4.39 against 4.17, matched Venn fight 5.72 against 5.36 (both all three judges higher), shore views level. The fight's black slab moved from PRESENT to PARTIAL.
   - **Gameplay:** the hike's walk band is byte-identical with the relief on and off (new `test_water_veilfall_relief_walk`). The route-grade audit is identical. Anchors and gate are unchanged.
