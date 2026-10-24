@@ -23,7 +23,7 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 	for section: String in ["current_flow", "current_flow_visual", "night_creature_floor",
 			"dock_village_candidate", "dock_dressing_candidate", "surfaces_candidate",
 			"stones_candidate", "veilfall_hero_candidate",
-			"veilfall_family_candidate"]:
+			"veilfall_family_candidate", "veilfall_facade_candidate"]:
 		assert_true(off.has(section), "%s is unjudged and must ship off" % section)
 		assert_true(raw.has(section), "%s ships in the file for capture" % section)
 	# close-1024 lt2: the time-of-day regrade cleared the CPU-provisional bar
@@ -100,7 +100,7 @@ func test_veilfall_hero_pieces_stay_clear_of_the_hike() -> void:
 			for point: Array in route.polyline:
 				spine.append(Vector2(float(point[0]), float(point[2])))
 	assert_true(spine.size() >= 2, "precondition: the Veilfall hike polyline exists")
-	var pieces: Array = raw.get("veilfall_hero_candidate", [])
+	var pieces: Array = (raw.get("veilfall_hero_candidate", []) as Array) + (raw.get("veilfall_facade_candidate", []) as Array)
 	assert_false(pieces.is_empty(), "precondition: the hero pieces ship in the file")
 	for piece: Dictionary in pieces:
 		var at := Vector2(float(piece.position_xz_m[0]), float(piece.position_xz_m[1]))
