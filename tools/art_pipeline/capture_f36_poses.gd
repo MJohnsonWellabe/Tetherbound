@@ -154,6 +154,11 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 		if _context and role == "ride" and _mount_offset(id) == null:
 			receipt.append({"role": role, "status": "not_rideable"})
 			continue
+		# GPU F36#0 judges (24 Oct) read a land species' swim row as walking on the
+		# stage's water slab; only water forms and swim mounts ever swim in play.
+		if _context and role == "swim" and not _swims(id):
+			receipt.append({"role": role, "status": "not_a_swimmer"})
+			continue
 		var clip := "f36_candidate/%s" % role if candidate else str(map.get(role, ""))
 		if not _scale_only and (clip.is_empty() or not player.has_animation(clip)):
 			receipt.append({"role": role, "status": "missing_baseline_clip"})
@@ -234,6 +239,13 @@ func _stage_role(role: String, body: Node3D, height: float, resting: AABB) -> Di
 				body.global_transform * (offset as Vector3))
 			_trainer.visible = false
 	return staged
+
+
+func _swims(id: String) -> bool:
+	if id.begins_with("water_"):
+		return true
+	var mount: Variant = SPECIES.definition(id).get("swim_mount", null)
+	return mount is Dictionary and bool((mount as Dictionary).get("compatible", false))
 
 
 func _mount_offset(id: String) -> Variant:
