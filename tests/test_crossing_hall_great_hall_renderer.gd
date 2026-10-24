@@ -22,9 +22,11 @@ func test_forward_plus_and_mobile_drop_the_shafts_and_dim_the_rims() -> void:
 	assert_eq(GREAT_HALL.renderer_scale(row, "forward_plus"), Vector2(0.5, 0.2))
 
 
+## Owner, 24 Oct, on the GPU r9 sheet: the white beams read as an error, "the
+## rest looks mostly fine". Only the shafts go; the rims keep full weight.
 func test_shipping_config_turns_the_shafts_off_off_compatibility() -> void:
 	var cfg: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(CONFIG)) as Dictionary)["hall_great_hall"]
 	var weights := GREAT_HALL.renderer_scale(cfg, "forward_plus")
 	assert_eq(weights.x, 0.0, "shafts are not built on Forward+")
-	assert_true(weights.y > 0.0 and weights.y < 1.0, "arch rims stay, dimmed")
+	assert_eq(weights.y, 1.0, "arch rims keep the owner-accepted weight")
 	assert_false((cfg.get("shafts", []) as Array).is_empty(), "the Compatibility shafts are still authored")
