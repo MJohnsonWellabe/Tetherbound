@@ -1,6 +1,20 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-24 05:30 CT READY tb/fights-land 47eea37f4 (origin/main 77447cf25 + this lane): your review items 1, 3 and 4. No config change, so what ships ON is unchanged from #722.
+  1. r3 re-judge of the shipped #b16cff (3 fresh judges, mapped, CPU):
+     - Meadows 6.44 vs main-before 5.80; Tidewake 6.39 vs 5.53; Cloudreach 6.28 vs 5.91 (first judged).
+     - Slab defect PARTIAL on all three; F38#5-F41#5 stay open.
+     - Meadows parked by the gain rule at 6.54; Stormwood parked at 6.21.
+  2. Stormwood hue: no cheap per-biome override that reads better was found. Yellow-gold is the owner's road current, white-violet is lightning, teal and oxblood are reserved, and magenta is the defect. The tells sit on blue-green moss, where violet still separates, and the dust and curtain carry the "where". Left as is.
+  3. Perf:
+     - draw_dust sizes the multimesh only when the count changes, and allocates nothing per frame (two passes over the spacing walk).
+     - Curtain bands drop the per-segment tier arrays.
+     - Pattern curtain/dust AABBs fit the outline plus rise (was +-4096 m).
+  4. Overlapping wind-ups: one counted aura overlay per body, so the glow lifts with the last wind-up. A body_glow hit flash during a tell borrows the glowing meshes and hands them back only while that tell's aura is live. New tests/test_tell_aura_overlap.gd (3 tests).
+  - Checks on 47eea37f4: 102 tests (tell_aura_overlap, telegraph_glow, charger_lunge, enemy_pattern_telegraph, stormwood_b_named_lunge_lanes/cues, creature_attack_telegraph_animation, lunge_lane, telegraph, shared_opponent_cue_shape, combat_stagger, combat_feedback, f22_riverwatch_presentation, combat_vfx, body_glow, combat_manager, combat_ai): 0 failed.
+  - Not run: full CI, and the C2 smoke (no gameplay or timing change).
+  - Balance: game 1 / tests-tools 1 (the focused test).
 - 2026-10-24 04:20 CT READY tb/fights-land 570357333: bodied fight telegraphs ON. Built on origin/main 2cde391e4; clean merge, no file overlap with main since base.
   - What changed:
     - Every wind-up (feet ring, charge lane, pattern ring/cone/fan/lane/marker/field, guard cone) raises kicked dust along its outline (drifting down a lane toward the strike), a low light curtain and a faint rim glow on the attacker.
