@@ -68,10 +68,12 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
    # the head up out of the water, paddle the forelegs, trail and kick the hind
    # legs, and sweep the tail side to side.
    rotate('root',-REAR*12);rotate('neck',-NOD*26);rotate('head',NOD*18)
+   # b5b judges: the striding legs read as wading. Fold the forelegs under the
+   # chest with a short paddle and stream the hind legs back along the tail.
    for side,ph in (('l',0),('r',math.pi)):
     stroke=math.sin(t*2*math.pi+ph)
-    rotate('front_upper_'+side,30*stroke);rotate('front_lower_'+side,-20*max(0,-stroke))
-    rotate('rear_upper_'+side,-38+12*math.sin(t*2*math.pi+ph+math.pi/2));rotate('rear_lower_'+side,18)
+    rotate('front_upper_'+side,FOLD['front']*(48+10*stroke));rotate('front_lower_'+side,-FOLD['front']*55)
+    rotate('rear_upper_'+side,-FOLD['rear']*(55+8*stroke));rotate('rear_lower_'+side,-FOLD['rear']*20)
    rotate('tail_1',10*wave,(0,0,1));rotate('tail_2',16*wave,(0,0,1))
   if role in ['walk','run']:
    amplitude={'walk':17,'run':28}[role]
