@@ -3,6 +3,14 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct F36#1 b13 (`close-1024/b13/judges.md`, CPU, confirming). Water forms now play their base recipe, which gives them a swim pose instead of the base-rig fallback.
+  - ON: water Riptusk 7.46 vs 5.74, Abyssal Guardian 7.36 vs 5.36, Aquaryn 7.13 vs 5.46, Mangrove Monitor 6.94, Sirenseal 6.94, Tidecoil 6.89 (Tidecoil swim still marked PRESENT once).
+  - ON below the bar: Mirejaw 5.89 vs 4.31.
+  - ON: Tuskroot topple 7.46 vs 6.17.
+  - OFF: water Cannonback 5.51 vs 6.03, and Mangrove Monitor -90 (5.84 vs 7.03). Its shipping faint reads as down here, so it now passes.
+  - Roster after b13: 39 of 70 pass.
+- 25 Oct ADMISSION: shipping water_mirejaw is silently scaled down 8% (3.28 m instead of its 3.55 m), same on the land head roster capture. `water_roster.json` already carries a disabled `fit_candidate` (footprint_allowance 5.21) "pending neutral visual review". I'm leaving it for your call.
+- 25 Oct MESHY batch 4 measured. Mosshock c3 is 4.62x longer than tall (0.80 x 1.90 x 0.41 raw). At its 2.95 m installed height that is about 13.6 m nose to tail against the 5.3 m cap; fitting 5.3 m would mean 1.15 m tall, under the 1.80 m trainer. STOPPED as you asked; it is your call with the owner. Pebbik (1.64, about 5.3 m at 3.25 m) and Riptusk (1.68, about 7.1 m at 4.25 m) fit; rigging them now.
 - 25 Oct MESHY batch 4 request: `close-1024/meshy-batch4/REQUEST.md` (Mosshock salamander redraft per your identity call, plus Pebbik and Riptusk, which fail F36#1 on material, not pose). Each has a drafted prompt, identity references, target height and max length inside its footprint allowance and the rings, no red or oxblood, and stays flag-off until judged. Deliver to `tb/meshy-1024` `assets_raw/naturalistic-1024/<species>_b4/`.
 - 25 Oct F36#1 WHOLE-ROSTER VERDICT (`close-1024/roster/verdict.md`; r1-r7, 70 subjects, CPU, three judges, every batch confirming): **not met, 31 of 70 pass**. 24 fail on a pose (clip work here: b13 Mangrove Monitor/Tuskroot topples via `--candidate-r13`, now on the lane OFF; b14 enables the water_* recipes, of which 5 have no swim clip and play the base-rig fallback). 15 fail on score only (materials, F36#0 remakes; Meshy batch 4 covers three). r6: Cloudfang 7.28, Skyrill 7.14, Breezetail 7.10, Aeriex 7.07 and Cliffspike 6.86 pass. r7: only water_mosshell passes (7.32).
 - 25 Oct 09:30 CT READY tb/creatures-land 2a5300916 (= c74eb3908 + your two tb/ev-coordinator merges + one commit).
