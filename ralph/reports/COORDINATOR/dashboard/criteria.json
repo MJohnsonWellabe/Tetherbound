@@ -1,7 +1,7 @@
 {
- "generated_at": "10:13 PM CT Tue 20 Oct 2026",
- "main_sha": "ce7cc5015",
- "batch4_sha": "Owner restart 17 Oct: four cloud lanes running; no landing open",
+ "generated_at": "2:55 PM CT Sat 24 Oct 2026",
+ "main_sha": "24dfec7b9",
+ "batch4_sha": "GPU judging live (owner 24 Oct); seven cloud lanes plus the GPU lane",
  "rows": [
   {
    "id": "F01",
@@ -1679,8 +1679,8 @@
    "counts": {
     "met": 4,
     "partial": 0,
-    "in_progress": 0,
-    "not_started": 1,
+    "in_progress": 1,
+    "not_started": 0,
     "blocked": 1,
     "failing": 0
    },
@@ -1711,8 +1711,8 @@
     },
     {
      "text": "A code-blind judge rates each biome's frame matrix as meeting the new bar on High and Medium.",
-     "status": "not_started",
-     "evidence": "none passing; Cloudreach Medium/High FAIL recorded in ART_DIRECTION §4.1",
+     "status": "in_progress",
+     "evidence": "GPU 24 Oct (tb/gpu-pass de025a1cc, ralph/reports/GPU-PASS/F38-0/main-1024/VERDICT.md; main 779422f10, High+Medium, yardstick): Meadows matrix judged on High and Medium: FAIL (no site at 7.5; best 7.09). Tidewake, Cloudreach (queued next) and Stormwood still to judge on GPU.",
      "gap": "Capture the per-biome High and Medium frame matrix, then a code-blind full-bar judge for each biome.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No passing full-bar verdict for any biome. Only FAILs and material- or preset-scope passes exist.",
      "audit_index": 3
@@ -3387,17 +3387,17 @@
    "counts": {
     "met": 1,
     "partial": 0,
-    "in_progress": 3,
-    "not_started": 37,
+    "in_progress": 13,
+    "not_started": 27,
     "blocked": 2,
     "failing": 0
    },
    "criteria": [
     {
      "text": "After F26 look-dev, the biome is re-captured (≥200 frames) and its catalog rows re-scored against the new bar.",
-     "status": "not_started",
-     "evidence": "tools/capture_f38_matrix.gd; R2-F38/capture-definition.json (no frames)",
-     "gap": "Run capture_f38_matrix.gd on High and Medium (≥200 frames). Re-score the Meadows/village catalog rows.",
+     "status": "in_progress",
+     "evidence": "GPU 24 Oct (tb/gpu-pass de025a1cc, ralph/reports/GPU-PASS/F38-0/main-1024/VERDICT.md; main 779422f10, High+Medium, yardstick): 354/528 frames at High and 355/528 at Medium (over the 200-frame floor); 174 stands rejected by the tool (\"no supported production-camera stand\"; band2_stone_and_root_0 has none). Only the world-visible catalog rows were re-scored (P2-014, P2-005, P2-003, P2-006, fight P2-062/063/064/016).",
+     "gap": "Recapture the rejected stands after the Meadows camera-stand fix, and re-score the remaining Meadows catalog rows.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. The capture definition and tool exist, but no frames or rescore have been recorded.",
      "audit_index": 0
     },
@@ -3413,8 +3413,8 @@
     },
     {
      "text": "F38 (1) top-20 item P2-016 creature hurt and movement poses: Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 100, lane tb/x04-meadows. Still frames cannot establish locomotion timing; check production transition captures before scheduling animation work. Tidewake and Stormwood stills confirm the recurring state-read gap; judge motion",
+     "status": "in_progress",
+     "evidence": "GPU 24 Oct (tb/gpu-pass de025a1cc, ralph/reports/GPU-PASS/F38-0/main-1024/VERDICT.md; main 779422f10, High+Medium, yardstick): PRESENT: hurt poses keep the idle silhouette in the F38 fight. Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 100, lane tb/x04-meadows. Still frames cannot establish locomotion timing; check production transition captures before scheduling animation work. Tidewake and Stormwood stills confirm the recurring state-read gap; judge mo",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
@@ -3424,7 +3424,7 @@
     {
      "text": "F38 (1) top-20 item P2-062 fight camera and creature scale: The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry — fixed on main with a GPU before/after pass at the bar.",
      "status": "blocked",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status blocked, impact 100, lane tb/x04-meadows. South bridge r05 is nearly all clipped creature texture; a fixture position may contribute. Warden arena frames 03 05 and 08 show the encounter better. Same combat camera may recur in other biomes but",
+     "evidence": "GPU 24 Oct (tb/gpu-pass de025a1cc, ralph/reports/GPU-PASS/F38-0/main-1024/VERDICT.md; main 779422f10, High+Medium, yardstick): PARTIAL in the F38 fight (5.34 High / 5.55 Medium): the ally crowds the opponent; HUD covers the bottom third. Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status blocked, impact 100, lane tb/x04-meadows. South bridge r05 is nearly all clipped creature texture; a fixture position may contribute. Warden arena frames 03 05 and 08 show the encounter better. Same combat camera may recur in other biomes but",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
@@ -3513,8 +3513,8 @@
     },
     {
      "text": "F38 (1) top-20 item P2-063 shared fight tell and hit effects: Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-re — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 60, lane tb/x04-meadows. Meadows and Tidewake code-blind fight review: flat magenta tell ring lacks clear attack path, and Tidewake hit contact barely changes enemy pose. Shared effect family scored once at widest exposure; e",
+     "status": "in_progress",
+     "evidence": "GPU 24 Oct (tb/gpu-pass de025a1cc, ralph/reports/GPU-PASS/F38-0/main-1024/VERDICT.md; main 779422f10, High+Medium, yardstick): PARTIAL: magenta telegraphs now pale outlines. Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 60, lane tb/x04-meadows. Meadows and Tidewake code-blind fight review: flat magenta tell ring lacks clear attack path, and Tidewake hit contact barely changes enemy pose. Shared effect family scored once at widest exposure; e",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
@@ -3603,8 +3603,8 @@
     },
     {
      "text": "F38 (2) impact>12 item P2-003 Team Tether stronghold: The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 40, lane tb/x04-meadows. The generic capture stands are not verified route approaches; reshoot the authored approach before work is assigned.",
+     "status": "in_progress",
+     "evidence": "GPU 24 Oct (tb/gpu-pass de025a1cc, ralph/reports/GPU-PASS/F38-0/main-1024/VERDICT.md; main 779422f10, High+Medium, yardstick): PRESENT at band5_stronghold_approach_0 (base a dark speck behind the pylons); PARTIAL at band5_1 (near-black, giant flat banners). Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 40, lane tb/x04-meadows. The generic capture stands are not verified route approaches; reshoot the authored approach before work is assigned.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
@@ -3613,8 +3613,8 @@
     },
     {
      "text": "F38 (2) impact>12 item P2-005 ground cover: Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. Repeated across several Meadows regions; compare route-walk samples before expanding sightings.",
+     "status": "in_progress",
+     "evidence": "GPU 24 Oct (tb/gpu-pass de025a1cc, ralph/reports/GPU-PASS/F38-0/main-1024/VERDICT.md; main 779422f10, High+Medium, yardstick): PRESENT or PARTIAL at every exterior site (10/10); judges ask for groves, edges, clearings, clustered flowers, ground-material variation. Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. Repeated across several Meadows regions; compare route-walk samples before expanding sightings.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
@@ -3623,8 +3623,8 @@
     },
     {
      "text": "F38 (2) impact>12 item P2-006 mill and settlements: The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. This merges the recurring lack of lively scene composition; split if later captures show independent causes or owners.",
+     "status": "in_progress",
+     "evidence": "GPU 24 Oct (tb/gpu-pass de025a1cc, ralph/reports/GPU-PASS/F38-0/main-1024/VERDICT.md; main 779422f10, High+Medium, yardstick): PRESENT at river_lock_0 (flat water); PARTIAL at village_road and river_lock_1. Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. This merges the recurring lack of lively scene composition; split if later captures show independent causes or owners.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
@@ -3643,8 +3643,8 @@
     },
     {
      "text": "F38 (2) impact>12 item P2-014 distant mountains: The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. Distant backdrop defect is separate from near-ground repetition; check if this backdrop is shared with another biome.",
+     "status": "in_progress",
+     "evidence": "GPU 24 Oct (tb/gpu-pass de025a1cc, ralph/reports/GPU-PASS/F38-0/main-1024/VERDICT.md; main 779422f10, High+Medium, yardstick): mostly FIXED (8/10 exterior sites); PRESENT at band2_stone_and_root_1 (faceted cliff planes with dark slashes). Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. Distant backdrop defect is separate from near-ground repetition; check if this backdrop is shared with another biome.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
@@ -3683,8 +3683,8 @@
     },
     {
      "text": "F38 (2) impact>12 item P2-064 Warden arena boundary: Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. The effect repeats through several Warden combat phases in the stronghold arena.",
+     "status": "in_progress",
+     "evidence": "GPU 24 Oct (tb/gpu-pass de025a1cc, ralph/reports/GPU-PASS/F38-0/main-1024/VERDICT.md; main 779422f10, High+Medium, yardstick): PARTIAL in the Warden fight. Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. The effect repeats through several Warden combat phases in the stronghold arena.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
@@ -3793,9 +3793,9 @@
     },
     {
      "text": "The biome frame matrix (approach, gameplay camera, reverse, detail, day/night, weather, a real fight) passes the new bar on High and Medium.",
-     "status": "not_started",
-     "evidence": "none current (F26#3 open)",
-     "gap": "Capture the full matrix (capture_f38_matrix.gd plus capture_f38_fight.gd) and run a code-blind judge on High and Medium.",
+     "status": "in_progress",
+     "evidence": "GPU 24 Oct (tb/gpu-pass de025a1cc, ralph/reports/GPU-PASS/F38-0/main-1024/VERDICT.md; main 779422f10, High+Medium, yardstick): no site at 7.5. Best village_road 6.73 High / 7.09 Medium, river_lock_1 6.89/6.86; worst arch_* stands 3.5-5.3 (camera inside rock/walls); fight 5.34/5.55.",
+     "gap": "Fix camera stands at the arch/hall/river-lock sites, the Hall shafts and orb chains, interior time-of-day grade, ground carpet, stronghold; then GPU recapture.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No current capture of the approach/gameplay/reverse/detail/day-night/weather/fight matrix has been judged against the new bar.",
      "audit_index": 3
     },
@@ -3809,9 +3809,9 @@
     },
     {
      "text": "No flat magenta rings or slabs, placeholder materials, floating bodies or clipping remain in the matrix.",
-     "status": "not_started",
-     "evidence": "none",
-     "gap": "Inspect the F38 matrix with a code-blind defect pass. Fix and recapture until the matrix is clean.",
+     "status": "in_progress",
+     "evidence": "GPU 24 Oct (tb/gpu-pass de025a1cc, ralph/reports/GPU-PASS/F38-0/main-1024/VERDICT.md; main 779422f10, High+Medium, yardstick): magenta FIXED everywhere except PARTIAL in the fight; placeholder PRESENT at hall_nave, arch_cloudreach, arch_biome5, river_lock_0; floating PARTIAL at hall_front and band5_1; clipping PRESENT at 8 sites (arch_biome5/6/7/8, arch_cloudreach, arch_tidewake, hall_nave, river_lock_0).",
+     "gap": "Camera stands and placeholder materials at those sites, then GPU recapture.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No current matrix has been checked for these defects.",
      "audit_index": 5
     }
