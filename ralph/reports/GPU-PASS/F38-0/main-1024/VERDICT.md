@@ -10,6 +10,17 @@
   - Worst: the `arch_*` stands, **3.5–5.3**. Most of their frames have the production camera inside or pressed against geometry.
 - **High vs Medium:** the two presets scored the same, or within 0.4, on every site.
 
+## Tier
+
+Tiers follow the owner's direction of 24 Oct. Each site takes the lower of its two preset scores.
+
+| Tier | Sites |
+|---|---|
+| **below 6** (18) | ironwood_1 5.97, arch_home, stone_and_root_1, hall_front, stronghold_0, farm_to_hall, fight 5.34, shrine_room, river_lock_0, arch_biome8, arch_stormwood, hall_nave, arch_tidewake, stronghold_1, arch_cloudreach, arch_biome5, arch_biome7, arch_biome6 3.53 |
+| **6–7** (4) | village_road 6.73, band3_the_river_lock_1 6.86, band1_lower_meadows_1 6.32, band4_upper_meadows_ironwood_0 6.20 |
+| 7–7.5 | none |
+| 7.5 and above | none |
+
 ## Run
 
 - **Source:** main 779422f10 (#729 included).

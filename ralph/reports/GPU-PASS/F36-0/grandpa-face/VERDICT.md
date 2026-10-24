@@ -5,6 +5,8 @@
 - It is 0.29 short of 7.5 and within noise of the installed face.
 - The close-1020 result this re-checks was 7.53 vs 7.47 (the `f36_0_npc:C1` anchor). That does not reproduce on GPU Forward+ with a confirming batch.
 
+**Tier: 7–7.5** (7.21 on the confirming batch; owner direction, 24 Oct).
+
 ## Run
 
 - **Source:** main 24dfec7b9. On main, `art.json grandpa.model` is the candidate (`candidate/models/grandpa_native_face.glb`).

@@ -9,6 +9,10 @@
 | Mudsnout | 6.59 | 6.70 | −0.11 | 0.91 | FAIL |
 | Trailpup | 6.36 | 6.50 | −0.14 | 1.14 | FAIL |
 
+- **Tier** (owner direction, 24 Oct), by candidate score:
+  - **7–7.5:** Mosshell 7.32, Bramblebun 7.25.
+  - **6–7:** Mudsnout 6.59, Trailpup 6.36.
+  - All four are re-measured in H (05671f929) with the stage fix.
 - **Terrapup:** pushed separately in `../terrapup-dog/` (7.09 / 7.09, FAIL).
 - **Nightburrow:** judged in B (7a44a9367), which supersedes it.
 - **Medium vs High:** the frames are the same, and every judge gave both presets identical scores.

@@ -5,6 +5,8 @@
 - **Agreement:** all three judges scored it 6.0–6.2 raw (7.04–7.18 mapped) on both sides.
 - **Medium vs High:** the frames are the same, so all three judges gave both presets identical scores.
 
+**Tier: 7–7.5** (7.09; owner direction, 24 Oct). Superseded by dog3 in H (tb/creatures 05671f929).
+
 ## Run
 
 - **Candidate:** `tb/creatures` 1225d1a86 (the A+C build), in its own worktree. Main is e35cac05b0 (origin/main 24dfec7b9).

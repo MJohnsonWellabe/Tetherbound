@@ -10,6 +10,16 @@
 - **High vs Medium:** the two presets score the same on every stand; the largest gap is 0.09 at the_high_perches. Every fix below is content, not a quality preset.
 - **Fight:** the F40 fight is still capturing. It will be added to this folder as `fight/`.
 
+## Tier
+
+Tiers follow the owner's direction of 24 Oct, using the lower of the two preset scores.
+
+| Tier | Stands |
+|---|---|
+| **below 6** (11) | summit_eyrie 5.62, three_bells_bridge 5.54, the_high_perches 5.43, realm_gate_crag 5.26, sky_shrine 5.20, windscar_beacon 5.08, cliffhold 5.02, windscar_flight_aerie 4.91, old_wind_observatory 4.74, stormward_overlook 4.60, fight 4.45 (`fight/`) |
+| **6–7** (1) | galefoot_waycamp 6.60 |
+| 7–7.5 / 7.5 and above | none |
+
 ## Run
 
 - **Source:** main 24dfec7b9, the shipping state. The manifests show the F40 preview candidates off and `cliffhold_detail_candidate` on, with revision `f40-sanctuary-and-route-masses-r1`.

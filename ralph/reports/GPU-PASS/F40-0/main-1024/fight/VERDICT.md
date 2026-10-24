@@ -2,6 +2,8 @@
 
 **Verdict: FAIL. 4.45 at High and 4.73 at Medium.** All four recorded defects are PRESENT by majority.
 
+**Tier: below 6.** 4.45 is the lower preset (owner direction, 24 Oct).
+
 ## Run
 
 - **Source:** main 24dfec7b9.
