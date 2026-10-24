@@ -1,0 +1,52 @@
+{
+ "Ir": {
+  "anchor": false,
+  "label": "H bramblebun Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\H\\sides\\bramblebun-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\H\\sides\\bramblebun-ship-Medium.png"
+ },
+ "Tq": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Pg": {
+  "anchor": false,
+  "label": "H terrapup dog3 Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\H\\sides\\terrapup-dog3-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\H\\sides\\terrapup-dog3-High.png"
+ },
+ "Lv": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Xm": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Oc": {
+  "anchor": false,
+  "label": "H mosshell Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\H\\sides\\mosshell-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\H\\sides\\mosshell-cand-Medium.png"
+ },
+ "Kc": {
+  "anchor": false,
+  "label": "H mosshell High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\H\\sides\\mosshell-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\H\\sides\\mosshell-ship-High.png"
+ },
+ "Xr": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Km": {
+  "anchor": false,
+  "label": "H bramblebun High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\H\\sides\\bramblebun-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\H\\sides\\bramblebun-ship-High.png"
+ }
+}
