@@ -4,6 +4,11 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-25 03:00 CT **READY: `tb/tidewake-land` at a6bbba553** (a6bbba553e87bd5d22a964202a6977ae7e87e99b). The fight HUD prompt-yield fix only (one cherry-picked commit on origin/main 124a7393c).
+  - **Files:** `scripts/ui/playground_hud.gd` and `tests/smoke_fight_world_prompt_yield.gd`.
+  - **Checks there:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed. `smoke_fight_world_prompt_yield` passed.
+  - **Not included:** the heightfield relief and every other OFF candidate.
+
 - 2026-10-25 02:40 CT **READY (functional fix, worst-first on the sub-6 Venn fight): the fight HUD overlap, `tb/tidewake` fe26613a5.**
   - **The defect:** "E Gather Reef Stone" drew over "C Switch / Esc Flee" in every Venn fight frame. Every Tidewake fight judge since mx1 has flagged it.
   - **Why the earlier fix missed it:** 5fb669d7b hid the world prompt only while the legacy `_grid_panel` showed. The F42 system overlay hides that grid and draws the command strip itself.
