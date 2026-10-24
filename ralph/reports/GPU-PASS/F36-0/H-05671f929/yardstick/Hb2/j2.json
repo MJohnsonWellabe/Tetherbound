@@ -1,0 +1,120 @@
+{
+ "sets": {
+  "Wg": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A plain stock-looking boar with clumpy, crusty fur that barely reaches the trainer's height, and no Tetherbound type accent; the swim frame (A) shows it walking on a flat blue slab."
+  },
+  "Oc": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The same boar as Wg: readable and grounded, but a generic realistic boar at about trainer height with crusty fur; it falls short of the owner's style bar and has nothing marking it as Tetherbound. B's swim frame floats it above a flat slab."
+  },
+  "Kr": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "An appealing, finished stylised elder with clear eyes and an olive, moss and brown outfit that fits the Meadows palette; no visible difference between sides."
+  },
+  "Dj": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean naturalistic coyote with a strong silhouette that stands taller than the trainer and has readable hurt and faint poses, though it carries no elemental identity; B's swim frame walks on top of a flat water slab."
+  },
+  "Pw": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The same solid naturalistic coyote as Dj; A's swim frame (legs fully above a flat blue slab with a white gradient edge) is the weak spot."
+  },
+  "Pb": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger panel with wrapped recipe text reads at a glance and matches the deep blue-grey direction, but the Craft action is plain text with a keyboard keycap (no teal or controller button), and the dark world behind has no atmosphere to sell it."
+  },
+  "Ub": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A very dark, low-value forest with no visible purple storm sky, flat magenta ground telegraphs, a near-invisible player creature and heavy HUD sank it; A adds camera-in-foliage and trunk occlusion in i11, i13 and i15."
+  },
+  "Oz": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's dark scales with gold veins are on the Fulgocobra board but read as noise, the coils knot, and the trainer ruler is hidden in 3 of 4 frames; B's toy-like yellow bands are off-board, and its faint mid/end frames levitate the snake above a detached shadow."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight readability: lift the value range and rim-light both fighters under the purple storm sky, keep the camera out of trunks and canopy, and replace the flat magenta ground rings with physical lightning or web telegraphs that show an impact",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix travel and faint grounding: sink swimmers into a real water surface (no flat slab or white gradient edge, no walking pose) and keep faint poses on the ground (Oz B)",
+   "kind": "scene"
+  },
+  {
+   "change": "Bring the generic boar and coyote up to the owner's style bar with Tetherbound identity (type accents, cleaner fur rather than crusty clumps) and scale the boar clearly above the 1.80 m trainer",
+   "kind": "new_art"
+  }
+ ]
+}

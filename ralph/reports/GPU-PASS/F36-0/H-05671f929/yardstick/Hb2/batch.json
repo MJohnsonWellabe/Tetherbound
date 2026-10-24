@@ -1,0 +1,86 @@
+{
+ "anchors": {
+  "f36_0_npc:C1A": [
+   7.0,
+   7.2,
+   7.3
+  ],
+  "f36_0_npc:C1B": [
+   7.0,
+   7.2,
+   7.3
+  ],
+  "craft:before": [
+   4.8,
+   4.8,
+   3.8
+  ],
+  "craft:after": [
+   6.6,
+   6.8,
+   6.1
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.3,
+   3.6,
+   3.7
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.0,
+   4.6,
+   4.6
+  ],
+  "f36_0_gap:C5B": [
+   5.0,
+   5.4,
+   5.4
+  ],
+  "f36_0_gap:C5A": [
+   4.5,
+   4.4,
+   4.8
+  ]
+ },
+ "candidates": {
+  "H mudsnout Medium cand|ship | mudsnout-ship-Medium": [
+   6.2,
+   5.8,
+   6.3
+  ],
+  "H mudsnout Medium cand|ship | mudsnout-cand-Medium": [
+   6.4,
+   6.1,
+   6.3
+  ],
+  "H mudsnout High cand|ship | mudsnout-cand-High": [
+   6.4,
+   6.1,
+   6.3
+  ],
+  "H mudsnout High cand|ship | mudsnout-ship-High": [
+   6.2,
+   5.8,
+   6.3
+  ],
+  "H trailpup Medium cand|ship | trailpup-cand-Medium": [
+   6.5,
+   6.5,
+   7.0
+  ],
+  "H trailpup Medium cand|ship | trailpup-ship-Medium": [
+   6.3,
+   6.2,
+   7.0
+  ],
+  "H trailpup High cand|ship | trailpup-ship-High": [
+   6.3,
+   6.2,
+   7.0
+  ],
+  "H trailpup High cand|ship | trailpup-cand-High": [
+   6.5,
+   6.5,
+   7.0
+  ]
+ }
+}

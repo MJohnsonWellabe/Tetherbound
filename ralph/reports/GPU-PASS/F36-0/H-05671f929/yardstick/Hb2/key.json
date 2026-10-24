@@ -1,0 +1,46 @@
+{
+ "Wg": {
+  "anchor": false,
+  "label": "H mudsnout Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\H\\sides\\mudsnout-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\H\\sides\\mudsnout-cand-Medium.png"
+ },
+ "Oc": {
+  "anchor": false,
+  "label": "H mudsnout High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\H\\sides\\mudsnout-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\H\\sides\\mudsnout-ship-High.png"
+ },
+ "Kr": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Dj": {
+  "anchor": false,
+  "label": "H trailpup Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\H\\sides\\trailpup-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\H\\sides\\trailpup-ship-Medium.png"
+ },
+ "Pw": {
+  "anchor": false,
+  "label": "H trailpup High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\H\\sides\\trailpup-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\H\\sides\\trailpup-cand-High.png"
+ },
+ "Pb": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Ub": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Oz": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ }
+}

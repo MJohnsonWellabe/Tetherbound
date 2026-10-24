@@ -1,0 +1,120 @@
+{
+ "sets": {
+  "Wg": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The naturalistic boar fur model is close to the owner bar, but the flat unrimmed stage light, a body no taller than the 1.80 m trainer and (A) a swim frame where it walks on top of the water sink the finish."
+  },
+  "Oc": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same boar as Wg: a convincing fur model, but flat stage light, scale at or under the trainer and (B) a swim frame that stands on the water instead of swimming keep it short of shipping finish."
+  },
+  "Kr": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, expressive, appealing elder with a readable face and an earthy olive/brown palette that fits the key-art world at a Palworld-class character finish."
+  },
+  "Dj": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The lean naturalistic coyote reads well and its faint poses stay grounded, but the flat grey stage light, no rim and (B) a swim frame where it walks on the surface stop it from reading as shipping finish."
+  },
+  "Pw": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same coyote as Dj: solid anatomy and fur, let down by the flat stage light and (A) a swim frame where it walks on the water plane, with a white-blown edge on the water."
+  },
+  "Pb": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's large gold ingredient lines and wrapped recipe text read well, but the plain white Craft/Leave hints with tiny keyboard glyphs, no teal button treatment and a dim low-poly storm backdrop fall short of shipping UI polish."
+  },
+  "Ub": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A dark brown, one-value forest with no purple storm sky, flat magenta ring and slab telegraphs, a barely visible player creature and a dense HUD sink it (A also has the camera buried in canopy)."
+  },
+  "Oz": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Neither cobra reaches the board's olive-scale and gold-lightning finish: A's mottled texture turns to noise and hides the trainer, and B's flat yellow bands and levitating faint poses break the read."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the flat magenta telegraph rings/slabs in Stormwood fights with real lightning/impact effects, fade occluding trunks and canopy, and lift the combat grade (purple storm sky, rim light on both fighters, smaller HUD footprint)",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix creature grounding and scale in presentation: swim frames sink the body to the waterline instead of walking on the surface, Fulgocobra faint poses stay on the ground, boar scaled clearly above the 1.80 m trainer, plus rim light on the creature stage",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-surface Fulgocobra to the board's look (dark olive scales, gold lightning cracks, cream belly) instead of mottled noise or flat yellow bands",
+   "kind": "scene"
+  }
+ ]
+}

@@ -1,0 +1,126 @@
+{
+ "sets": {
+  "Ir": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The naturalistic moss-coated hare reads well, lights well and matches the owner style bar; B's swimming frame (flat blue plane with a white wedge fading in from the right) is the only weak spot."
+  },
+  "Tq": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The appealing grandpa villager has clear eyes, a warm olive and cream palette and a clean silhouette, and he fits the cozy settlement of the key art."
+  },
+  "Pg": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The big furred dog with its green plated back reads instantly and stands well above the ruler; the rider is tiny but the mount reads, and the faint poses read without a label."
+  },
+  "Lv": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's fur is naturalistic but has blotchy gold spots and a faint-mid frame floating above its shadow; B's smooth terracotta-clay boar with moss decals looks like a toy and stands below trainer height, off the owner's naturalistic bar."
+  },
+  "Xm": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky, dark forest without the purple storm sky, flat magenta telegraph rings and slabs, a dense debug-like HUD and a near-invisible player creature sink it; in A, foliage fills whole frames."
+  },
+  "Oc": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The mossy turtle model is solid and well scaled, but its faint mid and faint end are barely distinguishable from standing, and A's swimming frame is a flat blue overlay with a white edge wedge."
+  },
+  "Kc": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "This is the same turtle as Oc: a good model, but the faint poses do not read and B's swim frame shows the same flat blue plane with a white wedge."
+  },
+  "Km": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "This is the same naturalistic hare as Ir, on-style and readable; B loses a little to the artificial swim overlay with its white edge wedge."
+  },
+  "Xr": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's aftermaths are site-specific (banners removed, cage opened with a freed villager, a smoking struck tent), but both sides sit on blurry stretched ground textures, flat tiled castle walls and washed-out lighting far below the key art; in B, enemy banners stay up after the win at sites 1, 3 and 5."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the flat magenta telegraph rings and slabs with real-object effects (stone, lightning) that land with an impact. Cut the fight HUD to a compact hierarchy, keep the camera out of the canopy, and grade Stormwood to its purple storm sky with white-violet lightning so both fighters read.",
+   "kind": "scene"
+  },
+  {
+   "change": "Upgrade the Meadows ground and wall materials (stretched blurry grass, flat tiled stone) and add warm key light with cool blue distance, so the aftermath sites match the key art's world.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the clay-toy boar (Lv B) as a naturalistic furred model taller than the trainer. Author faint poses for the turtle that read without a label, and swim poses that sit in real water.",
+   "kind": "new_art"
+  }
+ ]
+}

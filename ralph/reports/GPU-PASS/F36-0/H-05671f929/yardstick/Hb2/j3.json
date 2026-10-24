@@ -1,0 +1,120 @@
+{
+ "sets": {
+  "Wg": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The naturalistic boar has believable fur bulk, but a single flat ochre value with no face or eye read and only trainer height sits below the Palworld creature finish."
+  },
+  "Oc": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same boar as Wg: decent fur mass, but monotone ochre, a lost face at small size and a swim frame where it hangs over the water keep it short of shipping finish."
+  },
+  "Kr": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, expressive grandpa with clear eyes, a natural olive and cream palette and a clean silhouette matches the key art's day-panel characters and a shipping finish."
+  },
+  "Dj": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The coyote model is close to the owner's style bar, with a lean, readable silhouette taller than the trainer, but the swim frame has it standing stiff-legged on the water surface, which breaks the finish."
+  },
+  "Pw": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same coyote as Dj: a strong naturalistic model and clear hurt and faint reads, held back by a swim pose that walks on the water and a low-contrast tan with little rim separation."
+  },
+  "Pb": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's larger, unclipped text and iconed Craft/Leave hints are serviceable, but the bare panel lacks Palworld's HUD polish, gives the craft action no teal emphasis and uses keyboard glyphs."
+  },
+  "Ub": {
+   "A": {
+    "bar_a": 3.7,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A dark, muddy brown forest floor with no purple storm sky, lightning or copper and glass highlights, flat magenta ground rings for telegraphs, a near-invisible player creature, a heavy HUD and (on A) camera-in-canopy blackouts sink it."
+  },
+  "Oz": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's noisy black-gold mottling turns the coils into an unreadable tangle, and B's bold banded serpent faints by rising into a floating S-curve far above its own shadow."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fights: keep the camera out of trunks and canopy, swap the flat magenta ring and slab telegraphs for real-object effects (lightning, stones, dust impacts), and lift the fight's light with the purple storm sky, rim light on both fighters and a lighter HUD so the player's creature reads",
+   "kind": "scene"
+  },
+  {
+   "change": "Rework the serpent (Oz): ground its hurt and faint poses on the floor with contact shadows, and give it one clean, bold band pattern with a clear head, face and eyes instead of noisy mottling",
+   "kind": "new_art"
+  },
+  {
+   "change": "Creature material and scale pass: break the boar's monotone ochre with darker mane, snout and leg values plus rim light and a visible eye, make every creature clearly taller than the 1.80 m trainer, and fix the swim frames (submerged body, no hovering or water-walking, no white water-plane edge)",
+   "kind": "scene"
+  }
+ ]
+}

@@ -1,0 +1,126 @@
+{
+ "sets": {
+  "Ir": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The moss-backed hare model is close to the owner bar, but the flat grey stage gives no Valheim-class light, and B's swimming frame is a flat blue slab with a white gradient edge that the trainer stands inside."
+  },
+  "Tq": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing old villager with readable eyes and a moss-green palette, at a character finish that would sit beside Palworld's cast."
+  },
+  "Pg": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A large, readable, naturalistic mount with real fur and a leaf-plate back that clearly dwarfs the trainer; the rider is tiny and perched, but the model finish carries it."
+  },
+  "Lv": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's furry boar is on-style but floats above its shadow in faint mid; B's smooth terracotta toy pig with flat moss decals falls well short of the naturalistic creature bar."
+  },
+  "Xm": {
+   "A": {
+    "bar_a": 2.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown forest with no purple storm sky, a small fight buried under debug HUD panels, flat magenta telegraph rings, and canopy blocking the view in A."
+  },
+  "Oc": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A well-textured mossy turtle that outsizes the trainer, but its faint poses barely differ from standing, the stage light is flat, and the swimming frame is a placeholder blue slab."
+  },
+  "Kc": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same turtle and same verdict: a good shell and skin model, but the faint poses don't read without the label and the flat blue water slab sinks the travel frame."
+  },
+  "Xr": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry smeared ground textures, a tiled fortress wall, flat noon light and sparse asset-pack props read as prototype rather than Palworld finish; B also leaves the enemy banners standing in three after frames."
+  },
+  "Km": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Identical to Ir: the hare model is near the bar, but the stage light is flat and B's swimming frame is a flat blue slab with a hard white gradient."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Clear the Stormwood fight camera: keep trunks and canopy out of the camera volume, replace the flat magenta telegraph rings with real ground-impact effects (cracking stones, lightning), strip the debug HUD panels, and grade in the fixed purple storm sky with white-violet lightning.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the placeholder swim-frame water (a flat blue box with a white gradient edge) with a proper water surface at waterline, with ripples and a wake, and give the turtle distinct, grounded faint poses.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the Meadows trainer-site ground and set dressing: sharp grass and dirt materials instead of smeared textures, grove and edge vegetation, warm directional light with blue distance, and after-states that remove enemy banners and leave site-specific aftermath.",
+   "kind": "scene"
+  }
+ ]
+}

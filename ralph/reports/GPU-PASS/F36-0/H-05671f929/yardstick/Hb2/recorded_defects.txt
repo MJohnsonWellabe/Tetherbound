@@ -1,0 +1,8 @@
+Wg: none
+Oc: none
+Kr: none
+Dj: none
+Pw: none
+Pb: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ub: none
+Oz: none

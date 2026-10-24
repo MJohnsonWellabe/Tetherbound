@@ -1,0 +1,126 @@
+{
+ "sets": {
+  "Ir": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The naturalistic hare reads well and stands taller than the ruler, but the moss reads as foliage cards stuck on its back, and B's swimming frame (standing hare floating on a flat blue slab with a white gradient strip) is not shipping finish."
+  },
+  "Tq": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The appealing, readable elder with a warm Meadows green-brown palette and clear eyes would sit comfortably beside Palworld's characters; only the plain stage keeps it from proving the world fit."
+  },
+  "Pg": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A solid naturalistic big dog with good scale and a clear ridden role, held back by the green plate armour reading as a separate stuck-on asset and the faint end flattening into the floor."
+  },
+  "Lv": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's fur is on-style but its noisy leopard spotting and the floating faint-mid pose sink it; B's smooth clay-toy boar with a nose-down faint end sits off the owner's naturalistic bar."
+  },
+  "Xm": {
+   "A": {
+    "bar_a": 2.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky brown frames with no purple storm sky, flat magenta telegraph rings and slabs, a HUD covering much of each frame and an often invisible player creature (plus A's foliage-blocked i11/i13/i15) are far from Palworld's boss-fight readability."
+  },
+  "Oc": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The well-textured mossy turtle has good scale, but its faint mid and faint end stay upright and do not read as fainting, and A's swimming frame is a flat blue slab with a white edge artefact."
+  },
+  "Kc": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The same turtle: strong shell surface and scale, sunk by unreadable upright faint poses and, on B, the slab-and-gradient swimming frame."
+  },
+  "Xr": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry low-resolution ground, flat terrain, uniform grass and flat-lit low-poly trees fall well short of Palworld and Valheim finish; A's site-specific aftermaths (freed captive, smouldering tent) help, while B leaves Team Tether banners standing after the win."
+  },
+  "Km": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Identical to Ir: a believable naturalistic hare with stuck-on moss, and B's broken swimming frame (floating standing pose, blue slab, white gradient) undercuts the finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight: replace flat magenta telegraph rings and slabs with real-object effects (lightning, stone) and impacts, pull the camera out of trunks and canopy, add the purple storm sky with a white-violet light grade, and shrink the HUD so both fighters read",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows outdoor scenes (Xr): higher-resolution ground materials, groves and clearings instead of a uniform grass carpet, terrain form and a warm key-art light grade with blue distance; remove faction banners in after frames so each aftermath reads",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature staging: real swim poses and a proper water surface instead of the blue slab with a white gradient, and faint poses that visibly collapse and stay grounded (turtle, boar); replace the clay-toy boar (Lv B) with a naturalistic fur model",
+   "kind": "new_art"
+  }
+ ]
+}

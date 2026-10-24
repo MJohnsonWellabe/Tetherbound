@@ -1,0 +1,198 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8095,
+  "least_squares_slope": 0.6629,
+  "method": "linear",
+  "slope": 0.6629,
+  "intercept": 2.9965,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.641,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1B": {
+   "measured": 6.833,
+   "reference": 7.47,
+   "mapped": 7.527,
+   "residual": -0.057
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.833,
+   "reference": 7.53,
+   "mapped": 7.527,
+   "residual": 0.003
+  },
+  "f36_0_gap:C1A": {
+   "measured": 5.4,
+   "reference": 6.1,
+   "mapped": 6.576,
+   "residual": -0.476
+  },
+  "f36_0_gap:C1B": {
+   "measured": 4.4,
+   "reference": 5.33,
+   "mapped": 5.914,
+   "residual": -0.584
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.0,
+   "reference": 4.0,
+   "mapped": 4.985,
+   "residual": -0.985
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 3.733,
+   "reference": 6.53,
+   "mapped": 5.472,
+   "residual": 1.058
+  },
+  "f04_6_r22:r22": {
+   "measured": 4.567,
+   "reference": 6.75,
+   "mapped": 6.024,
+   "residual": 0.726
+  },
+  "f04_6_r22:control": {
+   "measured": 3.8,
+   "reference": 5.83,
+   "mapped": 5.516,
+   "residual": 0.314
+  }
+ },
+ "candidates": {
+  "H bramblebun Medium cand|ship | bramblebun-cand-Medium": {
+   "measured_mean": 6.4,
+   "mapped_mean": 7.24,
+   "mapped_judges": [
+    7.64,
+    6.97,
+    7.11
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "H bramblebun Medium cand|ship | bramblebun-ship-Medium": {
+   "measured_mean": 6.1,
+   "mapped_mean": 7.04,
+   "mapped_judges": [
+    7.44,
+    6.71,
+    6.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "H terrapup dog3 Medium|High | terrapup-dog3-Medium": {
+   "measured_mean": 6.533,
+   "mapped_mean": 7.33,
+   "mapped_judges": [
+    7.57,
+    7.17,
+    7.24
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "H terrapup dog3 Medium|High | terrapup-dog3-High": {
+   "measured_mean": 6.533,
+   "mapped_mean": 7.33,
+   "mapped_judges": [
+    7.57,
+    7.17,
+    7.24
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "H mosshell Medium cand|ship | mosshell-ship-Medium": {
+   "measured_mean": 5.667,
+   "mapped_mean": 6.75,
+   "mapped_judges": [
+    6.84,
+    6.58,
+    6.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "H mosshell Medium cand|ship | mosshell-cand-Medium": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.93,
+   "mapped_judges": [
+    6.97,
+    6.84,
+    6.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "H mosshell High cand|ship | mosshell-cand-High": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.93,
+   "mapped_judges": [
+    6.97,
+    6.84,
+    6.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "H mosshell High cand|ship | mosshell-ship-High": {
+   "measured_mean": 5.667,
+   "mapped_mean": 6.75,
+   "mapped_judges": [
+    6.84,
+    6.58,
+    6.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "H bramblebun High cand|ship | bramblebun-cand-High": {
+   "measured_mean": 6.4,
+   "mapped_mean": 7.24,
+   "mapped_judges": [
+    7.64,
+    6.97,
+    7.11
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "H bramblebun High cand|ship | bramblebun-ship-High": {
+   "measured_mean": 6.1,
+   "mapped_mean": 7.04,
+   "mapped_judges": [
+    7.44,
+    6.71,
+    6.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
