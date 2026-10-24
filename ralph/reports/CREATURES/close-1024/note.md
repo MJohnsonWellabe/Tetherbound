@@ -3,6 +3,22 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct READY tb/creatures-land b67ec65dc (= c6985d7a9 + two commits).
+  - F36#0 scale (GPU item 2): Trailpup 2.3 -> 3.1 m, Stormtrail 2.55 -> 3.45 m and Cindercub 2.5 -> 3.25 m, radius with height. No footprint warning; Warrens and Hall admission hold.
+  - F36#1: Riverdrake's land form plays its recipe (b15: 6.80 vs 6.20; land only, since the lane keeps its pilot).
+  - Galecrest and Stormraven recipes OFF (GPU judged worse), with `_why_gpu_1024_f36_1` recording the six GPU-confirmed species.
+  - Checks:
+    - Full suite on 15d18563a: 6964 tests, 2 failed. One was a local untracked candidate's texture import; the other is the scale ladder below.
+    - After the fix: scale_ladder, texture_import_policy, species, rideable, dual_type, variant, evolution and companion pass (162 tests, 0 failed). Post-pass `--check` current.
+    - Smokes, headless, with the larger growth applied (a superset of this one): arena OK, gate E passed, catching OK.
+  - QUESTION, scale rule against the owner's 7 Sep 2026 ladder. The GPU judges read Mudsnout, Paddlenewt and Riftfrill at or below the ruler. They sit in the owner's "small class: just over the trainer" band (1.90-2.15 m, at least five species; `test_creature_scale_ladder`). Growing them empties the class to three, so they stay at 2.0, 2.15 and 2.15 m. Mudsnout would also be capped at 2.45 m by Warrens admission (2.6 m fails). Options:
+    - (a) keep them, with the declared height still just over the trainer;
+    - (b) owner revises the small class;
+    - (c) grow other small species into the band.
+    Your call or the owner's; I've not changed the test.
+  - b16 (`close-1024/b16/judges.md`): the growth is neutral on CPU tiles, because each tile crops to creature plus trainer. The Mosshell sprawl faint lost (6.62 vs 6.74) and is OFF; the lane keeps only its scripts.
+  - b15: the Tuskroot fresh re-check is 6.59, so its F36#1 pass is withdrawn (it stays ON). The water-Riptusk swim got one PRESENT. Riverdrake gains a pass. The roster now stands at 37 of 70.
+  - Next: Aquaryn and Tidecoil (GPU 7.49 and 7.45; the notes only describe shipping, so I'll try hit variants). Then dark values (Stormtrail, Cindercub) and the Frostclaw dark sphere at the trainer's feet.
 - 24 Oct READY tb/creatures-land c6985d7a9 (= 078a5f6c4 + Mirejaw fit + Pebbik remake ON + rig sources and raw files + Riptusk held OFF).
   - Checks:
     - Full `run_tests`: 6964 tests. 4 failed on cb8b86ca7, all Riptusk; after the hold the affected files (creature_rest_pose, four_biome_roster_population, species, f36_pose, water) pass, 540 tests, 0 failed.
