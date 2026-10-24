@@ -614,6 +614,32 @@
           }
         }
       }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-beacon-spire-candidate",
+      "_why": "F40 C4 / P2-024 Windscar Beacon (GPU baseline 5.08: 'a lone wooden arch'): the coordinator's Meshy spire (assets/props/meshy-1024/cloudreach_windscar_beacon_spire, task ids in provenance.jsonl, drafted reference assets/environment/cloudreach/meshy_refs/windscar_beacon/beacon_spire_ref.jpg), 27 m to the finial (15x the 1.80 m trainer), stands 24 m out along the beacon stand's heading, 9 m past the wind-gate arch, so the catalogue views frame it through the arch. Untinted, visual only, no collision; the arch, signal and banners stay. Flag OFF; not judged yet.",
+      "overlay": {
+        "settlements": {
+          "WindscarBeacon": {
+            "buildings": [
+              {
+                "asset": "windscar_beacon_spire",
+                "glb": "res://assets/props/meshy-1024/cloudreach_windscar_beacon_spire/cloudreach_windscar_beacon_spire.glb",
+                "at": [
+                  18.16,
+                  0.0,
+                  15.69
+                ],
+                "height": 27.0,
+                "yaw": 220.0,
+                "collision_fraction": 0.0,
+                "tint": "#ffffff"
+              }
+            ]
+          }
+        }
+      }
     }
   ]
 }
