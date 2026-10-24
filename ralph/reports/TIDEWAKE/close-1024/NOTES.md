@@ -4,6 +4,15 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 20:40 CT **INFO / QUESTION (vf3/VERDICT.md): the facade is level, so it stays OFF.**
+  - **Scores:** close-up 4.59 against 4.56; matched fight 4.98 against 4.98.
+  - **Judges' read:** a small tile pasted mid-slab at an odd angle. They unanimously name the giant stretched faceted terrain slabs and the wall-facing camera as the real fault.
+  - **The F39#4 close-up now sits at 4.56 shipping,** after limestone and the rock family.
+  - **QUESTION:** next step for F39#4, either:
+    - (a) reshape or retexture the Veilfall terrain in that gully (gameplay terrain; needs a route and walk check); or
+    - (b) reframe the `veilfall-near` stand toward the falls and water (that changes the yardstick, so it is your call).
+  - Meanwhile I'm on your GPU asks: night shadow on Forward+ and the noon seam.
+
 - 2026-10-24 20:10 CT **READY: `tb/tidewake-land` at 3e852e6be** (3e852e6be33f98ec068b3122efa75a199d99dc1a), one commit on origin/main d71bd31f6 (#728).
   - **ON:** `veilfall_family_candidate` (rf1: close-up 4.51 against 3.90, shore level, matched fight 5.01 against 4.85).
   - **Lane fixes:**
