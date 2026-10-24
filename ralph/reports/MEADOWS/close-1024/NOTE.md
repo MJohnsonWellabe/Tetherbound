@@ -62,6 +62,17 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Test: `tests/test_crossing_hall_great_hall_renderer.gd`. `--only=crossing_hall,great_hall_renderer`: 9 tests, 0 failed.
   - GPU re-judge command: the F17-6 fixed set (`capture_camera_set.gd --set=res://tools/visual_judge/camera_sets/F17-6.json`) at Medium and High.
 
+- 2026-10-24 17:45 UTC STATUS F38#5: Hall and relay rescan, after the fixture correction and the relay-pad change. See `f38-0/matrix.md`, "F38#5 rescan".
+  - Mapped scores: Hall nave, shrine and arches 6.37 (was 4.25, 2.80 and 2.09). Relay yard 5.85 (was 5.19).
+  - Void, black and inside-geometry frames and the floor hex decals are gone.
+  - Still open:
+    - The relay gameplay stand frames the trainer through the gate arch, with a pier filling half the frame. That needs shared camera code, so I'm reporting it, not changing it.
+    - The arch rims read as neon on Compatibility. They wait on the F17#6 GPU verdict, because Low must stay identical.
+    - The Hall walls hug the frame edge in arch detail views.
+    - Shrine night is washed out.
+  - The "waterfall/steam column" is the owner-specified objective beacon (`objective_beacon.json`) pointing at the Warrens. It's wayfinding, so I'm leaving it alone.
+- 2026-10-24 17:45 UTC STATUS F38#0: the supplementals are capturing on CPU (creatures first, ~35 s a frame). The 40 remaining rows get one-sided sheets and three judges as each run lands. P2-015 terrapup faint now sits grounded in the fresh capture.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
