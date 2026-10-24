@@ -3,6 +3,12 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct GPU READY on tb/creatures b705fe176. Both candidates are bound on the lane; ride seat 2.66 m on Terrapup's plated back.
+  - Terrapup large dog (`candidate_dog2`, 3.20 m, 5.31 m long, no footprint shrink). CPU sanity b21: 7.46 vs the badger's 7.65; no pose PRESENT, ride fixed x3. It is the owner's species, so it goes to GPU.
+  - Mudsnout tusks (`candidate_nat1024t`): b20 CPU 7.46 vs 7.33.
+  - Capture, Medium and High, at b705fe176 against main: `godot --path . --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=terrapup,mudsnout --whole-body --context --out=res://.artifacts/gpu_b2021/<preset>`.
+  - Grow/lead admission for the dog is the same 3.20 m footprint class as the cleared badger; I'll run the lead probe before it lands.
+  - b20 rim on Trailpup, Nightburrow and Bramblebun: no visible gain, dropped. A texture-level accent comes next.
 - 24 Oct GPU READY (candidate pick on CPU, b19; `close-1024/b19/judges.md`): value lift on tb/creatures 5d9b70894. Cindercub field_emission 0.8 (CPU 7.15 vs 6.88), Stormtrail 1.0 (6.77 vs 6.59), Riftfrill 1.0 (6.21 vs 6.03).
   - Capture, both arms at Medium and High:
     - candidate: `godot --path . --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=cindercub,stormtrail,riftfrill --whole-body --context --out=res://.artifacts/gpu_b19/<preset>` at 5d9b70894;
