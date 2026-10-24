@@ -1136,7 +1136,7 @@
         "colour": "#1d6b8c",
         "height": 2.15,
         "radius": 0.716043,
-        "footprint_allowance": 2.6,
+        "footprint_allowance": 4.8,
         "model": "res://assets/creatures/tetherbound/paddlenewt/candidate_nat1024/models/creature_paddlenewt_nat1024.glb",
         "_comment_model": "Deliberately the SAME mesh as paddlenewt. This is an aspect variant, not a new creature: CLAUDE.md's rule that Meadows creatures are differentiated by materials, textures, modest scale, animation, VFX, habitat, behaviour, traits and encounter context IS the build path the owner's sheet specifies for it ('VARIANT RECOLOR'). The recolour, emissive and VFX treatment belongs to the T1-CREATURE-ART lane; this entry is the identity it attaches to. Do NOT repoint this at a new .glb without an owner directive -- the expansion brief names a new mesh for five OTHER creatures and explicitly not for this one.",
         "model_scale": 1.0,
