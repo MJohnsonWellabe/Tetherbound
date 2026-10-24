@@ -1,0 +1,53 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 6085,
+    "spine": 7774,
+    "neck": 4057,
+    "head": 7015,
+    "front_upper_l": 240,
+    "front_lower_l": 407,
+    "front_upper_r": 262,
+    "front_lower_r": 402,
+    "tail_1": 291,
+    "tail_2": 939,
+    "rear_upper_l": 204,
+    "rear_lower_l": 64,
+    "rear_upper_r": 185,
+    "rear_lower_r": 57
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 14069,
+  "height_m": 1.95,
+  "length_m": 2.6902,
+  "width_m": 0.7585,
+  "triangles": 28000,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.0824,
+      -0.314,
+      0.0841
+    ],
+    "front_r": [
+      0.0798,
+      -0.312,
+      0.0885
+    ],
+    "rear_l": [
+      -0.0551,
+      0.2751,
+      0.1318
+    ],
+    "rear_r": [
+      0.0531,
+      0.2817,
+      0.1342
+    ]
+  },
+  "back_top_normalised": 0.6105,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false
+}
