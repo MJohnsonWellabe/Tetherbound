@@ -491,7 +491,13 @@ func _fixed_views(look: Node) -> void:
 			return
 		eye.rotation_degrees = Vector3(float(view.pitch), float(view.yaw), 0.0)
 		eye.fov = float(view.fov)
-		look.call("set_weather", {})
+		# Clear views keep the original pinned look exactly (no weather delta),
+		# so frames stay comparable with every earlier clear batch. Any other
+		# preset keeps the sky/sun delta WorldWeather.set_weather() just pushed
+		# into WorldLook: clearing it here would leave rain particles falling
+		# out of a clear midday sky.
+		if view_weather == "clear":
+			look.call("set_weather", {})
 		var clock: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/art.json"))
 		look.call("resume_at_elapsed", float(view.time) / 24.0 * float(clock.day_length_seconds))
 		look.call("set_clock_frozen", true)
