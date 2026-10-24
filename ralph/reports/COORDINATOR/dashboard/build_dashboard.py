@@ -666,7 +666,7 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
   <div class="kpis">
     <div class="kpi"><b>{accepted} / {len(crit["rows"])}</b><span>F rows accepted (every criterion met)</span></div>
     <div class="kpi"><b>{len(all_c) - counts["met"]}</b><span>Criteria not done: {_open_by["F36"]} creatures (F36), {_open_by["look"]} biome looks (F38–F41), {_open_by["other"]} everything else</span></div>
-    <div class="kpi"><b>{counts["met"]} / {len(all_c)}</b><span>Criteria met: {counts["met"] - evidenced_only} on main, {evidenced_only} evidenced on lane branches</span></div>
+    <div class="kpi"><b>{counts["met"]} / {len(all_c)}</b><span>Criteria met on main</span></div>
     <div class="kpi"><b>{redesign_met} / {len(redesign_c)}</b><span>Redesign criteria met (F16 onward)</span></div>
     <div class="kpi"><b>{counts["failing"] + counts["blocked"]}</b><span>Criteria failing or blocked</span></div>
   </div>
