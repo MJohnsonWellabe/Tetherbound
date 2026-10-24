@@ -4,6 +4,17 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 22:30 CT **INFO / QUESTION (rd1/VERDICT.md): F39#4's material route is exhausted; what remains is geometry.**
+  - **Result:** the material-only gully fix (finer texture, short runnels, tighter bedding) loses the CPU pre-judge: close-up 3.94 against 4.34, all three judges lower. Shore and fight were also slightly lower. It stays OFF.
+  - **Why:** the judges read shipping's long runnels as welcome "wet-streak detail". The "stretched slab" they name is the few huge faceted terrain faces themselves.
+  - **QUESTION:** do you want either:
+    - (1) a heightfield relief pass on the gully (a terrain bake on the hike: route and walk check plus earned-save pieces), or
+    - (2) a Meshy slab-wall fitted to these exact faces?
+- 2026-10-24 22:30 CT INFO: **owner declutter.**
+  - **Candidate:** `first_shore_declutter_candidate` (OFF) drops the three First Shore p1 props by id (ids added to the shipped props). `stones_candidate` (OFF) is thinned to 0.2, grouped, with a soft tide band.
+  - **Confirmed:** the beach "dot field" is the stone tier. With it off, the sand reads clean.
+  - **Next:** the First Shore and lesson views are capturing for a CPU pre-judge, then READY for the GPU lane.
+
 - 2026-10-24 21:00 CT **READY for the GPU lane: the Forward+ night-shadow and noon-seam fixes are staged OFF on `tb/tidewake` 3d0de8a9c.** This container has no Vulkan, so I could not render or verify them.
   - **Mechanism:** in `world_look.gd`, a key named `<key>_forward_plus` replaces `<key>` only on Forward+/Mobile. Compatibility is unchanged, with a test.
   - **Section:** `forward_plus_candidate`.
