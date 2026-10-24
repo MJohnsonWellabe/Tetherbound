@@ -29,4 +29,6 @@ Quoting the judges on the candidate's 18:00: "a warm golden hour with orange san
 1. **Night casts nothing.** All three: the beach is still ambient-filled and the trainer and barrels throw no shadow; one judge adds that the candidate pushes the night far enough that the dock and posts almost stop reading. r2 trades night ambient (0.40 -> 0.26) for a stronger moon key (0.62 -> 0.95) so props cast.
 2. **Dawn was never regraded.** Two judges: 05:00 is "the midday frame with a white disc added". r1 only touched golden and night. r2 adds a dawn grade.
 3. **The midday seam is softened, not gone.** r2 raises horizon haze 0.34 -> 0.46 and aerial perspective 0.62 -> 0.72.
-4. **Unchanged and out of this round:** the Veilfall close-up (new art, Meshy request 7-8), the even pebble and dune-grass scatter, and the HUD's keyboard prompts, empty quick-bar slots and the doubled slash in the health readout ("100//100") - that last one is a real UI defect worth a one-line fix in the UI lane.
+4. **Unchanged and out of this round:** the Veilfall close-up (new art, Meshy request 7-8), the even pebble and dune-grass scatter, and the HUD's keyboard prompts and empty quick-bar slots.
+
+**One reported defect did not reproduce.** Two judges read the health readout as a doubled slash, "100//100". It is not: `playground_hud.gd:2625` formats `"%d / %d"`, and a 2x crop of the shipping frame shows "100 / 100" correctly. The outlined glyphs merge at the size the judges saw. Nothing to fix, and nothing passed to the UI lane.
