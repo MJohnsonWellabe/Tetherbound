@@ -179,6 +179,8 @@ func build(world: Node3D) -> void:
 		_hazards.set_shader_parameter("lane_alpha", float(lanes.get("fill_alpha", 0.21)) * fill_scale)
 		_hazards.set_shader_parameter("rim_alpha", float(lanes.get("rim_alpha", 0.0)))
 		_hazards.set_shader_parameter("rim_width", float(lanes.get("rim_width_m", 0.35)))
+		_hazards.set_shader_parameter("streak_alpha", float(lanes.get("streak_alpha", 0.0)))
+		_hazards.set_shader_parameter("streak_speed", float(lanes.get("streak_speed", 9.0)))
 	overlay.material_override = _hazards
 	add_child(overlay)
 	_build_state_bindings(world,materials)

@@ -1,0 +1,23 @@
+# Generic fight-presentation candidate H (owner 24 Oct: no outlined attack areas), capture-only.
+# Repo root, clean tree. Applies cand_rw_hud.py.txt (compact command lane, smaller contact disc +
+# grounded impact burst, horizon pitch, ally composition, Riverwatch pilot floor, Veyra lane block ON),
+# then: outlines off (dust + attacker element glow carry the tell) and Veyra wind streaks instead of
+# a filled lane. `git checkout data/config/` restores.
+import json, subprocess, sys
+subprocess.run([sys.executable, 'ralph/reports/FIGHTS/close-1024/cand_rw_hud.py.txt', '0.10'], check=True)
+p = 'data/config/combat.json'; s = open(p).read()
+for a, b in [('"outline_off": false', '"outline_off": true'),
+             ('"tell_aura_element": false', '"tell_aura_element": true'),
+             ('"dust_alpha": 0.75', '"dust_alpha": 0.9'),
+             ('"dust_spacing_m": 0.55', '"dust_spacing_m": 0.45'),
+             ('"tell_aura": 0.3', '"tell_aura": 0.45')]:
+    assert s.count(a) == 1, a
+    s = s.replace(a, b)
+json.loads(s); open(p, 'w').write(s)
+p = 'data/config/cloudreach_veyra_readability.json'; s = open(p).read()
+for a, b in [('"fill_alpha": 0.21,', '"fill_alpha": 0.0,'), ('"rim_alpha": 0.85,', '"rim_alpha": 0.0,'),
+             ('"streak_alpha": 0.0,', '"streak_alpha": 0.8,')]:
+    assert s.count(a) == 1, a
+    s = s.replace(a, b)
+json.loads(s); open(p, 'w').write(s)
+print('candidate H applied')
