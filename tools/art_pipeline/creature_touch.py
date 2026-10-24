@@ -13,7 +13,10 @@ The untouched albedo is kept once, the first time a species is touched, at
 repaints from that copy, so re-running never compounds a touch.
 
 Spec: data/creatures/creature_touches.json, keyed by species:
-  {"source_model": "<species>/candidate_xxx", "overlays": [...]}
+  {"source_model": "<species>/candidate_xxx", "overlays": [...],
+   "also": ["<species>/candidate_yyy"]}
+`also` lists builds of the same remake that share its UV layout and albedo
+(Mudsnout's tusk build); each gets the same painted image.
 Overlays are tools/creature_overlays.py overlays (mode "shade" for hardened
 patches and scars), placed by the remake's anatomy map.
 
@@ -76,16 +79,34 @@ def base_color_image(gltf):
     return gltf["textures"][texture]["source"]
 
 
-def touch(species, entry):
-    remake = entry["source_model"]
+def _open(remake):
     models = os.path.join(CREATURES, remake, "models")
     glb_name = sorted(f for f in os.listdir(models) if f.endswith(".glb"))[0]
     glb = os.path.join(models, glb_name)
     gltf, blob = read_glb(glb)
     views = [blob[v.get("byteOffset", 0):v.get("byteOffset", 0) + v["byteLength"]]
              for v in gltf["bufferViews"]]
-    image_index = base_color_image(gltf)
-    image = gltf["images"][image_index]
+    return models, glb_name, glb, gltf, views
+
+
+def _write(remake, jpeg):
+    models, glb_name, glb, gltf, views = _open(remake)
+    image = gltf["images"][base_color_image(gltf)]
+    views[image["bufferView"]] = jpeg
+    image["mimeType"] = "image/jpeg"
+    write_glb(glb, gltf, views)
+    # The import extracts this image beside the GLB; write it too so the
+    # extracted texture matches before the next reimport.
+    extracted = os.path.join(models, "%s_%s.jpg" % (os.path.splitext(glb_name)[0], image.get("name", "Image_0")))
+    with open(extracted, "wb") as f:
+        f.write(jpeg)
+    return glb
+
+
+def touch(species, entry):
+    remake = entry["source_model"]
+    _models, _name, _glb, gltf, views = _open(remake)
+    image = gltf["images"][base_color_image(gltf)]
     base_dir = os.path.join(CREATURES, remake, "source", "touch")
     base_path = os.path.join(base_dir, "albedo_base.jpg")
     if not os.path.exists(base_path):
@@ -100,18 +121,12 @@ def touch(species, entry):
     buffer = io.BytesIO()
     out.save(buffer, "JPEG", quality=JPEG_QUALITY)
     jpeg = buffer.getvalue()
-    views[image["bufferView"]] = jpeg
-    image["mimeType"] = "image/jpeg"
-    write_glb(glb, gltf, views)
-    # The import extracts this image beside the GLB; write it too so the
-    # extracted texture matches before the next reimport.
-    extracted = os.path.join(models, "%s_%s.jpg" % (os.path.splitext(glb_name)[0], image.get("name", "Image_0")))
-    with open(extracted, "wb") as f:
-        f.write(jpeg)
+    for target in [remake] + list(entry.get("also", [])):
+        glb = _write(target, jpeg)
+        print("%s: touched %s (%d bytes, sha %s)" % (
+            species, os.path.relpath(glb, ROOT), len(jpeg), hashlib.sha256(jpeg).hexdigest()[:12]))
     for note in notes:
         print("   %s" % note)
-    print("%s: touched %s (%d bytes, sha %s)" % (
-        species, os.path.relpath(glb, ROOT), len(jpeg), hashlib.sha256(jpeg).hexdigest()[:12]))
 
 
 def main():
