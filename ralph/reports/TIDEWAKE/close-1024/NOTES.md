@@ -4,6 +4,19 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 14:10 CT **ANSWER (#725 review): p1 and p2 were not skewed. Regression test at `tb/tidewake` ff70faa67.**
+  1. **p1 and p2 capture code.**
+     - All four p1/p2 arms were captured at **8ce49fdaf**: `p1_ctl`, `p1_cand`, `p2_ctl` and `p2_cand` (each frame's `metadata.json` `source_sha`).
+     - At that commit `shaders/stone_field.gdshader` has no `clump_patch`/`tide_band` uniforms, and `_build_stones` has no such keys. The grouping code first appears at 46d30d74d.
+     - So neither arm rendered grouped pebbles. The 5.59 against 5.02 and 6.02 against 5.72 deltas are the props and the Deep Watch clusters alone.
+     - The only frames that carried the bug are my limestone `ls_ctl`/`ls_cand` captures (46d30d74d), in both arms, and they have not been judged. I am recapturing them on the fixed code before judging.
+  2. **The fix** is cherry-picked onto the lane as cabf2caab.
+  3. **The regression test** is `test_water_dune_cover.gd::test_stone_grouping_never_inherits_the_grass_profile_keys`.
+     - It builds the stone tier from the real shipping Tidewake profile, which sets grass `clump_patch_*` at the top level and has no stones override.
+     - It asserts all five stone uniforms stay at the shader's 0.0 default.
+     - It also asserts that a `stones` override still reaches the shader.
+     - It **fails on the pre-fix `grass_field.gd` and passes on the fix**. `test_water_dune_cover`: 10 tests, 168 assertions, 0 failed.
+
 - 2026-10-24 13:40 CT **READY: `tb/tidewake-land` at c542dcd8c** (c542dcd8cbdc99efa9a24c010a60066dd8e6af42), one commit on origin/main 45865499d.
   - **ON:** the Meshy beach props (p1: 5.59 against 5.02) and the Deep Watch shore site through `shipped_sites` (p2: 6.02 against 5.72).
   - **OFF:**
