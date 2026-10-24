@@ -2464,11 +2464,11 @@
    "title": "Tidewake: visual catalog burn-down to the full bar",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/visual-tidewake",
-   "pct": 33,
+   "pct": 17,
    "counts": {
-    "met": 2,
+    "met": 1,
     "partial": 0,
-    "in_progress": 2,
+    "in_progress": 3,
     "not_started": 2,
     "blocked": 0,
     "failing": 0
@@ -2508,9 +2508,9 @@
     },
     {
      "text": "The hero landmark (Veilfall) reads at distance and up close.",
-     "status": "met",
-     "evidence": "PR #577 (consolidation 4) merged 2026-10-07 3:52 PM CT: from tb/codex-d 5c7908ded3 (READY #572 6045866946, 3:05 PM CT 10-07): Veilfall distance 6/6 run 37677560955, near 20 run 37662801275, judge PASS; review APPROVE",
-     "gap": "Decide the Veilfall flags. Recapture distance and close-up frames on High and Medium and run a fresh code-blind judge.",
+     "status": "in_progress",
+     "evidence": "REOPENED 24 Oct 2026 (tb/tidewake close-1024 vf1): on today's yardstick the Veilfall close-up maps to 3.35 (shipping) and 4.20 (best in-scene, limestone material); every judge names faceted cliff slabs, the near-black kitbash crown and the blown white falls. New art (Meshy veilfall_cascade_tier, veilfall_plunge_rocks on tb/meshy-1024 2d8328475) is being integrated flag-OFF for vf2. | Earlier: PR #577 (consolidation 4) merged 2026-10-07 3:52 PM CT: from tb/codex-d 5c7908ded3 (READY #572 6045866946, 3:05 PM CT 10-07): Veilfall distance 6/6 run 37677560955, near 20 run 37662801275, judge PASS; review APPROVE",
+     "gap": "Integrate the Meshy cascade tier and plunge rocks, judge vf2 on the yardstick, and reach a mapped 6.7 (CPU-provisional) then 7.5 on GPU.",
      "note": "Landed: PR #577 (consolidation 4) merged 2026-10-07 3:52 PM CT: from tb/codex-d 5c7908ded3 (READY #572 6045866946, 3:05 PM CT 10-07): Veilfall distance 6/6 run 37677560955, near 20 run 37662801275, judge PASS; review APPROVE",
      "audit_index": 4
     },
