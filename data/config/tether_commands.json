@@ -22,7 +22,7 @@
   },
   "snare_bounds": {"minimum_movement_multiplier": 0.45, "maximum_catch_bonus": 0.16},
   "item_bounds": {"maximum_heal": 1000000, "maximum_nourishment": 100, "maximum_happiness": 100, "minimum_buff_scale": 0.001, "maximum_buff_scale": 2.0, "maximum_buff_seconds": 3600, "buff_stats": ["attack", "defence", "speed", "wind_regen"]},
-  "ui": {"width": 580, "font_size": 22, "bar_height": 18, "refusal_seconds": 2.5},
+  "ui": {"width": 580, "font_size": 22, "bar_height": 18, "refusal_seconds": 2.5, "compact_when_idle": false, "_why_compact_when_idle": "F22#4 named-fight HUD candidate (Fights lane, 24 Oct; GPU/CPU judges: the bottom band covers about a third of the fight frame). true: while no command is usable the lane shows only its title and meter (scripts/ui/tether_command_meter.gd). OFF until judged."},
   "refusals": {
     "disabled": "Tether Commands are unavailable.",
     "stale_actor": "Your creature changed. Try again.",

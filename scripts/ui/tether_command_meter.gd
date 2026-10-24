@@ -7,6 +7,8 @@ const GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const TOKENS := preload("res://scripts/ui/ui_tokens.gd")
 const SYSTEM_SCREEN := preload("res://scripts/ui/system_screen.gd")
 var _bar: ProgressBar
+## The four command columns (hidden while compact_when_idle and none is usable).
+var _buttons: GridContainer
 var _title: Label
 var _reason: Label
 var _labels: Dictionary = {}
@@ -49,6 +51,7 @@ func _ready() -> void:
 	_bar.add_theme_stylebox_override("fill", fill)
 	add_child(_bar)
 	var buttons := GridContainer.new()
+	_buttons = buttons
 	buttons.columns = 4
 	buttons.add_theme_constant_override("h_separation", 20)
 	add_child(buttons)
@@ -112,6 +115,7 @@ func present(snapshot: Dictionary, using_pad: bool, keep_visible: bool = false) 
 	_bar.max_value = maximum
 	_bar.value = clampf(meter, 0, maximum)
 	_title.text = "Commands  %d / %d" % [int(meter), int(maximum)]
+	var any_available := false
 	for id: String in _ids():
 		var row: Dictionary = COMMANDS.config().commands[id]
 		var label: RichTextLabel = _labels[id]
@@ -132,6 +136,12 @@ func present(snapshot: Dictionary, using_pad: bool, keep_visible: bool = false) 
 		# Unaffordable stays >= 80 % bright and reads by hue (grey, not teal);
 		# TEXT_MUTED at ~55 % fell to ~1.3:1 over a sunlit path (F42#2 r3).
 		label.add_theme_color_override("default_color", TOKENS.TEAL_SOFT if available else UNAVAILABLE)
+		any_available = any_available or available
+	# F22#4 named-fight HUD (GPU/CPU judges: the bottom band covers about a
+	# third of the frame). `ui.compact_when_idle` (OFF): while no command can be
+	# used, the lane shows only its title and meter; the columns return the
+	# moment one becomes usable, so the read on a spendable command is unchanged.
+	_buttons.visible = any_available or COMMANDS.config().get("ui", {}).get("compact_when_idle") != true
 
 func refused(reason: String) -> void:
 	if _reason == null: return
