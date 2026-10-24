@@ -80,6 +80,12 @@ func _build_formation(spec: Dictionary) -> void:
 	var body := MeshInstance3D.new()
 	body.name = "FacetedCragBody"
 	body.mesh = formation
+	# F39#4 (close-1024): optional render-only relief over the same coarse
+	# shell. Displacement is inward only and the collider below is still the
+	# coarse trimesh, so collision, supports and route clearances do not move.
+	var relief: Dictionary = _rules.get("visual_relief", {})
+	if not relief.is_empty() and not bool(_world.get("simulation_only")):
+		body.mesh = _relief_mesh(formation, relief, seed_value)
 	body.material_override = _rock_material
 	body.visibility_range_end = 1100.0
 	body.visibility_range_end_margin = 120.0
@@ -89,7 +95,7 @@ func _build_formation(spec: Dictionary) -> void:
 	holder.add_child(solid)
 	var collider := CollisionShape3D.new()
 	collider.name = "CragTrimesh"
-	collider.shape = (body.mesh as ArrayMesh).create_trimesh_shape()
+	collider.shape = formation.create_trimesh_shape()
 	solid.add_child(collider)
 	var cap := MeshInstance3D.new()
 	cap.name = "VegetatedShelfCap"
@@ -161,6 +167,67 @@ func _formation_mesh(base_radius: Vector2, top_radius: Vector2, height: float,
 		_triangle(surface, cap_centre, top_ring[index], top_ring[(index + 1) % segments])
 	surface.generate_normals()
 	return surface.commit()
+
+
+## Subdivides every coarse wall triangle and pushes its interior points inward
+## along the face normal by a value-noise depth plus horizontal bedding, so a
+## 30-70 m crag face breaks into ledges and blocks instead of one flat facet.
+## Edge vertices stay on the coarse shell, so neighbouring faces still meet and
+## nothing reaches outside the collider. Cap (near-horizontal) faces are kept.
+func _relief_mesh(coarse: ArrayMesh, relief: Dictionary, seed_value: int) -> ArrayMesh:
+	var steps := clampi(int(relief.get("subdivisions", 6)), 1, 16)
+	var amplitude := maxf(0.0, float(relief.get("amplitude_m", 1.2)))
+	var cell := maxf(0.5, float(relief.get("noise_cell_m", 3.0)))
+	var strata := maxf(0.5, float(relief.get("strata_m", 2.5)))
+	var strata_weight := clampf(float(relief.get("strata_weight", 0.45)), 0.0, 1.0)
+	var arrays := coarse.surface_get_arrays(0)
+	var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var offset := Vector3(float(seed_value % 97), float(seed_value % 53), float(seed_value % 31))
+	for tri in range(0, verts.size(), 3):
+		var a := verts[tri]
+		var b := verts[tri + 1]
+		var c := verts[tri + 2]
+		var normal := (b - a).cross(c - a).normalized()
+		if absf(normal.y) > 0.85:
+			_triangle(surface, a, b, c)
+			continue
+		var grid: Array = []
+		for i in steps + 1:
+			var row: Array[Vector3] = []
+			for j in steps + 1 - i:
+				var u := float(i) / float(steps)
+				var v := float(j) / float(steps)
+				var point := a + (b - a) * u + (c - a) * v
+				var edge := i == 0 or j == 0 or i + j == steps
+				if not edge:
+					var n := _relief_noise((point + offset) / cell)
+					var bed := 1.0 - absf(fposmod(point.y / strata, 1.0) * 2.0 - 1.0)
+					var depth := amplitude * lerpf(n, smoothstep(0.55, 0.95, bed), strata_weight)
+					point -= normal * depth
+				row.append(point)
+			grid.append(row)
+		for i in steps:
+			for j in steps - i:
+				_triangle(surface, grid[i][j], grid[i + 1][j], grid[i][j + 1])
+				if j + 1 < steps - i:
+					_triangle(surface, grid[i + 1][j], grid[i + 1][j + 1], grid[i][j + 1])
+	surface.generate_normals()
+	return surface.commit()
+
+
+static func _relief_noise(p: Vector3) -> float:
+	var cell := p.floor()
+	var f := p - cell
+	f = f * f * (Vector3.ONE * 3.0 - f * 2.0)
+	var value := 0.0
+	for corner in 8:
+		var o := Vector3(corner & 1, (corner >> 1) & 1, (corner >> 2) & 1)
+		var h := fposmod(sin((cell + o).dot(Vector3(127.1, 311.7, 74.7))) * 43758.5453, 1.0)
+		var w := (f.x if o.x > 0.0 else 1.0 - f.x) * (f.y if o.y > 0.0 else 1.0 - f.y) * (f.z if o.z > 0.0 else 1.0 - f.z)
+		value += h * w
+	return value
 
 
 func _cap_mesh(radius: Vector2, seed_value: int) -> ArrayMesh:

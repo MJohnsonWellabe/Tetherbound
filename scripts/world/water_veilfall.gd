@@ -120,6 +120,10 @@ func build(realm: Node3D) -> void:
 	# tint toward the shipped limestone; geometry, collision and clearances unchanged.
 	var family: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get(
 		"veilfall_family_candidate", {}).get("exterior_composition", {})
+	# F39#4 (close-1024, OFF until judged): render-only relief on the gate crags.
+	family = preload("res://scripts/world/tidewake_look_profile.gd").merge(family,
+		preload("res://scripts/world/tidewake_look_profile.gd").settings().get(
+			"veilfall_formation_relief_candidate", {}).get("exterior_composition", {}))
 	exterior_presentation.call("build", world,
 		preload("res://scripts/world/tidewake_look_profile.gd").merge(rules.get("exterior_composition", {}), family))
 	_build_distance_presentation()
