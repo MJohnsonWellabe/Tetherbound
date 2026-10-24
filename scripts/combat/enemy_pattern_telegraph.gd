@@ -37,6 +37,8 @@ var _tint := Color.WHITE
 var _curtain: MeshInstance3D = null
 var _curtain_lines: Array = []
 var _curtain_time := 0.0
+## Round-2 kicked dust along the same outline (STYLE.draw_dust; null = off).
+var _dust: MultiMeshInstance3D = null
 ## Soft-style edge hue; the fill hue unless a row asks for a darker rim.
 var _edge_tint := Color.WHITE
 ## F22#4 Riverwatch round (13 Oct): a row's `cue_water` draws its field as a
@@ -133,6 +135,10 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	if not cue._soft.is_empty() and STYLE.curtain_height(cue._soft, 1.0) > 0.0:
 		cue._curtain = STYLE.make_curtain(AABB(Vector3(-4096, -512, -4096), Vector3(8192, 1024, 8192)))
 		visual.add_child(cue._curtain)
+	if not cue._soft.is_empty() and STYLE.dust_enabled(cue._soft):
+		cue._dust = STYLE.make_dust()
+		cue._dust.custom_aabb = AABB(Vector3(-4096, -512, -4096), Vector3(8192, 1024, 8192))
+		visual.add_child(cue._dust)
 	if profile.get("cue_water") == true and str(profile.get("telegraph_shape", "")) == "field":
 		cue._add_water(float(profile.get("telegraph", 1.0)))
 	if profile.get("cue_water_spray") == true and str(profile.get("telegraph_shape", "")) == "fan":
@@ -837,7 +843,7 @@ func _add_water_cast(rise_s: float) -> void:
 
 
 func _process(delta: float) -> void:
-	if _curtain != null:
+	if _curtain != null or _dust != null:
 		_curtain_time += delta
 		_draw_curtain()
 	if _aura_material != null:
@@ -1109,7 +1115,7 @@ func _aim_soft(shape: String) -> void:
 			_soft_edge(left, far_left, side, feather)
 			_soft_edge(right, far_right, -side, feather)
 			_soft_edge(far_left, far_right, -_heading, minf(feather, length * 0.4))
-			if _curtain != null:
+			if _curtain != null or _dust != null:
 				_curtain_lines.append(_seated_line([left, far_left, far_right, right]))
 	_draw_curtain()
 
@@ -1117,9 +1123,10 @@ func _aim_soft(shape: String) -> void:
 ## The curtain over the outline collected by the last aim, sized by how far
 ## into the tell it is.
 func _draw_curtain() -> void:
+	var tell := maxf(0.05, float(_profile.get("telegraph", 0.8)))
+	STYLE.draw_dust(_dust, _curtain_lines, _soft, _curtain_time / tell, _curtain_time)
 	if _curtain == null:
 		return
-	var tell := maxf(0.05, float(_profile.get("telegraph", 0.8)))
 	STYLE.draw_curtain(_curtain, _curtain_lines, _edge_tint, float(_soft.get("edge_alpha", 0.7))
 		* float(_soft.get("curtain_alpha", 0.6)), STYLE.curtain_height(_soft, _curtain_time / tell),
 		_soft, _curtain_time)
@@ -1136,7 +1143,7 @@ func _seated_line(points: Array) -> PackedVector3Array:
 func _soft_disc(centre: Vector3, inner: float, outer: float, arc: float) -> void:
 	var count := maxi(2, int(ceil(float(_segments) * arc / TAU)))
 	var feather := minf(float(_soft.get("feather_m", 0.3)), (outer - inner) * float(_soft.get("feather_max_fraction", 0.35)))
-	if _curtain != null:
+	if _curtain != null or _dust != null:
 		var outline: Array = []
 		if arc < TAU:
 			outline.append(centre + _heading.rotated(Vector3.UP, -arc * 0.5) * inner)

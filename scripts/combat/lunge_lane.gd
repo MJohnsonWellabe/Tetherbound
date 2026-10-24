@@ -57,6 +57,8 @@ var _crackle := 0.0
 var _xray: MeshInstance3D = null
 ## Bodied-tell curtains on the two rails (STYLE.curtain_height; null = off).
 var _curtain: MeshInstance3D = null
+## Round-2 kicked dust drifting down the rails (STYLE.draw_dust; null = off).
+var _dust: MultiMeshInstance3D = null
 
 ## P2-093/P2-063 soft style (`telegraph.soft_style`; empty = off).
 var _soft: Dictionary = {}
@@ -135,6 +137,9 @@ func _ready() -> void:
 	if not _soft.is_empty() and STYLE.curtain_height(_soft, 1.0) > 0.0:
 		_curtain = STYLE.make_curtain(AABB())
 		_instance.add_child(_curtain)
+	if not _soft.is_empty() and STYLE.dust_enabled(_soft):
+		_dust = STYLE.make_dust()
+		_instance.add_child(_dust)
 	_refresh_aabb()
 
 
@@ -259,6 +264,8 @@ func _refresh_aabb() -> void:
 		_xray.custom_aabb = _instance.custom_aabb
 	if _curtain != null:
 		_curtain.custom_aabb = _instance.custom_aabb
+	if _dust != null:
+		_dust.custom_aabb = _instance.custom_aabb
 
 
 ## World offset from the lane origin for a point `along` the heading and
@@ -374,7 +381,7 @@ func _draw_soft(base: Color, fade: float) -> void:
 		var phase := fmod(_life / CHEVRON_PERIOD + float(i) / float(CHEVRONS), 1.0)
 		var tip := _start + 0.6 + phase * maxf(0.1, _length - 1.2)
 		_chevron(tip, arm, Color(core, core.a * sin(phase * PI)))
-	if _curtain != null:
+	if _curtain != null or _dust != null:
 		var rails: Array = []
 		for side: float in [-1.0, 1.0]:
 			var rail := PackedVector3Array()
@@ -387,6 +394,7 @@ func _draw_soft(base: Color, fade: float) -> void:
 			rails.append(rail)
 		STYLE.draw_curtain(_curtain, rails, base, glow_alpha * float(_soft.get("curtain_alpha", 0.6)),
 			STYLE.curtain_height(_soft, build), _soft, _life)
+		STYLE.draw_dust(_dust, rails, _soft, build, _life, fade, true)
 
 
 ## Round 4 (P2-063 judge: "reads as a static UI outline, nothing shows the

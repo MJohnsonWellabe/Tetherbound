@@ -56,6 +56,10 @@ var _ring_mesh: ImmediateMesh = null
 ## Bodied-tell curtain on the rim (STYLE.curtain_height; null = off). A child
 ## of the ring, so the ring stays this node's only direct mesh.
 var _curtain: MeshInstance3D = null
+## Round-2 kicked dust round the rim and the attacker's rim glow
+## (STYLE.draw_dust / STYLE.apply_aura; null/empty = off).
+var _dust: MultiMeshInstance3D = null
+var _aura_taken: Array = []
 ## Heights belong to one mesh rebuild, never to a later pulse or moved body.
 var _ground_seen: Dictionary = {}
 var _drawn: Array = []
@@ -97,6 +101,10 @@ func _ready() -> void:
 	if not _soft.is_empty() and STYLE.curtain_height(_soft, 1.0) > 0.0:
 		_curtain = STYLE.make_curtain(_ring.custom_aabb)
 		_ring.add_child(_curtain)
+	if not _soft.is_empty() and STYLE.dust_enabled(_soft):
+		_dust = STYLE.make_dust()
+		_dust.custom_aabb = _ring.custom_aabb
+		_ring.add_child(_dust)
 
 
 func _material() -> StandardMaterial3D:
@@ -153,6 +161,8 @@ func _material() -> StandardMaterial3D:
 func follow_state(body: Node3D, active: Callable) -> void:
 	_follow_body = body
 	_state_active = active
+	if not _soft.is_empty() and _aura_taken.is_empty():
+		_aura_taken = STYLE.apply_aura(body, _colour, _soft)
 	if is_instance_valid(body) and body.has_method("body_radius"):
 		# The inner edge (72% of radius) must clear the live footprint.
 		_radius = maxf(_radius, float(body.call("body_radius")) * 1.5)
@@ -161,6 +171,8 @@ func follow_state(body: Node3D, active: Callable) -> void:
 		_ring.custom_aabb = AABB(Vector3.ONE * -reach, Vector3.ONE * reach * 2.0)
 		if _curtain != null:
 			_curtain.custom_aabb = _ring.custom_aabb
+		if _dust != null:
+			_dust.custom_aabb = _ring.custom_aabb
 
 
 func _physics_process(delta: float) -> void:
@@ -260,7 +272,7 @@ func _draw_ring(radius: float, alpha: float) -> void:
 	for i in SEGMENTS + 1:
 		var angle: float = TAU * float(i) / float(SEGMENTS)
 		var direction := Vector3(cos(angle), 0.0, sin(angle))
-		if _curtain != null and i < SEGMENTS:
+		if (_curtain != null or _dust != null) and i < SEGMENTS:
 			rim.append(_ground_vertex(direction * radius))
 		var colour := Color(_colour.r, _colour.g, _colour.b, alpha)
 		var inner_colour := colour
@@ -277,3 +289,13 @@ func _draw_ring(radius: float, alpha: float) -> void:
 		var build := clampf(_life / maxf(0.05, _duration), 0.0, 1.0)
 		STYLE.draw_curtain(_curtain, [rim], _colour, alpha * float(_soft.get("curtain_alpha", 0.6)),
 			STYLE.curtain_height(_soft, build), _soft, _life, true)
+	if _dust != null:
+		var loop := rim.duplicate()
+		if not loop.is_empty():
+			loop.append(loop[0])
+		STYLE.draw_dust(_dust, [loop], _soft, clampf(_life / maxf(0.05, _duration), 0.0, 1.0), _life,
+			clampf(alpha / 0.55, 0.0, 1.0))
+
+
+func _exit_tree() -> void:
+	STYLE.clear_aura(_aura_taken)

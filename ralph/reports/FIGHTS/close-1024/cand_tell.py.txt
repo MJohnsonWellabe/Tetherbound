@@ -10,6 +10,13 @@ ARMS = {
     "B": {"curtain": {"curtain_height_m": 0.45, "curtain_alpha": 0.7, "shimmer": 0.5}, "colour": "#8c6cff"},
     # taller, brighter curtains with a stronger mid band; violet-blue hue
     "C": {"curtain": {"curtain_height_m": 0.8, "curtain_alpha": 0.9, "curtain_mid": 0.35, "curtain_mid_alpha": 0.55, "shimmer": 0.6}, "colour": "#8c6cff"},
+    # round 2 (r1 judges: "a physical wind-up, not a decal"): kicked dust rising and drifting along
+    # every tell outline, a rim glow on the attacker, a fainter ground line and a low curtain
+    "D": {"curtain": {"curtain_height_m": 0.4, "curtain_alpha": 0.5, "shimmer": 0.5,
+                      "dust_alpha": 0.75, "dust_spacing_m": 0.55, "dust_size_m": 0.8, "dust_rise_m": 0.9,
+                      "dust_hz": 1.1, "dust_colour": "#cdb894", "tell_aura": 0.9},
+          "colour": "#8c6cff",
+          "set": {"edge_alpha": 0.32, "locked_edge_alpha": 0.6, "core_alpha": 0.75, "build_start_alpha": 0.4}},
 }
 spec = ARMS[arm]
 path = "data/config/combat.json"
@@ -23,6 +30,13 @@ if spec["colour"]:
     for key in ['"colour": "#ff40e6"', '"lane_colour": "#ff40e6"']:
         assert text.count(key) == 1, key
         text = text.replace(key, key.replace("#ff40e6", spec["colour"]))
+for key, value in spec.get("set", {}).items():
+    pattern = re.compile(r'("%s": )([0-9.]+)' % key)
+    soft_at = text.index('"soft_style": {')
+    soft_end = text.index('"outer_feather_m"', soft_at)
+    chunk = text[soft_at:soft_end]
+    assert len(pattern.findall(chunk)) == 1, key
+    text = text[:soft_at] + pattern.sub(lambda m: m.group(1) + json.dumps(value), chunk) + text[soft_end:]
 json.loads(text)
 open(path, "w").write(text)
 print("arm", arm, "applied")
