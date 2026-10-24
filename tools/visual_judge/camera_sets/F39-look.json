@@ -1,7 +1,7 @@
 {
   "item": "F39 shared biome look",
   "realm": "water",
-  "_fixture": "Production Water scene; F13#5 mid-chapter flags and teleported stands. pos is the absolute camera position, stand the trainer position. Frozen clear weather, host-carried clock set to the explicit hour. Reuse unchanged for matched OFF/ON Medium/High rounds. Initial look sample only, not the >=200-frame catalog or complete fight/weather matrix.",
+  "_fixture": "Production Water scene; F13#5 mid-chapter flags and teleported stands. pos is the absolute camera position, stand the trainer position. Weather is frozen at each view's own declared preset (clear or rain), host-carried clock set to the explicit hour. Reuse unchanged for matched OFF/ON Medium/High rounds. Initial look sample only, not the >=200-frame catalog or complete fight/weather matrix.",
   "views": [
     {
       "id": "shore-day",
@@ -110,6 +110,60 @@
       "fov": 70,
       "time": 12,
       "weather": "clear"
+    },
+    {
+      "id": "shore-rain",
+      "stand": [
+        0,
+        2.229,
+        162
+      ],
+      "pos": [
+        -3,
+        5.0,
+        156
+      ],
+      "yaw": -177.0831,
+      "pitch": 8.7641,
+      "fov": 70,
+      "time": 12,
+      "weather": "rain"
+    },
+    {
+      "id": "lesson-rain",
+      "stand": [
+        57.368,
+        2.228571,
+        151.502
+      ],
+      "pos": [
+        54.368,
+        5.0,
+        147.502
+      ],
+      "yaw": -117.3484,
+      "pitch": -6.3939,
+      "fov": 70,
+      "time": 12,
+      "weather": "rain"
+    },
+    {
+      "id": "veilfall-rain",
+      "stand": [
+        384.311,
+        2.229,
+        3805.405
+      ],
+      "pos": [
+        387.311,
+        5.0,
+        3799.405
+      ],
+      "yaw": 151.1913,
+      "pitch": 37.1961,
+      "fov": 70,
+      "time": 12,
+      "weather": "rain"
     }
   ]
 }

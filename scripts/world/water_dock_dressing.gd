@@ -25,9 +25,15 @@ func build(water_world: Node3D) -> void:
 	var look := preload("res://scripts/world/tidewake_look_profile.gd").settings()
 	if bool(look.get("enabled", false)):
 		cfg["workplace_candidate"] = look.get("dock_workplace", {})
-		cfg["village_candidate"] = look.get("dock_village", {})
+		# `dock_village_candidate` (an unjudged section, OFF in play) overrides
+		# keys of the shipping hamlet under the capture flag.
+		cfg["village_candidate"] = preload("res://scripts/world/tidewake_look_profile.gd").merge(
+			look.get("dock_village", {}), look.get("dock_village_candidate", {}))
 		# A working-harbour pier (longer, wider, loaded deck) under the same gate.
 		cfg = preload("res://scripts/world/tidewake_look_profile.gd").merge(cfg, look.get("dock_dressing", {}))
+		# Unjudged pier additions (the Meshy sloop) ride their own section, so
+		# they ship in the file but stay OFF in play until a round passes them.
+		cfg = preload("res://scripts/world/tidewake_look_profile.gd").merge(cfg, look.get("dock_dressing_candidate", {}))
 	var world_cfg: Dictionary = water_world.get("config")
 	var anchors := {}
 	for anchor: Variant in world_cfg.get("anchors", []):

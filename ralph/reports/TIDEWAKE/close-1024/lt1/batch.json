@@ -1,0 +1,12 @@
+{"anchors":{
+ "craft:after":[6.9,7.2,6.3],
+ "craft:before":[4.6,4.8,4.4],
+ "f36_0_npc:C3B":[5.0,5.8,5.0],
+ "f36_0_npc:C3A":[5.1,5.9,5.3],
+ "f36_0_gap:C6A":[6.3,6.2,6.2],
+ "f36_0_gap:C6B":[7.3,7.0,7.0],
+ "f04_6_r22:r22":[4.9,5.8,3.6],
+ "f04_6_r22:control":[4.1,4.6,2.8]},
+"candidates":{
+ "F39 look control (main)":[5.4,5.2,4.2],
+ "F39 look lighting candidate":[6.4,6.4,5.4]}}

@@ -1,0 +1,23 @@
+{
+ "Wx": {
+  "anchor": false,
+  "label": "F13#5 currents b5",
+  "A": "control (main 5f1f388cc, shipping current look)",
+  "B": "candidate b5 (--tidewake-look-candidate, 57eadb9f1)"
+ },
+ "Ez": {
+  "anchor": true,
+  "A": "f36_0_npc:C3A",
+  "B": "f36_0_npc:C3B"
+ },
+ "Md": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Ne": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ }
+}
