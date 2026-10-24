@@ -2065,17 +2065,13 @@
         "height": 3.25,
         "radius": 1.1375,
         "footprint_allowance": 3.0,
-        "model": "res://assets/creatures/tetherbound/pebbik/models/creature_pebbik_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/pebbik/candidate_b4/models/creature_pebbik_b4.glb",
+        "colourway_source_species": "pebbik_b4",
+        "field_emission": 0.0,
+        "_comment_remake_b4": "Close-1024 Meshy batch 4 naturalistic remake (identity kept; task ids in candidate_b4/source/meshy_provenance.jsonl), native clips; ON at close-1024 b14 7.16 vs 5.69 mapped (CPU-provisional; three code-blind judges, confirming batch).",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "animations": {
-          "idle": "idle",
-          "walk": "walk",
-          "run": "run",
-          "attack": "attack",
-          "hit": "hit",
-          "faint": "faint"
-        },
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
       },
       "learnset": "pebbik"
