@@ -268,6 +268,26 @@ func _draw_ring(center: Vector2, chance: float, scale_value: float, alpha: float
 	_draw_readout(center, radius, chance, tier_colour, alpha, locked)
 
 
+## P2-058 (F38): the percentage and caption sat straight on the target's body
+## and the busy grass. The plate is the HUD's own panel (deep blue-grey,
+## translucent, pale border) behind both lines, so the readout separates from
+## the scene without hiding the creature above it. `plate_enabled` gates it.
+func _draw_readout_plate(font: Font, pct_pos: Vector2, pct_dims: Vector2, pct_size: int,
+		caption_pos: Vector2, caption_dims: Vector2, alpha: float) -> void:
+	var pad := Vector2(float(_readout_visual.get("plate_pad_x", 18.0)),
+		float(_readout_visual.get("plate_pad_y", 8.0)))
+	var top := pct_pos.y - font.get_ascent(pct_size)
+	var bottom := caption_pos.y + font.get_descent(CAPTION_FONT_SIZE)
+	var half_width := maxf(pct_dims.x, caption_dims.x) * 0.5
+	var mid_x := pct_pos.x + pct_dims.x * 0.5
+	var rect := Rect2(Vector2(mid_x - half_width, top) - pad,
+		Vector2(half_width * 2.0, bottom - top) + pad * 2.0)
+	var box := UITokens.panel_box()
+	box.bg_color.a *= alpha * float(_readout_visual.get("plate_opacity", 1.0))
+	box.border_color.a *= alpha
+	draw_style_box(box, rect)
+
+
 func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: Color,
 		alpha: float, locked: bool = true) -> void:
 	var font := get_theme_default_font()
@@ -291,6 +311,13 @@ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: C
 	var pct_pos := center + Vector2(-pct_dims.x * 0.5, radius + READOUT_GAP)
 	var outlined := bool(_readout_visual.get("outline_enabled", false))
 	var outline_size := maxi(0, int(_readout_visual.get("outline_size", UITokens.OUTLINE_SIZE)))
+	var caption_text := "CAPTURE CHANCE" if locked else "NOT ON TARGET"
+	var caption_dims: Vector2 = font.get_string_size(
+		caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, CAPTION_FONT_SIZE
+	)
+	var caption_pos := center + Vector2(-caption_dims.x * 0.5, radius + READOUT_GAP + CAPTION_GAP)
+	if bool(_readout_visual.get("plate_enabled", false)):
+		_draw_readout_plate(font, pct_pos, pct_dims, pct_size, caption_pos, caption_dims, alpha)
 	if outlined:
 		var pct_outline := UITokens.OUTLINE
 		pct_outline.a *= tier_colour.a
@@ -298,13 +325,8 @@ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: C
 			pct_size, outline_size, pct_outline)
 	draw_string(font, pct_pos, pct_text, HORIZONTAL_ALIGNMENT_LEFT, -1, pct_size, tier_colour)
 
-	var caption_text := "CAPTURE CHANCE" if locked else "NOT ON TARGET"
 	var caption_colour := UITokens.TEXT_SECONDARY
 	caption_colour.a *= alpha
-	var caption_dims: Vector2 = font.get_string_size(
-		caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, CAPTION_FONT_SIZE
-	)
-	var caption_pos := center + Vector2(-caption_dims.x * 0.5, radius + READOUT_GAP + CAPTION_GAP)
 	if outlined:
 		var caption_outline := UITokens.OUTLINE
 		caption_outline.a *= caption_colour.a
