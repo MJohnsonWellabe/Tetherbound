@@ -176,7 +176,7 @@ func return_to_bridge(tree: SceneTree, world: Node3D, game: Node, previous: Dict
 	if depth < bank - 0.6 or TRAINING.snapshot(game) != before:
 		_fail("Training return failed physical far-bank or retained training checks")
 	_receipt("training_bridge_return", {"depth": depth, "required_depth": bank - 0.6, "training": TRAINING.snapshot(game)})
-	if onward_to_mill and _failures.is_empty():
+	if onward_to_mill and failures.is_empty():
 		for point: Vector2 in mill_legs(config):
 			var at := Vector3(point.x, float(world.call("ground_height_at", point.x, point.y)), point.y)
 			if not await _walk_to(at, "earned north spine return", 0.6 if point == MILL_NORTH_END else 10.0): return _out()
