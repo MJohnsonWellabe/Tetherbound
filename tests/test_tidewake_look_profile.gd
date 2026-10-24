@@ -86,3 +86,25 @@ func test_rig_keeps_one_grade_and_matched_fog_horizons() -> void:
 		assert_eq(env.fog_colour, sky.horizon_colour, time + " fog must meet the sky")
 		for key: String in ["adjustment_brightness", "adjustment_contrast", "adjustment_saturation"]:
 			assert_eq(env[key], look.environment[key], time + " uses the shared grade")
+
+
+## close-1024 vf2: the veilfall-near gully floor is the `veilfall_exploration_spine`
+## hike (4 m wide). Hero pieces are presentation (the ring has a collider), so each
+## sits well clear of that trail's centreline rather than on or beside it.
+func test_veilfall_hero_pieces_stay_clear_of_the_hike() -> void:
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PROFILE.CONFIG))
+	var world: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
+	var spine: Array = []
+	for route: Dictionary in world.get("land_routes", []):
+		if str(route.get("id", "")) == "veilfall_exploration_spine":
+			for point: Array in route.polyline:
+				spine.append(Vector2(float(point[0]), float(point[2])))
+	assert_true(spine.size() >= 2, "precondition: the Veilfall hike polyline exists")
+	var pieces: Array = raw.get("veilfall_hero_candidate", [])
+	assert_false(pieces.is_empty(), "precondition: the hero pieces ship in the file")
+	for piece: Dictionary in pieces:
+		var at := Vector2(float(piece.position_xz_m[0]), float(piece.position_xz_m[1]))
+		var nearest := INF
+		for index in spine.size() - 1:
+			nearest = minf(nearest, at.distance_to(Geometry2D.get_closest_point_to_segment(at, spine[index], spine[index + 1])))
+		assert_true(nearest >= 15.0, "%s sits %.1f m from the hike centreline" % [piece.get("landmark_id", "?"), nearest])
