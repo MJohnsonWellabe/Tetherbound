@@ -108,8 +108,10 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
    # aside, the feet stay planted (the grounding below keeps them on the floor).
    e=min(1,t/.12);e=e*e*(3-2*e)
    r=max(0,min(1,(t-.5)/.47));e*=1-r*r*(3-2*r)
-   turn('root',[(REAR*4*e,(1,0,0)),(9*e,(0,1,0))]);rotate('spine',REAR*6*e)
-   rotate('neck',NOD*18*e);turn('head',[(NOD*8*e,(1,0,0)),(22*e,(0,0,1))])
+   # P2-016 (GPU, 24 Oct): at fight distance this recoil (4 deg pitch, 9 deg lean)
+   # read as idle under hits. Roughly double it, feet still planted.
+   turn('root',[(REAR*9*e,(1,0,0)),(16*e,(0,1,0))]);rotate('spine',REAR*11*e)
+   rotate('neck',NOD*26*e);turn('head',[(NOD*12*e,(1,0,0)),(30*e,(0,0,1))])
   if role=='faint':
    # Close-1024: the side roll (back to camera), grounded on the body (see low()).
    phase=phase_of(t)
