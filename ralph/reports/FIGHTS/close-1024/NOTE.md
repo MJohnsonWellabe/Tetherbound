@@ -1,6 +1,11 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-24 23:55 CT INFO generic fight fix, r4 code-blind batch (CPU, 3 fresh judges, mapped; confirming, top anchor f36_0_npc C1 7.53, slope 1.23, r 0.95, RMSE 0.42, no warnings):
+  - Meadows grunt/Warden (stronghold_elite hall): **5.88** after (`cand_gen_h`) vs 4.85 before (main config). Outline defect PRESENT -> FIXED and impact disc PRESENT -> FIXED (3/3 judges). HUD PRESENT -> PARTIAL. Wind-up "where" still PARTIAL (one judge PRESENT): the dust reads as a real object but is diffuse.
+  - Riverwatch: **6.99** after vs 5.64 before. Outlines and disc FIXED 3/3, HUD PARTIAL.
+  - Judges' next asks: a denser dust or spray wall filling the danger area with a timing pulse; a cooler fill and wider value range in the dark hall; hanging foliage cards clip the hall camera on the before side only.
+  - Files: r4_{batch,key,spec,calibrate}.json.
 - 2026-10-24 07:40 CT INFO F22#4 C2/C3 on current main (45865499d merged into tb/fights): running, 24 seeds, one Godot process. Order: smoke_finale_named_c2c3, smoke_stormwood_b_named_c2c3, smoke_meadows_named_c2c3, smoke_water_named_c2c3. Several hours.
   - Gap 1: the Stormwood named smoke drove combat_depth_pilot (no live patterns), the reason the audit called it stale. It now uses f22_pattern_pilot with the encounter_director context (named pattern by encounter id, authored profile as role) and the switching acceptance reader, as the Meadows and water smokes do.
   - Gap 2: Veyra and Marrow had no C2/C3 smoke. New tests/smoke_finale_named_c2c3.gd (Meadows harness, production translators, party level = region wild band midpoint + 1: 42 and 52).
