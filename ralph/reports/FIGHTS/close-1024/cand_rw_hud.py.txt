@@ -11,3 +11,19 @@ a = '"captain_riverwatch": {"max_distance_m": 14.0}'; assert s.count(a) == 1
 s = s.replace(a, '"captain_riverwatch": {"max_distance_m": 14.0, "pilot_min_screen_fraction": %s}' % fraction)
 json.loads(s); open(p, 'w').write(s)
 print('rw hud candidate applied, pilot fraction', fraction)
+# P2-063 impact (Creatures p2016 + GPU judge): a smaller contact disc and a grounded dust/stone burst
+# at the struck creature's feet on charged hits (combat.json impact.ground_burst).
+p = 'data/config/combat.json'; s = open(p).read()
+d = json.loads(s)
+for key, old, new in [('quick', 0.9, 0.55), ('charged', 1.2, 0.75)]:
+    a = '"%s": {\n      "colour": "%s",\n      "radius": %s,' % (key, d['impact'][key]['colour'], old)
+    assert s.count(a) == 1, a
+    s = s.replace(a, a.replace('"radius": %s' % old, '"radius": %s' % new))
+a = '"impact": {'
+assert s.count(a) == 1
+ground = {"enabled": True, "quick": False, "cue_contact_puffs": 8, "cue_contact_reach_m": 1.4,
+          "cue_contact_seconds": 0.7, "cue_contact_dust_alpha": 0.7, "cue_contact_debris_scale": 1.6,
+          "cue_contact_light_energy": 2.0}
+s = s.replace(a, a + ' "ground_burst": %s,' % json.dumps(ground))
+json.loads(s); open(p, 'w').write(s)
+print('impact candidate applied')

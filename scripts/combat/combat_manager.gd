@@ -5907,6 +5907,15 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 		float(spec.get("core_pop", 0.0)) * float(style.get("strength_scale", 1.0)),
 		float(spec.get("core_hold", 0.0))
 	)
+	# P2-063 / F22#4 (`impact.ground_burst`, absent = off): a landed blow also
+	# kicks dust and stone chips from the struck creature's feet, so the hit is
+	# a grounded event rather than only a disc over the body. Charged blows by
+	# default; `quick: true` adds quick ones. The same contact_burst a named
+	# charge uses (enemy_pattern_telegraph.gd), with this block's cue_contact_* keys.
+	var ground: Variant = cfg.get("ground_burst")
+	if ground is Dictionary and (ground as Dictionary).get("enabled") == true \
+			and (charged or (ground as Dictionary).get("quick") == true) and is_instance_valid(struck):
+		PATTERN_CUE.contact_burst(host, struck.global_position, ground)
 
 
 func _nudge_camera_on_landing(charged: bool) -> void:
