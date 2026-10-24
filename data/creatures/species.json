@@ -153,6 +153,7 @@
           "fly_grip": "fly_grip",
           "ride": "ride"
         },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."},
         "_comment_size": "Chibi bipeds beside a 1.8m trainer, so they read as companions rather than as livestock \u2014 which is the Palworld register. Sized against each other so the practice creature is smaller than your partner and the one that ambushes you is bigger than both.",
         "_comment_pack": "Plumberry Plains Vol. 2, and it answers the review's first and largest complaint directly. The critic's words were 'none of them is a designed creature... Palworld's entire proposition is that its creatures are drawn characters \u2014 bold silhouette, hue-opposed to the environment, exaggerated proportion, expression', and that the previous roster put 'a naturalistic tree frog, a faceted grey low-poly goat, and a Nintendo Mii in the same 300 pixels'. These are ten designed chibi characters from ONE artist, which fixes the design AND the cohesion complaint at once.",
         "_comment_pick": "Chosen on MEASURED colour, not taste. The first pick was fox, rabbit and wolf \u2014 which turned out to be the three LEAST saturated characters in the pack (0.20, 0.19, 0.15), i.e. exactly the defect the critic named on the creature they replaced: 'saturation 0.12... a grey rock standing on olive ground... your own creature is the least readable object in your own fight'. Re-picked against its stated criterion \u2014 hue-opposed to a green world, and readable at 40px:\n  bear      hue  23 deg, sat 0.77, val 0.61  \u2014 orange-brown, the most saturated thing in the pack\n  duck      hue  42 deg, sat 0.67, val 0.95  \u2014 bright gold\n  songbird  hue 194 deg, sat 0.36, val 0.72  \u2014 blue, the only cool hue available\nThree hues, three values, none of them the chartreuse the ground is made of.",
@@ -193,7 +194,8 @@
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Produced by the tools/art_pipeline chain from sheet 02; see archive/docs/art/RIPPLET_PRODUCTION_REPORT.md.",
-        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"}
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "rideable": {
         "can_carry": true,
@@ -321,7 +323,8 @@
           "swim": "swim",
           "fly_grip": "fly_grip",
           "ride": "ride"
-        }
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "bramblebun"
     },
@@ -378,7 +381,8 @@
           "swim": "swim",
           "fly_grip": "fly_grip",
           "ride": "ride"
-        }
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "mudsnout",
       "evolution_breaks_level": 20,
@@ -431,7 +435,8 @@
           "swim": "swim",
           "fly_grip": "fly_grip",
           "ride": "ride"
-        }
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "trailpup"
     },
@@ -496,7 +501,8 @@
           "swim": "swim",
           "fly_grip": "fly_grip",
           "ride": "ride"
-        }
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "burrowback"
     },
@@ -575,6 +581,7 @@
           "fly_grip": "fly_grip",
           "ride": "ride"
         },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."},
         "field_emission": 0.0,
         "rest_model_position_offset": 0.0
       },
@@ -690,7 +697,8 @@
           "swim": "swim",
           "fly_grip": "fly_grip",
           "ride": "ride"
-        }
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "paddlenewt"
     },
@@ -743,7 +751,8 @@
           "swim": "swim",
           "fly_grip": "fly_grip",
           "ride": "ride"
-        }
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "mosshell",
       "evolves_into": "cannonback",
@@ -1026,6 +1035,7 @@
           "fly_grip": "fly_grip",
           "ride": "ride"
         },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."},
         "field_emission": 0.0,
         "rest_model_position_offset": 0.0,
         "colourway_source_species": "veridian_nat1024"
@@ -1067,7 +1077,8 @@
         "aspect_source_species": "burrowback",
         "_comment_aspect": "D1 / DARK-FEATURES 2026-08-30. The two keys creature_body.gd::_build_placeholder() reads to dress this body as its Aspect variant. T1-CREATURE-ART generated and committed the recolour+emissive siblings and built the runtime hook, but deliberately left these keys to T3-CREATURES (its handover: that file is T3-CREATURES own); T3-CREATURES then landed this entry without them. Neither lane held both halves -- the textures and this file were on separate branches -- so until those merged nobody could have added these. Without them the variant renders in its base species shipped textures, i.e. as a plain burrowback. aspect_source_species names whose texture FOLDER the siblings live in (not this species own id), which is why it repeats variant_of above.",
         "model_yaw": 0.0,
-        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"}
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "nightburrow"
     },
@@ -1107,7 +1118,8 @@
         "aspect_source_species": "trailpup",
         "_comment_aspect": "D1 / DARK-FEATURES 2026-08-30. The two keys creature_body.gd::_build_placeholder() reads to dress this body as its Aspect variant. T1-CREATURE-ART generated and committed the recolour+emissive siblings and built the runtime hook, but deliberately left these keys to T3-CREATURES (its handover: that file is T3-CREATURES own); T3-CREATURES then landed this entry without them. Neither lane held both halves -- the textures and this file were on separate branches -- so until those merged nobody could have added these. Without them the variant renders in its base species shipped textures, i.e. as a plain trailpup. aspect_source_species names whose texture FOLDER the siblings live in (not this species own id), which is why it repeats variant_of above.",
         "model_yaw": 0.0,
-        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"}
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "stormtrail"
     },
@@ -1146,7 +1158,8 @@
         "aspect_source_species": "paddlenewt",
         "_comment_aspect": "D1 / DARK-FEATURES 2026-08-30. The two keys creature_body.gd::_build_placeholder() reads to dress this body as its Aspect variant. T1-CREATURE-ART generated and committed the recolour+emissive siblings and built the runtime hook, but deliberately left these keys to T3-CREATURES (its handover: that file is T3-CREATURES own); T3-CREATURES then landed this entry without them. Neither lane held both halves -- the textures and this file were on separate branches -- so until those merged nobody could have added these. Without them the variant renders in its base species shipped textures, i.e. as a plain paddlenewt. aspect_source_species names whose texture FOLDER the siblings live in (not this species own id), which is why it repeats variant_of above.",
         "model_yaw": 0.0,
-        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"}
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "riftfrill"
     },
@@ -1274,6 +1287,7 @@
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."},
         "_comment_art": "T3-INSTALL, 2026-08-30: Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. T1-CREATURE-RIG, same day: rigged and animated through `tools/art_pipeline/finish.py rig <species> --kind quadruped` (the LOCAL Blender quadruped rigger every other production creature in this roster already goes through -- rig_quadruped.py + animate_quadruped.py -- not Meshy's own auto-rigger, which is documented humanoid-only). Verified against a rendered posed frame (ralph/reports/T1-CREATURE-RIG/shots/pose_check/) before installing, not just a passing skins-count check; now plays idle/walk/run/attack/hit/faint like every other production creature."
       },
       "learnset": "cindercub"
@@ -2075,6 +2089,7 @@
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."},
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
       },
       "learnset": "pebbik"
