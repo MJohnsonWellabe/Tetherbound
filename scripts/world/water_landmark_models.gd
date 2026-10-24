@@ -54,7 +54,10 @@ func build(water_world: Node3D) -> void:
 		var yaw := deg_to_rad(float(spec.get("yaw_deg", 0.0)))
 		var half := Vector2(bounds.size.x, bounds.size.z) * factor * 0.5
 		holder.rotation.y = yaw
-		holder.position = Vector3(at.x, _floor(water_world, at, yaw, half) - float(spec.get("sink_m", 0.15)), at.y)
+		# `lift_m` raises a piece set into a steep slope, where the lowest footprint
+	# point would bury most of it (close-1024 vf2, the upper Veilfall tier).
+	holder.position = Vector3(at.x, _floor(water_world, at, yaw, half) - float(spec.get("sink_m", 0.15))
+		+ float(spec.get("lift_m", 0.0)), at.y)
 		add_child(holder)
 		var box: Array = spec.get("collider_fraction", [])
 		if box.size() == 3:
