@@ -1098,11 +1098,11 @@
    "title": "Village road and the Crossing Hall",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/hub",
-   "pct": 100,
+   "pct": 86,
    "counts": {
-    "met": 7,
+    "met": 6,
     "partial": 0,
-    "in_progress": 0,
+    "in_progress": 1,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -1158,9 +1158,9 @@
     },
     {
      "text": "Village and Hall frames pass the new visual bar (ACCEPTANCE §4: Palworld/Animo creatures and world, Valheim lighting and atmosphere) with a code-blind judge.",
-     "status": "met",
-     "evidence": "CPU-provisional met (24 Oct 2026, tb/meadows-land 6cb3e6c0b): Crossing Hall r9 mapped Bar A 6.84 vs shipping 5.82, three fresh code-blind judges, standard yardstick prompt, three anchor pairs, confirming batch, linear calibration r 0.89 RMSE 0.55 (ralph/reports/MEADOWS/close-1024/F17-6.md). A GPU pass must confirm 7.5. | Code-blind r2 5:01 AM CT 12 Oct (tb/ev-coop-chapters c7d491457): the exterior village and Hall destination PASS at Low in day, golden hour, night and rain; no reserved red (teal banners). | Pair02 2f04551faf: three blind judges prefer frame-lantern-lit candidate; BarA6.033333/BarB5.5 vs concurrent original4.5/3.633333. ART_DIRECTION supplied; portable proof: ralph/reports/EVIDENCE/takeover-native/hall-lantern-2f/proof.md.",
-     "gap": "GPU confirmation at 7.5 (Medium/High fixed camera set); a GPU score below 7.5 reopens.",
+     "status": "in_progress",
+     "evidence": "REOPENED on GPU 24 Oct 2026 (tb/gpu-pass d4ded67f4, ralph/reports/GPU-PASS/F17-6/VERDICT.md): main r9 maps to 5.83 vs control 4.98 at Medium and High (GTX 1060, Forward+). r9's hall_great_hall.shafts (additive quads) render on Forward+ as hard white bars in 6 of 10 day views, plus neon arch rims; the CPU sheet shows no shafts. Needs a renderer-aware shaft fix and a GPU re-judge. | Earlier: CPU-provisional met (24 Oct 2026, tb/meadows-land 6cb3e6c0b): Crossing Hall r9 mapped Bar A 6.84 vs shipping 5.82, three fresh code-blind judges, standard yardstick prompt, three anchor pairs, confirming batch, linear calibration r 0.89 RMSE 0.55 (ralph/reports/MEADOWS/close-1024/F17-6.md). A GPU pass must confirm 7.5. | Code-blind r2 5:01 AM CT 12 Oct (tb/ev-coop-chapters c7d491457): the exterior village and Hall destination PASS at Low in day, golden hour, night and rain; no reserved red (teal banners). | Pair02 2f04551faf: three blind judges prefer frame-lantern-lit candidate; BarA6.033333/BarB5.5 vs concurrent original4.5/3.633333. ART_DIRECTION supplied; portable proof: ralph/reports/EVIDENCE/takeover-native/hall-lantern-2f/proof.md.",
+     "gap": "Make the Hall shafts and arch rims renderer-aware (as the F22#4 boss aura), re-judge F17-6 on GPU at Medium and High; 7.5 closes it.",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No full Bars A/B village/Hall matrix judged. The Low capture failed and the Forward+ pilot crashed before capture. | Pair02 is not directly comparable to prior reference-only4.067. Original historical scores/approach dispositions remain in their evidence; no closure or fresh full-matrix trend.",
      "audit_index": 6
     }
@@ -1358,11 +1358,11 @@
    "title": "Combat impact and camera",
    "chapter": "Wave 1 · World, order, combat and look",
    "lane": "tb/combat",
-   "pct": 83,
+   "pct": 100,
    "counts": {
-    "met": 5,
+    "met": 6,
     "partial": 0,
-    "in_progress": 1,
+    "in_progress": 0,
     "not_started": 0,
     "blocked": 0,
     "failing": 0
@@ -1410,9 +1410,9 @@
     },
     {
      "text": "Code-blind judge prefers after over before on 'hits feel weighty and readable' from matched frame sequences; fights hold frame rate on the Medium preset capture.",
-     "status": "in_progress",
-     "evidence": "Code-blind judge 4:35 AM CT 12 Oct prefers AFTER (shipped feedback) over BEFORE (feedback neutralised), low-medium confidence, on a matched Oreth duel pair (b782788bf; tb/ev-systems-b 42c190127): the reaction over time and the magnitude cue read better. Combat RNG differs between legs (disclosed).",
-     "gap": "Judge half DONE: tb/ev-systems 1e6fdf74, ralph/reports/EVIDENCE/F21-5/r3. The shipped head (old burst + 40 px outlined numbers + plated caption) is preferred over the r2 'before' by a fresh code-blind judge under neutral labels, medium-high confidence (6:25 AM CT Tue 13 Oct). Remaining: the frame-time half, a Medium-preset four-creature fight capture on Codex's GPU machine.",
+     "status": "met",
+     "evidence": "Met 24 Oct 2026 (coordinator). Judge half: a fresh code-blind judge prefers the shipped hits under neutral labels (tb/ev-systems 1e6fdf74, ralph/reports/EVIDENCE/F21-5/r3, 13 Oct). Frame-time half: GPU pass on Medium (GTX 1060, Forward+, 1080p, vsync off), worst-case four-creature ultimate volleys in the Meadows stage with the launch-stall fix that landed in #712: no frame over 33.3 ms in 24 volleys, worst 25.7 ms, steady 100-118 fps, p95 9.0-11.4 ms (ralph/reports/GPU-PASS/F25-4/FIX.md, VERDICT.md). | Earlier: Code-blind judge 4:35 AM CT 12 Oct prefers AFTER (shipped feedback) over BEFORE (feedback neutralised), low-medium confidence, on a matched Oreth duel pair (b782788bf; tb/ev-systems-b 42c190127): the reaction over time and the magnitude cue read better. Combat RNG differs between legs (disclosed).",
+     "gap": "",
      "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No matched before/after judge verdict and no Medium-preset fight frame-time capture.",
      "audit_index": 5
     }
@@ -2464,11 +2464,11 @@
    "title": "Tidewake: visual catalog burn-down to the full bar",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/visual-tidewake",
-   "pct": 33,
+   "pct": 17,
    "counts": {
-    "met": 2,
+    "met": 1,
     "partial": 0,
-    "in_progress": 2,
+    "in_progress": 3,
     "not_started": 2,
     "blocked": 0,
     "failing": 0
@@ -2508,9 +2508,9 @@
     },
     {
      "text": "The hero landmark (Veilfall) reads at distance and up close.",
-     "status": "met",
-     "evidence": "PR #577 (consolidation 4) merged 2026-10-07 3:52 PM CT: from tb/codex-d 5c7908ded3 (READY #572 6045866946, 3:05 PM CT 10-07): Veilfall distance 6/6 run 37677560955, near 20 run 37662801275, judge PASS; review APPROVE",
-     "gap": "Decide the Veilfall flags. Recapture distance and close-up frames on High and Medium and run a fresh code-blind judge.",
+     "status": "in_progress",
+     "evidence": "REOPENED 24 Oct 2026 (tb/tidewake close-1024 vf1): on today's yardstick the Veilfall close-up maps to 3.35 (shipping) and 4.20 (best in-scene, limestone material); every judge names faceted cliff slabs, the near-black kitbash crown and the blown white falls. New art (Meshy veilfall_cascade_tier, veilfall_plunge_rocks on tb/meshy-1024 2d8328475) is being integrated flag-OFF for vf2. | Earlier: PR #577 (consolidation 4) merged 2026-10-07 3:52 PM CT: from tb/codex-d 5c7908ded3 (READY #572 6045866946, 3:05 PM CT 10-07): Veilfall distance 6/6 run 37677560955, near 20 run 37662801275, judge PASS; review APPROVE",
+     "gap": "Integrate the Meshy cascade tier and plunge rocks, judge vf2 on the yardstick, and reach a mapped 6.7 (CPU-provisional) then 7.5 on GPU.",
      "note": "Landed: PR #577 (consolidation 4) merged 2026-10-07 3:52 PM CT: from tb/codex-d 5c7908ded3 (READY #572 6045866946, 3:05 PM CT 10-07): Veilfall distance 6/6 run 37677560955, near 20 run 37662801275, judge PASS; review APPROVE",
      "audit_index": 4
     },
