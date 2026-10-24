@@ -15,3 +15,12 @@ Scale check: every size is against the 1.80 m trainer and the installed dock (de
 | 6 | tidewake_dock_work_cluster | 2.0 x 1.4 x 1.2 m | F13#5 inhabited docks: deck props showing daily work | Cluster: two coopered bait barrels, a coiled rope, an open fish basket of silver fish, a gutting stool with a knife-less wooden board, a mending net draped over a barrel. |
 
 Water materials are a scene/shader change (water depth bands, foam), not a Meshy asset; this lane does them.
+
+## Second batch, 24 Oct 2026 (judge-driven)
+
+All three w1 judges call the Veilfall close-up the weakest frame in the batch and mark it `new_art`: "near-black faceted slabs with untextured facets", "an opaque white quad whose bottom edge stops dead in mid-air", no mist, no plunge pool, no scale cue. The board (`water-veilfall-stronghold-board.png`) asks for pale stratified limestone, layered cascades and turquoise pools.
+
+| # | Name | Size (W x D x H) | Purpose | Brief |
+|---|---|---|---|---|
+| 7 | veilfall_cascade_tier | 18 x 10 x 12 m | F39#4 / P2-010: one modular tier of the hero falls, three or four stacked and offset make the cascade | Pale stratified limestone cliff tier: horizontal bedding courses with a weathered lip, a wide notch where the water pours, wet darker stone in the pour line, moss and sea-grass on the dry shoulders, a shallow turquoise catch basin cut into the top. Flat base and top so tiers stack. |
+| 8 | veilfall_plunge_rocks | 9 x 7 x 3 m | The base of the falls: the frame currently ends in mid-air with no pool | Cluster of water-worn pale limestone boulders around a shallow basin, polished and darker where the water strikes, white mineral crust at the waterline, a few ferns in the crevices. |
