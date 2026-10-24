@@ -1,0 +1,17 @@
+{
+  "_comment": "Owner 24 Oct 2026 creature touches: 'adding some energy, some elemental effects, and some war torn appearance or hardened appearance to give the unique but still realistic look. Don't go overboard.' One or two light touches per species on the existing model, a small part of the body, realistic first; no red/oxblood. Baked into the remake's own albedo by tools/art_pipeline/creature_touch.py (overlays as in tools/creature_overlays.py, placed by the anatomy map: unit y = height, z = length with the head near 0.85-1.0, radial = distance from the body axis).",
+  "trailpup": {
+    "source_model": "trailpup/candidate_nat1024",
+    "overlays": [
+      {"id": "weathered_shoulders", "_why": "Hardened: darker, scuffed coat on the shoulders and forelegs of a trail-worn coyote.", "where": {"z_min": 0.55, "z_max": 0.82, "y_max": 0.75}, "mode": "shade", "val_scale": 0.72, "sat_scale": 0.85, "coverage": 0.45, "grain": 5.0, "clump_softness": 0.14, "softness": 0.12},
+      {"id": "flank_scars", "_why": "War-torn: two or three thin pale scar lines on the flank.", "where": {"z_min": 0.38, "z_max": 0.7, "y_min": 0.45, "y_max": 0.78, "radial_min": 0.55}, "mode": "shade", "val_scale": 1.45, "sat_scale": 0.55, "coverage": 0.05, "grain": 22.0, "clump_softness": 0.03, "softness": 0.05}
+    ]
+  },
+  "mudsnout": {
+    "source_model": "mudsnout/candidate_nat1024",
+    "overlays": [
+      {"id": "hardened_shoulder_hide", "_why": "Hardened: a darker, mud-crusted shield of hide over the shoulders, the way a wallowing boar's shoulders cake and toughen.", "where": {"z_min": 0.55, "z_max": 0.8, "y_min": 0.35}, "mode": "shade", "val_scale": 0.7, "sat_scale": 0.8, "coverage": 0.55, "grain": 4.0, "clump_softness": 0.16, "softness": 0.14},
+      {"id": "snout_scar", "_why": "War-torn: a pale scar line across the snout and cheek.", "where": {"z_min": 0.86, "y_min": 0.3, "y_max": 0.7}, "mode": "shade", "val_scale": 1.4, "sat_scale": 0.6, "coverage": 0.07, "grain": 20.0, "clump_softness": 0.03, "softness": 0.05}
+    ]
+  }
+}
