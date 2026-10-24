@@ -47,7 +47,9 @@ void fragment() {
 	arc*=step(0.5,as_)*float(phase>1);
 	vec3 color=mix(vec3(0.93,0.70,0.28),vec3(0.56,0.86,0.97),step(1.5,ws));
 	color=mix(color,mix(vec3(0.97,0.60,0.18),vec3(0.90,0.23,0.26),step(1.5,as_)),arc);
-	ALBEDO=color;
+	// The rim lifts toward white before ALBEDO is written (it was mixed after,
+	// so the readability rim never showed its highlight).
 	color=mix(color,vec3(1.0),rim*step(0.01,rim_alpha)*0.6);
+	ALBEDO=color;
 	ALPHA=max(max(wind,arc)*lane_alpha,rim*rim_alpha)*(1.0-sheltered)*(1.0-step(36.0,radius));
 }

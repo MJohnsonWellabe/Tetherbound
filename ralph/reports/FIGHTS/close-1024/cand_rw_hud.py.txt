@@ -36,3 +36,13 @@ for a, b in [('"pitch_start_deg": -25.0', '"pitch_start_deg": -15.0'),
     s = s.replace(a, b)
 json.loads(s); open(p, 'w').write(s)
 print('fight camera candidate applied')
+# Veyra wind lanes (GPU F40: opaque white shaft planes on Forward+): readability ON with today's
+# fill on Compatibility, the fill x0.3 on Forward+/Mobile, and a bright rim on every lane edge.
+p = 'data/config/cloudreach_veyra_readability.json'; s = open(p).read()
+for a, b in [('"enabled": false', '"enabled": true'),
+             ('"fill_alpha": 0.4,', '"fill_alpha": 0.21,'),
+             ('"forward_plus_fill_scale": 1.0', '"forward_plus_fill_scale": 0.3')]:
+    assert s.count(a) == 1, a
+    s = s.replace(a, b)
+json.loads(s); open(p, 'w').write(s)
+print('veyra lanes candidate applied')

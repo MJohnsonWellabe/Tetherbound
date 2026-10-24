@@ -171,7 +171,12 @@ func build(world: Node3D) -> void:
 	var readable: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_veyra_readability.json"))
 	if readable is Dictionary and bool((readable as Dictionary).get("enabled", false)):
 		var lanes: Dictionary = (readable as Dictionary).get("wind_lanes", {})
-		_hazards.set_shader_parameter("lane_alpha", float(lanes.get("fill_alpha", 0.21)))
+		# Forward+ and Mobile draw the unshaded fill as a white slab (GPU F40
+		# judges); there the fill takes `forward_plus_fill_scale`, so the rim
+		# carries the lane. Compatibility keeps the fill as authored.
+		var fill_scale := 1.0 if RenderingServer.get_current_rendering_method() == "gl_compatibility" \
+			else float(lanes.get("forward_plus_fill_scale", 1.0))
+		_hazards.set_shader_parameter("lane_alpha", float(lanes.get("fill_alpha", 0.21)) * fill_scale)
 		_hazards.set_shader_parameter("rim_alpha", float(lanes.get("rim_alpha", 0.0)))
 		_hazards.set_shader_parameter("rim_width", float(lanes.get("rim_width_m", 0.35)))
 	overlay.material_override = _hazards
