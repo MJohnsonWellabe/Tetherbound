@@ -1,0 +1,8 @@
+﻿# F36#1 held shove hit on main (local): the 15 enabled species the CPU scored >= 7.0. Candidate vs shipping at Medium; candidate at High.
+$env:TB_GRADE_VARIANT = ""; $env:TB_RUN_TIMEOUT_MIN = "45"
+$sp = "--species=frostclaw,aquaryn,tidecoil,voltwig,breezetail,cliffspike,cloudfang,craghorn,pebbik,thundertunnel,stormraven,tanglevolt,stormcapra,solmane,galecrest"
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $root = "D:\tb-gpu-runs\out\F36-1-main"
+& $run -Preset Medium -Script "res://tools/art_pipeline/capture_f36_poses.gd" -OutDir "$root\Medium-candidate" -Resolution "1920x1080" -ProjectPath "D:\tb-gpu-pass" -UserArgs @($sp, "--candidate", "--whole-body", "--context", "--out={FRAMES}")
+& $run -Preset Medium -Script "res://tools/art_pipeline/capture_f36_poses.gd" -OutDir "$root\Medium-shipping" -Resolution "1920x1080" -ProjectPath "D:\tb-gpu-pass" -UserArgs @($sp, "--whole-body", "--context", "--out={FRAMES}")
+& $run -Preset High -Script "res://tools/art_pipeline/capture_f36_poses.gd" -OutDir "$root\High-candidate" -Resolution "1920x1080" -ProjectPath "D:\tb-gpu-pass" -UserArgs @($sp, "--candidate", "--whole-body", "--context", "--out={FRAMES}")
+"f36-1 main done"

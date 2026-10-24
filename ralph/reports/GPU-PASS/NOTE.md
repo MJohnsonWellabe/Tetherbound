@@ -2,6 +2,12 @@
 
 ## READY (24 Oct): newest first
 
+- **10:20 CT, F36#1 held shove hit on main** (the 15 enabled species with CPU ≥ 7.0; recipe vs shipping, Medium):
+  - **CONFIRMED: Tanglevolt 7.89, Frostclaw 7.88, Stormcapra 7.79, Cloudfang 7.73, Breezetail 7.69, Craghorn 7.66.**
+  - **REOPENED:** Aquaryn 7.49, Tidecoil 7.45, Solmane 7.33 (no gain), Cliffspike 7.03, Thundertunnel 6.91, Voltwig 6.89, Pebbik 6.89.
+  - **Recipe scores below shipping:** Galecrest (6.62 vs 6.72) and **Stormraven (5.81 vs 6.09)**. Consider turning these two OFF.
+  - Evidence: `F36-1/main-1024/VERDICT.md`.
+
 - **09:40 CT, F36#0 creatures on main:**
   - **CONFIRMED: Terrapup 7.64 (3.20 m) and Burrowback 7.61.**
   - **REOPENED:** water_mosshell 7.41, Mosshell 7.36, Ripplet 7.26, Nightburrow 7.01, Bramblebun 6.95, Paddlenewt 6.65, Veridian 6.52, Stormtrail 6.16, Cindercub 6.11, Riftfrill 6.04, Mudsnout 5.88, Trailpup 5.73.
