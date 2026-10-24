@@ -63,6 +63,6 @@
 1. The relay gameplay stand is #03, 07, 11 and 15: `band3_the_river_lock_0__*__gameplay`. The trainer stands in the gate arch with a wall pier filling half the frame, and the detail frames #06 and #14 have a timber corner.
    - The production camera is not inside geometry here, because it sees the trainer through the arch. It is the framing the player gets standing on that spot.
    - Fix candidate: the camera's occluder handling for thin piers. That is shared camera code, outside this lane's paths, so it is reported, not changed.
-2. The Hall arch rims (#17-20, 25-30) read as "neon placeholder glows" to all three judges. On Compatibility the rims are full weight. Forward+ already takes 0.35 (land2). A CPU candidate dimming the Compatibility rims is the next in-scope step.
+2. The Hall arch rims (#17-20, 25-30) read as "neon placeholder glows" to all three judges. On Compatibility the rims are full weight. Forward+ already takes 0.35 (land2). Dimming the Compatibility rims would change the F17#6 scene, which the coordinator asked to keep identical on Low/Compatibility. This waits on the GPU F17#6 verdict.
 3. Arch detail frames #05-08 and #31-32 have a near wall or pillar at the frame edge, because the nave is about 12 m wide. Shrine room night #47-48 is washed near-white.
 4. Not F38#5 classes: repetitive wall modules, and indoor day/night/rain that barely differ. These are Bar A asks.
