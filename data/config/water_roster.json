@@ -533,7 +533,9 @@
       "placeholder": {
         "source_species": "mosshell",
         "source_definition": "res://data/creatures/species.json#species/mosshell/placeholder",
-        "model": "res://assets/creatures/tetherbound/mosshell/models/creature_mosshell_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/mosshell/candidate_nat1024/models/creature_mosshell_nat1024.glb",
+        "colourway_source_species": "mosshell_nat1024",
+        "_comment_model_nat1024": "Close-1024: the naturalistic remake, as the land form, with its own clips (level swim). b7 (CPU three-judge yardstick, confirming batch): water form mapped 7.19 vs installed 5.86 (CPU-provisional). Mount and saddle unchanged: the shell top is 2.50 m at the seat on idle and swim, under the 2.49 m seat as before; production mounted-swimming smoke on water_mosshell 19/19 checks.",
         "source_height_m": 2.5,
         "target_height_m": 2.5,
         "model_scale": 1.0,
@@ -543,11 +545,16 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
         },
         "presentation_intent": "Reuse the installed Meadows Mosshell body as the roster's authored cross-biome anchor",
-        "replacement_model": "res://assets/creatures/tetherbound/mosshell/models/creature_mosshell_lod0.glb",
+        "replacement_model": "res://assets/creatures/tetherbound/mosshell/candidate_nat1024/models/creature_mosshell_nat1024.glb",
         "replacement_binding": "res://data/creatures/species.json#species/mosshell/placeholder/model",
         "status": "reused_meadows_anchor",
         "_comment": "Mosshell is the Water roster's explicitly documented reused Meadows anchor; its installed body and animation bindings are intentional."

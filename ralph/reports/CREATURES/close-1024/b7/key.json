@@ -1,0 +1,29 @@
+{
+ "Ae": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Of": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Vn": {
+  "anchor": false,
+  "label": "F36 water_mosshell b7",
+  "A": "<scratch>/b7/sides/wm-live.png",
+  "B": "<scratch>/b7/sides/wm-c.png"
+ },
+ "Cn": {
+  "anchor": false,
+  "label": "F36 mosshell b7",
+  "A": "<scratch>/b7/sides/ms-c.png",
+  "B": "<scratch>/b7/sides/ms-live.png"
+ },
+ "Ba": {
+  "anchor": true,
+  "A": "f36_0_gap:C3B",
+  "B": "f36_0_gap:C3A"
+ }
+}
