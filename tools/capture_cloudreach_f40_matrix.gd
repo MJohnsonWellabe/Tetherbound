@@ -265,6 +265,8 @@ func _ground_offset_view(row: Dictionary) -> bool:
 		return true
 	var game := root.get_node_or_null(^"Game")
 	var origin := Vector2(float(row.stand_origin_xz[0]), float(row.stand_origin_xz[1]))
+	var heading := deg_to_rad(float(row.view_heading_deg))
+	var forward := Vector2(sin(heading), cos(heading))
 	var space := _world.get_world_3d().direct_space_state
 	var eye := func(point: Vector2) -> Vector3:
 		return Vector3(point.x, float(_world.call("ground_height_at", point.x, point.y)) + 1.6, point.y)
@@ -277,7 +279,15 @@ func _ground_offset_view(row: Dictionary) -> bool:
 			return false
 		var query := PhysicsRayQueryParameters3D.create(eye.call(point), eye.call(origin))
 		query.exclude = [_player.get_rid()]
-		return space.intersect_ray(query).is_empty()
+		if not space.intersect_ray(query).is_empty():
+			return false
+		# The production camera sits ~5.8 m behind the trainer on its arm; a
+		# wall there shortens the arm and puts the lens on the wall.
+		var back := -forward
+		var arm := PhysicsRayQueryParameters3D.create(eye.call(point),
+			eye.call(point) + Vector3(back.x, 0.0, back.y) * 6.0 + Vector3.UP * 1.2)
+		arm.exclude = [_player.get_rid()]
+		return space.intersect_ray(arm).is_empty()
 	var yaw := deg_to_rad(float(row.view_heading_deg))
 	var chosen := VIEW_FALLBACK.resolve(origin, Vector2(sin(yaw), cos(yaw)), offset, grounded)
 	if chosen.is_empty():
