@@ -36,3 +36,11 @@ References drafted as crops of the owner boards (`docs/reference/boards-2026-09-
 - F41#5 defect scan, all three judges: no flat magenta ground disc in Break on either side (FIXED); the fights still show thin magenta lane/ring outlines (PARTIAL; Fights-owned `charger_lunge`/telegraph). Other recorded defects still present: near-lens trunk/root (forest, giant, reverse), black foreground patch (forest), squat Stormheart, unreadable glass scar, Break forest near-black, lightning not lighting trunks and ground in the forest stands.
 - Judges' top changes (all three): (scene) relight forest interiors (lift shadow and fill, rim on trunks, lightning lighting ground and trunks, depth fog); (scene, out of lane) slim the fight HUD and frame the pilot larger, real arc/crack telegraphs and impact bursts; (new_art) a tall split Stormheart hero, a strike-scarred glass field.
 - Coordinator delivered the Meshy batch on `tb/meshy-1024` 38602bdb0: `assets/props/meshy-1024/stormwood_stormheart_v3_far` (about 1.2:1, faint cleft) and `stormwood_glass_scar_crystals`. Unwired.
+
+## Round r14 (clearly different approach: new art + interior fill), capturing
+- Candidate = r13 patch plus (`r14-candidate.patch`):
+  - Stormheart hero `meshy_hero.model` -> `assets/props/meshy-1024/stormwood_stormheart_v3_far` (coordinator Meshy, tb/meshy-1024 38602bdb0), height 300 m, shape 0.8/1/0.8 (v3 is about 1.2:1; 380 m ran the crown off the top of the 300 m stand's frame);
+  - glass field `shard_finish.crystal_model` -> `assets/props/meshy-1024/stormwood_glass_scar_crystals`, `crystal_height_scale` 0.55 (one fulgurite cluster per scar, 3.9-7.2 m); new code `_add_crystals` in stormwood_glass_field.gd (no key = off), focused test `test_fulgurite_clusters_build_only_with_their_model` (fails without the code);
+  - forest-interior fill: `stormwood_look.json rig.environment.ambient_energy` 1.65 -> 2.3 (shadow opacity is pinned by the surge tests; ambient is not).
+- Both Meshy folders: texture_import_policy --apply then reimport; --check PASS (6 sidecars mode 2).
+- Control: the r13 control frames (main 5f1f388cc, unchanged rendering path).
