@@ -1,6 +1,11 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-24 07:40 CT INFO F22#4 C2/C3 on current main (45865499d merged into tb/fights): running, 24 seeds, one Godot process. Order: smoke_finale_named_c2c3, smoke_stormwood_b_named_c2c3, smoke_meadows_named_c2c3, smoke_water_named_c2c3. Several hours.
+  - Gap 1: the Stormwood named smoke drove combat_depth_pilot (no live patterns), the reason the audit called it stale. It now uses f22_pattern_pilot with the encounter_director context (named pattern by encounter id, authored profile as role) and the switching acceptance reader, as the Meadows and water smokes do.
+  - Gap 2: Veyra and Marrow had no C2/C3 smoke. New tests/smoke_finale_named_c2c3.gd (Meadows harness, production translators, party level = region wild band midpoint + 1: 42 and 52).
+  - All three harnesses now record `pattern_attacks` per run for the per-fight table. Verdict rules unchanged.
+  - One-seed sanity: Veyra and Marrow PASS (terrapup). Capacitor (terrapup, 1 seed) failed the ratio (0.76 > 0.55); the 24-seed run decides.
 - 2026-10-24 06:45 CT INFO F22#4 Riverwatch CPU re-judge on current main (77447cf25 + tb/fights): mapped **6.89**, CPU-provisional (6.7 or above; 7.5 still needs the GPU).
   - Batch: confirming (top anchor f36_0_npc C1 7.53), linear fit slope 1.81, r 0.98, RMSE 0.33, not above the top anchor, no warnings.
   - Main before #722 (88398238a): 6.71. Raw now 6.4/6.3/6.6 vs before 6.3/6.1/6.6.
