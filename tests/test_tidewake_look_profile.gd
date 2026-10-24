@@ -22,7 +22,7 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 	var off: Array = raw.get("sections_off", [])
 	for section: String in ["current_flow", "current_flow_visual", "night_creature_floor",
 			"dock_village_candidate", "dock_dressing_candidate", "surfaces_candidate",
-			"veilfall_rock_candidate", "landmark_props_candidate"]:
+			"veilfall_rock_candidate"]:
 		assert_true(off.has(section), "%s is unjudged and must ship off" % section)
 		assert_true(raw.has(section), "%s ships in the file for capture" % section)
 	# close-1024 lt2: the time-of-day regrade cleared the CPU-provisional bar
@@ -34,6 +34,13 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 		"the regrade's mapped score is recorded in the config")
 	var regraded: Dictionary = PROFILE.settings().get("lighting_candidate", {})
 	assert_true(regraded.get("times", {}).has("golden"), "the regrade reaches play")
+	# close-1024 p1: the Meshy beach props beat main (mapped 5.59 vs 5.02), so
+	# they ship ON by the coordinator's beats-main rule, score recorded beside them.
+	assert_false(off.has("landmark_props_candidate"), "the judged beach props ship on")
+	assert_true(str(raw.get("_why_landmark_props_candidate", "")).contains("5.59"),
+		"the props' mapped score is recorded in the config")
+	assert_false((PROFILE.settings().get("landmark_props_candidate", []) as Array).is_empty(),
+		"the beach props reach play")
 	var config := PROFILE.settings()
 	for section: Variant in off:
 		assert_false(config.has(str(section)), "%s must not reach play" % section)
