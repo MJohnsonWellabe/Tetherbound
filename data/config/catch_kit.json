@@ -1,5 +1,7 @@
 {
  "enabled": false,
+ "_why_close1024_r1": "Meadows close-1024 catch r1 (kit ON + Meshy orb + catching.json framed_camera ON): mapped Bar A 6.42 vs shipping 6.08 (+0.34; three code-blind judges, standard prompt, 3 anchor pairs, linear r 0.84 RMSE 0.74; CPU llvmpipe Low; ralph/reports/MEADOWS/close-1024/P2-059-060-catch.md). Below 6.7: stays OFF. Judges: magenta ring gone (PARTIAL: rest/shake/breakout frames identical), the camera still cuts to a tight downward view, verdict text buried under the HUD cards.",
+ 
  "_comment": "P2-060 (effects-claude, 2026-10-12). Presentation only, shipping OFF until a code-blind PASS: scripts/vfx/catch_kit.gd gives the orb a lit, rim-lit body with a turning inner swirl, replaces the catch flashes' flat look with a soft edge-lit tether-hue (blue-violet, never red) ring, draws capture motes from the creature into the orb, and plays a clear success or breakout burst. Catch timing, chance, verdict and every catching.json value are untouched.",
  "ring_colour": "#9d8cff",
  "ring_core": "#ffffff",

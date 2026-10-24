@@ -1,0 +1,29 @@
+{
+ "Gp": {
+  "anchor": false,
+  "label": "P2-059/061 caught sequence",
+  "A": "/tmp/claude-0/cap/side_catchB_ship.png",
+  "B": "/tmp/claude-0/cap/side_catchB_cand.png"
+ },
+ "Cx": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Wz": {
+  "anchor": true,
+  "A": "f36_0_gap:C6B",
+  "B": "f36_0_gap:C6A"
+ },
+ "Sd": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Pm": {
+  "anchor": false,
+  "label": "P2-059/060 breakout sequence",
+  "A": "/tmp/claude-0/cap/side_catchA_ship.png",
+  "B": "/tmp/claude-0/cap/side_catchA_cand.png"
+ }
+}
