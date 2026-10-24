@@ -54,3 +54,14 @@ Three things are now established with evidence rather than opinion:
 1. **The yardstick works, and it caught us.** The b6 batch read 7.33 for the currents candidate and would have closed the row; its anchors only reached 6.93, so the score was extrapolated. The confirming batch with anchors to 7.53 put the same frames at 6.06. Every number above is from a confirming batch.
 2. **Tidewake's ceiling is light, not meshes.** Across four batches and twelve judge passes the same three things are named first: no time-of-day grade, no horizon haze, no cast shadow at night. The grade round moved the look more in one pass (+0.61) than three rounds of current-cue work moved the currents row (+0.09 in total after the first).
 3. **Two rows cannot close from this lane.** F39#1 needs a before/after PASS on all twenty top items; fourteen belong to the animation, UI, camera and shared-art lanes (table above). F39#3 additionally needs weather and a real fight, and `capture_tidewake_f13_5.gd --camera-set` refuses any weather but clear, so the matrix cannot be captured with the tool this lane has.
+
+## F39#5 defect scan: what twelve judge passes actually found in Tidewake
+
+The four batches this close put the Tidewake frames in front of twelve independent code-blind judges. Against F39#5's four named classes:
+
+- **Flat magenta rings or slabs: none in any Tidewake frame.** Every magenta finding in this close is in the Stormwood fight anchor (`f10_2_r3_capacitor`), not in Tidewake. Passed to the Fights lane: flat magenta telegraph quads and ground rings, no impact on the strike and impact frames, and a player creature that is never identifiable in frame.
+- **Placeholder materials: one, and it is the chapter's hero landmark.** All six judges across lt1 and lt2 call the Veilfall close-up faceted untextured slabs with a waterfall that stops partway down with no plume, spray or pool, and mark it `new_art`. Meshy requests 7-8 cover it.
+- **Floating bodies: reported once, did not reproduce.** A b6 judge described "a detached blue clawed flipper standing in the sand, a second creature buried in the dune to the shoulder" in the Brine Steps swim view. Checked at 4x on that exact frame: the creature stands beyond the dune crest and is cut off by the ridge line, which is ordinary terrain occlusion from a sea-level camera looking up a dune. No defect found, nothing filed.
+- **Clipping: nothing in geometry.** Two judges named "a prop clipped by the right frame edge" in the dock rows; that is the fixed camera's framing at the authored stand, not geometry through geometry.
+
+The honest state of the row: this is a scan of the look views, not of F39#5's full matrix, which depends on F39#3's matrix (now capturable under weather, still missing a real fight and the reverse/detail views). The scan on the 9-view matrix with the shipping look is capturing.
