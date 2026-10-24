@@ -18,3 +18,21 @@ References drafted as crops of the owner boards (`docs/reference/boards-2026-09-
   - `presentation.telegraph.soft_style.enabled` true (F41#5: strike warning not a flat disc);
   - `stormwood_glass_field.json shard_finish`: height_scale 0.45 -> 0.8, emission 0.45 -> 1.1, crust_footprint 0.9 -> 1.05 (glass scar unreadable).
 - Capture fix (run option only, no tool change): Break stills without `--fixed-fps` advance ~2-5 s of game time per CPU frame, so a 0.25 s bolt has decayed by the screenshot (why `_await_sky_bolt` "mostly timed out"). Matrix now runs as two passes per arm: Calm + aftermath at normal stepping, then `--phases=break --no-aftermath` with `--fixed-fps 10`. `--fixed-fps 20` for the whole run was tried and dropped: the 6 s phase blend then costs ~5 min per frame.
+
+## Round r13 result (24 Oct, about 02:30 UTC)
+- Batch: 4 anchor pairs, fixed: craft, f10_2_r3_capacitor, f36_0_npc:C5 (`--include`), plus f36_0_gap:C2; 5 candidate sets; three fresh code-blind judges, JUDGE_PROMPT v1 verbatim. Files: `r13/` (spec, sets, key, recorded defects, batch, mapped, `_sheet_r13.png` = Calm set).
+- Fit: linear, slope 1.18, intercept -0.49, r 0.73, anchor RMSE 0.78 (warning: > 0.75). Confirming batch (top anchor 7.35).
+
+| Set | Control raw (j1/j2/j3) | Control mapped | Candidate raw | Candidate mapped | Gain |
+|---|---|---|---|---|---|
+| F41#3 Calm | 5.5/4.9/4.8 | 5.48 | 5.6/5.0/4.8 | 5.56 | +0.08 |
+| F41#3 Break | 5.0/4.5/4.3 | 4.93 | 5.1/4.5/4.3 | 4.97 | +0.04 |
+| F41#3 aftermath | 5.8/5.2/5.2 | 5.87 | 5.9/5.3/5.2 | 5.95 | +0.08 |
+| F10#2 glass_field | 5.7/5.4/5.2 | 5.91 | 5.6/5.2/4.9 | 5.68 | -0.23 |
+| F10#2 capacitor | 5.9/5.8/5.5 | 6.26 | 5.9/5.8/5.7 | 6.34 | +0.08 |
+
+- Control is main's ON r11 look; its mapped scores (5.48/4.93/5.87/5.91/6.26) sit near r12's mapped candidate scores, so main holds roughly the r11/r12 level.
+- Reading: the r13 config changes are below the judges' resolution. Gain rule: r12 and r13 are two consecutive rounds under +0.5. Before parking, one clearly different approach (r14).
+- F41#5 defect scan, all three judges: no flat magenta ground disc in Break on either side (FIXED); the fights still show thin magenta lane/ring outlines (PARTIAL; Fights-owned `charger_lunge`/telegraph). Other recorded defects still present: near-lens trunk/root (forest, giant, reverse), black foreground patch (forest), squat Stormheart, unreadable glass scar, Break forest near-black, lightning not lighting trunks and ground in the forest stands.
+- Judges' top changes (all three): (scene) relight forest interiors (lift shadow and fill, rim on trunks, lightning lighting ground and trunks, depth fog); (scene, out of lane) slim the fight HUD and frame the pilot larger, real arc/crack telegraphs and impact bursts; (new_art) a tall split Stormheart hero, a strike-scarred glass field.
+- Coordinator delivered the Meshy batch on `tb/meshy-1024` 38602bdb0: `assets/props/meshy-1024/stormwood_stormheart_v3_far` (about 1.2:1, faint cleft) and `stormwood_glass_scar_crystals`. Unwired.
