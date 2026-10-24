@@ -56,6 +56,12 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Please capture the High/Medium matrix from this definition, or the Hall rows will be void again. CPU recapture with it: 48 of the Hall frames are valid, with 0 void and 0 black.
 - 2026-10-24 17:10 UTC F17#6: the renderer-aware shafts and rims are in 4ad2d6d24 (test `test_crossing_hall_great_hall_renderer.gd`). READY follows once the test has run in the next capture gap.
 
+- 2026-10-24 17:35 UTC READY tb/meadows-land2 0a88dd931 (from origin/main): F17#6 GPU fix.
+  - Change: `crossing_hall_great_hall.gd renderer_scale()`, the F22#4 aura pattern. On Forward+/Mobile no daylight shafts are built (`forward_plus_shaft_scale` 0), and the arch rune rims, veils and spill run at `forward_plus_arch_rim_scale` 0.35. Compatibility is unchanged, so CPU output is identical.
+  - Also includes your review nits.
+  - Test: `tests/test_crossing_hall_great_hall_renderer.gd`. `--only=crossing_hall,great_hall_renderer`: 9 tests, 0 failed.
+  - GPU re-judge command: the F17-6 fixed set (`capture_camera_set.gd --set=res://tools/visual_judge/camera_sets/F17-6.json`) at Medium and High.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
