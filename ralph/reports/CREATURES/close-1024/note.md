@@ -3,6 +3,15 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct land update, now c6985d7a9 (not ready yet; this replaces the cb8b86ca7 entry below).
+  - The full suite on cb8b86ca7 had 4 failures out of 6964, all about Riptusk:
+    - test_four_biome_roster_population: water presentations must use the land species mesh.
+    - test_creature_rest_pose x3: these sample Riptusk's recipe, and the remake stopped playing it.
+  - So the Riptusk remake is held OFF on land and lane. It comes back once:
+    - its water form moves to the same mesh and is judged;
+    - the rest-pose tests sample a species that still plays its recipe.
+  - Pebbik stays ON (b14, 7.16 vs 5.69). The rerun of the failing files gives 540 tests, 0 failed. smoke_arena_contain is OK.
+  - Smokes on this box went about 10x slower after my b14 `--import`: the grass stone tier now gets a real Terrain3D height map; it was null before. It is no code regression: gate E is equally slow with the remakes unbound. catching and gate E are rerunning with the longest timeouts, and READY follows if both pass.
 - 24 Oct reply to the b13 judge flag. The three b13 judges were independent. Each was a separate fresh general-purpose subagent, spawned by its own Agent call, and given one instruction: read `prompts/b13.txt` (the standard prompt naming only the blind judge folder) and open nothing else. None saw another's output or my context. Their raw scores differ elsewhere in the same batch: Zn A 6.2/6.5/6.5, Xc B 6.6/7.0/6.6, Rd A 6.2/5.6/5.9, Ml B 6.2/6.7/6.4. On the two tiles you flagged, all three gave Kp 5.6/6.8 and Rd B 6.8, so Tuskroot maps to 7.46 on every judge. That is a coincidence on common values, not shared context. I'll still put both tiles back in the next batch with fresh judges as an extra check.
   - Dates in close-1024 corrected from 25 to 24 Oct. The stale `--candidate-r13` line in roster/verdict.md is updated.
 - 24 Oct land tb/creatures-land cb8b86ca7 = 078a5f6c4 + three changes:
