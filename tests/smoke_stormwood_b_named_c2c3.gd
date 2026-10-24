@@ -28,6 +28,9 @@ extends SceneTree
 ##
 ## Verdict rules applied per case/starter (printed; nothing is tuned):
 ##   C2 named wild: READER median lead HP cost <= 0.55 x MASHER's, READER win >= 90%.
+##     COMBAT §7 trivial-fight floor: a type-advantaged lead with MASHER median
+##     party cost <= 15% is judged READER win and party cost no worse than
+##     MASHER's instead of the ratio (never for neutral/disadvantaged leads).
 ##   C3: no single incoming hit >= 50% of an entry creature's HP (worst seen,
 ##       not neutral-only: a harsher bound), every tell >= 0.8 s, and any tell
 ##       authored as heavy (>= 1.1 s by BOSSES) observed at >= 1.1 s.
@@ -45,10 +48,13 @@ const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const CATALOGUE := preload("res://scripts/combat/stormwood_encounter_catalogue.gd")
+const TYPE_CHART := preload("res://scripts/combat/type_chart.gd")
 
 const STARTERS := ["terrapup", "ripplet", "galewisp"]
 const RETAINED := ["bramblebun", "mudsnout", "pipwing", "trailpup"]
 const RATIO_MAX := 0.55
+## COMBAT §7 trivial-fight floor (coordinator, owner-delegated, 2026-10-12).
+const TRIVIAL_PARTY_COST_MAX := 0.15
 const READER_WIN_MIN := 0.90
 const HIT_CEILING := 0.50
 const TELL_FLOOR := 0.8
@@ -216,10 +222,11 @@ func _run() -> void:
 			var m: Dictionary = row.pilots.get("MASHER", {})
 			var r: Dictionary = row.pilots.get("READER", {})
 			if not m.is_empty() and not r.is_empty():
-				row["verdict"] = _verdict(entry, m, r)
+				row["verdict"] = _verdict(entry, m, r, starter)
 				if not bool(row.verdict.pass): failures += 1
-				print("STORMWOOD_C2C3_VERDICT %s %s %s ratio=%.2f reader_win=%.2f max_hit=%.3f min_tell=%.2f %s" % [
+				print("STORMWOOD_C2C3_VERDICT %s %s %s%s ratio=%.2f reader_win=%.2f max_hit=%.3f min_tell=%.2f %s" % [
 					entry.id, starter, "PASS" if bool(row.verdict.pass) else "FAIL",
+					" (trivial-fight floor)" if bool(row.verdict.trivial_floor) else "",
 					float(row.verdict.ratio), float(r.win_rate), float(row.verdict.max_hit),
 					float(row.verdict.min_tell), ", ".join(row.verdict.reasons)])
 			rows.append(row)
@@ -242,14 +249,26 @@ func _run() -> void:
 	quit(0 if errors.is_empty() else 1)
 
 
-func _verdict(entry: Dictionary, masher: Dictionary, reader: Dictionary) -> Dictionary:
+func _verdict(entry: Dictionary, masher: Dictionary, reader: Dictionary, starter: String = "") -> Dictionary:
 	var reasons: Array[String] = []
 	# A masher that loses no lead HP makes the ratio undefined; the reader then
 	# cannot be cheaper, so the comparison says nothing: report it as a FAIL of
 	# "decisions have value" rather than divide by zero.
 	var masher_cost := float(masher.median_lead_cost)
 	var ratio := float(reader.median_lead_cost) / masher_cost if masher_cost > 0.0001 else INF
-	if ratio > RATIO_MAX: reasons.append("reader/masher lead cost %.2f > %.2f" % [ratio, RATIO_MAX])
+	# COMBAT §7 trivial-fight floor: a type-advantaged lead whose fight is
+	# trivial for both pilots (masher median party cost <= 15%) is judged
+	# reader-no-worse (win rate and party cost) instead of the ratio. Never
+	# for a neutral or disadvantaged lead, never above the floor.
+	var trivial := _lead_advantaged(starter, entry) \
+		and float(masher.median_party_cost) <= TRIVIAL_PARTY_COST_MAX
+	if trivial:
+		if float(reader.win_rate) < float(masher.win_rate) \
+				or float(reader.median_party_cost) > float(masher.median_party_cost):
+			reasons.append("trivial-fight floor: reader worse than masher (win %.2f/%.2f, party %.3f/%.3f)" % [
+				float(reader.win_rate), float(masher.win_rate),
+				float(reader.median_party_cost), float(masher.median_party_cost)])
+	elif ratio > RATIO_MAX: reasons.append("reader/masher lead cost %.2f > %.2f" % [ratio, RATIO_MAX])
 	if float(reader.win_rate) < READER_WIN_MIN: reasons.append("reader win %.2f < %.2f" % [float(reader.win_rate), READER_WIN_MIN])
 	var max_hit := maxf(float(masher.max_single_hit_frac), float(reader.max_single_hit_frac))
 	if max_hit >= HIT_CEILING: reasons.append("single hit %.2f >= %.2f" % [max_hit, HIT_CEILING])
@@ -260,7 +279,29 @@ func _verdict(entry: Dictionary, masher: Dictionary, reader: Dictionary) -> Dict
 	if float(entry.authored_tell) >= HEAVY_TELL and min_tell >= 0.0 and min_tell < HEAVY_TELL - 0.001:
 		reasons.append("heavy-authored tell seen at %.2f < %.2f" % [min_tell, HEAVY_TELL])
 	if int(masher.stalled) + int(reader.stalled) > 0: reasons.append("stalled runs")
-	return {"pass": reasons.is_empty(), "ratio": ratio, "max_hit": max_hit, "min_tell": min_tell, "reasons": reasons}
+	return {"pass": reasons.is_empty(), "ratio": ratio, "max_hit": max_hit, "min_tell": min_tell,
+		"trivial_floor": trivial, "reasons": reasons}
+
+
+## The lead's type matchup against every foe: advantaged when it hits harder
+## or takes less, and never the reverse against any foe.
+static func _lead_advantaged(starter: String, entry: Dictionary) -> bool:
+	var lead: RefCounted = SPECIES.spawn(starter) if not starter.is_empty() else null
+	if lead == null:
+		return false
+	var lead_type := str(lead.get("creature_type"))
+	var advantaged := false
+	for member: Dictionary in entry.get("foes", []):
+		var foe: RefCounted = SPECIES.spawn(str(member.get("species", "")))
+		if foe == null:
+			return false
+		var foe_type := str(foe.get("creature_type"))
+		var attack := TYPE_CHART.effectiveness(lead_type, foe_type)
+		var defence := TYPE_CHART.effectiveness(foe_type, lead_type)
+		if attack < 0 or defence > 0:
+			return false
+		advantaged = advantaged or attack > 0 or defence < 0
+	return advantaged
 
 
 static func _median(values: Array) -> float:
