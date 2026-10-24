@@ -1,0 +1,22 @@
+﻿# Local GPU-pass queue for F17#6 Crossing Hall r9 (never committed).
+# Candidate = main as checked out; control = the same tree with crossing_hall.json from 5f1f388cc
+# (the only game-content difference between 5f1f388cc and r9 816dfa60f).
+$root = "D:\tb-gpu-runs\out\F17-6b"
+$proj = "D:\tb-gpu-pass"
+$set = "--set=res://tools/visual_judge/camera_sets/F17-6.json"
+$cfg = "data/config/crossing_hall.json"
+New-Item -ItemType Directory -Force $root | Out-Null
+foreach ($arm in @("candidate", "control")) {
+    if ($arm -eq "control") {
+        cmd /c "git -C $proj show 5f1f388cc:$cfg > $proj\data\config\crossing_hall.json"
+        git -C $proj diff --stat -- $cfg
+    }
+    foreach ($p in @("Medium", "High")) {
+        $out = Join-Path $root "$arm-$p"
+        & D:\tb-gpu-runs\tools\run_tool.ps1 -Preset $p -Script "D:/tb-gpu-runs/tools/capture_camera_set_ready.gd" -OutDir $out -Resolution "1920x1080" -ProjectPath $proj -UserArgs @($set, "--out={FRAMES}", "--preset=$p")
+    }
+}
+git -C $proj checkout -- $cfg
+git -C $proj status --short -- $cfg
+"F17b queue done"
+
