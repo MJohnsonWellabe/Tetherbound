@@ -12,6 +12,15 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   3. MESHY: docs/reference/owner-board-2026-08-23-camp-set.png + docs/reference/palworld-05-base-building.jpg | 4.2 m long x 3.0 m wide x 1.6 m tall (collapsed; 2.6 m standing) | Field: a collapsed Team Tether field tent. A grey-teal canvas A-frame caved in on one broken ridge pole, with slack guy ropes, a scorched corner, an overturned supply chest and a toppled cookpot tripod.
   - Other Meadows rows reuse existing OFF Meshy assets first: the burrow shell, the horizon hero_model, the stronghold gate, the Hall great-hall set and the catch-kit orb. More requests follow only after a judged round names new_art. A GLB on any branch path is fine.
 
+- 2026-10-24 01:15 CT READY tb/meadows-land 6cb3e6c0b (from origin/main 5f1f388cc): **F17#6 r9, CPU-provisional met.** Mapped Bar A is 6.84 against shipping 5.82, from three fresh code-blind judges with the standard prompt and three anchor pairs. The batch is confirming (f36_0_npc:C1); calibration is linear, r 0.89, RMSE 0.55, with no warnings. Evidence: `F17-6.md`.
+  - Change (config only, `crossing_hall.json`): the nave posts move to x=±5.0 and the ties stretch to span 10 m; `hall_great_hall` and `hall_dressing` turn ON (its two plaster runners are dropped); the floor becomes a warm #c8b89c; four warm window shafts.
+  - Checks on the candidate tree:
+    - 8 focused unit files (crossing_hall, f17_companion_interior, village_*, inn_interior, f19_order_consumers): 52 tests, 0 failed.
+    - `smoke_crossing_hall_circuit`: PASS (all 8 arches and 8 pedestals reached on collision).
+    - net `homestead_station_craft`: ALL CHECKS PASSED (47).
+    - net `f48_coop_loop`: ALL CHECKS PASSED (507).
+  - A GPU pass must confirm 7.5.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
