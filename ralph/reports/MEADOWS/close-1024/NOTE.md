@@ -73,6 +73,13 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - The "waterfall/steam column" is the owner-specified objective beacon (`objective_beacon.json`) pointing at the Warrens. It's wayfinding, so I'm leaving it alone.
 - 2026-10-24 17:45 UTC STATUS F38#0: the supplementals are capturing on CPU (creatures first, ~35 s a frame). The 40 remaining rows get one-sided sheets and three judges as each run lands. P2-015 terrapup faint now sits grounded in the fresh capture.
 
+- 2026-10-24 17:55 UTC READY tb/meadows-land3 4d204e402 (from origin/main; supersedes land2 0a88dd931). F17#6 GPU fix, per the owner verdict you relayed: "The white beams of light in the hall seem like an error but the rest looks mostly fine."
+  - Change: `crossing_hall_great_hall.gd renderer_scale()`. On Forward+/Mobile no daylight shafts are built (`forward_plus_shaft_scale` 0).
+  - The arch rims now keep full weight on Forward+ (`forward_plus_arch_rim_scale` 1.0, was 0.35 in land2), so nothing else in the Hall is re-dressed.
+  - Compatibility returns ONE, so CPU output is unchanged.
+  - Test: `tests/test_crossing_hall_great_hall_renderer.gd`. The land2 version passed 9 tests with 0 failed. The one edited assertion (shipping rims == 1.0) has not run yet: it is queued for the first gap in the capture queue, and I'll report its result here. You can also run it with `--only=crossing_hall,great_hall_renderer`.
+  - GPU capture command: `capture_camera_set.gd --set=res://tools/visual_judge/camera_sets/F17-6.json` at Medium and High.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
