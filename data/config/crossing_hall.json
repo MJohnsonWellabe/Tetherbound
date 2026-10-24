@@ -224,7 +224,7 @@
     },
     "daylight_windows": {
       "enabled": true,
-      "_scope": "Two lights inside existing west nave window apertures. Parent hall_waymark.enabled gates construction; both lights turn OFF at night through the existing clock response.",
+      "_scope": "Four lights at the upper nave window row: two west (x=-6.75, z 0 and 12) and, from F17#6 r9, two east (x=+6.75, z -6 and 6, in the wall bays between the east arches, below the upper window row seen in the r9 nave-arches-right frame). Parent hall_waymark.enabled gates construction; all four turn OFF at night through the existing clock response.",
       "_why_r9": "F17#6 r9: warm window shafts on both sides for the judges' daylight and trainer-exposure ask (with the warm limestone floor, was #a4afb3). F17#6 r9 (24 Oct, CPU-provisional): mapped Bar A 6.84 vs shipping 5.82 (three fresh code-blind judges, JUDGE_PROMPT v1, 3 anchor pairs incl. f36_0_npc:C1 (confirming batch), calibrate.py linear slope 1.11 r 0.89 RMSE 0.55; F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/F17-6.md). Meets the 6.7 CPU-provisional bar; a GPU pass must confirm 7.5.",
       "colour": "#ffe6c0",
       "energy": 2.6,

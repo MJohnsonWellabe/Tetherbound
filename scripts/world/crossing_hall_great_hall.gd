@@ -1,13 +1,15 @@
 extends RefCounted
 
-## F17#6 close-1020 r2 "great hall" interior candidate (presentation only;
-## OFF via crossing_hall.json hall_great_hall). r1 judges: the nave read as an
+## F17#6 "great hall" interior dressing (presentation; crossing_hall.json
+## hall_great_hall, ON from F17#6 r9). r1 judges: the nave read as an
 ## outdoor courtyard between house fronts, the night pools had no source, and
 ## the Hall had no tether landmark or blue accent. This dresses the interior as
 ## one hall: a woven runner down the nave, cloth hangings over alternate
 ## clerestory windows, iron candle rings hung from the roof with their own
 ## light and night pools, and a rune inlay with a hanging tether crystal in the
-## Shrine Room. Nothing collides; no route, portal state or save changes.
+## Shrine Room. Only a piece with `collider_radius_m` collides (a static
+## cylinder, e.g. the shrine altar); the dressing pieces do not. No route,
+## portal state or save changes.
 const WOOD_TEXTURE := "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png"
 const STONE_TEXTURE := "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"
 const GLOW := preload("res://scripts/world/crossing_hall_claude.gd")
