@@ -164,6 +164,43 @@
       "fov": 70,
       "time": 12,
       "weather": "rain"
+    },
+    {
+      "id": "veilfall-vista",
+      "stand": [
+        384.311,
+        2.229,
+        3805.405
+      ],
+      "pos": [
+        480.31,
+        20.0,
+        3629.41
+      ],
+      "yaw": 149.27,
+      "pitch": 11.0,
+      "fov": 70,
+      "time": 12,
+      "weather": "clear"
+    },
+    {
+      "id": "veilfall-vista-rain",
+      "stand": [
+        384.311,
+        2.229,
+        3805.405
+      ],
+      "pos": [
+        480.31,
+        20.0,
+        3629.41
+      ],
+      "yaw": 149.27,
+      "pitch": 11.0,
+      "fov": 70,
+      "time": 12,
+      "weather": "rain"
     }
-  ]
+  ],
+  "_veilfall_vista": "close-1024 T3 (coordinator, GPU baseline: the Veilfall views were camera-on-rock): veilfall-vista and veilfall-vista-rain sit 200 m offshore of the landing stand and look back at the mountain, the falls and the sea. They are the Veilfall row's views from now on; veilfall-near and veilfall-rain stay unchanged for the close-up rock comparisons already queued."
 }
