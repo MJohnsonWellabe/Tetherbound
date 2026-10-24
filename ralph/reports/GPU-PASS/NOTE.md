@@ -2,7 +2,14 @@
 
 ## READY (24 Oct): newest first
 
-- **10:15 CT, F22#4 Riverwatch on main: REOPENED.**
+- **10:40 CT, Forward+ grade re-measure on main (with #712 Meadows fog 0.001):** luma Medium vs Low:
+  - **Meadows 102.6 vs 106.8 (96%, was 87.6)**;
+  - **Tidewake 165.2 vs 163.5 (parity)**;
+  - Stormwood F10 63.2 vs 73.1 (86%, more saturated).
+  - Matched frames read as one look across presets. Evidence: `forward-plus-grade/main-1024/RESULT.md`.
+  - **Now running:** the Tidewake regrade capture, then the emission-floor overlay checks (F22#4 at Medium, night and day creatures).
+
+- **10:08 CT, F22#4 Riverwatch on main: REOPENED.**
   - Medium maps to **5.10**, with the ghost still PRESENT ×3; Low maps to **6.39**.
   - **Root cause, isolated on GPU:**
     - not the tell aura (the renderer-aware aura works);
