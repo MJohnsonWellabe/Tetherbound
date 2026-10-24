@@ -1514,17 +1514,13 @@
         "height": 3.4,
         "radius": 1.19,
         "footprint_allowance": 3.0,
-        "model": "res://assets/creatures/tetherbound/aquaryn/models/creature_aquaryn_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/aquaryn/candidate_b5/models/creature_aquaryn_b5.glb",
+        "colourway_source_species": "aquaryn_b5",
+        "field_emission": 0.0,
+        "_comment_remake_b5": "Close-1024 coordinator Meshy b5 naturalistic remake (navy back, ivory belly, matte scales; provenance candidate_b5/source/meshy_provenance.jsonl), measured quadruped rig, own clips (Ripplet nat1024b script: recoil hit, -90 faint, sunk swim). b23 CPU pick 7.30 vs 7.30 (tie; judges split navy vs cyan); GPU to decide.",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "animations": {
-          "idle": "idle",
-          "walk": "walk",
-          "run": "run",
-          "attack": "attack",
-          "hit": "hit",
-          "faint": "faint"
-        },
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
         "_comment_placeholder_stats": "T1-CREATURE-RIG-FIX-2026-09-07: the model itself succeeded after 2 redos (a crop bug fed the wrong section of the reference board, causing a floating leg then a multi-leg pileup before a correctly-cropped board fixed it), but rig_quadruped.py's bone-heat weighting then failed to converge on the corrected mesh (100% of vertices left unweighted). Fixed via strip_textures.py -> cleanup_mesh.py (voxel-remesh to one manifold donor) -> rig_quadruped.py on the clean donor (0 unweighted) -> skin_transfer.py (nearest-face weight transfer onto the real textured mesh, 0 unweighted after transfer) -> animate_quadruped.py, verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
       },
       "learnset": "aquaryn"
@@ -1757,17 +1753,13 @@
         "height": 5.5,
         "radius": 1.925,
         "footprint_allowance": 3.0,
-        "model": "res://assets/creatures/tetherbound/tidecoil/models/creature_tidecoil_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/tidecoil/candidate_b5/models/creature_tidecoil_b5.glb",
+        "colourway_source_species": "tidecoil_b5",
+        "field_emission": 0.0,
+        "_comment_remake_b5": "Close-1024 coordinator Meshy b5 naturalistic remake (navy back, ivory belly, matte scales; provenance candidate_b5/source/meshy_provenance.jsonl), measured quadruped rig, own clips (Ripplet nat1024b script: recoil hit, -90 faint, sunk swim). b23 CPU pick 7.26 vs 6.39; GPU to decide.",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "animations": {
-          "idle": "idle",
-          "walk": "walk",
-          "run": "run",
-          "attack": "attack",
-          "hit": "hit",
-          "faint": "faint"
-        },
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
       },
       "learnset": "tidecoil"

@@ -135,21 +135,14 @@
       "placeholder": {
         "source_species": "paddlenewt",
         "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
-        "model": "res://assets/creatures/tetherbound/aquaryn/models/creature_aquaryn_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/aquaryn/candidate_b5/models/creature_aquaryn_b5.glb",
         "source_height_m": 2.15,
         "target_height_m": 5.0,
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "animations": {
-          "idle": "idle",
-          "walk": "walk",
-          "run": "run",
-          "attack": "attack",
-          "hit": "hit",
-          "faint": "faint"
-        },
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
         "presentation_intent": "White chest blue back turquoise fins orange crests",
-        "replacement_model": "res://assets/creatures/tetherbound/aquaryn/models/creature_aquaryn_lod0.glb",
+        "replacement_model": "res://assets/creatures/tetherbound/aquaryn/candidate_b5/models/creature_aquaryn_b5.glb",
         "replacement_binding": "res://data/creatures/species.json#species/aquaryn/placeholder/model",
         "status": "installed_species_mesh",
         "_comment": "Runtime presentation uses the installed species mesh and authored animation bindings. Visual acceptance remains separate."
@@ -186,21 +179,14 @@
       "placeholder": {
         "source_species": "paddlenewt",
         "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
-        "model": "res://assets/creatures/tetherbound/tidecoil/models/creature_tidecoil_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/tidecoil/candidate_b5/models/creature_tidecoil_b5.glb",
         "source_height_m": 2.15,
         "target_height_m": 5.5,
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "animations": {
-          "idle": "idle",
-          "walk": "walk",
-          "run": "run",
-          "attack": "attack",
-          "hit": "hit",
-          "faint": "faint"
-        },
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
         "presentation_intent": "Navy scales coral fin edges",
-        "replacement_model": "res://assets/creatures/tetherbound/tidecoil/models/creature_tidecoil_lod0.glb",
+        "replacement_model": "res://assets/creatures/tetherbound/tidecoil/candidate_b5/models/creature_tidecoil_b5.glb",
         "replacement_binding": "res://data/creatures/species.json#species/tidecoil/placeholder/model",
         "status": "installed_species_mesh",
         "_comment": "Runtime presentation uses the installed species mesh and authored animation bindings. Visual acceptance remains separate."
