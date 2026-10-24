@@ -1,0 +1,34 @@
+{
+ "Yr": {
+  "anchor": false,
+  "label": "F39#3 weather: clear vs rain",
+  "A": "shipping, clear (shore-day, lesson-dune, veilfall-near)",
+  "B": "shipping, rain (shore-rain, lesson-rain, veilfall-rain)"
+ },
+ "Gd": {
+  "anchor": false,
+  "label": "F39#3 real fight (both sides the same capture)",
+  "A": "shipping, real Venn fight (tell-start 0.65 s, hit 1.08 s, t 14 s, t 22 s)",
+  "B": "shipping, real Venn fight (tell-start 0.65 s, hit 1.08 s, t 14 s, t 22 s)"
+ },
+ "Ui": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ud": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ },
+ "Nj": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Tf": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}
