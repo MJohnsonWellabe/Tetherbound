@@ -1,0 +1,28 @@
+{
+ "Ft": {
+  "anchor": false,
+  "label": "F40 Cloudreach fight High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-fight-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-fight-Medium.png"
+ },
+ "Pb": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Vy": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Jg": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Gt": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ }
+}

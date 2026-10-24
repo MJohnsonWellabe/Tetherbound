@@ -1,0 +1,351 @@
+{
+  "accelerated": false,
+  "activity_intervals": [
+    {
+      "end_seconds": 21.5,
+      "from": "meaningful_offer",
+      "from_stage": "battle_captain_veyra_storm_anchor",
+      "gap_seconds": 0.5,
+      "start_seconds": 21.0,
+      "to": "meaningful_offer",
+      "to_stage": "battle_captain_veyra_storm_anchor"
+    },
+    {
+      "end_seconds": 22.52,
+      "from": "meaningful_offer",
+      "from_stage": "battle_captain_veyra_storm_anchor",
+      "gap_seconds": 1.02,
+      "start_seconds": 21.5,
+      "to": "input_interact",
+      "to_stage": "battle_captain_veyra_storm_anchor"
+    },
+    {
+      "end_seconds": 207.0,
+      "from": "input_interact",
+      "from_stage": "battle_captain_veyra_storm_anchor",
+      "gap_seconds": 184.48,
+      "start_seconds": 22.52,
+      "to": "meaningful_offer",
+      "to_stage": "battle_captain_veyra_storm_anchor"
+    },
+    {
+      "end_seconds": 207.0,
+      "from": "meaningful_offer",
+      "from_stage": "battle_captain_veyra_storm_anchor",
+      "gap_seconds": 0.0,
+      "start_seconds": 207.0,
+      "to": "meaningful_offer",
+      "to_stage": "battle_captain_veyra_storm_anchor"
+    },
+    {
+      "end_seconds": 207.0,
+      "from": "meaningful_offer",
+      "from_stage": "battle_captain_veyra_storm_anchor",
+      "gap_seconds": 0.0,
+      "start_seconds": 207.0,
+      "to": "meaningful_offer",
+      "to_stage": "battle_captain_veyra_storm_anchor"
+    }
+  ],
+  "combat_mode": "live_input_spacer_switch",
+  "distance_m": 379.530600683298,
+  "events": [
+    {
+      "kind": "assertion",
+      "label": "Ready production world contains Player, CloudreachRuntime and CloudreachChapter",
+      "position": "(0.0, 59.66922, 0.0)",
+      "simulated_seconds": 0.0,
+      "stage": "boot",
+      "wall_seconds": 461.996053
+    },
+    {
+      "kind": "assertion",
+      "label": "Ready production fight bindings are present",
+      "position": "(0.0, 59.66922, 0.0)",
+      "simulated_seconds": 0.0,
+      "stage": "boot",
+      "wall_seconds": 462.013999
+    },
+    {
+      "kind": "assertion",
+      "label": "Summit event relocated captain",
+      "position": "(100.0, 1160.131, 5350.0)",
+      "simulated_seconds": 0.5,
+      "stage": "captain_phase2_approach",
+      "wall_seconds": 464.370878
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(100.0, 1160.131, 5350.0)",
+      "kind": "travel_start",
+      "position": "(100.0, 1160.131, 5350.0)",
+      "simulated_seconds": 0.5,
+      "stage": "battle_captain_veyra_storm_anchor",
+      "target": "(100.0, 1160.0, 5400.0)",
+      "wall_seconds": 464.396284
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(100.0, 1160.151, 5399.63)",
+      "simulated_seconds": 10.77,
+      "stage": "battle_captain_veyra_storm_anchor",
+      "target": "(100.0, 1160.0, 5400.0)",
+      "wall_seconds": 474.607445
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(100.0, 1160.151, 5399.63)",
+      "kind": "travel_start",
+      "position": "(100.0, 1160.151, 5399.63)",
+      "simulated_seconds": 11.1,
+      "stage": "battle_captain_veyra_storm_anchor",
+      "target": "(103.0, 1160.0, 5450.0)",
+      "wall_seconds": 474.902524
+    },
+    {
+      "chosen": false,
+      "distance_m": 3.41663765907288,
+      "kind": "meaningful_offer",
+      "label": "Greet Captain Veyra",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Captain Veyra/Interactable",
+      "position": "(102.9193, 1160.151, 5448.639)",
+      "simulated_seconds": 21.0,
+      "stage": "battle_captain_veyra_storm_anchor",
+      "wall_seconds": 484.892433
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(102.9906, 1160.151, 5449.839)",
+      "simulated_seconds": 21.37,
+      "stage": "battle_captain_veyra_storm_anchor",
+      "target": "(103.0, 1160.0, 5450.0)",
+      "wall_seconds": 485.167435
+    },
+    {
+      "chosen": false,
+      "distance_m": 1.82986116409302,
+      "kind": "meaningful_offer",
+      "label": "Challenge Captain Veyra",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Captain Veyra/CloudreachChallenge",
+      "position": "(102.9906, 1160.151, 5449.839)",
+      "simulated_seconds": 21.5,
+      "stage": "battle_captain_veyra_storm_anchor",
+      "wall_seconds": 485.803937
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(102.9906, 1160.151, 5449.839)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Captain Veyra/CloudreachChallenge",
+      "prompt_position": "(101.5, 1161.2, 5450.0)",
+      "root_distance": 2.99487400054932,
+      "root_position": "(100.0, 1160.15, 5450.0)",
+      "senn_defeated": false,
+      "simulated_seconds": 22.22,
+      "stage": "battle_captain_veyra_storm_anchor",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 486.422586
+    },
+    {
+      "kind": "input_interact",
+      "position": "(102.4, 1160.151, 5451.2)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Captain Veyra/CloudreachChallenge",
+      "simulated_seconds": 22.52,
+      "stage": "battle_captain_veyra_storm_anchor",
+      "wall_seconds": 487.807449
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/CloudreachPeople/Captain Veyra/CloudreachChallenge",
+      "position": "(102.4, 1160.151, 5451.2)",
+      "simulated_seconds": 22.52,
+      "stage": "battle_captain_veyra_storm_anchor",
+      "wall_seconds": 487.821437
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input started captain_veyra_storm_anchor",
+      "position": "(102.4, 1160.151, 5451.2)",
+      "simulated_seconds": 22.85,
+      "stage": "battle_captain_veyra_storm_anchor",
+      "wall_seconds": 488.14568
+    },
+    {
+      "chosen": false,
+      "distance_m": 2.85557508468628,
+      "kind": "meaningful_offer",
+      "label": "Rest at summit bivouac",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/summit_bivouac/Interactable",
+      "position": "(134.0, 1160.993, 5344.0)",
+      "simulated_seconds": 207.0,
+      "stage": "battle_captain_veyra_storm_anchor",
+      "wall_seconds": 721.526749
+    },
+    {
+      "chosen": false,
+      "distance_m": 2.0770902633667,
+      "kind": "meaningful_offer",
+      "label": "Craft",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/summit_bivouac/CraftInteractable",
+      "position": "(134.0, 1160.993, 5344.0)",
+      "simulated_seconds": 207.0,
+      "stage": "battle_captain_veyra_storm_anchor",
+      "wall_seconds": 721.564745
+    },
+    {
+      "chosen": false,
+      "distance_m": 2.52772378921509,
+      "kind": "meaningful_offer",
+      "label": "Rest a Creature",
+      "path": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/summit_bivouac/CampCreatureBed/Interactable",
+      "position": "(134.0, 1160.993, 5344.0)",
+      "simulated_seconds": 207.0,
+      "stage": "battle_captain_veyra_storm_anchor",
+      "wall_seconds": 721.579883
+    },
+    {
+      "charged_inputs": 12,
+      "coins_gained": 0,
+      "damage_dealt": 1037.6267138118,
+      "damage_taken": 1959.16178735671,
+      "hits_dealt": 68,
+      "hits_taken": 33,
+      "id": "captain_veyra_storm_anchor",
+      "kind": "battle_resolved",
+      "loss_callback": true,
+      "mode": "live_input_spacer_switch",
+      "position": "(134.0, 1160.179, 5344.0)",
+      "quick_inputs": 64,
+      "rounds": [
+        {
+          "ally_at_start": "sparkit",
+          "final_gap": 6.15079879760742,
+          "frames": 3247,
+          "opponent": "aeriex",
+          "outcome": "won",
+          "seconds": 54.1166666666667,
+          "timed_out": false
+        },
+        {
+          "ally_at_start": "mudsnout",
+          "final_gap": 6.58891248703003,
+          "frames": 2921,
+          "opponent": "cloudfang",
+          "outcome": "won",
+          "seconds": 48.6833333333333,
+          "timed_out": false
+        },
+        {
+          "ally_at_start": "bramblebun",
+          "final_gap": 82.4064025878906,
+          "frames": 4528,
+          "opponent": "galecrest",
+          "outcome": "lost",
+          "seconds": 75.4666666666667,
+          "timed_out": false
+        }
+      ],
+      "simulated_seconds": 207.3,
+      "stage": "battle_captain_veyra_storm_anchor",
+      "started_callback": true,
+      "switches": 0,
+      "team_after": [
+        {
+          "hp": 0.0,
+          "label": "Sparkit",
+          "level": 44,
+          "species_id": "sparkit",
+          "xp": 0
+        },
+        {
+          "hp": 0.0,
+          "label": "Mudsnout",
+          "level": 44,
+          "species_id": "mudsnout",
+          "xp": 0
+        },
+        {
+          "hp": 0.0,
+          "label": "Bramblebun",
+          "level": 44,
+          "species_id": "bramblebun",
+          "xp": 0
+        },
+        {
+          "hp": 0.0,
+          "label": "Terrapup",
+          "level": 44,
+          "species_id": "terrapup",
+          "xp": 0
+        },
+        {
+          "hp": 0.0,
+          "label": "Brooktail",
+          "level": 44,
+          "species_id": "brooktail",
+          "xp": 0
+        }
+      ],
+      "team_before": [
+        {
+          "hp": 315.04,
+          "label": "Sparkit",
+          "level": 44,
+          "species_id": "sparkit",
+          "xp": 0
+        },
+        {
+          "hp": 358.0,
+          "label": "Mudsnout",
+          "level": 44,
+          "species_id": "mudsnout",
+          "xp": 0
+        },
+        {
+          "hp": 340.1,
+          "label": "Bramblebun",
+          "level": 44,
+          "species_id": "bramblebun",
+          "xp": 0
+        },
+        {
+          "hp": 429.6,
+          "label": "Terrapup",
+          "level": 44,
+          "species_id": "terrapup",
+          "xp": 0
+        },
+        {
+          "hp": 329.36,
+          "label": "Brooktail",
+          "level": 44,
+          "species_id": "brooktail",
+          "xp": 0
+        }
+      ],
+      "timed_out": false,
+      "victory_callback": false,
+      "wall_seconds": 721.951855
+    },
+    {
+      "kind": "FAIL",
+      "message": "Live input combat lost through the production callback: captain_veyra_storm_anchor",
+      "position": "(134.0, 1160.179, 5344.0)",
+      "simulated_seconds": 207.3,
+      "stage": "battle_captain_veyra_storm_anchor",
+      "wall_seconds": 721.963797
+    }
+  ],
+  "evidence_scope": "live_combat_acceptance",
+  "from_save": "",
+  "leg": "",
+  "leg_completed": false,
+  "longest_dead_travel_seconds": 184.48333333339,
+  "mechanics_route_completed": false,
+  "passed": false,
+  "recovery_choices": [],
+  "stage": "battle_captain_veyra_storm_anchor"
+}

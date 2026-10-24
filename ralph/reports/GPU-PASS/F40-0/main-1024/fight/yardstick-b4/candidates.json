@@ -1,0 +1,14 @@
+[
+    {
+        "label":  "F40 Cloudreach fight High|Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-fight-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f40\\sides\\F40-fight-Medium.png",
+        "brief":  "A real Cloudreach story fight (Captain Veyra at the storm anchor) through the production camera with ordinary attack and dodge inputs: the battle start, 14 evenly spaced live frames, and the aftermath. Does the fight read on screen - both fighters, telegraphs and impacts clearly visible - and does it look like an event that belongs to the sky realm?",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "P2-062: the oversized ally fills half the combat view and hides the opponent or player",
+                        "P2-063: tells rely on text while flat magenta floor marks and bright impact flashes carry the hits",
+                        "P2-016: hurt and moving frames keep the idle silhouette"
+                    ]
+    }
+]
