@@ -22,7 +22,8 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 	var off: Array = raw.get("sections_off", [])
 	for section: String in ["current_flow", "current_flow_visual", "night_creature_floor",
 			"dock_village_candidate", "dock_dressing_candidate", "surfaces_candidate",
-			"stones_candidate", "veilfall_hero_candidate"]:
+			"stones_candidate", "veilfall_hero_candidate",
+			"veilfall_facade_candidate"]:
 		assert_true(off.has(section), "%s is unjudged and must ship off" % section)
 		assert_true(raw.has(section), "%s ships in the file for capture" % section)
 	# close-1024 lt2: the time-of-day regrade cleared the CPU-provisional bar
@@ -46,6 +47,11 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 	assert_false(off.has("veilfall_rock_candidate"), "the judged limestone ships on")
 	assert_true(str(raw.get("_why_veilfall_rock_candidate", "")).contains("4.20"),
 		"the limestone's mapped score is recorded in the config")
+	# close-1024 rf1: one rock family beat shipping on the close-up and held level
+	# elsewhere, so it ships ON with its scores beside it.
+	assert_false(off.has("veilfall_family_candidate"), "the judged rock family ships on")
+	assert_true(str(raw.get("_why_veilfall_family_candidate", "")).contains("4.51"),
+		"the rock family's mapped score is recorded in the config")
 	var config := PROFILE.settings()
 	for section: Variant in off:
 		assert_false(config.has(str(section)), "%s must not reach play" % section)
@@ -85,3 +91,25 @@ func test_rig_keeps_one_grade_and_matched_fog_horizons() -> void:
 		assert_eq(env.fog_colour, sky.horizon_colour, time + " fog must meet the sky")
 		for key: String in ["adjustment_brightness", "adjustment_contrast", "adjustment_saturation"]:
 			assert_eq(env[key], look.environment[key], time + " uses the shared grade")
+
+
+## close-1024 vf2: the veilfall-near gully floor is the `veilfall_exploration_spine`
+## hike (4 m wide). Hero pieces are presentation (the ring has a collider), so each
+## sits well clear of that trail's centreline rather than on or beside it.
+func test_veilfall_hero_pieces_stay_clear_of_the_hike() -> void:
+	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PROFILE.CONFIG))
+	var world: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_world.json"))
+	var spine: Array = []
+	for route: Dictionary in world.get("land_routes", []):
+		if str(route.get("id", "")) == "veilfall_exploration_spine":
+			for point: Array in route.polyline:
+				spine.append(Vector2(float(point[0]), float(point[2])))
+	assert_true(spine.size() >= 2, "precondition: the Veilfall hike polyline exists")
+	var pieces: Array = (raw.get("veilfall_hero_candidate", []) as Array) + (raw.get("veilfall_facade_candidate", []) as Array)
+	assert_false(pieces.is_empty(), "precondition: the hero pieces ship in the file")
+	for piece: Dictionary in pieces:
+		var at := Vector2(float(piece.position_xz_m[0]), float(piece.position_xz_m[1]))
+		var nearest := INF
+		for index in spine.size() - 1:
+			nearest = minf(nearest, at.distance_to(Geometry2D.get_closest_point_to_segment(at, spine[index], spine[index + 1])))
+		assert_true(nearest >= 15.0, "%s sits %.1f m from the hike centreline" % [piece.get("landmark_id", "?"), nearest])

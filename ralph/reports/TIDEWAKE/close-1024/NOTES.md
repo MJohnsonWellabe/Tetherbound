@@ -4,6 +4,57 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 19:20 CT **INFO (rf1/VERDICT.md): one rock family ships ON at `tb/tidewake` deb793527.** Every view it changes was judged; confirming batch, no extrapolation.
+  - **Close-up:** 4.51 against 3.90, all three judges higher.
+  - **Shore views:** 6.08 against 6.08, level.
+  - **Matched fight:** 5.01 against 4.85.
+  - The fight's top-right "black slab" is untouched by it. It isn't the kitbash or the formations; next I'll identify which piece it is.
+  - **vf3** (the facade, lifted 14 m and facing the stand, 35.8 m off the hike) is capturing for its close-up and matched-fight round.
+  - **After vf3**, your GPU asks: night shadow on Forward+ and the noon seam.
+
+- 2026-10-24 18:15 CT **MESHY: `assets/props/meshy-1025/veilfall_cliff_facade/reference/`, 35 m wide x 30 m tall x 6 m deep (flat back), a slope-hugging Veilfall gully-wall cliff facade with a 2-3 tier white falls.**
+  - **Placement:** flush on the west gully wall at (338.0, 3836.0), normal (0.902, -0.431), yaw 115.5. Clearance from the hike: 35.8 m at the centre, 24.8 m minimum at the front face.
+  - **Inputs:** board crops (text, figures and structures removed), stone swatches, `prompt.txt`, `scale_check.png` (about 17x the 1.80 m trainer) and `placement.md`.
+  - **Gate:** OFF until judged.
+
+- 2026-10-24 17:55 CT **PARKED, with a MESHY suggestion: vf2 placement.** Off the hike, the veilfall-near slope is too steep for the cascade tier.
+  - **Why it fails:** at 15 m or more from the trail, the tiers bury into the slope, and only their crowns show as pale lumps. Lifting them floats their downhill fronts toward the camera, which judges already called "pasted, floating".
+  - **What it showed:** the only spot where the tier read (the close-up gain) was the trail itself, the gully floor.
+  - **My call:** park vf2 OFF. Keep the GLBs on the lane and the config placement with its clearance test.
+  - **The real fit is a slope-hugging asset,** not a free-standing tier. MESHY suggestion:
+    - **What:** a 30-40 m wide stratified limestone cliff face with a 2-3 tier white falls.
+    - **Form:** made as a thin, back-flat facade (about 6 m deep) to sit flush against the west gully wall, off the trail, like a skin over the existing slope.
+    - **References:** the c2 cascade-tier concepts plus the board's exterior crop under `assets/props/meshy-1025/veilfall_cascade_tier/reference/`.
+    - **Scale:** about 30 m tall against the 1.80 m trainer (about 17x).
+  - **Your call:** should I draft the reference and scale check?
+
+- 2026-10-24 17:30 CT **INFO: vf2's matched-moment fight is level (vfm: 3.56 against 3.64), but vf2 is withdrawn because it sat on the hike.**
+  - **The problem:** the `veilfall_exploration_spine` (4 m, main path to the gate) runs up the gully floor I had placed in.
+    - The plunge ring, which has a collider, sat 6.5 m from the trail centreline. The lower tier sat 8.4 m away.
+    - My raycast probe read the graded trail as cliff.
+  - **The fix:** every piece is now 15 m or more clear, with a regression test, `test_veilfall_hero_pieces_stay_clear_of_the_hike`, which fails on the old positions (`tb/tidewake` 5c… / d1939622c).
+  - **Next for vf2:** the moved placement is re-capturing for its own close-up round.
+  - **Land a167d0f67 is unaffected:** the limestone is a material change, and vf2 was OFF and excluded there.
+  - **One rock family** (`veilfall_family_candidate`, OFF): the gate formations and crown crags move toward the limestone, material only.
+    - The first look shows the crown crags pale tan.
+    - Its views (Veilfall close-up and rain, the seven shore/lesson views) and matched fight frames are capturing for a judged round.
+
+- 2026-10-24 16:30 CT **READY: `tb/tidewake-land` at a167d0f67** (a167d0f674e28cb143f891909183f71c0b2d0df9), one commit on origin/main 4fde48210, after #725 and #726.
+  - **ON:** the Veilfall limestone (`veilfall_rock_candidate`), with every view it changes judged:
+    - close-up 4.20 against 3.35 (vf1);
+    - the seven F39-look views 5.29 against 5.24, which is level (ls1);
+    - the Venn fight 4.90 against 4.77 (ls1).
+  - **Staged OFF:** the `veilfall_hero_candidate` config and the `lift_m` spec key. The Meshy 7-8 GLBs are **not** in the land.
+  - **Checks:** tidewake look, model preload, material family, dune cover and groves, and the five Veilfall test files: 35 tests, 2816 assertions, 0 failed.
+  - I force-pushed over my own earlier land head; #725 has already merged it.
+- 2026-10-24 16:30 CT **QUESTION (vf2/VERDICT.md): the Meshy 7-8 hero pieces split.**
+  - **Close-up:** they beat vf1, 3.55 against limestone 2.85, with all three judges higher.
+  - **Venn fight frames:** they lose, 4.29 against 4.72, with all three judges lower.
+  - **Why the fight result is suspect:** every judge credits the control's frames 3-4 for the camp its live fight happened to swing towards, and no judge mentions the cascade in either side's fight frames.
+  - **Shore views:** the hero pieces change them by less than run-to-run noise.
+  - **Status:** OFF under the rule.
+  - **The question:** do you want a matched-moment fight round (the same frame index, judged alone), or should the close-up decide? Either way, the judges' next ask is one rock family: the pale tiers against the black formation slabs.
+
 - 2026-10-24 15:20 CT **INFO (ls1/VERDICT.md): the limestone ships ON; vf2 beats vf1.** All captures are on the #725-fixed code.
   - **Limestone on its other views** (seven F39-look shore and lesson views): 5.29 against main 5.24, which is level.
   - **Limestone in the Venn fight:** 4.90 against 4.77.
