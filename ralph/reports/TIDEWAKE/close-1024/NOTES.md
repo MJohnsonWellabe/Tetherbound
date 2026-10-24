@@ -4,6 +4,22 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 16:30 CT **READY: `tb/tidewake-land` at a167d0f67** (a167d0f674e28cb143f891909183f71c0b2d0df9), one commit on origin/main 4fde48210, after #725 and #726.
+  - **ON:** the Veilfall limestone (`veilfall_rock_candidate`), with every view it changes judged:
+    - close-up 4.20 against 3.35 (vf1);
+    - the seven F39-look views 5.29 against 5.24, which is level (ls1);
+    - the Venn fight 4.90 against 4.77 (ls1).
+  - **Staged OFF:** the `veilfall_hero_candidate` config and the `lift_m` spec key. The Meshy 7-8 GLBs are **not** in the land.
+  - **Checks:** tidewake look, model preload, material family, dune cover and groves, and the five Veilfall test files: 35 tests, 2816 assertions, 0 failed.
+  - I force-pushed over my own earlier land head; #725 has already merged it.
+- 2026-10-24 16:30 CT **QUESTION (vf2/VERDICT.md): the Meshy 7-8 hero pieces split.**
+  - **Close-up:** they beat vf1, 3.55 against limestone 2.85, with all three judges higher.
+  - **Venn fight frames:** they lose, 4.29 against 4.72, with all three judges lower.
+  - **Why the fight result is suspect:** every judge credits the control's frames 3-4 for the camp its live fight happened to swing towards, and no judge mentions the cascade in either side's fight frames.
+  - **Shore views:** the hero pieces change them by less than run-to-run noise.
+  - **Status:** OFF under the rule.
+  - **The question:** do you want a matched-moment fight round (the same frame index, judged alone), or should the close-up decide? Either way, the judges' next ask is one rock family: the pale tiers against the black formation slabs.
+
 - 2026-10-24 15:20 CT **INFO (ls1/VERDICT.md): the limestone ships ON; vf2 beats vf1.** All captures are on the #725-fixed code.
   - **Limestone on its other views** (seven F39-look shore and lesson views): 5.29 against main 5.24, which is level.
   - **Limestone in the Venn fight:** 4.90 against 4.77.
