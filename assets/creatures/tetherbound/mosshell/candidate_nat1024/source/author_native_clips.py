@@ -42,6 +42,11 @@ def reset():
   b.rotation_mode='QUATERNION';b.rotation_quaternion=Quaternion((1,0,0),0);b.location=(0,0,0)
 def rotate(name,degrees,axis=(1,0,0)):
  basis=bases[name];rig.pose.bones[name].rotation_quaternion=basis.inverted()@Quaternion(Vector(axis),math.radians(degrees))@basis
+# Compose several turns on one bone (rotate() sets it outright).
+def turn(name,parts):
+ basis=bases[name];q=Quaternion((1,0,0,0))
+ for deg,axis in parts:q=Quaternion(Vector(axis),math.radians(deg))@q
+ rig.pose.bones[name].rotation_quaternion=basis.inverted()@q@basis
 def low(skip=(),q=0.0):
  graph=bpy.context.evaluated_depsgraph_get();result=math.inf
  for o in bpy.data.objects:
@@ -100,12 +105,17 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
    for side in ['l','r']:
     rotate('front_upper_'+side,-26*e);rotate('front_lower_'+side,30*e)
   if role=='faint':
-   # Close-1024: the side roll (back to camera), grounded on the body (see low()).
+   # GPU H (24 Oct): the -60 side roll still read as standing (a shell dome
+   # either way). A turtle faints by withdrawing: the head drops under the shell
+   # rim, the legs fold in under it, and the shell settles on the ground with a
+   # slight nose-down lean, so the standing legs-and-head silhouette is gone.
    phase=phase_of(t)
-   rotate('root',FAINT_ROLL*phase,(0,1,0));rotate('head',12*phase);rotate('neck',NOD*25*phase)
+   turn('root',[(-REAR*8*phase,(1,0,0)),(-15*phase,(0,1,0))])
+   # (NOD's positive turn raises this neck, as in the dog script: lower with -NOD.)
+   rotate('neck',-NOD*55*phase);rotate('head',-NOD*30*phase)
    for prefix in ['front','rear']:
     for side in ['l','r']:
-     rotate(prefix+'_upper_'+side,45*phase);rotate(prefix+'_lower_'+side,-65*phase)
+     rotate(prefix+'_upper_'+side,FOLD[prefix]*85*phase);rotate(prefix+'_lower_'+side,-FOLD[prefix]*115*phase)
   if role=='rest':
    # b4 judges: rolling belly-to-camera showed the unlit underside as a dark blob.
    # Roll the other way, so the back and markings face the stage camera (the
