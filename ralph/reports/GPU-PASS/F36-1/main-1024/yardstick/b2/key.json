@@ -1,0 +1,52 @@
+{
+ "Al": {
+  "anchor": false,
+  "label": "F36#1 main solmane recipe|shipping Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-solmane-candidate.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-solmane-shipping.png"
+ },
+ "Mo": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Fn": {
+  "anchor": false,
+  "label": "F36#1 main stormraven recipe|shipping Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-stormraven-shipping.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-stormraven-candidate.png"
+ },
+ "Pe": {
+  "anchor": false,
+  "label": "F36#1 main tidecoil recipe|shipping Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-tidecoil-candidate.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-tidecoil-shipping.png"
+ },
+ "Qy": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Qo": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Xv": {
+  "anchor": false,
+  "label": "F36#1 main aquaryn recipe|shipping Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-aquaryn-candidate.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-aquaryn-shipping.png"
+ },
+ "Wp": {
+  "anchor": false,
+  "label": "F36#1 main frostclaw recipe|shipping Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-frostclaw-candidate.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-frostclaw-shipping.png"
+ },
+ "Av": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ }
+}
