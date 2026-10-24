@@ -7,6 +7,9 @@ const TIDEWAKE_PROFILE := preload("res://scripts/world/tidewake_look_profile.gd"
 
 func _load() -> Dictionary:
 	var loaded := TIDEWAKE_PROFILE.overlay(super._load(), "lighting")
+	# The evening/night regrade is its own unjudged section, so it ships in the
+	# file but OFF in play until a round judges it.
+	loaded = TIDEWAKE_PROFILE.overlay(loaded, "lighting_candidate")
 	# Night creature emission floor (white-ghost creatures, F39#0 GPU pass):
 	# its own section so it can stay OFF until a night round judges it.
 	var floor_cfg: Dictionary = TIDEWAKE_PROFILE.overlay({}, "night_creature_floor")
