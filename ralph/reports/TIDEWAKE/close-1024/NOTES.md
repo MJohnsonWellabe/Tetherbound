@@ -30,3 +30,19 @@ The 44 Tidewake catalog rows (`ralph/reports/VISUAL/phase2/catalog.csv`) sort in
 | P2-066 live current streaks | 36 | PARKED with F13#5 at 6.20 (r3) |
 
 The other fourteen are **not this lane's**: P2-016, P2-028, P2-071, P2-101, P2-108, P2-119 and P2-063 are animation; P2-002, P2-001, P2-007 and P2-060 are UI; P2-089 and P2-113 are camera; P2-030 and P2-033 and P2-055 are the shared-art lane's material and mesh candidates (the shared-art note names the three configs that ship OFF). F39#1 asks for a before/after code-blind PASS on **every** top-20 item, so the row cannot close from the Tidewake lane alone; it needs the animation, UI, camera and shared-art lanes' rows for the same items. That is the structural reason F39#1 and F39#2 have stayed in_progress across several closes, and it is worth the coordinator's attention before another Tidewake-only round is spent on them.
+
+## Where the Tidewake look actually stands, 24 Oct
+
+Four judged items this close, all mapped through confirming batches (anchors reaching 7.35 or higher, so no score here is extrapolated):
+
+| Item | Control | Best candidate | Bar |
+|---|---|---|---|
+| F13#5 / P2-066 currents | 5.42-5.75 | **6.20** (r3) | PARKED under 6.7 |
+| P2-009 water depth (shelf stop) | 5.90 | 5.90 (no gain) | under 6.7 |
+| F39 look, time-of-day grade | 5.60 | **6.21** (lt1, +0.61) | under 6.7 |
+
+Three things are now established with evidence rather than opinion:
+
+1. **The yardstick works, and it caught us.** The b6 batch read 7.33 for the currents candidate and would have closed the row; its anchors only reached 6.93, so the score was extrapolated. The confirming batch with anchors to 7.53 put the same frames at 6.06. Every number above is from a confirming batch.
+2. **Tidewake's ceiling is light, not meshes.** Across four batches and twelve judge passes the same three things are named first: no time-of-day grade, no horizon haze, no cast shadow at night. The grade round moved the look more in one pass (+0.61) than three rounds of current-cue work moved the currents row (+0.09 in total after the first).
+3. **Two rows cannot close from this lane.** F39#1 needs a before/after PASS on all twenty top items; fourteen belong to the animation, UI, camera and shared-art lanes (table above). F39#3 additionally needs weather and a real fight, and `capture_tidewake_f13_5.gd --camera-set` refuses any weather but clear, so the matrix cannot be captured with the tool this lane has.
