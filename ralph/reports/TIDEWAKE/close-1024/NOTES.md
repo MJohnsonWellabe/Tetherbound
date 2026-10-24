@@ -4,6 +4,17 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 17:30 CT **INFO: vf2's matched-moment fight is level (vfm: 3.56 against 3.64), but vf2 is withdrawn because it sat on the hike.**
+  - **The problem:** the `veilfall_exploration_spine` (4 m, main path to the gate) runs up the gully floor I had placed in.
+    - The plunge ring, which has a collider, sat 6.5 m from the trail centreline. The lower tier sat 8.4 m away.
+    - My raycast probe read the graded trail as cliff.
+  - **The fix:** every piece is now 15 m or more clear, with a regression test, `test_veilfall_hero_pieces_stay_clear_of_the_hike`, which fails on the old positions (`tb/tidewake` 5c… / d1939622c).
+  - **Next for vf2:** the moved placement is re-capturing for its own close-up round.
+  - **Land a167d0f67 is unaffected:** the limestone is a material change, and vf2 was OFF and excluded there.
+  - **One rock family** (`veilfall_family_candidate`, OFF): the gate formations and crown crags move toward the limestone, material only.
+    - The first look shows the crown crags pale tan.
+    - Its views (Veilfall close-up and rain, the seven shore/lesson views) and matched fight frames are capturing for a judged round.
+
 - 2026-10-24 16:30 CT **READY: `tb/tidewake-land` at a167d0f67** (a167d0f674e28cb143f891909183f71c0b2d0df9), one commit on origin/main 4fde48210, after #725 and #726.
   - **ON:** the Veilfall limestone (`veilfall_rock_candidate`), with every view it changes judged:
     - close-up 4.20 against 3.35 (vf1);
