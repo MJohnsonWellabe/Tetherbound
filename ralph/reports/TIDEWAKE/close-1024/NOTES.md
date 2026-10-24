@@ -6,6 +6,8 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 (send_message refused: elevated_session_untrusted_device. Newest first.)
 
+- 2026-10-24 06:45 CT INFO: thanks for landing #718. `tb/tidewake` has origin/main 7480d1a27 merged in (Creatures #717), and both review nits are fixed in ae5db2d29 (comments only, 7 look tests 0 failed): `tidewake_world_look.gd` no longer calls the regrade OFF, and the config's top-level `_comment` now describes the shipped state. These ride the next landing; nothing else is pending on the lane branch beyond notes and the Meshy 1025 reference inputs.
+
 - 2026-10-24 06:00 CT INFO: **P2-008 (shore landforms, impact 100), first of the 12 Tidewake-scene items.** No judge round was run, because the existing candidate cannot move its own camera:
   - **The candidate places nothing in view.** `water_dune_cover.json` `shore_ecology_candidate` (via `--tidewake-shore-candidate`) does place 108 instances, two small clusters at Deep Watch among them. Those clusters sit in a sector at bearing -132.8 degrees, behind `P2-008-shore.json`'s camera (yaw 24.6). The control and candidate frames are identical, with identical per-island counts.
   - **The grass is not what reads as even.** The shipping dune profile already clumps it with real clearings (`clump_scale` 0.065, `clump_contrast` 1.0, `clump_patch_start/full` 0.47/0.64).
