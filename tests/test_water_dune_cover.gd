@@ -216,3 +216,35 @@ func test_shipped_shore_site_places_while_the_candidate_stays_off() -> void:
 	for entry: String in probe.placed_layers:
 		assert_true(entry.begins_with("deep_watch/"), "an unjudged island's site stays off: %s" % entry)
 	probe.free()
+
+
+## #725 review: Tidewake's dune profile sets clump_patch_* at its top level for
+## the grass. The stone tier must not inherit them, or shipping pebbles group
+## with `stones_candidate` OFF; only a `stones` override sets the stone uniforms.
+func test_stone_grouping_never_inherits_the_grass_profile_keys() -> void:
+	var source: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_ground_cover.json"))
+	var profile := DUNES.ground_profile(source, DUNES.config())
+	assert_true(float(profile.get("clump_patch_full", 0.0)) > 0.0,
+		"precondition: the shipping profile sets grass clump_patch_* at its top level")
+	assert_false((profile.get("stones", {}) as Dictionary).has("clump_patch_start"),
+		"precondition: no stones override ships")
+	var stone_keys := ["clump_patch_start", "clump_patch_full", "tide_band_low_y", "tide_band_high_y", "tide_band_gain"]
+	var shipping := profile.duplicate(true)
+	shipping.stones.count = 64
+	var field := GRASS.new()
+	field._build_stones(shipping, 40.0)
+	for key: String in stone_keys:
+		# Unset reads back null, which is the shader's own 0.0 default.
+		var value: Variant = field._stone_material.get_shader_parameter(key)
+		assert_true(value == null or is_zero_approx(float(value)),
+			"shipping stones leave %s at the old shader math, got %s" % [key, value])
+	field.free()
+	var override := profile.duplicate(true)
+	override.stones.count = 64
+	override.stones.merge({"clump_patch_start": 0.45, "clump_patch_full": 0.62, "tide_band_high_y": 1.4}, true)
+	var candidate := GRASS.new()
+	candidate._build_stones(override, 40.0)
+	assert_almost_eq(float(candidate._stone_material.get_shader_parameter("clump_patch_full")), 0.62, 0.0001,
+		"a stones override still reaches the shader")
+	assert_almost_eq(float(candidate._stone_material.get_shader_parameter("tide_band_high_y")), 1.4)
+	candidate.free()
