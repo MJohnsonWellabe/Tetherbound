@@ -1,0 +1,35 @@
+{
+ "En": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Po": {
+  "anchor": false,
+  "label": "tell-r2 tidewake",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r2/tidewake_ctl.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r2/tidewake_E.png"
+ },
+ "Xq": {
+  "anchor": false,
+  "label": "tell-r2 stormwood",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r2/stormwood_ctl.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r2/stormwood_E.png"
+ },
+ "Lt": {
+  "anchor": false,
+  "label": "tell-r2 meadows",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r2/meadows_ctl.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r2/meadows_E.png"
+ },
+ "Tc": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Bc": {
+  "anchor": true,
+  "A": "f36_0_npc:C3A",
+  "B": "f36_0_npc:C3B"
+ }
+}
