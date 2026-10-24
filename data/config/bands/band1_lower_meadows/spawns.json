@@ -987,7 +987,8 @@
         0.0,
         693.0
       ],
-      "radius": 3.0,
+      "radius": 4.0,
+      "_why_radius_grown_trailpup": "Coordinator 24 Oct: Trailpup grew 2.3 -> 3.1 m (GPU F36#0, radius 0.77 -> 1.04 m), so three bodies with the 1.25 m presentation gap no longer fit this 3.0 m disc and the resolver warned (net smoke f48_cut_key). Disc widened 3.0 -> 4.0 m; centre unchanged, still about 11 m off the open-meadow stand.",
       "_why_vp9_r7": "VP9 LIFE round 7 (final round): swapped bramblebun -> trailpup, same reasoning as order 1002's own round-7 note. Bramblebun (redesign mesh reads pale/antlered) is exactly the shape the round-6 judge described as camouflaged as a flowering shrub -- paired here with order 1002's mudsnout as the round's second, visually distinct high-contrast ground species (tan #b3925e, larger silhouette than mudsnout) rather than doubling up on one species. Position/count/radius unchanged from round 5.",
       "_why_vp9_r5": "VP9 LIFE round 5 course correction, same reasoning as order 1070. The band1 open-meadow stand (-6,700) already has order 1002's Pipwing 14m off; this trio sits 11.4m off the same eye on the open corridor ground, so the stand reads 2 species / 5 individuals rather than one distant pair. Radius tightened 9.0 -> 3.0 after round 5's own first boot showed a wide-radius roll can crowd the camera's own near field. (Species was bramblebun at the time; see _why_vp9_r7 above.)"
     },
