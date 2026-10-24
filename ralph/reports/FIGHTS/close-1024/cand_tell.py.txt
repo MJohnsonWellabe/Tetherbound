@@ -17,6 +17,12 @@ ARMS = {
                       "dust_hz": 1.1, "dust_colour": "#cdb894", "tell_aura": 0.9},
           "colour": "#8c6cff",
           "set": {"edge_alpha": 0.32, "locked_edge_alpha": 0.6, "core_alpha": 0.75, "build_start_alpha": 0.4}},
+    # D with the attacker glow cut to 0.3 (at 0.9 it washed Voltarach and Mirejaw pale on Compatibility)
+    "E": {"curtain": {"curtain_height_m": 0.4, "curtain_alpha": 0.5, "shimmer": 0.5,
+                      "dust_alpha": 0.75, "dust_spacing_m": 0.55, "dust_size_m": 0.8, "dust_rise_m": 0.9,
+                      "dust_hz": 1.1, "dust_colour": "#cdb894", "tell_aura": 0.3},
+          "colour": "#8c6cff",
+          "set": {"edge_alpha": 0.32, "locked_edge_alpha": 0.6, "core_alpha": 0.75, "build_start_alpha": 0.4}},
 }
 spec = ARMS[arm]
 path = "data/config/combat.json"
