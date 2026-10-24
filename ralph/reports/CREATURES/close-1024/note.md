@@ -3,6 +3,11 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct GPU READY on tb/creatures 7a44a9367: Cindercub ember motes (owner touch pass; `touch_vfx`, not a variant; `close-1024/b25/judges.md`).
+  - CPU: parity, 7.19 vs 7.26.
+  - Capture vs main: `godot --path . --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=cindercub,nightburrow,stormtrail,riftfrill,ashtusk --whole-body --context --out=res://.artifacts/gpu-touch-vfx/<preset>`
+  - Same commit fixes Aspect VFX billboards drawn edge-on on side-on creatures, so Nightburrow, Stormtrail, Riftfrill and Ashtusk VFX change too. That is why they are in the capture.
+  - Tests: the new touch_vfx test plus 138 aspect/variant/shiny/colourway tests, 0 failed.
 - 24 Oct GPU READY on tb/creatures 1225d1a86: owner touch pass on Trailpup and Mudsnout (weathered shoulders and faint scars, baked into the albedo; the mesh is unchanged; `close-1024/b24/judges.md`).
   - CPU: score-neutral and light (Trailpup 7.58 vs 7.58, Mudsnout 6.86 vs 6.82). It is the owner-directed look, so the GPU pass decides.
   - Capture vs main: `godot --path . --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=trailpup,mudsnout --whole-body --context --out=res://.artifacts/gpu-touch/<preset>`
