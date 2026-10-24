@@ -24,8 +24,12 @@ func build(water_world: Node3D) -> void:
 	# by landmark offset.
 	var specs: Array = (look.get("landmark_models", []) as Array) + (look.get("landmark_props_candidate", []) as Array) \
 		+ (look.get("veilfall_hero_candidate", []) as Array) + (look.get("veilfall_facade_candidate", []) as Array)
+	# `first_shore_declutter_candidate` (OFF in play) drops named props by id.
+	var dropped: Array = (look.get("first_shore_declutter_candidate", {}) as Dictionary).get("drop_landmark_props", [])
 	for raw: Variant in specs:
 		var spec := raw as Dictionary
+		if dropped.has(str(spec.get("id", ""))):
+			continue
 		var landmark: Dictionary = landmarks.get(str(spec.get("landmark_id", "")), {})
 		var at_raw: Array = landmark.get("position", [])
 		if spec.has("position_xz_m"):
