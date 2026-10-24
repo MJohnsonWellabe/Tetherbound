@@ -30,7 +30,17 @@ func test_split_and_prior_exact_meadows_orders_are_admitted() -> void:
 	var no_return: Array = HANDOFF.TRAINED_MEADOWS_PIECES.duplicate()
 	no_return.erase("training_t2_return")
 	assert_eq(HANDOFF.order_profile(no_return, HANDOFF.TRAINED_MEADOWS_REALMS), "")
-	assert_eq(HANDOFF.TRAINED_MEADOWS_PIECES[HANDOFF.TRAINED_MEADOWS_PIECES.find("warrens") - 1], "training_t2_return")
+	# Masters follow masters.json chapter_guidance: Orin's loop returns before
+	# the Warrens; Mira's lies past the Relay (mill_crossing_restored) and
+	# returns before the Sigils.
+	var order: Array = HANDOFF.TRAINED_MEADOWS_PIECES
+	assert_eq(order[order.find("warrens") - 1], "training_t1_return")
+	assert_eq(order[order.find("relay") + 1], "training_t2_earn")
+	assert_eq(order[order.find("sigils") - 1], "training_t2_return")
+	assert_true(order.find("training_t2_master") > order.find("relay"), "Mira after the mill crossing opens")
+	var no_t1_return: Array = HANDOFF.TRAINED_MEADOWS_PIECES.duplicate()
+	no_t1_return.erase("training_t1_return")
+	assert_eq(HANDOFF.order_profile(no_t1_return, HANDOFF.TRAINED_MEADOWS_REALMS), "")
 	var reordered: Array = HANDOFF.TRAINED_MEADOWS_PIECES.duplicate()
 	var first := reordered.find("training_t1_master")
 	reordered[first] = "training_t1_feed"
