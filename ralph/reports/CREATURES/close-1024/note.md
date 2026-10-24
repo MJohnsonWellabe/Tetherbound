@@ -3,6 +3,19 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct READY tb/creatures-land cf2d4258a (P2-016 after the GPU PARTIAL on #733). The commit is main 124a7393c plus the stage commits, 4b2a5fa63 and cf2d4258a.
+  - **Who was idle:** in the grunt fight the large armoured badger is the PLAYER's fixture Terrapup (HUD: "Terrapup Lv3"), not the enemy. The small creature that now rears is the enemy Mudsnout.
+    - An in-engine probe of an engaged wild Mudsnout shows the hit clip held about 0.28 s through hitstop and movement, then gait.
+  - **Cause 1 (4b2a5fa63):** a stagger showed its STAGGER label over an idle body once the 0.25 s wince ran out.
+    - Fix: a stagger now holds the creature's wince, the middle of its named hit window, for the whole stagger, then lets the clip play out.
+    - Applies to the enemy (local and synced) and to the player's creature. Rigs with no named window are unchanged.
+  - **Cause 2 (cf2d4258a):** Terrapup's badger, Burrowback and Bramblebun use the small "recoil" hit (root 4 deg, lean 9 deg). At fight distance it reads as idle.
+    - Fix: the recoil roughly doubles (pitch 9, lean 16, spine 11, neck 26, head snap 30 deg), feet planted. Only the hit clip changes; idle, faint and rest keyframes are identical.
+    - The CPU stage before/after shows a clear chest-back recoil on all three.
+  - **Tests:** hit window plus stagger (3 new), telegraph, companion, combat_feedback, hitstop, flinch, poise and stagger: 66, 0 failed. test_combat, wild_creature, encounter, test_poise and remote_creature: 357, 0 failed. rest_pose, f36_pose, texture_for, rideable, riding and four_biome: 88, 0 failed.
+  - **GPU check (same command):** `godot --path . --script res://tools/capture_f38_fight.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=32 --interval=0.15 --attack --dodge --tell-frames --preset=<Medium|High> --source-commit=<sha>`
+  - **Not mine:** the lavender telegraph domes over the reacting creature are Fights'.
+  - **Lane note:** dog3 on tb/creatures uses the same small recoil; it gets the same accent if dog3 goes forward.
 - 24 Oct QUESTION/ASK (reply to your --all baseline at main; please swap it before it starts): `capture_f36_poses.gd --all --whole-body --context` at main gives a wrong shipping baseline for two reasons.
   1. **Without `--candidate`, every species plays its installed clips** (capture_f36_poses.gd line ~168: `map.get(role)`). The 36 F36 (1) subjects whose f36 recipe ships (enabled_species) would be scored on poses players never see.
   2. **Main lacks the two stage commits.** Land species get a floating carried frame or a swim slab with a white edge; that alone docked Mosshell, Bramblebun, Trailpup and Mudsnout in GPU A+C.
