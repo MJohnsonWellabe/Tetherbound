@@ -1,0 +1,26 @@
+[
+    {
+        "label":  "F22#4 EF overlay Medium vs shipped Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f22ef\\sides\\F22-ef-overlay.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f22ef\\sides\\F22-ef-shipped.png",
+        "brief":  "A named trainer fight at a Meadows river lock: the river captain\u0027s water creature against the player\u0027s smaller creature. Frames: before the fight, twelve half-second frames, after, then three telegraphed attacks (start, mid, strike). Does the fight read on screen - both fighters, the telegraphs and the impacts clearly visible - and does it look like an event that belongs to the world?",
+        "defects":  [
+                        "The captain\u0027s creature does not read as a boss: it is not convincingly larger than the player\u0027s creature",
+                        "Telegraph rings or lanes are the flat magenta the art direction lists as a defect",
+                        "A landed attack shows no visible impact (no splash, debris or flash where it hits)",
+                        "The captain\u0027s creature renders washed-out, grey or semi-transparent (a ghost or hologram) instead of a solid creature"
+                    ]
+    },
+    {
+        "label":  "F22#4 EF overlay Medium vs Low",
+        "a":  "D:\\tb-gpu-runs\\yard\\f22ef\\sides\\F22-ef-overlay.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f22ef\\sides\\F22-ef-low.png",
+        "brief":  "A named trainer fight at a Meadows river lock: the river captain\u0027s water creature against the player\u0027s smaller creature. Frames: before the fight, twelve half-second frames, after, then three telegraphed attacks (start, mid, strike). Does the fight read on screen - both fighters, the telegraphs and the impacts clearly visible - and does it look like an event that belongs to the world?",
+        "defects":  [
+                        "The captain\u0027s creature does not read as a boss: it is not convincingly larger than the player\u0027s creature",
+                        "Telegraph rings or lanes are the flat magenta the art direction lists as a defect",
+                        "A landed attack shows no visible impact (no splash, debris or flash where it hits)",
+                        "The captain\u0027s creature renders washed-out, grey or semi-transparent (a ghost or hologram) instead of a solid creature"
+                    ]
+    }
+]

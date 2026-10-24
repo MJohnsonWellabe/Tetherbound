@@ -182,3 +182,8 @@ F39-look-lt2/main-1024/_sheet_f39_lt2_gpu.png
 F39-look-lt2/main-1024/yardstick/key.json
 F39-look-lt2/main-1024/yardstick/batch.json
 F39-look-lt2/main-1024/yardstick/mapped.json
+emission-floor/overlay-1024/RESULT.md
+emission-floor/overlay-1024/_sheet_ef_night_sweep.png
+emission-floor/overlay-1024/yardstick/key.json
+emission-floor/overlay-1024/yardstick/batch.json
+emission-floor/overlay-1024/yardstick/mapped.json

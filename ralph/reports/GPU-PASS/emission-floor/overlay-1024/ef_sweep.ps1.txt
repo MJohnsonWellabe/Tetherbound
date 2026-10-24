@@ -1,0 +1,15 @@
+# Forward+ emission-floor scale sweep at night (local): sparkit (pale), cindercub (dark), bramblebun, ripplet at Medium.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $proj = "D:\tb-gpu-pass"; $root = "D:\tb-gpu-runs\out\EF"
+$py = "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_RUN_TIMEOUT_MIN = "30"
+foreach ($sc in "0.25", "0.5") {
+    & $py -I D:\tb-gpu-runs\tools\emission_overlay.py apply $sc
+    Select-String -Path "$proj\data\config\art.json" -Pattern "forward_plus_scale" | ForEach-Object Line
+    $out = "$root\nl-night-scale$sc"; New-Item -ItemType Directory -Force "$out\frames" | Out-Null
+    $env:TB_NL_OUT = ("$out\frames" -replace '\\', '/'); $env:TB_NL_TIME = "night"; $env:TB_NL_SPECIES = "sparkit,cindercub,bramblebun,ripplet"
+    & $run -Preset Medium -Script "D:/tb-gpu-runs/tools/nl_capture.gd" -OutDir $out -Resolution "1920x1080" -ProjectPath $proj
+    git -C $proj checkout -- data/config/art.json scripts/world/world_look.gd
+}
+git -C $proj status --short -- data/config/art.json scripts/world/world_look.gd
+$env:TB_NL_OUT = ""; $env:TB_NL_TIME = ""; $env:TB_NL_SPECIES = ""
+"ef sweep done"
