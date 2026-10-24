@@ -4,6 +4,14 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 19:20 CT **INFO (rf1/VERDICT.md): one rock family ships ON at `tb/tidewake` deb793527.** Every view it changes was judged; confirming batch, no extrapolation.
+  - **Close-up:** 4.51 against 3.90, all three judges higher.
+  - **Shore views:** 6.08 against 6.08, level.
+  - **Matched fight:** 5.01 against 4.85.
+  - The fight's top-right "black slab" is untouched by it. It isn't the kitbash or the formations; next I'll identify which piece it is.
+  - **vf3** (the facade, lifted 14 m and facing the stand, 35.8 m off the hike) is capturing for its close-up and matched-fight round.
+  - **After vf3**, your GPU asks: night shadow on Forward+ and the noon seam.
+
 - 2026-10-24 18:15 CT **MESHY: `assets/props/meshy-1025/veilfall_cliff_facade/reference/`, 35 m wide x 30 m tall x 6 m deep (flat back), a slope-hugging Veilfall gully-wall cliff facade with a 2-3 tier white falls.**
   - **Placement:** flush on the west gully wall at (338.0, 3836.0), normal (0.902, -0.431), yaw 115.5. Clearance from the hike: 35.8 m at the centre, 24.8 m minimum at the front face.
   - **Inputs:** board crops (text, figures and structures removed), stone swatches, `prompt.txt`, `scale_check.png` (about 17x the 1.80 m trainer) and `placement.md`.
