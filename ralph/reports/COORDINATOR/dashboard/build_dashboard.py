@@ -77,8 +77,25 @@ def stack(cs):
 
 
 # ---- sections -------------------------------------------------------------
-# Owner 12 Oct: F38-F41 are their own features on the Visual catalog tab.
-VISUAL_FEATURES = {"F38", "F39", "F40", "F41"}
+# Owner 24 Oct: every feature, F38-F41 included, sits on this tab; a row with
+# per-unit sub-rows shows them as nested cards whose counts add up to the row total.
+VISUAL_FEATURES = set()
+_GROUP_NAMES = {"0": "priority assets", "1": "top-20 catalog items", "2": "impact >12 catalog items"}
+
+
+def _crit_li(x, label=""):
+    return (f'<li class="crit s-{norm(x.get("status"))}"><div class="crit-head">{pill(x.get("status"))}'
+            f'<span class="crit-text">{("<b>" + E(label) + "</b> ") if label else ""}{E(x.get("text", ""))}</span></div>'
+            f'<dl><div><dt>Evidence</dt><dd>{E(x.get("evidence") or "None recorded")}</dd></div>'
+            f'<div><dt>Remaining</dt><dd>{E(x.get("gap") or "Nothing")}</dd></div></dl></li>')
+
+
+def _subcard(title, group):
+    m = sum(1 for x in group if norm(x.get("status")) == "met")
+    p_ = round(100 * m / max(1, len(group)))
+    return (f'<li class="crit sub"><details class="frow"><summary><span class="fid"></span><span class="ftitle">{E(title)}</span>'
+            f'<span class="fnum">{m}/{len(group)} met</span>{bar(p_)}<span class="fpct">{p_}%</span>{stack(group)}</summary>'
+            f'<ol class="crits">{"".join(_crit_li(x, x.get("subject", "")) for x in group)}</ol></details></li>')
 chapter_html = []
 for name, letter, ids in CHAPTERS:
     cards = []
@@ -89,12 +106,20 @@ for name, letter, ids in CHAPTERS:
         p = pct(r)
         cs = r.get("criteria", [])
         met = sum(1 for x in cs if norm(x.get("status")) == "met")
-        items = "".join(
-            f'<li class="crit s-{norm(x.get("status"))}"><div class="crit-head">{pill(x.get("status"))}'
-            f'<span class="crit-text">{E(x.get("text", ""))}</span></div>'
-            f'<dl><div><dt>Evidence</dt><dd>{E(x.get("evidence") or "None recorded")}</dd></div>'
-            f'<div><dt>Remaining</dt><dd>{E(x.get("gap") or "Nothing")}</dd></div></dl></li>'
-            for x in cs)
+        _top = [x for x in cs if not x.get("parent")]
+        _groups = {}
+        for x in cs:
+            if x.get("parent"):
+                _groups.setdefault(x["parent"], []).append(x)
+        _parents = {}
+        for _n, x in enumerate(_top):
+            _parents[f"{fid}#{x.get('audit_index', _n)}"] = x
+        items = (_subcard(f"{fid} biome-level criteria" if fid in ("F38", "F39", "F40", "F41") else f"{fid} other criteria", _top)
+                 if _groups else "".join(_crit_li(x) for x in _top))
+        for _par, _g in _groups.items():
+            _k = _par.split("#")[-1]
+            _name = "roster pose subjects" if fid == "F36" and _k == "1" else _GROUP_NAMES.get(_k, "items")
+            items += _subcard(f"{fid} ({_k}) {_name}", _g)
         cards.append(
             f'<details class="frow" id="{fid}"><summary>'
             f'<span class="fid">{fid}</span><span class="ftitle">{E(r.get("title", ""))}</span>'
@@ -577,6 +602,7 @@ h2{{font-size:20px;font-weight:700}} h3{{font-size:16px;font-weight:700}}
 .seg.s-failing{{background:var(--fail)}} .seg.s-blocked{{background:var(--block)}} .seg.s-not_started{{background:var(--none)}}
 .crits{{margin:0;padding:0 14px 14px 58px;display:grid;gap:10px}}
 .crit{{padding:10px 12px;border-radius:8px;border:1px solid var(--line)}}
+.crit.sub{{padding:0;border:none}} .crit.sub .frow{{border-color:var(--line)}} .crit.sub .crits{{padding-left:14px}}
 .crit-head{{display:flex;gap:10px;align-items:flex-start}} .crit-text{{font-weight:500}}
 .crit dl{{margin:8px 0 0;display:grid;gap:4px;font-size:13.5px}}
 .crit dl div{{display:grid;grid-template-columns:86px minmax(0,1fr);gap:8px}}
