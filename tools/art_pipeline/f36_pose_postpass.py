@@ -908,14 +908,16 @@ SHOVE_1024B = ('stormcapra', 'galecrest', 'galewisp', 'brooktail', 'duskhush', '
 # Close-1024 b8-b9 (CPU, three judges per batch, confirming batches): the held
 # shove from the second half beat the shipping hit at or above the
 # CPU-provisional 6.7 mapped on these. Live recipes; the rest stay OFF.
-LANDED_1024B_SHOVE = ('galecrest', 'aeriex', 'galewisp', 'tanglevolt', 'stormcapra', 'solmane',
-                      'ripplet')
+# Ripplet passed too but now plays its naturalistic remake's own clips (b11).
+LANDED_1024B_SHOVE = ('galecrest', 'aeriex', 'galewisp', 'tanglevolt', 'stormcapra', 'solmane')
 # Close-1024 coordinator call (24 Oct, as on 22 Oct): ON where the candidate beat
 # shipping in a confirming batch, under 6.7 mapped, with no judge seeing the
 # faint end still standing (b2-b4, b8-b9). Ashtusk lands with its side topple.
-LANDED_1024_BELOW_BAR = ('cindercub', 'ashtusk', 'nightburrow', 'shadelet', 'mosshock', 'stormtrail',
-                         'riftfrill', 'abyssal_guardian', 'brooktail', 'glimmermoth', 'tempestwing',
-                         'ribbonray')
+# Nightburrow, Stormtrail and Riftfrill passed too but follow their bases onto
+# the naturalistic remakes (own clips), so they are not listed.
+# Cindercub passed too but now plays its naturalistic remake's own clips (b11).
+LANDED_1024_BELOW_BAR = ('ashtusk', 'shadelet', 'mosshock', 'abyssal_guardian', 'brooktail',
+                         'glimmermoth', 'tempestwing', 'ribbonray')
 LANDED_1024_TOPPLE = ('ashtusk',)
 SHOVE_1024_RUN = (SHOVE_1024 if CANDIDATE_1024 else LANDED_1024_SHOVE) + LANDED_1024B_SHOVE + LANDED_1024_BELOW_BAR
 if '--candidate-1024b' in sys.argv:
@@ -927,6 +929,14 @@ PRONE = tuple(s for s in PRONE if s not in LANDED_1024_TOPPLE)
 if CANDIDATE_1024:
     PRONE = tuple(s for s in PRONE if s not in PRONE_TO_TOPPLE_1024)
     LIMP_ROLL['tuskroot'] = 90.0
+# F36#1 roster r1 read Tuskroot's limp sprawl as a belly-up flip; it topples
+# like the boars (close-1024 b13: 7.46 vs 6.17 mapped, faint FIXED x3, ON).
+TOPPLED = tuple(TOPPLED) + ('tuskroot',)
+TOPPLE_ROLL['tuskroot'] = 90.0
+# Mangrove Monitor's -90 roll (OFF; --candidate-r13) lost in b13 (5.84 vs 7.03:
+# it rolls belly-up), so its +90 topple stays.
+if '--candidate-r13' in sys.argv:
+    TOPPLE_ROLL['mangrove_monitor'] = -90.0
 LIVE_SHOVE_HIT = tuple(LIVE_SHOVE_HIT) + tuple(s for s in SHOVE_1024_RUN if s not in LIVE_SHOVE_HIT)
 SHOVE_GAIN_BY.update({s: 1.5 for s in SHOVE_1024_RUN})
 SHOVE_HOLD_BY.update({s: (0.5, 0.97) for s in SHOVE_1024_RUN})

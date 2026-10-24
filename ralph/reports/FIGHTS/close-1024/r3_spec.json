@@ -1,0 +1,32 @@
+[
+ {
+  "label": "tell-r3 meadows",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r3/meadows_ctl.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r3/meadows_F.png",
+  "brief": "Meadows named-trainer fight on open grass: four frames at an opponent's wind-up and charge",
+  "defects": [
+   "flat magenta ring or slab telegraph on the ground",
+   "wind-up warning does not show where and when to move"
+  ]
+ },
+ {
+  "label": "tell-r3 tidewake",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r3/tidewake_ctl.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r3/tidewake_F.png",
+  "brief": "Tidewake beach trainer fight: four frames around an opponent's wind-up",
+  "defects": [
+   "flat magenta ring or slab telegraph on the ground",
+   "wind-up warning does not show where and when to move"
+  ]
+ },
+ {
+  "label": "tell-r3 cloudreach",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r3/cloudreach_ctl.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r3/cloudreach_F.png",
+  "brief": "Cloudreach captain fight in a stone arena: four frames during the fight",
+  "defects": [
+   "flat magenta ring or slab telegraph on the ground",
+   "wind-up warning does not show where and when to move"
+  ]
+ }
+]
