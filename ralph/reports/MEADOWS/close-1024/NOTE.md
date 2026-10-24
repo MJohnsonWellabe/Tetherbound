@@ -77,7 +77,7 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Change: `crossing_hall_great_hall.gd renderer_scale()`. On Forward+/Mobile no daylight shafts are built (`forward_plus_shaft_scale` 0).
   - The arch rims now keep full weight on Forward+ (`forward_plus_arch_rim_scale` 1.0, was 0.35 in land2), so nothing else in the Hall is re-dressed.
   - Compatibility returns ONE, so CPU output is unchanged.
-  - Test: `tests/test_crossing_hall_great_hall_renderer.gd`. The land2 version passed 9 tests with 0 failed. The one edited assertion (shipping rims == 1.0) has not run yet: it is queued for the first gap in the capture queue, and I'll report its result here. You can also run it with `--only=crossing_hall,great_hall_renderer`.
+  - Test: `tests/test_crossing_hall_great_hall_renderer.gd`. The land2 version passed 9 tests with 0 failed. Re-run at 20:09 UTC on the land3 content with the rims assertion: `--only=crossing_hall,great_hall_renderer`, 9 tests, 31 assertions, 0 failed.
   - GPU capture command: `capture_camera_set.gd --set=res://tools/visual_judge/camera_sets/F17-6.json` at Medium and High.
 
 - 2026-10-24 19:05 UTC STATUS F38#0 pass 2 (`f38-0/README.md`): ten creature and catch rows rescored, 4.14–5.29 mapped. Catch candidates in impact order:
@@ -86,6 +86,15 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Both are queued for one ON catch capture after the supplementals, then judged per row.
   - The flat magenta wedge in catch_low is the enemy lunge-lane telegraph, not catch UI, so it belongs to the P2-063 fight-tell row.
   - P2-015/016/017 (creature pose and scale) live in `data/creatures/f36_pose_candidates.json`, which the creatures lane owns. Tell me if those are mine to change for Meadows species.
+
+- 2026-10-24 20:20 UTC STATUS F38 L1 (camera stands, the 174 rejected): reproduced on CPU. The causes, from a physics probe at each stand:
+  - Fixture: main's `capture-definition.json` still points the wall arches outward. The fix (arches in-room detail only, nave and shrine on the floor, `capture_f38_matrix.gd` honours `views` and `prefer_terrain_ground`) is on tb/meadows and lands with the stand fixes.
+  - Quarry `band2_stone_and_root_0`: every stand sits in quarry dressing. The capsule overlaps the work wagon (gameplay), a foundation is 0.3 m above the terrain (detail), rocks and bag (reverse), and a tree (approach).
+  - Ironwood 0/1: tree trunk colliders overlap the capsule (approach, detail), or a trunk behind pulls the camera in to 1.9–2.4 m (gameplay, approach).
+  - arch_home approach (-23.7, 14): no collider at all within the probe window.
+  - Village road, Hall front, shrine and farm approach: "no physical floor" (probe incomplete; search running).
+  - A heading search (8 headings per stand, the same production preflight and camera checks, nothing relaxed) is running on CPU now. Next: re-seat each site at a passing heading in `capture-definition.json`, recapture those stands on CPU, then READY with the stand list.
+- 2026-10-24 20:20 UTC NOTE F38 L2: the GPU "orb chains" in hall_nave are the same Forward+ shaft quads (they render as beaded white bars). land3 (shafts not built on Forward+) removes both.
 
 ## Work log
 
