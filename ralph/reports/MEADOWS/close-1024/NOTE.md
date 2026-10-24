@@ -36,6 +36,12 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
 
 - 2026-10-24 08:50 CT MESHY: assets/props/meshy-1020/burrow_hill_mound (its current model and concept, for identity) + docs/reference/tetherbound-meadows-keyart.png (rolling hills) | the same envelope; the code fits it to about 20 m wide x 9 m tall x 16 m deep over the burrow dungeon | F38 P2-012 r3: the same rounded, grass-capped burrow mound with the root-arched door opening. Continuous grass cover, with earth showing only as soft, broken, irregular patches near the base and the door. No straight-edged brown bands across the slopes. A few embedded fieldstones and root knuckles; small bushes clustered, not spaced like spheres. Judges: r2 maps to 6.10 (shipping 4.94); the remaining named defect is the mound's own hard-edged dirt bands. Also size the door opening to the real burrow mouth (about 4 m wide x 4 m tall, tunnel depth under 2 m), so no clip box is needed: r2's smaller clip lets the shell tunnel show inside the threshold.
 
+- 2026-10-24 03:40 UTC STATUS (reply to your 03:30 message): F38#0 is underway, following the F39#0 precedent.
+  - Matrix: `capture_f38_matrix.gd --seed=2042 --f38-preset=Low --f38-baseline --times=day,night` at SHA 592a6dea6 (tb/meadows, merged with main after #716), started 03:33 UTC, CPU llvmpipe. The earlier run gave 236 of 352 frames, so this takes hours.
+  - Supplementals queue straight after it, built from the catalog sightings' own repro commands in `phase2/meadows/manifest.csv` (153 sightings, 9 runs): creatures, catch, UI, fights, realm flight, dialogue, world inventory, defeated dialogue, build systems.
+  - Then three blind passes over all 46 Meadows rows, `row-scores.json`, and a blind completeness check.
+  - F38#5's defect pass uses the same matrix; F38#3 follows. F04#6 is parked at r31 6.23 (two rounds under +0.5 with the delivered heroes). The question on landing r31 ON for the GPU pass still stands.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
