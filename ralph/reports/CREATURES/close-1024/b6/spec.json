@@ -1,0 +1,113 @@
+[
+ {
+  "label": "F36 mudsnout b6",
+  "a": "<scratch>/b6/sides/mudsnout-live.png",
+  "b": "<scratch>/b6/sides/mudsnout-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, surface, face, scale against the ruler - and whether the hit reads as a hit and the faint reads as down without a label, grounded, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+  ]
+ },
+ {
+  "label": "F36 trailpup b6",
+  "a": "<scratch>/b6/sides/trailpup-live.png",
+  "b": "<scratch>/b6/sides/trailpup-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, surface, face, scale against the ruler - and whether the hit reads as a hit and the faint reads as down without a label, grounded, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+  ]
+ },
+ {
+  "label": "F36 sparkit b6",
+  "a": "<scratch>/b6/sides/sparkit-live.png",
+  "b": "<scratch>/b6/sides/sparkit-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, surface, face, scale against the ruler - and whether the hit reads as a hit and the faint reads as down without a label, grounded, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+  ]
+ },
+ {
+  "label": "F36 staticub b6",
+  "a": "<scratch>/b6/sides/staticub-live.png",
+  "b": "<scratch>/b6/sides/staticub-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, surface, face, scale against the ruler - and whether the hit reads as a hit and the faint reads as down without a label, grounded, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+  ]
+ },
+ {
+  "label": "F36 burrowback b6",
+  "a": "<scratch>/b6/sides/burrowback-live.png",
+  "b": "<scratch>/b6/sides/burrowback-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, surface, face, scale against the ruler - and whether the hit reads as a hit and the faint reads as down without a label, grounded, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+  ]
+ },
+ {
+  "label": "F36 mosshell b6",
+  "a": "<scratch>/b6/sides/mosshell-live.png",
+  "b": "<scratch>/b6/sides/mosshell-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, surface, face, scale against the ruler - and whether the hit reads as a hit and the faint reads as down without a label, grounded, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+  ]
+ },
+ {
+  "label": "F36 paddlenewt b6",
+  "a": "<scratch>/b6/sides/paddlenewt-live.png",
+  "b": "<scratch>/b6/sides/paddlenewt-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, surface, face, scale against the ruler - and whether the hit reads as a hit and the faint reads as down without a label, grounded, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+  ]
+ },
+ {
+  "label": "F36 veridian b6",
+  "a": "<scratch>/b6/sides/veridian-live.png",
+  "b": "<scratch>/b6/sides/veridian-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, surface, face, scale against the ruler - and whether the hit reads as a hit and the faint reads as down without a label, grounded, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+  ]
+ },
+ {
+  "label": "F36 mirejaw b6",
+  "a": "<scratch>/b6/sides/mirejaw-live.png",
+  "b": "<scratch>/b6/sides/mirejaw-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature's model and material as the game's real look - readability, surface, face, scale against the ruler - and whether the hit reads as a hit and the faint reads as down without a label, grounded, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+  ]
+ },
+ {
+  "label": "F36 water_riverdrake b6",
+  "a": "<scratch>/b6/sides/wr-live.png",
+  "b": "<scratch>/b6/sides/wr-c.png",
+  "brief": "One water creature on a neutral stage beside a 1.80 m human ruler: hit react, faint end, swimming at a water surface (two moments), and carrying the trainer on its back as a swim mount. Judge the creature's model and material as the game's real look - readability, surface, face, scale against the ruler - and whether the hit reads as a hit, the faint reads as down, the swim reads as swimming and the rider sits on its back, without clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim reads as standing or wading rather than swimming",
+   "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+  ]
+ }
+]
