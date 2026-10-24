@@ -3,6 +3,7 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct READY tb/creatures-land 078a5f6c4 (= 2a5300916 + three cherry-picks from the lane: roster r6-r7 and the whole-roster verdict, b13 ON flips with the verdict folder, the count fix). The b13 flips are data and post-pass only (enabled_species gains seven water_* ids; Tuskroot topples), so no mesh changed and there is no footprint risk. The land keeps water_riverdrake enabled. Checks: post-pass `--check` current; `run_tests --only=f36_pose,creature_pose,water,swim,species,dual_type,aspect,rideable,riding` 583 tests, 0 failed. Roster: 38 of 70 pass, so F36#1 is still open.
 - 25 Oct F36#1 b13 (`close-1024/b13/judges.md`, CPU, confirming). Water forms now play their base recipe, which gives them a swim pose instead of the base-rig fallback.
   - ON: water Riptusk 7.46 vs 5.74, Abyssal Guardian 7.36 vs 5.36, Aquaryn 7.13 vs 5.46, Mangrove Monitor 6.94, Sirenseal 6.94, Tidecoil 6.89 (Tidecoil swim still marked PRESENT once).
   - ON below the bar: Mirejaw 5.89 vs 4.31.
