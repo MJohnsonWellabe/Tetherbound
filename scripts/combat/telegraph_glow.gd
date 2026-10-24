@@ -53,6 +53,9 @@ var _soft: Dictionary = {}
 
 var _ring: MeshInstance3D = null
 var _ring_mesh: ImmediateMesh = null
+## Bodied-tell curtain on the rim (STYLE.curtain_height; null = off). A child
+## of the ring, so the ring stays this node's only direct mesh.
+var _curtain: MeshInstance3D = null
 ## Heights belong to one mesh rebuild, never to a later pulse or moved body.
 var _ground_seen: Dictionary = {}
 var _drawn: Array = []
@@ -91,6 +94,9 @@ func _ready() -> void:
 	# water surface above it (see `_ground_vertex`).
 	_ring.custom_aabb = AABB(Vector3(-reach, -0.2, -reach), Vector3(reach * 2.0, reach + 6.0, reach * 2.0))
 	add_child(_ring)
+	if not _soft.is_empty() and STYLE.curtain_height(_soft, 1.0) > 0.0:
+		_curtain = STYLE.make_curtain(_ring.custom_aabb)
+		_ring.add_child(_curtain)
 
 
 func _material() -> StandardMaterial3D:
@@ -153,6 +159,8 @@ func follow_state(body: Node3D, active: Callable) -> void:
 	if _ring != null:
 		var reach := _radius * 2.5
 		_ring.custom_aabb = AABB(Vector3.ONE * -reach, Vector3.ONE * reach * 2.0)
+		if _curtain != null:
+			_curtain.custom_aabb = _ring.custom_aabb
 
 
 func _physics_process(delta: float) -> void:
@@ -247,10 +255,13 @@ func _draw_ring(radius: float, alpha: float) -> void:
 		inner = radius * (1.0 - lerpf(0.12, 0.4, build))
 		alpha *= lerpf(0.45, 1.0, build)
 	_ring_mesh.clear_surfaces()
+	var rim := PackedVector3Array()
 	_ring_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLE_STRIP)
 	for i in SEGMENTS + 1:
 		var angle: float = TAU * float(i) / float(SEGMENTS)
 		var direction := Vector3(cos(angle), 0.0, sin(angle))
+		if _curtain != null and i < SEGMENTS:
+			rim.append(_ground_vertex(direction * radius))
 		var colour := Color(_colour.r, _colour.g, _colour.b, alpha)
 		var inner_colour := colour
 		var outer_colour := colour
@@ -262,3 +273,7 @@ func _draw_ring(radius: float, alpha: float) -> void:
 		_ring_mesh.surface_set_color(outer_colour)
 		_ring_mesh.surface_add_vertex(_ground_vertex(direction * radius))
 	_ring_mesh.surface_end()
+	if _curtain != null:
+		var build := clampf(_life / maxf(0.05, _duration), 0.0, 1.0)
+		STYLE.draw_curtain(_curtain, [rim], _colour, alpha * float(_soft.get("curtain_alpha", 0.6)),
+			STYLE.curtain_height(_soft, build), _soft, _life, true)

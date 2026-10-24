@@ -31,6 +31,12 @@ var _aimed: Array = []
 ## the hue.
 var _soft: Dictionary = {}
 var _tint := Color.WHITE
+## Bodied-tell curtain on the shape's outline (STYLE.curtain_height; null =
+## off), redrawn each frame from `_curtain_lines` so its height builds over
+## the tell and its shimmer runs.
+var _curtain: MeshInstance3D = null
+var _curtain_lines: Array = []
+var _curtain_time := 0.0
 ## Soft-style edge hue; the fill hue unless a row asks for a darker rim.
 var _edge_tint := Color.WHITE
 ## F22#4 Riverwatch round (13 Oct): a row's `cue_water` draws its field as a
@@ -124,6 +130,9 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	visual.material_override = material
 	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	cue.add_child(visual)
+	if not cue._soft.is_empty() and STYLE.curtain_height(cue._soft, 1.0) > 0.0:
+		cue._curtain = STYLE.make_curtain(AABB(Vector3(-4096, -512, -4096), Vector3(8192, 1024, 8192)))
+		visual.add_child(cue._curtain)
 	if profile.get("cue_water") == true and str(profile.get("telegraph_shape", "")) == "field":
 		cue._add_water(float(profile.get("telegraph", 1.0)))
 	if profile.get("cue_water_spray") == true and str(profile.get("telegraph_shape", "")) == "fan":
@@ -828,6 +837,9 @@ func _add_water_cast(rise_s: float) -> void:
 
 
 func _process(delta: float) -> void:
+	if _curtain != null:
+		_curtain_time += delta
+		_draw_curtain()
 	if _aura_material != null:
 		_aura_time += delta
 		var pulse := 0.5 + 0.5 * sin(_aura_time * TAU * float(_profile.get("cue_boss_aura_pulse_hz", 2.2)))
@@ -1049,6 +1061,12 @@ func _quad(a: Vector3, b: Vector3, c: Vector3, d: Vector3, alpha: float) -> void
 
 
 func _vertex(point: Vector3, colour: Color) -> void:
+	_mesh.surface_set_color(colour)
+	_mesh.surface_add_vertex(_seated(point))
+
+
+## `point` seated on the walked floor (or the marker seat), lifted a hair.
+func _seated(point: Vector3) -> Vector3:
 	var ground := point.y
 	if is_finite(_seat_y):
 		ground = _seat_y
@@ -1063,13 +1081,13 @@ func _vertex(point: Vector3, colour: Color) -> void:
 			_ground_seen[key] = measured
 		if is_finite(measured):
 			ground = measured
-	_mesh.surface_set_color(colour)
-	_mesh.surface_add_vertex(Vector3(point.x, ground + _lift, point.z))
+	return Vector3(point.x, ground + _lift, point.z)
 
 
 ## Soft style: the same shapes as `aim`'s match, as a faint wash, a glow band
 ## feathering inward from each edge, and a thin lit core line on the edge.
 func _aim_soft(shape: String) -> void:
+	_curtain_lines.clear()
 	match shape:
 		"ring":
 			_soft_disc(_origin, float(_profile.get("inner_radius_m", 0.0)), float(_profile.get("range", 0.0)), TAU)
@@ -1091,11 +1109,44 @@ func _aim_soft(shape: String) -> void:
 			_soft_edge(left, far_left, side, feather)
 			_soft_edge(right, far_right, -side, feather)
 			_soft_edge(far_left, far_right, -_heading, minf(feather, length * 0.4))
+			if _curtain != null:
+				_curtain_lines.append(_seated_line([left, far_left, far_right, right]))
+	_draw_curtain()
+
+
+## The curtain over the outline collected by the last aim, sized by how far
+## into the tell it is.
+func _draw_curtain() -> void:
+	if _curtain == null:
+		return
+	var tell := maxf(0.05, float(_profile.get("telegraph", 0.8)))
+	STYLE.draw_curtain(_curtain, _curtain_lines, _edge_tint, float(_soft.get("edge_alpha", 0.7))
+		* float(_soft.get("curtain_alpha", 0.6)), STYLE.curtain_height(_soft, _curtain_time / tell),
+		_soft, _curtain_time)
+
+
+## World points seated on the same ground the shape's vertices use.
+func _seated_line(points: Array) -> PackedVector3Array:
+	var line := PackedVector3Array()
+	for point: Vector3 in points:
+		line.append(_seated(point))
+	return line
 
 
 func _soft_disc(centre: Vector3, inner: float, outer: float, arc: float) -> void:
 	var count := maxi(2, int(ceil(float(_segments) * arc / TAU)))
 	var feather := minf(float(_soft.get("feather_m", 0.3)), (outer - inner) * float(_soft.get("feather_max_fraction", 0.35)))
+	if _curtain != null:
+		var outline: Array = []
+		if arc < TAU:
+			outline.append(centre + _heading.rotated(Vector3.UP, -arc * 0.5) * inner)
+		for index: int in count + (1 if arc < TAU else 0):
+			outline.append(centre + _heading.rotated(Vector3.UP, -arc * 0.5 + arc * float(index) / float(count)) * outer)
+		if arc < TAU:
+			outline.append(centre + _heading.rotated(Vector3.UP, arc * 0.5) * inner)
+		else:
+			outline.append(outline[0])
+		_curtain_lines.append(_seated_line(outline))
 	for index: int in count:
 		var a := -arc * 0.5 + arc * float(index) / float(count)
 		var b := -arc * 0.5 + arc * float(index + 1) / float(count)
