@@ -3,6 +3,32 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct 09:30 CT READY tb/creatures-land 2a5300916 (= c74eb3908 + your two tb/ev-coordinator merges + one commit).
+  - **F36#1 fixes ON** (b12, CPU, 3 judges, confirming; `close-1024/b12/judges.md`). Base = the roster shipping tiles:
+    - Bramblebun recoil hit: 8.02 vs 7.71.
+    - Terrapup recoil hit + back-to-camera faint: 7.28 vs 7.02.
+    - Ripplet sunk level swim: 7.49 vs 7.36.
+    - Burrowback recoil + roll: 7.23 vs 6.93.
+    - Bramblebun, Terrapup and Ripplet now pass F36#1 (no pose PRESENT). Burrowback keeps one "hit reads as a lunge".
+    - Reverted (no gain): Paddlenewt flat faint, Torrentoad/Cannonback sprawl.
+    - QUESTION: the Mosshock remake with the sprawl faint maps 7.15 vs 4.45 (faint FIXED x3), but judges read it as a toad while shipping Mosshock is a lizard. That's an identity change, so it is OFF until you say.
+  - **Your nits:**
+    - b11 verdict folder now on the land branch.
+    - Admission probe at `close-1024/admission/lead_probe.txt`.
+    - Cindercub out of LANDED_1024_BELOW_BAR and Ripplet out of LANDED_1024B_SHOVE (only those two profiles regenerate).
+    - Ripplet's stale comments fixed.
+    - `_field_bright_root` pruned together with the weak references.
+    - Cindercub's 0.62 m footprint headroom noted for redrafts.
+  - **Checks on 2a5300916** (local, CPU, after `--import`):
+    - `run_tests --only=dual_type,aspect,variant,creature_body,texture_for,colourway,shiny,surface_finish,night,field,rideable,riding,swim,water,f36_pose,creature_pose,species,scale_ladder,companion,evolution,spawns,rest_pose,starter`: 879 tests, 0 failed.
+    - Smokes: `smoke_arena_contain` OK; `smoke_gate_e_finale` passed; `smoke_catching` OK; `smoke_f37_ripplet` PASS; `smoke_creature_field_brightness` PASS; `smoke_bramblebun_colourway_binding` 12/12.
+    - Postpass `--check` current; texture policy PASS (870).
+- 25 Oct F36#1 whole-roster verdict, in progress: 50 of 70 subjects judged at the land head (`close-1024/roster/r1`-`r5/verdict.md`; rule: no pose PRESENT and mapped >= 6.7, CPU-provisional). r6-r7 (Voltwig onward and the water_* forms) are next.
+  - Passing so far: Stormursa, Trailpup, Mudsnout, Meadowhart, Mosshell, Galecrest, Nightburrow, Veridian, Brooktail, Pipwing, Cindercub, Frostclaw, Shadelet, Staticub, Tidecoil, Sirenseal, Tanglevolt, Stormcapra, Craghorn, Thundertunnel, Stormraven, Glimmermoth. Bramblebun, Terrapup and Ripplet also pass with the b12 fixes in this READY.
+  - Failing on poses (clip work next): Tuskroot (belly-up faint), Paddlenewt, Riftfrill, Mangrove Monitor (flips), Torrentoad, Cragclaw, Fulgocobra (upright faints), Pebbik (airborne hit), Cannonback (shell roll), and the installed land Riverdrake (hit equals standing; the held pilot fixes this).
+  - Failing on score only (materials/style, F36#0 territory): Galewisp, Stormtrail, Duskhush, Reedwing, Ashtusk (6.68), Riptusk, Sparkit, Mirejaw, Voltwig, Abyssal Guardian, Mosshock, Stormbrush, Voltarach.
+  - Judges' recurring asks: a recoil instead of rear-ups (most installed recipes), and stage staging (long tails pass through the ruler; capture-stage only).
+  - Swim applicability: only the water_* forms and swim mounts. Base species of the water roster swim through their water form, so base-species swim rows in r2-r3 are informational.
 - 25 Oct 01:40 CT READY tb/creatures-land c74eb3908 (= dbd0a12c6 + your tb/ev-coordinator merge + one commit). Your `_texture_for` .jpg fallback and its test are merged in, so the regression is not reintroduced (thanks for catching it).
   - **F36#0 b11** (CPU, three judges, confirming; `close-1024/b11/judges.md`):
     - New ON: Ripplet (starter, four-legged otter) 7.40 vs 5.51; Cindercub 7.63 vs 5.59.
