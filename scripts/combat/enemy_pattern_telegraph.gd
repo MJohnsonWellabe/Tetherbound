@@ -133,11 +133,10 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 	visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	cue.add_child(visual)
 	if not cue._soft.is_empty() and STYLE.curtain_height(cue._soft, 1.0) > 0.0:
-		cue._curtain = STYLE.make_curtain(AABB(Vector3(-4096, -512, -4096), Vector3(8192, 1024, 8192)))
+		cue._curtain = STYLE.make_curtain(AABB())
 		visual.add_child(cue._curtain)
 	if not cue._soft.is_empty() and STYLE.dust_enabled(cue._soft):
 		cue._dust = STYLE.make_dust()
-		cue._dust.custom_aabb = AABB(Vector3(-4096, -512, -4096), Vector3(8192, 1024, 8192))
 		visual.add_child(cue._dust)
 	if profile.get("cue_water") == true and str(profile.get("telegraph_shape", "")) == "field":
 		cue._add_water(float(profile.get("telegraph", 1.0)))
@@ -1117,7 +1116,33 @@ func _aim_soft(shape: String) -> void:
 			_soft_edge(far_left, far_right, -_heading, minf(feather, length * 0.4))
 			if _curtain != null or _dust != null:
 				_curtain_lines.append(_seated_line([left, far_left, far_right, right]))
+	_fit_curtain_bounds()
 	_draw_curtain()
+
+
+## The curtain and dust bounds: the outline collected by this aim, plus the
+## tallest curtain and the dust's rise and puff size above it.
+func _fit_curtain_bounds() -> void:
+	if _curtain_lines.is_empty():
+		return
+	var box := AABB()
+	var started := false
+	for line: PackedVector3Array in _curtain_lines:
+		for point: Vector3 in line:
+			if started:
+				box = box.expand(point)
+			else:
+				box = AABB(point, Vector3.ZERO)
+				started = true
+	var up := maxf(STYLE.curtain_height(_soft, 1.0), float(_soft.get("dust_rise_m", 0.8))
+		+ float(_soft.get("dust_size_m", 0.7)) * 1.5)
+	var reach := float(_soft.get("dust_spacing_m", 0.6)) * 1.5 + float(_soft.get("dust_size_m", 0.7)) * 1.5
+	box = box.grow(reach)
+	box.size.y += up
+	if _curtain != null:
+		_curtain.custom_aabb = box
+	if _dust != null:
+		_dust.custom_aabb = box
 
 
 ## The curtain over the outline collected by the last aim, sized by how far
