@@ -3,6 +3,10 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 24 Oct GPU re-run request at tb/creatures ef8c20d7e. Trailpup, Bramblebun, Nightburrow and Mosshell were judged on GPU with a swim row (land species walking on the water slab) and, for Trailpup, below the ruler. Both are fixed: the stage drops the swim row for non-swimmers (06beef397), and Trailpup is now 3.1 m.
+  - On CPU they map 7.80, 7.93, 6.69 and 7.31 (b20, b18).
+  - Command: `godot --path . --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=trailpup,bramblebun,nightburrow,mosshell --whole-body --context --out=res://.artifacts/gpu_rerun/<preset>`.
+  - The owner's "one touch" accent for them stays my next item: the rim lever was invisible, so it will be texture-level.
 - 24 Oct GPU READY on tb/creatures aca00a732: Stormtrail and Riftfrill texture-level fixes (`close-1024/b22/judges.md`).
   - CPU b22: Stormtrail 7.21 vs 5.58 (storm-grey coat, soft blue spine line, gold leg bands gone). Riftfrill 6.63 vs 5.93 (lighter teal, pale belly, accent-only glow).
   - Their b19 value lift is dropped (the repaint replaces it). Cindercub keeps its lift.
