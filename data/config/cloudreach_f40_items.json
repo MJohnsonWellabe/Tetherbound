@@ -593,6 +593,27 @@
           }
         }
       }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-haze-candidate",
+      "_why": "GPU F40 baseline C6 + C1 (24 Oct, all 11 stands below 7.5; 'the cameras show a grass lawn, not a sky realm'; distance haze missing between islands). Realm visual overlay only: day fog delta -0.00015 -> +0.00025 (aerial depth between planes), horizon haze band 0.15/0.42 -> 0.22/0.6, and the upper cloud deck raised from 100 m to 55 m under each tier (lower deck and banks unchanged) so the cloud sea sits in frame past the route edges. No terrain, collision or route change. Flag OFF; not judged yet.",
+      "overlay": {
+        "visual": {
+          "atmosphere": {
+            "environment": {
+              "fog_density_add": 0.00025
+            }
+          },
+          "sky_profile": {
+            "horizon_haze_height": 0.22,
+            "horizon_haze_strength": 0.6
+          },
+          "cloud_sea": {
+            "upper_deck_offset_m": 55.0
+          }
+        }
+      }
     }
   ]
 }
