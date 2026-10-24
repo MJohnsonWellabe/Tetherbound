@@ -3387,7 +3387,7 @@
    "counts": {
     "met": 1,
     "partial": 0,
-    "in_progress": 13,
+    "in_progress": 12,
     "not_started": 27,
     "blocked": 2,
     "failing": 0
@@ -3406,20 +3406,31 @@
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 100, lane tb/x04-meadows. The direct pose fixture needs confirmation in a real faint/rest transition; explicit hovering is visible in Trailpup and Veridian. Cloudreach resting Cloudfang Solmane and Tempestwing show clear groun",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-015",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-016 creature hurt and movement poses: Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename — fixed on main with a GPU before/after pass at the bar.",
      "status": "in_progress",
      "evidence": "GPU 24 Oct (tb/gpu-pass de025a1cc, ralph/reports/GPU-PASS/F38-0/main-1024/VERDICT.md; main 779422f10, High+Medium, yardstick): PRESENT: hurt poses keep the idle silhouette in the F38 fight. Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 100, lane tb/x04-meadows. Still frames cannot establish locomotion timing; check production transition captures before scheduling animation work. Tidewake and Stormwood stills confirm the recurring state-read gap; judge mo",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-016",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows",
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-062 fight camera and creature scale: The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry — fixed on main with a GPU before/after pass at the bar.",
@@ -3429,37 +3440,57 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-062",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-002 map: The map canvas shows headings and markers without visible terrain or road context for the displayed destinations — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 80, lane tb/x04-meadows. First Shore is marked discovered but the Day 1 state may hide survey detail; both biome maps lack terrain/route context at this state.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-002",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows",
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-017 normal creature scale: Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 80, lane tb/x04-meadows. Apparent visual height varies with perspective and posture; compare with declared size and a level camera before adjusting assets. Stormwood near-framed size comparison confirms this in five additiona",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-017",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-033 ground pickup identity: Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal came — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 80, lane tb/x04-meadows. Code-blind ground-level review across four biomes. Meadows candies/potions are small colored glows; Tidewake repeats a crate family; Cloudreach potion/revive can read as flowers; five progression-gate",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-033",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows",
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-058 catch aim readability: The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc — fixed on main with a GPU before/after pass at the bar.",
@@ -3469,57 +3500,73 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-058",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-119 Fly carrier grip pose: The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands r — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 64, lane tb/x04-meadows. Code-blind comparison across three production-camera flight sequences. Meadows launch was reshot with a settled camera and clearly repeats the pose. The carrier silhouette is strong, but the body hold",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-119",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows",
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-001 menu shell: The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 60, lane tb/x04-meadows. Same full-screen shell in Meadows and Tidewake production UI; assess Cloudreach and Stormwood before final shared exposure.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-001",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows",
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-007 secondary menu panels: The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 60, lane tb/x04-meadows. The Day 1 fixture may explain empty panels, but the screen leaves large dead areas. Skills capture still resembles Quests; verify navigation.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-007",
-     "audit_index": 1
-    },
-    {
-     "text": "F38 (1) top-20 item P2-055 named character silhouettes: Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes — fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 60, lane tb/x04-tidewake. Distinct named roles share world-model and portrait archetypes, corroborated in Tidewake post-win text frames. Recurring same-character appearances excluded. No definite portrait/model mismatch claime",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F38#1",
-     "subject": "P2-055",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows",
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-063 shared fight tell and hit effects: Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-re — fixed on main with a GPU before/after pass at the bar.",
      "status": "in_progress",
      "evidence": "GPU 24 Oct (tb/gpu-pass de025a1cc, ralph/reports/GPU-PASS/F38-0/main-1024/VERDICT.md; main 779422f10, High+Medium, yardstick): PARTIAL: magenta telegraphs now pale outlines. Prior: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 60, lane tb/x04-meadows. Meadows and Tidewake code-blind fight review: flat magenta tell ring lacks clear attack path, and Tidewake hit contact barely changes enemy pose. Shared effect family scored once at widest exposure; e",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-063",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows",
+      "tidewake",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-034 harvest reward identity: Several reward harvest nodes read as generic crates or vegetation without a clear visible connection to their named item — fixed on main with a GPU before/after pass at the bar.",
@@ -3529,7 +3576,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-034",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-059 catch sequence camera framing: The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link — fixed on main with a GPU before/after pass at the bar.",
@@ -3539,27 +3589,42 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-059",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-060 catch effect finish: The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visib — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 48, lane tb/x04-meadows. Resting and shaking stills have little visible difference; motion and audio need separate review before judging shake timing. Tidewake normal fight repeats the flat yellow orb/magenta ring; rest and s",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-060",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows",
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-069 flight and landing pose read: Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change rea — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status deferred, impact 48, lane tb/x04-cloudreach. Deferred to shared Fly gameplay/Claude owner with Cloudreach animation support: original stills/source audit predate owned-carrier Fly. Main cf0a3b974 now conditionally restores the recalled owned fol",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-069",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows",
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-086 tournament dialogue subject identity: Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits — fixed on main with a GPU before/after pass at the bar.",
@@ -3569,7 +3634,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-086",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-087 named trainer dialogue subject visibility: Several named trainer dialogue views show only the player and terrain with no speaker visible — fixed on main with a GPU before/after pass at the bar.",
@@ -3579,27 +3647,41 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-087",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-095 craft recipe text: Long recipe names and material preview lines are clipped in the crafting list — fixed on main with a GPU before/after pass at the bar.",
      "status": "in_progress",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status fixed, impact 48, lane tb/x04-meadows. Fixed in 54b189254. Enabled crafting UI passed independent code-blind review in Meadows Cloudreach Stormwood at 1920x1080 and four Meadows 1280x720 stress pairs; baseline failed. Current-main import a",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-095",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (1) top-20 item P2-004 exploration HUD: The many dark boxed HUD panels and outlined text occupy a large share of the exploration view — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 45, lane tb/x04-meadows. Tidewake exterior confirms the large team strip quest box quick bar and shortcut bar; Meadows frame is indoors. Cloudreach flight frames show the same panels crowding airborne scenery. Coverage questi",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
      "subject": "P2-004",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows",
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-003 Team Tether stronghold: The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close — fixed on main with a GPU before/after pass at the bar.",
@@ -3609,7 +3691,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-003",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-005 ground cover: Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks — fixed on main with a GPU before/after pass at the bar.",
@@ -3619,7 +3704,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-005",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-006 mill and settlements: The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity — fixed on main with a GPU before/after pass at the bar.",
@@ -3629,7 +3717,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-006",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-013 Tether Relay yard: Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp — fixed on main with a GPU before/after pass at the bar.",
@@ -3639,7 +3730,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-013",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-014 distant mountains: The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes — fixed on main with a GPU before/after pass at the bar.",
@@ -3649,17 +3743,25 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-014",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-018 shiny palette distinction: Some shiny variants have no reliably readable colour-block difference from their normal form at the device view — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. Other species have strong shiny distinctions; assess these pairs at the same lighting and camera.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-018",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-020 creature ground contact: Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view — fixed on main with a GPU before/after pass at the bar.",
@@ -3669,17 +3771,26 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-020",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-031 settings and binding instructions: Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. Shared menu presentation in two biomes; [Minus] and [Equal] labels are visible in map instructions.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-031",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows",
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-064 Warden arena boundary: Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry — fixed on main with a GPU before/after pass at the bar.",
@@ -3689,7 +3800,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-064",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-065 trainer defeated presentation: The bridge grunt and Warden remain upright in similar neutral postures after victory while banner and dialogue carry most of the state chang — fixed on main with a GPU before/after pass at the bar.",
@@ -3699,7 +3813,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-065",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-012 Burrow Warrens hillside: The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut — fixed on main with a GPU before/after pass at the bar.",
@@ -3709,7 +3826,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-012",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-019 alpha rarity read: Several alpha variants read mainly as a modest size increase without a distinct staged presence beside the trainer — fixed on main with a GPU before/after pass at the bar.",
@@ -3719,7 +3839,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-019",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-035 camp and workshop prop legibility: Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out — fixed on main with a GPU before/after pass at the bar.",
@@ -3729,27 +3852,41 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-035",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-061 catch result hierarchy: Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individu — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 27, lane tb/x04-meadows. The breakout and success wording is clear but the caught individual and inventory destination are not visually prominent in these stills. Tidewake verdict wording is legible, but its caught banner ove",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-061",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows",
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-094 placed wall visual: A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 27, lane tb/x04-meadows. Visual-only production BuildPlacer fixture; one wall and floor placement at an open Meadows stand. No build validation or cost demonstrated. Cloudreach visual-only fixture repeats this presentation. S",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-094",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-050 human post poses: Many named villagers and trainers hold the same straight neutral stance with arms down despite different roles — fixed on main with a GPU before/after pass at the bar.",
@@ -3759,7 +3896,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-050",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-078 dialogue speaker occlusion: Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker — fixed on main with a GPU before/after pass at the bar.",
@@ -3769,7 +3909,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-078",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-079 Meadows dialogue rock obstruction: Large rock faces fill the camera and hide the named speaker during dialogue — fixed on main with a GPU before/after pass at the bar.",
@@ -3779,17 +3922,25 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-079",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows"
+     ]
     },
     {
      "text": "F38 (2) impact>12 item P2-096 craft action hint contrast: Craft and leave button hints are faint gray on the dark translucent craft panel — fixed on main with a GPU before/after pass at the bar.",
      "status": "in_progress",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status fixed, impact 24, lane tb/x04-meadows. Fixed in 54b189254. Enabled crafting UI passed independent code-blind review in Meadows Cloudreach Stormwood at 1920x1080 and four Meadows 1280x720 stress pairs; baseline failed. Current-main import a",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
      "subject": "P2-096",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "meadows",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "The biome frame matrix (approach, gameplay camera, reverse, detail, day/night, weather, a real fight) passes the new bar on High and Medium.",
@@ -3822,12 +3973,12 @@
    "title": "Tidewake: visual catalog burn-down to the full bar",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/visual-tidewake",
-   "pct": 2,
+   "pct": 3,
    "counts": {
     "met": 1,
     "partial": 0,
-    "in_progress": 16,
-    "not_started": 30,
+    "in_progress": 15,
+    "not_started": 17,
     "blocked": 0,
     "failing": 0
    },
@@ -3848,27 +3999,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#1",
      "subject": "P2-008",
-     "audit_index": 1
-    },
-    {
-     "text": "F39 (1) top-20 item P2-016 creature hurt and movement poses: Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 100, lane tb/x04-meadows. Still frames cannot establish locomotion timing; check production transition captures before scheduling animation work. Tidewake and Stormwood stills confirm the recurring state-read gap; judge motion",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F39#1",
-     "subject": "P2-016",
-     "audit_index": 1
-    },
-    {
-     "text": "F39 (1) top-20 item P2-002 map: The map canvas shows headings and markers without visible terrain or road context for the displayed destinations — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 80, lane tb/x04-meadows. First Shore is marked discovered but the Day 1 state may hide survey detail; both biome maps lack terrain/route context at this state.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F39#1",
-     "subject": "P2-002",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (1) top-20 item P2-010 Veilfall silhouette: The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks — fixed on main with a GPU before/after pass at the bar.",
@@ -3878,7 +4012,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#1",
      "subject": "P2-010",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (1) top-20 item P2-011 named destination read: Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces — fixed on main with a GPU before/after pass at the bar.",
@@ -3888,27 +4025,25 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#1",
      "subject": "P2-011",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (1) top-20 item P2-030 shiny creature finish: Several shiny variants become near-uniform hot magenta and lose their ordinary species material and pattern identity — fixed on main with a GPU before/after pass at the bar.",
      "status": "in_progress",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 80, lane tb/x04-tidewake. Variants are easy to identify; Ripplet and Mosshell retain more form detail. Phase 2c: thirteen source-preserving regional shiny repaints staged at21a8e11de behind phase2_shiny_finish_enabled=false; s",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#1",
      "subject": "P2-030",
-     "audit_index": 1
-    },
-    {
-     "text": "F39 (1) top-20 item P2-033 ground pickup identity: Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal came — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 80, lane tb/x04-meadows. Code-blind ground-level review across four biomes. Meadows candies/potions are small colored glows; Tidewake repeats a crate family; Cloudreach potion/revive can read as flowers; five progression-gate",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F39#1",
-     "subject": "P2-033",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F39 (1) top-20 item P2-071 surface swimming trainer pose: During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than — fixed on main with a GPU before/after pass at the bar.",
@@ -3918,7 +4053,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#1",
      "subject": "P2-071",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (1) top-20 item P2-028 creature faint state: Several fainted aquatic creatures keep raised alert heads or upright crouches instead of reading as defeated — fixed on main with a GPU before/after pass at the bar.",
@@ -3928,7 +4066,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#1",
      "subject": "P2-028",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (1) top-20 item P2-089 fight actor composition: Close-range fight staging lets allies, enemies and sometimes the trainer intersect, so heads and limbs cover one another in several Venn opp — fixed on main with a GPU before/after pass at the bar.",
@@ -3938,7 +4079,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#1",
      "subject": "P2-089",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (1) top-20 item P2-108 Aquaryn mounted-water pose: The seated Aquaryn rider traverses turquoise water while the mount stays tall and nearly static above the surface with no visible stroke bob — fixed on main with a GPU before/after pass at the bar.",
@@ -3948,47 +4092,25 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#1",
      "subject": "P2-108",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (1) top-20 item P2-113 catch camera distance: Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the or — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status deferred, impact 64, lane tb/x04-tidewake. Code-blind review of complete dry First Shore wild catch sequence. Cannonback, Terrapup and trainer overlap at aim distance; impact circle dominates Cannonback. The catch failure and success states ar",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#1",
      "subject": "P2-113",
-     "audit_index": 1
-    },
-    {
-     "text": "F39 (1) top-20 item P2-119 Fly carrier grip pose: The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands r — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 64, lane tb/x04-meadows. Code-blind comparison across three production-camera flight sequences. Meadows launch was reshot with a settled camera and clearly repeats the pose. The carrier silhouette is strong, but the body hold",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F39#1",
-     "subject": "P2-119",
-     "audit_index": 1
-    },
-    {
-     "text": "F39 (1) top-20 item P2-001 menu shell: The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 60, lane tb/x04-meadows. Same full-screen shell in Meadows and Tidewake production UI; assess Cloudreach and Stormwood before final shared exposure.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F39#1",
-     "subject": "P2-001",
-     "audit_index": 1
-    },
-    {
-     "text": "F39 (1) top-20 item P2-007 secondary menu panels: The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 60, lane tb/x04-meadows. The Day 1 fixture may explain empty panels, but the screen leaves large dead areas. Skills capture still resembles Quests; verify navigation.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F39#1",
-     "subject": "P2-007",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F39 (1) top-20 item P2-009 water and island depth: Broad offshore water reads as uniform light cyan with little depth variation across several island routes — fixed on main with a GPU before/after pass at the bar.",
@@ -3998,47 +4120,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#1",
      "subject": "P2-009",
-     "audit_index": 1
-    },
-    {
-     "text": "F39 (1) top-20 item P2-055 named character silhouettes: Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes — fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 60, lane tb/x04-tidewake. Distinct named roles share world-model and portrait archetypes, corroborated in Tidewake post-win text frames. Recurring same-character appearances excluded. No definite portrait/model mismatch claime",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F39#1",
-     "subject": "P2-055",
-     "audit_index": 1
-    },
-    {
-     "text": "F39 (1) top-20 item P2-063 shared fight tell and hit effects: Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-re — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 60, lane tb/x04-meadows. Meadows and Tidewake code-blind fight review: flat magenta tell ring lacks clear attack path, and Tidewake hit contact barely changes enemy pose. Shared effect family scored once at widest exposure; e",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F39#1",
-     "subject": "P2-063",
-     "audit_index": 1
-    },
-    {
-     "text": "F39 (1) top-20 item P2-060 catch effect finish: The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visib — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 48, lane tb/x04-meadows. Resting and shaking stills have little visible difference; motion and audio need separate review before judging shake timing. Tidewake normal fight repeats the flat yellow orb/magenta ring; rest and s",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F39#1",
-     "subject": "P2-060",
-     "audit_index": 1
-    },
-    {
-     "text": "F39 (1) top-20 item P2-069 flight and landing pose read: Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change rea — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status deferred, impact 48, lane tb/x04-cloudreach. Deferred to shared Fly gameplay/Claude owner with Cloudreach animation support: original stills/source audit predate owned-carrier Fly. Main cf0a3b974 now conditionally restores the recalled owned fol",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F39#1",
-     "subject": "P2-069",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-101 Riverdrake fight ground contact: Riverdrake crouch and recoil sink its belly and feet into sand or leave the body hovering above a separate shadow — fixed on main with a GPU before/after pass at the bar.",
@@ -4048,7 +4133,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-101",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-115 authored camp creature bed silhouette: The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape  — fixed on main with a GPU before/after pass at the bar.",
@@ -4058,7 +4146,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-115",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-116 authored camp workbench identity: The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidd — fixed on main with a GPU before/after pass at the bar.",
@@ -4068,17 +4159,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-116",
-     "audit_index": 2
-    },
-    {
-     "text": "F39 (2) impact>12 item P2-004 exploration HUD: The many dark boxed HUD panels and outlined text occupy a large share of the exploration view — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 45, lane tb/x04-meadows. Tidewake exterior confirms the large team strip quest box quick bar and shortcut bar; Meadows frame is indoors. Cloudreach flight frames show the same panels crowding airborne scenery. Coverage questi",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F39#2",
-     "subject": "P2-004",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-072 swimmer water contact: The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body — fixed on main with a GPU before/after pass at the bar.",
@@ -4088,7 +4172,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-072",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-026 Veilfall approach shallows: A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather t — fixed on main with a GPU before/after pass at the bar.",
@@ -4098,27 +4185,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-026",
-     "audit_index": 2
-    },
-    {
-     "text": "F39 (2) impact>12 item P2-031 settings and binding instructions: Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. Shared menu presentation in two biomes; [Minus] and [Equal] labels are visible in map instructions.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F39#2",
-     "subject": "P2-031",
-     "audit_index": 2
-    },
-    {
-     "text": "F39 (2) impact>12 item P2-045 candy pickup tiers: Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-stormwood. The Tidewake skill candy I and II labels are tiny. Skill candy III was not isolated in its frame and needs a reshoot.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F39#2",
-     "subject": "P2-045",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-066 live current streaks: Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface — fixed on main with a GPU before/after pass at the bar.",
@@ -4128,7 +4198,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-066",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-067 current restoration environment: The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged — fixed on main with a GPU before/after pass at the bar.",
@@ -4138,7 +4211,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-067",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-073 dialogue camera framing: At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speak — fixed on main with a GPU before/after pass at the bar.",
@@ -4148,17 +4224,25 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-073",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-088 fight team roster contrast: The left team roster fades to pale low-contrast text against terrain during active combat — fixed on main with a GPU before/after pass at the bar.",
      "status": "in_progress",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 36, lane tb/x04-tidewake. Contrast varies by battle state; the roster is darker and legible at hit-001_22. Code-blind review. Stormwood team names likewise disappear into dense wet grass during tells. Full Venn run shows TEAM ",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-088",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-090 fight background creature ground contact: A small blue creature-like figure remains partly buried in sand behind Ripplett through the Venn fight — fixed on main with a GPU before/after pass at the bar.",
@@ -4168,7 +4252,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-090",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-103 named fight victory hierarchy: Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little v — fixed on main with a GPU before/after pass at the bar.",
@@ -4178,7 +4265,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-103",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-109 Aquaryn dismount camera obstruction: After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return acti — fixed on main with a GPU before/after pass at the bar.",
@@ -4188,17 +4278,24 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-109",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-114 catch chance HUD contrast: The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan w — fixed on main with a GPU before/after pass at the bar.",
      "status": "in_progress",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 36, lane tb/x04-tidewake. The 4% to 41% values are visible on inspection, while the CAPTURE CHANCE label nearly disappears into the background. Assess on the actual 1920x1080 display before choosing a panel or text treatment. ",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches tidewake, cloudreach; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-114",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake",
+      "cloudreach"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-029 creature rest poses: Riptusk and Torrentoad resting poses roll onto their backs with limbs raised and read as distressed rather than settled — fixed on main with a GPU before/after pass at the bar.",
@@ -4208,27 +4305,25 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-029",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-032 map active region: The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab — fixed on main with a GPU before/after pass at the bar.",
      "status": "in_progress",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status fixed, impact 27, lane tb/x04-tidewake. Source confirms the displayed realm is disabled, formerly using unavailable-gray styling despite valid selection. Candidate d68213708 gives only the selected disabled button bright text and a teal out",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-032",
-     "audit_index": 2
-    },
-    {
-     "text": "F39 (2) impact>12 item P2-061 catch result hierarchy: Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individu — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 27, lane tb/x04-meadows. The breakout and success wording is clear but the caught individual and inventory destination are not visually prominent in these stills. Tidewake verdict wording is legible, but its caught banner ove",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F39#2",
-     "subject": "P2-061",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake",
+      "cloudreach",
+      "stormwood"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-075 dialogue foreground obstruction: The player head and back overlap the named speaker in several conversation frames — fixed on main with a GPU before/after pass at the bar.",
@@ -4238,7 +4333,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-075",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-057 grass around named characters: Dense pale grass reaches knee to waist height around Tidewake characters and hides much of their costume silhouette in normal-camera post vi — fixed on main with a GPU before/after pass at the bar.",
@@ -4248,7 +4346,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-057",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-091 fight boss title overlay: The upper-center boss title card overlaps part of Cannonback’s shell and head in the opening and tell views — fixed on main with a GPU before/after pass at the bar.",
@@ -4258,7 +4359,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-091",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "F39 (2) impact>12 item P2-074 dialogue speaker visibility: Several named conversations show no identifiable speaker near the dialogue panel — fixed on main with a GPU before/after pass at the bar.",
@@ -4268,7 +4372,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
      "subject": "P2-074",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake"
+     ]
     },
     {
      "text": "The biome frame matrix (approach, gameplay camera, reverse, detail, day/night, weather, a real fight) passes the new bar on High and Medium.",
@@ -4301,12 +4408,12 @@
    "title": "Cloudreach: visual catalog burn-down to the full bar",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/visual-cloudreach",
-   "pct": 2,
+   "pct": 5,
    "counts": {
     "met": 1,
     "partial": 0,
-    "in_progress": 6,
-    "not_started": 37,
+    "in_progress": 0,
+    "not_started": 21,
     "blocked": 0,
     "failing": 0
    },
@@ -4320,26 +4427,6 @@
      "audit_index": 0
     },
     {
-     "text": "F40 (1) top-20 item P2-015 creature collapse and rest: Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 100, lane tb/x04-meadows. The direct pose fixture needs confirmation in a real faint/rest transition; explicit hovering is visible in Trailpup and Veridian. Cloudreach resting Cloudfang Solmane and Tempestwing show clear groun",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#1",
-     "subject": "P2-015",
-     "audit_index": 1
-    },
-    {
-     "text": "F40 (1) top-20 item P2-016 creature hurt and movement poses: Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 100, lane tb/x04-meadows. Still frames cannot establish locomotion timing; check production transition captures before scheduling animation work. Tidewake and Stormwood stills confirm the recurring state-read gap; judge motion",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#1",
-     "subject": "P2-016",
-     "audit_index": 1
-    },
-    {
      "text": "F40 (1) top-20 item P2-021 open terrain: Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the ro — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status deferred, impact 100, lane tb/x04-cloudreach. Deferred: paired native review FAIL requires a broader middle-ground scene redesign; no passing presentation-only fix established. Owner: Cloudreach scene lane. Skyline candidate remains off; evidence",
@@ -4347,47 +4434,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#1",
      "subject": "P2-021",
-     "audit_index": 1
-    },
-    {
-     "text": "F40 (1) top-20 item P2-002 map: The map canvas shows headings and markers without visible terrain or road context for the displayed destinations — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 80, lane tb/x04-meadows. First Shore is marked discovered but the Day 1 state may hide survey detail; both biome maps lack terrain/route context at this state.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#1",
-     "subject": "P2-002",
-     "audit_index": 1
-    },
-    {
-     "text": "F40 (1) top-20 item P2-017 normal creature scale: Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 80, lane tb/x04-meadows. Apparent visual height varies with perspective and posture; compare with declared size and a level camera before adjusting assets. Stormwood near-framed size comparison confirms this in five additiona",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#1",
-     "subject": "P2-017",
-     "audit_index": 1
-    },
-    {
-     "text": "F40 (1) top-20 item P2-030 shiny creature finish: Several shiny variants become near-uniform hot magenta and lose their ordinary species material and pattern identity — fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 80, lane tb/x04-tidewake. Variants are easy to identify; Ripplet and Mosshell retain more form detail. Phase 2c: thirteen source-preserving regional shiny repaints staged at21a8e11de behind phase2_shiny_finish_enabled=false; s",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#1",
-     "subject": "P2-030",
-     "audit_index": 1
-    },
-    {
-     "text": "F40 (1) top-20 item P2-033 ground pickup identity: Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal came — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 80, lane tb/x04-meadows. Code-blind ground-level review across four biomes. Meadows candies/potions are small colored glows; Tidewake repeats a crate family; Cloudreach potion/revive can read as flowers; five progression-gate",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#1",
-     "subject": "P2-033",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (1) top-20 item P2-022 summit aviary: The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silho — fixed on main with a GPU before/after pass at the bar.",
@@ -4397,7 +4447,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#1",
      "subject": "P2-022",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (1) top-20 item P2-024 architectural landmark read: Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail — fixed on main with a GPU before/after pass at the bar.",
@@ -4407,47 +4460,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#1",
      "subject": "P2-024",
-     "audit_index": 1
-    },
-    {
-     "text": "F40 (1) top-20 item P2-113 catch camera distance: Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the or — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status deferred, impact 64, lane tb/x04-tidewake. Code-blind review of complete dry First Shore wild catch sequence. Cannonback, Terrapup and trainer overlap at aim distance; impact circle dominates Cannonback. The catch failure and success states ar",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#1",
-     "subject": "P2-113",
-     "audit_index": 1
-    },
-    {
-     "text": "F40 (1) top-20 item P2-119 Fly carrier grip pose: The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands r — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 64, lane tb/x04-meadows. Code-blind comparison across three production-camera flight sequences. Meadows launch was reshot with a settled camera and clearly repeats the pose. The carrier silhouette is strong, but the body hold",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#1",
-     "subject": "P2-119",
-     "audit_index": 1
-    },
-    {
-     "text": "F40 (1) top-20 item P2-001 menu shell: The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 60, lane tb/x04-meadows. Same full-screen shell in Meadows and Tidewake production UI; assess Cloudreach and Stormwood before final shared exposure.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#1",
-     "subject": "P2-001",
-     "audit_index": 1
-    },
-    {
-     "text": "F40 (1) top-20 item P2-007 secondary menu panels: The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 60, lane tb/x04-meadows. The Day 1 fixture may explain empty panels, but the screen leaves large dead areas. Skills capture still resembles Quests; verify navigation.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#1",
-     "subject": "P2-007",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (1) top-20 item P2-023 exposed landform edges: Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges — fixed on main with a GPU before/after pass at the bar.",
@@ -4457,37 +4473,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#1",
      "subject": "P2-023",
-     "audit_index": 1
-    },
-    {
-     "text": "F40 (1) top-20 item P2-060 catch effect finish: The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visib — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 48, lane tb/x04-meadows. Resting and shaking stills have little visible difference; motion and audio need separate review before judging shake timing. Tidewake normal fight repeats the flat yellow orb/magenta ring; rest and s",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#1",
-     "subject": "P2-060",
-     "audit_index": 1
-    },
-    {
-     "text": "F40 (1) top-20 item P2-069 flight and landing pose read: Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change rea — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status deferred, impact 48, lane tb/x04-cloudreach. Deferred to shared Fly gameplay/Claude owner with Cloudreach animation support: original stills/source audit predate owned-carrier Fly. Main cf0a3b974 now conditionally restores the recalled owned fol",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#1",
-     "subject": "P2-069",
-     "audit_index": 1
-    },
-    {
-     "text": "F40 (1) top-20 item P2-095 craft recipe text: Long recipe names and material preview lines are clipped in the crafting list — fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status fixed, impact 48, lane tb/x04-meadows. Fixed in 54b189254. Enabled crafting UI passed independent code-blind review in Meadows Cloudreach Stormwood at 1920x1080 and four Meadows 1280x720 stress pairs; baseline failed. Current-main import a",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#1",
-     "subject": "P2-095",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (1) top-20 item P2-112 captain fight camera orientation: During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and e — fixed on main with a GPU before/after pass at the bar.",
@@ -4497,17 +4486,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#1",
      "subject": "P2-112",
-     "audit_index": 1
-    },
-    {
-     "text": "F40 (1) top-20 item P2-004 exploration HUD: The many dark boxed HUD panels and outlined text occupy a large share of the exploration view — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 45, lane tb/x04-meadows. Tidewake exterior confirms the large team strip quest box quick bar and shortcut bar; Meadows frame is indoors. Cloudreach flight frames show the same panels crowding airborne scenery. Coverage questi",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#1",
-     "subject": "P2-004",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (1) top-20 item P2-105 mounted terrace edge and cloud crossing: The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently uns — fixed on main with a GPU before/after pass at the bar.",
@@ -4517,17 +4499,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#1",
      "subject": "P2-105",
-     "audit_index": 1
-    },
-    {
-     "text": "F40 (2) impact>12 item P2-018 shiny palette distinction: Some shiny variants have no reliably readable colour-block difference from their normal form at the device view — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. Other species have strong shiny distinctions; assess these pairs at the same lighting and camera.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#2",
-     "subject": "P2-018",
-     "audit_index": 2
+     "audit_index": 1,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (2) impact>12 item P2-025 grass and stone finish: Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across site — fixed on main with a GPU before/after pass at the bar.",
@@ -4537,17 +4512,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#2",
      "subject": "P2-025",
-     "audit_index": 2
-    },
-    {
-     "text": "F40 (2) impact>12 item P2-031 settings and binding instructions: Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. Shared menu presentation in two biomes; [Minus] and [Equal] labels are visible in map instructions.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#2",
-     "subject": "P2-031",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (2) impact>12 item P2-053 bright Cloudreach route markers: Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright — fixed on main with a GPU before/after pass at the bar.",
@@ -4557,7 +4525,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#2",
      "subject": "P2-053",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (2) impact>12 item P2-068 named NPC post readability: Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or co — fixed on main with a GPU before/after pass at the bar.",
@@ -4567,47 +4538,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#2",
      "subject": "P2-068",
-     "audit_index": 2
-    },
-    {
-     "text": "F40 (2) impact>12 item P2-088 fight team roster contrast: The left team roster fades to pale low-contrast text against terrain during active combat — fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 36, lane tb/x04-tidewake. Contrast varies by battle state; the roster is darker and legible at hit-001_22. Code-blind review. Stormwood team names likewise disappear into dense wet grass during tells. Full Venn run shows TEAM ",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#2",
-     "subject": "P2-088",
-     "audit_index": 2
-    },
-    {
-     "text": "F40 (2) impact>12 item P2-114 catch chance HUD contrast: The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan w — fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 36, lane tb/x04-tidewake. The 4% to 41% values are visible on inspection, while the CAPTURE CHANCE label nearly disappears into the background. Assess on the actual 1920x1080 display before choosing a panel or text treatment. ",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#2",
-     "subject": "P2-114",
-     "audit_index": 2
-    },
-    {
-     "text": "F40 (2) impact>12 item P2-032 map active region: The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab — fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status fixed, impact 27, lane tb/x04-tidewake. Source confirms the displayed realm is disabled, formerly using unavailable-gray styling despite valid selection. Candidate d68213708 gives only the selected disabled button bright text and a teal out",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#2",
-     "subject": "P2-032",
-     "audit_index": 2
-    },
-    {
-     "text": "F40 (2) impact>12 item P2-061 catch result hierarchy: Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individu — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 27, lane tb/x04-meadows. The breakout and success wording is clear but the caught individual and inventory destination are not visually prominent in these stills. Tidewake verdict wording is legible, but its caught banner ove",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#2",
-     "subject": "P2-061",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (2) impact>12 item P2-077 dialogue foreground composition: The foreground player or nearby posts hide much of the named speaker in several conversation frames — fixed on main with a GPU before/after pass at the bar.",
@@ -4617,17 +4551,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#2",
      "subject": "P2-077",
-     "audit_index": 2
-    },
-    {
-     "text": "F40 (2) impact>12 item P2-094 placed wall visual: A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 27, lane tb/x04-meadows. Visual-only production BuildPlacer fixture; one wall and floor placement at an open Meadows stand. No build validation or cost demonstrated. Cloudreach visual-only fixture repeats this presentation. S",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#2",
-     "subject": "P2-094",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (2) impact>12 item P2-106 terrace edge clouds: Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor — fixed on main with a GPU before/after pass at the bar.",
@@ -4637,7 +4564,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#2",
      "subject": "P2-106",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (2) impact>12 item P2-076 dialogue speaker visibility: Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen — fixed on main with a GPU before/after pass at the bar.",
@@ -4647,17 +4577,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#2",
      "subject": "P2-076",
-     "audit_index": 2
-    },
-    {
-     "text": "F40 (2) impact>12 item P2-096 craft action hint contrast: Craft and leave button hints are faint gray on the dark translucent craft panel — fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status fixed, impact 24, lane tb/x04-meadows. Fixed in 54b189254. Enabled crafting UI passed independent code-blind review in Meadows Cloudreach Stormwood at 1920x1080 and four Meadows 1280x720 stress pairs; baseline failed. Current-main import a",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F40#2",
-     "subject": "P2-096",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (2) impact>12 item P2-117 catch chance feedback timing: A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar — fixed on main with a GPU before/after pass at the bar.",
@@ -4667,7 +4590,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#2",
      "subject": "P2-117",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (2) impact>12 item P2-048 Cloudreach map region label: The discovered Cloudreach Gate / Lower Cliffs label is cut after LOWER without a wrap or ellipsis — fixed on main with a GPU before/after pass at the bar.",
@@ -4677,7 +4603,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#2",
      "subject": "P2-048",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (2) impact>12 item P2-049 floating dark strips: Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void — fixed on main with a GPU before/after pass at the bar.",
@@ -4687,7 +4616,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#2",
      "subject": "P2-049",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (2) impact>12 item P2-054 mushroom pickup variants: Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance — fixed on main with a GPU before/after pass at the bar.",
@@ -4697,7 +4629,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#2",
      "subject": "P2-054",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (2) impact>12 item P2-102 High Perches rim mushroom: A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem — fixed on main with a GPU before/after pass at the bar.",
@@ -4707,7 +4642,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#2",
      "subject": "P2-102",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "F40 (2) impact>12 item P2-118 full-party catch choice legibility: The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice ins — fixed on main with a GPU before/after pass at the bar.",
@@ -4717,7 +4655,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#2",
      "subject": "P2-118",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "cloudreach"
+     ]
     },
     {
      "text": "The biome frame matrix (approach, gameplay camera, reverse, detail, day/night, weather, a real fight) passes the new bar on High and Medium.",
@@ -4750,12 +4691,12 @@
    "title": "Stormwood: visual catalog burn-down to the full bar",
    "chapter": "Wave 2 · Creature power, homestead and visuals",
    "lane": "tb/visual-stormwood",
-   "pct": 4,
+   "pct": 8,
    "counts": {
     "met": 2,
     "partial": 0,
-    "in_progress": 7,
-    "not_started": 38,
+    "in_progress": 2,
+    "not_started": 21,
     "blocked": 0,
     "failing": 0
    },
@@ -4769,26 +4710,6 @@
      "audit_index": 0
     },
     {
-     "text": "F41 (1) top-20 item P2-015 creature collapse and rest: Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 100, lane tb/x04-meadows. The direct pose fixture needs confirmation in a real faint/rest transition; explicit hovering is visible in Trailpup and Veridian. Cloudreach resting Cloudfang Solmane and Tempestwing show clear groun",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#1",
-     "subject": "P2-015",
-     "audit_index": 1
-    },
-    {
-     "text": "F41 (1) top-20 item P2-016 creature hurt and movement poses: Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 100, lane tb/x04-meadows. Still frames cannot establish locomotion timing; check production transition captures before scheduling animation work. Tidewake and Stormwood stills confirm the recurring state-read gap; judge motion",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#1",
-     "subject": "P2-016",
-     "audit_index": 1
-    },
-    {
      "text": "F41 (1) top-20 item P2-037 Stormheart finale: The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 100, lane tb/x04-stormwood. Current native baseline confirms the cylindrical silhouette and sparse crown. The default-off visual grounding candidate visibly closes floating wall seams in a fresh blind review of 19 pairs / 38 nat",
@@ -4796,7 +4717,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#1",
      "subject": "P2-037",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (1) top-20 item P2-042 Surge phase presentation: Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain — fixed on main with a GPU before/after pass at the bar.",
@@ -4806,7 +4730,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#1",
      "subject": "P2-042",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (1) top-20 item P2-092 named wild fight actor spacing: Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer — fixed on main with a GPU before/after pass at the bar.",
@@ -4816,47 +4743,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#1",
      "subject": "P2-092",
-     "audit_index": 1
-    },
-    {
-     "text": "F41 (1) top-20 item P2-002 map: The map canvas shows headings and markers without visible terrain or road context for the displayed destinations — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 80, lane tb/x04-meadows. First Shore is marked discovered but the Day 1 state may hide survey detail; both biome maps lack terrain/route context at this state.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#1",
-     "subject": "P2-002",
-     "audit_index": 1
-    },
-    {
-     "text": "F41 (1) top-20 item P2-017 normal creature scale: Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 80, lane tb/x04-meadows. Apparent visual height varies with perspective and posture; compare with declared size and a level camera before adjusting assets. Stormwood near-framed size comparison confirms this in five additiona",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#1",
-     "subject": "P2-017",
-     "audit_index": 1
-    },
-    {
-     "text": "F41 (1) top-20 item P2-030 shiny creature finish: Several shiny variants become near-uniform hot magenta and lose their ordinary species material and pattern identity — fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 80, lane tb/x04-tidewake. Variants are easy to identify; Ripplet and Mosshell retain more form detail. Phase 2c: thirteen source-preserving regional shiny repaints staged at21a8e11de behind phase2_shiny_finish_enabled=false; s",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#1",
-     "subject": "P2-030",
-     "audit_index": 1
-    },
-    {
-     "text": "F41 (1) top-20 item P2-033 ground pickup identity: Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal came — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 80, lane tb/x04-meadows. Code-blind ground-level review across four biomes. Meadows candies/potions are small colored glows; Tidewake repeats a crate family; Cloudreach potion/revive can read as flowers; five progression-gate",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#1",
-     "subject": "P2-033",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (1) top-20 item P2-038 named destination identities: Several named destinations read as similar grass and trees without a distinct subject in the captured close views — fixed on main with a GPU before/after pass at the bar.",
@@ -4866,7 +4756,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#1",
      "subject": "P2-038",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (1) top-20 item P2-039 forest ground and distance layers: Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers — fixed on main with a GPU before/after pass at the bar.",
@@ -4876,7 +4769,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#1",
      "subject": "P2-039",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (1) top-20 item P2-093 named wild danger and opening cues: The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish sign — fixed on main with a GPU before/after pass at the bar.",
@@ -4886,7 +4782,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#1",
      "subject": "P2-093",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (1) top-20 item P2-081 named trainer dialogue identity: Every captured named trainer conversation repeats the same generic line and shows no portrait — fixed on main with a GPU before/after pass at the bar.",
@@ -4896,67 +4795,25 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#1",
      "subject": "P2-081",
-     "audit_index": 1
-    },
-    {
-     "text": "F41 (1) top-20 item P2-113 catch camera distance: Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the or — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status deferred, impact 64, lane tb/x04-tidewake. Code-blind review of complete dry First Shore wild catch sequence. Cannonback, Terrapup and trainer overlap at aim distance; impact circle dominates Cannonback. The catch failure and success states ar",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#1",
-     "subject": "P2-113",
-     "audit_index": 1
-    },
-    {
-     "text": "F41 (1) top-20 item P2-119 Fly carrier grip pose: The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands r — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 64, lane tb/x04-meadows. Code-blind comparison across three production-camera flight sequences. Meadows launch was reshot with a settled camera and clearly repeats the pose. The carrier silhouette is strong, but the body hold",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#1",
-     "subject": "P2-119",
-     "audit_index": 1
-    },
-    {
-     "text": "F41 (1) top-20 item P2-001 menu shell: The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 60, lane tb/x04-meadows. Same full-screen shell in Meadows and Tidewake production UI; assess Cloudreach and Stormwood before final shared exposure.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#1",
-     "subject": "P2-001",
-     "audit_index": 1
-    },
-    {
-     "text": "F41 (1) top-20 item P2-007 secondary menu panels: The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 60, lane tb/x04-meadows. The Day 1 fixture may explain empty panels, but the screen leaves large dead areas. Skills capture still resembles Quests; verify navigation.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#1",
-     "subject": "P2-007",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (1) top-20 item P2-055 named character silhouettes: Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes — fixed on main with a GPU before/after pass at the bar.",
      "status": "in_progress",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 60, lane tb/x04-tidewake. Distinct named roles share world-model and portrait archetypes, corroborated in Tidewake post-win text frames. Recurring same-character appearances excluded. No definite portrait/model mismatch claime",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#1",
      "subject": "P2-055",
-     "audit_index": 1
-    },
-    {
-     "text": "F41 (1) top-20 item P2-063 shared fight tell and hit effects: Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-re — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 60, lane tb/x04-meadows. Meadows and Tidewake code-blind fight review: flat magenta tell ring lacks clear attack path, and Tidewake hit contact barely changes enemy pose. Shared effect family scored once at widest exposure; e",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#1",
-     "subject": "P2-063",
-     "audit_index": 1
+     "audit_index": 1,
+     "biomes": [
+      "meadows",
+      "tidewake",
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (1) top-20 item P2-046 harvest resource identity: Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material — fixed on main with a GPU before/after pass at the bar.",
@@ -4966,27 +4823,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#1",
      "subject": "P2-046",
-     "audit_index": 1
-    },
-    {
-     "text": "F41 (2) impact>12 item P2-060 catch effect finish: The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visib — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 48, lane tb/x04-meadows. Resting and shaking stills have little visible difference; motion and audio need separate review before judging shake timing. Tidewake normal fight repeats the flat yellow orb/magenta ring; rest and s",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#2",
-     "subject": "P2-060",
-     "audit_index": 2
-    },
-    {
-     "text": "F41 (2) impact>12 item P2-069 flight and landing pose read: Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change rea — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status deferred, impact 48, lane tb/x04-cloudreach. Deferred to shared Fly gameplay/Claude owner with Cloudreach animation support: original stills/source audit predate owned-carrier Fly. Main cf0a3b974 now conditionally restores the recalled owned fol",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#2",
-     "subject": "P2-069",
-     "audit_index": 2
+     "audit_index": 1,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (2) impact>12 item P2-070 Glass Sink landmark: The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do n — fixed on main with a GPU before/after pass at the bar.",
@@ -4996,7 +4836,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
      "subject": "P2-070",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (2) impact>12 item P2-082 named character portrait identity: Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations — fixed on main with a GPU before/after pass at the bar.",
@@ -5006,27 +4849,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
      "subject": "P2-082",
-     "audit_index": 2
-    },
-    {
-     "text": "F41 (2) impact>12 item P2-095 craft recipe text: Long recipe names and material preview lines are clipped in the crafting list — fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status fixed, impact 48, lane tb/x04-meadows. Fixed in 54b189254. Enabled crafting UI passed independent code-blind review in Meadows Cloudreach Stormwood at 1920x1080 and four Meadows 1280x720 stress pairs; baseline failed. Current-main import a",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#2",
-     "subject": "P2-095",
-     "audit_index": 2
-    },
-    {
-     "text": "F41 (2) impact>12 item P2-004 exploration HUD: The many dark boxed HUD panels and outlined text occupy a large share of the exploration view — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 45, lane tb/x04-meadows. Tidewake exterior confirms the large team strip quest box quick bar and shortcut bar; Meadows frame is indoors. Cloudreach flight frames show the same panels crowding airborne scenery. Coverage questi",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#2",
-     "subject": "P2-004",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (2) impact>12 item P2-040 charged road surface: Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern — fixed on main with a GPU before/after pass at the bar.",
@@ -5036,27 +4862,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
      "subject": "P2-040",
-     "audit_index": 2
-    },
-    {
-     "text": "F41 (2) impact>12 item P2-018 shiny palette distinction: Some shiny variants have no reliably readable colour-block difference from their normal form at the device view — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. Other species have strong shiny distinctions; assess these pairs at the same lighting and camera.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#2",
-     "subject": "P2-018",
-     "audit_index": 2
-    },
-    {
-     "text": "F41 (2) impact>12 item P2-031 settings and binding instructions: Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-meadows. Shared menu presentation in two biomes; [Minus] and [Equal] labels are visible in map instructions.",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#2",
-     "subject": "P2-031",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (2) impact>12 item P2-044 electric creature finish: Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance — fixed on main with a GPU before/after pass at the bar.",
@@ -5066,17 +4875,24 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
      "subject": "P2-044",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (2) impact>12 item P2-045 candy pickup tiers: Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance — fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
      "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-stormwood. The Tidewake skill candy I and II labels are tiny. Skill candy III was not isolated in its frame and needs a reshoot.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
+     "note": "Counted once (owner 24 Oct board math): touches tidewake, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
      "subject": "P2-045",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "tidewake",
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (2) impact>12 item P2-083 dialogue foreground obstruction: Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames — fixed on main with a GPU before/after pass at the bar.",
@@ -5086,17 +4902,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
      "subject": "P2-083",
-     "audit_index": 2
-    },
-    {
-     "text": "F41 (2) impact>12 item P2-088 fight team roster contrast: The left team roster fades to pale low-contrast text against terrain during active combat — fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 36, lane tb/x04-tidewake. Contrast varies by battle state; the roster is darker and legible at hit-001_22. Code-blind review. Stormwood team names likewise disappear into dense wet grass during tells. Full Venn run shows TEAM ",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#2",
-     "subject": "P2-088",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (2) impact>12 item P2-110 Hollows fight loss result clarity: After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready  — fixed on main with a GPU before/after pass at the bar.",
@@ -5106,17 +4915,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
      "subject": "P2-110",
-     "audit_index": 2
-    },
-    {
-     "text": "F41 (2) impact>12 item P2-032 map active region: The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab — fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status fixed, impact 27, lane tb/x04-tidewake. Source confirms the displayed realm is disabled, formerly using unavailable-gray styling despite valid selection. Candidate d68213708 gives only the selected disabled button bright text and a teal out",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#2",
-     "subject": "P2-032",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (2) impact>12 item P2-041 Crown Arch: The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it — fixed on main with a GPU before/after pass at the bar.",
@@ -5126,27 +4928,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
      "subject": "P2-041",
-     "audit_index": 2
-    },
-    {
-     "text": "F41 (2) impact>12 item P2-061 catch result hierarchy: Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individu — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 27, lane tb/x04-meadows. The breakout and success wording is clear but the caught individual and inventory destination are not visually prominent in these stills. Tidewake verdict wording is legible, but its caught banner ove",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#2",
-     "subject": "P2-061",
-     "audit_index": 2
-    },
-    {
-     "text": "F41 (2) impact>12 item P2-094 placed wall visual: A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top — fixed on main with a GPU before/after pass at the bar.",
-     "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 27, lane tb/x04-meadows. Visual-only production BuildPlacer fixture; one wall and floor placement at an open Meadows stand. No build validation or cost demonstrated. Cloudreach visual-only fixture repeats this presentation. S",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#2",
-     "subject": "P2-094",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (2) impact>12 item P2-056 uniformed character readability: Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distanc — fixed on main with a GPU before/after pass at the bar.",
@@ -5156,17 +4941,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
      "subject": "P2-056",
-     "audit_index": 2
-    },
-    {
-     "text": "F41 (2) impact>12 item P2-096 craft action hint contrast: Craft and leave button hints are faint gray on the dark translucent craft panel — fixed on main with a GPU before/after pass at the bar.",
-     "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status fixed, impact 24, lane tb/x04-meadows. Fixed in 54b189254. Enabled crafting UI passed independent code-blind review in Meadows Cloudreach Stormwood at 1920x1080 and four Meadows 1280x720 stress pairs; baseline failed. Current-main import a",
-     "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
-     "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
-     "parent": "F41#2",
-     "subject": "P2-096",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (2) impact>12 item P2-043 Glass Field spike bases: Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster — fixed on main with a GPU before/after pass at the bar.",
@@ -5176,7 +4954,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
      "subject": "P2-043",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (2) impact>12 item P2-084 named character dialogue reuse: Distinct named Stormwood characters use identical dialogue lines — fixed on main with a GPU before/after pass at the bar.",
@@ -5186,7 +4967,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
      "subject": "P2-084",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "F41 (2) impact>12 item P2-111 Hollows victory reward tiles: The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mista — fixed on main with a GPU before/after pass at the bar.",
@@ -5196,7 +4980,10 @@
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
      "subject": "P2-111",
-     "audit_index": 2
+     "audit_index": 2,
+     "biomes": [
+      "stormwood"
+     ]
     },
     {
      "text": "The biome frame matrix (approach, gameplay camera, reverse, detail, day/night, weather, a real fight) passes the new bar on High and Medium.",

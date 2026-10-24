@@ -47,6 +47,10 @@ rows = {r["id"]: r for r in crit["rows"]}
 all_c = [x for r in crit["rows"] for x in r.get("criteria", [])]
 counts = {k: sum(1 for x in all_c if norm(x.get("status")) == k) for k in ORDER}
 overall = round(sum(pct(r) for r in crit["rows"]) / max(1, len(crit["rows"])))
+_open_by = {"F36": 0, "look": 0, "other": 0}
+for _r in crit["rows"]:
+    _o = sum(1 for x in _r.get("criteria", []) if norm(x.get("status")) != "met")
+    _open_by["F36" if _r["id"] == "F36" else "look" if _r["id"] in ("F38", "F39", "F40", "F41") else "other"] += _o
 # Owner 2026-10-07: a criterion counts once evidenced on a lane branch; show how many are not yet on main.
 evidenced_only = sum(1 for x in all_c if norm(x.get("status")) == "met" and str(x.get("note", "")).startswith("Landed: Evidenced"))
 redesign_c = [x for r in crit["rows"] if r["id"] not in _ORIG for x in r.get("criteria", [])]
@@ -422,6 +426,16 @@ plan_html = render_gantt(HERE / "plan.json", "Delivery plan", "plan-h",
 # ---- visual catalog tab (owner 12 Oct) ----------------------------------------
 _VPILL = {"done": "met", "parked": "failing", "open": "not_started"}
 _VLABEL = {"done": "Done", "parked": "Parked", "open": "Open"}
+# Task status follows the Acceptance tab's per-item rows (owner 24 Oct: one source,
+# GPU-judged), so the two tabs cannot disagree; the catalog file keeps the defect text.
+_vboard = {x["subject"]: norm(x.get("status")) for r_ in crit["rows"] if r_["id"] in ("F38", "F39", "F40", "F41")
+           for x in r_.get("criteria", []) if x.get("parent")}
+for _b in vcat["biomes"]:
+    for _t in _b["tasks"]:
+        if _t["id"] in _vboard:
+            _s = _vboard[_t["id"]]
+            _t["status"] = "done" if _s == "met" else "parked" if _s in ("failing", "blocked") else "open"
+            _t["note"] = "Board: " + _s.replace("_", " ")
 _vu = {}
 for _b in vcat["biomes"]:
     for _t in _b["tasks"]:
@@ -486,8 +500,8 @@ _vlegend = "".join(f'<span class="leg">{_vpill(k)} {sum(1 for v_ in _vu.values()
 visual_html = (
     '<div class="kpis">'
     f'<div class="kpi"><b>{_vdone} / {len(_vu)}</b><span>Catalog tasks done (each row once across biomes)</span></div>'
-    f'<div class="kpi"><b>{sum(1 for v_ in _vcodex.values() if v_ == "done")} / {len(_vcodex)}</b><span>Codex tasks done (scene, mesh, material, lighting, camera)</span></div>'
-    f'<div class="kpi"><b>{sum(1 for v_ in _vclaude.values() if v_ == "done")} / {len(_vclaude)}</b><span>Claude tasks done (UI and creature-pose rows)</span></div>'
+    f'<div class="kpi"><b>{sum(1 for v_ in _vcodex.values() if v_ == "done")} / {len(_vcodex)}</b><span>Scene, mesh, material, lighting and camera tasks done</span></div>'
+    f'<div class="kpi"><b>{sum(1 for v_ in _vclaude.values() if v_ == "done")} / {len(_vclaude)}</b><span>UI and creature-pose tasks done</span></div>'
     f'<div class="kpi"><b>{_vk["crit_met"]} / {_vk["crit"]}</b><span>F38–F41 criteria met</span></div>'
     f'<div class="kpi"><b>{_vparked}</b><span>Tasks parked (need a fresh approach)</span></div>'
     '</div>'
@@ -495,7 +509,7 @@ visual_html = (
     '<section class="panel"><h2>About this tab</h2><p class="note">Each biome pass is its own feature: its top-20 catalog rows, then every other row over impact 12, '
     'each fixed to the full bar with a before/after code-blind PASS on main, then a full matrix and defect scan. Codex owns scene, mesh, material, lighting and camera rows; '
     'UI rows go to Claude (F42) and creature-pose rows to Claude (F36#1). Planned last, after the main delivery plan; the plan is at the bottom of this tab. '
-    f'Source: ralph/reports/VISUAL/phase2/catalog.csv with the latest judge verdicts ({E(vcat.get("generated_at", ""))}).</p></section>'
+    f'Defects from ralph/reports/VISUAL/phase2/catalog.csv; status from the board (GPU-judged, owner 24 Oct), so this tab and Acceptance agree.</p></section>'
     + "".join(_vsections) + vplan_html)
 
 # A complete document (owner report, 2026-09-30): the board is also served raw by
@@ -627,7 +641,7 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
   <div class="pane pane-acc">
   <div class="kpis">
     <div class="kpi"><b>{accepted} / {len(crit["rows"])}</b><span>F rows accepted (every criterion met)</span></div>
-    <div class="kpi"><b>{overall}%</b><span>Criteria met, averaged across features (met criteria only)</span></div>
+    <div class="kpi"><b>{len(all_c) - counts["met"]}</b><span>Criteria not done: {_open_by["F36"]} creatures (F36), {_open_by["look"]} biome looks (F38–F41), {_open_by["other"]} everything else</span></div>
     <div class="kpi"><b>{counts["met"]} / {len(all_c)}</b><span>Criteria met: {counts["met"] - evidenced_only} on main, {evidenced_only} evidenced on lane branches</span></div>
     <div class="kpi"><b>{redesign_met} / {len(redesign_c)}</b><span>Redesign criteria met (F16 onward)</span></div>
     <div class="kpi"><b>{counts["failing"] + counts["blocked"]}</b><span>Criteria failing or blocked</span></div>
