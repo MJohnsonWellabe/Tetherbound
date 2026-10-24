@@ -1,4 +1,4 @@
-# r5 (25 Oct 2026, CPU): F36#1 whole-roster pose verdict, batch 5 of 7 (land head, shipping state)
+# r5 (24 Oct 2026, CPU): F36#1 whole-roster pose verdict, batch 5 of 7 (land head, shipping state)
 
 Same method as r4. Anchors include the Stormwood fight pair and the craft pair; confirming. Fit linear slope 1.324, intercept -1.710, RMSE 0.55. Warning: Tanglevolt meets the bar only above the top anchor (7.53); this is the confirming batch.
 

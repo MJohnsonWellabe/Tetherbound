@@ -1,4 +1,4 @@
-# r6 (25 Oct 2026, CPU): F36#1 whole-roster pose verdict, batch 6 of 7 (land head, shipping state)
+# r6 (24 Oct 2026, CPU): F36#1 whole-roster pose verdict, batch 6 of 7 (land head, shipping state)
 
 Same method as r4/r5: shipping-state tiles with identical A/B sides, JUDGE_PROMPT.md verbatim, three fresh code-blind judges, and anchors Grandpa face (f36_0_npc:C1), craft and the Stormwood fight pair. This is a confirming batch. Fit: linear, slope 1.051, intercept 0.200, RMSE 0.70, no warnings.
 
