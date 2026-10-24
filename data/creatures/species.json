@@ -734,7 +734,9 @@
         "radius": 1.042857,
         "_comment_footprint": "Broad low shell body, wider relative to its height than a quadruped -- more footprint than Burrowback's already-broad digging stance, similar register to a tortoise rather than a mammal.",
         "footprint_allowance": 5.8,
-        "model": "res://assets/creatures/tetherbound/mosshell/models/creature_mosshell_lod0.glb",
+        "_comment_model_nat1024": "F36#0 owner style direction 22 Oct: naturalistic remake (coordinator Meshy, candidate_nat1024; measured quadruped rig, own clips: level swim, -60 side-tip faint; provenance candidate_nat1024/source/meshy_provenance.jsonl, drafted concept reference/nat1024-concept.png). Close-1024 b7: mapped 7.31 vs live 5.65; water form 7.19 vs 5.86 (CPU three-judge yardstick, confirming batch; CPU-provisional).",
+        "model": "res://assets/creatures/tetherbound/mosshell/candidate_nat1024/models/creature_mosshell_nat1024.glb",
+        "colourway_source_species": "mosshell_nat1024",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate b). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md; R0.4's report also flags a topology check (a thin protrusion near the hindquarters that might read as an errant tail/spike) that could not be visually confirmed or ruled out here -- this container has no libEGL, so no turntable render could be produced, and inspect_glb.py's structural report shows only the usual post-retexture non-manifold/duplicate-vertex noise that rigging (0 unweighted vertices) already tolerated fine. Flagged for whoever next looks at a rendered frame of this creature. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
@@ -743,8 +745,13 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
         }
       },
       "learnset": "mosshell",
