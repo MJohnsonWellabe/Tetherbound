@@ -1124,6 +1124,30 @@ func _select_piece(id: String) -> bool:
 	return false
 
 
+const CLEAR_STEP_M := 3.5
+
+
+## The nearest heading to `wanted` whose straight step is free of colliders at
+## knee and chest height. A step aimed through a station sent the navigator
+## round it and in at the farmhouse door (training_t4_kitchen, 24 Oct: from
+## beside the Forge, every later step started inside Grandpa's house).
+func _open_heading(wanted: Vector3, length: float) -> Vector3:
+	var space := _player.get_world_3d().direct_space_state
+	for turn in 12:
+		var heading := wanted.rotated(Vector3.UP, deg_to_rad(30.0 * float((turn + 1) / 2) * (1.0 if turn % 2 == 0 else -1.0)))
+		var clear := true
+		for height: float in [0.5, 1.2]:
+			var from := _player.global_position + Vector3.UP * height
+			var query := PhysicsRayQueryParameters3D.create(from, from + heading * (length + 0.5))
+			query.exclude = [_player.get_rid()]
+			if not space.intersect_ray(query).is_empty():
+				clear = false
+				break
+		if clear:
+			return heading
+	return wanted
+
+
 ## Walk until nothing actionable is drawing the interact line.
 func _clear_of_every_offer() -> bool:
 	if _arbiter == null:
@@ -1179,8 +1203,8 @@ func _clear_of_every_offer() -> bool:
 			away = -_forward()
 		# Fan out: straight away first, then progressively wider either side.
 		var lean := deg_to_rad(35.0 * float((attempt + 1) / 2) * (1.0 if attempt % 2 == 0 else -1.0))
-		var heading := away.normalized().rotated(Vector3.UP, lean)
-		var step := _player.global_position + heading * 3.5
+		var heading := _open_heading(away.normalized().rotated(Vector3.UP, lean), CLEAR_STEP_M)
+		var step := _player.global_position + heading * CLEAR_STEP_M
 		await _walk_to(step, "clear of the '%s' prompt" % str(offer.get("label", "")), 0.8, false)
 	_fail("could not get clear of the interact line; Build cannot be opened from here. "
 		+ "winner=%s provider=%s" % [str(_arbiter.call("winner")),

@@ -24,3 +24,19 @@ func test_retained_five_is_checked_before_any_challenger_is_returned() -> void:
 	party = _party()
 	party.pop_back()
 	assert_true(ADAPTER.select_challenger(party, 10, "").is_empty())
+
+## Mira stands on the Ironwood ridge past the Old Mill Crossing. From home the
+## route crosses the South Bridge, then follows the north spine through the
+## mill crossing; from beside her it is one short leg to a stand 4 m away.
+func test_mira_route_follows_the_north_spine_through_the_mill_crossing() -> void:
+	var terrain: Variant = JSON.parse_string(FileAccess.get_file_as_string(ADAPTER.TERRAIN))
+	var mira := Vector2(-405.0, 5050.0)
+	var legs: Array[Vector2] = ADAPTER.mira_legs(Vector2(-22.7, 22.7), mira, terrain)
+	assert_eq(legs[0], ADAPTER.FAR_BANK, "home first crosses the South Bridge")
+	assert_true(legs.has(Vector2(-152.0, 4170.0)) and legs.has(Vector2(-152.0, 4235.0)), "crosses on the Old Mill Crossing")
+	assert_true(absf(legs[-1].distance_to(mira) - 4.0) < 0.01, "ends on a stand 4 m short of Mira")
+	for index in range(1, legs.size()):
+		assert_true(legs[index].y >= legs[index - 1].y - 260.0, "never doubles back south along the spine")
+	var near: Array[Vector2] = ADAPTER.mira_legs(Vector2(-330.0, 5030.0), mira, terrain)
+	assert_eq(near.size(), 1, "the boundary beside her walks one leg")
+	assert_true(absf(near[0].distance_to(mira) - 4.0) < 0.01)

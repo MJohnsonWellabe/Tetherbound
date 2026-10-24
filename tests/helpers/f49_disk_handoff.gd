@@ -21,17 +21,25 @@ const MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows", "meadows", 
 ## hashes; only the common opening/camp/bridge may precede this new profile.
 const TRAINING_PROFILE := "meadows_training_v1"
 const TRAINING_SHARED_PREFIX := ["opening_village", "opening_team", "camp_tournament", "bridge"]
+## Masters follow their chapter_guidance gates (masters.json): Orin before the
+## Warrens, Mira past the Old Mill Crossing (mill_crossing_restored, opened by
+## the Relay rescue) and before the Sigil gate. Each loop ends with a return
+## walk: t1 to the South Bridge far bank (the Warrens start), t2 to the Old
+## Mill Crossing (the Sigils spine start).
 const TRAINED_MEADOWS_PIECES := ["opening_village", "opening_team", "camp_tournament", "bridge",
 	"training_t1_earn", "training_t1_altar_1", "training_t1_altar_2", "training_t1_altar_3", "training_t1_altar_4", "training_t1_altar_5",
-	"training_t1_master", "training_t1_kitchen", "training_t1_feed",
+	"training_t1_master", "training_t1_kitchen", "training_t1_feed", "training_t1_return",
+	"warrens", "relay",
 	"training_t2_earn", "training_t2_altar_1", "training_t2_altar_2", "training_t2_altar_3", "training_t2_altar_4", "training_t2_altar_5",
 	"training_t2_master", "training_t2_kitchen", "training_t2_feed", "training_t2_return",
-	"warrens", "relay", "sigils", "hall", "warden", "tidewake_handoff"]
+	"sigils", "hall", "warden", "tidewake_handoff"]
 const TRAINED_MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows",
+	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows",
+	"meadows", "meadows", "meadows", "meadows",
 	"meadows", "meadows",
-	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows",
-	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows",
-	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "water"]
+	"meadows", "meadows", "meadows", "meadows", "meadows", "meadows",
+	"meadows", "meadows", "meadows", "meadows",
+	"meadows", "meadows", "meadows", "water"]
 const MEADOWS_SLOT := 0
 var profile := ""
 var tree: SceneTree
