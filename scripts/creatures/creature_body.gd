@@ -1325,6 +1325,9 @@ func _night_floor_material(source: BaseMaterial3D) -> BaseMaterial3D:
 		return source
 	var key := "%s|%s" % [species_id, source.resource_name]
 	if _night_floor_materials.has(key):
+		# Each body's rim copy is its own, so the shared floor is reached from
+		# every live one, not only from the body that first made it.
+		_track_field_bright_copy(source, _night_floor_materials[key])
 		return _night_floor_materials[key]
 	var floored := source.duplicate() as BaseMaterial3D
 	floored.resource_name = "%s%s" % [floored.resource_name, suffix]
@@ -1334,6 +1337,7 @@ func _night_floor_material(source: BaseMaterial3D) -> BaseMaterial3D:
 	floored.emission = Color(1.0, 1.0, 1.0, 1.0)
 	floored.emission_energy_multiplier = _night_floor_scale
 	preload("res://scripts/creatures/creature_surface_finish.gd").sync_lighting(floored)
+	_track_field_bright_copy(source, floored)
 	_night_floor_materials[key] = floored
 	return floored
 
@@ -1373,6 +1377,12 @@ static var _field_scale := 1.0
 ## uses, for the same reason: many instances of one species must not each own a
 ## private duplicate this static setter would otherwise have to hunt down.
 static var _field_bright_info: Dictionary = {}
+## Copies later passes made of a brightened material (the per-body
+## `field_rim`/tier rim duplicate, then its night floor), keyed by the source's
+## instance id, weakly held. Close-1024: Galecrest, Tanglevolt and Voltarach
+## ship `field_rim`, so their live surface was `_field_bright_field_rim_night_floor`,
+## a frozen copy the night rescale never reached (day = night albedo).
+static var _field_bright_derived: Dictionary = {}
 const FIELD_DEGREEN_GAP := 0.35
 
 ## OP-0905-03 (docs/owner/OWNER_PLAYTEST_2026-09-05.md, "Bramblebun colour is
@@ -1480,6 +1490,40 @@ static func _apply_field_bright_values(info: Dictionary) -> void:
 	if _night_floor_materials.has(floored_key):
 		(_night_floor_materials[floored_key] as BaseMaterial3D).albedo_color = new_albedo
 		preload("res://scripts/creatures/creature_surface_finish.gd").sync_lighting(_night_floor_materials[floored_key] as BaseMaterial3D)
+	_sync_field_bright_derived(material, new_albedo, material.emission_energy_multiplier)
+
+
+## A rim copy is the brightened material plus rim fields, so it takes the same
+## albedo and emission; a night floor owns its emission (the night scale) and
+## takes the albedo only.
+static func _sync_field_bright_derived(source: BaseMaterial3D, albedo: Color, emission_mult: float) -> void:
+	for ref: WeakRef in _field_bright_derived.get(source.get_instance_id(), []):
+		var copy := ref.get_ref() as BaseMaterial3D
+		if copy == null:
+			continue
+		copy.albedo_color = albedo
+		if copy.emission_enabled and not copy.resource_name.ends_with("_night_floor"):
+			copy.emission_energy_multiplier = emission_mult
+		preload("res://scripts/creatures/creature_surface_finish.gd").sync_lighting(copy)
+
+
+## Record `copy` under the brightened material it descends from (directly, or
+## through a rim copy), so the night rescale reaches it. Registered under that
+## root, which `_field_bright_info` holds: the in-between rim copy is freed once
+## its night floor replaces it on the mesh.
+static var _field_bright_root: Dictionary = {}
+
+
+static func _track_field_bright_copy(source: BaseMaterial3D, copy: BaseMaterial3D) -> void:
+	var root: int = int(_field_bright_root.get(source.get_instance_id(), 0))
+	if root == 0:
+		if not source.resource_name.ends_with("_field_bright"):
+			return
+		root = source.get_instance_id()
+	if not _field_bright_derived.has(root):
+		_field_bright_derived[root] = []
+	(_field_bright_derived[root] as Array).append(weakref(copy))
+	_field_bright_root[copy.get_instance_id()] = root
 
 
 func _field_bright_material(source: BaseMaterial3D, strength: float, degreen: float) -> BaseMaterial3D:
@@ -1596,8 +1640,10 @@ func _rim_light_node(node: Node, strength: float, tag: String) -> void:
 			var material := source as BaseMaterial3D
 			var suffix := "_%s_rim" % tag
 			if not material.resource_name.ends_with(suffix):
+				var rim_source := material
 				material = material.duplicate() as BaseMaterial3D
 				material.resource_name = "%s%s" % [material.resource_name, suffix]
+				_track_field_bright_copy(rim_source, material)
 				instance.set_surface_override_material(surface, material)
 			material.rim_enabled = true
 			material.rim = strength
