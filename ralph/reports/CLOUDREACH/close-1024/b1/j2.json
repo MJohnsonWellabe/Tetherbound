@@ -1,0 +1,37 @@
+{
+ "bar_a": {
+  "Gf": {
+   "A": 4.5,
+   "B": 5.3
+  },
+  "Bv": {
+   "A": 4.7,
+   "B": 4.2
+  },
+  "Vs": {
+   "A": 4.9,
+   "B": 4.1
+  },
+  "Ps": {
+   "A": 5.8,
+   "B": 6.1
+  },
+  "Rb": {
+   "A": 6.3,
+   "B": 4.7
+  },
+  "Lr": {
+   "A": 5.4,
+   "B": 4.6
+  },
+  "Zm": {
+   "A": 5.0,
+   "B": 5.3
+  },
+  "Ua": {
+   "A": 4.5,
+   "B": 4.6
+  }
+ },
+ "note": "Bar A per side as returned by the judge; defect states and prose in VERDICT.md"
+}
