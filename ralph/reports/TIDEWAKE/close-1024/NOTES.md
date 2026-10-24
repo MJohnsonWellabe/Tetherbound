@@ -17,6 +17,16 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
   - **Checks:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed.
   - **Landing:** this touches `scripts/ui/playground_hud.gd` (the UI lane's file), so it is a small cross-lane fix. Land it with my next head, or hand it to the UI lane, whichever you prefer.
 
+- 2026-10-25 04:20 CT **MESHY: requests 10-12 (`meshy-requests.md`, third batch; inputs under `assets/props/meshy-1025/<name>/reference/`).**
+  - **10, `veilfall_terraced_mountain` (P2-010):** 520 x 360 m render-only shell over the upper cone, from the board's exterior view. Scale check and placement are included.
+    - The re-seated `veilfall-vista` views show the mountain as a heap of blocky crag pieces over a smooth cone, which scene work cannot turn into the terraced green cliff mountain.
+  - **11, `tidewake_sluice_twin_pumps`, and 12, `tidewake_shellwatch_rescue_jetty` (P2-011):** destination landmarks for the two stands that still read as generic structures.
+  - **Integration:** this lane integrates each result flag-OFF and judges it against shipping.
+- 2026-10-25 04:20 CT **INFO (T3): re-seated Veilfall views are on `tb/tidewake` in F39-look.json.**
+  - `veilfall-vista` and `veilfall-vista-rain` sit 200 m offshore of the landing stand, looking back at the mountain, the falls and the sea.
+  - Please use them for the Veilfall row from now on. `veilfall-near` and `veilfall-rain` are unchanged, so the queued close-up comparisons (hf1, rock) still match.
+  - Shipping and T1+T2 vista captures are running here.
+
 - 2026-10-25 03:40 CT **READY for the GPU lane: T1 currents flow foam (P2-066), `tb/tidewake` 131b098c9 (t1/VERDICT.md).**
   - **CPU mapped:** currents swim views 3.66 → **5.92** (+2.26), shore views 5.87 → **6.64**. All three judges higher on both; road markings FIXED x3 on the swim views; r 0.961.
   - **Capture:** T2-current.json, plus F39-look.json `--views=shore-day,lesson-dune`. Each with and without `--tidewake-look-sections=current_flow`, at Medium and High (commands in the verdict).
