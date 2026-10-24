@@ -19,10 +19,16 @@ func build(water_world: Node3D) -> void:
 	var landmarks := {}
 	for raw: Variant in (water_world.get("config") as Dictionary).get("landmarks", []):
 		landmarks[str((raw as Dictionary).get("id", ""))] = raw
-	for raw: Variant in look.get("landmark_models", []):
+	# `landmark_props_candidate` (judged above main, ON in play) adds props
+	# by absolute `position_xz_m` as well as by landmark offset.
+	var specs: Array = (look.get("landmark_models", []) as Array) + (look.get("landmark_props_candidate", []) as Array)
+	for raw: Variant in specs:
 		var spec := raw as Dictionary
 		var landmark: Dictionary = landmarks.get(str(spec.get("landmark_id", "")), {})
 		var at_raw: Array = landmark.get("position", [])
+		if spec.has("position_xz_m"):
+			var placed: Array = spec.position_xz_m
+			at_raw = [float(placed[0]), 0.0, float(placed[1])]
 		if at_raw.size() < 3:
 			push_warning("landmark model has no authored landmark: %s" % spec.get("landmark_id", ""))
 			continue
@@ -39,7 +45,7 @@ func build(water_world: Node3D) -> void:
 			continue
 		var factor := float(spec.get("height_m", 5.0)) / bounds.size.y
 		var holder := Node3D.new()
-		holder.name = "Landmark_%s" % str(spec.landmark_id)
+		holder.name = "Landmark_%s" % str(spec.get("landmark_id", "prop"))
 		model.scale = Vector3.ONE * factor
 		model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
 		holder.add_child(model)
@@ -52,7 +58,7 @@ func build(water_world: Node3D) -> void:
 		if box.size() == 3:
 			var body := StaticBody3D.new()
 			var shape := CollisionShape3D.new()
-			var size := Vector3(half.x * 2.0 * float(box[0]), float(spec.height_m) * float(box[1]),
+			var size := Vector3(half.x * 2.0 * float(box[0]), float(spec.get("height_m", 5.0)) * float(box[1]),
 				half.y * 2.0 * float(box[2]))
 			shape.shape = BoxShape3D.new()
 			(shape.shape as BoxShape3D).size = size

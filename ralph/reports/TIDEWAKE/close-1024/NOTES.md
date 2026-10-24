@@ -4,7 +4,56 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 13:05 CT **INFO / BLOCKED (not this lane's): `smoke_net_water_alpha` is red on unchanged origin/main 45865499d in this container.**
+  - Run: `tools/net/run_net_smoke.sh water_alpha` on two real peers.
+  - The failing check is s15, "Client's engagement is authorized by remote host", with detail "No host-authorized local fight". Every other step passes.
+  - The land head beeea5516 fails identically, so this lane's diff does not cause it. It may be the CPU container's timing, or something from the fights landing (#724); I have not root-caused it.
+  - Logs are local (`/tmp/claude-0/sp/net_alpha*.log`).
+  - **Please check it on CI.** The brief asks this lane to keep the smoke green, and I can't from here.
+- 2026-10-24 13:05 CT INFO: your answers are applied on `tb/tidewake` 46d30d74d.
+  - **Deep Watch:** it ships alone through a new `shipped_sites` switch on the shore-ecology candidate. The parent stays OFF, and a focused test covers both halves.
+  - **Limestone:** the views it changes outside vf1 are being captured now: the seven F39-look shore and lesson views, plus the Venn fight where the judges saw the "black slab". They will be judged before it goes ON.
+  - **Pebbles:** `stones_candidate` (grouped pebbles plus a tide band, OFF) is staged for the next round.
+
+- 2026-10-24 12:45 CT **READY / INFO: 12:12 work order, all three steps done.** The land branch is `tb/tidewake-land` (SHA in the next line).
+  1. **Meshy props (p1/VERDICT.md).**
+     - What shipped: driftwood, a deck-work cluster and a 6.5 m hauled-up sloop on the First Shore and lesson beaches, plus driftwood at Deep Watch.
+     - Score: mapped **5.59 against main 5.02** on the six F39-look views. All three judges scored it higher, and empty foreground moved from PRESENT to PARTIAL.
+     - Decision: by your beats-main rule, `landmark_props_candidate` ships **ON**. It is presentation only with no colliders, so routes and encounters are unchanged.
+     - The dock sections stay OFF (dk1 judged them level).
+     - All six GLBs are already on main, so nothing has to be excluded from the land branch.
+     - No F39 row closes: 5.59 is below 6.7.
+  2. **P2-008 (p2/VERDICT.md).**
+     - Fix: the Deep Watch clusters were behind the camera. They now sit 4-14 m out from the stand.
+     - Score: mapped **6.02 against main 5.72**. All three judges scored it higher. **Not met.**
+     - The candidate **stays OFF**: its parent flag would also turn on six other islands' clusters that nobody has judged.
+     - **QUESTION:** do you want a per-site switch so Deep Watch alone ships ON by the beats-main rule?
+     - What the judges still want: rock outcrops or a headland at the waterline (new-art scale), and the even `stone_field` pebble scatter fixed.
+  3. **F39#4, said plainly: the Veilfall close-up cannot reach 6.7 in-scene.**
+     - Shipping maps to **3.35** (vf1/). The best in-scene change, the limestone material, maps to **4.20**.
+     - Four earlier OFF massing candidates from prior lanes did not get there either.
+     - Every judge since mx1 names the same causes: low-poly faceted cliff slabs, the near-black kitbash crown, and a stand at the cliff foot where the falls read as a blown white smear.
+     - Two of those are new art: **MESHY requests 7-8** (`meshy-requests.md`, references and scale checks under `assets/props/meshy-1025/`).
+     - **Please reopen F39#4.** I'll integrate 7-8 when they arrive.
+     - The limestone material also beats shipping (+0.85) but stays OFF under the "OFF until passing" rule. **QUESTION:** apply beats-main to it as well?
+  - **Next:** I'll rerun F39#5/#3 now that `tb/fights` has landed (#724). Then I'll work the shared top asks: the pebble scatter clustering (scene) and the horizon haze band (scene).
+
 (send_message refused: elevated_session_untrusted_device. Newest first.)
+
+- 2026-10-24 06:45 CT INFO: thanks for landing #718. `tb/tidewake` has origin/main 7480d1a27 merged in (Creatures #717), and both review nits are fixed in ae5db2d29 (comments only, 7 look tests 0 failed): `tidewake_world_look.gd` no longer calls the regrade OFF, and the config's top-level `_comment` now describes the shipped state. These ride the next landing; nothing else is pending on the lane branch beyond notes and the Meshy 1025 reference inputs.
+
+- 2026-10-24 06:00 CT INFO: **P2-008 (shore landforms, impact 100), first of the 12 Tidewake-scene items.** No judge round was run, because the existing candidate cannot move its own camera:
+  - **The candidate places nothing in view.** `water_dune_cover.json` `shore_ecology_candidate` (via `--tidewake-shore-candidate`) does place 108 instances, two small clusters at Deep Watch among them. Those clusters sit in a sector at bearing -132.8 degrees, behind `P2-008-shore.json`'s camera (yaw 24.6). The control and candidate frames are identical, with identical per-island counts.
+  - **The grass is not what reads as even.** The shipping dune profile already clumps it with real clearings (`clump_scale` 0.065, `clump_contrast` 1.0, `clump_patch_start/full` 0.47/0.64).
+  - **The even scatter every judge names is the pebble field.** `grass_field.gd` hands the stones the same noise (stones fall back to the grass `clump_*` keys), but `stone_field.gdshader` only does `mix(1.0, noise, contrast)`, with no clearing threshold. So pebble density never reaches zero, and the beach reads as one even sprinkle.
+  - **Smallest real fix:** add the grass shader's `clump_patch_start/full` smoothstep to `stone_field.gdshader`. That is a shared shader used by every biome, so it needs an OFF uniform default and a Meadows no-change check. Then judge P2-008 on a camera that faces the shore it changes.
+  - **Next in this lane's 12:** P2-115 camp bed (ON since close-1022, never judged on today's yardstick) and P2-057 grass around named characters (candidate OFF). Both are bounded captures with existing candidates.
+
+- 2026-10-24 05:40 CT **READY: `tb/tidewake-land` = 2a111298a** (contains origin/main 816dfa60f; merged after PR #716 landed, no file overlap). This is the land branch with the 7.07 time-of-day grade ON; everything else in it is OFF, a capture fix or evidence. Checks on that tree: 578 water/tidewake/veilfall/dock/drift/clock/weather/world-look/texture tests 0 failed, smoke_net_water_alpha ALL CHECKS PASSED, and after the merge `tidewake_look/water_surface/water_offshore/veilfall` re-ran with 20 tests, 0 failed. Commits on `tb/tidewake` after 2a111298a are notes and Meshy reference inputs only; they do not need to land.
+- 2026-10-24 05:40 CT **MESHY (Veilfall hero, the real fix for F39#5's placeholder rock):** inputs are on `tb/tidewake` under `assets/props/meshy-1025/<name>/reference/` (each with `.gdignore`):
+  - **(7) veilfall_cascade_tier**, 18 m wide x 10 m deep x 12 m tall (6.7x the 1.80 m trainer, see `scale_check.png`). Refs: `board_exterior_crop.png`, `board_falls_entrance_crop.png`, `board_palette_crop.png`, cropped from `docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png`. Full prompt in `prompt.txt`: pale stratified limestone tier with a pour notch, a wet pour line, mossy ledges and a turquoise catch basin; stackable flat base and top; no red.
+  - **(8) veilfall_plunge_rocks**, 9 x 7 x 3 m. Refs: `board_approach_crop.png`, `board_palette_crop.png`. Prompt: water-worn pale limestone boulders around a shallow turquoise plunge basin.
+  - Both land flag-OFF and get judged against vf1 (limestone 4.20, shipping 3.35). Acknowledged: the limestone material stays OFF meanwhile; telegraphs are left to tb/fights, and F39#5/F39#3 rerun once it lands.
 
 - 2026-10-24 05:15 CT **READY: `tb/tidewake-land` (head named in the commit after this note).** It is origin/main plus lane work only. Everything since the 02:45 READY is OFF, a capture fix, or evidence:
   - **Meshy 1024 batch wired in OFF** (all judged: docks level, currents level).

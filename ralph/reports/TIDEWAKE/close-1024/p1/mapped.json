@@ -1,0 +1,94 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9353,
+  "least_squares_slope": 1.4344,
+  "method": "linear",
+  "slope": 1.4344,
+  "intercept": -2.4908,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.479,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C7B": {
+   "measured": 6.7,
+   "reference": 6.3,
+   "mapped": 7.119,
+   "residual": -0.819
+  },
+  "f36_0_gap:C7A": {
+   "measured": 6.033,
+   "reference": 7.03,
+   "mapped": 6.163,
+   "residual": 0.867
+  },
+  "craft:after": {
+   "measured": 6.633,
+   "reference": 7.35,
+   "mapped": 7.024,
+   "residual": 0.326
+  },
+  "craft:before": {
+   "measured": 5.067,
+   "reference": 4.83,
+   "mapped": 4.777,
+   "residual": 0.053
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.1,
+   "reference": 7.47,
+   "mapped": 7.693,
+   "residual": -0.223
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.033,
+   "reference": 7.53,
+   "mapped": 7.598,
+   "residual": -0.068
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 6.233,
+   "reference": 6.73,
+   "mapped": 6.45,
+   "residual": 0.28
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.467,
+   "reference": 3.5,
+   "mapped": 3.916,
+   "residual": -0.416
+  }
+ },
+ "candidates": {
+  "F39 look: Meshy props candidate": {
+   "measured_mean": 5.633,
+   "mapped_mean": 5.59,
+   "mapped_judges": [
+    5.54,
+    5.83,
+    5.4
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F39 look: main (shipping)": {
+   "measured_mean": 5.233,
+   "mapped_mean": 5.02,
+   "mapped_judges": [
+    5.11,
+    5.11,
+    4.82
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
