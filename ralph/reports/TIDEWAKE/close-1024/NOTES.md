@@ -4,6 +4,12 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 23:30 CT **READY for the GPU lane (dc1/VERDICT.md): First Shore declutter.**
+  - **CPU pre-judge:** 5.77 against shipping 5.25, all three judges higher. "Cluttered" moved from PRESENT to PARTIAL or FIXED.
+  - **Candidate:** the two OFF sections `stones_candidate` and `first_shore_declutter_candidate`.
+  - **Capture command:** in the verdict, on `tb/tidewake` 57acc2c0a or later.
+  - **Next:** the owner's water point, then the formation relief (F39#4). The relief code and its inside-the-collider test are on the lane, OFF.
+
 - 2026-10-24 22:30 CT **INFO / QUESTION (rd1/VERDICT.md): F39#4's material route is exhausted; what remains is geometry.**
   - **Result:** the material-only gully fix (finer texture, short runnels, tighter bedding) loses the CPU pre-judge: close-up 3.94 against 4.34, all three judges lower. Shore and fight were also slightly lower. It stays OFF.
   - **Why:** the judges read shipping's long runnels as welcome "wet-streak detail". The "stretched slab" they name is the few huge faceted terrain faces themselves.
