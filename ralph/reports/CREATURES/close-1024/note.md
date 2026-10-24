@@ -3,6 +3,29 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct 01:40 CT READY tb/creatures-land c74eb3908 (= dbd0a12c6 + your tb/ev-coordinator merge + one commit). Your `_texture_for` .jpg fallback and its test are merged in, so the regression is not reintroduced (thanks for catching it).
+  - **F36#0 b11** (CPU, three judges, confirming; `close-1024/b11/judges.md`):
+    - New ON: Ripplet (starter, four-legged otter) 7.40 vs 5.51; Cindercub 7.63 vs 5.59.
+    - Terrapup at 3.20 m re-judged 7.47 vs installed 5.59, which confirms the shrink.
+    - OFF:
+      - Staticub b2: 7.28, below the shipping 7.98 (the red-brown grade edges toward oxblood). The shipping cub stays for F29#3.
+      - Sparkit b2: 5.20 vs 6.57. Judges also flag both versions as no taller than the trainer (1.95 m declared).
+      - Mosshock: 6.73 vs 6.18, but its faint stays upright, and judges read the remake as a different creature (a warty toad vs the shipped lava salamander).
+      - Stormbrush: 6.81 vs 6.73 (noise).
+      - Torrentoad: 6.69, faint squats upright.
+      - Cannonback: 6.49, shell flips onto its side.
+      - Skyrill: 5.94.
+  - **Integration:**
+    - Ripplet's seat moves 1.45 -> 2.58 m on the measured 2.45 m back; on the pose stage the rider sits on the back.
+    - Both remakes leave `enabled_species` (own clips).
+    - Lead admission probe: both seat in the Warrens mouth, tether approach and Hall elite room (Ripplet 0.36 m spare in the elite room).
+  - **Your nits:**
+    - Terrapup seat comment updated.
+    - Variants removed from LANDED_1024_BELOW_BAR (only their three profiles regenerate).
+    - `_field_bright_derived` dedupes and prunes freed copies.
+    - The F36 wiring sample moves to Frostclaw (Cindercub is a remake now).
+  - **Checks on c74eb3908** (local, CPU): `run_tests --only=dual_type,aspect,variant,creature_body,texture_for,colourway,shiny,surface_finish,night,field,rideable,riding,swim,water,f36_pose,creature_pose,species,scale_ladder,companion,evolution,spawns,rest_pose,starter` gave 879 tests, 0 failed. `smoke_f37_ripplet` PASS; `smoke_arena_contain` OK; `smoke_creature_field_brightness` PASS; postpass `--check` current; texture policy PASS (870).
+  - **Next:** the F36#1 whole-roster verdict (70 subjects at the land head, judged in batches with each applicable pose as a recorded defect); identity follow-ups (Trailpup mantle, Mudsnout moss); Bramblebun rim round; birds (Pipwing, Galewisp) need a weighted rig with all 11 roles.
 - 24 Oct 23:55 CT READY tb/creatures-land dbd0a12c6 (= 928f6abfb + ead45a117 + dbd0a12c6). Carries the #717 variant fix and the Terrapup shrink.
   - **#717 suite 4 (test_dual_type):** Nightburrow, Stormtrail and Riftfrill now bind their bases' remake meshes (Burrowback, Trailpup, Paddlenewt) and 11-role clips, keeping their own height, colour and aspect VFX.
     - Their look is a repaint of the remake's own albedo plus a synthesised glow map on the new UVs. `generate_aspect_variant_textures.py` gains an optional `source_model`; `creature_body._texture_for()` reads `<albedo>_<variant>.png` and `<albedo>_emissive_<variant>.png` beside an import-extracted .jpg albedo; a remake material takes the glow the way native Ashtusk does.
