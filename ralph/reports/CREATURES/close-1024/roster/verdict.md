@@ -34,3 +34,5 @@ Pass rule: no judge marks an applicable pose PRESENT, and the mapped mean is at 
 - Meshy batch 4 for the material fails.
 
 Batch verdicts: `roster/r1`-`r7/verdict.md`.
+
+**After b13 (close-1024/b13):** Tuskroot, Mangrove Monitor (shipping faint reads as down on the b13 tile) and the water forms of Riptusk, Abyssal Guardian, Aquaryn, Mangrove Monitor and Sirenseal now pass: **38 of 70**.
