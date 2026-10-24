@@ -881,6 +881,31 @@ HIT_STYLE.update({s: 'shove' for s in LANDED_1022_SHOVE})
 SHOVE_GAIN_BY.update({s: 1.5 for s in LANDED_1022_SHOVE})
 SHOVE_HOLD_BY.update({s: (0.5, 0.97) for s in LANDED_1022_SHOVE})
 PRONE = tuple(s for s in PRONE if s != 'mirejaw')
+# Close-1024 candidate (OFF until judged; enable with --candidate-1024). The
+# shipping-roster matrix (CPU, 58 species): hits that read as standing on every
+# species still on the recoil or flinch hit, and belly-down prone faints that
+# read as standing (Mudsnout, Ashtusk, Torrentoad, Cragclaw, Staticub, Skyrill),
+# the same read the GPU judges gave Mirejaw's prone faint before its topple.
+# The candidate gives them the judged held shove and the side topple.
+CANDIDATE_1024 = '--candidate-1024' in sys.argv
+PRONE_TO_TOPPLE_1024 = ('mudsnout', 'ashtusk', 'torrentoad', 'cragclaw', 'staticub', 'skyrill')
+SHOVE_1024 = ('ashtusk', 'cindercub', 'shadelet', 'torrentoad', 'cragclaw', 'pebbik', 'stormbrush',
+              'thundertunnel', 'mudsnout', 'riptusk', 'mangrove_monitor', 'voltwig', 'skyrill',
+              'terrapup', 'trailpup', 'burrowback', 'cannonback', 'cliffspike', 'frostclaw', 'mosshock',
+              'sirenseal', 'tuskroot', 'cloudfang', 'stormtrail', 'craghorn', 'breezetail', 'tidecoil',
+              'aquaryn', 'stormraven', 'nightburrow', 'riftfrill', 'riverdrake')
+# Close-1024 b2-b4 (CPU, three judges per batch, confirming batches): the held
+# shove beat the shipping hit on these, each at or above the CPU-provisional
+# 6.7 mapped. Live recipes for them only; the rest stay --candidate-1024.
+LANDED_1024_SHOVE = ('burrowback', 'frostclaw', 'trailpup', 'aquaryn', 'riptusk', 'sirenseal',
+                     'tidecoil', 'voltwig', 'breezetail', 'cliffspike', 'cloudfang', 'craghorn',
+                     'pebbik', 'stormbrush', 'stormraven', 'thundertunnel')
+SHOVE_1024_RUN = SHOVE_1024 if CANDIDATE_1024 else LANDED_1024_SHOVE
+if CANDIDATE_1024:
+    PRONE = tuple(s for s in PRONE if s not in PRONE_TO_TOPPLE_1024)
+LIVE_SHOVE_HIT = tuple(LIVE_SHOVE_HIT) + tuple(s for s in SHOVE_1024_RUN if s not in LIVE_SHOVE_HIT)
+SHOVE_GAIN_BY.update({s: 1.5 for s in SHOVE_1024_RUN})
+SHOVE_HOLD_BY.update({s: (0.5, 0.97) for s in SHOVE_1024_RUN})
 
 
 def clamp_neck(frames, limit=NECK_PITCH_LIMIT):
