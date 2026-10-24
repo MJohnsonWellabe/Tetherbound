@@ -1909,7 +1909,7 @@
      "status": "met",
      "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): Stormursa (the storm bear) mapped 8.13 Medium / 8.13 High; 5.0 m, larger than Staticub (3.25 m) and taller than the 1.80 m trainer; provenance at assets/creatures/tetherbound/stormursa/source/provenance.json; flag ON.",
      "gap": "Nothing",
-     "note": "GPU yardstick 22 Oct after #705 (GPU-PASS/F29-3/yardstick/): calibrated 7.00, Medium = High, confirming batch; faint PASS x3. 0.5 short of 7.5, so the CPU-provisional 6.73 is reopened.",
+     "note": "Met on the GPU roster baseline, 24 Oct (Stormursa 8.13).",
      "audit_index": 3
     },
     {
@@ -3096,7 +3096,7 @@
     {
      "text": "F36 (1) terrapup: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): terrapup mapped 7.61 (tier 7-7.5). CPU whole-roster round r1: mapped 7.02 (ralph/reports/CREATURES/close-1024/roster/r1/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): terrapup mapped 7.61, which passes on score, but that is the badger mesh the owner reopened as the wrong species (24 Oct); the large-dog Terrapup is judged separately. CPU whole-roster round r1: mapped 7.02 (ralph/reports/CREATURES/close-1024/roster/r1/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
