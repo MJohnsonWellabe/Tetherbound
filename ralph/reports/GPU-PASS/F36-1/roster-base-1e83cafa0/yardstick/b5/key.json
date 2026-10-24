@@ -1,0 +1,88 @@
+{
+ "Dj": {
+  "anchor": false,
+  "label": "F36base voltarach Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\voltarach-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\voltarach-High.png"
+ },
+ "Ia": {
+  "anchor": false,
+  "label": "F36base sparkit Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\sparkit-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\sparkit-Medium.png"
+ },
+ "Yb": {
+  "anchor": false,
+  "label": "F36base tuskroot Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\tuskroot-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\tuskroot-Medium.png"
+ },
+ "Fy": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Cv": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Qn": {
+  "anchor": false,
+  "label": "F36base aeriex Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\aeriex-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\aeriex-High.png"
+ },
+ "Gr": {
+  "anchor": false,
+  "label": "F36base fulgocobra Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\fulgocobra-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\fulgocobra-Medium.png"
+ },
+ "Fo": {
+  "anchor": false,
+  "label": "F36base staticub Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\staticub-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\staticub-High.png"
+ },
+ "Oe": {
+  "anchor": false,
+  "label": "F36base mirejaw Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\mirejaw-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\mirejaw-Medium.png"
+ },
+ "Ld": {
+  "anchor": false,
+  "label": "F36base galewisp Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\galewisp-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\galewisp-Medium.png"
+ },
+ "Fv": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Hm": {
+  "anchor": false,
+  "label": "F36base stormursa Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\stormursa-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\stormursa-Medium.png"
+ },
+ "Ht": {
+  "anchor": false,
+  "label": "F36base riptusk Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\riptusk-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\riptusk-Medium.png"
+ },
+ "Dn": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ah": {
+  "anchor": false,
+  "label": "F36base water_aquaryn Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_aquaryn-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_aquaryn-Medium.png"
+ }
+}

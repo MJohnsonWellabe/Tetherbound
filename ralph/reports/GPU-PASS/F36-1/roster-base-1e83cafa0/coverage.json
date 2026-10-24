@@ -1,0 +1,332 @@
+[
+    {
+        "species":  "abyssal_guardian",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "aeriex",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "ashtusk",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "brooktail",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "cannonback",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "cragclaw",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "fulgocobra",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "galewisp",
+        "group":  "cand",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "glimmermoth",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "mangrove_monitor",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "mirejaw",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "mosshock",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "ribbonray",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "riptusk",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "riverdrake",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "shadelet",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "sirenseal",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "skyrill",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "sparkit",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "staticub",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "stormbrush",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "stormursa",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "tempestwing",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "torrentoad",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "tuskroot",
+        "group":  "cand",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "voltarach",
+        "group":  "cand",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "water_abyssal_guardian",
+        "group":  "cand",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "water_aquaryn",
+        "group":  "cand",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "water_cragclaw",
+        "group":  "cand",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "water_mangrove_monitor",
+        "group":  "cand",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "water_mirejaw",
+        "group":  "cand",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "water_riptusk",
+        "group":  "cand",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "water_riverdrake",
+        "group":  "cand",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "water_sirenseal",
+        "group":  "cand",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "water_tidecoil",
+        "group":  "cand",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "water_torrentoad",
+        "group":  "cand",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "bramblebun",
+        "group":  "plain",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "burrowback",
+        "group":  "plain",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "cindercub",
+        "group":  "plain",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "duskhush",
+        "group":  "plain",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "meadowhart",
+        "group":  "plain",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "mosshell",
+        "group":  "plain",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "mudsnout",
+        "group":  "plain",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "nightburrow",
+        "group":  "plain",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "paddlenewt",
+        "group":  "plain",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "pipwing",
+        "group":  "plain",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "reedwing",
+        "group":  "plain",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "riftfrill",
+        "group":  "plain",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "ripplet",
+        "group":  "plain",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "stormtrail",
+        "group":  "plain",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "terrapup",
+        "group":  "plain",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "trailpup",
+        "group":  "plain",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "veridian",
+        "group":  "plain",
+        "medium":  5,
+        "high":  5
+    },
+    {
+        "species":  "water_cannonback",
+        "group":  "plain",
+        "medium":  4,
+        "high":  4
+    },
+    {
+        "species":  "water_mosshell",
+        "group":  "plain",
+        "medium":  5,
+        "high":  5
+    }
+]

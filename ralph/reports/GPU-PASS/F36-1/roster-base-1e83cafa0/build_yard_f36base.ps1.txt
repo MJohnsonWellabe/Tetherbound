@@ -1,0 +1,32 @@
+# F36 baseline (local, tb/creatures-land 1e83cafa0 = main 124a7393c + stage fixes): one set per species, Medium vs High,
+# standing / hit react / faint mid / faint end + travel role where shot. 36 recipe-on species (cand-*) + 19 own-clip species (plain-*).
+# Batches of 11 sets, species order shuffled with a fixed seed so batches mix kinds.
+$o = "D:\tb-gpu-runs\out\F36-base"; $od = "D:\tb-gpu-runs\yard\f36base\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out) {
+    $s = [ordered]@{ title = ""; cols = 5; thumb_w = 300; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out; crop = @(560, 200, 1000, 640) }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_f36b.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_f36b.json" | Out-Null; return $out
+}
+$brief = "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read."
+$groups = @{ cand = "abyssal_guardian,aeriex,ashtusk,brooktail,cannonback,cragclaw,fulgocobra,galewisp,glimmermoth,mangrove_monitor,mirejaw,mosshock,ribbonray,riptusk,riverdrake,shadelet,sirenseal,skyrill,sparkit,staticub,stormbrush,stormursa,tempestwing,torrentoad,tuskroot,voltarach,water_abyssal_guardian,water_aquaryn,water_cragclaw,water_mangrove_monitor,water_mirejaw,water_riptusk,water_riverdrake,water_sirenseal,water_tidecoil,water_torrentoad"; plain = "bramblebun,burrowback,cindercub,duskhush,meadowhart,mosshell,mudsnout,nightburrow,paddlenewt,pipwing,reedwing,riftfrill,ripplet,stormtrail,terrapup,trailpup,veridian,water_cannonback,water_mosshell" }
+$sets = @(); $cover = @()
+foreach ($g in "cand", "plain") {
+    foreach ($sp in $groups[$g].Split(",")) {
+        $sd = @{}; $n = @{}
+        foreach ($pr in "Medium", "High") {
+            $dir = "$o\$g-$pr\frames"
+            $role = @("ride", "swim", "fly_grip") | Where-Object { Test-Path "$dir\$sp-$_-050.png" } | Select-Object -First 1
+            $p = @(@("hit-000", "standing"), @("hit-025", "hit react"), @("faint-050", "faint mid"), @("faint-100", "faint end"))
+            if ($role) { $p += , @("$role-050", @{ ride = "ridden"; swim = "swimming"; fly_grip = "carrying" }[$role]) }
+            $files = @($p | ForEach-Object { "$dir\$sp-$($_[0]).png" } | Where-Object { Test-Path $_ })
+            $caps = @($p | Where-Object { Test-Path "$dir\$sp-$($_[0]).png" } | ForEach-Object { $_[1] })
+            $n[$pr] = $files.Count
+            if ($files.Count -gt 0) { $sd[$pr] = Side $files $caps "$od\$sp-$pr.png" }
+        }
+        $cover += [ordered]@{ species = $sp; group = $g; medium = $n["Medium"]; high = $n["High"] }
+        if ($sd["Medium"] -and $sd["High"]) { $sets += [ordered]@{ label = "F36base $sp Medium|High"; a = $sd["Medium"]; b = $sd["High"]; brief = $brief; defects = @() } }
+    }
+}
+$rng = New-Object System.Random 2042; $sets = @($sets | Sort-Object { $rng.Next() })
+$nb = 0; for ($i = 0; $i -lt $sets.Count; $i += 11) { $nb++; $chunk = $sets[$i..([math]::Min($i + 10, $sets.Count - 1))]; New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\f36base\b$nb" | Out-Null; [IO.File]::WriteAllText("D:\tb-gpu-runs\yard\f36base\b$nb\candidates.json", (ConvertTo-Json -InputObject @($chunk) -Depth 5)) }
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\f36base\coverage.json", (ConvertTo-Json -InputObject @($cover) -Depth 4))
+"f36base sets: $($sets.Count) in $nb batches; missing: " + (($cover | Where-Object { -not $_.medium -or -not $_.high } | ForEach-Object { $_.species }) -join ",")

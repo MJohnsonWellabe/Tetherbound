@@ -1,0 +1,88 @@
+{
+ "Wx": {
+  "anchor": false,
+  "label": "F36base water_cannonback Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_cannonback-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_cannonback-High.png"
+ },
+ "Fn": {
+  "anchor": false,
+  "label": "F36base ribbonray Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\ribbonray-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\ribbonray-Medium.png"
+ },
+ "Us": {
+  "anchor": false,
+  "label": "F36base abyssal_guardian Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\abyssal_guardian-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\abyssal_guardian-Medium.png"
+ },
+ "Ki": {
+  "anchor": false,
+  "label": "F36base nightburrow Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\nightburrow-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\nightburrow-High.png"
+ },
+ "Wj": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Aa": {
+  "anchor": false,
+  "label": "F36base brooktail Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\brooktail-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\brooktail-High.png"
+ },
+ "Ly": {
+  "anchor": false,
+  "label": "F36base torrentoad Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\torrentoad-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\torrentoad-High.png"
+ },
+ "Td": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Ta": {
+  "anchor": false,
+  "label": "F36base riftfrill Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\riftfrill-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\riftfrill-Medium.png"
+ },
+ "Jr": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Nz": {
+  "anchor": false,
+  "label": "F36base mudsnout Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\mudsnout-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\mudsnout-Medium.png"
+ },
+ "Ds": {
+  "anchor": false,
+  "label": "F36base water_riverdrake Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_riverdrake-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_riverdrake-Medium.png"
+ },
+ "Bo": {
+  "anchor": false,
+  "label": "F36base water_riptusk Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_riptusk-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_riptusk-Medium.png"
+ },
+ "Cm": {
+  "anchor": false,
+  "label": "F36base duskhush Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\duskhush-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\duskhush-Medium.png"
+ },
+ "Qy": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ }
+}

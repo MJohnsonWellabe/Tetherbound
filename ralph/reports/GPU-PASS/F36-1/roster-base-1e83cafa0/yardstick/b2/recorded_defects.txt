@@ -1,0 +1,15 @@
+Vj: none
+Us: none
+Ow: none
+Wf: none
+Lg: none
+Sa: none
+Db: none
+Xx: none
+Tj: none
+Ph: none
+Uw: none
+Lq: none
+Uy: none
+Ry: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Zo: none

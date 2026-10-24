@@ -1,0 +1,15 @@
+Ys: none
+Wb: none
+Rn: none
+My: none
+Pc: none
+Gt: none
+Qk: none
+Tu: none
+Wz: none
+Rm: none
+Cu: none
+Ng: none
+Ni: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Up: none
+To: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"

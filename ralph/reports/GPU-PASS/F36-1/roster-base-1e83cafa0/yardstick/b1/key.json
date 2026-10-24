@@ -1,0 +1,88 @@
+{
+ "Zz": {
+  "anchor": false,
+  "label": "F36base pipwing Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\pipwing-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\pipwing-High.png"
+ },
+ "Bo": {
+  "anchor": false,
+  "label": "F36base trailpup Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\trailpup-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\trailpup-High.png"
+ },
+ "Oy": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Jb": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Eg": {
+  "anchor": false,
+  "label": "F36base reedwing Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\reedwing-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\reedwing-Medium.png"
+ },
+ "Wj": {
+  "anchor": false,
+  "label": "F36base tempestwing Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\tempestwing-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\tempestwing-Medium.png"
+ },
+ "Iq": {
+  "anchor": false,
+  "label": "F36base skyrill Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\skyrill-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\skyrill-High.png"
+ },
+ "Tj": {
+  "anchor": false,
+  "label": "F36base water_mirejaw Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_mirejaw-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_mirejaw-Medium.png"
+ },
+ "Ab": {
+  "anchor": false,
+  "label": "F36base mosshell Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\mosshell-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\mosshell-Medium.png"
+ },
+ "Rp": {
+  "anchor": true,
+  "A": "f36_0_gap:C4B",
+  "B": "f36_0_gap:C4A"
+ },
+ "Bt": {
+  "anchor": false,
+  "label": "F36base cragclaw Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\cragclaw-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\cragclaw-High.png"
+ },
+ "Vz": {
+  "anchor": false,
+  "label": "F36base water_mosshell Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_mosshell-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_mosshell-High.png"
+ },
+ "Yk": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Oe": {
+  "anchor": false,
+  "label": "F36base burrowback Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\burrowback-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\burrowback-Medium.png"
+ },
+ "Cx": {
+  "anchor": false,
+  "label": "F36base cindercub Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\cindercub-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\cindercub-Medium.png"
+ }
+}

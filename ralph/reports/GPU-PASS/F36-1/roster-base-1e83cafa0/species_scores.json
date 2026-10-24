@@ -1,0 +1,1102 @@
+{
+ "pipwing": {
+  "Medium": {
+   "mapped": 6.66,
+   "judges": [
+    6.99,
+    6.29,
+    6.71
+   ],
+   "batch": 1
+  },
+  "High": {
+   "mapped": 6.66,
+   "judges": [
+    6.99,
+    6.29,
+    6.71
+   ],
+   "batch": 1
+  }
+ },
+ "trailpup": {
+  "Medium": {
+   "mapped": 7.34,
+   "judges": [
+    7.83,
+    6.99,
+    7.2
+   ],
+   "batch": 1
+  },
+  "High": {
+   "mapped": 7.34,
+   "judges": [
+    7.83,
+    6.99,
+    7.2
+   ],
+   "batch": 1
+  }
+ },
+ "reedwing": {
+  "High": {
+   "mapped": 6.78,
+   "judges": [
+    6.99,
+    6.85,
+    6.5
+   ],
+   "batch": 1
+  },
+  "Medium": {
+   "mapped": 6.78,
+   "judges": [
+    6.99,
+    6.85,
+    6.5
+   ],
+   "batch": 1
+  }
+ },
+ "tempestwing": {
+  "High": {
+   "mapped": 6.76,
+   "judges": [
+    6.85,
+    6.85,
+    6.57
+   ],
+   "batch": 1
+  },
+  "Medium": {
+   "mapped": 6.76,
+   "judges": [
+    6.85,
+    6.85,
+    6.57
+   ],
+   "batch": 1
+  }
+ },
+ "skyrill": {
+  "Medium": {
+   "mapped": 6.33,
+   "judges": [
+    6.43,
+    6.43,
+    6.15
+   ],
+   "batch": 1
+  },
+  "High": {
+   "mapped": 6.33,
+   "judges": [
+    6.43,
+    6.43,
+    6.15
+   ],
+   "batch": 1
+  }
+ },
+ "water_mirejaw": {
+  "High": {
+   "mapped": 6.45,
+   "judges": [
+    6.64,
+    6.29,
+    6.43
+   ],
+   "batch": 1
+  },
+  "Medium": {
+   "mapped": 6.45,
+   "judges": [
+    6.64,
+    6.29,
+    6.43
+   ],
+   "batch": 1
+  }
+ },
+ "mosshell": {
+  "High": {
+   "mapped": 6.9,
+   "judges": [
+    6.85,
+    6.43,
+    7.41
+   ],
+   "batch": 1
+  },
+  "Medium": {
+   "mapped": 6.9,
+   "judges": [
+    6.85,
+    6.43,
+    7.41
+   ],
+   "batch": 1
+  }
+ },
+ "cragclaw": {
+  "Medium": {
+   "mapped": 6.4,
+   "judges": [
+    6.64,
+    6.15,
+    6.43
+   ],
+   "batch": 1
+  },
+  "High": {
+   "mapped": 6.4,
+   "judges": [
+    6.64,
+    6.15,
+    6.43
+   ],
+   "batch": 1
+  }
+ },
+ "water_mosshell": {
+  "Medium": {
+   "mapped": 6.99,
+   "judges": [
+    6.99,
+    6.57,
+    7.41
+   ],
+   "batch": 1
+  },
+  "High": {
+   "mapped": 6.99,
+   "judges": [
+    6.99,
+    6.57,
+    7.41
+   ],
+   "batch": 1
+  }
+ },
+ "burrowback": {
+  "High": {
+   "mapped": 7.3,
+   "judges": [
+    7.55,
+    6.99,
+    7.34
+   ],
+   "batch": 1
+  },
+  "Medium": {
+   "mapped": 7.3,
+   "judges": [
+    7.55,
+    6.99,
+    7.34
+   ],
+   "batch": 1
+  }
+ },
+ "cindercub": {
+  "High": {
+   "mapped": 7.18,
+   "judges": [
+    7.55,
+    7.13,
+    6.85
+   ],
+   "batch": 1
+  },
+  "Medium": {
+   "mapped": 7.18,
+   "judges": [
+    7.55,
+    7.13,
+    6.85
+   ],
+   "batch": 1
+  }
+ },
+ "cannonback": {
+  "Medium": {
+   "mapped": 6.92,
+   "judges": [
+    7.2,
+    6.57,
+    6.99
+   ],
+   "batch": 2
+  },
+  "High": {
+   "mapped": 6.92,
+   "judges": [
+    7.2,
+    6.57,
+    6.99
+   ],
+   "batch": 2
+  }
+ },
+ "sirenseal": {
+  "Medium": {
+   "mapped": 7.2,
+   "judges": [
+    7.2,
+    6.99,
+    7.41
+   ],
+   "batch": 2
+  },
+  "High": {
+   "mapped": 7.2,
+   "judges": [
+    7.2,
+    6.99,
+    7.41
+   ],
+   "batch": 2
+  }
+ },
+ "ashtusk": {
+  "Medium": {
+   "mapped": 6.36,
+   "judges": [
+    6.36,
+    6.57,
+    6.15
+   ],
+   "batch": 2
+  },
+  "High": {
+   "mapped": 6.36,
+   "judges": [
+    6.36,
+    6.57,
+    6.15
+   ],
+   "batch": 2
+  }
+ },
+ "water_torrentoad": {
+  "High": {
+   "mapped": 7.59,
+   "judges": [
+    7.73,
+    7.52,
+    7.52
+   ],
+   "batch": 2
+  },
+  "Medium": {
+   "mapped": 7.59,
+   "judges": [
+    7.73,
+    7.52,
+    7.52
+   ],
+   "batch": 2
+  }
+ },
+ "shadelet": {
+  "High": {
+   "mapped": 6.29,
+   "judges": [
+    6.15,
+    6.57,
+    6.15
+   ],
+   "batch": 2
+  },
+  "Medium": {
+   "mapped": 6.29,
+   "judges": [
+    6.15,
+    6.57,
+    6.15
+   ],
+   "batch": 2
+  }
+ },
+ "riverdrake": {
+  "High": {
+   "mapped": 7.2,
+   "judges": [
+    7.2,
+    7.2,
+    7.2
+   ],
+   "batch": 2
+  },
+  "Medium": {
+   "mapped": 7.2,
+   "judges": [
+    7.2,
+    7.2,
+    7.2
+   ],
+   "batch": 2
+  }
+ },
+ "stormbrush": {
+  "High": {
+   "mapped": 6.82,
+   "judges": [
+    6.78,
+    7.2,
+    6.47
+   ],
+   "batch": 2
+  },
+  "Medium": {
+   "mapped": 6.82,
+   "judges": [
+    6.78,
+    7.2,
+    6.47
+   ],
+   "batch": 2
+  }
+ },
+ "water_sirenseal": {
+  "Medium": {
+   "mapped": 7.24,
+   "judges": [
+    7.31,
+    6.99,
+    7.41
+   ],
+   "batch": 2
+  },
+  "High": {
+   "mapped": 7.24,
+   "judges": [
+    7.31,
+    6.99,
+    7.41
+   ],
+   "batch": 2
+  }
+ },
+ "stormtrail": {
+  "High": {
+   "mapped": 5.98,
+   "judges": [
+    6.15,
+    6.15,
+    5.63
+   ],
+   "batch": 2
+  },
+  "Medium": {
+   "mapped": 5.98,
+   "judges": [
+    6.15,
+    6.15,
+    5.63
+   ],
+   "batch": 2
+  }
+ },
+ "mangrove_monitor": {
+  "Medium": {
+   "mapped": 6.92,
+   "judges": [
+    6.99,
+    6.78,
+    6.99
+   ],
+   "batch": 2
+  },
+  "High": {
+   "mapped": 6.92,
+   "judges": [
+    6.99,
+    6.78,
+    6.99
+   ],
+   "batch": 2
+  }
+ },
+ "meadowhart": {
+  "Medium": {
+   "mapped": 7.94,
+   "judges": [
+    8.04,
+    7.73,
+    8.04
+   ],
+   "batch": 2
+  },
+  "High": {
+   "mapped": 7.94,
+   "judges": [
+    8.04,
+    7.73,
+    8.04
+   ],
+   "batch": 2
+  }
+ },
+ "water_cannonback": {
+  "Medium": {
+   "mapped": 7.42,
+   "judges": [
+    7.75,
+    6.94,
+    7.58
+   ],
+   "batch": 3
+  },
+  "High": {
+   "mapped": 7.42,
+   "judges": [
+    7.75,
+    6.94,
+    7.58
+   ],
+   "batch": 3
+  }
+ },
+ "ribbonray": {
+  "High": {
+   "mapped": 6.48,
+   "judges": [
+    6.94,
+    5.97,
+    6.53
+   ],
+   "batch": 3
+  },
+  "Medium": {
+   "mapped": 6.48,
+   "judges": [
+    6.94,
+    5.97,
+    6.53
+   ],
+   "batch": 3
+  }
+ },
+ "abyssal_guardian": {
+  "High": {
+   "mapped": 6.91,
+   "judges": [
+    7.34,
+    6.78,
+    6.61
+   ],
+   "batch": 3
+  },
+  "Medium": {
+   "mapped": 6.91,
+   "judges": [
+    7.34,
+    6.78,
+    6.61
+   ],
+   "batch": 3
+  }
+ },
+ "nightburrow": {
+  "Medium": {
+   "mapped": 6.59,
+   "judges": [
+    6.94,
+    6.37,
+    6.45
+   ],
+   "batch": 3
+  },
+  "High": {
+   "mapped": 6.59,
+   "judges": [
+    6.94,
+    6.37,
+    6.45
+   ],
+   "batch": 3
+  }
+ },
+ "brooktail": {
+  "Medium": {
+   "mapped": 7.13,
+   "judges": [
+    7.18,
+    6.94,
+    7.26
+   ],
+   "batch": 3
+  },
+  "High": {
+   "mapped": 7.13,
+   "judges": [
+    7.18,
+    6.94,
+    7.26
+   ],
+   "batch": 3
+  }
+ },
+ "torrentoad": {
+  "Medium": {
+   "mapped": 7.32,
+   "judges": [
+    7.58,
+    6.61,
+    7.75
+   ],
+   "batch": 3
+  },
+  "High": {
+   "mapped": 7.32,
+   "judges": [
+    7.58,
+    6.61,
+    7.75
+   ],
+   "batch": 3
+  }
+ },
+ "riftfrill": {
+  "High": {
+   "mapped": 6.51,
+   "judges": [
+    6.53,
+    6.45,
+    6.53
+   ],
+   "batch": 3
+  },
+  "Medium": {
+   "mapped": 6.51,
+   "judges": [
+    6.53,
+    6.45,
+    6.53
+   ],
+   "batch": 3
+  }
+ },
+ "mudsnout": {
+  "High": {
+   "mapped": 6.96,
+   "judges": [
+    6.94,
+    7.26,
+    6.7
+   ],
+   "batch": 3
+  },
+  "Medium": {
+   "mapped": 6.96,
+   "judges": [
+    6.94,
+    7.26,
+    6.7
+   ],
+   "batch": 3
+  }
+ },
+ "water_riverdrake": {
+  "High": {
+   "mapped": 7.32,
+   "judges": [
+    7.91,
+    6.94,
+    7.1
+   ],
+   "batch": 3
+  },
+  "Medium": {
+   "mapped": 7.32,
+   "judges": [
+    7.91,
+    6.94,
+    7.1
+   ],
+   "batch": 3
+  }
+ },
+ "water_riptusk": {
+  "High": {
+   "mapped": 7.1,
+   "judges": [
+    7.58,
+    6.61,
+    7.1
+   ],
+   "batch": 3
+  },
+  "Medium": {
+   "mapped": 7.1,
+   "judges": [
+    7.58,
+    6.61,
+    7.1
+   ],
+   "batch": 3
+  }
+ },
+ "duskhush": {
+  "High": {
+   "mapped": 7.07,
+   "judges": [
+    7.18,
+    6.78,
+    7.26
+   ],
+   "batch": 3
+  },
+  "Medium": {
+   "mapped": 7.07,
+   "judges": [
+    7.18,
+    6.78,
+    7.26
+   ],
+   "batch": 3
+  }
+ },
+ "mosshock": {
+  "Medium": {
+   "mapped": 5.85,
+   "judges": [
+    6.2,
+    5.96,
+    5.37
+   ],
+   "batch": 4
+  },
+  "High": {
+   "mapped": 5.85,
+   "judges": [
+    6.2,
+    5.96,
+    5.37
+   ],
+   "batch": 4
+  }
+ },
+ "water_tidecoil": {
+  "Medium": {
+   "mapped": 7.88,
+   "judges": [
+    7.96,
+    7.96,
+    7.73
+   ],
+   "batch": 4
+  },
+  "High": {
+   "mapped": 7.88,
+   "judges": [
+    7.96,
+    7.96,
+    7.73
+   ],
+   "batch": 4
+  }
+ },
+ "water_abyssal_guardian": {
+  "High": {
+   "mapped": 6.63,
+   "judges": [
+    7.14,
+    6.67,
+    6.08
+   ],
+   "batch": 4
+  },
+  "Medium": {
+   "mapped": 6.63,
+   "judges": [
+    7.14,
+    6.67,
+    6.08
+   ],
+   "batch": 4
+  }
+ },
+ "terrapup": {
+  "High": {
+   "mapped": 7.61,
+   "judges": [
+    7.73,
+    7.37,
+    7.73
+   ],
+   "batch": 4
+  },
+  "Medium": {
+   "mapped": 7.61,
+   "judges": [
+    7.73,
+    7.37,
+    7.73
+   ],
+   "batch": 4
+  }
+ },
+ "water_mangrove_monitor": {
+  "High": {
+   "mapped": 6.24,
+   "judges": [
+    6.55,
+    6.32,
+    5.85
+   ],
+   "batch": 4
+  },
+  "Medium": {
+   "mapped": 6.24,
+   "judges": [
+    6.55,
+    6.32,
+    5.85
+   ],
+   "batch": 4
+  }
+ },
+ "water_cragclaw": {
+  "Medium": {
+   "mapped": 6.32,
+   "judges": [
+    6.55,
+    6.08,
+    6.32
+   ],
+   "batch": 4
+  },
+  "High": {
+   "mapped": 6.32,
+   "judges": [
+    6.55,
+    6.08,
+    6.32
+   ],
+   "batch": 4
+  }
+ },
+ "veridian": {
+  "High": {
+   "mapped": 6.63,
+   "judges": [
+    6.79,
+    6.55,
+    6.55
+   ],
+   "batch": 4
+  },
+  "Medium": {
+   "mapped": 6.63,
+   "judges": [
+    6.79,
+    6.55,
+    6.55
+   ],
+   "batch": 4
+  }
+ },
+ "ripplet": {
+  "High": {
+   "mapped": 7.49,
+   "judges": [
+    7.49,
+    7.49,
+    7.49
+   ],
+   "batch": 4
+  },
+  "Medium": {
+   "mapped": 7.49,
+   "judges": [
+    7.49,
+    7.49,
+    7.49
+   ],
+   "batch": 4
+  }
+ },
+ "glimmermoth": {
+  "Medium": {
+   "mapped": 6.43,
+   "judges": [
+    6.55,
+    6.67,
+    6.08
+   ],
+   "batch": 4
+  },
+  "High": {
+   "mapped": 6.43,
+   "judges": [
+    6.55,
+    6.67,
+    6.08
+   ],
+   "batch": 4
+  }
+ },
+ "paddlenewt": {
+  "Medium": {
+   "mapped": 6.75,
+   "judges": [
+    7.37,
+    6.79,
+    6.08
+   ],
+   "batch": 4
+  },
+  "High": {
+   "mapped": 6.75,
+   "judges": [
+    7.37,
+    6.79,
+    6.08
+   ],
+   "batch": 4
+  }
+ },
+ "bramblebun": {
+  "Medium": {
+   "mapped": 7.37,
+   "judges": [
+    7.37,
+    7.26,
+    7.49
+   ],
+   "batch": 4
+  },
+  "High": {
+   "mapped": 7.37,
+   "judges": [
+    7.37,
+    7.26,
+    7.49
+   ],
+   "batch": 4
+  }
+ },
+ "voltarach": {
+  "Medium": {
+   "mapped": 6.87,
+   "judges": [
+    6.77,
+    6.56,
+    7.29
+   ],
+   "batch": 5
+  },
+  "High": {
+   "mapped": 6.87,
+   "judges": [
+    6.77,
+    6.56,
+    7.29
+   ],
+   "batch": 5
+  }
+ },
+ "sparkit": {
+  "High": {
+   "mapped": 6.28,
+   "judges": [
+    6.14,
+    6.35,
+    6.35
+   ],
+   "batch": 5
+  },
+  "Medium": {
+   "mapped": 6.28,
+   "judges": [
+    6.14,
+    6.35,
+    6.35
+   ],
+   "batch": 5
+  }
+ },
+ "tuskroot": {
+  "High": {
+   "mapped": 7.89,
+   "judges": [
+    8.03,
+    7.61,
+    8.03
+   ],
+   "batch": 5
+  },
+  "Medium": {
+   "mapped": 7.89,
+   "judges": [
+    8.03,
+    7.61,
+    8.03
+   ],
+   "batch": 5
+  }
+ },
+ "aeriex": {
+  "Medium": {
+   "mapped": 7.64,
+   "judges": [
+    7.82,
+    7.19,
+    7.92
+   ],
+   "batch": 5
+  },
+  "High": {
+   "mapped": 7.64,
+   "judges": [
+    7.82,
+    7.19,
+    7.92
+   ],
+   "batch": 5
+  }
+ },
+ "fulgocobra": {
+  "High": {
+   "mapped": 6.38,
+   "judges": [
+    6.77,
+    6.14,
+    6.24
+   ],
+   "batch": 5
+  },
+  "Medium": {
+   "mapped": 6.38,
+   "judges": [
+    6.77,
+    6.14,
+    6.24
+   ],
+   "batch": 5
+  }
+ },
+ "staticub": {
+  "Medium": {
+   "mapped": 8.1,
+   "judges": [
+    8.24,
+    7.82,
+    8.24
+   ],
+   "batch": 5
+  },
+  "High": {
+   "mapped": 8.1,
+   "judges": [
+    8.24,
+    7.82,
+    8.24
+   ],
+   "batch": 5
+  }
+ },
+ "mirejaw": {
+  "High": {
+   "mapped": 6.52,
+   "judges": [
+    6.56,
+    6.45,
+    6.56
+   ],
+   "batch": 5
+  },
+  "Medium": {
+   "mapped": 6.52,
+   "judges": [
+    6.56,
+    6.45,
+    6.56
+   ],
+   "batch": 5
+  }
+ },
+ "galewisp": {
+  "High": {
+   "mapped": 6.84,
+   "judges": [
+    6.77,
+    6.56,
+    7.19
+   ],
+   "batch": 5
+  },
+  "Medium": {
+   "mapped": 6.84,
+   "judges": [
+    6.77,
+    6.56,
+    7.19
+   ],
+   "batch": 5
+  }
+ },
+ "stormursa": {
+  "High": {
+   "mapped": 8.13,
+   "judges": [
+    8.24,
+    8.03,
+    8.13
+   ],
+   "batch": 5
+  },
+  "Medium": {
+   "mapped": 8.13,
+   "judges": [
+    8.24,
+    8.03,
+    8.13
+   ],
+   "batch": 5
+  }
+ },
+ "riptusk": {
+  "High": {
+   "mapped": 7.64,
+   "judges": [
+    7.82,
+    7.4,
+    7.71
+   ],
+   "batch": 5
+  },
+  "Medium": {
+   "mapped": 7.64,
+   "judges": [
+    7.82,
+    7.4,
+    7.71
+   ],
+   "batch": 5
+  }
+ },
+ "water_aquaryn": {
+  "High": {
+   "mapped": 7.33,
+   "judges": [
+    7.61,
+    6.98,
+    7.4
+   ],
+   "batch": 5
+  },
+  "Medium": {
+   "mapped": 7.33,
+   "judges": [
+    7.61,
+    6.98,
+    7.4
+   ],
+   "batch": 5
+  }
+ }
+}

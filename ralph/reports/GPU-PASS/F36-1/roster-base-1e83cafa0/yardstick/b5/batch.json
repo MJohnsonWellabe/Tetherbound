@@ -1,0 +1,156 @@
+{
+ "anchors": {
+  "f36_0_gap:C5A": [
+   4.8,
+   3.8,
+   4.4
+  ],
+  "f36_0_gap:C5B": [
+   6.3,
+   5.8,
+   6.7
+  ],
+  "craft:before": [
+   4.0,
+   4.0,
+   4.3
+  ],
+  "craft:after": [
+   6.3,
+   6.2,
+   6.4
+  ],
+  "p2_094_r4:X_before": [
+   3.2,
+   3.0,
+   3.4
+  ],
+  "p2_094_r4:Y_after": [
+   5.3,
+   4.8,
+   5.0
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   6.3,
+   6.8
+  ],
+  "f36_0_npc:C1A": [
+   6.8,
+   6.3,
+   6.8
+  ]
+ },
+ "candidates": {
+  "F36base voltarach Medium|High | voltarach-Medium": [
+   5.8,
+   5.6,
+   6.3
+  ],
+  "F36base voltarach Medium|High | voltarach-High": [
+   5.8,
+   5.6,
+   6.3
+  ],
+  "F36base sparkit Medium|High | sparkit-High": [
+   5.2,
+   5.4,
+   5.4
+  ],
+  "F36base sparkit Medium|High | sparkit-Medium": [
+   5.2,
+   5.4,
+   5.4
+  ],
+  "F36base tuskroot Medium|High | tuskroot-High": [
+   7.0,
+   6.6,
+   7.0
+  ],
+  "F36base tuskroot Medium|High | tuskroot-Medium": [
+   7.0,
+   6.6,
+   7.0
+  ],
+  "F36base aeriex Medium|High | aeriex-Medium": [
+   6.8,
+   6.2,
+   6.9
+  ],
+  "F36base aeriex Medium|High | aeriex-High": [
+   6.8,
+   6.2,
+   6.9
+  ],
+  "F36base fulgocobra Medium|High | fulgocobra-High": [
+   5.8,
+   5.2,
+   5.3
+  ],
+  "F36base fulgocobra Medium|High | fulgocobra-Medium": [
+   5.8,
+   5.2,
+   5.3
+  ],
+  "F36base staticub Medium|High | staticub-Medium": [
+   7.2,
+   6.8,
+   7.2
+  ],
+  "F36base staticub Medium|High | staticub-High": [
+   7.2,
+   6.8,
+   7.2
+  ],
+  "F36base mirejaw Medium|High | mirejaw-High": [
+   5.6,
+   5.5,
+   5.6
+  ],
+  "F36base mirejaw Medium|High | mirejaw-Medium": [
+   5.6,
+   5.5,
+   5.6
+  ],
+  "F36base galewisp Medium|High | galewisp-High": [
+   5.8,
+   5.6,
+   6.2
+  ],
+  "F36base galewisp Medium|High | galewisp-Medium": [
+   5.8,
+   5.6,
+   6.2
+  ],
+  "F36base stormursa Medium|High | stormursa-High": [
+   7.2,
+   7.0,
+   7.1
+  ],
+  "F36base stormursa Medium|High | stormursa-Medium": [
+   7.2,
+   7.0,
+   7.1
+  ],
+  "F36base riptusk Medium|High | riptusk-High": [
+   6.8,
+   6.4,
+   6.7
+  ],
+  "F36base riptusk Medium|High | riptusk-Medium": [
+   6.8,
+   6.4,
+   6.7
+  ],
+  "F36base water_aquaryn Medium|High | water_aquaryn-High": [
+   6.6,
+   6.0,
+   6.4
+  ],
+  "F36base water_aquaryn Medium|High | water_aquaryn-Medium": [
+   6.6,
+   6.0,
+   6.4
+  ]
+ }
+}

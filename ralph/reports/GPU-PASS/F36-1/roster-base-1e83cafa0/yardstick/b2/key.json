@@ -1,0 +1,88 @@
+{
+ "Vj": {
+  "anchor": false,
+  "label": "F36base cannonback Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\cannonback-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\cannonback-High.png"
+ },
+ "Us": {
+  "anchor": false,
+  "label": "F36base sirenseal Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\sirenseal-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\sirenseal-High.png"
+ },
+ "Ow": {
+  "anchor": false,
+  "label": "F36base ashtusk Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\ashtusk-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\ashtusk-High.png"
+ },
+ "Wf": {
+  "anchor": true,
+  "A": "f36_0_gap:C3B",
+  "B": "f36_0_gap:C3A"
+ },
+ "Lg": {
+  "anchor": false,
+  "label": "F36base water_torrentoad Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_torrentoad-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_torrentoad-Medium.png"
+ },
+ "Sa": {
+  "anchor": false,
+  "label": "F36base shadelet Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\shadelet-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\shadelet-Medium.png"
+ },
+ "Db": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Xx": {
+  "anchor": false,
+  "label": "F36base riverdrake Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\riverdrake-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\riverdrake-Medium.png"
+ },
+ "Tj": {
+  "anchor": false,
+  "label": "F36base stormbrush Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\stormbrush-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\stormbrush-Medium.png"
+ },
+ "Ph": {
+  "anchor": false,
+  "label": "F36base water_sirenseal Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_sirenseal-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_sirenseal-High.png"
+ },
+ "Uw": {
+  "anchor": false,
+  "label": "F36base stormtrail Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\stormtrail-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\stormtrail-Medium.png"
+ },
+ "Lq": {
+  "anchor": false,
+  "label": "F36base mangrove_monitor Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\mangrove_monitor-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\mangrove_monitor-High.png"
+ },
+ "Uy": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ry": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Zo": {
+  "anchor": false,
+  "label": "F36base meadowhart Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\meadowhart-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\meadowhart-High.png"
+ }
+}

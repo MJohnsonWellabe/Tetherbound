@@ -1,0 +1,156 @@
+{
+ "anchors": {
+  "f36_0_npc:C1A": [
+   6.8,
+   7.0,
+   6.8
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   7.0,
+   6.8
+  ],
+  "f36_0_gap:C1A": [
+   5.3,
+   4.8,
+   5.0
+  ],
+  "f36_0_gap:C1B": [
+   4.8,
+   5.5,
+   4.6
+  ],
+  "craft:after": [
+   6.3,
+   6.3,
+   5.8
+  ],
+  "craft:before": [
+   4.5,
+   4.4,
+   3.8
+  ],
+  "p2_094_r4:Y_after": [
+   5.8,
+   5.9,
+   5.5
+  ],
+  "p2_094_r4:X_before": [
+   3.8,
+   3.8,
+   3.0
+  ]
+ },
+ "candidates": {
+  "F36base mosshock Medium|High | mosshock-Medium": [
+   5.5,
+   5.3,
+   4.8
+  ],
+  "F36base mosshock Medium|High | mosshock-High": [
+   5.5,
+   5.3,
+   4.8
+  ],
+  "F36base water_tidecoil Medium|High | water_tidecoil-Medium": [
+   7.0,
+   7.0,
+   6.8
+  ],
+  "F36base water_tidecoil Medium|High | water_tidecoil-High": [
+   7.0,
+   7.0,
+   6.8
+  ],
+  "F36base water_abyssal_guardian Medium|High | water_abyssal_guardian-High": [
+   6.3,
+   5.9,
+   5.4
+  ],
+  "F36base water_abyssal_guardian Medium|High | water_abyssal_guardian-Medium": [
+   6.3,
+   5.9,
+   5.4
+  ],
+  "F36base terrapup Medium|High | terrapup-High": [
+   6.8,
+   6.5,
+   6.8
+  ],
+  "F36base terrapup Medium|High | terrapup-Medium": [
+   6.8,
+   6.5,
+   6.8
+  ],
+  "F36base water_mangrove_monitor Medium|High | water_mangrove_monitor-High": [
+   5.8,
+   5.6,
+   5.2
+  ],
+  "F36base water_mangrove_monitor Medium|High | water_mangrove_monitor-Medium": [
+   5.8,
+   5.6,
+   5.2
+  ],
+  "F36base water_cragclaw Medium|High | water_cragclaw-Medium": [
+   5.8,
+   5.4,
+   5.6
+  ],
+  "F36base water_cragclaw Medium|High | water_cragclaw-High": [
+   5.8,
+   5.4,
+   5.6
+  ],
+  "F36base veridian Medium|High | veridian-High": [
+   6.0,
+   5.8,
+   5.8
+  ],
+  "F36base veridian Medium|High | veridian-Medium": [
+   6.0,
+   5.8,
+   5.8
+  ],
+  "F36base ripplet Medium|High | ripplet-High": [
+   6.6,
+   6.6,
+   6.6
+  ],
+  "F36base ripplet Medium|High | ripplet-Medium": [
+   6.6,
+   6.6,
+   6.6
+  ],
+  "F36base glimmermoth Medium|High | glimmermoth-Medium": [
+   5.8,
+   5.9,
+   5.4
+  ],
+  "F36base glimmermoth Medium|High | glimmermoth-High": [
+   5.8,
+   5.9,
+   5.4
+  ],
+  "F36base paddlenewt Medium|High | paddlenewt-Medium": [
+   6.5,
+   6.0,
+   5.4
+  ],
+  "F36base paddlenewt Medium|High | paddlenewt-High": [
+   6.5,
+   6.0,
+   5.4
+  ],
+  "F36base bramblebun Medium|High | bramblebun-Medium": [
+   6.5,
+   6.4,
+   6.6
+  ],
+  "F36base bramblebun Medium|High | bramblebun-High": [
+   6.5,
+   6.4,
+   6.6
+  ]
+ }
+}

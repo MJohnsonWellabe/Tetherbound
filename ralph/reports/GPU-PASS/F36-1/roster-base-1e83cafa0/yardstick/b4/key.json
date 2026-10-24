@@ -1,0 +1,88 @@
+{
+ "Ys": {
+  "anchor": false,
+  "label": "F36base mosshock Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\mosshock-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\mosshock-High.png"
+ },
+ "Wb": {
+  "anchor": false,
+  "label": "F36base water_tidecoil Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_tidecoil-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_tidecoil-High.png"
+ },
+ "Rn": {
+  "anchor": false,
+  "label": "F36base water_abyssal_guardian Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_abyssal_guardian-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_abyssal_guardian-Medium.png"
+ },
+ "My": {
+  "anchor": false,
+  "label": "F36base terrapup Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\terrapup-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\terrapup-Medium.png"
+ },
+ "Pc": {
+  "anchor": false,
+  "label": "F36base water_mangrove_monitor Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_mangrove_monitor-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_mangrove_monitor-Medium.png"
+ },
+ "Gt": {
+  "anchor": false,
+  "label": "F36base water_cragclaw Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_cragclaw-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\water_cragclaw-High.png"
+ },
+ "Qk": {
+  "anchor": false,
+  "label": "F36base veridian Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\veridian-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\veridian-Medium.png"
+ },
+ "Tu": {
+  "anchor": false,
+  "label": "F36base ripplet Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\ripplet-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\ripplet-Medium.png"
+ },
+ "Wz": {
+  "anchor": false,
+  "label": "F36base glimmermoth Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\glimmermoth-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\glimmermoth-High.png"
+ },
+ "Rm": {
+  "anchor": false,
+  "label": "F36base paddlenewt Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\paddlenewt-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\paddlenewt-High.png"
+ },
+ "Cu": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ng": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Ni": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Up": {
+  "anchor": false,
+  "label": "F36base bramblebun Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\bramblebun-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36base\\sides\\bramblebun-High.png"
+ },
+ "To": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ }
+}
