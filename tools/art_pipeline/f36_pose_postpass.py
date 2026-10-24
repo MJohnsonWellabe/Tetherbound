@@ -894,11 +894,18 @@ SHOVE_1024 = ('ashtusk', 'cindercub', 'shadelet', 'torrentoad', 'cragclaw', 'peb
               'terrapup', 'trailpup', 'burrowback', 'cannonback', 'cliffspike', 'frostclaw', 'mosshock',
               'sirenseal', 'tuskroot', 'cloudfang', 'stormtrail', 'craghorn', 'breezetail', 'tidecoil',
               'aquaryn', 'stormraven', 'nightburrow', 'riftfrill', 'riverdrake')
+# Close-1024 b2-b4 (CPU, three judges per batch, confirming batches): the held
+# shove beat the shipping hit on these, each at or above the CPU-provisional
+# 6.7 mapped. Live recipes for them only; the rest stay --candidate-1024.
+LANDED_1024_SHOVE = ('burrowback', 'frostclaw', 'trailpup', 'aquaryn', 'riptusk', 'sirenseal',
+                     'tidecoil', 'voltwig', 'breezetail', 'cliffspike', 'cloudfang', 'craghorn',
+                     'pebbik', 'stormbrush', 'stormraven', 'thundertunnel')
+SHOVE_1024_RUN = SHOVE_1024 if CANDIDATE_1024 else LANDED_1024_SHOVE
 if CANDIDATE_1024:
     PRONE = tuple(s for s in PRONE if s not in PRONE_TO_TOPPLE_1024)
-    LIVE_SHOVE_HIT = tuple(LIVE_SHOVE_HIT) + tuple(s for s in SHOVE_1024 if s not in LIVE_SHOVE_HIT)
-    SHOVE_GAIN_BY.update({s: 1.5 for s in SHOVE_1024})
-    SHOVE_HOLD_BY.update({s: (0.5, 0.97) for s in SHOVE_1024})
+LIVE_SHOVE_HIT = tuple(LIVE_SHOVE_HIT) + tuple(s for s in SHOVE_1024_RUN if s not in LIVE_SHOVE_HIT)
+SHOVE_GAIN_BY.update({s: 1.5 for s in SHOVE_1024_RUN})
+SHOVE_HOLD_BY.update({s: (0.5, 0.97) for s in SHOVE_1024_RUN})
 
 
 def clamp_neck(frames, limit=NECK_PITCH_LIMIT):

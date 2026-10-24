@@ -1,0 +1,77 @@
+{
+ "Gq": {
+  "anchor": false,
+  "label": "F36 staticub b4",
+  "A": "<scratch>/b4/sides/staticub-base.png",
+  "B": "<scratch>/b4/sides/staticub-c.png"
+ },
+ "Fg": {
+  "anchor": false,
+  "label": "F36 pebbik b4",
+  "A": "<scratch>/b4/sides/pebbik-c.png",
+  "B": "<scratch>/b4/sides/pebbik-base.png"
+ },
+ "Ld": {
+  "anchor": false,
+  "label": "F36 craghorn b4",
+  "A": "<scratch>/b4/sides/craghorn-c.png",
+  "B": "<scratch>/b4/sides/craghorn-base.png"
+ },
+ "Ke": {
+  "anchor": false,
+  "label": "F36 stormbrush b4",
+  "A": "<scratch>/b4/sides/stormbrush-c.png",
+  "B": "<scratch>/b4/sides/stormbrush-base.png"
+ },
+ "Vj": {
+  "anchor": false,
+  "label": "F36 cloudfang b4",
+  "A": "<scratch>/b4/sides/cloudfang-c.png",
+  "B": "<scratch>/b4/sides/cloudfang-base.png"
+ },
+ "Ga": {
+  "anchor": false,
+  "label": "F36 skyrill b4",
+  "A": "<scratch>/b4/sides/skyrill-c.png",
+  "B": "<scratch>/b4/sides/skyrill-base.png"
+ },
+ "Ok": {
+  "anchor": false,
+  "label": "F36 thundertunnel b4",
+  "A": "<scratch>/b4/sides/thundertunnel-base.png",
+  "B": "<scratch>/b4/sides/thundertunnel-c.png"
+ },
+ "Az": {
+  "anchor": false,
+  "label": "F36 breezetail b4",
+  "A": "<scratch>/b4/sides/breezetail-base.png",
+  "B": "<scratch>/b4/sides/breezetail-c.png"
+ },
+ "Tv": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Dr": {
+  "anchor": false,
+  "label": "F36 stormraven b4",
+  "A": "<scratch>/b4/sides/stormraven-base.png",
+  "B": "<scratch>/b4/sides/stormraven-c.png"
+ },
+ "Ut": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ },
+ "Bv": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Un": {
+  "anchor": false,
+  "label": "F36 cliffspike b4",
+  "A": "<scratch>/b4/sides/cliffspike-base.png",
+  "B": "<scratch>/b4/sides/cliffspike-c.png"
+ }
+}

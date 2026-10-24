@@ -1,0 +1,136 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:control": [
+   4.2,
+   3.8,
+   4.0
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.0,
+   4.4,
+   4.6
+  ],
+  "f36_0_gap:C2B": [
+   5.5,
+   5.0,
+   5.0
+  ],
+  "f36_0_gap:C2A": [
+   6.8,
+   6.3,
+   6.2
+  ],
+  "f36_0_npc:C1B": [
+   7.0,
+   6.6,
+   6.3
+  ],
+  "f36_0_npc:C1A": [
+   7.0,
+   6.6,
+   6.3
+  ]
+ },
+ "candidates": {
+  "staticub live": [
+   7.3,
+   7.1,
+   7.3
+  ],
+  "staticub c1024": [
+   7.5,
+   7.2,
+   7.1
+  ],
+  "pebbik c1024": [
+   6.3,
+   5.8,
+   6.4
+  ],
+  "pebbik live": [
+   6.0,
+   5.3,
+   5.9
+  ],
+  "craghorn c1024": [
+   7.2,
+   6.9,
+   6.9
+  ],
+  "craghorn live": [
+   6.3,
+   5.8,
+   5.8
+  ],
+  "stormbrush c1024": [
+   6.1,
+   6.0,
+   6.0
+  ],
+  "stormbrush live": [
+   5.8,
+   5.5,
+   5.5
+  ],
+  "cloudfang c1024": [
+   7.2,
+   6.9,
+   6.7
+  ],
+  "cloudfang live": [
+   6.7,
+   6.2,
+   6.4
+  ],
+  "skyrill c1024": [
+   5.9,
+   5.6,
+   5.5
+  ],
+  "skyrill live": [
+   5.6,
+   5.2,
+   5.2
+  ],
+  "thundertunnel live": [
+   5.8,
+   6.0,
+   5.6
+  ],
+  "thundertunnel c1024": [
+   6.3,
+   6.6,
+   6.0
+  ],
+  "breezetail live": [
+   6.0,
+   5.8,
+   5.5
+  ],
+  "breezetail c1024": [
+   6.9,
+   7.0,
+   6.6
+  ],
+  "stormraven live": [
+   6.0,
+   5.6,
+   5.5
+  ],
+  "stormraven c1024": [
+   6.8,
+   6.5,
+   6.4
+  ],
+  "cliffspike live": [
+   6.1,
+   5.6,
+   5.6
+  ],
+  "cliffspike c1024": [
+   6.6,
+   6.2,
+   5.9
+  ]
+ }
+}

@@ -1,0 +1,77 @@
+{
+ "Mm": {
+  "anchor": false,
+  "label": "F36 aquaryn b3",
+  "A": "<scratch>/b3/sides/aquaryn-c.png",
+  "B": "<scratch>/b3/sides/aquaryn-base.png"
+ },
+ "Pi": {
+  "anchor": false,
+  "label": "F36 voltwig b3",
+  "A": "<scratch>/b3/sides/voltwig-c.png",
+  "B": "<scratch>/b3/sides/voltwig-base.png"
+ },
+ "Vy": {
+  "anchor": false,
+  "label": "F36 cragclaw b3",
+  "A": "<scratch>/b3/sides/cragclaw-c.png",
+  "B": "<scratch>/b3/sides/cragclaw-base.png"
+ },
+ "Sz": {
+  "anchor": false,
+  "label": "F36 mosshock b3",
+  "A": "<scratch>/b3/sides/mosshock-c.png",
+  "B": "<scratch>/b3/sides/mosshock-base.png"
+ },
+ "Tw": {
+  "anchor": false,
+  "label": "F36 cannonback b3",
+  "A": "<scratch>/b3/sides/cannonback-base.png",
+  "B": "<scratch>/b3/sides/cannonback-c.png"
+ },
+ "Xl": {
+  "anchor": false,
+  "label": "F36 tidecoil b3",
+  "A": "<scratch>/b3/sides/tidecoil-c.png",
+  "B": "<scratch>/b3/sides/tidecoil-base.png"
+ },
+ "Vc": {
+  "anchor": false,
+  "label": "F36 riptusk b3",
+  "A": "<scratch>/b3/sides/riptusk-c.png",
+  "B": "<scratch>/b3/sides/riptusk-base.png"
+ },
+ "Hw": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Nt": {
+  "anchor": false,
+  "label": "F36 sirenseal b3",
+  "A": "<scratch>/b3/sides/sirenseal-c.png",
+  "B": "<scratch>/b3/sides/sirenseal-base.png"
+ },
+ "En": {
+  "anchor": false,
+  "label": "F36 mangrove_monitor b3",
+  "A": "<scratch>/b3/sides/mangrove_monitor-c.png",
+  "B": "<scratch>/b3/sides/mangrove_monitor-base.png"
+ },
+ "Yr": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Yv": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ju": {
+  "anchor": false,
+  "label": "F36 torrentoad b3",
+  "A": "<scratch>/b3/sides/torrentoad-base.png",
+  "B": "<scratch>/b3/sides/torrentoad-c.png"
+ }
+}
