@@ -41,6 +41,29 @@
   - Balance: game 5 commits / tests-tools 0.
 - 2026-10-24 INFO Task 1 (fight telegraphs vs F38#5-F41#5 "no flat magenta rings or slabs") started. New OFF hook: bodied tell (`telegraph.soft_style.curtain_height_m`, 0/absent = off; scripts/combat/tell_style.gd). Each tell's outer rim (feet ring, charge-lane rails, pattern ring/cone/fan/lane/marker outline, guard cone) raises a thin depth-tested light curtain that fades upward with a travelling shimmer. Footprints, timings, the AI's telegraph and depth rules unchanged. Candidates are capture-only overlays (`cand_tell.py.txt`).
 
+## HANDED TO STORMWOOD (F10#2, Stormwood named-fight camera; coordinator consolidation 24 Oct)
+- **Fixed (on main):**
+  - The sight-line fight camera (`foliage_camera_visibility.json line_of_sight_fade`, enabled_realms ["stormwood"]). The lens refuses orbits whose line to either fighter meets trunks or rocks, and canopy fades in fights.
+  - Per-named-wild distance caps (`named_max_distance_m`, 11-12 m) and a pilot size floor (`pilot_min_screen_fraction` 0.07).
+  - Pilot mark: rim 0.9, pale contact ring over the ground, and a fill light.
+  - C3 6/6 on CPU r8 (6.77 mapped, old 6.7 rule).
+  - Telegraphs: the bodied tells (#722) apply to the Stormwood named rows. They keep their violet #b48cff row hue, and the shared hue is #b16cff. The Stormwood named tells were judged 6.13 vs 5.87 (r2, `ralph/reports/FIGHTS/close-1024/NOTE.md`) and are parked for scoring (two rounds under +0.5).
+- **Open:**
+  - The GPU verdict (owner 24 Oct: GPU decides). Medium/High was 3.58-3.68 on the 21 Oct GPU scale, and 5.52 on the 22 Oct yardstick (`ralph/reports/GPU-PASS/F10-2/`, STATE).
+  - Judges' standing asks:
+    1. The Stormwood grade: dark, monochrome, no purple sky in frame.
+    2. The fight HUD covers 35-45% of the frame (UI). A compact Tether Command lane candidate exists: `tether_commands.json ui.compact_when_idle`, OFF.
+    3. The pilot (Sparkit) reads as a speck next to Voltarach. A per-trainer pilot floor exists (`camera.json fight.per_trainer.<id>.pilot_min_screen_fraction`); named wilds use `line_of_sight_fade.pilot_min_screen_fraction`, and a global raise to 0.11 would also change Riverwatch, so add a per-named-wild key there if needed.
+    4. Canopy at the frame edges.
+    5. Tells are still flat ground decals (PARTIAL).
+- **C2/C3 (functional, F22#4 run, 24 Oct):** smoke_stormwood_b_named_c2c3 now drives live patterns; 15/18 rows PASS. The Terrapup rows (capacitor, crown, old_rodfolk) re-run under the COMBAT §7 trivial-fight floor; results are in the F22#4 READY line.
+- **Camera set (fixed, as judged):**
+  - Five fights: `tools/capture_named_fights_f10_6.gd --ids=hollows_alpha,capacitor_alpha,crown_guardian,old_rodfolk_hall_guardian,glass_field_alpha --seconds=18 --interval=1.0 --camera-view=north`.
+  - blackwater_elder: the same with `--ids=blackwater_elder` at the default stand.
+  - Frames: i00-i17 plus tell1/tell2 a-f.
+  - CPU: `--fixed-fps 20`. GPU Medium: `--rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --fixed-fps 20` (commands in `ralph/reports/GPU-PASS/F10-2/`).
+- **History:** `ralph/reports/CAMERA/close-1020/NOTE.md` (r1-r8), `ralph/reports/STORMWOOD/close-1022/notes.md`.
+
 ## Rounds
 
 ### r1 (24 Oct, CPU llvmpipe Compatibility 1280x720): arm C vs shipping
