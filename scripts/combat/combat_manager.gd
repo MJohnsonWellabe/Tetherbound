@@ -6402,7 +6402,33 @@ func _finish_catch() -> void:
 func _watch_the_orb(orb: Node3D) -> void:
 	if orb == null or _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
-	_camera_rig.call("set_target", orb, CATCH.camera_profile("resolve_camera"))
+	var profile := CATCH.camera_profile("resolve_camera")
+	var offset := _trainer_frame_offset(orb, profile)
+	_camera_rig.call("set_target", orb, profile)
+	if offset != Vector3.ZERO and _camera_rig.has_method("set_framing_pivot_offset"):
+		_camera_rig.call("set_framing_pivot_offset", offset)
+		var throw := -offset.normalized()
+		_camera_rig.set("yaw", atan2(-throw.x, -throw.z))
+
+
+## P2-059 (`resolve_camera.trainer_share`, only inside catching.json's
+## framed_camera block): the orb shot keeps the trainer in it. The pivot slides
+## that share of the way from the orb toward the trainer, the lens looks from
+## behind the trainer along the throw, and the arm reaches past the trainer
+## by `trainer_margin_m` (written into `profile.distance`). Returns the pivot
+## offset, or zero when the profile asks for nothing. Presentation only; the
+## orb, the dice and the verdict are unchanged.
+func _trainer_frame_offset(orb: Node3D, profile: Dictionary) -> Vector3:
+	if not profile.has("trainer_share") or _player == null or not is_instance_valid(_player):
+		return Vector3.ZERO
+	var span := _player.global_position - orb.global_position
+	span.y = 0.0
+	if span.length() < 0.5:
+		return Vector3.ZERO
+	var share := clampf(float(profile["trainer_share"]), 0.0, 1.0)
+	var fit := span.length() * share + float(profile.get("trainer_margin_m", 3.5))
+	profile["distance"] = maxf(float(profile.get("distance", 6.0)), fit)
+	return span * share
 
 
 ## One of the catch's three flashes (catching.json `vfx`): strike, caught,

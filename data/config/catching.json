@@ -117,7 +117,8 @@
     "_comment": "P2-113 (visual-claude lane, 2026-10-12). The catalogue found the aim frame crowded the trainer between a cropped ally and the target, and that the strike and breakout close-up (resolve_camera: 3.4 m at fov 36, about 1.1 m of half-width at the orb) cropped bodies and was filled by the creature that pops out on a breakout. With this enabled, catch_math.gd::camera_profile merges these overrides onto `aim` and `resolve_camera`. The aim pulls back and widens so the trainer, ally and target separate. The resolve shot stands off so the orb and the full body around it share the frame (6.0 m x tan(22) = 2.4 m half-width). Glide speeds, pitch limits and aim sensitivity are unchanged. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
     "enabled": false,
     "aim": {"distance": 4.9, "height": 2.05, "fov": 58.0, "shoulder_offset": 1.25},
-    "resolve_camera": {"distance": 6.0, "height": 0.85, "fov": 44.0, "pitch_start_deg": -30.0}
+    "resolve_camera": {"distance": 6.0, "height": 0.85, "fov": 44.0, "pitch_start_deg": -30.0, "trainer_share": 0.45, "trainer_margin_m": 3.5, "shoulder_offset": 1.0},
+    "_why_trainer_share": "P2-059 close-1024 r1 judges (6.42 vs 6.08): the resolve shot still cut to a tight downward view of grass with the trainer and companion out of frame. With trainer_share the pivot slides that share from the orb toward the trainer and the lens looks from behind the trainer along the throw, trainer_margin_m past them (combat_manager.gd _trainer_frame_offset). Inside this OFF block only."
   },
   "resolve_camera": {
     "_comment": "camera_rig profile for the wobble: a close-up on the resting orb, entered with a slow glide (retarget_lag) the moment the orb strikes. The whole resolution plays through this shot — the orb is the only actor on stage and the camera says so. Handed back to the creature on a breakout and to the trainer when a catch ends the fight.",
