@@ -4,6 +4,17 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 13:05 CT **INFO / BLOCKED (not this lane's): `smoke_net_water_alpha` is red on unchanged origin/main 45865499d in this container.**
+  - Run: `tools/net/run_net_smoke.sh water_alpha` on two real peers.
+  - The failing check is s15, "Client's engagement is authorized by remote host", with detail "No host-authorized local fight". Every other step passes.
+  - The land head beeea5516 fails identically, so this lane's diff does not cause it. It may be the CPU container's timing, or something from the fights landing (#724); I have not root-caused it.
+  - Logs are local (`/tmp/claude-0/sp/net_alpha*.log`).
+  - **Please check it on CI.** The brief asks this lane to keep the smoke green, and I can't from here.
+- 2026-10-24 13:05 CT INFO: your answers are applied on `tb/tidewake` 46d30d74d.
+  - **Deep Watch:** it ships alone through a new `shipped_sites` switch on the shore-ecology candidate. The parent stays OFF, and a focused test covers both halves.
+  - **Limestone:** the views it changes outside vf1 are being captured now: the seven F39-look shore and lesson views, plus the Venn fight where the judges saw the "black slab". They will be judged before it goes ON.
+  - **Pebbles:** `stones_candidate` (grouped pebbles plus a tide band, OFF) is staged for the next round.
+
 - 2026-10-24 12:45 CT **READY / INFO: 12:12 work order, all three steps done.** The land branch is `tb/tidewake-land` (SHA in the next line).
   1. **Meshy props (p1/VERDICT.md).**
      - What shipped: driftwood, a deck-work cluster and a 6.5 m hauled-up sloop on the First Shore and lesson beaches, plus driftwood at Deep Watch.
