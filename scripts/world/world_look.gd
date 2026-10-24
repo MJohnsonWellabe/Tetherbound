@@ -1161,7 +1161,8 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# creature_body.gd::_apply_night_floor's own comment), and every other
 	# time-of-day block leaves this key unset -- 0.0 default, so day/golden/
 	# dawn stay exactly as measured before this floor existed.
-	CREATURE_BODY.set_emission_floor_scale(float(cfg.get("creature_emission_floor", 0.0)))
+	CREATURE_BODY.set_emission_floor_scale(creature_emission_floor_for_renderer(
+		cfg, RenderingServer.get_current_rendering_method()))
 	# G3-CREATURE-COLOUR-0904 (docs/CURRENT_STATE.md §3). The mirror image of the
 	# floor directly above: `field_emission`/`field_degreen`
 	# (creature_body.gd::_apply_field_brightness()) are a per-species DAYTIME
@@ -1260,3 +1261,17 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	var viewport := get_viewport()
 	if viewport != null:
 		GRAPHICS_PREFS.apply_camera(viewport.get_camera_3d())
+
+
+## F22#4 GPU pass (24 Oct): the creature emission floor adds each plain-PBR
+## creature's own albedo as emission. It was tuned on Compatibility; on
+## Forward+ (Medium/High) the same additive term washes those creatures milky
+## grey in daylight (the Riverwatch "ghost" boss: with the floor off alone,
+## Medium matched Low). Forward+ and Mobile take
+## `creature_emission_floor_forward_plus_scale` of it; Compatibility is
+## unchanged.
+static func creature_emission_floor_for_renderer(cfg: Dictionary, rendering_method: String) -> float:
+	var floor_scale := float(cfg.get("creature_emission_floor", 0.0))
+	if rendering_method == "gl_compatibility":
+		return floor_scale
+	return floor_scale * maxf(0.0, float(cfg.get("creature_emission_floor_forward_plus_scale", 1.0)))
