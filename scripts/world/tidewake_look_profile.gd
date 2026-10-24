@@ -15,8 +15,15 @@ static func settings() -> Dictionary:
 	if OS.get_cmdline_user_args().has("--tidewake-look-candidate"):
 		parsed.enabled = true
 		return parsed
+	# Capture-only: restore just the named unjudged sections, so a judged
+	# round can attribute its result to one candidate instead of all of them.
+	var restore: PackedStringArray = []
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--tidewake-look-sections="):
+			restore = arg.trim_prefix("--tidewake-look-sections=").split(",", false)
 	for section: Variant in parsed.get("sections_off", []):
-		parsed.erase(str(section))
+		if not restore.has(str(section)):
+			parsed.erase(str(section))
 	return parsed
 
 

@@ -1,10 +1,23 @@
 # GPU-PASS lane note (owner's Windows desktop, GTX 1060 3GB; 21–22 Oct 2026)
 
-## TO COORDINATOR: FINAL READY tb/gpu-pass (the commit that adds this note; its SHA is in my last message)
+## READY (24 Oct): newest first
+
+- **10:05 CT, F17#6 Crossing Hall r9: REOPENED on GPU.** Main r9 maps to **5.83** against a control of 4.98 (5f1f388cc Hall config), the same at Medium and High.
+  - The cause: r9's `hall_great_hall.shafts` (additive quads) render on Forward+ as hard white bead-streak bars in 6 of the 10 day views. Neon arch rims add to it. All three judges named the shafts as the worst artefact. The CPU sheet shows no shafts at all.
+  - The fix needs to be renderer-aware, like the F22#4 aura.
+  - A shafts-off diagnostic is queued.
+  - Also fixed: a GPU timing bug in `capture_camera_set.gd` (coordinator aaaa585a1).
+  - Evidence: `F17-6/VERDICT.md`.
+  - **Now running:** F22#4 Riverwatch on main.
+
+- **08:55 CT, F25#4 confirmed on main (Medium):** the launch frame is 16.6–27.4 ms (volley 1) and 10.3–18.0 ms (volley 2), with 0 frames over 33.3 ms in 24 volleys. The budget caps at 384 under over-cap load. This backs F21#5.
+  - Low with prewarm read 245–254 ms on a cold cache after the reimport. **The warm-cache re-run gives 64–78 ms, the same as FIX.md: a cache artefact, not a regression.**
+  - Evidence: `F25-4/main-confirm/VERDICT.md`.
+  - **Now running:** F17#6 Crossing Hall, Medium and High; the Low re-run follows it.
 
 Land on main only the files in `LANDABLE.txt`: verdict .md, key and score .json, and one `_sheet` per row, nothing over about 200 KB (owner size rule). Everything else stays on tb/gpu-pass.
 
-**Fix branch:** `tb/vfx-launch` at **b175bda5c** is pushed, with the owner's approval in this chat. It holds the F25#4 launch-stall fix and its hardened test. It is not landed; that is yours.
+*(Below: the 21–22 Oct lane note, kept for history. tb/vfx-launch has since landed on main.)*
 
 **Cleanup (22 Oct, evening):** removed my own run outputs (`D:\tb-gpu-runs\out`, `yard`, `judge`; all evidence committed), my worktree `D:\tb-gpu-wt-lane`, my `.artifacts\phase2` and the untracked `gpu1022-*` Tidewake capture folders, and the three preset shader caches. That freed about 13.8 GB; D: went from 11.2 to 25.0 GB free. The old D: checkouts were not touched. The keep-awake had already expired.
 
@@ -48,16 +61,20 @@ Land on main only the files in `LANDABLE.txt`: verdict .md, key and score .json,
 3. Re-confirm F25#4 on main after tb/vfx-launch lands (`F25-4/f25_fix_queue.ps1.txt`, about 12 minutes).
 4. F08#3: judges ask for foreground dressing, a night lighting pass and varied islets (scene work for the Cloudreach lane).
 
-## GPU QUEUE (coordinator, 24 Oct; run top to bottom)
+## GPU QUEUE (coordinator, 24 Oct midday; run top to bottom; work from origin/main 45865499d or later)
 
-Each row is CPU-provisional until this pass. Capture at Medium and High, judge with the yardstick (`tools/visual_judge/`: standard prompt, at least 3 anchor pairs, `calibrate.py`). A mapped Bar A of 7.5 or above confirms the row; below 7.5 reopens it. Commit verdicts per `LANDABLE.txt` rules.
+Each row is CPU-provisional until this pass. Capture at Medium and High, judge with the yardstick (`tools/visual_judge/`: standard prompt, at least 3 anchor pairs, `calibrate.py`). A mapped Bar A of 7.5 or above confirms the row; below 7.5 reopens it. Commit verdicts per `LANDABLE.txt` rules to tb/gpu-pass and write a READY line at the top of this note.
 
-1. **F17#6 Crossing Hall r9** (main 816dfa60f; control 5f1f388cc): `tools/visual_judge/capture_camera_set.gd --set=res://tools/visual_judge/camera_sets/F17-6.json` (15 views). CPU was 6.84 vs 5.82 (`ralph/reports/MEADOWS/close-1024/F17-6.md`).
-2. **F36#0 naturalistic creatures** (main after the Creatures landing): `capture_f36_poses.gd --whole-body --context --species=terrapup,bramblebun,mudsnout,trailpup,paddlenewt,burrowback,veridian,mosshell,nightburrow,stormtrail,riftfrill` (no `--candidate`), plus Mosshell's water form. CPU: Bramblebun 7.57, Trailpup 7.49, Mudsnout 7.40, Mosshell 7.31 (water 7.19), Burrowback 7.23, Paddlenewt 6.88, Veridian 6.82 (`ralph/reports/CREATURES/close-1024/`). Terrapup ships at 3.20 m (owner: "Just shrink it"; judged 7.62 at 3.85 m, re-judge at 3.20 m). Nightburrow, Stormtrail and Riftfrill wear their bases' remake meshes (unjudged on them). Riverdrake stays OFF.
-3. **F36#1 held shove hit** (same commit): `capture_f36_poses.gd --candidate --whole-body --context` for the species in `f36_pose_candidates.json` `enabled_species` plus the profiles whose `_why_close1024*` lines record a score (b2-b4, b8-b9). CPU above shipping; the sub-6.7 set is recorded in `_why_close1024_below_bar`.
-4. **Tidewake time-of-day regrade** (main after the Tidewake landing): the `tools/visual_judge/camera_sets/F39-look.json` look views at golden/night (`ralph/reports/TIDEWAKE/close-1024/lt2/`). CPU 7.07 vs 5.84.
-5. **Re-check F39#4** (board says met on 7 Oct): its close-up half maps to 3.35 on today's CPU yardstick (`ralph/reports/TIDEWAKE/close-1024/vf1/`). Confirm or reopen on GPU.
-6. **Later landings tonight** (Tidewake, Stormwood, Meadows rows): each lane note's READY line names its camera set; the coordinator adds them here when they land.
+1. **F17#6 Crossing Hall r9** (CPU 6.84 vs 5.82; `ralph/reports/MEADOWS/close-1024/F17-6.md`): `tools/visual_judge/capture_camera_set.gd --set=res://tools/visual_judge/camera_sets/F17-6.json` (15 views).
+2. **F22#4 Riverwatch named fight at Medium** (CPU 6.89 on 77447cf25; `ralph/reports/FIGHTS/close-1024/rw_*.json`). The renderer-aware boss aura (Forward+ rim x0.3, no omni light) is on main, so this is the re-judge your GHOST.md asked for: `tools/art_pipeline/capture_named_fight.gd --trainer=captain_riverwatch --live-member=captain_riverwatch:4 --ally=ripplet --frames=12 --interval=0.5 --tell-frames`; compare tell frames by state.
+3. **F36#0 naturalistic creatures**: `capture_f36_poses.gd --whole-body --context --species=ripplet,cindercub,terrapup,bramblebun,mudsnout,trailpup,paddlenewt,burrowback,veridian,mosshell,nightburrow,stormtrail,riftfrill` (no `--candidate`), plus Mosshell's water form. CPU: Cindercub 7.63, Bramblebun 7.57, Trailpup 7.49, Terrapup 7.47 (3.20 m, owner "Just shrink it"), Ripplet 7.40, Mudsnout 7.40, Mosshell 7.31, Burrowback 7.23, Paddlenewt 6.88, Veridian 6.82. Nightburrow, Stormtrail and Riftfrill wear their bases' meshes (unjudged on them). Riverdrake stays OFF.
+4. **F36#1 poses**: `capture_f36_poses.gd --candidate --whole-body --context` for `f36_pose_candidates.json` `enabled_species` (held shove hits, recoil/faint/swim for the remakes, water forms swimming, Tuskroot topple; verdicts under `ralph/reports/CREATURES/close-1024/`).
+5. **Tidewake time-of-day regrade** (CPU 7.07 vs 5.84): `tools/visual_judge/camera_sets/F39-look.json` at golden/night (`ralph/reports/TIDEWAKE/close-1024/lt2/`).
+6. **High/Medium biome matrices for F38#0 / F40#0 / F26#3** once the Meadows and Cloudreach lanes land their CPU matrices: `capture_f38_matrix.gd` (Meadows) and the F40 matrix (Cloudreach) at High and Medium, then a yardstick judge per biome. This turns the CPU-provisional re-scores into full ones and is the F26#3 evidence.
+7. **Forward+ grade re-measure** (follow-up 1 above): Meadows Medium on main (#712 fog 0.001 and the fplus grade are both on main).
+8. **Fight telegraphs** (#722/#724, violet #b16cff, informational; CPU 6.44/6.39/6.28, below the bar): the Meadows, Tidewake and Cloudreach fight sets at Medium, tell frames by state.
+
+Skip F39#4 (reopened 24 Oct: the Veilfall close-up needs new art first). F21#5 closed on your F25#4 frame-time evidence; nothing to run.
 
 **Rules this lane ran under:**
 - Push only tb/gpu-pass.

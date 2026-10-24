@@ -130,6 +130,16 @@ func _run() -> void:
 	if not is_nan(hall_ground_y) and not _mount_isolated_hall(world, hall_ground_y, hall_arm):
 		quit(2)
 		return
+	# World shells build across frames (Meadows' settlements land ~30 s in on a
+	# GPU), so a fixed frame count alone can shoot an empty meadow. Wait for the
+	# world's own ready flag first; the isolated mode has no world script.
+	var shell_deadline := Time.get_ticks_msec() + 300000
+	while world.get("_shell_ready") == false:
+		if Time.get_ticks_msec() > shell_deadline:
+			push_error("capture_camera_set: world shell not ready after 300 s")
+			quit(2)
+			return
+		await process_frame
 	for i in 300:
 		await physics_frame
 	if not get_nodes_in_group(&"deployed_creature").is_empty():
