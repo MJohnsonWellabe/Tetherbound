@@ -9,6 +9,10 @@ const ALTAR_INTERACTION := preload("res://scripts/ui/altar_station_interaction.g
 const ALTAR_SERVICE := preload("res://scripts/ui/altar_service.gd")
 const BRIDGE_ROUTE := preload("res://tests/helpers/meadows_earned_bridge_segment.gd")
 const MAX_PAYMENTS := 19
+const SPINE := preload("res://tests/helpers/meadows_earned_warrens_segment.gd")
+## The Sigils piece follows the departure spine from the Old Mill Crossing's
+## north road end; Mira's loop (t2) returns there along the north spine.
+const MILL_NORTH_END := Vector2(-152.0, 4235.0)
 var _completions: Array[Dictionary] = []
 
 static func preflight(training: Dictionary, tier: int, index: int) -> Array[String]:
@@ -137,7 +141,7 @@ func _bind_homestead() -> bool:
 
 ## The Warrens input checks physical far-bank stance. Reuse the authored
 ## bridge approach and live near/far points after the saved homestead loop.
-func return_to_bridge(tree: SceneTree, world: Node3D, game: Node, previous: Dictionary) -> Dictionary:
+func return_to_bridge(tree: SceneTree, world: Node3D, game: Node, previous: Dictionary, onward_to_mill := false) -> Dictionary:
 	_tree = tree
 	_world = world
 	_game = game
@@ -172,7 +176,25 @@ func return_to_bridge(tree: SceneTree, world: Node3D, game: Node, previous: Dict
 	if depth < bank - 0.6 or TRAINING.snapshot(game) != before:
 		_fail("Training return failed physical far-bank or retained training checks")
 	_receipt("training_bridge_return", {"depth": depth, "required_depth": bank - 0.6, "training": TRAINING.snapshot(game)})
+	if onward_to_mill and failures.is_empty():
+		for point: Vector2 in mill_legs(config):
+			var at := Vector3(point.x, float(world.call("ground_height_at", point.x, point.y)), point.y)
+			if not await _walk_to(at, "earned north spine return", 0.6 if point == MILL_NORTH_END else 10.0): return _out()
+		if TRAINING.snapshot(game) != before:
+			_fail("Training return changed retained training on the north spine")
+		_receipt("training_mill_return", {"player": _player.global_position, "training": TRAINING.snapshot(game)})
 	return _out()
+
+## Far bank -> the north spine (bands 2 and 3) -> the Old Mill Crossing's north
+## road end, where the Sigils piece's departure spine begins.
+static func mill_legs(terrain: Dictionary) -> Array[Vector2]:
+	var legs: Array[Vector2] = []
+	for id: String in ["band2_stone_and_root", "band3_the_river_lock"]:
+		for point: Vector2 in SPINE.trail_points(terrain, "bands", id):
+			if not legs.is_empty() and legs[-1] == point: continue
+			legs.append(point)
+			if point == MILL_NORTH_END: return legs
+	return []
 
 func _raise_to_cap(panel: Node, uid: String, target: int, prompt: Node3D) -> bool:
 	if not await _altar_focus(panel, "creature:" + uid): return _fail_b("Cannot focus retained Altar companion")
