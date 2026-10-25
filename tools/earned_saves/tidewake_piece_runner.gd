@@ -402,6 +402,11 @@ func _prepare_meadows_prefix() -> bool:
 	# verified and carried in meadows_origin, never relabelled earned.
 	var input_mode := "generated_fixture" if receipt.get("kind", "") == "f49_generated_fixture_handoff" \
 			or receipt.get("input_mode", "") == "generated_fixture" else "earned"
+	# Standing direction 2 (owner, 22 Oct): a piece may start from its
+	# predecessor's accepted end save made on an earlier commit; the import
+	# records the f49_pinned_start transition (producer -> consumer commit).
+	meadows_prefix.set("pinned_start", true)
+	disclosures.append("Pinned start: the Meadows tidewake_handoff save may come from an earlier commit; seam proven by its handoff manifest")
 	if meadows_prefix.call("import_prefix", from_dir, input_mode) != "tidewake_handoff":
 		failures.append_array(meadows_prefix.failures)
 		return false
