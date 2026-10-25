@@ -2,9 +2,9 @@ extends "res://tests/test_case.gd"
 
 # P2-016 G4 fallback (GPU, 25 Oct): from the high grunt camera and under the
 # contact disc a few-pixel head dip did not read. The hit recoil now drops the
-# head about a third of the body's height, pitched about the hindquarters, and
-# pushes away from the blow. Visual only: the art moves, the body and its
-# collider do not.
+# head about a third of the body's height, pitched about the hindquarters,
+# pushes away from the blow and squashes briefly on contact. Visual only: the
+# art moves, the body and its collider do not.
 
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const BODY := preload("res://scripts/creatures/creature_body.gd")
@@ -47,7 +47,10 @@ func test_the_recoil_drops_the_head_a_third_of_the_body_and_keeps_the_collider()
 	var half := float(body.call("_combat_flinch_body_length")) * 0.5
 	var nose_rest := rest.origin + forward * half
 	var hips_rest := rest.origin - forward * half
-	await _frames(int(ceil(BODY.FLINCH_OUT_S * Engine.physics_ticks_per_second)) + 2)
+	await _frames(int(ceil(BODY.FLINCH_OUT_S * Engine.physics_ticks_per_second)))
+	assert_true(art.transform.basis.y.length() < rest.basis.y.length() * 0.95,
+		"the contact squashes the art down")
+	await _frames(int(ceil(BODY.FLINCH_SQUASH_S * Engine.physics_ticks_per_second)) + 2)
 	var moved := art.transform * (rest.affine_inverse() * nose_rest)
 	var hips := art.transform * (rest.affine_inverse() * hips_rest)
 	var height := float(body.call("body_height"))
@@ -56,7 +59,7 @@ func test_the_recoil_drops_the_head_a_third_of_the_body_and_keeps_the_collider()
 	assert_almost_eq(hips.y, hips_rest.y, 0.02, "the hindquarters stay at their height")
 	if collider != null:
 		assert_true(collider.transform.is_equal_approx(collider_before), "the collider never moves on the body")
-	await _frames(int(ceil((BODY.FLINCH_HOLD_S + BODY.FLINCH_BACK_S) * Engine.physics_ticks_per_second)) + 4)
+	await _frames(int(ceil((BODY.FLINCH_HOLD_S - BODY.FLINCH_SQUASH_S + BODY.FLINCH_BACK_S) * Engine.physics_ticks_per_second)) + 4)
 	assert_true(art.transform.is_equal_approx(rest), "the art returns to its rest pose")
 
 

@@ -2505,7 +2505,7 @@ func hold_combat_wince(seconds: float) -> bool:
 	return _animator != null and bool(_animator.call("hold_wince", seconds))
 
 
-const FLINCH_SHOVE_PER_M := 0.11
+const FLINCH_SHOVE_PER_M := 0.2
 const FLINCH_MIN_HEIGHT := 0.8
 const FLINCH_MAX_HEIGHT := 4.0
 const FLINCH_OUT_S := 0.06
@@ -2516,6 +2516,10 @@ const FLINCH_BACK_S := 0.2
 ## reads from the high grunt camera and past the contact disc.
 const FLINCH_HEAD_DROP_FRACTION := 0.33
 const FLINCH_MAX_DIP_DEG := 25.0
+## A short squash on contact (G5): flattened and widened for FLINCH_SQUASH_S,
+## then the held dip.
+const FLINCH_SQUASH := Vector3(1.08, 0.86, 1.08)
+const FLINCH_SQUASH_S := 0.08
 
 ## Recoil stays visual, never moving collision or attack geometry. Enabled
 ## hurt clips own Model's grounded transform, so their additive recoil uses
@@ -2552,8 +2556,10 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
 		dipped = Transform3D(turn * rest.basis, pivot + turn * (rest.origin - pivot))
 	dipped.origin += recoil
 	_combat_flinch_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
-	_combat_flinch_tween.tween_property(_combat_flinch_target, "transform", dipped, FLINCH_OUT_S).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_combat_flinch_tween.tween_interval(FLINCH_HOLD_S)
+	var squashed := Transform3D(Basis.from_scale(FLINCH_SQUASH) * dipped.basis, dipped.origin)
+	_combat_flinch_tween.tween_property(_combat_flinch_target, "transform", squashed, FLINCH_OUT_S).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_combat_flinch_tween.tween_property(_combat_flinch_target, "transform", dipped, FLINCH_SQUASH_S)
+	_combat_flinch_tween.tween_interval(maxf(0.0, FLINCH_HOLD_S - FLINCH_SQUASH_S))
 	_combat_flinch_tween.tween_property(_combat_flinch_target, "transform", rest, FLINCH_BACK_S).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 
 
