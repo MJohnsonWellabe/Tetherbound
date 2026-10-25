@@ -989,6 +989,25 @@ func _wait_for_panel(script_tail: String) -> Node:
 	return null
 
 
+## A station's prompt is on its working face. From behind it, a straight walk
+## at the prompt runs into the station itself (training_t4_feed, 24 Oct: from
+## south-west of the Kitchen, its north-face prompt sat between the Kitchen and
+## its tier-2 attachment; 2 confined resets, 3 m short). Come round by the
+## player's own side to a point just in front of the face first. INF when the
+## player already stands in front.
+static func front_side_waypoint(prompt: Vector3, station: Vector3, player: Vector3) -> Vector3:
+	var facing := Vector3(prompt.x - station.x, 0.0, prompt.z - station.z)
+	if facing.length() < 0.2:
+		return Vector3.INF
+	facing = facing.normalized()
+	var offset := Vector3(player.x - prompt.x, 0.0, player.z - prompt.z)
+	if offset.dot(facing) >= 0.0:
+		return Vector3.INF
+	var lateral := Vector3(-facing.z, 0.0, facing.x)
+	var sign := 1.0 if offset.dot(lateral) >= 0.0 else -1.0
+	return Vector3(prompt.x, player.y, prompt.z) + facing * 0.6 + lateral * sign * 1.8
+
+
 func _walk_to_prompt(prompt: Node3D, what: String) -> bool:
 	if not await _stow_piece():
 		return false
@@ -998,6 +1017,10 @@ func _walk_to_prompt(prompt: Node3D, what: String) -> bool:
 	# with the hammer still equipped reopens the catalogue every time rather
 	# than sometimes. `_stow_hammer()` is what a player does about it.
 	if not await _stow_hammer():
+		return false
+	var side := front_side_waypoint(prompt.global_position, (prompt.get_parent() as Node3D).global_position \
+		if prompt.get_parent() is Node3D else prompt.global_position, _player.global_position)
+	if side != Vector3.INF and not await _walk_to(side, "round to the front of the %s" % what, 0.6):
 		return false
 	if not await _walk_to(prompt.global_position, "the %s" % what, 1.4):
 		return false
