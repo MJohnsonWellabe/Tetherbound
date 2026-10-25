@@ -242,6 +242,11 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
 
 - 2026-10-25 12:55 UTC READY (test pending) tb/meadows-land9 18d660876f (from origin/main 1d5faebac; supersedes land8 7472798460): the same tier-1 art as land8, with `arch_facades` ON (judged passing) and the gatehouse parked OFF. Test `tests/test_meadows_tier1_art_gates.gd` (updated for facades ON) is queued behind the CPU captures.
 
+- 2026-10-25 13:04 UTC READY tb/meadows-land10 0133455e34 (from origin/main 1d5faebac; supersedes land7 1edc159ae): the F38 camera fixture plus the baseline-dressing fix, with two new probe-verified seats.
+  - band5_stronghold_approach_1: gameplay and detail views at heading 45 (probe `shots/f38_1024_shprobe` tried 45/90/135; 45 is clear of the courtyard pillar and the crates).
+  - hall_front: gameplay view at heading 45. At 135 the camera settled inside a house eave; of 0–315, only 45 and 270 pass, and 270 looks down the nave.
+  - GPU command: as in the land7 READY, adding `--subset=band5_stronghold_approach --subset=hall_front`.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
