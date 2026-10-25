@@ -271,8 +271,16 @@ func _stormwood_support_receipt(frame_id: String) -> Dictionary:
 			_failures.append(frame_id + ": near rain was not suppressed under the actual Ashfoot roof")
 			return {}
 	elif frame_id.begins_with("ashfoot_shelter_outside_"):
-		if roofed or sheltered or surge_sheltered:
-			_failures.append(frame_id + ": Ashfoot 11 m exterior incorrectly received roof/lightning shelter")
+		if roofed:
+			_failures.append(frame_id + ": Ashfoot 11 m exterior incorrectly received the roof")
+			return {}
+		# 11 m out is still inside the Ashfoot camp safe zone (stormwood_surge.json
+		# safe_zones.ashfoot, r 42; WORLD §5.2 "camps with rods ... are safe"), so
+		# lightning shelter there is the zone rule's own answer, not the roof's.
+		var region := str(_surge.call("region_at", _player.global_position))
+		var zone_safe := bool(_lightning.get("rules").call("sheltered", _player.global_position, region, false, []))
+		if sheltered != zone_safe:
+			_failures.append(frame_id + ": Ashfoot 11 m exterior lightning shelter %s disagrees with the camp safe-zone rule %s" % [sheltered, zone_safe])
 			return {}
 		if expected_phase == "break" and rain_ratio < 0.10:
 			_failures.append(frame_id + ": near rain did not remain visible outside the Ashfoot roof")
