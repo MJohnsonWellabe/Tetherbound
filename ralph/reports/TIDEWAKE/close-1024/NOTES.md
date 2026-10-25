@@ -21,6 +21,7 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
   - **What it does:** Tidewake-only rain mist at 0.35 of the shared preset.
   - **CPU mapped, rain views:** 5.67 → **6.18**. All three judges higher. The fog-flattening defect is FIXED x3.
   - **Trade-off:** rain now reads only through streaks. A darker overcast grade is next.
+  - **Overcast grade (rg1):** a darker sky, dimmer sun and ambient was level (6.36 vs 6.29), so it stays OFF. Making rain read needs wet sand and sea ripples, a material job.
 
 - 2026-10-25 16:40 CT **STATUS against the 5.2 CPU floor (coordinator 25 Oct), plus READY addenda.**
   - **Currents:** T1e. Swim views 5.77, Deep Watch 6.09. Above the floor. READY.
