@@ -17,6 +17,11 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
   - **Checks:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed.
   - **Landing:** this touches `scripts/ui/playground_hud.gd` (the UI lane's file), so it is a small cross-lane fix. Land it with my next head, or hand it to the UI lane, whichever you prefer.
 
+- 2026-10-25 12:40 CT **READY addendum (t4c/VERDICT.md): optional `shore_surf_vary_candidate` on top of T4.**
+  - **CPU mapped:** shore 6.63 → 6.86, Deep Watch 6.04 → 6.18. A small gain, every judge +0.1 to +0.2.
+  - **Capture:** add it to the T4 section list.
+  - **Grouped stones:** level to slightly lower, stays OFF.
+
 - 2026-10-25 10:30 CT **READY for the GPU lane: T4 surf line, `tb/tidewake` 510f05426 (t4/VERDICT.md).**
   - **CPU mapped, on top of T1e in both arms:** shore views 6.10 → **6.67**, Deep Watch 5.37 → **5.89**. All three judges higher; r 0.993.
   - **Change:** a new optional water-shader surf band. It is 0 for every realm, so shipping is unchanged.
