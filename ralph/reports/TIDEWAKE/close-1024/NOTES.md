@@ -17,6 +17,12 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
   - **Checks:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed.
   - **Landing:** this touches `scripts/ui/playground_hud.gd` (the UI lane's file), so it is a small cross-lane fix. Land it with my next head, or hand it to the UI lane, whichever you prefer.
 
+- 2026-10-25 06:40 CT **READY for the GPU lane, replacing the 03:40 T1 line: T1e currents, `tb/tidewake` 63aeaefe6 (t1e/VERDICT.md).**
+  - **CPU mapped, same batch as T1:** swim views T1 5.25 → **T1e 5.77** (+0.52), shore views 6.54 → 6.66. All three judges higher. The loud yellow pennants are FIXED.
+  - **Capture:** same commands as `t1/VERDICT.md`, with `--tidewake-look-sections=current_flow`.
+  - **Known gaps:** direction and the night read got weaker. That's the next round.
+  - **INFO:** the water-colour route (T2, T2b) lost twice and is parked. Verdicts in `t2/` and `t2b/`.
+
 - 2026-10-25 04:20 CT **MESHY: requests 10-12 (`meshy-requests.md`, third batch; inputs under `assets/props/meshy-1025/<name>/reference/`).**
   - **10, `veilfall_terraced_mountain` (P2-010):** 520 x 360 m render-only shell over the upper cone, from the board's exterior view. Scale check and placement are included.
     - The re-seated `veilfall-vista` views show the mountain as a heap of blocky crag pieces over a smooth cone, which scene work cannot turn into the terraced green cliff mountain.
