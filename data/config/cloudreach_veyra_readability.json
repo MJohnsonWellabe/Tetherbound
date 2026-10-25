@@ -1,7 +1,8 @@
 {
+  "_why_fight_presentation_1025": "Fights close-1024 generic fight presentation ON (owner 24 Oct: 'I don't like how the fights outline the area of the attack'; cand_gen_h). Code-blind yardstick, CPU, 3 fresh judges, mapped, before -> after: Meadows Warden hall 4.85 -> 5.88, Riverwatch 5.64 -> 6.99 (r4); Veyra 5.60 -> 6.21, Stormwood glass_field 5.71 -> 6.13, Venn 5.38 -> 6.07 (r5). Outlines and impact disc FIXED in every after set; tell 'where' still PARTIAL/PRESENT (dust only). Presentation only: timings, footprints and the AI's telegraph unchanged. GPU confirms 7.5. ralph/reports/FIGHTS/close-1024/NOTE.md Here: wind lanes enabled with fill 0 and rim 0, wind streaks 0.8 (no slabs).",
   "_comment": "F22#4 Captain Veyra (Cloudreach summit) readability candidate. Her Crosswind Command wind lanes (cloudreach_summit_hazards.gdshader) drew at 21% alpha with no edges and melted into the summit paving in the CPU baseline. This raises the lane fill and adds a bright rim along each lane edge; lane geometry, timing, push and safe lee pockets are unchanged (presentation only). OFF until the in-world three-judge round passes.",
-  "enabled": false,
+  "enabled": true,
   "_why_streaks_1024": "Owner 24 Oct (no outlined attack areas): streak_alpha draws soft wind wisps drifting down each lane (cloudreach_summit_hazards.gdshader) so the lane reads as wind, not a plane; set fill_alpha and rim_alpha to 0 with it. 0 = off.",
   "_why_forward_plus_1024": "GPU F40 fight (24 Oct): on Forward+ the wind-lane fill drew as opaque white shaft planes. forward_plus_fill_scale multiplies the fill on Forward+/Mobile only (cloudreach_summit_presentation.gd); the rim carries the lane there. Compatibility keeps fill_alpha.",
-  "wind_lanes": {"fill_alpha": 0.4, "rim_alpha": 0.85, "rim_width_m": 0.45, "forward_plus_fill_scale": 1.0, "streak_alpha": 0.0, "streak_speed": 9.0}
+  "wind_lanes": {"fill_alpha": 0.0, "rim_alpha": 0.0, "rim_width_m": 0.45, "forward_plus_fill_scale": 0.3, "streak_alpha": 0.8, "streak_speed": 9.0}
 }
