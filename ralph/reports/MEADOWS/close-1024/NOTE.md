@@ -247,6 +247,47 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - hall_front: gameplay view at heading 45. At 135 the camera settled inside a house eave; of 0–315, only 45 and 270 pass, and 270 looks down the nave.
   - GPU command: as in the land7 READY, adding `--subset=band5_stronghold_approach --subset=hall_front`.
 
+- 2026-10-25 13:06 UTC STATUS (reply to the 13:04 directive; send_message to the coordinator is refused: elevated_session_untrusted_device).
+  - All 9 heroes from tb/meshy-1024 4eb886a11 are wired and CPU-judged:
+    - arch facades: ON, 8.08 vs 5.28 (land9);
+    - cliffs: 5.93 vs 4.89, OFF pending GPU, recommend ON;
+    - gatehouse: parked after two rounds under 0.5;
+    - Ironwood: A/B capturing now.
+  - Ground cover is the new-art route already: 10 Meshy tiers. r2 rendered real variety but placed about 11.7k items (55 min per CPU frame). r3 cuts reach and triangles for cost; it is not a look tweak.
+  - Dominant object per GPU stand below 6, from the GPU verdict (tb/gpu-pass F38-0/main-1024) and current CPU frames:
+
+| Stand (GPU) | Dominant object | Covered by |
+|---|---|---|
+| arch_* (3.53–5.26) | blank arch / plaster wall; camera in rock | facades ON (land9), L1 seats (land10) |
+| arch_home 5.85 | shaft slabs over the pillars | L2 (land3); facade MESHY below |
+| hall_nave 4.77, hall_front 5.82, shrine_room 5.53 | white shaft quads and orb chains (Forward+) | L2 (land3); hall_front seat (land10) |
+| band5_stronghold_1 4.59 | giant flat oxblood banners filling the courtyard | scene: banner scale-down candidate, now |
+| band5_stronghold_0 5.66 | stronghold a speck behind the pylons | MESHY lit keep (12:52) |
+| band2_stone_and_root_1 5.82 | faceted Burrow mound with slab ramp | cliffs OFF/ready; MESHY 1 below |
+| band3_the_river_lock_0 5.29 | bare flat dirt yard filling the lower half | MESHY 2 below |
+| band2_stone_and_root_0 (no GPU frames) | pale untextured quarry blocks beside the trainer | MESHY 3 below |
+| farm_to_hall 5.60 | orange-washed house interior | L1: re-seated onto the road (land7/10) |
+
+- 2026-10-25 13:06 UTC MESHY (dominant objects, F38 tier 1). One change each. All install flag-OFF and are judged on their own stand. Sizes are against the 1.80 m trainer.
+  1. **meadows_burrow_mound** (band2_stone_and_root_1, the Warrens entrance at about (-357, 2610)).
+     - Size: about 40 m wide x 14 m tall x 30 m deep.
+     - Ref: owner key art, the burrow/hill panel (`docs/reference/tetherbound-meadows-keyart.png`), and `docs/reference/palworld-04-plateau-landmark.jpg` for the sculpted grassy rock.
+     - Prompt: "large grassy hill mound with a dug burrow entrance, rounded sculpted earth and layered grey rock outcrops, grass and moss draping over the top, a worn dirt path leading into a round tunnel mouth framed by roots and stones, stylised realism, game asset".
+     - Replaces the faceted planes and the slab ramp.
+  2. **meadows_lock_yard_paving** (band3_the_river_lock_0).
+     - Modules: 8 x 8 m and 8 x 4 m tiles plus a curb edge. Several tile the about 30 x 40 m lock yard.
+     - Ref: `docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png` (quay stone) with the key art's warm Meadows stone.
+     - Prompt: "worn flagstone yard paving module with irregular grey-tan stones, moss and grass in the joints, a few puddles and wheel ruts, flat with a low curb edge, stylised realism, game asset, tileable layout".
+  3. **meadows_quarry_blocks** (band2_stone_and_root_0, the stone quarry).
+     - Set: three cut-stone piles (1–2 m blocks, stacked 2–3 m high) and one half-cut quarry face, about 6 m tall.
+     - Ref: owner key art, grey stone palette; `docs/reference/palworld-05-base-building.jpg` for the stacked resources.
+     - Prompt: "stacked cut granite blocks in a working quarry, chisel marks, wooden wedges and a rope sling, moss on the lower stones, grey-tan stone, stylised realism, game asset".
+     - Replaces the pale untextured cubes.
+  4. **meadows_arch_home** (arch_home, the Hall's home doorway).
+     - Same envelope as the r1 surrounds (about 4.4 x 5.2 x 0.7 m, open centre).
+     - Ref: owner key art, Meadows Hall panel.
+     - Prompt: "warm carved oak and limestone portal surround for a great hall doorway, wheat and leaf relief on the jambs, a carved sun keystone, stylised realism, game asset, open centre".
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
