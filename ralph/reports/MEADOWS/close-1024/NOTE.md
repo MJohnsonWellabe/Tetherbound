@@ -175,6 +175,14 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - QUESTION: is a Meadows terrain colour-bake pass (it fingerprints the terrain and vegetation bakes) in scope for this lane, or does it go to a world/terrain owner?
 - 2026-10-25 03:15 UTC NOTE L3 (interior time-of-day grade): not started, deliberately. Per your relay of the owner's F17#6 verdict ("the rest looks mostly fine", don't re-dress the hall), the Hall interior stays as is apart from the shafts (land3). Tell me if L3 should override that.
 
+- 2026-10-25 03:55 UTC RESULT F38 L4 colour-bake pass (per your approval): built and tested, no visible effect, PARKED.
+  - The tool is `tools/bake_meadows_colour_candidate.gd` (colour only: clover, moss, worn-earth halo and outcrop-base variation from each region's own maps). `meadows_colour_candidate.gd` swaps the maps in at runtime behind `terrain_presentation.json colour_candidate.enabled` (OFF). No height, control, collision, vegetation or fingerprint change.
+  - The swap demonstrably ran (64 regions). The CPU capture at farm_to_hall, band2_stone_and_root_1 and band5_0 (approach and gameplay) is still identical to shipping.
+  - That makes four carpet attempts with no visible change. At play-camera distances the grass blade layer covers the ground completely, so neither terrain colour nor shader macro reaches the frame.
+  - PNGs not committed (7.6 MB for no effect); the tool regenerates them.
+  - The carpet lever is the blade layer itself (per-patch blade tint, species mix and height) or new ground-cover art. I'm not starting a fifth attempt on my own; say if you want the blade-tint route, or a MESHY/texture ask for ground cover.
+  - Next: L5 haze and L6 facades, per your order.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.

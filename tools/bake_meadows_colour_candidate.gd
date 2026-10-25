@@ -27,7 +27,7 @@ func _initialize() -> void:
 		var region: Resource = ResourceLoader.load(SOURCE_DIR.path_join(file), "", ResourceLoader.CACHE_MODE_IGNORE)
 		if region == null:
 			continue
-		var location: Vector2i = region.get("location")
+		var location := _location_from_name(file)
 		var colour: Image = (region.get("color_map") as Image).duplicate()
 		var height: Image = region.get("height_map")
 		if colour.is_compressed():
@@ -42,12 +42,21 @@ func _initialize() -> void:
 	quit(0 if written > 0 else 1)
 
 
+## Terrain3D names each region file `terrain3d` + x + z, each a sign character
+## (`-` negative, `_` positive) and two digits; the resource does not store it.
+static func _location_from_name(file: String) -> Vector2i:
+	var stem := file.get_basename().trim_prefix("terrain3d")
+	var x := int(stem.substr(1, 2)) * (-1 if stem[0] == "-" else 1)
+	var z := int(stem.substr(4, 2)) * (-1 if stem[3] == "-" else 1)
+	return Vector2i(x, z)
+
+
 static func _noise(seed: int, frequency: float) -> FastNoiseLite:
 	var noise := FastNoiseLite.new()
 	noise.seed = seed
 	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	noise.frequency = frequency
-	noise.fractal_octaves = 2
+	noise.fractal_octaves = 3
 	return noise
 
 
@@ -86,8 +95,8 @@ static func _vary(colour: Image, height: Image, location: Vector2i, spacing: flo
 			var soil_here := soil_mask[z * size.x + x]
 			var out := c
 			if soil_here < 0.5:
-				var cl := smoothstep(0.15, 0.45, clover.get_noise_2d(wx, wz))
-				var ms := smoothstep(0.2, 0.55, moss.get_noise_2d(wx, wz))
+				var cl := smoothstep(-0.05, 0.4, clover.get_noise_2d(wx, wz))
+				var ms := smoothstep(0.0, 0.45, moss.get_noise_2d(wx, wz))
 				out = out.lerp(Color(c.r * clover_tint.r, c.g * clover_tint.g, c.b * clover_tint.b, c.a), cl * clover_amount)
 				out = out.lerp(Color(c.r * moss_tint.r, c.g * moss_tint.g, c.b * moss_tint.b, c.a), ms * moss_amount)
 				out = out.lerp(Color(worn_tint.r, worn_tint.g, worn_tint.b, c.a), near[z * size.x + x] * (1.0 - soil_here) * worn_amount)

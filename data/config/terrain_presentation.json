@@ -54,12 +54,12 @@
     "dir": "res://data/terrain/playground_colour_candidate",
     "seed": 2205,
     "vertex_spacing": 2.0,
-    "clover_scale_m": 14.0,
+    "clover_scale_m": 45.0,
     "clover_tint": "#c4dbb0",
-    "clover_strength": 0.55,
-    "moss_scale_m": 22.0,
+    "clover_strength": 0.5,
+    "moss_scale_m": 70.0,
     "moss_tint": "#a9bd8e",
-    "moss_strength": 0.4,
+    "moss_strength": 0.35,
     "soil_reference": "#d1b37e",
     "worn_tint": "#d8c49a",
     "worn_strength": 0.45,
@@ -67,6 +67,8 @@
     "rock_tint": "#b3b1a6",
     "rock_strength": 0.45,
     "rock_start_deg": 18.0,
-    "rock_full_deg": 32.0
+    "rock_full_deg": 32.0,
+    "_why_r2": "r1 at 14 m / 22 m with two octaves and tight thresholds wrote fine speckle (4-8 m) that reads as generator noise; r2 uses broader organic patches (45 m clover, 70 m moss, three octaves, softer thresholds).",
+    "_parked": "PARKED close-1024: the swap ran (64 region maps; log '[colour_candidate] swapped 64') and the CPU capture at farm_to_hall, band2_stone_and_root_1 and band5_0 is identical to shipping. That is the fourth carpet attempt with no visible change (grass drift r1 and r2, terrain macro shader, this colour bake). At play-camera distances the dense grass blades cover the ground completely, so terrain colour does not reach the frame. The PNGs are not committed (7.6 MB, no effect); re-run tools/bake_meadows_colour_candidate.gd to regenerate. The remaining lever is the blade layer itself (per-patch blade tint/species/height) or new ground-cover art."
   }
 }
