@@ -34,5 +34,17 @@
   "beacons": [
     { "position": [-5.5, 0.35, 5.0], "colour": "#72dcdb", "energy": 2.8, "range_m": 17.0 },
     { "position": [5.5, 0.35, 5.0], "colour": "#78b8df", "energy": 2.5, "range_m": 16.0 }
-  ]
+  ],
+  "candidate": {
+    "enabled": false,
+    "preview_arg": "--cloudreach-overlook-cleanup-candidate",
+    "_why": "F40#5 / GPU F40 baseline C5 (24 Oct, stormward_overlook 4.60, worst stand: 'dark mossy hedge cubes float beside the bannered arch', P2-049 dark strips PRESENT). The piers and ruined wings are castle tower/wall meshes in the dark masonry, which read as hedge cubes; the candidate draws them in the pale Cloudreach stone (stone_light). The P2-049 'black rail-like strips' are the flat bronze needle bars lying across the grass; the candidate drops the needle (the compass ring and signal stay). Visual only, collision-free as before. Flag OFF; not judged yet. r1 CPU b2: 4.92 vs 4.82 (+0.10): the pale wings still read as floating cubes and the strips stayed. r2 drops the two ruined wall wings (the floating cubes) and the four pitched approach pavers (the remaining dark strips); the piers that carry the arch stay in pale stone. r3 (b3 r2 5.38 vs 5.00) also drops the two flat banner cards, paired with the items flag --cloudreach-f40-overlook-r3-candidate (no route tree through the arch, stone ground at the stand).",
+    "overlay": {
+      "ruin_material": "stone_light",
+      "show_needle": false,
+      "ruined_wings": [],
+      "approach_pavers": [],
+      "banners": []
+    }
+  }
 }

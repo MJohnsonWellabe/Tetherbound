@@ -1,0 +1,7 @@
+Lf: "Flat banner cards hang from the arch"; "A tree grows through the arch so the compass ring reads as hung from a tree"; "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read"
+Kz: none
+Zq: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Ox: none
+Dk: none
+Ko: "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read"; "Rocks and props are scattered evenly instead of composed groups"
+Sz: "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read"; "Rocks and props are scattered evenly instead of composed groups"

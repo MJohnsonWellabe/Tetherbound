@@ -27,5 +27,11 @@
   "_arrival_portal_note": "F08#3 arrival-lip: the solid WallEntranceBricks arch across the south Fly line hid the landing for the last 25 m of every arrival. 'pylons' keeps two free-standing SimpleTowerBricks gate pylons (pier width = size.x/2 - opening_half) with occlusion-only camera stops and no lintel; 'arch' restores the old portal.",
   "needle_feet": [[11.5, -0.5, 1.8], [13.0, 6.0, 2.8], [-12.0, 5.0, 1.8], [-12.8, -2.5, 2.8], [-8.5, -11.0, 1.8], [14.5, -4.5, 2.8]],
   "_needle_feet_note": "F08#3: [x, z, radius] of the six visual-only needles (no collision; Fly and landing are owned by the terrain and survey disc). Re-spaced so the south Fly arrival (x 0, z<0), the north landing/departure lane and the NW vista toward Cliffhold are open; the production camera no longer sits wedged between two needles after a landing.",
-  "_compass_note": "F08#3: the outer ring was a 0.5 m gold tube that read as a rail across the lens of the landed/route frames; it is now a 0.2 m inlay, flattened (presentation _add_ring)."
+  "_compass_note": "F08#3: the outer ring was a 0.5 m gold tube that read as a rail across the lens of the landed/route frames; it is now a 0.2 m inlay, flattened (presentation _add_ring).",
+  "candidate": {
+    "enabled": false,
+    "preview_arg": "--cloudreach-high-perches-compass-candidate",
+    "_why": "F40#5 / F40 High Perches (flag OFF, not judged yet): the CPU F40 recapture (24 Oct, stand 7, every time and weather) shows the inner compass ring and the four wide rays as flat saturated blue bands around the trainer, the 'flat ring' read. The candidate inlays them in the same dark masonry as the court, so the compass reads as cut stone with the thin bronze rays and outer ring.",
+    "overlay": {"compass_inlay": "stone"}
+  }
 }
