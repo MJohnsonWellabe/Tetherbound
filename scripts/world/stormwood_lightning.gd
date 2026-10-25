@@ -8,6 +8,7 @@ const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const CHARGED_GROUND := preload("res://scripts/world/stormwood_charged_ground.gd")
 const EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
+const TELL_STYLE := preload("res://scripts/combat/tell_style.gd")
 var rules := RULES.new()
 var world: Node3D
 var surge: Node
@@ -577,6 +578,17 @@ uniform float final_fill_alpha = 0.5;
 // flat placeholder disc): radial gradient fill, ground-noise breakup and a
 // travelling rim glow. 0 keeps the F10#3 look exactly.
 uniform float soft_style = 0.0;
+// Owner 24 Oct ("I don't like how the fights outline the area of the
+// attack"), carried to the strike warning (GPU F41#0 Stormheart break, 25 Oct:
+// "a flat magenta ground ring"): no painted rim, dashes or hazard-hue disc.
+// The soil chars inside the strike radius, densest where the bolt will land,
+// and the converging leaders read as sparks. 0 keeps the outlined look, which
+// combat.json telegraph.high_contrast_markers brings back.
+uniform float outline_off = 0.0;
+uniform float scorch_alpha = 0.55;
+uniform vec3 scorch_colour : source_color = vec3(0.06, 0.04, 0.07);
+uniform float spark_whiten = 0.65;
+uniform float spark_gain = 1.6;
 varying float r;
 varying vec2 ground_xz;
 void vertex() {
@@ -679,8 +691,29 @@ void fragment() {
 		a_edge *= 1.6;
 	}
 	float white_hot = urgency * (1.0 - strike);
-	vec3 hot = mix(mix(rim_colour, vec3(1.0, 0.9, 1.0), white_hot), vec3(0.92, 0.72, 1.0), strike);
+	vec3 spark = rim_colour;
 	vec3 fill_colour = mix(rim_colour * 0.55, vec3(1.0, 0.75, 1.0), white_hot);
+	if (outline_off > 0.5) {
+		a_rim = 0.0;
+		a_edge = 0.0;
+		// Ground-scale noise breaks the char's edge so no circle reads; it
+		// still fades out by the 3 m damage radius.
+		vec2 cell = floor(ground_xz * 1.6);
+		vec2 f = fract(ground_xz * 1.6);
+		f = f * f * (3.0 - 2.0 * f);
+		float n00 = fract(sin(dot(cell, vec2(127.1, 311.7))) * 43758.55);
+		float n10 = fract(sin(dot(cell + vec2(1.0, 0.0), vec2(127.1, 311.7))) * 43758.55);
+		float n01 = fract(sin(dot(cell + vec2(0.0, 1.0), vec2(127.1, 311.7))) * 43758.55);
+		float n11 = fract(sin(dot(cell + vec2(1.0, 1.0), vec2(127.1, 311.7))) * 43758.55);
+		float grain = mix(mix(n00, n10, f.x), mix(n01, n11, f.x), f.y);
+		float reach = 1.0 - smoothstep(rim_radius * 0.45, rim_radius, distance_m + (grain - 0.5) * 0.9);
+		float core = 1.0 - smoothstep(0.0, 1.1, distance_m);
+		a_fill = scorch_alpha * max(reach * (0.3 + 0.7 * progress), core * (0.5 + 0.5 * progress)) * (0.55 + 0.45 * grain);
+		fill_colour = scorch_colour;
+		leaders *= spark_gain;
+		spark = mix(rim_colour, vec3(0.92, 0.9, 1.0), spark_whiten);
+	}
+	vec3 hot = mix(mix(spark, vec3(1.0, 0.9, 1.0), white_hot), vec3(0.92, 0.72, 1.0), strike);
 	vec3 colour = (hot * intensity * (a_rim + leaders) + edge_colour * a_edge + fill_colour * a_fill)
 		/ max(a_rim + a_edge + leaders + a_fill, 0.001);
 	ALBEDO = colour;
@@ -782,6 +815,13 @@ func _telegraph_material() -> ShaderMaterial:
 	material.set_shader_parameter("charged_fill_alpha", float(cfg.get("charged_fill_alpha", 0.34)))
 	material.set_shader_parameter("final_fill_alpha", float(cfg.get("final_fill_alpha", 0.5)))
 	material.set_shader_parameter("soft_style", 1.0 if bool((cfg.get("soft_style", {}) as Dictionary).get("enabled", false)) else 0.0)
+	var unoutlined := TELL_STYLE.outlines_off(cfg)
+	material.set_shader_parameter("outline_off", 1.0 if unoutlined else 0.0)
+	if unoutlined:
+		material.set_shader_parameter("scorch_alpha", float(cfg.get("scorch_alpha", 0.55)))
+		material.set_shader_parameter("scorch_colour", Color(str(cfg.get("scorch_colour", "#0f0a12"))))
+		material.set_shader_parameter("spark_whiten", float(cfg.get("spark_whiten", 0.65)))
+		material.set_shader_parameter("spark_gain", float(cfg.get("spark_gain", 1.6)))
 	material.set_shader_parameter("pulse_hz_start", float(cfg.get("pulse_hz_start", 2.0)))
 	material.set_shader_parameter("pulse_hz_end", float(cfg.get("pulse_hz_end", 7.0)))
 	material.set_shader_parameter("telegraph_seconds", float(rules.config.strike.telegraph_seconds))
