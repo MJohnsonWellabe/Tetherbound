@@ -77,7 +77,11 @@
         2581.7
       ],
       "heading_deg": 0,
-      "source": "debug_teleport_spots.json:The Burrow Warrens"
+      "source": "debug_teleport_spots.json:The Burrow Warrens",
+      "views": [
+        "approach",
+        "gameplay"
+      ]
     },
     {
       "id": "band3_the_river_lock_0",
@@ -146,7 +150,11 @@
         7000.0
       ],
       "heading_deg": 0,
-      "source": "debug_teleport_spots.json:Stronghold Approach"
+      "source": "debug_teleport_spots.json:Stronghold Approach",
+      "views": [
+        "approach",
+        "gameplay"
+      ]
     },
     {
       "id": "band5_stronghold_approach_1",
@@ -162,15 +170,20 @@
       "id": "farm_to_hall",
       "region": "village",
       "at": [
-        8.3,
-        14
+        24.0,
+        14.0
       ],
       "heading_deg": 90,
       "source": "F17 village/crossing_hall coordinates; strict stand support required",
       "view_headings": {
         "approach": 135
       },
-      "_why_view_headings": "F38 L1 close-1024: the fixed stand for these views failed the unchanged production preflight (capsule in quarry props or tree trunks, no physical floor, or the camera pulled in by a wall). A CPU search of 8 headings at the view's own offset, with the same preflight and settled camera checks, found these absolute view headings passing; other views keep the site heading."
+      "_why_view_headings": "approach only; see _why_close1024_at.",
+      "views": [
+        "approach",
+        "gameplay"
+      ],
+      "_why_close1024_at": "F38 tier-1 close-1024: at (8.3, 14) the gameplay and detail stands landed inside Grandpa's house (GPU: 'five of its six frames are one orange-washed interior'). The site is the farm-to-Hall walk, so it moves east onto the road at (24, 14), still facing the Hall: CPU capture gives gameplay, reverse and detail on the village road with the Hall at its end. The 32 m approach at heading 90 lands back near the house with no physical floor; it takes heading 135 (verification pending)."
     },
     {
       "id": "village_road",
