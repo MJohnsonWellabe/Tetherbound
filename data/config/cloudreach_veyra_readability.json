@@ -4,5 +4,8 @@
   "enabled": true,
   "_why_streaks_1024": "Owner 24 Oct (no outlined attack areas): streak_alpha draws soft wind wisps drifting down each lane (cloudreach_summit_hazards.gdshader) so the lane reads as wind, not a plane; set fill_alpha and rim_alpha to 0 with it. 0 = off.",
   "_why_forward_plus_1024": "GPU F40 fight (24 Oct): on Forward+ the wind-lane fill drew as opaque white shaft planes. forward_plus_fill_scale multiplies the fill on Forward+/Mobile only (cloudreach_summit_presentation.gd); the rim carries the lane there. Compatibility keeps fill_alpha.",
+  "_why_high_contrast_lanes": "Accessibility: with combat.json telegraph.high_contrast_markers true (default OFF) these keys override wind_lanes, bringing back the filled, rimmed lane (the judged 24 Oct readability look) alongside the outlined attack areas.",
+  "_scope_high_contrast_lanes": "Client-local presentation only; no authority, save or network state.",
+  "high_contrast_lanes": {"fill_alpha": 0.21, "rim_alpha": 0.85, "streak_alpha": 0.0},
   "wind_lanes": {"fill_alpha": 0.0, "rim_alpha": 0.0, "rim_width_m": 0.45, "forward_plus_fill_scale": 0.3, "streak_alpha": 0.8, "streak_speed": 9.0}
 }

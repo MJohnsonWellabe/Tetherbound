@@ -1,6 +1,7 @@
 extends Node3D
 
 const FINALE := preload("res://scripts/world/cloudreach_finale_controller.gd")
+const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
 const HAZARDS := preload("res://shaders/cloudreach_summit_hazards.gdshader")
 const RELAY := preload("res://assets/environment/team_tether/relay_apparatus.glb")
 const BOUNDS := preload("res://scripts/world/building_prefabs.gd")
@@ -167,10 +168,14 @@ func build(world: Node3D) -> void:
 		var lee: Dictionary = config.lee_pockets[i]
 		var at := FINALE.vec(lee.offset)
 		_hazards.set_shader_parameter("lee%d"%i,Vector3(at.x,at.z,float(lee.radius_m)))
-	# F22#4 Veyra readability candidate (cloudreach_veyra_readability.json, OFF).
+	# F22#4 Veyra readability (cloudreach_veyra_readability.json, ON since 25 Oct).
 	var readable: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/cloudreach_veyra_readability.json"))
 	if readable is Dictionary and bool((readable as Dictionary).get("enabled", false)):
 		var lanes: Dictionary = (readable as Dictionary).get("wind_lanes", {})
+		# Accessibility (combat.json telegraph.high_contrast_markers): the
+		# outlined attack areas return, so the lanes take their filled look.
+		if COMBAT_MATH.config().get("telegraph", {}).get("high_contrast_markers") == true:
+			lanes = lanes.merged((readable as Dictionary).get("high_contrast_lanes", {}), true)
 		# Forward+ and Mobile draw the unshaded fill as a white slab (GPU F40
 		# judges); there the fill takes `forward_plus_fill_scale`, so the rim
 		# carries the lane. Compatibility keeps the fill as authored.

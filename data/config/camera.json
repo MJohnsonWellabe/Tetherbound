@@ -55,7 +55,8 @@
     "per_trainer_enabled": true,
     "_why_screen_tilt_deg": "F22#4 (Fights lane, 22 Oct): pitch the fight lens down this many degrees after the solved pose so the fighters sit above the bottom HUD band (judges: the band covers the pilot and trainer). 0 = OFF: at 6 degrees r11 tied r13 within noise and cropped heads (F22-4-R6.md). Presentation only; clamped 0-15.",
     "screen_tilt_deg": 0.0,
-    "_why_fallback_max_steps": "Fights close-1024 generic fix (cand_gen_h): when no orbit candidate passes, keep the best within this many steps of the solved pose instead of swinging the full search (the Venn seabed camera pop). -1 = OFF (no limit, previous behaviour). Presentation only.",
+    "_why_fallback_max_steps": "Fights close-1024 generic fix (cand_gen_h): when no orbit candidate passes, keep the best within this many steps of the solved pose instead of swinging the full search (the Venn seabed camera pop). -1 = no limit (previous behaviour). ON at 2 since 25 Oct (Venn r5: camera jump PRESENT -> FIXED 3/3).",
+    "_scope_fallback_max_steps": "Client-local presentation only: read by each peer's renderer/HUD; no host authority, save, transaction, network message or gameplay state. Absent = previous behaviour.",
     "fallback_max_steps": 2,
     "per_trainer": {"captain_riverwatch": {"max_distance_m": 14.0, "pilot_min_screen_fraction": 0.1}},
     "readability": {

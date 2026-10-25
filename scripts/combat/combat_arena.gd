@@ -61,7 +61,7 @@ func configure(centre: Vector3, cfg: Dictionary) -> void:
 		and bool(_sight_vegetation.call("has_fight_sight_fade")))
 	# GPU F41/F39 fights (24 Oct): the player's creature is lost on dark ground
 	# in fights without the sight-line presentation. `pilot_mark.all_fights`
-	# (OFF) gives every fight the pilot rim and fill light.
+	# (ON since 25 Oct) gives every fight the pilot rim and fill light.
 	_pilot_all = bool(_pilot_cfg().get("all_fights", false))
 	if _pilot_all:
 		set_process(true)

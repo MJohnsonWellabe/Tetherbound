@@ -138,7 +138,7 @@ func present(snapshot: Dictionary, using_pad: bool, keep_visible: bool = false) 
 		label.add_theme_color_override("default_color", TOKENS.TEAL_SOFT if available else UNAVAILABLE)
 		any_available = any_available or available
 	# F22#4 named-fight HUD (GPU/CPU judges: the bottom band covers about a
-	# third of the frame). `ui.compact_when_idle` (OFF): while no command can be
+	# third of the frame). `ui.compact_when_idle` (ON since 25 Oct): while no command can be
 	# used, the lane shows only its title and meter; the columns return the
 	# moment one becomes usable, so the read on a spendable command is unchanged.
 	_buttons.visible = any_available or COMMANDS.config().get("ui", {}).get("compact_when_idle") != true

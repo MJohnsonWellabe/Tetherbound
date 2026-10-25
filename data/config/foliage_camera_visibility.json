@@ -86,7 +86,9 @@
     "named_max_distance_m": {"hollows_alpha": 11.0, "capacitor_alpha": 11.0, "crown_guardian": 12.0, "old_rodfolk_hall_guardian": 11.0, "blackwater_elder": 12.0, "glass_field_alpha": 11.0},
     "pilot_mark": {
       "enabled": true,
+      "_scope_all_fights": "Client-local presentation only: read by each peer's renderer/HUD; no host authority, save, transaction, network message or gameplay state. Absent = previous behaviour.",
       "all_fights": true,
+      "_scope_ring_enabled": "Client-local presentation only: read by each peer's renderer/HUD; no host authority, save, transaction, network message or gameplay state. Absent = previous behaviour.",
       "ring_enabled": false,
       "rim_strength": 0.9,
       "ring_radius_m": 0.9,
