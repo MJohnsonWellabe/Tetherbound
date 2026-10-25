@@ -341,6 +341,8 @@ func _build_distance_presentation() -> void:
 	# presentation; flow vectors, strengths and the restored flag are untouched.
 	var flow_config: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").overlay(
 		rules.get("current_flow", {}), "current_flow")
+	# close-1024 `current_bands_candidate` (OFF in play): aligned flow bands.
+	flow_config = preload("res://scripts/world/tidewake_look_profile.gd").overlay(flow_config, "current_bands_candidate")
 	if bool(flow_config.get("enabled", true)):
 		var flow := CURRENT_FLOW.new()
 		flow.name = "WaterCurrentFlow"
