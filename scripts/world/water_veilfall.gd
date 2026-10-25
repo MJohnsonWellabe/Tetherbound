@@ -147,6 +147,10 @@ func build(realm: Node3D) -> void:
 	crag_kitbash.name = "VeilfallCragKitbash"
 	add_child(crag_kitbash)
 	crag_kitbash.build(world, self)
+	# close-1024 `veilfall_mountain_candidate` (OFF in play): the generated crown
+	# replaces the render-only crag heap, which otherwise buries it.
+	if preload("res://scripts/world/tidewake_look_profile.gd").settings().has("veilfall_mountain_candidate"):
+		crag_kitbash.visible = false
 	_entry_prompt = _prompt(exterior, "Enter behind the waterfall", Vector3(0, 1.4, 0), _enter)
 	interior = Node3D.new()
 	interior.name = "VeilfallInterior"
