@@ -22,6 +22,7 @@ const CANOPY_SHADER := preload("res://scripts/world/stormheart_canopy.gdshader")
 const CUT_WOOD_SHADER := preload("res://scripts/world/stormheart_cut_wood.gdshader")
 const SPLIT_BARK := preload("res://scripts/world/stormheart_split_bark.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
+const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 var simulation_only := false
 var _presentation: Dictionary = {}
 var _wood: StandardMaterial3D
@@ -101,6 +102,8 @@ func build() -> void:
 		_built_detail()
 	if _presentation_enabled("deck_supports"):
 		_deck_supports(_presentation.get("deck_supports", {}))
+	if _presentation_enabled("meshy_interior"):
+		_meshy_interior(_presentation.get("meshy_interior", {}))
 	if _presentation_enabled("hollow_floor"):
 		# r16 judges: the hollow's floor was the outdoor grass carpet. The
 		# ground-cover tiers (grass_field.gd) keep out of the trunk's own
@@ -850,6 +853,64 @@ func _visual_beam(parent: Node3D, id: String, start: Vector3, finish: Vector3,
 		Vector3(thickness, thickness, vector.length()), material)
 	visual.basis = Basis.looking_at(vector.normalized())
 	return visual
+
+
+## GPU F41#0 (Stormheart 3.51) and the coordinator's big-swing order (25 Oct):
+## the dominant objects are the bare trunk wall and the plain deck band, so
+## Meshy hero pieces replace their look (tb/meshy-1024 ae67083ec). A ring of
+## carved root-wall panels lines the trunk's inner wall, skipping the two
+## split openings, and arched walkway segments with lantern railings ring the
+## OuterWorks deck's inner lip. Presentation only: the deck's own surface and
+## colliders are unchanged.
+func _meshy_interior(cfg: Dictionary) -> void:
+	var root := Node3D.new()
+	root.name = "MeshyInterior"
+	add_child(root)
+	var wall_path := str(cfg.get("wall_model", ""))
+	if ResourceLoader.exists(wall_path):
+		var radius := float(cfg.get("wall_radius_m", 45.4))
+		var width := float(cfg.get("wall_width_m", 8.0))
+		var height := float(cfg.get("wall_height_m", 12.0))
+		var step := width / radius
+		var gaps: Array = cfg.get("wall_gaps", [[-1.84, -1.30], [1.43, 1.71]])
+		var angle := -PI
+		var index := 0
+		while angle < PI:
+			var centre := angle + step * 0.5
+			var blocked := false
+			for gap: Array in gaps:
+				if centre > float(gap[0]) - step * 0.5 and centre < float(gap[1]) + step * 0.5:
+					blocked = true
+			if not blocked:
+				var panel := HERO_PROP.load_model(wall_path)
+				HERO_PROP.fit_height(panel, height, float(cfg.get("wall_sink_m", 0.4)))
+				var holder := Node3D.new()
+				holder.name = "RootWall%02d" % index
+				holder.position = Vector3(cos(centre) * radius, 0.0, sin(centre) * radius)
+				holder.rotation.y = atan2(-holder.position.x, -holder.position.z)
+				root.add_child(holder)
+				holder.add_child(panel)
+				HERO_PROP.glow(panel, Color(str(cfg.get("vein_colour", "#9fd0ff"))), float(cfg.get("vein_energy", 1.1)))
+			angle += step
+			index += 1
+	var deck_path := str(cfg.get("deck_model", ""))
+	if ResourceLoader.exists(deck_path):
+		var lip_r := float(cfg.get("deck_radius_m", 19.4))
+		var length := float(cfg.get("deck_length_m", 8.0))
+		var count := int(floor(TAU * lip_r / length))
+		for index in count:
+			var phi := TAU * (float(index) + 0.5) / float(count)
+			var segment := HERO_PROP.load_model(deck_path)
+			var bounds := HERO_PROP.BOUNDS.measure(segment)
+			var factor := length / maxf(0.01, bounds.size.x)
+			segment.scale = Vector3.ONE * factor
+			segment.position.y = -bounds.position.y * factor - float(cfg.get("deck_sink_m", 0.15))
+			var holder := Node3D.new()
+			holder.name = "DeckWalk%02d" % index
+			holder.position = Vector3(cos(phi) * lip_r, 6.0, sin(phi) * lip_r)
+			holder.rotation.y = -phi - PI * 0.5
+			root.add_child(holder)
+			holder.add_child(segment)
 
 
 ## GPU F41#0 (Stormheart 3.51, 25 Oct: "smooth bare trunk walls ... add

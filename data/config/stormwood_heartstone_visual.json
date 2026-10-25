@@ -39,5 +39,14 @@
     "height_m": 1.9,
     "seat": 0.8,
     "emission_energy": 1.4
+  },
+  "hero": {
+    "enabled": false,
+    "_candidate": "r18 Meshy candidate (OFF until judged): enable to replace the installed rock with the hero stone; its collider grows to height_m on every shell.",
+    "model": "res://assets/props/meshy-1024/crown_heartstone_hero/crown_heartstone_hero.glb",
+    "height_m": 4.0,
+    "sink_m": 0.1,
+    "yaw_deg": 210.0,
+    "glow_energy": 1.3
   }
 }

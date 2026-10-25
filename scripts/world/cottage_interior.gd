@@ -22,6 +22,7 @@ const CUT_WOOD_SHADER := preload("res://scripts/world/stormheart_cut_wood.gdshad
 const WOOD_ATLAS := preload("res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png")
 const KIT := "res://assets/props/quaternius_fantasy/%s.gltf"
 const FINISH_CONFIG := "res://data/config/cottage_interior_finish.json"
+const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 
 var _half_w := 1.69
 var _half_d := 1.69
@@ -97,10 +98,13 @@ func _build_lining() -> void:
 	if not parsed is Dictionary:
 		return
 	var cfg: Dictionary = parsed
+	if not bool(cfg.get("enabled", false)):
+		return
 	var holder := get_parent() as Node3D
 	var role := str(holder.get_meta("village_role", "")) if holder != null else ""
 	if role.is_empty() or not (cfg.get("lined_roles", []) as Array).has(role):
 		return
+	_build_hearth(cfg.get("hearth", {}))
 	var height := float(cfg.get("lining_height_m", 2.45))
 	var inset := float(cfg.get("lining_inset_m", 0.03))
 	var thick := 0.04
@@ -142,6 +146,33 @@ func _build_lining() -> void:
 		add_child(bar)
 
 
+## The ranger hearth (Meshy, tb/meshy-1024 ae67083ec) on the back wall at the
+## door lane's end, clear of the bed on the west side; a warm fire light in
+## its firebox replaces the plaster-washing ceiling key.
+func _build_hearth(cfg: Dictionary) -> void:
+	var model := HERO_PROP.load_model(str(cfg.get("model", "")))
+	if model == null:
+		return
+	var bounds := HERO_PROP.fit_height(model, float(cfg.get("height_m", 2.0)), 0.0)
+	var factor := model.scale.x
+	var depth := bounds.size.z * factor
+	var at := Vector3(_door_x + float(cfg.get("x_offset_m", -0.28)), FLOOR_TOP, -_half_d + depth * 0.5 + 0.04)
+	var holder := Node3D.new()
+	holder.name = "Hearth"
+	holder.position = at
+	add_child(holder)
+	holder.add_child(model)
+	_solid(Vector3(bounds.size.x * factor, float(cfg.get("height_m", 2.0)), depth), at + Vector3(0.0, float(cfg.get("height_m", 2.0)) * 0.5, 0.0))
+	var fire := OmniLight3D.new()
+	fire.name = "HearthFire"
+	fire.position = at + Vector3(0.0, 0.45, depth * 0.35)
+	fire.light_color = Color(str(cfg.get("fire_colour", "#ffb066")))
+	fire.light_energy = float(cfg.get("fire_energy", 1.8))
+	fire.omni_range = float(cfg.get("fire_range_m", 5.5))
+	fire.shadow_enabled = true
+	add_child(fire)
+
+
 func _lining_panel(id: String, at: Vector3, size: Vector2, yaw: float, material: Material, thick: float) -> void:
 	var panel := MeshInstance3D.new()
 	panel.name = id
@@ -179,7 +210,8 @@ func _build_furniture() -> void:
 		_solid(Vector3(0.49, 0.63, 0.49), barrel_at + Vector3(0.0, 0.315, 0.0))
 	# Wall pieces hang above head height, clear of the floor lane.
 	_kit("Shelf", "Shelf_Simple", Vector3(west + 0.16, FLOOR_TOP + 1.55, chest_at.z), 90.0, 0.8)
-	_kit("PegRack", "Peg_Rack", Vector3(_door_x, FLOOR_TOP + 1.6, -_half_d + 0.06), 0.0, 0.8)
+	if get_node_or_null(^"Hearth") == null:
+		_kit("PegRack", "Peg_Rack", Vector3(_door_x, FLOOR_TOP + 1.6, -_half_d + 0.06), 0.0, 0.8)
 
 
 func _build_rug() -> void:

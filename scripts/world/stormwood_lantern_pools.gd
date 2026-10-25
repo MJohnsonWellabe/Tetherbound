@@ -11,6 +11,7 @@ extends RefCounted
 const CONFIG := "res://data/config/stormwood_lantern_pools.json"
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 const WATER_SHADER := """
 shader_type spatial;
 render_mode blend_mix, depth_draw_opaque, cull_disabled;
@@ -83,11 +84,37 @@ static func install(world: Node3D) -> void:
 		placed += 1
 		if simulation_only:
 			continue
-		_build_pool(root, shader, Vector3(centre.x, level, centre.y), radius, cfg)
-		_rim_stones(world, root, centre, radius, pool, cfg)
+		var basin: Dictionary = cfg.get("basin", {})
+		if bool(basin.get("enabled", false)) and ResourceLoader.exists(str(basin.get("model", ""))):
+			_build_basin(root, Vector3(centre.x, low, centre.y), radius, basin)
+		else:
+			_build_pool(root, shader, Vector3(centre.x, level, centre.y), radius, cfg)
+			_rim_stones(world, root, centre, radius, pool, cfg)
 		if bool(pool.get("lantern", true)):
 			_lantern_post(world, root, centre, radius, pool, cfg)
 	root.set_meta("pools_placed", placed)
+
+
+## The Meshy root-rimmed pool basin (tb/meshy-1024 ae67083ec) in place of the
+## flat disc and loose stones. Its square ground slab sits below the lowest
+## ground; the model is flattened (`height_scale`) so only the root lip and
+## water show, `rim_lift_m` above the lowest ground.
+static func _build_basin(root: Node3D, low_at: Vector3, radius: float, cfg: Dictionary) -> void:
+	var model := HERO_PROP.load_model(str(cfg.model))
+	var bounds := BOUNDS.measure(model)
+	var across := radius * 2.0 * float(cfg.get("radius_scale", 1.25))
+	var factor := across / maxf(0.01, maxf(bounds.size.x, bounds.size.z))
+	var flat := factor * float(cfg.get("height_scale", 0.45))
+	model.scale = Vector3(factor, flat, factor)
+	model.position.y = float(cfg.get("rim_lift_m", 0.2)) - bounds.end.y * flat
+	var holder := Node3D.new()
+	holder.name = "Basin%d" % root.get_child_count()
+	holder.position = low_at
+	holder.rotation.y = fposmod(low_at.x * 0.37 + low_at.z * 0.11, TAU)
+	holder.set_meta(GRASS_FIELD.CLEAR_RADIUS_META, across * 0.5)
+	holder.add_to_group(GRASS_FIELD.CLEAR_GROUP)
+	root.add_child(holder)
+	holder.add_child(model)
 
 
 static func _build_pool(root: Node3D, shader: Shader, at: Vector3, radius: float, cfg: Dictionary) -> void:

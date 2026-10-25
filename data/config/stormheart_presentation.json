@@ -63,6 +63,23 @@
     "light_energy": 2.6,
     "light_range_m": 16.0
   },
+  "meshy_interior": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_candidate": "r18 Meshy candidate (OFF until judged; coordinator big-swing order 25 Oct): carved root-wall panels around the trunk's inner wall (skipping the split openings) and arched walkway segments with lantern railings on the OuterWorks deck's inner lip. tb/meshy-1024 ae67083ec. Presentation only.",
+    "wall_model": "res://assets/props/meshy-1024/stormheart_root_wall_panel/stormheart_root_wall_panel.glb",
+    "wall_radius_m": 45.4,
+    "wall_width_m": 8.0,
+    "wall_height_m": 12.0,
+    "wall_sink_m": 0.4,
+    "wall_gaps": [[-1.84, -1.30], [1.43, 1.71]],
+    "vein_colour": "#9fd0ff",
+    "vein_energy": 1.1,
+    "deck_model": "res://assets/props/meshy-1024/stormheart_deck_segment/stormheart_deck_segment.glb",
+    "deck_radius_m": 19.4,
+    "deck_length_m": 8.0,
+    "deck_sink_m": 0.15
+  },
   "hollow_floor": {
     "enabled": false,
     "_why_off": "r17 code-blind CPU round (25 Oct): clearing the hollow's ground cover mapped 5.24 -> 4.75 against r16. OFF.",

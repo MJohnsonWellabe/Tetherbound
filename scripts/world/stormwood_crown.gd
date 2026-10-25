@@ -6,6 +6,7 @@ const GUARDIAN_CLEAR_FLAG := "stormwood:named:crown_guardian:cleared"
 const ENGINE_TRUTH_FLAG := "stormwood:engine_truth_learned"
 const FINISH_SHADER := preload("res://shaders/stormwood_heartstone.gdshader")
 const FINISH_CONFIG := "res://data/config/stormwood_heartstone_visual.json"
+const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 var world: Node3D
 var game: Node
 var prompt: Node3D
@@ -13,6 +14,7 @@ var _revision := -1
 var _finish: Dictionary = {}
 var _veins: Array[ShaderMaterial] = []
 var _crystal_lit: Array[BaseMaterial3D] = []
+var _hero_glow: Array[ShaderMaterial] = []
 var _stone_light: OmniLight3D
 
 func mount(owner_world: Node3D) -> void:
@@ -23,7 +25,10 @@ func mount(owner_world: Node3D) -> void:
 	# Read on every shell: the stone's size sets its collider too, so host
 	# and clients agree on the body whatever they draw.
 	_finish = JSON.parse_string(FileAccess.get_file_as_string(FINISH_CONFIG))
-	var height := float(_finish.get("height_m", 2.4))
+	var hero: Dictionary = _finish.get("hero", {})
+	var use_hero := bool(hero.get("enabled", false)) and ResourceLoader.exists(str(hero.get("model", "")))
+	# The hero stone is taller; its collider follows it on every shell.
+	var height := float(hero.get("height_m", 4.0)) if use_hero else float(_finish.get("height_m", 2.4))
 	var solid := StaticBody3D.new()
 	var collision := CollisionShape3D.new()
 	var sphere := SphereShape3D.new()
@@ -33,7 +38,17 @@ func mount(owner_world: Node3D) -> void:
 	solid.add_child(collision)
 	add_child(solid)
 	_satellites(height, bool(world.get("simulation_only")))
-	if not bool(world.get("simulation_only")):
+	if not bool(world.get("simulation_only")) and use_hero:
+		# GPU F41#0 / r16-r17 judges: no heartstone presence. The Meshy hero
+		# (tb/meshy-1024 ae67083ec: standing stone, embedded blue crystal,
+		# root plinth) replaces the installed rock; its crystal glows.
+		var model := HERO_PROP.load_model(str(hero.model))
+		HERO_PROP.fit_height(model, height, float(hero.get("sink_m", 0.1)))
+		model.rotation.y = deg_to_rad(float(hero.get("yaw_deg", 0.0)))
+		model.name = "HeartstoneHero"
+		add_child(model)
+		_hero_glow = HERO_PROP.glow(model, Color(str(_finish.get("charge_colour", "#9adecd"))), float(hero.get("glow_energy", 1.2)))
+	elif not bool(world.get("simulation_only")):
 		var stone := (load("res://assets/environment/stylized_nature/Rock_Medium_3.gltf") as PackedScene).instantiate() as Node3D
 		var bounds := BOUNDS.measure(stone)
 		var factor := height / maxf(0.1, bounds.size.y)
@@ -168,6 +183,10 @@ func restore_progression_from_game(_game: Node) -> void:
 		veins.set_shader_parameter("charge_colour", tint)
 		veins.set_shader_parameter("charge_energy", float(_finish.get("released_energy" if released else "charge_energy", 1.1)))
 	var crystal_energy := float((_finish.get("crown_crystal", {}) as Dictionary).get("emission_energy", 1.2))
+	var hero_energy := float((_finish.get("hero", {}) as Dictionary).get("glow_energy", 1.2))
+	for glow: ShaderMaterial in _hero_glow:
+		glow.set_shader_parameter("glow_colour", tint)
+		glow.set_shader_parameter("glow_energy", hero_energy * (0.2 if released else 1.0))
 	for lit: BaseMaterial3D in _crystal_lit:
 		lit.emission = tint
 		lit.emission_energy_multiplier = crystal_energy * (0.2 if released else 1.0)
