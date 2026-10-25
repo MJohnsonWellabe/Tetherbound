@@ -108,19 +108,6 @@ func _build_furniture() -> void:
 	# Wall pieces hang above head height, clear of the floor lane.
 	_kit("Shelf", "Shelf_Simple", Vector3(west + 0.16, FLOOR_TOP + 1.55, chest_at.z), 90.0, 0.8)
 	_kit("PegRack", "Peg_Rack", Vector3(_door_x, FLOOR_TOP + 1.6, -_half_d + 0.06), 0.0, 0.8)
-	# A standing candle at the bed head is the room's warm key light (r16
-	# judges: overexposed flat plaster); the ceiling fill drops to match.
-	var candle_at := Vector3(bed_at.x + bed_size.x * 0.5 + 0.2, FLOOR_TOP, -_half_d + 0.3)
-	_kit("Candles", "CandleStick_Stand", candle_at, 0.0, 0.6)
-	_solid(Vector3(0.3, 0.8, 0.3), candle_at + Vector3(0.0, 0.4, 0.0))
-	var candle := OmniLight3D.new()
-	candle.name = "CandleLight"
-	candle.position = candle_at + Vector3(0.0, 0.85, 0.0)
-	candle.light_color = Color(1.0, 0.72, 0.45)
-	candle.light_energy = 1.6
-	candle.omni_range = 4.5
-	candle.shadow_enabled = true
-	add_child(candle)
 
 
 func _build_rug() -> void:
@@ -134,7 +121,7 @@ func _build_light() -> void:
 	# Lower and warmer than the old 2.4: the white plaster blew out to a
 	# shadowless box (GPU F41#0, 25 Oct).
 	light.light_color = Color(1.0, 0.82, 0.62)
-	light.light_energy = 0.8
+	light.light_energy = 1.35
 	light.omni_range = 6.5
 	light.shadow_enabled = true
 	add_child(light)

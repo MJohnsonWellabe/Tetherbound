@@ -64,7 +64,8 @@
     "light_range_m": 16.0
   },
   "hollow_floor": {
-    "enabled": true,
+    "enabled": false,
+    "_why_off": "r17 code-blind CPU round (25 Oct): clearing the hollow's ground cover mapped 5.24 -> 4.75 against r16. OFF.",
     "scope": "client_presentation",
     "_why": "r17 (25 Oct): r16 judges read the hollow's grass carpet as outdoors. Ground-cover tiers keep out of clear_radius_m around the trunk axis.",
     "clear_radius_m": 40.0
