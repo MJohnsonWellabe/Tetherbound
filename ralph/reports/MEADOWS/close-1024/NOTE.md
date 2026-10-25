@@ -223,6 +223,12 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Ref: `docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png`, with the key art's Meadows stone palette so it sits in the Hall.
   - Prompt: "carved dark oak and grey stone portal surround for a doorway, twisted root and branch relief climbing both jambs, a small pale-blue lightning glass keystone, iron straps, stylised realism, game asset, open centre". No oxblood.
 
+- 2026-10-25 12:30 UTC READY (test pending) tb/meadows-land8 7472798460 (from origin/main): tier-1 new art wired OFF.
+  - Contents: Hall arch facades (`crossing_hall_arch_facades.gd`, `crossing_hall.json arch_facades`, now covering all seven chapter arches), the stronghold hero gatehouse (`stronghold_hero_gatehouse.gd`, `stronghold.json hero_gatehouse`, r2 placement), and the Meadows hero pieces (`meadows_hero_pieces.gd`, `meadows_hero_pieces.json`: cliffs and Ironwood). It also carries their ten `assets/props/meshy-1024/meadows_*` assets, imported with policy passed, and three one-line hooks.
+  - Every flag is false, so shipping is unchanged. Test: `tests/test_meadows_tier1_art_gates.gd`, queued behind the CPU captures; I'll post the result here.
+  - It lands alongside land3, land6 and land7 with no overlapping hunks (land3 touches other keys in `crossing_hall.json`).
+  - Use it for the GPU art pass in the 11:40 READY (flip each flag on for the candidate side).
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
