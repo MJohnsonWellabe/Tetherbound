@@ -514,3 +514,4 @@ F39#1 = every top-20 Tidewake item fixed on main with a before/after code-blind 
 
 **Count:** 20 top-20 + 23 impact>12 = 43 items; 12 are Tidewake-scene rows this lane can fix, the other 31 belong to the animation, UI, camera and shared-art lanes. Neither row can close until those lanes land PASSes on the same items.
 - 2026-10-25 INFO wl1: waterline_declutter_candidate level on CPU (6.36 → 6.47 mapped), stays OFF. Judges name the pier stakes, the even pebble carpet and the cold 18:00 sky, not the drift markers. Evidence: wl1/.
+- 2026-10-25 READY fc2 (Veilfall face, OFF): terraced flanks + mossy ledges + narrower crown + far rain veil, CPU mapped 5.27 → 5.98 (+0.71, x3); rain streaks FIXED x3. Sections: current_flow,veilfall_falls_candidate,rain_fog_candidate,rain_veil_candidate,veilfall_mountain_candidate. Head: 2b0d9b543. Judges name sawtooth terraces next; fc3 in progress.
