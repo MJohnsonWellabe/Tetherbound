@@ -16,7 +16,8 @@ extends SceneTree
 ##   * lightning shelter (`StormwoodLightning.sheltered`, cached as
 ##     `StormwoodSurge.sheltered`) follows WORLD §5.2 "camps with rods ... are
 ##     safe": inside and 11 m out (inside the camp safe zone) yes, 60 m out no;
-##     the live guard and the cached state always agree.
+##     the live guard and the cached state always agree;
+##   * inside, the trainer stands on the room floor, proud of the terrain.
 ##
 ## Disclosed fixtures: debug placement at each stand (the production player
 ## body, settled on the ground); the camera rig follows as in play; no input.
@@ -101,6 +102,10 @@ func _stand(label: String, at: Vector2, want_roof: bool, want_shelter: bool) -> 
 	_expect(roofed == want_roof, "%s: near-rain roof state is %s (want %s)" % [label, roofed, want_roof])
 	_expect(live == want_shelter, "%s: lightning shelter is %s (want %s)" % [label, live, want_shelter])
 	_expect(cached == live, "%s: cached surge shelter agrees with the live guard" % label)
+	if want_roof:
+		# The room floor must stand proud of the terrain it covers, or the
+		# terrain z-fights up through it (GPU F41 matrix, 25 Oct).
+		_expect(pos.y - ground >= 0.03, "%s: trainer stands on the room floor %.3f m above the terrain (want >= 0.03)" % [label, pos.y - ground])
 	_stands_done += 1
 
 

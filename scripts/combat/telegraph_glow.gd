@@ -308,8 +308,21 @@ func _draw_ring(radius: float, alpha: float) -> void:
 		var loop := rim.duplicate()
 		if not loop.is_empty():
 			loop.append(loop[0])
-		STYLE.draw_dust(_dust, [loop], _soft, clampf(_life / maxf(0.05, _duration), 0.0, 1.0), _life,
-			clampf(alpha / 0.55, 0.0, 1.0))
+		var build := clampf(_life / maxf(0.05, _duration), 0.0, 1.0)
+		var lines: Array = [loop]
+		var fills := STYLE.fill_fractions(_soft, build)
+		if not fills.is_empty() and not rim.is_empty():
+			# Heights between the rim (already sampled) and one centre sample,
+			# so fill rows add one ground query per redraw, not one per point.
+			var centre_y := _ground_vertex(Vector3.ZERO).y
+			for fraction: float in fills:
+				var row := PackedVector3Array()
+				for i in rim.size() + 1:
+					var edge: Vector3 = rim[i % rim.size()]
+					row.append(Vector3(edge.x * (1.0 - fraction), lerpf(edge.y, centre_y, fraction),
+						edge.z * (1.0 - fraction)))
+				lines.append(row)
+		STYLE.draw_dust(_dust, lines, _soft, build, _life, clampf(alpha / 0.55, 0.0, 1.0))
 
 
 func _exit_tree() -> void:

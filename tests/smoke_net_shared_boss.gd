@@ -83,7 +83,19 @@ const OWNER_POSE_PREFIX := preload("res://tests/helpers/net_owner_pose_prefix.gd
 ## which pulls the opponent's `hp` down. It never touches `max_hp`, `attack` or
 ## `defence` -- the three this asserts on -- but reading them afterwards would
 ## invite the next reader to assume it might.
-## The fight driver supplies no self-HP top-ups in any of this smoke's modes.
+## The fight driver supplies no self-HP top-ups in any of this smoke's modes,
+## with ONE disclosed exception in the main mode: after the two damage halves
+## and before the friendly half, the host's own creature receives a single
+## typed aid through `tools/net/f48_actor_topup.gd` (`actor_topup_once`, the
+## same disclosed provider and owner save/ACK the Warden mechanics fixtures
+## use; its contract is a full heal and it never revives). Why: the boss's
+## landed hits all go to the host's creature, since the damage halves keep
+## the guest's creature outside the boss's swing arc and `pick_struck` only
+## spreads among creatures that arc reaches. With no aid the host's creature
+## reached the friendly half on 24-59 hp and fainted in about 1 run in 9,
+## ending the host's battle (netfix NOTE, Follow-ups 5 and 9). Every check on
+## the damage halves reads before the aid; nothing after it asserts on the
+## host creature's HP total.
 ##
 ## ### FINDING F1, CLOSED: the stat multiplier and the cooldown now reach the
 ## ### creature, and this file asserts it
@@ -195,6 +207,8 @@ const SEAT_FALLBACK := 1.4
 ## Metres along Z each creature stands off the boss, on opposite sides, so
 ## neither is ever in the other's arc during the shared-damage half.
 const NEAR_Z := 1.6
+## Frames the one disclosed aid may take through its owner save/ACK.
+const TOPUP_FRAMES := 600
 ## The friendly-fire staging: how far along Z the striker stands off the victim.
 const APART_Z := 1.5
 ## Which side of peer 1's creature peer 0's is stood on, in turn, one per
@@ -727,6 +741,15 @@ func _run() -> void:
 			+ " over %d placement attempt(s); the host last held its creature %.2f m from the boss"
 				% [attempts, last_gap])
 		var guest_hp := float(((await _boss(1)).get("record", {}) as Dictionary).get("hp", -1.0))
+		# The host's number travels to the guest after the blow. Under load one
+		# read came back a blow early (guest 222.109 against host 214.717, the
+		# guest's previous value). Wait, bounded, for the replicated value; a
+		# copy that never matches still fails below.
+		for _wait in REFUSAL_POLLS:
+			if absf(guest_hp - host_hp) < 0.001:
+				break
+			await step(1, "wait", {"frames": FRIENDLY_SETTLE})
+			guest_hp = float(((await _boss(1)).get("record", {}) as Dictionary).get("hp", -1.0))
 		# §3: the record's hp is THE hit points and both peers render it. A client
 		# decrementing its own copy "for responsiveness" diverges here by exactly
 		# one blow.
@@ -734,6 +757,16 @@ func _run() -> void:
 			"and both peers draw the same boss health bar after it (host %.3f, guest %.3f)"
 				% [host_hp, guest_hp])
 		hp_before = host_hp
+
+	# --- the one disclosed aid (see the header) ------------------------------
+	# The damage halves are checked above, before this. One typed full heal of
+	# the host's own creature, through the disclosed provider and its owner
+	# save/ACK; never a revive, never repeated.
+	var aided: Dictionary = await step(0, "actor_topup_once", {"budget_frames": TOPUP_FRAMES}, TOPUP_FRAMES + 300)
+	print("[shared-boss aid] %s" % JSON.stringify(aided))
+	check(str(aided.get("verdict", "")) == "PASS",
+		"the host's creature took its one disclosed aid before the friendly half (%s)"
+			% str(aided.get("detail", "")))
 
 	# --- 5. friendly fire between the two pilots, in the BOSS fight -----------
 	#

@@ -849,6 +849,13 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			_trainer_fight_director = null
 			_trainer_fight_manager = null
 			return trainer_result
+		"actor_topup_once":
+			var topup_result: Dictionary = await _step_actor_topup_once(args)
+			if not _trainer_fight_progress.is_empty():
+				_trainer_fight_progress["running"] = false
+			_trainer_fight_director = null
+			_trainer_fight_manager = null
+			return topup_result
 		"place_stand_in":
 			out = await _step_place_stand_in(args)
 		"party_grant":
@@ -4372,6 +4379,51 @@ static func _stage_trainer_hp_ceiling(director: Node, manager: Node,
 ## `smoke_trainer_battle.gd` does, and for the same reason: this arm is testing
 ## the payout at the end of a won battle, not the player's ability to survive
 ## one, and a creature that faints ends the battle in a LOSS and tests nothing.
+## ONE disclosed self-HP aid for the host's own creature in the canonical
+## Warden fight, outside the swing loop: the same typed provider
+## (tools/net/f48_actor_topup.gd, same DISCLOSURE) `win_trainer_battle` calls
+## each stride when `self_hp_topups` is on, called once here and waited on
+## through its owner save/ACK. The provider's contract is a full heal; it
+## refuses a fainted creature. Host only.
+func _step_actor_topup_once(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	var manager := _combat_manager()
+	if director == null or manager == null:
+		return {"verdict": "ERROR", "detail": "no EncounterDirector/CombatManager"}
+	if not bool(director.call("trainer_battle_active")):
+		return {"verdict": "FAIL", "detail": "no trainer battle is running"}
+	var mine: Variant = manager.call("active_creature")
+	if mine == null:
+		return {"verdict": "FAIL", "detail": "no active creature to aid"}
+	var provider_script: Script = load("res://tools/net/f48_actor_topup.gd")
+	var provider: Node = provider_script.call("install", self, provider_script.get_script_constant_map().get("DISCLOSURE", {}))
+	if provider == null:
+		return {"verdict": "FAIL", "detail": "the disclosed Warden aid requires the actual host PeerRunner"}
+	var budget := maxi(60, int(args.get("budget_frames", 600)))
+	var before := float((mine as RefCounted).get("hp"))
+	_trainer_fight_director = director
+	_trainer_fight_manager = manager
+	_trainer_fight_observed_encounter_id = str(manager.call("encounter_id"))
+	_trainer_fight_progress = {"running": true, "started_ms": Time.get_ticks_msec(),
+		"started_physics_frame": _physics_count, "phase": "actor_topup_once"}
+	var result: Dictionary = {}
+	var frames := 0
+	while frames < budget:
+		result = provider.call("request_topup", director, manager)
+		if result.get("ok") != true or result.get("pending") != true:
+			break
+		await physics_frame
+		frames += 1
+	var after := float((manager.call("active_creature") as RefCounted).get("hp")) if manager.call("active_creature") != null else -1.0
+	var data := {"before": before, "after": after, "max_hp": float((mine as RefCounted).get("max_hp")),
+		"code": str(result.get("code", "")), "action_id": str(result.get("action_id", "")), "frames": frames}
+	if result.get("ok") != true or result.get("pending") == true:
+		return {"verdict": "FAIL", "data": data,
+			"detail": "the disclosed aid did not settle (%s) after %d frames" % [str(result.get("code", "")), frames]}
+	return {"verdict": "PASS", "data": data,
+		"detail": "host creature %.1f -> %.1f hp (%s) in %d frames" % [before, after, str(result.get("code", "")), frames]}
+
+
 func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 	var director := _encounter_director()
 	var manager := _combat_manager()
