@@ -1,0 +1,12 @@
+{
+ "piece": "f49_s3_kitchen_2",
+ "runner": "tide",
+ "segment_or_profile": "training_t5_kitchen_2",
+ "from": "tests/fixtures/earned_saves/f49_s3_kitchen_1",
+ "source_commit": "67b9a25541f40e131414c65a44ee130d8fd8aa3e",
+ "wall_seconds": 493,
+ "command": "godot --headless --fixed-fps 60 --path . --script tools/earned_saves/tidewake_piece_runner.gd -- --segment=training_t5_kitchen_2 --from=<rb>/f49_s3_kitchen_1 --out=<rb>/f49_s3_kitchen_2",
+ "lane": "tb/stormwood-routes (Stormwood lane, S3/S5 for F49#0)",
+ "renderer": "Godot 4.7 headless, CPU container",
+ "result": "PASS"
+}
