@@ -1,6 +1,6 @@
 # Tidewake close-1024 round mt1: MESHY 10 crown on the capped Veilfall summit, CPU pre-judge (25 Oct 2026, CT)
 
-## What  turns on (OFF in play)
+## What `veilfall_mountain_candidate` turns on (OFF in play)
 
 - **Crown:** `veilfall_terraced_mountain` (tb/meshy-1024 7a5f3318a). Render mesh with trimesh collision that follows the drawn mesh (`trimesh_collider`).
   - Fit: 460 m tall, stretched 1.6 x 1.7 in plan.
