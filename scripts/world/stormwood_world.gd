@@ -14,6 +14,7 @@ const FALL_RECOVERY := preload("res://scripts/world/fall_recovery.gd")
 const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
 const STRUCK_SENTINEL := preload("res://scripts/world/stormwood_struck_sentinel.gd")
 const GLASS_SINK := preload("res://scripts/world/stormwood_glass_sink.gd")
+const GROUND_ZONES := preload("res://scripts/world/stormwood_ground_zones.gd")
 const POCKETS := preload("res://scripts/world/stormwood_pockets.gd")
 const ROAD_CURRENT := preload("res://scripts/world/stormwood_road_current.gd")
 const ROD_LINE := preload("res://scripts/world/stormwood_rod_line.gd")
@@ -350,6 +351,7 @@ func _stand_up_ground_cover() -> void:
 		if full_profile:
 			for key: String in finish.get("grass", {}):
 				profile[key] = finish.grass[key]
+			profile.merge(GROUND_ZONES.grass_keys(), true)
 		for tier: Dictionary in profile.get("cover_tiers", []):
 			if full_profile:
 				var overrides: Dictionary = finish.get("tiers", {}).get(str(tier.get("name", "")), {})
@@ -441,3 +443,4 @@ func _apply_ground_materials(budget: RefCounted) -> void:
 	material.set("auto_shader",true)
 	if not simulation_only:
 		GLASS_SINK.install(_terrain, _field.config.glass_sink)
+		GROUND_ZONES.install(_terrain)

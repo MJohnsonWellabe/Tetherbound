@@ -170,6 +170,13 @@ uniform float ground_blend : hint_range(0.0, 1.0) = 0.55;
 // second pattern that happens to look similar. This is most of why the
 // hand-over does not read as a line.
 uniform float drift_scale = 0.11;
+// GROUND ZONES: the grass field's zone_* field (Stormwood). The far sheet
+// opens over bare loam and darkens over moss, like the near tufts. 0 = off.
+uniform float zone_strength : hint_range(0.0, 1.0) = 0.0;
+uniform float zone_scale = 0.028;
+uniform vec2 zone_bare = vec2(0.26, 0.36);
+uniform vec2 zone_moss = vec2(0.64, 0.74);
+uniform vec3 zone_moss_tint : source_color = vec3(0.7, 0.8, 0.65);
 uniform float drift_contrast : hint_range(0.0, 1.0) = 0.78;
 // Mottle. The noise that moves the tint between base and tip and, through
 // `mottle_value`, moves its brightness too. It is what replaces the near
@@ -431,6 +438,12 @@ void fragment() {
 		float n2 = value_noise(v_world_xz * macro_scale2);
 		macrov = mix(macro_variation1, vec3(1.0), n1) * mix(macro_variation2, vec3(1.0), n2);
 		macrov = mix(vec3(1.0), macrov, macro_strength);
+	}
+	if (zone_strength > 0.001) {
+		float zone_n = value_noise(v_world_xz * zone_scale) * 0.7
+			+ value_noise(v_world_xz * zone_scale * 2.7 + vec2(17.3, 5.1)) * 0.3;
+		drift *= 1.0 - (1.0 - smoothstep(zone_bare.x, zone_bare.y, zone_n)) * zone_strength;
+		tint = mix(tint, tint * zone_moss_tint, smoothstep(zone_moss.x, zone_moss.y, zone_n) * zone_strength);
 	}
 	ALBEDO = tint * mix(vec3(1.0), v_ground_colour, ground_blend) * value * macrov;
 	ALPHA = strength * v_ramp * drift;
