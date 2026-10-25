@@ -287,6 +287,11 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
      - Same envelope as the r1 surrounds (about 4.4 x 5.2 x 0.7 m, open centre).
      - Ref: owner key art, Meadows Hall panel.
      - Prompt: "warm carved oak and limestone portal surround for a great hall doorway, wheat and leaf relief on the jambs, a carved sun keystone, stylised realism, game asset, open centre".
+  5. **meadows_tether_war_banner** (band5_stronghold_approach_1, the courtyard heraldry; replaces the flat cloth quads, not the banner sizes).
+     - Size: about 2.4 m wide x 7 m drop, with a carved pole and crossbar (the board's 6–8 m banners). Oxblood is correct here: it is Team Tether's own stronghold.
+     - Ref: `docs/reference/owner-board-2026-08-15-systems-and-castle.png` (castle banners) and the key art's stronghold panel.
+     - Prompt: "heavy hanging war banner, deep oxblood wool with deep vertical folds and a tattered, frayed hem, a pale stitched circle-and-cross emblem, iron-capped wooden crossbar and pole, stylised realism, game asset".
+     - Why replacement rather than a rescale: earlier judges asked for the banners 3–4x larger (T1-HALL-4); the GPU judge now reads them as "giant flat banners". Flat cloth is the defect, and a rescale would oscillate.
 
 ## Work log
 
