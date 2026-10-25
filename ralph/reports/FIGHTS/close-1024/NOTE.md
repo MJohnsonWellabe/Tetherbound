@@ -1,6 +1,11 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-25 12:45 CT INFO r8 (J items 3 and 5: kit flash x0.5 and life x0.65, contact disc 0.32/0.42, lighter ground burst, pilot floor 0.13), code-blind CPU, 3 fresh judges, mapped (confirming, slope 1.10, r 0.89, RMSE 0.63; files r8_*):
+  - Shipped look -> r8: Stormwood 6.17 -> 6.21, Warden f38 7.01 -> 6.97, Venn 6.02 -> 5.84, grunt f38 6.72 -> 6.57. **Not better: r8 stays OFF** (`flash_scale`, `flash_life_scale` 1.0; radii and pilot floor unchanged).
+  - All three judges name the same main cause: **the wind-up dust columns** bury the player's creature (Stormwood Sparkit, Terrapup). That density is my r6 fill rows and pulse at dust_alpha 0.9, so it is a regression in my own change. r9 tests your G5 cap (charge-lane dust at most 0.35) with tell dust at 0.6; that arm is capturing now against r8's shipped-look frames.
+  - Venn on CPU: Ripplet is solid on both arms, and impacts are FIXED on the shipped arm. The "Gather Reef Stone" prompt still draws in this capture even with the `_combat_is_running()` group fallback, so another path draws it. Next look.
+  - Gain rule: r7 and r8 both gained under +0.5 on the shared fight look, so after r9 (a regression fix) I park scene tuning of the fight look. The judges' standing asks are camera stability at fences, flat ground and missing chapter sky or water, which are biome and camera work.
 - 2026-10-25 12:00 CT INFO J items, in progress on tb/fights (all OFF or code-only until judged):
   1. **Venn ghost.**
      - 844dad9e0: the follower cover fade is also skipped for any body a running fight pilots (FOUNDATION_GROUP manager, `is_fighting()`, `_ally_body`), whatever its follow state. New test.
