@@ -37,13 +37,16 @@ func build(room: Dictionary = {}) -> void:
 	_build_light()
 
 
-## Top level with the terrain outside, same reasoning as shop_interior.gd:
 ## village.gd sinks the building to `ground - 0.05`, so a slab centred at
-## -0.10 with a 0.30-tall body puts its surface exactly on the doorsill.
+## -0.05 with a 0.30-tall body puts its surface 5 cm proud of the terrain
+## outside. Level with it (the old -0.10 centre) the two surfaces were
+## coplanar on a flat settlement pad and the terrain z-fought up through the
+## room (Stormwood Ashfoot shelter, GPU F41 matrix, 25 Oct); a 5 cm sill is
+## well inside the character's step height.
 func _build_floor() -> void:
 	_box(
 		Vector3(_half_w * 2.0 + 0.6, 0.3, _half_d * 2.0 + 0.6),
-		Vector3(0.0, -0.10, 0.0),
+		Vector3(0.0, -0.05, 0.0),
 		COL_FLOOR
 	)
 
