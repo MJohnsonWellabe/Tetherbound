@@ -1,5 +1,82 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## HANDOFF (25 Oct, PAUSED for a fresh session)
+
+### Branch heads
+- `tb/creatures` 6ce1a74cb (+ this handoff): the lane. It holds dog3 Terrapup (candidate_dog3, f0ada94b5), the Grandpa hair candidate (41b3b19c0), all specs and this note. It is not landed.
+- `tb/creatures-land` 4f7c8d31c: the landing candidate. It merged main 400f3661f (#746/#747) at 9ad1c9e85. Not landed as a whole; the coordinator lands pieces from it.
+- `tb/creatures-land2` 6749404d4: landed (#740 merged).
+- `main` 400f3661f.
+
+### Landed
+- #740: Mosshock height 3.6 m with its collider grown (radius 1.8), and the Grandpa eyes.
+- Earlier batches, per the coordinator.
+
+### Open candidates on `tb/creatures-land`
+
+| item | commit | status | next step |
+|---|---|---|---|
+| P2-016 body hit-flash | 29f4de904 | GPU queued (coordinator). CPU inconclusive: the disk filled and only 4 of 12 frames survived; the boar looked lighter on contact. | GPU verdict. If PRESENT, raise `impact.hit_flash.strength` (0.55) or `seconds` (0.12) as one change. |
+| Big wince (head drop, squash, shove) | f2afad52d, gated by `impact.hurt_wince`, OFF | b37 +0.31, b38 +0.00. Parked by rule 1. | None. The 0.55 s wince-hold timing (4403807c8/288784257) is still in the animator; ask whether to gate it too. |
+| Fight-effect ride-alongs: dust clear 2x radius, ground burst 5 @ 0.3, flash radius 0.3/0.38 | 5d1e10c71, f19176296 | Ride along with the hit-flash; not judged alone. | Judged with the hit-flash on GPU. |
+| Mosshock regrade (#745 CI fix) | 01b054770 (8c27cb42e) | GPU queued. CPU b36 4.90 -> 6.01. colourway test moss share about 0.48. | Coordinator: once GPU holds it at 6 or above, move #745 to main + 01b054770's texture. Its GPU path to 7.5: more coat value range, rim, higher head carriage, a faint that keeps the head up. |
+| Storm arc emission (Tanglevolt, Staticub, Thundertunnel, Voltarach) | e4b6a4018, cecef9776 | GPU queued (one stage check against the 22 Oct board). | GPU only; the CPU stage cannot show emission. |
+| Tanglevolt board look: field_emission and field_rim to 0 | 1b9c6616b | GPU queued with the above. | If the GPU wants a rim, it is one number in species.json. |
+| Nightburrow plate fill + rim, Riftfrill rim | tb/creatures 4e5dc1d35 | CPU b35 +0.23 / +0.00. Not queued (under 0.5). | Drop, or fold into a bigger change. |
+| Mirejaw `lift_dark_back` touch | tb/creatures 4e5dc1d35 | Superseded by the Mirejaw retexture. | Drop it. |
+
+### Orders not started (blocked on disk)
+Source: the Meshy retextures on `tb/meshy-1024` b959ba072, `assets_raw/naturalistic-1024/{terrapup_dog3_retex,mirejaw_retex}/{r1,r2}/` (GLB, base_color PNG, thumbnail, provenance, prompt; original UVs).
+
+**2. dog3 Terrapup** (owner: "Terrapup should be a dog"; land target: dog3 replaces the badger). Work on `tb/creatures`; the dog3 mesh is `assets/creatures/tetherbound/terrapup/candidate_dog3/models/creature_terrapup_dog3.glb`.
+- Start from r1 (it shows the plates best).
+- Write a grade script modelled on `assets/creatures/tetherbound/mosshock/retex/grade_retex.py`: the coat goes from orange to chestnut #7A4E2E, keeping hue out of the red band (check with the `shift_reserved_red.py` bands), and the plates go to weathered earth-grey.
+- Write it into the dog3 GLB's Image_0 and the extracted jpg. Drop the `terrapup` overlays in `creature_touches.json`; the retexture replaces them.
+- Fold into the same candidate:
+  - lower `mount_offset` into the pad dip (now [0, 2.36, 0]; measure the pad height on the ride clip);
+  - the cower (already in dog3 clips, 17ce37f88/f0ada94b5);
+  - `field_rim` 0.3.
+- Re-pin f36 if dog3 is in the recipes, run the import policy, import again, then CPU-judge against shipped main (the badger). Use `mkb15.py` with `BASE_FROM`, or the runbook flow.
+- If the plates still read as a backpack after grading, ask the coordinator for a re-run with a stronger plate prompt.
+- Specs: `close-1024/dog3-retex-spec/spec.md`. GPU path-to-7.5 verdicts: `tb/gpu-pass` `F36-1/M-terrapup-dog3-17ce37f88/VERDICT.md`.
+
+**3. Mirejaw**
+- Start from r2. r1 went blue-grey, which is off-spec.
+- Grade the back to about value 0.28 olive-umber (#4A4636, seams #8A7A4E) and lift the frills to amber #D69A3A-#E7B85A. No red: re-run the `shift_reserved_red.py` check.
+- Mesh: main's `assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native.glb`.
+- Then rebuild vivid with `--only vivid mirejaw`, re-pin f36, run the import policy, import again.
+- CPU-judge against main and post READY.
+- Spec: `close-1024/mirejaw-retex-spec/spec.md`.
+
+### Parked by the coordinator
+- Land Riverdrake faint "seated coil" (GPU 7.13).
+- water_riverdrake rider framing (no tool change).
+
+### Open questions sent
+- Whether to gate the 0.55 s wince hold off as well.
+
+### What worked
+- Asset-level changes:
+  - the Mosshock Meshy retexture: GPU +1.76, CPU +1.11 after the regrade;
+  - the red-band hue shifts (GPU red check FIXED 12/12);
+  - the dog3 rig;
+  - the Grandpa eyes (GPU 7.20 vs 7.09).
+- Rule 1 (two rounds under 0.5 means switch approach) saved time once it was followed.
+
+### What did not work
+- Pose and timing tweaks for P2-016: five GPU rounds with no gain, and two CPU rounds under 0.5 for the big wince.
+- Belly-to-camera faint rolls (b34: read as belly-up, −1.1).
+- Albedo value nudges (b35 Mirejaw −0.05).
+- Rims under llvmpipe: they don't render, so the CPU can't judge them.
+
+### Harness runbook
+TECHNICAL §8.1 "Creature stage and asset lessons" was added on `tb/creatures-land` 4f7c8d31c. Scratch scripts used (re-create from these descriptions if needed):
+- `cap_live.sh <out> <species...>`: wraps `capture_f36_poses.gd` and adds `--candidate` for enabled species.
+- `mkb15.py <batch> <cand_root> <sp>:<base_root>`: tiles hit-000/hit-050/faint-100 (plus ride/swim/fly) per side, writes spec.json, calls `anchor_tiles.py --pairs 3 --include f36_0_npc:C1`, hard-links `docs/reference` (`cp -rl`, to save disk) and fills the prompt. The prompt's judge-folder path must be absolute.
+- `mapb.py <batch>`: raw_scores.json + key.json -> batch.json -> `calibrate.py`.
+- Fight A/B: run `capture_named_fight.gd --trainer=south_bridge_grunt --frames=18 --interval=0.15 --attack` twice, the main arm with main's versions of the changed files checked out. Crop each frame to (0, 0.2h, 0.6w, 0.8h), tile 6 wide at 384x240, and build the spec by hand.
+- Disk is the binding constraint: each 1280x720 fight frame is about 4 MB, and a full disk silently truncates PNGs. Check `Image.load()` before tiling.
+
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
