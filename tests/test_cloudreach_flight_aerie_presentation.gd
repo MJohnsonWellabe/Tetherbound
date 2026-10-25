@@ -99,7 +99,11 @@ func test_production_world_mounts_the_visual_layer_and_catalogue_uses_the_route_
 	assert_false(found.is_empty(), "Windscar Flight Aerie is absent from the player-facing catalogue")
 	assert_eq(found.get("position", []), [373.0, 3262.5357],
 		"the catalogue no longer uses the authored final ground-route approach")
-	assert_almost_eq(float(found.get("view_heading_deg", 0.0)), -115.0, 0.01,
+	# Facing is (sin h, cos h), the convention Game.debug_teleport_to and the
+	# F40 matrix share; the old -115 looked straight away from the compass.
+	var yaw := deg_to_rad(float(found.get("view_heading_deg", 0.0)))
+	var to_compass := (Vector2(400.0, 3250.0) - Vector2(373.0, 3262.5357)).normalized()
+	assert_true(Vector2(sin(yaw), cos(yaw)).dot(to_compass) > 0.98,
 		"the route arrival no longer faces the launch compass")
 	assert_between(Vector2(373.0, 3262.5357).distance_to(Vector2(400.0, 3250.0)), 29.0, 30.5,
 		"the evidence arrival is either back inside the lesson or detached from the route")

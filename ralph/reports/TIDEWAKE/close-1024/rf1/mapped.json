@@ -2,127 +2,75 @@
  "bar": 7.5,
  "fit": {
   "n_points": 6,
-  "pearson_r": 0.9689,
-  "least_squares_slope": 1.2385,
+  "pearson_r": 0.8627,
+  "least_squares_slope": 1.1828,
   "method": "linear",
-  "slope": 1.2385,
-  "intercept": -0.6453,
+  "slope": 1.1828,
+  "intercept": -0.4439,
   "fallback_reason": null
  },
- "anchor_rmse": 0.38,
+ "anchor_rmse": 0.482,
  "top_anchor_reference": 7.53,
  "confirming_batch": true,
  "anchors": {
-  "craft:after": {
-   "measured": 5.967,
-   "reference": 7.35,
-   "mapped": 6.744,
-   "residual": 0.606
+  "f36_0_gap:C7B": {
+   "measured": 6.1,
+   "reference": 6.3,
+   "mapped": 6.771,
+   "residual": -0.471
   },
-  "craft:before": {
-   "measured": 4.533,
-   "reference": 4.83,
-   "mapped": 4.969,
-   "residual": -0.139
-  },
-  "p2_094_r4:Y_after": {
-   "measured": 5.6,
-   "reference": 6.73,
-   "mapped": 6.29,
-   "residual": 0.44
-  },
-  "p2_094_r4:X_before": {
-   "measured": 3.533,
-   "reference": 3.5,
-   "mapped": 3.731,
-   "residual": -0.231
+  "f36_0_gap:C7A": {
+   "measured": 5.5,
+   "reference": 7.03,
+   "mapped": 6.062,
+   "residual": 0.968
   },
   "f36_0_npc:C1B": {
-   "measured": 6.867,
+   "measured": 6.7,
    "reference": 7.47,
-   "mapped": 7.859,
-   "residual": -0.389
+   "mapped": 7.481,
+   "residual": -0.011
   },
   "f36_0_npc:C1A": {
-   "measured": 6.833,
+   "measured": 6.767,
    "reference": 7.53,
-   "mapped": 7.817,
-   "residual": -0.287
+   "mapped": 7.56,
+   "residual": -0.03
+  },
+  "craft:after": {
+   "measured": 6.567,
+   "reference": 7.35,
+   "mapped": 7.323,
+   "residual": 0.027
+  },
+  "craft:before": {
+   "measured": 4.867,
+   "reference": 4.83,
+   "mapped": 5.313,
+   "residual": -0.483
   }
  },
  "candidates": {
-  "Close-up: limestone shipping": {
-   "measured_mean": 3.667,
-   "mapped_mean": 3.9,
+  "Rain views: t1e + falls f2": {
+   "measured_mean": 5.167,
+   "mapped_mean": 5.67,
    "mapped_judges": [
-    3.81,
-    3.81,
-    4.06
+    5.59,
+    5.59,
+    5.83
    ],
    "clamped": false,
    "outside_anchor_range": false,
    "above_top_anchor": false,
    "meets_bar": false
   },
-  "Close-up: rock family": {
-   "measured_mean": 4.167,
-   "mapped_mean": 4.51,
+  "Rain views: + rain_fog_candidate": {
+   "measured_mean": 5.6,
+   "mapped_mean": 6.18,
    "mapped_judges": [
-    4.56,
-    4.31,
-    4.68
-   ],
-   "clamped": false,
-   "outside_anchor_range": false,
-   "above_top_anchor": false,
-   "meets_bar": false
-  },
-  "Shore views: shipping": {
-   "measured_mean": 5.433,
-   "mapped_mean": 6.08,
-   "mapped_judges": [
-    6.04,
-    6.29,
-    5.92
-   ],
-   "clamped": false,
-   "outside_anchor_range": false,
-   "above_top_anchor": false,
-   "meets_bar": false
-  },
-  "Shore views: rock family": {
-   "measured_mean": 5.433,
-   "mapped_mean": 6.08,
-   "mapped_judges": [
-    6.04,
-    6.29,
-    5.92
-   ],
-   "clamped": false,
-   "outside_anchor_range": false,
-   "above_top_anchor": false,
-   "meets_bar": false
-  },
-  "Matched fight: shipping": {
-   "measured_mean": 4.433,
-   "mapped_mean": 4.85,
-   "mapped_judges": [
-    4.8,
-    4.93,
-    4.8
-   ],
-   "clamped": false,
-   "outside_anchor_range": false,
-   "above_top_anchor": false,
-   "meets_bar": false
-  },
-  "Matched fight: rock family": {
-   "measured_mean": 4.567,
-   "mapped_mean": 5.01,
-   "mapped_judges": [
-    4.8,
-    5.3,
-    4.93
+    6.06,
+    5.94,
+    6.53
    ],
    "clamped": false,
    "outside_anchor_range": false,

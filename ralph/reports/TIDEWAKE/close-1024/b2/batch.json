@@ -1,0 +1,12 @@
+{"anchors":{
+ "f36_0_npc:C1A":[7.3,6.9,7.3],
+ "f36_0_npc:C1B":[7.3,6.9,7.3],
+ "craft:after":[6.6,6.4,6.3],
+ "craft:before":[5.3,4.6,4.4],
+ "p2_094_r4:Y_after":[6.5,6.3,5.6],
+ "p2_094_r4:X_before":[4.6,4.1,3.6]},
+"candidates":{
+ "Currents swim: current_flow (base)":[5.5,5.2,4.9],
+ "Currents swim: + swim_candidate sw2 (faded ring, half-submerged)":[6.2,5.6,5.6],
+ "Destinations (pumps-shore + jetty stands): lm2":[5.3,4.5,4.3],
+ "Destinations: + s3 (pumps at the shore 19 m, jetty 19 m, moored boat)":[6.2,5.6,5.7]}}

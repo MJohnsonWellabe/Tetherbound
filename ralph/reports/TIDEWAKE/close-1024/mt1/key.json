@@ -1,0 +1,29 @@
+{
+ "Tl": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Zo": {
+  "anchor": false,
+  "label": "vista: t1e+falls vs crown",
+  "A": "/tmp/claude-0/sp/vista_mtn7.png",
+  "B": "/tmp/claude-0/sp/vista_falls2.png"
+ },
+ "Tv": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Te": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Hf": {
+  "anchor": false,
+  "label": "vista: shipping vs crown",
+  "A": "/tmp/claude-0/sp/vista_mtn7.png",
+  "B": "/tmp/claude-0/sp/vista_base.png"
+ }
+}

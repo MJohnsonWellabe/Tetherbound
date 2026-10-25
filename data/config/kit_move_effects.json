@@ -1121,6 +1121,7 @@
    }
   }
  },
- "impact_scale": 2.0,
+ "_why_flash_scale": "Fights close-1025 candidate (OFF at 1.0): GPU J judges still saw the contact flash and its 1.6x bloom cover the struck creature. flash_scale multiplies every kit move contact flash (kit_effect.gd), flash_life_scale its 0.3 s life.", "_scope_flash_scale": "Client-local presentation only; no authority, save or network state.", "flash_scale": 1.0, "flash_life_scale": 1.0,
+  "impact_scale": 2.0,
  "trail_scale": 2.3
 }

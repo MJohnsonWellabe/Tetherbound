@@ -1,0 +1,116 @@
+{
+ "anchors": {
+  "craft:before": [
+   4.8,
+   5.0,
+   5.0
+  ],
+  "craft:after": [
+   6.3,
+   6.4,
+   6.8
+  ],
+  "f36_0_gap:C5B": [
+   5.4,
+   5.6,
+   6.6
+  ],
+  "f36_0_gap:C5A": [
+   5.2,
+   5.0,
+   5.0
+  ],
+  "p2_094_r4:Y_after": [
+   5.6,
+   5.6,
+   6.0
+  ],
+  "p2_094_r4:X_before": [
+   3.8,
+   3.8,
+   4.2
+  ],
+  "f36_0_npc:C5B": [
+   4.8,
+   4.8,
+   5.4
+  ],
+  "f36_0_npc:C5A": [
+   4.8,
+   4.8,
+   5.5
+  ]
+ },
+ "candidates": {
+  "haze2 gate control": [
+   5.2,
+   5.0,
+   5.5
+  ],
+  "haze2 gate candidate": [
+   5.2,
+   5.0,
+   5.5
+  ],
+  "haze2 shrine candidate": [
+   5.9,
+   5.7,
+   6.0
+  ],
+  "haze2 shrine control": [
+   5.9,
+   5.7,
+   6.0
+  ],
+  "overlook r2 candidate": [
+   5.0,
+   5.3,
+   5.0
+  ],
+  "overlook r2 control": [
+   4.7,
+   4.5,
+   5.4
+  ],
+  "island shell control": [
+   5.6,
+   5.0,
+   5.8
+  ],
+  "island shell candidate": [
+   6.0,
+   5.5,
+   6.1
+  ],
+  "gate shell control": [
+   5.2,
+   4.8,
+   5.5
+  ],
+  "gate shell candidate": [
+   6.1,
+   5.6,
+   6.3
+  ],
+  "F08#3 r18d control": [
+   5.6,
+   5.3,
+   6.0
+  ],
+  "F08#3 r18d candidate": [
+   6.1,
+   5.8,
+   6.4
+  ],
+  "aerie perch control": [
+   4.8,
+   4.6,
+   5.0
+  ],
+  "aerie perch candidate": [
+   5.4,
+   5.3,
+   5.7
+  ]
+ }
+}

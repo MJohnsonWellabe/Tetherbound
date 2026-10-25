@@ -507,5 +507,725 @@
     }
   ],
   "_p2_021_r3": "r3: near stack moved to 13 m along / 14 m out so it no longer crowds the trainer; a second, higher ledge tier at 44 m; the shrine cloud ring dropped to 55-110 m so its dithered base sits below the plateau rim.",
-  "_stand_pattern_void_note": "P2-021 r5: past the shrine plateau rim the walk cameras saw only sky. Island spires (installed strata spire cluster) stand in the void beyond the rim (void_ok: stand height, top void_top_m above it, only on the walk stands), their bases sunk in a cloud sea just below the rim. r4's rim-hung shelves sat under the sightline and one read as a floating slab, so they are gone."
+  "_stand_pattern_void_note": "P2-021 r5: past the shrine plateau rim the walk cameras saw only sky. Island spires (installed strata spire cluster) stand in the void beyond the rim (void_ok: stand height, top void_top_m above it, only on the walk stands), their bases sunk in a cloud sea just below the rim. r4's rim-hung shelves sat under the sightline and one read as a floating slab, so they are gone.",
+  "candidates": [
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-heartstone-candidate",
+      "_why": "F40 P2-021 (impact 100; parked at CPU mapped 6.37, every judge named the smooth untextured cyan egg): the coordinator's Meshy heartstone (assets/props/meshy-1024/cloudreach_sky_shrine_heartstone, task ids in provenance.jsonl, drafted reference assets/environment/cloudreach/meshy_refs/sky_shrine/heartstone_ref.jpg) replaces the procedural HeartSocketGlow sphere and the two AncientWindArmature tori at the same centre (local y 8.5), 5.8 m tall (crystal ~3.8 m, 2.1x the 1.80 m trainer). Untinted (the settlement building tint would grey the crystal), visual only, no collision; the heartstone focal light and suspension arms stay. Flag OFF; not judged yet.",
+      "overlay": {
+        "settlements": {
+          "SkyShrineHeartstone": {
+            "buildings": [
+              {
+                "asset": "sky_shrine_heartstone",
+                "glb": "res://assets/props/meshy-1024/cloudreach_sky_shrine_heartstone/cloudreach_sky_shrine_heartstone.glb",
+                "at": [
+                  0.0,
+                  5.6,
+                  0.0
+                ],
+                "height": 5.8,
+                "yaw": 0.0,
+                "collision_fraction": 0.0,
+                "no_snap": true,
+                "tint": "#ffffff"
+              }
+            ],
+            "hide_visual_prefixes": [
+              "HeartSocketGlow",
+              "AncientWindArmature"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-island-shell-candidate",
+      "_why": "F40 P2-023 (impact 60; parked at CPU mapped 6.00 vs 5.60 after two dressing rounds under +0.5; every judge asked for a pale stratified rounded island with a tapered underside instead of the extruded mesa): the coordinator's Meshy shell (assets/props/meshy-1024/cloudreach_high_perches_island_shell, task ids in provenance.jsonl, drafted reference assets/environment/cloudreach/meshy_refs/high_perches/island_shell_ref.jpg) wraps the High Perches mesa: 75 m across so its inner rim (model r 0.6) clears the 46 x 44 m walkable crown, rim lip at crown level, stretched to 74 m deep. The mesa keeps its crown surface and collision; its wall surfaces, buttresses, outcrops and underside draw nothing. Visual only. Flag OFF; not judged yet.",
+      "overlay": {
+        "settlements": {
+          "HighRoostPerches": {
+            "buildings": [
+              {
+                "asset": "high_perches_island_shell",
+                "glb": "res://assets/props/meshy-1024/cloudreach_high_perches_island_shell/cloudreach_high_perches_island_shell.glb",
+                "at": [
+                  0.0,
+                  -69.1,
+                  0.0
+                ],
+                "height": 74.0,
+                "width": 75.0,
+                "yaw": 0.0,
+                "collision_fraction": 0.0,
+                "no_snap": true,
+                "double_sided": true
+              }
+            ],
+            "hide_child_visuals": [
+              {
+                "under": "LandmarkLedge",
+                "surfaces_of": "StratifiedCliffBody",
+                "hide_surfaces_from": 1,
+                "keep_prefixes": [
+                  "IslandMist",
+                  "StratifiedCliffBody"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-perches-tidy-candidate",
+      "_why": "F40#5 / GPU F40 baseline C5 (24 Oct): at the High Perches the Master signpost's world-space caption ('...Hold your footing. Follow the side path ->') fills and clips the right third of every reverse frame (CPU recapture stand 7 too; b1 judges PRESENT x3). The sign stood 3 m behind and 8 m beside the stand, inside the reverse camera's near field; the candidate moves it to the court edge 14 m to the side (offset [10.6, 9.1] from the Master's sign position, still facing the Master). Visual only. Flag OFF; not judged yet.",
+      "overlay": {
+        "visual": {
+          "master_signpost_offsets": {
+            "high_roost_perches": [
+              10.6,
+              9.1
+            ]
+          }
+        }
+      }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-haze-candidate",
+      "_why": "GPU F40 baseline C6 + C1 (24 Oct, all 11 stands below 7.5; 'the cameras show a grass lawn, not a sky realm'; distance haze missing between islands). Realm visual overlay only: day fog delta -0.00015 -> +0.00025 (aerial depth between planes), horizon haze band 0.15/0.42 -> 0.22/0.6, and the upper cloud deck raised from 100 m to 55 m under each tier (lower deck and banks unchanged) so the cloud sea sits in frame past the route edges. No terrain, collision or route change. Flag OFF; not judged yet. r1 CPU b2: judges saw both sides as identical (gate 5.84 = 5.84, shrine 5.52 = 5.52; ~2.5% of pixels changed). r2: fog delta +0.0010, haze band 0.28/0.8, upper cloud deck 35 m under the tier.",
+      "overlay": {
+        "visual": {
+          "atmosphere": {
+            "environment": {
+              "fog_density_add": 0.001
+            }
+          },
+          "sky_profile": {
+            "horizon_haze_height": 0.28,
+            "horizon_haze_strength": 0.8
+          },
+          "cloud_sea": {
+            "upper_deck_offset_m": 35.0
+          }
+        }
+      }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-beacon-spire-candidate",
+      "_why": "F40 C4 / P2-024 Windscar Beacon (GPU baseline 5.08: 'a lone wooden arch'): the coordinator's Meshy spire (assets/props/meshy-1024/cloudreach_windscar_beacon_spire, task ids in provenance.jsonl, drafted reference assets/environment/cloudreach/meshy_refs/windscar_beacon/beacon_spire_ref.jpg), 27 m to the finial (15x the 1.80 m trainer), stands 24 m out along the beacon stand's heading, 9 m past the wind-gate arch, so the catalogue views frame it through the arch. Untinted, visual only, no collision; the arch, signal and banners stay. Flag OFF; not judged yet.",
+      "overlay": {
+        "settlements": {
+          "WindscarBeacon": {
+            "buildings": [
+              {
+                "asset": "windscar_beacon_spire",
+                "glb": "res://assets/props/meshy-1024/cloudreach_windscar_beacon_spire/cloudreach_windscar_beacon_spire.glb",
+                "at": [
+                  18.16,
+                  0.0,
+                  15.69
+                ],
+                "height": 27.0,
+                "yaw": 220.0,
+                "collision_fraction": 0.0,
+                "tint": "#ffffff"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-gate-shell-candidate",
+      "_why": "F40 C2 / P2-023 Realm Gate Crag (GPU 5.26; judges: 'replace the realm-gate overhang, a blunt brown slab, with sculpted rock'). A pixel probe at the CPU gameplay camera shows that slab is the gate crag's own 58 x 54 m mesa body (LandmarkLedge with buttresses and outcrops) seen from the road below. The coordinator's Meshy island shell (assets/props/meshy-1024/cloudreach_high_perches_island_shell, an open-topped stratified ring with a jagged hanging underside) wraps it: 97 m across so its inner rim (model r 0.6) clears the crown, lip at crown level, natural proportions (74 m deep). The mesa keeps its crown surface and collision; its wall surfaces, buttresses, outcrops and shelves draw nothing. Visual only. Flag OFF; not judged yet.",
+      "overlay": {
+        "settlements": {
+          "RealmGateCrag": {
+            "buildings": [
+              {
+                "asset": "realm_gate_island_shell",
+                "glb": "res://assets/props/meshy-1024/cloudreach_high_perches_island_shell/cloudreach_high_perches_island_shell.glb",
+                "at": [
+                  0.0,
+                  -68.7,
+                  0.0
+                ],
+                "height": 74.0,
+                "width": 97.0,
+                "yaw": 30.0,
+                "collision_fraction": 0.0,
+                "no_snap": true,
+                "double_sided": true
+              }
+            ],
+            "hide_child_visuals": [
+              {
+                "under": "LandmarkLedge",
+                "surfaces_of": "StratifiedCliffBody",
+                "hide_surfaces_from": 1,
+                "keep_prefixes": [
+                  "IslandMist",
+                  "StratifiedCliffBody"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-aerie-perch-candidate",
+      "_why": "F40 C4 / P2-024 Windscar Flight Aerie (GPU 4.91; CPU b2 5.14 after the heading fix: 'only poles and banners hint at an aerie behind trees'). Two copies of the installed Meshy aerie perch platform (assets/props/meshy-1020/cloudreach_aerie_perch_platform: a deck on a stone pedestal with a curved perch bar, provenance.json) stand on the dais edge facing the catalogue stand (which is 30 m out at local (-27, 12.5)), 9 and 7 m tall (5x and 4x the 1.80 m trainer), so a launch structure reads in front of the trees. Untinted, visual only, no collision; the five timber perches, compass and lesson stay. Flag OFF; not judged yet.",
+      "overlay": {
+        "settlements": {
+          "WindscarFlightAerie": {
+            "buildings": [
+              {
+                "asset": "aerie_perch_platform",
+                "glb": "res://assets/props/meshy-1020/cloudreach_aerie_perch_platform/cloudreach_aerie_perch_platform.glb",
+                "at": [
+                  -12.0,
+                  0.0,
+                  7.0
+                ],
+                "height": 9.0,
+                "yaw": -65.0,
+                "collision_fraction": 0.0,
+                "tint": "#ffffff"
+              },
+              {
+                "asset": "aerie_perch_platform",
+                "glb": "res://assets/props/meshy-1020/cloudreach_aerie_perch_platform/cloudreach_aerie_perch_platform.glb",
+                "at": [
+                  -14.5,
+                  0.0,
+                  -3.0
+                ],
+                "height": 7.0,
+                "yaw": -100.0,
+                "collision_fraction": 0.0,
+                "tint": "#ffffff"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-sage-grass-candidate",
+      "_why": "F40 C1 / P2-021 (every judge, b2 and b3 and the GPU baseline: 'a uniform, highly saturated mid-green grass carpet leads every Cloudreach frame and blocks the pale stratified stone, bright sky read; lower saturation and value'). Realm visual overlay only: terrain upland tint #abc89f -> #b9c0a4 and dry upland #c3c6a2 -> #c8c3a8 (paler, less green), grass blades base #2c4214 -> #36442a, tip #91a947 -> #a4ac6a, dry tip #a89b42 -> #b0a468, bush tip #647a31 -> #6f7a47. No density, terrain, collision or route change. Flag OFF; not judged yet. r1 CPU look: no change (hue/saturation of the lower frame identical) because the terrain material comes from the geology ground builder and most blades from the look's ground-cover finish; r2 also retints the look's finish blades (tint_base #33421a -> #3a4527, tip #889a3f -> #a3aa69, dry base #4b4919 -> #514c2a, dry tip #a89b42 -> #b2a66a). r2 CPU look: still no change; the turf shader's grass_tint is hard-coded (#8ca867 / dry #a2ad78) and both blade layers match the turf at turf_match 0.85. r3 retints the turf itself: #8ca867 -> #9aa57c, dry #a2ad78 -> #aca985 (paler, less saturated sage).",
+      "overlay": {
+        "visual": {
+          "surface": {
+            "upland": {
+              "tint": "#b9c0a4"
+            },
+            "upland_dry": {
+              "tint": "#c8c3a8"
+            }
+          },
+          "ground_cover": {
+            "grass_base": "#36442a",
+            "grass_tip": "#a4ac6a",
+            "dry_grass_tip": "#b0a468",
+            "bush_tip": "#6f7a47"
+          }
+        },
+        "look": {
+          "ground_cover_finish": {
+            "tint_base": "#3a4527",
+            "tint_tip": "#a3aa69",
+            "dry_tint_base": "#514c2a",
+            "dry_tint_tip": "#b2a66a"
+          }
+        },
+        "turf": {
+          "grass_tint": "#9aa57c",
+          "dry_grass_tint": "#aca985"
+        }
+      }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-stone-ground-candidate",
+      "_why": "Judges' shared ask in b2-b4 (sage-grass retint parked at +0.1 after three rounds): break the lawn carpet near the camera with pale stratified stone shelves and scree. r1: the delivered Meshy stratified ledge sunk flush as low shelves either side of the path, plus scree and two outcrops, at the matrix Realm Gate (stand 0) and Summit Eyrie (stand 10) cameras. r1 (unjudged, self-look on CPU piece 3): the ledges sunk flush showed their grass lip and read as raised grass slabs, a recorded defect class, so r1b uses the installed strata spire cluster sunk ~1 m as stone shelves of columns either side of the path plus larger scree rocks. CPU pre-judge pending.",
+      "overlay": {
+        "settlements": {
+          "RealmGateCrag": {
+            "stands": [
+              {
+                "id": "gate_landmark_approach",
+                "from": [
+                  -8.2,
+                  -22.6
+                ],
+                "to": [
+                  -1.4,
+                  -3.8
+                ]
+              },
+              {
+                "id": "gate_road_approach",
+                "from": [
+                  -9.4,
+                  -103.4
+                ],
+                "to": [
+                  -13.2,
+                  -83.8
+                ],
+                "y": -43.2
+              },
+              {
+                "id": "gate_road_close",
+                "from": [
+                  -14.5,
+                  -76.9
+                ],
+                "to": [
+                  -18.4,
+                  -57.3
+                ],
+                "y": -40.9
+              },
+              {
+                "id": "f40_gate_road",
+                "from": [
+                  -15.5,
+                  -72.0
+                ],
+                "to": [
+                  -19.32,
+                  -52.37
+                ],
+                "y": -40.5,
+                "pattern": [
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 1.5,
+                    "lateral_m": 4.4,
+                    "height": 3.2,
+                    "yaw": 90,
+                    "rise_m": -1.2
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 5.0,
+                    "lateral_m": -4.6,
+                    "height": 3.6,
+                    "yaw": -70,
+                    "rise_m": -1.4
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 10.0,
+                    "lateral_m": 6.5,
+                    "height": 4.5,
+                    "yaw": 130,
+                    "rise_m": -1.2,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 13.0,
+                    "lateral_m": -7.2,
+                    "height": 4.2,
+                    "yaw": -40,
+                    "rise_m": -1.0,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": -1.5,
+                    "lateral_m": -4.0,
+                    "height": 2.4,
+                    "yaw": 20,
+                    "rise_m": -1.0
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 2.5,
+                    "lateral_m": 6.2,
+                    "height": 1.1,
+                    "yaw": 60
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 8.0,
+                    "lateral_m": -5.6,
+                    "height": 1.2,
+                    "yaw": -20
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 0.5,
+                    "lateral_m": 2.4,
+                    "height": 0.45,
+                    "yaw": 30
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 3.0,
+                    "lateral_m": -2.6,
+                    "height": 0.4,
+                    "yaw": -70
+                  },
+                  {
+                    "asset": "rock_mid",
+                    "along_m": 3.6,
+                    "lateral_m": 3.0,
+                    "height": 0.35,
+                    "yaw": 110
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 7.0,
+                    "lateral_m": 3.2,
+                    "height": 0.5,
+                    "yaw": 200
+                  },
+                  {
+                    "asset": "rock_mid",
+                    "along_m": 7.8,
+                    "lateral_m": -3.1,
+                    "height": 0.45,
+                    "yaw": 15
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 11.0,
+                    "lateral_m": 3.6,
+                    "height": 0.55,
+                    "yaw": 75
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 8.0,
+                    "lateral_m": -11.0,
+                    "height": 3.0,
+                    "yaw": -35
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 6.0,
+                    "lateral_m": 10.5,
+                    "height": 2.6,
+                    "yaw": 35
+                  }
+                ]
+              }
+            ]
+          },
+          "SummitEyrieStronghold": {
+            "stands": [
+              {
+                "id": "f40_summit_overlook",
+                "from": [
+                  111.3,
+                  45.05
+                ],
+                "to": [
+                  92.76,
+                  37.54
+                ],
+                "y": 0.0,
+                "pattern": [
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 1.5,
+                    "lateral_m": 4.4,
+                    "height": 3.2,
+                    "yaw": 90,
+                    "rise_m": -1.2
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 5.0,
+                    "lateral_m": -4.6,
+                    "height": 3.6,
+                    "yaw": -70,
+                    "rise_m": -1.4
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 10.0,
+                    "lateral_m": 6.5,
+                    "height": 4.5,
+                    "yaw": 130,
+                    "rise_m": -1.2,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 13.0,
+                    "lateral_m": -7.2,
+                    "height": 4.2,
+                    "yaw": -40,
+                    "rise_m": -1.0,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": -1.5,
+                    "lateral_m": -4.0,
+                    "height": 2.4,
+                    "yaw": 20,
+                    "rise_m": -1.0
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 2.5,
+                    "lateral_m": 6.2,
+                    "height": 1.1,
+                    "yaw": 60
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 8.0,
+                    "lateral_m": -5.6,
+                    "height": 1.2,
+                    "yaw": -20
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 0.5,
+                    "lateral_m": 2.4,
+                    "height": 0.45,
+                    "yaw": 30
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 3.0,
+                    "lateral_m": -2.6,
+                    "height": 0.4,
+                    "yaw": -70
+                  },
+                  {
+                    "asset": "rock_mid",
+                    "along_m": 3.6,
+                    "lateral_m": 3.0,
+                    "height": 0.35,
+                    "yaw": 110
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 7.0,
+                    "lateral_m": 3.2,
+                    "height": 0.5,
+                    "yaw": 200
+                  },
+                  {
+                    "asset": "rock_mid",
+                    "along_m": 7.8,
+                    "lateral_m": -3.1,
+                    "height": 0.45,
+                    "yaw": 15
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 11.0,
+                    "lateral_m": 3.6,
+                    "height": 0.55,
+                    "yaw": 75
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 8.0,
+                    "lateral_m": -11.0,
+                    "height": 3.0,
+                    "yaw": -35
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 6.0,
+                    "lateral_m": 10.5,
+                    "height": 2.6,
+                    "yaw": 35
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-overlook-r3-candidate",
+      "_why": "Stormward Overlook r3 (r1 +0.10, r2 +0.38: a clearly different approach). Judges' remaining asks: a route tree grows through the arch so the compass ring reads as hung from a tree; bare lawn near the camera. r3 keeps the look's tree clusters out of a 16 m clearing round the arch (r3a used a route-tree exclusion and the tree stayed: it is a look tree) and lays the stone-ground shelves and scree at the matrix stand. Captured with --cloudreach-overlook-cleanup-candidate (r3 there also drops the two flat banner cards). CPU pre-judge pending.",
+      "overlay": {
+        "settlements": {
+          "WaterwardOverlook": {
+            "stands": [
+              {
+                "id": "f40_overlook",
+                "from": [
+                  2.0,
+                  -16.0
+                ],
+                "to": [
+                  -0.09,
+                  3.89
+                ],
+                "y": 0.0,
+                "pattern": [
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 1.5,
+                    "lateral_m": 4.4,
+                    "height": 3.2,
+                    "yaw": 90,
+                    "rise_m": -1.2
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 5.0,
+                    "lateral_m": -4.6,
+                    "height": 3.6,
+                    "yaw": -70,
+                    "rise_m": -1.4
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 10.0,
+                    "lateral_m": 6.5,
+                    "height": 4.5,
+                    "yaw": 130,
+                    "rise_m": -1.2,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 13.0,
+                    "lateral_m": -7.2,
+                    "height": 4.2,
+                    "yaw": -40,
+                    "rise_m": -1.0,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": -1.5,
+                    "lateral_m": -4.0,
+                    "height": 2.4,
+                    "yaw": 20,
+                    "rise_m": -1.0
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 2.5,
+                    "lateral_m": 6.2,
+                    "height": 1.1,
+                    "yaw": 60
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 8.0,
+                    "lateral_m": -5.6,
+                    "height": 1.2,
+                    "yaw": -20
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 0.5,
+                    "lateral_m": 2.4,
+                    "height": 0.45,
+                    "yaw": 30
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 3.0,
+                    "lateral_m": -2.6,
+                    "height": 0.4,
+                    "yaw": -70
+                  },
+                  {
+                    "asset": "rock_mid",
+                    "along_m": 3.6,
+                    "lateral_m": 3.0,
+                    "height": 0.35,
+                    "yaw": 110
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 7.0,
+                    "lateral_m": 3.2,
+                    "height": 0.5,
+                    "yaw": 200
+                  },
+                  {
+                    "asset": "rock_mid",
+                    "along_m": 7.8,
+                    "lateral_m": -3.1,
+                    "height": 0.45,
+                    "yaw": 15
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 11.0,
+                    "lateral_m": 3.6,
+                    "height": 0.55,
+                    "yaw": 75
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 8.0,
+                    "lateral_m": -11.0,
+                    "height": 3.0,
+                    "yaw": -35
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 6.0,
+                    "lateral_m": 10.5,
+                    "height": 2.6,
+                    "yaw": 35
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "look": {
+          "trees_stones": {
+            "architectural_clearings": [
+              {
+                "landmark_id": "summit_eyrie_stronghold",
+                "radius_m": 35.0,
+                "height_tolerance_m": 30.0,
+                "approach_offset": [
+                  111.3,
+                  12.9,
+                  45.05
+                ],
+                "approach_half_width_m": 12.0,
+                "_why": "Keep decorative trunks out of the inhabited aviary footprint and the elevated eastern road's view toward its entrance. The exposed summit's trees remain outside this corridor."
+              },
+              {
+                "landmark_id": "waterward_overlook",
+                "radius_m": 16.0,
+                "height_tolerance_m": 30.0,
+                "_why": "Overlook r3: no look tree through the compass arch."
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
 }

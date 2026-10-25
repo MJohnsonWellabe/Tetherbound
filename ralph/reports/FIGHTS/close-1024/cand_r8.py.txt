@@ -1,0 +1,20 @@
+# Fights r8 candidate overlay (capture-only; repo root, clean tree). GPU J asks on top of the
+# shipped r6/r7: smaller, shorter impacts kept off the target (kit move flash x0.5 and life x0.65,
+# contact disc 0.42/0.55 -> 0.32/0.42, a lighter ground burst) and a larger pilot floor (0.10 ->
+# 0.13; Stormwood Sparkit is still a speck). `git checkout data/config/` restores.
+import json
+def edit(p, pairs):
+    s = open(p).read()
+    for a, b in pairs:
+        assert s.count(a) == 1, (p, a)
+        s = s.replace(a, b)
+    json.loads(s); open(p, 'w').write(s)
+edit('data/config/kit_move_effects.json', [('"flash_scale": 1.0, "flash_life_scale": 1.0', '"flash_scale": 0.5, "flash_life_scale": 0.65')])
+s = open('data/config/combat.json').read(); d = json.loads(s)
+pairs = [('"cue_contact_puffs": 8', '"cue_contact_puffs": 5'), ('"cue_contact_dust_alpha": 0.7', '"cue_contact_dust_alpha": 0.5')]
+for key, old, new in [('quick', 0.42, 0.32), ('charged', 0.55, 0.42)]:
+    a = '"%s": {\n      "colour": "%s",\n      "radius": %s,' % (key, d['impact'][key]['colour'], old)
+    pairs.append((a, a.replace('"radius": %s' % old, '"radius": %s' % new)))
+edit('data/config/combat.json', pairs)
+edit('data/config/camera.json', [('"pilot_min_screen_fraction": 0.1,\n', '"pilot_min_screen_fraction": 0.13,\n')])
+print('r8 candidate applied')

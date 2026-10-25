@@ -1,0 +1,26 @@
+# capture_queue.sh.txt: before/after capture queue (Fights close-1024). Pauses a running headless smoke
+# (SIGSTOP on the godot process itself, not its timeout wrapper), captures both arms one Godot at a time,
+# restores config and resumes the smoke. Set S to a scratch dir and SHA to the full 40-char pushed commit.
+# Usage: S=/path/to/scratch SHA=$(git rev-parse HEAD) bash capture_queue.sh.txt   (edit the overlay name)
+S=${S:?set S}
+cd /home/user/Tetherbound
+export XDG_DATA_HOME=$S/xdg
+log() { echo "$(date +%H:%M) $*" >> $S/q7.status; }
+P=$(pgrep -f "^godot --headless.*smoke_")
+[ -n "$P" ] && kill -STOP $P
+log "paused smoke $P"
+G="timeout 2700 xvfb-run -a -s \"-screen 0 1280x720x24\" godot --path . --rendering-driver opengl3 --resolution 1280x720"
+arm() {
+  O=shots/f1024/r8/$1; rm -rf $O; mkdir -p $O
+  eval $G --script res://tools/phase2_capture_tidewake_fights.gd -- --trainer=water_trainer_venn --seed=2042 --out=res://ralph/reports/VISUAL/phase2/tidewake/f1024-r8-$1 > $S/cap_r8_$1_venn.log 2>&1; log "$1 venn $?"
+  mv ralph/reports/VISUAL/phase2/tidewake/f1024-r8-$1 $O/venn
+  eval $G --fixed-fps 20 --script res://tools/capture_named_fights_f10_6.gd -- --ids=glass_field_alpha --seconds=14 --interval=2.0 --camera-view=north --fixture-seed=1042206 --out=res://$O/stormwood > $S/cap_r8_$1_sw.log 2>&1; log "$1 stormwood $?"
+  eval $G --script res://tools/capture_f38_fight.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=32 --interval=0.15 --attack --dodge --tell-frames --preset=Low --low-resolution=1280x720 --source-commit=$SHA --out=res://$O/f38 > $S/cap_r8_$1_f38.log 2>&1; log "$1 f38 $?"
+}
+git checkout -q data/config/
+arm pre
+python3 ralph/reports/FIGHTS/close-1024/cand_r8.py.txt >> $S/q7.status
+arm r8
+git checkout -q data/config/
+[ -n "$P" ] && kill -CONT $P
+log "R8DONE resumed smoke"

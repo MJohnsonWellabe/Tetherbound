@@ -44,6 +44,13 @@ uniform float vf_tone_strength = 0.6;
 uniform sampler2D vf_cliff_texture : source_color, filter_linear_mipmap, repeat_enable;
 uniform float vf_cliff_texture_strength = 0.0;
 uniform float vf_cliff_texture_scale = 0.05;
+// Optional vegetated ledges (close-1024 crown candidate, OFF by default): flat
+// ground above vf_ledge_min_height_m inside Veilfall turns mossy green, so a
+// terraced face reads as green ledges between rock risers. Strength 0 = off.
+uniform vec3 vf_ledge_colour : source_color = vec3(0.30, 0.40, 0.22);
+uniform float vf_ledge_strength = 0.0;
+uniform float vf_ledge_min_height_m = 25.0;
+uniform float vf_ledge_flat = 0.80;
 
 float vf_hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -91,6 +98,12 @@ const TAIL := """
 				vf_wet = mix(vf_wet, vf_tex * mix(vf_streak_colour, vf_rock_colour, 0.5) * 2.2, vf_cliff_texture_strength);
 			}
 			ALBEDO = mix(ALBEDO, vf_wet, vf_rock);
+			if (vf_ledge_strength > 0.0) {
+				float vf_moss_ledge = vf_in * smoothstep(vf_ledge_min_height_m, vf_ledge_min_height_m + 10.0, v_vertex.y)
+					* smoothstep(vf_ledge_flat - 0.12, vf_ledge_flat, w_normal.y);
+				float vf_moss = 0.75 + 0.5 * mix(vf_noise(vf_b * 0.6), vf_noise(vf_a * 0.6), vf_wx);
+				ALBEDO = mix(ALBEDO, vf_ledge_colour * vf_moss, vf_moss_ledge * vf_ledge_strength);
+			}
 			ROUGHNESS = mix(ROUGHNESS, mix(vf_dry_roughness, vf_wet_roughness, vf_streak), vf_rock);
 			SPECULAR = mix(SPECULAR, vf_wet_specular, vf_rock);
 			float vf_far = vf_in * vf_tone_strength

@@ -1,0 +1,10 @@
+# judge_prompt.py.txt: fill tools/visual_judge/JUDGE_PROMPT.md's three slots for a judge folder built by anchor_tiles.py.
+# python3 judge_prompt.py.txt <judge_folder> <recorded_defects.txt> > prompt.txt
+# Paste prompt.txt verbatim into each of three fresh judge agents (general-purpose, each its own context).
+import sys
+folder, defects = sys.argv[1], sys.argv[2]
+t = open('tools/visual_judge/JUDGE_PROMPT.md').read()
+body = t.split('```text\n', 1)[1].rsplit('```', 1)[0]
+print(body.replace('[JUDGE FOLDER]', folder)
+      .replace('[SET LIST]', open(folder + '/sets.md').read().strip())
+      .replace('[RECORDED DEFECTS]', open(defects).read().strip()), end='')
