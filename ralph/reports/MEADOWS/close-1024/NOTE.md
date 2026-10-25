@@ -323,6 +323,14 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Hero run: land11 + land12 + land3, with the GPU command in the land11 READY.
   - Coordinator's 17:46 note received: eight MESHY assets generating. I wire each OFF on delivery.
 
+- 2026-10-25 19:39 UTC READY **tb/meadows-land13 d9f0525d0b** (from origin/main ca8901ce0; replaces land3, land7, land8–land12 for landing). This is the coordinator's 19:11 ask.
+  - **arch_facades ON:** GPU MH (tb/gpu-pass bf099dd2f) measured +0.79 Medium and +1.11 High, with L6 going PRESENT→PARTIAL on 6 of 6. The gain is in `crossing_hall.json arch_facades._why_on_gpu`. Every other land11 flag ships OFF: cliffs +0.40, Ironwood trees negative, gatehouse invisible.
+  - **land12 fixture:** per-view seats, the baseline dressing gate, and no leaked view trim.
+  - **land3, F17#6:** no daylight-shaft quads on Forward+/Mobile; Compatibility is unchanged.
+  - **Hard-rule fix, oxblood tufts:** Grass_Wheat's UVs all sample the orange-red column of the shared `Grass.png` atlas, and the drygrass straw multiply turned it rust-red. `derived/Grass_wheat_straw.png` repaints only that column straw gold, swapped in through `vegetation_presentation.json retexture`. I left `vegetation.json` alone because its bytes are the scatter fingerprint, so the bake stays fresh. A CPU check at band5_stronghold_approach_0 shows every red tuft now straw gold, with the rest of the frame unchanged.
+  - **Tests on land13's own files:** `test_meadows_tier1_art_gates` (facades ON, the rest OFF), `test_crossing_hall_great_hall_renderer`, `test_meadows_catalog_presentation_gate` and `test_stronghold_banner_camera_occluder` give 9 tests, 32 assertions, 0 failed.
+  - land6 (F04#6 aftermath heroes OFF) stays a separate branch, unchanged.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
