@@ -2,15 +2,16 @@
 
 ## TO COORDINATOR
 - 2026-10-25 01:25 CT READY tb/fights-land dcb3463d4 (origin/main f7b9b6a1e + tb/fights 53eccce4b, clean merge, no overlap with main's changes): **generic fight presentation ON** (owner 24 Oct: no outlined attack areas). One READY for the Veyra, Meadows grunt/Warden, F10#2 Stormwood, F22#4 Riverwatch and Venn fights.
-  - What is ON (every key has ; the overlay that was judged is ):
-    - combat.json telegraph.soft_style:  true, so no painted ring, cone, lane or slab. The tell is kicked dust along the same footprint (alpha 0.9, spacing 0.45 m), a low light curtain and the attacker's element-coloured rim glow (, 0.45). Accessibility:  brings the outlines back; default OFF.
-    - Impacts: contact disc radius 0.9/1.2 -> 0.55/0.75, and  (dust and stones at the struck creature's feet, P2-063).
-    - Fight lens: pitch_start -25 -> -15 deg (horizon in frame), composition_yaw 35 -> 50 deg (ally off the opponent's line). camera.json  2 stops the Venn seabed pop (the frames.json max camera-to-fighters distance drops from 40.4 m to 24.3 m; the remaining worst case is a 3 s orbit to the sea side at 21 m). Riverwatch pilot floor 0.10.
-    - Slim HUD: tether_commands  true (the command grid hides while nothing is usable).
+  - What is ON (every key has `_why_fight_presentation_1025`; the overlay that was judged is `cand_gen_h.py.txt`):
+    - combat.json telegraph.soft_style: `outline_off` true, so no painted ring, cone, lane or slab. The tell is kicked dust along the same footprint (alpha 0.9, spacing 0.45 m), a low light curtain and the attacker's element-coloured rim glow (`tell_aura_element`, 0.45). Accessibility: `telegraph.high_contrast_markers` brings the outlines back; default OFF.
+    - Impacts: contact disc radius 0.9/1.2 -> 0.55/0.75, and `impact.ground_burst` (dust and stones at the struck creature's feet, P2-063).
+    - Fight lens: pitch_start -25 -> -15 deg (horizon in frame), composition_yaw 35 -> 50 deg (ally off the opponent's line). camera.json `fallback_max_steps` 2 stops the Venn seabed pop (the frames.json max camera-to-fighters distance drops from 40.4 m to 24.3 m; the remaining worst case is a 3 s orbit to the sea side at 21 m). Riverwatch pilot floor 0.10.
+    - Slim HUD: tether_commands `ui.compact_when_idle` true (the command grid hides while nothing is usable).
     - Veyra: wind lanes ON with fill 0 and rim 0, replaced by moving wind streaks (0.8): no slabs.
-    - Pilot:  true (rim and fill light on the player's creature in every fight),  false.
+    - Pilot: `pilot_mark.all_fights` true (rim and fill light on the player's creature in every fight), `ring_enabled` false.
     - Timings, footprints, the AI's telegraph and gameplay are unchanged.
   - Scores (code-blind, CPU llvmpipe, 3 fresh judges per batch, mapped; both batches confirming):
+
     | fight | before (main) | after | outlines | impact disc | tell where/when |
     |---|---|---|---|---|---|
     | Meadows grunt/Warden hall (r4) | 4.85 | **5.88** | PRESENT -> FIXED 3/3 | PRESENT -> FIXED 3/3 | PARTIAL (1 judge PRESENT) |
@@ -18,67 +19,27 @@
     | Veyra (r5) | 5.60 | **6.21** | FIXED 2/3, PARTIAL 1; slabs PRESENT -> PARTIAL | FIXED 3/3 | PRESENT (text banner only) |
     | Stormwood glass_field (r5) | 5.71 | **6.13** | FIXED 2/3, PARTIAL 1 | FIXED 3/3 | PARTIAL/PRESENT |
     | Venn (r5) | 5.38 | **6.07** | FIXED 3/3; camera jump PRESENT -> FIXED 3/3 | FIXED 3/3 | PRESENT |
+
     - r4: slope 1.23, r 0.95, RMSE 0.42. r5: slope 0.83, r 0.77, RMSE 0.52. No warnings; none above the top anchor.
-    - Before/after sheet:  (all five fights; left before, right after).
+    - Before/after sheet: `_sheet_r5.png` (all five fights; left before, right after).
     - None reaches 7.5, so the GPU decides. Earlier GPU Medium for Riverwatch was 7.26 (after #727), measured before this fix.
   - Judges' common next asks (not in this READY):
     1. A denser dust or spray wall that fills the danger area, with a timing pulse. The dust alone reads as a real object but is diffuse.
     2. The HUD right panels are still large.
     3. The player's creature is small on dark moss and translucent on Tidewake sand (Ripplet).
     4. Flat arena and beach ground.
-  - GPU capture commands (repo root, at dcb3463d4, Medium/High; Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
-
-[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
-[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
-[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
-[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
-[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
-[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
-[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
-[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
-[0m
-[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registering global classes... (12 steps)[39m[0m
-[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[   7% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  15% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  23% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  30% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  38% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  46% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  53% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  61% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
-[92m[ DONE ][39m [1mupdate_scripts_classes[22m
-[0m
-[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (9 steps)[39m[0m
-[   0% ] [90m[1m_update_scan_actions[22m | bramblebun_extracted_base_color.png[39m[0m
-[  10% ] [90m[1m_update_scan_actions[22m | cragclaw_extracted_base_color.png[39m[0m
-[  20% ] [90m[1m_update_scan_actions[22m | mangrove_monitor_extracted_base_color.png[39m[0m
-[  30% ] [90m[1m_update_scan_actions[22m | mirejaw_extracted_base_color.png[39m[0m
-[  40% ] [90m[1m_update_scan_actions[22m | mudsnout_extracted_base_color.png[39m[0m
-[  50% ] [90m[1m_update_scan_actions[22m | riptusk_extracted_base_color.png[39m[0m
-[  60% ] [90m[1m_update_scan_actions[22m | sirenseal_extracted_base_color.png[39m[0m
-[  70% ] [90m[1m_update_scan_actions[22m | trailpup_extracted_base_color.png[39m[0m
-[  80% ] [90m[1m_update_scan_actions[22m | veridian_extracted_base_color.png[39m[0m
-[92m[ DONE ][39m [1m_update_scan_actions[22m
-[0m
-[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
-[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
-[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
-[92m[ DONE ][39m [1mloading_editor_layout[22m
-[0m first):
-    - Warden: Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
-    - Riverwatch: 
-    - Stormwood (F10#2): Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
-    - Veyra: Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org (the output must sit under that folder).
-    - Venn: Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org. On CPU it ends "Capture rejected: frame_cap", before and after alike, after writing 40 frames.
+  - GPU capture commands (repo root, at dcb3463d4, Medium/High; `godot --headless --path . --import` first):
+    - Warden: `godot --path . --script res://tools/art_pipeline/capture_named_fight.gd -- --trainer=warden_aldis --ally=ripplet --frames=12 --interval=0.5 --tell-frames --out=res://shots/gpu/warden`
+    - Riverwatch: same script with `--trainer=captain_riverwatch --live-member=captain_riverwatch:4 --ally=ripplet --frames=12 --interval=0.5 --tell-frames --out=res://shots/gpu/riverwatch`
+    - Stormwood (F10#2): `godot --path . --fixed-fps 20 --script res://tools/capture_named_fights_f10_6.gd -- --ids=glass_field_alpha --seconds=14 --interval=2.0 --camera-view=north --fixture-seed=1042206 --out=res://shots/gpu/stormwood`
+    - Veyra: `godot --path . --script res://tools/phase2_capture_cloudreach_live_fight.gd -- --output=res://ralph/reports/VISUAL/phase2/cloudreach/gpu-veyra --seed=7` (the output must sit under that folder).
+    - Venn: `godot --path . --script res://tools/phase2_capture_tidewake_fights.gd -- --trainer=water_trainer_venn --seed=2042 --out=res://ralph/reports/VISUAL/phase2/tidewake/gpu-venn`. On CPU it ends "Capture rejected: frame_cap", before and after alike, after writing 40 frames.
     - Frames judged: Warden/Riverwatch t01-mid, t02-mid, 04, 08. Stormwood tell1-b-mid, tell2-b-mid, tell1-e-impact, tell3-c-late. Veyra live-1362/1722/2082/2262. Venn tell-start-000.65, t-006.02, t-012.00, t-024.02.
     - Before = main f7b9b6a1e.
   - Checks on tb/fights 53eccce4b (same combat code and config as the land): 197 tests, 9466 assertions, 0 failed. Suites: tell_aura_overlap, telegraph_glow, charger_lunge, enemy_pattern_telegraph, stormwood_b_named_lunge_lanes/cues, creature_attack_telegraph_animation, shared_opponent_cue_shape, named_tell_text, combat_stagger, combat_feedback, f22_riverwatch_presentation, combat_vfx, body_glow, combat_manager, combat_ai, fight_camera, combat_camera_clear_orbit, combat_spaced_camera, combat_system_overlay_layout, f24_host_commands, f21_hit_presentation, hit_feedback, cloudreach_summit_paving, stormwood_pilot_reach, combat_arena_bystanders/hold_inside, cloudreach_director_client_veyra.
   - Not run: full CI. C2 is not affected (the reader pilots read game state, not pixels).
-  - F22#4 C2/C3 per fight (24 seeds, READER vs MASHER, live f22 patterns; pattern id = ; attacks seen across runs):
+  - F22#4 C2/C3 per fight (24 seeds, READER vs MASHER, live f22 patterns; pattern id = `named_<case>`; attacks seen across runs):
+
     | case | pattern | attacks | result (starter) |
     |---|---|---|---|
     | captain_veyra_storm_anchor | named_captain_veyra_storm_anchor | veyra_crosswind, current_zone, diver_retreat, diver_leap | terrapup PASS; ripplet PASS; galewisp PASS |
@@ -98,7 +59,7 @@
     | stronghold_elite | named_stronghold_elite | diver_leap, diver_retreat, hald_reset, wall_slam, current_volley, current_zone, wall_quake | terrapup PASS; ripplet PASS; galewisp PASS |
     | warden_aldis | named_warden_aldis | wall_check, wall_quake, diver_retreat, diver_leap, current_volley, current_zone, charger_rush, charger_double_rush, guardian_earth_fist, ace_exam | terrapup PASS; ripplet PASS; galewisp PASS |
     - Pending (the queue is running them now, one Godot process): smoke_water_named_c2c3 (Venn and the water named fights); the Terrapup Stormwood rerun under the COMBAT §7 trivial-fight floor (capacitor 0.94, crown 0.57, old_rodfolk 1.02: the reader wins 100% and takes 3-5% max hit, so trivial, not a tell failure); and the Riverwatch rerun after the Brooktail power trim 27.5 -> 27.0 (Terrapup and Galewisp C3 at 0.501). I will add the result as INFO.
-    - For Balance: Meadows chapter galewisp  0.12 < 0.25 (Balance lane's per ACCEPTANCE).
+    - For Balance: Meadows chapter galewisp `masher_loses_a_named_fight` 0.12 < 0.25 (Balance lane's per ACCEPTANCE).
   - Balance: game 1 (config ON) / tests-tools 0 in this READY.
   - F10#2 handoff complete with this READY. I am stopping new work after the F22#4 INFO.
 - 2026-10-24 23:55 CT INFO generic fight fix, r4 code-blind batch (CPU, 3 fresh judges, mapped; confirming, top anchor f36_0_npc C1 7.53, slope 1.23, r 0.95, RMSE 0.42, no warnings):
