@@ -158,6 +158,7 @@ Every lane reuses this runbook; do not rebuild a harness that is listed here. It
 - `ralph/reports/CLOUDREACH/close-1024/NOTE.md`
 - `ralph/reports/FIGHTS/close-1024/NOTE.md` (helpers in `tools/*.txt`)
 - `ralph/reports/ROUTES/close-1024/NOTE.md`
+- `ralph/reports/CREATURES/close-1024/note.md` (on `tb/creatures`)
 
 When a lane hits a new harness problem, it adds the problem, its cause and its fix to its NOTE runbook and to this list.
 
@@ -208,6 +209,25 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
   - Edit JSON with targeted line edits validated by `json.loads`, never a whole-file `json.dump`.
 - **Determinism:** random wild spawns differ between arms; note them in the verdict. Terrain bakes are not byte-deterministic, so keep only the regions you changed.
 - **GPU form for READY lines:** the same tool and arguments with `--rendering-method forward_plus --resolution 1920x1080 --preset=<Medium|High>`. The GPU session captures both arms itself.
+
+**Creature stage and asset lessons (Creatures lane, 25 Oct)**
+- **Stage capture:** `xvfb-run -a -s "-screen 0 1280x720x24" godot --rendering-driver opengl3 --path . --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=<id> --whole-body --context [--candidate] --out=res://.artifacts/<dir>/<id>`. Pass `--candidate` for every species in `f36_pose_candidates.json` `enabled_species`, or it plays the plain clips.
+  - "F36 candidate did not install" in the log means a missing import (re-import) or a stale `source_sha256` pin.
+- **f36 recipes:**
+  - Each profile is one compact JSON line. Edit only that line and validate with `json.loads`.
+  - Never put `_why` keys inside a profile: the loader reads every key as a clip and fails to install. Put notes at the top level instead.
+  - Re-pin `species.<id>.source_sha256` after any GLB byte change, including a texture rewrite.
+- **Texture rewrites** (retex grades, `creature_touch.py`, `shift_reserved_red.py`, `arc_emission.py`):
+  - Rewrite the embedded GLB image and the extracted image.
+  - Re-run `--only vivid <id>` (`repaint_creature_textures.py`) when a vivid PNG exists.
+  - Run `texture_import_policy.py --apply <dir>` for new images, then import again.
+  - The CPU stage self-lights the whole albedo (field_emission), so emission-only changes (arc emission, Tanglevolt field lift) show only on GPU.
+- **Net smokes:** `tools/net/run_net_smoke.sh <name> --out=<dir>` (two peers, about 3 min each); it prints ALL CHECKS PASSED.
+- **Disk recovery:**
+  - A failed fetch leaves `.git/objects/pack/tmp_pack_*` of up to 150 MB; delete it.
+  - Remove `.godot/imported` entries that no `.import` file references.
+  - The classifier refuses `git reset --hard` and `git restore` over work; use `git stash push` instead.
+  - A merge interrupted by a full disk leaves partial copies of the other side's files. Check each against `git hash-object`/`git rev-parse <ref>:<path>` before removing them.
 
 **CPU judging (the `visual-judge` yardstick)**
 1. **Contact sheets:** 2×2 per side at 640×360 per tile. Write a spec `[{label, a, b, brief, defects}]`.
