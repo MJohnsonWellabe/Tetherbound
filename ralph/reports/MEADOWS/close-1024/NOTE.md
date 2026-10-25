@@ -334,6 +334,20 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
 - 2026-10-25 20:06 UTC **FIXED feaf24a32** (PR #750, tb/meadows-land13). `Grass_wheat_straw.png.import` is now mode 2 (s3tc_bptc, mipmaps on, detect_3d 0) and reimported, and `texture_import_policy.py --check` passes for all 1019. I ran `test_texture_import_policy`, `test_meadows_tier1_art_gates`, `test_crossing_hall_great_hall_renderer`, `test_meadows_catalog_presentation_gate` and `test_stronghold_banner_camera_occluder` on land13's own files: 11 tests, 1253 assertions, 0 failed. My send_message was refused (untrusted device).
   - Harness note for TECHNICAL §8.1: `texture_import_policy.py --apply <file>` updates 0 sidecars, because it takes directories. For a single new texture outside `meshy-*`, set `compress/mode=2`, `mipmaps/generate=true` and `detect_3d/compress_to=0` in its `.import`, then run `godot --headless --import`.
 
+- 2026-10-25 20:34 UTC READY (GPU) **tb/meadows-land14 47ea49dca2** (from origin/main c361f575e, which has land13). Hero bundle 2, with every flag OFF. It contains:
+  - **The lit keep** (`stronghold.json hero_gatehouse`, the Meshy meadows_lit_keep from ae67083ec): 110 m wide, about 122 m tall, 130 m past the mouth, with a window/brazier emission mask and an albedo tint toward weathered stone. CPU result (`dom1025-*`, `_sheet_dom1025.png`): band5_0 day+night raw 5.67 vs 4.97 (+0.70), mapped +0.44 on a weak fit (slope 0.63, r 0.52, because the C9 anchor pair scored identically). P2-003 went PRESENT→PARTIAL for all 3 judges, who agree it "reads as a landmark fortress day and night". Their critique ("bleached white") is answered by the tint, CPU-checked (`f38_keep_cand3`). Confound: the shipping frames predate the oxblood tuft fix.
+  - **War banners** (`stronghold.json banner_model_candidate`): the Meshy war banner at each courtyard banner slot. The camera occluder and the Warden take-down are unchanged.
+  - **Courtyard declutter (ships, rides along):** camp props 18–20 move off the band5_1 gameplay seat.
+  - **The giant ironwood** (`ironwood_grove_presentation.json hero_tree.model_candidate`, Meshy meadows_giant_ironwood): replaces the faceted landmark tree with a uniform fit to its height. CPU raw 6.37 vs 4.93 (+1.43), mapped +0.90. The defect went PRESENT→PARTIAL for all 3, read as "a believable broad oak".
+  - **Tests on land14's own files:** test_meadows_tier1_art_gates, test_texture_import_policy, test_stronghold_banner_camera_occluder and test_meadows_banner_capture_0912 give 13 tests, 1331 assertions, 0 failed.
+  - **GPU command:** for the candidate side, set `hero_gatehouse.enabled`, `banner_model_candidate.enabled` and `hero_tree.model_candidate.enabled` true. Then run `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=band5_stronghold_approach --subset=band4_upper_meadows_ironwood_0 --output=res://<round>`, and repeat with them false. The keep and banners judge on band5_0/1, the tree on ironwood_0.
+- 2026-10-25 20:34 UTC PARKED (CPU, same batch):
+  - lock paving r2 (raw +0.20; judges read decal-like pale patches on dark ground).
+  - quarry face (0.00).
+  - home and Stormwood surrounds (−0.10; the arch_home stand looks along the side wall with a post in frame).
+  - burrow mound (it never showed: the Warrens' own excavated hill hides it even at 64 m; the fix is a structural rebuild of that hill, or extending the cliffs across the bank face as the GPU note suggests).
+  - Judges' shared next asks: real leaf-card canopies for the small grove trees, and a worked ground material for yards and quarry floors.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
