@@ -20,7 +20,9 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 - 2026-10-25 13:30 CT **INFO (T4 beach grass): `dune_grass_candidate` reverted, not judged.**
   - **Tried:** fewer shore pioneers and tighter colonies in `water_ground_cover`.
   - **Result:** no visible change at Deep Watch. The even tufts there come from another layer.
-  - **Plan:** the clump fix needs the layer that places those tufts found first. Not started.
+  - **Plan:** the clump fix needs the layer that places those tufts found first.
+  - **14:10 update:** a second try (`dune_groundcover_candidate`: fewer, denser Grass_Wispy_Tall clusters) also made no visible change, so it is reverted too.
+  - **Re-scoped:** that's two candidates with no visible effect on the beach tufts. The beach-clump item is parked until the placing layer is identified with a toggle-off probe. Not guessing further.
   - **State of `tb/tidewake`:** head carries only judged candidates, T1e and T4 plus vary, all OFF in play.
 
 - 2026-10-25 12:40 CT **READY addendum (t4c/VERDICT.md): optional `shore_surf_vary_candidate` on top of T4.**
