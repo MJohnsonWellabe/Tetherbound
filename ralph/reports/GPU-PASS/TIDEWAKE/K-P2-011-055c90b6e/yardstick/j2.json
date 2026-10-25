@@ -1,0 +1,136 @@
+{
+ "sets": {
+  "Lh": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing wolf nears the owner bar, but broken faint materials (A) and an upright, nose-down faint end (B) sink the finish beside Palworld creatures."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Empty, evenly scattered dunes, a flat navy sea and only a small sluice house on dry sand read as a prototype, not a lived-in Palworld-class coast."
+  },
+  "Ar": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger blue-grey panel is readable, but plain, small action prompts with no teal emphasis keep it short of a shipping HUD."
+  },
+  "Xk": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bare dunes and dark band of sea carry no coastal landmark mood, and A's red-spined creature lying on its side reads as a corpse."
+  },
+  "Ps": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing villager whose soft cartoon face sits a step away from the naturalistic creature bar and Palworld's human finish."
+  },
+  "Gg": {
+   "A": {
+    "bar_a": 3.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown forest with no storm sky, flat magenta telegraph rings, a barely visible player creature, and canopy blocking the view in A i11/i13/i15."
+  },
+  "Gn": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's small watchtower gives one point to steer by, but the empty sand slope with no tie to the water does not read as Palworld-class density or Valheim-class atmosphere."
+  },
+  "Bj": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same as Gn: a small lone tower on a bare dune with a flat midday grade and no surf, falls or haze."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give each Tidewake destination a hero landmark at least 4-6x the trainer's height built into the water (a sluice gate with white falls, a shell watchtower on the spit), with planned grass clusters and props around it instead of even scatter",
+   "kind": "new_art"
+  },
+  {
+   "change": "Regrade the Tidewake water to open cyan/navy with white surf and foam at the shoreline, and add midday haze for depth so the place reads as the coastal water realm",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight: replace the flat magenta telegraphs with real ground cracks, stones and lightning, lift the forest value and show the purple storm sky, and keep the camera out of the canopy so both fighters stay readable",
+   "kind": "scene"
+  }
+ ]
+}

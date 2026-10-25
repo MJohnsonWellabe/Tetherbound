@@ -1,0 +1,136 @@
+{
+ "sets": {
+  "Lh": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's standing model with dark fur and violet veins is close to the owner's Tanglevolt bar, but neither side carries it: A's faint poses float above detached shadows and fall apart into a black-and-white mess, and B coats the whole body in saturated blue emissive veins and ends the faint pitched nose-down and vertical."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's twin-turret wheel house gives Sluice Isle something to aim for, but it is only about twice the trainer's height, stands on dry dune away from the water, and sits in a flat-lit expanse of uniform sand and flat navy sea with no cyan shallows, foam or atmosphere."
+  },
+  "Ar": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger type, full ingredient lines and warm gold costs fit the blue-grey panel direction, but the small pale Craft and Leave hints use keyboard glyphs, have no teal emphasis, and half the panel is dead space."
+  },
+  "Xk": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B adds the same small wheel house as a marker on an otherwise empty dune, and A has nothing but a dark-red creature lying like a carcass on the sand; neither has the water-tied landmark or the light and depth Palworld or Valheim would show."
+  },
+  "Ps": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder's white hair, readable eyes and olive-and-leather costume are appealing and on-palette, but the soft big-eyed animated-film face sits apart from the naturalistic creature bar, and the full body is plain and stiff."
+  },
+  "Gg": {
+   "A": {
+    "bar_a": 3.7,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spider boss reads in most frames, but flat magenta rings and slabs stand in for every telegraph, a dense debug-style HUD covers both sides of the screen, the scene is one dark murky mid-tone with no purple storm sky or lightning, and in A canopy and trunks black out several frames."
+  },
+  "Gn": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's wooden watchtower marks Shellwatch, but it is small and stands inland on a bare dune; the sea is a flat navy strip, and the only white fall is a sliver cut off at the frame edge."
+  },
+  "Bj": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same as Gn: a modest watchtower on uniform sand with stamped grass carpets, flat midday light and no shoreline drama, nothing like the Veilfall board's water-and-stone landmark language."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give every Tidewake destination (Sluice Isle, Shellwatch) a hero landmark tied to the water, 5 to 10 times the trainer's height and standing at the shoreline or in the surf (sluice gates over a channel, a sea-stack lighthouse, white falls), in the stone, wood and blue-banner language of the Veilfall board.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Re-dress the Tidewake coast. Cyan-to-navy shallows with foam lines and darker wet sand at the shore, dune grass broken into clustered edges and clearings instead of stamped carpets, rocks and driftwood grouped as a foreground layer, and stronger sun shadows plus distance haze to separate foreground, midground and distance.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight presentation. A collision-aware camera that stays out of the canopy, the flat magenta telegraph rings replaced with physical effects (cracking ground, thrown stone, white-violet lightning), the purple storm sky with rim light on both fighters, and the debug HUD cut back.",
+   "kind": "scene"
+  }
+ ]
+}

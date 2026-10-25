@@ -1,0 +1,136 @@
+{
+ "sets": {
+  "Lh": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's lightning-veined fur matches the Tanglevolt bar, but flat stage lighting, weak rim light and a faint-end pose tipped up on its head (B) or floating faint-mid with fur that turns grey and patchy (A) sink both below Palworld finish."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's twin-tower waterwheel structure gives Sluice Isle a marker, but it sits on dry sand away from the water, and the flat midday grade, carpet-scattered grass and empty dunes look nothing like a lived-in Palworld/Valheim coast."
+  },
+  "Ar": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's blue-grey translucent panel with full recipe lines and large ingredient counts fits the UI direction, but tiny keyboard-glyph Craft/Leave hints with no teal emphasis, a list showing only three tall rows, and a murky world behind it stay short of a shipping-game finish."
+  },
+  "Xk": {
+   "A": {
+    "bar_a": 3.3,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The waterwheel landmark in B helps, but bare dunes with even grass scatter, no shoreline dressing, no haze or light shafts, and a dark red creature lying on its side in A's left foreground read as an unfinished blockout."
+  },
+  "Ps": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing old villager whose olive vest and scarf fit the palette, but the big-eyed animated-film face reads more cartoon than the naturalistic world, and the neutral stage gives no Valheim-class light to carry it."
+  },
+  "Gg": {
+   "A": {
+    "bar_a": 3.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold spider reads in most frames, but flat magenta ground rings and slabs as telegraphs, no visible purple storm sky or lightning, a near-invisible player creature, and (A) frames i11, i13 and i15 swallowed by trunk and canopy sink it."
+  },
+  "Gn": {
+   "A": {
+    "bar_a": 3.2,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B adds a small wooden watchtower near the trainer, but it is a generic lookout with no shell or water language, set on an empty dune under flat light, far from Palworld's dense, lived-in landmarks."
+  },
+  "Bj": {
+   "A": {
+    "bar_a": 3.2,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Named destination reads as an unmarked slope or generic structure": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same Shellwatch view as Gn: the small generic watchtower in B is a marker but not a hero landmark, and the bare dune with even grass carpet and no atmosphere keeps it from shipping-game finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give each Tidewake destination (Sluice Isle, Shellwatch) a hero landmark built into the water's edge, not set down on a dry dune: Sluice Isle as stone-and-timber sluice gates with channels, spill and white falls; Shellwatch as a tall shell-crowned watchtower on a sea rock with a pier. Each needs a silhouette at least 4-5x the trainer and a coloured banner or beacon readable at 30% size.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Dress the coast: break the even grass carpet into clumps and edges, add rocks, driftwood, palms and props around the landmark, bring cyan shallows and foam up to the site, and add warm sun with soft sea haze for depth and a clear foreground/midground/distance separation.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight: replace the flat magenta telegraph rings and slabs with real-object effects (lightning bolts, rock spikes, impact dust), add camera collision that clears trunks and canopy, put a rim light or outline on the player's creature, and show the purple storm sky through a clearing.",
+   "kind": "scene"
+  }
+ ]
+}

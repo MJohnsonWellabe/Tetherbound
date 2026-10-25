@@ -1,0 +1,46 @@
+[
+    {
+        "label":  "L veilfall-vista Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-ship-Medium.png",
+        "brief":  "A fixed production-camera view of Veilfall, Tidewake\u0027s landmark mountain and falls, from about 750 m offshore, in clear weather or rain. Judge whether the whole landmark reads as the key art\u0027s stepped, inhabited mountain with falls and sea, and whether the weather and light belong to the world.",
+        "defects":  [
+                        "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain",
+                        "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course",
+                        "The rain view has no rain or fog that reads; it looks like clear weather"
+                    ]
+    },
+    {
+        "label":  "L veilfall-vista-rain Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-rain-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-rain-ship-Medium.png",
+        "brief":  "A fixed production-camera view of Veilfall, Tidewake\u0027s landmark mountain and falls, from about 750 m offshore, in clear weather or rain. Judge whether the whole landmark reads as the key art\u0027s stepped, inhabited mountain with falls and sea, and whether the weather and light belong to the world.",
+        "defects":  [
+                        "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain",
+                        "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course",
+                        "The rain view has no rain or fog that reads; it looks like clear weather"
+                    ]
+    },
+    {
+        "label":  "L veilfall-vista High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-ship-High.png",
+        "brief":  "A fixed production-camera view of Veilfall, Tidewake\u0027s landmark mountain and falls, from about 750 m offshore, in clear weather or rain. Judge whether the whole landmark reads as the key art\u0027s stepped, inhabited mountain with falls and sea, and whether the weather and light belong to the world.",
+        "defects":  [
+                        "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain",
+                        "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course",
+                        "The rain view has no rain or fog that reads; it looks like clear weather"
+                    ]
+    },
+    {
+        "label":  "L veilfall-vista-rain High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-rain-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-rain-ship-High.png",
+        "brief":  "A fixed production-camera view of Veilfall, Tidewake\u0027s landmark mountain and falls, from about 750 m offshore, in clear weather or rain. Judge whether the whole landmark reads as the key art\u0027s stepped, inhabited mountain with falls and sea, and whether the weather and light belong to the world.",
+        "defects":  [
+                        "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain",
+                        "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course",
+                        "The rain view has no rain or fog that reads; it looks like clear weather"
+                    ]
+    }
+]

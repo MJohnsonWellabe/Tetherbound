@@ -1,0 +1,172 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9142,
+  "least_squares_slope": 1.2737,
+  "method": "linear",
+  "slope": 1.2737,
+  "intercept": -0.0291,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.502,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C4B": {
+   "measured": 5.167,
+   "reference": 7.17,
+   "mapped": 6.552,
+   "residual": 0.618
+  },
+  "f36_0_gap:C4A": {
+   "measured": 5.367,
+   "reference": 6.77,
+   "mapped": 6.807,
+   "residual": -0.037
+  },
+  "craft:before": {
+   "measured": 4.167,
+   "reference": 4.83,
+   "mapped": 5.278,
+   "residual": -0.448
+  },
+  "craft:after": {
+   "measured": 5.867,
+   "reference": 7.35,
+   "mapped": 7.443,
+   "residual": -0.093
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.1,
+   "reference": 7.47,
+   "mapped": 7.741,
+   "residual": -0.271
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.1,
+   "reference": 7.53,
+   "mapped": 7.741,
+   "residual": -0.211
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.6,
+   "reference": 4.0,
+   "mapped": 4.556,
+   "residual": -0.556
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.367,
+   "reference": 6.53,
+   "mapped": 5.533,
+   "residual": 0.997
+  }
+ },
+ "candidates": {
+  "K pumps Medium cand|ship | K-pumps-ship-Medium": {
+   "measured_mean": 3.767,
+   "mapped_mean": 4.77,
+   "mapped_judges": [
+    5.07,
+    4.81,
+    4.43
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "K pumps Medium cand|ship | K-pumps-cand-Medium": {
+   "measured_mean": 4.567,
+   "mapped_mean": 5.79,
+   "mapped_judges": [
+    5.96,
+    5.58,
+    5.83
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "K pumps High cand|ship | K-pumps-ship-High": {
+   "measured_mean": 3.567,
+   "mapped_mean": 4.51,
+   "mapped_judges": [
+    4.81,
+    4.56,
+    4.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "K pumps High cand|ship | K-pumps-cand-High": {
+   "measured_mean": 4.567,
+   "mapped_mean": 5.79,
+   "mapped_judges": [
+    5.96,
+    5.58,
+    5.83
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "K jetty High cand|ship | K-jetty-ship-High": {
+   "measured_mean": 3.533,
+   "mapped_mean": 4.47,
+   "mapped_judges": [
+    4.81,
+    4.56,
+    4.05
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "K jetty High cand|ship | K-jetty-cand-High": {
+   "measured_mean": 4.4,
+   "mapped_mean": 5.58,
+   "mapped_judges": [
+    5.83,
+    5.45,
+    5.45
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "K jetty Medium cand|ship | K-jetty-ship-Medium": {
+   "measured_mean": 3.533,
+   "mapped_mean": 4.47,
+   "mapped_judges": [
+    4.81,
+    4.56,
+    4.05
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "K jetty Medium cand|ship | K-jetty-cand-Medium": {
+   "measured_mean": 4.4,
+   "mapped_mean": 5.58,
+   "mapped_judges": [
+    5.83,
+    5.45,
+    5.45
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

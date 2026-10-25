@@ -1,0 +1,46 @@
+{
+ "Az": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Lo": {
+  "anchor": false,
+  "label": "L veilfall-vista High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-cand-High.png"
+ },
+ "Ho": {
+  "anchor": false,
+  "label": "L veilfall-vista-rain High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-rain-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-rain-ship-High.png"
+ },
+ "Uz": {
+  "anchor": false,
+  "label": "L veilfall-vista Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-cand-Medium.png"
+ },
+ "Xr": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Qh": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ii": {
+  "anchor": false,
+  "label": "L veilfall-vista-rain Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-rain-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\KL\\sides\\L-veilfall-vista-rain-ship-Medium.png"
+ },
+ "Qc": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ }
+}

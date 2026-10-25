@@ -1,0 +1,150 @@
+{
+ "sets": {
+  "Az": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's mottled, grounded serpent comes closest to the owner's naturalistic bar, but A's glossy flat bands and floating faint poses sink it, and neither has the fur/scale-level surface finish and rim light of a shipping Palworld creature."
+  },
+  "Lo": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PARTIAL",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PRESENT",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PARTIAL",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PARTIAL",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bright sky and open navy sea carry it, but the landmark is a single brown boulder cone with one fall and almost no greenery, terraces or habitation, far below Palworld's landmark finish."
+  },
+  "Ho": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PARTIAL",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PARTIAL",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PARTIAL",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PRESENT",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's overcast grade starts a Valheim-like storm mood, but no rain streaks, mist at the falls or wet sea read, and B's flat fog erases the mountain while the chevron lane stays crisp."
+  },
+  "Uz": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PARTIAL",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PRESENT",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PARTIAL",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PARTIAL",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Clean sky and water help, but the bare faceted rock cone with one fall and a game-board current lane reads as a blockout, not a finished hero landmark."
+  },
+  "Xr": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's site-specific aftermaths (banners down, freed captive, smoking tent wreck) carry the idea, but blurry repeated ground textures, sparse uniform grass and flat midday light sit well below Palworld's density and finish."
+  },
+  "Qh": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder is appealing and clearly authored with a coherent green/brown villager palette, but the soft toy-like shading and minimal costume detail fall short of a shipping game's character finish."
+  },
+  "Ii": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PARTIAL",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PARTIAL",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PARTIAL",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PRESENT",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Grey storm grade gives some mood in A, but no falling rain, spray or layered fog depth, and B's uniform blue wash eats the landmark entirely."
+  },
+  "Qc": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, brace, plank cap and stone footing read as built, but the flat untextured tan infill, lone door-sized panel and the flat-shaded grey placeholder rock beside it are far from Palworld's base-building finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild Veilfall to the stronghold board: stepped cliff tiers with green ledges and trees, several tiered falls with base mist, and visible habitation (arch, bridge, stair, stronghold gate) breaking the single cone silhouette.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Replace the chevron/dashed current lane with subtle foam and ripple streaks in the water, and make rain read: visible rain streaks, falls spray, darker wet sea and depth-layered fog that keeps the landmark's silhouette instead of a uniform wash.",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows material and density pass for Xr/Qc: sharper non-repeating ground and grass textures, grove-and-clearing vegetation, warmer saturation, textured wall infill, and replace the flat-shaded grey placeholder boulder; pull enemy banners in every after frame and vary the aftermath props per site.",
+   "kind": "scene"
+  }
+ ]
+}

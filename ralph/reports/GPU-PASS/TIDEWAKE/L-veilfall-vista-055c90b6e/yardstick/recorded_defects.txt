@@ -1,0 +1,8 @@
+Az: none
+Lo: "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain"; "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course"; "The rain view has no rain or fog that reads; it looks like clear weather"
+Ho: "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain"; "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course"; "The rain view has no rain or fog that reads; it looks like clear weather"
+Uz: "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain"; "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course"; "The rain view has no rain or fog that reads; it looks like clear weather"
+Xr: none
+Qh: none
+Ii: "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain"; "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course"; "The rain view has no rain or fog that reads; it looks like clear weather"
+Qc: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"

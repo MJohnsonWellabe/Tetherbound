@@ -1,0 +1,8 @@
+Lh: none
+Uv: "Named destination reads as an unmarked slope or generic structure"
+Ar: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Xk: "Named destination reads as an unmarked slope or generic structure"
+Ps: none
+Gg: none
+Gn: "Named destination reads as an unmarked slope or generic structure"
+Bj: "Named destination reads as an unmarked slope or generic structure"

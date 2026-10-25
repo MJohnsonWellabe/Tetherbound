@@ -1,0 +1,38 @@
+[
+    {
+        "label":  "K pumps Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\K-pumps-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\K-pumps-ship-Medium.png",
+        "brief":  "A fixed production-camera view of one named Tidewake destination at midday, with the 1.80 m trainer standing at the destination point. Judge whether the place reads as the named destination of the key art\u0027s coastal water realm: a landmark you could navigate to, tied to the water and belonging to the world.",
+        "defects":  [
+                        "Named destination reads as an unmarked slope or generic structure"
+                    ]
+    },
+    {
+        "label":  "K jetty Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\K-jetty-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\K-jetty-ship-Medium.png",
+        "brief":  "A fixed production-camera view of one named Tidewake destination at midday, with the 1.80 m trainer standing at the destination point. Judge whether the place reads as the named destination of the key art\u0027s coastal water realm: a landmark you could navigate to, tied to the water and belonging to the world.",
+        "defects":  [
+                        "Named destination reads as an unmarked slope or generic structure"
+                    ]
+    },
+    {
+        "label":  "K pumps High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\K-pumps-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\K-pumps-ship-High.png",
+        "brief":  "A fixed production-camera view of one named Tidewake destination at midday, with the 1.80 m trainer standing at the destination point. Judge whether the place reads as the named destination of the key art\u0027s coastal water realm: a landmark you could navigate to, tied to the water and belonging to the world.",
+        "defects":  [
+                        "Named destination reads as an unmarked slope or generic structure"
+                    ]
+    },
+    {
+        "label":  "K jetty High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\K-jetty-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\KL\\sides\\K-jetty-ship-High.png",
+        "brief":  "A fixed production-camera view of one named Tidewake destination at midday, with the 1.80 m trainer standing at the destination point. Judge whether the place reads as the named destination of the key art\u0027s coastal water realm: a landmark you could navigate to, tied to the water and belonging to the world.",
+        "defects":  [
+                        "Named destination reads as an unmarked slope or generic structure"
+                    ]
+    }
+]

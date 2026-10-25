@@ -1,0 +1,86 @@
+{
+ "anchors": {
+  "f36_0_gap:C4B": [
+   5.5,
+   5.2,
+   4.8
+  ],
+  "f36_0_gap:C4A": [
+   4.9,
+   5.6,
+   5.6
+  ],
+  "craft:before": [
+   4.5,
+   4.0,
+   4.0
+  ],
+  "craft:after": [
+   6.0,
+   5.8,
+   5.8
+  ],
+  "f36_0_npc:C1B": [
+   6.3,
+   6.0,
+   6.0
+  ],
+  "f36_0_npc:C1A": [
+   6.3,
+   6.0,
+   6.0
+  ],
+  "f10_2_r3_capacitor:control": [
+   3.7,
+   3.2,
+   3.9
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.4,
+   3.8,
+   4.9
+  ]
+ },
+ "candidates": {
+  "K pumps Medium cand|ship | K-pumps-ship-Medium": [
+   4.0,
+   3.8,
+   3.5
+  ],
+  "K pumps Medium cand|ship | K-pumps-cand-Medium": [
+   4.7,
+   4.4,
+   4.6
+  ],
+  "K pumps High cand|ship | K-pumps-ship-High": [
+   3.8,
+   3.6,
+   3.3
+  ],
+  "K pumps High cand|ship | K-pumps-cand-High": [
+   4.7,
+   4.4,
+   4.6
+  ],
+  "K jetty High cand|ship | K-jetty-ship-High": [
+   3.8,
+   3.6,
+   3.2
+  ],
+  "K jetty High cand|ship | K-jetty-cand-High": [
+   4.6,
+   4.3,
+   4.3
+  ],
+  "K jetty Medium cand|ship | K-jetty-ship-Medium": [
+   3.8,
+   3.6,
+   3.2
+  ],
+  "K jetty Medium cand|ship | K-jetty-cand-Medium": [
+   4.6,
+   4.3,
+   4.3
+  ]
+ }
+}

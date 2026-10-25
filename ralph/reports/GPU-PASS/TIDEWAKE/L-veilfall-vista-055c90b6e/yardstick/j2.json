@@ -1,0 +1,150 @@
+{
+ "sets": {
+  "Az": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's grounded, scaled coils come close to the owner bar, but A's glossy plastic banding and faint poses floating in mid-air sink the set as shipping-quality creature work."
+  },
+  "Lo": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PRESENT",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PRESENT",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PRESENT",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PARTIAL",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The sky is pleasant, but a single faceted boulder cone with one ribbon fall, no terraces, greenery or structures, and flat navy water reads as a prototype, not the board's inhabited Veilfall."
+  },
+  "Ho": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PRESENT",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PARTIAL",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PRESENT",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PRESENT",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's overcast grey grade gives some storm mood, but there is no falling rain, and B's uniform fog turns the landmark into a flat pale cut-out rather than Valheim-style layered atmosphere."
+  },
+  "Uz": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PRESENT",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PRESENT",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PRESENT",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PARTIAL",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This matches Lo: clean light and sky, but a bare rock cone with one fall and sparse sandbar islets lacks the density and landmark language a Palworld-class vista needs."
+  },
+  "Xr": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's site-specific aftermaths (freed captive, smoke, fallen banner) are good storytelling, but smeared low-resolution ground, lollipop trees and flat midday light sit well below Palworld finish."
+  },
+  "Qh": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing, expressive elder with a palette that fits the Meadows reads at shipping-character finish; only the slightly stiff full-body stance holds it back."
+  },
+  "Ii": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PRESENT",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PARTIAL",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Veilfall reads as a smooth steep mound or cone with thin strips of falls rather than a stepped, inhabited mountain": "PRESENT",
+     "Currents are marked with oversized opaque chevrons and regular dashed lines over calm water, like an obstacle course": "PRESENT",
+     "The rain view has no rain or fog that reads; it looks like clear weather": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "As in Ho, overcast haze without rain streaks or splashes, plus B's fog washing out the whole mountain, gives a weather view no Valheim-class mood."
+  },
+  "Qc": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's braced timber frame with a cap and stone footing reads as Palworld-style base building, but the flat untextured infill, the flat-shaded pale boulder beside it and the blurry grass keep the finish short."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild Veilfall as the board's stepped mountain: terraced cliff bands with tree-topped ledges, several tiered falls with mist, arches and bridges, and the stronghold gate behind the main fall.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Replace current chevrons and dashes with subtle foam and streak lines in every weather, and make the rain view read with visible rain streaks, sea-surface splashes and graded distance fog that keeps the landmark silhouette and its value range.",
+   "kind": "scene"
+  },
+  {
+   "change": "Sharpen the Meadows terrain and grade (Xr, Qc): replace the smeared low-res ground textures, add stronger directional sun with grounding contact shadows/AO, swap the flat-shaded pale boulders for the nature family's rocks, and give wall infill a plaster texture.",
+   "kind": "scene"
+  }
+ ]
+}
