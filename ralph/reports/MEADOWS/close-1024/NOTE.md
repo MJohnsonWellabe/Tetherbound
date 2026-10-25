@@ -204,6 +204,13 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - GPU command: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --output=res://<round>` (full matrix, or `--subset=` per tier-1 stand).
   - Land with land3 (shafts off on Forward+) and land6 (F04#6 heroes OFF).
 
+- 2026-10-25 09:10 UTC STATUS (reply to 09:02): you were right, the 05:39 cover capture died. The cause was the disk allowance: only 1.3 GB was free.
+  - Freed ~1 GB of finished judge folders and capture copies in /tmp, not repo content.
+  - Restored the capture's temporary definition edit from git.
+  - Re-running the A/B as two separate runs, with a git-based restore on exit so a crash cannot strand edits: shipping vs ground-cover tiers plus blade layer, on band2_stone_and_root_1 and band5_stronghold_approach_0, approach and gameplay, clear and rain.
+  - Queued next: a heading probe for band5_stronghold_approach_1 (4.59). Its gameplay and detail cameras press into machinery and a pillar in the courtyard, the same L1 fix as river lock 0.
+  - Not delivered yet on tb/meshy-1024: the arch facades, the stronghold hero, the stone_and_root cliffs and the Ironwood canopies. Those tier-1 stands (arch_*, band5_0/1, stone_and_root_1) wait on them after L1 and L2.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
