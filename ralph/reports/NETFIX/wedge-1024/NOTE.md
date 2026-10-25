@@ -77,6 +77,34 @@ Verdict: **a test race, not PR #738.**
   - **Race frequency:** 0 guest pending_vitals refusals in all 6 runs; it is rare locally.
   - **Forced check:** a run with a temporary copy that injected `move_start_required` on attempt 1 re-staged it, then passed on a real `friendly_target` (ALL CHECKS PASSED).
 
+## Follow-up 3: shared_boss second failure on #738 (590973c7, run 40152511791)
+
+Verdict: **still not PR #738.** One failure is the race fixed in 7e7e2e84; the other is a separate staging-geometry weakness in the smoke.
+
+- **The PR head reproduces only the first failure.** 4 runs of 590973c7 locally, two at a time, unfixed smoke: 3 passed and 1 failed.
+  - The failure was `the host refused it with friendly_target ... (got code 'pending_vitals')`, the same pre-resolve race as run 40150677244.
+  - 7e7e2e84 re-stages on exactly this code.
+- **The race exists on main too.** Pending_vitals refusals appeared in main-based runs as well (f3: one on the host).
+- **The PR adds no measurable load.** Peer physics rates under paired load are the same on main and the PR: host 18.7–20.0 Hz vs 18.4–20.9 Hz, guest 24.6–26.1 Hz vs 25.3–26.2 Hz.
+- **No camera or collision path is involved:**
+  - `place_creature` writes `global_position` in world space.
+  - `strike` aims at world targets. Neither reads the camera.
+  - `combat_arena.gd`'s new `_process` (`pilot_mark.all_fights`) only moves a light and sets the rim.
+  - `contact_burst` and `ground_burst` spawn visual particles after the hit is decided.
+  - `hold_inside` and the contact spacing are unchanged.
+  - `pitch_start`, `composition_yaw`, `fallback_max_steps` and the pilot floor only change the lens.
+- **What the CI log shows (failure 2, "4.38 m of 4.00 m"):**
+  - All 12 attempts have the guest's creature fixed at (-1.21, 6.17, 7661.98).
+  - Attempts 1–9 used the in-ring path, with sides at 105°, 135° and 165°, multiples of FRIENDLY_RAYS' 15°. Attempts 10–12 used the away-from-boss fan. Every stand landed at Z 7662.4–7663.5, the +Z side.
+  - After the 8-frame settle, the host's creature never held its stand. `place_creature` reported it back at about (2.4–3.1, 7660.0–7660.7) every time, about 4.4 m from the guest, so `apart >= SWING_REACH_M` and every attempt `continue`d (no window read, empty refusal).
+  - This matches the smoke's own comment that "the Warden Arena's +Z face cuts the ring": a stand inside the ring can still be inside a wall.
+  - Roomiest-first ordering keeps choosing +Z stands when the guest stands near that face.
+  - Whether the guest ends near the wall depends on where its creature finished the boss-damage phase, which varies run to run.
+- **Proposed smallest fix (not applied; awaiting your go):** in `tests/smoke_net_shared_boss.gd`'s staging loop, when the host's creature did not hold the previous stand (its re-read position is more than ~1 m from `stand`), stage the next attempt on the line from the guest towards where the host's creature was actually held, APART_Z from the guest.
+  - For failure 2 that stand is (0.2, 7661.5): inside the room and clear of the boss (about 40° off the line, boss 7.5 m away against teammate 1.5 m).
+  - Staging only; the `friendly_target`, `clean` and window assertions are unchanged.
+  - An alternative that is less of a guess: first add the probe's ring centre and radius to the attempt print, to confirm the wall reading on the next failure.
+
 ## TO COORDINATOR
 
-READY tb/netfix-wedge @ 7e7e2e8406f8449f3eb69e89d0e955908a0c3c9d: new fix 7e7e2e84 (shared_boss re-stages a swing the host refused before resolving, pending_vitals or move_start_required; a test race, not PR #738). Earlier fixes: 294e6709 boss_rewards, 19a1733e client_trainer_rewards. origin/main f7b9b6a1 merged in. Root cause: tests/smoke_net_boss_rewards_each_participant.gd:194 sent its 6000-frame budget only as the step deadline. tools/net/peer_runner.gd:4395 bounds the win arm by args.budget_frames (default 2160 effective), so a slow 37-swing CI fight timed out 0.6 s into a normal final-round settlement. There was no owner-passive race; the "released then re-held" log pair is round 1 and round 2 sharing one hold key. Fix: pass args budget_frames 6000 with step 6400. Results: the CI signature reproduced locally at budget 1650; boss_rewards 6/6 local passes after the fix, run in parallel pairs. client_trainer_rewards got the same gap fixed (budget_frames 4000 / step 12600) and passed 3/3 locally. Unit suites not run (no production change).
+READY tb/netfix-wedge (head = this note commit) with fix 7e7e2e84 for the shared_boss race. VERDICT on #738's second failure (run 40152511791): not the PR; a staging-geometry weakness (host creature never holds a +Z stand near the Warden Arena wall). A fix is proposed in Follow-up 3 and awaits your go. Fix 7e7e2e84 (shared_boss re-stages a swing the host refused before resolving, pending_vitals or move_start_required; a test race, not PR #738). Earlier fixes: 294e6709 boss_rewards, 19a1733e client_trainer_rewards. origin/main f7b9b6a1 merged in. Root cause: tests/smoke_net_boss_rewards_each_participant.gd:194 sent its 6000-frame budget only as the step deadline. tools/net/peer_runner.gd:4395 bounds the win arm by args.budget_frames (default 2160 effective), so a slow 37-swing CI fight timed out 0.6 s into a normal final-round settlement. There was no owner-passive race; the "released then re-held" log pair is round 1 and round 2 sharing one hold key. Fix: pass args budget_frames 6000 with step 6400. Results: the CI signature reproduced locally at budget 1650; boss_rewards 6/6 local passes after the fix, run in parallel pairs. client_trainer_rewards got the same gap fixed (budget_frames 4000 / step 12600) and passed 3/3 locally. Unit suites not run (no production change).
