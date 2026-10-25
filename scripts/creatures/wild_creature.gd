@@ -128,6 +128,8 @@ var _poise_resist_left: float = 0.0
 var _synced_poise_max: float = -1.0
 var _staggered: bool = false
 var _stagger_critical_ready: bool = false
+## A guest's synced stagger starts the held wince once, not on every resync.
+var _was_staggered_for_wince := false
 
 ## F04 travelling lunge (combat.json `charger_lunge`). Only a body whose
 ## per-member override sets `lunge_travels` ever sets any of these; every other
@@ -2039,7 +2041,8 @@ func apply_poise_damage(amount: float, force_stagger: bool = false, striker: Nod
 	# TELEGRAPH exit as impact and would emit the cancelled strike.
 	_intent = AI.Intent.RECOVER
 	_beat_left = float(_combat_cfg.get("stagger_seconds", _poise_config().get("stagger_seconds", 0.6)))
-	if _animator != null:
+	# P2-016: the stagger shows as a held wince rather than the idle body.
+	if _animator != null and not hold_combat_wince(_beat_left):
 		_animator.call("cancel_hold")
 	return true
 
@@ -2075,9 +2078,13 @@ func sync_poise(value: float, staggered_now: bool, critical_ready: bool = true,
 		_cancel_lunge()
 		_selected_attack.clear()
 		_selected_heading_locked = false
+		var fresh := not _was_staggered_for_wince
 		_intent = AI.Intent.RECOVER
 		_beat_left = stagger_left if stagger_left >= 0.0 else float(_combat_cfg.get(
 			"stagger_seconds", _poise_config().get("stagger_seconds", 0.6)))
+		if fresh:
+			hold_combat_wince(_beat_left)
+	_was_staggered_for_wince = staggered_now
 
 
 func stagger_seconds_left() -> float:
