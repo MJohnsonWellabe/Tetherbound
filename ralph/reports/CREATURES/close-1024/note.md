@@ -3,6 +3,11 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures-land f3d6d65f0 (hard rule, from your GPU roster baseline): the crimson frills on Riverdrake and Mirejaw (land and water) are amber now. Please GPU-judge mirejaw, water_mirejaw, riverdrake and water_riverdrake.
+  - Albedo texels in the saturated red band were shifted to amber, keeping each texel's value: Riverdrake 8.5%, Mirejaw 1.6%. Tool: `tools/art_pipeline/shift_reserved_red.py`. GLB-embedded and extracted images are both rewritten, and the f36 recipe hashes re-pinned.
+  - Found while checking: water Mirejaw had been loading the previous lod0 mesh's vivid repaint onto the native UVs, which gave the garbled camo and most of its red. Its water roster entry now has the land form's `colourway_source_species`, so it wears its own texture. Abyssal Guardian's water form had the same gap and got the same fix; CPU frames show the water and land Guardians now match.
+  - Tests: water_species_catalog, f36_pose_candidates, rest_pose, texture_import_policy, four_biome_roster_population, 0 failed.
+- 25 Oct GPU READY tb/creatures-land a22e582cd (tier 1): the Stormtrail and Riftfrill repaint (lane aca00a732) is promoted to land. CPU b22 mapped: Stormtrail 7.21 vs 5.58, Riftfrill 6.63 vs 5.93. Stormtrail is one of the two GPU sub-6 rows.
 - 24 Oct READY tb/creatures-land b36911df9 (your non-blocking ask on cf2d4258a): other peers' copies of a player's creature now hold the stagger wince too.
   - The owner's proxy attaches `stagger_seconds` (combat `player_stagger_seconds_left()`) to the hit it publishes, and the viewer's copy calls `hold_combat_wince`, clamped to 2 s.
   - Tests: new test_remote_stagger_wince plus the test_remote, remote_creature, hit-window and presentation suites, 149 tests, 0 failed.
