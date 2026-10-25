@@ -3,6 +3,12 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures-land 1b9c6616b: **Tanglevolt restored to its 22 Oct board look, one small candidate.**
+  - field_emission 1.45 -> 0.0. I also took field_rim 0.25 -> 0.0: both came in ce892f75a after the board was made, and the rim brightens the fur at the silhouette, so I left it out rather than guess. If the GPU stage check wants the rim back, it is one number.
+  - The vein emissive mask (e4b6a4018) carries the arcs against the dark coat.
+  - Focused tests: 96 tests, 0 failed.
+  - Proof is your GPU stage check against the board, as you asked. The CPU stage cannot show it.
+
 - 25 Oct: **tb/creatures-land merged main 400f3661f (#746, #747)** as 9ad1c9e85.
   - One conflict, in combat.json soft_style: I kept main's `dust_lane_alpha_max` and the lane's `dust_body_clear`; tell_style.gd auto-merged both.
   - Focused tests (tell_dust_body_clear, enemy_pattern_telegraph, creature_flinch_head_drop, f36_pose_candidates, texture_import_policy, stormwood_source_colourways): 14 tests, 0 failed.
