@@ -2734,6 +2734,8 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	var cap := fight_camera_trainer_cap(fight, _wild)
 	if cap.has("max_distance_m"):
 		local["max_distance_m"] = minf(float(local.max_distance_m), float(cap.max_distance_m))
+	if cap.has("face_yaw_deg"):
+		local["prefer_world_yaw_deg"] = float(cap.face_yaw_deg)
 	# F10#2 r8 candidate: a named wild may cap the solver's pull-back so its
 	# fight keeps a steady close framing.
 	var named_cap := named_fight_camera_cap(_wild, _fight_world_sight_targets().size() > 0)

@@ -1,0 +1,12 @@
+# grid.py out.png img1 img2 [img3 img4]: 2x2 (or 1x2) contact grid of 1280x720 frames at half size
+import sys
+from PIL import Image
+out, imgs = sys.argv[1], sys.argv[2:]
+w, h = 640, 360
+cols = 2
+rows = (len(imgs) + 1) // 2
+g = Image.new("RGB", (w * cols, h * rows), (20, 20, 20))
+for i, p in enumerate(imgs):
+    im = Image.open(p).convert("RGB").resize((w, h), Image.LANCZOS)
+    g.paste(im, ((i % cols) * w, (i // cols) * h))
+g.save(out)

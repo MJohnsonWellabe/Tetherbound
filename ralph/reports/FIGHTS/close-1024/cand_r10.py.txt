@@ -1,0 +1,12 @@
+# Fights r10 candidate overlay (capture-only; one change). Venn (Tidewake, GPU 4.64 High, the lowest
+# fight): its frames sit under a cliff overhang (a black wedge over the top third), on bleached sand,
+# with no sea. The one sea-facing frame was the judges' best in the batch. The fight lens now
+# prefers the views nearest world yaw -90 deg (looking +x, toward the water) for this trainer
+# (camera.json fight.per_trainer.water_trainer_venn.face_yaw_deg). `git checkout data/config/` restores.
+import json
+p = 'data/config/camera.json'; s = open(p).read()
+a = '"captain_riverwatch": {'
+assert s.count(a) == 1, a
+s = s.replace(a, '"water_trainer_venn": {"face_yaw_deg": -90.0}, ' + a)
+json.loads(s); open(p, 'w').write(s)
+print('r10 candidate applied')

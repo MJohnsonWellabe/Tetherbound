@@ -1,6 +1,201 @@
 # Fights lane close-1024 (tb/fights)
 
+## Handoff (state, 25 Oct 13:40 CT; lane PAUSED by owner direction)
+
+**Branch heads**
+- `tb/fights-land` **4ae4433da**: a55b0fa4b's lane content merged onto origin/main 1d5faebac (main had already merged a55b0fa4b as e5ca1200f, so the land adds nothing new to main). 283 tests, 0 failed after `--import`.
+- `tb/fights` (this NOTE's head). Landed on main: everything up to a55b0fa4b. That is the generic fight presentation (no outlines, dust tells, slim HUD, grounded impacts, horizon lens, Veyra streaks, pilot rim), r6/r7 ON, the pilot ghost fix ef4591a18 and the review follow-ups.
+- **Unlanded** on tb/fights. All code here is off by default, or is a fix that has a test:
+  - 844dad9e0: follower cover fade skipped for a body a running fight pilots (test).
+  - 3f24b65df: HUD `_combat_is_running()` falls back to FOUNDATION_GROUP; kit_move_effects `flash_scale` and `flash_life_scale` (OFF).
+  - 1d511d18b and 43d7e6d6b: `telegraph.soft_style.dust_lane_alpha_max` (OFF).
+  - ed4ba3ebd: camera.json `fight.per_trainer.<id>.face_yaw_deg` (absent = off).
+  - Overlays cand_r8, cand_r9, cand_r10, and tools/ (this commit).
+
+**Open candidates**
+
+| candidate | flag(s) | verdict so far | exact next step |
+|---|---|---|---|
+| r9 dust regression fix | `dust_lane_alpha_max` 0.35 + `dust_alpha` 0.9 -> 0.6 (`cand_r9.py.txt`) | not judged (captures cut by the pause) | Capture r9 for Venn, Stormwood and f38 (`capture_queue.sh.txt`, one arm; r8/pre is the shipped look, but those frames were deleted for disk, so recapture pre too). Judge, then ship if no worse. **Highest value**: every r8 judge named dust columns burying the pilot. |
+| r10 Venn lens faces the sea | `per_trainer.water_trainer_venn.face_yaw_deg -90` (`cand_r10.py.txt`; needs ed4ba3ebd) | not captured | Capture Venn pre and r10 (`tools/phase2_capture_tidewake_fights.gd`), judge. If the overhang is still in frame, try -60 or -120 (check frames.json camera vs fighters). |
+| r8 smaller kit flash / contact disc / pilot floor 0.13 | `flash_scale` 0.5, `flash_life_scale` 0.65, impact radii 0.32/0.42, ground burst 5 puffs alpha 0.5, `fight.pilot_min_screen_fraction` 0.13 | **flat, kept OFF** (Stormwood 6.17->6.21, Warden f38 7.01->6.97, Venn 6.02->5.84, grunt 6.72->6.57) | Do not retry scaling. Redesign the impact (a feet-level burst instead of a lens-facing bloom). |
+| r7 steadier lens | camera.json `orbit_speed_deg_s` 70, `lag` 2.5 | judges still saw cuts on both sides; never shipped | Cuts come from the solver re-picking orbit candidates at fences and gates. Add hysteresis to the candidate choice instead. |
+
+**Open criteria** (GPU J = tb/gpu-pass 34b190ad1 on a55b0fa4b, Medium/High; CPU = my latest mapped)
+
+| criterion / fight | GPU Med / High | CPU | dominant remaining defect (judges) |
+|---|---|---|---|
+| F22#4 Riverwatch (visual) | 6.98 / 6.83 | 7.05 (r6) | HUD over the left action; impact spray on the target |
+| F22#4 Warden | 7.08 / 6.99 | 6.81 hall (r6), 7.01 f38 (r8 pre) | dust over the struck creature; camera cuts at fences |
+| F10#2 Stormwood camera | 6.48 / 6.09 | 6.17-6.38 | Sparkit tiny and buried in tell dust; no storm sky in frame; canopy |
+| F39 Venn (Tidewake) | 5.82 / **4.64** | 5.84-6.56 | pilot ghost on GPU (fix unlanded); black overhang; bleached sand, no sea; "Gather Reef Stone" prompt |
+| F40 Veyra (Cloudreach) | 6.14 / 6.60 | 6.54 (r6) | flat sand arena, mid-screen prompt panel, white impact disc |
+| F38#5-F41#5 telegraph slab defect | outlines FIXED in every set since the generic batch | | wind-up "where" still PARTIAL or PRESENT: text plus dust only |
+| F22#4 C2/C3 | | finale 6/6; Meadows 22/24; Stormwood 15/18; water 48/54 | Riverwatch rerun (power 27.0) and Stormwood Terrapup trivial-floor rerun not run. Venn and Nerissa ratio ~0.75 (Water lane). Meadows chapter Galewisp 0.12 < 0.25 (Balance). |
+
+**What worked and what didn't** (mapped CPU deltas unless noted)
+- **Worked:**
+  - Pilot ghost fix (follower fade scoped to following): Venn +0.64, Warden hall +0.62, Riverwatch +0.62 (r6). GPU Warden +0.84/+0.99, Riverwatch +1.29/+0.95.
+  - Generic presentation (outlines off, dust tells, slim HUD, grounded impacts, horizon lens, Veyra streaks): Warden +1.03, Riverwatch +1.35 (r4); Veyra +0.61, Stormwood +0.42, Venn +0.69 (r5).
+  - Bodied tells, curtain and dust over outlines: +0.3 to +1.0 (r1-r3).
+- **Did not work:**
+  - Smaller impact scales (r8): -0.08.
+  - Slower orbit and softer lag (r7): cuts unchanged.
+  - Stagger label placement: fixed the ambiguity (GPU 3/3), but there is no score gain without the Creatures-lane body wince.
+  - Hue-only telegraph changes (#8c6cff, #b16cff): small.
+  - Aura 0.9: washed large bodies pale.
+- **Regressions I introduced:**
+  - r6 dust fill rows plus pulse at dust_alpha 0.9 bury the pilot (fix staged as r9).
+  - Duplicate dust keys from re-running an overlay on an already-overlaid tree (fixed fd121b1e5).
+
+## Harness runbook (exactly what I ran; CPU container, Mesa llvmpipe, Godot 4.7-stable)
+
+**Setup**
+- Godot 4.7-stable is at /usr/local/bin/godot (downloaded; not preinstalled).
+- After any checkout or main merge, run `godot --headless --path . --import` (about 10-25 min). Without it, captures fail with "FIGHT DID NOT START" on unimported assets.
+- Export `XDG_DATA_HOME=<scratch>/xdg` for captures, so saves and settings stay out of $HOME.
+- One Godot at a time. To pause a long smoke, `kill -STOP` **the godot process itself** (`pgrep -f "^godot --headless.*smoke_"`), not the `timeout` wrapper; then `kill -CONT` it afterwards. The wrapper's wall-clock timeout keeps running while the smoke is paused.
+
+**Fight captures** (xvfb, 1280x720, Compatibility; prefix `timeout 2700 xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 --resolution 1280x720`)
+- **Warden hall / Riverwatch:** `--script res://tools/art_pipeline/capture_named_fight.gd -- --trainer=warden_aldis --ally=ripplet --frames=12 --interval=0.5 --tell-frames --out=res://shots/<dir>`
+  - Riverwatch adds `--trainer=captain_riverwatch --live-member=captain_riverwatch:4`.
+  - Judged frames: `<id>-t01-stand-mid`, `-t02-stand-mid`, `-04`, `-08`.
+  - About 10-17 min.
+- **Stormwood (F10#2):** add `--fixed-fps 20 --script res://tools/capture_named_fights_f10_6.gd -- --ids=glass_field_alpha --seconds=14 --interval=2.0 --camera-view=north --fixture-seed=1042206 --out=res://shots/<dir>`
+  - Frames: `glass_field_alpha-tell1-b-mid`, `tell2-b-mid`, `tell1-e-impact`, `tell3-c-late`.
+  - About 16 min.
+- **Veyra:** `--script res://tools/phase2_capture_cloudreach_live_fight.gd -- --output=res://ralph/reports/VISUAL/phase2/cloudreach/<name> --seed=7`
+  - The output must be under that folder (the tool refuses otherwise); move the frames out of the repo afterwards.
+  - It often hits the 2700 s timeout (exit 124) after writing frames. A late frame (live-2262) can be missing, so compare live-1362/1722/1902/2082.
+  - About 45 min.
+- **Venn:** `--script res://tools/phase2_capture_tidewake_fights.gd -- --trainer=water_trainer_venn --seed=2042 --out=res://ralph/reports/VISUAL/phase2/tidewake/<name>`
+  - Exit 1 "Capture rejected: frame_cap" is normal (40 frames written).
+  - Frames are in `<name>/venn/`: tell-start-000.65, t-006.02, t-012.00, t-024.02. frames.json has camera and fighter positions (use it to find camera pops).
+  - About 10 min. One run stalled for 30+ min when the disk filled; kill it and rerun.
+- **f38 trainer runs (GPU G3 set):** `--script res://tools/capture_f38_fight.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=32 --interval=0.15 --attack --dodge --tell-frames --preset=Low --low-resolution=1280x720 --source-commit=<FULL 40-char pushed sha> --out=res://shots/<fresh dir>`
+  - It needs the full SHA and a fresh output dir (`lookdev_capture_bootstrap.gd` refuses a short SHA or an existing dir).
+  - The Warden fight may end early (frame 22), so pick frames present in both arms.
+  - About 20 min for both trainers.
+- Candidates are config overlays: `python3 ralph/reports/FIGHTS/close-1024/cand_*.py.txt` on a **clean** tree, and `git checkout data/config/` to restore.
+  - Commit any new default keys **before** running an overlay, or the restore wipes them.
+  - Never run an overlay twice: it duplicates JSON keys, which happened with cand_r6 inside cand_r7.
+- Queue template: `tools/capture_queue.sh.txt` (pause smoke, pre arm, overlay, candidate arm, restore, resume).
+
+**Smokes (F22#4 C2/C3)** (`godot --headless --path . --fixed-fps 60 --script <smoke> -- --seeds=24 --json=<out.json>`)
+
+| smoke | wall time | notes |
+|---|---|---|
+| `tests/smoke_finale_named_c2c3.gd` (Veyra, Marrow) | ~2.5 h | |
+| `tests/smoke_stormwood_b_named_c2c3.gd` | ~2.8 h | `--starter=terrapup` for the Terrapup rerun |
+| `tests/smoke_meadows_named_c2c3.gd` | ~5.2 h | `--case=captain_riverwatch` for the Riverwatch rerun |
+| `tests/smoke_water_named_c2c3.gd` | ~9 h | It prints measurements only; apply `tools/water_verdict.py.txt` (rule plus trivial floor). Galewisp is type-advantaged against all five water named wilds. |
+
+- The water smoke ran under `timeout 36000`; pausing it eats into that budget.
+- Per-fight table: `python3 tools/c2table.py.txt <json>...`, which uses `runs[].pattern_attacks`; the water JSON rows have no `verdict` (use water_verdict).
+
+**Unit tests**
+- `godot --headless --path . --script tests/run_tests.gd -- --only=a,b,c` (file stems without `test_`).
+- My standard fights set is listed in the 05:20 and 11:20 READY entries (about 280 tests, about 5 min).
+
+**Code-blind judging** (tools/visual_judge)
+1. Contact grids: `python3 tools/grid.py.txt out.png f1 f2 f3 f4` (2x2 at half size; 8 frames gives 2x4).
+2. Spec JSON: `[{"label","a","b","brief","defects":[...]}]`.
+3. Run `python3 tools/visual_judge/anchor_tiles.py --out <judge dir> --key <outside>/key.json --candidates spec.json --pairs 3 --seed <n> --include f36_0_npc:C1`. The include makes it a confirming batch.
+4. Copy `docs/reference` into `<judge dir>/reference` (anchor_tiles does not; I copied a prepared one).
+5. Fill the prompt: `python3 tools/judge_prompt.py.txt <judge dir> <outside>/recorded_defects.txt`. Give it verbatim to three fresh general-purpose agents, in parallel, with only the folder path.
+6. Read A/B per set from key.json and write `rN_batch.json` (`anchors` by key id: [j1,j2,j3]; `candidates`: [j1,j2,j3]).
+7. Run `python3 tools/visual_judge/calibrate.py rN_batch.json --out rN_calibrate.json`.
+8. Commit only rN_{batch,key,spec,calibrate}.json plus at most one `_sheet*.png` under 1.5 MB (quantize with PIL; resize if needed).
+
+**Harness problems hit** (cause, then fix, then where the fix lives)
+1. **Godot missing:** downloaded 4.7-stable (local only).
+2. **"FIGHT DID NOT START" after a main merge:** unimported assets. Run `--import` (procedure).
+3. **Cloudreach capture refuses other outputs:** the tool restricts the path. Write under phase2/cloudreach, then move (procedure).
+4. **f38 capture exit 1, no frames:** short SHA or existing dir. Full SHA, fresh dir (procedure).
+5. **`git checkout data/config` wiped uncommitted defaults:** commit defaults first (procedure).
+6. **pkill -f pattern killed my own shell (exit 144):** kill by PID (procedure).
+7. **sed -i on a running queue script did nothing:** sed replaces the inode, and running bash keeps the old one. Edit with in-place writes, and only after the current position (procedure).
+8. **SIGSTOP on `timeout` did not pause the smoke:** stop the godot child (procedure). The earlier mistake is disclosed in the 01:25 READY.
+9. **Disk full:** `git worktree add` (3 GB of assets), and later the capture folders. Use `git merge-tree --write-tree` plus `commit-tree` for land branches instead of worktrees, and prune shots/ and old judge folders (procedure).
+10. **Unquoted heredoc ran backtick commands:** quote heredocs (`<<'EOF'`) (procedure).
+11. **Water smoke has no verdict:** `tools/water_verdict.py.txt` (this commit).
+12. **test_enemy_pattern_telegraph sample budget:** fill rows sampled the ground. Interpolate from seated edges (code, 3e028626f..fd121b1e5 series).
+
 ## TO COORDINATOR
+- 2026-10-25 13:30 CT **READY tb/fights-land 4ae4433da**: exactly a55b0fa4b's lane content on current origin/main 1d5faebac. Main has not moved since; `git diff a55b0fa4b 4ae4433da` equals main's own changes. Checks on 4ae4433da after `godot --import`: 283 tests, 11394 assertions, 0 failed (the 11:20 set). **The Fights lane pauses after this entry** (owner: cut usage); no new work.
+- 2026-10-25 13:30 CT INFO F22#4 C2/C3 final state (24 seeds, READER vs MASHER, live f22 patterns; per-fight tables in the 05:20 and 10:40 entries):
+  - Finale (Veyra, Marrow): 6/6 PASS.
+  - Meadows named: 22/24. Riverwatch Terrapup and Galewisp C3 were 0.501 against the 0.5 ceiling. Brooktail power 27.5 -> 27.0 is landed; its 24-seed rerun was **not run** (stopped for the pause).
+  - Stormwood named: 15/18. The three Terrapup rows fail the ratio only (reader win 1.00, max hit 3-5%). The rerun under the COMBAT §7 trivial-fight floor was **stopped before finishing** (pause).
+  - Water: 48/54. Venn and Nerissa fail the ratio (about 0.75) with Ripplet and Galewisp; Songweaver and Tidecoil Galewisp miss the trivial floor by noise. Water-lane rows.
+  - Chapter row for Balance: Meadows Galewisp `masher_loses_a_named_fight` 0.12 < 0.25.
+  - F22#4 does not close on this evidence: the two reruns are open, and Venn/Nerissa need a tune.
+- 2026-10-25 13:30 CT HANDOFF open high-gain fight items, for the Creatures lane (or whoever resumes fights). Code on tb/fights after the land, all OFF or untested on GPU:
+  1. **Venn pilot fade during fights.** 844dad9e0 (unlanded) skips the follower cover fade for any body a running fight pilots, whatever its follow state, with a new test. CPU shows Ripplet solid; GPU J still showed it dithered on a55b0fa4b. Land 844dad9e0 and re-judge on GPU.
+  2. **Venn below 6** (GPU High 4.64). The dominant problem is the lens under the cliff overhang (black wedge), bleached sand and no sea. Structural fix staged: ed4ba3ebd adds per-trainer `face_yaw_deg` to the fight camera solver (absent = off), and `cand_r10.py.txt` sets Venn to -90 (looking at the sea). Not captured or judged yet.
+     - The "Gather Reef Stone" prompt still drew in the CPU Venn capture even with 3f24b65df's `_combat_is_running()` group fallback. Main's a6bbba553 also targets it; verify on GPU.
+  3. **Impact discs over targets.** Kit move contact flashes draw a 1.6x bloom nudged 0.45 m toward the lens. 3f24b65df adds kit_move_effects `flash_scale` and `flash_life_scale` (OFF). r8 tried x0.5 with smaller contact discs: flat (-0.08 mean), so OFF. Needs a redesign (feet-level burst), not a scale.
+  4. **Heavy-trail opacity.** Judges in r8 and GPU G5: the wind-up dust columns bury the struck creature. This is the r6 fill rows and pulse at dust_alpha 0.9, a regression from my change. 1d511d18b/43d7e6d6b add `dust_lane_alpha_max` (OFF), and `cand_r9.py.txt` (lane dust at most 0.35, tell dust 0.6) is staged; its captures were cut by the pause. Highest-value next step: capture and judge r9, and ship it if no worse.
+  5. **Flash at the feet.** `impact.flash_drop` 1.0 is ON (landed), but the judges still see a disc on the struck body from the kit move flash (item 3) and the ground burst puffs. Same fix as item 3.
+  - Stagger body read: main has 4b2a5fa63 (stagger holds the wince); labels name their owner (landed).
+- 2026-10-25 12:45 CT INFO r8 (J items 3 and 5: kit flash x0.5 and life x0.65, contact disc 0.32/0.42, lighter ground burst, pilot floor 0.13), code-blind CPU, 3 fresh judges, mapped (confirming, slope 1.10, r 0.89, RMSE 0.63; files r8_*):
+  - Shipped look -> r8: Stormwood 6.17 -> 6.21, Warden f38 7.01 -> 6.97, Venn 6.02 -> 5.84, grunt f38 6.72 -> 6.57. **Not better: r8 stays OFF** (`flash_scale`, `flash_life_scale` 1.0; radii and pilot floor unchanged).
+  - All three judges name the same main cause: **the wind-up dust columns** bury the player's creature (Stormwood Sparkit, Terrapup). That density is my r6 fill rows and pulse at dust_alpha 0.9, so it is a regression in my own change. r9 tests your G5 cap (charge-lane dust at most 0.35) with tell dust at 0.6; that arm is capturing now against r8's shipped-look frames.
+  - Venn on CPU: Ripplet is solid on both arms, and impacts are FIXED on the shipped arm. The "Gather Reef Stone" prompt still draws in this capture even with the `_combat_is_running()` group fallback, so another path draws it. Next look.
+  - Gain rule: r7 and r8 both gained under +0.5 on the shared fight look, so after r9 (a regression fix) I park scene tuning of the fight look. The judges' standing asks are camera stability at fences, flat ground and missing chapter sky or water, which are biome and camera work.
+- 2026-10-25 12:00 CT INFO J items, in progress on tb/fights (all OFF or code-only until judged):
+  1. **Venn ghost.**
+     - 844dad9e0: the follower cover fade is also skipped for any body a running fight pilots (FOUNDATION_GROUP manager, `is_fighting()`, `_ally_body`), whatever its follow state. New test.
+     - A CPU Venn capture on the current tree shows Ripplet solid in every frame. Your GPU frames on a55b0fa4b still dithered; the new gate covers the follow-state path you suspected.
+     - The same capture still drew "Gather Reef Stone". playground_hud `_combat_is_running()` only looked for a CombatManager under the current scene, and the Tidewake captures mount the world elsewhere, so the HUD read "no fight". It now also counts any fighting manager in FOUNDATION_GROUP (code).
+  2. **Venn 4.64 (High).** The judges' causes were the ghost, the prompt, cyan discs on Cannonback's shell (impacts, item 3), the black overhang wedge at the frame top and the flat sand. The first three are addressed. The overhang is the fight lens under a cliff lip, which is the next camera item after r8.
+  3. **Impacts.** New OFF keys: kit_move_effects `flash_scale` and `flash_life_scale`. Every kit move's contact flash draws a 1.6x bloom nudged 0.45 m toward the lens, which covers the target. r8 tries flash x0.5, life x0.65, contact disc 0.32/0.42, and a lighter ground burst (5 puffs, alpha 0.5).
+  4. **Stagger body read.** This is Creatures' wince and recoil; I will not duplicate it. The label side is done (owners 3/3 on Veyra).
+  5. **Stormwood Sparkit.** The 0.10 pilot floor already applies there since r7. r8 tries 0.13 everywhere; nothing is shrunk.
+  - r8 captures (current default vs `cand_r8.py.txt`; Venn, Stormwood glass_field, f38 grunt and Warden) are running; judging and READY follow.
+- 2026-10-25 11:20 CT READY tb/fights-land 4ae4433da: a55b0fa4b's content on current origin/main 1d5faebac (merge commit; lane-side content identical to a55b0fa4b plus NOTE lines). `godot --import` was run for main's 461 new files. Checks on 4ae4433da: 283 tests, 11394 assertions, 0 failed. The suites are the a55b0fa4b set plus main's touched stormwood_b_combat_camera_fit and stormwood_strike_countdown, follower_leader_view_fade, effect_banner_owner and band_content.
+  - Next candidate (your J items 1-5) has started on tb/fights. Item 1 is in (a running fight that pilots the body now skips the follower cover fade, whatever its follow state; new test), and capture checks of the Venn tool's fight state are next.
+- 2026-10-25 10:40 CT INFO F22#4 C2/C3, water (smoke_water_named_c2c3, 24 seeds, 54 rows, 2592 runs, 0 errors).
+  - This harness only measures (`accepted` is fixed false). I applied the same verdict rule as the Stormwood harness: READER/MASHER median lead cost <= 0.55; READER win >= 0.90; single hit < 0.50; tells >= 0.8 s; and the COMBAT §7 trivial-fight floor for a type-advantaged lead whose MASHER party cost is <= 0.15.
+  - Galewisp (air) is advantaged against all five water named wilds (attack +1, defence -1).
+  - **Result: 48/54 PASS.** Every row passes win, hit ceiling and tells; the failures are ratio-only:
+    1. **Venn: Ripplet 0.75, Galewisp 0.76.** Real C2 misses, not trivial (MASHER party 0.54 / 0.46): the reader wins every run but saves too little lead HP.
+    2. **Nerissa: Ripplet 0.76, Galewisp 0.76** (MASHER party 0.78 / 0.71).
+    3. **Songweaver and Tidecoil, Galewisp:** fail the trivial floor's "reader no worse" by margins at noise level (reader party 0.040 vs 0.032, 0.045 vs 0.044). Brine Root's Galewisp row passes the floor (0.024 vs 0.025).
+  - These are Water-lane fights (F14#0 rows). I am reporting them and changing no numbers, since a Venn or Nerissa tune belongs with the owner of those trainers' rows. If you want it here, the lever is the trainers' `foe_power_multiplier`, or a stronger tell on their heaviest move, re-run with this smoke.
+
+    | case | pattern | attacks | result (starter) |
+    |---|---|---|---|
+    | water_lantern_shell_sentinel | named_water_lantern_shell_sentinel | water_lantern_shell_sentinel_wall_check, water_lantern_shell_sentinel_wall_slam | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_gull_basalt_claw | named_water_gull_basalt_claw | water_gull_basalt_claw_wall_check, water_gull_basalt_claw_wall_slam | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_brine_root_watcher | named_water_brine_root_watcher | water_brine_root_watcher_charger_rush, water_brine_root_watcher_charger_check | terrapup PASS; ripplet PASS; galewisp PASS (trivial floor, party 0.024/0.025) |
+    | water_drowned_garden_songweaver | named_water_drowned_garden_songweaver | water_drowned_garden_songweaver_current_volley, water_drowned_garden_songweaver_current_zone | terrapup PASS; ripplet PASS; galewisp FAIL (trivial floor, party 0.040/0.032) |
+    | water_deep_watch_tidecoil | named_water_deep_watch_tidecoil | tidecoil_sweep | terrapup PASS; ripplet PASS; galewisp FAIL (trivial floor, party 0.045/0.044) |
+    | water_aquaryn_alpha | named_water_aquaryn_alpha | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_pell_trial | named_water_trainer_pell_trial | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_tovin | named_water_trainer_tovin | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_solm | named_water_trainer_solm | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_irva | named_water_trainer_irva | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_bex | named_water_trainer_bex | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_calder | named_water_trainer_calder | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_tess | named_water_trainer_tess | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_fennel | named_water_trainer_fennel | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_venn | named_water_trainer_venn | wall_check, wall_quake, venn_charger_rush, venn_charger_double_rush, current_volley, current_zone | terrapup PASS; ripplet FAIL 0.75; galewisp FAIL 0.76 |
+    | water_trainer_morra | named_water_trainer_morra | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_evi | named_water_trainer_evi | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_nerissa | named_water_trainer_nerissa | wall_check, wall_slam, wall_quake, current_volley, current_zone, charger_check, nerissa_lane | terrapup PASS; ripplet FAIL 0.76; galewisp FAIL 0.76 |
+  - Still queued: the Terrapup Stormwood rerun (trivial floor) and the Riverwatch rerun (Brooktail 27.0).
+- 2026-10-25 05:55 CT READY tb/fights-land a55b0fa4b (origin/main 1c64efc1a + tb/fights fd121b1e5): your review follow-up on 3e028626f.
+  1. **Bug fixed.** `_on_hit_effectiveness` clears `_effect_banner_mine`, so a type verdict after the player's own stagger goes back under the enemy plate. New tests/test_effect_banner_owner.gd: fails without the fix, passes with it.
+  2. **Duplicate keys.** The duplicated dust keys in `telegraph.soft_style` are removed; my second overlay run while assembling the ON config left them. One copy remains, same values.
+  3. **Scope notes.** Added `_scope_dust_fill` (dust_fill_rows, dust_fill_reveal, dust_max), `_scope_dust_pulse` (dust_pulse, dust_pulse_hz, dust_pulse_hz_end) and `_scope_compact_rows_fixed`. All are client-local presentation.
+  4. **Stale comments.** They now say ON: combat_hud.gd (stagger_by_owner), tether_command_meter.gd (compact_rows_fixed), combat_manager.gd (pilot floor, flash_drop), tell_style.gd (fill rows), combat_system_overlay.gd (panel_scale).
+  5. **Perf.**
+     - telegraph_glow fill rows now take heights between the already-sampled rim and one centre sample: one extra ground query per redraw instead of 2 x SEGMENTS.
+     - lunge_lane's heights are cached per aim (`_heights`, cleared only on re-aim), so no change there.
+     - Known: lunge_lane and telegraph_glow still build small per-frame line arrays for the dust (tens of points). Left as is.
+  - Defaults and looks are unchanged from 3e028626f except the glow fill-row heights, which are now interpolated.
+  - Checks on fd121b1e5: 163 tests, 9369 assertions, 0 failed (effect_banner_owner, telegraph_glow, enemy_pattern_telegraph, lunge_lane, charger_lunge, tell_aura_overlap, combat_hud_handheld_floors, hud_presentation_lifecycle, hud_widgets, combat_stagger, hit_feedback, combat_system_overlay_layout, f24_host_commands, stormwood_b_named_lunge_lanes/cues, shared_opponent_cue_shape, creature_attack_telegraph_animation).
 - 2026-10-25 05:20 CT READY tb/fights-land 3e028626f (origin/main 1c64efc1a + tb/fights; clean merge, no file overlap with main's changes): **your four r6 asks and the three GPU G3 items, ON, plus the pilot ghost fix.**
   - **Pilot ghost fix** (ef4591a18; code, always on):
     - P2-062's follower fade (`follow_candidate`, ON since 22 Oct) dithered the follower at 0.85 while it covered the trainer from the camera. The follower *is* the fight's pilot, and the trainer stands behind it, so the pilot was a ghost for whole fights. That was the "Ripplet translucent" ask; in the Warden hall the pilot was effectively invisible.
