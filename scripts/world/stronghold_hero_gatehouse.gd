@@ -56,7 +56,10 @@ static func _light_windows(model: Node3D, cfg: Dictionary) -> void:
 				continue
 			var lit := source.duplicate() as StandardMaterial3D
 			lit.emission_enabled = true
-			lit.emission = Color.WHITE
+			# The default emission operator ADDS the colour to the texture, so a
+			# white base lit the whole keep; black leaves only the masked windows.
+			lit.emission = Color.BLACK
+			lit.emission_operator = BaseMaterial3D.EMISSION_OP_ADD
 			lit.emission_texture = mask
 			lit.emission_energy_multiplier = float(cfg.get("emission_energy", 2.5))
 			mesh_instance.set_surface_override_material(surface, lit)
