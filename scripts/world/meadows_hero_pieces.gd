@@ -45,14 +45,19 @@ static func _place(world: Node3D, row: Dictionary, group: String) -> bool:
 	var holder := Node3D.new()
 	holder.name = "HeroPiece_%s_%s" % [group, str(row.get("id", "piece"))]
 	world.add_child(holder)
-	holder.add_child(model)
-	var bounds := RENDER_BOUNDS.measure(model)
+	# `pitch_deg` lays a piece modelled upright (the paving tile) flat; the fit
+	# and the ground seat are measured after it, in the holder's frame.
+	var pivot := Node3D.new()
+	holder.add_child(pivot)
+	pivot.add_child(model)
+	pivot.rotation.x = deg_to_rad(float(row.get("pitch_deg", 0.0)))
+	var bounds := RENDER_BOUNDS.measure(holder)
 	if bounds.size.x <= 0.001:
 		holder.queue_free()
 		return false
 	var fit := float(row.get("width_m", 10.0)) / bounds.size.x
-	model.scale = Vector3.ONE * fit
-	model.position = Vector3(-bounds.get_center().x, -bounds.position.y, -bounds.get_center().z) * fit
+	pivot.scale = Vector3.ONE * fit
+	pivot.position = Vector3(-bounds.get_center().x, -bounds.position.y, -bounds.get_center().z) * fit
 	var at: Array = row.get("at", [0.0, 0.0])
 	var x := float(at[0])
 	var z := float(at[1])

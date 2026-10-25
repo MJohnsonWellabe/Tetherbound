@@ -161,6 +161,10 @@ func _build_hero_tree(world: Node, raw: Dictionary) -> void:
 						float(raw.get("canopy_width_m", 38.0)) / maxf(installed_bounds.size.x, 0.001),
 						height / installed_bounds.size.y,
 						float(raw.get("canopy_depth_m", 28.0)) / maxf(installed_bounds.size.z, 0.001))
+					# The candidate keeps its own crown proportions: one uniform
+					# scale to the landmark's height.
+					if use_candidate:
+						scale_factor = Vector3.ONE * (height / installed_bounds.size.y)
 					installed.scale = scale_factor
 					installed.rotation.y = deg_to_rad(float(raw.get("yaw_deg", 0.0)))
 					installed.position = Vector3(at.x,
