@@ -23,3 +23,20 @@ func _load() -> Dictionary:
 		env["creature_emission_floor"] = float(floor_cfg.creature_emission_floor)
 		night["environment"] = env
 	return loaded
+
+
+## close-1024 `rain_fog_candidate` (OFF in play): Tidewake's sightlines run to
+## kilometres, so the shared rain mist (fog_density_add) washes the Veilfall and
+## far islands to one grey. Scales only Tidewake's rain mist; the shared preset
+## and every other realm are untouched.
+func set_weather(delta: Dictionary) -> void:
+	var candidate: Dictionary = TIDEWAKE_PROFILE.settings().get("rain_fog_candidate", {})
+	if candidate.is_empty() or not bool(delta.get("rain", false)):
+		super.set_weather(delta)
+		return
+	var tuned := delta.duplicate(true)
+	var env: Dictionary = tuned.get("environment", {})
+	if env.has("fog_density_add"):
+		env["fog_density_add"] = float(env.fog_density_add) * float(candidate.get("fog_density_add_scale", 1.0))
+	tuned["environment"] = env
+	super.set_weather(tuned)
