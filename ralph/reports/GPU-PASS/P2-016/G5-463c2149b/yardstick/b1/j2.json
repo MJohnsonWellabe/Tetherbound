@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Zj": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Creatures are well modelled, but a tight top-down camera on a flat green grass carpet with no sky, depth or light shafts, and cotton-ball dust puffs, sinks it beside Palworld's open, layered fight frames."
+  },
+  "Wq": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 2.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown forest floor with no purple storm sky or lightning, a dense debug-style HUD over most of the frame, flat magenta ground rings and (B) the camera inside trunks and foliage sank it."
+  },
+  "Xf": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder with readable eyes and a warm green/brown palette carries it at character finish, though the neutral dark stage shows nothing of the world's light."
+  },
+  "Om": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Idle-locked bodies, white puff clouds that bury the boar, and either a grass-carpet top-down view (A) or a low slope camera where foreground grass hides the player's creature (B) sank it."
+  },
+  "Cm": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's slope camera has some depth and a stronghold backdrop but loses the boar in grass, and B is a flat grass-carpet close-up with smoke puffs, so neither reaches Palworld's clear, lit combat staging."
+  },
+  "Nq": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry, low-detail ground textures, flat overcast light, sparse props on open dirt and a placeholder-looking tunnel wall sank it; there is no Valheim-class atmosphere."
+  },
+  "Vp": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's furred boar approaches the naturalistic bar but stays no taller than the trainer and floats in faint mid, while A's glossy terracotta clay body with stuck-on leaf moss reads as a toy."
+  },
+  "Th": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Idle-locked creatures, a 'stagger' that only shows up as a text label, and (A) a wooden totem and fence blocking half the frame for eight frames sank it."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Reframe the combat camera: pull back and up, keep both fighters and the trainer in a clear band, fade or collide-avoid props, trunks and foreground grass, and show sky and horizon so there is foreground, midground and distance. Covers Zj/Om/Cm/Th occlusion, Wq camera-in-foliage, and the flat grass-carpet look.",
+   "kind": "scene"
+  },
+  {
+   "change": "Author real hit-react, stagger and locomotion lean animations (additive flinch or recoil on hit, body lean when moving) for the boar and the moss-shell badger, so hurt reads without the label, and replace the cotton-ball dust puffs with grounded debris and impact effects.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Stormwood fight grade and UI: purple storm sky, white-violet lightning and rim light on the creatures, a cut-down HUD that stays off the action, and stone, lightning or impact-object telegraphs in place of the flat magenta rings. In Meadows, swap the smeary ground textures for authored grass and dirt variation.",
+   "kind": "scene"
+  }
+ ]
+}

@@ -1,0 +1,38 @@
+[
+    {
+        "label":  "G5 south_bridge_grunt f1-16 Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\G5\\sides\\G5-south_bridge_grunt-1-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\G5\\sides\\G5-south_bridge_grunt-1-ship-Medium.png",
+        "brief":  "A real Meadows trainer fight seen through the production camera with ordinary attack and dodge inputs: 16 consecutive frames 0.15 s apart (read left to right, top to bottom). Judge whether the creatures read as alive in combat - when a creature is hit or moves, its body visibly reacts (flinch, recoil, stagger, lean) instead of holding its idle silhouette - and whether the fight reads clearly on screen.",
+        "defects":  [
+                        "P2-016: hurt and moving frames keep the idle silhouette"
+                    ]
+    },
+    {
+        "label":  "G5 south_bridge_grunt f17-32 Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\G5\\sides\\G5-south_bridge_grunt-17-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\G5\\sides\\G5-south_bridge_grunt-17-ship-Medium.png",
+        "brief":  "A real Meadows trainer fight seen through the production camera with ordinary attack and dodge inputs: 16 consecutive frames 0.15 s apart (read left to right, top to bottom). Judge whether the creatures read as alive in combat - when a creature is hit or moves, its body visibly reacts (flinch, recoil, stagger, lean) instead of holding its idle silhouette - and whether the fight reads clearly on screen.",
+        "defects":  [
+                        "P2-016: hurt and moving frames keep the idle silhouette"
+                    ]
+    },
+    {
+        "label":  "G5 warden_aldis f1-16 Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\G5\\sides\\G5-warden_aldis-1-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\G5\\sides\\G5-warden_aldis-1-ship-Medium.png",
+        "brief":  "A real Meadows trainer fight seen through the production camera with ordinary attack and dodge inputs: 16 consecutive frames 0.15 s apart (read left to right, top to bottom). Judge whether the creatures read as alive in combat - when a creature is hit or moves, its body visibly reacts (flinch, recoil, stagger, lean) instead of holding its idle silhouette - and whether the fight reads clearly on screen.",
+        "defects":  [
+                        "P2-016: hurt and moving frames keep the idle silhouette"
+                    ]
+    },
+    {
+        "label":  "G5 warden_aldis f17-32 Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\G5\\sides\\G5-warden_aldis-17-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\G5\\sides\\G5-warden_aldis-17-ship-Medium.png",
+        "brief":  "A real Meadows trainer fight seen through the production camera with ordinary attack and dodge inputs: 16 consecutive frames 0.15 s apart (read left to right, top to bottom). Judge whether the creatures read as alive in combat - when a creature is hit or moves, its body visibly reacts (flinch, recoil, stagger, lean) instead of holding its idle silhouette - and whether the fight reads clearly on screen.",
+        "defects":  [
+                        "P2-016: hurt and moving frames keep the idle silhouette"
+                    ]
+    }
+]

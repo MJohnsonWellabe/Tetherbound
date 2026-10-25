@@ -1,0 +1,140 @@
+{
+ "sets": {
+  "Tg": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm saturated grass and a big readable armoured badger help, but flat white cotton-ball puff trails, a carpet of uniform grass, no sky or atmospheric depth, and (B f01-f03) a camera buried in the fence sink it."
+  },
+  "Nz": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager with readable eyes, white hair silhouette and an earthy green/brown outfit that sits at the finish of a shipping creature-collector's human NPCs, though his rounded cartoon face is softer than the naturalistic creatures."
+  },
+  "Ly": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, diagonal brace, shingled cap and stone footing finally read as built, but the flat untextured beige infill, a lone free-standing panel, a low-poly grey boulder and a painted-card mountain backdrop keep it well below Palworld base-building finish."
+  },
+  "Dj": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Close tight framing on a uniform dark-green grass carpet with no horizon, white puff blobs over the boar (f02-f04) and fence posts filling the lens (A f13, B f12-f13) read as a prototype, not a finished field fight."
+  },
+  "Gj": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's wider f26-f31 hillside, stream and arena give some place, but the white bead-chain VFX (A f21-f23, B f22-f24) hides the boar entirely and B f25-f32 has a wooden post and red banner blocking the right third of the frame."
+  },
+  "Ul": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's side-on hillside with stream, trees and arena reads as a place and the badger rears in f29-f32, but the 'Mudsnout stagger' label (B f24-f25) over an unchanged boar pose, ring-shaped white puff spirals (A f17, A f25-f27) and no sky or light shafts keep it short."
+  },
+  "Vg": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A bulky armoured boar that clears the 1.80 m ruler with grounded faint poses, but its plates and fur collapse into one dark mid-to-low value (B) or red-brown glow seams that hide the tusks (A), and both go near-black and burnt at faint end, short of the style bar's rim-lit fur."
+  },
+  "Cw": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's deep blue-grey panel with large wrapped recipe text and white Craft/Leave hints is readable at both resolutions, but the hints use tiny keyboard glyphs with no teal accent, and B's truncated 'have 0), 3 St...' lines and grey 'Craft: A / Enter' footnote are unreadable on a small screen."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Author additive hit-flinch, recoil and stagger poses for the badger and boar and drive them on every impact (Tg/Dj/Gj/Ul show impact bursts and a 'stagger' label over an unchanged idle body)",
+   "kind": "new_art"
+  },
+  {
+   "change": "Replace the flat white cotton-ball puff and bead-chain trails with small dust, stone and spark impacts, and add camera collision and fade so arena posts and banners never fill the lens; frame fights wider so some sky and distance show",
+   "kind": "scene"
+  },
+  {
+   "change": "Give the homestead wall infill a textured wattle/daub or plank material in a mid value and keep the A-side craft panel's text scale at 720p with controller-glyph hints in teal",
+   "kind": "scene"
+  }
+ ]
+}

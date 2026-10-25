@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Zj": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Strong creature silhouettes, but the fight plays on a flat, sky-less grass carpet under one dull mid-tone grade with cotton-ball dust puffs and no Valheim-class light or atmosphere."
+  },
+  "Wq": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky brown-black frames with no purple storm sky, flat magenta telegraph rings, a barely visible player creature and debug-style HUD panels covering much of every frame sink it."
+  },
+  "Xf": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing, readable villager, but its rounder cartoon finish leans away from the key art's stylised realism and it is shown only on a black void with no world light."
+  },
+  "Om": {
+   "A": {
+    "bar_a": 4.7,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A frames the creatures clearly but on a flat grass carpet; side B's low camera buries the fight behind foreground grass, so neither has the clarity or atmosphere of the Palworld shots."
+  },
+  "Cm": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Readable creatures, but low occluded framing (A) or a carved prop clipping into frame (B), on a flat grass carpet with no sky or light shafts, keep it below Palworld finish."
+  },
+  "Nq": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Sky, distance and readable props help, but smeared low-resolution ground textures and a flat midday grade keep it short of Palworld density and Valheim light; B also leaves enemy banners standing after the win."
+  },
+  "Vp": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's furred boar gets near the naturalistic bar but its lumpy gold back patches and trainer-height scale fall short; A's smooth clay-toy surface with moss decals looks like a placeholder."
+  },
+  "Th": {
+   "A": {
+    "bar_a": 3.7,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A wooden banner post blocks the fight in most of A's frames and both sides cut to a low grass-level camera at the end, all under a flat grade with no sky or atmosphere."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Make the production fight camera keep both creatures and the trainer in frame at mid height: never drop it behind foreground grass or slopes (Om B, Cm A, Th f30-32), push props and banner posts out of the near plane (Th A f18-f28, Zj B f12-f13, Cm B f10-f16), and pull Stormwood fight cameras out of trunks and canopy (Wq B i12-i15).",
+   "kind": "scene"
+  },
+  {
+   "change": "Give the badger and boar real hit-react, stagger and lean animations (body compression, head snap, recoil step) for every hit and dodge, so hurt and moving frames stop holding the idle silhouette.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Re-light and re-dress the fight grounds: break the uniform grass carpet with paths, rocks, clearings and wildflower patches; widen the value range with warm sun, rim light and some sky or cool distance in frame; replace the cotton-ball dust puffs and flat magenta telegraph rings with grounded dust, stone and lightning impacts; and trim Wq's debug HUD panels.",
+   "kind": "scene"
+  }
+ ]
+}

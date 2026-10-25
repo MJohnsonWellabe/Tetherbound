@@ -1,0 +1,140 @@
+{
+ "sets": {
+  "Tg": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm, dense meadow grass and a well-built badger carry it, but opaque white cotton-puff effects, a training post blocking the camera and a near-invisible trainer sink it below Palworld's combat read and Valheim-class atmosphere."
+  },
+  "Nz": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager: readable face and eyes, earthy green and brown palette that fits the Meadows. The finish is close to shipping, though he leans more toward a Western cartoon than the key art's figures."
+  },
+  "Ly": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, cap and stone footing finally read as built, but one lone panel next to a flat low-poly grey boulder, with lollipop trees and a painted mountain backdrop, is well short of Palworld base-building density and finish."
+  },
+  "Dj": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The two creatures read clearly against rich grass, but they barely move when hit, and with white blob effects, no sky or depth and the camera clipping into props (B f12-f13) it does not read as the same finish as Palworld."
+  },
+  "Gj": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A fence post and banner fill much of A f17-f24 and a target dummy blocks the right of B f25-f32; together with smoke that buries the enemy, the fight stops being readable."
+  },
+  "Ul": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A frames the duel cleanly on warm grass, but hits produce no flinch (A f28 hit '23' looks the same as f29) and there is no atmosphere or sky grade, so it falls short of Palworld's punchy combat."
+  },
+  "Vg": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A naturalistic, furred, plated boar near the owner's style bar; A's ember cracks give it identity and contrast. Both faint-end frames collapse to a near-black blob, and hit react looks the same as standing."
+  },
+  "Cw": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's large, wrapped recipe text and clear Craft/Leave hints read at a glance, but the plain panel over a murky, near-black rainy scene and B's tiny clipped text and grey hints keep it below Palworld's UI finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Author real hit-flinch/recoil and locomotion lean/stagger animation layers for the badger and boar, so hurt and moving frames break the idle silhouette.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Swap the opaque white cotton-puff combat effects for smaller, translucent dust and earth debris with a clear impact flash. Add combat-camera collision and pull the camera back, so training posts and dummies never fill the frame and the trainer stays visible.",
+   "kind": "scene"
+  },
+  {
+   "change": "Give the homestead wall textured plank or wattle infill and replace the flat low-poly grey boulder and lollipop trees around it with the key art's oak and rock family. Keep Cw side A's text scale and add controller-glyph prompts.",
+   "kind": "scene"
+  }
+ ]
+}

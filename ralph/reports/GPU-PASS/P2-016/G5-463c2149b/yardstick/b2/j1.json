@@ -1,0 +1,140 @@
+{
+ "sets": {
+  "Tg": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated badger and boar are well made, but the fight is a stiff idle pose sliding over a flat dark-green grass carpet, with white blob dust trails and fence posts hiding the action and no sky, shafts or atmosphere in most frames."
+  },
+  "Nz": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The appealing, clearly drawn elder villager carries it as a character, but he is shown only on a void with no world or light to match against, and he reads more animated-film cartoon than the naturalistic world."
+  },
+  "Ly": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, brace, plank cap and stone footing help, but a lone flat beige panel beside a faceted grey low-poly rock under a flat painted mountain backdrop is nowhere near Palworld's base-building finish."
+  },
+  "Dj": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Good creature models sink under a tight camera on a uniform dark grass field, frames where the camera sits behind fence and dummy geometry, and hits that land with no visible body reaction."
+  },
+  "Gj": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's sunlit wide frames (f26-f31) show real depth, but white blob dust swarms hide the target and a wooden post fills the right third of B (f25-f32), and the bodies never react to hits."
+  },
+  "Ul": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's warm hillside, fence line and tree edge give some sense of place, but the 'Mudsnout stagger' label appears while the boar keeps its idle stance, and A is a flat green carpet with dust-ring clutter."
+  },
+  "Vg": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A heavy, grounded armoured boar in the naturalistic style, but its very dark low-value material has no rim light, the faint end turns into a black smeared mass, and in A red ember glow fills the plate seams."
+  },
+  "Cw": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The deep blue-grey translucent panel with pale border fits the direction, but there is no teal interaction or gold progression accent, and B's tiny, truncated grey text would not read on a 7-inch screen."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give creatures real additive hit-flinch, recoil and stagger poses and locomotion lean, layered over idle, so hits and dodges visibly change the body silhouette (and the 'stagger' label matches a visible stagger)",
+   "kind": "new_art"
+  },
+  {
+   "change": "Re-frame and re-light the trainer-fight camera: pull back to the sunlit wide view with sky and distance, keep fence posts and dummies out of the lens, break the grass into clumps, flowers and bare patches, and add rim light so creatures separate from the ground",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the white blob dust and puff trails with grounded dirt and debris impact effects, and lift creature material values (rim light, lighter plate and fur highlights, no black faint mass)",
+   "kind": "scene"
+  }
+ ]
+}

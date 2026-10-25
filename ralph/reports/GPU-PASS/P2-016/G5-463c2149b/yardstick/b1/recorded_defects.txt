@@ -1,0 +1,8 @@
+Zj: "P2-016: hurt and moving frames keep the idle silhouette"
+Wq: none
+Xf: none
+Om: "P2-016: hurt and moving frames keep the idle silhouette"
+Cm: "P2-016: hurt and moving frames keep the idle silhouette"
+Nq: none
+Vp: none
+Th: "P2-016: hurt and moving frames keep the idle silhouette"
