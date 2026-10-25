@@ -317,6 +317,13 @@ func _build_distance_presentation() -> void:
 	# cliff texture, shorter runnels and tighter bedding so the steep faces stop
 	# reading as one stretched smear. Material only; OFF until judged.
 	rock_rules = preload("res://scripts/world/tidewake_look_profile.gd").overlay(rock_rules, "veilfall_rock_detail_candidate")
+	# fc2 (close-1024): with the terraced crown ON, flat tier tops on the face
+	# tint as mossy ledges so the terraces read as cliff tiers, not sand stripes.
+	var crown_specs: Variant = preload("res://scripts/world/tidewake_look_profile.gd").settings().get("veilfall_mountain_candidate", [])
+	if crown_specs is Array and not (crown_specs as Array).is_empty() and (crown_specs as Array)[0] is Dictionary:
+		var ledges: Dictionary = ((crown_specs as Array)[0] as Dictionary).get("rock_ledges", {})
+		rock_rules = rock_rules.duplicate()
+		rock_rules.merge(ledges, true)
 	material_receipt = ROCK_MATERIAL.install(world.get("terrain"), rock_rules)
 	var falls := FALLS.new()
 	falls.name = "VeilfallWhiteFalls"

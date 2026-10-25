@@ -30,6 +30,7 @@ func _load() -> Dictionary:
 ## far islands to one grey. Scales only Tidewake's rain mist; the shared preset
 ## and every other realm are untouched.
 func set_weather(delta: Dictionary) -> void:
+	_apply_rain_veil(bool(delta.get("rain", false)))
 	var candidate: Dictionary = TIDEWAKE_PROFILE.settings().get("rain_fog_candidate", {})
 	# close-1024 `rain_grade_candidate` (OFF in play): sun/sky/environment keys
 	# merged over the rain preset so Tidewake rain reads as overcast weather.
@@ -46,3 +47,20 @@ func set_weather(delta: Dictionary) -> void:
 		if grade.has(section):
 			tuned[section] = TIDEWAKE_PROFILE.merge(tuned.get(section, {}), grade[section])
 	super.set_weather(tuned)
+
+
+var _rain_veil: GPUParticles3D = null
+
+
+## close-1024 `rain_veil_candidate` (OFF in play): a far rain layer on the
+## active camera so rain reads from the Veilfall vista, not only beside the
+## player. Built on first rain; hidden whenever the preset is dry.
+func _apply_rain_veil(raining: bool) -> void:
+	var cfg: Dictionary = TIDEWAKE_PROFILE.settings().get("rain_veil_candidate", {})
+	if cfg.is_empty() or not is_inside_tree():
+		return
+	if _rain_veil == null:
+		_rain_veil = preload("res://scripts/world/tidewake_rain_veil.gd").new()
+		_rain_veil.call("configure", cfg)
+		add_child(_rain_veil)
+	_rain_veil.call("set_raining", raining)
