@@ -285,12 +285,6 @@ func _island_layer(source: Dictionary, layer_name: String, island_id: String, pr
 	var island_overrides: Dictionary = _rules.get("island_layer_overrides", {}).get(island_id, {})
 	if island_overrides.has(layer_name):
 		layer.merge((island_overrides[layer_name] as Dictionary).duplicate(true), true)
-	# close-1024 `dune_groundcover_candidate` (OFF in play): fewer, denser beach
-	# grass clusters, so groves read with open sand between them.
-	if DUNE_COVER.applies_to_island(island_id, _dune_settings):
-		var clumps: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get(
-			"dune_groundcover_candidate", {}).get(layer_name, {})
-		layer.merge(clumps.duplicate(true), true)
 	layer["max_slope_deg"] = float((layer.get("profile_max_slope_deg", {}) as Dictionary).get(
 		profile, layer.get("max_slope_deg", 30.0)))
 	return layer
