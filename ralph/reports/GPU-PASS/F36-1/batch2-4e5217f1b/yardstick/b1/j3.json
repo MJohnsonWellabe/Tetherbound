@@ -1,0 +1,146 @@
+{
+ "sets": {
+  "Pi": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean naturalistic coyote with real fur that sits on the owner style bar, but it is an unaccented real-world animal only slightly taller than the ruler, with no Tetherbound identity, and the grey stage gives no light or atmosphere to carry it."
+  },
+  "Gq": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's grey wolf with blue storm veins is close to the Tanglevolt board and the style bar; B's flat black coat with yellow bands is off-board and loses fur form, and neither side has the rim light that would put it at Palworld finish."
+  },
+  "As": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The amber frills and leopard scales read well, but the body stands low beside the ruler, the material changes between poses (A faint end goes dark, B faint mid and faint end go pale and untextured), and that sinks the finish."
+  },
+  "Zk": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A believable naturalistic boar with grounded faint poses, but it is a generic real animal no taller than the trainer, with a single mid-brown value and no rim light or Tetherbound accent."
+  },
+  "Jz": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's amber frills and the swimming frame help, but the creature stands low, the faint end turns dark, and A's red frills and untextured pale faint body sink it."
+  },
+  "Xd": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "An appealing cyan water dragon with a cream sail that fits the water board, but the long low body barely clears the ruler, its tail passes through the trainer, and the flat stage light gives it no rim separation."
+  },
+  "Ph": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, well-modelled grandpa with a readable face and an earthy key-art palette sits at Palworld-like character finish, though his cartoon face is a step away from the naturalistic creatures."
+  },
+  "Ox": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's dark scales with gold veining track the Fulgocobra board, but the ruler is missing from most frames; B's saturated yellow-banded black skin is off-board and its faint poses float upright above a detached shadow."
+  },
+  "Wr": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky single-value brown forest with no purple storm sky or lightning, flat magenta rings for telegraphs, a tiny unreadable player creature and HUD panels covering a large part of every frame, with A's camera also dropping into foliage and trunks (i11, i13, i15)."
+  },
+  "Pw": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared low-resolution ground, flat noon light, tiled cliff walls and sparse props sink it next to Palworld; A's aftermaths (banner down, freed captive, smoke column) are at least particular to each site, while B leaves enemy banners up in its after frames."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Lock each creature's material and grounding across every state: no pale or untextured swap in faint frames (As B, Jz A), no colour shift at faint end, faint poses lying on the ground with contact shadows (Ox B floats), ruler placed clear of tails (Xd, Jz), and amber, never red, frills.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight: replace the flat magenta ground rings with real-object telegraphs (white-violet lightning, cracking ground, debris), keep the camera out of trunks and canopy, add the purple storm sky, rim light and value separation so the player's creature reads, and shrink the HUD so it stops covering the fight.",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows world finish: higher-resolution ground and cliff materials, warm sun with cool blue distance and grove/clearing dressing, and aftermaths that remove enemy banners and leave site-specific remains.",
+   "kind": "scene"
+  }
+ ]
+}

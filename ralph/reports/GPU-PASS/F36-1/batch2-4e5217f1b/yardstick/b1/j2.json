@@ -1,0 +1,146 @@
+{
+ "sets": {
+  "Pi": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A naturalistic, well-furred coyote that matches the owner style bar carries it; the flat grey stage has no Valheim-class light, but the model finish holds up."
+  },
+  "Gq": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's dark wolf with blue veins is on-board but low contrast with no rim light; B's crude gold leg bands and flare blur the creature's identity."
+  },
+  "As": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Gold frills and the leopard-spotted hide read well in A, but B's faint frames lose the material and turn to a pale untextured body, and the creature barely matches the trainer's height."
+  },
+  "Zk": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A solid naturalistic boar, but it is plain brown with none of the board's moss accents, stands about trainer height, and is lit flat."
+  },
+  "Jz": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's gold-frilled, spotted hide and its swimming frame carry it, but A's red-pink frills on a washed-out grey-pink body sink that side."
+  },
+  "Xd": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The teal newt with its cream crest matches the board's water palette, but it sits low next to the trainer and the stage gives it no rim or atmosphere."
+  },
+  "Ph": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "An appealing grandfather villager with expressive eyes and a natural olive and cream palette that fits the cozy Meadows; his face is more cartoon than the naturalistic creatures."
+  },
+  "Ox": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's dark scales with gold veins are close to the Fulgocobra board, but B's faint frames float the snake upright in mid-air above a detached shadow, in a saturated wasp-yellow off the board."
+  },
+  "Wr": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky brown frames with no purple storm sky or white-violet lightning, flat magenta telegraph rings, a heavy HUD and a near-invisible player creature sink it."
+  },
+  "Pw": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry low-res terrain and wall textures, sparse even vegetation and flat skies sink it; A's smoke columns and removed banners give some site-specific aftermath."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight readability: replace the flat magenta rings and triangles with real ground-crack and white-violet lightning tells and impacts, keep the camera out of trunks and canopy (A i11/i13/i15), add the purple storm sky and rim light on both fighters, and slim the HUD side panels so the player's creature reads.",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows aftermath sites: swap the blurry terrain and wall materials for sharper ones, group grass and trees into groves and edges, add a warm Valheim-style sky and fog grade, and make each after frame clearly site-specific (remove the red enemy banners, add smoke, freed creatures and toppled props).",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature stage pass: keep faint poses grounded (Ox B floats), stop the material loss in faint frames (As B turns white), keep frills gold rather than red (Jz A), drop Gq B's crude gold leg bands, and add a rim light so dark creatures separate from the backdrop.",
+   "kind": "scene"
+  }
+ ]
+}

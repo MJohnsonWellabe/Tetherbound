@@ -1,0 +1,74 @@
+[
+    {
+        "species":  "mudsnout",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "species":  "trailpup",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "species":  "cindercub",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "species":  "nightburrow",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "species":  "riverdrake",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "species":  "water_riverdrake",
+        "preset":  "Medium",
+        "cand":  5,
+        "ship":  4
+    },
+    {
+        "species":  "mirejaw",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "species":  "water_mirejaw",
+        "preset":  "Medium",
+        "cand":  5,
+        "ship":  4
+    },
+    {
+        "species":  "mosshock",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "species":  "riftfrill",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "species":  "paddlenewt",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "species":  "stormtrail",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4
+    }
+]

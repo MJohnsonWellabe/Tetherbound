@@ -1,0 +1,58 @@
+{
+ "Pi": {
+  "anchor": false,
+  "label": "B2 trailpup Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\b2\\sides\\trailpup-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\b2\\sides\\trailpup-ship-Medium.png"
+ },
+ "Gq": {
+  "anchor": false,
+  "label": "B2 stormtrail Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\b2\\sides\\stormtrail-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\b2\\sides\\stormtrail-ship-Medium.png"
+ },
+ "As": {
+  "anchor": false,
+  "label": "B2 mirejaw Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\b2\\sides\\mirejaw-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\b2\\sides\\mirejaw-ship-Medium.png"
+ },
+ "Zk": {
+  "anchor": false,
+  "label": "B2 mudsnout Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\b2\\sides\\mudsnout-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\b2\\sides\\mudsnout-ship-Medium.png"
+ },
+ "Jz": {
+  "anchor": false,
+  "label": "B2 water_mirejaw Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\b2\\sides\\water_mirejaw-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\b2\\sides\\water_mirejaw-cand-Medium.png"
+ },
+ "Xd": {
+  "anchor": false,
+  "label": "B2 paddlenewt Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\b2\\sides\\paddlenewt-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\b2\\sides\\paddlenewt-ship-Medium.png"
+ },
+ "Ph": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ox": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Wr": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Pw": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ }
+}

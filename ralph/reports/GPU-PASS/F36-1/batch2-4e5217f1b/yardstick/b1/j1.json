@@ -1,0 +1,146 @@
+{
+ "sets": {
+  "Pi": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Clean naturalistic fur and a readable coyote silhouette, but it reads as a stock wild animal with no creature identity accent, and its head sits barely level with the 1.80 m trainer."
+  },
+  "Gq": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Tanglevolt-like blue streaks are on-style, but the near-black body merges into the dark stage on both sides, and B's flat gold bands read as painted stripes rather than a material."
+  },
+  "As": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The leopard-spotted salamander with gold frills is appealing, but the material changes between frames (A faint end goes dark, B faint mid and end go untextured white) and the low body against the trainer sink it."
+  },
+  "Zk": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Good bristled fur and grounded faint poses, but it is a plain realistic boar at about the trainer's height, with no Tetherbound creature identity."
+  },
+  "Jz": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's gold-frilled spotted model and swimming role carry it partway, while A's red-pink frills and its pale grey material swap in the faint frames look unfinished."
+  },
+  "Xd": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The teal aquatic body with a pale fin crest is the closest creature in the batch to the colour board, but its low back stays under the trainer's height and the trainer clips its tail in the faint frames."
+  },
+  "Ph": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder with clear eyes and an earthy olive palette that fits the key art's village; the finish matches a shipping stylised game."
+  },
+  "Ox": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A hides the trainer in three of four frames under a noisy mottled skin, and B's clean yellow bands are undone by faint frames that rear into the air above a detached shadow."
+  },
+  "Wr": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown-green forest with no purple storm sky, flat magenta ring telegraphs, a near-invisible player creature and heavy HUD panels sinks it; A also puts the camera inside trunks and foliage."
+  },
+  "Pw": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's site-specific aftermaths (freed cage, smoking rubble, emblem stones) carry some story, but smeared low-resolution ground, a flat tiled fortress wall and thin flat light sit well below Palworld density and Valheim atmosphere, and B leaves the enemy banners standing."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight staging: keep the camera out of trunks and canopy with a collision-aware pull-back, lift exposure, add the purple storm sky and a rim light on both fighters, replace the flat magenta telegraph rings and slabs with real-object effects (lightning, stones), and shrink or fade the HUD panels during combat",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature material and pose consistency: stop the per-frame material swaps (As B and Jz A turn pale or untextured when fainting, As A darkens at faint end), ground Ox B's faint so it collapses instead of rearing into the air, and clear the trainer out of creature tails and bodies",
+   "kind": "scene"
+  },
+  {
+   "change": "Scale every creature to stand clearly taller than the 1.80 m trainer, and give the stock-animal models (Pi coyote, Zk boar, Gq wolf) authored identity accents in the owner style-bar manner (elemental markings, crest or plate detail) so they read as Tetherbound creatures rather than wildlife",
+   "kind": "new_art"
+  }
+ ]
+}

@@ -1,0 +1,224 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8852,
+  "least_squares_slope": 1.0837,
+  "method": "linear",
+  "slope": 1.0837,
+  "intercept": 0.446,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.627,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1B": {
+   "measured": 6.6,
+   "reference": 7.47,
+   "mapped": 7.598,
+   "residual": -0.128
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.6,
+   "reference": 7.53,
+   "mapped": 7.598,
+   "residual": -0.068
+  },
+  "f36_0_gap:C6A": {
+   "measured": 6.4,
+   "reference": 6.47,
+   "mapped": 7.382,
+   "residual": -0.912
+  },
+  "f36_0_gap:C6B": {
+   "measured": 5.033,
+   "reference": 6.9,
+   "mapped": 5.9,
+   "residual": 1.0
+  },
+  "craft:before": {
+   "measured": 4.167,
+   "reference": 4.83,
+   "mapped": 4.961,
+   "residual": -0.131
+  },
+  "craft:after": {
+   "measured": 6.167,
+   "reference": 7.35,
+   "mapped": 7.129,
+   "residual": 0.221
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 5.067,
+   "reference": 6.73,
+   "mapped": 5.937,
+   "residual": 0.793
+  },
+  "p2_094_r4:X_before": {
+   "measured": 3.533,
+   "reference": 3.5,
+   "mapped": 4.275,
+   "residual": -0.775
+  }
+ },
+ "candidates": {
+  "B2 mosshock Medium cand|ship | mosshock-cand-Medium": {
+   "measured_mean": 4.033,
+   "mapped_mean": 4.82,
+   "mapped_judges": [
+    5.11,
+    4.24,
+    5.11
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 mosshock Medium cand|ship | mosshock-ship-Medium": {
+   "measured_mean": 4.467,
+   "mapped_mean": 5.29,
+   "mapped_judges": [
+    5.65,
+    4.78,
+    5.43
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 nightburrow Medium cand|ship | nightburrow-cand-Medium": {
+   "measured_mean": 5.6,
+   "mapped_mean": 6.51,
+   "mapped_judges": [
+    6.73,
+    6.41,
+    6.41
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 nightburrow Medium cand|ship | nightburrow-ship-Medium": {
+   "measured_mean": 5.6,
+   "mapped_mean": 6.51,
+   "mapped_judges": [
+    6.73,
+    6.41,
+    6.41
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 riftfrill Medium cand|ship | riftfrill-ship-Medium": {
+   "measured_mean": 4.667,
+   "mapped_mean": 5.5,
+   "mapped_judges": [
+    5.86,
+    4.78,
+    5.86
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 riftfrill Medium cand|ship | riftfrill-cand-Medium": {
+   "measured_mean": 5.467,
+   "mapped_mean": 6.37,
+   "mapped_judges": [
+    6.73,
+    5.86,
+    6.51
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 water_riverdrake Medium cand|ship | water_riverdrake-cand-Medium": {
+   "measured_mean": 6.2,
+   "mapped_mean": 7.16,
+   "mapped_judges": [
+    7.27,
+    6.95,
+    7.27
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 water_riverdrake Medium cand|ship | water_riverdrake-ship-Medium": {
+   "measured_mean": 5.3,
+   "mapped_mean": 6.19,
+   "mapped_judges": [
+    6.19,
+    5.86,
+    6.51
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 cindercub Medium cand|ship | cindercub-ship-Medium": {
+   "measured_mean": 6.333,
+   "mapped_mean": 7.31,
+   "mapped_judges": [
+    7.6,
+    7.06,
+    7.27
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 cindercub Medium cand|ship | cindercub-cand-Medium": {
+   "measured_mean": 6.267,
+   "mapped_mean": 7.24,
+   "mapped_judges": [
+    7.49,
+    6.95,
+    7.27
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 riverdrake Medium cand|ship | riverdrake-ship-Medium": {
+   "measured_mean": 5.3,
+   "mapped_mean": 6.19,
+   "mapped_judges": [
+    6.19,
+    5.86,
+    6.51
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 riverdrake Medium cand|ship | riverdrake-cand-Medium": {
+   "measured_mean": 6.167,
+   "mapped_mean": 7.13,
+   "mapped_judges": [
+    7.16,
+    6.95,
+    7.27
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

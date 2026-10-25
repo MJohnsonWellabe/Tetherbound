@@ -1,0 +1,106 @@
+{
+ "anchors": {
+  "f36_0_npc:C1B": [
+   6.3,
+   6.5,
+   7.0
+  ],
+  "f36_0_npc:C1A": [
+   6.3,
+   6.5,
+   7.0
+  ],
+  "f36_0_gap:C6A": [
+   6.3,
+   6.5,
+   6.4
+  ],
+  "f36_0_gap:C6B": [
+   4.5,
+   5.0,
+   5.6
+  ],
+  "craft:before": [
+   4.0,
+   4.0,
+   4.5
+  ],
+  "craft:after": [
+   6.0,
+   6.0,
+   6.5
+  ],
+  "p2_094_r4:Y_after": [
+   5.0,
+   5.0,
+   5.2
+  ],
+  "p2_094_r4:X_before": [
+   3.8,
+   3.0,
+   3.8
+  ]
+ },
+ "candidates": {
+  "B2 mosshock Medium cand|ship | mosshock-cand-Medium": [
+   4.3,
+   3.5,
+   4.3
+  ],
+  "B2 mosshock Medium cand|ship | mosshock-ship-Medium": [
+   4.8,
+   4.0,
+   4.6
+  ],
+  "B2 nightburrow Medium cand|ship | nightburrow-cand-Medium": [
+   5.8,
+   5.5,
+   5.5
+  ],
+  "B2 nightburrow Medium cand|ship | nightburrow-ship-Medium": [
+   5.8,
+   5.5,
+   5.5
+  ],
+  "B2 riftfrill Medium cand|ship | riftfrill-ship-Medium": [
+   5.0,
+   4.0,
+   5.0
+  ],
+  "B2 riftfrill Medium cand|ship | riftfrill-cand-Medium": [
+   5.8,
+   5.0,
+   5.6
+  ],
+  "B2 water_riverdrake Medium cand|ship | water_riverdrake-cand-Medium": [
+   6.3,
+   6.0,
+   6.3
+  ],
+  "B2 water_riverdrake Medium cand|ship | water_riverdrake-ship-Medium": [
+   5.3,
+   5.0,
+   5.6
+  ],
+  "B2 cindercub Medium cand|ship | cindercub-ship-Medium": [
+   6.6,
+   6.1,
+   6.3
+  ],
+  "B2 cindercub Medium cand|ship | cindercub-cand-Medium": [
+   6.5,
+   6.0,
+   6.3
+  ],
+  "B2 riverdrake Medium cand|ship | riverdrake-ship-Medium": [
+   5.3,
+   5.0,
+   5.6
+  ],
+  "B2 riverdrake Medium cand|ship | riverdrake-cand-Medium": [
+   6.2,
+   6.0,
+   6.3
+  ]
+ }
+}

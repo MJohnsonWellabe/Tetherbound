@@ -1,0 +1,10 @@
+Pi: none
+Gq: none
+As: "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)"
+Zk: none
+Jz: "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)"
+Xd: none
+Ph: none
+Ox: none
+Wr: none
+Pw: none

@@ -1,0 +1,404 @@
+{
+ "item": "creatures batch 2",
+ "candidate": "tb/creatures-land 4e5217f1b",
+ "control": "main f7b9b6a1e",
+ "preset_note": "Medium judged; High frames pixel-identical on the stage (mean abs diff <= 0.06/255)",
+ "species": {
+  "trailpup": {
+   "cand": {
+    "mapped": 7.34,
+    "judges": [
+     7.25,
+     7.52,
+     7.25
+    ],
+    "defects": [
+     {},
+     {},
+     {}
+    ]
+   },
+   "ship": {
+    "mapped": 7.43,
+    "judges": [
+     7.43,
+     7.43,
+     7.43
+    ],
+    "defects": [
+     {},
+     {},
+     {}
+    ]
+   }
+  },
+  "stormtrail": {
+   "cand": {
+    "mapped": 7.31,
+    "judges": [
+     6.98,
+     7.34,
+     7.61
+    ],
+    "defects": [
+     {},
+     {},
+     {}
+    ]
+   },
+   "ship": {
+    "mapped": 6.44,
+    "judges": [
+     6.8,
+     6.08,
+     6.44
+    ],
+    "defects": [
+     {},
+     {},
+     {}
+    ]
+   }
+  },
+  "mirejaw": {
+   "cand": {
+    "mapped": 6.92,
+    "judges": [
+     6.62,
+     7.16,
+     6.98
+    ],
+    "defects": [
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+     }
+    ]
+   },
+   "ship": {
+    "mapped": 5.96,
+    "judges": [
+     6.26,
+     5.54,
+     6.08
+    ],
+    "defects": [
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+     }
+    ]
+   }
+  },
+  "mudsnout": {
+   "cand": {
+    "mapped": 7.22,
+    "judges": [
+     7.34,
+     7.16,
+     7.16
+    ],
+    "defects": [
+     {},
+     {},
+     {}
+    ]
+   },
+   "ship": {
+    "mapped": 7.25,
+    "judges": [
+     7.43,
+     7.07,
+     7.25
+    ],
+    "defects": [
+     {},
+     {},
+     {}
+    ]
+   }
+  },
+  "water_mirejaw": {
+   "ship": {
+    "mapped": 5.66,
+    "judges": [
+     5.81,
+     5.36,
+     5.81
+    ],
+    "defects": [
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PRESENT"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PRESENT"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PRESENT"
+     }
+    ]
+   },
+   "cand": {
+    "mapped": 7.07,
+    "judges": [
+     6.8,
+     7.25,
+     7.16
+    ],
+    "defects": [
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+     }
+    ]
+   }
+  },
+  "paddlenewt": {
+   "cand": {
+    "mapped": 7.28,
+    "judges": [
+     7.16,
+     7.34,
+     7.34
+    ],
+    "defects": [
+     {},
+     {},
+     {}
+    ]
+   },
+   "ship": {
+    "mapped": 7.25,
+    "judges": [
+     7.16,
+     7.34,
+     7.25
+    ],
+    "defects": [
+     {},
+     {},
+     {}
+    ]
+   }
+  },
+  "mosshock": {
+   "cand": {
+    "mapped": 4.82,
+    "judges": [
+     5.11,
+     4.24,
+     5.11
+    ],
+    "defects": [
+     {
+      "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT"
+     },
+     {
+      "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT"
+     },
+     {
+      "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT"
+     }
+    ]
+   },
+   "ship": {
+    "mapped": 5.29,
+    "judges": [
+     5.65,
+     4.78,
+     5.43
+    ],
+    "defects": [
+     {
+      "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PARTIAL"
+     },
+     {
+      "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT"
+     },
+     {
+      "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT"
+     }
+    ]
+   }
+  },
+  "nightburrow": {
+   "cand": {
+    "mapped": 6.51,
+    "judges": [
+     6.73,
+     6.41,
+     6.41
+    ],
+    "defects": [
+     {},
+     {},
+     {}
+    ]
+   },
+   "ship": {
+    "mapped": 6.51,
+    "judges": [
+     6.73,
+     6.41,
+     6.41
+    ],
+    "defects": [
+     {},
+     {},
+     {}
+    ]
+   }
+  },
+  "riftfrill": {
+   "ship": {
+    "mapped": 5.5,
+    "judges": [
+     5.86,
+     4.78,
+     5.86
+    ],
+    "defects": [
+     {},
+     {},
+     {}
+    ]
+   },
+   "cand": {
+    "mapped": 6.37,
+    "judges": [
+     6.73,
+     5.86,
+     6.51
+    ],
+    "defects": [
+     {},
+     {},
+     {}
+    ]
+   }
+  },
+  "water_riverdrake": {
+   "cand": {
+    "mapped": 7.16,
+    "judges": [
+     7.27,
+     6.95,
+     7.27
+    ],
+    "defects": [
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+     }
+    ]
+   },
+   "ship": {
+    "mapped": 6.19,
+    "judges": [
+     6.19,
+     5.86,
+     6.51
+    ],
+    "defects": [
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PRESENT"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PARTIAL"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PRESENT"
+     }
+    ]
+   }
+  },
+  "cindercub": {
+   "ship": {
+    "mapped": 7.31,
+    "judges": [
+     7.6,
+     7.06,
+     7.27
+    ],
+    "defects": [
+     {},
+     {},
+     {}
+    ]
+   },
+   "cand": {
+    "mapped": 7.24,
+    "judges": [
+     7.49,
+     6.95,
+     7.27
+    ],
+    "defects": [
+     {},
+     {},
+     {}
+    ]
+   }
+  },
+  "riverdrake": {
+   "ship": {
+    "mapped": 6.19,
+    "judges": [
+     6.19,
+     5.86,
+     6.51
+    ],
+    "defects": [
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PRESENT"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PARTIAL"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PRESENT"
+     }
+    ]
+   },
+   "cand": {
+    "mapped": 7.13,
+    "judges": [
+     7.16,
+     6.95,
+     7.27
+    ],
+    "defects": [
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+     },
+     {
+      "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+     }
+    ]
+   }
+  }
+ }
+}

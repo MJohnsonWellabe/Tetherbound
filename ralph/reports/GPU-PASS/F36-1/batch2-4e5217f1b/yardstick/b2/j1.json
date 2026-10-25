@@ -1,0 +1,160 @@
+{
+ "sets": {
+  "Eg": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blotch camouflage dissolves the silhouette and face in both sides (worst on A's dark olive/orange), and B's creature shrinks to roughly trainer height, so it reads as a placeholder rather than a Palworld-class creature."
+  },
+  "Ln": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Bulky bear mass and scale carry it, but the dark spotted back plates break the silhouette into noise and there is no rim light to lift it off the stage."
+  },
+  "Zi": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder with readable eyes and a palette that fits the meadow world; the rounder, more cartoon face sits a little apart from the naturalistic creature style."
+  },
+  "Cb": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's teal body, pale belly and violet fin read far better than A's near-black glossy purple, but both stand barely trainer-high and the face is lost at small size."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fleece-and-horn Stormcapra model matches the owner bar, but B's faint mid and faint end float the creature in mid-air above its own shadow, and A's faint end jams the head into the floor."
+  },
+  "Rp": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Spotted blue serpent-dragon has a strong silhouette and A's pale crest is on-palette, but B keeps red frills, drops the ridden frame and its faint end coils upright like a sitting statue."
+  },
+  "Zk": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger wrapped recipe text and ingredient rows are readable on the blue-grey translucent panel, but the Craft/Leave actions are body-weight text with tiny generic glyphs and no teal emphasis, and the world behind is murky."
+  },
+  "Vv": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A naturalistic shaggy wolf at Tanglevolt-bar finish, clearly taller than the trainer with readable hit and faint poses; only the dark-on-dark value and missing rim light hold it back."
+  },
+  "Hd": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, diagonal brace, plank cap and stone footing read as built, but it is still a lone thin panel; B is a blown-out white board with no cap or footing, and the flat grey rock and sparse grass sit well below Palworld density."
+  },
+  "Nj": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same blue dragon: B's pale crest and grounded flat faint carry it, while A keeps red frills and an upright coiled faint end, and neither side shows its travel role."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Repaint creature materials to the creature colour board: remove camouflage blotching (Eg, Ln back plates) and red frills (Rp B, Nj A), lift dark bodies (Cb A, Vv) with a value step and rim light so face and eyes read at 30%.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix scale and grounding: scale every creature above the 1.80 m trainer (Eg B, Cb), keep faint poses on the floor (Uv B floating, Uv A head through floor) and replace the upright coiled faint end used by Rp B / Nj A with the flat collapse.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build a real homestead wall piece: thick log or wattle body with textured mid-value infill, a plank cap and a distinct stone footing that tiles into runs, instead of a single thin panel.",
+   "kind": "new_art"
+  }
+ ]
+}

@@ -1,0 +1,224 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8811,
+  "least_squares_slope": 0.9002,
+  "method": "linear",
+  "slope": 0.9002,
+  "intercept": 1.9354,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.513,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1B": {
+   "measured": 6.467,
+   "reference": 7.47,
+   "mapped": 7.757,
+   "residual": -0.287
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.433,
+   "reference": 7.53,
+   "mapped": 7.727,
+   "residual": -0.197
+  },
+  "f36_0_gap:C5B": {
+   "measured": 5.467,
+   "reference": 6.93,
+   "mapped": 6.856,
+   "residual": 0.074
+  },
+  "f36_0_gap:C5A": {
+   "measured": 4.1,
+   "reference": 5.7,
+   "mapped": 5.626,
+   "residual": 0.074
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.433,
+   "reference": 4.0,
+   "mapped": 5.026,
+   "residual": -1.026
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.133,
+   "reference": 6.53,
+   "mapped": 5.656,
+   "residual": 0.874
+  },
+  "f04_6_r22:r22": {
+   "measured": 4.933,
+   "reference": 6.75,
+   "mapped": 6.376,
+   "residual": 0.374
+  },
+  "f04_6_r22:control": {
+   "measured": 4.2,
+   "reference": 5.83,
+   "mapped": 5.716,
+   "residual": 0.114
+  }
+ },
+ "candidates": {
+  "B2 trailpup Medium cand|ship | trailpup-cand-Medium": {
+   "measured_mean": 6.0,
+   "mapped_mean": 7.34,
+   "mapped_judges": [
+    7.25,
+    7.52,
+    7.25
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 trailpup Medium cand|ship | trailpup-ship-Medium": {
+   "measured_mean": 6.1,
+   "mapped_mean": 7.43,
+   "mapped_judges": [
+    7.43,
+    7.43,
+    7.43
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 stormtrail Medium cand|ship | stormtrail-cand-Medium": {
+   "measured_mean": 5.967,
+   "mapped_mean": 7.31,
+   "mapped_judges": [
+    6.98,
+    7.34,
+    7.61
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 stormtrail Medium cand|ship | stormtrail-ship-Medium": {
+   "measured_mean": 5.0,
+   "mapped_mean": 6.44,
+   "mapped_judges": [
+    6.8,
+    6.08,
+    6.44
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 mirejaw Medium cand|ship | mirejaw-cand-Medium": {
+   "measured_mean": 5.533,
+   "mapped_mean": 6.92,
+   "mapped_judges": [
+    6.62,
+    7.16,
+    6.98
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 mirejaw Medium cand|ship | mirejaw-ship-Medium": {
+   "measured_mean": 4.467,
+   "mapped_mean": 5.96,
+   "mapped_judges": [
+    6.26,
+    5.54,
+    6.08
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 mudsnout Medium cand|ship | mudsnout-cand-Medium": {
+   "measured_mean": 5.867,
+   "mapped_mean": 7.22,
+   "mapped_judges": [
+    7.34,
+    7.16,
+    7.16
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 mudsnout Medium cand|ship | mudsnout-ship-Medium": {
+   "measured_mean": 5.9,
+   "mapped_mean": 7.25,
+   "mapped_judges": [
+    7.43,
+    7.07,
+    7.25
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 water_mirejaw Medium cand|ship | water_mirejaw-ship-Medium": {
+   "measured_mean": 4.133,
+   "mapped_mean": 5.66,
+   "mapped_judges": [
+    5.81,
+    5.36,
+    5.81
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 water_mirejaw Medium cand|ship | water_mirejaw-cand-Medium": {
+   "measured_mean": 5.7,
+   "mapped_mean": 7.07,
+   "mapped_judges": [
+    6.8,
+    7.25,
+    7.16
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 paddlenewt Medium cand|ship | paddlenewt-cand-Medium": {
+   "measured_mean": 5.933,
+   "mapped_mean": 7.28,
+   "mapped_judges": [
+    7.16,
+    7.34,
+    7.34
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "B2 paddlenewt Medium cand|ship | paddlenewt-ship-Medium": {
+   "measured_mean": 5.9,
+   "mapped_mean": 7.25,
+   "mapped_judges": [
+    7.16,
+    7.34,
+    7.25
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

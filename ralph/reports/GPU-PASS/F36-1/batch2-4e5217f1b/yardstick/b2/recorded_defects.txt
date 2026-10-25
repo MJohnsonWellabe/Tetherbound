@@ -1,0 +1,10 @@
+Eg: "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face"
+Ln: none
+Zi: none
+Cb: none
+Uv: none
+Rp: "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)"
+Zk: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Vv: none
+Hd: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Nj: "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)"

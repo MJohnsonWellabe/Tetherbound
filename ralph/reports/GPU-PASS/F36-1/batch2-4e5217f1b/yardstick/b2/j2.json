@@ -1,0 +1,160 @@
+{
+ "sets": {
+  "Eg": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Neither side would pass next to Palworld creatures: A is a near-black blob with orange-yellow blotches that loses its face, and B is a glossy lime-and-black toy that stands no taller than the trainer."
+  },
+  "Ln": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bulk and the brown fur are close to the owner bar, but the busy yellow-on-black spotted back plate and the dark face with no rim light sink it at small size."
+  },
+  "Zi": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The appealing, warm elder with a green-and-brown outfit fits the Meadows palette, but the soft toy-like shading and the flat studio grade fall short of a shipped finish."
+  },
+  "Cb": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A low, knee-high newt below the trainer's height, read as a dark purple slug in A and a clearer teal body with a purple fin in B, does not carry the presence of a Palworld creature."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Stormcapra's horns and fleece carry close to the owner bar on A, but B's faint frames flip the ram onto its back and float it above its shadow, and the neutral stage gives no Valheim-class light."
+  },
+  "Rp": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spotted blue dragon has a readable, appealing silhouette, but the red-tipped frills on B, B's upright sitting faint end and A's ridden frame with no visible rider keep it below a shipped finish."
+  },
+  "Zk": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's panel is legible and on-direction, but it sits over a murky, flat night scene with no light structure, and the Craft and Leave prompts lack teal emphasis and controller glyphs."
+  },
+  "Vv": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The naturalistic wolf is large and grounded and close to the Tanglevolt bar, but its dark brown fur has no rim light or accent and merges into the dark stage, so the face is lost at small size."
+  },
+  "Hd": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, diagonal brace, cap board and stone footing start to read as built, but both sides stand as a single isolated panel beside a flat grey boulder in a flat-lit field, and B is a blown-out white card."
+  },
+  "Nj": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The silhouette is clean and appealing, but A's red-edged frills and its faint end, which curls the creature upright into a seated pose, and the absence of any world light leave it short of Palworld finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Creature material and value pass: replace Eg's camouflage blotches with one bold readable body colour plus accents and a clear face and eyes; lift Cb A's near-black purple and Vv's dark brown with lighter undersides and rim highlights; recolour the Rp/Nj frill tips to a friendly coral or gold instead of red.",
+   "kind": "scene"
+  },
+  {
+   "change": "Scale and pose fixes: scale Eg and Cb so they stand taller than the 1.80 m trainer; keep faint poses grounded and lying down (Uv B floating on its back, the upright seated faint end on Rp B and Nj A); show the rider in the ridden frame.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the homestead wall as a thick timber-frame section with depth, toned wattle or plank infill, a cap beam and a distinct stone footing, placed in runs rather than as a lone card; in the craft UI, give the Craft and Leave prompts teal controller glyphs.",
+   "kind": "new_art"
+  }
+ ]
+}

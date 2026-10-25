@@ -1,0 +1,56 @@
+[
+    {
+        "label":  "B2 mudsnout Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\b2\\sides\\mudsnout-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\b2\\sides\\mudsnout-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "B2 trailpup Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\b2\\sides\\trailpup-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\b2\\sides\\trailpup-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "B2 mirejaw Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\b2\\sides\\mirejaw-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\b2\\sides\\mirejaw-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)"
+                    ]
+    },
+    {
+        "label":  "B2 water_mirejaw Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\b2\\sides\\water_mirejaw-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\b2\\sides\\water_mirejaw-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)"
+                    ]
+    },
+    {
+        "label":  "B2 paddlenewt Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\b2\\sides\\paddlenewt-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\b2\\sides\\paddlenewt-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "B2 stormtrail Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\b2\\sides\\stormtrail-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\b2\\sides\\stormtrail-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    }
+]
