@@ -54,6 +54,9 @@ const TAIL := """
         float sz_green = smoothstep(0.03, 0.12, (ALBEDO.g - max(ALBEDO.r, ALBEDO.b)) / max(ALBEDO.g, 0.02));
         if (sz_green > 0.0) {
             vec2 sz_xz = v_vertex.xz;
+            // Out toward the horizon the zones mottled the distance band
+            // (r21 preview); they fade between 180 and 300 m from the camera.
+            sz_green *= 1.0 - smoothstep(180.0, 300.0, length(v_vertex.xz - _camera_pos.xz));
             float sz_n = sz_field(sz_xz);
             float sz_bare_w = (1.0 - smoothstep(sz_bare.x, sz_bare.y, sz_n)) * sz_green * sz_strength;
             float sz_moss_w = smoothstep(sz_moss.x, sz_moss.y, sz_n) * sz_green * sz_strength;
@@ -63,12 +66,14 @@ const TAIL := """
             ALBEDO = mix(ALBEDO, sz_moss_rgb, sz_moss_w * 0.85);
             ALBEDO = mix(ALBEDO, sz_soil, sz_bare_w);
             ROUGHNESS = mix(ROUGHNESS, 0.92, sz_bare_w);
-            // Black pools in the lowest part of the loam: dark, wet, glossy.
+            // Black pools in the lowest part of the loam: dark and wet.
             if (sz_pool.y > sz_pool.x) {
                 float sz_pool_w = (1.0 - smoothstep(sz_pool.x, sz_pool.y, sz_n)) * sz_green * sz_strength;
                 ALBEDO = mix(ALBEDO, sz_pool_colour.rgb, sz_pool_w);
-                ROUGHNESS = mix(ROUGHNESS, 0.08, sz_pool_w);
-                SPECULAR = mix(SPECULAR, 0.7, sz_pool_w);
+                // Satin, not mirror: a glossy pool reflected the pale sky as
+                // a silver puddle (r21 preview).
+                ROUGHNESS = mix(ROUGHNESS, 0.38, sz_pool_w);
+                SPECULAR = mix(SPECULAR, 0.25, sz_pool_w);
             }
         }
     }

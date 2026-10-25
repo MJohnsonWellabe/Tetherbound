@@ -439,13 +439,16 @@ void fragment() {
 		macrov = mix(macro_variation1, vec3(1.0), n1) * mix(macro_variation2, vec3(1.0), n2);
 		macrov = mix(vec3(1.0), macrov, macro_strength);
 	}
-	if (zone_strength > 0.001) {
+	// Fades out toward the horizon, where the darkening mottled the
+	// distance band (r21 preview).
+	float zone_w = zone_strength * (1.0 - smoothstep(150.0, 260.0, v_dist));
+	if (zone_w > 0.001) {
 		float zone_n = value_noise(v_world_xz * zone_scale) * 0.7
 			+ value_noise(v_world_xz * zone_scale * 2.7 + vec2(17.3, 5.1)) * 0.3;
 		// Darken over loam rather than open: an opened far sheet showed the
 		// fogged terrain as a pink strip on the horizon (r20 judges x3).
-		tint *= 1.0 - 0.45 * (1.0 - smoothstep(zone_bare.x, zone_bare.y, zone_n)) * zone_strength;
-		tint = mix(tint, tint * zone_moss_tint, smoothstep(zone_moss.x, zone_moss.y, zone_n) * zone_strength);
+		tint *= 1.0 - 0.45 * (1.0 - smoothstep(zone_bare.x, zone_bare.y, zone_n)) * zone_w;
+		tint = mix(tint, tint * zone_moss_tint, smoothstep(zone_moss.x, zone_moss.y, zone_n) * zone_w);
 	}
 	ALBEDO = tint * mix(vec3(1.0), v_ground_colour, ground_blend) * value * macrov;
 	ALPHA = strength * v_ramp * drift;
