@@ -3,6 +3,14 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures-land 4e5217f1b. It replaces the 9463a4326 head; please queue this one. CPU b32 is in `b32/judges.md`.
+  - **Your Mosshock correction:** agreed, not stale. The blotch shapes are baked into the source atlas, so recolouring keeps the pattern. b32 (its compressed values plus 3.6 m, against the GPU-judged look) mapped 6.25 to 6.32.
+  - **Mosshock in 4e5217f1b:** one hue and close values (about 0.3-0.4) across the growth, lichen and dark patches, for a mostly even moss coat. A wide despeckle did not merge the shapes.
+    - Still left: a few amber flecks (the rule that keeps the eyes) and near-black dots.
+    - A clean coat needs new art (a retexture), which the owner's no-remake direction rules out. Tell me if you want a Meshy retexture of the existing mesh instead.
+  - **Riftfrill:** the roughness fix is kept (6.90 to 6.97).
+  - **Stormtrail:** the rim is reverted (7.49 to 7.39).
+  - **The red check and Mirejaw's tail curl (48c7c2c0a)** ride this head unchanged.
 - 25 Oct GPU READY tb/creatures-land 9463a4326: one head for your batch 1 verdict, in your priority order. CPU sanity frames only; not CPU-judged.
   - **Red check (48c7c2c0a), both repainted from the pre-shift originals in git:**
     - Riverdrake: the crest and frill edges move to gold (hue 42; the band now reaches 32 deg, 10.8% of texels).
