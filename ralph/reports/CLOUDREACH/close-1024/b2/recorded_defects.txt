@@ -1,0 +1,12 @@
+Fk: "Dark mossy cube blocks float beside the bannered arch"; "Disconnected dark rail-like strips lie across the grass"
+Vj: none
+Om: "The landmark reads as a lone wooden arch with weak landmark-specific detail"; "Broad level grass leads the frame instead of layered elevated land"
+Vz: "Every view is boxed in by trunk-like columns, hiding the observatory"; "Tilted plank props and flat blue strips lie on the grass"
+Np: "The approach camera sits on a blank untextured wall"
+Bo: "Broad level grass leads the frame; the cloud sea and floating land sit only far away"; "Distance has little aerial haze between the land masses"
+Gq: none
+Ie: "No aerie is in view: the frames show an empty slope with trees"
+Iw: "Broad level grass leads the frame; the cloud sea and floating land sit only far away"; "Distance has little aerial haze between the land masses"
+Dp: "Flat saturated blue rings and spokes lie on the landing court like painted plastic bands"; "A large world-space character caption overlaps the right third of some frames"
+Ni: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Wf: none
