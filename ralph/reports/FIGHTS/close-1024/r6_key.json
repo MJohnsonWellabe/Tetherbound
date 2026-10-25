@@ -1,0 +1,47 @@
+{
+ "Pn": {
+  "anchor": false,
+  "label": "r6 venn",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/venn_pre.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/venn_r6.png"
+ },
+ "Tz": {
+  "anchor": false,
+  "label": "r6 stormwood",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/stormwood_r6.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/stormwood_pre.png"
+ },
+ "Jq": {
+  "anchor": true,
+  "A": "f36_0_gap:C6B",
+  "B": "f36_0_gap:C6A"
+ },
+ "Kw": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Qy": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "En": {
+  "anchor": false,
+  "label": "r6 warden",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/warden_r6.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/warden_pre.png"
+ },
+ "Oy": {
+  "anchor": false,
+  "label": "r6 riverwatch",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/riverwatch_pre.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/riverwatch_r6.png"
+ },
+ "Fg": {
+  "anchor": false,
+  "label": "r6 veyra",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/veyra_r6.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/veyra_pre.png"
+ }
+}

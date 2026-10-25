@@ -1,0 +1,29 @@
+{
+ "Ee": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Nl": {
+  "anchor": false,
+  "label": "r7 warden",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r7/warden_r7.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r7/warden_pre.png"
+ },
+ "Po": {
+  "anchor": true,
+  "A": "f36_0_gap:C6B",
+  "B": "f36_0_gap:C6A"
+ },
+ "Mv": {
+  "anchor": false,
+  "label": "r7 grunt",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r7/grunt_pre.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r7/grunt_r7.png"
+ },
+ "Xa": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ }
+}

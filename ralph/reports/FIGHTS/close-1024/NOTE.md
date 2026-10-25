@@ -1,6 +1,67 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-25 05:20 CT READY tb/fights-land 3e028626f (origin/main 1c64efc1a + tb/fights; clean merge, no file overlap with main's changes): **your four r6 asks and the three GPU G3 items, ON, plus the pilot ghost fix.**
+  - **Pilot ghost fix** (ef4591a18; code, always on):
+    - P2-062's follower fade (`follow_candidate`, ON since 22 Oct) dithered the follower at 0.85 while it covered the trainer from the camera. The follower *is* the fight's pilot, and the trainer stands behind it, so the pilot was a ghost for whole fights. That was the "Ripplet translucent" ask; in the Warden hall the pilot was effectively invisible.
+    - The cover test now runs only while following, as P2-062's `_why` scopes it. New case in test_follower_leader_view_fade.
+    - Found by tracing the dither in a probe capture: amount 0.85 is creature_body CAMERA_FADE_AMOUNT, not the fight's own 0.6 occlusion fade.
+  - **ON in config** (each key has `_why_fight_presentation_1025b` and a `_scope_*` note; client-local presentation only):
+    1. Dust fills the danger footprint (`dust_fill_rows` 2). The rows are revealed edge-inward as the tell builds (`dust_fill_reveal` 0.8), and the dust breathes faster toward the strike (`dust_pulse` 0.45, 1.5 -> 4.5 Hz). Rows sit inside the real hit shape (never in a ring's safe hole) and take their heights from edge points already sampled, so there are no new ground queries.
+    2. Right panels at 0.8: hud.json `panel_scale`. The move cluster keeps its bottom-right corner fixed and the enemy card its top-right corner.
+    3. HUD height jump: real. The compact lane is laid out from the screen bottom, so the returning grid pushed the title and meter up. `compact_rows_fixed` puts the grid above them, so the meter row holds still.
+    4. Pilot size floor 0.10 in every fight (camera.json `fight.pilot_min_screen_fraction`). It used to apply only in Stormwood sight-line fights, so the Riverwatch per-trainer 0.10 had been inert.
+    5. G3 item 1, stagger label: "STAGGERED — punish now" was already the **enemy's** (combat_hud `_on_staggered(on_enemy=true)`), so the GPU judges read it correctly. With `stagger_by_owner` each line names its creature ("Mudsnout staggered — punish now"; "Terrapup staggered — recovering"), and the player's own sits beside the player's panel, not under the enemy plate. The body hold is Creatures'.
+    6. G3 item 2, effects off the target: `impact.flash_drop` 1.0 puts the contact flash at the struck creature's feet, where `ground_burst` already kicks dust and stones. Radii 0.55/0.75 -> 0.42/0.55.
+    7. G3 item 3, stable low lens: pitch -15 and the fallback limit already shipped in the generic batch. I tried a slower orbit and softer lag (`orbit_speed_deg_s` 70, `lag` 2.5) in r7, and the judges still saw cuts on both sides, so it stays OFF (config unchanged). The cuts come from the solver re-picking orbit candidates around fences and gates; the next step is hysteresis on that choice, not smoothing.
+  - **Scores** (code-blind, CPU llvmpipe, 3 fresh judges per batch, mapped; both batches confirming):
+
+    | fight | before (shipped look) | after |
+    |---|---|---|
+    | Venn (r6) | 5.92 | **6.56** |
+    | Warden hall (r6) | 6.19 | **6.81** |
+    | Riverwatch (r6) | 6.43 | **7.05** |
+    | Stormwood glass_field (r6) | 6.27 | **6.38** |
+    | Veyra (r6) | 6.46 | **6.54** |
+    | Warden, open grass, f38 attack/dodge run (r7) | 5.93 | **6.32** |
+    | grunt, f38 attack/dodge run (r7) | 6.08 | **5.93** |
+
+    - Fits: r6 slope 0.81, r 0.78, RMSE 0.74. r7 slope 1.46, r 0.91, RMSE 0.56. Every fight is above your 5.2 floor.
+    - Judges, 3/3: the player's creature PRESENT -> FIXED (Venn, Riverwatch); the Warden hall PRESENT -> FIXED or PARTIAL.
+    - The grunt -0.15 is inside the batch noise. Its camera cuts and dust over the subjects are on both sides.
+    - The r6/r7 frames were captured with the fill rows ground-sampled; this land interpolates the same heights (test fix). On these grounds that is visually the same; noting it.
+  - **Judges' remaining asks:**
+    1. The wind-up "where" is still PARTIAL or PRESENT everywhere: the tells read as text plus dust.
+    2. A round target reticle over the struck creature (the target marker, not the impact flash) reads as a flat disc.
+    3. Camera cuts in trainer fights at fences.
+    4. Flat ground carpets (scene); Stormwood exposure and camera in canopy (biome lanes).
+  - **GPU capture commands:** as in my 01:25 READY. The G3 set: `tools/capture_f38_fight.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=32 --interval=0.15 --attack --dodge --tell-frames --preset=<p> --source-commit=<40-char sha> --out=<fresh dir>`.
+  - **Checks** on tb/fights (same code and config as the land): 267 tests, 11335 assertions, 0 failed. Suites: the 01:25 set plus follower_leader_view_fade, combat_hud_handheld_floors, hud_presentation_lifecycle, hud_widgets, combat_wind, trainer_fight_no_catch_prompt, band_content. Full CI not run.
+  - **Still running:** the water C2/C3 smoke and the Terrapup Stormwood and Riverwatch reruns. They were paused while captures ran, one Godot at a time, so they are later than planned; F22#4 INFO when they finish.
+  - **Balance:** game 3 (pilot ghost fix, the r6/r7 ON config, the fill-row seating) / tests-tools 1 (follower fade case).
+- 2026-10-25 04:15 CT INFO r6 (your four asks), code-blind CPU batch, 3 fresh judges, mapped (confirming, slope 0.81, r 0.78, RMSE 0.74; files r6_*):
+  - Shipped generic look before -> r6 after: Venn 5.92 -> **6.56**, Warden 6.19 -> **6.81**, Riverwatch 6.43 -> **7.05**, Stormwood 6.27 -> 6.38, Veyra 6.46 -> 6.54. Every fight holds or improves and all are above the 5.2 floor.
+  - **The big gain is a bug fix, ef4591a18.** P2-062's follower fade (`camera.occlusion_fade.follow_candidate`, ON since 22 Oct) dithers the follower body at 0.85 while it covers the trainer from the camera. In a fight the follower *is* the piloted creature and the trainer stands behind it, so the pilot was a ghost for whole fights. This is the "Ripplet translucent" ask; in the Warden hall the pilot was effectively invisible. The cover test now runs only while following, as its `_why` scopes it, with a new unit test.
+    - Judges, 3/3: the player's creature PRESENT -> FIXED at Venn and Riverwatch; at Warden PRESENT -> FIXED or PARTIAL.
+  - The rest of r6 (all OFF until this READY):
+    1. Dust fill rows plus a timing pulse inside the danger footprint.
+    2. Right panels at 0.8.
+    3. A fixed meter row in the compact lane: the HUD height jump was real, since the returning grid pushed the title and meter up.
+    4. A pilot size floor of 0.10 in every fight. It used to apply only in Stormwood sight-line fights, so the Riverwatch per-trainer 0.10 had been inert.
+    - Judges still mark the wind-up "where" PARTIAL or PRESENT everywhere.
+  - I turn r6 ON with the r7 READY (your G3 items), which is capturing now on the trainer fights (south_bridge_grunt, warden_aldis, capture_f38_fight.gd). The r7 overlay builds on r6, so r6 stays an overlay until then.
+- 2026-10-25 02:25 CT INFO smoke_net_shared_boss vs the fights batch (read from the code; I have not run it):
+  - **No new colliders or host positions.** `impact.ground_burst` (enemy_pattern_telegraph.gd contact_burst) adds only a Node3D with MeshInstance3D quads and an OmniLight3D. pilot_mark.all_fights enables combat_arena `_process`, which only moves the pilot light and sets the rim. `sight_fade_active()` still requires a real sight fade, so `_fight_world_sight_targets()` (camera caps, the pilot floor) is unchanged outside Stormwood. `fallback_max_steps` only chooses among fight-camera poses. `compact_when_idle` is UI.
+  - **The one input-relevant change is `camera.tracking.composition_yaw_deg` 35 -> 50** (and pitch_start -25 -> -15). The occlusion_fade comment in combat.json says the tracker's composition "moves the camera basis that camera-relative movement reads". Any client or pilot steering by stick input instead of exact placement now maps about 15 deg differently, and the fight lens sits higher. If the smoke's guest creature moves by input after `place_creature` (settle, a pilot approach, hold_inside), that is the prime suspect.
+  - Quick bisect: rerun it with combat.json `"composition_yaw_deg": 35.0` and `"pitch_start_deg": -25.0` and the rest of the batch unchanged. If it passes, the fix belongs in the smoke's staging (re-read positions or retry the move after the settle), or I revert composition_yaw for the generic batch (it was part of the judged look). Your call; I can push either.
+- 2026-10-25 02:00 CT INFO cherry-picked your 590973c77 (band_split_baseline mirror of the Brooktail power edit) into tb/fights as d6d41836e. My miss: future band balance edits mirror the baseline fixture in the same commit. r6 (your four asks) is capturing now.
+- 2026-10-25 02:05 CT READY tb/fights-land 282901fd5 (origin/main f7b9b6a1e + tb/fights 4c330f4d6): your review follow-up on dcb3463d4. Comments, scopes and one accessibility path; what the GPU judges is unchanged with the defaults.
+  1. Scopes: `_scope_outline_off`, `_scope_ground_burst` (combat.json), `_scope_compact_when_idle` (tether_commands.json), `_scope_all_fights` and `_scope_ring_enabled` (foliage_camera_visibility.json pilot_mark), `_scope_fallback_max_steps` (camera.json). Each reads: "Client-local presentation only: read by each peer's renderer/HUD; no host authority, save, transaction, network message or gameplay state. Absent = previous behaviour." Same sibling `_scope_<key>` convention as the F22#4 cue keys.
+  2. Stale notes now say ON since 25 Oct: `_why_outline_off`, `_why_compact_when_idle`, `_why_fallback_max_steps`, combat_arena.gd (pilot_mark.all_fights), tether_command_meter.gd, cloudreach_summit_presentation.gd.
+  3. The one gameplay number in this lane's landing: band3_the_river_lock/trainers.json captain_riverwatch Brooktail combat power 27.5 -> 27.0 (`_why_power_f22_4`). Oreth Flood measured C3 0.501 against the 0.5 ceiling for Terrapup and Galewisp. The Riverwatch 24-seed rerun on it is queued; the result goes in the F22#4 INFO.
+  4. Optional, done: with `telegraph.high_contrast_markers` true, Veyra's lanes take `high_contrast_lanes` (fill 0.21, rim 0.85, streaks 0): the filled, rimmed look judged on 24 Oct. Default OFF, so it has no effect on the judged look. Parse check only; there is no test of the ON path.
+  - Checks on tb/fights 4c330f4d6: 117 tests, 9055 assertions, 0 failed (combat_system_overlay_layout, f24_host_commands, cloudreach_summit_paving, combat_arena_bystanders/hold_inside, fight_camera, combat_vfx, combat_camera_clear_orbit, combat_spaced_camera, cloudreach_continuous_harness, cloudreach_director_client_veyra, stormwood_pilot_reach, telegraph_glow, enemy_pattern_telegraph). Godot check-only on cloudreach_summit_presentation.gd: clean.
+  - Process note: during the dcb3463d4 test run the paused process was the timeout wrapper, so the water C2 smoke ran alongside the tests for about ten minutes. Both finished. This run paused the Godot process itself.
 - 2026-10-25 01:25 CT READY tb/fights-land dcb3463d4 (origin/main f7b9b6a1e + tb/fights 53eccce4b, clean merge, no overlap with main's changes): **generic fight presentation ON** (owner 24 Oct: no outlined attack areas). One READY for the Veyra, Meadows grunt/Warden, F10#2 Stormwood, F22#4 Riverwatch and Venn fights.
   - What is ON (every key has `_why_fight_presentation_1025`; the overlay that was judged is `cand_gen_h.py.txt`):
     - combat.json telegraph.soft_style: `outline_off` true, so no painted ring, cone, lane or slab. The tell is kicked dust along the same footprint (alpha 0.9, spacing 0.45 m), a low light curtain and the attacker's element-coloured rim glow (`tell_aura_element`, 0.45). Accessibility: `telegraph.high_contrast_markers` brings the outlines back; default OFF.
