@@ -23,7 +23,13 @@ var _shadow_before: Dictionary = {}
 
 static func load_settings() -> Dictionary:
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
-	return raw if raw is Dictionary else {}
+	var loaded: Dictionary = raw if raw is Dictionary else {}
+	# close-1024 `swim_candidate` (Tidewake look, OFF in play): P2-072 ring keys.
+	var candidate: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get("swim_candidate", {})
+	if candidate.has("contact"):
+		loaded = loaded.duplicate()
+		loaded.merge(candidate.contact, true)
+	return loaded
 
 
 static func attach(model: Node3D, body: CharacterBody3D) -> Node3D:
