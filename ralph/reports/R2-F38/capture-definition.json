@@ -212,8 +212,8 @@
       ],
       "heading_deg": 90,
       "source": "F17 village/crossing_hall coordinates; strict stand support required",
-      "view_headings": {
       "_why_gameplay_heading": "F38 L1 close-1024: at heading 135 the hall_front gameplay camera settled inside a house eave (frame filled by the underside of the roof). A CPU probe of 0/45/90/180/225/270/315 (shots/f38_1024_hfprobe, unchanged preflight): only 45 and 270 pass, and 270 looks down the nave; 45 frames the Hall's stone front, banners and doorway with the trainer on the path.",
+      "view_headings": {
         "approach": 135,
         "gameplay": 45,
         "detail": 135
