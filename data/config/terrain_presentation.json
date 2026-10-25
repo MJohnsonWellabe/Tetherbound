@@ -47,5 +47,26 @@
     "macro_variation2": "#b6cfa4",
     "macro_variation1": "#e3ead6",
     "_parked": "PARKED close-1024: CPU capture near-identical to shipping at farm_to_hall, band2_stone_and_root_1 and band5_0 (approach and gameplay). With grass coverage (grass_field.json carpet_candidate, parked after r1 and r2) that is three attempts on the carpet with no visible change. The near-field read is the grass blades plus the baked terrain colour map, which these shader knobs do not reach. P2-005 needs authored ground variation in the bake (worn earth, clover and moss patches, rock outcrops, grove edges) or new ground-cover art. Left OFF; not for GPU."
+  },
+  "colour_candidate": {
+    "enabled": false,
+    "_scope": "F38 L4 / P2-005 close-1024 candidate (OFF until judged), coordinator-approved colour-bake pass: colour only. tools/bake_meadows_colour_candidate.gd reads each shipped region's colour and height maps and writes a varied colour map per region to `dir`; meadows_colour_candidate.gd swaps them in after load while enabled. No heightfield, control, collision, vegetation placement or bake-fingerprint change. Variation: clover patches (~14 m, cool green), moss/value breaks (~22 m), a worn-earth halo along existing soil (paths, aprons), and grey darkening at outcrop bases (slope from the region's own heightmap). Grove-edge darkening is NOT included: it would need vegetation masks. The grass blades sample the same colour maps (ground_blend), so they follow. `dir` sits behind a .gdignore, so an export would not carry it; convert before enabling for a build.",
+    "dir": "res://data/terrain/playground_colour_candidate",
+    "seed": 2205,
+    "vertex_spacing": 2.0,
+    "clover_scale_m": 14.0,
+    "clover_tint": "#c4dbb0",
+    "clover_strength": 0.55,
+    "moss_scale_m": 22.0,
+    "moss_tint": "#a9bd8e",
+    "moss_strength": 0.4,
+    "soil_reference": "#d1b37e",
+    "worn_tint": "#d8c49a",
+    "worn_strength": 0.45,
+    "worn_reach_px": 2,
+    "rock_tint": "#b3b1a6",
+    "rock_strength": 0.45,
+    "rock_start_deg": 18.0,
+    "rock_full_deg": 32.0
   }
 }

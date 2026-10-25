@@ -17,6 +17,7 @@ extends Node3D
 ## literal because from Wave 6 it is an authority answer -- the per-realm
 ## spawners and synchronizer visibility filters key on it.
 const REALM_ID := "meadows"
+const MEADOWS_COLOUR_CANDIDATE := preload("res://scripts/world/meadows_colour_candidate.gd")
 const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const LONG_WATER_VISUAL_CONFIG := "res://data/config/long_water_visual.json"
@@ -835,6 +836,8 @@ func _ready() -> void:
 	_terrain.set("data_directory", DATA_DIR)
 	await get_tree().process_frame
 	BOOT_LOG.phase("playground: terrain data_directory assigned")
+	# F38 L4 (OFF unless terrain_presentation.json colour_candidate.enabled).
+	MEADOWS_COLOUR_CANDIDATE.apply(_terrain)
 	await _shell_build.call("step", "terrain_data")
 
 	_apply_dynamic_collision()
