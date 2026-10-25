@@ -30,7 +30,9 @@
     "res://assets/environment/stylized_nature/Rock_Medium_3.gltf": "#eed8c4"
   },
   "_comment_rock_adjust": "MEADOWS-VISUAL-PASS round 5: the pack's Rocks_Diffuse averages RGB(78,88,64), a dark moss green, and a retint can only multiply it darker -- so the scatter boulders rendered as black, mint or brown blocks whatever colour they were given. Rocks_Diffuse_meadows.png is the same texture desaturated to 40% and lifted to a mean of about RGB(153,154,137) (derived offline from the installed pack file; same UVs and facets), and the per-model tints below separate the three rocks into warm, cool and sandstone greys. A runtime retexture_adjust was tried first and rendered flat white: the derived texture did not survive the scatter's mesh-asset round trip.",
+  "_comment_retexture_grass_1025": "Hard rule (oxblood/red is Team Tether's): GPU judges (tb/gpu-pass bf099dd2f, MH) saw red/oxblood grass tufts in the meadow foreground at the stronghold approach and Ironwood. Grass_Wheat samples only the third (orange-red) column of the shared Grass.png atlas, and the drygrass straw multiply turned it rust-red. derived/Grass_wheat_straw.png repaints only that column straw gold; every other grass model samples other columns, so they are unchanged. Kept here (render overlay) rather than vegetation.json, whose bytes are the scatter fingerprint.",
   "retexture": {
+    "Grass": "res://assets/environment/stylized_nature/derived/Grass_wheat_straw.png",
     "Rocks": "res://assets/environment/stylized_nature/Rocks_Diffuse_meadows.png"
   },
   "candidate": {
