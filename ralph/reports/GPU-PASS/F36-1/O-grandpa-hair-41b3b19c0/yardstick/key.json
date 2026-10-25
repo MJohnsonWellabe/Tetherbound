@@ -1,0 +1,34 @@
+{
+ "Yd": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "He": {
+  "anchor": true,
+  "A": "f36_0_npc:C5B",
+  "B": "f36_0_npc:C5A"
+ },
+ "Yz": {
+  "anchor": false,
+  "label": "Grandpa hair High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\gphair\\sides\\gphair-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\gphair\\sides\\gphair-ctl-High.png"
+ },
+ "Xb": {
+  "anchor": false,
+  "label": "Grandpa hair Medium cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\gphair\\sides\\gphair-ctl-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\gphair\\sides\\gphair-cand-Medium.png"
+ },
+ "Pz": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Zg": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ }
+}

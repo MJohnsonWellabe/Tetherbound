@@ -1,0 +1,104 @@
+{
+ "sets": {
+  "Yd": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's panel is clean and legible, but the dark rainy world behind it is murky and flat, and the Craft/Leave prompts are small white text with tiny glyphs rather than the bold, colour-keyed controller prompts a shipping game uses."
+  },
+  "He": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A low-resolution, soft-textured grunt whose eyes read as dark smudges and whose all-black outfit gives no silhouette or appeal at small size sinks it."
+  },
+  "Yz": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the hair and beard read as a smooth, soft-edged or blurry mass rather than crisp strands and locks": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the hair and beard read as a smooth, soft-edged or blurry mass rather than crisp strands and locks": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "An appealing, well-lit stylised villager with a palette that fits Meadows carries it, but the fuzzy, felt-like hair and beard and plain studio stage keep it short of shipping finish."
+  },
+  "Xb": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the hair and beard read as a smooth, soft-edged or blurry mass rather than crisp strands and locks": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the hair and beard read as a smooth, soft-edged or blurry mass rather than crisp strands and locks": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The face, eyes and outfit read clearly and fit the world, but the hair and beard are still a soft, blurry mass with only the outline broken into locks, below the finish of the owner's bar."
+  },
+  "Pz": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared ground textures, a flat sky with no atmosphere or light shafts, uniform low-poly tree walls and sparse props sink it next to Palworld's dense, saturated fields."
+  },
+  "Zg": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's bold banding reads well, but its faint poses float upright in mid-air and its material washes to pale yellow; B is grounded, but its noisy mottled surface muddies the silhouette, so neither reaches the owner's creature bar."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Lift the Meadows world in the Pz sites to the key art: replace the smeared ground textures with crisp grass/dirt materials and grass clumps, break the uniform tree walls into groves and edges, and add a warm sun grade with cool blue distance fog and a painted sky",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the character hair and beard as layered locks/hair cards with alpha-tested strand edges (Yz/Xb villager), and replace the low-res Team Tether grunt (He) with a higher-detail model with real eye whites and pupils and a broken-up silhouette",
+   "kind": "new_art"
+  },
+  {
+   "change": "Keep serpent hit and faint poses on the ground with a stable material (Zg A), drop the visible oxblood enemy banners from post-win frames (Pz B), and give craft-panel actions bold teal controller-glyph prompts",
+   "kind": "scene"
+  }
+ ]
+}

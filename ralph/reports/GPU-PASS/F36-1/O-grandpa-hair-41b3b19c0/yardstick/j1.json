@@ -1,0 +1,104 @@
+{
+ "sets": {
+  "Yd": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's panel is legible, but the flat grey-white hints with no teal interaction colour or clear controller glyphs, over a murky dark rain frame, sit well below Palworld's crisp, colour-coded HUD."
+  },
+  "He": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A low-detail grunt with blurry textures, smudged black eye sockets and helmet-like hair reads as a placeholder next to Palworld characters and to this game's own villager model."
+  },
+  "Yz": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the hair and beard read as a smooth, soft-edged or blurry mass rather than crisp strands and locks": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the hair and beard read as a smooth, soft-edged or blurry mass rather than crisp strands and locks": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The appealing, well-modelled elder with expressive eyes, a clear silhouette and a Meadows-green palette matches a shipping game's character finish; only the fuzzy beard holds it back."
+  },
+  "Xb": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the hair and beard read as a smooth, soft-edged or blurry mass rather than crisp strands and locks": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the hair and beard read as a smooth, soft-edged or blurry mass rather than crisp strands and locks": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The same strong elder character design and material finish carries it; the soft, felt-like beard mass is the visible gap."
+  },
+  "Pz": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry, smeared grass and ground textures, sparse uniform vegetation, a tiled-stone tunnel wall and flat noon light with no atmosphere sink it well below Palworld density and Valheim-class light."
+  },
+  "Zg": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's coiled, grounded snake is close, but its noisy camo-like mottling and the flat stage light lack the rim-lit, clean-scale finish of Palworld creatures; A's floating faint poses sink it outright."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Meadows world finish at the faction sites: sharper terrain and grass materials, grouped groves and edges instead of an even carpet, a warm-grass / cool-distance grade with atmospheric depth, and aftermaths that remove the oxblood banners and leave site-specific debris (A's direction) rather than erasing props",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the Team Tether grunt (He) with a model at the elder villager's quality: real eyes instead of smudged sockets, defined hair locks, textured uniform with the emblem crisp",
+   "kind": "new_art"
+  },
+  {
+   "change": "Keep B's craft-panel layout and give the action hints teal interaction styling with large controller face-button glyphs (A Craft, B Leave) on a higher-contrast deep blue-grey panel",
+   "kind": "scene"
+  }
+ ]
+}

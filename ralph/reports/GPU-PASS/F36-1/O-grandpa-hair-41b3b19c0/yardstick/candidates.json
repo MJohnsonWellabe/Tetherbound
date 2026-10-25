@@ -1,0 +1,20 @@
+[
+ {
+  "label": "Grandpa hair Medium cand|ctl",
+  "a": "D:\\tb-gpu-runs\\yard\\gphair\\sides\\gphair-cand-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\gphair\\sides\\gphair-ctl-Medium.png",
+  "brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+  "defects": [
+   "the hair and beard read as a smooth, soft-edged or blurry mass rather than crisp strands and locks"
+  ]
+ },
+ {
+  "label": "Grandpa hair High cand|ctl",
+  "a": "D:\\tb-gpu-runs\\yard\\gphair\\sides\\gphair-cand-High.png",
+  "b": "D:\\tb-gpu-runs\\yard\\gphair\\sides\\gphair-ctl-High.png",
+  "brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+  "defects": [
+   "the hair and beard read as a smooth, soft-edged or blurry mass rather than crisp strands and locks"
+  ]
+ }
+]

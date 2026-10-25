@@ -1,0 +1,6 @@
+Yd: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+He: none
+Yz: "the hair and beard read as a smooth, soft-edged or blurry mass rather than crisp strands and locks"
+Xb: "the hair and beard read as a smooth, soft-edged or blurry mass rather than crisp strands and locks"
+Pz: none
+Zg: none

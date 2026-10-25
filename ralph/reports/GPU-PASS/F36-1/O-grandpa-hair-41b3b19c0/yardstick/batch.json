@@ -1,0 +1,66 @@
+{
+ "anchors": {
+  "craft:before": [
+   3.4,
+   4.4,
+   4.0
+  ],
+  "craft:after": [
+   6.0,
+   6.3,
+   6.0
+  ],
+  "f36_0_npc:C5B": [
+   3.8,
+   3.8,
+   3.5
+  ],
+  "f36_0_npc:C5A": [
+   3.8,
+   3.9,
+   3.5
+  ],
+  "f04_6_r22:r22": [
+   5.0,
+   5.0,
+   4.8
+  ],
+  "f04_6_r22:control": [
+   4.2,
+   4.1,
+   3.8
+  ],
+  "f36_0_gap:C5A": [
+   3.8,
+   4.6,
+   5.0
+  ],
+  "f36_0_gap:C5B": [
+   6.2,
+   5.3,
+   5.8
+  ]
+ },
+ "candidates": {
+  "Grandpa hair High cand|ctl | gphair-cand-High": [
+   6.6,
+   6.3,
+   6.3
+  ],
+  "Grandpa hair High cand|ctl | gphair-ctl-High": [
+   6.6,
+   6.3,
+   6.1
+  ],
+  "Grandpa hair Medium cand|ctl | gphair-ctl-Medium": [
+   6.6,
+   6.3,
+   6.3
+  ],
+  "Grandpa hair Medium cand|ctl | gphair-cand-Medium": [
+   6.6,
+   6.3,
+   6.1
+  ]
+ }
+}
