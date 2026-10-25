@@ -1,0 +1,96 @@
+{
+ "anchors": {
+  "f36_0_npc:C1A": [
+   6.2,
+   6.8,
+   6.2
+  ],
+  "f36_0_npc:C1B": [
+   6.2,
+   6.8,
+   6.2
+  ],
+  "p2_094_r4:X_before": [
+   3.2,
+   3.2,
+   4.0
+  ],
+  "p2_094_r4:Y_after": [
+   4.8,
+   5.0,
+   5.6
+  ],
+  "f04_6_r22:control": [
+   4.0,
+   4.6,
+   4.8
+  ],
+  "f04_6_r22:r22": [
+   4.6,
+   5.8,
+   5.8
+  ],
+  "f36_0_gap:C2B": [
+   4.8,
+   5.2,
+   5.0
+  ],
+  "f36_0_gap:C2A": [
+   5.8,
+   6.6,
+   6.0
+  ]
+ },
+ "candidates": {
+  "S cam_aerie Medium cand|ship | S-cam_aerie-ship-Medium": [
+   3.0,
+   3.6,
+   3.8
+  ],
+  "S cam_aerie Medium cand|ship | S-cam_aerie-cand-Medium": [
+   3.8,
+   4.4,
+   4.6
+  ],
+  "S settle_day Medium cand|ship | S-settle-day-ctl-Medium": [
+   4.6,
+   5.6,
+   5.6
+  ],
+  "S settle_day Medium cand|ship | S-settle-day-cand-Medium": [
+   5.0,
+   6.1,
+   6.2
+  ],
+  "S gate_shell Medium cand|ship | S-gate_shell-cand-Medium": [
+   3.8,
+   5.0,
+   5.0
+  ],
+  "S gate_shell Medium cand|ship | S-gate_shell-ship-Medium": [
+   3.4,
+   4.6,
+   4.6
+  ],
+  "S perches_shell Medium cand|ship | S-perches_shell-cand-Medium": [
+   4.0,
+   4.8,
+   4.6
+  ],
+  "S perches_shell Medium cand|ship | S-perches_shell-ship-Medium": [
+   4.4,
+   5.3,
+   5.2
+  ],
+  "S aerie_perch Medium cand|ship | S-aerie_perch-cand-Medium": [
+   3.8,
+   4.8,
+   4.8
+  ],
+  "S aerie_perch Medium cand|ship | S-aerie_perch-ship-Medium": [
+   3.8,
+   4.4,
+   4.6
+  ]
+ }
+}

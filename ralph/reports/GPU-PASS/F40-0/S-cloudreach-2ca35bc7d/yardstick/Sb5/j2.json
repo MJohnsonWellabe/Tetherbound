@@ -1,0 +1,158 @@
+{
+ "sets": {
+  "Ff": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "No observatory reads in any frame - A is walled in by dark trunks with flat blue ground streaks and teal pedestals, B opens to cliffs but the plateau is a plain green disc with flat yellow paddles, so neither has Palworld's density or Valheim's sky light."
+  },
+  "Xf": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bell tower, chapel and campfire give a real landmark and warm night light, but the smeared orange dirt, the blobby pale foreground rock covering a third of each gameplay frame and the flat grey-green distance (plus B's approach camera stuck inside a wall) keep it below that finish."
+  },
+  "Ky": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder with readable eyes, a strong white-hair silhouette and an earthy green/brown palette that fits the Meadows key art; the full-body view is small and slightly stiff, and the two sides are effectively identical."
+  },
+  "Zo": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F40#5: flat blue rings on the paving where a stone compass should read": "FIXED",
+     "P2-025: tall grass intrudes through paving": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.9,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F40#5: flat blue rings on the paving where a stone compass should read": "PRESENT",
+     "P2-025: tall grass intrudes through paving": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's cobbled compass disc under a bright cloud sky with pillars and floating purple sky-fish is a fair start, but B's flat saturated blue ring slabs and stray white 'le' glyph at the left edge sink it, and both sides are a sparse open disc with no layered floating land."
+  },
+  "Hq": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths are distinct per site (opened cage with a freed villager, smoke plume, torn-down banners and scattered crates), whereas A leaves the oxblood banners up in rows 3 and 5; both sit on blurry low-res ground, crude wall textures and a flat midday grade far from Palworld finish."
+  },
+  "Tt": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's spotted gold fur boar is the closer match to the owner's naturalistic bar, but it hovers above its shadow in faint mid and only matches the trainer's height; B looks like a smooth clay toy with pasted moss and a faint end that rolls into an unreadable head-up pose."
+  },
+  "Lr": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's white cloud banks, street lamps, rocks and shrubs give real foreground and some warm pools of light, but it is still largely moon-blue with no villagers, and A's flat purple-blue cloud blobs and empty ground read as unfinished."
+  },
+  "Vu": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fight is a small dark spider in murky brown woods with flat magenta outline telegraphs, a player creature that barely reads and a dense HUD; A also has frames i13 and i15 lost to canopy, and there is no purple storm sky or white-violet lightning anywhere."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace flat-colour stand-ins (Zo blue rings, Ff blue ground streaks and teal pedestals, Vu magenta outline telegraphs, Lr purple cloud blobs) with textured stone inlays and real ground-impact effects (cracked earth, sparks, lightning).",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-author the fixed cameras and the chapter grade: pull back from trunks, walls and foreground rocks (Ff A, Xf B approach, Vu A i13/i15) so the landmark and layered floating islands read, add a bright Cloudreach sky and warm night light pools, and give Stormwood its purple storm sky with rim light on the fighters.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build hero landmark meshes for the Cloudreach destinations (the Old Wind Observatory and High Perches structures, in pale stratified stone and the board's dome and tower language) and bring creatures like the Tt boar up to the owner's fur-detail bar at a scale above the 1.80 m trainer.",
+   "kind": "new_art"
+  }
+ ]
+}

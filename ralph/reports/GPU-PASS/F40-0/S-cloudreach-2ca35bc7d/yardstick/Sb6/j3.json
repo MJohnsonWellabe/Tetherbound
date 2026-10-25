@@ -1,0 +1,154 @@
+{
+ "sets": {
+  "Ce": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A flat grassy disc with a flat blue ring decal, a pale unmodelled sky and no visible layered islands or atmospheric depth sinks it next to Palworld's dense, lit landmarks."
+  },
+  "Wk": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky brown-black forest with no purple storm sky, flat magenta outline telegraphs and a HUD covering much of the frame, plus canopy blocking the camera in A, sink it against Palworld's bright, readable boss fight."
+  },
+  "Bu": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clearly readable, appealing elder villager with expressive eyes, a strong white-hair silhouette and a natural green/brown palette carries it, held back only by a stiff full-body pose."
+  },
+  "Tz": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Pale stone spires and fog give real Cloudreach distance, but the bell bridge is a small far-off shape under the quest panel, the foreground is a uniform grass carpet with a blurred dirt patch, and the light is flat."
+  },
+  "Js": {
+   "A": {
+    "bar_a": 3.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.7,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Approach cameras are jammed against a boulder that hides the trainer, and close cameras are a third filled by a wall with the heartstone cropped at the top edge, so no landmark or sky realm reads."
+  },
+  "Rk": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's furry naturalistic boar has the right material language but is no taller than the trainer and floats off its shadow in faint mid; B's glossy terracotta piggy-bank surface is off the owner's naturalistic bar."
+  },
+  "Mv": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's aftermaths are site-specific (felled banners, open cage, smoking extinguished camp), but low-resolution smeared ground textures, flat stone walls and sparse props keep it short of Palworld's finish."
+  },
+  "Gd": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber aerie scaffolds give it a landmark, but it stands on a bare grass dome in front of a flat grey tower with no layered islands, cloud sea or directional light, so it reads as a sparse blockout."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Reframe and dress every Cloudreach production camera (Ce, Tz, Js, Gd): pull cameras off the boulders and walls, put the named landmark at mid-frame clear of the quest panel, and show layered pale stratified islands over a cloud sea with warm directional sun, height fog and light shafts instead of the flat grass disc and blank sky.",
+   "kind": "scene"
+  },
+  {
+   "change": "Make the Stormwood fight readable: keep the camera out of the canopy, add the purple storm sky and rim light so both fighters separate from the brown ground, replace the flat magenta outline telegraphs with real lightning, stone or ground-crack effects with an impact, and shrink the HUD that covers the left and bottom of the frame.",
+   "kind": "scene"
+  },
+  {
+   "change": "Bring creatures and Cloudreach landmarks up to the owner's bar: rebuild the Rk boar taller than the 1.80 m trainer with naturalistic fur and grounded faint poses (not B's glossy clay), and build hero aerie and shrine meshes in stone, glass and gold to replace the plain grey towers and cylinders.",
+   "kind": "new_art"
+  }
+ ]
+}

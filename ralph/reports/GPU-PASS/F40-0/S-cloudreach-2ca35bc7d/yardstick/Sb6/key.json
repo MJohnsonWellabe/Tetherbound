@@ -1,0 +1,46 @@
+{
+ "Ce": {
+  "anchor": false,
+  "label": "S perches_shell High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-perches_shell-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-perches_shell-cand-High.png"
+ },
+ "Wk": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Bu": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Tz": {
+  "anchor": false,
+  "label": "S cam_bells Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_bells-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_bells-ship-Medium.png"
+ },
+ "Js": {
+  "anchor": false,
+  "label": "S heart_tool High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-heart_tool-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-heart_tool-cand-High.png"
+ },
+ "Rk": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Mv": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Gd": {
+  "anchor": false,
+  "label": "S aerie_perch High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-aerie_perch-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-aerie_perch-cand-High.png"
+ }
+}

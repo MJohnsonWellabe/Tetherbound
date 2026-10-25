@@ -1,0 +1,62 @@
+[
+    {
+        "label":  "S heart_tool Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-heart_tool-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-heart_tool-ctl-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-021: the shrine heartstone reads as a smooth untextured cyan egg"
+                    ]
+    },
+    {
+        "label":  "S settle_day High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-settle-day-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-settle-day-ctl-High.png",
+        "brief":  "Fixed views of a Cloudreach settlement (day) with the 1.80 m trainer as a ruler. Judge whether it reads as a lived-in sky-realm settlement of the key art: inhabited, lit and belonging to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue"
+                    ]
+    },
+    {
+        "label":  "S settle_night Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-settle-night-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-settle-night-ctl-Medium.png",
+        "brief":  "Fixed views of a Cloudreach settlement (night) with the 1.80 m trainer as a ruler. Judge whether it reads as a lived-in sky-realm settlement of the key art: inhabited, lit and belonging to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue"
+                    ]
+    },
+    {
+        "label":  "S cam_galefoot High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_galefoot-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_galefoot-ship-High.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (Galefoot Waycamp) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "The fixed view is blocked, empty or looking away from the named landmark"
+                    ]
+    },
+    {
+        "label":  "S beacon_spire Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-beacon_spire-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-beacon_spire-ship-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (Windscar Beacon) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail"
+                    ]
+    }
+]

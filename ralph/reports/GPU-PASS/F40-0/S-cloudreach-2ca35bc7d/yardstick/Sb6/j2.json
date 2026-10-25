@@ -1,0 +1,154 @@
+{
+ "sets": {
+  "Ce": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A flat grass plateau with a saturated blue ring decal and a few pillars, with no layered floating land or sky depth in view, reads as a test arena next to Palworld's dense, atmospheric fields."
+  },
+  "Wk": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky brown-black forest with no purple storm sky or lightning grade, flat magenta telegraph shapes, a tiny player creature and HUD panels covering a third of each frame sink it against Palworld's bright, legible boss fights."
+  },
+  "Bu": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing stylised elder with a clear face, readable eyes and an earthy Meadows palette carries it at a shipping-character finish, though only on a neutral stage."
+  },
+  "Tz": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Good bright sky, grass and distant pale spires are a start, but the bell bridge is small and half under the quest panel, and the flat dirt squares and empty lawn keep it well short of Palworld density."
+  },
+  "Js": {
+   "A": {
+    "bar_a": 3.7,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Every view is half-filled by a boulder or pillar pressed against the camera and the heartstone is cut off at the top edge, so the shrine never reads as a sky-realm landmark."
+  },
+  "Rk": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's furry, tusked boar approaches the owner's naturalistic style bar but is no taller than the trainer and floats in faint mid; B's smooth clay-toy pig with moss decals falls well below it."
+  },
+  "Mv": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The aftermath storytelling in A is clear, but smeared low-res ground textures, blocky walls and a flat sky keep the Meadows a long way from Palworld's lush finish."
+  },
+  "Gd": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A bare grass dome with a plain grey tower behind the HUD, plus (on B) simple plank scaffolds, has none of the aviary board's dome, arches, waterfalls or layered islands."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Build Cloudreach hero landmarks and layered floating-island sets (stratified pale-stone undersides, arches, aviary towers, waterfalls into a cloud sea) and put them in the fixed views at High Perches, Three Bells Bridge, the heartstone shrine and Windscar Aerie",
+   "kind": "new_art"
+  },
+  {
+   "change": "Re-frame the fixed production cameras so no boulder, pillar or foliage fills the foreground, the landmark sits clear of the quest panel and minimap, and the foreground, midground and distance separate with aerial-perspective fog and sun shafts",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight: grade to the purple storm sky with white-violet rim and lightning light, fade occluding trunks and canopy, swap flat magenta telegraph rings and squares for real-object effects with impacts, and shrink the HUD panels so both fighters read",
+   "kind": "scene"
+  }
+ ]
+}

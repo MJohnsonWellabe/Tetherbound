@@ -1,0 +1,178 @@
+{
+ "sets": {
+  "Ec": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths are site-specific (freed villager in an opened cage, smoke plume, fallen banner), but blurry smeared ground textures, flat terrain and sparse low-poly props keep both sides well short of Palworld's dense, lit fields."
+  },
+  "Gs": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 2.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fight is a gold spider on dim brown ground under heavy HUD, with flat magenta ring telegraphs and no purple storm sky or lightning, and in B (i12-i16) dark canopy blocks the view."
+  },
+  "Xn": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F40#5: flat blue rings on the paving where a stone compass should read": "PRESENT",
+     "P2-025: tall grass intrudes through paving": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F40#5: flat blue rings on the paving where a stone compass should read": "FIXED",
+     "P2-025: tall grass intrudes through paving": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's carved stone compass and textured timber posts give a real authored plaza, but the perch is one flat platform with no layered floating land or Valheim-class sky depth around it."
+  },
+  "Ri": {
+   "A": {
+    "bar_a": 3.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The stacked pale rock pillars in the cloud sea read as Cloudreach, but no shrine appears in any view, leaving an empty flat green plane with sparse grass cards."
+  },
+  "Cb": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The beacon is a lone plain wooden arch with two banners on an open lawn (A still has a stone tower behind it, but B loses it), and the cliffs behind are washed-out grey slabs."
+  },
+  "Yi": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bell gantry, rope bridge and distant rock spires form the best Cloudreach composition in the batch, but the bells are tiny in frame, and a smeared dirt patch and an empty lawn fill the foreground."
+  },
+  "Jo": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A warm, appealing elder with a clear face, eyes and earthy village palette is close to shippable, but his soft toy-like cartoon finish is a step more stylised than the key art's people."
+  },
+  "Vz": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cyan-lit gate at the end of the path gives a destination, but a flat unlit green ramp, a blurry stretched dirt path and blunt extruded rock shelves (B's mushroom-cap overhang) sink it."
+  },
+  "Bw": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A naturalistic frost wolf near the owner's Tanglevolt bar, with a clear head and silhouette, but A's faint-end reads as a shapeless white blob, B's faint-mid leaves the ground, and the matte fur lacks rim light."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild Cloudreach destination ground and dressing: replace the flat unlit green plane and smeared dirt paths with pale stratified stone shelves, textured grass clumps and groves, and add layered floating islands at mid-distance. Frame each fixed camera on its landmark so it fills a third of the frame.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build the missing hero landmarks so each destination has a distinctive centrepiece: a carved heartstone and shrine for Sky Shrine, a beacon tower for Windscar Beacon (lost in Cb B), and bells big enough to read at Three Bells Bridge.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Stormwood fight readability: fade or cull trunks and canopy between the camera and the fighters, raise exposure under the purple storm-sky grade with rim light on both creatures, replace the flat magenta ring telegraphs with real-object effects (lightning, debris), and shrink the HUD panels that cover the arena.",
+   "kind": "scene"
+  }
+ ]
+}

@@ -1,0 +1,204 @@
+[
+    {
+        "item":  "gate_shell",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4,
+        "label":  "Realm Gate Crag island shell (flag) vs no flag"
+    },
+    {
+        "item":  "beacon_spire",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4,
+        "label":  "Windscar Beacon spire (flag) vs no flag"
+    },
+    {
+        "item":  "aerie_perch",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4,
+        "label":  "Windscar Flight Aerie perch platforms (flag) vs no flag"
+    },
+    {
+        "item":  "heartstone",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4,
+        "label":  "Sky Shrine heartstone (flag) vs no flag"
+    },
+    {
+        "item":  "perches_compass_tidy",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4,
+        "label":  "High Perches compass + tidy (flags) vs no flag"
+    },
+    {
+        "item":  "perches_shell",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4,
+        "label":  "High Perches island shell (flag) vs no flag"
+    },
+    {
+        "item":  "cam_galefoot",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  3,
+        "label":  "Galefoot Waycamp camera fix vs F40 main"
+    },
+    {
+        "item":  "cam_bells",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  3,
+        "label":  "Three Bells Bridge camera fix vs F40 main"
+    },
+    {
+        "item":  "cam_aerie",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  3,
+        "label":  "Windscar Flight Aerie heading fix vs F40 main"
+    },
+    {
+        "item":  "cam_cliffhold",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4,
+        "label":  "Cliffhold approach fix vs F40 main"
+    },
+    {
+        "item":  "cam_observatory",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4,
+        "label":  "Old Wind Observatory stand vs F40 main"
+    },
+    {
+        "item":  "heart_tool",
+        "preset":  "Medium",
+        "cand":  1,
+        "ship":  1
+    },
+    {
+        "item":  "hp_tool",
+        "preset":  "Medium",
+        "cand":  0,
+        "ship":  0
+    },
+    {
+        "item":  "settle_day",
+        "preset":  "Medium",
+        "cand":  1,
+        "ship":  1
+    },
+    {
+        "item":  "settle_night",
+        "preset":  "Medium",
+        "cand":  1,
+        "ship":  1
+    },
+    {
+        "item":  "gate_shell",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  4,
+        "label":  "Realm Gate Crag island shell (flag) vs no flag"
+    },
+    {
+        "item":  "beacon_spire",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  4,
+        "label":  "Windscar Beacon spire (flag) vs no flag"
+    },
+    {
+        "item":  "aerie_perch",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  4,
+        "label":  "Windscar Flight Aerie perch platforms (flag) vs no flag"
+    },
+    {
+        "item":  "heartstone",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  4,
+        "label":  "Sky Shrine heartstone (flag) vs no flag"
+    },
+    {
+        "item":  "perches_compass_tidy",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  4,
+        "label":  "High Perches compass + tidy (flags) vs no flag"
+    },
+    {
+        "item":  "perches_shell",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  4,
+        "label":  "High Perches island shell (flag) vs no flag"
+    },
+    {
+        "item":  "cam_galefoot",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  3,
+        "label":  "Galefoot Waycamp camera fix vs F40 main"
+    },
+    {
+        "item":  "cam_bells",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  3,
+        "label":  "Three Bells Bridge camera fix vs F40 main"
+    },
+    {
+        "item":  "cam_aerie",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  3,
+        "label":  "Windscar Flight Aerie heading fix vs F40 main"
+    },
+    {
+        "item":  "cam_cliffhold",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  4,
+        "label":  "Cliffhold approach fix vs F40 main"
+    },
+    {
+        "item":  "cam_observatory",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  4,
+        "label":  "Old Wind Observatory stand vs F40 main"
+    },
+    {
+        "item":  "heart_tool",
+        "preset":  "High",
+        "cand":  1,
+        "ship":  1
+    },
+    {
+        "item":  "hp_tool",
+        "preset":  "High",
+        "cand":  0,
+        "ship":  0
+    },
+    {
+        "item":  "settle_day",
+        "preset":  "High",
+        "cand":  1,
+        "ship":  1
+    },
+    {
+        "item":  "settle_night",
+        "preset":  "High",
+        "cand":  1,
+        "ship":  1
+    }
+]

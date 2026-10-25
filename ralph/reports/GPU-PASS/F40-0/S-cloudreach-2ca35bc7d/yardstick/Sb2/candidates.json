@@ -1,0 +1,63 @@
+[
+    {
+        "label":  "S perches_compass_tidy High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-perches_compass_tidy-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-perches_compass_tidy-ship-High.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (The High Perches) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "F40#5: flat blue rings on the paving where a stone compass should read",
+                        "P2-025: tall grass intrudes through paving"
+                    ]
+    },
+    {
+        "label":  "S beacon_spire High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-beacon_spire-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-beacon_spire-ship-High.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (Windscar Beacon) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail"
+                    ]
+    },
+    {
+        "label":  "S gate_shell High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-gate_shell-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-gate_shell-ship-High.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (Realm Gate Crag) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges"
+                    ]
+    },
+    {
+        "label":  "S cam_bells High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_bells-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_bells-ship-High.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (Three Bells Bridge) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "The fixed view is blocked, empty or looking away from the named landmark"
+                    ]
+    },
+    {
+        "label":  "S heartstone High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-heartstone-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-heartstone-ship-High.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (Sky Shrine) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-021: the shrine heartstone reads as a smooth untextured cyan egg"
+                    ]
+    }
+]

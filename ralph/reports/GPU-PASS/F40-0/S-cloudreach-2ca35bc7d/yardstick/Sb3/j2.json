@@ -1,0 +1,184 @@
+{
+ "sets": {
+  "Ko": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing elder with readable face and earthy palette that fits the village family, but the glossy big-eyed toon face is a different, simpler finish than Palworld's characters and the naturalistic world."
+  },
+  "Gg": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths tell site-specific stories (opened cage with freed captive, fallen banner, smoking rubble), but blurry low-res grass and stone, flat noon light and empty uniform fields sit well below Palworld density and Valheim atmosphere."
+  },
+  "Ni": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A bare flat-green hill with faceted toy trees and either a half-hidden tower (A) or nothing but distant cliffs (B) reads as an empty test map, not an aerie in a layered sky realm."
+  },
+  "Zp": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cloud sea and pale stratified sea-stacks give the best Cloudreach sky in the batch, but the foreground is an empty flat lawn with two dark faceted rocks and no shrine at all, so there is no place or landmark to read."
+  },
+  "Im": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, diagonal brace, shingled cap and stone footing finally read as a built wall, but the flat beige infill, lone thin panel and the faceted grey boulder beside it are short of Palworld base-building finish."
+  },
+  "Pu": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ram-horned fleece creature matches the owner's in-game Stormcapra look with a strong horn silhouette, but soft unlit fleece and (in B) a faint that levitates off the stage keep it below Palworld creature finish."
+  },
+  "Eu": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A coherent half-timbered camp with warm lamp-lit nights carries it, but it reads as a Meadows village on a flat lawn with no floating land, cloud sea or sky depth."
+  },
+  "Or": {
+   "A": {
+    "bar_a": 3.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B opens up to a ringed platform with distant mesas, but there is still no observatory structure, and A is boxed in by trunks with flat cyan primitives and floating blue streaks, which reads as a blockout."
+  },
+  "Bz": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The chapel, clock tower and campfire commons with a warm night grade make a believable hamlet, but the flat muddy-brown ground, camera-clipped bedroll and missing sky/floating-cliff layers keep it from Palworld finish or a Cloudreach read."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-aim every Cloudreach fixed camera at its named landmark and give each site the Zp treatment: a cloud sea below the rim, pale stratified floating stacks at mid and far distance, and an aerial-perspective fog grade, so each reads as layered sky land rather than a flat lawn (Ni, Eu, Or, Bz, Zp).",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace flat placeholder surfaces (uniform green lawn, muddy flat dirt, faceted grey/black rocks, flat cyan primitives and blue ground streaks) with textured ground blends, grass clumps and edges, and pale stratified-stone rock materials; pull foreground props such as the Bz bedroll out of the near plane.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build hero landmark meshes that are currently missing from view: the Sky Shrine heartstone and shrine, the Old Wind Observatory structure and the Windscar aerie roost, in the pale stone, gold-accent, blue-banner language of the Sky Aviary board.",
+   "kind": "new_art"
+  }
+ ]
+}

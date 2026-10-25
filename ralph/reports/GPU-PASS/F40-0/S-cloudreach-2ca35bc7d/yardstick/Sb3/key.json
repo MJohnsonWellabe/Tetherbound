@@ -1,0 +1,52 @@
+{
+ "Ko": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Gg": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Ni": {
+  "anchor": false,
+  "label": "S cam_aerie High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_aerie-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_aerie-ship-High.png"
+ },
+ "Zp": {
+  "anchor": false,
+  "label": "S heartstone Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-heartstone-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-heartstone-ship-Medium.png"
+ },
+ "Im": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Pu": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ },
+ "Eu": {
+  "anchor": false,
+  "label": "S cam_galefoot Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_galefoot-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_galefoot-cand-Medium.png"
+ },
+ "Or": {
+  "anchor": false,
+  "label": "S cam_observatory Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_observatory-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_observatory-cand-Medium.png"
+ },
+ "Bz": {
+  "anchor": false,
+  "label": "S cam_cliffhold High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_cliffhold-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_cliffhold-cand-High.png"
+ }
+}

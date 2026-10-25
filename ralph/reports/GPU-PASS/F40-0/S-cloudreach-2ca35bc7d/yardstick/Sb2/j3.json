@@ -1,0 +1,178 @@
+{
+ "sets": {
+  "Ec": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths (banners torn down, cage opened with a freed villager, smoke from a wreck) are particular to each site, but on both sides smeared ground textures, blocky walls and sparse lollipop trees under flat light sit far below Palworld density and Valheim-class atmosphere."
+  },
+  "Gs": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 2.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky brown-black frames with no purple storm sky or lightning, flat magenta ring and arrow telegraphs, a player creature that is barely visible and a HUD covering the left third sink it; B is worse, with the camera inside foliage on i12-i16."
+  },
+  "Xn": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F40#5: flat blue rings on the paving where a stone compass should read": "PRESENT",
+     "P2-025: tall grass intrudes through paving": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F40#5: flat blue rings on the paving where a stone compass should read": "FIXED",
+     "P2-025: tall grass intrudes through paving": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's carved stone compass helps, but the place reads as a flat plateau with plain pillars and no layered floating land or sky-realm depth, so it lacks Palworld's density and Valheim-class atmosphere."
+  },
+  "Ri": {
+   "A": {
+    "bar_a": 3.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cloud sea and stacked stone pillars hint at Cloudreach, but every view is an empty flat lawn with no shrine in frame; the heartstone defect is gone only because the landmark itself is missing from the frame."
+  },
+  "Cb": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A lone plain wooden arch with loose banners, on a uniform grass carpet in front of flat grey cliff walls, does not reach Palworld's lived-in density; A's stone beacon tower behind the arch is the only thing that gives the place a landmark."
+  },
+  "Yi": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bell bridge and pale stratified spires in the distance are the most Cloudreach-like views in the batch, but the landmark is tiny and pushed into the top corner, the foreground is a flat dirt square and lawn, and the light is plain."
+  },
+  "Jo": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, warm elder with an expressive face and eyes, an earthy green/cream palette and a clean silhouette matches Palworld's human finish, though he is a little more cartoon than the naturalistic creatures."
+  },
+  "Vz": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A smooth, untextured green ramp with a hard straight edge and a blurry ruler-straight path leading to a small gate is graybox-level next to Palworld; B's stratified overhang adds layering but buries the gate."
+  },
+  "Bw": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The frost wolf's fur and size against the ruler come close to the style bar, but its near-white values with no rim light read flat, and the faint poses break (A's faint end is a camera-facing upright blob, B's faint mid and end hover above their shadows)."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-aim and re-compose every Cloudreach fixed camera on its named landmark, and replace the flat green lawn carpet with groves, rock shelves and textured grass variation; add layered floating islands with pale stratified, tapered undersides in the mid-ground and distance, plus a warmer sun grade and depth fog",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight readability: pull the camera out of trunks and foliage, add a purple storm sky with white-violet lightning and rim light on both fighters, replace the flat magenta telegraph rings and arrows with physical ground-crack or lightning effects, and shrink the left-hand HUD stack",
+   "kind": "scene"
+  },
+  {
+   "change": "Hero landmark meshes for the Sky Shrine heartstone and the Windscar Beacon, matching the Sky Aviary board's pale stone, gold accent and blue banner language",
+   "kind": "new_art"
+  }
+ ]
+}

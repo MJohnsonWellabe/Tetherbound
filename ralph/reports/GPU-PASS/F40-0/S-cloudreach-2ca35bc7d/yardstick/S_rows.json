@@ -1,0 +1,1830 @@
+[
+ {
+  "batch": 1,
+  "code": "Op",
+  "label": "S settle_night Medium cand|ship",
+  "side": "S-settle-night-ctl-Medium",
+  "mapped": 5.93,
+  "judges": [
+   5.93,
+   5.93,
+   5.93
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Op",
+  "label": "S settle_night Medium cand|ship",
+  "side": "S-settle-night-cand-Medium",
+  "mapped": 6.52,
+  "judges": [
+   6.47,
+   6.55,
+   6.55
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Us",
+  "label": "S heart_tool Medium cand|ship",
+  "side": "S-heart_tool-ctl-Medium",
+  "mapped": 4.93,
+  "judges": [
+   4.62,
+   5.16,
+   5.0
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Us",
+  "label": "S heart_tool Medium cand|ship",
+  "side": "S-heart_tool-cand-Medium",
+  "mapped": 5.31,
+  "judges": [
+   5.0,
+   5.62,
+   5.31
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Pe",
+  "label": "S settle_day High cand|ship",
+  "side": "S-settle-day-cand-High",
+  "mapped": 6.65,
+  "judges": [
+   6.55,
+   6.7,
+   6.7
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Pe",
+  "label": "S settle_day High cand|ship",
+  "side": "S-settle-day-ctl-High",
+  "mapped": 6.21,
+  "judges": [
+   6.16,
+   6.24,
+   6.24
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Db",
+  "label": "S beacon_spire Medium cand|ship",
+  "side": "S-beacon_spire-ship-Medium",
+  "mapped": 5.49,
+  "judges": [
+   5.23,
+   5.77,
+   5.47
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Db",
+  "label": "S beacon_spire Medium cand|ship",
+  "side": "S-beacon_spire-cand-Medium",
+  "mapped": 6.11,
+  "judges": [
+   5.85,
+   6.39,
+   6.08
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ir",
+  "label": "S cam_galefoot High cand|ship",
+  "side": "S-cam_galefoot-ship-High",
+  "mapped": 6.13,
+  "judges": [
+   6.08,
+   6.24,
+   6.08
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ir",
+  "label": "S cam_galefoot High cand|ship",
+  "side": "S-cam_galefoot-cand-High",
+  "mapped": 6.42,
+  "judges": [
+   6.31,
+   6.55,
+   6.39
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Xn",
+  "label": "S perches_compass_tidy High cand|ship",
+  "side": "S-perches_compass_tidy-ship-High",
+  "mapped": 5.89,
+  "judges": [
+   6.0,
+   6.06,
+   5.61
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F40#5: flat blue rings on the paving where a stone compass should read": "PRESENT",
+    "P2-025: tall grass intrudes through paving": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F40#5: flat blue rings on the paving where a stone compass should read": "PRESENT",
+    "P2-025: tall grass intrudes through paving": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F40#5: flat blue rings on the paving where a stone compass should read": "PRESENT",
+    "P2-025: tall grass intrudes through paving": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Xn",
+  "label": "S perches_compass_tidy High cand|ship",
+  "side": "S-perches_compass_tidy-cand-High",
+  "mapped": 6.39,
+  "judges": [
+   6.52,
+   6.52,
+   6.13
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F40#5: flat blue rings on the paving where a stone compass should read": "FIXED",
+    "P2-025: tall grass intrudes through paving": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F40#5: flat blue rings on the paving where a stone compass should read": "FIXED",
+    "P2-025: tall grass intrudes through paving": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F40#5: flat blue rings on the paving where a stone compass should read": "FIXED",
+    "P2-025: tall grass intrudes through paving": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ri",
+  "label": "S heartstone High cand|ship",
+  "side": "S-heartstone-cand-High",
+  "mapped": 5.41,
+  "judges": [
+   5.34,
+   5.47,
+   5.41
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ri",
+  "label": "S heartstone High cand|ship",
+  "side": "S-heartstone-ship-High",
+  "mapped": 5.41,
+  "judges": [
+   5.34,
+   5.47,
+   5.41
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Cb",
+  "label": "S beacon_spire High cand|ship",
+  "side": "S-beacon_spire-cand-High",
+  "mapped": 6.04,
+  "judges": [
+   6.0,
+   6.13,
+   6.0
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Cb",
+  "label": "S beacon_spire High cand|ship",
+  "side": "S-beacon_spire-ship-High",
+  "mapped": 5.63,
+  "judges": [
+   5.61,
+   5.67,
+   5.61
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Yi",
+  "label": "S cam_bells High cand|ship",
+  "side": "S-cam_bells-cand-High",
+  "mapped": 6.17,
+  "judges": [
+   6.2,
+   6.26,
+   6.06
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Yi",
+  "label": "S cam_bells High cand|ship",
+  "side": "S-cam_bells-ship-High",
+  "mapped": 6.13,
+  "judges": [
+   6.06,
+   6.2,
+   6.13
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Vz",
+  "label": "S gate_shell High cand|ship",
+  "side": "S-gate_shell-cand-High",
+  "mapped": 5.87,
+  "judges": [
+   5.87,
+   6.0,
+   5.74
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Vz",
+  "label": "S gate_shell High cand|ship",
+  "side": "S-gate_shell-ship-High",
+  "mapped": 5.69,
+  "judges": [
+   5.74,
+   5.74,
+   5.61
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Ni",
+  "label": "S cam_aerie High cand|ship",
+  "side": "S-cam_aerie-cand-High",
+  "mapped": 4.94,
+  "judges": [
+   5.33,
+   4.69,
+   4.8
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Ni",
+  "label": "S cam_aerie High cand|ship",
+  "side": "S-cam_aerie-ship-High",
+  "mapped": 5.16,
+  "judges": [
+   5.87,
+   4.48,
+   5.12
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Zp",
+  "label": "S heartstone Medium cand|ship",
+  "side": "S-heartstone-cand-Medium",
+  "mapped": 5.62,
+  "judges": [
+   5.55,
+   5.76,
+   5.55
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Zp",
+  "label": "S heartstone Medium cand|ship",
+  "side": "S-heartstone-ship-Medium",
+  "mapped": 5.62,
+  "judges": [
+   5.55,
+   5.76,
+   5.55
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Eu",
+  "label": "S cam_galefoot Medium cand|ship",
+  "side": "S-cam_galefoot-ship-Medium",
+  "mapped": 6.08,
+  "judges": [
+   6.3,
+   5.97,
+   5.97
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Eu",
+  "label": "S cam_galefoot Medium cand|ship",
+  "side": "S-cam_galefoot-cand-Medium",
+  "mapped": 6.44,
+  "judges": [
+   6.72,
+   6.3,
+   6.3
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Or",
+  "label": "S cam_observatory Medium cand|ship",
+  "side": "S-cam_observatory-ship-Medium",
+  "mapped": 4.34,
+  "judges": [
+   4.8,
+   4.16,
+   4.05
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Or",
+  "label": "S cam_observatory Medium cand|ship",
+  "side": "S-cam_observatory-cand-Medium",
+  "mapped": 5.51,
+  "judges": [
+   5.76,
+   5.44,
+   5.33
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Bz",
+  "label": "S cam_cliffhold High cand|ship",
+  "side": "S-cam_cliffhold-ship-High",
+  "mapped": 5.62,
+  "judges": [
+   5.97,
+   5.33,
+   5.55
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Bz",
+  "label": "S cam_cliffhold High cand|ship",
+  "side": "S-cam_cliffhold-cand-High",
+  "mapped": 6.62,
+  "judges": [
+   6.83,
+   6.4,
+   6.62
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Yp",
+  "label": "S cam_aerie Medium cand|ship",
+  "side": "S-cam_aerie-ship-Medium",
+  "mapped": 4.33,
+  "judges": [
+   3.8,
+   4.49,
+   4.72
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Yp",
+  "label": "S cam_aerie Medium cand|ship",
+  "side": "S-cam_aerie-cand-Medium",
+  "mapped": 5.25,
+  "judges": [
+   4.72,
+   5.41,
+   5.64
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Jx",
+  "label": "S settle_day Medium cand|ship",
+  "side": "S-settle-day-ctl-Medium",
+  "mapped": 6.4,
+  "judges": [
+   5.64,
+   6.79,
+   6.79
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Jx",
+  "label": "S settle_day Medium cand|ship",
+  "side": "S-settle-day-cand-Medium",
+  "mapped": 6.98,
+  "judges": [
+   6.1,
+   7.36,
+   7.48
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Ti",
+  "label": "S gate_shell Medium cand|ship",
+  "side": "S-gate_shell-cand-Medium",
+  "mapped": 5.64,
+  "judges": [
+   4.72,
+   6.1,
+   6.1
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Ti",
+  "label": "S gate_shell Medium cand|ship",
+  "side": "S-gate_shell-ship-Medium",
+  "mapped": 5.18,
+  "judges": [
+   4.26,
+   5.64,
+   5.64
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Mz",
+  "label": "S perches_shell Medium cand|ship",
+  "side": "S-perches_shell-cand-Medium",
+  "mapped": 5.48,
+  "judges": [
+   4.95,
+   5.87,
+   5.64
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Mz",
+  "label": "S perches_shell Medium cand|ship",
+  "side": "S-perches_shell-ship-Medium",
+  "mapped": 6.06,
+  "judges": [
+   5.41,
+   6.44,
+   6.33
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Ud",
+  "label": "S aerie_perch Medium cand|ship",
+  "side": "S-aerie_perch-cand-Medium",
+  "mapped": 5.48,
+  "judges": [
+   4.72,
+   5.87,
+   5.87
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Ud",
+  "label": "S aerie_perch Medium cand|ship",
+  "side": "S-aerie_perch-ship-Medium",
+  "mapped": 5.25,
+  "judges": [
+   4.72,
+   5.41,
+   5.64
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Ff",
+  "label": "S cam_observatory High cand|ship",
+  "side": "S-cam_observatory-ship-High",
+  "mapped": 5.18,
+  "judges": [
+   5.18,
+   5.18,
+   5.18
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Ff",
+  "label": "S cam_observatory High cand|ship",
+  "side": "S-cam_observatory-cand-High",
+  "mapped": 5.67,
+  "judges": [
+   5.7,
+   5.7,
+   5.61
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Xf",
+  "label": "S cam_cliffhold Medium cand|ship",
+  "side": "S-cam_cliffhold-cand-Medium",
+  "mapped": 6.1,
+  "judges": [
+   6.04,
+   6.21,
+   6.04
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Xf",
+  "label": "S cam_cliffhold Medium cand|ship",
+  "side": "S-cam_cliffhold-ship-Medium",
+  "mapped": 5.58,
+  "judges": [
+   5.44,
+   5.78,
+   5.53
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Zo",
+  "label": "S perches_compass_tidy Medium cand|ship",
+  "side": "S-perches_compass_tidy-cand-Medium",
+  "mapped": 6.21,
+  "judges": [
+   6.04,
+   6.21,
+   6.38
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F40#5: flat blue rings on the paving where a stone compass should read": "FIXED",
+    "P2-025: tall grass intrudes through paving": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F40#5: flat blue rings on the paving where a stone compass should read": "FIXED",
+    "P2-025: tall grass intrudes through paving": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F40#5: flat blue rings on the paving where a stone compass should read": "FIXED",
+    "P2-025: tall grass intrudes through paving": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Zo",
+  "label": "S perches_compass_tidy Medium cand|ship",
+  "side": "S-perches_compass_tidy-ship-Medium",
+  "mapped": 5.41,
+  "judges": [
+   5.44,
+   5.44,
+   5.36
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "F40#5: flat blue rings on the paving where a stone compass should read": "PRESENT",
+    "P2-025: tall grass intrudes through paving": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "F40#5: flat blue rings on the paving where a stone compass should read": "PRESENT",
+    "P2-025: tall grass intrudes through paving": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F40#5: flat blue rings on the paving where a stone compass should read": "PRESENT",
+    "P2-025: tall grass intrudes through paving": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Lr",
+  "label": "S settle_night High cand|ship",
+  "side": "S-settle-night-ctl-High",
+  "mapped": 5.84,
+  "judges": [
+   5.53,
+   5.7,
+   6.3
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Lr",
+  "label": "S settle_night High cand|ship",
+  "side": "S-settle-night-cand-High",
+  "mapped": 6.55,
+  "judges": [
+   6.38,
+   6.47,
+   6.81
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 6,
+  "code": "Ce",
+  "label": "S perches_shell High cand|ship",
+  "side": "S-perches_shell-ship-High",
+  "mapped": 5.74,
+  "judges": [
+   5.8,
+   5.8,
+   5.63
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 6,
+  "code": "Ce",
+  "label": "S perches_shell High cand|ship",
+  "side": "S-perches_shell-cand-High",
+  "mapped": 5.88,
+  "judges": [
+   5.8,
+   6.04,
+   5.8
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 6,
+  "code": "Tz",
+  "label": "S cam_bells Medium cand|ship",
+  "side": "S-cam_bells-cand-Medium",
+  "mapped": 6.18,
+  "judges": [
+   6.21,
+   6.37,
+   5.96
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 6,
+  "code": "Tz",
+  "label": "S cam_bells Medium cand|ship",
+  "side": "S-cam_bells-ship-Medium",
+  "mapped": 6.07,
+  "judges": [
+   6.13,
+   6.21,
+   5.88
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 6,
+  "code": "Js",
+  "label": "S heart_tool High cand|ship",
+  "side": "S-heart_tool-ctl-High",
+  "mapped": 4.73,
+  "judges": [
+   4.48,
+   5.06,
+   4.64
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 6,
+  "code": "Js",
+  "label": "S heart_tool High cand|ship",
+  "side": "S-heart_tool-cand-High",
+  "mapped": 5.11,
+  "judges": [
+   4.81,
+   5.47,
+   5.06
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 6,
+  "code": "Gd",
+  "label": "S aerie_perch High cand|ship",
+  "side": "S-aerie_perch-ship-High",
+  "mapped": 5.5,
+  "judges": [
+   5.63,
+   5.72,
+   5.14
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 6,
+  "code": "Gd",
+  "label": "S aerie_perch High cand|ship",
+  "side": "S-aerie_perch-cand-High",
+  "mapped": 5.96,
+  "judges": [
+   6.13,
+   6.13,
+   5.63
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+   }
+  ]
+ }
+]

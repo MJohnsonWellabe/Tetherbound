@@ -1,0 +1,176 @@
+{
+ "sets": {
+  "Op": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm window and lamp practicals help, but empty dirt foregrounds, no villagers and a flat blue night grade (A's clouds as dark blue blobs) sit well below Palworld density and Valheim night atmosphere."
+  },
+  "Io": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, appealing elder with readable eyes, a strong white-hair silhouette and a Meadows green-brown palette carries it, though the slightly toy-like skin finish is a notch more cartoon than the naturalistic world."
+  },
+  "Jx": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths (opened cage with freed captive, smoke plume, torn banner on the ground) are site-specific, but blurry smeared ground and wall textures and flat lighting keep both sides far from Palworld finish."
+  },
+  "Us": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Every view is half-filled by a boulder or wall at camera distance and the heartstone is cropped at the frame top, so no floating land, landmark or sky-realm light reads at all."
+  },
+  "Pe": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Bright sky, floating islands and pale stone buildings carry the Cloudreach read, but bare dirt and grass foregrounds, no inhabitants and flat midday light sink it against Palworld's lived-in density."
+  },
+  "Ih": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's blotchy yellow boar floats off the ground in faint mid/end and hit react matches standing, while B reads as a glossy terracotta piggy-bank with moss decals; neither reaches the owner's naturalistic fur bar, and both stand no taller than the trainer."
+  },
+  "Db": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B adds a stone beacon column behind the arch but it is cropped at the frame top; a lone wooden arch on a uniform grass carpet with faceted bush mounds does not read as a sky-realm landmark."
+  },
+  "Od": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A muddy brown-black forest with no purple storm sky, flat magenta ring/chevron telegraphs, a near-invisible player creature and heavy HUD panels sink both sides; B also has canopy fully blocking i13 and i15 and partly i11-i17."
+  },
+  "Ir": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Cosy timber cottages and warm windows read as a camp, but a stacked-slab rock blocks the right third of the gameplay views and no floating land or cloud layering shows, so it reads as a Meadows hamlet rather than Cloudreach."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-author the fixed production cameras for Us, Db and Ir so the named landmark (heartstone, beacon, waycamp) is framed whole, with no boulder or wall in the near third, and floating land plus cloud layers visible behind it.",
+   "kind": "scene"
+  },
+  {
+   "change": "Dress Cloudreach settlements and landmarks for lived-in density: foreground props, carts, crates, flower beds, NPCs and creatures, warm lamp pools and lit clouds at night instead of flat moon-blue, and replace faceted bush/rock blobs with the textured stone family.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build hero landmark and creature art to the owner bar: a detailed Windscar beacon tower and heartstone, and a naturalistic fur boar standing taller than the trainer with grounded faint poses; replace Od's flat magenta ring telegraphs with physical lightning and ground-crack effects.",
+   "kind": "new_art"
+  }
+ ]
+}

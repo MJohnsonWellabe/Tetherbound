@@ -1,0 +1,64 @@
+[
+    {
+        "label":  "S heartstone Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-heartstone-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-heartstone-ship-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (Sky Shrine) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-021: the shrine heartstone reads as a smooth untextured cyan egg"
+                    ]
+    },
+    {
+        "label":  "S cam_galefoot Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_galefoot-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_galefoot-ship-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (Galefoot Waycamp) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "The fixed view is blocked, empty or looking away from the named landmark"
+                    ]
+    },
+    {
+        "label":  "S cam_cliffhold High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_cliffhold-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_cliffhold-ship-High.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (Cliffhold) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "The fixed view is blocked, empty or looking away from the named landmark"
+                    ]
+    },
+    {
+        "label":  "S cam_aerie High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_aerie-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_aerie-ship-High.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (Windscar Flight Aerie) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "The fixed view is blocked, empty or looking away from the named landmark",
+                        "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail"
+                    ]
+    },
+    {
+        "label":  "S cam_observatory Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_observatory-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_observatory-ship-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (Old Wind Observatory) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "The fixed view is blocked, empty or looking away from the named landmark",
+                        "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail"
+                    ]
+    }
+]

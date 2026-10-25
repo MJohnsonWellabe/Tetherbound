@@ -1,0 +1,63 @@
+[
+    {
+        "label":  "S gate_shell Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-gate_shell-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-gate_shell-ship-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (Realm Gate Crag) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges"
+                    ]
+    },
+    {
+        "label":  "S aerie_perch Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-aerie_perch-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-aerie_perch-ship-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (Windscar Flight Aerie) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail"
+                    ]
+    },
+    {
+        "label":  "S settle_day Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-settle-day-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-settle-day-ctl-Medium.png",
+        "brief":  "Fixed views of a Cloudreach settlement (day) with the 1.80 m trainer as a ruler. Judge whether it reads as a lived-in sky-realm settlement of the key art: inhabited, lit and belonging to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue"
+                    ]
+    },
+    {
+        "label":  "S perches_shell Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-perches_shell-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-perches_shell-ship-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (The High Perches) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges"
+                    ]
+    },
+    {
+        "label":  "S cam_aerie Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_aerie-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_aerie-ship-Medium.png",
+        "brief":  "Fixed production-camera views of one Cloudreach location (Windscar Flight Aerie) with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "The fixed view is blocked, empty or looking away from the named landmark",
+                        "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail"
+                    ]
+    }
+]

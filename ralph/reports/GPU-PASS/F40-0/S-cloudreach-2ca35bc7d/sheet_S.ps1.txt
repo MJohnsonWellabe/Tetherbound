@@ -1,0 +1,21 @@
+# Item S sheet: 6 before|after pairs at High (left = baseline/no-flag, right = candidate). Neutral labels; key in VERDICT.md.
+$o = "D:\tb-gpu-runs\out"
+function Find($src, $name) {
+    $dirs = if ($src -eq "F40") { @(Get-ChildItem "$o\F40" -Directory -Filter "matrix-High-*") } else { @(Get-ChildItem $o -Directory -Filter "$src-High-*") }
+    foreach ($d in $dirs) { $f = Join-Path $d.FullName "frames\$name"; if (Test-Path $f) { return $f } }
+    throw "missing $src $name"
+}
+$rows = @(
+    @("1", (Find "S-ctl" "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__day__clear.png"), (Find "S-cand" "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__day__clear.png")),
+    @("2", (Find "S-ctl" "cloudreach__windscar_ravine__05__windscar_beacon__approach__day__clear.png"), (Find "S-cand" "cloudreach__windscar_ravine__05__windscar_beacon__approach__day__clear.png")),
+    @("3", (Find "F40" "cloudreach__upper_cloudreach__09__cliffhold__approach__day__clear.png"), (Find "S-ctl" "cloudreach__upper_cloudreach__09__cliffhold__approach__day__clear.png")),
+    @("4", (Find "F40" "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__day__clear.png"), (Find "S-ctl" "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__day__clear.png")),
+    @("5", "$o\S-heart-ctl-High\frames\cloudreach__landmark__sky_shrine_heartstone__day__close.jpg", "$o\S-heart-cand-High\frames\cloudreach__landmark__sky_shrine_heartstone__day__close.jpg"),
+    @("6", "$o\S-settle-ctl-day-High\frames\104_upper_cloudreach_place_cliffhold_court_night.png", "$o\S-settle-cand-day-High\frames\104_upper_cloudreach_place_cliffhold_court_night.png")
+)
+$spec = [ordered]@{ title = "S Cloudreach batches 1-3 (tb/cloudreach 2ca35bc7d), High: left baseline | right candidate"; cols = 2; thumb_w = 520; label_w = 50
+    rows = @($rows | ForEach-Object { [ordered]@{ label = $_[0]; files = @($_[1], $_[2]); captions = @("base", "cand") } }); out = "D:\tb-gpu-runs\staging\S-cloudreach-2ca35bc7d\_sheet_s.png" }
+New-Item -ItemType Directory -Force "D:\tb-gpu-runs\staging\S-cloudreach-2ca35bc7d" | Out-Null
+[IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_sheet_S.json", ($spec | ConvertTo-Json -Depth 5))
+& D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_sheet_S.json"
+"{0:N2} MB" -f ((Get-Item $spec.out).Length / 1MB)

@@ -1,0 +1,178 @@
+{
+ "sets": {
+  "Ec": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry low-res ground, flat-textured walls and a sparse, flatly lit meadow sink it next to Palworld's dense, saturated fields, even though B's aftermath props (freed cage, struck tent with smoke, torn banners) read well."
+  },
+  "Gs": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 2.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown-black forest with no purple storm sky, flat magenta telegraph rings and a dense HUD around a small boss sinks it; B also loses the fight to foliage blocking the camera in i12-i16."
+  },
+  "Xn": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F40#5: flat blue rings on the paving where a stone compass should read": "PRESENT",
+     "P2-025: tall grass intrudes through paving": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F40#5: flat blue rings on the paving where a stone compass should read": "FIXED",
+     "P2-025: tall grass intrudes through paving": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Mossy pillars and a carved stone compass (B) help, but there is no layered floating land or pale stratified cliffs, and the flat midday light has none of Valheim's atmosphere."
+  },
+  "Ri": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "An empty flat green lawn against a cloud bank with distant rock stacks, and no shrine at all, sinks it."
+  },
+  "Cb": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.7,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A lone plain wooden arch on a grass lawn, with washed-out grey cliff walls behind it, does not read as a beacon or a sky realm; A's stone lantern tower helps only a little."
+  },
+  "Yi": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The layered cliff, rope ramp and distant stone stacks are the closest to Cloudreach, but the three bells are tiny and the frame is mostly grass, with flat light and no atmosphere."
+  },
+  "Vz": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The mossy gate with cyan crystals is a readable goal, but a smooth flat-green hill, a blurry low-res path and (in B) a blunt brown slab blocking the gate sink it against Palworld's density and Valheim's light."
+  },
+  "Jo": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "An appealing, clearly characterful elder with readable eyes and an earthy olive and cream palette that fits the key art; the full-body view is small and slightly stiff."
+  },
+  "Bw": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's shaggy white and blue fur approaches the owner's naturalistic bar, but the body reads long and low at about trainer height, and the faint poses (A's front-facing crouch, B's body floating off its shadow) break the read."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Build every Cloudreach fixed view around its landmark: frame the shrine, bells, beacon and gate large in the midground, add layered floating islands with pale stratified cliff undersides, and replace the flat untextured green lawns with grass/stone material breakup and grove edges",
+   "kind": "scene"
+  },
+  {
+   "change": "Grade and light the scenes for atmosphere: Stormwood purple storm sky with rim light on the fighters, a camera collision pull-back that keeps trunks and foliage out of the fight, and replacing flat magenta/blue telegraph and compass rings with real stone/lightning effects",
+   "kind": "scene"
+  },
+  {
+   "change": "Author real landmark hero meshes for Sky Shrine (heartstone shrine), Windscar Beacon (beacon tower beyond the bare arch) and Realm Gate Crag (sculpted cliffs in place of the blunt mushroom slab)",
+   "kind": "new_art"
+  }
+ ]
+}

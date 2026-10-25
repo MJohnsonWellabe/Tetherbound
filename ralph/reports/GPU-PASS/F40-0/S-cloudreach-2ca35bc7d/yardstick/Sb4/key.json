@@ -1,0 +1,52 @@
+{
+ "Yp": {
+  "anchor": false,
+  "label": "S cam_aerie Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_aerie-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_aerie-cand-Medium.png"
+ },
+ "Jx": {
+  "anchor": false,
+  "label": "S settle_day Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-settle-day-ctl-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-settle-day-cand-Medium.png"
+ },
+ "Ay": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Hr": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Ti": {
+  "anchor": false,
+  "label": "S gate_shell Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-gate_shell-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-gate_shell-ship-Medium.png"
+ },
+ "Tf": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Mz": {
+  "anchor": false,
+  "label": "S perches_shell Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-perches_shell-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-perches_shell-ship-Medium.png"
+ },
+ "Ud": {
+  "anchor": false,
+  "label": "S aerie_perch Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-aerie_perch-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-aerie_perch-ship-Medium.png"
+ },
+ "Kp": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ }
+}

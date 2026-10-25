@@ -1,0 +1,52 @@
+{
+ "Ec": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Gs": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Xn": {
+  "anchor": false,
+  "label": "S perches_compass_tidy High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-perches_compass_tidy-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-perches_compass_tidy-cand-High.png"
+ },
+ "Ri": {
+  "anchor": false,
+  "label": "S heartstone High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-heartstone-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-heartstone-ship-High.png"
+ },
+ "Cb": {
+  "anchor": false,
+  "label": "S beacon_spire High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-beacon_spire-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-beacon_spire-ship-High.png"
+ },
+ "Yi": {
+  "anchor": false,
+  "label": "S cam_bells High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_bells-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_bells-ship-High.png"
+ },
+ "Jo": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Vz": {
+  "anchor": false,
+  "label": "S gate_shell High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-gate_shell-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-gate_shell-ship-High.png"
+ },
+ "Bw": {
+  "anchor": true,
+  "A": "f36_0_gap:C3A",
+  "B": "f36_0_gap:C3B"
+ }
+}

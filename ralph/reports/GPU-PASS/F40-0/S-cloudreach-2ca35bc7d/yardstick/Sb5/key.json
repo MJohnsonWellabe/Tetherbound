@@ -1,0 +1,46 @@
+{
+ "Ff": {
+  "anchor": false,
+  "label": "S cam_observatory High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_observatory-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_observatory-cand-High.png"
+ },
+ "Xf": {
+  "anchor": false,
+  "label": "S cam_cliffhold Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_cliffhold-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-cam_cliffhold-ship-Medium.png"
+ },
+ "Ky": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Zo": {
+  "anchor": false,
+  "label": "S perches_compass_tidy Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-perches_compass_tidy-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-perches_compass_tidy-ship-Medium.png"
+ },
+ "Hq": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Tt": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Lr": {
+  "anchor": false,
+  "label": "S settle_night High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-settle-night-ctl-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\S\\sides\\S-settle-night-cand-High.png"
+ },
+ "Vu": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ }
+}

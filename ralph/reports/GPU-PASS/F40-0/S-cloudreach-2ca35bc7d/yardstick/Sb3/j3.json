@@ -1,0 +1,184 @@
+{
+ "sets": {
+  "Ko": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder with readable eyes, a strong silhouette and a warm green and brown palette carries it, though the face is more toon than the key art's stylised realism."
+  },
+  "Gg": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared low-resolution ground, a flat uniform grass carpet and a black tunnel sink it; B's site-specific aftermaths (torn banner, opened cage, smoke) are the only story beats with a Palworld feel."
+  },
+  "Ni": {
+   "A": {
+    "bar_a": 3.9,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "An empty green hill with no readable aerie sinks it; B's pale stratified cliffs and haze are the only Cloudreach note."
+  },
+  "Zp": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bright cloud sea and stratified rock pillars carry the sky mood, but the bare flat grass foreground and missing shrine landmark sink it."
+  },
+  "Im": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's braced timber frame, plank cap and stone footing finally read as built, but the flat beige infill and the untextured faceted boulder beside it keep it below Palworld base-building finish."
+  },
+  "Pu": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The woolly ram with heavy horns and a cyan crystal matches the owner's Stormcapra bar, though the face is lost under the horns and B's faint poses float off the ground."
+  },
+  "Eu": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cozy timber cottages and lamp-lit night carry it, but it reads as a Meadows hamlet with no floating land or sky depth, and a house and a rock stack frame most of the view."
+  },
+  "Or": {
+   "A": {
+    "bar_a": 3.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A is crowded by trunks and flat cyan/blue placeholder shapes; B opens onto pale cliffs, but no observatory appears, only a trunk on a flat earth plinth."
+  },
+  "Bz": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gothic stone hall, clock tower and warm campfire night carry it, but the smeared orange dirt plaza, the cut-off foreground rock and bedroll, and no floating land sink it."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-aim every Cloudreach fixed camera at its named landmark and stage layered floating islands in the mid and far ground (cloud gaps, stratified cliff edges), not open flat grass or a wall or trunk filling the frame",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace faceted grey boulders, flat cyan/blue primitives and smeared dirt or grass ground with the textured pale stratified stone, ground breakup and grove-and-clearing vegetation from the Cloudreach board",
+   "kind": "scene"
+  },
+  {
+   "change": "Build hero landmark meshes for the Windscar Flight Aerie, the Old Wind Observatory and the Sky Shrine heartstone, in the board's pale stone, gold-accent and blue-banner family",
+   "kind": "new_art"
+  }
+ ]
+}

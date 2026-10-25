@@ -1,0 +1,182 @@
+{
+ "sets": {
+  "Yp": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A flat untextured green lawn under a flat grey sky with the aerie cropped to a tower base sinks it; there is no layered floating land, no aviary, and no Valheim-class atmosphere."
+  },
+  "Jx": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bright sky, floating islets and stone-and-timber houses carry it toward the board, but the smooth untextured grass, sparse props and absence of villagers keep it below Palworld density and finish."
+  },
+  "Ay": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "An appealing, readable elder with a warm earthy outfit, but the soft toy-like cartoon face is more animated-film than the naturalistic stylised realism of the key art and the Palworld world."
+  },
+  "Hr": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's braced timber frame with a cap and stone footing reads as built, but a lone flat-infilled panel beside a faceted grey placeholder boulder on smeary ground is not Palworld base-building finish."
+  },
+  "Ti": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The teal-lit gate at the end of the path gives it a goal, but a ruler-straight path across a bare green lawn, a dull grey sky and, in B, a big brown mushroom-cap slab overhead sink it."
+  },
+  "Tf": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's site-specific aftermaths (freed cage captive, banners torn down, smoking wreck) carry the story, but the smeary low-resolution ground, dark tunnel wall and flat light are well below Palworld and Valheim finish."
+  },
+  "Mz": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The pillars, banner and glowing sky birds give it identity, but a flat saturated-blue compass decal, cut-off world-space text and cramped camera with almost no sky depth sink it."
+  },
+  "Ud": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A bare green lawn, a black wedge slab, and a tower cropped by the top of the frame give no sense of an aerie in the clouds or of Valheim-class sky and light."
+  },
+  "Kp": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A strong blue-and-cream crested silhouette that towers over the ruler, but the glossy toy-like cartoon surface falls short of the owner's naturalistic scale-and-plate bar, and A's faint poses float and flip."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Recompose the fixed Cloudreach cameras (Windscar Aerie, Realm Gate Crag, High Perches) so the named landmark fills the upper frame against layered floating islands and a cloud sea, with bright Cloudreach sky, aerial-perspective fog and sun shafts instead of flat grey overcast",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the smooth untextured green ground plane and faceted grey boulders with textured grass, wildflower and rock clusters, curved paths that break up the ground, and foreground dressing, and remove the black wedge slabs and stray world-space text",
+   "kind": "scene"
+  },
+  {
+   "change": "Model eroded, tapered floating-island undersides and cliff shelves in pale stratified stone to replace the blunt slabs and straight extruded edges, and build an aviary-style hero structure for the aerie",
+   "kind": "new_art"
+  }
+ ]
+}

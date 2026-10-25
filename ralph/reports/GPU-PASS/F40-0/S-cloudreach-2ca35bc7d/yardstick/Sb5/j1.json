@@ -1,0 +1,158 @@
+{
+ "sets": {
+  "Ff": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Flat green ground, plain beige cliffs and no readable observatory or layered floating land sink it; A is further sunk by trunks filling the frame."
+  },
+  "Xf": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.9,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The stone chapel, clock tower and campfire give a real landmark, but the flat dirt and grass, the foreground boulder blocking a third of the gameplay frames and the absence of any floating-island sky read sink it."
+  },
+  "Ky": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing elder with a clear face, eyes and earthy palette that fits the world, but the soft toy-like animated-film shading is a notch more cartoon than Palworld-finish characters."
+  },
+  "Zo": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F40#5: flat blue rings on the paving where a stone compass should read": "FIXED",
+     "P2-025: tall grass intrudes through paving": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.9,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F40#5: flat blue rings on the paving where a stone compass should read": "PRESENT",
+     "P2-025: tall grass intrudes through paving": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A bright sky and violet sky-creatures help, but the bare plaza, plain pillars and no layered floating land sink it, and B's flat blue rings plus the stray white glyph at the left edge make it look unfinished."
+  },
+  "Hq": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths are distinct for each site (freed captive, smoke plume, fallen banner), but blurry low-res ground, sparse flat meadows and weak light keep both sides well short of Palworld finish."
+  },
+  "Tt": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's furry, spotted boar is on the naturalistic style bar but stands below the trainer and floats in faint mid; B's smooth clay body with moss decals reads as a toy, not the owner's style."
+  },
+  "Lr": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Floating islands, warm windows and B's cloud sea, lamp posts and foreground rocks help, but large empty dark ground, no villagers and a flat blue night grade keep it from Valheim-class night atmosphere."
+  },
+  "Vu": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The large spider is readable, but the dark, muddy forest, flat magenta telegraph shapes, a player creature lost at small size, a HUD that covers the frame and (in A) canopy blacking out whole frames sink it."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Recompose every Cloudreach fixed camera on its named landmark and build the sky-realm read: layered floating islands at three depths, a cloud sea below the rim, pale stratified cliff stone instead of flat beige, and textured ground replacing the flat green and dirt fills; pull cameras out of trunks, walls and foreground boulders.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace flat decal rings (blue compass rings at The High Perches, magenta telegraph slabs in Stormwood) with real stone and effect objects: a carved stone compass inlay, and telegraphs shown as cracking ground, thrown stones or lightning with an impact.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Grade and fill nights and fights: warm lamp and window pools, villagers and props in the near foreground of Cloudreach night settlements, and in Stormwood fade occluding trunks and canopy, rim-light both fighters and trim the HUD panels that cover the action.",
+   "kind": "scene"
+  }
+ ]
+}

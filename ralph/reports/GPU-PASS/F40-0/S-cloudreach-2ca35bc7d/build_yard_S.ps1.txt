@@ -1,0 +1,85 @@
+# Item S (local): Cloudreach batches 1-3 on tb/cloudreach 2ca35bc7d. One set per item per preset ($env:S_PRESETS, default "Medium,High").
+# Flag items: candidate (flags) vs control (no flag) from this run. Camera/stand fixes (no flag): this run's control vs the F40 main baseline
+# (out\F40, main d71bd31). The settlement tool writes day and night views in one run; sets split them by the _day/_night suffix. Matrix sets use 4 views per stand: approach day clear, gameplay day clear, gameplay night clear, gameplay day rain.
+$o = "D:\tb-gpu-runs\out"; $od = "D:\tb-gpu-runs\yard\S\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out, [int] $cols = 2, [int] $tw = 560) {
+    $s = [ordered]@{ title = ""; cols = $cols; thumb_w = $tw; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_S.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_S.json" | Out-Null; return $out
+}
+$generic = @("Placeholder or untextured materials (flat grey, checker or faceted blocks)", "Floating bodies or props (a gap between an object and the ground under it)", "Clipping (geometry passing through geometry, or the camera inside geometry)")
+$p2023 = "P2-023: floating island undersides form blunt dark slabs, and cliffs and grassy shelves have conspicuous straight extruded edges"
+$p2024 = "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail"
+$views = @("approach__day__clear", "gameplay__day__clear", "gameplay__night__clear", "gameplay__day__rain")
+$stands = [ordered]@{
+    "01" = @("gate_lower_cliffs__01__realm_gate_crag", "Realm Gate Crag")
+    "02" = @("gate_lower_cliffs__02__galefoot_waycamp", "Galefoot Waycamp")
+    "03" = @("broken_causeways__03__three_bells_bridge", "Three Bells Bridge")
+    "05" = @("windscar_ravine__05__windscar_beacon", "Windscar Beacon")
+    "06" = @("windscar_ravine__06__windscar_flight_aerie", "Windscar Flight Aerie")
+    "07" = @("high_roost_sky_shrine__07__sky_shrine", "Sky Shrine")
+    "08" = @("high_roost_sky_shrine__08__the_high_perches", "The High Perches")
+    "09" = @("upper_cloudreach__09__cliffhold", "Cliffhold")
+    "10" = @("upper_cloudreach__10__old_wind_observatory", "Old Wind Observatory")
+}
+$camDef = "The fixed view is blocked, empty or looking away from the named landmark"
+# item: id, stand, cand-source, ship-source, defects, label
+$items = @(
+    @("gate_shell", "01", "S-cand", "S-ctl", @($p2023), "Realm Gate Crag island shell (flag) vs no flag"),
+    @("beacon_spire", "05", "S-cand", "S-ctl", @($p2024), "Windscar Beacon spire (flag) vs no flag"),
+    @("aerie_perch", "06", "S-cand", "S-ctl", @($p2024), "Windscar Flight Aerie perch platforms (flag) vs no flag"),
+    @("heartstone", "07", "S-cand", "S-ctl", @("P2-021: the shrine heartstone reads as a smooth untextured cyan egg"), "Sky Shrine heartstone (flag) vs no flag"),
+    @("perches_compass_tidy", "08", "S-cand", "S-ctl", @("F40#5: flat blue rings on the paving where a stone compass should read", "P2-025: tall grass intrudes through paving"), "High Perches compass + tidy (flags) vs no flag"),
+    @("perches_shell", "08", "S-shell", "S-ctl", @($p2023), "High Perches island shell (flag) vs no flag"),
+    @("cam_galefoot", "02", "S-ctl", "F40", @($camDef), "Galefoot Waycamp camera fix vs F40 main"),
+    @("cam_bells", "03", "S-ctl", "F40", @($camDef), "Three Bells Bridge camera fix vs F40 main"),
+    @("cam_aerie", "06", "S-ctl", "F40", @($camDef, $p2024), "Windscar Flight Aerie heading fix vs F40 main"),
+    @("cam_cliffhold", "09", "S-ctl", "F40", @($camDef), "Cliffhold approach fix vs F40 main"),
+    @("cam_observatory", "10", "S-ctl", "F40", @($camDef, $p2024), "Old Wind Observatory stand vs F40 main")
+)
+$brief = "Fixed production-camera views of one Cloudreach location with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Cloudreach sky realm: a coherent place of layered floating land, a readable landmark and light that belongs to the world."
+function Find($src, $pr, $name) {
+    $dirs = if ($src -eq "F40") { @(Get-ChildItem "$o\F40" -Directory -Filter "matrix-$pr-*") } else { @(Get-ChildItem $o -Directory -Filter "$src-$pr-*") }
+    foreach ($d in $dirs) { $f = Join-Path $d.FullName "frames\$name"; if (Test-Path $f) { return $f } }
+    return $null
+}
+$presets = if ($env:S_PRESETS) { $env:S_PRESETS.Split(",") } else { @("Medium", "High") }
+$sets = @(); $cover = @()
+foreach ($pr in $presets) {
+    foreach ($it in $items) {
+        $st = $stands[$it[1]]; $sd = @{}; $n = @{}
+        foreach ($arm in @(@("cand", $it[2]), @("ship", $it[3]))) {
+            $files = @(); $caps = @()
+            foreach ($v in $views) { $f = Find $arm[1] $pr "cloudreach__$($st[0])__$v.png"; if ($f) { $files += $f; $caps += ($v -replace '__', ' ') } }
+            $n[$arm[0]] = $files.Count
+            if ($files.Count -gt 0) { $sd[$arm[0]] = Side $files $caps "$od\S-$($it[0])-$($arm[0])-$pr.png" }
+        }
+        $cover += [ordered]@{ item = $it[0]; preset = $pr; cand = $n["cand"]; ship = $n["ship"]; label = $it[5] }
+        if ($sd["cand"] -and $sd["ship"]) { $sets += [ordered]@{ label = "S $($it[0]) $pr cand|ship"; a = $sd["cand"]; b = $sd["ship"]; brief = ($brief -replace 'one Cloudreach location', "one Cloudreach location ($($st[1]))"); defects = @($generic) + $it[4] } }
+    }
+    # non-matrix tools
+    foreach ($t in @(@("heart_tool", "S-heart", @("P2-021: the shrine heartstone reads as a smooth untextured cyan egg")), @("hp_tool", "S-hp", @($p2023)))) {
+        $sd = @{}
+        foreach ($arm in "cand", "ctl") {
+            $fs = @(Get-ChildItem "$o\$($t[1])-$arm-$pr\frames" -Recurse -Include *.png, *.jpg -ErrorAction SilentlyContinue | Sort-Object Name)
+            if ($fs.Count -gt 4) { $step = $fs.Count / 4; $fs = @(0..3 | ForEach-Object { $fs[[int]($_ * $step)] }) }
+            if ($fs.Count -gt 0) { $sd[$arm] = Side @($fs | ForEach-Object FullName) @($fs | ForEach-Object BaseName) "$od\S-$($t[0])-$arm-$pr.png" }
+        }
+        $cover += [ordered]@{ item = $t[0]; preset = $pr; cand = [int]($sd["cand"] -ne $null); ship = [int]($sd["ctl"] -ne $null) }
+        if ($sd["cand"] -and $sd["ctl"]) { $sets += [ordered]@{ label = "S $($t[0]) $pr cand|ship"; a = $sd["cand"]; b = $sd["ctl"]; brief = $brief; defects = @($generic) + $t[2] } }
+    }
+    foreach ($tod in "day", "night") {
+        $sd = @{}
+        foreach ($arm in "cand", "ctl") {
+            $fs = @(Get-ChildItem "$o\S-settle-$arm-day-$pr\frames" -Recurse -Include *.png, *.jpg -ErrorAction SilentlyContinue | Where-Object { $_.BaseName -like "*_$tod" } | Sort-Object Name)
+            if ($fs.Count -gt 4) { $step = $fs.Count / 4; $fs = @(0..3 | ForEach-Object { $fs[[int]($_ * $step)] }) }
+            if ($fs.Count -gt 0) { $sd[$arm] = Side @($fs | ForEach-Object FullName) @($fs | ForEach-Object BaseName) "$od\S-settle-$tod-$arm-$pr.png" }
+        }
+        $cover += [ordered]@{ item = "settle_$tod"; preset = $pr; cand = [int]($sd["cand"] -ne $null); ship = [int]($sd["ctl"] -ne $null) }
+        if ($sd["cand"] -and $sd["ctl"]) { $sets += [ordered]@{ label = "S settle_$tod $pr cand|ship"; a = $sd["cand"]; b = $sd["ctl"]; brief = "Fixed views of a Cloudreach settlement ($tod) with the 1.80 m trainer as a ruler. Judge whether it reads as a lived-in sky-realm settlement of the key art: inhabited, lit and belonging to the world."; defects = @($generic) + @("F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue") } }
+    }
+}
+$rng = New-Object System.Random 2045; $sets = @($sets | Sort-Object { $rng.Next() })
+$nb = [math]::Ceiling($sets.Count / 5); $buckets = @(for ($k = 0; $k -lt $nb; $k++) { , @() }); for ($i = 0; $i -lt $sets.Count; $i++) { $buckets[$i % $nb] += , $sets[$i] }
+for ($k = 0; $k -lt $nb; $k++) { New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\S\b$($k+1)" | Out-Null; [IO.File]::WriteAllText("D:\tb-gpu-runs\yard\S\b$($k+1)\candidates.json", (ConvertTo-Json -InputObject @($buckets[$k]) -Depth 5)) }
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\S\coverage.json", (ConvertTo-Json -InputObject @($cover) -Depth 4))
+"S sets: $($sets.Count) in $nb batches"; $cover | ForEach-Object { "$($_.item) $($_.preset) cand=$($_.cand) ship=$($_.ship)" }

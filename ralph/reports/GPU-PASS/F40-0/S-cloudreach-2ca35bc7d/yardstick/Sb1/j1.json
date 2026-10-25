@@ -1,0 +1,176 @@
+{
+ "sets": {
+  "Op": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm windows and B's white volumetric clouds help, but no villagers, a uniform moon-blue grade and A's flat dark-blue cloud blobs keep it short of Palworld/Valheim finish."
+  },
+  "Io": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder with readable eyes, clear silhouette and a natural green-brown palette that fits the key art; the sides are effectively identical."
+  },
+  "Jx": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's torn-down banners, freed captive, collapsed tent and smoke plume give site-specific aftermaths, but smeared low-res grass, a flat tiled wall and a drab desaturated meadow sink the finish."
+  },
+  "Us": {
+   "A": {
+    "bar_a": 2.9,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-021: the shrine heartstone reads as a smooth untextured cyan egg": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Cameras are jammed against a rock face and a wall, the heartstone is cropped at the frame top and no layered floating land reads, so neither place nor landmark lands."
+  },
+  "Pe": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F08#3: the near foreground is empty or the settlement reads as unlived-in, and nights go flat moon-blue": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Bright sky, floating islands and coherent stone architecture carry it, but no villagers or work activity and bare green foregrounds make it read as an empty set rather than a lived-in Palworld base."
+  },
+  "Ih": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's furred boar is close to the naturalistic style bar but floats in faint mid and, like B's smooth clay-toy boar, stands well under the 1.80 m trainer."
+  },
+  "Db": {
+   "A": {
+    "bar_a": 3.7,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-024: the destination presents sparse, plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's lit stone beacon column gives a landmark, but a lone wooden arch on an empty grass field with a blob-like mound and fog-washed cliffs is far from the key art's layered sky realm."
+  },
+  "Od": {
+   "A": {
+    "bar_a": 3.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 2.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown frame with flat magenta ground rings as telegraphs, a near-invisible player creature and (B i12-i15) trunks filling the camera, with no purple storm sky or lightning, reads nothing like Palworld's boss fights."
+  },
+  "Ir": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "The fixed view is blocked, empty or looking away from the named landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A coherent cottage camp with good shadows and night window light, but it reads as a Meadows village with no floating land or sky depth, framed between a house and a faceted rock pillar."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Populate Cloudreach settlements and camps with villagers, work props, lamp clusters and dressed near foregrounds, and warm the night grade with lantern pools instead of uniform moon-blue (Op, Pe, Ir, Db).",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-frame production and combat cameras so the landmark and both fighters are unobstructed (Us approach/close, Od B i12-i15), lift the Stormwood fight grade, and replace flat magenta ring telegraphs with physical lightning/stone effects.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build hero landmark and layered floating-land assets for Cloudreach destinations (Windscar Beacon, heartstone shrine, island undersides and stratified pale stone visible from the cameras).",
+   "kind": "new_art"
+  }
+ ]
+}
