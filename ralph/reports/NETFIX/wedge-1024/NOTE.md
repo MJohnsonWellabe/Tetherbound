@@ -52,6 +52,31 @@ No unit regression test was added: the fix is a timeout in a smoke's arguments, 
   - After the event retires (all duties settled), a later retry re-creates it with no settlement. Round 1's event `7e6e…` was still in the CI world save, unsettled.
   - Harmless today: its duties release by receipt. Once the trainer-round receipt window evicts that receipt, it could re-gate.
 
+## Follow-up 2: shared_boss `move_start_required` (PR #738, run 40150677244, shard 12)
+
+Verdict: **a test race, not PR #738.**
+
+- **Evidence:** the guest log has `move_start refused: pending_vitals (The original health change is still being saved.)`, then `strike_intent refused: move_start_required`.
+  - The job log shows a single friendly-fire attempt (`attempt=1`).
+  - The swing's move start reached the host while the guest's previous health change was still saving (`encounter_director.gd`'s pending_vitals gate). The strike then had no committed start (`encounter_director.gd:3438`).
+  - The loop in `tests/smoke_net_shared_boss.gd` (~l.875–898) accepted any non-empty refusal as the host's answer, so it exited and the `friendly_target` assert failed.
+- **Second weakness:** the striker's `last_encounter_refusal` (`combat_manager.gd:4259`) is never cleared, so a refusal from an earlier attempt could be read as this swing's answer.
+- **PR #738 is not the cause.**
+  - Its `_flash_host_impact` change only adds an optional `contact_burst` particle spawn after the hit is already decided.
+  - The rest is camera, telegraph, arena and UI presentation.
+  - None of it is on the move-start or strike-commit path.
+  - The race is a pre-existing timing window that load can open on any commit.
+  - I did not run 282901fd5 itself: the race never occurred in 6 local runs on main-based code, so a PR-head run would not tell the two apart.
+- **Fix (7e7e2e84):** `PRE_RESOLVE_REFUSALS = ["pending_vitals", "move_start_required"]`. Such a refusal re-stages the attempt (logged).
+  - A refusal only counts as the arrival if it differs from the read taken just before the swing; after all polls, whatever is there is used.
+  - The `friendly_target` assertion is unchanged and still required.
+  - If every attempt is refused before resolving, the assert still fails with that code.
+- **Local results**, run in pairs (base = main's smoke, fixed = this branch), so each run had CI-like load:
+  - **Fixed:** 3/3 pass.
+  - **Base:** 2/3 pass. Its one failure was a different load failure: the host's creature died during staging and the fight ended.
+  - **Race frequency:** 0 guest pending_vitals refusals in all 6 runs; it is rare locally.
+  - **Forced check:** a run with a temporary copy that injected `move_start_required` on attempt 1 re-staged it, then passed on a real `friendly_target` (ALL CHECKS PASSED).
+
 ## TO COORDINATOR
 
-READY tb/netfix-wedge @ 19a1733e742b6bf60bd58250d6ff8f87eb569cbf (fixes 294e6709 boss_rewards + 19a1733e client_trainer_rewards). Root cause: tests/smoke_net_boss_rewards_each_participant.gd:194 sent its 6000-frame budget only as the step deadline. tools/net/peer_runner.gd:4395 bounds the win arm by args.budget_frames (default 2160 effective), so a slow 37-swing CI fight timed out 0.6 s into a normal final-round settlement. There was no owner-passive race; the "released then re-held" log pair is round 1 and round 2 sharing one hold key. Fix: pass args budget_frames 6000 with step 6400. Results: the CI signature reproduced locally at budget 1650; boss_rewards 6/6 local passes after the fix, run in parallel pairs. client_trainer_rewards got the same gap fixed (budget_frames 4000 / step 12600) and passed 3/3 locally. Unit suites not run (no production change).
+READY tb/netfix-wedge @ 7e7e2e8406f8449f3eb69e89d0e955908a0c3c9d: new fix 7e7e2e84 (shared_boss re-stages a swing the host refused before resolving, pending_vitals or move_start_required; a test race, not PR #738). Earlier fixes: 294e6709 boss_rewards, 19a1733e client_trainer_rewards. origin/main f7b9b6a1 merged in. Root cause: tests/smoke_net_boss_rewards_each_participant.gd:194 sent its 6000-frame budget only as the step deadline. tools/net/peer_runner.gd:4395 bounds the win arm by args.budget_frames (default 2160 effective), so a slow 37-swing CI fight timed out 0.6 s into a normal final-round settlement. There was no owner-passive race; the "released then re-held" log pair is round 1 and round 2 sharing one hold key. Fix: pass args budget_frames 6000 with step 6400. Results: the CI signature reproduced locally at budget 1650; boss_rewards 6/6 local passes after the fix, run in parallel pairs. client_trainer_rewards got the same gap fixed (budget_frames 4000 / step 12600) and passed 3/3 locally. Unit suites not run (no production change).
