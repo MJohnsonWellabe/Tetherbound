@@ -17,6 +17,12 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
   - **Checks:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed.
   - **Landing:** this touches `scripts/ui/playground_hud.gd` (the UI lane's file), so it is a small cross-lane fix. Land it with my next head, or hand it to the UI lane, whichever you prefer.
 
+- 2026-10-25 13:30 CT **INFO (T4 beach grass): `dune_grass_candidate` reverted, not judged.**
+  - **Tried:** fewer shore pioneers and tighter colonies in `water_ground_cover`.
+  - **Result:** no visible change at Deep Watch. The even tufts there come from another layer.
+  - **Plan:** the clump fix needs the layer that places those tufts found first. Not started.
+  - **State of `tb/tidewake`:** head carries only judged candidates, T1e and T4 plus vary, all OFF in play.
+
 - 2026-10-25 12:40 CT **READY addendum (t4c/VERDICT.md): optional `shore_surf_vary_candidate` on top of T4.**
   - **CPU mapped:** shore 6.63 → 6.86, Deep Watch 6.04 → 6.18. A small gain, every judge +0.1 to +0.2.
   - **Capture:** add it to the T4 section list.
