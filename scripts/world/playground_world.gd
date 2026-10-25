@@ -18,6 +18,7 @@ extends Node3D
 ## spawners and synchronizer visibility filters key on it.
 const REALM_ID := "meadows"
 const MEADOWS_COLOUR_CANDIDATE := preload("res://scripts/world/meadows_colour_candidate.gd")
+const MEADOWS_HERO_PIECES := preload("res://scripts/world/meadows_hero_pieces.gd")
 const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const LONG_WATER_VISUAL_CONFIG := "res://data/config/long_water_visual.json"
@@ -838,6 +839,8 @@ func _ready() -> void:
 	BOOT_LOG.phase("playground: terrain data_directory assigned")
 	# F38 L4 (OFF unless terrain_presentation.json colour_candidate.enabled).
 	MEADOWS_COLOUR_CANDIDATE.apply(_terrain)
+	# F38 tier-1 hero pieces (OFF unless meadows_hero_pieces.json enables a group).
+	MEADOWS_HERO_PIECES.build(self)
 	await _shell_build.call("step", "terrain_data")
 
 	_apply_dynamic_collision()

@@ -1,0 +1,47 @@
+{
+  "_comment": "F38 tier-1 hero pieces (close-1024). Each group is OFF until judged on its stands; see meadows_hero_pieces.gd. World coordinates; y comes from the terrain minus sink_m.",
+  "cliffs": {
+    "enabled": false,
+    "_why": "P2-014 at band2_stone_and_root_1 (GPU 5.82): 'replace the faceted cliff planes with dark slashes with sculpted, stratified rock'. The coordinator's Meshy cliff modules (tb/meshy-1024 4eb886a11, Veilfall/Aviary stratified cliff refs) flank the Burrow mouth (-357, 2610) along the bank face that the band2_stone_and_root_1 stands look at from the south-east: 30 m modules (about 15 m tall, roughly 8x the 1.80 m trainer) buried 3 m, the 12 m corner beyond. Yaw 135 faces the stands; placement verified by CPU capture before judging.",
+    "pieces": [
+      {
+        "id": "cliff_a",
+        "path": "res://assets/props/meshy-1024/meadows_cliff_a/meadows_cliff_a.glb",
+        "at": [
+          -382.5,
+          2593.0
+        ],
+        "width_m": 30.0,
+        "sink_m": 3.0,
+        "yaw_deg": 135.0
+      },
+      {
+        "id": "cliff_b",
+        "path": "res://assets/props/meshy-1024/meadows_cliff_b/meadows_cliff_b.glb",
+        "at": [
+          -340.0,
+          2635.5
+        ],
+        "width_m": 30.0,
+        "sink_m": 3.0,
+        "yaw_deg": 135.0
+      },
+      {
+        "id": "cliff_corner",
+        "path": "res://assets/props/meshy-1024/meadows_cliff_corner/meadows_cliff_corner.glb",
+        "at": [
+          -321.6,
+          2648.2
+        ],
+        "width_m": 12.0,
+        "sink_m": 2.0,
+        "yaw_deg": 100.0
+      }
+    ]
+  },
+  "ironwood": {
+    "enabled": false,
+    "_why": "band4 ironwood (GPU 6.29/6.12, not tier 1): 'replace the faceted, blobby canopies with real leaf-card canopies'. Two coordinator Meshy hero trees (about 14 m) beside the band4 ironwood stands. Not yet placed: positions follow the cliffs and gatehouse.",
+    "pieces": []
+  }
+}
