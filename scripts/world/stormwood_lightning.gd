@@ -589,6 +589,9 @@ uniform float scorch_alpha = 0.55;
 uniform vec3 scorch_colour : source_color = vec3(0.06, 0.04, 0.07);
 uniform float spark_whiten = 0.65;
 uniform float spark_gain = 1.6;
+uniform float spark_width_mul = 2.5;
+uniform float crackle_alpha = 0.7;
+uniform float crackle_scale = 1.0;
 varying float r;
 varying vec2 ground_xz;
 void vertex() {
@@ -610,7 +613,9 @@ void vertex() {
 	// Only the rim and glow are pulled toward the camera (about grass
 	// height), never the dark fill, so the fill cannot draw over a trainer
 	// standing at the near rim.
-	float pull = len >= pull_start_radius ? depth_pull : 0.0;
+	// Ringless, the char and its current are the whole tell, so all of it
+	// rises above the grass; there is no opaque fill to cover a trainer.
+	float pull = (len >= pull_start_radius || outline_off > 0.5) ? depth_pull : 0.0;
 	view.xyz *= max(0.2, 1.0 - pull / max(dist, 0.001));
 	POSITION = PROJECTION_MATRIX * view;
 }
@@ -638,7 +643,8 @@ void fragment() {
 	float a = sin(joint * 2.31 + noise_sector * 1.7);
 	float b = sin((joint + 1.0) * 2.31 + noise_sector * 1.7);
 	float kink = mix(a, b, fract(step_m)) * leader_kink * min(distance_m, 1.0);
-	float tapered_width = leader_width * (0.45 + 0.55 * min(distance_m / rim_radius, 1.0));
+	float tapered_width = leader_width * (0.45 + 0.55 * min(distance_m / rim_radius, 1.0))
+		* mix(1.0, spark_width_mul, step(0.5, outline_off));
 	float leader_distance = abs(lateral - kink) / max(tapered_width, 0.005);
 	float leader = (exp(-leader_distance * leader_distance) + 0.12 * exp(-leader_distance * leader_distance / 9.0)) * inside;
 	float charge_radius = rim_radius * (1.0 - progress);
@@ -710,6 +716,16 @@ void fragment() {
 		float core = 1.0 - smoothstep(0.0, 1.1, distance_m);
 		a_fill = scorch_alpha * max(reach * (0.3 + 0.7 * progress), core * (0.5 + 0.5 * progress)) * (0.55 + 0.45 * grain);
 		fill_colour = scorch_colour;
+		// Live current crawling over the char (the same filament field as the
+		// fights' cue_crackle, tell_style.gd): natural lightning light, not paint,
+		// brightening as the strike nears, so the area still reads at night.
+		vec2 w = ground_xz * crackle_scale;
+		float ct = TIME;
+		float ca = sin(w.x * 3.1 + sin(w.y * 1.7 + ct * 5.0) * 2.0 + ct * 9.0);
+		float cb = sin(w.y * 2.6 + sin(w.x * 2.3 - ct * 6.0) * 2.0 - ct * 7.0);
+		float crackle = max(1.0 - smoothstep(0.0, 0.12, abs(ca)), 0.75 * (1.0 - smoothstep(0.0, 0.10, abs(cb))));
+		crackle *= mix(1.0, 0.6 + 0.4 * step(0.3, fract(sin(floor(ct * 14.0) * 12.9898) * 43758.5453)), pulse_enabled);
+		leaders += crackle * reach * crackle_alpha * (0.25 + 0.75 * progress) * (1.0 - strike);
 		leaders *= spark_gain;
 		spark = mix(rim_colour, vec3(0.92, 0.9, 1.0), spark_whiten);
 	}
@@ -822,6 +838,9 @@ func _telegraph_material() -> ShaderMaterial:
 		material.set_shader_parameter("scorch_colour", Color(str(cfg.get("scorch_colour", "#0f0a12"))))
 		material.set_shader_parameter("spark_whiten", float(cfg.get("spark_whiten", 0.65)))
 		material.set_shader_parameter("spark_gain", float(cfg.get("spark_gain", 1.6)))
+		material.set_shader_parameter("spark_width_mul", float(cfg.get("spark_width_mul", 2.5)))
+		material.set_shader_parameter("crackle_alpha", float(cfg.get("crackle_alpha", 0.7)))
+		material.set_shader_parameter("crackle_scale", float(cfg.get("crackle_scale", 1.0)))
 	material.set_shader_parameter("pulse_hz_start", float(cfg.get("pulse_hz_start", 2.0)))
 	material.set_shader_parameter("pulse_hz_end", float(cfg.get("pulse_hz_end", 7.0)))
 	material.set_shader_parameter("telegraph_seconds", float(rules.config.strike.telegraph_seconds))
