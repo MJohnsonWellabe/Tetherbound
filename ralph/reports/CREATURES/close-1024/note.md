@@ -3,6 +3,16 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct READY tb/creatures-land-grandpa f1209f09c (Grandpa eyes only, from main e60204db8, separate from batch 2):
+  - **Contents:** 30a52c7de (cherry-picked as d52929bc5) plus an `art.json` `_why_eyes_close1024` citing tb/gpu-pass 9099a88322.
+  - **No switch needed:** main's `art.json` already ships `grandpa/candidate/models/grandpa_native_face.glb`, so the eyes commit alone turns the eyes on.
+  - **Tests:** texture_import_policy, character_hair_split, character_appearance_variants, character_metallic, captured_character_receipt: 23 tests, 0 failed.
+  - **smoke_art:** reports four failures (creature shiny, alpha and rarity-tier checks: terrapup, paddlenewt, burrowback), identical on plain main e60204db8. Nothing Grandpa-related.
+- 25 Oct GPU READY tb/creatures-land 288784257 (your G3 verdict): every landed hit now holds its wince 0.55 s.
+  - **Diagnosis:** a CPU fight log showed every hit already triggers the wince and nothing clears it early. The wince simply ended long before the damage number did: 0.19 s, then 0.3 s, against the number's 0.8 s (combat.json `duration_seconds`).
+  - **Change:** 0.55 s held plus the clip's release now spans the number. 4403807c8 (0.3 s) and 288784257 (0.55 s). Two existing tests updated to the new intended timing; 47 tests, 0 failed.
+  - **CPU proof, your exact capture_f38_fight grunt command:** damage-number frames 15, 16, 18-21, 23, 24 and 26 show Mudsnout's head ducked in the wince; G3 had 1 in 32.
+  - **Exceptions:** frames 2, 12 and 13, where the hit lands during Mudsnout's protected heavy wind-up (the purple cone). The body stays committed to the attack there, which reads like the heavy-armour design. Tell me if it should flinch through it instead.
 - 25 Oct GPU READY tb/creatures 41b3b19c0 (Grandpa hair and beard, on top of the 30a52c7de eyes you have queued for the next PR):
   - **Change:** same head, mesh and atlas. Only the white-grey hair and beard texels (7.6%) change: a 3 px median removes the felt speckle, and an unsharp pass at strand scale (4 px) makes the strands crisper. Colours and identity unchanged.
   - **Method:** a wide smoothing was tried first and rejected; it blurred the strands into more felt.
