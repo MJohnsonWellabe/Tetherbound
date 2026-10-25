@@ -55,6 +55,12 @@ func _ready() -> void:
 	buttons.columns = 4
 	buttons.add_theme_constant_override("h_separation", 20)
 	add_child(buttons)
+	# Fights close-1025 (`ui.compact_rows_fixed`, ON since 25 Oct): the lane is
+	# laid out from the screen bottom, so a returning grid under the meter
+	# pushed the title and meter up by its height. Above them, it grows upward
+	# and the meter row stays where it was.
+	if ui.get("compact_when_idle") == true and ui.get("compact_rows_fixed") == true:
+		move_child(buttons, 0)
 	for id: String in _ids():
 		# RichText so a pad shows the same d-pad glyph art as other prompts.
 		var label := RichTextLabel.new()

@@ -1,0 +1,30 @@
+[
+ {
+  "label": "r7 grunt",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r7/grunt_pre.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r7/grunt_r7.png",
+  "brief": "Meadows trainer fight against an enemy-faction grunt at a fenced crossing: eight frames in order across the fight, attacks and dodges",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect is a flat disc hiding the struck creature",
+   "camera jumps, cuts or swings between frames instead of a stable low view",
+   "the player's creature is hard to find or reads as a translucent ghost"
+  ]
+ },
+ {
+  "label": "r7 warden",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r7/warden_pre.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r7/warden_r7.png",
+  "brief": "Meadows named-trainer fight on open grass: eight frames in order across the fight, attacks and dodges",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect is a flat disc hiding the struck creature",
+   "camera jumps, cuts or swings between frames instead of a stable low view",
+   "the player's creature is hard to find or reads as a translucent ghost"
+  ]
+ }
+]
