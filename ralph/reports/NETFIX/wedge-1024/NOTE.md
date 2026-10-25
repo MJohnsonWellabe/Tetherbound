@@ -37,13 +37,21 @@ No unit regression test was added: the fix is a timeout in a smoke's arguments, 
 - After the fix: `smoke_net_boss_rewards_each_participant` passed **6/6**, run two at a time for load. Fight plus settlement finished at driver frames 1442–1546.
 - owner_passive, ledger, session and combat-round unit suites were not run: no production code changed (RD-37).
 
-## Side observations (not fixed, out of scope)
+## Follow-up: client_trainer_rewards (coordinator request)
 
-- `tests/smoke_net_client_trainer_rewards.gd:84` has the same gap: step budget 9000 but no `budget_frames` in the args, so it also gets 2160.
+- `tests/smoke_net_client_trainer_rewards.gd` had the same gap: a 9000-frame step budget but no `budget_frames`, so its arm also got 2160.
+- Fixed in `19a1733e`: `budget_frames: 4000` with a 12600-frame step.
+  - The arm gets 3760 frames, about 209 s at the 18 Hz a loaded runner was seen stepping.
+  - The wall deadline is 210 s + 5 s slack, so the peer still answers first, keeping the smoke's existing rule.
+- Before the change, the guest-driven fight plus saves already finished at driver frames 1726–1846 locally, close to the old 2160 cap.
+- After the fix: 3/3 local passes (two run in parallel, one alone).
+
+## Side observation (left as a finding, per the coordinator)
+
 - `foundation_combat_round_resolution` (`scripts/net/session.gd`) re-journals its round's event on every retry call.
   - After the event retires (all duties settled), a later retry re-creates it with no settlement. Round 1's event `7e6e…` was still in the CI world save, unsettled.
   - Harmless today: its duties release by receipt. Once the trainer-round receipt window evicts that receipt, it could re-gate.
 
 ## TO COORDINATOR
 
-READY tb/netfix-wedge @ 294e67097682f2debdc609cc796fe391559f7592 (fix). Root cause: tests/smoke_net_boss_rewards_each_participant.gd:194 sent its 6000-frame budget only as the step deadline. tools/net/peer_runner.gd:4395 bounds the win arm by args.budget_frames (default 2160 effective), so a slow 37-swing CI fight timed out 0.6 s into a normal final-round settlement. There was no owner-passive race; the "released then re-held" log pair is round 1 and round 2 sharing one hold key. Fix: pass args budget_frames 6000 with step 6400. Results: the CI signature reproduced locally at budget 1650; 6/6 local smoke passes after the fix, run in parallel pairs. Unit suites not run (no production change).
+READY tb/netfix-wedge @ 19a1733e742b6bf60bd58250d6ff8f87eb569cbf (fixes 294e6709 boss_rewards + 19a1733e client_trainer_rewards). Root cause: tests/smoke_net_boss_rewards_each_participant.gd:194 sent its 6000-frame budget only as the step deadline. tools/net/peer_runner.gd:4395 bounds the win arm by args.budget_frames (default 2160 effective), so a slow 37-swing CI fight timed out 0.6 s into a normal final-round settlement. There was no owner-passive race; the "released then re-held" log pair is round 1 and round 2 sharing one hold key. Fix: pass args budget_frames 6000 with step 6400. Results: the CI signature reproduced locally at budget 1650; boss_rewards 6/6 local passes after the fix, run in parallel pairs. client_trainer_rewards got the same gap fixed (budget_frames 4000 / step 12600) and passed 3/3 locally. Unit suites not run (no production change).
