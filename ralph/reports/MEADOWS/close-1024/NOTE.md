@@ -348,6 +348,12 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - burrow mound (it never showed: the Warrens' own excavated hill hides it even at 64 m; the fix is a structural rebuild of that hill, or extending the cliffs across the bank face as the GPU note suggests).
   - Judges' shared next asks: real leaf-card canopies for the small grove trees, and a worked ground material for yards and quarry floors.
 
+- 2026-10-25 20:35 UTC MESHY (band4 grove and meadow trees). The judges (dom1025, iw1024, GPU MH) name the small grove trees' "clumpy, blobby, cube-ish canopies" as the next object after the landmark tree.
+  - **meadows_grove_oak_a/b/c:** three variants, 9–13 m tall with 7–10 m crowns (5–7x the 1.80 m trainer).
+  - Ref: `assets/props/meshy-1024/meadows_giant_ironwood/reference/` (the judges' preferred oak, for family match) and the key art's oak-grove panel.
+  - Prompt: "broadleaf oak tree with a dense canopy of many layered leaf-card clusters (not blobs), gnarled trunk with bark and moss, natural asymmetric crown, warm green with sunlit yellow-green tips, stylised realism like Valheim and Palworld, game asset".
+  - These replace the scatter's grove-tree models at the Ironwood stands as one candidate.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
