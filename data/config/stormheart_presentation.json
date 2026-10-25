@@ -63,6 +63,12 @@
     "light_energy": 2.6,
     "light_range_m": 16.0
   },
+  "hollow_floor": {
+    "enabled": true,
+    "scope": "client_presentation",
+    "_why": "r17 (25 Oct): r16 judges read the hollow's grass carpet as outdoors. Ground-cover tiers keep out of clear_radius_m around the trunk axis.",
+    "clear_radius_m": 40.0
+  },
   "branching_crown": {
     "enabled": true,
     "_comment": "Reference-backed P2-037 geometry candidate: connected asymmetric branch tiers and overlapping installed-family leaf masses. Visual only; existing shell, entrance, platforms, ascent and collisions remain unchanged. Native exterior/interior review required.",

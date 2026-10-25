@@ -21,6 +21,7 @@ const PRESENTATION_PATH := "res://data/config/stormheart_presentation.json"
 const CANOPY_SHADER := preload("res://scripts/world/stormheart_canopy.gdshader")
 const CUT_WOOD_SHADER := preload("res://scripts/world/stormheart_cut_wood.gdshader")
 const SPLIT_BARK := preload("res://scripts/world/stormheart_split_bark.gd")
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 var simulation_only := false
 var _presentation: Dictionary = {}
 var _wood: StandardMaterial3D
@@ -100,6 +101,15 @@ func build() -> void:
 		_built_detail()
 	if _presentation_enabled("deck_supports"):
 		_deck_supports(_presentation.get("deck_supports", {}))
+	if _presentation_enabled("hollow_floor"):
+		# r16 judges: the hollow's floor was the outdoor grass carpet. The
+		# ground-cover tiers (grass_field.gd) keep out of the trunk's own
+		# footprint so the packed earth under the decks shows.
+		var floor_clear := Node3D.new()
+		floor_clear.name = "HollowFloorClear"
+		floor_clear.set_meta(GRASS_FIELD.CLEAR_RADIUS_META, float((_presentation.get("hollow_floor", {}) as Dictionary).get("clear_radius_m", 40.0)))
+		floor_clear.add_to_group(GRASS_FIELD.CLEAR_GROUP)
+		add_child(floor_clear)
 
 
 func _presentation_enabled(key: String) -> bool:
