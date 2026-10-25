@@ -1,0 +1,41 @@
+{
+ "Sn": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Mn": {
+  "anchor": false,
+  "label": "shore: base vs grass",
+  "A": "/tmp/claude-0/sp/g_sh.png",
+  "B": "/tmp/claude-0/sp/t4v_sh.png"
+ },
+ "Gb": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "No": {
+  "anchor": false,
+  "label": "DW: base vs water",
+  "A": "/tmp/claude-0/sp/t4v_dw.png",
+  "B": "/tmp/claude-0/sp/w_dw.png"
+ },
+ "Gp": {
+  "anchor": false,
+  "label": "DW: base vs grass",
+  "A": "/tmp/claude-0/sp/g_dw.png",
+  "B": "/tmp/claude-0/sp/t4v_dw.png"
+ },
+ "Nc": {
+  "anchor": false,
+  "label": "shore: base vs water",
+  "A": "/tmp/claude-0/sp/w_sh.png",
+  "B": "/tmp/claude-0/sp/t4v_sh.png"
+ },
+ "Mc": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}
