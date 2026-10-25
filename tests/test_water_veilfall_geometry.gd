@@ -182,3 +182,37 @@ func test_generated_cave_geometry_and_authority_in_initialized_tree() -> void:
 			result = JSON.parse_string(line.trim_prefix("VEILFALL_GEOMETRY_RESULT="))
 	assert_true(int(result.get("assertions", 0)) > 300, "Generated geometry and all guarded control paths must run")
 	assert_eq(result.get("failures", ["missing result"]), [])
+
+
+## close-1024 F39#4: the render-only crag relief pushes points inward only, by at
+## most its amplitude, and keeps each coarse triangle's edges on the shell, so
+## the unchanged coarse collider still bounds everything the player sees.
+func test_crag_relief_stays_inside_the_coarse_shell() -> void:
+	var exterior := preload("res://scripts/world/water_veilfall_exterior.gd").new()
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var a := Vector3(0, 0, 0)
+	var b := Vector3(20, 0, 0)
+	var c := Vector3(0, 30, 0)
+	surface.add_vertex(a)
+	surface.add_vertex(b)
+	surface.add_vertex(c)
+	var coarse := surface.commit()
+	var normal := (b - a).cross(c - a).normalized()
+	# Both shipped arms: arm 1 as configured, arm 2 at the larger amplitude.
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/tidewake_look.json"))
+	for section: String in ["veilfall_formation_relief_candidate", "veilfall_formation_relief_fill_candidate"]:
+		var relief_cfg: Dictionary = cfg[section].exterior_composition.visual_relief
+		var amplitude := float(relief_cfg.amplitude_m)
+		var relief: ArrayMesh = exterior._relief_mesh(coarse, relief_cfg, 4101)
+		var verts: PackedVector3Array = relief.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+		assert_true(verts.size() > 3 * 30, "%s subdivides the face" % section)
+		var moved := 0
+		for v: Vector3 in verts:
+			var offset := (v - a).dot(normal)
+			assert_true(offset <= 0.0001, "%s: no relief point lies outside the coarse face" % section)
+			assert_true(offset >= -amplitude - 0.0001, "%s: relief depth stays within its amplitude" % section)
+			if offset < -0.01:
+				moved += 1
+		assert_true(moved > 0, "%s displaces interior points" % section)
+	exterior.free()

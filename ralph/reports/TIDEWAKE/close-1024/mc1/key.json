@@ -1,0 +1,34 @@
+{
+ "Iq": {
+  "anchor": false,
+  "label": "currents Meshy vs r3",
+  "A": "r3 (leaning stakes with wakes)",
+  "B": "Meshy 1024 driftwood + spar buoy (28c4e8282)"
+ },
+ "Nu": {
+  "anchor": false,
+  "label": "currents Meshy vs control",
+  "A": "Meshy 1024 driftwood + spar buoy (28c4e8282)",
+  "B": "control (main 5f1f388cc)"
+ },
+ "Bp": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Mr": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Dt": {
+  "anchor": true,
+  "A": "f36_0_gap:C3A",
+  "B": "f36_0_gap:C3B"
+ },
+ "Ts": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

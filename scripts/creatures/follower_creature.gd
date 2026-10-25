@@ -268,11 +268,27 @@ func _blocks_leader_view(model: Node3D, eye: Vector3) -> bool:
 	var local := model.global_transform.affine_inverse() * eye
 	if _camera_fade_bounds.grow(float(cfg.get("near_margin_m", 1.5))).has_point(local):
 		return true
-	if leader == null or not is_instance_valid(leader):
+	# Fights close-1025: only while following. In a fight the trainer stands
+	# behind its piloted creature, so this test held the pilot at 0.85 dither
+	# for the whole fight (judges: "Ripplet renders as a translucent ghost").
+	if not _following or leader == null or not is_instance_valid(leader) or piloted_in_fight(self):
 		return false
 	var base := _world_position(leader)
 	for height: Variant in cfg.get("leader_heights_m", [0.5, 1.0, 1.6]):
 		if CAMERA_FADE.segment_hits_ellipsoid(eye, base + Vector3.UP * float(height), model.global_transform, _camera_fade_bounds):
+			return true
+	return false
+
+
+## True while a running fight pilots `body` (GPU J pass: a capture that left
+## the pilot in its following state still ghosted it). The combat managers
+## join `combat_manager.gd` FOUNDATION_GROUP on entering the tree.
+static func piloted_in_fight(body: Node) -> bool:
+	if body == null or not body.is_inside_tree():
+		return false
+	for manager: Node in body.get_tree().get_nodes_in_group(&"foundation_combat_managers"):
+		if manager.has_method("is_fighting") and bool(manager.call("is_fighting")) \
+				and manager.get("_ally_body") == body:
 			return true
 	return false
 

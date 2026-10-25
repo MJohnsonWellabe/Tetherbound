@@ -28,6 +28,11 @@ func build(materials: Dictionary) -> void:
 		push_error("High Perches visual config is invalid")
 		return
 	var cfg := parsed as Dictionary
+	# A judged-next round, OFF unless enabled or a capture passes its preview arg.
+	var next: Variant = cfg.get("candidate", {})
+	if next is Dictionary and (bool(next.get("enabled", false))
+			or OS.get_cmdline_user_args().has(str(next.get("preview_arg", "--none")))):
+		cfg.merge(next.get("overlay", {}), true)
 	var stone := _material(materials, "masonry")
 	var stone_light := _material(materials, "masonry_trim")
 	var timber := _material(materials, "weathered_timber")
@@ -35,7 +40,7 @@ func build(materials: Dictionary) -> void:
 	var blue := _colour_material(Color(str(cfg.get("banner_blue", "#315f9a"))))
 	var gold := _colour_material(Color(str(cfg.get("banner_gold", "#d6ad52"))))
 	_add_arrival_arch(cfg, stone_light)
-	_add_compass(cfg, stone_light, bronze, blue)
+	_add_compass(cfg, stone_light, bronze, stone if str(cfg.get("compass_inlay", "blue")) == "stone" else blue)
 	_add_roosts(cfg, stone, timber, bronze)
 	_add_banners(cfg, blue, gold, timber)
 	_add_signals(cfg)

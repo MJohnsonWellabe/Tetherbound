@@ -1,0 +1,58 @@
+{
+ "Nm": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ty": {
+  "anchor": false,
+  "label": "F17#6 r9 GPU Medium nave-sides",
+  "A": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-nave-sides-control.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-nave-sides-candidate.png"
+ },
+ "Ij": {
+  "anchor": false,
+  "label": "F17#6 r9 GPU High shrine",
+  "A": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-High-shrine-candidate.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-High-shrine-control.png"
+ },
+ "Gm": {
+  "anchor": false,
+  "label": "F17#6 r9 GPU Medium shrine",
+  "A": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-shrine-control.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-shrine-candidate.png"
+ },
+ "Bb": {
+  "anchor": false,
+  "label": "F17#6 r9 GPU High approach-nave",
+  "A": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-High-approach-nave-candidate.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-High-approach-nave-control.png"
+ },
+ "Is": {
+  "anchor": false,
+  "label": "F17#6 r9 GPU High nave-sides",
+  "A": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-High-nave-sides-candidate.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-High-nave-sides-control.png"
+ },
+ "Iw": {
+  "anchor": false,
+  "label": "F17#6 r9 GPU Medium approach-nave",
+  "A": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-approach-nave-control.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-approach-nave-candidate.png"
+ },
+ "Vy": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Zz": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Xl": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ }
+}

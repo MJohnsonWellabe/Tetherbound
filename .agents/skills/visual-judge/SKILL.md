@@ -12,6 +12,8 @@ not a critic.
 
 ## Running it
 
+For lane captures and CPU judging, follow the runbook in `docs/TECHNICAL.md` §8.1 (setup, exact capture commands, the judge-folder and calibrate steps, and known harness pitfalls). The commands below are the original survey path.
+
 ```bash
 apt-get install -y xvfb mesa-vulkan-drivers    # once, on a fresh machine
 tools/survey.sh                                # 5 framed shots -> shots/

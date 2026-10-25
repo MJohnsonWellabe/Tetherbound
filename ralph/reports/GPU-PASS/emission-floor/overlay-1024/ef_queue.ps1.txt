@@ -1,0 +1,27 @@
+﻿# Emission-floor overlay verification (local). Shipped arms first, then overlay arms, then revert.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $proj = "D:\tb-gpu-pass"; $root = "D:\tb-gpu-runs\out\EF"
+$py = "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_RUN_TIMEOUT_MIN = "30"; $env:TB_FORCE_MATTE = ""; $env:TB_FORCE_OPAQUE = ""; $env:TB_DROP_OVERLAY = ""
+$nightSp = "sparkit,cindercub,bramblebun,ripplet"
+$daySp = "sparkit,cindercub,bramblebun,ripplet,mudsnout,trailpup,paddlenewt,terrapup"
+function NL($arm, $time, $sp) {
+    $out = "$root\nl-$time-$arm"; New-Item -ItemType Directory -Force "$out\frames" | Out-Null
+    $env:TB_NL_OUT = ("$out\frames" -replace '\\', '/'); $env:TB_NL_TIME = $time; $env:TB_NL_SPECIES = $sp
+    & $run -Preset Medium -Script "D:/tb-gpu-runs/tools/nl_capture.gd" -OutDir $out -Resolution "1920x1080" -ProjectPath $proj
+}
+"== shipped"
+git -C $proj diff --stat -- data/config/art.json scripts/world/world_look.gd
+NL "shipped" "night" $nightSp
+NL "shipped" "day" $daySp
+"== overlay"
+& $py -I D:\tb-gpu-runs\tools\emission_overlay.py apply
+git -C $proj diff --stat -- data/config/art.json scripts/world/world_look.gd
+git -C $proj diff -- data/config/art.json scripts/world/world_look.gd | Set-Content -Encoding utf8 "$root\overlay_applied.diff"
+$a = @("--trainer=captain_riverwatch", "--live-member=captain_riverwatch:4", "--ally=ripplet", "--frames=12", "--interval=0.5", "--tell-frames", "--keep-alive", "--out={FRAMES}")
+& $run -Preset Medium -Script "res://tools/art_pipeline/capture_named_fight.gd" -OutDir "$root\F22-Medium-overlay" -ProjectPath $proj -UserArgs $a
+NL "overlay" "night" $nightSp
+NL "overlay" "day" $daySp
+git -C $proj checkout -- data/config/art.json scripts/world/world_look.gd
+git -C $proj status --short -- data/config/art.json scripts/world/world_look.gd
+$env:TB_NL_OUT = ""; $env:TB_NL_TIME = ""; $env:TB_NL_SPECIES = ""
+"emission overlay queue done"

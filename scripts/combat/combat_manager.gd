@@ -2394,10 +2394,13 @@ func _take_camera() -> void:
 ## F10#2 r6 (line_of_sight_fade.pilot_min_screen_fraction, with the sight-line
 ## candidate only): the farthest the lens may stand so a pilot `height` m tall
 ## fills at least that fraction of a `fov_deg` vertical frame; 0 = no floor.
-static func pilot_size_floor_distance(height: float, fov_deg: float, candidate_on: bool) -> float:
+## `override_fraction` > 0 (camera.json fight.per_trainer.<id>.pilot_min_screen_fraction)
+## replaces the shared fraction for that trainer's fight.
+static func pilot_size_floor_distance(height: float, fov_deg: float, candidate_on: bool,
+		override_fraction: float = 0.0) -> float:
 	var sight: Dictionary = preload("res://scripts/world/foliage_camera_visibility.gd").config() \
 		.get("line_of_sight_fade", {})
-	var fraction := float(sight.get("pilot_min_screen_fraction", 0.0))
+	var fraction := override_fraction if override_fraction > 0.0 else float(sight.get("pilot_min_screen_fraction", 0.0))
 	if not candidate_on or fraction <= 0.0 or height <= 0.0:
 		return 0.0
 	return height / (2.0 * tan(deg_to_rad(fov_deg) * 0.5) * fraction)
@@ -2731,6 +2734,8 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	var cap := fight_camera_trainer_cap(fight, _wild)
 	if cap.has("max_distance_m"):
 		local["max_distance_m"] = minf(float(local.max_distance_m), float(cap.max_distance_m))
+	if cap.has("face_yaw_deg"):
+		local["prefer_world_yaw_deg"] = float(cap.face_yaw_deg)
 	# F10#2 r8 candidate: a named wild may cap the solver's pull-back so its
 	# fight keeps a steady close framing.
 	var named_cap := named_fight_camera_cap(_wild, _fight_world_sight_targets().size() > 0)
@@ -2738,8 +2743,14 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 		local["max_distance_m"] = minf(float(local.max_distance_m), named_cap)
 	# F10#2 r6 candidate: never pull back so far that the piloted creature's
 	# rendered height drops under `pilot_min_screen_fraction` of the frame.
+	# Fights close-1025 (ON since 25 Oct; camera.json fight.pilot_min_screen_fraction,
+	# 0/absent = off): the same floor in every fight, not only sight-line ones
+	# (judges: the pilot is a speck on dark moss and pale sand). A per-trainer
+	# fraction still wins, and only applies once the floor is on.
+	var every_fight := float(fight.get("pilot_min_screen_fraction", 0.0))
 	var floor_m := pilot_size_floor_distance(_body_render_bounds(_ally_body).size.y, camera.fov,
-		_fight_world_sight_targets().size() > 0)
+		_fight_world_sight_targets().size() > 0 or every_fight > 0.0,
+		float(cap.get("pilot_min_screen_fraction", every_fight)))
 	if floor_m > 0.0:
 		local["max_distance_m"] = maxf(float(cfg.get("distance", 6.0)), minf(float(local.max_distance_m), floor_m))
 	local["roll_radians"] = (_camera_rig as Node3D).rotation.z
@@ -3928,6 +3939,9 @@ func _take_player_poise_damage(amount: float) -> bool:
 		_ally_body.call("cancel_combat_burst")
 	_action = Action.STAGGER
 	_action_timer = float(_poise_config().get("stagger_seconds", 0.6))
+	# P2-016: the player's creature shows its stagger as a held wince.
+	if _ally_body != null and _ally_body.has_method("hold_combat_wince"):
+		_ally_body.call("hold_combat_wince", _action_timer)
 	return true
 
 
@@ -5649,7 +5663,8 @@ func _on_enemy_telegraph(seconds: float) -> void:
 		_wild.global_position,
 		_wild.call("tell_colour") if _wild.has_method("tell_colour") else Color(str(cfg.get("colour", "#ff5a3c"))),
 		float(cfg.get("radius", 1.1)),
-		seconds
+		seconds,
+		true
 	)
 	glow.call("follow_state", _wild, enemy_is_winding_up)
 
@@ -5888,9 +5903,17 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 	var feedback := _shared_hit_feedback() if not impact.is_empty() else null
 	if feedback != null: style = feedback.call("flash_style", impact)
 	if style.has("colour"): colour = colour.lerp(Color(str(style.colour)), 0.6)
+	# Fights close-1025 (ON since 25 Oct; `impact.flash_drop` 0..1, 0/absent = off):
+	# GPU G3 judges saw the gold disc cover the struck body and hide its react.
+	# The flash moves this fraction of the way from the contact point down to
+	# the struck creature's feet; the ground burst carries the hit there.
+	var flash_at := where
+	var drop := clampf(float(cfg.get("flash_drop", 0.0)), 0.0, 1.0)
+	if drop > 0.0 and is_instance_valid(struck):
+		flash_at = where.lerp(Vector3(where.x, struck.global_position.y + 0.15, where.z), drop)
 	FLASH.burst(
 		host,
-		where,
+		flash_at,
 		colour,
 		float(spec.get("radius", 1.5)) * float(style.get("radius_scale", 1.0)),
 		float(spec.get("duration", 0.34)) * float(style.get("duration_scale", 1.0)),
@@ -5903,6 +5926,15 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 		float(spec.get("core_pop", 0.0)) * float(style.get("strength_scale", 1.0)),
 		float(spec.get("core_hold", 0.0))
 	)
+	# P2-063 / F22#4 (`impact.ground_burst`, absent = off): a landed blow also
+	# kicks dust and stone chips from the struck creature's feet, so the hit is
+	# a grounded event rather than only a disc over the body. Charged blows by
+	# default; `quick: true` adds quick ones. The same contact_burst a named
+	# charge uses (enemy_pattern_telegraph.gd), with this block's cue_contact_* keys.
+	var ground: Variant = cfg.get("ground_burst")
+	if ground is Dictionary and (ground as Dictionary).get("enabled") == true \
+			and (charged or (ground as Dictionary).get("quick") == true) and is_instance_valid(struck):
+		PATTERN_CUE.contact_burst(host, struck.global_position, ground)
 
 
 func _nudge_camera_on_landing(charged: bool) -> void:
@@ -6840,6 +6872,12 @@ func player_poise_fraction() -> float:
 
 func player_is_staggered() -> bool:
 	return _action == Action.STAGGER
+
+
+## Seconds left on the local player's creature's stagger (0 when not staggered).
+## Its remote proxy publishes this with the hit so other peers hold the wince too.
+func player_stagger_seconds_left() -> float:
+	return maxf(0.0, _action_timer) if _action == Action.STAGGER else 0.0
 
 
 func outcome() -> String:

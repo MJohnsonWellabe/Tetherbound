@@ -65,6 +65,26 @@ func _run() -> void:
 	hud._yield_bottom_to_build_menu()
 	_check(prompt.visible, "Released command bar (relay phase): the interaction prompt returns")
 
+	# close-1024: the F42 system overlay hides the legacy grid and draws the
+	# command strip itself; the world prompt must still yield to it.
+	# The overlay is built lazily on a real fight's first frame; stand one in.
+	if combat._system_overlay == null:
+		combat._system_overlay = Control.new()
+		combat.add_child(combat._system_overlay)
+	var overlay: Control = combat._system_overlay
+	if overlay != null:
+		overlay.show()
+		hud._yield_bottom_to_build_menu()
+		_check(overlay.is_visible_in_tree(), "Fixture: system overlay command strip shown")
+		_check(not prompt.visible, "Fight (system overlay): the world prompt yields to the command strip")
+		combat._world_presentation_mode = "relays"
+		hud._yield_bottom_to_build_menu()
+		_check(prompt.visible, "Relay phase over the overlay: the interaction prompt returns")
+		combat._world_presentation_mode = "combat"
+		overlay.hide()
+	else:
+		_check(false, "Fixture: combat HUD has a system overlay")
+
 	manager.fighting = false
 	hud._yield_bottom_to_build_menu()
 	_check(prompt.visible, "After the fight: the world prompt shows again")

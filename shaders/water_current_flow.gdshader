@@ -77,6 +77,30 @@ uniform bool visual_ridges_enabled = false;
 uniform float visual_ridge_spacing_m = 23.0;
 uniform float visual_ridge_width_m = 4.5;
 uniform float visual_ridge_gain = 0.7;
+// F13#5 tide-line candidate (close-1024). Natural current read: where the
+// moving lane meets still sea, an irregular foam seam (continuous, wandering,
+// varying width, broken only in long gaps) drifts with the flow along both
+// banks, and the lane inside carries small choppy wavelet caps. 0 = off.
+uniform float seam_opacity = 0.0;
+uniform float seam_width_m = 1.3;
+uniform float seam_wander_m = 3.5;
+uniform float seam_gap = 0.25;
+uniform float chop_cap_opacity = 0.0;
+uniform float chop_cap_scale_m = 2.2;
+uniform float chop_cap_density = 0.35;
+// b6: each seam stretch is a foam tongue that brightens toward its downstream
+// head and frays upstream, so a still frame says which way the water runs.
+// Stretch length in metres (0 = untapered seams).
+uniform float seam_taper_m = 0.0;
+// t1b: moonlit foam. A small emission on the foam only, so the lane still
+// reads at night; 0 keeps the lit foam exactly.
+uniform float moon_glint = 0.0;
+// t1f: a faint cool sheen over the channel tint so the lane itself (not only
+// its foam) still reads at night; 0 keeps the tint exactly.
+uniform float lane_glint = 0.0;
+uniform vec4 lane_glint_colour : source_color = vec4(0.62, 0.77, 0.88, 1.0);
+// b6: the lane tint fades over a wandering soft edge instead of the ribbon rim.
+uniform bool soft_channel_tint = false;
 varying vec3 v_world;
 varying float v_distance;
 
@@ -221,6 +245,44 @@ void fragment() {
 		ridge_shadow = smoothstep(width, width + 0.35, phase_m)
 			* (1.0 - smoothstep(width + 0.35, width * 1.8, phase_m)) * gain * 0.3;
 	}
+	float seam_a = 0.0;
+	if (seam_opacity > 0.0 || chop_cap_opacity > 0.0) {
+		float moving_s = along - TIME * speed;
+		// Distance in metres from each bank, along a slowly wandering line.
+		float wander = (noise(vec2(moving_s / 37.0, 1.3)) - 0.5) * 2.0 * seam_wander_m
+			+ (noise(vec2(moving_s / 9.0, 5.1)) - 0.5) * seam_wander_m * 0.35;
+		float ribbon_half = max(fwidth(across_m) / max(fwidth(UV.x), 1e-5) * 0.5, 1.0);
+		float from_edge = (1.0 - across) * ribbon_half - 0.18 * ribbon_half + wander * sign(UV.x - 0.5);
+		float girth = seam_width_m * mix(0.45, 1.25, noise(vec2(moving_s / 6.0, UV.x * 3.0)));
+		float seam = 1.0 - smoothstep(girth * 0.4, girth, abs(from_edge));
+		// Lacy bubble texture inside the seam, and long gaps where it breaks.
+		float lace = smoothstep(0.3, 0.75, noise(vec2(across_m * 1.7, moving_s * 0.9)));
+		float keep = smoothstep(seam_gap - 0.08, seam_gap + 0.08, noise(vec2(moving_s / 28.0, UV.x * 7.0 + 2.0)));
+		seam *= mix(0.55, 1.0, lace) * keep;
+		if (seam_taper_m > 0.0) {
+			float side_seed = step(0.5, UV.x) * 17.3;
+			float stretch = moving_s / seam_taper_m + hash(vec2(side_seed, 4.1));
+			float stretch_id = floor(stretch);
+			float tongue = fract(stretch);
+			float head = smoothstep(0.05, 0.8, tongue) * (1.0 - smoothstep(0.88, 0.97, tongue));
+			seam *= head * mix(0.6, 1.0, hash(vec2(stretch_id, side_seed + 2.0)));
+		}
+		// Wavelet caps: small crescent whitecaps, denser toward the lane core.
+		vec2 cap_uv = vec2(across_m, moving_s * 1.6) / max(chop_cap_scale_m, 0.5);
+		vec2 cap_cell = floor(cap_uv);
+		// Each cap is jittered, sized and faded per cell so the field never
+		// reads as a regular grid of arcs.
+		vec2 cap_jitter = vec2(hash(cap_cell + vec2(1.7, 3.3)), hash(cap_cell + vec2(8.1, 2.9))) - 0.5;
+		float cap_size = mix(0.55, 1.0, hash(cap_cell + vec2(6.6, 0.4)));
+		vec2 cap_local = (fract(cap_uv) - 0.5 - cap_jitter * 0.45) / cap_size;
+		float cap_on = step(hash(cap_cell + vec2(4.2, 9.1)), chop_cap_density * (1.0 - across));
+		float crescent = 1.0 - smoothstep(0.04, 0.12, abs(cap_local.y + cap_local.x * cap_local.x * 1.2 - 0.05));
+		crescent *= 1.0 - smoothstep(0.25, 0.42, abs(cap_local.x));
+		crescent *= mix(0.35, 1.0, lace) * mix(0.4, 1.0, hash(cap_cell + vec2(2.2, 7.7)));
+		float cap = cap_on * crescent * chop_cap_opacity;
+		foam = clamp(max(foam, cap), 0.0, 1.0);
+		seam_a = clamp(seam * seam_opacity, 0.0, 1.0) * ends * fade;
+	}
 	float band = lane_opacity * mix(0.5, 1.0, strength)
 		* (0.6 + 0.4 * noise(vec2(across_m / 6.0, (along - TIME * speed * 0.5) / 25.0)));
 	if (visual_groups_enabled) {
@@ -230,6 +292,10 @@ void fragment() {
 	float alpha = foam + band * (1.0 - foam);
 	vec3 premult = brightness * (foam_colour.rgb * foam + lane_colour.rgb * band * (1.0 - foam)) * mask;
 	alpha *= mask;
+	// The tide-line seam sits on the banks, outside the soft foam edge mask.
+	premult = premult * (1.0 - seam_a) + brightness * foam_colour.rgb * seam_a;
+	alpha = alpha + seam_a * (1.0 - alpha);
+	float lane_glow = 0.0;
 	if (channel_tint_opacity > 0.0 || channel_edge_opacity > 0.0) {
 		// Under the foam: the dashed rim, then the channel tint. Not dimmed by
 		// the soft foam edge mask, so the bank line sits at the ribbon's edge.
@@ -237,16 +303,29 @@ void fragment() {
 		float rim = 1.0 - smoothstep(rim_w * 0.35, rim_w * 0.6, abs(across - (1.0 - rim_w)));
 		rim *= step(0.4, fract((along - TIME * speed) / max(channel_edge_dash_m, 1.0)));
 		float inside = 1.0 - smoothstep(1.0 - rim_w * 0.4, 1.0, across);
+		if (soft_channel_tint) {
+			float tint_edge = noise(vec2(across_m / 7.0, (along - TIME * speed * 0.6) / 21.0));
+			inside = (1.0 - smoothstep(0.45 + tint_edge * 0.25, 0.92, across))
+				* mix(0.7, 1.0, noise(vec2(across_m / 4.0, (along - TIME * speed) / 9.0)));
+		}
 		float base = ends * fade;
 		float rim_a = rim * channel_edge_opacity * base;
 		float tint_a = inside * channel_tint_opacity * base * mix(0.6, 1.0, calm_scale);
 		vec3 under = channel_edge_colour.rgb * rim_a + channel_tint_colour.rgb * tint_a * (1.0 - rim_a);
 		float under_a = rim_a + tint_a * (1.0 - rim_a);
+		lane_glow = tint_a * (1.0 - alpha);
 		premult += under * (1.0 - alpha);
 		alpha += under_a * (1.0 - alpha);
 	}
 	ALBEDO = premult / max(alpha, 0.001);
 	ALBEDO *= 1.0 - ridge_shadow;
+	if (moon_glint > 0.0) {
+		float foam_share = clamp((foam * mask + seam_a) / max(alpha, 0.001), 0.0, 1.0);
+		EMISSION = foam_colour.rgb * foam_share * moon_glint;
+	}
+	if (lane_glint > 0.0) {
+		EMISSION += lane_glint_colour.rgb * lane_glow / max(alpha, 0.001) * lane_glint;
+	}
 	ROUGHNESS = 0.7;
 	ALPHA = alpha;
 }

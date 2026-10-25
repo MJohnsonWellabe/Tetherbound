@@ -1,6 +1,9 @@
 extends "res://tests/test_case.gd"
 
 ## Queue with ROOT. These test candidate wiring/restoration, not visual PASS.
+## Frostclaw is the sample enabled species on installed art (Terrapup, Trailpup
+## and Cindercub, the earlier samples, now ship naturalistic remakes with their
+## own clips, close-1024).
 const BODY := preload("res://scripts/creatures/creature_body.gd")
 const SCENE := preload("res://scenes/creatures/creature.tscn")
 
@@ -34,7 +37,7 @@ func _case_preview_library_preserves_installed_clips_and_revive_pivot() -> void:
 	var loop := Engine.get_main_loop() as SceneTree
 	loop.root.add_child(stage)
 	stage.add_child(body)
-	body.call("setup", "terrapup", false)
+	body.call("setup", "frostclaw", false)
 	body.set_physics_process(false)
 	assert_true(bool(body.get_meta("f36_pose_candidate_installed", false)), "explicit preview installs on the measured rig")
 	var players := body.find_children("*", "AnimationPlayer", true, false)
@@ -71,7 +74,7 @@ func _case_ordinary_body_uses_enabled_poses() -> void:
 	body.set_script(BODY)
 	var loop := Engine.get_main_loop() as SceneTree
 	loop.root.add_child(body)
-	body.call("setup", "terrapup", false)
+	body.call("setup", "frostclaw", false)
 	body.set_physics_process(false)
 	assert_true(bool(body.get_meta("f36_pose_candidate_installed", false)), "ordinary body uses owner-enabled poses on installed art")
 	body.free()

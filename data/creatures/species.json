@@ -86,24 +86,24 @@
       "rideable": {
         "can_carry": true,
         "requires_item": "saddle",
-        "mount_offset": [
-          0.0,
-          3.26413,
-          -0.251087
-        ],
+        "_comment_shrink_owner_1024": "Owner 24 Oct: Just shrink it (exception to the never-shrink rule for this naturalistic pilot only). At 3.85 m the pilot is 6.84 m nose to tail and combat admission could not seat it in the Warrens mouth (6.0 m ring) or the Hall elite room (7.0 m) with the 0.6 m clearance, so the elite fight never formed. Uniform scale 3.85 -> 3.20 m (x0.8312): radius, seat and dismount distance scaled by the same ratio; still well above the 1.80 m trainer. Terrapup has no evolution line, so no ladder order changes.",
+        "_comment_mount_nat1022": "Close-1024: the naturalistic pilot's stone-plated back stands 3.71 m at the seat (measured on its ride clip; installed back about 3.10 m), so the seat rose 3.264 -> 3.80 m at 3.85 m; after the owner's 24 Oct shrink to 3.20 m the back measures 3.08 m and the seat is 3.16 m, inside the declared height (test_rideable_roster).",
+        "mount_offset": [0.0, 3.16, -0.208696],
         "ride_speed_multiplier": 1.7,
-        "dismount_distance": 2.678261
+        "dismount_distance": 2.226087
       },
       "placeholder": {
         "colour": "#8a6138",
         "_comment_height_2026_08_31": "Was 2.00m (D19). BACKLOG-VISUAL-STARTER-SCALE/BACKLOG-VISUAL-BADGER-LINE-SCALE (see `_comment_starter_scale_2026_08_31` above): 2.00m rendered taller than the 1.80m trainer AND taller than this line's own adult, Burrowback (1.70m, untouched by this pass) -- a starter should not loom over the player, and a cub should not outsize the adult it is thematically paired with in the census. Dropped to 1.62m, verified by direct re-render (creature_body._fit() at this height is comfortably below its footprint-volume clamp threshold for this model, so the render-measured height equals the declared 1.62m exactly -- checked, not assumed). `radius` dropped by the identical ratio (0.81x) per D12's 'radii scale with height' rule, so the hit cone and catch-accuracy bonus stay tuned relative to the creature's own new size rather than becoming proportionally larger. SUPERSEDED 2026-09-01, see `_comment_height_2026_09_01_correction` below -- kept verbatim as the historical record of what the 08-31 pass did and why, not amended.",
         "_comment_height_2026_09_01_correction": "OD-0901-1 (`archive/owner/OWNER_DIRECTIVES_2026-09-01.md`): the owner directly overrode the 08-31 cut above -- 'I think almost all creatures should stand taller than the character. That's part of the allure of the game.' A starter looming over the player is the intended read, not the defect the census called it. Raised to 2.30m: past the pre-08-31 value of 2.00m (D19), not merely back to it, per the owner's explicit instruction not to just undo the cut. `radius` raised by the same ratio in reverse (radius/height held at Terrapup's own 0.3802 constant, per D12), giving 0.8746 -- so the hit cone and catch-accuracy bonus track the new size exactly as they tracked the old one. Verified by direct re-render with tools/_capture_creature_roster.gd: render-measured height equals the declared 2.30m (creature_body._fit()'s footprint-volume clamp does not engage at this height for this model). Burrowback (the 'badger line' pairing from defect 65) is deliberately left untouched -- see the ripplet entry's 2026-09-01 comment for the reasoning, which applies equally here.",
-        "height": 3.85,
-        "radius": 1.464004,
+        "height": 3.2,
+        "radius": 1.216834,
         "_comment_rest_roll": "OWNER-0912-TERRAPUP-LAY R41 keeps whole-body runtime roll disabled. The installed GLB now carries a dedicated authored rest clip: its skeletal root rolls around the rig's verified flank axis while the four legs, head, spine and tail fold as one animation. This replaces the R25-R38 attempt to rescue the crouching faint clip with runtime transforms.",
         "rest_roll_deg": 0.0,
+        "field_rim": 0.25,
         "rest_use_body_pose": true,
         "_comment_rest_pose": "R41 uses the dedicated baked rest clip and applies only a measured model translation after the clip completes. The final 90-degree flank pose uses mirrored local-Z limb tucks. The live-skin probe excludes CreatureBody's four-vertex ContactShadow helper from anatomical bounds: R40 grounded that helper while the visible creature hovered. The real unshifted skinned minimum is 1.1302m below the anchor plane, so +1.0302m targets 0.100m of bedding compression. The no-op root recipe preserves the authored final frame through the reversible rest lifecycle; no runtime skeletal distortion, mesh scaling or vertex deformation is used.",
+        "_comment_rest_nat1022": "Close-1024: the naturalistic pilot's own rest clip ends grounded (author_native_clips.py grounds every frame; Blender: lowest vertex 0.00 m, 3.05 m tall = 0.79 of standing), so the installed model's +1.0302 m translation is 0.",
         "rest_pose": {
           "clip_role": "rest",
           "max_height_ratio": 0.85,
@@ -117,7 +117,7 @@
           ],
           "model_position_offset": [
             0.0,
-            1.0302,
+            0.0,
             0.0
           ],
           "bones": {
@@ -131,11 +131,13 @@
           }
         },
         "_comment_footprint": "How long this body may be for its width, as a multiple of its collider diameter. A quadruped is genuinely several times longer than it is wide; a frog is not. Set too low and creature_body._fit() scales the model DOWN to fit the allowance and the creature renders shorter than its own collider claims \u2014 silently, until MA4.",
-        "model": "res://assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb",
+        "_comment_model_nat1022": "F36#0 owner style direction 22 Oct: naturalistic pilot (coordinator Meshy, candidate_nat1022; measured quadruped rig, own clips; provenance in candidate_nat1022/source/meshy_provenance.jsonl, drafted reference reference/nat1022-concept.png). Close-1024 b1 (CPU, three judges, confirming batch): mapped 7.62 vs live 5.30 (CPU-provisional). Field rim 0.25, no albedo lift (it blew out the plates).",
+        "model": "res://assets/creatures/tetherbound/terrapup/candidate_nat1022/models/creature_terrapup_nat1022.glb",
+        "colourway_source_species": "terrapup_nat1022",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_field_emission_0901": "OWNER DIRECTIVE 2026-09-01 ('some of the smaller creatures blend into the environment too well'), revisited 2026-09-25 under the owner's lane-session direction that Terrapup's shell is grey STONE (sheet 01) and should 'look good'. History: 1.4 was chosen on 09-01 when the shell was an olive/mint block, from a sweep that put 1.4 at 1.124/1.070 on that texture and that probe framing. Re-measured 2026-09-25 on the stone-plate texture with tools/_probe_grass_separation.gd --species=terrapup --extra-emission=0.6,0.8,1.0,1.2,1.4 and tools/_grass_separation_ratio.py, creature box (490,225)-(795,445) vs grass boxes (150,260,380,340) / (100,440,420,640): DAY 0.6->0.635/0.762, 0.8->0.685/0.822, 1.0->0.725/0.870, 1.2->0.753/0.907, 1.4->0.776/0.935; NIGHT 0.6->0.444/0.531, 1.0->0.510/0.611, 1.4->0.574/0.688. No value up to 1.4 reaches the old 1.06 luminance target in the current probe framing (the box is mostly shaded coat), so 1.4 no longer meets it either; the trend would need ~3.0, which renders the plates white and the moss lime (seen in the 2026-09-25 world A/B). 0.6 is kept because separation now comes from the pale grey plates against the dark coat and the green field (hue and in-body value contrast), which two code-blind judge rounds preferred to the 1.4 look ('grey-on-brown contrast lifts the silhouette day and night'). The 1.06 luminance bar is therefore NOT claimed as met at 0.6. TUNABLE.",
-        "field_emission": 0.6,
+        "field_emission": 0.0,
         "_comment_art": "Rigged and animated. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider \u2014 and therefore the hit cone and the catch accuracy bonus \u2014 does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "_comment_animations": "26 clips ship baked into each .glb, so nothing is retargeted and nothing can be mangled. `pain` and `fall_over` are what hit and faint have wanted since M2; `uppercut` is a real committed swing rather than a lunge with no animation.",
         "animations": {
@@ -143,10 +145,15 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
           "faint": "faint",
-          "rest": "rest"
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
         },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."},
         "_comment_size": "Chibi bipeds beside a 1.8m trainer, so they read as companions rather than as livestock \u2014 which is the Palworld register. Sized against each other so the practice creature is smaller than your partner and the one that ambushes you is bigger than both.",
         "_comment_pack": "Plumberry Plains Vol. 2, and it answers the review's first and largest complaint directly. The critic's words were 'none of them is a designed creature... Palworld's entire proposition is that its creatures are drawn characters \u2014 bold silhouette, hue-opposed to the environment, exaggerated proportion, expression', and that the previous roster put 'a naturalistic tree frog, a faceted grey low-poly goat, and a Nintendo Mii in the same 300 pixels'. These are ten designed chibi characters from ONE artist, which fixes the design AND the cohesion complaint at once.",
         "_comment_pick": "Chosen on MEASURED colour, not taste. The first pick was fox, rabbit and wolf \u2014 which turned out to be the three LEAST saturated characters in the pack (0.20, 0.19, 0.15), i.e. exactly the defect the critic named on the creature they replaced: 'saturation 0.12... a grey rock standing on olive ground... your own creature is the least readable object in your own fight'. Re-picked against its stated criterion \u2014 hue-opposed to a green world, and readable at 40px:\n  bear      hue  23 deg, sat 0.77, val 0.61  \u2014 orange-brown, the most saturated thing in the pack\n  duck      hue  42 deg, sat 0.67, val 0.95  \u2014 bright gold\n  songbird  hue 194 deg, sat 0.36, val 0.72  \u2014 blue, the only cool hue available\nThree hues, three values, none of them the chartreuse the ground is made of.",
@@ -181,26 +188,20 @@
         "_comment_height_2026_09_01_correction": "OD-0901-1 (`archive/owner/OWNER_DIRECTIVES_2026-09-01.md`): the owner directly overrode the 08-31 cut above -- 'almost all creatures should stand taller than the character... that's part of the allure.' RIPPLET_PRODUCTION_REPORT.md and ralph/BLOCKED.md's own account of the sheet describe 'chibi' as a PROPORTION read -- 'stubbier and larger-headed', held-paw sitter posture -- not a literal-smallness instruction; nothing in the sheet materials says Ripplet must be the smallest starter or must sit below the player. So 'chibi mascot' and 'towers over the player' are not actually in tension: a stout, big-headed, big creature is still readably chibi. Raised to 2.15m -- past the pre-08-31 value of 1.95m (D19), not merely back to it -- and kept a step below Terrapup's own 2.30m so the two starters keep their prior relative order (Ripplet the stouter, slightly shorter of the pair) while both clear the player by a wide, unambiguous margin; 2.15m is comfortably above the 1.80m floor OD-0901-1 sets as the one hard constraint. `radius` raised by the same ratio in reverse (radius/height held at Ripplet's own 0.3793 constant, per D12), giving 0.8155. Verified by direct re-render with tools/_capture_creature_roster.gd: render-measured height equals the declared 2.15m. Burrowback (defect 65's 'badger line' pairing with Terrapup) is left untouched: Terrapup and Burrowback are not a real `evolves_into`/`evolves_from` pair (verified prior session -- 'badger line' is a thematic label only), so D17 imposes no ordering requirement, and OD-0901-1 says any relative-ordering fix in this area should raise the smaller side rather than lower the larger one -- but the ordering concern itself was only ever a coincidence the census flagged, not a real defect, and this pass makes no claim that Burrowback needs to change to stay coherent next to a bigger Terrapup.",
         "height": 3.6,
         "radius": 1.365488,
-        "_comment_footprint": "Upright sitter with a torso-sized tail fan behind it; the fan is most of the footprint.",
+        "_comment_footprint": "Close-1024: the four-legged otter remake (5.73 m nose to tail at 3.6 m) clears this allowance (9.83 m). Was: upright sitter with a torso-sized tail fan behind it; the fan is most of the footprint.",
         "footprint_allowance": 3.6,
-        "model": "res://assets/creatures/tetherbound/ripplet/candidate_installed_retex/models/creature_ripplet_installed_retex_r6_lod0.glb", "_comment_model_close1020": "F36#0 close-1020 art pass 4: installed-rig retex r6 (ripplet/candidate_installed_retex/source/species_candidate_r6.json); three code-blind judges 6.70 vs 6.13 installed at the fight camera (CPU-provisional).",
+        "colourway_source_species": "ripplet_nat1024b", "_comment_model_nat1024b": "F36#0 owner style direction 22 Oct: naturalistic four-legged otter remake (coordinator Meshy batch 3, candidate_nat1024b; measured quadruped rig, own clips; provenance candidate_nat1024b/source/meshy_provenance.jsonl). close-1024 b11 (CPU three-judge yardstick, confirming batch): mapped 7.40 vs shipping 5.51 (CPU-provisional). Seat 1.45 -> 2.58 m on the measured 2.45 m back (ride clip), inside the 3.6 m height.", "model": "res://assets/creatures/tetherbound/ripplet/candidate_nat1024b/models/creature_ripplet_nat1024b.glb", "_comment_model_close1020": "Superseded by the close-1024 naturalistic remake (history only). F36#0 close-1020 art pass 4: installed-rig retex r6 (ripplet/candidate_installed_retex/source/species_candidate_r6.json); three code-blind judges 6.70 vs 6.13 installed at the fight camera (CPU-provisional).",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Produced by the tools/art_pipeline chain from sheet 02; see archive/docs/art/RIPPLET_PRODUCTION_REPORT.md.",
-        "animations": {
-          "idle": "idle",
-          "walk": "walk",
-          "run": "run",
-          "attack": "attack",
-          "hit": "hit",
-          "faint": "faint"
-        }
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "rideable": {
         "can_carry": true,
         "required_realm": "water",
         "requires_item": "",
-        "mount_offset": [0.0, 1.45, -0.15],
+        "mount_offset": [0.0, 2.58, -0.15],
         "ride_speed_multiplier": 1.0,
         "dismount_distance": 2.5
       },
@@ -292,10 +293,9 @@
         "_comment_field_rim_0828": "OWNER DIRECTIVE 2026-08-28 section 2b, the half scale cannot reach: 'or they're the color of the grass'. Measured on a real render at throwing range in real grass -- where the Bramblebun is visible at all, hue separation against the field is fine (47 degrees, tan against green) but LUMINANCE contrast is 1.15:1, and this repo's vegetation.json quotes a blind critic calling 1.00:1 invisible. Hue discrimination falls off with angular size much faster than value does, so 47 degrees of hue does not rescue it at 7.5m on a 7-inch panel. 0.22 against creature_body.gd's FIELD_RIM_MAX 0.30 and the alpha's own 0.65: enough to outline the silhouette against grass, far enough under the alpha's rim that an alpha's identity tell survives. Rim rather than a brighter albedo because these models are self-lit and an albedo change would be invisible -- creature_body.gd::_apply_alpha_presence() made that call first and its reasoning applies unchanged. TUNABLE. -- MEASURED AND SET BACK TO ZERO. tools/_probe_grass_separation.gd rendered this creature four ways from ONE fixed camera in real grass at throwing range (0.78/0.96 crossed with rim 0/0.22) and the rim is a no-op: visible creature area 7.0% -> 7.1% at 0.78 and 10.8% -> 10.9% at 0.96, luminance contrast 1.15 -> 1.14 and 1.08 -> 1.06. That is consistent with why _apply_alpha_presence() runs its own rim at 0.65 and pairs it with an aura and a repainted colourway: on a self-lit material a rim under FIELD_RIM_MAX (0.30) does not register. Left at 0 rather than raised, because the strengths that would register are the alpha's own identity tell. The mechanism stays available and opted out; the colour half of the owner's report is NOT solved by it.",
         "field_rim": 0.0,
         "_comment_field_emission_0901": "OWNER DIRECTIVE 2026-09-01 ('some of the smaller creatures blend into the environment too well like bramblebun and others who disappear in the grass. they either need to be bigger or brighter'), owner-approved to push past both the modest-scale lever and the rim BACKLOG-B2-GRASS-SEPARATION already proved a no-op. `field_emission` (creature_body.gd::_apply_field_brightness()) is a per-species value-brightness multiplier -- see FIELD_EMISSION_MAX's own comment in creature_body.gd for why it multiplies `albedo_color` rather than emission: this mesh's shipped material was inspected directly (spawn + read back the active surface material) and has `emission_enabled = false`, so it is NOT the self-lit convention the rest of this file's rim/tint comments assume, and an emission-only lever (tried first, per the B2 report's own reasoning) measured as a complete no-op -- ratio flat at 1.014-1.015 across a 0.5-3.0 sweep. MEASURED with tools/_probe_grass_separation.gd's `--extra-emission=` sweep + tools/_grass_separation_ratio.py against this same session's SHIPPED-height render, both of the original audit's two grass reference boxes, target 1.06-1.15: 0.50->1.090/1.035, 0.60->1.103/1.047, 0.70->1.115/1.057, 0.80->1.126/1.070, 0.90->1.137/1.080, 1.00->1.143/1.085, 1.10->1.152/1.095, 1.20->1.163/1.103, 1.50->1.182/1.118, 2.00->1.200/1.140, 3.00->1.215/1.155. Box 1 alone is in-range from ~0.15; box 2 (the stricter, HUD-clear box) only enters range past ~0.72, and box 1 leaves range past ~1.05 -- 0.9 is the value comfortably inside BOTH boxes' target window (1.137 and 1.080), not just whichever box clears first. TUNABLE.",
-        "field_emission": 2.5,
+        "field_emission": 0.0,
         "_comment_field_emission_0903": "CREATURE-LEGIBILITY-0903 (Gate 2.4, docs/ROADMAP.md). Reopened with a stricter acceptance than the 0901 pass above met: 'Bramblebun-vs-ground luminance ratio at least 1.5:1 at 30% scale', against 0901's own 1.06-1.15 target. Re-measured this session with tools/_probe_grass_separation.gd's `--extra-emission=` sweep at the CURRENT shipped stand/lighting (creature box (585,350,700,450), open-grass reference box (150,260,380,340) on the probe's own 1280x800 frame, Rec.709 luma, verified unchanged when both boxes are scaled to 30% before measuring): SHIPPED (0.9) -> 1.331, 1.20 -> 1.389, 1.60 -> 1.467, 2.00 -> 1.523, 2.50 -> 1.568, 3.00 -> 1.612. 0.9 no longer clears the new bar at all -- the 0901 measurement above was against a different camera stand/grass state, and this bar is a full 1.5 vs. that pass's 1.06-1.15, so a re-measurement rather than an increment was the right call. 2.5 clears 1.5:1 with real margin (1.568, vs. 2.00's 1.523 sitting close to the line) while still reading as the creature's own cream/tan coat rather than a blown-out white shape at 3.0 -- checked against the rendered frames directly, not asserted. Height/field_rim untouched: `_comment_height_0831` above already measured height as the wrong lever (ratio FALLS as height rises) and `_comment_field_rim_0828` already proved rim a no-op on this self-lit-by-multiply material; this stays the value lever. TUNABLE.",
         "_comment_field_degreen_0902": "OWNER-0901-CREATURE-GRASS-VISIBILITY-V2. Reopened after `field_emission` shipped: owner playtest 2026-09-02, with grass_field.enabled now true (it was false for every render behind the 0901 fix above -- confirmed by that render's own missing 'grass field re-bound' log line, which only prints when the field is actually on), verbatim 'small creatures in grass still want fixed. they're not super visible.' Re-rendered against the real, camera-relative field this time (tools/_probe_grass_separation.gd, same throwing-range stand): bramblebun_redesign's own reference art (assets/creatures/tetherbound/bramblebun_redesign/reference/side.png) paints real moss/lichen patches across its back and shoulders, and those patches sample far closer to the meadow's own measured ground hue (68.3, grass_field.json's _comment_colour) than the whole-texture mean (39.6) the 0828/0901 notes above measured against -- a crop box sized to the WHOLE creature dilutes a hue match that is real over the specific area a human eye actually uses to find the silhouette edge against a real tuft carpet. `field_emission`'s pure per-channel multiply cannot fix this: it brightens the moss patches without ever moving them off grass's own hue. `field_degreen` (creature_body.gd::_brighten_node(), 0.0 default/no-op) suppresses the green channel's share of the same brightness push instead, which pulls a moss-hued pixel toward the coat's own warm brown rather than a brighter version of the same green, and does nothing to the tan majority of the coat. Response is sharply non-linear (multiplying already-dark, already-saturated green pixels), not gradual: swept 0.0/0.5/0.65/0.8/1.0 against real grass -- 0.0 and 0.5 read almost identically, 0.65/0.8/1.0 all land at essentially the same strong warm/pink separation once the channel gap is wide enough to pull the moss patches off grass's hue. 0.75 sits past that threshold with margin rather than pinned at FIELD_DEGREEN_MAX. See this branch's own report for the frames. TUNABLE.",
-        "field_degreen": 0.75,
         "_comment_scale_0830": "T3-CREATURES. 0.96 -> 1.00, and radius by the SAME ratio per D12. The owner's creature-expansion master sheet carries a SIZE GUIDE explicitly 'Relative to Player ~1.8m' and puts Bramblebun at 1.0m; the lane brief names that guide authoritative for scale. This is a 4% change and it is deliberately ALL that changed here. Section 6 of the brief also says 'increase its size substantially', and those two owner statements are only compatible if 'size' there means visual MASS rather than standing height -- which is what the sheet's own note says ('Larger and more substantial') and what its artwork shows: a heavy, bramble-covered hare with oversized ears at about the same height. The mass therefore has to come from the REPLACEMENT MESH the brief specifies (build path: REDO AS NEW MESHY CREATURE), which is blocked on MESHY_API_KEY -- see data/creatures/species_pending.json. Whoever lands that mesh should NOT also inflate this number to chase the word 'substantially'; that would take the creature straight back off the owner's own size guide.",
         "_comment_height_0831": "BACKLOG-B2-GRASS-SEPARATION. Ticket assumed a small height increase would restore the pre-redesign 1.06-1.15 creature/grass luminance ratio the audit's B2 addendum re-measured worse (~1.02-1.05). MEASURED AND LEFT AT 1.00: tools/_probe_grass_separation.gd (extended this session to render the species table's live height instead of only its two hardcoded test values) swept 0.86m (the tallest-tuft clearance floor) through 1.15m against the current bramblebun_redesign mesh, and the ratio falls as height RISES across the whole range (0.86m ~1.02, 1.00m ~1.02, 1.15m ~1.00) -- the same direction the pre-redesign 2026-08-28 measurement recorded for the old mesh. Nothing in the safe range (above the grass-clearance floor, at or below the modest/D12 size guide) reaches 1.06. field_rim is already proven a no-op-to-negative by the original four-way test; model_scale predicts the identical mechanism by construction (creature_body.gd::_fit() applies it as a pure multiplier on the same height-based fit). Full method, numbers and reasoning in ralph/reports/audit/BACKLOG-B2-GRASS-SEPARATION-2026-08-31.md. Closing this for real needs an albedo/value change to the mesh itself, or an owner-approved size push past 'modest' -- not a config tweak, and not this field.",
         "height": 3.0,
@@ -303,10 +303,11 @@
         "footprint_allowance": 5.8,
         "_comment_rest_roll": "BACKLOG-VISUAL-BED-ROSTER-FIT (2026-09-01). NOT the same fix as terrapup/trailpup: this species' broken bed pose is not a roll-angle/body-plan mismatch. Its `idle` clip itself is already badly deformed for this mesh's antler/twig geometry -- verified by rendering `play_faint()` (roll 0, no rotation at all) and finding the same self-intersecting antler tangle as every rolled angle tried (-30/-45/-60/90), so no roll value fixes it (`ralph/reports/audit/bed-roster-fit/shots/`). `rest_roll_deg: 0` is applied anyway because it is still the SMALLEST footprint of the options tried (the antlers point up rather than out, and the core body stays planted on the pad rather than being thrown further off it by an additional roll on top of already-bad bone data) -- a containment choice, not a claim that this pose is fixed. The animation defect itself is real and separate: BACKLOG-VISUAL-BRAMBLEBUN-IDLE-DEFORM, filed alongside this pass, needs a rig/animation fix (likely a bad antler-bone keyframe in the quadruped rigger's idle/faint output), not a data tweak.",
         "rest_roll_deg": 0.0,
-        "model": "res://assets/creatures/tetherbound/bramblebun_redesign/models/creature_bramblebun_redesign_lod0.glb",
+        "_comment_model_nat1022": "F36#0 owner style direction 22 Oct: naturalistic pilot (coordinator Meshy, candidate_nat1022; measured quadruped rig, own clips; provenance in candidate_nat1022/source/meshy_provenance.jsonl, drafted reference reference/nat1022-concept.png). Close-1024 b1 (CPU, three judges, confirming batch): mapped 7.57 vs live 4.59 (CPU-provisional). The pilot needs no grass-separation lift or degreen.",
+        "model": "res://assets/creatures/tetherbound/bramblebun/candidate_nat1022/models/creature_bramblebun_nat1022.glb",
+        "colourway_source_species": "bramblebun_nat1022",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "colourway_source_species": "bramblebun_redesign",
         "_comment_colourway_source": "The installed model is the independently UV-unwrapped Bramblebun redesign. Its embedded source texture must remain paired with that mesh; the legacy bramblebun folder's vivid/shiny/alpha atlases were painted for a different mesh and map unrelated patches onto this one. No redesign-specific sibling repaint exists yet, so this source key deliberately preserves the redesign GLB's own material for ordinary/alpha bodies and lets the existing generic tint fallback distinguish a shiny until matching derivatives are authored.",
         "_comment_art": "Produced by tools/art_pipeline from the owner's wild Ground Sheet A; see docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. Replaces the Plumberry duck that stood in for it. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider \u2014 and therefore the hit cone and the catch accuracy bonus \u2014 does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "_comment_redesign_0830": "T3-INSTALL, 2026-08-30, TRIED repointing `model` at bramblebun_redesign/'s mesh and REVERTED it in the same pass: `tests/smoke_art.gd` caught 'bramblebun has no AnimationPlayer despite declaring 6 clips' because the redesign's `.glb` was a static, unrigged single-mesh Meshy export (skins: 0, empty animations array). T1-CREATURE-RIG, same day, closed that gap: `tools/art_pipeline/finish.py rig bramblebun_redesign --kind quadruped` (the LOCAL Blender quadruped rigger every other production creature in this roster already goes through -- rig_quadruped.py + animate_quadruped.py, no Meshy spend, not the humanoid Meshy-auto-rig recipe the comment this replaces guessed at) produced a clean rig (15 bones, 0 unweighted vertices) and the standard 6 clips (idle/walk/run/attack/hit/faint), verified against a rendered posed frame (ralph/reports/T1-CREATURE-RIG/shots/pose_check/bramblebun_redesign_attack10.png) before installing, not just a passing skins-count check. `model` now points at the redesign for real. `height` was already moved 0.96 -> 1.00 for the redesign's own size guide (see _comment_scale_0830) and is left there.",
@@ -315,9 +316,15 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
-        }
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "bramblebun"
     },
@@ -355,8 +362,10 @@
         "footprint_allowance": 3.0,
         "_comment_field_emission_0901": "OWNER DIRECTIVE 2026-09-01 ('some of the smaller creatures blend into the environment too well... they either need to be bigger or brighter'). Third species this lane checked with tools/_probe_grass_separation.gd's `--species=` sweep (after bramblebun and terrapup) rather than assumed from the other two -- picked because it is the darkest small creature in the roster (`#6e492c`, a dark dirt brown) and a real render confirmed it: SHIPPED (field_emission 0.0) measured 0.719/0.682, the creature noticeably darker than the field, a near-identical starting problem to terrapup's rather than bramblebun's milder one. Swept against crop box (560,340)-(720,445): 0.5->0.883/0.840, 0.9->1.006/0.955, 1.2->1.087/1.035, 1.3->1.114/1.059, 1.35->1.125/1.068, 1.4->1.136/1.081, 1.5->1.161/1.104, 1.8->1.218/1.159, 2.1->1.272/1.209. 1.4 lands both boxes comfortably inside the 1.06-1.15 target, same discipline and the same value terrapup landed on. SUPERSEDED below -- that 1.06-1.15 target is CREATURE-LEGIBILITY-0903's own stricter 1.5:1 bar's predecessor.",
         "_comment_field_emission_0904": "G3-CREATURE-COLOUR-0904. Re-measured against Gate 2.4's stricter 1.5:1 bar, which only Bramblebun had been re-checked against (docs/CURRENT_STATE.md \u00a73 flagged Mudsnout/Terrapup/Burrowback as open). tools/_probe_grass_separation.gd --species=mudsnout --time=day, tighter creature box (600,375)-(690,440) (the original (560,340)-(720,445) box above dilutes with surrounding grass at this stricter bar's scale), same open-grass reference box (150,260,380,340) CREATURE-LEGIBILITY-0903 used: SHIPPED (1.4) measured 1.347-1.428 across two crop widths -- FAILS the 1.5:1 bar, confirming the open item. Swept: 1.8->1.558, 2.2->1.734, 2.6->1.886, 3.0->2.016. Hue held flat at ~44 degrees (a plain warm dirt-brown, `_comment_field_emission_0901`'s own `#6e492c`) across the whole sweep since this species carries no `field_degreen` -- no pink-shift risk the way Bramblebun's did. 2.2 clears the bar with real margin (1.734, the same discipline CREATURE-LEGIBILITY-0903 used for Bramblebun's own 2.5) while staying short of 3.0's washed-out saturation (sat 0.427 at 2.2 vs 0.360 at 3.0, measured off the rendered frame). TUNABLE.",
-        "field_emission": 2.2,
-        "model": "res://assets/creatures/tetherbound/mudsnout/models/creature_mudsnout_lod0.glb",
+        "field_emission": 0.0,
+        "_comment_model_nat1024": "F36#0 owner style direction 22 Oct: naturalistic remake (coordinator Meshy, candidate_nat1024; measured quadruped rig, own clips; provenance candidate_nat1024/source/meshy_provenance.jsonl, drafted concept reference/nat1024-concept.png). close-1024 b6: mapped 7.40 vs live 5.61 (CPU three-judge yardstick, confirming batch; CPU-provisional).",
+        "model": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t.glb",
+        "colourway_source_species": "mudsnout_nat1024t",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Wild Ground Sheet A; see docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md.",
@@ -365,9 +374,15 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
-        }
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "mudsnout",
       "evolution_breaks_level": 20,
@@ -395,13 +410,16 @@
       },
       "placeholder": {
         "colour": "#b3925e",
-        "height": 2.3,
-        "radius": 0.770859,
+        "_comment_grow_gpu_1024": "GPU F36#0 (24 Oct): the remake stood at or below the 1.80 m trainer; grown 2.3 -> 3.1 m (x1.348), radius with it, per the grow-the-smaller-side rule.",
+        "height": 3.1,
+        "radius": 1.038984,
         "_comment_footprint": "Long-bodied and narrow -- the leanest silhouette in the Ground group.",
         "footprint_allowance": 3.2,
         "_comment_rest_roll": "BACKLOG-VISUAL-BED-ROSTER-FIT (2026-09-01). FOLLOWUP-2026-09-01.md flagged this species with the same DEFAULT_REST_ROLL_DEG back-flip as terrapup (idle paws lifted off centreline, so a 90-degree roll swings them into the air instead of settling). -45 degrees, the same angle that fixed terrapup, produces a genuine lying-on-side pose here too -- verified by render (`ralph/reports/audit/bed-roster-fit/shots/`), not assumed to generalize just because the root cause matches.",
         "rest_roll_deg": -45.0,
-        "model": "res://assets/creatures/tetherbound/trailpup/models/creature_trailpup_lod0.glb",
+        "_comment_model_nat1024": "F36#0 owner style direction 22 Oct: naturalistic remake (coordinator Meshy, candidate_nat1024; measured quadruped rig, own clips; provenance candidate_nat1024/source/meshy_provenance.jsonl, drafted concept reference/nat1024-concept.png). close-1024 b6: mapped 7.49 vs live 6.50 (CPU three-judge yardstick, confirming batch; CPU-provisional).",
+        "model": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024.glb",
+        "colourway_source_species": "trailpup_nat1024",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Wild Ground Sheet A; see docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md.",
@@ -410,9 +428,15 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
-        }
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "trailpup"
     },
@@ -440,9 +464,10 @@
       "rideable": {
         "can_carry": true,
         "requires_item": "saddle",
+        "_comment_mount_nat1024": "Close-1024: the remake's stone-plated back stands 2.90 m at the seat (measured on its ride clip), so the seat rises 2.603 -> 2.93 m, inside its 2.95 m height.",
         "mount_offset": [
           0.0,
-          2.602941,
+          2.93,
           -0.190882
         ],
         "ride_speed_multiplier": 1.5,
@@ -454,22 +479,30 @@
         "radius": 1.068941,
         "_comment_footprint": "Low, broad digging body with heavy forelimbs -- more footprint than a compact biped, similar register to Tuskroot's heavy stance but at Medium rather than Large size class.",
         "footprint_allowance": 3.2,
-        "model": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_installed_retex_v2_lod0.glb",
+        "_comment_model_nat1024": "F36#0 owner style direction 22 Oct: naturalistic remake (coordinator Meshy, candidate_nat1024; measured quadruped rig, own clips; provenance candidate_nat1024/source/meshy_provenance.jsonl, drafted concept reference/nat1024-concept.png). close-1024 b6: mapped 7.23 vs live 6.97 (CPU three-judge yardstick, confirming batch; CPU-provisional).",
+        "model": "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024.glb",
+        "colourway_source_species": "burrowback_nat1024",
         "_comment_model_close1020": "F36#0 close-1020: Meshy installed-rig retex v2 (matte warm grey-brown stones, darker cracks, fur between plates; burrowback/candidate_installed_retex/source/species_candidate_v2.json); three code-blind judges 6.87 vs 5.50 installed at the fight camera (CPU-provisional). Shiny, alpha and Nightburrow keep their earlier repaints via creature_body.gd RETEX_LEGACY_MAPS.",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_field_emission_vp9": "VP9 LIFE round 2 (code-blind judge addendum): 'ridge camp shapes indistinguishable from rocks'. `colour` #6c7061 is a grey-olive rock tone by design (its own sheet: rock-nodule armour), which is exactly why it was reading as scenery rather than a creature next to the ridge camp's actual rocks. Same `field_emission` lever OWNER DIRECTIVE 2026-09-01 set for bramblebun/terrapup/mudsnout (creature_body.gd::_apply_field_brightness()), applied here for the first time -- unmeasured against tools/_probe_grass_separation.gd (no time in this round's budget to run the sweep), so 0.9 is bramblebun's own modest, no-glow value taken as the conservative default rather than terrapup/mudsnout's steeper 1.4 (both of those started BELOW 1.0 on measurement; this species has not been measured at all). TUNABLE, and due a real sweep before it is treated as settled.",
         "_comment_field_emission_0904": "G3-CREATURE-COLOUR-0904. Finally measured, against Gate 2.4's 1.5:1 bar (docs/CURRENT_STATE.md \u00a73 flagged this species as open, never swept). tools/_probe_grass_separation.gd --species=burrowback --time=day, crop box (530,280)-(720,440), same grass reference box CREATURE-LEGIBILITY-0903 used: SHIPPED (0.9) -> creature luma 0.261 vs. grass 0.307 -- this species is DARKER than the field, not brighter, so the creature/grass ratio reads 0.85:1 (below 1.0), and even read as an absolute contrast ratio (max/min) it is only 1.18:1. Swept 1.3->1.03:1, 1.7->1.19:1 -- still under 1.5:1 at either point, and every step toward 1.5 pushes this species further AWAY from the grey-olive 'rock-nodule armour' identity `_comment_field_emission_vp9` above names as the reason `colour` is a rock tone on purpose. Unlike Bramblebun/Mudsnout (both measurably too DARK for their setting, a straight brightness fix), Burrowback's whole design intent is camouflage-adjacent-to-rocks, and a same-direction brightness push here trades that identity for a bar written around a creature meant to stand out in grass, not one meant to blend into a ridge camp's stone. Left at 0.9, unchanged -- this is a design question (does this species still get to read as rock-toned, or does grass-legibility override that everywhere it spawns), not a value nobody chose to measure. Flagged, not fixed.",
-        "field_emission": 0.9,
+        "field_emission": 0.0,
         "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate c). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
         "animations": {
           "idle": "idle",
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
-        }
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "burrowback"
     },
@@ -548,6 +581,7 @@
           "fly_grip": "fly_grip",
           "ride": "ride"
         },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."},
         "field_emission": 0.0,
         "rest_model_position_offset": 0.0
       },
@@ -644,7 +678,9 @@
         "radius": 0.716043,
         "_comment_footprint": "Compact agile newt body with a fin/tail silhouette that extends past a plain quadruped footprint but not as far as a winged creature's -- between Trailpup's lean canine body and Ripplet's otter build.",
         "footprint_allowance": 4.8,
-        "model": "res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb",
+        "_comment_model_nat1024": "F36#0 owner style direction 22 Oct: naturalistic remake (coordinator Meshy, candidate_nat1024; measured quadruped rig, own clips; provenance candidate_nat1024/source/meshy_provenance.jsonl, drafted concept reference/nat1024-concept.png). close-1024 b6: mapped 6.88 vs live 5.29 (CPU three-judge yardstick, confirming batch; CPU-provisional).",
+        "model": "res://assets/creatures/tetherbound/paddlenewt/candidate_nat1024/models/creature_paddlenewt_nat1024.glb",
+        "colourway_source_species": "paddlenewt_nat1024",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_field_emission_vp9": "VP9 LIFE round 2 set field_emission 0.9 here (see git history) to fight 'mill pond blue blob'. ROOT-CAUSED in round 3 and REVERTED: direct inspection of the shipped .glb material (tools/_probe_paddlenewt_material.gd) shows `emission_enabled = true` with a full emission TEXTURE bound (`..._emissive.png`), unlike bramblebun/terrapup/mudsnout, all three of which have `emission_enabled = false` on their own shipped materials (their own comments confirm this by the same direct-inspection method) -- the `field_emission` lever's own `_apply_field_brightness()` doc comment only ever measured and justified boosting `emission_energy_multiplier` for that non-self-lit case. Paddlenewt (and every other water/rock species checked -- mosshell, brooktail, burrowback -- share the same self-lit convention) was already self-illuminating via its emission texture BEFORE this lever touched it; multiplying an already-active emission by 1.9x (0.9 -> factor 1+0.9) overexposed it into the 'shapeless glowing blob' the round-2 judge reported, worse than round 1's plain dark smudge. Set back to the code default (0, i.e. omitted) -- burrowback (also self-lit, also boosted to 0.9 in round 2) was NOT reported as glowing, so this is not a blanket 'never boost a self-lit material' finding, but paddlenewt specifically reads worse boosted than unboosted. Round 3's mill-pond fix works the shot (position/distance/background), not this lever, until a real measurement justifies re-adding it.",
@@ -654,9 +690,15 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
-        }
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "paddlenewt"
     },
@@ -691,7 +733,9 @@
         "radius": 1.042857,
         "_comment_footprint": "Broad low shell body, wider relative to its height than a quadruped -- more footprint than Burrowback's already-broad digging stance, similar register to a tortoise rather than a mammal.",
         "footprint_allowance": 5.8,
-        "model": "res://assets/creatures/tetherbound/mosshell/models/creature_mosshell_lod0.glb",
+        "_comment_model_nat1024": "F36#0 owner style direction 22 Oct: naturalistic remake (coordinator Meshy, candidate_nat1024; measured quadruped rig, own clips: level swim, -60 side-tip faint; provenance candidate_nat1024/source/meshy_provenance.jsonl, drafted concept reference/nat1024-concept.png). Close-1024 b7: mapped 7.31 vs live 5.65; water form 7.19 vs 5.86 (CPU three-judge yardstick, confirming batch; CPU-provisional).",
+        "model": "res://assets/creatures/tetherbound/mosshell/candidate_nat1024/models/creature_mosshell_nat1024.glb",
+        "colourway_source_species": "mosshell_nat1024",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "R0.6: tools/art_pipeline finish.py clean -> texture -> rig -> grade -> install, from the R0.4 winner (candidate b). See docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md; R0.4's report also flags a topology check (a thin protrusion near the hindquarters that might read as an errant tail/spike) that could not be visually confirmed or ruled out here -- this container has no libEGL, so no turntable render could be produced, and inspect_glb.py's structural report shows only the usual post-retexture non-manifold/duplicate-vertex noise that rigging (0 unweighted vertices) already tolerated fine. Flagged for whoever next looks at a rendered frame of this creature. The model is measured and fitted to `height` at load by creature_body._fit(), so the collider -- and therefore the hit cone and the catch accuracy bonus -- does not move when the art is swapped. `colour` is retained only for the fallback capsule.",
@@ -700,9 +744,15 @@
           "walk": "walk",
           "run": "run",
           "attack": "attack",
+          "charged": "charged",
           "hit": "hit",
-          "faint": "faint"
-        }
+          "faint": "faint",
+          "rest": "rest",
+          "swim": "swim",
+          "fly_grip": "fly_grip",
+          "ride": "ride"
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "mosshell",
       "evolves_into": "cannonback",
@@ -948,9 +998,10 @@
       "rideable": {
         "can_carry": true,
         "requires_item": "",
+        "_comment_mount_nat1024": "Close-1024: the remake's back stands about 2.97 m at the seat (measured on its ride clip), so the seat rises 2.771 -> 3.13 m, 0.16 m above the back as on Meadowhart.",
         "mount_offset": [
           0.0,
-          2.771111,
+          3.13,
           -0.322222
         ],
         "ride_speed_multiplier": 2.8,
@@ -966,7 +1017,8 @@
         "rest_sink_extra": 1.5,
         "_comment_rest_roll": "BACKLOG-VISUAL-BED-ROSTER-FIT (2026-09-01), owner directive: 'galecrest goes way out of the bed' plus 'grow the ceiling, don't shrink toward it' (archive/owner/OWNER_DIRECTIVES_2026-09-01.md) prompted a full-roster bed-fit measurement, and this 3.6m legendary was the single worst offender measured (1.66x the OLD rim radius even in its default rolled pose, worse than Galecrest). Its idle plants all four legs near the body centreline like a real standing stag (unlike terrapup/trailpup's lifted-paw idle), so rolling it -- at 90, -30, or -45, all measured -- swings the LEGS outward and makes the horizontal footprint WORSE than standing still (measured: roll 0 = 2.95m x 3.04m footprint; roll -45 = 4.63m x 4.63m). `rest_roll_deg: 0` (play_faint(), the same crouch escape hatch as terrapup/galecrest) is the smallest-footprint option found and is what keeps this creature inside a bed of any sane size -- it reads as standing/settled rather than lying flat, a real remaining pose-quality gap for this species that a bed-fit pass is not the place to chase further (this creature towers over any bed regardless of pose; the bed rim was grown -- see creature_bed.gd's RIM_RADIUS_X/Z -- specifically to still contain this footprint).",
         "rest_roll_deg": 0.0,
-        "model": "res://assets/creatures/tetherbound/veridian/candidate_installed_retex/models/creature_veridian_installed_retex_r6_lod0.glb", "_comment_model_close1020": "F36#0 close-1020 art pass 4: installed-rig retex r6 (veridian/candidate_installed_retex/source/species_candidate_r6.json); three code-blind judges 6.90 vs 5.53 installed at the fight camera (CPU-provisional).",
+        "_comment_model_nat1024": "F36#0 owner style direction 22 Oct: naturalistic remake (coordinator Meshy, candidate_nat1024; measured quadruped rig, own clips; provenance candidate_nat1024/source/meshy_provenance.jsonl, drafted concept reference/nat1024-concept.png). close-1024 b6: mapped 6.82 vs live 6.56 (CPU three-judge yardstick, confirming batch; CPU-provisional).",
+        "model": "res://assets/creatures/tetherbound/veridian/candidate_nat1024/models/creature_veridian_nat1024.glb", "_comment_model_close1020": "Superseded by the close-1024 naturalistic remake (history only). F36#0 close-1020 art pass 4: installed-rig retex r6 (veridian/candidate_installed_retex/source/species_candidate_r6.json); three code-blind judges 6.90 vs 5.53 installed at the fight camera (CPU-provisional).",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Board 06's Veridian Stag, owner-approved as the legendary's direct source. Antler rack thickened and bent forward per the blind critique \u2014 the generated rack swept backward only, 'which turns a crown into a windblown crest'.",
@@ -983,9 +1035,10 @@
           "fly_grip": "fly_grip",
           "ride": "ride"
         },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."},
         "field_emission": 0.0,
         "rest_model_position_offset": 0.0,
-        "colourway_source_species": "veridian_installed_retex_r6_review"
+        "colourway_source_species": "veridian_nat1024"
       },
       "learnset": "veridian"
     },
@@ -1017,21 +1070,15 @@
         "height": 3.5,
         "radius": 1.268167,
         "footprint_allowance": 3.2,
-        "model": "res://assets/creatures/tetherbound/burrowback/models/creature_burrowback_installed_retex_v2_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024.glb",
         "_comment_model": "Deliberately the SAME mesh as burrowback. This is an aspect variant, not a new creature: CLAUDE.md's rule that Meadows creatures are differentiated by materials, textures, modest scale, animation, VFX, habitat, behaviour, traits and encounter context IS the build path the owner's sheet specifies for it ('VARIANT RECOLOR'). The recolour, emissive and VFX treatment belongs to the T1-CREATURE-ART lane; this entry is the identity it attaches to. Do NOT repoint this at a new .glb without an owner directive -- the expansion brief names a new mesh for five OTHER creatures and explicitly not for this one.",
         "model_scale": 1.0,
-        "aspect_variant": "nightburrow",
+        "aspect_variant": "nightburrow", "_comment_model_close1024": "Close-1024: aspect variants reuse the base mesh (test_dual_type), so this follows burrowback onto its naturalistic remake with its own clips; the variant look is its repaint of that mesh's albedo plus a glow map (tools/generate_aspect_variant_textures.py source_model) and its aspect VFX. Unjudged on the new mesh.",
         "aspect_source_species": "burrowback",
         "_comment_aspect": "D1 / DARK-FEATURES 2026-08-30. The two keys creature_body.gd::_build_placeholder() reads to dress this body as its Aspect variant. T1-CREATURE-ART generated and committed the recolour+emissive siblings and built the runtime hook, but deliberately left these keys to T3-CREATURES (its handover: that file is T3-CREATURES own); T3-CREATURES then landed this entry without them. Neither lane held both halves -- the textures and this file were on separate branches -- so until those merged nobody could have added these. Without them the variant renders in its base species shipped textures, i.e. as a plain burrowback. aspect_source_species names whose texture FOLDER the siblings live in (not this species own id), which is why it repeats variant_of above.",
         "model_yaw": 0.0,
-        "animations": {
-          "idle": "idle",
-          "walk": "walk",
-          "run": "run",
-          "attack": "attack",
-          "hit": "hit",
-          "faint": "faint"
-        }
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "nightburrow"
     },
@@ -1060,24 +1107,19 @@
       },
       "placeholder": {
         "colour": "#4a463c",
-        "height": 2.55,
-        "radius": 0.85469,
+        "_comment_grow_gpu_1024": "GPU F36#0 (24 Oct): the remake stood at or below the 1.80 m trainer; grown 2.55 -> 3.45 m (x1.353), radius with it, per the grow-the-smaller-side rule.",
+        "height": 3.45,
+        "radius": 1.156345,
         "footprint_allowance": 3.2,
-        "model": "res://assets/creatures/tetherbound/trailpup/models/creature_trailpup_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024.glb",
         "_comment_model": "Deliberately the SAME mesh as trailpup. This is an aspect variant, not a new creature: CLAUDE.md's rule that Meadows creatures are differentiated by materials, textures, modest scale, animation, VFX, habitat, behaviour, traits and encounter context IS the build path the owner's sheet specifies for it ('VARIANT RECOLOR'). The recolour, emissive and VFX treatment belongs to the T1-CREATURE-ART lane; this entry is the identity it attaches to. Do NOT repoint this at a new .glb without an owner directive -- the expansion brief names a new mesh for five OTHER creatures and explicitly not for this one.",
         "model_scale": 1.0,
-        "aspect_variant": "stormtrail",
+        "aspect_variant": "stormtrail", "_comment_model_close1024": "Close-1024: aspect variants reuse the base mesh (test_dual_type), so this follows trailpup onto its naturalistic remake with its own clips; the variant look is its repaint of that mesh's albedo plus a glow map (tools/generate_aspect_variant_textures.py source_model) and its aspect VFX. Unjudged on the new mesh.",
         "aspect_source_species": "trailpup",
         "_comment_aspect": "D1 / DARK-FEATURES 2026-08-30. The two keys creature_body.gd::_build_placeholder() reads to dress this body as its Aspect variant. T1-CREATURE-ART generated and committed the recolour+emissive siblings and built the runtime hook, but deliberately left these keys to T3-CREATURES (its handover: that file is T3-CREATURES own); T3-CREATURES then landed this entry without them. Neither lane held both halves -- the textures and this file were on separate branches -- so until those merged nobody could have added these. Without them the variant renders in its base species shipped textures, i.e. as a plain trailpup. aspect_source_species names whose texture FOLDER the siblings live in (not this species own id), which is why it repeats variant_of above.",
         "model_yaw": 0.0,
-        "animations": {
-          "idle": "idle",
-          "walk": "walk",
-          "run": "run",
-          "attack": "attack",
-          "hit": "hit",
-          "faint": "faint"
-        }
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "stormtrail"
     },
@@ -1108,22 +1150,16 @@
         "colour": "#1d6b8c",
         "height": 2.15,
         "radius": 0.716043,
-        "footprint_allowance": 2.6,
-        "model": "res://assets/creatures/tetherbound/paddlenewt/models/creature_paddlenewt_lod0.glb",
+        "footprint_allowance": 4.8,
+        "model": "res://assets/creatures/tetherbound/paddlenewt/candidate_nat1024/models/creature_paddlenewt_nat1024.glb",
         "_comment_model": "Deliberately the SAME mesh as paddlenewt. This is an aspect variant, not a new creature: CLAUDE.md's rule that Meadows creatures are differentiated by materials, textures, modest scale, animation, VFX, habitat, behaviour, traits and encounter context IS the build path the owner's sheet specifies for it ('VARIANT RECOLOR'). The recolour, emissive and VFX treatment belongs to the T1-CREATURE-ART lane; this entry is the identity it attaches to. Do NOT repoint this at a new .glb without an owner directive -- the expansion brief names a new mesh for five OTHER creatures and explicitly not for this one.",
         "model_scale": 1.0,
-        "aspect_variant": "riftfrill",
+        "aspect_variant": "riftfrill", "_comment_model_close1024": "Close-1024: aspect variants reuse the base mesh (test_dual_type), so this follows paddlenewt onto its naturalistic remake with its own clips; the variant look is its repaint of that mesh's albedo plus a glow map (tools/generate_aspect_variant_textures.py source_model) and its aspect VFX. Unjudged on the new mesh.",
         "aspect_source_species": "paddlenewt",
         "_comment_aspect": "D1 / DARK-FEATURES 2026-08-30. The two keys creature_body.gd::_build_placeholder() reads to dress this body as its Aspect variant. T1-CREATURE-ART generated and committed the recolour+emissive siblings and built the runtime hook, but deliberately left these keys to T3-CREATURES (its handover: that file is T3-CREATURES own); T3-CREATURES then landed this entry without them. Neither lane held both halves -- the textures and this file were on separate branches -- so until those merged nobody could have added these. Without them the variant renders in its base species shipped textures, i.e. as a plain paddlenewt. aspect_source_species names whose texture FOLDER the siblings live in (not this species own id), which is why it repeats variant_of above.",
         "model_yaw": 0.0,
-        "animations": {
-          "idle": "idle",
-          "walk": "walk",
-          "run": "run",
-          "attack": "attack",
-          "hit": "hit",
-          "faint": "faint"
-        }
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "riftfrill"
     },
@@ -1243,20 +1279,15 @@
       },
       "placeholder": {
         "colour": "#b5552c",
-        "height": 2.5,
-        "radius": 0.833929,
+        "_comment_grow_gpu_1024": "GPU F36#0 (24 Oct): the remake stood at or below the 1.80 m trainer; grown 2.5 -> 3.25 m (x1.300), radius with it, per the grow-the-smaller-side rule.",
+        "height": 3.25,
+        "radius": 1.084108,
         "footprint_allowance": 3.2,
-        "model": "res://assets/creatures/tetherbound/cindercub/models/creature_cindercub_lod0.glb",
+        "colourway_source_species": "cindercub_nat1024b", "_comment_model_nat1024b": "F36#0 owner style direction 22 Oct: naturalistic ember wolf cub remake (coordinator Meshy batch 2 quadruped redraft, candidate_nat1024b; measured quadruped rig, own clips; provenance candidate_nat1024b/source/meshy_provenance.jsonl). close-1024 b11 (CPU three-judge yardstick, confirming batch): mapped 7.63 vs shipping 5.59 (CPU-provisional).", "model": "res://assets/creatures/tetherbound/cindercub/candidate_nat1024b/models/creature_cindercub_nat1024b.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "animations": {
-          "idle": "idle",
-          "walk": "walk",
-          "run": "run",
-          "attack": "attack",
-          "hit": "hit",
-          "faint": "faint"
-        },
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."},
         "_comment_art": "T3-INSTALL, 2026-08-30: Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. T1-CREATURE-RIG, same day: rigged and animated through `tools/art_pipeline/finish.py rig <species> --kind quadruped` (the LOCAL Blender quadruped rigger every other production creature in this roster already goes through -- rig_quadruped.py + animate_quadruped.py -- not Meshy's own auto-rigger, which is documented humanoid-only). Verified against a rendered posed frame (ralph/reports/T1-CREATURE-RIG/shots/pose_check/) before installing, not just a passing skins-count check; now plays idle/walk/run/attack/hit/faint like every other production creature."
       },
       "learnset": "cindercub"
@@ -1844,9 +1875,9 @@
       },
       "placeholder": {
         "colour": "#8899aa",
-        "height": 2.95,
-        "radius": 1.475,
-        "footprint_allowance": 2.24,
+        "_comment_height_1025": "GPU batch 1 (25 Oct): the long, low newt stood no taller than the 1.80 m trainer. Hard rule (grow the smaller side): 2.95 -> 3.6 m, collider radius grown with it to the ladder ceiling (1.475 -> 1.8 = 0.5 x 3.6) so spacing reach keeps clearing the 22% larger art (the F10#2 invariant), and footprint_allowance 2.237 keeps radius x allowance at the scaled art fit (3.304 x 3.6/2.95 = 4.03). Its colour stays main's here: the batch-2 repaint fell on GPU (4.82), and a Meshy retexture of this mesh is being judged separately.", "height": 3.6,
+        "radius": 1.8,
+        "footprint_allowance": 2.237,
         "_why_radius_f10": "F10#2 C3 code-blind judge (Blackwater Elder): the 1.0325 m collider sat inside ~6.4 x 3.9 m art, so fights spaced by it closed to 2.4-3.1 m and the art swallowed the pilot (hidden 2-3 of 3 ally sample heights; none from 3.24 m). The collider grows to the scale ladder's radius/height ceiling of 0.5 (hard rule: grow the smaller side), so spacing reach is ~3.38 m; radius x footprint_allowance stays ~3.304, so the art fit and spawn spacing are unchanged.",
         "model": "res://assets/creatures/tetherbound/mosshock/models/creature_mosshock_lod0.glb",
         "model_scale": 1.0,
@@ -2051,17 +2082,14 @@
         "height": 3.25,
         "radius": 1.1375,
         "footprint_allowance": 3.0,
-        "model": "res://assets/creatures/tetherbound/pebbik/models/creature_pebbik_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/pebbik/candidate_b4/models/creature_pebbik_b4.glb",
+        "colourway_source_species": "pebbik_b4",
+        "field_emission": 0.0,
+        "_comment_remake_b4": "Close-1024 Meshy batch 4 naturalistic remake (identity kept; task ids in candidate_b4/source/meshy_provenance.jsonl), native clips; ON at close-1024 b14 7.16 vs 5.69 mapped (CPU-provisional; three code-blind judges, confirming batch).",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "animations": {
-          "idle": "idle",
-          "walk": "walk",
-          "run": "run",
-          "attack": "attack",
-          "hit": "hit",
-          "faint": "faint"
-        },
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."},
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
       },
       "learnset": "pebbik"

@@ -4710,9 +4710,16 @@ func _combat_manager_node() -> Node:
 ## no world or no manager is reachable, so menus and tests are unaffected.
 func _combat_is_running() -> bool:
 	var world := get_tree().get_current_scene()
-	if world == null:
-		return false
-	var combat := world.get_node_or_null(^"CombatManager")
+	var combat: Node = world.get_node_or_null(^"CombatManager") if world != null else null
+	# Fights close-1025 (GPU J, Venn): a world that is not the current scene
+	# (the Tidewake fight captures mount it under the root) read as "no fight",
+	# so world verbs such as "Gather Reef Stone" drew over every water fight.
+	# Any manager in combat_manager.gd's FOUNDATION_GROUP counts.
+	if combat == null:
+		for node: Node in get_tree().get_nodes_in_group(&"foundation_combat_managers"):
+			if node.has_method("is_fighting") and bool(node.call("is_fighting")):
+				combat = node
+				break
 	# F14 C3: a trainer's held send-out beat still presents the fight, so the
 	# exploration layer (tracker, hotbar, legend) does not flash in mid-battle.
 	if combat != null and combat.has_method("presenting_fight"):
@@ -5202,6 +5209,13 @@ func _combat_command_bar_shown() -> bool:
 	for node: Node in get_tree().get_nodes_in_group("combat_hud"):
 		var grid: Variant = node.get("_grid_panel")
 		if grid is Control and is_instance_valid(grid) and (grid as Control).is_visible_in_tree():
+			return true
+		# The F42 system overlay hides the legacy grid and draws the command
+		# strip itself (close-1024: "Gather Reef Stone" still drew over it in
+		# every Venn fight frame). A relay phase keeps its interaction prompt.
+		var overlay: Variant = node.get("_system_overlay")
+		if overlay is Control and is_instance_valid(overlay) and (overlay as Control).is_visible_in_tree() \
+				and str(node.get("_world_presentation_mode")) != "relays":
 			return true
 	return false
 

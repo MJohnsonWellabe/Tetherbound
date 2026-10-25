@@ -1,0 +1,47 @@
+[
+    {
+        "label":  "F36#1 main cliffspike recipe|shipping Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-cliffspike-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-cliffspike-shipping.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#1 main thundertunnel recipe|shipping Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-thundertunnel-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-thundertunnel-shipping.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#1 main pebbik recipe|shipping Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-pebbik-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-pebbik-shipping.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#1 main voltwig recipe|shipping Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-voltwig-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-voltwig-shipping.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#1 main galecrest recipe|shipping Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-galecrest-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-galecrest-shipping.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    }
+]

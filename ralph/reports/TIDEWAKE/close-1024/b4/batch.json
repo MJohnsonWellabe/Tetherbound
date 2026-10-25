@@ -1,0 +1,12 @@
+{"anchors":{
+ "craft:after":[6.6,6.3,6.6],
+ "craft:before":[5.2,5.0,5.2],
+ "f36_0_npc:C1B":[7.0,7.0,6.8],
+ "f36_0_npc:C1A":[7.0,7.0,6.8],
+ "f36_0_gap:C3B":[6.3,6.1,5.4],
+ "f36_0_gap:C3A":[7.0,7.1,7.0]},
+"candidates":{
+ "Currents swim: sw2 + current_bands_candidate":[6.2,6.0,5.8],
+ "Currents swim: + current_tint_candidate (lighter lane tint)":[5.6,5.6,5.4],
+ "Shore: wl2 (stones + golden sky)":[6.0,5.9,6.0],
+ "Shore: wl2 + lesson_clusters_candidate":[6.4,6.3,6.3]}}

@@ -1,0 +1,44 @@
+{
+ "kind": "f49_piece_seam",
+ "from_piece": "sigils",
+ "from_commit": "ef27593524aeb8671d6407414d59be17b200f9dd",
+ "to_piece": "hall",
+ "to_commit": "ef27593524aeb8671d6407414d59be17b200f9dd",
+ "producer_receipt_sha256": "b9c7532b863f860f813e67d249015cdcc646f3bdae7c11de10e1e771981ef7b5",
+ "consumer_predecessor_binding": "b9c7532b863f860f813e67d249015cdcc646f3bdae7c11de10e1e771981ef7b5",
+ "binding_matches": true,
+ "proof": "earned_chain_runner import_prefix + f49_disk_handoff.reload_boundary: the consumer loaded the producer's hash-bound receipt and save through production Load and compared its saved state; any difference refuses the piece",
+ "end_state": {
+  "realm": "meadows",
+  "party": [
+   {
+    "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+    "species": "terrapup",
+    "level": 19
+   },
+   {
+    "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+    "species": "bramblebun",
+    "level": 19
+   },
+   {
+    "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+    "species": "bramblebun",
+    "level": 19
+   },
+   {
+    "uid": "creature-afbd0d982b14221393f70c29863586a1",
+    "species": "mudsnout",
+    "level": 19
+   },
+   {
+    "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+    "species": "bramblebun",
+    "level": 20
+   }
+  ],
+  "flags": 56
+ },
+ "differences": [],
+ "matches": true
+}

@@ -1,0 +1,104 @@
+{
+ "sets": {
+  "Xe": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean on-palette panel, but the world behind is dim and flat, and B's tiny clipped text sinks it."
+  },
+  "Yg": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Good sky, but a flat green lawn with a centred stripe path reads as generator output, not an authored sky realm."
+  },
+  "Nb": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The domed aviary is a real landmark, but the even grass-card scatter and empty mid-ground keep it below Palworld finish."
+  },
+  "Vd": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Strong costume silhouette, but the flat dot eyes and waxy face lack shipping-game finish."
+  },
+  "Sa": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Dark muddy frames, a near-invisible player creature, flat magenta telegraphs, no storm atmosphere, and in B the camera is buried in foliage."
+  },
+  "Ql": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A's standing model matches the owner's naturalistic bar, though the floating faint poses (A) and blown-out emissive and rotated faint end (B) hurt it."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the uniform Cloudreach turf with pale stratified stone shelves, outcrops and scree, keep wind-dried grass only in clustered edges, and curve the path off-centre past authored rock groups (Yg, Nb)",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight: keep the camera clear of trunks and canopy (fade occluders), add the purple storm sky, moss and rim light, replace magenta rings and slabs with real-object lightning and debris telegraphs, and shrink the HUD (Sa)",
+   "kind": "scene"
+  },
+  {
+   "change": "Ground the faint poses with no floating or vertical rotation, cap the lightning emissive so the fur reads, and keep Xe A's large panel with controller glyphs and a denser recipe list (Ql, Xe)",
+   "kind": "scene"
+  }
+ ]
+}

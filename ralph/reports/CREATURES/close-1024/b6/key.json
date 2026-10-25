@@ -1,0 +1,77 @@
+{
+ "Pv": {
+  "anchor": false,
+  "label": "F36 sparkit b6",
+  "A": "<scratch>/b6/sides/sparkit-live.png",
+  "B": "<scratch>/b6/sides/sparkit-c.png"
+ },
+ "Vy": {
+  "anchor": false,
+  "label": "F36 veridian b6",
+  "A": "<scratch>/b6/sides/veridian-live.png",
+  "B": "<scratch>/b6/sides/veridian-c.png"
+ },
+ "In": {
+  "anchor": false,
+  "label": "F36 burrowback b6",
+  "A": "<scratch>/b6/sides/burrowback-c.png",
+  "B": "<scratch>/b6/sides/burrowback-live.png"
+ },
+ "Lh": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Ng": {
+  "anchor": false,
+  "label": "F36 staticub b6",
+  "A": "<scratch>/b6/sides/staticub-live.png",
+  "B": "<scratch>/b6/sides/staticub-c.png"
+ },
+ "Fh": {
+  "anchor": false,
+  "label": "F36 mosshell b6",
+  "A": "<scratch>/b6/sides/mosshell-c.png",
+  "B": "<scratch>/b6/sides/mosshell-live.png"
+ },
+ "Ow": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Em": {
+  "anchor": false,
+  "label": "F36 mudsnout b6",
+  "A": "<scratch>/b6/sides/mudsnout-c.png",
+  "B": "<scratch>/b6/sides/mudsnout-live.png"
+ },
+ "Vi": {
+  "anchor": false,
+  "label": "F36 mirejaw b6",
+  "A": "<scratch>/b6/sides/mirejaw-live.png",
+  "B": "<scratch>/b6/sides/mirejaw-c.png"
+ },
+ "Gg": {
+  "anchor": false,
+  "label": "F36 trailpup b6",
+  "A": "<scratch>/b6/sides/trailpup-c.png",
+  "B": "<scratch>/b6/sides/trailpup-live.png"
+ },
+ "Ml": {
+  "anchor": false,
+  "label": "F36 paddlenewt b6",
+  "A": "<scratch>/b6/sides/paddlenewt-live.png",
+  "B": "<scratch>/b6/sides/paddlenewt-c.png"
+ },
+ "Vg": {
+  "anchor": false,
+  "label": "F36 water_riverdrake b6",
+  "A": "<scratch>/b6/sides/wr-live.png",
+  "B": "<scratch>/b6/sides/wr-c.png"
+ },
+ "Ji": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ }
+}

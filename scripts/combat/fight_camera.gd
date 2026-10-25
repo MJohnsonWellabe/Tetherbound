@@ -154,11 +154,29 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 			var gap_a: float = side_gap.call(float(a))
 			var gap_b: float = side_gap.call(float(b))
 			return gap_a < gap_b or (gap_a == gap_b and absf(float(a)) < absf(float(b))))
+	# Fights close-1025 (per-trainer `face_yaw_deg`, absent = off): an arena
+	# with one good backdrop (Venn: the sea, not the cliff overhang) tries the
+	# views nearest that world yaw first, the exact one included, and takes the
+	# first that passes within `side_view_max_steps`. Same constraints and caps.
+	var face_yaw: Variant = config.get("prefer_world_yaw_deg")
+	var prefer_face := face_yaw != null and not prefer_side
+	if prefer_face:
+		var exact := rad_to_deg(wrapf(deg_to_rad(float(face_yaw)) - yaw,-PI,PI))
+		if not offsets.has(exact): offsets.append(exact)
+		var face_gap := func(value: float) -> float: return absf(wrapf(value - exact,-180.0,180.0))
+		offsets.sort_custom(func(a: Variant,b: Variant) -> bool:
+			return face_gap.call(float(a)) < face_gap.call(float(b)))
 	var maximum := maxf(0.01,float(config.get("max_distance_m",48.0)))
 	var distance_steps := clampi(int(config.get("separation_distance_steps",8)),1,12)
 	var distance_scale := clampf(float(config.get("separation_distance_scale",1.2)),1.01,2.0)
 	var best: Dictionary = {}
 	var nearest_safe: Dictionary = {}
+	# `fallback_max_steps` (>= 0; absent = -1, no limit): when no candidate
+	# passes, the least-overlap fallback may only come from the first steps of
+	# each angle's distance search. Unlimited, a fight with a large ally (the
+	# Venn fight's Cannonback, GPU F39 24 Oct) popped the lens ~37 m out onto a
+	# cliff top for a beat: a black seabed close-up instead of the two fighters.
+	var fallback_steps := int(config.get("fallback_max_steps", -1))
 	var near_slack: float = clampf(float(config.get("safe_fit_distance_slack_m",0.75)),0.0,3.0)
 	# Reserve separation beyond the exact measured edge so the live tracker can
 	# ease toward its chosen angle without spending its dead zone in overlap.
@@ -219,10 +237,11 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 			if not constraint_info.is_empty():
 				candidate["world_room"] = constraint_info.get("world_room",null)
 				candidate["model_room"] = constraint_info.get("model_room",INF)
-			if best.is_empty() or (framed and not bool(best.framed)) \
+			var fallback_ok := fallback_steps < 0 or step <= fallback_steps
+			if fallback_ok and (best.is_empty() or (framed and not bool(best.framed)) \
 					or (framed == bool(best.framed) and (overlap < float(best.overlap)
 						or (overlap == float(best.overlap) and float(visibility.get("penalty",0.0))
-							< float((best.get("visibility",{}) as Dictionary).get("penalty",0.0))))):
+							< float((best.get("visibility",{}) as Dictionary).get("penalty",0.0)))))):
 				best = candidate
 			if passed:
 				if nearest_safe.is_empty() or actual_distance<float(nearest_safe.distance)-near_slack \
@@ -230,7 +249,7 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 						and absf(offset)<absf(float(nearest_safe.yaw_offset_deg))):
 					nearest_safe = candidate
 				# A side view that needs a long pull-back loses to the ordinary search.
-				if prefer_side and step <= int(config.get("side_view_max_steps",2)): return nearest_safe
+				if (prefer_side or prefer_face) and step <= int(config.get("side_view_max_steps",2)): return nearest_safe
 				break # First passing distance on this angle; no larger zoom needed.
 			if distance >= maximum: break
 	if not nearest_safe.is_empty(): return nearest_safe

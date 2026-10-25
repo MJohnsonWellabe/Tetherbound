@@ -939,10 +939,26 @@ static func _apply_renderer_grade(env: Environment, grade: Dictionary) -> void:
 	env.adjustment_saturation *= saturation
 
 
+## GPU-PASS (close-1024): a key written `<key>_forward_plus` replaces `<key>`
+## only under Forward+ or Mobile, so a grade can answer a GPU-only fault (the
+## Forward+ fog halving, sky-ambient fill) while Compatibility reads exactly the
+## values it always did. Every time block that carries one must carry it, since
+## keyframe blending holds a one-sided key constant across the transition.
+static func renderer_overrides(cfg: Dictionary, rendering_method: String) -> Dictionary:
+	if rendering_method != "forward_plus" and rendering_method != "mobile":
+		return cfg
+	var out := cfg.duplicate()
+	for key: Variant in cfg.keys():
+		if str(key).ends_with("_forward_plus"):
+			out[str(key).trim_suffix("_forward_plus")] = cfg[key]
+	return out
+
+
 func _apply_sun(cfg: Dictionary) -> void:
 	var sun: DirectionalLight3D = get_node_or_null(sun_path) as DirectionalLight3D
 	if sun == null or cfg.is_empty():
 		return
+	cfg = renderer_overrides(cfg, RenderingServer.get_current_rendering_method())
 
 	sun.rotation = Vector3(
 		deg_to_rad(float(cfg.get("pitch_deg", -46.0))),
@@ -1131,6 +1147,8 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	var holder: WorldEnvironment = get_node_or_null(environment_path) as WorldEnvironment
 	if holder == null or holder.environment == null:
 		return
+	cfg = renderer_overrides(cfg, RenderingServer.get_current_rendering_method())
+	sky_cfg = renderer_overrides(sky_cfg, RenderingServer.get_current_rendering_method())
 	var env := holder.environment
 
 	if not sky_cfg.is_empty() and env.sky != null:
@@ -1161,7 +1179,8 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	# creature_body.gd::_apply_night_floor's own comment), and every other
 	# time-of-day block leaves this key unset -- 0.0 default, so day/golden/
 	# dawn stay exactly as measured before this floor existed.
-	CREATURE_BODY.set_emission_floor_scale(float(cfg.get("creature_emission_floor", 0.0)))
+	CREATURE_BODY.set_emission_floor_scale(creature_emission_floor_for_renderer(
+		cfg, RenderingServer.get_current_rendering_method()))
 	# G3-CREATURE-COLOUR-0904 (docs/CURRENT_STATE.md §3). The mirror image of the
 	# floor directly above: `field_emission`/`field_degreen`
 	# (creature_body.gd::_apply_field_brightness()) are a per-species DAYTIME
@@ -1260,3 +1279,17 @@ func _apply_environment(cfg: Dictionary, sky_cfg: Dictionary) -> void:
 	var viewport := get_viewport()
 	if viewport != null:
 		GRAPHICS_PREFS.apply_camera(viewport.get_camera_3d())
+
+
+## F22#4 GPU pass (24 Oct): the creature emission floor adds each plain-PBR
+## creature's own albedo as emission. It was tuned on Compatibility; on
+## Forward+ (Medium/High) the same additive term washes those creatures milky
+## grey in daylight (the Riverwatch "ghost" boss: with the floor off alone,
+## Medium matched Low). Forward+ and Mobile take
+## `creature_emission_floor_forward_plus_scale` of it; Compatibility (and any
+## other method, such as a headless dummy) is unchanged.
+static func creature_emission_floor_for_renderer(cfg: Dictionary, rendering_method: String) -> float:
+	var floor_scale := float(cfg.get("creature_emission_floor", 0.0))
+	if rendering_method != "forward_plus" and rendering_method != "mobile":
+		return floor_scale
+	return floor_scale * maxf(0.0, float(cfg.get("creature_emission_floor_forward_plus_scale", 1.0)))

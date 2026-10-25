@@ -1,0 +1,6 @@
+Ud: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Xm: "Evening and dawn are graded like midday (same light and colour, only the sky changes)"; "The sea meets the sky on a razor seam with no haze or falloff into distance"; "The night beach is flat ambient: nothing casts a shadow"
+Ek: none
+Pn: "Evening and dawn are graded like midday (same light and colour, only the sky changes)"; "The sea meets the sky on a razor seam with no haze or falloff into distance"; "The night beach is flat ambient: nothing casts a shadow"
+Ob: none
+Nb: none

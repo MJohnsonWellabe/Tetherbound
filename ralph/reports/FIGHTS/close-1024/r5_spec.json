@@ -1,0 +1,40 @@
+[
+ {
+  "label": "gen-r5 stormwood",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r5/stormwood_ctl.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r5/stormwood_H.png",
+  "brief": "Stormwood forest named-wild fight against a large electric spider: four frames at its wind-ups",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect is a flat disc hiding the struck creature"
+  ]
+ },
+ {
+  "label": "gen-r5 veyra",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r5/veyra_ctl.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r5/veyra_H.png",
+  "brief": "Cloudreach captain fight in a stone summit arena against a large bird: four frames during the fight",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect is a flat disc hiding the struck creature",
+   "wide translucent wind-lane slabs cover the arena"
+  ]
+ },
+ {
+  "label": "gen-r5 venn",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r5/venn_ctl.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r5/venn_H.png",
+  "brief": "Tidewake beach trainer fight against a large shelled water creature: four frames over the fight",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect is a flat disc hiding the struck creature",
+   "fight camera jumps far away from the fighters"
+  ]
+ }
+]

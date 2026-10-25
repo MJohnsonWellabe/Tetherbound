@@ -32,6 +32,15 @@ uniform vec4 deep_colour: source_color = vec4(0.11, 0.32, 0.38, 1.0);
 uniform vec4 shallow_colour: source_color = vec4(0.48, 0.68, 0.58, 1.0);
 // How many metres of depth it takes to reach the deep colour.
 uniform float depth_falloff = 1.6;
+// F39 P2-009: a middle band so open water is a gradient from shallow through
+// a mid shelf to the deep colour, instead of one ramp that saturates and then
+// reads as a hard navy band at the shelf edge. mid_depth_m <= 0 keeps the old
+// two-colour ramp exactly. depth_band_break_m wanders the depth every colour
+// ramp reads (the Tidewake offshore variant's included), so no ramp draws a
+// straight contour over a flat seabed; 0 keeps the measured depth everywhere.
+uniform vec4 mid_colour: source_color = vec4(0.11, 0.32, 0.38, 1.0);
+uniform float mid_depth_m = 0.0;
+uniform float depth_band_break_m = 0.0;
 uniform float alpha_deep = 0.88;
 uniform float alpha_shallow = 0.42;
 // Fade alpha to zero over this many metres of depth right at the shoreline,
@@ -44,6 +53,16 @@ uniform float foam_depth = 0.30;
 uniform sampler2D foam_noise;
 uniform float foam_scale = 0.14;
 uniform float foam_speed = 0.03;
+// T4 surf line: a narrow broken foam line right at the waterline, so a shore
+// reads as surf instead of a hard sand/water cut. The breakup threshold keeps
+// it in long irregular stretches (never the solid drawn ring blind round 1
+// rejected). surf_strength 0 keeps the original contact foam exactly.
+uniform float surf_strength = 0.0;
+uniform float surf_depth_m = 0.35;
+uniform float surf_breakup = 0.4;
+// 0..1: how much the surf band's reach wanders along the shore (a broad
+// world-space noise), so it never reads as one even drawn line.
+uniform float surf_vary = 0.0;
 
 uniform sampler2D wave_normal_a;
 uniform sampler2D wave_normal_b;
@@ -88,6 +107,17 @@ void fragment() {
 		ground = height_min + texture(terrain_height, (uv - region.xy) / region.zw).r * (height_max - height_min);
 	}
 	float depth = max(world_pos.y - ground, 0.0);
+	if (depth_band_break_m > 0.0) {
+		// P2-009: a flat seabed turns every depth ramp into a straight contour
+		// across the frame. One broad world-space wander (about 40 m) plus a
+		// finer one bend it into a coastline. World space, so it does not swim
+		// with the camera; faded out in the first metre so the waterline, its
+		// foam band and the alpha feather stay exactly where the ground says.
+		float band_ramp = smoothstep(0.4, 1.5, depth);
+		float broad = texture(foam_noise, uv * 0.025 + vec2(0.17)).r - 0.5;
+		float fine = texture(foam_noise, uv * 0.09 + vec2(0.63)).r - 0.5;
+		depth = max(0.0, depth + (broad * 1.6 + fine * 0.6) * depth_band_break_m * band_ramp);
+	}
 
 	// Two noise-normal layers scrolling in different directions; their sum
 	// stops either one's drift reading as a conveyor belt. In flow mode both
@@ -115,6 +145,16 @@ void fragment() {
 	float shallowness = 1.0 - smoothstep(0.0, depth_falloff, depth);
 	shallowness = clamp(shallowness + (n_a.g - 0.5) * 0.05, 0.0, 1.0);
 	vec3 colour = mix(deep_colour.rgb, shallow_colour.rgb, shallowness);
+	if (mid_depth_m > 0.0) {
+		// A third stop on the shelf, as a band that rises out of the shallow
+		// colour and falls back into the deep one. Written as a mix INTO the
+		// existing colour, never a replacement: the Tidewake offshore variant
+		// injects its own deep tone on the line above, and overwriting here
+		// would throw that away.
+		float up = smoothstep(0.0, mid_depth_m, depth);
+		float down = 1.0 - smoothstep(mid_depth_m, max(depth_falloff, mid_depth_m + 0.5), depth);
+		colour = mix(colour, mid_colour.rgb, clamp(up * down, 0.0, 1.0));
+	}
 
 	// View-angle blend toward the sky family — a flat look-down shows the
 	// water's own colour, a grazing look across shows the sky's, which is
@@ -143,6 +183,16 @@ void fragment() {
 	float n2 = texture(foam_noise, uv * foam_scale * 0.37 + vec2(0.41) + vec2(-TIME, TIME * 0.8) * foam_speed * 0.6).r;
 	float noise = n1 * 0.55 + n2 * 0.45;
 	float foam = smoothstep(0.6, 0.78, noise * 0.55 + contact * 0.4) * contact;
+	if (surf_strength > 0.0) {
+		float surf_reach = surf_depth_m;
+		if (surf_vary > 0.0) {
+			float wander = texture(foam_noise, uv * 0.018 + vec2(0.71, 0.29)).r;
+			surf_reach *= mix(1.0, mix(0.25, 1.6, wander), surf_vary);
+		}
+		float surf_band = (1.0 - smoothstep(surf_reach * 0.4, surf_reach, depth)) * smoothstep(0.0, 0.04, depth);
+		float surf_noise = n2 * 0.6 + n1 * 0.4;
+		foam = max(foam, surf_band * smoothstep(surf_breakup, surf_breakup + 0.12, surf_noise) * surf_strength);
+	}
 	colour = mix(colour, foam_colour.rgb, foam);
 
 	float alpha = mix(alpha_deep, alpha_shallow, shallowness);

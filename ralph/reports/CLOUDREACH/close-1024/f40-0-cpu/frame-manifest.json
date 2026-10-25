@@ -1,0 +1,765 @@
+{
+"source_commit": "22b88b52660b603929cf150bd2195efbcd7780aa",
+"tool": "tools/capture_cloudreach_f40_matrix.gd --preset=Low --low-resolution=1280x720, pieces d*8+3..d*8+7",
+"renderer": "gl_compatibility/opengl3, Mesa llvmpipe CPU, xvfb",
+"frames_local": ".artifacts/f40/r1/ (not committed)",
+"stopped": "24 Oct 13:40 CT by coordinator (owner: GPU lane captures the matrix; Cloudreach lane moves to scene fixes)",
+"count": 151,
+"frames": [
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear",
+"sha256": "13b714c96d257505e71c9c5d5a752d0bbf1b94286b188c4407340a15d086f14f"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain",
+"sha256": "a28b784788c4407da61a057ace12ab61156420da2228710eb129351279271b8a"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__golden__clear",
+"sha256": "c3996abd995795f072715eb5cc97df600924f3b36e2cc39b53c871fd6da279f7"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__golden__rain",
+"sha256": "6203ed9aee817e78b25f84922d48e744e3b3264b0c83ec39d4a46c1eb225d2cc"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__night__clear",
+"sha256": "7a07736860554876e29c4585203afb965c3fc4bfdf9cdba31fc4283a39161017"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear",
+"sha256": "89412e256cb94ef789225748c48a40998d9eac1eaebcfb69d14ebdd68319a7a7"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__rain",
+"sha256": "eb7a03479840a8b66576fcbde9b4156eef1925bf2bb399a7c7fbc664912694a6"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__golden__clear",
+"sha256": "330d6ad0fd16c1b4cacc3f74023dcc6e7c9827fa20f2d4f400d86bb089a7409f"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__golden__rain",
+"sha256": "989b398bcba2563620439590ceeaa8dd618988af630208c27a480b889ad08453"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__night__clear",
+"sha256": "ce0b375955b7a58f0642aaa517e5ebb60d5b656b3cfafc295e306aaa6daf8c3b"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear",
+"sha256": "031891f3ab755214bd43fefc8ba6502784f7d86e34558b50aa051be370d2f107"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__rain",
+"sha256": "26fd4726e980cbb66a88ad3ae8a0d4c09eb21787231f56e53817e3fcfd9237fa"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__golden__clear",
+"sha256": "da4af0a13bf384e3d5dbc38d89eea610d2f4b0f1a9fc9d9dd194da89a5fe42a4"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__golden__rain",
+"sha256": "bc1338498b0ac7541ccd4bab95ba1b3a59cf183dbc93101b851fa54ca3eee47a"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__night__clear",
+"sha256": "f648a854f9accf78bddc4ebf20ec41cd4459a3e1b485aa7b6fed3f30b7231c61"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear",
+"sha256": "525bb9e04218dd0a9fa8ccd9c00a73ad099a52485832c4e7e0a06d8cf732f09b"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__rain",
+"sha256": "ceae4cfb3ba843e28e45a51dd9b3845dd530e32369980955af4a5a5a6fdad413"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__golden__clear",
+"sha256": "8002ceb75eec5b3ea8199c22759fc8676bb0834597e35be959678d647cb5cb1d"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__golden__rain",
+"sha256": "f8100a9893a33daf16e90c8dc7ff22882226bcb50f28a10b2b9661d29f02a1bb"
+},
+{
+"stand": "dest0",
+"frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__night__clear",
+"sha256": "ba516f65b217acc6b40b6a1fd0c1fa77cfd49f98842a1d97eaeddb6e5542bd4c"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__day__clear",
+"sha256": "91a01a3eacdec8f619508a2daab00ef532519242ea0bf44f6c42ed0d06864285"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__day__rain",
+"sha256": "2795d0dc289417d55a58a37f8960e52882241f4e3e7bceb6a39776fcf6cbd63f"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__golden__clear",
+"sha256": "29d3906fed9bbda08eb0cdcc020d9b57051151d9f3e8e6d86bfa894a2e2eee9c"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__golden__rain",
+"sha256": "3dec97b1ce430dc8962d7580e9387815437d0478132a18f9d3586e9b72bf6321"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__night__clear",
+"sha256": "6760f775f7d96fa39228914f4c166404e8fb6ab35fed8a20b8cc55771d3555b2"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__detail__day__clear",
+"sha256": "a88f9cb2753f36ba517323f0637f57b64f4a787a7da69d866ec87c19c19c7816"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__detail__day__rain",
+"sha256": "f1fe9026ffc520da0e67a9f4c0abbdfac133f0ab8e730f6c8a0eaa5d378337b1"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__detail__golden__clear",
+"sha256": "98d088c7255c1e7485b977b0b8f10ae270b30911cb5b9e7b851140088f5b8e71"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__detail__golden__rain",
+"sha256": "9cac16b4bc34fc99d1b6f8bb17995e5808797d8fe3f9008051057c99adf3ad01"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__detail__night__clear",
+"sha256": "150cbba266f47dc891ab1a5319553e9f1e6f67a184c3ec485f0f240c7059a298"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__day__clear",
+"sha256": "62254477b0e4ead9867bcca87f894b418d35a309f68c5469984c58fe63bdc186"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__day__rain",
+"sha256": "662636ccbd9917227dffad39509f3770d10b0bf7517103fdf66bb602862c3f65"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__golden__clear",
+"sha256": "45758df63c0b372133f09813d6ca307c17127889de8133a1a31f06b57ab06932"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__golden__rain",
+"sha256": "1cca5b5b5f97f84fc745ed19b6dd1f1c8a259675179d3c09a5fac6bbfb5e83a5"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__night__clear",
+"sha256": "7b48dbde8bb14673bac96cd9859df31884ea92f714094a44dce5c4c7dee0059d"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__day__clear",
+"sha256": "59d0ccd29c634a5ddf00631197b3c89aa1949abe7863335d345a7bb5e62686ef"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__day__rain",
+"sha256": "9aea2864bf75bb5e321c52d5ee1179d4b1034df35b9ff3a706c8777002d6abfb"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__golden__clear",
+"sha256": "87f9f8485edb8b8db17bd6a47fe0b8670e7d4eb72ac887d2fb6615b804a85f67"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__golden__rain",
+"sha256": "c7c9a877635e7073c067150bbc2439826d0c5daa4e402dfa4f5a1ee4ffe94a87"
+},
+{
+"stand": "dest10",
+"frame": "cloudreach__summit_final_stronghold__11__summit_eyrie__reverse__night__clear",
+"sha256": "4376ef459a21897edd4b5a3094038f215b53dc3154409552c92d9477963488af"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__clear",
+"sha256": "3687267988b0822a160936e45627bb504d112e7f674348f7facfa4e09ac3a3fa"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__day__rain",
+"sha256": "408199bdd6ca3ff14a2cdf76f48c9b87d1484990c99f885eeb63354ac286e501"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__clear",
+"sha256": "af1aa6241f5218ebfe665deadbe195f11806dce5ab63402e51619d9ec9cc4166"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__golden__rain",
+"sha256": "7acf22f20238bde5b10b14254956522cb3328c3fa0379544c982c8b799214cad"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__approach__night__clear",
+"sha256": "39088a81da20cb63af446761d9b6873f5b5dad94337ce98bd54370c30889044f"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__detail__day__clear",
+"sha256": "f506e5a646614ffe43974122959c9b337a1d852a331688f3a35155b5a715bf8d"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__detail__day__rain",
+"sha256": "1c14bb52969c564de4aa43abe48ea7e15d9ec04029d526a4a47293ebc21c6d83"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__detail__golden__clear",
+"sha256": "418fec5a4594121d8395d9b573dd287346ca66a252914b9591c5b80b7cdf7baa"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__detail__golden__rain",
+"sha256": "078885d38cc0364417335c05d4c667249195f1eb4c6b78774a31918c2c719622"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__detail__night__clear",
+"sha256": "2d78c4214b5a5249dd1fc1c756e038896bd31a75a4ef5a04fcba1bb3e928f91d"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__day__clear",
+"sha256": "c2280f167e1ef1d783187af528eddb39a2e9c1d5405c1176cef47f62d1a094d7"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__day__rain",
+"sha256": "50894c488c7ee0f54ad7f769b80919a03320302319ab8254c0097350cd26a08c"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__golden__clear",
+"sha256": "41b5fba4140c17077611c5ce1858836bea47e75676735ae438a0432606d51cd6"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__golden__rain",
+"sha256": "6913d3fcd724cfcab6be204df58d32ff07eaeb6a5a84dbfa996e11ee29275b7b"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__gameplay__night__clear",
+"sha256": "1691c188a3d8b7ce2236ba954cfcc4a07965df24d8e85624d17334842c5d1e91"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__day__clear",
+"sha256": "6fee3dcffd5cc8622c55ac4044fbad74f14794f553d2c5de113e4cd6e6e0e122"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__day__rain",
+"sha256": "c8f4b2ffe99617d92c7b7b61d3d69e24fa0c04f884526c8598746a8415fab6d2"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__golden__clear",
+"sha256": "b8c5ae29b13ccf2052bd279b45e2230885957124e09317f326b07e461ab8b2b3"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__golden__rain",
+"sha256": "abf4933378df4c1b4fa7e44afafb91278858a32deab547a8a0c5cda302845d0c"
+},
+{
+"stand": "dest11",
+"frame": "cloudreach__summit_final_stronghold__12__stormward_overlook__reverse__night__clear",
+"sha256": "cc42dd117e27149795944c55167fda079d87ec5c08ad534e8c710a28257e2bfa"
+},
+{
+"stand": "dest4",
+"frame": "cloudreach__windscar_ravine__05__windscar_beacon__approach__day__clear",
+"sha256": "6f8b64eeb727f77fcc80f102f7977899a459e37ef8bd922213f305fa7dd5496a"
+},
+{
+"stand": "dest4",
+"frame": "cloudreach__windscar_ravine__05__windscar_beacon__approach__day__rain",
+"sha256": "7bbcc792a017fd2f8bb30286a238f2ab4a75496cf37e50822cabfa0926a85468"
+},
+{
+"stand": "dest4",
+"frame": "cloudreach__windscar_ravine__05__windscar_beacon__approach__golden__clear",
+"sha256": "e815e080689f419f8e86be8ef2e57ef8ba8257125d11dee4be8085b17072f0e2"
+},
+{
+"stand": "dest4",
+"frame": "cloudreach__windscar_ravine__05__windscar_beacon__detail__day__clear",
+"sha256": "8ab4d71c951180f691289c2ebd38b166fd6e5a71014bb7b9360f446881d86412"
+},
+{
+"stand": "dest4",
+"frame": "cloudreach__windscar_ravine__05__windscar_beacon__detail__day__rain",
+"sha256": "c59cc5e315aa959ac5aa564ff2c752708b38dd3ef358a19707825b145a973de4"
+},
+{
+"stand": "dest4",
+"frame": "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__day__clear",
+"sha256": "e5c2495e5b0d1cc0469dd4f01ba5e6f0f6269d271995e6b57f34e92f9ddc3037"
+},
+{
+"stand": "dest4",
+"frame": "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__day__rain",
+"sha256": "bcf77015e9c4194f43b451f747aafea8bfc9feff3799f768d377aed9d5f265a2"
+},
+{
+"stand": "dest4",
+"frame": "cloudreach__windscar_ravine__05__windscar_beacon__gameplay__golden__clear",
+"sha256": "c1810cf202ca3a36506a9a921ba8c94be3b641b14a083b4cc9a3d4b109aeed99"
+},
+{
+"stand": "dest4",
+"frame": "cloudreach__windscar_ravine__05__windscar_beacon__reverse__day__clear",
+"sha256": "30f8a270a6e34d252a8ff6733c2bca438ee829f7f7054f10c1a8d21636a3f8d7"
+},
+{
+"stand": "dest4",
+"frame": "cloudreach__windscar_ravine__05__windscar_beacon__reverse__day__rain",
+"sha256": "c0c326dc260c310c61c923dfd62970afeb2aed8637210ccff244ff7c0d000642"
+},
+{
+"stand": "dest4",
+"frame": "cloudreach__windscar_ravine__05__windscar_beacon__reverse__golden__clear",
+"sha256": "50540c37f1ba2956960042c63bdfedb08e98a0c670a65750dd9d9de02d54467d"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__day__clear",
+"sha256": "b240edc9303d398a37e8ba30e59dc6e0b0d3ca681c88216c77e308505467794d"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__day__rain",
+"sha256": "69e72e9b32cb24dbcc13c722d38419d5668829db424dfef48adab9840c19f4ef"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__golden__clear",
+"sha256": "b1b6c86708bccd225e982ae6cb1018370ea955721e94d91ee73873c3cd7404ba"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__golden__rain",
+"sha256": "dbbb89fb8bf35aea5f8b9302429b1a141e403bdff1404088b928e6200b100997"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__approach__night__clear",
+"sha256": "65a1f1badb71aa4a3e6ef0c90b5e9de3384abd745b3f8b86240b997aecaa52c4"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__day__clear",
+"sha256": "b34e45fcec57fa5f7fe228809e46c1419e810afca470aeb874d850ec30e26e5f"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__day__rain",
+"sha256": "ffc5eb684478efcd0164d325ec11c1e4d0d1c6fd107d7ee12e38a372728eb01f"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__golden__clear",
+"sha256": "8cf2b33c9cec5db717cc543b13437710d5fcb67939bc5f0a37de69a482504f1b"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__golden__rain",
+"sha256": "c11ae8585cd43a947d6badc2aadd6ff85208e902cd53867028726fb6db31f50e"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__detail__night__clear",
+"sha256": "87bd91d41bed54b5ea750ed3b59c027ff3d59c1d5c31aa4c539439c26f5605f2"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__day__clear",
+"sha256": "ae5a771d19b38a59a7c6cb98265a8f413c1c1cb7fec50be653e9a0235f8f2403"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__day__rain",
+"sha256": "b360302a26004a658fac83e031b231eb78661e19cc2f2810de8432bce64327cd"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__golden__clear",
+"sha256": "cb5e0e5d588bb3a126392f8322ef114590eb53d1818a35c99d327201f46d21af"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__golden__rain",
+"sha256": "b8c66e67d1f45da0ea7e51e9406933c45f612a93ed658b5169a6bc7d960b0040"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__gameplay__night__clear",
+"sha256": "1f5a58a9b26cc6df8476d3b9793704576a68ce56b860127311cc772676c9581d"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__day__clear",
+"sha256": "81ed15cdfae1ab70d0c493b467735ccf3a6f2dd878c79dc9a8385b28ee7b410f"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__day__rain",
+"sha256": "13090dcce0bad3a68eecc62ef9535ca925822cc85434f5ec755e8650ee53dc43"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__golden__clear",
+"sha256": "2e7659ee3c7ecd2b62e31f732b330eb2a3ad00c5e114f75af8686a3a436d087d"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__golden__rain",
+"sha256": "4a8fb430f6ef4f159b772a82038c3f4b8631e1398f04db8574469f549e97801d"
+},
+{
+"stand": "dest6",
+"frame": "cloudreach__high_roost_sky_shrine__07__sky_shrine__reverse__night__clear",
+"sha256": "fad380a1b3e016698701902720238e4fa3b9de539543f1078a26b9a4b1ee83f3"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__approach__day__clear",
+"sha256": "59ab0369f80840ea9f6ad8d9a338877332f0c17888463bdda2cc39223b01c801"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__approach__day__rain",
+"sha256": "4a31f765725ffdbb61877c374a285fb9150143216bdf2c8ab0c33c4aeaf3a963"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__approach__golden__clear",
+"sha256": "5baa6f03b2ba74a5195ed44df69f612d521c41d26c62bb2f737f0ad5dfac38d5"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__approach__golden__rain",
+"sha256": "ea10599df2090990fc35e700228809fbbcccf78ce49a1381fe69cb1decd487b8"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__approach__night__clear",
+"sha256": "553e928d96ef99b65f0a3d873b37cb1776ed4b4a2b045b9a376338c4ca9a699b"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__detail__day__clear",
+"sha256": "adf6b685f40df650410f33bc77c15f439deab754c2f612b5eca63d3a65bc9e9a"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__detail__day__rain",
+"sha256": "9ebaf637c770e06256f65d606d690e00d0e64342f76d1051f2d8bc1becdb3081"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__detail__golden__clear",
+"sha256": "c4b937214a76fbc9b2edfbd5ebce63edf7b31812d8c2c6c27c618b23359b4c46"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__detail__golden__rain",
+"sha256": "33827e1753a58fa8e9380d4cb8562a55adc91e841341f41a30d3af63ef8c80e3"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__detail__night__clear",
+"sha256": "459348b4e6a7dd6ad9f590c0918bb82997892ae8f26efde98d4b0d139c6e1fd0"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__day__clear",
+"sha256": "d8ec073da1a4c4bc01d8eb53f8c780589a2a26acfa2dad3653ba4d7548d1fdec"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__day__rain",
+"sha256": "647aa2a3c9a38bfa2bf828eab108c8fdbd48dde7d5f506d1bb51cda95687c8d6"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__golden__clear",
+"sha256": "54dbc4df658fb7570b9ab6c3a48a49e631b5d53bdcfc5d604f4c4cc52f4cee71"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__golden__rain",
+"sha256": "bb74be026ca6df87cfa0a7e8f561d3fee5fc6d15f65bfe5888ed01f5fedc565a"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__gameplay__night__clear",
+"sha256": "a5d4c1044a849f8f0c8115e850222a5bb1483f0e6e8b0193000a3d215f09fe1a"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__day__clear",
+"sha256": "1030f53598ec6a52ff88d5eba9b760cab0110992b95da13cf2947efebb7c296b"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__day__rain",
+"sha256": "95ec4a4bc31e01f37d1c008fbf8470755381d462d1807ff7df60098efe69baa2"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__golden__clear",
+"sha256": "87018b189b93cb7c235a677211ea743719c48b77bb37588b2548e0b47b048001"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__golden__rain",
+"sha256": "d23cb3afed5e29f0574cf577932e06fe78bdec7f64a0a30613a741e9ca4e96a8"
+},
+{
+"stand": "dest7",
+"frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__reverse__night__clear",
+"sha256": "1cf08f24c98cd722af7738026f2f13b1bc6c5bee0b7ec3e771628bf8972d8eea"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__approach__day__clear",
+"sha256": "ead903aa9b2aa917d4fb7082d192edc1cbc9d495a7f05121de35b96f45a79a91"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__approach__day__rain",
+"sha256": "80fe344cc37b71849ddfade5f1483f889eb479be69c3dcd882dd5dd019bb9c90"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__approach__golden__clear",
+"sha256": "331a027283e0ef544a73cc00a383ff00c5cbbb6f38967ad1a2ac81ee37281d67"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__approach__golden__rain",
+"sha256": "b2c1f97068524c1d874300b400f75b20fa89005722945d7cdc2751975b9a87b7"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__approach__night__clear",
+"sha256": "9470502ba880e596f914a926dd8ef975ddb07cb14e097116987f8119de35655a"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__detail__day__clear",
+"sha256": "4680e12d4d70f865ee1abe7f2d3dcbc8b4f07376537d3b76f2f2b01b85a1df46"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__detail__day__rain",
+"sha256": "0295b196370be3425418af392709ce53df08faedc40c64b6b3df215978943c7d"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__detail__golden__clear",
+"sha256": "2731b815c30d3a722e0a73f2a99336e24482b0c39625b431b39b25f0a3176c70"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__detail__golden__rain",
+"sha256": "b4aa6d959e383d89e542597297b9b840ca979649984c7bf49e0f08f76ec90d0d"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__detail__night__clear",
+"sha256": "b5d55ffad1d8d80d940270f1f0fc26c1811cb33df4a4e99906117cf627fbfe56"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__gameplay__day__clear",
+"sha256": "712c447e6c82726cc3af1d302e1696694ce67af965f6656d334a319e8f6d8c4d"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__gameplay__day__rain",
+"sha256": "0e0c8d73c9c77280c4312496f8716ca08f521c494770e0a8da9dec67bdd5add3"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__gameplay__golden__clear",
+"sha256": "1742770afa458614408362aa16a30e34838cada7732fc1cfc432ee50a7c4b88e"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__gameplay__golden__rain",
+"sha256": "d6eed9f22e4f613a8fa648d444d2f23372ffddc10c1839eb05d717ba7d07f8ca"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__gameplay__night__clear",
+"sha256": "30153e4c0be32d93e543dbb55d273baa6ad27b78f9fc22b77d776615fe3d8a36"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__reverse__day__clear",
+"sha256": "7c57a105e59ea899f6c39afacf5ac8a4e5ee33d71b13d4eef5a78483ffb36e71"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__reverse__day__rain",
+"sha256": "705043067657dc27d95a391dec102eac2d882772eaf6877666ad474b01f73b7c"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__reverse__golden__clear",
+"sha256": "572f62cfd3514e27073d5b3e296c44216ef2fe583855bba320e14eb4e471072d"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__reverse__golden__rain",
+"sha256": "876f6fd2a9a86864e2a105f3280daf5b321ac177f81b0179c986434c8723b3bb"
+},
+{
+"stand": "dest8",
+"frame": "cloudreach__upper_cloudreach__09__cliffhold__reverse__night__clear",
+"sha256": "79373ac81c12f648cede6f71e4a4218ffc2207b143566b0d2f2c2817e69ab03e"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__approach__day__clear",
+"sha256": "734e28a46ef0982cc20aef4d81e1ad8280cd3abf24a115b49909c2104977b2af"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__approach__day__rain",
+"sha256": "0718c440d6fbbc157ffec240175da875f8539ea7f4366d5709929b2c68b7c0c7"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__approach__golden__clear",
+"sha256": "cab094fdda4311975a9874281220c486147f6e7188792eeb1009ae61eba98923"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__approach__golden__rain",
+"sha256": "942319fd02f2eb1b138d6bad8d2aceb0a12a4a5192fa4ce7789425d78db9c18d"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__approach__night__clear",
+"sha256": "4ba1f13b52f31d616f5628dea490ea3e0b4e7e081ef401e8d0993f81412eb4c8"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__detail__day__clear",
+"sha256": "574391165aa6feac39761498467fd0d5799090d1c487e5f440bff367bc6b37f9"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__detail__day__rain",
+"sha256": "2ef93a2b84965933690f2feb7d3cf72801356aa4bdf4a0036af3dee82e490306"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__detail__golden__clear",
+"sha256": "ec47281d88f8a67ea7586ffc81e66ff17d5e9e2ea25f11b93d71aa37ee5ba982"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__detail__golden__rain",
+"sha256": "32408d15882ea4d2625d6a6f92ed5eb9b7e0d23bd4516586da5b350badc923f7"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__detail__night__clear",
+"sha256": "4f6fe227b44ae1f86c969c91a9af70f9ada8a455dc147e012a20e3474a5c5c66"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__day__clear",
+"sha256": "e6aa6b6ff69344e4e0bc3c99d9274e9897976bdf27674798ba46013838b6c697"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__day__rain",
+"sha256": "7cfddb873500514e2f4bf2e01468e0d8bd4bf7174432d1cc29d50be674f8b673"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__golden__clear",
+"sha256": "af2d50797015fa63014d20a85732bc8777b1067dc53802c12bd0fd805ebdda41"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__golden__rain",
+"sha256": "e1c8913a30694fcff75e2d595f0c89d88e5465cf676f7dc9b29c44a1afd7c898"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__gameplay__night__clear",
+"sha256": "29fdc10d230f77544ce355065073dae6e03ccdc6d1bfb63e6ed441808cea1ee7"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__reverse__day__clear",
+"sha256": "e8e8a594e22e5dd0dc699a3b6c65dd1814f3875e1e5c9ec30cc1324ef3435ec8"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__reverse__day__rain",
+"sha256": "2c3beaced1a796ff12ac76f95ef161e8f4cf94e335cc7b72494cdfc58c6ac02c"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__reverse__golden__clear",
+"sha256": "310774a1af0a3966fd08a27d20ff137330c61c822cec49765f24aa6ab955804e"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__reverse__golden__rain",
+"sha256": "c743ce4fb9d3c04044dda1083e592e9744c7e95cee01824e994d6430b6ffec75"
+},
+{
+"stand": "dest9",
+"frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__reverse__night__clear",
+"sha256": "b4aa9eaef7e07ee5d738f3e81a3fde7a106a3317b080653793aa3a6ed125ef40"
+}
+]
+}

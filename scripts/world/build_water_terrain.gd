@@ -19,6 +19,14 @@ func _run() -> void:
 		push_error("Water bake needs its config and Terrain3D extension")
 		quit(1)
 		return
+	# `--veilfall-cap` bakes the close-1024 summit-cap variant (MESHY 10 crown)
+	# into its own directory; the shipping bake is untouched.
+	var output := OUTPUT
+	if OS.get_cmdline_user_args().has("--veilfall-cap"):
+		var cap: Dictionary = config.terrain.get("veilfall_summit_cap", {})
+		cap["enabled"] = true
+		config.terrain["veilfall_summit_cap"] = cap
+		output = str(cap.get("data_directory", OUTPUT + "_veilfall_cap"))
 	var field := FIELD.new(config)
 	var visual: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG))
 	var spec: Dictionary = config.terrain
@@ -93,9 +101,9 @@ func _run() -> void:
 				data.call("set_control_auto", position, false)
 		print("Water region %s baked" % str(location))
 		await process_frame
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT))
-	data.call("save_directory", OUTPUT)
-	var manifest := FileAccess.open(OUTPUT + "/manifest.json", FileAccess.WRITE)
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output))
+	data.call("save_directory", output)
+	var manifest := FileAccess.open(output + "/manifest.json", FileAccess.WRITE)
 	if manifest == null:
 		push_error("Cannot write Water terrain manifest")
 		quit(1)

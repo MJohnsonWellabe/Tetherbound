@@ -1,0 +1,86 @@
+{
+ "anchors": {
+  "f36_0_npc:C1A": [
+   7.3,
+   6.6,
+   7.0
+  ],
+  "f36_0_npc:C1B": [
+   7.3,
+   6.6,
+   7.0
+  ],
+  "craft:before": [
+   5.5,
+   5.0,
+   5.2
+  ],
+  "craft:after": [
+   6.9,
+   6.6,
+   6.6
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.6,
+   4.6,
+   5.0
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.0,
+   3.9,
+   4.5
+  ]
+ },
+ "candidates": {
+  "aeriex": [
+   6.6,
+   6.4,
+   6.6
+  ],
+  "ribbonray": [
+   6.1,
+   5.6,
+   6.2
+  ],
+  "water_cannonback": [
+   5.3,
+   6.0,
+   5.8
+  ],
+  "cliffspike": [
+   6.2,
+   6.2,
+   6.6
+  ],
+  "breezetail": [
+   6.35,
+   6.55,
+   6.8
+  ],
+  "skyrill": [
+   6.9,
+   6.4,
+   6.5
+  ],
+  "solmane": [
+   5.4,
+   5.0,
+   5.6
+  ],
+  "water_riptusk": [
+   5.8,
+   6.1,
+   6.0
+  ],
+  "tempestwing": [
+   5.9,
+   5.6,
+   6.0
+  ],
+  "cloudfang": [
+   6.7,
+   6.6,
+   6.9
+  ]
+ }
+}

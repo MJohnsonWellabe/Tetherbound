@@ -1,0 +1,76 @@
+{
+ "sets": {
+  "Ud": {
+   "A": {
+    "bar_a": 4.0
+   },
+   "B": {
+    "bar_a": 5.6
+   }
+  },
+  "Xm": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "grade": "FIXED",
+     "seam": "PRESENT",
+     "night": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "grade": "PRESENT",
+     "seam": "PRESENT",
+     "night": "PRESENT"
+    }
+   }
+  },
+  "Ek": {
+   "A": {
+    "bar_a": 5.5
+   },
+   "B": {
+    "bar_a": 6.3
+   }
+  },
+  "Ob": {
+   "A": {
+    "bar_a": 7.0
+   },
+   "B": {
+    "bar_a": 7.1
+   }
+  },
+  "Nb": {
+   "A": {
+    "bar_a": 3.8
+   },
+   "B": {
+    "bar_a": 4.6
+   }
+  },
+  "Pn": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "grade": "FIXED",
+     "seam": "PRESENT",
+     "night": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "grade": "PRESENT",
+     "seam": "PRESENT",
+     "night": "PRESENT"
+    }
+   }
+  }
+ },
+ "notes": {
+  "Xm/Pn": "sets look near-identical; A: real peach-rose evening, rose-violet dawn; B: evening ~ noon, dawn grey midday with low sun; both: razor horizon, shadowless night, bare dunes, flat-shaded Veilfall",
+  "Pn": "supplied on follow-up request (original block omitted Pn); scored on its own"
+ }
+}

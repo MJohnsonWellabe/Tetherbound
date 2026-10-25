@@ -989,6 +989,27 @@ func _wait_for_panel(script_tail: String) -> Node:
 	return null
 
 
+## A station's prompt is on its working face. From behind it, a straight walk
+## at the prompt runs into the station itself (training_t4_feed, 24 Oct: from
+## south-west of the Kitchen, its north-face prompt sat between the Kitchen and
+## its tier-2 attachment; 2 confined resets, 3 m short). Come round by the
+## player's own side to a point just in front of the face first. The same
+## from straight in front: the Kitchen's tier-2 attachment stands on the face's
+## own axis, 1.25 m out (the rerun from the north stopped behind it), so the
+## pocket is entered from the side. INF within 2 m of the prompt.
+static func front_side_waypoint(prompt: Vector3, station: Vector3, player: Vector3) -> Vector3:
+	var facing := Vector3(prompt.x - station.x, 0.0, prompt.z - station.z)
+	if facing.length() < 0.2:
+		return Vector3.INF
+	facing = facing.normalized()
+	var offset := Vector3(player.x - prompt.x, 0.0, player.z - prompt.z)
+	if offset.length() < 2.0:
+		return Vector3.INF
+	var lateral := Vector3(-facing.z, 0.0, facing.x)
+	var sign := 1.0 if offset.dot(lateral) >= 0.0 else -1.0
+	return Vector3(prompt.x, player.y, prompt.z) + facing * 0.6 + lateral * sign * 1.8
+
+
 func _walk_to_prompt(prompt: Node3D, what: String) -> bool:
 	if not await _stow_piece():
 		return false
@@ -999,6 +1020,11 @@ func _walk_to_prompt(prompt: Node3D, what: String) -> bool:
 	# than sometimes. `_stow_hammer()` is what a player does about it.
 	if not await _stow_hammer():
 		return false
+	var side := front_side_waypoint(prompt.global_position, (prompt.get_parent() as Node3D).global_position \
+		if prompt.get_parent() is Node3D else prompt.global_position, _player.global_position)
+	# Best effort: the direct walk below still decides.
+	if side != Vector3.INF:
+		await _walk_to(side, "round to the front of the %s" % what, 0.6, false, false)
 	if not await _walk_to(prompt.global_position, "the %s" % what, 1.4):
 		return false
 	for attempt in 3:
@@ -1124,6 +1150,30 @@ func _select_piece(id: String) -> bool:
 	return false
 
 
+const CLEAR_STEP_M := 3.5
+
+
+## The nearest heading to `wanted` whose straight step is free of colliders at
+## knee and chest height. A step aimed through a station sent the navigator
+## round it and in at the farmhouse door (training_t4_kitchen, 24 Oct: from
+## beside the Forge, every later step started inside Grandpa's house).
+func _open_heading(wanted: Vector3, length: float) -> Vector3:
+	var space := _player.get_world_3d().direct_space_state
+	for turn in 12:
+		var heading := wanted.rotated(Vector3.UP, deg_to_rad(30.0 * float((turn + 1) / 2) * (1.0 if turn % 2 == 0 else -1.0)))
+		var clear := true
+		for height: float in [0.5, 1.2]:
+			var from := _player.global_position + Vector3.UP * height
+			var query := PhysicsRayQueryParameters3D.create(from, from + heading * (length + 0.5))
+			query.exclude = [_player.get_rid()]
+			if not space.intersect_ray(query).is_empty():
+				clear = false
+				break
+		if clear:
+			return heading
+	return wanted
+
+
 ## Walk until nothing actionable is drawing the interact line.
 func _clear_of_every_offer() -> bool:
 	if _arbiter == null:
@@ -1179,8 +1229,13 @@ func _clear_of_every_offer() -> bool:
 			away = -_forward()
 		# Fan out: straight away first, then progressively wider either side.
 		var lean := deg_to_rad(35.0 * float((attempt + 1) / 2) * (1.0 if attempt % 2 == 0 else -1.0))
-		var heading := away.normalized().rotated(Vector3.UP, lean)
-		var step := _player.global_position + heading * 3.5
+		# Lengthen the step each pair of attempts (3.5 -> 8 m): on the built
+		# homestead plot the Forge, Kitchen and Altar prompts sit about 4 m
+		# apart, and a 3.5 m step only hopped from one prompt into the next
+		# (training_t4_kitchen, 24 Oct).
+		var length := CLEAR_STEP_M + 1.5 * float(attempt / 2)
+		var heading := _open_heading(away.normalized().rotated(Vector3.UP, lean), length)
+		var step := _player.global_position + heading * length
 		await _walk_to(step, "clear of the '%s' prompt" % str(offer.get("label", "")), 0.8, false)
 	_fail("could not get clear of the interact line; Build cannot be opened from here. "
 		+ "winner=%s provider=%s" % [str(_arbiter.call("winner")),

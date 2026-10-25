@@ -38,6 +38,7 @@ const PROPS := {
 	"fence": "res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Extension2.gltf",
 	"strata_outcrop": "res://assets/props/meshy-1020/cloudreach_strata_spire_cluster/cloudreach_strata_spire_cluster.glb",
 	"cliff_shelf": "res://assets/props/meshy-1020/cloudreach_cliff_shelf_edge/cloudreach_cliff_shelf_edge.glb",
+	"strata_ledge": "res://assets/props/meshy-1024/cloudreach_stratified_overhang/cloudreach_stratified_overhang.glb",
 }
 const MESHY := "res://assets/props/meshy-1020/cloudreach_%s/cloudreach_%s.glb"
 static var _items_loaded := false
@@ -58,6 +59,12 @@ static func config() -> Dictionary:
 	if raw is Dictionary and (bool(raw.get("enabled", false))
 			or OS.get_cmdline_user_args().has(str(raw.get("preview_arg", "--none")))):
 		_active = raw
+		# A judged-next round rides on top of the shipping settings, OFF unless
+		# its `enabled` is set or a capture opts in with its own preview arg.
+		var next: Variant = raw.get("candidate", {})
+		if next is Dictionary and (bool(next.get("enabled", false))
+				or OS.get_cmdline_user_args().has(str(next.get("preview_arg", "--none")))):
+			_active = merge(raw, next.get("overlay", {}))
 	return _active
 
 
@@ -69,6 +76,11 @@ static func items_config() -> Dictionary:
 	if raw is Dictionary and (bool(raw.get("enabled", false))
 			or OS.get_cmdline_user_args().has(str(raw.get("preview_arg", "--none")))):
 		_items = raw
+		# Judged-next rounds, each OFF unless enabled or passed its preview arg.
+		for next: Variant in raw.get("candidates", []):
+			if next is Dictionary and (bool(next.get("enabled", false))
+					or OS.get_cmdline_user_args().has(str(next.get("preview_arg", "--none")))):
+				_items = merge(_items, next.get("overlay", {}))
 	return _items
 
 
@@ -250,6 +262,29 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 						mesh.visible = false
 					if child is GeometryInstance3D:
 						(child as GeometryInstance3D).visible = false
+		# A hero piece that replaces part of a procedural mass: hide the named
+		# children under one node (colliders and the walkable crown stay).
+		for rule: Dictionary in site.get("hide_child_visuals", []):
+			var under := root.get_node_or_null(NodePath(str(rule.get("under", ""))))
+			if under == null:
+				continue
+			var kept: Array = rule.get("keep_prefixes", [])
+			for child: Node in under.get_children():
+				var label := str(child.name)
+				# The walkable crown shares one mesh with its walls: keep the
+				# crown surface(s) and draw the later surfaces with nothing.
+				if label == str(rule.get("surfaces_of", "")) and child is MeshInstance3D:
+					var body := child as MeshInstance3D
+					for surface in range(int(rule.get("hide_surfaces_from", 1)), body.mesh.get_surface_count()):
+						body.set_surface_override_material(surface, _invisible())
+					continue
+				var named := (rule.get("prefixes", []) as Array).any(func(prefix: String) -> bool: return label.begins_with(prefix))
+				var unkept := rule.has("keep_prefixes") and not kept.any(func(prefix: String) -> bool: return label.begins_with(prefix))
+				if named or unkept:
+					for mesh: GeometryInstance3D in child.find_children("*", "GeometryInstance3D", true, false):
+						mesh.visible = false
+					if child is GeometryInstance3D:
+						(child as GeometryInstance3D).visible = false
 		# A hero shell that encloses the court: hide every older visual inside
 		# its ring (colliders stay), keeping this candidate's own dressing.
 		var within := float(site.get("hide_visual_within_m", 0.0))
@@ -270,7 +305,9 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 			var to := Vector3(float(stand.to[0]), 0.0, float(stand.to[1]))
 			var forward := (to - from).normalized()
 			var side := Vector3.UP.cross(forward).normalized()
-			for item: Dictionary in spec.get("stand_pattern", []):
+			# A stand may carry its own layout (a candidate's ground structure
+			# for one camera) instead of the shared pattern.
+			for item: Dictionary in stand.get("pattern", spec.get("stand_pattern", [])):
 				var only: Array = item.get("only_stands", [])
 				if not only.is_empty() and not only.has(str(stand.get("id", ""))):
 					continue
@@ -393,7 +430,7 @@ func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
 		float(spec.height), float(spec.get("yaw", 0.0)), float(spec.get("width", 0.0)))
 	if model == null:
 		return
-	_dress_building(model, str(spec.asset), path, bool(spec.get("double_sided", false)))
+	_dress_building(model, str(spec.asset), path, bool(spec.get("double_sided", false)), str(spec.get("tint", "")))
 	var placement := model.get_parent() as Node3D
 	var bounds: AABB = BOUNDS.measure(model)
 	var size := bounds.size * (float(spec.height) / maxf(bounds.size.y, 0.01))
@@ -431,9 +468,9 @@ func _building(parent: Node3D, spec: Dictionary, at: Vector3) -> void:
 ## where the asset ships a mask of its baked amber panes.
 ## double_sided: a hollow shell the camera can stand inside (its inner faces
 ## would otherwise be culled and the court would open onto the sky).
-func _dress_building(model: Node3D, asset: String, path := "", double_sided := false) -> void:
+func _dress_building(model: Node3D, asset: String, path := "", double_sided := false, tint_override := "") -> void:
 	var spec := config() if not config().is_empty() else items_config()
-	var tint := Color(str(spec.get("building_tint", "#ffffff")))
+	var tint := Color(tint_override if not tint_override.is_empty() else str(spec.get("building_tint", "#ffffff")))
 	var mask_path := (path if not path.is_empty() else MESHY % [asset, asset]).trim_suffix(".glb") + "_window_mask.png"
 	var mask: Texture2D = load(mask_path) as Texture2D if ResourceLoader.exists(mask_path) else null
 	var glow := Color(str(spec.get("window_colour", "#ffa04a")))
@@ -457,6 +494,14 @@ func _dress_building(model: Node3D, asset: String, path := "", double_sided := f
 				_lamps.append({"light": null, "material": finish,
 					"glow": float(spec.get("window_night_energy", 2.5)), "day_glow": 0.0})
 			mesh.set_surface_override_material(surface, finish)
+
+
+static func _invisible() -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.albedo_color = Color(1.0, 1.0, 1.0, 0.0)
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	return material
 
 
 func _collide(placement: Node3D, size: Vector3, fraction: float) -> void:

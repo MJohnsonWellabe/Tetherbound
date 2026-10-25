@@ -1,7 +1,7 @@
 {
   "item": "F39 shared biome look",
   "realm": "water",
-  "_fixture": "Production Water scene; F13#5 mid-chapter flags and teleported stands. pos is the absolute camera position, stand the trainer position. Frozen clear weather, host-carried clock set to the explicit hour. Reuse unchanged for matched OFF/ON Medium/High rounds. Initial look sample only, not the >=200-frame catalog or complete fight/weather matrix.",
+  "_fixture": "Production Water scene; F13#5 mid-chapter flags and teleported stands. pos is the absolute camera position, stand the trainer position. Weather is frozen at each view's own declared preset (clear or rain), host-carried clock set to the explicit hour. Reuse unchanged for matched OFF/ON Medium/High rounds. Initial look sample only, not the >=200-frame catalog or complete fight/weather matrix.",
   "views": [
     {
       "id": "shore-day",
@@ -110,6 +110,99 @@
       "fov": 70,
       "time": 12,
       "weather": "clear"
+    },
+    {
+      "id": "shore-rain",
+      "stand": [
+        0,
+        2.229,
+        162
+      ],
+      "pos": [
+        -3,
+        5.0,
+        156
+      ],
+      "yaw": -177.0831,
+      "pitch": 8.7641,
+      "fov": 70,
+      "time": 12,
+      "weather": "rain"
+    },
+    {
+      "id": "lesson-rain",
+      "stand": [
+        57.368,
+        2.228571,
+        151.502
+      ],
+      "pos": [
+        54.368,
+        5.0,
+        147.502
+      ],
+      "yaw": -117.3484,
+      "pitch": -6.3939,
+      "fov": 70,
+      "time": 12,
+      "weather": "rain"
+    },
+    {
+      "id": "veilfall-rain",
+      "stand": [
+        384.311,
+        2.229,
+        3805.405
+      ],
+      "pos": [
+        387.311,
+        5.0,
+        3799.405
+      ],
+      "yaw": 151.1913,
+      "pitch": 37.1961,
+      "fov": 70,
+      "time": 12,
+      "weather": "rain"
+    },
+    {
+      "id": "veilfall-vista",
+      "stand": [
+        384.311,
+        2.229,
+        3805.405
+      ],
+      "pos": [
+        560.0,
+        40.0,
+        3480.0
+      ],
+      "yaw": 151.39,
+      "pitch": 17.7,
+      "fov": 70,
+      "time": 12,
+      "weather": "clear",
+      "_why": "close-1024 mt1 judges x3: the 200 m stand cropped the summit, so the landmark had no silhouette; coordinator approved a reframe (same subject, same purpose). Old pose {\"pos\": [480.31, 20.0, 3629.41], \"yaw\": 149.27, \"pitch\": 11.0, \"fov\": 70}. New: ~750 m offshore on the same bearing, aimed at mid-mountain so the whole island, crown and sea are in frame. Earlier scores on the old stand do not carry over."
+    },
+    {
+      "id": "veilfall-vista-rain",
+      "stand": [
+        384.311,
+        2.229,
+        3805.405
+      ],
+      "pos": [
+        560.0,
+        40.0,
+        3480.0
+      ],
+      "yaw": 151.39,
+      "pitch": 17.7,
+      "fov": 70,
+      "time": 12,
+      "weather": "rain",
+      "_why": "close-1024 mt1 judges x3: the 200 m stand cropped the summit, so the landmark had no silhouette; coordinator approved a reframe (same subject, same purpose). Old pose {\"pos\": [480.31, 20.0, 3629.41], \"yaw\": 149.27, \"pitch\": 11.0, \"fov\": 70}. New: ~750 m offshore on the same bearing, aimed at mid-mountain so the whole island, crown and sea are in frame. Earlier scores on the old stand do not carry over."
     }
-  ]
+  ],
+  "_veilfall_vista": "close-1024 T3 (coordinator, GPU baseline: the Veilfall views were camera-on-rock): veilfall-vista and veilfall-vista-rain sit 200 m offshore of the landing stand and look back at the mountain, the falls and the sea. They are the Veilfall row's views from now on; veilfall-near and veilfall-rain stay unchanged for the close-up rock comparisons already queued."
 }

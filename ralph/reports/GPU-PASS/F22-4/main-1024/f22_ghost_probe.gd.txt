@@ -1,0 +1,153 @@
+extends "res://tools/art_pipeline/capture_named_fight.gd"
+
+## GPU-pass F22#4 ghost-boss probe (local only, never committed). Same capture;
+## dumps every material on the hero-model captain once, and with
+## TB_FORCE_OPAQUE=1 forces each of its BaseMaterial3D surfaces opaque
+## (transparency DISABLED, depth draw opaque-only, no alpha scissor/hash) every
+## frame. ShaderMaterials are reported with their render_mode line.
+var _probe_frames := 0
+var _dumped := false
+var _first_seen := -1
+var _forced := {}
+
+
+func _initialize() -> void:
+	RenderingServer.frame_pre_draw.connect(_probe_tick)
+	if not OS.get_environment("TB_GRADE_VARIANT").is_empty():
+		load("D:/tb-gpu-runs/tools/grade_override.gd").install(self)
+
+
+func _captain() -> Node:
+	for n: Node in get_root().find_children("*", "CharacterBody3D", true, false):
+		var o: Variant = n.get("art_model_override")
+		if o is String and not (o as String).is_empty():
+			return n
+	return null
+
+
+func _materials(gi: GeometryInstance3D) -> Array:
+	var out: Array = []
+	if gi.material_override != null: out.append(["override", gi.material_override])
+	if gi.material_overlay != null: out.append(["overlay", gi.material_overlay])
+	var mi := gi as MeshInstance3D
+	if mi != null and mi.mesh != null:
+		for s in mi.mesh.get_surface_count():
+			var m: Material = mi.get_surface_override_material(s)
+			if m != null: out.append(["surface_override_%d" % s, m])
+			var base: Material = mi.mesh.surface_get_material(s)
+			if base != null: out.append(["mesh_surface_%d" % s, base])
+	return out
+
+
+func _describe(m: Material) -> String:
+	if m is BaseMaterial3D:
+		var b := m as BaseMaterial3D
+		return "%s transparency=%d depth_draw=%d cull=%d blend=%d albedo=%s alpha_scissor=%.2f shading=%d no_depth_test=%s emission=%s emission_colour=%s emission_energy=%.2f emission_op=%d refraction=%s refraction_scale=%.2f sss=%s backlight=%s rim=%s rim_amount=%.2f clearcoat=%s metallic=%.2f roughness=%.2f proximity_fade=%s distance_fade=%d albedo_tex=%s" % [
+			b.get_class(), b.transparency, b.depth_draw_mode, b.cull_mode, b.blend_mode, str(b.albedo_color),
+			b.alpha_scissor_threshold, b.shading_mode, b.no_depth_test, b.emission_enabled, str(b.emission), b.emission_energy_multiplier,
+			b.emission_operator, b.refraction_enabled, b.refraction_scale, b.subsurf_scatter_enabled, b.backlight_enabled,
+			b.rim_enabled, b.rim, b.clearcoat_enabled, b.metallic, b.roughness, b.proximity_fade_enabled, b.distance_fade_mode,
+			b.albedo_texture.resource_path if b.albedo_texture != null else "none"]
+	if m is ShaderMaterial:
+		var sh := (m as ShaderMaterial).shader
+		var mode := ""
+		if sh != null:
+			for line: String in sh.code.split("\n"):
+				if line.strip_edges().begins_with("render_mode"): mode = line.strip_edges()
+		return "ShaderMaterial shader=%s %s next_pass=%s" % [sh.resource_path if sh != null else "null", mode, str(m.next_pass)]
+	return m.get_class()
+
+
+func _probe_tick() -> void:
+	_probe_frames += 1
+	var cap := _captain()
+	if cap == null: return
+	var gis: Array = cap.find_children("*", "GeometryInstance3D", true, false)
+	if _first_seen < 0: _first_seen = _probe_frames
+	if (_probe_frames - _first_seen) % 120 == 30:
+		_dumped = true
+		print("GHOST frame=%d captain=%s species=%s model=%s geometry=%d" % [_probe_frames, cap.name, str(cap.get("species_id")), str(cap.get("art_model_override")), gis.size()])
+		for gi: GeometryInstance3D in gis:
+			print("GHOST node=%s class=%s visible=%s transparency=%.2f cast_shadow=%d" % [gi.get_path(), gi.get_class(), gi.is_visible_in_tree(), gi.transparency, gi.cast_shadow])
+			for pair: Array in _materials(gi):
+				print("GHOST   %s: %s" % [pair[0], _describe(pair[1])])
+	if OS.get_environment("TB_FORCE_OPAQUE") == "1":
+		for gi: GeometryInstance3D in gis:
+			if gi.transparency > 0.0: gi.transparency = 0.0
+			if gi.material_override is BaseMaterial3D and not _forced.has(gi.material_override.get_instance_id()):
+				var o := (gi.material_override as BaseMaterial3D).duplicate() as BaseMaterial3D
+				o.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+				o.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_OPAQUE_ONLY
+				o.albedo_color.a = 1.0
+				_forced[o.get_instance_id()] = true
+				gi.material_override = o
+			var mi := gi as MeshInstance3D
+			if mi == null or mi.mesh == null: continue
+			for s in mi.mesh.get_surface_count():
+				var active: Material = mi.get_active_material(s)
+				if not active is BaseMaterial3D or _forced.has(active.get_instance_id()): continue
+				var b := (active as BaseMaterial3D).duplicate() as BaseMaterial3D
+				b.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+				b.depth_draw_mode = BaseMaterial3D.DEPTH_DRAW_OPAQUE_ONLY
+				b.albedo_color.a = 1.0
+				_forced[b.get_instance_id()] = true
+				mi.set_surface_override_material(s, b)
+			if gi.material_overlay != null and OS.get_environment("TB_DROP_OVERLAY") == "1":
+				gi.material_overlay = null
+
+	if OS.get_environment("TB_FORCE_MATTE") != "":
+		# 1 = metallic 0 (texture dropped); 2 = also roughness 1 (texture dropped); 3 = also emission off.
+		var mode := OS.get_environment("TB_FORCE_MATTE")
+		if mode == "E" or mode == "R":
+			# E = emission off only; R = roughness 1 only (texture dropped). Everything else as shipped.
+			for gi: GeometryInstance3D in gis:
+				var mi2 := gi as MeshInstance3D
+				if mi2 == null or mi2.mesh == null: continue
+				for s in mi2.mesh.get_surface_count():
+					var act: Material = mi2.get_active_material(s)
+					if not act is BaseMaterial3D or _forced.has(act.get_instance_id()): continue
+					var c := (act as BaseMaterial3D).duplicate() as BaseMaterial3D
+					if mode == "E":
+						c.emission_enabled = false
+					else:
+						c.roughness = 1.0
+						c.roughness_texture = null
+					_forced[c.get_instance_id()] = true
+					mi2.set_surface_override_material(s, c)
+					print("GHOST mode %s applied frame=%d surface=%d emission_tex=%s emission_op=%d" % [mode, _probe_frames, s,
+						str((act as BaseMaterial3D).emission_texture.resource_path if (act as BaseMaterial3D).emission_texture != null else "none"),
+						(act as BaseMaterial3D).emission_operator])
+			return
+		var level := int(mode)
+		for gi: GeometryInstance3D in gis:
+			var mi := gi as MeshInstance3D
+			if mi == null or mi.mesh == null: continue
+			for s in mi.mesh.get_surface_count():
+				var active: Material = mi.get_active_material(s)
+				if not active is BaseMaterial3D or _forced.has(active.get_instance_id()): continue
+				var b := (active as BaseMaterial3D).duplicate() as BaseMaterial3D
+				b.metallic = 0.0
+				b.metallic_texture = null
+				if level >= 2:
+					b.roughness = 1.0
+					b.roughness_texture = null
+				if level >= 3:
+					b.emission_enabled = false
+				_forced[b.get_instance_id()] = true
+				mi.set_surface_override_material(s, b)
+				print("GHOST matte%d applied frame=%d surface=%d (was metallic=%.2f roughness=%.2f mtex=%s rtex=%s)" % [level, _probe_frames, s,
+					(active as BaseMaterial3D).metallic, (active as BaseMaterial3D).roughness,
+					str((active as BaseMaterial3D).metallic_texture != null), str((active as BaseMaterial3D).roughness_texture != null)])
+
+	if OS.get_environment("TB_FORCE_METAL0") == "1":
+		for gi: GeometryInstance3D in gis:
+			var mi := gi as MeshInstance3D
+			if mi == null or mi.mesh == null: continue
+			for s in mi.mesh.get_surface_count():
+				var active: Material = mi.get_active_material(s)
+				if not active is BaseMaterial3D or _forced.has(active.get_instance_id()): continue
+				var b := (active as BaseMaterial3D).duplicate() as BaseMaterial3D
+				b.metallic = 0.0
+				_forced[b.get_instance_id()] = true
+				mi.set_surface_override_material(s, b)
+				print("GHOST metal0 applied frame=%d surface=%d (was metallic=%.2f)" % [_probe_frames, s, (active as BaseMaterial3D).metallic])

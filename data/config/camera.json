@@ -1,4 +1,6 @@
 {
+  "_why_fight_presentation_1025b": "Fights close-1025 ON (coordinator asks after r4/r5 + GPU G3): code-blind CPU r6, 3 fresh judges, mapped, shipped look -> r6: Venn 5.92 -> 6.56, Warden 6.19 -> 6.81, Riverwatch 6.43 -> 7.05, Stormwood 6.27 -> 6.38, Veyra 6.46 -> 6.54 (with the pilot ghost fix ef4591a18); r7 trainer fights (r6 + stagger label + flash drop + a steadier lens, the lens kept OFF): Warden 5.93 -> 6.32, grunt 6.08 -> 5.93. ralph/reports/FIGHTS/close-1024/NOTE.md Here: fight.pilot_min_screen_fraction 0.10 in every fight.",
+  "_why_fight_presentation_1025": "Fights close-1024 generic fight presentation ON (owner 24 Oct: 'I don't like how the fights outline the area of the attack'; cand_gen_h). Code-blind yardstick, CPU, 3 fresh judges, mapped, before -> after: Meadows Warden hall 4.85 -> 5.88, Riverwatch 5.64 -> 6.99 (r4); Veyra 5.60 -> 6.21, Stormwood glass_field 5.71 -> 6.13, Venn 5.38 -> 6.07 (r5). Outlines and impact disc FIXED in every after set; tell 'where' still PARTIAL/PRESENT (dust only). Presentation only: timings, footprints and the AI's telegraph unchanged. GPU confirms 7.5. ralph/reports/FIGHTS/close-1024/NOTE.md Here: fallback_max_steps 2 (the Venn seabed pop) and the Riverwatch pilot_min_screen_fraction 0.10.",
   "_comment": "Camera behaviour that is not the exploration orbit. The orbit itself still lives in movement.json's `camera` block; this file holds the modes that take the rig away from it. Today that is the conversation push-in (D73 sec6, closure plan CL-G10).",
 
   "conversation": {
@@ -54,7 +56,13 @@
     "per_trainer_enabled": true,
     "_why_screen_tilt_deg": "F22#4 (Fights lane, 22 Oct): pitch the fight lens down this many degrees after the solved pose so the fighters sit above the bottom HUD band (judges: the band covers the pilot and trainer). 0 = OFF: at 6 degrees r11 tied r13 within noise and cropped heads (F22-4-R6.md). Presentation only; clamped 0-15.",
     "screen_tilt_deg": 0.0,
-    "per_trainer": {"captain_riverwatch": {"max_distance_m": 14.0}},
+    "_why_fallback_max_steps": "Fights close-1024 generic fix (cand_gen_h): when no orbit candidate passes, keep the best within this many steps of the solved pose instead of swinging the full search (the Venn seabed camera pop). -1 = no limit (previous behaviour). ON at 2 since 25 Oct (Venn r5: camera jump PRESENT -> FIXED 3/3).",
+    "_scope_fallback_max_steps": "Client-local presentation only: read by each peer's renderer/HUD; no host authority, save, transaction, network message or gameplay state. Absent = previous behaviour.",
+    "fallback_max_steps": 2,
+    "_why_pilot_min_screen_fraction": "Fights close-1025 (ON since 25 Oct, r6/r7): the pilot size floor (the solver never pulls back so far that the piloted creature renders under this fraction of the frame height) in every fight; it used to apply only in Stormwood sight-line fights, so per_trainer fractions elsewhere were inert. Judges r4/r5: the pilot is a speck on dark moss and pale sand.",
+    "_scope_pilot_min_screen_fraction": "Client-local presentation only; no authority, save or network state.",
+    "pilot_min_screen_fraction": 0.1,
+    "per_trainer": {"captain_riverwatch": {"max_distance_m": 14.0, "pilot_min_screen_fraction": 0.1}},
     "readability": {
       "_comment": "Camera-only conservative oriented whole-render envelopes include the trainer and foreground creatures. Actual projected envelope intersection is checked for front-to-back depth, including lower silhouettes; no hidden body, scale/collision change or sparse ellipsoid shortcut. Independent whole-frame pixels remain required.",
       "hud_margin_px": 12.0,
