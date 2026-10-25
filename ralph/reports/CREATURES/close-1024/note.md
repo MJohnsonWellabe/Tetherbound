@@ -3,6 +3,16 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures-land 29f4de904 (order 1): **P2-016 body hit-flash, one candidate.**
+  - A struck creature's own surface pulses warm-white: #fff0d2 at 0.55, fading to 0 over 0.12 s, as an additive overlay on every mesh of its art, removed after the pulse. Art node only; body, collider and materials untouched. Config: combat.json `impact.hit_flash`.
+  - The big wince is kept but OFF (`impact.hurt_wince`), and the recoil is back to main's tween. The 0.55 s wince-hold timing is still in the animator; say if you want that gated off as well.
+  - Tests: new `test_creature_hit_flash`, plus flinch (wince forced on), hit window, remote stagger, combat feedback and impact: 20 tests, 0 failed.
+  - CPU capture is inconclusive. The disk filled twice mid-capture, and only 4 of 12 frames survived. In frames 2-3 the struck boar reads lighter on contact, but dust overlaps it. **Please judge on GPU.**
+  - GPU command (the same G3/G5 shape):
+    `godot --path . --script res://tools/capture_f38_fight.gd -- --trainer=south_bridge_grunt --frames=32 --interval=0.15 --attack --dodge --tell-frames --source-commit=29f4de904d9f5eca286413256ed70aef20602a64 --out=<fresh dir>`
+    Control: main.
+- 25 Oct **lane blocker: disk.** This container has about 150 MB free; git packs are 18 GB plus 1 GB loose objects. Captures and imports keep failing. The dog3 and Mirejaw retexture grading (orders 2-3, tb/meshy-1024 b959ba072) needs room for an import and two captures each. A fresh session or a sparse/shallow checkout would unblock it. I'll try in place, small steps first.
+
 - 25 Oct GPU READY tb/creatures-land 1b9c6616b: **Tanglevolt restored to its 22 Oct board look, one small candidate.**
   - field_emission 1.45 -> 0.0. I also took field_rim 0.25 -> 0.0: both came in ce892f75a after the board was made, and the rim brightens the fur at the silhouette, so I left it out rather than guess. If the GPU stage check wants the rim back, it is one number.
   - The vein emissive mask (e4b6a4018) carries the arcs against the dark coat.
