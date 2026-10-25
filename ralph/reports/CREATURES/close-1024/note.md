@@ -3,6 +3,10 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures-land a986d3142 (tier 1, the sub-6 row): Mosshock's ordinary repaint.
+  - **Change:** the neon-green camo is gone. Its red growth becomes a darker, muted olive moss outside the grass hue band (0% of chromatic texels in the band, was 57%); the gold current becomes pale lichen; the amber eyes are kept, so the face reads. Rule change only: `four_biome_colourways.json` mosshock `vivid_rules`, regenerated with `tools/repaint_creature_textures.py --only vivid mosshock`.
+  - **CPU b30:** mapped 5.55 to 6.43 (+0.88). Fit slope 1.26, anchor RMSE 0.55, confirming batch. Evidence: `b30/judges.md`.
+  - **Still flagged by all three judges:** the hit (a rear-up that reads as a lunge) and the faint (hard to parse). I'm doing a cower hit next.
 - 25 Oct GPU READY tb/creatures-land 471d7ff3e (your G2 verdict on cf2d4258a): the struck enemy now flinches in named-trainer fights.
   - **Path:** the enemy in a named-trainer fight is the same wild_creature body; its hit clip fires with its impact window. The hit pose itself was the problem: a rear-back that read as attacking, and Mudsnout's had never been strengthened.
   - **21714fd2f:** Mudsnout, Burrowback and the Terrapup badger now cower when hit (head ducks low and aside, body rolls away, tail tucks; feet planted). Only the hit clip changes.
