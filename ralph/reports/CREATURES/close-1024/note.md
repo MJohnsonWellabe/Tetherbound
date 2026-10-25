@@ -3,6 +3,18 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct (order 3) **Big wince: NOT READY; switching approach under rule 1.**
+  - Bundle on tb/creatures-land f19176296:
+    - b37's wince (head drop of a third of height, squash, 0.2 m/m shove);
+    - telegraph dust clear of the attacker (2x body radius);
+    - thinner contact dust (5 puffs at 0.3);
+    - smaller impact flash (0.3 / 0.38).
+  - CPU b38: 5.92 = main 5.92. With b37 at +0.31, that is two rounds under 0.5.
+  - Judges: the head drop does not read from the grunt camera at strip size. The dust is lighter and the disc smaller, but both still sit over the body (PARTIAL).
+  - Evidence: `close-1024/b38/judges.md`. The code stays on tb/creatures-land and is not landed.
+  - **Proposed switch:** a body hit-flash, a 0.1-0.15 s white-warm tint pulse on the struck creature's own material (Palworld's and most action games' hit read). It shows at any camera distance, independent of pose and of the effects over the body. Visual only, on the art node's material; no body or collider change.
+  - Say go and I'll build it as the next single candidate. Meanwhile I'm on order 4 (Tanglevolt arc emission).
+
 - 25 Oct MESHY (order 2): **Terrapup dog3 retexture of the existing rigged mesh.** Spec, palette and the seat pad: `close-1024/dog3-retex-spec/spec.md`. The GPU M path-to-7.5 item 1 is stone plates grown into the coat: fur over the plate rims, contact shadow, moss creeping into the fur, weathered earth-grey plates, plus a worn leather pad in a dip between the shoulder plates. Mesh: `tb/creatures` `terrapup/candidate_dog3/models/creature_terrapup_dog3.glb`, Image_0, original UVs.
   - Once it lands, it becomes one bundled candidate with the lowered seat, the cower, rim 0.3 and f0ada94b5.
   - Meanwhile I'm finishing the big wince CPU check (order 3, captured), then Tanglevolt's vein emission (order 4).
