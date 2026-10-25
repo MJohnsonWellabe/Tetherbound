@@ -1,0 +1,46 @@
+{
+ "Tc": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Er": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ },
+ "Ee": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Kh": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ou": {
+  "anchor": false,
+  "label": "G3 south_bridge_grunt f17-32 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G3\\sides\\G3-south_bridge_grunt-17-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G3\\sides\\G3-south_bridge_grunt-17-ship-Medium.png"
+ },
+ "Dx": {
+  "anchor": false,
+  "label": "G3 warden_aldis f1-16 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G3\\sides\\G3-warden_aldis-1-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G3\\sides\\G3-warden_aldis-1-cand-Medium.png"
+ },
+ "Zc": {
+  "anchor": false,
+  "label": "G3 south_bridge_grunt f1-16 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G3\\sides\\G3-south_bridge_grunt-1-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G3\\sides\\G3-south_bridge_grunt-1-cand-Medium.png"
+ },
+ "Yn": {
+  "anchor": false,
+  "label": "G3 warden_aldis f17-32 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G3\\sides\\G3-warden_aldis-17-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G3\\sides\\G3-warden_aldis-17-ship-Medium.png"
+ }
+}

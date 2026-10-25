@@ -1,0 +1,140 @@
+{
+ "sets": {
+  "Cb": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The serpent model is a credible naturalistic base, but A's muddy gold mottling loses the read at small size and B's faint poses float off the ground in a rising coil, so neither reaches Palworld creature finish."
+  },
+  "Sw": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The side camera and big armoured badger read well, but frozen idle bodies under hits and a flat olive-yellow grade with no sky, fog or cool distance sink it."
+  },
+  "Zl": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A high top-down camera over a uniform grass carpet, with the player creature mostly off screen and wild swings in f12-f14, means the fight does not read as a Palworld-class battle."
+  },
+  "Rb": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager with expressive eyes and a coherent green-brown homestead palette that matches shipping stylised character finish, though he is more cartoon than the naturalistic creatures."
+  },
+  "Yo": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Apart from one possible stagger (A f24), both creatures hold their idle silhouettes under flat lavender telegraph domes and 2D gold hit rings, all shot from a high camera under a muddy yellow grade."
+  },
+  "Ei": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, brace, cap and stone footing start to read as built, but the wall is still a lone thin card on a flat grass carpet beside a low-poly rock, and B is a blank white sheet."
+  },
+  "Hp": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The arena framing with fence and banners is readable, but creatures that stay frozen under hits, smoke that blankets the target (A f30-f31), the camera inside foliage (A f28) and a one-note yellow grade sink it."
+  },
+  "Al": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger, unclipped blue-grey panel nears a shipping UI, but its keyboard-glyph hints are small and plain, and it sits over a murky grey night scene with no Valheim-class mood."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Author and trigger real hit-react, stagger and locomotion body poses (flinch, recoil, lean, rear) for the combat creatures so a hit or a move visibly changes the silhouette, and ground the serpent's faint poses on the floor",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix the production fight camera to a consistent low over-the-shoulder framing that keeps the player creature, enemy and trainer on screen (no top-down swings, no foliage in front of the lens, smoke that never hides the target), and regrade the Meadows fight away from flat olive-yellow toward warm grass, a real value range and cool blue distance",
+   "kind": "scene"
+  },
+  {
+   "change": "Ship the homestead wall in the A-style construction (timber frame, brace, cap, stone footing) with real thickness and a textured, mid-value wattle/daub infill instead of a pale card",
+   "kind": "scene"
+  }
+ ]
+}

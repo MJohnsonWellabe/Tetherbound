@@ -1,0 +1,136 @@
+{
+ "sets": {
+  "Tc": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's large readable blue-grey panel is close to the UI direction, but the hints are small keyboard glyphs rather than controller-first prompts, and the world under it is a flat grey rainy murk with no Valheim-class light."
+  },
+  "Er": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated boar is naturalistic, taller than the ruler and near the owner bar, but its dark brown fur and plates merge into one low-value mass (B especially; A's faint end goes crushed black) with no rim light, so it lacks Palworld-class read and appeal."
+  },
+  "Ee": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Dark mud-brown frames with no purple storm sky or lightning, flat magenta rings and chevrons as telegraphs, a tiny unreadable player creature, a heavy HUD and (B i12-i15) camera inside trunks or foliage sink it."
+  },
+  "Kh": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Grandpa Elias is clearly the board character, with a warm, appealing face, readable eyes and an earthy palette that fits the key art; only the slightly toy-like smooth skin keeps it below the top tier."
+  },
+  "Ou": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm Meadows grass and readable creatures carry it, but the uniform grass carpet, flat lavender domes and cones, flat gold hit discs and a camera that swings onto the fence (A f20-21/f32, B f28-30) keep it below Palworld finish."
+  },
+  "Dx": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The close camera makes both creatures large and readable against warm grass, but the stiff idle poses, flat telegraph and hit graphics, and red banners in the background fall short of Palworld's lively combat."
+  },
+  "Zc": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The steep top-down camera flattens everything into a green grass field and leaves the large creature off screen for most frames (f05-f11), so the fight barely reads."
+  },
+  "Yn": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Good warm light and clear framing of both creatures, but the flat lavender cones, white dust blobs covering the small creature (A f31-f32, B f29-f30) and mostly idle bodies fall short of Palworld finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give creatures readable hit and move reactions (flinch, recoil, stagger, lean, run-cycle body tilt) so hurt and moving frames break the idle silhouette in every trainer fight",
+   "kind": "new_art"
+  },
+  {
+   "change": "Replace flat lavender/magenta telegraph domes, cones and rings and the flat gold hit discs with real-object effects (thrown earth, stone chips, sparks, ground cracks) plus a subtle ground decal and impact flash; trim dust clouds so they never hide a creature",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix fight framing and lighting: a lower production camera that keeps both creatures in frame (Zc), Stormwood with a purple storm sky, lifted exposure, rim light on creatures and canopy/trunk occlusion culling (Ee), and a lighter HUD",
+   "kind": "scene"
+  }
+ ]
+}

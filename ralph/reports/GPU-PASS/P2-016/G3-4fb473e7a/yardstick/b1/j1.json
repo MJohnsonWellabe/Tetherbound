@@ -1,0 +1,136 @@
+{
+ "sets": {
+  "Tc": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's panel is legible and on-palette, but it is a plain dark slab over a murky, near-black rainy world with no gold progression accents, cyan focus state or controller glyph weight like a shipping game's UI."
+  },
+  "Er": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured boar has a strong, believable silhouette and correct scale, but the faint-end frames crush to an almost black, featureless mass and the plain fur/plate material lacks the rim light and surface finish of the owner's style bar."
+  },
+  "Ee": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spider is readable in gold, but the scene is a dim brown floor with no purple storm sky, lightning or moss colour, heavy HUD panels, flat magenta telegraph rings and (B) a camera buried in trunks and foliage."
+  },
+  "Kh": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing, clearly characterised elder with readable eyes and a natural green/brown palette that fits the key art's villagers; the lighting on the neutral stage is flat, but the model holds up."
+  },
+  "Ou": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Both creatures stand frozen in idle poses on a uniform grass carpet seen from above, with no sky, light shafts or atmosphere; only flat gold discs and lilac rings signal that anything is happening."
+  },
+  "Dx": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The lower camera, warm grass, flowers and stronghold banners give it real place, but the badger and hamster never flinch or recoil under the impacts, so it reads as stickers trading UI glyphs."
+  },
+  "Zc": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The camera frames the small creature against empty grass while the opponent is mostly off screen, and neither body reacts to hits, so the fight neither reads nor feels alive."
+  },
+  "Yn": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Good composition with the stronghold behind, but frozen idle bodies and white smoke puffs that fully hide the small creature (A f31-f32, B f29-f30) sink it."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give every creature real additive hit-react, stagger and move-lean layers (body recoil, head snap, squash on impact, lean into dashes) so hurt and moving frames break the idle silhouette in all Meadows trainer fights.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Combat camera and VFX pass: keep both fighters framed at a low three-quarter angle with sky in shot, keep trunks and foliage out of the camera (fade or collide), replace flat magenta/lilac rings and gold discs with grounded effects (dust, stone, sparks), and cap smoke opacity so it never hides a fighter.",
+   "kind": "scene"
+  },
+  {
+   "change": "Lighting and grade per chapter: Stormwood purple storm sky, moss blue-green, lightning flashes and rim light on creatures; Meadows warm key light with cool blue distance; break up uniform grass with clumps, paths and clearings; lift faint/dark material values so fallen creatures stay readable.",
+   "kind": "scene"
+  }
+ ]
+}

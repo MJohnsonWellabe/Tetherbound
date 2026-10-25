@@ -1,0 +1,140 @@
+{
+ "sets": {
+  "Cb": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's muddy black-gold mottling loses the serpent's form at small size and B's bold banding reads well standing but its faint mid/end pose hovers in the air above a detached shadow, so neither reaches Palworld creature finish."
+  },
+  "Sw": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The creatures are well furred and large in frame, but a murky olive-yellow grade with no sky or distance, flat lavender-outlined puff telegraphs and mostly frozen bodies sink it against Palworld's bright, readable fights."
+  },
+  "Zl": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "For most of the clip the camera sits high and far over an empty, uniform dark-green grass carpet, where the creatures and trainer are tiny and the fight reads as specks under telegraph shapes, with no Valheim-class light or depth."
+  },
+  "Rb": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder villager has a clear face, readable eyes and a palette that fits the key art, but his soft, toy-like cartoon finish and stiff full-body stance sit below a shipping game's character finish."
+  },
+  "Yo": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A few frames show a stagger or lean, but most hits are only gold flash rings on an unchanged body, and the dim, yellow-graded grass with no horizon keeps it short of Palworld/Valheim finish."
+  },
+  "Ei": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, diagonal brace, cap and stone footing read as built, but it is a lone panel with a large flat cream infill beside a faceted grey placeholder rock under a flat painted mountain backdrop, and B is a blown-out white card."
+  },
+  "Hp": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's badger visibly turns and lunges (f25, f31), but the rodent holds its idle silhouette under hit rings, and in A the camera clips foliage (f28) and dust clouds hide the target (f30-31), all under a murky grade with no sky."
+  },
+  "Al": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger blue-grey translucent panel shows full recipe lines and warm ingredient counts, but the small, plain white Craft/Leave hints use keyboard glyphs with no teal emphasis, so it still reads below shipping-game UI polish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Add additive hit-react and locomotion animation layers (flinch, recoil, lean, stagger) on every combat creature so hurt and moving frames break the idle silhouette.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Re-grade and re-frame Meadows combat: lift the murky olive-yellow grade to warm grass with cool blue distance and sky in frame, keep the production camera close on both combatants instead of high and far over empty grass, and stop the camera clipping foliage.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build homestead walls as A's timber-framed, capped, stone-footed panel with textured, darker infill that joins into runs, and replace the faceted grey placeholder rock/tent beside it.",
+   "kind": "new_art"
+  }
+ ]
+}

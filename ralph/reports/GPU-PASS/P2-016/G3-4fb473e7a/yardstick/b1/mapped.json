@@ -1,0 +1,172 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8772,
+  "least_squares_slope": 1.0352,
+  "method": "linear",
+  "slope": 1.0352,
+  "intercept": 0.8115,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.587,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 5.8,
+   "reference": 7.35,
+   "mapped": 6.816,
+   "residual": 0.534
+  },
+  "craft:before": {
+   "measured": 4.3,
+   "reference": 4.83,
+   "mapped": 5.263,
+   "residual": -0.433
+  },
+  "f36_0_gap:C7A": {
+   "measured": 5.867,
+   "reference": 7.03,
+   "mapped": 6.885,
+   "residual": 0.145
+  },
+  "f36_0_gap:C7B": {
+   "measured": 5.767,
+   "reference": 6.3,
+   "mapped": 6.781,
+   "residual": -0.481
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.333,
+   "reference": 6.53,
+   "mapped": 5.297,
+   "residual": 1.233
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.733,
+   "reference": 4.0,
+   "mapped": 4.676,
+   "residual": -0.676
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.633,
+   "reference": 7.47,
+   "mapped": 7.678,
+   "residual": -0.208
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.6,
+   "reference": 7.53,
+   "mapped": 7.644,
+   "residual": -0.114
+  }
+ },
+ "candidates": {
+  "G3 south_bridge_grunt f17-32 Medium cand|ship | G3-south_bridge_grunt-17-cand-Medium": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.99,
+   "mapped_judges": [
+    5.88,
+    6.19,
+    5.88
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G3 south_bridge_grunt f17-32 Medium cand|ship | G3-south_bridge_grunt-17-ship-Medium": {
+   "measured_mean": 5.133,
+   "mapped_mean": 6.13,
+   "mapped_judges": [
+    6.09,
+    6.3,
+    5.99
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G3 warden_aldis f1-16 Medium cand|ship | G3-warden_aldis-1-ship-Medium": {
+   "measured_mean": 5.267,
+   "mapped_mean": 6.26,
+   "mapped_judges": [
+    6.19,
+    6.61,
+    5.99
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G3 warden_aldis f1-16 Medium cand|ship | G3-warden_aldis-1-cand-Medium": {
+   "measured_mean": 5.433,
+   "mapped_mean": 6.44,
+   "mapped_judges": [
+    6.51,
+    6.51,
+    6.3
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G3 south_bridge_grunt f1-16 Medium cand|ship | G3-south_bridge_grunt-1-ship-Medium": {
+   "measured_mean": 4.467,
+   "mapped_mean": 5.44,
+   "mapped_judges": [
+    5.47,
+    5.57,
+    5.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G3 south_bridge_grunt f1-16 Medium cand|ship | G3-south_bridge_grunt-1-cand-Medium": {
+   "measured_mean": 4.7,
+   "mapped_mean": 5.68,
+   "mapped_judges": [
+    5.78,
+    5.68,
+    5.57
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G3 warden_aldis f17-32 Medium cand|ship | G3-warden_aldis-17-cand-Medium": {
+   "measured_mean": 5.067,
+   "mapped_mean": 6.06,
+   "mapped_judges": [
+    5.88,
+    6.3,
+    5.99
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G3 warden_aldis f17-32 Medium cand|ship | G3-warden_aldis-17-ship-Medium": {
+   "measured_mean": 5.233,
+   "mapped_mean": 6.23,
+   "mapped_judges": [
+    6.19,
+    6.4,
+    6.09
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

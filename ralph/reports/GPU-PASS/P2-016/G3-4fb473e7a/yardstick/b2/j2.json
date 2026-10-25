@@ -1,0 +1,140 @@
+{
+ "sets": {
+  "Cb": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The serpent's pattern and coil are a credible creature, but the mottled, low-contrast skin on A and B's faint poses floating clear of their own shadow sit below Palworld-class finish on a bare grey stage."
+  },
+  "Sw": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A heavy yellow-green grade with no sky, depth or atmosphere, plus flat white puff and lilac-outline telegraphs, sinks it against Palworld's clean, saturated fields and readable impacts."
+  },
+  "Zl": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Most frames are a top-down view of a uniform grass carpet with tiny brown creatures and no horizon, which is far from Palworld's framing and Valheim's light."
+  },
+  "Rb": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder is appealing and on-palette, with readable eyes, but the soft toy-like cartoon finish sits apart from the naturalistic creatures and from Palworld's in-world character finish."
+  },
+  "Yo": {
+   "A": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Big flat lilac dome rings and white puff clouds stand in for real impacts, and the over-warm grade lacks Valheim-class light, so it does not read at the same finish."
+  },
+  "Ei": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A lone freestanding panel on a flat, sparse low-poly meadow with a painted-card mountain backdrop is far from Palworld's built bases and Valheim's lit homesteads; A's timber frame, stone footing and cap help, B's blank white card sinks it."
+  },
+  "Hp": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The arena backdrop gives a sense of place, but the muddy yellow grade, smoke blobs that hide the action and camera clipping into foliage keep it short of Palworld's finish."
+  },
+  "Al": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's panel is clean and readable, but the murky purple-black world behind it, with no light or form, is nowhere near Palworld or Valheim-class atmosphere."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give both combatants real hit and move reactions: a recoil or flinch pose with hit-stop when struck, a lean into movement and dodges, and a readable stagger, so neither creature holds its idle silhouette across a strike (Sw, Zl, Yo, Hp).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix how the combat frames read: frame creatures at medium distance with sky and horizon in view instead of top-down grass carpet, keep the camera out of foliage, pull the yellow-green grade back toward warm grass with cool blue distance, and replace flat white puffs and lilac outline or dome rings with grounded real-object effects (stone, dust, sparks) and an impact.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build the homestead wall from A's language: a thicker timber frame, a weathered and darker plaster or wattle infill, a distinct stone footing and a cap, set as a joined run rather than one card-thin panel; drop B's blown-out white panel.",
+   "kind": "scene"
+  }
+ ]
+}

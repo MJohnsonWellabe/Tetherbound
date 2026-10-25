@@ -1,0 +1,136 @@
+{
+ "sets": {
+  "Tc": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's larger wrapped text and icon-led Craft/Leave hints help, but both panels are flat grey-teal boxes with no teal/gold accent hierarchy over a murky, unlit world, well short of Palworld UI finish."
+  },
+  "Er": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's naturalistic plated boar with bright tusks reads closest to the style bar, but in both the dark brown body merges with its plates, hit react is indistinguishable from standing, and the faint end goes to a black blob (A also adds a red-orange seam glow that edges toward reserved oxblood)."
+  },
+  "Ee": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold Voltarach reads, but the player creature is nearly invisible, telegraphs are flat magenta rings and chevrons, the HUD covers about a third of each frame, there is no purple storm sky, and B's camera drops into foliage (i13, i15) and behind trunks (i12, i16)."
+  },
+  "Kh": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing stylised grandpa with clear eyes, a readable silhouette and a natural olive/cream/brown palette that fits the key art's village; B's slightly flushed skin is the only difference."
+  },
+  "Ou": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm meadow grass carries the setting, but the armoured badger holds one rigid pose through every hit, impacts are flat gold discs and lavender rings, and the camera cuts (A f20-f21, f32; B f28-f30) break the read."
+  },
+  "Dx": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's denser grass and dandelions look more lived-in, but neither creature flinches or staggers, A's sweep ring and white puffs bury the player creature (f05-f08), and the lighting is flat with no sky or atmosphere."
+  },
+  "Zc": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The enemy is off screen or just a shadow for most frames (A f05-f11, B f06-f11), A f14 shows it as a translucent ghost, and the creatures only rotate and never react, so it never reads as a fight."
+  },
+  "Yn": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The arena with fence and banners gives a sense of place, but the badger only turns rather than recoiling, white smoke completely hides the player creature (A f31-f32, B f29-f30), and B shows almost no impacts f17-f24."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Author hit-react, flinch, stagger and move-lean animation layers for every creature (body recoils on hit and leans into movement) so hurt and moving frames leave the idle silhouette; also make hit react clearly different from standing in the stage captures.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Rework combat camera and effects: keep both fighters framed with no cuts, and no camera inside foliage or behind trunks; replace flat lavender/magenta rings, chevrons and opaque white puffs with object-based telegraphs and impacts that never cover a fighter; add rim light so creatures separate from the ground.",
+   "kind": "scene"
+  },
+  {
+   "change": "Restyle the craft panel and combat HUD to the UI direction: larger unclipped recipe text, teal-accented controller prompt glyphs for Craft/Leave, gold progression accents, and a slimmer Stormwood HUD that clears the action.",
+   "kind": "scene"
+  }
+ ]
+}
