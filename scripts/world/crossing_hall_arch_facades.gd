@@ -45,7 +45,8 @@ static func build(hall: Node3D, cfg: Dictionary, arches: Dictionary) -> int:
 		var flipped := absf(float(row.get("yaw_deg", 0.0))) >= 90.0
 		var back := bounds.end.z if flipped else -bounds.position.z
 		var across_offset := centre.x if flipped else -centre.x
-		model.position = Vector3(across_offset * fit.x, -bounds.position.y * fit.y,
+		# `sink_m` buries the delivered models' thin threshold slab in the floor.
+		model.position = Vector3(across_offset * fit.x, -bounds.position.y * fit.y - float(row.get("sink_m", 0.0)),
 				float(row.get("z_m", 0.12)) + back * fit.z)
 		built += 1
 	print("[crossing_hall] arch facades: %d built" % built)

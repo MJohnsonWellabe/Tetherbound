@@ -943,6 +943,42 @@
       "glow_radius_m": 0.08
     }
   },
+  "arch_facades": {
+    "enabled": false,
+    "_why": "F38 L6 close-1024 candidate (OFF until judged): GPU F38 judges read the arch stands as plaster window-strip walls with blank arches (arch_cloudreach 4.29, arch_tidewake 4.62, arch_biome5 4.15). Coordinator Meshy portal surrounds (tb/meshy-1024 4eb886a11; task ids in each provenance.jsonl), fitted by crossing_hall_arch_facades.gd to 4.4 x 5.2 m around each arch slot (door opening ~2.6 x 3.8 m; the 1.80 m trainer for scale), back face 0.1 m proud of the wall, threshold slab sunk 0.12 m. Presentation only; no collision, portal, route or save change.",
+    "pieces": {
+      "tidewake": {
+        "path": "res://assets/props/meshy-1024/meadows_arch_tidewake/meadows_arch_tidewake.glb",
+        "size_m": [
+          4.4,
+          5.2
+        ],
+        "yaw_deg": 0.0,
+        "z_m": 0.1,
+        "sink_m": 0.12
+      },
+      "cloudreach": {
+        "path": "res://assets/props/meshy-1024/meadows_arch_cloudreach/meadows_arch_cloudreach.glb",
+        "size_m": [
+          4.4,
+          5.2
+        ],
+        "yaw_deg": 0.0,
+        "z_m": 0.1,
+        "sink_m": 0.12
+      },
+      "biome5": {
+        "path": "res://assets/props/meshy-1024/meadows_arch_biome5/meadows_arch_biome5.glb",
+        "size_m": [
+          4.4,
+          5.2
+        ],
+        "yaw_deg": 0.0,
+        "z_m": 0.1,
+        "sink_m": 0.12
+      }
+    }
+  },
   "hall_great_hall": {
     "_why_on_r9": "F17#6 r9 (24 Oct, CPU-provisional): mapped Bar A 6.84 vs shipping 5.82 (three fresh code-blind judges, JUDGE_PROMPT v1, 3 anchor pairs incl. f36_0_npc:C1 (confirming batch), calibrate.py linear slope 1.11 r 0.89 RMSE 0.55; F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/F17-6.md). Meets the 6.7 CPU-provisional bar; a GPU pass must confirm 7.5.",
     "enabled": true,
