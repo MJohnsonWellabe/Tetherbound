@@ -1,6 +1,8 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-25 11:20 CT READY tb/fights-land 4ae4433da: a55b0fa4b's content on current origin/main 1d5faebac (merge commit; lane-side content identical to a55b0fa4b plus NOTE lines). `godot --import` was run for main's 461 new files. Checks on 4ae4433da: 283 tests, 11394 assertions, 0 failed. The suites are the a55b0fa4b set plus main's touched stormwood_b_combat_camera_fit and stormwood_strike_countdown, follower_leader_view_fade, effect_banner_owner and band_content.
+  - Next candidate (your J items 1-5) has started on tb/fights. Item 1 is in (a running fight that pilots the body now skips the follower cover fade, whatever its follow state; new test), and capture checks of the Venn tool's fight state are next.
 - 2026-10-25 10:40 CT INFO F22#4 C2/C3, water (smoke_water_named_c2c3, 24 seeds, 54 rows, 2592 runs, 0 errors).
   - This harness only measures (`accepted` is fixed false). I applied the same verdict rule as the Stormwood harness: READER/MASHER median lead cost <= 0.55; READER win >= 0.90; single hit < 0.50; tells >= 0.8 s; and the COMBAT §7 trivial-fight floor for a type-advantaged lead whose MASHER party cost is <= 0.15.
   - Galewisp (air) is advantaged against all five water named wilds (attack +1, defence -1).
