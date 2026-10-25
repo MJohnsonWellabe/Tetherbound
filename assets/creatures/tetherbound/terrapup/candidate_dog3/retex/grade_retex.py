@@ -17,12 +17,7 @@ It writes the graded image into the model's embedded Image_0 and the
 extracted image beside it, so the mesh, rig, UVs and clips are untouched. The
 noise is seeded, so a re-run gives the same bytes. Needs numpy, Pillow and scipy.
 
-    python3 assets/creatures/tetherbound/terrapup/candidate_dog3/retex/grade_retex.py [--source r3] [--preview out.png]
-
-r3 (task 01a1754c, tb/meshy-1024 6c63dfa6d) asked Meshy for small separate
-stones ringed by coat. Its stones are already grey-brown (hue about 50,
-saturation 0.16) with no blue-grey rims, so `--source r3` also seeds the plate
-mask from textured grey stone texels; the coat grade is the same.
+    python3 assets/creatures/tetherbound/terrapup/candidate_dog3/retex/grade_retex.py [--preview out.png]
 """
 import io
 import os
@@ -37,8 +32,7 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", "..", "..", ".."))
 sys.path.insert(0, os.path.join(ROOT, "tools", "art_pipeline"))
 import shift_reserved_red as T  # noqa: E402  (HSV helpers and GLB writer)
 
-SOURCES = {"r1": "r1_base_color.png", "r3": "r3_base_color.png"}
-STONE = {"hue": (40.0, 100.0), "sat_max": 0.3, "val": (0.2, 0.65)}  # r3 only
+SOURCE = os.path.join(HERE, "r1_base_color.png")
 MODELS = os.path.join(HERE, "..", "models")
 GLB = os.path.join(MODELS, "creature_terrapup_dog3.glb")
 JPG = os.path.join(MODELS, "creature_terrapup_dog3_Image_0.jpg")
@@ -110,17 +104,13 @@ def _blend(rgb, colour, alpha):
     return rgb * (1.0 - a) + np.asarray(colour)[None, None, :] * a
 
 
-def grade(rgb, stone_seed=False):
+def grade(rgb):
     rng = np.random.default_rng(SEED)
     h, s, v = T._hsv(rgb)
     cool = (h >= PLATE_HUE[0]) & (h < PLATE_HUE[1]) & (s >= PLATE_SAT_MIN) & (v <= PLATE_VAL_MAX)
     mean = nd.uniform_filter(v, 7)
     spread = np.sqrt(np.maximum(nd.uniform_filter(v * v, 7) - mean * mean, 0))
-    seed = cool
-    if stone_seed:
-        seed = seed | ((h >= STONE["hue"][0]) & (h <= STONE["hue"][1]) & (s <= STONE["sat_max"])
-                       & (v >= STONE["val"][0]) & (v <= STONE["val"][1]))
-    rim = nd.binary_opening(seed & (spread > PLATE_RIM_DETAIL))
+    rim = nd.binary_opening(cool & (spread > PLATE_RIM_DETAIL))
     # Each plate's dark, textured interior sits inside its blue-grey rim.
     near = nd.binary_dilation(rim, structure=_disk(PLATE_REACH_PX))
     interior = ((h < INTERIOR["hue_max"]) & (s < INTERIOR["sat_max"]) & (v < INTERIOR["val_max"])
@@ -174,9 +164,8 @@ def grade(rgb, stone_seed=False):
 
 
 def main():
-    tag = sys.argv[sys.argv.index("--source") + 1] if "--source" in sys.argv else "r1"
-    rgb = np.asarray(Image.open(os.path.join(HERE, SOURCES[tag])).convert("RGB")).astype(np.float64) / 255.0
-    out = grade(rgb, stone_seed=(tag == "r3"))
+    rgb = np.asarray(Image.open(SOURCE).convert("RGB")).astype(np.float64) / 255.0
+    out = grade(rgb)
     h, s, v = T._hsv(out)
     signed = np.where(h > 180.0, h - 360.0, h)
     red = (signed >= -15.0) & (signed <= 26.0) & (s >= 0.55) & (v >= 0.12)
