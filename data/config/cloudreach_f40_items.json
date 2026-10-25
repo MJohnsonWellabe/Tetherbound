@@ -640,6 +640,45 @@
           }
         }
       }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-gate-shell-candidate",
+      "_why": "F40 C2 / P2-023 Realm Gate Crag (GPU 5.26; judges: 'replace the realm-gate overhang, a blunt brown slab, with sculpted rock'). A pixel probe at the CPU gameplay camera shows that slab is the gate crag's own 58 x 54 m mesa body (LandmarkLedge with buttresses and outcrops) seen from the road below. The coordinator's Meshy island shell (assets/props/meshy-1024/cloudreach_high_perches_island_shell, an open-topped stratified ring with a jagged hanging underside) wraps it: 97 m across so its inner rim (model r 0.6) clears the crown, lip at crown level, natural proportions (74 m deep). The mesa keeps its crown surface and collision; its wall surfaces, buttresses, outcrops and shelves draw nothing. Visual only. Flag OFF; not judged yet.",
+      "overlay": {
+        "settlements": {
+          "RealmGateCrag": {
+            "buildings": [
+              {
+                "asset": "realm_gate_island_shell",
+                "glb": "res://assets/props/meshy-1024/cloudreach_high_perches_island_shell/cloudreach_high_perches_island_shell.glb",
+                "at": [
+                  0.0,
+                  -68.7,
+                  0.0
+                ],
+                "height": 74.0,
+                "width": 97.0,
+                "yaw": 30.0,
+                "collision_fraction": 0.0,
+                "no_snap": true,
+                "double_sided": true
+              }
+            ],
+            "hide_child_visuals": [
+              {
+                "under": "LandmarkLedge",
+                "surfaces_of": "StratifiedCliffBody",
+                "hide_surfaces_from": 1,
+                "keep_prefixes": [
+                  "IslandMist",
+                  "StratifiedCliffBody"
+                ]
+              }
+            ]
+          }
+        }
+      }
     }
   ]
 }
