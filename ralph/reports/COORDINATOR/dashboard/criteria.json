@@ -915,8 +915,8 @@
     {
      "text": "Currents, inhabited docks and Veilfall distance read pass T2 matrix",
      "status": "failing",
-     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F13-5/VERDICT.md",
-     "gap": "Codex owns this (owner, 13 Oct). Visuals recorded a FAIL at 05d3b81a: Veilfall OK; the docks and currents frames fail. Codex re-captures, scores out of 10 and pulls the F39 rows that raise it; done at 8.5.",
+     "evidence": "GPU 24 Oct baseline (tb/gpu-pass 4409b9074, ralph/reports/GPU-PASS/F39-0/tidewake-base-124a7393c/VERDICT.md): currents and docks 3.61, Veilfall 3.20, both below 6. Earlier: tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F13-5/VERDICT.md",
+     "gap": "Tidewake lane: replace the current streaks with flow foam (T1), re-seat the Veilfall cameras (T3), depth-graded water (T2); GPU recapture; done at mapped 7.5 on Medium and High.",
      "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 5
     }
