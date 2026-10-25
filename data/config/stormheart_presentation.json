@@ -81,6 +81,45 @@
     "deck_sink_m": 0.15,
     "deck_tint": "#a99f96"
   },
+  "hero_interior": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_candidate": "r19 Stormheart hero interior (OFF until GPU-judged). GPU SW6 (25 Oct): the single root-wall ring read as a tiled strip and the wall above stayed a smooth dark drum with no core. Replaces meshy_interior's wall ring with three staggered rows of the Meshy root-wall panel (tb/meshy-1024 ae67083ec) up to about 50 m, varied scale and yaw from a fixed seed; a lightning core column on the hollow axis (natural glow, cools after the storm ends); warm lantern clusters and short navy banners on the OuterWorks lip; keeps meshy_interior's deck walk. Presentation only: no collider, floor or route change.",
+    "deck_walk": true,
+    "wall_model": "res://assets/props/meshy-1024/stormheart_root_wall_panel/stormheart_root_wall_panel.glb",
+    "wall_radius_m": 46.5,
+    "_why_radius": "The panel is 35% as deep as it is tall; at 46.5 m the lowest row's root fronts stay outside the 44 m deck walk.",
+    "rows": [
+      {"base_m": -0.5, "height_m": 14.0, "phase": 0.0},
+      {"base_m": 12.0, "height_m": 18.0, "phase": 0.5},
+      {"base_m": 28.0, "height_m": 22.0, "phase": 0.25}
+    ],
+    "overlap": 0.82,
+    "scale_jitter": 0.12,
+    "yaw_jitter_deg": 8.0,
+    "seed": 1025,
+    "sectors": 12,
+    "wall_gaps": [[-1.84, -1.30], [1.43, 1.71]],
+    "vein_colour": "#9fd0ff",
+    "vein_energy": 1.1,
+    "core_column": {
+      "centre": [0.0, 5.0],
+      "base_m": 0.0,
+      "top_m": 149.5,
+      "core_radius_m": 1.3,
+      "sheath_radius_m": 3.4,
+      "core_colour": "#e4f4ff",
+      "colour": "#a9dcff",
+      "energy": 2.6,
+      "sheath_energy": 0.55,
+      "cooled_scale": 0.12,
+      "light_heights_m": [4.0, 30.0, 70.0, 120.0],
+      "light_energy": 2.2,
+      "light_range_m": 30.0
+    },
+    "lantern_clusters": {"count": 8, "phase": 0.25, "radius_m": 18.7, "drops_m": [0.9, 1.6, 2.3], "spread_m": 0.9, "lantern_scale": 1.2, "flame_energy": 3.6, "light_energy": 3.0, "light_range_m": 15.0},
+    "lip_banners": {"count": 8, "phase": 0.75, "radius_m": 18.35, "drop_scale": 0.5}
+  },
   "hollow_floor": {
     "enabled": false,
     "_why_off": "r17 code-blind CPU round (25 Oct): clearing the hollow's ground cover mapped 5.24 -> 4.75 against r16. OFF.",
