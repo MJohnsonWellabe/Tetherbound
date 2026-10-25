@@ -3,6 +3,10 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures-land 4fb473e7a (tier 1, on top of the a986d3142 repaint): Mosshock's hit is now a cower, because all three b30 judges read the rear-up as a lunge.
+  - **New pose:** the head ducks low and aside, the body dips 8 deg and rolls 16 deg away, the tail tucks and all four feet stay planted. Only its recipe hit line changes, in `f36_pose_candidates.json`.
+  - **Checks:** CPU stage frames read as a flinch; test_f36_pose_candidates and the hit-window test, 7 tests, 0 failed. Not yet judged; it rides the next CPU batch.
+  - **State:** pushed and clean, so nothing was lost to the disconnect.
 - 25 Oct GPU READY tb/creatures-land a986d3142 (tier 1, the sub-6 row): Mosshock's ordinary repaint.
   - **Change:** the neon-green camo is gone. Its red growth becomes a darker, muted olive moss outside the grass hue band (0% of chromatic texels in the band, was 57%); the gold current becomes pale lichen; the amber eyes are kept, so the face reads. Rule change only: `four_biome_colourways.json` mosshock `vivid_rules`, regenerated with `tools/repaint_creature_textures.py --only vivid mosshock`.
   - **CPU b30:** mapped 5.55 to 6.43 (+0.88). Fit slope 1.26, anchor RMSE 0.55, confirming batch. Evidence: `b30/judges.md`.
