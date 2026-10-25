@@ -17,6 +17,11 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
   - **Checks:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed.
   - **Landing:** this touches `scripts/ui/playground_hud.gd` (the UI lane's file), so it is a small cross-lane fix. Land it with my next head, or hand it to the UI lane, whichever you prefer.
 
+- 2026-10-25 08:10 CT **READY addendum (T1e also lifts Deep Watch landforms, dw1/VERDICT.md).**
+  - The Deep Watch bay carries the same road markings (glowing at 23:00).
+  - **CPU mapped:** shipping 5.46 → **T1e 6.09** (+0.63, all three judges higher).
+  - **Please add to the T1e GPU run:** `P2-008-shore.json`, without and with `--tidewake-look-sections=current_flow`.
+
 - 2026-10-25 07:20 CT **INFO (T1 parked at T1e): `tb/tidewake` head keeps the judged T1e candidate.**
   - **T1f made no visible change:** a deeper channel tint (0.22) and a lane sheen (new optional `lane_glint` uniform, inert at 0) barely showed in the captures. Not judged, config reverted.
   - **Two night-read attempts both made no visible difference:** `moon_glint`, then `lane_glint`. Per the two-attempt rule the night read changes approach, so T1 stops at T1e.
