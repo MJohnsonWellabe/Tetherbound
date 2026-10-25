@@ -132,7 +132,7 @@
           "display_name": "Region 3 — The Conductor Run",
           "spots": [
             { "display_name": "Rodline Post", "position": [-700.0, 2300.0] },
-            { "display_name": "The Capacitor Grove", "position": [-1080.0, 3020.0] }
+            { "display_name": "The Capacitor Grove", "position": [-1080.0, 3020.0], "f41_survey": {"position": [-1066.9, 2995.2], "view_heading_deg": 172.0, "old_position": [-1080.0, 3020.0], "old_view_heading_deg": 152.2, "_why_reframed": "GPU F41#0 Stormwood matrix (25 Oct, 1.07 Medium / 3.10 High): blocked frames. The catalogue stood on the Capacitor alpha's own seat (stormwood_encounters.json capacitor_alpha, -1080, 3020), so the held alpha filled the lens in every heading. The survey stand alone moves 28 m back along the Rodline approach; its sixth heading (322 deg) faces the grove with the alpha 10 deg right of centre as the subject. The teleport arrival is unchanged."} }
           ]
         },
         {
