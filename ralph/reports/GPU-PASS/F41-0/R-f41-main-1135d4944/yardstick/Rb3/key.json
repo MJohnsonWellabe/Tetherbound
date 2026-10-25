@@ -1,0 +1,52 @@
+{
+ "Fy": {
+  "anchor": false,
+  "label": "R dynamo_the_glass_field High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-dynamo_the_glass_field-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-dynamo_the_glass_field-cand-High.png"
+ },
+ "Uv": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Gq": {
+  "anchor": false,
+  "label": "R glowmoss_hollows_crown_overlook High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-glowmoss_hollows_crown_overlook-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-glowmoss_hollows_crown_overlook-cand-High.png"
+ },
+ "Xr": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Hw": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Vl": {
+  "anchor": false,
+  "label": "R conductor_run_the_capacitor_grove High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-conductor_run_the_capacitor_grove-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-conductor_run_the_capacitor_grove-ship-High.png"
+ },
+ "Ls": {
+  "anchor": false,
+  "label": "R cinder_verge_verge_rod_station High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-cinder_verge_verge_rod_station-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-cinder_verge_verge_rod_station-cand-High.png"
+ },
+ "No": {
+  "anchor": false,
+  "label": "R dynamo_the_stormheart_tree High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-dynamo_the_stormheart_tree-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-dynamo_the_stormheart_tree-cand-High.png"
+ },
+ "Bq": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ }
+}

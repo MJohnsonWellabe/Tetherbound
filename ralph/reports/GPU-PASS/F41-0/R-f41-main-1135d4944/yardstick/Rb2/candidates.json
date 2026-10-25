@@ -1,0 +1,73 @@
+[
+    {
+        "label":  "R dynamo_the_stormheart_tree Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\R\\sides\\R-dynamo_the_stormheart_tree-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\R\\sides\\R-dynamo_the_stormheart_tree-ship-Medium.png",
+        "brief":  "Fixed production-camera views of one Stormwood location (dynamo the stormheart tree) through a storm\u0027s calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+                        "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain",
+                        "F41 gap 2: the Stormheart tree\u0027s bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)"
+                    ]
+    },
+    {
+        "label":  "R deepwood_lantern_hollow High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\R\\sides\\R-deepwood_lantern_hollow-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\R\\sides\\R-deepwood_lantern_hollow-ship-High.png",
+        "brief":  "Fixed production-camera views of one Stormwood location (deepwood lantern hollow) through a storm\u0027s calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+                        "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain"
+                    ]
+    },
+    {
+        "label":  "R glowmoss_hollows_the_lantern_pools Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\R\\sides\\R-glowmoss_hollows_the_lantern_pools-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\R\\sides\\R-glowmoss_hollows_the_lantern_pools-ship-Medium.png",
+        "brief":  "Fixed production-camera views of one Stormwood location (glowmoss hollows the lantern pools) through a storm\u0027s calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+                        "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain"
+                    ]
+    },
+    {
+        "label":  "R conductor_run_rodline_post High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\R\\sides\\R-conductor_run_rodline_post-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\R\\sides\\R-conductor_run_rodline_post-ship-High.png",
+        "brief":  "Fixed production-camera views of one Stormwood location (conductor run rodline post) through a storm\u0027s calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+                        "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain"
+                    ]
+    },
+    {
+        "label":  "R cinder_verge_the_struck_sentinel High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\R\\sides\\R-cinder_verge_the_struck_sentinel-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\R\\sides\\R-cinder_verge_the_struck_sentinel-ship-High.png",
+        "brief":  "Fixed production-camera views of one Stormwood location (cinder verge the struck sentinel) through a storm\u0027s calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+        "defects":  [
+                        "Flat magenta slabs or rings on the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+                        "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain"
+                    ]
+    }
+]

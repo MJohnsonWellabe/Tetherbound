@@ -1,0 +1,96 @@
+{
+ "anchors": {
+  "craft:after": [
+   6.0,
+   6.3,
+   6.0
+  ],
+  "craft:before": [
+   4.8,
+   4.5,
+   4.0
+  ],
+  "p2_094_r4:X_before": [
+   3.8,
+   3.8,
+   3.5
+  ],
+  "p2_094_r4:Y_after": [
+   5.2,
+   5.3,
+   5.5
+  ],
+  "f36_0_npc:C1A": [
+   6.8,
+   7.0,
+   7.0
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   7.0,
+   7.0
+  ],
+  "f36_0_gap:C2B": [
+   5.0,
+   4.7,
+   5.0
+  ],
+  "f36_0_gap:C2A": [
+   6.0,
+   6.6,
+   6.6
+  ]
+ },
+ "candidates": {
+  "R deepwood_lantern_hollow High cand|ship | R-deepwood_lantern_hollow-ship-High": [
+   4.4,
+   4.6,
+   5.0
+  ],
+  "R deepwood_lantern_hollow High cand|ship | R-deepwood_lantern_hollow-cand-High": [
+   4.4,
+   4.5,
+   5.0
+  ],
+  "R dynamo_the_stormheart_tree Medium cand|ship | R-dynamo_the_stormheart_tree-cand-Medium": [
+   3.6,
+   3.9,
+   3.8
+  ],
+  "R dynamo_the_stormheart_tree Medium cand|ship | R-dynamo_the_stormheart_tree-ship-Medium": [
+   3.0,
+   3.3,
+   3.2
+  ],
+  "R cinder_verge_the_struck_sentinel High cand|ship | R-cinder_verge_the_struck_sentinel-ship-High": [
+   4.5,
+   4.8,
+   4.8
+  ],
+  "R cinder_verge_the_struck_sentinel High cand|ship | R-cinder_verge_the_struck_sentinel-cand-High": [
+   4.5,
+   4.8,
+   4.8
+  ],
+  "R conductor_run_rodline_post High cand|ship | R-conductor_run_rodline_post-ship-High": [
+   4.7,
+   5.2,
+   5.2
+  ],
+  "R conductor_run_rodline_post High cand|ship | R-conductor_run_rodline_post-cand-High": [
+   4.5,
+   4.8,
+   4.8
+  ],
+  "R glowmoss_hollows_the_lantern_pools Medium cand|ship | R-glowmoss_hollows_the_lantern_pools-cand-Medium": [
+   4.6,
+   5.0,
+   5.0
+  ],
+  "R glowmoss_hollows_the_lantern_pools Medium cand|ship | R-glowmoss_hollows_the_lantern_pools-ship-Medium": [
+   4.5,
+   4.7,
+   4.8
+  ]
+ }
+}

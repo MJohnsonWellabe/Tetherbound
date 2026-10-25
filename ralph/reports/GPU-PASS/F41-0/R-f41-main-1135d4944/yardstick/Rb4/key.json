@@ -1,0 +1,52 @@
+{
+ "Dl": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Qp": {
+  "anchor": false,
+  "label": "R cinder_verge_the_struck_sentinel Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-cinder_verge_the_struck_sentinel-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-cinder_verge_the_struck_sentinel-cand-Medium.png"
+ },
+ "Oq": {
+  "anchor": false,
+  "label": "R glowmoss_hollows_crown_overlook Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-glowmoss_hollows_crown_overlook-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-glowmoss_hollows_crown_overlook-ship-Medium.png"
+ },
+ "Bh": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Sl": {
+  "anchor": false,
+  "label": "R conductor_run_the_capacitor_grove Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-conductor_run_the_capacitor_grove-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-conductor_run_the_capacitor_grove-cand-Medium.png"
+ },
+ "Ff": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Ch": {
+  "anchor": false,
+  "label": "R hollow_crown_the_crown_heartstone Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-hollow_crown_the_crown_heartstone-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-hollow_crown_the_crown_heartstone-ship-Medium.png"
+ },
+ "Ft": {
+  "anchor": false,
+  "label": "R deepwood_lantern_hollow Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-deepwood_lantern_hollow-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-deepwood_lantern_hollow-cand-Medium.png"
+ },
+ "Tc": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ }
+}

@@ -1,0 +1,46 @@
+{
+ "Ew": {
+  "anchor": false,
+  "label": "R glowmoss_hollows_the_lantern_pools High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-glowmoss_hollows_the_lantern_pools-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-glowmoss_hollows_the_lantern_pools-cand-High.png"
+ },
+ "Vu": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Fa": {
+  "anchor": false,
+  "label": "R ashfoot_shelter_inside Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-ashfoot_shelter_inside-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-ashfoot_shelter_inside-cand-Medium.png"
+ },
+ "Ts": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Cg": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Ep": {
+  "anchor": false,
+  "label": "R ashfoot_shelter_inside High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-ashfoot_shelter_inside-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-ashfoot_shelter_inside-ship-High.png"
+ },
+ "Fd": {
+  "anchor": false,
+  "label": "R dynamo_the_glass_field Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-dynamo_the_glass_field-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\R\\sides\\R-dynamo_the_glass_field-ship-Medium.png"
+ },
+ "Sk": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ }
+}

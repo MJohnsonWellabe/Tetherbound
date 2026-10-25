@@ -1,0 +1,56 @@
+# Item R (local): F41 Stormwood matrix re-capture on current main (out\SW-r) vs the 9099a88 F41 baseline (out\SW-base).
+# One set per landmark stand per preset, candidate vs baseline on the same 6 view ids (picked as in build_yard_f41.ps1).
+# Recorded defects: the same F38#5 generic defects + F41 rescore gaps as the baseline round.
+$base = "D:\tb-gpu-runs\out\SW-base"; $cand = "D:\tb-gpu-runs\out\SW-r"; $od = "D:\tb-gpu-runs\yard\R\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out, [int] $cols = 3, [int] $tw = 420) {
+    $s = [ordered]@{ title = ""; cols = $cols; thumb_w = $tw; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_R.json", ($s | ConvertTo-Json -Depth 5))
+    & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_R.json" | Out-Null
+    return $out
+}
+$generic = @(
+    "Flat magenta slabs or rings on the ground",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+    "Floating bodies or props (a gap between an object and the ground under it)",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)")
+$world = @(
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain")
+$standExtra = @{
+    "dynamo_the_stormheart_tree" = @("F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)")
+}
+$phaseCycle = @("calm", "building", "break", "fading", "break", "calm")
+function Frames($root, $pr) { $h = @{}; Get-ChildItem "$root\f41-$pr\frames" -Filter *.jpg -ErrorAction SilentlyContinue | ForEach-Object { $h[$_.BaseName] = $_.FullName }; return $h }
+function StandOf($id) { $id -replace '_(v\d+_)?(calm|building|break|fading)$', '' }
+$sets = @(); $cover = @()
+foreach ($pr in "Medium", "High") {
+    $b = Frames $base $pr; $c = Frames $cand $pr
+    $both = @($c.Keys | Where-Object { $b.ContainsKey($_) })
+    $stands = $both | ForEach-Object { StandOf $_ } | Sort-Object -Unique
+    foreach ($st in $stands) {
+        $ids = @($both | Where-Object { (StandOf $_) -eq $st })
+        $views = @($ids | ForEach-Object { if ($_ -match '_(v\d+)_[a-z]+$') { $Matches[1] } else { "" } } | Sort-Object -Unique)
+        $pick = @()
+        for ($i = 0; $i -lt 6 -and $pick.Count -lt 6; $i++) {
+            $v = $views[$i % $views.Count]; $ph = $phaseCycle[$i]
+            $id = if ($v) { "$st" + "_$v" + "_$ph" } else { "$st" + "_$ph" }
+            if (($ids -contains $id) -and ($pick -notcontains $id)) { $pick += $id }
+        }
+        foreach ($id in ($ids | Sort-Object)) { if ($pick.Count -ge 6) { break }; if ($pick -notcontains $id) { $pick += $id } }
+        $caps = @($pick | ForEach-Object { ($_ -replace "^$st" + "_", '') -replace '_', ' ' })
+        $sa = Side @($pick | ForEach-Object { $c[$_] }) $caps "$od\R-$st-cand-$pr.png"
+        $sb = Side @($pick | ForEach-Object { $b[$_] }) $caps "$od\R-$st-ship-$pr.png"
+        $def = @($generic) + $world; if ($standExtra.ContainsKey($st)) { $def += $standExtra[$st] }
+        $place = ($st -replace '_', ' ')
+        $brief = "Fixed production-camera views of one Stormwood location ($place) through a storm's calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world."
+        $sets += [ordered]@{ label = "R $st $pr cand|ship"; a = $sa; b = $sb; brief = $brief; defects = $def }
+        $cover += [ordered]@{ stand = $st; preset = $pr; cand = @($c.Keys | Where-Object { (StandOf $_) -eq $st }).Count; ship = @($b.Keys | Where-Object { (StandOf $_) -eq $st }).Count; judged = $pick }
+    }
+    "$pr frames cand $($c.Count) base $($b.Count) both $($both.Count) stands $(@($stands).Count)"
+}
+$rng = New-Object System.Random 2046; $sets = @($sets | Sort-Object { $rng.Next() })
+$nb = [math]::Ceiling($sets.Count / 5); $buckets = @(for ($k = 0; $k -lt $nb; $k++) { , @() })
+for ($i = 0; $i -lt $sets.Count; $i++) { $buckets[$i % $nb] += , $sets[$i] }
+for ($k = 0; $k -lt $nb; $k++) { $n = $k + 1; New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\R\b$n" | Out-Null; [IO.File]::WriteAllText("D:\tb-gpu-runs\yard\R\b$n\candidates.json", (ConvertTo-Json -InputObject @($buckets[$k]) -Depth 5)) }
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\R\coverage.json", (ConvertTo-Json -InputObject $cover -Depth 5))
+"R sets: $($sets.Count) in $nb batches"

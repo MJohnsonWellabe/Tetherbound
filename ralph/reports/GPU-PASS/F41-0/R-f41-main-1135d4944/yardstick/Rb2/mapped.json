@@ -1,0 +1,200 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8786,
+  "least_squares_slope": 1.068,
+  "method": "linear",
+  "slope": 1.068,
+  "intercept": 0.4207,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.648,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.1,
+   "reference": 7.35,
+   "mapped": 6.935,
+   "residual": 0.415
+  },
+  "craft:before": {
+   "measured": 4.433,
+   "reference": 4.83,
+   "mapped": 5.155,
+   "residual": -0.325
+  },
+  "p2_094_r4:X_before": {
+   "measured": 3.7,
+   "reference": 3.5,
+   "mapped": 4.372,
+   "residual": -0.872
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 5.333,
+   "reference": 6.73,
+   "mapped": 6.117,
+   "residual": 0.613
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.933,
+   "reference": 7.53,
+   "mapped": 7.825,
+   "residual": -0.295
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.933,
+   "reference": 7.47,
+   "mapped": 7.825,
+   "residual": -0.355
+  },
+  "f36_0_gap:C2B": {
+   "measured": 4.9,
+   "reference": 6.9,
+   "mapped": 5.654,
+   "residual": 1.246
+  },
+  "f36_0_gap:C2A": {
+   "measured": 6.4,
+   "reference": 6.83,
+   "mapped": 7.256,
+   "residual": -0.426
+  }
+ },
+ "candidates": {
+  "R deepwood_lantern_hollow High cand|ship | R-deepwood_lantern_hollow-ship-High": {
+   "measured_mean": 4.667,
+   "mapped_mean": 5.4,
+   "mapped_judges": [
+    5.12,
+    5.33,
+    5.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R deepwood_lantern_hollow High cand|ship | R-deepwood_lantern_hollow-cand-High": {
+   "measured_mean": 4.633,
+   "mapped_mean": 5.37,
+   "mapped_judges": [
+    5.12,
+    5.23,
+    5.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R dynamo_the_stormheart_tree Medium cand|ship | R-dynamo_the_stormheart_tree-cand-Medium": {
+   "measured_mean": 3.767,
+   "mapped_mean": 4.44,
+   "mapped_judges": [
+    4.27,
+    4.59,
+    4.48
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R dynamo_the_stormheart_tree Medium cand|ship | R-dynamo_the_stormheart_tree-ship-Medium": {
+   "measured_mean": 3.167,
+   "mapped_mean": 3.8,
+   "mapped_judges": [
+    3.62,
+    3.95,
+    3.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": true,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R cinder_verge_the_struck_sentinel High cand|ship | R-cinder_verge_the_struck_sentinel-ship-High": {
+   "measured_mean": 4.7,
+   "mapped_mean": 5.44,
+   "mapped_judges": [
+    5.23,
+    5.55,
+    5.55
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R cinder_verge_the_struck_sentinel High cand|ship | R-cinder_verge_the_struck_sentinel-cand-High": {
+   "measured_mean": 4.7,
+   "mapped_mean": 5.44,
+   "mapped_judges": [
+    5.23,
+    5.55,
+    5.55
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R conductor_run_rodline_post High cand|ship | R-conductor_run_rodline_post-ship-High": {
+   "measured_mean": 5.033,
+   "mapped_mean": 5.8,
+   "mapped_judges": [
+    5.44,
+    5.97,
+    5.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R conductor_run_rodline_post High cand|ship | R-conductor_run_rodline_post-cand-High": {
+   "measured_mean": 4.7,
+   "mapped_mean": 5.44,
+   "mapped_judges": [
+    5.23,
+    5.55,
+    5.55
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R glowmoss_hollows_the_lantern_pools Medium cand|ship | R-glowmoss_hollows_the_lantern_pools-cand-Medium": {
+   "measured_mean": 4.867,
+   "mapped_mean": 5.62,
+   "mapped_judges": [
+    5.33,
+    5.76,
+    5.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R glowmoss_hollows_the_lantern_pools Medium cand|ship | R-glowmoss_hollows_the_lantern_pools-ship-Medium": {
+   "measured_mean": 4.667,
+   "mapped_mean": 5.4,
+   "mapped_judges": [
+    5.23,
+    5.44,
+    5.55
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "some candidates lie more than 0.5 outside the anchors' measured range (extrapolated)"
+ ]
+}

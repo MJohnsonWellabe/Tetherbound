@@ -1,0 +1,13 @@
+# Item R sheet: 4 baseline|current-main pairs from the F41 Stormwood catalogue. Neutral labels; key in VERDICT.md.
+$b = "D:\tb-gpu-runs\out\SW-base"; $c = "D:\tb-gpu-runs\out\SW-r"
+$rows = @(
+    @("1", "High", "conductor_run_the_capacitor_grove_v05_break"),
+    @("2", "High", "ashfoot_shelter_inside_calm"),
+    @("3", "Medium", "dynamo_the_stormheart_tree_v03_break"),
+    @("4", "High", "conductor_run_rodline_post_v01_calm")
+)
+$spec = [ordered]@{ title = "R F41 Stormwood catalogue: left 9099a88 baseline | right current main (lane 1135d4944)"; cols = 2; thumb_w = 520; label_w = 50
+    rows = @($rows | ForEach-Object { [ordered]@{ label = $_[0]; files = @("$b\f41-$($_[1])\frames\$($_[2]).jpg", "$c\f41-$($_[1])\frames\$($_[2]).jpg"); captions = @("base", "main") } }); out = "D:\tb-gpu-runs\staging\R-f41-main-1135d4944\_sheet_r.png" }
+New-Item -ItemType Directory -Force "D:\tb-gpu-runs\staging\R-f41-main-1135d4944" | Out-Null
+[IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_sheet_R.json", ($spec | ConvertTo-Json -Depth 5))
+& D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_sheet_R.json"
