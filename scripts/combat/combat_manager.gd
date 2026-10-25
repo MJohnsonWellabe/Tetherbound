@@ -2741,8 +2741,14 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 		local["max_distance_m"] = minf(float(local.max_distance_m), named_cap)
 	# F10#2 r6 candidate: never pull back so far that the piloted creature's
 	# rendered height drops under `pilot_min_screen_fraction` of the frame.
+	# Fights close-1025 candidate (camera.json fight.pilot_min_screen_fraction,
+	# 0/absent = off): the same floor in every fight, not only sight-line ones
+	# (judges: the pilot is a speck on dark moss and pale sand). A per-trainer
+	# fraction still wins, and only applies once the floor is on.
+	var every_fight := float(fight.get("pilot_min_screen_fraction", 0.0))
 	var floor_m := pilot_size_floor_distance(_body_render_bounds(_ally_body).size.y, camera.fov,
-		_fight_world_sight_targets().size() > 0, float(cap.get("pilot_min_screen_fraction", 0.0)))
+		_fight_world_sight_targets().size() > 0 or every_fight > 0.0,
+		float(cap.get("pilot_min_screen_fraction", every_fight)))
 	if floor_m > 0.0:
 		local["max_distance_m"] = maxf(float(cfg.get("distance", 6.0)), minf(float(local.max_distance_m), floor_m))
 	local["roll_radians"] = (_camera_rig as Node3D).rotation.z

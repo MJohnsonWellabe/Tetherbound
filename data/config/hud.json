@@ -106,7 +106,9 @@
       "command_width": 840,
       "move_width": 420,
       "move_row_height": 68,
-      "move_bottom": 380
+      "move_bottom": 380,
+      "_why_panel_scale": "Fights close-1025 candidate (OFF at 1.0): scales the right-hand move cluster (bottom-right corner fixed) and the enemy card (top-right corner fixed); judges r4/r5: the right panels still cover the fight. combat_system_overlay.gd corner_scale.",
+      "panel_scale": 1.0
     },
     "scope": "device_local_presentation"
   }

@@ -308,8 +308,15 @@ func _draw_ring(radius: float, alpha: float) -> void:
 		var loop := rim.duplicate()
 		if not loop.is_empty():
 			loop.append(loop[0])
-		STYLE.draw_dust(_dust, [loop], _soft, clampf(_life / maxf(0.05, _duration), 0.0, 1.0), _life,
-			clampf(alpha / 0.55, 0.0, 1.0))
+		var build := clampf(_life / maxf(0.05, _duration), 0.0, 1.0)
+		var lines: Array = [loop]
+		for fraction: float in STYLE.fill_fractions(_soft, build):
+			var row := PackedVector3Array()
+			for i in SEGMENTS + 1:
+				var angle: float = TAU * float(i % SEGMENTS) / float(SEGMENTS)
+				row.append(_ground_vertex(Vector3(cos(angle), 0.0, sin(angle)) * radius * (1.0 - fraction)))
+			lines.append(row)
+		STYLE.draw_dust(_dust, lines, _soft, build, _life, clampf(alpha / 0.55, 0.0, 1.0))
 
 
 func _exit_tree() -> void:

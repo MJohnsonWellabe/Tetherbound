@@ -36,6 +36,8 @@ var _tint := Color.WHITE
 ## the tell and its shimmer runs.
 var _curtain: MeshInstance3D = null
 var _curtain_lines: Array = []
+## Candidate dust fill rows inside the shape ([fraction, line]; STYLE.fill_fractions).
+var _fill_lines: Array = []
 var _curtain_time := 0.0
 ## Round-2 kicked dust along the same outline (STYLE.draw_dust; null = off).
 var _dust: MultiMeshInstance3D = null
@@ -1093,6 +1095,7 @@ func _seated(point: Vector3) -> Vector3:
 ## feathering inward from each edge, and a thin lit core line on the edge.
 func _aim_soft(shape: String) -> void:
 	_curtain_lines.clear()
+	_fill_lines.clear()
 	match shape:
 		"ring":
 			_soft_disc(_origin, float(_profile.get("inner_radius_m", 0.0)), float(_profile.get("range", 0.0)), TAU)
@@ -1116,6 +1119,12 @@ func _aim_soft(shape: String) -> void:
 			_soft_edge(far_left, far_right, -_heading, minf(feather, length * 0.4))
 			if _curtain != null or _dust != null:
 				_curtain_lines.append(_seated_line([left, far_left, far_right, right]))
+				var rows := int(_soft.get("dust_fill_rows", 0))
+				for row in range(1, rows + 1):
+					var fraction := float(row) / float(rows + 1)
+					var inset := side * half_width * fraction
+					_fill_lines.append([fraction, _seated_line([left + inset, far_left + inset])])
+					_fill_lines.append([fraction, _seated_line([right - inset, far_right - inset])])
 	_fit_curtain_bounds()
 	_draw_curtain()
 
@@ -1149,7 +1158,14 @@ func _fit_curtain_bounds() -> void:
 ## into the tell it is.
 func _draw_curtain() -> void:
 	var tell := maxf(0.05, float(_profile.get("telegraph", 0.8)))
-	STYLE.draw_dust(_dust, _curtain_lines, _soft, _curtain_time / tell, _curtain_time)
+	var dust_lines := _curtain_lines
+	if not _fill_lines.is_empty():
+		var reveal := float(_soft.get("dust_fill_reveal", 0.8))
+		dust_lines = _curtain_lines.duplicate()
+		for fill: Array in _fill_lines:
+			if _curtain_time / tell >= float(fill[0]) * reveal:
+				dust_lines.append(fill[1])
+	STYLE.draw_dust(_dust, dust_lines, _soft, _curtain_time / tell, _curtain_time)
 	if _curtain == null:
 		return
 	STYLE.draw_curtain(_curtain, _curtain_lines, _edge_tint, float(_soft.get("edge_alpha", 0.7))
@@ -1179,6 +1195,14 @@ func _soft_disc(centre: Vector3, inner: float, outer: float, arc: float) -> void
 		else:
 			outline.append(outline[0])
 		_curtain_lines.append(_seated_line(outline))
+		var rows := int(_soft.get("dust_fill_rows", 0))
+		for row in range(1, rows + 1):
+			var fraction := float(row) / float(rows + 1)
+			var radius := outer - (outer - inner) * fraction
+			var arc_line: Array = []
+			for index: int in count + 1:
+				arc_line.append(centre + _heading.rotated(Vector3.UP, -arc * 0.5 + arc * float(index) / float(count)) * radius)
+			_fill_lines.append([fraction, _seated_line(arc_line)])
 	for index: int in count:
 		var a := -arc * 0.5 + arc * float(index) / float(count)
 		var b := -arc * 0.5 + arc * float(index + 1) / float(count)

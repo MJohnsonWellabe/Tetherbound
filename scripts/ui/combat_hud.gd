@@ -308,6 +308,8 @@ func _ready() -> void:
 	_dress(_ally_energy, _energy_fill)
 
 	_enemy_panel.add_theme_stylebox_override("panel", _quiet_panel_box())
+	SYSTEM_OVERLAY.corner_scale(_enemy_panel, float(SYSTEM_OVERLAY.SCREEN.config().get("combat", {})
+		.get("panel_scale", 1.0)), Vector2(1.0, 0.0))
 	_ally_panel.add_theme_stylebox_override("panel", UITokens.panel_box())
 	_grid_panel.add_theme_stylebox_override("panel", UITokens.panel_box())
 	# `slot_box()`, not `panel_box()`: this plate is 36px tall and `panel_box()`'s
