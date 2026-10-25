@@ -193,6 +193,8 @@ var _was_fighting: bool = false
 ## `scenes/combat/combat_hud.tscn`, the same convention `_orb_cluster` and
 ## `_party_strip` above already follow.
 var _effect_banner: Label = null
+## The stagger line is about the player's own creature (effect_banner.stagger_by_owner).
+var _effect_banner_mine := false
 var _effect_left: float = 0.0
 var _enemy_poise: ProgressBar = null
 var _ally_poise: ProgressBar = null
@@ -532,6 +534,25 @@ func _poise_pip() -> ProgressBar:
 func _position_effect_banner() -> void:
 	if _effect_banner == null:
 		return
+	if _effect_banner_mine and _ally_panel != null and _ally_panel.size.y > 1.0:
+		# Beside the player's own panel, top-aligned with it (stagger_by_owner).
+		_effect_banner.anchor_left = 0.0
+		_effect_banner.anchor_right = 0.0
+		var at := _ally_panel.position + Vector2(_ally_panel.size.x + EFFECT_BANNER_GAP, 0.0)
+		_effect_banner.offset_top = at.y
+		_effect_banner.offset_bottom = at.y + 44.0
+		var label_font := _effect_banner.get_theme_font("font")
+		var span := 420.0
+		if label_font != null:
+			span = clampf(label_font.get_string_size(_effect_banner.text, HORIZONTAL_ALIGNMENT_LEFT, -1,
+				_effect_banner.get_theme_font_size("font_size")).x + 28.0 + 2.0 * UITokens.OUTLINE_SIZE, 120.0, 560.0)
+		_effect_banner.offset_left = at.x
+		_effect_banner.offset_right = at.x + span
+		return
+	if _effect_banner.anchor_left != 1.0:
+		_effect_banner.anchor_left = 1.0
+		_effect_banner.anchor_right = 1.0
+		_effect_banner.offset_right = -32.0
 	var top := 232.0
 	if _enemy_panel != null and _enemy_panel.size.y > 1.0:
 		top = _enemy_panel.position.y + _enemy_panel.size.y + EFFECT_BANNER_GAP
@@ -1791,6 +1812,18 @@ func _on_staggered(on_enemy: bool) -> void:
 	if not on_enemy and mine != null:
 		who = "%s " % mine.label()
 	_effect_banner.text = "STAGGERED — punish now" if on_enemy else "%sSTAGGERED — recovering" % who
+	# Fights close-1025 candidate (`effect_banner.stagger_by_owner`, OFF): GPU
+	# G3 judges read the stagger line under the enemy plate as ambiguous. With
+	# it on, each line names whose creature it is, and the player's own sits
+	# beside the player's panel instead of under the enemy's.
+	_effect_banner_mine = false
+	if COMBAT_MATH.config().get("effect_banner", {}).get("stagger_by_owner") == true:
+		if on_enemy:
+			var foe: RefCounted = _manager.call("enemy") if _manager != null else null
+			_effect_banner.text = ("%s staggered — punish now" % foe.label()) if foe != null else "STAGGERED — punish now"
+		else:
+			_effect_banner.text = "%sstaggered — recovering" % who
+			_effect_banner_mine = true
 	# Amber, not red, on your own creature: a blind round read the red line
 	# about a friendly body as the reserved villain colour leaking onto the
 	# player's side. Still a warning; no longer the enemy's colour.

@@ -5898,9 +5898,17 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 	var feedback := _shared_hit_feedback() if not impact.is_empty() else null
 	if feedback != null: style = feedback.call("flash_style", impact)
 	if style.has("colour"): colour = colour.lerp(Color(str(style.colour)), 0.6)
+	# Fights close-1025 candidate (`impact.flash_drop` 0..1, 0/absent = off):
+	# GPU G3 judges saw the gold disc cover the struck body and hide its react.
+	# The flash moves this fraction of the way from the contact point down to
+	# the struck creature's feet; the ground burst carries the hit there.
+	var flash_at := where
+	var drop := clampf(float(cfg.get("flash_drop", 0.0)), 0.0, 1.0)
+	if drop > 0.0 and is_instance_valid(struck):
+		flash_at = where.lerp(Vector3(where.x, struck.global_position.y + 0.15, where.z), drop)
 	FLASH.burst(
 		host,
-		where,
+		flash_at,
 		colour,
 		float(spec.get("radius", 1.5)) * float(style.get("radius_scale", 1.0)),
 		float(spec.get("duration", 0.34)) * float(style.get("duration_scale", 1.0)),
