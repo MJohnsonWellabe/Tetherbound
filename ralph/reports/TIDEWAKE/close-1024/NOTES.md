@@ -17,6 +17,11 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
   - **Checks:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed.
   - **Landing:** this touches `scripts/ui/playground_hud.gd` (the UI lane's file), so it is a small cross-lane fix. Land it with my next head, or hand it to the UI lane, whichever you prefer.
 
+- 2026-10-25 07:20 CT **INFO (T1 parked at T1e): `tb/tidewake` head keeps the judged T1e candidate.**
+  - **T1f made no visible change:** a deeper channel tint (0.22) and a lane sheen (new optional `lane_glint` uniform, inert at 0) barely showed in the captures. Not judged, config reverted.
+  - **Two night-read attempts both made no visible difference:** `moon_glint`, then `lane_glint`. Per the two-attempt rule the night read changes approach, so T1 stops at T1e.
+  - **T1e stays READY** (06:40 line).
+
 - 2026-10-25 06:40 CT **READY for the GPU lane, replacing the 03:40 T1 line: T1e currents, `tb/tidewake` 63aeaefe6 (t1e/VERDICT.md).**
   - **CPU mapped, same batch as T1:** swim views T1 5.25 → **T1e 5.77** (+0.52), shore views 6.54 → 6.66. All three judges higher. The loud yellow pennants are FIXED.
   - **Capture:** same commands as `t1/VERDICT.md`, with `--tidewake-look-sections=current_flow`.
