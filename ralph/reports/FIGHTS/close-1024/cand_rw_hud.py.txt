@@ -1,0 +1,48 @@
+# F22#4 Riverwatch HUD/pilot candidate overlay (capture-only; repo root, clean tree):
+#   compact Tether Command lane while no command is usable, and a larger pilot size floor
+#   for the Riverwatch fight only. `git checkout data/config/tether_commands.json data/config/camera.json` restores.
+import json, sys
+fraction = float(sys.argv[1]) if len(sys.argv) > 1 else 0.10
+p = 'data/config/tether_commands.json'; s = open(p).read()
+a = '"compact_when_idle": false'; assert s.count(a) == 1
+s = s.replace(a, '"compact_when_idle": true'); json.loads(s); open(p, 'w').write(s)
+p = 'data/config/camera.json'; s = open(p).read()
+a = '"captain_riverwatch": {"max_distance_m": 14.0}'; assert s.count(a) == 1
+s = s.replace(a, '"captain_riverwatch": {"max_distance_m": 14.0, "pilot_min_screen_fraction": %s}' % fraction)
+json.loads(s); open(p, 'w').write(s)
+print('rw hud candidate applied, pilot fraction', fraction)
+# P2-063 impact (Creatures p2016 + GPU judge): a smaller contact disc and a grounded dust/stone burst
+# at the struck creature's feet on charged hits (combat.json impact.ground_burst).
+p = 'data/config/combat.json'; s = open(p).read()
+d = json.loads(s)
+for key, old, new in [('quick', 0.9, 0.55), ('charged', 1.2, 0.75)]:
+    a = '"%s": {\n      "colour": "%s",\n      "radius": %s,' % (key, d['impact'][key]['colour'], old)
+    assert s.count(a) == 1, a
+    s = s.replace(a, a.replace('"radius": %s' % old, '"radius": %s' % new))
+a = '"impact": {'
+assert s.count(a) == 1
+ground = {"enabled": True, "quick": False, "cue_contact_puffs": 8, "cue_contact_reach_m": 1.4,
+          "cue_contact_seconds": 0.7, "cue_contact_dust_alpha": 0.7, "cue_contact_debris_scale": 1.6,
+          "cue_contact_light_energy": 2.0}
+s = s.replace(a, a + ' "ground_burst": %s,' % json.dumps(ground))
+json.loads(s); open(p, 'w').write(s)
+print('impact candidate applied')
+# GPU F38/F40 fight asks (generic): a fight lens that shows the horizon (pitch -25 -> -15) and an
+# ally kept off the opponent's line (neutral tracking composition yaw 35 -> 50 deg).
+p = 'data/config/combat.json'; s = open(p).read()
+for a, b in [('"pitch_start_deg": -25.0', '"pitch_start_deg": -15.0'),
+             ('"composition_yaw_deg": 35.0', '"composition_yaw_deg": 50.0')]:
+    assert s.count(a) == 1, a
+    s = s.replace(a, b)
+json.loads(s); open(p, 'w').write(s)
+print('fight camera candidate applied')
+# Veyra wind lanes (GPU F40: opaque white shaft planes on Forward+): readability ON with today's
+# fill on Compatibility, the fill x0.3 on Forward+/Mobile, and a bright rim on every lane edge.
+p = 'data/config/cloudreach_veyra_readability.json'; s = open(p).read()
+for a, b in [('"enabled": false', '"enabled": true'),
+             ('"fill_alpha": 0.4,', '"fill_alpha": 0.21,'),
+             ('"forward_plus_fill_scale": 1.0', '"forward_plus_fill_scale": 0.3')]:
+    assert s.count(a) == 1, a
+    s = s.replace(a, b)
+json.loads(s); open(p, 'w').write(s)
+print('veyra lanes candidate applied')

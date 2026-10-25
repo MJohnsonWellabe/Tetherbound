@@ -2394,10 +2394,13 @@ func _take_camera() -> void:
 ## F10#2 r6 (line_of_sight_fade.pilot_min_screen_fraction, with the sight-line
 ## candidate only): the farthest the lens may stand so a pilot `height` m tall
 ## fills at least that fraction of a `fov_deg` vertical frame; 0 = no floor.
-static func pilot_size_floor_distance(height: float, fov_deg: float, candidate_on: bool) -> float:
+## `override_fraction` > 0 (camera.json fight.per_trainer.<id>.pilot_min_screen_fraction)
+## replaces the shared fraction for that trainer's fight.
+static func pilot_size_floor_distance(height: float, fov_deg: float, candidate_on: bool,
+		override_fraction: float = 0.0) -> float:
 	var sight: Dictionary = preload("res://scripts/world/foliage_camera_visibility.gd").config() \
 		.get("line_of_sight_fade", {})
-	var fraction := float(sight.get("pilot_min_screen_fraction", 0.0))
+	var fraction := override_fraction if override_fraction > 0.0 else float(sight.get("pilot_min_screen_fraction", 0.0))
 	if not candidate_on or fraction <= 0.0 or height <= 0.0:
 		return 0.0
 	return height / (2.0 * tan(deg_to_rad(fov_deg) * 0.5) * fraction)
@@ -2739,7 +2742,7 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	# F10#2 r6 candidate: never pull back so far that the piloted creature's
 	# rendered height drops under `pilot_min_screen_fraction` of the frame.
 	var floor_m := pilot_size_floor_distance(_body_render_bounds(_ally_body).size.y, camera.fov,
-		_fight_world_sight_targets().size() > 0)
+		_fight_world_sight_targets().size() > 0, float(cap.get("pilot_min_screen_fraction", 0.0)))
 	if floor_m > 0.0:
 		local["max_distance_m"] = maxf(float(cfg.get("distance", 6.0)), minf(float(local.max_distance_m), floor_m))
 	local["roll_radians"] = (_camera_rig as Node3D).rotation.z
@@ -5904,6 +5907,15 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 		float(spec.get("core_pop", 0.0)) * float(style.get("strength_scale", 1.0)),
 		float(spec.get("core_hold", 0.0))
 	)
+	# P2-063 / F22#4 (`impact.ground_burst`, absent = off): a landed blow also
+	# kicks dust and stone chips from the struck creature's feet, so the hit is
+	# a grounded event rather than only a disc over the body. Charged blows by
+	# default; `quick: true` adds quick ones. The same contact_burst a named
+	# charge uses (enemy_pattern_telegraph.gd), with this block's cue_contact_* keys.
+	var ground: Variant = cfg.get("ground_burst")
+	if ground is Dictionary and (ground as Dictionary).get("enabled") == true \
+			and (charged or (ground as Dictionary).get("quick") == true) and is_instance_valid(struck):
+		PATTERN_CUE.contact_burst(host, struck.global_position, ground)
 
 
 func _nudge_camera_on_landing(charged: bool) -> void:

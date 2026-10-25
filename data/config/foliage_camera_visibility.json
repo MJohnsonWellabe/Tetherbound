@@ -1,4 +1,5 @@
 {
+  "_why_fight_presentation_1025": "Fights close-1024 generic fight presentation ON (owner 24 Oct: 'I don't like how the fights outline the area of the attack'; cand_gen_h). Code-blind yardstick, CPU, 3 fresh judges, mapped, before -> after: Meadows Warden hall 4.85 -> 5.88, Riverwatch 5.64 -> 6.99 (r4); Veyra 5.60 -> 6.21, Stormwood glass_field 5.71 -> 6.13, Venn 5.38 -> 6.07 (r5). Outlines and impact disc FIXED in every after set; tell 'where' still PARTIAL/PRESENT (dust only). Presentation only: timings, footprints and the AI's telegraph unchanged. GPU confirms 7.5. ralph/reports/FIGHTS/close-1024/NOTE.md Here: pilot_mark.all_fights true (pilot rim and fill light in every fight), ring_enabled false (no outlined ring).",
   "enabled": true,
   "_comment": "Presentation only: nearby non-colliding leaf surfaces fade only when their per-instance projected bounds overlap the trainer corridor. A bounds test is conservative, not an exact leaf-depth/ray test. No placements, bake inputs, harvest state or colliders change. Validate native Compatibility motion before accepting.",
   "invisible_below_m": 5.8,
@@ -97,6 +98,10 @@
     "named_max_distance_m": {"hollows_alpha": 11.0, "capacitor_alpha": 11.0, "crown_guardian": 12.0, "old_rodfolk_hall_guardian": 11.0, "blackwater_elder": 12.0, "glass_field_alpha": 11.0},
     "pilot_mark": {
       "enabled": true,
+      "_scope_all_fights": "Client-local presentation only: read by each peer's renderer/HUD; no host authority, save, transaction, network message or gameplay state. Absent = previous behaviour.",
+      "all_fights": true,
+      "_scope_ring_enabled": "Client-local presentation only: read by each peer's renderer/HUD; no host authority, save, transaction, network message or gameplay state. Absent = previous behaviour.",
+      "ring_enabled": false,
       "rim_strength": 0.9,
       "ring_radius_m": 0.9,
       "ring_width_m": 0.24,

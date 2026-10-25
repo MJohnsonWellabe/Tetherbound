@@ -1,0 +1,12 @@
+[
+ {
+  "label": "rw-1024",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/rw/before.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/rw/now.png",
+  "brief": "Meadows river named-trainer fight against a large otter boss: four frames during its water wind-ups",
+  "defects": [
+   "flat magenta ring or slab telegraph on the ground",
+   "boss attack does not read as a real water effect"
+  ]
+ }
+]

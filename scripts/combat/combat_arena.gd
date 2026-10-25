@@ -59,6 +59,12 @@ func configure(centre: Vector3, cfg: Dictionary) -> void:
 	_sight_vegetation = get_parent().get_node_or_null(^"Vegetation") if get_parent() != null else null
 	set_process(_sight_vegetation != null and _sight_vegetation.has_method("has_fight_sight_fade") \
 		and bool(_sight_vegetation.call("has_fight_sight_fade")))
+	# GPU F41/F39 fights (24 Oct): the player's creature is lost on dark ground
+	# in fights without the sight-line presentation. `pilot_mark.all_fights`
+	# (ON since 25 Oct) gives every fight the pilot rim and fill light.
+	_pilot_all = bool(_pilot_cfg().get("all_fights", false))
+	if _pilot_all:
+		set_process(true)
 	if is_processing():
 		_build_pilot_light()
 	radius = float(cfg.get("radius", radius))
@@ -131,7 +137,17 @@ func _clear_soft_occluders(reach: float) -> void:
 
 
 func _process(_delta: float) -> void:
-	if is_instance_valid(_sight_vegetation) and not _sight_vegetation.is_queued_for_deletion():
+	var sight_on := not _sight_blocked and is_instance_valid(_sight_vegetation) and not _sight_vegetation.is_queued_for_deletion() \
+		and _sight_vegetation.has_method("has_fight_sight_fade") and bool(_sight_vegetation.call("has_fight_sight_fade"))
+	if not sight_on and _pilot_all:
+		if not sight_subjects.is_empty() and sight_subjects[0] is Node3D and is_instance_valid(sight_subjects[0]):
+			var pilot := sight_subjects[0] as Node3D
+			if pilot.is_inside_tree():
+				if _pilot_light != null:
+					_pilot_light.global_position = pilot.global_position + Vector3.UP * _pilot_light_height
+				_mark_pilot(pilot)
+		return
+	if sight_on:
 		var points: Array[Vector3] = []
 		for subject: Variant in sight_subjects:
 			if subject is Node3D and is_instance_valid(subject) and (subject as Node3D).is_inside_tree():
@@ -153,6 +169,11 @@ func limit_sight_fade(trainer_id: String) -> void:
 			or not _sight_vegetation.has_method("fight_sight_allows") \
 			or bool(_sight_vegetation.call("fight_sight_allows", trainer_id)):
 		return
+	_sight_blocked = true
+	if _pilot_all:
+		# The pilot rim and light stay; only the sight-line presentation stops.
+		_sight_vegetation.call("set_fight_sight_target", get_instance_id(), Vector3.INF)
+		return
 	set_process(false)
 	_unmark_pilot()
 	if _pilot_ring != null and is_instance_valid(_pilot_ring):
@@ -166,7 +187,9 @@ func limit_sight_fade(trainer_id: String) -> void:
 
 ## True while this arena publishes the F10#2 sight-line fade targets.
 func sight_fade_active() -> bool:
-	return is_processing() and is_instance_valid(_sight_vegetation)
+	# Processing alone also runs the all-fights pilot rim (pilot_mark.all_fights).
+	return is_processing() and not _sight_blocked and is_instance_valid(_sight_vegetation) \
+		and _sight_vegetation.has_method("has_fight_sight_fade") and bool(_sight_vegetation.call("has_fight_sight_fade"))
 
 
 ## F10#2 r6 candidate: the piloted creature reads against dark ground through
@@ -176,6 +199,10 @@ var _rimmed: Node3D = null
 ## The model that carries the rim: a tag-switch re-skin replaces it.
 var _rimmed_model: Node = null
 var _pilot_ring: MeshInstance3D = null
+## `pilot_mark.all_fights`: the pilot rim and light run in every fight.
+var _pilot_all := false
+## limit_sight_fade refused this fight's sight-line presentation.
+var _sight_blocked := false
 
 func _pilot_cfg() -> Dictionary:
 	var cfg: Variant = preload("res://scripts/world/foliage_camera_visibility.gd").config() \
@@ -194,6 +221,9 @@ func _mark_pilot(pilot: Node3D) -> void:
 			pilot.call("_rim_light_node", model, float(cfg.get("rim_strength", 0.6)), "pilot")
 			_rimmed = pilot
 			_rimmed_model = model
+	# `ring_enabled` false (owner 24 Oct, no floor outlines): rim and light only.
+	if cfg.get("ring_enabled") == false:
+		return
 	if _pilot_ring == null:
 		_pilot_ring = MeshInstance3D.new()
 		_pilot_ring.name = "PilotContactRing"

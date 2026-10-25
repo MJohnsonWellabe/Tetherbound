@@ -1,6 +1,98 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-25 01:25 CT READY tb/fights-land dcb3463d4 (origin/main f7b9b6a1e + tb/fights 53eccce4b, clean merge, no overlap with main's changes): **generic fight presentation ON** (owner 24 Oct: no outlined attack areas). One READY for the Veyra, Meadows grunt/Warden, F10#2 Stormwood, F22#4 Riverwatch and Venn fights.
+  - What is ON (every key has `_why_fight_presentation_1025`; the overlay that was judged is `cand_gen_h.py.txt`):
+    - combat.json telegraph.soft_style: `outline_off` true, so no painted ring, cone, lane or slab. The tell is kicked dust along the same footprint (alpha 0.9, spacing 0.45 m), a low light curtain and the attacker's element-coloured rim glow (`tell_aura_element`, 0.45). Accessibility: `telegraph.high_contrast_markers` brings the outlines back; default OFF.
+    - Impacts: contact disc radius 0.9/1.2 -> 0.55/0.75, and `impact.ground_burst` (dust and stones at the struck creature's feet, P2-063).
+    - Fight lens: pitch_start -25 -> -15 deg (horizon in frame), composition_yaw 35 -> 50 deg (ally off the opponent's line). camera.json `fallback_max_steps` 2 stops the Venn seabed pop (the frames.json max camera-to-fighters distance drops from 40.4 m to 24.3 m; the remaining worst case is a 3 s orbit to the sea side at 21 m). Riverwatch pilot floor 0.10.
+    - Slim HUD: tether_commands `ui.compact_when_idle` true (the command grid hides while nothing is usable).
+    - Veyra: wind lanes ON with fill 0 and rim 0, replaced by moving wind streaks (0.8): no slabs.
+    - Pilot: `pilot_mark.all_fights` true (rim and fill light on the player's creature in every fight), `ring_enabled` false.
+    - Timings, footprints, the AI's telegraph and gameplay are unchanged.
+  - Scores (code-blind, CPU llvmpipe, 3 fresh judges per batch, mapped; both batches confirming):
+
+    | fight | before (main) | after | outlines | impact disc | tell where/when |
+    |---|---|---|---|---|---|
+    | Meadows grunt/Warden hall (r4) | 4.85 | **5.88** | PRESENT -> FIXED 3/3 | PRESENT -> FIXED 3/3 | PARTIAL (1 judge PRESENT) |
+    | Riverwatch (r4) | 5.64 | **6.99** | PRESENT -> FIXED 3/3 | FIXED | PARTIAL |
+    | Veyra (r5) | 5.60 | **6.21** | FIXED 2/3, PARTIAL 1; slabs PRESENT -> PARTIAL | FIXED 3/3 | PRESENT (text banner only) |
+    | Stormwood glass_field (r5) | 5.71 | **6.13** | FIXED 2/3, PARTIAL 1 | FIXED 3/3 | PARTIAL/PRESENT |
+    | Venn (r5) | 5.38 | **6.07** | FIXED 3/3; camera jump PRESENT -> FIXED 3/3 | FIXED 3/3 | PRESENT |
+
+    - r4: slope 1.23, r 0.95, RMSE 0.42. r5: slope 0.83, r 0.77, RMSE 0.52. No warnings; none above the top anchor.
+    - Before/after sheet: `_sheet_r5.png` (all five fights; left before, right after).
+    - None reaches 7.5, so the GPU decides. Earlier GPU Medium for Riverwatch was 7.26 (after #727), measured before this fix.
+  - Judges' common next asks (not in this READY):
+    1. A denser dust or spray wall that fills the danger area, with a timing pulse. The dust alone reads as a real object but is diffuse.
+    2. The HUD right panels are still large.
+    3. The player's creature is small on dark moss and translucent on Tidewake sand (Ripplet).
+    4. Flat arena and beach ground.
+  - GPU capture commands (repo root, at dcb3463d4, Medium/High; `godot --headless --path . --import` first):
+    - Warden: `godot --path . --script res://tools/art_pipeline/capture_named_fight.gd -- --trainer=warden_aldis --ally=ripplet --frames=12 --interval=0.5 --tell-frames --out=res://shots/gpu/warden`
+    - Riverwatch: same script with `--trainer=captain_riverwatch --live-member=captain_riverwatch:4 --ally=ripplet --frames=12 --interval=0.5 --tell-frames --out=res://shots/gpu/riverwatch`
+    - Stormwood (F10#2): `godot --path . --fixed-fps 20 --script res://tools/capture_named_fights_f10_6.gd -- --ids=glass_field_alpha --seconds=14 --interval=2.0 --camera-view=north --fixture-seed=1042206 --out=res://shots/gpu/stormwood`
+    - Veyra: `godot --path . --script res://tools/phase2_capture_cloudreach_live_fight.gd -- --output=res://ralph/reports/VISUAL/phase2/cloudreach/gpu-veyra --seed=7` (the output must sit under that folder).
+    - Venn: `godot --path . --script res://tools/phase2_capture_tidewake_fights.gd -- --trainer=water_trainer_venn --seed=2042 --out=res://ralph/reports/VISUAL/phase2/tidewake/gpu-venn`. On CPU it ends "Capture rejected: frame_cap", before and after alike, after writing 40 frames.
+    - Frames judged: Warden/Riverwatch t01-mid, t02-mid, 04, 08. Stormwood tell1-b-mid, tell2-b-mid, tell1-e-impact, tell3-c-late. Veyra live-1362/1722/2082/2262. Venn tell-start-000.65, t-006.02, t-012.00, t-024.02.
+    - Before = main f7b9b6a1e.
+  - Checks on tb/fights 53eccce4b (same combat code and config as the land): 197 tests, 9466 assertions, 0 failed. Suites: tell_aura_overlap, telegraph_glow, charger_lunge, enemy_pattern_telegraph, stormwood_b_named_lunge_lanes/cues, creature_attack_telegraph_animation, shared_opponent_cue_shape, named_tell_text, combat_stagger, combat_feedback, f22_riverwatch_presentation, combat_vfx, body_glow, combat_manager, combat_ai, fight_camera, combat_camera_clear_orbit, combat_spaced_camera, combat_system_overlay_layout, f24_host_commands, f21_hit_presentation, hit_feedback, cloudreach_summit_paving, stormwood_pilot_reach, combat_arena_bystanders/hold_inside, cloudreach_director_client_veyra.
+  - Not run: full CI. C2 is not affected (the reader pilots read game state, not pixels).
+  - F22#4 C2/C3 per fight (24 seeds, READER vs MASHER, live f22 patterns; pattern id = `named_<case>`; attacks seen across runs):
+
+    | case | pattern | attacks | result (starter) |
+    |---|---|---|---|
+    | captain_veyra_storm_anchor | named_captain_veyra_storm_anchor | veyra_crosswind, current_zone, diver_retreat, diver_leap | terrapup PASS; ripplet PASS; galewisp PASS |
+    | captain_marrow_dynamo_core | named_captain_marrow_dynamo_core | wall_check, wall_quake, diver_leap, diver_retreat, marrow_current_volley, marrow_current_zone, charger_check, charger_rush, marrow_bank_answer | terrapup PASS; ripplet PASS; galewisp PASS |
+    | hollows_alpha | named_hollows_alpha | hollows_alpha_charger_rush, hollows_alpha_charger_double_rush | terrapup PASS; ripplet PASS; galewisp PASS |
+    | capacitor_alpha | named_capacitor_alpha | capacitor_alpha_charger_rush, capacitor_alpha_diver_leap | terrapup FAIL; ripplet PASS; galewisp PASS |
+    | crown_guardian | named_crown_guardian | crown_guardian_wall_check, crown_guardian_wall_slam | terrapup FAIL; ripplet PASS; galewisp PASS |
+    | old_rodfolk_hall_guardian | named_old_rodfolk_hall_guardian | old_rodfolk_hall_guardian_ace_lane, old_rodfolk_hall_guardian_ace_exam | terrapup FAIL; ripplet PASS; galewisp PASS |
+    | blackwater_elder | named_blackwater_elder | blackwater_elder_current_volley, blackwater_elder_current_zone | terrapup PASS; ripplet PASS; galewisp PASS |
+    | glass_field_alpha | named_glass_field_alpha | glass_field_alpha_charger_rush, glass_field_alpha_charger_double_rush | terrapup PASS; ripplet PASS; galewisp PASS |
+    | warrens_guardian | named_warrens_guardian | guardian_wall_quick, guardian_earth_fist | terrapup PASS; ripplet PASS; galewisp PASS |
+    | relay_officer_dell | named_relay_officer_dell | wall_check, wall_slam, wall_quake, diver_leap, diver_retreat | terrapup PASS; ripplet PASS; galewisp PASS |
+    | relay_captain | named_relay_captain | diver_leap, diver_retreat, current_zone, wall_check, wall_quake, wall_slam, charger_rush, charger_double_rush | terrapup PASS; ripplet PASS; galewisp PASS |
+    | captain_riverwatch | named_captain_riverwatch | wall_check, wall_slam, charger_check, charger_rush, diver_retreat, diver_leap, oreth_overflow, oreth_flood | terrapup FAIL; ripplet PASS; galewisp FAIL |
+    | captain_field | named_captain_field | current_volley, current_zone, halder_range, charger_double_rush, wall_check, wall_quake, wall_slam | terrapup PASS; ripplet PASS; galewisp PASS |
+    | captain_ridge | named_captain_ridge | wall_check, wall_quake, current_volley, current_zone, charger_check, charger_rush, wall_slam, diver_retreat, vess_flank | terrapup PASS; ripplet PASS; galewisp PASS |
+    | stronghold_elite | named_stronghold_elite | diver_leap, diver_retreat, hald_reset, wall_slam, current_volley, current_zone, wall_quake | terrapup PASS; ripplet PASS; galewisp PASS |
+    | warden_aldis | named_warden_aldis | wall_check, wall_quake, diver_retreat, diver_leap, current_volley, current_zone, charger_rush, charger_double_rush, guardian_earth_fist, ace_exam | terrapup PASS; ripplet PASS; galewisp PASS |
+    - Pending (the queue is running them now, one Godot process): smoke_water_named_c2c3 (Venn and the water named fights); the Terrapup Stormwood rerun under the COMBAT §7 trivial-fight floor (capacitor 0.94, crown 0.57, old_rodfolk 1.02: the reader wins 100% and takes 3-5% max hit, so trivial, not a tell failure); and the Riverwatch rerun after the Brooktail power trim 27.5 -> 27.0 (Terrapup and Galewisp C3 at 0.501). I will add the result as INFO.
+    - For Balance: Meadows chapter galewisp `masher_loses_a_named_fight` 0.12 < 0.25 (Balance lane's per ACCEPTANCE).
+  - Balance: game 1 (config ON) / tests-tools 0 in this READY.
+  - F10#2 handoff complete with this READY. I am stopping new work after the F22#4 INFO.
+- 2026-10-24 23:55 CT INFO generic fight fix, r4 code-blind batch (CPU, 3 fresh judges, mapped; confirming, top anchor f36_0_npc C1 7.53, slope 1.23, r 0.95, RMSE 0.42, no warnings):
+  - Meadows grunt/Warden (stronghold_elite hall): **5.88** after (`cand_gen_h`) vs 4.85 before (main config). Outline defect PRESENT -> FIXED and impact disc PRESENT -> FIXED (3/3 judges). HUD PRESENT -> PARTIAL. Wind-up "where" still PARTIAL (one judge PRESENT): the dust reads as a real object but is diffuse.
+  - Riverwatch: **6.99** after vs 5.64 before. Outlines and disc FIXED 3/3, HUD PARTIAL.
+  - Judges' next asks: a denser dust or spray wall filling the danger area with a timing pulse; a cooler fill and wider value range in the dark hall; hanging foliage cards clip the hall camera on the before side only.
+  - Files: r4_{batch,key,spec,calibrate}.json.
+- 2026-10-24 07:40 CT INFO F22#4 C2/C3 on current main (45865499d merged into tb/fights): running, 24 seeds, one Godot process. Order: smoke_finale_named_c2c3, smoke_stormwood_b_named_c2c3, smoke_meadows_named_c2c3, smoke_water_named_c2c3. Several hours.
+  - Gap 1: the Stormwood named smoke drove combat_depth_pilot (no live patterns), the reason the audit called it stale. It now uses f22_pattern_pilot with the encounter_director context (named pattern by encounter id, authored profile as role) and the switching acceptance reader, as the Meadows and water smokes do.
+  - Gap 2: Veyra and Marrow had no C2/C3 smoke. New tests/smoke_finale_named_c2c3.gd (Meadows harness, production translators, party level = region wild band midpoint + 1: 42 and 52).
+  - All three harnesses now record `pattern_attacks` per run for the per-fight table. Verdict rules unchanged.
+  - One-seed sanity: Veyra and Marrow PASS (terrapup). Capacitor (terrapup, 1 seed) failed the ratio (0.76 > 0.55); the 24-seed run decides.
+- 2026-10-24 06:45 CT INFO F22#4 Riverwatch CPU re-judge on current main (77447cf25 + tb/fights): mapped **6.89**, CPU-provisional (6.7 or above; 7.5 still needs the GPU).
+  - Batch: confirming (top anchor f36_0_npc C1 7.53), linear fit slope 1.81, r 0.98, RMSE 0.33, not above the top anchor, no warnings.
+  - Main before #722 (88398238a): 6.71. Raw now 6.4/6.3/6.6 vs before 6.3/6.1/6.6.
+  - Renderer-aware boss aura: already on main from 22 Oct (`aura_renderer_scale`: Compatibility 1/1; Forward+ and Mobile rim x0.3, no omni light; test_enemy_pattern_telegraph). That is the GHOST.md fix, so there was nothing new to ship. The GPU Medium re-judge is the open step.
+  - Judges' remaining asks: a real water volume (spray column or wave, foam and an impact splash) instead of the glassy wedge; the HUD covering the lower third.
+  - Capture: `tools/art_pipeline/capture_named_fight.gd --trainer=captain_riverwatch --live-member=captain_riverwatch:4 --ally=ripplet --frames=12 --interval=0.5 --tell-frames`. Frames t01-mid, t02-mid, 04, 08.
+  - Files: rw_{batch,key,spec,calibrate}.json.
+- 2026-10-24 05:30 CT READY tb/fights-land 47eea37f4 (origin/main 77447cf25 + this lane): your review items 1, 3 and 4. No config change, so what ships ON is unchanged from #722.
+  1. r3 re-judge of the shipped #b16cff (3 fresh judges, mapped, CPU):
+     - Meadows 6.44 vs main-before 5.80; Tidewake 6.39 vs 5.53; Cloudreach 6.28 vs 5.91 (first judged).
+     - Slab defect PARTIAL on all three; F38#5-F41#5 stay open.
+     - Meadows parked by the gain rule at 6.54; Stormwood parked at 6.21.
+  2. Stormwood hue: no cheap per-biome override that reads better was found. Yellow-gold is the owner's road current, white-violet is lightning, teal and oxblood are reserved, and magenta is the defect. The tells sit on blue-green moss, where violet still separates, and the dust and curtain carry the "where". Left as is.
+  3. Perf:
+     - draw_dust sizes the multimesh only when the count changes, and allocates nothing per frame (two passes over the spacing walk).
+     - Curtain bands drop the per-segment tier arrays.
+     - Pattern curtain/dust AABBs fit the outline plus rise (was +-4096 m).
+  4. Overlapping wind-ups: one counted aura overlay per body, so the glow lifts with the last wind-up. A body_glow hit flash during a tell borrows the glowing meshes and hands them back only while that tell's aura is live. New tests/test_tell_aura_overlap.gd (3 tests).
+  - Checks on 47eea37f4: 102 tests (tell_aura_overlap, telegraph_glow, charger_lunge, enemy_pattern_telegraph, stormwood_b_named_lunge_lanes/cues, creature_attack_telegraph_animation, lunge_lane, telegraph, shared_opponent_cue_shape, combat_stagger, combat_feedback, f22_riverwatch_presentation, combat_vfx, body_glow, combat_manager, combat_ai): 0 failed.
+  - Not run: full CI, and the C2 smoke (no gameplay or timing change).
+  - Balance: game 1 / tests-tools 1 (the focused test).
 - 2026-10-24 04:20 CT READY tb/fights-land 570357333: bodied fight telegraphs ON. Built on origin/main 2cde391e4; clean merge, no file overlap with main since base.
   - What changed:
     - Every wind-up (feet ring, charge lane, pattern ring/cone/fan/lane/marker/field, guard cone) raises kicked dust along its outline (drifting down a lane toward the strike), a low light curtain and a faint rim glow on the attacker.
@@ -14,6 +106,29 @@
   - Not run: the C2 named-fight smoke (no gameplay or timing change) and full CI.
   - Balance: game 5 commits / tests-tools 0.
 - 2026-10-24 INFO Task 1 (fight telegraphs vs F38#5-F41#5 "no flat magenta rings or slabs") started. New OFF hook: bodied tell (`telegraph.soft_style.curtain_height_m`, 0/absent = off; scripts/combat/tell_style.gd). Each tell's outer rim (feet ring, charge-lane rails, pattern ring/cone/fan/lane/marker outline, guard cone) raises a thin depth-tested light curtain that fades upward with a travelling shimmer. Footprints, timings, the AI's telegraph and depth rules unchanged. Candidates are capture-only overlays (`cand_tell.py.txt`).
+
+## HANDED TO STORMWOOD (F10#2, Stormwood named-fight camera; coordinator consolidation 24 Oct)
+- **Fixed (on main):**
+  - The sight-line fight camera (`foliage_camera_visibility.json line_of_sight_fade`, enabled_realms ["stormwood"]). The lens refuses orbits whose line to either fighter meets trunks or rocks, and canopy fades in fights.
+  - Per-named-wild distance caps (`named_max_distance_m`, 11-12 m) and a pilot size floor (`pilot_min_screen_fraction` 0.07).
+  - Pilot mark: rim 0.9, pale contact ring over the ground, and a fill light.
+  - C3 6/6 on CPU r8 (6.77 mapped, old 6.7 rule).
+  - Telegraphs: the bodied tells (#722) apply to the Stormwood named rows. They keep their violet #b48cff row hue, and the shared hue is #b16cff. The Stormwood named tells were judged 6.13 vs 5.87 (r2, `ralph/reports/FIGHTS/close-1024/NOTE.md`) and are parked for scoring (two rounds under +0.5).
+- **Open:**
+  - The GPU verdict (owner 24 Oct: GPU decides). Medium/High was 3.58-3.68 on the 21 Oct GPU scale, and 5.52 on the 22 Oct yardstick (`ralph/reports/GPU-PASS/F10-2/`, STATE).
+  - Judges' standing asks:
+    1. The Stormwood grade: dark, monochrome, no purple sky in frame.
+    2. The fight HUD covers 35-45% of the frame (UI). A compact Tether Command lane candidate exists: `tether_commands.json ui.compact_when_idle`, OFF.
+    3. The pilot (Sparkit) reads as a speck next to Voltarach. A per-trainer pilot floor exists (`camera.json fight.per_trainer.<id>.pilot_min_screen_fraction`); named wilds use `line_of_sight_fade.pilot_min_screen_fraction`, and a global raise to 0.11 would also change Riverwatch, so add a per-named-wild key there if needed.
+    4. Canopy at the frame edges.
+    5. Tells are still flat ground decals (PARTIAL).
+- **C2/C3 (functional, F22#4 run, 24 Oct):** smoke_stormwood_b_named_c2c3 now drives live patterns; 15/18 rows PASS. The Terrapup rows (capacitor, crown, old_rodfolk) re-run under the COMBAT §7 trivial-fight floor; results are in the F22#4 READY line.
+- **Camera set (fixed, as judged):**
+  - Five fights: `tools/capture_named_fights_f10_6.gd --ids=hollows_alpha,capacitor_alpha,crown_guardian,old_rodfolk_hall_guardian,glass_field_alpha --seconds=18 --interval=1.0 --camera-view=north`.
+  - blackwater_elder: the same with `--ids=blackwater_elder` at the default stand.
+  - Frames: i00-i17 plus tell1/tell2 a-f.
+  - CPU: `--fixed-fps 20`. GPU Medium: `--rendering-method forward_plus --rendering-driver vulkan --resolution 1280x720 --fixed-fps 20` (commands in `ralph/reports/GPU-PASS/F10-2/`).
+- **History:** `ralph/reports/CAMERA/close-1020/NOTE.md` (r1-r8), `ralph/reports/STORMWOOD/close-1022/notes.md`.
 
 ## Rounds
 
