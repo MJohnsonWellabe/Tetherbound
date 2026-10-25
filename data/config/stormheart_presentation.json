@@ -42,7 +42,9 @@
   "built_detail": {
     "enabled": true,
     "_comment": "P2-037: distinct installed-family cut wood on existing floors, supported deck fascia and hanging blue/gold cloth. No new floors, barriers or collision.",
-    "wood_tint": "#c4aa87",
+    "wood_tint": "#dcd2c4",
+    "wood_weathering": 0.75,
+    "_why_weathered_wood": "GPU F41#0 Stormwood matrix (25 Oct, all three judges on the Stormheart stand): the decks and rails read as plain red, close to the oxblood reserved for Team Tether. The atlas's orange grain under the old warm tint gave albedo about (111,66,29); 0.75 weathering with a cool grey tint gives aged timber about (101,87,74), the same value band with a quarter of the saturation.",
     "banner_colour": "#183e65",
     "banner_trim": "#d5b466"
   },

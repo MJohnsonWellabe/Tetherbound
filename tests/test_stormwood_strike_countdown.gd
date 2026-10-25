@@ -6,6 +6,7 @@ extends "res://tests/test_case.gd"
 
 const LIGHTNING := preload("res://scripts/world/stormwood_lightning.gd")
 const SURGE_PATH := "res://data/config/stormwood_surge.json"
+const RULES := preload("res://scripts/world/stormwood_surge_rules.gd")
 
 
 func _surge() -> Dictionary:
@@ -48,3 +49,25 @@ func test_building_and_fading_are_distinct() -> void:
 	assert_true(float(building.sheet_glow) > float(fading.sheet_glow), "Building flickers in-cloud; Fading does not")
 	assert_true(float(fading.ceiling_breakup) > float(building.ceiling_breakup), "Fading opens gaps in the ceiling")
 	assert_true(float(fading.steam) > 0.0 and float(building.steam) == 0.0, "only Fading steams")
+
+
+func test_the_warning_drops_its_painted_outline_unless_high_contrast() -> void:
+	var cfg: Dictionary = _surge().presentation.telegraph
+	assert_true(cfg.get("outline_off") == true, "the strike warning has no painted outline (GPU F41#0, 25 Oct)")
+	var style := preload("res://scripts/combat/tell_style.gd")
+	var combat: Dictionary = preload("res://scripts/combat/combat_math.gd").config()
+	assert_eq(style.outlines_off(cfg), combat.get("telegraph", {}).get("high_contrast_markers") != true,
+		"high_contrast_markers brings the outline back")
+	# Behaviour, not text: the material the game builds carries the switch,
+	# and the shader's ringless branch exists and compiles.
+	var lightning := LIGHTNING.new()
+	lightning.rules = RULES.new(_surge())
+	var material: ShaderMaterial = lightning.call("_telegraph_material")
+	assert_eq(float(material.get_shader_parameter("outline_off")), 1.0 if style.outlines_off(cfg) else 0.0,
+		"the built warning material follows outlines_off")
+	var uniforms: Array[String] = []
+	for row: Dictionary in material.shader.get_shader_uniform_list():
+		uniforms.append(str(row.name))
+	for name: String in ["outline_off", "scorch_alpha", "crackle_alpha", "spark_width_mul"]:
+		assert_true(uniforms.has(name), "the warning shader declares " + name)
+	lightning.free()
