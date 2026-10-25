@@ -25,7 +25,7 @@ func build(water_world: Node3D) -> void:
 	var specs: Array = (look.get("landmark_models", []) as Array) + (look.get("landmark_props_candidate", []) as Array) \
 		+ (look.get("veilfall_hero_candidate", []) as Array) + (look.get("veilfall_facade_candidate", []) as Array) \
 		+ (look.get("veilfall_mountain_candidate", []) as Array) \
-		+ (look.get("destination_landmarks_candidate", []) as Array)
+		+ _destinations(look)
 	# `first_shore_declutter_candidate` (OFF in play) drops named props by id.
 	var dropped: Array = (look.get("first_shore_declutter_candidate", {}) as Dictionary).get("drop_landmark_props", [])
 	for raw: Variant in specs:
@@ -69,6 +69,9 @@ func build(water_world: Node3D) -> void:
 		# point would bury most of it (close-1024 vf2, the upper Veilfall tier).
 		holder.position = Vector3(at.x, _floor(water_world, at, yaw, half) - float(spec.get("sink_m", 0.15))
 			+ float(spec.get("lift_m", 0.0)), at.y)
+		# `float_y_m` seats a moored boat on the sea surface instead of the seabed.
+		if spec.has("float_y_m"):
+			holder.position.y = float(spec.float_y_m)
 		add_child(holder)
 		var box: Array = spec.get("collider_fraction", [])
 		if box.size() == 3:
@@ -85,6 +88,23 @@ func build(water_world: Node3D) -> void:
 		# flyer or glider can reach (close-1024: the generated Veilfall crown).
 		if bool(spec.get("trimesh_collider", false)):
 			add_trimesh_collision(model)
+
+
+## `destination_landmarks_s3_candidate` (OFF in play) re-seats and adds to the
+## lm2 destination pieces: its entries replace lm2's by landmark_id.
+static func _destinations(look: Dictionary) -> Array:
+	var base: Array = look.get("destination_landmarks_candidate", [])
+	var s3: Array = look.get("destination_landmarks_s3_candidate", [])
+	if s3.is_empty():
+		return base
+	var replaced: Array = []
+	for raw: Variant in s3:
+		replaced.append(str((raw as Dictionary).get("landmark_id", "")))
+	var merged: Array = []
+	for raw: Variant in base:
+		if not replaced.has(str((raw as Dictionary).get("landmark_id", ""))):
+			merged.append(raw)
+	return merged + s3
 
 
 ## Optional per-surface materials, by surface index (the installed castle kit's

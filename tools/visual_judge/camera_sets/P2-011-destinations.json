@@ -40,6 +40,25 @@
       "time": 12,
       "weather": "clear",
       "_why": "lm1 s2: the rescue jetty moved to the nearest shoreline (64 m from the destination point), so this stand frames both the destination and the shore; old pose pos [249.00400000000002, 28.732, 986.349] yaw -135.0 pitch -12.8."
+    },
+    {
+      "id": "pumps-shore",
+      "stand": [
+        985.0,
+        8.08,
+        2745.0
+      ],
+      "pos": [
+        989.9,
+        18.2,
+        2757.7
+      ],
+      "yaw": -0.3,
+      "pitch": -12.0,
+      "fov": 65,
+      "time": 12,
+      "weather": "clear",
+      "_why": "close-1024 s3: the pumps move to the nearest shore (990.1, 2717.4) because no water lies within 180 m of their destination point; this stand frames that shore seat from inland, 40 m back and 10 m up, trainer in frame. The original pumps view stays for matched lm1/lm2 rounds."
     }
   ]
 }
