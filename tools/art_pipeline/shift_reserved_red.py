@@ -1,15 +1,19 @@
 """Hard rule: red/oxblood is reserved for Team Tether. The GPU F36 roster
 baseline (24 Oct 2026) found crimson frills on Riverdrake and Mirejaw (land and
 water forms share these textures). This shifts only the saturated reds of a
-creature albedo to a warm amber, keeping each texel's value, so the frills keep
+creature albedo to a gold-tan, keeping each texel's value, so the frills keep
 their accent role without reading as the reserved colour. Browns and oranges
-(hue above the red band) are untouched.
+(below each target's saturation floor) are untouched.
 
-Re-running is close to a no-op: shifted texels sit at the amber hue, outside the red
-band (JPEG re-encoding leaves a few stray texels; it still rewrites the GLB, so
-re-pin the f36 recipe hash). The untouched originals are in git history.
-An image embedded in a GLB is rewritten in the GLB too, under the same name, so
-a fresh import extracts the corrected texture.
+Every target repaints from its untouched original, read from git at
+ORIGINAL_REV (the commit before this tool first ran), so a re-run or a re-tune
+never compounds. An image embedded in a GLB is rewritten in the GLB too, under
+the same name, so a fresh import extracts the corrected texture; re-pin the
+f36 recipe hash after a run.
+
+GPU batch 1 (25 Oct): amber at 34 deg still read red-orange on Riverdrake's
+crest, and Mirejaw's rust-brown frill roots sat just above the first band.
+Each target now has its own band and a gold-tan target.
 
     python3 tools/art_pipeline/shift_reserved_red.py
 """
@@ -17,25 +21,26 @@ import io
 import json
 import os
 import struct
+import subprocess
 
 import numpy as np
 from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 C = os.path.join(ROOT, "assets", "creatures", "tetherbound")
-# (glb or None, image file, embedded image name or None)
+ORIGINAL_REV = "f3d6d65f0^"
+# (glb or None, image file, embedded image name or None, band)
+RIVERDRAKE = {"hue": (-15.0, 32.0), "min_sat": 0.4, "min_val": 0.15, "to_hue": 42.0, "sat_scale": 0.7}
+# Mirejaw's body is a warm taupe-brown (hue 20-40, sat under 0.55); only the
+# saturated rust at the frill roots is moved.
+MIREJAW = {"hue": (-15.0, 26.0), "min_sat": 0.55, "min_val": 0.12, "to_hue": 40.0, "sat_scale": 0.6}
 TARGETS = [
     ("riverdrake/models/creature_riverdrake_lod0.glb", "riverdrake/models/creature_riverdrake_lod0_Image_0.jpg",
-     "Image_0"),
-    (None, "riverdrake/models/riverdrake_extracted_base_color_vivid.png", None),
+     "Image_0", RIVERDRAKE),
+    (None, "riverdrake/models/riverdrake_extracted_base_color_vivid.png", None, RIVERDRAKE),
     ("mirejaw/candidate/models/creature_mirejaw_native.glb", "mirejaw/candidate/models/creature_mirejaw_native_Image_0.jpg",
-     "Image_0"),
+     "Image_0", MIREJAW),
 ]
-RED_HUE = (-15.0, 20.0)      # degrees, wrapping through 0
-MIN_SAT = 0.45
-MIN_VAL = 0.25
-AMBER_HUE = 34.0
-SAT_SCALE = 0.9
 
 
 def _hsv(rgb):
@@ -67,13 +72,14 @@ def _rgb(h, s, v):
     return out + (v - c)[..., None]
 
 
-def shift(image):
+def shift(image, band):
     rgb = np.asarray(image.convert("RGB")).astype(np.float64) / 255.0
     h, s, v = _hsv(rgb)
     signed = np.where(h > 180.0, h - 360.0, h)
-    mask = (signed >= RED_HUE[0]) & (signed <= RED_HUE[1]) & (s >= MIN_SAT) & (v >= MIN_VAL)
+    lo, hi = band["hue"]
+    mask = (signed >= lo) & (signed <= hi) & (s >= band["min_sat"]) & (v >= band["min_val"])
     out = rgb.copy()
-    out[mask] = _rgb(np.full(mask.sum(), AMBER_HUE), s[mask] * SAT_SCALE, v[mask])
+    out[mask] = _rgb(np.full(mask.sum(), band["to_hue"]), s[mask] * band["sat_scale"], v[mask])
     result = Image.fromarray((np.clip(out, 0, 1) * 255).astype(np.uint8), "RGB")
     if image.mode == "RGBA":
         result.putalpha(image.getchannel("A"))
@@ -118,13 +124,13 @@ def _write_glb(path, gltf, views):
 
 
 def main():
-    for glb, image_path, embedded in TARGETS:
+    for glb, image_path, embedded, band in TARGETS:
         src = os.path.join(C, image_path)
         ext = os.path.splitext(src)[1].lower()
-        result, share = shift(Image.open(src))
-        if share == 0.0:
-            print("%s: no reserved red left" % image_path)
-            continue
+        rel = os.path.relpath(src, ROOT)
+        original = subprocess.run(["git", "-C", ROOT, "show", "%s:%s" % (ORIGINAL_REV, rel)],
+                                  check=True, capture_output=True).stdout
+        result, share = shift(Image.open(io.BytesIO(original)), band)
         data = _encode(result, ext)
         open(src, "wb").write(data)
         if glb:
@@ -133,8 +139,7 @@ def main():
             views[image["bufferView"]] = data
             image["mimeType"] = "image/jpeg" if ext in (".jpg", ".jpeg") else "image/png"
             _write_glb(os.path.join(C, glb), gltf, views)
-        print("%s: %.2f%% shifted red->amber%s" % (image_path, share * 100, " (+ GLB)" if glb else ""))
-
+        print("%s: %.2f%% shifted to hue %d%s" % (image_path, share * 100, band["to_hue"], " (+ GLB)" if glb else ""))
 
 if __name__ == "__main__":
     main()
