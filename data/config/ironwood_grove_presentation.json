@@ -10,6 +10,7 @@
     {"harvest_order": 4004, "at": [-339.0, 5060.0], "root_radius_m": 1.7, "root_count": 4, "root_height_m": 0.32}
   ],
   "hero_tree": {
+    "model_candidate": {"enabled": false, "model": "res://assets/props/meshy-1024/meadows_giant_ironwood/meadows_giant_ironwood.glb", "_why_r1_cpu": "close-1024 r1 CPU A/B (dom1025-batch.json; three fresh code-blind judges, JUDGE_PROMPT verbatim): band4_upper_meadows_ironwood_0 day approach/gameplay/detail, raw Bar A 6.37 vs 4.93 (+1.43), mapped 6.31 vs 5.41 (+0.90; weak fit, slope 0.63 r 0.52). The faceted-canopy defect goes PRESENT to PARTIAL on all three: the landmark reads as 'a believable broad oak with a leafy canopy'; the smaller grove trees stay clumpy. OFF until GPU.", "_why": "F38 band4 close-1024 (OFF until judged): all three CPU judges (iw1024) name this landmark's canopy as 'flat, faceted low-poly canopy shards against the sky'. A coordinator Meshy giant ironwood replaces the model here (path filled on delivery), fitted to the same height/canopy envelope and keeping its own textures instead of the ancient-tree shader. Presentation only; harvest seats, roots and the lightning heart are unchanged."},
     "at": [-330.0, 5160.0],
     "model": "res://assets/environment/meadows/ironwood/ironwood_ancient_tree.glb",
     "yaw_deg": 12.0,
