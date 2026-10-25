@@ -20,6 +20,7 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
 const LANTERN_MODEL := "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf"
 const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
+const ARCH_FACADES := preload("res://scripts/world/crossing_hall_arch_facades.gd")
 const PORTAL_ACTION := preload("res://scripts/world/portal_arch.gd")
 const DATA := preload("res://scripts/data/redesign_data.gd")
 const PORTALS_PATH := "res://data/config/portals.json"
@@ -93,6 +94,7 @@ func build(config: Dictionary) -> bool:
 	_build_hero_waymark()
 	_claude_pools = CLAUDE_INTERIORS.build(self, _config, _arches, _interior_lights)
 	_great_hall = GREAT_HALL.build(self, _config.get("hall_great_hall", {}), _arches)
+	ARCH_FACADES.build(self, _config.get("arch_facades", {}), _arches)
 	_build_daylight_windows()
 	_build_interior_ambient()
 	_declare_interior_volumes()
