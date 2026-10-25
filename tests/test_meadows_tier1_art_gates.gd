@@ -1,7 +1,7 @@
 extends "res://tests/test_case.gd"
 
-## F38 tier-1 new art (close-1024): the Hall arch facades ship ON (judged
-## passing); the stronghold hero gatehouse and the Meadows hero pieces ship OFF
+## F38 tier-1 new art (close-1024): the Hall arch facades, the stronghold hero
+## gatehouse and the Meadows hero pieces ship OFF until a GPU pass judges them,
 ## and build nothing while off; on, a facade is fitted inside its arch slot.
 
 const ARCH_FACADES := preload("res://scripts/world/crossing_hall_arch_facades.gd")
@@ -14,8 +14,8 @@ func _block(path: String, key: String) -> Dictionary:
 	return (parsed as Dictionary).get(key, {}) if parsed is Dictionary else {}
 
 
-func test_shipping_configs_gate_the_new_art() -> void:
-	assert_true(bool(_block("res://data/config/crossing_hall.json", "arch_facades").get("enabled", false)), "facades judged passing ship ON")
+func test_shipping_configs_keep_the_new_art_off() -> void:
+	assert_false(bool(_block("res://data/config/crossing_hall.json", "arch_facades").get("enabled", true)))
 	assert_false(bool(_block("res://data/config/stronghold.json", "hero_gatehouse").get("enabled", true)))
 	var pieces := HERO_PIECES.settings()
 	for group: String in pieces.keys():
