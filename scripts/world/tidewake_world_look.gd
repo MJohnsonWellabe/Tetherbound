@@ -31,12 +31,18 @@ func _load() -> Dictionary:
 ## and every other realm are untouched.
 func set_weather(delta: Dictionary) -> void:
 	var candidate: Dictionary = TIDEWAKE_PROFILE.settings().get("rain_fog_candidate", {})
-	if candidate.is_empty() or not bool(delta.get("rain", false)):
+	# close-1024 `rain_grade_candidate` (OFF in play): sun/sky/environment keys
+	# merged over the rain preset so Tidewake rain reads as overcast weather.
+	var grade: Dictionary = TIDEWAKE_PROFILE.settings().get("rain_grade_candidate", {})
+	if (candidate.is_empty() and grade.is_empty()) or not bool(delta.get("rain", false)):
 		super.set_weather(delta)
 		return
 	var tuned := delta.duplicate(true)
 	var env: Dictionary = tuned.get("environment", {})
-	if env.has("fog_density_add"):
+	if env.has("fog_density_add") and not candidate.is_empty():
 		env["fog_density_add"] = float(env.fog_density_add) * float(candidate.get("fog_density_add_scale", 1.0))
 	tuned["environment"] = env
+	for section: String in ["sun", "sky", "environment"]:
+		if grade.has(section):
+			tuned[section] = TIDEWAKE_PROFILE.merge(tuned.get(section, {}), grade[section])
 	super.set_weather(tuned)
