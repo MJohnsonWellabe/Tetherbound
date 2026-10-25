@@ -3,6 +3,11 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct READY tb/creatures-land2 c28bb6cc9, from main e60204db8. It replaces tb/creatures-land-grandpa.
+  - **Contents:** all of 4e5217f1b, merged cleanly (86611cffd), except Mosshock's colour. Mosshock's vivid texture and its colourway rules are main's again; it keeps the 3.6 m height and scaled footprint (e4de7124e). Plus the Grandpa eyes (cf5bbf99d) and the `art.json` `_why` citing tb/gpu-pass 9099a88322 (c28bb6cc9); no other switch is needed, because main already ships the candidate head.
+  - **Not in it:** the later G3 hit-react hold (4403807c8, 288784257 on tb/creatures-land, posted separately for GPU) is not in land2, as you scoped it to 4e5217f1b.
+  - **Tests:** f36_pose_candidates, rest_pose, water_species_catalog, texture_import_policy, four_biome_roster_population, creature_scale_ladder, hit_impact_window, remote_stagger_wince, combat_feel, combat_stagger, hit_feedback, remote_creature, character_hair_split, character_appearance_variants, character_metallic: 96 tests, 0 failed.
+  - **Next:** grading the Meshy Mosshock r1 retexture (separate), then the batch-2 notes (Mirejaw faint back, land Riverdrake faint coil, water_riverdrake rider size).
 - 25 Oct READY tb/creatures-land-grandpa f1209f09c (Grandpa eyes only, from main e60204db8, separate from batch 2):
   - **Contents:** 30a52c7de (cherry-picked as d52929bc5) plus an `art.json` `_why_eyes_close1024` citing tb/gpu-pass 9099a88322.
   - **No switch needed:** main's `art.json` already ships `grandpa/candidate/models/grandpa_native_face.glb`, so the eyes commit alone turns the eyes on.
