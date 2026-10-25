@@ -3,6 +3,17 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures-land cecef9776 (order 4): **storm arc emission.** Tanglevolt (e4b6a4018), plus Staticub, Thundertunnel and Voltarach.
+  - Each gets an emissiveTexture built only from its painted lightning: arc-hue pixels that are saturated and lifted 0.12-0.15 above the surrounding fur. The coverage is Tanglevolt 0.68%, Staticub 0.21%, Thundertunnel 0.70% and Voltarach 6.90% (its gold vein network). The texture is embedded in the shipped GLB the way Stormursa's map is. Base colour, mesh, rig and clips are unchanged.
+  - Tool: `tools/art_pipeline/arc_emission.py`; spec: `data/creatures/arc_emission.json`. f36 pins and import policy updated; f36_pose_candidates + texture_import_policy pass.
+  - **The check is GPU only:** Low/Compatibility already self-lights the whole albedo (field_emission), so the CPU stage shows no difference (Tanglevolt before/after identical on CPU). Please judge Medium/High night and day.
+  - Scan of the other electric species:
+    - Stormursa already ships emission.
+    - Stormbrush's blue is the fur itself, not arcs.
+    - Fulgocobra and Voltwig have faint veining only.
+    - Glimmermoth, Sparkit, Stormraven and Mosshock have no painted arcs.
+- 25 Oct status: order 3 (big wince) is not ready (b38 = main) and the body hit-flash is proposed above. Order 2 (dog3) is waiting on the Meshy retexture.
+
 - 25 Oct (order 3) **Big wince: NOT READY; switching approach under rule 1.**
   - Bundle on tb/creatures-land f19176296:
     - b37's wince (head drop of a third of height, squash, 0.2 m/m shove);
