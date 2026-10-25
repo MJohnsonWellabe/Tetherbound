@@ -3,6 +3,13 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures 17ce37f88 (tier 3, dog3 Terrapup; lane-only like the earlier dog3 posts):
+  - **Hit:** now the cower. The head-up recoil read as rearing.
+  - **Plates:** the green stone plates are desaturated and darkened toward a weathered earth-grey, so they read as grown into the coat (`creature_touches.json` terrapup `plates_into_fur`).
+  - **Seat:** stays at the lane's 2.58 m offset; the rider sits on the back in CPU frames.
+  - **Faint:** already side-lying, unchanged.
+  - **Capture:** the lane species state (dog3 model plus its own `rideable.mount_offset`). Not CPU-judged yet.
+  - **Mosshock retexture spec:** staged as you asked, at `close-1024/mosshock-retex-spec/` (palette hex, what stays, style-bar crops). Use it only if batch 2 leaves Mosshock below 6.
 - 25 Oct GPU READY tb/creatures-land 4e5217f1b. It replaces the 9463a4326 head; please queue this one. CPU b32 is in `b32/judges.md`.
   - **Your Mosshock correction:** agreed, not stale. The blotch shapes are baked into the source atlas, so recolouring keeps the pattern. b32 (its compressed values plus 3.6 m, against the GPU-judged look) mapped 6.25 to 6.32.
   - **Mosshock in 4e5217f1b:** one hue and close values (about 0.3-0.4) across the growth, lichen and dark patches, for a mostly even moss coat. A wide despeckle did not merge the shapes.
