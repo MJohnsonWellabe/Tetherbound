@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Qs": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky brown-black frames with no purple storm sky, no lightning rim light, flat magenta telegraph rings, a near-invisible player creature and B's camera buried in foliage (i11, i13, i15) sink it far below the Palworld forest boss shot."
+  },
+  "Jc": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured badger and warm meadow grade carry it, but stiff idle-held bodies under hits, a heavy yellow-orange grade with no sky or depth, and flat gold hit rings keep it short of Palworld's impact and Valheim's atmosphere."
+  },
+  "Nn": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.1,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's steady top-down camera keeps both fighters readable but flat, while B loses the badger off-frame for f18-f27, puts crates in the foreground and snaps angle at f29, and neither has the sky, light or creature reactions of the Palworld shots."
+  },
+  "Wd": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's site-specific aftermaths (banner down, rack toppled, cage opened, smoke column) are a real idea, but blurry smeared ground texture, sparse scattered props, billboard-like trees and flat midday light read well below Palworld density and Valheim light; B keeps enemy banners standing after the win."
+  },
+  "Ch": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormcapra model matches the owner style bar (fleece, horns, blue crystal) and stands taller than the ruler, but on a grey stage with matte fleece and no rim light it is not at Palworld finish, and B's faint mid/end flips the creature upside down floating above its shadow."
+  },
+  "Vr": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fight is mostly the small creature alone on an even grass carpet seen from above, with the enemy only arriving at f13-f16 and the bodies holding idle through gold-ring hits; B adds a camera jump at f15, so neither reads at Palworld's combat finish."
+  },
+  "Qy": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing elderly villager with readable eyes and an olive/brown palette that suits the Meadows, but its smooth toon-film styling clashes with the naturalistic creature bar and it is shown on a black void with no world light."
+  },
+  "La": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Both fighters, the arena fence and the telegraph read clearly, but neither body flinches under the f01-f04 and f10-f11 hits, and the oversaturated orange-green grade with no sky or distance falls short of Palworld finish and Valheim atmosphere."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Author and drive hit-react, stagger and move-lean animation layers (body recoil, head snap, crouch, step-back) for every combat creature so hurt and moving frames leave the idle silhouette; this clears P2-016 across Jc, Nn, Vr and La.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix combat camera and effects: keep the camera out of trunks and canopy and keep both fighters framed (Qs B, Nn B), hold the angle without snaps, swap flat magenta and gold rings for physical effects (stones, sparks, white-violet lightning) with impact, and shrink and recolour the Qs HUD so it stops covering the action.",
+   "kind": "scene"
+  },
+  {
+   "change": "Lighting and terrain pass: give Stormwood its fixed purple storm sky, lightning rim light and blue-green moss value range; in the Meadows, tone down the yellow-orange grade, show sky and cool blue distance, and replace the smeared ground texture and even grass carpet with groves, clumps and clearings; take enemy banners down in every Wd aftermath.",
+   "kind": "scene"
+  }
+ ]
+}

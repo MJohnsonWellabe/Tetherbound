@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "On": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured badger is a strong naturalistic read, but the low camera buried in a yellow-green grass carpet, the tiny hedgehog and the opaque white smoke puffs keep it well short of Palworld finish and Valheim light."
+  },
+  "Bc": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder villager is warm and appealing with clear eyes and a palette that fits the key art, but he is shown only on a black void, so nothing proves he sits in the world's light at shipping finish."
+  },
+  "Qo": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Flat noon light, blurry stretched ground textures, lollipop trees and a muddy tunnel interior sink it; B's torn-down banners, freed cage and smoking collapsed tent are the only parts that read as authored aftermath."
+  },
+  "Uc": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A near top-down view over one dark mid-tone grass field, with camera cuts and a badger that keeps one pose, reads as a prototype rather than a lit, lived-in Palworld fight."
+  },
+  "Di": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The stronghold backdrop and readable cone telegraphs help, but the over-yellow grade, uniform grass carpet and creatures frozen in idle under hit bursts sink it."
+  },
+  "Lx": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A solid naturalistic boar mesh with good scale, let down by a hit react that matches the idle pose, a faint-mid that floats off its shadow and a faint-end that collapses into a black smear."
+  },
+  "Tf": {
+   "A": {
+    "bar_a": 3.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "For most frames the camera frames the small creature against empty dark grass with the opponent off screen, so the fight never reads as a spectacle and there is no sky, depth or light mood."
+  },
+  "Jx": {
+   "A": {
+    "bar_a": 2.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky brown-black frames with no purple storm sky or lightning, flat magenta telegraph shapes, a debug-heavy HUD and (in A) canopy blackouts are nowhere near the Stormwood board or Palworld."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Add real hit and move body reactions (flinch, recoil, lean, stagger) to every creature, a hit react pose distinct from idle, and grounded faint poses that keep contact with the shadow and do not collapse into a black mesh smear.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix the fight camera: a raised 3/4 framing that keeps both creatures and the trainer on screen, no hard cuts mid-exchange, collision that pulls in front of trunks and canopy rather than into them, and a lighter, less-cluttered HUD that does not cover the action.",
+   "kind": "scene"
+  },
+  {
+   "change": "Regrade the Meadows and Stormwood lighting: warm key with cool blue distance and visible sky in Meadows, a fixed purple storm sky with violet lightning and moss/copper highlights in Stormwood, break the uniform grass carpet into groves and clearings, and replace flat magenta telegraphs and opaque white smoke with grounded stone, dust and lightning effects.",
+   "kind": "scene"
+  }
+ ]
+}

@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Qs": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spider boss reads, but flat magenta ground rings, a muddy brown value range with no purple storm sky or lightning, an unreadable player creature and a dense debug-like HUD sink it, and B's camera inside foliage (i12-i16) makes it worse."
+  },
+  "Jc": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A close, warm Meadows camera and a naturalistic armoured badger carry it, but the struck small creature holds its idle pose under hits, and big flat gold hit-marker sprites with flat lighting keep it below Palworld finish."
+  },
+  "Nn": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A near-top-down camera over a uniform grass carpet with no sky or horizon sinks it; both creatures hold one silhouette, and in B the camera jumps and a dark blob covers f19-f24."
+  },
+  "Wd": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Each site's aftermath reads (cleared crates, freed cage, smoke, emblem stones), but blurry low-detail ground, a flat stone wall, sparse props and flat midday light read well below Palworld, and B leaves the oxblood banners standing after the win."
+  },
+  "Ch": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormcapra's fleece, horns and scale against the ruler are on the owner's bar, but the hit react barely differs from standing, and in B the faint poses float upside down above their shadow."
+  },
+  "Vr": {
+   "A": {
+    "bar_a": 4.7,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A top-down camera leaves tiny creatures on a uniform grass carpet with the enemy off-screen for most frames, so it reads as a debug view, not a Palworld-class fight."
+  },
+  "Qy": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing old villager with a warm, natural palette, but the smooth toy-like cartoon face is a step away from the naturalistic finish of the owner's style bar and Palworld's characters."
+  },
+  "La": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A good warm Meadows framing with the arena fence behind, but the badger's silhouette barely changes across 16 frames and flat gold hit-marker discs stand in for real impacts."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Author hit-react, stagger and attack-lean body animation for both fighters (the small player creature especially), and replace the flat gold hit-marker discs and flat magenta ground rings with real-object impacts (dust, stones, sparks, lightning).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Lock the trainer and wild-fight camera to a low three-quarter view that shows the horizon and both fighters (no top-down jumps), and add occluder fade or culling so trunks and foliage never fill the frame (Qs B i12-i16, Nn B, Vr).",
+   "kind": "scene"
+  },
+  {
+   "change": "Grade the fights to their chapter: a purple Stormwood storm sky, white-violet lightning and rim light on the Qs boss; break the Meadows grass carpet into groves and edges with warm key light, cool blue distance and readable value contrast behind the creatures.",
+   "kind": "scene"
+  }
+ ]
+}

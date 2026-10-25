@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "On": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Large armoured badger reads well, but the heavy yellow-olive grade, no sky or distance in the combat camera, and flat gold sunburst discs and lavender arcs put it well below Palworld's finish."
+  },
+  "Bc": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The appealing, well-shaded elder villager with readable eyes and an earthy palette is at shipping character finish; the neutral stage means light and atmosphere cannot be judged."
+  },
+  "Qo": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared, low-detail grass ground, sparse lollipop trees, flat noon light and empty horizons sink it, even though B's torn-down banners and smoke tell a real aftermath."
+  },
+  "Uc": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Close top-down grass framing with a yellow grade, no sky, and flat lavender arc/cone telegraphs that cover half the frame read as prototype, not Palworld-class combat."
+  },
+  "Di": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The creatures hold static poses under oversized gold hit discs and lavender cones, with a muddy yellow-green grade and no atmospheric depth."
+  },
+  "Lx": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured boar has a solid naturalistic silhouette and good scale, but dark, low-contrast plate materials with no rim light, and faint poses that collapse into a black blob, fall short of the owner's creature bar."
+  },
+  "Tf": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "For most frames the camera shows only grass and a small hamster while the opponent is off screen, so there is no world, sky or light to carry it."
+  },
+  "Jx": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky brown-black frames with no purple storm sky or lightning, debug panels covering a third of each frame, flat magenta outline telegraphs and an invisible player creature sink it."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Add real hit-react, stagger and locomotion lean animation (additive flinch/recoil layer) so the small player creature and the badger break their idle silhouette when struck or moving in every Meadows fight.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Replace the flat gold sunburst discs and screen-filling lavender arc/cone/outline telegraphs with grounded, creature-scaled VFX (dust, stone chips, sparks, ground scorch) and a ground-hugging tell sized under the creature; remove the debug panels from the Stormwood captures.",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-frame and re-grade the combat camera: pull it back and lower it so both fighters, the sky and blue distance are in shot, cut the yellow-olive cast for warm grass/cool distance, add rim light on creatures and fade occluding trunks and canopy in Stormwood under a fixed purple storm sky.",
+   "kind": "scene"
+  }
+ ]
+}

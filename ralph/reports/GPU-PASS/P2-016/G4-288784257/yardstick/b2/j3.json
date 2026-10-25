@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Qs": {
+   "A": {
+    "bar_a": 3.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A dark brown, single-mid-tone forest floor with flat magenta ground rings, a barely visible player creature, no purple storm sky or lightning, and (on B) the camera buried in trunks/foliage in i12-i15 sank it."
+  },
+  "Jc": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The warm Meadows grade and the readable armoured badger carried it, but stiff hit frames, dust or gold hit markers swallowing the small creature, and flat sunless light keep it short of Palworld finish."
+  },
+  "Nn": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A high camera over a uniform grass carpet with no sky, no depth and no body reactions sank it, and on B the camera loses the big creature for most of f18-f28."
+  },
+  "Wd": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Flat midday light, smeared low-res ground textures, a tiled placeholder stone wall and sparse props sank it, despite some site-specific aftermath (A's open cage, smoke column, removed banners)."
+  },
+  "Ch": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The naturalistic fleece-and-horn Stormcapra matches the owner style bar, but on B the faint poses float upside down above a detached shadow, and the neutral stage gives no Valheim-class light."
+  },
+  "Vr": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "For 12 of 16 frames only the small creature is on screen over a flat grass carpet, holding one pose under wedge telegraphs, and B adds jarring camera jumps at f12-f15."
+  },
+  "Qy": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "An appealing, well-built elder with an on-palette green-and-brown outfit, but the big-eyed cartoon face sits more Pixar than the key art's stylised realism, and it is shown on a black void with no world light."
+  },
+  "La": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The best-framed fight in the batch, with both creatures, the arena fence and a warm grade, but the gold hit markers cover the target and the reactions are faint, so it is not at Palworld finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Add authored hit-react, stagger and locomotion-lean animation (or a strong additive procedural layer) to every creature, so hurt and moving frames visibly break the idle silhouette, and keep faint poses grounded (Ch B floats).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fight camera and VFX pass: a collision-aware camera that frames both fighters and never enters trunks or foliage (Qs B, Nn B, Vr), smaller translucent hit markers that don't cover the target, and real lightning/stone telegraphs instead of flat magenta rings in Stormwood, under a purple storm sky with rim light on the creatures.",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows world finish: replace the smeared ground textures and uniform grass carpet with grove/edge/clearing composition, sun direction with real shadows, distance haze and a visible sky; in Wd after frames, remove the oxblood banners and leave clear site-specific aftermath.",
+   "kind": "scene"
+  }
+ ]
+}

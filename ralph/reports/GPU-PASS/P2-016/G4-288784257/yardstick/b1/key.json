@@ -1,0 +1,46 @@
+{
+ "On": {
+  "anchor": false,
+  "label": "G4 warden_aldis f17-32 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G4\\sides\\G4-warden_aldis-17-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G4\\sides\\G4-warden_aldis-17-ship-Medium.png"
+ },
+ "Bc": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Qo": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Uc": {
+  "anchor": false,
+  "label": "G4 south_bridge_grunt f17-32 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G4\\sides\\G4-south_bridge_grunt-17-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G4\\sides\\G4-south_bridge_grunt-17-ship-Medium.png"
+ },
+ "Di": {
+  "anchor": false,
+  "label": "G4 warden_aldis f1-16 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G4\\sides\\G4-warden_aldis-1-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G4\\sides\\G4-warden_aldis-1-cand-Medium.png"
+ },
+ "Lx": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ },
+ "Tf": {
+  "anchor": false,
+  "label": "G4 south_bridge_grunt f1-16 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G4\\sides\\G4-south_bridge_grunt-1-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G4\\sides\\G4-south_bridge_grunt-1-cand-Medium.png"
+ },
+ "Jx": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ }
+}

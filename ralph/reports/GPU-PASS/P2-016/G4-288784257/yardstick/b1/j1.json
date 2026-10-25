@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "On": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured badger and hamster are credible naturalistic creatures, but a flat olive-yellow grade, a low tight camera, puff-cloud hits with no body reaction and no sky or atmosphere fall well short of Palworld's punchy, well-lit fights."
+  },
+  "Bc": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder is appealing and his earthy palette fits the key art, but he is shown on a black void with flat studio light, so nothing here proves he matches the finish of a shipping game."
+  },
+  "Qo": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared low-detail ground textures, a blocky stone wall, a washed-out flat sky and weak shadows read as a placeholder renderer, nowhere near Palworld's dense, saturated world."
+  },
+  "Uc": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A top-down view of a uniform grass carpet with a muddy olive grade, mostly static bodies and abrupt camera cuts sinks it against Palworld's framing and Valheim's light."
+  },
+  "Di": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Readable creatures and a fort backdrop help, but the grade is one oversaturated yellow-green mid-tone with no sky, depth or atmosphere, and hits land on bodies that stay in their idle pose."
+  },
+  "Lx": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated boar's model sits near the owner's creature bar, but its dark, low-contrast materials, black faint frames and a hit pose identical to standing keep it below Palworld's finish."
+  },
+  "Tf": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The camera leaves the large enemy mostly off-screen and the scene is a flat grass carpet with an olive grade, so the fight does not read and looks nothing like a shipping action game."
+  },
+  "Jx": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Voltarach model matches its board, but a murky brown forest with no purple storm sky or lightning, flat magenta ground telegraphs, debug-dense HUD panels and (in A) trunks blacking out frames sink it."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Add real hit-react and locomotion body animation (flinch, recoil, lean, stagger) for the armoured badger and the hamster, and frame fights with a camera that keeps both fighters on screen at a readable size, without hard cuts.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Regrade Meadows: pull the olive-yellow saturation back to warm green with cool blue distance, show sky and horizon in combat framing, break the grass carpet into groves and clearings, and add rim light so creatures separate from the ground.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fights: add the fixed purple storm sky, white-violet lightning and fog depth, swap flat magenta telegraphs for physical lightning/impact effects, fade occluding trunks and canopy, and trim the HUD to the shipping panel set.",
+   "kind": "scene"
+  }
+ ]
+}
