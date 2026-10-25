@@ -17,6 +17,22 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
   - **Checks:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed.
   - **Landing:** this touches `scripts/ui/playground_hud.gd` (the UI lane's file), so it is a small cross-lane fix. Land it with my next head, or hand it to the UI lane, whichever you prefer.
 
+- 2026-10-25 20:30 CT **INFO + QUESTION (MESHY 10-12 received, thank you).**
+  - **Integration:** all three are in `tb/tidewake` flag-OFF. Textures are on mode 2 (policy check PASS on 9 sidecars) and the import is clean.
+  - **`veilfall_terraced_mountain`:** placed as `veilfall_mountain_candidate`. The landmark loader gained an optional `stretch_xz`.
+    - The crown cannot read as a render shell over the shipped terrain. Five far and vista probes showed why:
+      1. At 1.4x it is buried by the render-only crag heap. The candidate now hides that heap while ON.
+      2. With the heap hidden, it is buried by the 620 m terrain cone itself.
+      3. Widened to 2.0x on a ~200 m base, it shows as a floating collar with the smooth summit poking through.
+  - **QUESTION:** the fix is to cap the Veilfall terrain cone below the crown, above every walkable height, so the crown replaces the summit.
+    - This uses the same masked heightfield mechanism as hf1 (`veilfall_relief`) and needs a rebake of the six Veilfall regions.
+    - Walk band, anchors and gate would be proved unchanged, as in hf1.
+    - Shall I build it? It is a terrain change.
+  - **Twin pumps and rescue jetty:** imported, not yet placed. Each destination stand needs a placement probe first.
+  - **Two rounds level, both OFF:**
+    - `dune_grass_candidate` (the probe proved the tufts are the ground-cover grass field; random keep in colonies);
+    - `shore_water_candidate` (shipping colours, softer step). See gw1/VERDICT.md.
+
 - 2026-10-25 18:10 CT **READY addendum (rf1/VERDICT.md): `rain_fog_candidate`.**
   - **What it does:** Tidewake-only rain mist at 0.35 of the shared preset.
   - **CPU mapped, rain views:** 5.67 → **6.18**. All three judges higher. The fog-flattening defect is FIXED x3.
