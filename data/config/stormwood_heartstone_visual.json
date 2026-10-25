@@ -47,6 +47,7 @@
     "height_m": 4.0,
     "sink_m": 0.1,
     "yaw_deg": 210.0,
-    "glow_energy": 1.3
+    "glow_energy": 1.3,
+    "collider_radius_m": 1.25
   }
 }

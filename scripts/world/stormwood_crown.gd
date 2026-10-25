@@ -29,12 +29,15 @@ func mount(owner_world: Node3D) -> void:
 	var use_hero := bool(hero.get("enabled", false)) and ResourceLoader.exists(str(hero.get("model", "")))
 	# The hero stone is taller; its collider follows it on every shell.
 	var height := float(hero.get("height_m", 4.0)) if use_hero else float(_finish.get("height_m", 2.4))
+	# The hero is a slender standing stone: its body is narrower than half its
+	# height, so the prompt stays at the old reach on its south face.
+	var body_r := float(hero.get("collider_radius_m", height * 0.5)) if use_hero else height * 0.5
 	var solid := StaticBody3D.new()
 	var collision := CollisionShape3D.new()
 	var sphere := SphereShape3D.new()
-	sphere.radius = height * 0.5
+	sphere.radius = body_r
 	collision.shape = sphere
-	collision.position.y = height * 0.5
+	collision.position.y = body_r
 	solid.add_child(collision)
 	add_child(solid)
 	_satellites(height, bool(world.get("simulation_only")))
@@ -58,6 +61,7 @@ func mount(owner_world: Node3D) -> void:
 		if bool(_finish.get("veins", true)):
 			_finish_stone(stone)
 		_crown_crystal(height)
+	if not bool(world.get("simulation_only")):
 		var light := OmniLight3D.new()
 		_stone_light = light
 		light.position.y = 2
@@ -67,7 +71,7 @@ func mount(owner_world: Node3D) -> void:
 		add_child(light)
 		prompt = INTERACTABLE.new()
 		prompt.name = "HeartstoneInteractable"
-		prompt.position = Vector3(0, 0.8, -(height * 0.5 + 0.8))
+		prompt.position = Vector3(0, 0.8, -(body_r + 0.8))
 		add_child(prompt)
 		prompt.activated.connect(_touch)
 	restore_progression_from_game(game)
