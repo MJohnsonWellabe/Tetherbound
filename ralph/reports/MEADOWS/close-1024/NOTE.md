@@ -161,6 +161,12 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   3. Sculpted stratified cliff faces for band2_stone_and_root_1, replacing the flat facets and dark slash shapes (P2-014). Ref: `docs/reference/boards-2026-09-06/cloudreach-cliffs-creature-roster-board.png` (stratified stone), with the key art's Meadows grey-stone palette. Two modular pieces, about 30 m wide x 15 m tall x 10 m deep, plus a 12 m corner piece. Prompt: "modular grassy hillside cliff face, layered grey sedimentary rock strata with rounded weathered edges, grass and moss spilling over the top lip, small ledges and boulders at the foot, stylised realism, game asset".
   - Also outstanding: the stronghold hero gatehouse (posted 22:30 UTC above).
 
+- 2026-10-25 02:00 UTC READY tb/meadows-land6 3e06c8ddf (from origin/main): F04#6 r31 Meshy aftermath heroes as an OFF candidate.
+  - Contents: the three GLBs with textures, provenance and references (main had none of them), `trainer_aftermath.json meshy_heroes` with `meshy_heroes_enabled: false`, the `trainer_aftermath.gd` overlay, and the test.
+  - Test: `--only=trainer_aftermath`, 18 tests, 158 assertions, 0 failed.
+  - CPU: r31 6.23 vs 5.86.
+  - GPU: judge with `meshy_heroes_enabled` on as the candidate side; the command is in the line below.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
