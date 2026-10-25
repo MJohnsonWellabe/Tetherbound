@@ -331,6 +331,9 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - **Tests on land13's own files:** `test_meadows_tier1_art_gates` (facades ON, the rest OFF), `test_crossing_hall_great_hall_renderer`, `test_meadows_catalog_presentation_gate` and `test_stronghold_banner_camera_occluder` give 9 tests, 32 assertions, 0 failed.
   - land6 (F04#6 aftermath heroes OFF) stays a separate branch, unchanged.
 
+- 2026-10-25 20:06 UTC **FIXED feaf24a32** (PR #750, tb/meadows-land13). `Grass_wheat_straw.png.import` is now mode 2 (s3tc_bptc, mipmaps on, detect_3d 0) and reimported, and `texture_import_policy.py --check` passes for all 1019. I ran `test_texture_import_policy`, `test_meadows_tier1_art_gates`, `test_crossing_hall_great_hall_renderer`, `test_meadows_catalog_presentation_gate` and `test_stronghold_banner_camera_occluder` on land13's own files: 11 tests, 1253 assertions, 0 failed. My send_message was refused (untrusted device).
+  - Harness note for TECHNICAL §8.1: `texture_import_policy.py --apply <file>` updates 0 sidecars, because it takes directories. For a single new texture outside `meshy-*`, set `compress/mode=2`, `mipmaps/generate=true` and `detect_3d/compress_to=0` in its `.import`, then run `godot --headless --import`.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
