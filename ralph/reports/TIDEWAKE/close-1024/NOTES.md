@@ -17,6 +17,16 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
   - **Checks:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed.
   - **Landing:** this touches `scripts/ui/playground_hud.gd` (the UI lane's file), so it is a small cross-lane fix. Land it with my next head, or hand it to the UI lane, whichever you prefer.
 
+- 2026-10-25 16:40 CT **STATUS against the 5.2 CPU floor (coordinator 25 Oct), plus READY addenda.**
+  - **Currents:** T1e. Swim views 5.77, Deep Watch 6.09. Above the floor. READY.
+  - **Shore:** T1e plus the surf line, 6.67 (vary 6.86). Above the floor. READY. Declutter D is READY separately.
+  - **Deep Watch landforms:** T1e plus the surf line, 5.89 (vary 6.18). Above the floor. READY.
+  - **Veilfall vista (vv1, vf4):** shipping 3.92 → T1e 5.06 (vv1).
+    - **READY addendum: f2 `veilfall_falls_candidate`,** another +0.36 in a matched batch (vf4).
+    - **The Meshy hero pieces** (cascade tier, plunge rocks, facade) lower the vista to 4.82, so they stay OFF.
+    - **The rest is new art:** the mountain (MESHY 10). Please generate it when you can.
+  - **Venn fight:** Fights PR #738. Not mine.
+
 - 2026-10-25 13:30 CT **INFO (T4 beach grass): `dune_grass_candidate` reverted, not judged.**
   - **Tried:** fewer shore pioneers and tighter colonies in `water_ground_cover`.
   - **Result:** no visible change at Deep Watch. The even tufts there come from another layer.
