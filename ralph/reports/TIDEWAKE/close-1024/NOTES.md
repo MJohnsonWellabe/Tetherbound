@@ -5,7 +5,7 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 ## Handoff (state, 25 Oct 2026 13:30 UTC; lane PAUSED by owner usage cut)
 
 ### Branch heads
-- **`tb/tidewake`** at `aa35d0d45` (pushed). It carries 153 commits not on main. **Nothing from close-1024 has landed.** Main's `tidewake_look.json` has none of the sections listed below. All close-1024 work sits here, every candidate OFF in play (listed in `sections_off`).
+- **`tb/tidewake`** at the commit that carries this handoff (last code commit `e02065d74`, swim_stroke_candidate). It carries 153 commits not on main. **Nothing from close-1024 has landed.** Main's `tidewake_look.json` has none of the sections listed below. All close-1024 work sits here, every candidate OFF in play (listed in `sections_off`).
 - **`tb/tidewake-land`** at `a6bbba553`. This is already merged into main: the fight-HUD prompt-yield fix only.
 - **Main** at `1d5faebac` when checked.
 
