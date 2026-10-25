@@ -418,6 +418,8 @@
         "_comment_rest_roll": "BACKLOG-VISUAL-BED-ROSTER-FIT (2026-09-01). FOLLOWUP-2026-09-01.md flagged this species with the same DEFAULT_REST_ROLL_DEG back-flip as terrapup (idle paws lifted off centreline, so a 90-degree roll swings them into the air instead of settling). -45 degrees, the same angle that fixed terrapup, produces a genuine lying-on-side pose here too -- verified by render (`ralph/reports/audit/bed-roster-fit/shots/`), not assumed to generalize just because the root cause matches.",
         "rest_roll_deg": -45.0,
         "_comment_model_nat1024": "F36#0 owner style direction 22 Oct: naturalistic remake (coordinator Meshy, candidate_nat1024; measured quadruped rig, own clips; provenance candidate_nat1024/source/meshy_provenance.jsonl, drafted concept reference/nat1024-concept.png). close-1024 b6: mapped 7.49 vs live 6.50 (CPU three-judge yardstick, confirming batch; CPU-provisional).",
+        "_comment_field_rim_1025": "Close-1024 tier 3 (GPU F36 roster R2): a pale coyote on pale ground lost its outline. The same 0.25 silhouette rim Terrapup, Galecrest, Voltarach and Tanglevolt carry.",
+        "field_rim": 0.25,
         "model": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024.glb",
         "colourway_source_species": "trailpup_nat1024",
         "model_scale": 1.0,
