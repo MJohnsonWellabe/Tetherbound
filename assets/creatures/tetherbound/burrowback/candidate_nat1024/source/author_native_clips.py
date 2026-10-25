@@ -103,15 +103,16 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
     rotate('front_upper_'+side,-30*pulse);rotate('front_lower_'+side,25*pulse)
    rotate('head',-10*pulse);rotate('spine',-4*pulse)
   if role=='hit':
-   # F36#1 roster r1 judges: the rear-back shove read as a leap or a lunge. A
-   # recoil instead: the head snaps up and away, the chest pulls back and leans
-   # aside, the feet stay planted (the grounding below keeps them on the floor).
+   # F36#1 roster r1 judges: the rear-back shove read as a leap or a lunge.
    e=min(1,t/.12);e=e*e*(3-2*e)
    r=max(0,min(1,(t-.5)/.47));e*=1-r*r*(3-2*r)
-   # P2-016 (GPU, 24 Oct): at fight distance this recoil (4 deg pitch, 9 deg lean)
-   # read as idle under hits. Roughly double it, feet still planted.
-   turn('root',[(REAR*9*e,(1,0,0)),(16*e,(0,1,0))]);rotate('spine',REAR*11*e)
-   rotate('neck',NOD*26*e);turn('head',[(NOD*12*e,(1,0,0)),(30*e,(0,0,1))])
+   # P2-016 (GPU, 25 Oct): in real trainer fights any rear-back, even this
+   # recoil, read as the creature attacking. Cower instead: the head ducks low
+   # and aside, the body rolls away from the blow and the tail tucks. No root
+   # pitch or bent knee: either lifts a foot off the floor in this rig.
+   turn('root',[(12*e,(0,1,0))]);turn('spine',[(-8*e,(0,0,1))])
+   turn('neck',[(-NOD*30*e,(1,0,0)),(-14*e,(0,0,1))]);turn('head',[(-NOD*14*e,(1,0,0)),(14*e,(0,1,0))])
+   rotate('tail_1',-25*e)
   if role=='faint':
    # Close-1024: the side roll (back to camera), grounded on the body (see low()).
    phase=phase_of(t)
