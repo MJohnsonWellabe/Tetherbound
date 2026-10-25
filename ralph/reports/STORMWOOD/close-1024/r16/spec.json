@@ -1,0 +1,59 @@
+[
+ {
+  "label": "WO6 pools",
+  "a": "<scratch>/sides/r16_pools.png",
+  "b": "<scratch>/sides/base_pools.png",
+  "brief": "Stormwood glowmoss hollow beside a forest camp, two fixed exploration views (top and bottom) in the calm storm phase, with the 1.80 m trainer and a companion as rulers. Judge whether the place reads as a named destination (a pool hollow with lanterns) in the key art's storm forest.",
+  "defects": [
+   "no pools read; one repeated ground carpet",
+   "billboard fog puffs instead of depth fog",
+   "no landmark framed in the heading"
+  ]
+ },
+ {
+  "label": "WO6 heartstone",
+  "a": "<scratch>/sides/r16_heartstone.png",
+  "b": "<scratch>/sides/base_heartstone.png",
+  "brief": "Stormwood crown hollow around a sacred heartstone, two fixed exploration views (top and bottom) in the calm storm phase, with the 1.80 m trainer as a ruler. Judge whether the heartstone reads as the landmark of the place and the hollow reads as the key art's storm forest.",
+  "defects": [
+   "the heartstone is not framed or has no presence",
+   "flat grey horizon",
+   "wild creatures crowd the survey view"
+  ]
+ },
+ {
+  "label": "WO6 stormheart",
+  "a": "<scratch>/sides/r16_stormheart.png",
+  "b": "<scratch>/sides/base_stormheart.png",
+  "brief": "Inside the hollow base of the giant Stormheart tree, two fixed exploration views (top and bottom) in the calm storm phase, timber decks spiralling up the trunk walls, with the 1.80 m trainer as a ruler.",
+  "defects": [
+   "smooth bare trunk walls",
+   "decks read as plain bands with no structure or supports",
+   "dark monochrome interior"
+  ]
+ },
+ {
+  "label": "WO6 ashfoot",
+  "a": "<scratch>/sides/r16_ashfoot.png",
+  "b": "<scratch>/sides/base_ashfoot.png",
+  "brief": "Inside a ranger shelter in the Stormwood settlement, one fixed view, with the 1.80 m trainer as a ruler. Judge whether the room reads as a lived-in shelter that belongs to the key art's world.",
+  "defects": [
+   "bare plaster box",
+   "blown-out window",
+   "terrain or grass showing through the floor"
+  ]
+ },
+ {
+  "label": "F10#2 fights",
+  "a": "<scratch>/sides/north_fight_glass_field_alpha.png",
+  "b": "<scratch>/sides/north_fight_capacitor_alpha.png",
+  "brief": "Two named Stormwood wild fights, one per side (each side is a different fight in a different place, not two versions of one): six moments each including wind-ups and impacts, gameplay camera with HUD. Judge each fight on its own - do both fighters, the telegraphs and the impacts read, and does it look like an event that belongs to the world?",
+  "defects": [
+   "dark monochrome arena",
+   "painted outline telegraph",
+   "no hit effect at impact",
+   "camera inside canopy or trunk",
+   "HUD covers the trainer or telegraph"
+  ]
+ }
+]
