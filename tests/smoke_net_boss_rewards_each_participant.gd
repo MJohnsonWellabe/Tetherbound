@@ -191,7 +191,12 @@ func _run() -> void:
 		+ "so any defeat flag it ends up holding can only have come from the host")
 
 	# --- and peer 0 fights Bryn's team down ------------------------------------
-	var won: Dictionary = await step(0, "win_trainer_battle", {"self_hp_topups": false, "stage_when_ready": true}, 6000)
+	# The arm's own frame budget is args.budget_frames (default 2400, less a
+	# 240-frame margin), not this step budget. It covers the fight AND both
+	# participants' durable round settlement (owner-passive checkpoint, ACK,
+	# rebase; ~3-4 s per round). A slow CI fight (37 swings, last faint at
+	# frame ~2070 of 2160) ran out mid-settlement: run 40138183076.
+	var won: Dictionary = await step(0, "win_trainer_battle", {"budget_frames": 6000, "self_hp_topups": false, "stage_when_ready": true}, 6400)
 	check(str(won.get("verdict", "")) == "PASS",
 		"peer 0 beat Bryn's whole team (%s)" % str(won.get("detail", "")))
 	if str(won.get("verdict", "")) != "PASS":

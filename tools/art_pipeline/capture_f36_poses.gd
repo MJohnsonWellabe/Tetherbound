@@ -154,6 +154,17 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 		if _context and role == "ride" and _mount_offset(id) == null:
 			receipt.append({"role": role, "status": "not_rideable"})
 			continue
+		# GPU F36#0 judges (24 Oct) read a land species' swim row as walking on the
+		# stage's water slab; only water forms and swim mounts ever swim in play.
+		if _context and role == "swim" and not _swims(id):
+			receipt.append({"role": role, "status": "not_a_swimmer"})
+			continue
+		# GPU A+C (24 Oct): a land species' carried row hung it in mid-air over a
+		# detached shadow. Only a fly carrier (fly_traversal can_carry) takes the
+		# fly_grip pose in play; everyone else is shown on the ground or not at all.
+		if _context and role == "fly_grip" and not _carries(id):
+			receipt.append({"role": role, "status": "not_a_carrier"})
+			continue
 		var clip := "f36_candidate/%s" % role if candidate else str(map.get(role, ""))
 		if not _scale_only and (clip.is_empty() or not player.has_animation(clip)):
 			receipt.append({"role": role, "status": "missing_baseline_clip"})
@@ -209,6 +220,10 @@ func _stage_role(role: String, body: Node3D, height: float, resting: AABB) -> Di
 			# flight row is shot with the body turned to a three-quarter view.
 			body.rotation.y += deg_to_rad(FLY_VIEW_TURN_DEG)
 		"swim":
+			# GPU A+C (24 Oct): the glossy slab ended in a blown white specular edge
+			# and stood the ruler in the water. A rough, nearly specular-free
+			# surface over the whole stage instead, and the ruler stands on the
+			# waterline beside the swimmer, out of the water.
 			if _water == null:
 				_water = MeshInstance3D.new()
 				var plane := PlaneMesh.new()
@@ -216,12 +231,15 @@ func _stage_role(role: String, body: Node3D, height: float, resting: AABB) -> Di
 				_water.mesh = plane
 				var material := StandardMaterial3D.new()
 				material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-				material.albedo_color = Color(0.16, 0.42, 0.55, 0.62)
-				material.roughness = 0.15
+				material.albedo_color = Color(0.14, 0.38, 0.5, 0.8)
+				material.roughness = 0.7
+				material.metallic_specular = 0.1
 				_water.material_override = material
 				_world.add_child(_water)
 			_water.visible = true
-			_water.global_position = Vector3(body.global_position.x, body.global_position.y + height * 0.38, body.global_position.z)
+			var waterline := body.global_position.y + height * 0.38
+			_water.global_position = Vector3(body.global_position.x, waterline, body.global_position.z)
+			_trainer.global_position = Vector3(_trainer.global_position.x, waterline, _trainer.global_position.z)
 		"ride":
 			var offset: Variant = _mount_offset(str(body.get("species_id")))
 			# A fresh rider per species: a rider reused after set_riding(false)
@@ -234,6 +252,19 @@ func _stage_role(role: String, body: Node3D, height: float, resting: AABB) -> Di
 				body.global_transform * (offset as Vector3))
 			_trainer.visible = false
 	return staged
+
+
+func _swims(id: String) -> bool:
+	if id.begins_with("water_"):
+		return true
+	var mount: Variant = SPECIES.definition(id).get("swim_mount", null)
+	return mount is Dictionary and bool((mount as Dictionary).get("compatible", false))
+
+
+func _carries(id: String) -> bool:
+	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/fly_traversal.json"))
+	var row: Variant = (data as Dictionary).get("capabilities", {}).get(id, null) if data is Dictionary else null
+	return row is Dictionary and bool((row as Dictionary).get("can_carry", false))
 
 
 func _mount_offset(id: String) -> Variant:
