@@ -1,0 +1,16 @@
+[
+ {
+  "label": "Grandpa eyes Medium cand|ctl",
+  "a": "D:\\tb-gpu-runs\\yard\\gpeyes\\sides\\gpeyes-cand-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\gpeyes\\sides\\gpeyes-ctl-Medium.png",
+  "brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+  "defects": []
+ },
+ {
+  "label": "Grandpa eyes High cand|ctl",
+  "a": "D:\\tb-gpu-runs\\yard\\gpeyes\\sides\\gpeyes-cand-High.png",
+  "b": "D:\\tb-gpu-runs\\yard\\gpeyes\\sides\\gpeyes-ctl-High.png",
+  "brief": "One named villager or enemy-faction member: two face close-ups and a full-body view. Judge the character as the game's real look - identity, face and eyes, silhouette, palette, appeal and fit with the key art's world.",
+  "defects": []
+ }
+]

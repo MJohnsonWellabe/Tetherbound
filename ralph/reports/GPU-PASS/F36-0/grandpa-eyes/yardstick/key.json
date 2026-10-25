@@ -1,0 +1,34 @@
+{
+ "Vt": {
+  "anchor": false,
+  "label": "Grandpa eyes Medium cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\gpeyes\\sides\\gpeyes-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\gpeyes\\sides\\gpeyes-ctl-Medium.png"
+ },
+ "Eo": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Lf": {
+  "anchor": false,
+  "label": "Grandpa eyes High cand|ctl",
+  "A": "D:\\tb-gpu-runs\\yard\\gpeyes\\sides\\gpeyes-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\gpeyes\\sides\\gpeyes-ctl-High.png"
+ },
+ "Kg": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Bs": {
+  "anchor": true,
+  "A": "f36_0_gap:C4B",
+  "B": "f36_0_gap:C4A"
+ },
+ "Gc": {
+  "anchor": true,
+  "A": "f36_0_npc:C9A",
+  "B": "f36_0_npc:C9B"
+ }
+}
