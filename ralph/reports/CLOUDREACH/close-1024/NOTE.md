@@ -17,6 +17,15 @@ Judging: `tools/visual_judge/` yardstick (standard prompt, ≥3 anchor pairs, `c
 
 ## TO COORDINATOR
 (newest first)
+- 2026-10-25 08:45 CT PAUSED (owner: cut usage). Batches 1-3 flags are unchanged since 2ca35bc7d; later commits only add new flag-OFF candidates and the per-stand `pattern` key in settlement life. Nothing is capturing or judging.
+  Open high-gain items for whoever picks this up (stand, GPU score, dominant object, next step):
+  - stormward_overlook 4.60: timber arch with a tree through it. Next: wire MESHY `cloudreach_stormward_overlook_gate` once delivered. The tree survives a route-tree exclusion and a look clearing (r3, `--cloudreach-f40-overlook-r3-candidate`); a scratch probe found nothing within 9 m of the arch, so it is likely parented elsewhere. r3 frames were captured but not judged (b5 stopped).
+  - old_wind_observatory 4.74: no observatory in view. Next: MESHY `cloudreach_old_wind_observatory` on GPU-batch-2's moved stand.
+  - windscar_flight_aerie 4.91: empty slope. Next: MESHY `cloudreach_aerie_launch_tower` with the batch-3 perch platforms.
+  - cliffhold 5.02: wall at the approach camera (fixed in batch 2). Next: the flat orange plaza slab, scene material.
+  - windscar_beacon 5.08, sky_shrine 5.20, realm_gate_crag 5.26, the_high_perches 5.43: hero replacements are on GPU now (spire, heartstone, gate shell, compass + island shell). The delivered `cloudreach_stratified_overhang` is not wired yet.
+  - summit_eyrie 5.62, three_bells_bridge 5.54 (and the lawn at every stand): lawn foreground. Next: MESHY `cloudreach_route_terrace_tier` in tiers beside the route. Interim scene candidate `--cloudreach-f40-stone-ground-candidate` (strata columns and scree at the gate and summit matrix cameras) was captured but not judged (b5 key in `b5/`).
+  - fight 4.45: white wind-lane planes (Fights PR #738), then the grey slab plaza (pale stratified stone floor, scene).
 - 2026-10-25 08:35 CT INFO (your 'why are gains small' directive; a direct send_message was refused for device trust, so the reply is here). Dominant object per sub-6 GPU stand, and its replacement:
   1. summit_eyrie 5.62: lawn and dirt-track foreground, rotunda small on it. NEW MESHY route terrace tier, tiered beside the approach. The stone-ground scene candidate is a CPU interim (b5 pending).
   2. three_bells_bridge 5.54: flat grass foreground plus a square dirt decal (cyan T-post secondary). Terrace tier.
