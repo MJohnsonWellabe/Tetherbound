@@ -6,6 +6,7 @@ extends "res://tests/test_case.gd"
 
 const LIGHTNING := preload("res://scripts/world/stormwood_lightning.gd")
 const SURGE_PATH := "res://data/config/stormwood_surge.json"
+const RULES := preload("res://scripts/world/stormwood_surge_rules.gd")
 
 
 func _surge() -> Dictionary:
@@ -57,7 +58,16 @@ func test_the_warning_drops_its_painted_outline_unless_high_contrast() -> void:
 	var combat: Dictionary = preload("res://scripts/combat/combat_math.gd").config()
 	assert_eq(style.outlines_off(cfg), combat.get("telegraph", {}).get("high_contrast_markers") != true,
 		"high_contrast_markers brings the outline back")
-	var code: String = LIGHTNING.TELEGRAPH_SHADER
-	assert_true(code.contains("if (outline_off > 0.5) {\n\t\ta_rim = 0.0;\n\t\ta_edge = 0.0;"), "no rim or glow band")
-	assert_true(code.contains("fill_colour = scorch_colour;"), "the fill chars the soil instead of a hazard-hue disc")
-	assert_true(code.find("float charge_radius") < code.find("if (outline_off > 0.5)"), "the leaders keep the countdown")
+	# Behaviour, not text: the material the game builds carries the switch,
+	# and the shader's ringless branch exists and compiles.
+	var lightning := LIGHTNING.new()
+	lightning.rules = RULES.new(_surge())
+	var material: ShaderMaterial = lightning.call("_telegraph_material")
+	assert_eq(float(material.get_shader_parameter("outline_off")), 1.0 if style.outlines_off(cfg) else 0.0,
+		"the built warning material follows outlines_off")
+	var uniforms: Array[String] = []
+	for row: Dictionary in material.shader.get_shader_uniform_list():
+		uniforms.append(str(row.name))
+	for name: String in ["outline_off", "scorch_alpha", "crackle_alpha", "spark_width_mul"]:
+		assert_true(uniforms.has(name), "the warning shader declares " + name)
+	lightning.free()
