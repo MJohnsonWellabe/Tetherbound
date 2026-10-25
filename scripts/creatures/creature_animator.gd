@@ -123,8 +123,10 @@ func tick(delta: float, speed: float, top_speed: float) -> void:
 		_play(WALK, true)
 
 
-## Play a one-shot and hold locomotion off until it finishes.
-func play_once(role: String) -> void:
+## Play a one-shot and hold locomotion off until it finishes. A combat hit
+## also holds its wince (`HIT_WINCE_HOLD_S`); `hold_hit_wince` false plays the
+## hit clip straight through, for presentation that is not a combat hit.
+func play_once(role: String, hold_hit_wince: bool = true) -> void:
 	if _player == null or _finished:
 		return
 	if role == HIT and _stagger_left > 0.0:
@@ -142,7 +144,7 @@ func play_once(role: String) -> void:
 		_telegraph_attack_clip = ""
 		_telegraph_contact_position = 0.0
 		return
-	if role == HIT and hold_wince(HIT_WINCE_HOLD_S):
+	if role == HIT and hold_hit_wince and hold_wince(HIT_WINCE_HOLD_S):
 		# Damage can freeze animation immediately, then locomotion cancels the
 		# hold on the first resumed tick. Show the authored wince now and keep
 		# it long enough to read; the clip then plays out its release.
@@ -277,7 +279,10 @@ func play_if_exists(role: String) -> bool:
 		return false
 	if _resolve(role) == "":
 		return false
-	play_once(role)
+	# Companion Presence's out-of-combat reactions (a hurt flinch, a nod) are
+	# not combat hits: freezing the clip at its wince for the P2-016 hold would
+	# stop the idle and override Presence's own playback speed.
+	play_once(role, false)
 	return true
 
 
