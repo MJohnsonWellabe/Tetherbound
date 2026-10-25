@@ -1,6 +1,17 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-25 05:55 CT READY tb/fights-land a55b0fa4b (origin/main 1c64efc1a + tb/fights fd121b1e5): your review follow-up on 3e028626f.
+  1. **Bug fixed.** `_on_hit_effectiveness` clears `_effect_banner_mine`, so a type verdict after the player's own stagger goes back under the enemy plate. New tests/test_effect_banner_owner.gd: fails without the fix, passes with it.
+  2. **Duplicate keys.** The duplicated dust keys in `telegraph.soft_style` are removed; my second overlay run while assembling the ON config left them. One copy remains, same values.
+  3. **Scope notes.** Added `_scope_dust_fill` (dust_fill_rows, dust_fill_reveal, dust_max), `_scope_dust_pulse` (dust_pulse, dust_pulse_hz, dust_pulse_hz_end) and `_scope_compact_rows_fixed`. All are client-local presentation.
+  4. **Stale comments.** They now say ON: combat_hud.gd (stagger_by_owner), tether_command_meter.gd (compact_rows_fixed), combat_manager.gd (pilot floor, flash_drop), tell_style.gd (fill rows), combat_system_overlay.gd (panel_scale).
+  5. **Perf.**
+     - telegraph_glow fill rows now take heights between the already-sampled rim and one centre sample: one extra ground query per redraw instead of 2 x SEGMENTS.
+     - lunge_lane's heights are cached per aim (`_heights`, cleared only on re-aim), so no change there.
+     - Known: lunge_lane and telegraph_glow still build small per-frame line arrays for the dust (tens of points). Left as is.
+  - Defaults and looks are unchanged from 3e028626f except the glow fill-row heights, which are now interpolated.
+  - Checks on fd121b1e5: 163 tests, 9369 assertions, 0 failed (effect_banner_owner, telegraph_glow, enemy_pattern_telegraph, lunge_lane, charger_lunge, tell_aura_overlap, combat_hud_handheld_floors, hud_presentation_lifecycle, hud_widgets, combat_stagger, hit_feedback, combat_system_overlay_layout, f24_host_commands, stormwood_b_named_lunge_lanes/cues, shared_opponent_cue_shape, creature_attack_telegraph_animation).
 - 2026-10-25 05:20 CT READY tb/fights-land 3e028626f (origin/main 1c64efc1a + tb/fights; clean merge, no file overlap with main's changes): **your four r6 asks and the three GPU G3 items, ON, plus the pilot ghost fix.**
   - **Pilot ghost fix** (ef4591a18; code, always on):
     - P2-062's follower fade (`follow_candidate`, ON since 22 Oct) dithered the follower at 0.85 while it covered the trainer from the camera. The follower *is* the fight's pilot, and the trainer stands behind it, so the pilot was a ghost for whole fights. That was the "Ripplet translucent" ask; in the Warden hall the pilot was effectively invisible.
