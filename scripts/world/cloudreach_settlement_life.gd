@@ -38,6 +38,7 @@ const PROPS := {
 	"fence": "res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Extension2.gltf",
 	"strata_outcrop": "res://assets/props/meshy-1020/cloudreach_strata_spire_cluster/cloudreach_strata_spire_cluster.glb",
 	"cliff_shelf": "res://assets/props/meshy-1020/cloudreach_cliff_shelf_edge/cloudreach_cliff_shelf_edge.glb",
+	"strata_ledge": "res://assets/props/meshy-1024/cloudreach_stratified_overhang/cloudreach_stratified_overhang.glb",
 }
 const MESHY := "res://assets/props/meshy-1020/cloudreach_%s/cloudreach_%s.glb"
 static var _items_loaded := false
@@ -304,7 +305,9 @@ func _dress_sites(world: Node3D, spec: Dictionary, timber: Material) -> void:
 			var to := Vector3(float(stand.to[0]), 0.0, float(stand.to[1]))
 			var forward := (to - from).normalized()
 			var side := Vector3.UP.cross(forward).normalized()
-			for item: Dictionary in spec.get("stand_pattern", []):
+			# A stand may carry its own layout (a candidate's ground structure
+			# for one camera) instead of the shared pattern.
+			for item: Dictionary in stand.get("pattern", spec.get("stand_pattern", [])):
 				var only: Array = item.get("only_stands", [])
 				if not only.is_empty() and not only.has(str(stand.get("id", ""))):
 					continue

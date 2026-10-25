@@ -753,6 +753,264 @@
           "dry_grass_tint": "#aca985"
         }
       }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-stone-ground-candidate",
+      "_why": "Judges' shared ask in b2-b4 (sage-grass retint parked at +0.1 after three rounds): break the lawn carpet near the camera with pale stratified stone shelves and scree. r1: the delivered Meshy stratified ledge sunk flush as low shelves either side of the path, plus scree and two outcrops, at the matrix Realm Gate (stand 0) and Summit Eyrie (stand 10) cameras. CPU pre-judge pending.",
+      "overlay": {
+        "settlements": {
+          "RealmGateCrag": {
+            "stands": [
+              {
+                "id": "gate_landmark_approach",
+                "from": [
+                  -8.2,
+                  -22.6
+                ],
+                "to": [
+                  -1.4,
+                  -3.8
+                ]
+              },
+              {
+                "id": "gate_road_approach",
+                "from": [
+                  -9.4,
+                  -103.4
+                ],
+                "to": [
+                  -13.2,
+                  -83.8
+                ],
+                "y": -43.2
+              },
+              {
+                "id": "gate_road_close",
+                "from": [
+                  -14.5,
+                  -76.9
+                ],
+                "to": [
+                  -18.4,
+                  -57.3
+                ],
+                "y": -40.9
+              },
+              {
+                "id": "f40_gate_road",
+                "from": [
+                  -15.5,
+                  -72.0
+                ],
+                "to": [
+                  -19.32,
+                  -52.37
+                ],
+                "y": -40.5,
+                "pattern": [
+                  {
+                    "asset": "strata_ledge",
+                    "along_m": 1.5,
+                    "lateral_m": 4.6,
+                    "height": 6.0,
+                    "yaw": 90,
+                    "rise_m": -5.3
+                  },
+                  {
+                    "asset": "strata_ledge",
+                    "along_m": 5.0,
+                    "lateral_m": -4.8,
+                    "height": 6.5,
+                    "yaw": -90,
+                    "rise_m": -5.8
+                  },
+                  {
+                    "asset": "strata_ledge",
+                    "along_m": 10.0,
+                    "lateral_m": 6.8,
+                    "height": 8.0,
+                    "yaw": 120,
+                    "rise_m": -6.8
+                  },
+                  {
+                    "asset": "strata_ledge",
+                    "along_m": 13.0,
+                    "lateral_m": -7.5,
+                    "height": 7.0,
+                    "yaw": -60,
+                    "rise_m": -5.9
+                  },
+                  {
+                    "asset": "cliff_shelf",
+                    "along_m": -1.5,
+                    "lateral_m": -4.2,
+                    "height": 3.0,
+                    "yaw": 20,
+                    "rise_m": -2.4
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 0.5,
+                    "lateral_m": 2.4,
+                    "height": 0.45,
+                    "yaw": 30
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 3.0,
+                    "lateral_m": -2.6,
+                    "height": 0.4,
+                    "yaw": -70
+                  },
+                  {
+                    "asset": "rock_mid",
+                    "along_m": 3.6,
+                    "lateral_m": 3.0,
+                    "height": 0.35,
+                    "yaw": 110
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 7.0,
+                    "lateral_m": 3.2,
+                    "height": 0.5,
+                    "yaw": 200
+                  },
+                  {
+                    "asset": "rock_mid",
+                    "along_m": 7.8,
+                    "lateral_m": -3.1,
+                    "height": 0.45,
+                    "yaw": 15
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 8.0,
+                    "lateral_m": -11.0,
+                    "height": 3.0,
+                    "yaw": -35
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 6.0,
+                    "lateral_m": 10.5,
+                    "height": 2.6,
+                    "yaw": 35
+                  }
+                ]
+              }
+            ]
+          },
+          "SummitEyrieStronghold": {
+            "stands": [
+              {
+                "id": "f40_summit_overlook",
+                "from": [
+                  111.3,
+                  45.05
+                ],
+                "to": [
+                  92.76,
+                  37.54
+                ],
+                "y": 0.0,
+                "pattern": [
+                  {
+                    "asset": "strata_ledge",
+                    "along_m": 1.5,
+                    "lateral_m": 4.6,
+                    "height": 6.0,
+                    "yaw": 90,
+                    "rise_m": -5.3
+                  },
+                  {
+                    "asset": "strata_ledge",
+                    "along_m": 5.0,
+                    "lateral_m": -4.8,
+                    "height": 6.5,
+                    "yaw": -90,
+                    "rise_m": -5.8
+                  },
+                  {
+                    "asset": "strata_ledge",
+                    "along_m": 10.0,
+                    "lateral_m": 6.8,
+                    "height": 8.0,
+                    "yaw": 120,
+                    "rise_m": -6.8
+                  },
+                  {
+                    "asset": "strata_ledge",
+                    "along_m": 13.0,
+                    "lateral_m": -7.5,
+                    "height": 7.0,
+                    "yaw": -60,
+                    "rise_m": -5.9
+                  },
+                  {
+                    "asset": "cliff_shelf",
+                    "along_m": -1.5,
+                    "lateral_m": -4.2,
+                    "height": 3.0,
+                    "yaw": 20,
+                    "rise_m": -2.4
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 0.5,
+                    "lateral_m": 2.4,
+                    "height": 0.45,
+                    "yaw": 30
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 3.0,
+                    "lateral_m": -2.6,
+                    "height": 0.4,
+                    "yaw": -70
+                  },
+                  {
+                    "asset": "rock_mid",
+                    "along_m": 3.6,
+                    "lateral_m": 3.0,
+                    "height": 0.35,
+                    "yaw": 110
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 7.0,
+                    "lateral_m": 3.2,
+                    "height": 0.5,
+                    "yaw": 200
+                  },
+                  {
+                    "asset": "rock_mid",
+                    "along_m": 7.8,
+                    "lateral_m": -3.1,
+                    "height": 0.45,
+                    "yaw": 15
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 8.0,
+                    "lateral_m": -11.0,
+                    "height": 3.0,
+                    "yaw": -35
+                  },
+                  {
+                    "asset": "strata_outcrop",
+                    "along_m": 6.0,
+                    "lateral_m": 10.5,
+                    "height": 2.6,
+                    "yaw": 35
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
     }
   ]
 }
