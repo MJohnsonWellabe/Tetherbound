@@ -1473,6 +1473,15 @@ func _build_stones(cfg: Dictionary, radius: float) -> void:
 			_stone_material.set_shader_parameter(key, float(stone_cfg[key]))
 		elif cfg.has(key):
 			_stone_material.set_shader_parameter(key, float(cfg[key]))
+	# Pebble grouping and the tide band are stone-only: they never fall back to
+	# the grass keys, or a biome whose grass sets clump_patch_* (Tidewake's
+	# dune cover) would group its pebbles with the stones candidate OFF.
+	for key: String in [
+		"clump_patch_start", "clump_patch_full", "tide_band_low_y", "tide_band_high_y",
+		"tide_band_gain",
+	]:
+		if stone_cfg.has(key):
+			_stone_material.set_shader_parameter(key, float(stone_cfg[key]))
 	if stone_cfg.has("tint_stone"):
 		_stone_material.set_shader_parameter("tint_stone", Color(str(stone_cfg["tint_stone"])))
 	# Where stone is ALLOWED is built from the same named texture list the grass

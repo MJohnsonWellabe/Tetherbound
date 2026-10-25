@@ -1,0 +1,10 @@
+# F22#4 Riverwatch on main (renderer-aware boss aura). Same capture as r13 (GHOST.md). Local tool.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"
+$root = "D:\tb-gpu-runs\out\F22-main"
+$env:TB_GRADE_VARIANT = ""; $env:TB_RUN_TIMEOUT_MIN = "30"
+$args0 = @("--trainer=captain_riverwatch", "--live-member=captain_riverwatch:4", "--ally=ripplet", "--frames=12", "--interval=0.5", "--tell-frames", "--keep-alive", "--out={FRAMES}")
+foreach ($r in @(@("Medium", "r1"), @("Medium", "r2"), @("Low", "r1"))) {
+    "-- $($r[0]) $($r[1])"
+    & $run -Preset $r[0] -Script "res://tools/art_pipeline/capture_named_fight.gd" -OutDir "$root\$($r[0])-$($r[1])" -ProjectPath "D:\tb-gpu-pass" -UserArgs $args0
+}
+"f22 main done"

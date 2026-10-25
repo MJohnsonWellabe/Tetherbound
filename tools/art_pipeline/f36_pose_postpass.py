@@ -881,6 +881,65 @@ HIT_STYLE.update({s: 'shove' for s in LANDED_1022_SHOVE})
 SHOVE_GAIN_BY.update({s: 1.5 for s in LANDED_1022_SHOVE})
 SHOVE_HOLD_BY.update({s: (0.5, 0.97) for s in LANDED_1022_SHOVE})
 PRONE = tuple(s for s in PRONE if s != 'mirejaw')
+# Close-1024 candidate (OFF until judged; enable with --candidate-1024). The
+# shipping-roster matrix (CPU, 58 species): hits that read as standing on every
+# species still on the recoil or flinch hit, and belly-down prone faints that
+# read as standing (Mudsnout, Ashtusk, Torrentoad, Cragclaw, Staticub, Skyrill),
+# the same read the GPU judges gave Mirejaw's prone faint before its topple.
+# The candidate gives them the judged held shove and the side topple.
+CANDIDATE_1024 = '--candidate-1024' in sys.argv
+PRONE_TO_TOPPLE_1024 = ('mudsnout', 'ashtusk', 'torrentoad', 'cragclaw', 'staticub', 'skyrill')
+SHOVE_1024 = ('ashtusk', 'cindercub', 'shadelet', 'torrentoad', 'cragclaw', 'pebbik', 'stormbrush',
+              'thundertunnel', 'mudsnout', 'riptusk', 'mangrove_monitor', 'voltwig', 'skyrill',
+              'terrapup', 'trailpup', 'burrowback', 'cannonback', 'cliffspike', 'frostclaw', 'mosshock',
+              'sirenseal', 'tuskroot', 'cloudfang', 'stormtrail', 'craghorn', 'breezetail', 'tidecoil',
+              'aquaryn', 'stormraven', 'nightburrow', 'riftfrill', 'riverdrake')
+# Close-1024 b2-b4 (CPU, three judges per batch, confirming batches): the held
+# shove beat the shipping hit on these, each at or above the CPU-provisional
+# 6.7 mapped. Live recipes for them only; the rest stay --candidate-1024.
+LANDED_1024_SHOVE = ('burrowback', 'frostclaw', 'trailpup', 'aquaryn', 'riptusk', 'sirenseal',
+                     'tidecoil', 'voltwig', 'breezetail', 'cliffspike', 'cloudfang', 'craghorn',
+                     'pebbik', 'stormbrush', 'stormraven', 'thundertunnel')
+# Close-1024 sweep, second half (OFF; enable with --candidate-1024b): the same
+# held shove for the species b2-b4 did not cover, birds and flyers included.
+SHOVE_1024B = ('stormcapra', 'galecrest', 'galewisp', 'brooktail', 'duskhush', 'pipwing', 'reedwing',
+               'glimmermoth', 'aeriex', 'ribbonray', 'tempestwing', 'solmane', 'abyssal_guardian',
+               'ripplet', 'tanglevolt')
+# Close-1024 b8-b9 (CPU, three judges per batch, confirming batches): the held
+# shove from the second half beat the shipping hit at or above the
+# CPU-provisional 6.7 mapped on these. Live recipes; the rest stay OFF.
+# Ripplet passed too but now plays its naturalistic remake's own clips (b11).
+LANDED_1024B_SHOVE = ('galecrest', 'aeriex', 'galewisp', 'tanglevolt', 'stormcapra', 'solmane')
+# Close-1024 coordinator call (24 Oct, as on 22 Oct): ON where the candidate beat
+# shipping in a confirming batch, under 6.7 mapped, with no judge seeing the
+# faint end still standing (b2-b4, b8-b9). Ashtusk lands with its side topple.
+# Nightburrow, Stormtrail and Riftfrill passed too but follow their bases onto
+# the naturalistic remakes (own clips), so they are not listed.
+# Cindercub passed too but now plays its naturalistic remake's own clips (b11).
+LANDED_1024_BELOW_BAR = ('ashtusk', 'shadelet', 'mosshock', 'abyssal_guardian', 'brooktail',
+                         'glimmermoth', 'tempestwing', 'ribbonray')
+LANDED_1024_TOPPLE = ('ashtusk',)
+SHOVE_1024_RUN = (SHOVE_1024 if CANDIDATE_1024 else LANDED_1024_SHOVE) + LANDED_1024B_SHOVE + LANDED_1024_BELOW_BAR
+if '--candidate-1024b' in sys.argv:
+    SHOVE_1024_RUN = tuple(SHOVE_1024_RUN) + tuple(s for s in SHOVE_1024B if s not in SHOVE_1024_RUN)
+# b2 judges: Tuskroot's limp sprawl rolls belly and feet to the camera and hides
+# its stone back (read as the armour vanishing). Candidate: roll the other way.
+LIMP_ROLL = {}
+PRONE = tuple(s for s in PRONE if s not in LANDED_1024_TOPPLE)
+if CANDIDATE_1024:
+    PRONE = tuple(s for s in PRONE if s not in PRONE_TO_TOPPLE_1024)
+    LIMP_ROLL['tuskroot'] = 90.0
+# F36#1 roster r1 read Tuskroot's limp sprawl as a belly-up flip; it topples
+# like the boars (close-1024 b13: 7.46 vs 6.17 mapped, faint FIXED x3, ON).
+TOPPLED = tuple(TOPPLED) + ('tuskroot',)
+TOPPLE_ROLL['tuskroot'] = 90.0
+# Mangrove Monitor's -90 roll (OFF; --candidate-r13) lost in b13 (5.84 vs 7.03:
+# it rolls belly-up), so its +90 topple stays.
+if '--candidate-r13' in sys.argv:
+    TOPPLE_ROLL['mangrove_monitor'] = -90.0
+LIVE_SHOVE_HIT = tuple(LIVE_SHOVE_HIT) + tuple(s for s in SHOVE_1024_RUN if s not in LIVE_SHOVE_HIT)
+SHOVE_GAIN_BY.update({s: 1.5 for s in SHOVE_1024_RUN})
+SHOVE_HOLD_BY.update({s: (0.5, 0.97) for s in SHOVE_1024_RUN})
 
 
 def clamp_neck(frames, limit=NECK_PITCH_LIMIT):
@@ -1080,7 +1139,7 @@ def refine(name, row, rig, fam, prof):
     for role in ROLES:
         SOLVER.guard_stretch(skin, prof[role]['frames'])
     if name in LIMP_SPRAWL:
-        limp_sprawl(rig, prof['faint']['frames'], mesh_long_axis(skin))
+        limp_sprawl(rig, prof['faint']['frames'], mesh_long_axis(skin), roll=LIMP_ROLL.get(name, -90.0))
         SOLVER.guard_stretch(skin, prof['faint']['frames'])
     else:
         SOLVER.ground_faint(skin, prof['faint']['frames'], lambda phase: min(1.0, phase / .7))

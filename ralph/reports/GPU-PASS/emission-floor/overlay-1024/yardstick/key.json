@@ -1,0 +1,34 @@
+{
+ "Bn": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Ci": {
+  "anchor": true,
+  "A": "f36_0_gap:C4A",
+  "B": "f36_0_gap:C4B"
+ },
+ "Sg": {
+  "anchor": false,
+  "label": "F22#4 EF overlay Medium vs Low",
+  "A": "D:\\tb-gpu-runs\\yard\\f22ef\\sides\\F22-ef-low.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f22ef\\sides\\F22-ef-overlay.png"
+ },
+ "Nr": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Tz": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ov": {
+  "anchor": false,
+  "label": "F22#4 EF overlay Medium vs shipped Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f22ef\\sides\\F22-ef-overlay.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f22ef\\sides\\F22-ef-shipped.png"
+ }
+}

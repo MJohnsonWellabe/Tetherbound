@@ -1,0 +1,13 @@
+Gq: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Fg: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Ld: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Ke: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Vj: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Ga: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Ok: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Az: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Tv: none
+Dr: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Ut: none
+Bv: none
+Un: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"

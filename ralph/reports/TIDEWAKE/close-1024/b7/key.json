@@ -1,0 +1,34 @@
+{
+ "Dd": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Wc": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Kd": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Xa": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ },
+ "Us": {
+  "anchor": false,
+  "label": "currents: control vs b6",
+  "A": "control (main 5f1f388cc)",
+  "B": "candidate b6 (81f8f630e)"
+ },
+ "Kj": {
+  "anchor": false,
+  "label": "currents: b5 vs b6",
+  "A": "candidate b5 (57eadb9f1)",
+  "B": "candidate b6 (81f8f630e)"
+ }
+}

@@ -10,6 +10,12 @@ const STORAGE := preload("res://tools/earned_saves/wip_fights/storage_trip.gd")
 const INPUT := preload("res://scripts/ui/input_owner.gd")
 const VISIT_PATH := "res://tools/earned_saves/master_visit.gd"
 const QUARRY_FLOOR := Vector2(412.0, 1780.0)
+const WARRENS := preload("res://tests/helpers/meadows_earned_warrens_segment.gd")
+const TERRAIN := "res://data/config/terrain_playground.json"
+## South Bridge far bank: band 1 of the spine ends here, past the gully.
+const FAR_BANK := Vector2(8.0, 1340.0)
+## Mira's Ironwood Ridge lies past the Old Mill Crossing on the north spine.
+const NORTH_SPINE := ["band2_stone_and_root", "band3_the_river_lock", "band4_upper_meadows_ironwood"]
 const ROUTE := preload("res://tests/helpers/meadows_earned_material_segment.gd")
 const LEVELS := {"master_t1": 10, "master_t2": 20}
 const ROUND_FRAMES := 9000
@@ -18,6 +24,7 @@ var _game: Node
 var _travel: RefCounted
 var _failures: Array[String] = []
 var _receipts: Array = []
+var _master_id := ""
 
 func run(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = {}) -> Dictionary:
 	_tree = tree
@@ -25,6 +32,7 @@ func run(tree: SceneTree, world: Node3D, game: Node, args: Dictionary = {}) -> D
 	_failures.clear()
 	_receipts.clear()
 	var master_id := str(args.get("master_id", ""))
+	_master_id = master_id
 	if not LEVELS.has(master_id):
 		return _failed("Meadows adapter requires master_t1 (Orin) or master_t2 (Mira)")
 	if tree == null or not is_instance_valid(world) or not is_instance_valid(game):
@@ -88,9 +96,17 @@ func _route_to(site: Node3D) -> bool:
 	# x 428-456, z 1764-1788). Come in over the open Old Quarry floor west of
 	# the site and stand on its quarry side.
 	var site_xz := Vector2(site.global_position.x, site.global_position.z)
-	var stand := site_xz + (QUARRY_FLOOR - site_xz).normalized() * 4.0
+	var legs: Array[Vector2] = []
+	var stand: Vector2
+	if _master_id == "master_t2":
+		legs = mira_legs(Vector2(player.global_position.x, player.global_position.z), site_xz,
+			JSON.parse_string(FileAccess.get_file_as_string(TERRAIN)))
+		stand = legs[-1]
+	else:
+		stand = site_xz + (QUARRY_FLOOR - site_xz).normalized() * 4.0
+		legs = [QUARRY_FLOOR, stand]
 	var arrived := true
-	for target: Vector2 in [QUARRY_FLOOR, stand]:
+	for target: Vector2 in legs:
 		var walker := ROUTE.new()
 		arrived = await walker.walk_route(_tree, world, _game, player, rig,
 			Vector3(target.x, float(world.call("ground_height_at", target.x, target.y)), target.y))
@@ -98,6 +114,34 @@ func _route_to(site: Node3D) -> bool:
 		if not arrived: break
 	_receipts.append({"beat": "master_travel", "arrived": arrived, "stand": str(stand), "player": str(player.global_position)})
 	return arrived
+
+
+## Mira stands off the north spine on the Ironwood ridge, past the Old Mill
+## Crossing. From the village side: the bridge far bank first (the walker
+## routes the South Bridge itself), then the spine's own points to the bend
+## nearest her, then a stand 4 m short of her on that side. From the north
+## bank (the start of a Mira visit) only the last legs are left.
+static func mira_legs(from: Vector2, site: Vector2, terrain: Variant) -> Array[Vector2]:
+	var spine: Array[Vector2] = []
+	if terrain is Dictionary:
+		for id: String in NORTH_SPINE:
+			for point: Vector2 in WARRENS.trail_points(terrain, "bands", id):
+				if spine.is_empty() or spine[-1] != point: spine.append(point)
+	var legs: Array[Vector2] = []
+	var join := WARRENS.nearest_index(spine, site)
+	var start := 0
+	if from.y < FAR_BANK.y:
+		legs.append(FAR_BANK)
+	else:
+		# Skip a spine point already behind the player (the spine runs north).
+		start = WARRENS.nearest_index(spine, from)
+		if start >= 0 and start < join and spine[start].y < from.y: start += 1
+	if join >= 0 and from.distance_to(site) > 120.0:
+		for index in range(max(start, 0), join + 1):
+			legs.append(spine[index])
+	var last := legs[-1] if not legs.is_empty() else from
+	legs.append(site + (last - site).normalized() * 4.0)
+	return legs
 
 
 func _party() -> Array:

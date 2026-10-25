@@ -214,7 +214,11 @@ func _place_island(island: Dictionary, by_model: Dictionary) -> void:
 func _place_shore_ecology_candidate(island: Dictionary, by_model: Dictionary,
 		centre: Vector2, radius: float, island_id: String) -> void:
 	var candidate: Dictionary = _dune_settings.get("shore_ecology_candidate", {})
-	if not bool(candidate.get("enabled", false)):
+	# `shipped_sites`: sites judged better than shipping, placed even while the
+	# candidate as a whole stays OFF (close-1024 p2: Deep Watch alone).
+	var whole := bool(candidate.get("enabled", false))
+	var shipped: Array = candidate.get("shipped_sites", [])
+	if not whole and shipped.is_empty():
 		return
 	if island_id in candidate.get("preserve_islands", ["veilfall"]):
 		return
@@ -225,6 +229,8 @@ func _place_shore_ecology_candidate(island: Dictionary, by_model: Dictionary,
 	var layers: Dictionary = candidate.get("layers", {})
 	var scatter_seed := int(island.get("scatter_seed", 1))
 	for site: Dictionary in sites:
+		if not whole and not shipped.has(str(site.get("id", ""))):
+			continue
 		var offset_range: Array = site.get("shore_offset_m", [16.0, 32.0])
 		if offset_range.size() != 2:
 			continue

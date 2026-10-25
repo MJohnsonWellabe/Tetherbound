@@ -1,0 +1,134 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8484,
+  "least_squares_slope": 1.4779,
+  "method": "linear",
+  "slope": 1.4779,
+  "intercept": -2.1151,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.536,
+ "top_anchor_reference": 6.9,
+ "confirming_batch": false,
+ "anchors": {
+  "f36_0_gap:C2A": {
+   "measured": 6.133,
+   "reference": 6.83,
+   "mapped": 6.949,
+   "residual": -0.119
+  },
+  "f36_0_gap:C2B": {
+   "measured": 6.233,
+   "reference": 6.9,
+   "mapped": 7.097,
+   "residual": -0.197
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.533,
+   "reference": 6.75,
+   "mapped": 6.063,
+   "residual": 0.687
+  },
+  "f04_6_r22:control": {
+   "measured": 4.867,
+   "reference": 5.83,
+   "mapped": 5.077,
+   "residual": 0.753
+  },
+  "f36_0_npc:C3A": {
+   "measured": 4.9,
+   "reference": 4.6,
+   "mapped": 5.127,
+   "residual": -0.527
+  },
+  "f36_0_npc:C3B": {
+   "measured": 4.9,
+   "reference": 4.53,
+   "mapped": 5.127,
+   "residual": -0.597
+  }
+ },
+ "candidates": {
+  "meadows ctl": {
+   "measured_mean": 5.3,
+   "mapped_mean": 5.72,
+   "mapped_judges": [
+    5.13,
+    5.87,
+    6.16
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "meadows C": {
+   "measured_mean": 5.833,
+   "mapped_mean": 6.51,
+   "mapped_judges": [
+    6.01,
+    6.6,
+    6.9
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "tidewake ctl": {
+   "measured_mean": 5.033,
+   "mapped_mean": 5.32,
+   "mapped_judges": [
+    4.98,
+    5.27,
+    5.72
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "tidewake C": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.27,
+   "mapped_judges": [
+    5.13,
+    4.98,
+    5.72
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "stormwood ctl": {
+   "measured_mean": 5.533,
+   "mapped_mean": 6.06,
+   "mapped_judges": [
+    6.16,
+    5.72,
+    6.31
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "stormwood C": {
+   "measured_mean": 5.633,
+   "mapped_mean": 6.21,
+   "mapped_judges": [
+    6.16,
+    6.01,
+    6.46
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

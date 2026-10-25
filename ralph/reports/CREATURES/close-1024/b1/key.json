@@ -1,0 +1,35 @@
+{
+ "Eh": {
+  "anchor": false,
+  "label": "F36 bramblebun b1",
+  "A": "<scratch>/b1/sides/bramblebun-c.png",
+  "B": "<scratch>/b1/sides/bramblebun-live.png"
+ },
+ "Ee": {
+  "anchor": false,
+  "label": "F36 terrapup b1",
+  "A": "<scratch>/b1/sides/terrapup-live.png",
+  "B": "<scratch>/b1/sides/terrapup-c.png"
+ },
+ "Ye": {
+  "anchor": true,
+  "A": "f36_0_gap:C3B",
+  "B": "f36_0_gap:C3A"
+ },
+ "Sk": {
+  "anchor": false,
+  "label": "F36 riverdrake b1",
+  "A": "<scratch>/b1/sides/riverdrake-c.png",
+  "B": "<scratch>/b1/sides/riverdrake-live.png"
+ },
+ "Zl": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Im": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

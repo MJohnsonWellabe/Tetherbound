@@ -451,11 +451,13 @@ func _resumed_segment() -> void:
 		if training_profile != HANDOFF.TRAINING_PROFILE or not piece_order.has(segment):
 			failures.append("Training piece requires the fixed earned training prefix")
 			return
-		if segment == "training_t2_return":
-			_take(await ALTAR.new().return_to_bridge(self, world, game, previous_training), "passed", segment)
-			return
 		var fields := segment.split("_")
 		var tier := int(fields[1].trim_prefix("t"))
+		if fields[2] == "return":
+			# t1 returns to the South Bridge far bank (the Warrens start); t2,
+			# past the Relay, walks on up the north spine to the Old Mill Crossing.
+			_take(await ALTAR.new().return_to_bridge(self, world, game, previous_training, tier == 2), "passed", segment)
+			return
 		if fields[2] == "earn":
 			_take(await EARN.new().run_earning(self, world, game, {"tier": tier, "previous_training": previous_training}), "passed", segment)
 			return
@@ -845,8 +847,8 @@ func _generate_boundary_fixture() -> bool:
 	# receipts or previous PASS evidence for a generated chapter input.
 	# Independent Master boundaries: tier -> exactly the prior tiers' wins/recipes.
 	# tidewake_late_independent follows Tidewake's T3 loop: prior wins t1-t3.
-	var prior_tier: int = {"tidewake_t3_ione_independent": 3, "tidewake_late_independent": 4, "cloudreach_t4_aster_independent": 4,
-		"stormwood_t5_rowan_independent": 5}.get(segment, 0)
+	var prior_tier: int = {"meadows_t2_independent": 2, "tidewake_t3_ione_independent": 3, "tidewake_late_independent": 4,
+		"cloudreach_t4_aster_independent": 4, "stormwood_t5_rowan_independent": 5}.get(segment, 0)
 	var prior_t3_setup := prior_tier > 0
 	var prior_wins: Array = []
 	var prior_recipes: Array = []

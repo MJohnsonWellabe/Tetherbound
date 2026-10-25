@@ -4,7 +4,7 @@
   "variants": {
     "nightburrow": {
       "display_name": "Nightburrow",
-      "source_species": "burrowback",
+      "source_species": "burrowback", "source_model": "burrowback/candidate_nat1024", "_comment_source_model": "Close-1024: the base ships its naturalistic remake, so the variant repaints that mesh's own albedo (aspect variants reuse the base mesh, test_dual_type).",
       "board": "docs/art/reference/creature-expansion-2026-08-30/01_Nightburrow_alpha_burrowback.png",
       "_comment": "Board palette: Charcoal Stone / Obsidian Fur / Violet Glow / Amethyst Flame. Burrowback's own existing `vivid_rules` (data/creatures/shiny_colourways.json) already push toward cold grey stone over a near-black body for unrelated reasons (OF28's badger-vs-badger differentiation from terrapup) -- close enough to Nightburrow's own base palette that this variant's rules mostly DEEPEN that same direction (more charcoal, more obsidian, less grey) rather than reinventing it, which matches the board's own pipeline note ('Darken fur and armor') and leaves the identity work to the emissive/VFX layer, exactly as the sheet insists it must: 'Without emissive/VFX treatment, this variant is not successful.'",
       "rules": [
@@ -72,7 +72,7 @@
     },
     "stormtrail": {
       "display_name": "Stormtrail",
-      "source_species": "trailpup",
+      "source_species": "trailpup", "source_model": "trailpup/candidate_nat1024", "_comment_source_model": "Close-1024: the base ships its naturalistic remake, so the variant repaints that mesh's own albedo (aspect variants reuse the base mesh, test_dual_type).",
       "board": "docs/art/reference/creature-expansion-2026-08-30/02_Stormtrail_alpha_trailpup.png",
       "_comment": "Board palette: Thunder Tan / Storm Fur / Volt Glow / Static Blue. JUDGE-4 2026-08-30 Q2-D2/D4/D11, blind pass against round 1: 'the coat is still the base's tan... four of five specified changes are absent' and the lightning was 'a soft gold patch on the left shoulder... on one side only', not the sheet's head-to-tail network -- round 1's own coverage/percentile retunes (see git history) never crossed that bar because a single sparse clumped layer can land its noise unevenly between the two flanks by chance, and a `val_scale` in the 0.5-0.6 range deepens tan without leaving tan. Round 2 (T1-VARIANTS-2): the coat rule now desaturates and darkens hard toward Storm Fur (a value/saturation move, not a hue deepen), and the lightning overlay is split into two layers -- a near-solid spine bolt (guarantees the head-to-tail line the sheet actually draws) plus a wide, still-high-coverage flank/leg network (coverage 0.58, not 0.32-0.65's own history of one-sided luck) -- so both flanks paint regardless of where the clump noise happens to peak. Live albedo/emission on this species are external .jpg (probed directly), so creature_body._texture_for() falls to its species-keyed extracted-PNG convention -- the generator writes against trailpup_extracted_base_color.png regardless.",
       "rules": [
@@ -199,7 +199,7 @@
     },
     "riftfrill": {
       "display_name": "Riftfrill",
-      "source_species": "paddlenewt",
+      "source_species": "paddlenewt", "source_model": "paddlenewt/candidate_nat1024", "_comment_source_model": "Close-1024: the base ships its naturalistic remake, so the variant repaints that mesh's own albedo (aspect variants reuse the base mesh, test_dual_type).",
       "board": "docs/art/reference/creature-expansion-2026-08-30/07_Riftfrill_paddlenewt_variant.png",
       "_comment": "Board palette: River Teal / Lilac Frill / Rift Glow / Mist White. JUDGE-4 2026-08-30 Q2-D5/D6/D11: round 1's own change was real (body sampled 60-80 units darker/desaturated, not the blind pass's first, withdrawn 'identical to base' note) but 'a VALUE move (a darker teal) rather than the sheet's HUE move (River Teal body, Lilac frill)... at lineup distance the pair reads as one axolotl at two brightnesses', and the sheet's own note is explicit that 'the frills, patterning, and effects carry most of the variant identity' -- so round 1 spent its budget on the body, which the sheet does not ask for, and under-spent on the frill/markings, which it does. Round 2 (T1-VARIANTS-2) leaves the body rule alone (it was working, per the judge's own corrected reading) and pushes the frill overlay to near-solid coverage over a much larger region (round 1's up_min:0.28 caught only the crown/tips the judge named, because a frill facing outward/sideways rather than straight up scores near zero on that predicate) plus a new `filigree` glow layer for the sheet's own 'glowing swirl patterns over head, back and frills', which round 1 did not attempt at all (D6).",
       "rules": [

@@ -91,6 +91,16 @@ uniform float stray_chance : hint_range(0.0, 1.0) = 0.06;
 // edge of a route. Cubed in use, so it is tight to the edge rather than a broad
 // halo.
 uniform float verge_gain : hint_range(0.0, 1.0) = 0.55;
+// Grouping (Tidewake close-1024 judges: "pebbles sprinkled evenly across the
+// whole beach, not grouped at the tide line or around rocks"). The drift noise
+// alone only thins the field; a patch threshold on the same noise cuts clean
+// bare gaps between groups, and a tide band gathers stone just above the
+// waterline. Both are no-ops at their defaults (full <= start).
+uniform float clump_patch_start = 0.0;
+uniform float clump_patch_full = 0.0;
+uniform float tide_band_low_y = 0.0;
+uniform float tide_band_high_y = 0.0;
+uniform float tide_band_gain : hint_range(0.0, 1.0) = 0.0;
 
 varying vec3 v_colour;
 varying float v_contact;
@@ -327,7 +337,16 @@ void vertex() {
 	// Coverage. Stone is dense on its own ground and rare off it -- the strays
 	// are what stop the gravel ending on the same hard line the grass mask was
 	// criticised for.
-	float drift = mix(1.0, value_noise(world_xz * clump_scale), clump_contrast);
+	float clump_noise = value_noise(world_xz * clump_scale);
+	float drift = mix(1.0, clump_noise, clump_contrast);
+	if (clump_patch_full > clump_patch_start) {
+		drift *= smoothstep(clump_patch_start, clump_patch_full, clump_noise);
+	}
+	if (tide_band_high_y > tide_band_low_y) {
+		float tide = smoothstep(tide_band_low_y - 0.3, tide_band_low_y, ground_h)
+				* (1.0 - smoothstep(tide_band_low_y, tide_band_high_y, ground_h));
+		drift = max(drift, tide * tide_band_gain);
+	}
 	// The verge. Terrain3D's control word carries the blend between a cell's
 	// base and overlay texture in bits 14-21, so a value in the MIDDLE of that
 	// range means this cell is on a boundary between two ground types -- which,

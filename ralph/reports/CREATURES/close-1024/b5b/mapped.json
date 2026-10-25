@@ -1,0 +1,82 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9504,
+  "least_squares_slope": 1.4319,
+  "method": "linear",
+  "slope": 1.4319,
+  "intercept": -2.332,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.428,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1B": {
+   "measured": 6.8,
+   "reference": 7.47,
+   "mapped": 7.405,
+   "residual": 0.065
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.9,
+   "reference": 7.53,
+   "mapped": 7.548,
+   "residual": -0.018
+  },
+  "f36_0_gap:C7A": {
+   "measured": 6.467,
+   "reference": 7.03,
+   "mapped": 6.928,
+   "residual": 0.102
+  },
+  "f36_0_gap:C7B": {
+   "measured": 6.5,
+   "reference": 6.3,
+   "mapped": 6.976,
+   "residual": -0.676
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 5.8,
+   "reference": 6.73,
+   "mapped": 5.973,
+   "residual": 0.757
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.233,
+   "reference": 3.5,
+   "mapped": 3.73,
+   "residual": -0.23
+  }
+ },
+ "candidates": {
+  "water_riverdrake live": {
+   "measured_mean": 6.067,
+   "mapped_mean": 6.36,
+   "mapped_judges": [
+    6.69,
+    6.26,
+    6.12
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "water_riverdrake pilot": {
+   "measured_mean": 6.267,
+   "mapped_mean": 6.64,
+   "mapped_judges": [
+    6.12,
+    6.83,
+    6.98
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

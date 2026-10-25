@@ -35,6 +35,10 @@ var _finished: bool = false
 var _material: ShaderMaterial = null
 ## The MeshInstance3D nodes this glow set an overlay on. Only those are restored.
 var _meshes: Array = []
+## Wind-up tell auras (tell_style.gd) this glow borrowed, mesh -> overlay; handed
+## back on finish while that wind-up still runs, so a hit landing mid-tell flashes.
+var _borrowed: Dictionary = {}
+const TELL_STYLE := preload("res://scripts/combat/tell_style.gd")
 
 
 ## `body` is a creature body (or any Node3D with MeshInstance3D descendants).
@@ -98,8 +102,12 @@ func _collect_meshes(body: Node3D) -> void:
 func _walk(node: Node, deep: bool) -> void:
 	if node is MeshInstance3D:
 		var mesh := node as MeshInstance3D
-		if mesh.mesh != null and mesh.material_overlay == null and not _meshes.has(mesh):
-			_meshes.append(mesh)
+		if mesh.mesh != null and not _meshes.has(mesh):
+			if mesh.material_overlay == null:
+				_meshes.append(mesh)
+			elif TELL_STYLE.is_live_aura(mesh.material_overlay):
+				_borrowed[mesh] = mesh.material_overlay
+				_meshes.append(mesh)
 	if not deep:
 		# Directly under the body itself only the capsule fallback nodes count;
 		# the model pivot was walked in full already, and anything else hung
@@ -144,6 +152,8 @@ func _finish() -> void:
 		# A model rebuild can free a mesh while its glow still lives on the body.
 		# Validate before even querying its type: `is` on a freed object errors.
 		if is_instance_valid(mesh) and mesh is MeshInstance3D and (mesh as MeshInstance3D).material_overlay == _material:
-			(mesh as MeshInstance3D).material_overlay = null
+			var back: Variant = _borrowed.get(mesh)
+			(mesh as MeshInstance3D).material_overlay = back if back != null and TELL_STYLE.is_live_aura(back) else null
 	_meshes.clear()
+	_borrowed.clear()
 	queue_free()

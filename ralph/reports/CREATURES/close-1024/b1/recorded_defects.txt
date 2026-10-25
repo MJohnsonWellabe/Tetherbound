@@ -1,0 +1,6 @@
+Eh: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+Ee: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+Ye: none
+Sk: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Creature style does not match the owner creature style bar (cartoon or toy-like rather than naturalistic)"
+Zl: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Im: none
