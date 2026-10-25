@@ -80,6 +80,10 @@ func build(water_world: Node3D) -> void:
 			shape.position = Vector3(0.0, size.y * 0.5, 0.0)
 			body.add_child(shape)
 			holder.add_child(body)
+		# `trimesh_collider`: collision that matches the drawn mesh, for pieces a
+		# flyer or glider can reach (close-1024: the generated Veilfall crown).
+		if bool(spec.get("trimesh_collider", false)):
+			add_trimesh_collision(model)
 
 
 ## Optional per-surface materials, by surface index (the installed castle kit's
@@ -130,3 +134,25 @@ func _floor(world: Node3D, centre: Vector2, yaw: float, half: Vector2) -> float:
 			if is_finite(y):
 				low = minf(low, y)
 	return low if is_finite(low) else 0.0
+
+
+## One static trimesh body per drawn mesh, in the mesh's own transform, so the
+## collision follows exactly what is rendered. Returns the bodies it added.
+static func add_trimesh_collision(root: Node) -> Array:
+	var bodies: Array = []
+	var stack: Array = [root]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		stack.append_array(node.get_children())
+		if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+			var shape := (node as MeshInstance3D).mesh.create_trimesh_shape()
+			if shape == null:
+				continue
+			var body := StaticBody3D.new()
+			body.name = "TrimeshCollision"
+			var collider := CollisionShape3D.new()
+			collider.shape = shape
+			body.add_child(collider)
+			node.add_child(body)
+			bodies.append(body)
+	return bodies

@@ -50,6 +50,14 @@ func _ready() -> void:
 	if simulation_only:
 		_strip_local_presentation()
 	config = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	# close-1024 `veilfall_mountain_candidate` (OFF in play): the generated crown
+	# needs the Veilfall summit capped below it, so the candidate switches both
+	# the analytic field and the baked terrain to the capped variant together.
+	if not simulation_only and preload("res://scripts/world/tidewake_look_profile.gd").settings().has("veilfall_mountain_candidate"):
+		var cap: Dictionary = config.terrain.get("veilfall_summit_cap", {})
+		if not cap.is_empty():
+			cap["enabled"] = true
+			config.terrain["data_directory"] = str(cap.get("data_directory", config.terrain.data_directory))
 	_visual = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_PATH))
 	if not simulation_only:
 		_visual = preload("res://scripts/world/tidewake_look_profile.gd").overlay(_visual, "surfaces")

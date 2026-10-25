@@ -31,6 +31,10 @@ var _profile_zones: Array = []
 var _dune_relief: Dictionary = {}
 ## F39#4 (close-1024): Veilfall-only crag relief, route-masked (see _veilfall_relief_at).
 var _veilfall_relief: Dictionary = {}
+## close-1024 MESHY 10: a soft summit cap on Veilfall only, so the generated
+## terraced crown (a landmark model) replaces the analytic peak. Heights below
+## cap_y_m - blend_m are untouched (every walkable height sits below that).
+var _veilfall_cap: Dictionary = {}
 var _veilfall_index := -1
 ## Per island: cell key -> flat [ax, az, bx, bz, ...] authored-site segments
 ## (island-local offsets) whose flat+fade zone touches that cell.
@@ -78,6 +82,7 @@ func _init(config: Dictionary = {}) -> void:
 	var terrain: Dictionary = _config.get("terrain", {})
 	_dune_relief = terrain.get("dune_relief", {})
 	_veilfall_relief = terrain.get("veilfall_relief", {})
+	_veilfall_cap = terrain.get("veilfall_summit_cap", {})
 	_sea_level = float(terrain.get("sea_level_m", 0.0))
 	_seabed_depth = maxf(0.0, float(terrain.get("seabed_depth_m", 65.0)))
 	_outer_slope = maxf(0.0001, float(terrain.get("outer_shore_slope", 0.35)))
@@ -355,7 +360,25 @@ func height_at(x: float, z: float) -> float:
 	var graded := _grade_trails(x, z, best)
 	if _veilfall_index >= 0 and bool(_veilfall_relief.get("enabled", false)):
 		graded += _veilfall_relief_after_grading(x, z)
+	if _veilfall_index >= 0 and bool(_veilfall_cap.get("enabled", false)):
+		graded = _veilfall_capped(x, z, graded)
 	return graded
+
+
+## Soft clamp: identity below cap - blend, then an exponential approach to the
+## cap with slope 1 at the knee, so the summit becomes a gently rounded plateau
+## with no crease. Veilfall's island footprint only.
+func _veilfall_capped(x: float, z: float, h: float) -> float:
+	var cap := float(_veilfall_cap.get("cap_y_m", 240.0))
+	var blend := maxf(0.5, float(_veilfall_cap.get("blend_m", 30.0)))
+	var knee := cap - blend
+	if h <= knee:
+		return h
+	var dx := x - _cx[_veilfall_index]
+	var dz := z - _cz[_veilfall_index]
+	if dx * dx + dz * dz > _radius[_veilfall_index] * _radius[_veilfall_index]:
+		return h
+	return knee + blend * (1.0 - exp(-(h - knee) / blend))
 
 
 ## Applied after trail grading so it also breaks up the graded cut walls; zero
