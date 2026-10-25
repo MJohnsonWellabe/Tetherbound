@@ -3,7 +3,8 @@ extends "res://tests/test_case.gd"
 ## F38 P2-062 (22 Oct): after a won fight the large ally parked beside the
 ## trainer near the lens and filled half the gameplay view. With the
 ## `follow_candidate` enabled, the follower also fades when the lens is close
-## to its body or when it covers the trainer; never when it stands clear.
+## to its body or when it covers the trainer while following; never when it
+## stands clear, and never for a fight's pilot covering its trainer.
 
 const FOLLOWER := preload("res://scripts/creatures/follower_creature.gd")
 const RUNS_IN_INITIALIZED_TREE := true
@@ -41,7 +42,17 @@ func test_disabled_candidate_never_fades() -> void:
 func test_ally_between_lens_and_trainer_fades() -> void:
 	FOLLOWER._follow_fade_cfg = {"enabled": true, "near_margin_m": 0.1, "leader_heights_m": [0.5, 1.0, 1.6]}
 	var parts := _setup(Vector3(0, 0, 4))
+	parts[0].set_following(true)
 	assert_true(parts[0]._blocks_leader_view(parts[0], Vector3(0, 1.5, 9.0)), "a body on the camera-to-trainer line fades")
+
+
+## Fights close-1025: in a fight the trainer stands behind its piloted
+## creature; covering the trainer there must not ghost the pilot.
+func test_piloted_body_in_a_fight_stays_solid() -> void:
+	FOLLOWER._follow_fade_cfg = {"enabled": true, "near_margin_m": 0.1, "leader_heights_m": [0.5, 1.0, 1.6]}
+	var parts := _setup(Vector3(0, 0, 4))
+	parts[0].set_following(false)
+	assert_false(parts[0]._blocks_leader_view(parts[0], Vector3(0, 1.5, 9.0)), "the fight's pilot covering its trainer stays solid")
 
 
 func test_lens_close_to_the_body_fades() -> void:
