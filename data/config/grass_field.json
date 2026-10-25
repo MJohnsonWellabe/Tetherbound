@@ -60,6 +60,7 @@
   "clump_contrast": 0.55,
   "carpet_candidate": {
     "_why": "F38 L4 / P2-005 close-1024 candidate (OFF until judged). Rounds 1-2 (broader/stronger drift: clump_scale 0.07 then 0.045, clump_contrast 0.8 then 1.0) read identical to shipping and were parked: the blade bodies take their colour from fixed tip tints and only the root samples the terrain colour map. Round 3, the coordinator's blade-layer route: per-patch tip tint drift (deep green to dry straw, ~40 m), per-patch height (grazed short patches and tall tufts, ~25 m), and blades thinned and shortened where the terrain colour map reads as soil, so paths, trampled yards and the colour bake's worn halos show ground (judge together with terrain_presentation.json colour_candidate). The species mix (clover/broadleaf blades) needs new blade meshes and is not in this round. When enabled these keys override the top-level ones at load (grass_field.gd config()).",
+    "_parked_r3": "PARKED close-1024 r3 (with terrain_presentation colour_candidate): three code-blind judges scored it level with shipping (mapped 6.05 vs 6.07; raw 6.0/6.0/5.8 vs 6.0/6.0/5.9; defect PRESENT or PARTIAL on both sides). The fifth carpet attempt with no measurable gain, so per coordinator direction the carpet goes to ground-cover art (MESHY/texture ask in the MEADOWS note). Left OFF.",
     "enabled": false,
     "patch_tint_strength": 0.85,
     "patch_tint_scale": 0.025,

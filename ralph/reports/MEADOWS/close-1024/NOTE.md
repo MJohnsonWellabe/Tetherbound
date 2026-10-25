@@ -183,6 +183,16 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - The carpet lever is the blade layer itself (per-patch blade tint, species mix and height) or new ground-cover art. I'm not starting a fifth attempt on my own; say if you want the blade-tint route, or a MESHY/texture ask for ground cover.
   - Next: L5 haze and L6 facades, per your order.
 
+- 2026-10-25 04:50 UTC RESULT F38 L4 blade-layer route r3 (per-patch tip tint, per-patch height, soil-driven thinning, with the colour-bake swap): three code-blind judges scored it level with shipping. Mapped 6.05 vs 6.07; raw 6.0/6.0/5.8 vs 6.0/6.0/5.9; defect PRESENT or PARTIAL on both sides. Files: `carpet-r3-*`. Parked, OFF.
+  - That is five carpet attempts, so I'm stopping here per your instruction.
+  - What the judges still ask for at every site: "clustered flower drifts of several species and sizes, worn dirt and bare patches, rock outcrops, taller grass edges".
+  - That is placed ground cover, not tinting.
+- 2026-10-25 04:50 UTC MESHY / texture ask (P2-005 ground-cover art). Sizes are against the 1.80 m trainer. Each item installs as a flag-off cover tier in `grass_field.json cover_tiers` (same instancing as the bushes and flowers), judged on the L4 views.
+  1. Clover and broadleaf ground-cover clumps, 3 variants, about 0.6–0.9 m across and 0.15–0.25 m tall. Ref: the owner key art's meadow foreground panels (`docs/reference/tetherbound-meadows-keyart.png`, crops (357, 8)–(1000, 325) and (546, 333)–(1022, 600)). Prompt: "low clump of clover and broadleaf meadow ground cover, round leaves in mixed greens with a few small white and pink blossoms, stylised realism, game asset, flat base".
+  2. Mixed wildflower drift clumps, 3 variants (purple lupin, gold buttercup, white daisy), about 0.8–1.2 m across and 0.3–0.6 m tall, several stems per clump. Same ref (the key art's purple and white drifts). Prompt: "dense clump of wild meadow flowers, many stems of one species with varied heights, stylised realism, game asset, flat base".
+  3. Worn-earth and stone-scatter decal-patch meshes, 2 variants, about 2–3 m across and near-flat (under 0.1 m), with pebbles and dry grass edges, to sit on paths and trampled yards. Ref: the key art's dirt path in the top-left panel. Prompt: "flat patch of worn trampled earth with small pebbles and dry grass tufts at the edge, stylised realism, game asset, very low profile".
+  4. Small rock-outcrop clusters, 2 variants, about 1.5–2.5 m across and 0.6–1.0 m tall, mossy grey, half-buried. Ref: the key art's river-bank stones (top-right panel). Prompt: "cluster of half-buried mossy grey rocks, rounded weathered stones of mixed sizes, stylised realism, game asset, flat base".
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
