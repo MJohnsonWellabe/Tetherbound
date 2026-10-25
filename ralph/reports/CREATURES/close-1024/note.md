@@ -3,6 +3,10 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures-land 2a1eb2d98 (= 01b054770 + G5): **P2-016 bigger wince.** On top of the third-of-height head drop (04ee56bcd): a 0.08 s squash on contact (0.86 high, 1.08 wide) and a shove away from the attacker of 0.2 m per metre of body (was 0.11). Hold timing unchanged; art node only, body and collider untouched (`test_creature_flinch_head_drop` + hit-window + remote-stagger: 9 tests, 0 failed).
+  - CPU b37 grunt fight vs main: 5.81 -> 6.12 (+0.31); the defect moves PRESENT 2 / PARTIAL 1 -> PARTIAL 3/3 ('lowered or pulled back after an impact' in a few frames). Evidence: `close-1024/b37/judges.md`.
+  - What still hides it on CPU, per all three judges: the dust puffs and the contact disc over the body at impact (fights lane), and the boar's facing turns reading as repositioning. If the GPU still calls it PRESENT, the next lever is a larger dip cap (25 deg now) or a stagger step back of about half a body length.
+
 - 25 Oct GPU READY tb/creatures-land 01b054770 (= 463c2149b + 3 commits): **Mosshock CI fix for #745 (urgent).**
   - Regraded from r1 (`retex/grade_retex.py`, never compounding): coat moss at hue 100 with lighter values and a saturation floor, darker folds (below the coat's median value) olive-brown, belly and throat pale cream, olive-brown rims, amber iris, no red. Written to the embedded albedo, the extracted jpg and the vivid PNG; f36 pin updated.
   - `test_stormwood_source_colourways`: moss share ~0.48, inside the unchanged 0.34-0.78 band. The only test edit: the Mosshock case gets the one-rule, match {}, sat_scale 1.0 check every other species gets (commit 8c27cb42e records that the retexture replaces the anatomical repaint).
