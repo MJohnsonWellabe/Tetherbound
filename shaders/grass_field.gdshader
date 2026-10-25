@@ -158,6 +158,24 @@ uniform vec3 tint_base : source_color = vec3(0.208, 0.267, 0.106);
 uniform vec3 tint_tip : source_color = vec3(0.514, 0.588, 0.239);
 uniform float ground_blend : hint_range(0.0, 1.0) = 0.65;
 uniform float translucency : hint_range(0.0, 1.0) = 0.35;
+// F38 L4 / P2-005 (close-1024, OFF at these defaults): the field's own
+// per-patch variation. `patch_tint_strength` drifts each blade's tip tint
+// between a deep green and a dry straw by a broad world noise; the height
+// patch makes grazed short patches and tall tufts; `soil_thin` and
+// `soil_shorten` thin and shorten blades where the terrain colour map reads as
+// soil (paths, trampled yards, the colour bake's worn halos) so the ground
+// shows there. Zero strengths keep the original output exactly.
+uniform float patch_tint_strength : hint_range(0.0, 1.0) = 0.0;
+uniform float patch_tint_scale = 0.03;
+uniform vec3 patch_tip_deep : source_color = vec3(0.30, 0.42, 0.16);
+uniform vec3 patch_tip_dry : source_color = vec3(0.70, 0.66, 0.36);
+uniform float patch_height_strength : hint_range(0.0, 1.0) = 0.0;
+uniform float patch_height_scale = 0.05;
+uniform float patch_height_low = 0.45;
+uniform float patch_height_high = 1.35;
+uniform vec3 soil_reference : source_color = vec3(0.82, 0.70, 0.49);
+uniform float soil_thin : hint_range(0.0, 1.0) = 0.0;
+uniform float soil_shorten : hint_range(0.0, 1.0) = 0.0;
 
 // Wind. Free here, and the reference frames are of moving grass.
 uniform float wind_time = 0.0;
@@ -217,6 +235,7 @@ varying vec3 v_ground_colour;
 varying float v_fade;
 varying float v_shade;
 varying float v_leaf_straw;
+varying float v_patch;
 
 // ---------------------------------------------------------------------------
 // COPIED VERBATIM from Terrain3D 1.0.2's generated shader. Do not "clean up".
@@ -577,6 +596,9 @@ void vertex() {
 		clearing = smoothstep(clearing_floor, 1.0, bush_drift) * clearing_strength;
 	}
 	float keep = drift * density_gain * (1.0 - clearing);
+	float soilness = 1.0 - smoothstep(0.06, 0.20, distance(v_ground_colour, soil_reference));
+	keep *= 1.0 - soil_thin * soilness;
+	v_patch = value_noise(world_xz * patch_tint_scale + vec2(41.7, 13.3));
 	if (dune_shape_active) {
 		vec2 warp = vec2(
 			value_noise(world_xz * dune_gap_warp_scale + dune_gap_offset),
@@ -640,6 +662,11 @@ void vertex() {
 		// Shorter under a bush as well as sparser. Thinning alone leaves the
 		// survivors at full height, still standing through the leaves.
 		h *= 1.0 - clearing * clearing_shorten;
+		if (patch_height_strength > 0.0) {
+			float tall = smoothstep(0.25, 0.75, value_noise(world_xz * patch_height_scale + vec2(7.9, 63.1)));
+			h *= mix(1.0, mix(patch_height_low, patch_height_high, tall), patch_height_strength);
+		}
+		h *= 1.0 - soil_shorten * (1.0 - smoothstep(0.06, 0.20, distance(v_ground_colour, soil_reference)));
 		// And shorter at the ring's edge, for the same reason at a different
 		// scale -- see `edge_shorten_floor` above.
 		h *= mix(edge_shorten_floor, 1.0, pow(v_fade, edge_shorten_bias));
@@ -731,7 +758,14 @@ void fragment() {
 	// shader does, and it picks up the ground's own variation without
 	// destroying the tint.
 	vec3 root = tint_base * mix(vec3(1.0), v_ground_colour, ground_blend);
-	vec3 col = mix(root, tint_tip, smoothstep(0.0, 0.85, v_blade_t));
+	vec3 tip = tint_tip;
+	if (patch_tint_strength > 0.0) {
+		vec3 drifted = v_patch < 0.5
+			? mix(patch_tip_deep, tint_tip, smoothstep(0.2, 0.5, v_patch))
+			: mix(tint_tip, patch_tip_dry, smoothstep(0.5, 0.8, v_patch));
+		tip = mix(tint_tip, drifted, patch_tint_strength);
+	}
+	vec3 col = mix(root, tip, smoothstep(0.0, 0.85, v_blade_t));
 	if (dune_tussock) {
 		col = mix(root, tint_tip, smoothstep(0.12, 1.0, v_blade_t) * v_leaf_straw);
 	}

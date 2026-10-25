@@ -1675,10 +1675,12 @@ func _apply_config(cfg: Dictionary) -> void:
 		"ground_blend", "translucency", "wind_strength", "wind_scale",
 		"gust", "gust_speed", "gust_length", "edge_shorten_floor", "edge_shorten_bias",
 		"lens_clear_m", "lens_clear_band",
+		"patch_tint_strength", "patch_tint_scale", "patch_height_strength", "patch_height_scale",
+		"patch_height_low", "patch_height_high", "soil_thin", "soil_shorten",
 	]:
 		if cfg.has(key):
 			_material.set_shader_parameter(key, float(cfg[key]))
-	for key: String in ["tint_base", "tint_tip"]:
+	for key: String in ["tint_base", "tint_tip", "patch_tip_deep", "patch_tip_dry", "soil_reference"]:
 		if cfg.has(key):
 			_material.set_shader_parameter(key, Color(str(cfg[key])))
 	if cfg.has("wind_dir"):
