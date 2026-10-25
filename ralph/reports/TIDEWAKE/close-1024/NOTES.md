@@ -25,6 +25,15 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
     - Please re-take the GPU Veilfall baseline on the new stand.
   - **Next idea:** carry the crown family down the face (terraced relief plus the main fall on the capped face). I'll report before building it.
 
+- 2026-10-26 12:00 CT **INFO: the Veilfall face (fc1/VERDICT.md) is parked after three attempts that did not beat shipping on the 750 m stand.**
+  - **Terraces:** they banded into sand stripes, so they are back to off and rebaked.
+  - **Falls:** they are hidden under the crown's base.
+  - **Options:**
+    1. A terrain material pass so ledges get rock and grass instead of sand.
+    2. A narrower crown so the falls show.
+    3. A full-mountain Meshy asset instead of a crown. If you want this one, I can draft the request.
+  - **Veilfall READY head is unchanged:** T1e + falls f2 + rain fog.
+
 - 2026-10-26 10:10 CT **READY update: P2-011 destination landmarks s2 (lm2/VERDICT.md) replaces the lm1 numbers.**
   - **Change:** the jetty moved to the shoreline, and both are 13 m.
   - **CPU mapped, reframed P2-011 stand:** 5.36 → **6.81** (+1.45). All three judges higher.
