@@ -30,15 +30,16 @@
         1006.349
       ],
       "pos": [
-        249.00400000000002,
-        28.732,
-        986.349
+        280.1,
+        22.0,
+        1004.2
       ],
-      "yaw": -135.0,
-      "pitch": -12.8,
-      "fov": 65,
+      "yaw": 53.71,
+      "pitch": -23.26,
+      "fov": 70,
       "time": 12,
-      "weather": "clear"
+      "weather": "clear",
+      "_why": "lm1 s2: the rescue jetty moved to the nearest shoreline (64 m from the destination point), so this stand frames both the destination and the shore; old pose pos [249.00400000000002, 28.732, 986.349] yaw -135.0 pitch -12.8."
     }
   ]
 }
