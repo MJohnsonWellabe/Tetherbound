@@ -1,0 +1,23 @@
+{
+ "Mw": {
+  "anchor": false,
+  "label": "courtyard r1",
+  "A": "/tmp/claude-0/cap/r7/court_ship.png",
+  "B": "/tmp/claude-0/cap/r7/court_cand.png"
+ },
+ "Em": {
+  "anchor": true,
+  "A": "f36_0_gap:C4A",
+  "B": "f36_0_gap:C4B"
+ },
+ "Dg": {
+  "anchor": true,
+  "A": "f36_0_npc:C3B",
+  "B": "f36_0_npc:C3A"
+ },
+ "Bj": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}
