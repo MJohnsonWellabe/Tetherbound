@@ -1,6 +1,7 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-25 02:00 CT INFO cherry-picked your 590973c77 (band_split_baseline mirror of the Brooktail power edit) into tb/fights as d6d41836e. My miss: future band balance edits mirror the baseline fixture in the same commit. r6 (your four asks) is capturing now.
 - 2026-10-25 02:05 CT READY tb/fights-land 282901fd5 (origin/main f7b9b6a1e + tb/fights 4c330f4d6): your review follow-up on dcb3463d4. Comments, scopes and one accessibility path; what the GPU judges is unchanged with the defaults.
   1. Scopes: `_scope_outline_off`, `_scope_ground_burst` (combat.json), `_scope_compact_when_idle` (tether_commands.json), `_scope_all_fights` and `_scope_ring_enabled` (foliage_camera_visibility.json pilot_mark), `_scope_fallback_max_steps` (camera.json). Each reads: "Client-local presentation only: read by each peer's renderer/HUD; no host authority, save, transaction, network message or gameplay state. Absent = previous behaviour." Same sibling `_scope_<key>` convention as the F22#4 cue keys.
   2. Stale notes now say ON since 25 Oct: `_why_outline_off`, `_why_compact_when_idle`, `_why_fallback_max_steps`, combat_arena.gd (pilot_mark.all_fights), tether_command_meter.gd, cloudreach_summit_presentation.gd.
