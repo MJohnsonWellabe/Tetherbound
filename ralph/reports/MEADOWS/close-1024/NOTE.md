@@ -132,6 +132,11 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Captured: band2_stone_and_root_0 (all 4 views; the GPU run had 0 frames here), band3_the_river_lock_1, band4 ironwood 0 and 1 (all 4 views each), and farm_to_hall.
   - The run hit its 108-minute CPU limit before village_road, hall_front, hall_nave, shrine_room and arch_home. Those five are recapturing now as part 2.
 
+- 2026-10-25 01:10 UTC RESULT land4 seats, CPU verification part 2: 35 rows captured, 0 rejected stands, 0 failures.
+  - All 4 views captured at village_road, hall_front, hall_nave and shrine_room. arch_home captured approach, gameplay and reverse before the CPU time limit.
+  - Across both parts, 73 of 73 reached rows captured. Every stand that was rejected on the GPU, at the 10 seated sites, now yields a frame on CPU.
+  - Open: band3_the_river_lock_0. It passes the checks, but its gameplay and detail stands frame the trainer under the gate wall, beside a timber wall. A heading probe (90/135/225/270) is capturing now; the chosen seat follows as a separate READY.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
