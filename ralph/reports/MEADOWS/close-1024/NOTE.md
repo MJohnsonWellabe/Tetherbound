@@ -378,6 +378,24 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - **Judge critique still open:** the keep is still small and pale, it is hidden by trees in the gameplay views, it has no Team Tether banners on it, and the night is murky.
   - **Not in this candidate:** courtyard daylight, the pylons and the clipped plank/beam props (band5_stronghold_approach_1). Courtyard daylight is its own candidate because the stronghold carries an 18-light budget. Working on it next; the banners get re-judged there.
 
+- 2026-10-25 23:35 UTC READY for GPU judging: **stronghold courtyard daylight r1 on tb/meadows** (this head; merged with origin/main 43c7fc696). This is the courtyard part of the coordinator's 21:58 item 3.
+  - **Candidate (OFF):** `stronghold.json courtyard_daylight_candidate.enabled: true` together with `banner_model_candidate.enabled: true`. The code is `stronghold.gd::_courtyard_daylight`.
+  - **What it changes:**
+    - The yard's own fill light (`lights` at [0,32]) becomes a broad, even sunlit bounce: energy 1.7 → 10, attenuation 1.2 → 0.4, range 36, #fff0d8. It is the same light, so the 18-light exterior budget is unchanged.
+    - The courtyard rubble keeps to the wall foot: scale_max 3.4 → 1.6, jitter 1.15 → 0.5.
+    - The two courtyard trim braces stand flush to their walls at x ±10.2, out of the camera's foreground.
+  - **CPU result** (`court1025r1-mapped.json`, `_sheet_court1025r1.png`; approach, gameplay and detail views, day and night): shipping 4.0/4.0/4.0 against the candidate at 5.5/5.6/5.6. Mapped, that is 4.35 → 5.92 (+1.57). The batch is confirming, but calibrate.py fell back to an offset-only map (least-squares slope 2.01, r 0.92). All three judges moved all three recorded defects from PRESENT to PARTIAL.
+  - **Checks with both flags ON:** `smoke_stronghold` passed, including the courtyard route and its doorways. With the flags OFF (as shipped): test_meadows_tier1_art_gates, test_stronghold_banner_camera_occluder, test_stronghold_camera_occluders and test_stronghold_approach_visual_identity ran 17 tests, 0 failed.
+  - **GPU A/B:** band5_stronghold_approach_1, all three views, day and night, Medium and High. Compare both flags ON against both OFF.
+  - **Still open (all three judges):**
+    - Night frames 5 and 6 are lit like day. The fill has no time-of-day hook.
+    - The back wall in the night approach frame stays near-black.
+    - A wall-foot brick still clips the corner of the gameplay frame.
+    - The yard floor is sparsely dressed.
+
+    The next courtyard round, if GPU confirms the gain, is a night variant of the fill (cool moonlit key, warm torch pools) plus mid-yard dressing.
+  - **Keep r5 READY (22:52) still stands**, and both candidates can go in one GPU run.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
