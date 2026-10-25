@@ -50,6 +50,8 @@
         "feature_max_val": 0.05,
         "feature_set_val": 0.02
       },
+      "_comment_overlays_1025": "Owner 25 Oct: one subtle unique touch. Hardened, war-worn: small pale chips worn into the edges of the stone back plates, under the glow; no new mesh, no new emission.",
+      "overlays": [{"id": "chipped_plates", "where": {"y_min": 0.72, "radial_min": 0.4}, "mode": "shade", "val_scale": 1.5, "sat_scale": 0.5, "coverage": 0.3, "grain": 14.0, "clump_softness": 0.05, "softness": 0.06}],
       "glow": [
         {
           "id": "armor_cracks",
