@@ -371,6 +371,13 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - **Haze/light:** L5 haze has had four sub-0.5 rounds this week, and L3 (interior grade) is held by the owner. It rides along only inside a big change.
   - **Next here:** the stronghold candidate from the 21:58 item 3. That means a keep several times larger in frame, the pylons out of that view, courtyard daylight and props cleared, and then a re-judge of the banners.
 
+- 2026-10-25 22:52 UTC READY for GPU judging: **stronghold keep r5 on tb/meadows fc0fd80c3** (merged with origin/main b21dd9734, which has land15). This is item 3 of the coordinator's 21:58 ask, keep part only.
+  - **Candidate (OFF):** `stronghold.json hero_gatehouse.enabled: true`. The keep is 150 m wide (about 167 m tall) with lit windows and a darker tint. The `band5_stronghold_approach_0` stand moves to about 300 m out (`capture-definition.json`, `at` [0, 7250]; rides along).
+  - **CPU result** (`keep1025r5-mapped.json`, `_sheet_keep1025r5.png`): shipping 5.3/5.3/5.1 against the keep at 5.9/5.9/5.9. That is raw +0.67, or mapped 5.01 → 5.85 (+0.84; slope 1.26, r 0.76). P2-003 went from PRESENT to PARTIAL for all three judges.
+  - **GPU A/B:** at band5_stronghold_approach_0 day and night, Medium and High, ON against OFF. Both sides use the new stand.
+  - **Judge critique still open:** the keep is still small and pale, it is hidden by trees in the gameplay views, it has no Team Tether banners on it, and the night is murky.
+  - **Not in this candidate:** courtyard daylight, the pylons and the clipped plank/beam props (band5_stronghold_approach_1). Courtyard daylight is its own candidate because the stronghold carries an 18-light budget. Working on it next; the banners get re-judged there.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
