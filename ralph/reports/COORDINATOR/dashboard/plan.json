@@ -1,9 +1,9 @@
 {
  "_comment": "Baseline delivery plan (owner request 2026-10-04). A sprint is one 8-hour session; sprints run back to back from `start`. Each bar's `start`/`end` are positions on a sprint axis: 0 is the start of sprint 1, 1 the end of sprint 1, 2.5 the middle of sprint 3. `features` lists what measures the bar: whole F rows, single criteria (\"F19#5\"), one chapter card (\"CARD:M2\") or one release-wide row (\"XCUT:...\"). The baseline is frozen; progress is read live from criteria.json. Re-baseline only on an owner decision and record it in `rebaselines`.",
- "baseline_set": "2026-10-24T19:47:00Z",
- "start": "2026-10-24T19:47:00Z",
+ "baseline_set": "2026-10-25T00:40:00Z",
+ "start": "2026-10-25T00:40:00Z",
  "sprint_hours": 8,
- "sprints": 15,
+ "sprints": 42,
  "rebaselines": [
   "2026-10-04 6:50 PM CDT, before any tracking: baseline measurement corrected. F29#3, F36#0, F36#3 and F47#0 (agent half) were labelled blocked but are agent work. The F49 bars now also measure the 13 chapter cards and the 4 release-wide requirements. Bar dates unchanged.",
   "2026-10-04 7:50 PM CDT (owner): added lane P, a temporary performance lane for sprints 1–4. Codex's desktop timings showed Meadows 11, Tidewake 7 and Stormwood 17 fps average at Medium 1080p. No other bar moved.",
@@ -20,7 +20,8 @@
   "2026-10-14 5:41:42 PM CDT (owner restart Tetherbound): all bars shifted equally to actual verified restart. Four fixed lanes from origin/main 6b13cc0851; durations/order unchanged. App permission mismatch corrected by resuming same four tasks with explicit never/danger-full-access.",
   "2026-10-16 4:45 AM CDT: owner shut Codex down; no criterion closed in the restart. Bars shifted 4.38 sprints to now so nothing reads LATE while stopped; they re-anchor to the actual restart time when lanes restart.",
   "2026-10-17 7:22 AM CDT (owner restart, new Claude coordinator): all bars shifted 3.33 sprints so the first bar starts at the actual restart; four lanes now run as cloud sessions. Durations and order unchanged.",
-  "2026-10-24 3:30 PM CDT (owner: \"fix the delivery plan to something reasonable\"): rebaselined from now over every open criterion (231, each catalog item once: 228 in lane bars, 3 owner items), plus the chapter exit cards and release-wide rows on the Routes bar. Eight lanes: Creatures, Meadows, Tidewake, Cloudreach, Stormwood, Fights, Routes and the GPU judge; owner items follow. Visual bars are sized at about 4 catalog items or 10 creature items per 8-hour sprint, which assumes the GPU judges each READY batch within a sprint. The visual catalog plan is folded into this one."
+  "2026-10-24 3:30 PM CDT (owner: \"fix the delivery plan to something reasonable\"): rebaselined from now over every open criterion (231, each catalog item once: 228 in lane bars, 3 owner items), plus the chapter exit cards and release-wide rows on the Routes bar. Eight lanes: Creatures, Meadows, Tidewake, Cloudreach, Stormwood, Fights, Routes and the GPU judge; owner items follow. Visual bars are sized at about 4 catalog items or 10 creature items per 8-hour sprint, which assumes the GPU judges each READY batch within a sprint. The visual catalog plan is folded into this one.",
+  "2026-10-24 7:40 PM CDT (owner: \"Yes do whatever you think is best\" on the offered two-week rebaseline): the 24 Oct plan assumed the GPU judges every READY batch within a sprint; measured, one GPU judges about one batch every 2-3 sprints and the owner's raise-the-floor tiers (everything to 6, then 7, then 7.5) add rounds. Biome bars scale by 3, Fights and Routes by 2; Creatures run 0-6 priority creatures, 6-15 poses, 15-18 the rest; the GPU judge runs to sprint 39 and the owner items follow. Scope unchanged; planned finish moves from Wed 28 Oct to about Sat 7 Nov."
  ],
  "lanes": [
   {
@@ -62,7 +63,7 @@
       "F36#29"
      ],
      "start": 0.0,
-     "end": 4.0,
+     "end": 6.0,
      "note": "Candidates queued on GPU; owner touch pass (energy, elemental, war-worn) on existing meshes.",
      "baseline_pct": 3.3
     },
@@ -140,8 +141,8 @@
       "F36#98",
       "F36#99"
      ],
-     "start": 4.0,
-     "end": 10.0,
+     "start": 6.0,
+     "end": 15.0,
      "note": "Pose batches of about 12 per GPU round.",
      "baseline_pct": 0.0
     },
@@ -150,8 +151,8 @@
      "features": [
       "F29#3"
      ],
-     "start": 10.0,
-     "end": 11.0,
+     "start": 15.0,
+     "end": 18.0,
      "note": "",
      "baseline_pct": 0.0
     }
@@ -168,7 +169,7 @@
       "F04#6"
      ],
      "start": 0.0,
-     "end": 2.0,
+     "end": 6.0,
      "note": "Hall beams renderer-aware; aftermath Meshy props in judging.",
      "baseline_pct": 0.0
     },
@@ -178,8 +179,8 @@
       "F38#0",
       "F38#41"
      ],
-     "start": 2.0,
-     "end": 4.0,
+     "start": 6.0,
+     "end": 12.0,
      "note": "174 rejected stands and clipping at arch, hall and river-lock sites.",
      "baseline_pct": 0.0
     },
@@ -206,8 +207,8 @@
       "F38#18",
       "F38#19"
      ],
-     "start": 4.0,
-     "end": 8.0,
+     "start": 12.0,
+     "end": 24.0,
      "note": "",
      "baseline_pct": 0.0
     },
@@ -234,8 +235,8 @@
       "F38#37",
       "F38#38"
      ],
-     "start": 8.0,
-     "end": 12.0,
+     "start": 24.0,
+     "end": 36.0,
      "note": "",
      "baseline_pct": 0.0
     },
@@ -244,8 +245,8 @@
      "features": [
       "F38#39"
      ],
-     "start": 12.0,
-     "end": 13.0,
+     "start": 36.0,
+     "end": 39.0,
      "note": "GPU High and Medium.",
      "baseline_pct": 0.0
     }
@@ -262,7 +263,7 @@
       "F39#31"
      ],
      "start": 0.0,
-     "end": 2.0,
+     "end": 6.0,
      "note": "",
      "baseline_pct": 0.0
     },
@@ -280,8 +281,8 @@
       "F39#9",
       "F39#10"
      ],
-     "start": 2.0,
-     "end": 6.0,
+     "start": 6.0,
+     "end": 18.0,
      "note": "Shore declutter and water first (owner).",
      "baseline_pct": 0.0
     },
@@ -308,8 +309,8 @@
       "F39#28",
       "F39#29"
      ],
-     "start": 6.0,
-     "end": 9.0,
+     "start": 18.0,
+     "end": 27.0,
      "note": "",
      "baseline_pct": 0.0
     },
@@ -319,8 +320,8 @@
       "F39#30",
       "F39#32"
      ],
-     "start": 9.0,
-     "end": 10.0,
+     "start": 27.0,
+     "end": 30.0,
      "note": "",
      "baseline_pct": 0.0
     }
@@ -337,7 +338,7 @@
       "F40#0"
      ],
      "start": 0.0,
-     "end": 2.0,
+     "end": 6.0,
      "note": "GPU captures the matrix; lane does scene fixes (owner 24 Oct).",
      "baseline_pct": 0.0
     },
@@ -363,8 +364,8 @@
       "F40#17",
       "F40#18"
      ],
-     "start": 2.0,
-     "end": 7.0,
+     "start": 6.0,
+     "end": 21.0,
      "note": "",
      "baseline_pct": 0.0
     },
@@ -375,8 +376,8 @@
       "F40#19",
       "F40#21"
      ],
-     "start": 7.0,
-     "end": 8.0,
+     "start": 21.0,
+     "end": 24.0,
      "note": "",
      "baseline_pct": 33.3
     }
@@ -390,7 +391,7 @@
      "label": "Finish Stormwood feast route piece (F49#0 piece)",
      "features": [],
      "start": 0.0,
-     "end": 1.0,
+     "end": 3.0,
      "note": "Route piece only (F49#0 is measured on the Routes bar); then hands remaining pieces to Routes.",
      "baseline_pct": 0.0
     },
@@ -399,8 +400,8 @@
      "features": [
       "F10#2"
      ],
-     "start": 1.0,
-     "end": 2.0,
+     "start": 3.0,
+     "end": 6.0,
      "note": "From Fights.",
      "baseline_pct": 0.0
     },
@@ -429,8 +430,8 @@
       "F41#20",
       "F41#21"
      ],
-     "start": 2.0,
-     "end": 7.0,
+     "start": 6.0,
+     "end": 21.0,
      "note": "",
      "baseline_pct": 0.0
     },
@@ -440,8 +441,8 @@
       "F41#22",
       "F41#24"
      ],
-     "start": 7.0,
-     "end": 8.0,
+     "start": 21.0,
+     "end": 24.0,
      "note": "",
      "baseline_pct": 0.0
     }
@@ -457,7 +458,7 @@
       "F22#4"
      ],
      "start": 0.0,
-     "end": 2.0,
+     "end": 4.0,
      "note": "Then the lane folds into the biome lanes.",
      "baseline_pct": 0.0
     }
@@ -476,7 +477,7 @@
       "XCUT"
      ],
      "start": 0.0,
-     "end": 4.0,
+     "end": 8.0,
      "note": "Pieces with matched saves; never a full run. Also measures the 13 chapter exit cards and the release-wide rows.",
      "baseline_pct": 47.4
     },
@@ -485,8 +486,8 @@
      "features": [
       "F47#0"
      ],
-     "start": 4.0,
-     "end": 5.0,
+     "start": 8.0,
+     "end": 10.0,
      "note": "Owner play pass confirms (owner lane).",
      "baseline_pct": 0.0
     },
@@ -495,8 +496,8 @@
      "features": [
       "F49#3"
      ],
-     "start": 5.0,
-     "end": 6.0,
+     "start": 10.0,
+     "end": 12.0,
      "note": "",
      "baseline_pct": 0.0
     }
@@ -512,7 +513,7 @@
       "F26#3"
      ],
      "start": 0.0,
-     "end": 13.0,
+     "end": 39.0,
      "note": "One GPU process at a time; the pace of every visual lane depends on it.",
      "baseline_pct": 0.0
     }
@@ -529,8 +530,8 @@
       "F49#1",
       "F49#2"
      ],
-     "start": 13.0,
-     "end": 14.5,
+     "start": 39.0,
+     "end": 42.0,
      "note": "Not scheduled by the coordinator; shown after the lanes.",
      "baseline_pct": 0.0
     }

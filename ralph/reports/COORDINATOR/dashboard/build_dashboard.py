@@ -28,6 +28,13 @@ _ORIG = {i for _n, _l, ids in CHAPTERS for i in ids}
 _crit_rows = json.loads((HERE / "criteria.json").read_text(encoding="utf-8"))["rows"]
 for _wave in dict.fromkeys(r.get("chapter", "Redesign") for r in _crit_rows if r["id"] not in _ORIG):
     CHAPTERS.append((_wave, "R", [r["id"] for r in _crit_rows if r["id"] not in _ORIG and r.get("chapter", "Redesign") == _wave]))
+# Owner 25 Oct ("why aren't they with the rest of the visual cards"): every GPU-judged
+# visual criterion sits in one Visual section at the end; the visual criteria of other
+# features move there as one card, and their home rows count only what is left.
+VISUAL_ROWS = ["F36", "F38", "F39", "F40", "F41"]
+VISUAL_OTHER = ["F04#6", "F08#3", "F10#2", "F13#5", "F17#6", "F22#4", "F26#3"]
+CHAPTERS = [(n, l, [i for i in ids if i not in VISUAL_ROWS]) for n, l, ids in CHAPTERS]
+CHAPTERS.append(("Visual · judged on the GPU", "V", ["VISUAL_OTHER"] + VISUAL_ROWS))
 
 
 def norm(s):
@@ -99,10 +106,24 @@ def _subcard(title, group):
 chapter_html = []
 for name, letter, ids in CHAPTERS:
     cards = []
+    _shown = []
     for fid in ids:
-        r = rows.get(fid)
+        if fid == "VISUAL_OTHER":
+            _vo = []
+            for _sel in VISUAL_OTHER:
+                _f, _, _i = _sel.partition("#")
+                _c = rows.get(_f, {}).get("criteria", [])
+                if _i.isdigit() and int(_i) < len(_c):
+                    _vo.append(dict(_c[int(_i)], text=f"{_sel} · " + str(_c[int(_i)].get("text", ""))))
+            r = {"title": "Visual criteria from other features", "criteria": _vo}
+        else:
+            r = rows.get(fid)
+            if r and any(s.startswith(fid + "#") for s in VISUAL_OTHER):
+                r = dict(r, criteria=[x for _n, x in enumerate(r.get("criteria", []))
+                                      if f"{fid}#{_n}" not in VISUAL_OTHER])
         if not r or fid in VISUAL_FEATURES:
             continue
+        _shown.extend(r.get("criteria", []))
         p = pct(r)
         cs = r.get("criteria", [])
         met = sum(1 for x in cs if norm(x.get("status")) == "met")
@@ -125,8 +146,8 @@ for name, letter, ids in CHAPTERS:
             f'<span class="fid">{fid}</span><span class="ftitle">{E(r.get("title", ""))}</span>'
             f'<span class="fnum">{met}/{len(cs)} met</span>{bar(p)}<span class="fpct">{p}%</span>{stack(cs)}'
             f'</summary><ol class="crits">{items}</ol></details>')
-    ch_rows = [rows[i] for i in ids if i in rows]
-    ch_pct = round(sum(pct(r) for r in ch_rows) / max(1, len(ch_rows)))
+    # Owner 25 Oct: the section figure is met / total over the criteria shown in it.
+    ch_pct = round(100 * sum(1 for x in _shown if norm(x.get("status")) == "met") / max(1, len(_shown)))
     if not cards:
         continue
     cards_html = "".join(cards)
@@ -587,7 +608,7 @@ h2{{font-size:20px;font-weight:700}} h3{{font-size:16px;font-weight:700}}
 .chapter{{display:grid;gap:8px}}
 .chapter header{{display:flex;align-items:baseline;gap:12px;border-bottom:3px solid var(--chc);padding-bottom:6px}}
 .chpct{{font:600 14px "JetBrains Mono",monospace;color:var(--chc)}}
-.ch-M{{--chc:var(--meadows)}} .ch-C{{--chc:var(--cloud)}} .ch-S{{--chc:var(--storm)}} .ch-T{{--chc:var(--tide)}} .ch-R{{--chc:var(--redesign)}}
+.ch-M{{--chc:var(--meadows)}} .ch-C{{--chc:var(--cloud)}} .ch-S{{--chc:var(--storm)}} .ch-T{{--chc:var(--tide)}} .ch-R{{--chc:var(--redesign)}} .ch-V{{--chc:var(--storm)}}
 .frow{{background:var(--panel);border:1px solid var(--line);border-radius:10px}}
 .frow summary{{list-style:none;cursor:pointer;display:grid;grid-template-columns:44px minmax(0,1fr) auto 120px 44px;grid-template-areas:"id title num meter pct" "id stack stack stack stack";gap:6px 12px;align-items:center;padding:12px 14px}}
 .frow summary::-webkit-details-marker{{display:none}}
