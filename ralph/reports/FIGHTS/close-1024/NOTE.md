@@ -1,6 +1,44 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-25 05:20 CT READY tb/fights-land 3e028626f (origin/main 1c64efc1a + tb/fights; clean merge, no file overlap with main's changes): **your four r6 asks and the three GPU G3 items, ON, plus the pilot ghost fix.**
+  - **Pilot ghost fix** (ef4591a18; code, always on):
+    - P2-062's follower fade (`follow_candidate`, ON since 22 Oct) dithered the follower at 0.85 while it covered the trainer from the camera. The follower *is* the fight's pilot, and the trainer stands behind it, so the pilot was a ghost for whole fights. That was the "Ripplet translucent" ask; in the Warden hall the pilot was effectively invisible.
+    - The cover test now runs only while following, as P2-062's `_why` scopes it. New case in test_follower_leader_view_fade.
+    - Found by tracing the dither in a probe capture: amount 0.85 is creature_body CAMERA_FADE_AMOUNT, not the fight's own 0.6 occlusion fade.
+  - **ON in config** (each key has `_why_fight_presentation_1025b` and a `_scope_*` note; client-local presentation only):
+    1. Dust fills the danger footprint (`dust_fill_rows` 2). The rows are revealed edge-inward as the tell builds (`dust_fill_reveal` 0.8), and the dust breathes faster toward the strike (`dust_pulse` 0.45, 1.5 -> 4.5 Hz). Rows sit inside the real hit shape (never in a ring's safe hole) and take their heights from edge points already sampled, so there are no new ground queries.
+    2. Right panels at 0.8: hud.json `panel_scale`. The move cluster keeps its bottom-right corner fixed and the enemy card its top-right corner.
+    3. HUD height jump: real. The compact lane is laid out from the screen bottom, so the returning grid pushed the title and meter up. `compact_rows_fixed` puts the grid above them, so the meter row holds still.
+    4. Pilot size floor 0.10 in every fight (camera.json `fight.pilot_min_screen_fraction`). It used to apply only in Stormwood sight-line fights, so the Riverwatch per-trainer 0.10 had been inert.
+    5. G3 item 1, stagger label: "STAGGERED — punish now" was already the **enemy's** (combat_hud `_on_staggered(on_enemy=true)`), so the GPU judges read it correctly. With `stagger_by_owner` each line names its creature ("Mudsnout staggered — punish now"; "Terrapup staggered — recovering"), and the player's own sits beside the player's panel, not under the enemy plate. The body hold is Creatures'.
+    6. G3 item 2, effects off the target: `impact.flash_drop` 1.0 puts the contact flash at the struck creature's feet, where `ground_burst` already kicks dust and stones. Radii 0.55/0.75 -> 0.42/0.55.
+    7. G3 item 3, stable low lens: pitch -15 and the fallback limit already shipped in the generic batch. I tried a slower orbit and softer lag (`orbit_speed_deg_s` 70, `lag` 2.5) in r7, and the judges still saw cuts on both sides, so it stays OFF (config unchanged). The cuts come from the solver re-picking orbit candidates around fences and gates; the next step is hysteresis on that choice, not smoothing.
+  - **Scores** (code-blind, CPU llvmpipe, 3 fresh judges per batch, mapped; both batches confirming):
+
+    | fight | before (shipped look) | after |
+    |---|---|---|
+    | Venn (r6) | 5.92 | **6.56** |
+    | Warden hall (r6) | 6.19 | **6.81** |
+    | Riverwatch (r6) | 6.43 | **7.05** |
+    | Stormwood glass_field (r6) | 6.27 | **6.38** |
+    | Veyra (r6) | 6.46 | **6.54** |
+    | Warden, open grass, f38 attack/dodge run (r7) | 5.93 | **6.32** |
+    | grunt, f38 attack/dodge run (r7) | 6.08 | **5.93** |
+
+    - Fits: r6 slope 0.81, r 0.78, RMSE 0.74. r7 slope 1.46, r 0.91, RMSE 0.56. Every fight is above your 5.2 floor.
+    - Judges, 3/3: the player's creature PRESENT -> FIXED (Venn, Riverwatch); the Warden hall PRESENT -> FIXED or PARTIAL.
+    - The grunt -0.15 is inside the batch noise. Its camera cuts and dust over the subjects are on both sides.
+    - The r6/r7 frames were captured with the fill rows ground-sampled; this land interpolates the same heights (test fix). On these grounds that is visually the same; noting it.
+  - **Judges' remaining asks:**
+    1. The wind-up "where" is still PARTIAL or PRESENT everywhere: the tells read as text plus dust.
+    2. A round target reticle over the struck creature (the target marker, not the impact flash) reads as a flat disc.
+    3. Camera cuts in trainer fights at fences.
+    4. Flat ground carpets (scene); Stormwood exposure and camera in canopy (biome lanes).
+  - **GPU capture commands:** as in my 01:25 READY. The G3 set: `tools/capture_f38_fight.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=32 --interval=0.15 --attack --dodge --tell-frames --preset=<p> --source-commit=<40-char sha> --out=<fresh dir>`.
+  - **Checks** on tb/fights (same code and config as the land): 267 tests, 11335 assertions, 0 failed. Suites: the 01:25 set plus follower_leader_view_fade, combat_hud_handheld_floors, hud_presentation_lifecycle, hud_widgets, combat_wind, trainer_fight_no_catch_prompt, band_content. Full CI not run.
+  - **Still running:** the water C2/C3 smoke and the Terrapup Stormwood and Riverwatch reruns. They were paused while captures ran, one Godot at a time, so they are later than planned; F22#4 INFO when they finish.
+  - **Balance:** game 3 (pilot ghost fix, the r6/r7 ON config, the fill-row seating) / tests-tools 1 (follower fade case).
 - 2026-10-25 04:15 CT INFO r6 (your four asks), code-blind CPU batch, 3 fresh judges, mapped (confirming, slope 0.81, r 0.78, RMSE 0.74; files r6_*):
   - Shipped generic look before -> r6 after: Venn 5.92 -> **6.56**, Warden 6.19 -> **6.81**, Riverwatch 6.43 -> **7.05**, Stormwood 6.27 -> 6.38, Veyra 6.46 -> 6.54. Every fight holds or improves and all are above the 5.2 floor.
   - **The big gain is a bug fix, ef4591a18.** P2-062's follower fade (`camera.occlusion_fade.follow_candidate`, ON since 22 Oct) dithers the follower body at 0.85 while it covers the trainer from the camera. In a fight the follower *is* the piloted creature and the trainer stands behind it, so the pilot was a ghost for whole fights. This is the "Ripplet translucent" ask; in the Warden hall the pilot was effectively invisible. The cover test now runs only while following, as its `_why` scopes it, with a new unit test.
