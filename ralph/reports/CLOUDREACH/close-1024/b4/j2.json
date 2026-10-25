@@ -1,0 +1,104 @@
+{
+ "sets": {
+  "Xe": {
+   "A": {
+    "bar_a": 6.7,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's panel is on-palette and legible but generic; B's truncated recipe lines and tiny unglyphed hints sink it."
+  },
+  "Yg": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A flat lawn and straight sand path dominate every camera; the gate is good but the sky realm and atmosphere never read."
+  },
+  "Nb": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The domed aviary landmark carries it, but the grass carpet, muddy path smear and missing pale stone sink it."
+  },
+  "Vd": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Strong hat-and-coat silhouette and warm palette carry it; waxy skin and shadowed eyes hold it back."
+  },
+  "Sa": {
+   "A": {
+    "bar_a": 4.7,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky brown lighting, flat magenta telegraph decals, an unreadable player creature and (B) camera-in-foliage frames sink it."
+  },
+  "Ql": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fur model is close to the Tanglevolt bar, but A's floating faint poses and B's over-bright veins and nose-down faint end break the finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the uniform lawn on Cloudreach roads with pale stratified stone ledges, exposed rock, short alpine tufts and flower clumps, and break the straight path",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight readability: keep the camera out of trunks and canopy, add the purple storm sky and creature rim light, and swap the flat magenta telegraph decals for lit ground cracks or sparks",
+   "kind": "scene"
+  },
+  {
+   "change": "Ground the creature faint poses so the body meets its shadow, and tone the lightning-vein emission down to the style-bar level",
+   "kind": "scene"
+  }
+ ]
+}
