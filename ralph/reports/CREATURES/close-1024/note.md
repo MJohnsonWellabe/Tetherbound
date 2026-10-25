@@ -3,6 +3,14 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct **BLOCKED (disk), orders 2-3 not started.** Even a depth-1 fetch of tb/meshy-1024 b959ba072 needs more than the 189 MB free here and failed with no space left on device; the temp pack was removed and the checkout is clean.
+  - The dog3 and Mirejaw retexture grading needs a session with disk headroom. Plan, from your read:
+    - **dog3:** r1; coat graded to chestnut #7A4E2E (no red); seat pad, cower, rim 0.3 and f0ada94b5 folded into one candidate on tb/creatures.
+    - **Mirejaw:** r2; back graded to about value 0.28 olive-umber, frills lifted to amber.
+    - Both: CPU-check against main, then READY.
+  - Specs: `close-1024/dog3-retex-spec/`, `close-1024/mirejaw-retex-spec/`.
+  - Grading template: `assets/creatures/tetherbound/mosshock/retex/grade_retex.py`.
+
 - 25 Oct GPU READY tb/creatures-land 29f4de904 (order 1): **P2-016 body hit-flash, one candidate.**
   - A struck creature's own surface pulses warm-white: #fff0d2 at 0.55, fading to 0 over 0.12 s, as an additive overlay on every mesh of its art, removed after the pulse. Art node only; body, collider and materials untouched. Config: combat.json `impact.hit_flash`.
   - The big wince is kept but OFF (`impact.hurt_wince`), and the recoil is back to main's tween. The 0.55 s wince-hold timing is still in the animator; say if you want that gated off as well.
