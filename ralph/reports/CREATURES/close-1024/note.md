@@ -3,6 +3,13 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures-land 78361d936 (tier 3 and the owner notes). CPU b31 is in `b31/judges.md`.
+  - **Mudsnout (66612a79b):** its small tusks (the lane's candidate_nat1024t, CPU b27 7.51 vs 7.04), the hardened shoulder hide and the snout scar. Height stays 2.0 m, in its small class. Its hit is the cower.
+  - **Trailpup (14639c373, then 78361d936):** one subtle touch, light trail dust in the paws and lower legs. I dropped the rim: b31 judges read it as bleached legs, and b20 had found no rim gain. Its hit is now the cower too, which Stormtrail shares.
+  - **Cindercub (a20d65623, then 78361d936):** definition via a soft ash-grey mask on the muzzle, cheeks and brow, ember cracks unchanged. Its hit is the cower.
+  - **Nightburrow (41c771e24):** small pale chips worn into the edges of its stone back plates, under the glow. Burrowback is unchanged.
+  - **b31 mapped:** Cindercub 7.44 to 7.52, Mudsnout 7.12 to 7.09, Nightburrow 6.63 to 6.66, Trailpup 7.18 to 7.09. All within noise; these are the owner-directed touches, so the GPU decides.
+  - **Grandpa:** noted the GPU pass on the eyes; the hair and beard pass is queued after dog3.
 - 25 Oct GPU READY tb/creatures-land 4fb473e7a (tier 1, on top of the a986d3142 repaint): Mosshock's hit is now a cower, because all three b30 judges read the rear-up as a lunge.
   - **New pose:** the head ducks low and aside, the body dips 8 deg and rolls 16 deg away, the tail tucks and all four feet stay planted. Only its recipe hit line changes, in `f36_pose_candidates.json`.
   - **Checks:** CPU stage frames read as a flinch; test_f36_pose_candidates and the hit-window test, 7 tests, 0 failed. Not yet judged; it rides the next CPU batch.

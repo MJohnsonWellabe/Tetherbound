@@ -1,0 +1,76 @@
+{
+ "anchors": {
+  "f36_0_npc:C1B": [
+   7.4,
+   7.4,
+   7.4
+  ],
+  "f36_0_npc:C1A": [
+   7.4,
+   7.4,
+   7.4
+  ],
+  "f36_0_gap:C2B": [
+   6.2,
+   6.0,
+   6.0
+  ],
+  "f36_0_gap:C2A": [
+   6.8,
+   6.6,
+   6.7
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.0,
+   4.9,
+   4.8
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.4,
+   4.3,
+   4.2
+  ]
+ },
+ "candidates": {
+  "cindercub live": [
+   7.2,
+   7.3,
+   7.0
+  ],
+  "cindercub cand": [
+   7.3,
+   7.4,
+   7.1
+  ],
+  "trailpup live": [
+   7.0,
+   7.0,
+   6.6
+  ],
+  "trailpup cand": [
+   7.2,
+   6.8,
+   6.3
+  ],
+  "nightburrow live": [
+   6.4,
+   5.8,
+   6.5
+  ],
+  "nightburrow cand": [
+   6.5,
+   5.8,
+   6.5
+  ],
+  "mudsnout cand": [
+   7.0,
+   6.6,
+   6.7
+  ],
+  "mudsnout live": [
+   7.0,
+   6.6,
+   6.8
+  ]
+ }
+}
