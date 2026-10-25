@@ -91,11 +91,13 @@ func build(water_world: Node3D) -> void:
 
 
 ## `destination_landmarks_s3_candidate` (OFF in play) re-seats and adds to the
-## lm2 destination pieces: its entries replace lm2's by landmark_id.
+## lm2 destination pieces: its entries replace lm2's by landmark_id. The s4
+## and s5 layers stack on it in that order.
 static func _destinations(look: Dictionary) -> Array:
 	var base: Array = look.get("destination_landmarks_candidate", [])
 	var s3: Array = (look.get("destination_landmarks_s3_candidate", []) as Array) \
-		+ (look.get("destination_landmarks_s4_candidate", []) as Array)
+		+ (look.get("destination_landmarks_s4_candidate", []) as Array) \
+		+ (look.get("destination_landmarks_s5_candidate", []) as Array)
 	if s3.is_empty():
 		return base
 	var replaced: Array = []
