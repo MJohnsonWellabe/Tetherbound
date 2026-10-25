@@ -20,7 +20,7 @@ The committed fixtures are the older chain from before the training loop: genera
 | M6 | relay → sigils | **MATCH-SAVED** (25 Oct): `f49_ms_relay` (relay from the generated `relay` profile, 5056 s) → `f49_ms_sigils` (18747 s: three captains 5/5 rounds, three sigils spent, Sigil Gate crossed); seam close-1024/seams/ms_relay__ms_sigils.json (consumer's hash-bound predecessor = producer receipt) | |
 | M7 | sigils → hall | **MATCH-SAVED** (25 Oct): `f49_ms_hall` (7514 s) from `f49_ms_sigils`; seam ms_sigils__ms_hall | |
 | M8 | hall → warden → tidewake_handoff | **MATCH-SAVED** (25 Oct): `f49_ms_warden` (1866 s), `f49_ms_tidewake_handoff` (696 s, ends in Tidewake); seams ms_hall__ms_warden, ms_warden__ms_tidewake_handoff | |
-| T1 | tidewake_handoff → tidewake 01_opening | running 25 Oct: 01 → 05 from `f49_ms_tidewake_handoff` (pinned start, generated-origin Meadows lineage; ae933f5f5..05e3fc8b2) | |
+| T1 | tidewake_handoff → tidewake 01_opening | GENERATED (`tidewake_arrival_generated`, L20) still. Prepared: 01 loads `f49_ms_tidewake_handoff` (pinned start, generated-origin Meadows lineage; 05e3fc8b2). Run stopped at load for the owner's pause, not a failure | |
 | T2 | 01 → 02 → 03 → 04 → 05_tidal | MATCH-SAVED | fixtures tidewake_01..05 |
 | T3 | 05_tidal → T3 loop (05i Ione → … → training_t3_return) | GENERATED start (`tidewake_t3_ione_independent`, L29); 12 inner seams MATCH-RECEIPT, real master_t3 and feasts | close-1020 |
 | T4 | t3_return → 07a_salt_bex | GENERATED (`tidewake_late_independent`, L31) | |
@@ -45,6 +45,6 @@ The committed fixtures are the older chain from before the training loop: genera
 - Stormwood: master_t5 proven; Kitchen and feed MISSING (S3).
 
 ## Count
-Missing pieces: M4, S3 (C6, C7 and M3 closed 25 Oct; S5 home_credits passed on tb/stormwood-routes as f49_s5b_home_credits). Generated seams no run proves: M5, T1 (being replaced), T3, T4, C1, C3, C5, S2, S4. A generated seam closes only by running the left piece's real end save into the right piece. The bulk of that is level: generated L29/L31/L39/L49 against earned L20/L31/L40.
+Missing pieces: M4, S3 (C6, C7 and M3 closed 25 Oct; S5 home_credits passed on tb/stormwood-routes as f49_s5b_home_credits). Generated seams no run proves: M5, T1, T3, T4, C1, C3, C5, S2, S4. A generated seam closes only by running the left piece's real end save into the right piece. The bulk of that is level: generated L29/L31/L39/L49 against earned L20/L31/L40.
 
 Owners (coordinator, 24 Oct 06:21Z): Routes owns C6, C7 and the Meadows rows (M3–M7); the Stormwood lane owns S3 and S5.
