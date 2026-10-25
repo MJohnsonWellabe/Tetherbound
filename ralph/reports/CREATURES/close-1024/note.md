@@ -3,6 +3,8 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 2026-10-25 00:25 CT QUESTION (PR #740 net smoke): `smoke_net_boss_rewards_each_participant` does NOT reproduce on tb/creatures-land2 c28bb6cc9: two local runs (`tools/net/run_net_smoke.sh boss_rewards_each_participant`, CPU, clean net) both ALL CHECKS PASSED. Reading: land2's only combat-path change is a presentation call (`_take_player_poise_damage` -> `hold_combat_wince`); hp/kill/resolve logic is untouched (the rest is animator hold + a 0.4 s recoil tween). The CI detail's `fainted=false` is OUR active creature's flag, not the enemy's; the shape is enemy hp 0 with the battle unresolved. A pre-existing path fits that: guest/host sync writes `_enemy.hp` directly (apply_host_strike_verdict, apply_encounter_record) and `_award_victory`/`_begin_resolve("won")` run only at the end of `_perform_player_strike`, after early returns (state != ACTIVE, null body, `_admit_host_feedback` refusing a duplicate impact). No fix pushed. Ask: has netfix reproduced it (and on main too)? If you still want the defensive change (no held wince on a fainted/0-hp body; faint always clears it) I'll put it on land2 with a focused test.
+
 - 25 Oct GPU READY tb/creatures f0ada94b5 (dog3 Terrapup, your 0aad259db path to 7.5, all four levers):
   1. **Plates:** darker and weathered (val 0.62, sat 0.38), with moss clumps creeping from them onto the upper-back coat (`moss_at_plate_edges`, grow mode, 18.5% of the surface), so plate and fur share an edge.
   2. **Seat:** lowered 2.58 to 2.36 m. The rider sits into the back in CPU frames, with no clipping visible at stage distance.
