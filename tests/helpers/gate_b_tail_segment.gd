@@ -993,15 +993,17 @@ func _wait_for_panel(script_tail: String) -> Node:
 ## at the prompt runs into the station itself (training_t4_feed, 24 Oct: from
 ## south-west of the Kitchen, its north-face prompt sat between the Kitchen and
 ## its tier-2 attachment; 2 confined resets, 3 m short). Come round by the
-## player's own side to a point just in front of the face first. INF when the
-## player already stands in front.
+## player's own side to a point just in front of the face first. The same
+## from straight in front: the Kitchen's tier-2 attachment stands on the face's
+## own axis, 1.25 m out (the rerun from the north stopped behind it), so the
+## pocket is entered from the side. INF within 2 m of the prompt.
 static func front_side_waypoint(prompt: Vector3, station: Vector3, player: Vector3) -> Vector3:
 	var facing := Vector3(prompt.x - station.x, 0.0, prompt.z - station.z)
 	if facing.length() < 0.2:
 		return Vector3.INF
 	facing = facing.normalized()
 	var offset := Vector3(player.x - prompt.x, 0.0, player.z - prompt.z)
-	if offset.dot(facing) >= 0.0:
+	if offset.length() < 2.0:
 		return Vector3.INF
 	var lateral := Vector3(-facing.z, 0.0, facing.x)
 	var sign := 1.0 if offset.dot(lateral) >= 0.0 else -1.0

@@ -177,5 +177,7 @@ func test_prompt_walk_comes_round_to_the_working_face() -> void:
 	assert_true(side != Vector3.INF)
 	assert_true(side.x < -11.2, "west of the Kitchen body, on the player's side")
 	assert_true(side.z > 14.7 and side.z < 15.95, "in the pocket before the tier-2 attachment")
-	assert_eq(HOME.front_side_waypoint(prompt, kitchen, Vector3(-10.0, 0.9, 18.5)), Vector3.INF, "already in front")
+	var north := HOME.front_side_waypoint(prompt, kitchen, Vector3(-10.6, 0.9, 21.6))
+	assert_true(north.x < -10.55 and north.z < 15.95, "from the north: into the pocket beside the tier-2 attachment")
+	assert_eq(HOME.front_side_waypoint(prompt, kitchen, Vector3(-10.5, 0.9, 15.6)), Vector3.INF, "already at the face")
 	assert_true(HOME.front_side_waypoint(prompt, kitchen, Vector3(-8.0, 0.9, 12.0)).x > -8.8, "east side from the south-east")
