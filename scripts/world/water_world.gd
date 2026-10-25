@@ -446,12 +446,6 @@ func _stand_up_ground_cover() -> void:
 		var stones: Dictionary = ((profile as Dictionary).get("stones", {}) as Dictionary).duplicate()
 		stones.merge(stones_candidate, true)
 		(profile as Dictionary)["stones"] = stones
-	# close-1024 `dune_grass_candidate` (OFF in play): fewer lone pioneer tufts and
-	# tighter colonies, so beach grass gathers into groves with open sand between.
-	var grass_candidate: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get("dune_grass_candidate", {})
-	for key: String in grass_candidate:
-		if not key.begins_with("_"):
-			(profile as Dictionary)[key] = grass_candidate[key]
 	var texture_names: Array = []
 	for spec: Dictionary in _visual.terrain.textures:
 		texture_names.append(str(spec.name))
