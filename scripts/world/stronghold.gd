@@ -57,6 +57,7 @@ extends Node3D
 
 const CONFIG_PATH := "res://data/config/stronghold.json"
 const STRONGHOLD_HERO_GATEHOUSE := preload("res://scripts/world/stronghold_hero_gatehouse.gd")
+const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 ## ROUND-5, FIX3. The same rigged-human builder `trainer_npc.gd`'s own bodies
 ## and `village_npcs.gd`'s decorative NPCs both build on -- used here directly
@@ -2053,6 +2054,14 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 	var width := BANNER_CLOTH_W * scale
 	var height := BANNER_CLOTH_H * scale
 
+	# F38 band5_1 (close-1024, OFF until judged): a Meshy war banner (pole,
+	# crossbar and draped cloth) replaces the bar and cloth at the same size.
+	var banner_model := _banner_model_candidate(width, height)
+	if banner_model != null:
+		holder.add_child(banner_model)
+		_add_banner_occluder(holder, Vector3(BANNER_CLOTH_T, -height * 0.5 - 0.09, 0.0), width, height)
+		return holder
+
 	# The crossbar it hangs from, in the Hall's own timber.
 	var bar := MeshInstance3D.new()
 	bar.name = "BannerBar"
@@ -2087,6 +2096,11 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 	# camera's arm swept through it and parked the lens behind the banner. One
 	# thin box over the cloth on the camera rig's occlusion-only layer stops
 	# the lens and nothing else (mask 0; the player's mask is layer 1).
+	_add_banner_occluder(holder, panel.position, width, height)
+	return holder
+
+
+func _add_banner_occluder(holder: Node3D, at: Vector3, width: float, height: float) -> void:
 	var occluder := StaticBody3D.new()
 	occluder.name = "CameraOccluder"
 	occluder.collision_layer = BANNER_CAMERA_OCCLUSION_LAYER
@@ -2098,10 +2112,31 @@ func _hang_banner(at: Vector3, yaw_rad: float, colour: Color = BANNER_COLOUR,
 	# fight's lens still ended inside a fold (lens probe, frame 08).
 	occluder_box.size = Vector3(0.7, height, width)
 	occluder_shape.shape = occluder_box
-	occluder.position = panel.position
+	occluder.position = at
 	occluder.add_child(occluder_shape)
 	holder.add_child(occluder)
-	return holder
+
+
+## `stronghold.json banner_model_candidate` (OFF until judged): the model is
+## fitted so its cloth spans `width` x `height`, hung from the holder origin
+## (the crossbar line) and facing out along the holder's +X. Null when off.
+func _banner_model_candidate(width: float, height: float) -> Node3D:
+	var cfg: Dictionary = _config.get("banner_model_candidate", {})
+	if not bool(cfg.get("enabled", false)):
+		return null
+	var scene := load(str(cfg.get("path", ""))) as PackedScene
+	if scene == null:
+		return null
+	var model := scene.instantiate() as Node3D
+	var bounds := RENDER_BOUNDS.measure(model)
+	if bounds.size.y <= 0.001:
+		model.free()
+		return null
+	var fit := height * float(cfg.get("height_share", 1.0)) / bounds.size.y
+	model.scale = Vector3.ONE * fit
+	model.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 90.0)))
+	model.position = Vector3(BANNER_CLOTH_T, -bounds.end.y * fit + float(cfg.get("lift_m", 0.0)), 0.0)
+	return model
 
 
 func _folded_banner_mesh(width: float, height: float) -> ArrayMesh:
