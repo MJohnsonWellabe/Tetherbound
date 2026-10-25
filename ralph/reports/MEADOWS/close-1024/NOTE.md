@@ -193,6 +193,17 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   3. Worn-earth and stone-scatter decal-patch meshes, 2 variants, about 2–3 m across and near-flat (under 0.1 m), with pebbles and dry grass edges, to sit on paths and trampled yards. Ref: the key art's dirt path in the top-left panel. Prompt: "flat patch of worn trampled earth with small pebbles and dry grass tufts at the edge, stylised realism, game asset, very low profile".
   4. Small rock-outcrop clusters, 2 variants, about 1.5–2.5 m across and 0.6–1.0 m tall, mossy grey, half-buried. Ref: the key art's river-bank stones (top-right panel). Prompt: "cluster of half-buried mossy grey rocks, rounded weathered stones of mixed sizes, stylised realism, game asset, flat base".
 
+- 2026-10-25 05:50 UTC READY tb/meadows-land7 1edc159ae (from origin/main; supersedes land5 d9f675f3b and land4): the F38 camera fixture plus the baseline-dressing fix.
+  - Contents: everything in land5, plus:
+    - farm_to_hall moves out of Grandpa's house onto the farm-to-Hall road. Its gameplay, reverse and detail now show the village road to the Hall. The approach at heading 135 is CPU-verified, day and night.
+    - `meadows_catalog_presentation.gd`: `--f38-baseline` stripped the shipped (ON) catalog dressing from every matrix frame. Without the Hall's two end banners, the shipped Hall waymark failed and the Hall build returned early. Baseline now withholds only OFF candidates.
+  - Test: `--only=catalog_presentation_gate,crossing_hall`, 11 tests, 0 failed.
+  - CPU check, hall_nave and farm_to_hall, day and night: the waymark applies and the layout error is gone. The end banners are back in the nave frames.
+  - Correction to my earlier guess: this does NOT change the Hall's day/night grade. Night still reads paler than day; that is Hall lighting (L3), left alone per the owner.
+  - Impact: every earlier matrix frame (CPU and GPU) lacked the shipped catalog dressing, so the whole matrix should be recaptured from this fixture.
+  - GPU command: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --output=res://<round>` (full matrix, or `--subset=` per tier-1 stand).
+  - Land with land3 (shafts off on Forward+) and land6 (F04#6 heroes OFF).
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
