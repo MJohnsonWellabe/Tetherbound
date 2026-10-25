@@ -28,14 +28,10 @@ func test_policy_recovers_source_regions_without_global_hue_flattening() -> void
 		var rule: Dictionary = species.get(id, {})
 		var vivid: Array = rule.get("vivid_rules", [])
 		assert_eq(int((rule.get("finish", {}) as Dictionary).get("feature_percentile", -1)), 0)
-		if id == "mosshock":
-			assert_eq(vivid.size(), 3, "Mosshock alone gets an anatomical red/gold-to-moss repaint")
-			assert_eq((vivid[2] as Dictionary).get("match", {}), {}, "unmatched Mosshock regions stay authored")
-		else:
-			assert_eq(vivid.size(), 1, "%s uses one source-preserving rule" % id)
-			if vivid.size() == 1:
-				assert_eq((vivid[0] as Dictionary).get("match", {}), {})
-				assert_almost_eq(float((vivid[0] as Dictionary).get("sat_scale", 0.0)), 1.0)
+		assert_eq(vivid.size(), 1, "%s uses one source-preserving rule" % id)
+		if vivid.size() == 1:
+			assert_eq((vivid[0] as Dictionary).get("match", {}), {})
+			assert_almost_eq(float((vivid[0] as Dictionary).get("sat_scale", 0.0)), 1.0)
 
 
 func test_outputs_cannot_return_to_the_flat_neon_roster() -> void:
