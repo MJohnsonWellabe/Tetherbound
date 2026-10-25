@@ -1,0 +1,11 @@
+Gf: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Gl: "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)"
+Ui: none
+Uz: none
+Ew: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Wx: "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)"
+Bm: none
+Od: none
+Ru: none
+Oy: "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)"
+Dc: "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)"

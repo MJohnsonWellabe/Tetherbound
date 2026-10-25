@@ -1,0 +1,59 @@
+[
+ {
+  "label": "B1 stormtrail Medium|High",
+  "a": "D:\\tb-gpu-runs\\yard\\b1\\sides\\stormtrail-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\b1\\sides\\stormtrail-High.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": {}
+ },
+ {
+  "label": "B1 riverdrake Medium|High",
+  "a": "D:\\tb-gpu-runs\\yard\\b1\\sides\\riverdrake-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\b1\\sides\\riverdrake-High.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)"
+  ]
+ },
+ {
+  "label": "B1 mosshock Medium|High",
+  "a": "D:\\tb-gpu-runs\\yard\\b1\\sides\\mosshock-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\b1\\sides\\mosshock-High.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": {}
+ },
+ {
+  "label": "B1 water_riverdrake Medium|High",
+  "a": "D:\\tb-gpu-runs\\yard\\b1\\sides\\water_riverdrake-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\b1\\sides\\water_riverdrake-High.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)"
+  ]
+ },
+ {
+  "label": "B1 mirejaw Medium|High",
+  "a": "D:\\tb-gpu-runs\\yard\\b1\\sides\\mirejaw-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\b1\\sides\\mirejaw-High.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)"
+  ]
+ },
+ {
+  "label": "B1 riftfrill Medium|High",
+  "a": "D:\\tb-gpu-runs\\yard\\b1\\sides\\riftfrill-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\b1\\sides\\riftfrill-High.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": {}
+ },
+ {
+  "label": "B1 water_mirejaw Medium|High",
+  "a": "D:\\tb-gpu-runs\\yard\\b1\\sides\\water_mirejaw-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\b1\\sides\\water_mirejaw-High.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "frills, fins or crest in dark red or oxblood (a colour reserved for the enemy faction)"
+  ]
+ }
+]

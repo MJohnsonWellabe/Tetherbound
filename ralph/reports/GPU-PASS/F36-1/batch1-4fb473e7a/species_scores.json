@@ -1,0 +1,82 @@
+{
+ "water_mirejaw": {
+  "Medium": 6.0,
+  "High": 6.0,
+  "judges": [
+   5.7,
+   6.81,
+   5.48
+  ],
+  "red_check": {
+   "PARTIAL": 6
+  }
+ },
+ "riftfrill": {
+  "Medium": 6.11,
+  "High": 6.11,
+  "judges": [
+   6.26,
+   6.37,
+   5.7
+  ],
+  "red_check": {}
+ },
+ "stormtrail": {
+  "Medium": 6.96,
+  "High": 6.96,
+  "judges": [
+   6.81,
+   7.25,
+   6.81
+  ],
+  "red_check": {}
+ },
+ "mirejaw": {
+  "Medium": 6.0,
+  "High": 6.0,
+  "judges": [
+   5.7,
+   6.81,
+   5.48
+  ],
+  "red_check": {
+   "PARTIAL": 6
+  }
+ },
+ "mosshock": {
+  "Medium": 5.41,
+  "High": 5.41,
+  "judges": [
+   5.48,
+   6.15,
+   4.6
+  ],
+  "red_check": {}
+ },
+ "water_riverdrake": {
+  "Medium": 6.99,
+  "High": 6.99,
+  "judges": [
+   7.03,
+   7.14,
+   6.81
+  ],
+  "red_check": {
+   "PARTIAL": 4,
+   "FIXED": 2
+  }
+ },
+ "riverdrake": {
+  "Medium": 6.99,
+  "High": 6.99,
+  "judges": [
+   7.03,
+   7.14,
+   6.81
+  ],
+  "red_check": {
+   "PARTIAL": 4,
+   "FIXED": 2
+  }
+ }
+}
