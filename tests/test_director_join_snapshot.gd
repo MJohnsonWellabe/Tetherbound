@@ -277,6 +277,31 @@ func _native_cleanup() -> void:
 	_native_host_peer = null
 	_native_guest_peer = null
 	_native_transition = null
+	_native_drain_audio()
+
+## A pooled one-shot (AudioManager parents it under root) can still be playing
+## when the child quits. Freeing a playing player only flags its playback;
+## the audio thread's next mix removes it, and AudioServer.finish() does not.
+## A loaded machine can skip that mix, leaking the playback and its stream
+## ("2 ObjectDB instances", "1 resources still in use"). Stop every player
+## and wait for two completed mixes so nothing is left for exit.
+func _native_drain_audio() -> void:
+	var root := (Engine.get_main_loop() as SceneTree).root
+	var stopped := false
+	for type: String in ["AudioStreamPlayer", "AudioStreamPlayer2D", "AudioStreamPlayer3D"]:
+		for player: Node in root.find_children("*", type, true, false):
+			if player.get("playing"):
+				player.call("stop")
+				stopped = true
+	if not stopped: return
+	var mixes := 0
+	var since := AudioServer.get_time_since_last_mix()
+	var deadline := Time.get_ticks_msec() + 1000
+	while mixes < 2 and Time.get_ticks_msec() < deadline:
+		OS.delay_msec(1)
+		var now := AudioServer.get_time_since_last_mix()
+		if now < since: mixes += 1
+		since = now
 
 func _case_native_realm_rpc_membership_and_admission() -> void:
 	if not _native_build(): return
