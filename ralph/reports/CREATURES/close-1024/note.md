@@ -3,6 +3,8 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct **Terrapup: shipped model passes (GPU 7.61/7.64); dog3 retired.** f0ada94b5 and the dog3 candidate are not landed, and no further dog3 work.
+
 - 25 Oct MESHY (rule 2): **Mirejaw retexture of the existing mesh.** GPU 6.92, one dominant defect (the near-black back, a 'dark smear' at faint end). Two albedo nudges gained under 0.5 (b34 -1.17, b35 -0.05), so per rule 1 I'm switching to the Mosshock route. Spec, palette and refs: `close-1024/mirejaw-retex-spec/` (back about value 0.28, olive-umber with thinner ochre seams; cream belly and amber frills kept; no red; texture only, same mesh, rig and recipe). I'll grade, wire, re-pin and CPU-judge it when the task lands.
   - The lane's `lift_dark_back` touch (4e5dc1d35) is superseded by this; drop it from GPU READY.
   - Status of my order: the Mosshock regrade (01b054770) and the bigger wince (2a1eb2d98) are both posted GPU READY.
