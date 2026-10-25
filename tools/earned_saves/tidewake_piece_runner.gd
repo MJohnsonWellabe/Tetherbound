@@ -397,7 +397,11 @@ func _prepare_meadows_prefix() -> bool:
 	if not meadows_prefix.call("configure_compatibility", compatibility_paths, "tidewake_01_opening"):
 		failures.append_array(meadows_prefix.failures)
 		return false
-	if meadows_prefix.call("import_prefix", from_dir, "earned") != "tidewake_handoff":
+	# A Meadows lineage that began at a disclosed generated boundary (relay,
+	# sigils or hall profile) imports as such; its origin and provenance are
+	# verified and carried in meadows_origin, never relabelled earned.
+	var input_mode := "generated_fixture" if receipt.get("kind", "") == "f49_generated_fixture_handoff" else "earned"
+	if meadows_prefix.call("import_prefix", from_dir, input_mode) != "tidewake_handoff":
 		failures.append_array(meadows_prefix.failures)
 		return false
 	meadows_origin = {"commit": meadows_prefix.source_commit,
