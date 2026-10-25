@@ -25,6 +25,10 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
     - Please re-take the GPU Veilfall baseline on the new stand.
   - **Next idea:** carry the crown family down the face (terraced relief plus the main fall on the capped face). I'll report before building it.
 
+- 2026-10-26 10:10 CT **READY update: P2-011 destination landmarks s2 (lm2/VERDICT.md) replaces the lm1 numbers.**
+  - **Change:** the jetty moved to the shoreline, and both are 13 m.
+  - **CPU mapped, reframed P2-011 stand:** 5.36 → **6.81** (+1.45). All three judges higher.
+
 - 2026-10-25 23:30 CT **READY for the GPU lane: P2-011 destination landmarks (lm1/VERDICT.md).**
   - **Change:** `destination_landmarks_candidate` places MESHY 11-12, the twin pumps and the rescue jetty.
   - **CPU mapped:** 4.33 → **5.58** (+1.25). All three judges higher.
