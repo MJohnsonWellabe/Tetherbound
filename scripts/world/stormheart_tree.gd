@@ -706,6 +706,7 @@ func _built_detail() -> void:
 	wood.shader = CUT_WOOD_SHADER
 	wood.set_shader_parameter("wood_atlas",load("res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png"))
 	wood.set_shader_parameter("wood_tint",Color(str(settings.get("wood_tint","#c4aa87"))))
+	wood.set_shader_parameter("weathering",clampf(float(settings.get("wood_weathering",0.0)),0.0,1.0))
 	_cut_wood = wood
 	for visual: MeshInstance3D in find_children("*","MeshInstance3D",true,false):
 		if visual.material_override == _wood:
