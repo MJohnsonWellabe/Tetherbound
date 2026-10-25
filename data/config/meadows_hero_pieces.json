@@ -41,6 +41,7 @@
     ]
   },
   "ironwood": {
+    "_why_r1": "close-1024 r1: mapped Bar A 5.86 ON vs shipping 5.20 (+0.66) on band4 ironwood 0/1, day approach/gameplay/detail and night gameplay (CPU, 25 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, anchors f36_0_npc:C2 / f36_0_gap:C1 / craft, calibrate.py linear slope 1.16 r 0.92 RMSE 0.34; Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/iw1024-mapped.json). Defect PARTIAL on all three (PRESENT on shipping): the new trees read as foliage, but the existing giant ironwood behind keeps its faceted canopy (MESHY line in NOTE.md). Below 6.7; OFF pending GPU, recommend ON.",
     "enabled": false,
     "_why": "band4 ironwood (GPU 6.29/6.12, not tier 1): 'replace the faceted, blobby canopies with real leaf-card canopies'. Two coordinator Meshy hero trees (about 14 m) beside the band4 ironwood stands. Placed (r1, unjudged) framing each stand's subject: the Ironwood Grove stand (gameplay and detail look +z) gets one either side 8-12 m past the player; the Ridgeline Watch stand (heading 45) one right and one left-behind the site. Crowns 11-12 m wide, so about 14 m tall, roughly 8x the 1.80 m trainer.",
     "pieces": [
