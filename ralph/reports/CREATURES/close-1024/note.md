@@ -2,6 +2,8 @@
 
 ## HANDOFF (25 Oct, PAUSED for a fresh session)
 
+**PAUSED 42fc1dcb2** (send_message was refused: untrusted device). tb/creatures-land 4f7c8d31c. Both branches are clean and pushed. No half-done grading exists: the b959ba072 fetch failed on disk before any change.
+
 ### Branch heads
 - `tb/creatures` 6ce1a74cb (+ this handoff): the lane. It holds dog3 Terrapup (candidate_dog3, f0ada94b5), the Grandpa hair candidate (41b3b19c0), all specs and this note. It is not landed.
 - `tb/creatures-land` 4f7c8d31c: the landing candidate. It merged main 400f3661f (#746/#747) at 9ad1c9e85. Not landed as a whole; the coordinator lands pieces from it.
