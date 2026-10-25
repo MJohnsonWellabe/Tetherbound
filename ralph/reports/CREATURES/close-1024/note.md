@@ -3,6 +3,13 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures-land 01b054770 (= 463c2149b + 3 commits): **Mosshock CI fix for #745 (urgent).**
+  - Regraded from r1 (`retex/grade_retex.py`, never compounding): coat moss at hue 100 with lighter values and a saturation floor, darker folds (below the coat's median value) olive-brown, belly and throat pale cream, olive-brown rims, amber iris, no red. Written to the embedded albedo, the extracted jpg and the vivid PNG; f36 pin updated.
+  - `test_stormwood_source_colourways`: moss share ~0.48, inside the unchanged 0.34-0.78 band. The only test edit: the Mosshock case gets the one-rule, match {}, sat_scale 1.0 check every other species gets (commit 8c27cb42e records that the retexture replaces the anatomical repaint).
+  - Named run on this branch: stormwood_source_colourways, director_join_snapshot, f36_pose_candidates, texture_import_policy, colourway, creature_flinch_head_drop: 23 tests, 0 failed. **test_director_join_snapshot passes here** and printed no "resources still in use" line.
+  - CPU pre-judge b36 against main: 4.90 -> 6.01 (+1.11). Judges: face and eye now read, but the coat is 'clay-like' with a narrow value range; the hit and the faint (a belly-up roll) are unchanged from main. Evidence: `close-1024/b36/judges.md`.
+- 25 Oct READY (fallback, same head) **P2-016 G4:** 04ee56bcd. The hit recoil drops the head about a third of the body's height (pitched nose-down about the hindquarters, capped at 25 deg), plus the shove away from the attacker; art node only, body and collider unchanged (`test_creature_flinch_head_drop`). CPU grunt fight capture: Mudsnout visibly dips nose-down at the impact frames. Use it if the 463c2149b re-test still fails.
+
 - 25 Oct GPU READY tb/creatures (head after this note): batch-2 follow-ups. Base for every pair is main.
   - **Nightburrow** (aspect_variants rule + field_rim 0.3): the mustard fill between the black back plates goes violet charcoal, so the plates read as one armoured mass; brown coat kept. CPU b35 6.76 -> 6.99 (+0.23).
   - **Riftfrill** (field_rim 0.3): CPU b35 7.37 = 7.37; the rim does not render under llvmpipe, so only the GPU can judge it.
