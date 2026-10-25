@@ -98,6 +98,8 @@ func build() -> void:
 	set_process(_core_material != null or _hero != null)
 	if _presentation_enabled("built_detail"):
 		_built_detail()
+	if _presentation_enabled("deck_supports"):
+		_deck_supports(_presentation.get("deck_supports", {}))
 
 
 func _presentation_enabled(key: String) -> bool:
@@ -838,6 +840,84 @@ func _visual_beam(parent: Node3D, id: String, start: Vector3, finish: Vector3,
 		Vector3(thickness, thickness, vector.length()), material)
 	visual.basis = Basis.looking_at(vector.normalized())
 	return visual
+
+
+## GPU F41#0 (Stormheart 3.51, 25 Oct: "smooth bare trunk walls ... add
+## structure and supports"): timber posts carry the OuterWorks deck where it
+## meets the trunk wall, each with a knee brace under the deck, and lanterns
+## hang under the deck's inner lip. Presentation only and out of the walking
+## floor: the posts stand at the wall edge, the lanterns overhead.
+func _deck_supports(cfg: Dictionary) -> void:
+	var root := Node3D.new()
+	root.name = "DeckSupports"
+	add_child(root)
+	var wood: Material = _cut_wood if _cut_wood != null else _wood
+	var count := int(cfg.get("post_count", 24))
+	var post_r := OUTER_WORKS_OUTER_RADIUS - float(cfg.get("post_inset_m", 0.7))
+	var deck_y := 6.0
+	var width := float(cfg.get("post_width_m", 0.6))
+	var posts: Array[Transform3D] = []
+	var braces: Array[Transform3D] = []
+	for index in count:
+		var angle := TAU * float(index) / float(count)
+		var radial := Vector3(cos(angle), 0.0, sin(angle))
+		var base := radial * post_r
+		var height := deck_y + 1.0
+		posts.append(Transform3D(Basis(Vector3.UP, -angle) * Basis.from_scale(Vector3(width, height, width)),
+			base + Vector3.UP * (deck_y - height * 0.5)))
+		# Knee brace from the post, 2.2 m down, up and inward to the deck.
+		var from := base + Vector3.UP * (deck_y - 2.2)
+		var to := base - radial * 2.0 + Vector3.UP * (deck_y - 0.15)
+		var along := to - from
+		var y_axis := along.normalized()
+		var x_axis := y_axis.cross(radial.cross(Vector3.UP)).normalized()
+		var z_axis := x_axis.cross(y_axis).normalized()
+		braces.append(Transform3D(Basis(x_axis * width * 0.55, y_axis * along.length(), z_axis * width * 0.55),
+			(from + to) * 0.5))
+	_instances(root, posts, wood)
+	_instances(root, braces, wood)
+	var glow := StandardMaterial3D.new()
+	glow.albedo_color = Color("ffbd62")
+	glow.emission_enabled = true
+	glow.emission = Color("ff9a3d")
+	glow.emission_energy_multiplier = 3.2
+	var lanterns := int(cfg.get("lantern_count", 12))
+	var lit_every := maxi(1, int(cfg.get("light_every", 2)))
+	var lip_r := 18.0 + float(cfg.get("lantern_inset_m", 0.6))
+	for index in lanterns:
+		var angle := TAU * (float(index) + 0.5) / float(lanterns)
+		var at := Vector3(cos(angle), 0.0, sin(angle)) * lip_r + Vector3.UP * float(cfg.get("lantern_y_m", 4.9))
+		var holder := Node3D.new()
+		holder.name = "DeckLantern%02d" % index
+		holder.position = at
+		root.add_child(holder)
+		var chain := MeshInstance3D.new()
+		var chain_mesh := BoxMesh.new()
+		chain_mesh.size = Vector3(0.05, 6.0 - 0.15 - at.y - 0.2, 0.05)
+		chain.mesh = chain_mesh
+		chain.material_override = _metal
+		chain.position.y = 0.2 + chain_mesh.size.y * 0.5
+		holder.add_child(chain)
+		var cage := MeshInstance3D.new()
+		var cage_mesh := BoxMesh.new()
+		cage_mesh.size = Vector3(0.34, 0.42, 0.34)
+		cage.mesh = cage_mesh
+		cage.material_override = _metal
+		holder.add_child(cage)
+		var flame := MeshInstance3D.new()
+		var sphere := SphereMesh.new()
+		sphere.radius = 0.15
+		sphere.height = 0.3
+		flame.mesh = sphere
+		flame.material_override = glow
+		holder.add_child(flame)
+		if index % lit_every == 0:
+			var light := OmniLight3D.new()
+			light.light_color = Color("ffb15c")
+			light.light_energy = float(cfg.get("light_energy", 1.8))
+			light.omni_range = float(cfg.get("light_range_m", 13.0))
+			light.shadow_enabled = false
+			holder.add_child(light)
 
 
 func _add_wayfinding_lamp(parent: Node3D, at: Vector3, glow: Material, id: String) -> void:
