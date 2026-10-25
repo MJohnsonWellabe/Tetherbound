@@ -1,0 +1,160 @@
+{
+ "sets": {
+  "As": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's panel is legible and on-palette, but neither side has the accent colour, controller glyph hierarchy and crisp finish of Palworld's HUD, and the world behind it is a murky, flat dusk."
+  },
+  "Zv": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's braced timber frame, cap board and stone footing read as built, but it is still a lone thin panel with flat infill beside a faceted grey placeholder rock, well short of Palworld's base-building finish."
+  },
+  "Xs": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the shelter interior reads as a bare plaster box with no Stormwood lining, hearth or lived-in dressing": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the shelter interior reads as a bare plaster box with no Stormwood lining, hearth or lived-in dressing": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's plank lining and lit stone hearth give a cozy warm room, but no frame of either side shows storm, purple light or anything Stormwood, so the four phases are indistinguishable and the room could be any village hut."
+  },
+  "Xw": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder with a strong white-hair-and-beard silhouette, readable eyes and an earthy green/brown outfit that sits in the Meadows palette, at roughly Palworld NPC finish."
+  },
+  "Me": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fixed purple sky, rain and white-violet lightning give it storm mood, but an unbroken dark-green ground carpet, flat lilac distance and a tiny or barely visible heartstone leave no landmark or depth to carry it."
+  },
+  "Mt": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's railed, lamp-lit ring walkways nod toward the board's interior, but the smooth dark trunk wall, murky underexposed frames and blobby lilac fog sprites sit far below the board's glowing hollow-tree core and Valheim-class light."
+  },
+  "Vr": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's furred, spotted boar moves toward the owner's naturalistic bar, but neither side stands taller than the 1.80 m trainer, and A's smooth clay-toy surface with stuck-on moss patches reads as a placeholder."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood ground and light pass: break the uniform dark-green carpet into soil, moss, rock and black-pool patches with grove/clearing structure, lift exposure with a storm-lit rim/key, replace the flat lilac distance with layered silhouetted forest, and swap the pale blob fog sprites for volumetric fog (Me, Mt, and a storm view through Xs windows)",
+   "kind": "scene"
+  },
+  {
+   "change": "Hero landmarks to board level: a large, textured crown heartstone framed in the Me cameras, and a Stormheart trunk with deep bark relief, branch roots, banners, lanterns and a glowing core shaft in Mt",
+   "kind": "new_art"
+  },
+  {
+   "change": "Creature and wall material pass: scale the Vr boar above the 1.80 m trainer with naturalistic fur (B direction) and grounded faint poses, and give the homestead wall depth, textured wattle or plank infill, a cap and a stone footing (A direction), with the faceted grey rock replaced",
+   "kind": "scene"
+  }
+ ]
+}

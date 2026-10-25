@@ -1,0 +1,82 @@
+[
+    {
+        "stand":  "ashfoot_shelter_inside",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4,
+        "judged":  [
+                       "ashfoot_shelter_inside_calm",
+                       "ashfoot_shelter_inside_building",
+                       "ashfoot_shelter_inside_break",
+                       "ashfoot_shelter_inside_fading"
+                   ]
+    },
+    {
+        "stand":  "dynamo_the_stormheart_tree",
+        "preset":  "Medium",
+        "cand":  24,
+        "ship":  24,
+        "judged":  [
+                       "dynamo_the_stormheart_tree_v01_calm",
+                       "dynamo_the_stormheart_tree_v02_building",
+                       "dynamo_the_stormheart_tree_v03_break",
+                       "dynamo_the_stormheart_tree_v04_fading",
+                       "dynamo_the_stormheart_tree_v05_break",
+                       "dynamo_the_stormheart_tree_v06_calm"
+                   ]
+    },
+    {
+        "stand":  "hollow_crown_the_crown_heartstone",
+        "preset":  "Medium",
+        "cand":  12,
+        "ship":  12,
+        "judged":  [
+                       "hollow_crown_the_crown_heartstone_v01_calm",
+                       "hollow_crown_the_crown_heartstone_v02_building",
+                       "hollow_crown_the_crown_heartstone_v03_break",
+                       "hollow_crown_the_crown_heartstone_v01_fading",
+                       "hollow_crown_the_crown_heartstone_v02_break",
+                       "hollow_crown_the_crown_heartstone_v03_calm"
+                   ]
+    },
+    {
+        "stand":  "ashfoot_shelter_inside",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  4,
+        "judged":  [
+                       "ashfoot_shelter_inside_calm",
+                       "ashfoot_shelter_inside_building",
+                       "ashfoot_shelter_inside_break",
+                       "ashfoot_shelter_inside_fading"
+                   ]
+    },
+    {
+        "stand":  "dynamo_the_stormheart_tree",
+        "preset":  "High",
+        "cand":  24,
+        "ship":  24,
+        "judged":  [
+                       "dynamo_the_stormheart_tree_v01_calm",
+                       "dynamo_the_stormheart_tree_v02_building",
+                       "dynamo_the_stormheart_tree_v03_break",
+                       "dynamo_the_stormheart_tree_v04_fading",
+                       "dynamo_the_stormheart_tree_v05_break",
+                       "dynamo_the_stormheart_tree_v06_calm"
+                   ]
+    },
+    {
+        "stand":  "hollow_crown_the_crown_heartstone",
+        "preset":  "High",
+        "cand":  12,
+        "ship":  12,
+        "judged":  [
+                       "hollow_crown_the_crown_heartstone_v01_calm",
+                       "hollow_crown_the_crown_heartstone_v02_building",
+                       "hollow_crown_the_crown_heartstone_v03_break",
+                       "hollow_crown_the_crown_heartstone_v01_fading",
+                       "hollow_crown_the_crown_heartstone_v02_break",
+                       "hollow_crown_the_crown_heartstone_v03_calm"
+                   ]
+    }
+]

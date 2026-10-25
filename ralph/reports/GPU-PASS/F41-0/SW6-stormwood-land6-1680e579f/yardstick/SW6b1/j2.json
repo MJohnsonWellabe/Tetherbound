@@ -1,0 +1,154 @@
+{
+ "sets": {
+  "We": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the shelter interior reads as a bare plaster box with no Stormwood lining, hearth or lived-in dressing": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the shelter interior reads as a bare plaster box with no Stormwood lining, hearth or lived-in dressing": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A warm, tidy generic cabin with no Stormwood material language and no view of the storm, so the four storm phases look the same; nothing Valheim-like in the light beyond A's hearth glow."
+  },
+  "Na": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's torn-down banners, open cage and smoke plume tell site-specific stories, but blurry tiled ground, bare open fields and flat skies sit well below Palworld density and finish."
+  },
+  "Tl": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's mottled gold-on-black scales approach the owner's naturalistic bar but it loses the upright hooded cobra silhouette, while A's flat toy banding and floating faint poses fall clearly below it."
+  },
+  "Wi": {
+   "A": {
+    "bar_a": 3.9,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple sky and wrap-around walkway hint at the Stormheart, but the frames are a murky low-value band of dark grass and smooth brown trunk with no crown, core or shafts of storm light."
+  },
+  "Jf": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Rain, purple sky and white-violet sky lightning give real storm mood, but a uniform dark grass carpet, sparse generic trees and a flat empty horizon with no hero heartstone sink it."
+  },
+  "By": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's braced timber frame, plank cap and stone footing read as built, but the flat untextured infill, the lone wall in an open field and the faceted grey boulder beside it are below Palworld base-building finish."
+  },
+  "Xq": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder with readable face and eyes and a Meadows palette (olive vest, green scarf, brown boots) sits at the finish of Palworld's human characters."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood exteriors (Wi, Jf): replace the uniform dark grass carpet with authored ground (moss, soil, rock outcrops, black pools, grove edges and clearings) and widen the value range with a cooler key, rim light and storm-lit shafts so terrain has form and the trainer and creatures separate from the ground.",
+   "kind": "scene"
+  },
+  {
+   "change": "Hero landmarks: a proper Stormheart tree (deep bark, branches, crown and glowing split core) framed in Wi, and a crown heartstone hero asset placed in view in every Jf camera.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Ashfoot shelter (We): keep A's hearth and timber lining, add Stormwood dressing (moss, copper and glass accents, hanging herbs) and a window that shows the storm so the calm, building, break and fading phases read inside.",
+   "kind": "scene"
+  }
+ ]
+}

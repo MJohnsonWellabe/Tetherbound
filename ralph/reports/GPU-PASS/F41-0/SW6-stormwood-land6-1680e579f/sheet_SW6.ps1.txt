@@ -1,0 +1,8 @@
+# Item SW6 sheet: 3 control|candidate pairs at High (left flags off, right flags on). Neutral labels; key in VERDICT.md.
+$o = "D:\tb-gpu-runs\out"
+$rows = @(@("1", "ashfoot_shelter_inside_calm"), @("2", "dynamo_the_stormheart_tree_v02_calm"), @("3", "hollow_crown_the_crown_heartstone_v02_calm"))
+$spec = [ordered]@{ title = "SW6 Stormwood land6 r18, High: left 2f3e3fef9 flags off | right 1680e579f flags on"; cols = 2; thumb_w = 520; label_w = 50
+    rows = @($rows | ForEach-Object { [ordered]@{ label = $_[0]; files = @("$o\SW6-ctl-High\frames\$($_[1]).jpg", "$o\SW6-cand-High\frames\$($_[1]).jpg"); captions = @("off", "on") } }); out = "D:\tb-gpu-runs\staging\SW6-stormwood-land6-1680e579f\_sheet_sw6.png" }
+New-Item -ItemType Directory -Force "D:\tb-gpu-runs\staging\SW6-stormwood-land6-1680e579f" | Out-Null
+[IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_sheet_SW6.json", ($spec | ConvertTo-Json -Depth 5))
+& D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_sheet_SW6.json"
