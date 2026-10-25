@@ -143,6 +143,12 @@ func _build_hero_tree(world: Node, raw: Dictionary) -> void:
 	var base_y := _ground(world, at)
 	var height := float(raw.get("height_m", 18.5))
 	var model_path := str(raw.get("model", ""))
+	# F38 band4 (close-1024, OFF until judged): a Meshy replacement for the
+	# landmark tree, fitted to the same envelope and keeping its own textures.
+	var candidate: Dictionary = raw.get("model_candidate", {})
+	var use_candidate := bool(candidate.get("enabled", false)) and not str(candidate.get("model", "")).is_empty()
+	if use_candidate:
+		model_path = str(candidate["model"])
 	if not model_path.is_empty():
 		var packed := load(model_path) as PackedScene
 		if packed != null:
@@ -160,7 +166,8 @@ func _build_hero_tree(world: Node, raw: Dictionary) -> void:
 					installed.position = Vector3(at.x,
 						base_y - installed_bounds.position.y * scale_factor.y
 						- float(raw.get("bury_depth_m", 0.0)), at.y)
-					_override_material(installed, _ancient_tree_material(raw))
+					if not use_candidate:
+						_override_material(installed, _ancient_tree_material(raw))
 					add_child(installed)
 					_hero_model_installed = true
 					return
