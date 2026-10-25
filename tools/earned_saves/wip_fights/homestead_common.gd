@@ -200,6 +200,8 @@ func kitchen(station_tier: int) -> bool:
 					return false
 		if not await _fund({str(row.id): 1}):
 			return false
+		if not await _clear_socket(kitchen, int(row.tier), str(row.id)):
+			return false
 		var attached := await _place_near(str(row.id), kitchen)
 		if attached == null:
 			return false
@@ -739,9 +741,99 @@ func _withdraw_from(chest: Node3D, need: Dictionary) -> bool:
 	return true
 
 
+## A station must not stand on the Kitchen's attachment sockets (station_rules
+## `socket`: tier 1 west, 2 north, 3 east, 4 south). The Forge on the plot spot
+## east of the Kitchen covered its tier-3 socket, so kitchen_cloudreach's ghost
+## was red at every stance (training_t4_kitchen_3, 24 Oct).
+const SOCKET_CLEAR_M := 2.8
+const KITCHEN_SOCKET_TIERS := 4
+
+static func kitchen_sockets(centre: Vector2, yaw_deg: float) -> Array[Vector2]:
+	var out: Array[Vector2] = []
+	var record := {"id": "kitchen", "position": [centre.x, 0.0, centre.y], "yaw_deg": yaw_deg}
+	for tier in range(1, KITCHEN_SOCKET_TIERS + 1):
+		var at: Vector3 = STATION_RULES.socket(STATION_RULES.config(), record, tier)
+		out.append(Vector2(at.x, at.z))
+	return out
+
+static func spot_clear_of_sockets(spot: Vector2, sockets: Array[Vector2]) -> bool:
+	for socket: Vector2 in sockets:
+		if socket.distance_to(spot) < SOCKET_CLEAR_M: return false
+	return true
+
+func _spot_keeps_sockets_clear(id: String, spot: Vector2) -> bool:
+	var placed := placed_buildings(_world, _tree.get_nodes_in_group(&"placed_building"))
+	for node: Node3D in placed:
+		if str(node.get_meta("building_id", "")) == "kitchen" and id != "kitchen":
+			if not spot_clear_of_sockets(spot, kitchen_sockets(Vector2(node.global_position.x, node.global_position.z), rad_to_deg(node.global_rotation.y))):
+				return false
+	if id == "kitchen":
+		var sockets := kitchen_sockets(spot, 0.0)
+		for node: Node3D in placed:
+			if not spot_clear_of_sockets(Vector2(node.global_position.x, node.global_position.z), sockets):
+				return false
+	return true
+
+
+## A station already standing on the Kitchen's next socket (a save made before
+## the socket rule, e.g. the Forge east of the Kitchen) is taken down the way a
+## player would: Build armed, aim at it until the placer highlights it, then
+## the production dismantle (Y). Its job is done (the tier's ingots are already
+## refined); `_refine` rebuilds a Forge on a socket-clear spot if a later tier
+## needs one.
+const DISMANTLE_STANDOFFS: Array[float] = [2.0, 2.4, 2.8, 1.7, 3.2]
+
+func _clear_socket(kitchen: Node3D, tier: int, armed_id: String) -> bool:
+	var record := {"id": "kitchen", "position": [kitchen.global_position.x, kitchen.global_position.y, kitchen.global_position.z],
+		"yaw_deg": rad_to_deg(kitchen.global_rotation.y)}
+	var at: Vector3 = STATION_RULES.socket(STATION_RULES.config(), record, tier)
+	var socket := Vector2(at.x, at.z)
+	var blocker: Node3D = null
+	for node: Node3D in placed_buildings(_world, _tree.get_nodes_in_group(&"placed_building")):
+		var id := str(node.get_meta("building_id", ""))
+		if node == kitchen or not STATION_RULES.attachment(STATION_RULES.config(), id).is_empty():
+			continue
+		if socket.distance_to(Vector2(node.global_position.x, node.global_position.z)) < SOCKET_CLEAR_M:
+			blocker = node
+	if blocker == null:
+		return true
+	var blocker_id := str(blocker.get_meta("building_id", ""))
+	var uid := str(blocker.get_meta("building_uid", ""))
+	var centre := Vector2(blocker.global_position.x, blocker.global_position.z)
+	var away := (Vector2(_player.global_position.x, _player.global_position.z) - centre)
+	if away.length() < 0.5: away = Vector2(0.0, 1.0)
+	if not await _select_piece(armed_id):
+		return false
+	for standoff: float in DISMANTLE_STANDOFFS:
+		var stance2 := centre + away.normalized() * standoff
+		var stance := Vector3(stance2.x, float(_world.call("ground_height_at", stance2.x, stance2.y)), stance2.y)
+		if not await _walk_to(stance, "dismantle %s stance (armed)" % blocker_id, MOVE_EPSILON, true, false):
+			continue
+		if not await _face_with_input(blocker.global_position - _player.global_position):
+			failures.clear()
+			continue
+		await _settle(10)
+		var placer := _tree.get_first_node_in_group(&"build_placer")
+		if placer == null or placer.get("_dismantle_target") != blocker:
+			continue
+		await _tap(&"build_dismantle")
+		if await _until(func() -> bool: return not _uids().has(uid)):
+			await _stow_piece()
+			_receipt("socket_cleared", {"id": blocker_id, "uid": uid, "socket_tier": tier, "socket": socket})
+			return true
+	await _stow_piece()
+	return _fail_b("The %s on the Kitchen's tier-%d socket could not be dismantled" % [blocker_id, tier])
+
+func _uids() -> Array:
+	var out: Array = []
+	for record: Variant in _game.get("placed_buildings"):
+		if record is Dictionary and record.get("removed", false) != true: out.append(str(record.get("uid", "")))
+	return out
+
+
 func _place_on_plot(id: String) -> Node3D:
 	for spot: Vector2 in PLOT_SPOTS:
-		if _used_spots.has(spot) or _occupied(spot):
+		if _used_spots.has(spot) or _occupied(spot) or not _spot_keeps_sockets_clear(id, spot):
 			continue
 		var placed := await _place_at(id, spot)
 		if placed != null:

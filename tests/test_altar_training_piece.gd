@@ -156,3 +156,13 @@ func test_accepted_journal_request_requires_same_character_world_and_spend() -> 
 		assert_eq(PIECE.accepted_request(changed, row.character_id, row.world_namespace, row.world_id, row.action_id, row.receipt), {}, field)
 	request.expected_character_revision = 99
 	assert_ne(request, row.intent, "witness cannot mutate the durable decision")
+
+## Mira's loop (t2) returns past the far bank up the north spine to the Old
+## Mill Crossing's north road end, where the Sigils departure spine begins.
+func test_t2_return_walks_the_north_spine_to_the_mill_crossing() -> void:
+	var terrain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+	var legs: Array[Vector2] = PIECE.mill_legs(terrain)
+	assert_true(legs.size() > 2)
+	assert_eq(legs[0], Vector2(0.0, 1360.0), "starts where band 1 meets the far bank")
+	assert_eq(legs[-1], PIECE.MILL_NORTH_END, "ends on the mill crossing's north road end")
+	assert_true(legs.has(Vector2(-152.0, 4170.0)), "crosses on the Old Mill Crossing")

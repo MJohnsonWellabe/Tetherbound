@@ -6,7 +6,8 @@ const TRAINING := preload("res://tools/earned_saves/training_handoff.gd")
 const ALTAR := preload("res://tools/earned_saves/altar_training_piece.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const PORTAL := preload("res://tests/helpers/f49_portal_travel.gd")
-const SPECS := {3: {"realm": "water", "arch": "tidewake", "kitchen": 2},
+const SPECS := {2: {"realm": "meadows", "arch": "", "kitchen": 1},
+	3: {"realm": "water", "arch": "tidewake", "kitchen": 2},
 	4: {"realm": "cloudreach", "arch": "cloudreach", "kitchen": 3},
 	5: {"realm": "stormwood", "arch": "stormwood", "kitchen": 4}}
 const HELPERS := {"storage": "res://tools/earned_saves/wip_fights/storage_trip.gd",
@@ -15,15 +16,25 @@ const HELPERS := {"storage": "res://tools/earned_saves/wip_fights/storage_trip.g
 
 static func spec(segment: String) -> Dictionary:
 	var fields := segment.split("_")
-	if fields.size() not in [3, 4] or fields[0] != "training" or fields[1] not in ["t3", "t4", "t5"] \
+	if fields.size() not in [3, 4] or fields[0] != "training" or fields[1] not in ["t2", "t3", "t4", "t5"] \
 			or fields[2] not in ["home", "storage", "kitchen", "feed", "return", "altar", "preparehome", "preparereturn"]: return {}
+	# Meadows T2 has no portal leg: Mira's chest ends north of the Old Mill
+	# Crossing and the Home Key alone brings the team home (home/kitchen/feed).
+	if fields[1] == "t2" and fields[2] not in ["home", "storage", "kitchen", "feed"]: return {}
+	var tier := int(fields[1].trim_prefix("t"))
 	if fields[2] == "altar":
 		if fields.size() != 4 or fields[3] not in ["1", "2", "3", "4", "5"]: return {}
+	elif fields[2] == "kitchen" and fields.size() == 4:
+		# training_tN_kitchen_<k>: raise the Kitchen to tier k only, so each
+		# attachment is its own saved piece (tier 1 carries the bridge-side
+		# gathering; a late failure no longer repeats it). k = the chapter's
+		# tier is the same end state as training_tN_kitchen.
+		if not fields[3].is_valid_int() or int(fields[3]) < 1 or int(fields[3]) > int(SPECS[tier].kitchen): return {}
 	elif fields.size() != 3: return {}
-	var tier := int(fields[1].trim_prefix("t"))
 	var result: Dictionary = SPECS[tier].duplicate()
 	result.merge({"tier": tier, "phase": fields[2], "master": "master_t%d" % tier, "feast": "feast_t%d" % tier})
 	if fields[2] == "altar": result["party_index"] = int(fields[3]) - 1
+	if fields[2] == "kitchen" and fields.size() == 4: result["kitchen"] = int(fields[3])
 	return result
 
 ## The preparation sequence has no optional branches: never reload a shared

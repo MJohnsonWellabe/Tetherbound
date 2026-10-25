@@ -163,3 +163,30 @@ func test_preparation_requires_exact_immediate_saved_piece() -> void:
 			assert_false(PIECE.predecessor_error(segment, prior, source).is_empty())
 		assert_eq(PIECE.predecessor(prefix + "preparehome"), "")
 		assert_eq(PIECE.predecessor(prefix + "storage"), "")
+
+## Meadows T2 (coordinator ruling 23 Oct, generated meadows_t2_independent):
+## Mira's chest ends north of the Old Mill Crossing; the Home Key brings the
+## team home for a tier-1 Kitchen and the feast_t2 feed. No portal leg.
+func test_meadows_t2_runs_home_kitchen_feed_without_a_portal_leg() -> void:
+	var kitchen := PIECE.spec("training_t2_kitchen")
+	assert_eq(kitchen.kitchen, 1)
+	assert_eq(kitchen.realm, "meadows")
+	assert_true(PIECE.preflight(_training(2), kitchen, "meadows").is_empty())
+	assert_true(PIECE.preflight(_training(2), PIECE.spec("training_t2_home"), "meadows").is_empty())
+	assert_true(PIECE.preflight(_training(2), PIECE.spec("training_t2_feed"), "meadows").is_empty())
+	for phase: String in ["return", "preparehome", "preparereturn", "altar_1"]:
+		assert_true(PIECE.spec("training_t2_" + phase).is_empty(), phase)
+
+## The Kitchen splits into one saved piece per attachment tier, so a late
+## failure does not repeat tier 1's bridge-side gathering.
+func test_kitchen_splits_into_one_piece_per_attachment_tier() -> void:
+	for k in [1, 2, 3]:
+		var job := PIECE.spec("training_t4_kitchen_%d" % k)
+		assert_eq(job.kitchen, k)
+		assert_eq(job.phase, "kitchen")
+		assert_true(PIECE.preflight(_training(4), job, "meadows").is_empty())
+	assert_true(PIECE.spec("training_t4_kitchen_4").is_empty(), "never past the chapter's own Kitchen tier")
+	assert_true(PIECE.spec("training_t4_kitchen_0").is_empty())
+	assert_true(PIECE.spec("training_t4_kitchen_x").is_empty())
+	assert_eq(PIECE.spec("training_t4_kitchen").kitchen, 3)
+	assert_eq(PIECE.spec("training_t2_kitchen_1").kitchen, 1)

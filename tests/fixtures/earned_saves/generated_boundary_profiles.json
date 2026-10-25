@@ -3,6 +3,30 @@
   "owner_policy": "#5726060136810",
   "base_save": "res://tests/fixtures/earned_saves/generated_input_base/save",
   "profiles": {
+    "meadows_t2_independent": {
+      "boundary": "relay",
+      "realm": "meadows",
+      "day": 7,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "ground_xz": [-330.0, 5030.0]
+      },
+      "party_levels": [20, 20, 20, 20, 20],
+      "heal_party": true,
+      "world_flags": ["warrens_cleared", "relay_captain_defeated", "relay_disabled", "captive_rescued", "mill_crossing_restored"],
+      "personal_flags": [],
+      "inventory_add": {
+        "tether_candy": 5
+      },
+      "character_fields": {
+        "portal_unlocks": [],
+        "relics_held": [],
+        "relics_hung": [],
+        "master_wins": ["master_t1"],
+        "feast_recipes": ["feast_t1"]
+      },
+      "disclosure": "Independent F49 Meadows T2 proof boundary (coordinator ruling 23 Oct 2026, option b). Post-Relay Meadows at Mira Emberlane's Ironwood Ridge sign (masters.json chapter_guidance: Mira follows mill_crossing_restored and precedes the Sigil gate): the base template's route state plus the Warrens/Relay/Old Mill Crossing results (warrens_cleared, relay_captain_defeated, relay_disabled, captive_rescued, mill_crossing_restored), five template creatures at generated L20/cap20 with prior breakthrough tier [1], the prior T1 Master win and recipe (earned in the Meadows T1 pieces training_t1_master/kitchen/feed), and five Tether Candy are generated setup, not earned play or transaction receipts. It stands in for training_t1_feed -> warrens -> relay (each proven or run as its own piece) and the paid Altar levels 19->20 (paid Altar slots are proven in T1/T3/T4/T5). No Mira win, feast_t2 recipe, Kitchen build or cook, feed, or selected-piece PASS is granted: the Mira duel, chest and every Kitchen/feed action must happen through ordinary play and production save."
+    },
     "relay": {
       "boundary": "warrens",
       "realm": "meadows",

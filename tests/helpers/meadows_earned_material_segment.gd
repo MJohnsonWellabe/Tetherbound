@@ -298,6 +298,8 @@ func _walk_target(target: Vector3, budget: int) -> bool:
 	# only over the open bridge: the authored approach, near bank, far bank.
 	var legs := bridge_legs(_world, Vector2(_player.global_position.x, _player.global_position.z),
 		Vector2(target.x, target.z))
+	var last := legs[-1] if not legs.is_empty() else Vector2(_player.global_position.x, _player.global_position.z)
+	legs.append_array(mound_detour(last, Vector2(target.x, target.z)))
 	if legs.is_empty():
 		return await _walk_same_side(target, budget)
 	var started := Engine.get_physics_frames()
@@ -310,6 +312,29 @@ func _walk_target(target: Vector3, budget: int) -> bool:
 			return false
 	_active_walk_purpose = purpose
 	return await _walk_same_side(target, budget - int(Engine.get_physics_frames() - started))
+
+
+## The Warrens mound (terrain rises.peaks[5], centre (-380,2488), r 30) stands
+## between the far bank and the ironwood stands north of it. A straight walk
+## that grazes it stalls on its flank (BLOCKERS B3; training_t4_kitchen, 24
+## Oct: ~3 h against it at (-357.8,2477.7) before the budget ran out). Pass it
+## by one waypoint 15 m outside its rim on the side the walk already lies.
+const WARRENS_MOUND := Vector2(-380.0, 2488.0)
+const WARRENS_MOUND_R := 30.0
+
+static func mound_detour(from: Vector2, to: Vector2) -> Array[Vector2]:
+	var line := to - from
+	if line.length() < 1.0 or from.distance_to(WARRENS_MOUND) < WARRENS_MOUND_R + 6.0 \
+			or to.distance_to(WARRENS_MOUND) < WARRENS_MOUND_R + 6.0:
+		return []
+	var t := clampf((WARRENS_MOUND - from).dot(line) / line.length_squared(), 0.0, 1.0)
+	var closest := from + line * t
+	if closest.distance_to(WARRENS_MOUND) >= WARRENS_MOUND_R + 6.0:
+		return []
+	var side := closest - WARRENS_MOUND
+	if side.length() < 0.5:
+		side = Vector2(-line.y, line.x)
+	return [WARRENS_MOUND + side.normalized() * (WARRENS_MOUND_R + 15.0)]
 
 
 ## Waypoints over the open South Bridge when `from` and `to` lie on opposite
