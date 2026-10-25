@@ -33,6 +33,14 @@ static func travel_reset_wait_ms() -> int:
 	var session: Variant = DATA.json_view("res://data/config/multiplayer.json").get("session", {})
 	var seconds: Variant = session.get("owner_passive_travel_reset_wait_s", 0.0) if session is Dictionary else 0.0
 	return int(float(seconds) * 1000.0) if (seconds is float or seconds is int) and float(seconds) > 0.0 else 0
+## How long a guest's first discovery may wait for the host's own view of
+## that pose before the terminal refusal (multiplayer.json
+## session.owner_passive_first_pose_wait_s; INITIAL_POSE_LAG_S when absent).
+static func first_pose_wait_ms() -> int:
+	var session: Variant = DATA.json_view("res://data/config/multiplayer.json").get("session", {})
+	var seconds: Variant = session.get("owner_passive_first_pose_wait_s", 0.0) if session is Dictionary else 0.0
+	if (seconds is float or seconds is int) and float(seconds) > 0.0: return int(float(seconds) * 1000.0)
+	return int(INITIAL_POSE_LAG_S * 1000.0)
 ## Hard bound on one peer's pose ring (INITIAL_POSE_LAG_S at 60 physics ticks
 ## per second is 120); a slower or faster tick only changes how many fit.
 const MAX_POSE_SAMPLES := 256
@@ -699,7 +707,7 @@ func _inputs_host_batch(peer: int, stream: Dictionary, packet: Dictionary, batch
 				# 1 ms after the grant). That is a wait for the host's own
 				# observation, like the no-body wait above: this exact prefix is
 				# retried (owner resend) and accepted only against a pose the host
-				# sampled. Still unconfirmed INITIAL_POSE_LAG_S later is terminal.
+				# sampled. Still unconfirmed after first_pose_wait_ms() is terminal.
 				var now := Time.get_ticks_msec()
 				var wait: Dictionary = stream.get("pose_wait", {})
 				if wait.get("sequence") != sequence:
@@ -707,7 +715,7 @@ func _inputs_host_batch(peer: int, stream: Dictionary, packet: Dictionary, batch
 					stream.pose_wait = wait
 					stream.first_input_refusal = {"input": input.duplicate(true), "context": context.duplicate(true),
 						"cursor_sequence": stream.cursor.sequence, "sampled_ms": now}
-				if REPLAY._position(at) and now - int(wait.since_ms) < int(INITIAL_POSE_LAG_S * 1000.0):
+				if REPLAY._position(at) and now - int(wait.since_ms) < first_pose_wait_ms():
 					_note_host(stream, "input %d waits: first pose not yet observed by the host" % sequence)
 					return false
 				stream.error = "owner_passive_initial_pose_unconfirmed"; return false

@@ -388,10 +388,10 @@ func test_host_sequence_gap_and_initial_remote_pose_refused() -> void:
 	assert_eq(stream.error, "owner_passive_initial_pose_unconfirmed")
 	assert_eq(stream.cursor.sequence, 1)
 
-## Past INITIAL_POSE_LAG_S since the first refusal of the waiting input.
+## Past the configured first-pose wait since the first refusal of the waiting input.
 func _age_pose_wait(stream: Dictionary) -> void:
 	assert_true(stream.has("pose_wait"), "fixture: the first discovery is waiting")
-	stream.pose_wait.since_ms = int(stream.pose_wait.since_ms) - 2500
+	stream.pose_wait.since_ms = int(stream.pose_wait.since_ms) - SYNC.first_pose_wait_ms() - 500
 
 func _first_discovery_packet(at: Array) -> Dictionary:
 	return _envelope({"op": "inputs", "inputs": [{"version": 1, "sequence": 2,
@@ -453,6 +453,35 @@ func test_a_first_discovery_the_host_has_not_yet_observed_waits_then_matches_its
 	assert_eq(stream.error, "")
 	assert_eq(stream.cursor.sequence, 2, "the same input applies against the host-observed pose")
 	assert_false(stream.has("pose_wait"), "the wait ends with the accepted input")
+
+func test_a_waiting_first_discovery_is_accepted_through_a_host_sample_taken_meanwhile() -> void:
+	# The replica passed the landing during the wait and moved on: the host's
+	# current body is elsewhere, but its own recent sample stood there.
+	service.body_position = Vector3(-1.4, 4.65, 14.3)
+	var landing := [80.0, 0.9, 46.0]
+	var stream := _first_discovery_after(landing)
+	assert_eq(stream.error, "")
+	assert_eq(stream.cursor.sequence, 1)
+	service._record_pose(2, "meadows", Vector3(80.0, 0.9, 46.0), Time.get_ticks_msec() - 200)
+	service.body_position = Vector3(-30.0, 0.9, 46.0) # 110 m on: only the sample matches
+	service.receive_host(2, _first_discovery_packet(landing))
+	assert_eq(stream.error, "")
+	assert_eq(stream.cursor.sequence, 2, "accepted against the host's own sample, inside the window")
+	assert_false(stream.has("pose_wait"))
+
+func test_a_far_first_discovery_resent_inside_the_wait_is_still_not_applied() -> void:
+	service.body_position = Vector3(-4.4, 0.9, 21.6)
+	var far := [186.2, 0.9, 14.0] # 191 m from the body; no sample anywhere near
+	var stream := _first_discovery_after(far)
+	var since := int(stream.pose_wait.since_ms)
+	service.receive_host(2, _first_discovery_packet(far)) # the owner's resend, inside the window
+	assert_eq(stream.cursor.sequence, 1, "an unobserved pose is never applied, however often it is resent")
+	assert_eq(stream.error, "", "still waiting inside the window")
+	assert_eq(int(stream.pose_wait.since_ms), since, "a resend does not restart the wait")
+	_age_pose_wait(stream)
+	service.receive_host(2, _first_discovery_packet(far))
+	assert_eq(stream.error, "owner_passive_initial_pose_unconfirmed")
+	assert_eq(stream.cursor.sequence, 1)
 
 func test_an_observed_pose_older_than_the_lag_window_does_not_count() -> void:
 	service.body_position = Vector3(-4.4, 0.9, 21.6)
