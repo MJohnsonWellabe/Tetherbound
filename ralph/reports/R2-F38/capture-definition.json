@@ -87,7 +87,12 @@
         3760.0
       ],
       "heading_deg": 0,
-      "source": "debug_teleport_spots.json:The Tether Relay"
+      "source": "debug_teleport_spots.json:The Tether Relay",
+      "view_headings": {
+        "gameplay": 270,
+        "detail": 135
+      },
+      "_why_view_headings": "F38 L1 close-1024: the base gameplay (8 m) and detail (3 m) stands pass the checks but frame the trainer under the relay gate wall and beside a timber wall (GPU and CPU judges: camera pressed against the walls, #03/07/11/15 and #06/14). A CPU probe at 90/135/225/270 picked the open-yard frames: gameplay 270 (gate, cage and banner in view, no wall) and detail 135."
     },
     {
       "id": "band3_the_river_lock_1",
