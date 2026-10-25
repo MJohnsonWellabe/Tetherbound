@@ -159,6 +159,12 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 	var distance_scale := clampf(float(config.get("separation_distance_scale",1.2)),1.01,2.0)
 	var best: Dictionary = {}
 	var nearest_safe: Dictionary = {}
+	# `fallback_max_steps` (>= 0; absent = -1, no limit): when no candidate
+	# passes, the least-overlap fallback may only come from the first steps of
+	# each angle's distance search. Unlimited, a fight with a large ally (the
+	# Venn fight's Cannonback, GPU F39 24 Oct) popped the lens ~37 m out onto a
+	# cliff top for a beat: a black seabed close-up instead of the two fighters.
+	var fallback_steps := int(config.get("fallback_max_steps", -1))
 	var near_slack: float = clampf(float(config.get("safe_fit_distance_slack_m",0.75)),0.0,3.0)
 	# Reserve separation beyond the exact measured edge so the live tracker can
 	# ease toward its chosen angle without spending its dead zone in overlap.
@@ -219,10 +225,11 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 			if not constraint_info.is_empty():
 				candidate["world_room"] = constraint_info.get("world_room",null)
 				candidate["model_room"] = constraint_info.get("model_room",INF)
-			if best.is_empty() or (framed and not bool(best.framed)) \
+			var fallback_ok := fallback_steps < 0 or step <= fallback_steps
+			if fallback_ok and (best.is_empty() or (framed and not bool(best.framed)) \
 					or (framed == bool(best.framed) and (overlap < float(best.overlap)
 						or (overlap == float(best.overlap) and float(visibility.get("penalty",0.0))
-							< float((best.get("visibility",{}) as Dictionary).get("penalty",0.0))))):
+							< float((best.get("visibility",{}) as Dictionary).get("penalty",0.0)))))):
 				best = candidate
 			if passed:
 				if nearest_safe.is_empty() or actual_distance<float(nearest_safe.distance)-near_slack \

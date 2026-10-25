@@ -21,13 +21,20 @@ static func spec(segment: String) -> Dictionary:
 	# Meadows T2 has no portal leg: Mira's chest ends north of the Old Mill
 	# Crossing and the Home Key alone brings the team home (home/kitchen/feed).
 	if fields[1] == "t2" and fields[2] not in ["home", "storage", "kitchen", "feed"]: return {}
+	var tier := int(fields[1].trim_prefix("t"))
 	if fields[2] == "altar":
 		if fields.size() != 4 or fields[3] not in ["1", "2", "3", "4", "5"]: return {}
+	elif fields[2] == "kitchen" and fields.size() == 4:
+		# training_tN_kitchen_<k>: raise the Kitchen to tier k only, so each
+		# attachment is its own saved piece (tier 1 carries the bridge-side
+		# gathering; a late failure no longer repeats it). k = the chapter's
+		# tier is the same end state as training_tN_kitchen.
+		if not fields[3].is_valid_int() or int(fields[3]) < 1 or int(fields[3]) > int(SPECS[tier].kitchen): return {}
 	elif fields.size() != 3: return {}
-	var tier := int(fields[1].trim_prefix("t"))
 	var result: Dictionary = SPECS[tier].duplicate()
 	result.merge({"tier": tier, "phase": fields[2], "master": "master_t%d" % tier, "feast": "feast_t%d" % tier})
 	if fields[2] == "altar": result["party_index"] = int(fields[3]) - 1
+	if fields[2] == "kitchen" and fields.size() == 4: result["kitchen"] = int(fields[3])
 	return result
 
 ## The preparation sequence has no optional branches: never reload a shared
