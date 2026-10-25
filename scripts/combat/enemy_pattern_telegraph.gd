@@ -1168,7 +1168,11 @@ func _draw_curtain() -> void:
 		for fill: Array in _fill_lines:
 			if _curtain_time / tell >= float(fill[0]) * reveal:
 				dust_lines.append(fill[1])
-	STYLE.draw_dust(_dust, dust_lines, _soft, _curtain_time / tell, _curtain_time)
+	var clear := Vector3.ZERO
+	var clear_scale := float(_soft.get("dust_body_clear", 0.0))
+	if clear_scale > 0.0 and is_instance_valid(_body) and _body.has_method("body_radius"):
+		clear = Vector3(_origin.x, _origin.z, float(_body.call("body_radius")) * clear_scale)
+	STYLE.draw_dust(_dust, dust_lines, _soft, _curtain_time / tell, _curtain_time, 1.0, false, clear)
 	if _curtain == null:
 		return
 	STYLE.draw_curtain(_curtain, _curtain_lines, _edge_tint, float(_soft.get("edge_alpha", 0.7))

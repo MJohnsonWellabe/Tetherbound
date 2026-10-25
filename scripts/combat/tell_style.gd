@@ -246,8 +246,13 @@ static func make_dust() -> MultiMeshInstance3D:
 ## Places the puffs along each ground polyline in `lines` (local space).
 ## `build` 0..1 is how far into the tell it is; `flow` drifts puffs toward
 ## each line's end (a lane), else they only rise (a ring or outline).
+## `clear` (x, z, radius; radius 0 = off) leaves out puffs whose ground point
+## falls inside the attacker's own footprint, so the dust marks the danger
+## without burying the creature winding up (P2-016 G5: a heavy's trail hid the
+## body, and the flinch around it could not read).
 static func draw_dust(instance: MultiMeshInstance3D, lines: Array, style: Dictionary,
-		build: float, time: float, fade: float = 1.0, flow: bool = false) -> void:
+		build: float, time: float, fade: float = 1.0, flow: bool = false,
+		clear: Vector3 = Vector3.ZERO) -> void:
 	if instance == null:
 		return
 	var spacing := maxf(0.15, float(style.get("dust_spacing_m", 0.6)))
@@ -256,7 +261,7 @@ static func draw_dust(instance: MultiMeshInstance3D, lines: Array, style: Dictio
 	# count the puffs, size the buffer only when that count changes, place them.
 	var count := 0
 	for points: PackedVector3Array in lines:
-		count += _dust_walk(points, spacing, cap - count, null, 0, style, 0.0, 0.0, false)
+		count += _dust_walk(points, spacing, cap - count, null, 0, style, 0.0, 0.0, false, clear)
 	var multimesh := instance.multimesh
 	if multimesh.instance_count != count:
 		multimesh.instance_count = count
@@ -264,7 +269,7 @@ static func draw_dust(instance: MultiMeshInstance3D, lines: Array, style: Dictio
 		clampf(build, 0.0, 1.0)) * clampf(fade, 0.0, 1.0) * pulse(style, build, time)
 	var placed := 0
 	for points: PackedVector3Array in lines:
-		placed += _dust_walk(points, spacing, count - placed, multimesh, placed, style, alpha, time, flow)
+		placed += _dust_walk(points, spacing, count - placed, multimesh, placed, style, alpha, time, flow, clear)
 
 
 ## Fights close-1025 (ON since 25 Oct; `soft_style.dust_fill_rows`; 0/absent = off).
@@ -300,7 +305,8 @@ static func pulse(style: Dictionary, build: float, time: float) -> float:
 ## Walks one polyline at `spacing`, at most `limit` puffs. With a multimesh,
 ## writes each puff from index `first`; without one it only counts.
 static func _dust_walk(points: PackedVector3Array, spacing: float, limit: int, multimesh: MultiMesh,
-		first: int, style: Dictionary, alpha: float, time: float, flow: bool) -> int:
+		first: int, style: Dictionary, alpha: float, time: float, flow: bool,
+		clear: Vector3 = Vector3.ZERO) -> int:
 	var placed := 0
 	var along := 0.0
 	var size := maxf(0.05, float(style.get("dust_size_m", 0.7)))
@@ -315,12 +321,16 @@ static func _dust_walk(points: PackedVector3Array, spacing: float, limit: int, m
 			continue
 		var next := ceilf(along / spacing) * spacing
 		while next < along + step and placed < limit:
+			var ground := a.lerp(b, (next - along) / step)
+			if clear.z > 0.0 and Vector2(ground.x - clear.x, ground.z - clear.y).length() < clear.z:
+				next += spacing
+				continue
 			if multimesh != null:
 				var slot := first + placed
 				var seed := fposmod(sin(float(slot) * 12.9898) * 43758.5453, 1.0)
 				var phase := fposmod(time * rate + seed, 1.0)
 				var grow := size * (0.55 + 0.9 * phase) * (0.8 + 0.4 * seed)
-				var at := a.lerp(b, (next - along) / step) + Vector3.UP * (grow * 0.35 + rise * phase)
+				var at := ground + Vector3.UP * (grow * 0.35 + rise * phase)
 				if flow:
 					at += (b - a) / step * spacing * 1.5 * phase
 				multimesh.set_instance_transform(slot, Transform3D(Basis.from_scale(Vector3.ONE * grow), at))
