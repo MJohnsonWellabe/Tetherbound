@@ -58,6 +58,10 @@ static func _place(world: Node3D, row: Dictionary, group: String) -> bool:
 	var fit := float(row.get("width_m", 10.0)) / bounds.size.x
 	pivot.scale = Vector3.ONE * fit
 	pivot.position = Vector3(-bounds.get_center().x, -bounds.position.y, -bounds.get_center().z) * fit
+	# `height_m` flattens a piece vertically (the paving tile is about a quarter
+	# as thick as it is wide); the holder only yaws, so its y stays world-up.
+	if row.has("height_m") and bounds.size.y > 0.001:
+		holder.scale = Vector3(1.0, float(row["height_m"]) / (bounds.size.y * fit), 1.0)
 	var at: Array = row.get("at", [0.0, 0.0])
 	var x := float(at[0])
 	var z := float(at[1])
