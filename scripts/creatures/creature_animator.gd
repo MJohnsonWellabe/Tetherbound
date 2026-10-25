@@ -31,9 +31,11 @@ const STILL_SPEED := 0.35
 const RUN_FRACTION := 0.55
 ## P2-016 (GPU G3, 25 Oct): a named impact window alone showed the wince for
 ## about 0.19 s before the next movement cancelled the release, so it landed
-## in one 0.15 s fight frame in 32. Every such hit now holds its wince at
-## least this long, the same way a stagger does (`hold_wince`).
-const HIT_WINCE_HOLD_S := 0.3
+## in one 0.15 s fight frame in 32. Every such hit now holds its wince this
+## long, the same way a stagger does (`hold_wince`): with the clip's release it
+## spans the 0.8 s a damage number stays up (combat.json `duration_seconds`),
+## so any frame showing the number also shows the body reacting.
+const HIT_WINCE_HOLD_S := 0.55
 
 var _player: AnimationPlayer = null
 var _clips: Dictionary = {}
