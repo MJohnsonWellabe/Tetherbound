@@ -319,7 +319,7 @@ func _build_distance_presentation() -> void:
 	add_child(falls)
 	var centre: Array = rules.get("rock_material", {}).get("centre_xz", [200.0, 4140.0])
 	var centre_xz := Vector2(float(centre[0]), float(centre[1]))
-	falls.build(world, rules.get("falls", {}), centre_xz)
+	falls.build(world, _falls_with_candidate(rules.get("falls", {})), centre_xz)
 	var silhouette := SILHOUETTE.new()
 	silhouette.name = "VeilfallFarSilhouette"
 	add_child(silhouette)
@@ -975,3 +975,17 @@ func _build_camera_occluders() -> void:
 	for raw: Variant in boxes:
 		var box := raw as Dictionary
 		_collision_box(body, _v(box.get("at", [0.0, 0.0, 0.0])), _v(box.get("size", [1.0, 1.0, 1.0])))
+
+
+## close-1024 `veilfall_falls_candidate` (OFF in play): per-column overrides by
+## id, so a judged fall shape can replace one column without copying the rest.
+static func _falls_with_candidate(falls_cfg: Dictionary) -> Dictionary:
+	var candidate: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get("veilfall_falls_candidate", {})
+	if candidate.is_empty():
+		return falls_cfg
+	var result := falls_cfg.duplicate(true)
+	var overrides: Dictionary = candidate.get("columns_by_id", {})
+	for column: Dictionary in result.get("columns", []):
+		if overrides.has(str(column.get("id", ""))):
+			column.merge((overrides[str(column.id)] as Dictionary).duplicate(true), true)
+	return result
