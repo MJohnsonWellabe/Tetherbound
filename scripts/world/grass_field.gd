@@ -804,7 +804,12 @@ func _apply_grass_lod(cfg: Dictionary) -> void:
 ## be generated this way, and why harvestable bushes are not on the list.
 func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 	var names := _terrain_texture_names()
-	for entry: Variant in cfg.get("cover_tiers", []):
+	var tiers: Array = (cfg.get("cover_tiers", []) as Array).duplicate()
+	# F38 L4 / P2-005: authored ground-cover tiers ride under one OFF flag.
+	var cover_candidate: Dictionary = cfg.get("cover_candidate", {})
+	if bool(cover_candidate.get("enabled", false)):
+		tiers.append_array(cover_candidate.get("tiers", []))
+	for entry: Variant in tiers:
 		var tier: Dictionary = entry
 		if not bool(tier.get("enabled", true)):
 			continue
@@ -814,7 +819,16 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 
 		var mm := MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
-		mm.mesh = _cover_mesh(str(tier.get("mesh", "bush")))
+		var albedo: Texture2D = null
+		if tier.has("mesh_path"):
+			var authored := authored_cover_mesh(str(tier["mesh_path"]), tier.get("scale_xyz", [1.0, 1.0, 1.0]), int(tier.get("max_tris", 3000)))
+			if authored.is_empty():
+				push_warning("cover tier '%s': mesh_path %s did not load; tier skipped" % [tier.get("name", "?"), tier["mesh_path"]])
+				continue
+			mm.mesh = authored.mesh
+			albedo = authored.get("albedo")
+		else:
+			mm.mesh = _cover_mesh(str(tier.get("mesh", "bush")))
 		# Its own lattice schedule, fitted to its own count and bias. The tiers
 		# no longer need separate RNG streams to stay independent of each
 		# other: nothing here is drawn from a stream at all, and where an item
@@ -870,6 +884,9 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 			if tier.has(key2):
 				mat.set_shader_parameter(key2, Color(str(tier[key2])))
 		mat.set_shader_parameter("placement_seed", maxi(0, int(tier.get("placement_seed", 0))))
+		if albedo != null:
+			mat.set_shader_parameter("use_albedo_texture", true)
+			mat.set_shader_parameter("albedo_texture", albedo)
 		var drift_offset: Array = tier.get("drift_offset", [0.0, 0.0])
 		mat.set_shader_parameter("drift_offset", Vector2(float(drift_offset[0]), float(drift_offset[1])))
 		if tier.has("wind_dir"):
@@ -1141,6 +1158,68 @@ func _far_mesh(inner: float, outer: float, cell: float) -> ArrayMesh:
 ## untouched by any of this. UV.y runs 0 at the base to 1 at the top in every
 ## one of them, because that is the channel the shader's tint gradient and its
 ## contact darken both read.
+## F38 L4 / P2-005: an authored ground-cover mesh (a Meshy GLB) for a cover
+## tier. The first MeshInstance3D's first surface is re-based so its footprint
+## is centred on the origin, its base sits at y=0 and its wider horizontal
+## extent is 1.0 -- the cover shader's `item_size` is then the item's width in
+## metres, as for the generated meshes -- and `scale_xyz` squashes or widens it
+## (the delivered clover domes and earth slab are too tall). Returns
+## {mesh, albedo} or {} if the scene has no usable mesh.
+static func authored_cover_mesh(path: String, scale_xyz: Variant = [1.0, 1.0, 1.0], max_tris: int = 3000) -> Dictionary:
+	var scene := load(path) as PackedScene
+	if scene == null:
+		return {}
+	var root := scene.instantiate()
+	var found: Array[Node] = root.find_children("*", "MeshInstance3D", true, false)
+	if root is MeshInstance3D:
+		found.push_front(root)
+	if found.is_empty() or (found[0] as MeshInstance3D).mesh == null:
+		root.free()
+		return {}
+	var instance := found[0] as MeshInstance3D
+	var source := instance.mesh
+	var arrays: Array = source.surface_get_arrays(0)
+	var material := instance.get_active_material(0)
+	root.free()
+	var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	if verts.is_empty():
+		return {}
+	var lo := verts[0]
+	var hi := verts[0]
+	for v: Vector3 in verts:
+		lo = lo.min(v)
+		hi = hi.max(v)
+	var width := maxf(hi.x - lo.x, hi.z - lo.z)
+	if width <= 0.0001:
+		return {}
+	var s: Array = scale_xyz if scale_xyz is Array and (scale_xyz as Array).size() == 3 else [1.0, 1.0, 1.0]
+	var factor := Vector3(float(s[0]), float(s[1]), float(s[2])) / width
+	var centre := Vector3((lo.x + hi.x) * 0.5, lo.y, (lo.z + hi.z) * 0.5)
+	for i in verts.size():
+		verts[i] = (verts[i] - centre) * factor
+	arrays[Mesh.ARRAY_VERTEX] = verts
+	# The delivered meshes run 11k-78k triangles; an instanced tier of
+	# hundreds needs a few thousand. Godot's own simplifier picks the first
+	# generated LOD under `max_tris`.
+	var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX] if arrays[Mesh.ARRAY_INDEX] != null else PackedInt32Array()
+	if max_tris > 0 and indices.size() / 3 > max_tris:
+		var importer := ImporterMesh.new()
+		importer.add_surface(Mesh.PRIMITIVE_TRIANGLES, arrays)
+		importer.generate_lods(25.0, 60.0, [])
+		for lod in importer.get_surface_lod_count(0):
+			var lod_indices := importer.get_surface_lod_indices(0, lod)
+			if lod_indices.size() / 3 <= max_tris:
+				indices = lod_indices
+				break
+		arrays[Mesh.ARRAY_INDEX] = indices
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	var albedo: Texture2D = null
+	if material is BaseMaterial3D:
+		albedo = (material as BaseMaterial3D).albedo_texture
+	return {"mesh": mesh, "albedo": albedo}
+
+
 func _cover_mesh(kind: String) -> ArrayMesh:
 	match kind:
 		"flower":

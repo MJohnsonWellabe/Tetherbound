@@ -173,6 +173,12 @@ uniform float gust_length = 26.0;
 // flower, whose petals are already shaped by their own geometry and whose
 // silhouette is settled.
 uniform float leaf_cut : hint_range(0.0, 1.0) = 0.0;
+// F38 L4 / P2-005 (close-1024): an authored mesh with its own albedo texture
+// (Meshy ground cover, installed by `grass_field.gd` from a tier's `mesh_path`,
+// normalised to unit width with its base at y=0). Off by default; the
+// generated tiers above are untouched.
+uniform bool use_albedo_texture = false;
+uniform sampler2D albedo_texture : source_color, filter_linear_mipmap;
 // How deep the edge notches bite. Enough to break the outline, not so much that
 // the leaf becomes a comb.
 uniform float leaf_serrate : hint_range(0.0, 0.6) = 0.22;
@@ -515,7 +521,7 @@ void vertex() {
 		float size = local_size * (1.0 + (hash12(world_xz * 6.13) - 0.5) * 2.0 * local_jitter)
 				* item_presence * (1.0 + composition_scale_boost * composition_mass
 						* composition_influence);
-		v_t = UV.y;
+		v_t = use_albedo_texture ? clamp(VERTEX.y, 0.0, 1.0) : UV.y;
 
 		vec3 local = VERTEX * size;
 
@@ -551,6 +557,9 @@ void vertex() {
 
 		vec3 own = mix(tint_base, tint_tip, smoothstep(0.0, 0.85, v_t));
 		own = mix(own, tint_wood, v_wood);
+		if (use_albedo_texture) {
+			own = vec3(1.0);
+		}
 		own *= 1.0 + (hash12(world_xz * 2.29) - 0.5) * 2.0 * tint_jitter;
 		// The base takes the terrain's own colour so growth comes OUT of the
 		// ground. The colour map is a near-white MULTIPLIER, not a colour --
@@ -600,7 +609,13 @@ void fragment() {
 		// to be cut narrow is not also always the dark one.
 		shade *= 1.0 + (fract(UV2.y * 7.31) - 0.5) * 2.0 * leaf_tint_jitter;
 	}
-	ALBEDO = v_colour * shade;
+	if (use_albedo_texture) {
+		vec4 tex = texture(albedo_texture, UV);
+		ALPHA = tex.a;
+		ALBEDO = tex.rgb * v_colour * shade;
+	} else {
+		ALBEDO = v_colour * shade;
+	}
 	ROUGHNESS = 0.95;
 
 	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
