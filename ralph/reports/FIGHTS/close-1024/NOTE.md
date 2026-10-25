@@ -1,5 +1,126 @@
 # Fights lane close-1024 (tb/fights)
 
+## Handoff (state, 25 Oct 13:40 CT; lane PAUSED by owner direction)
+
+**Branch heads**
+- `tb/fights-land` **4ae4433da**: a55b0fa4b's lane content merged onto origin/main 1d5faebac (main had already merged a55b0fa4b as e5ca1200f, so the land adds nothing new to main). 283 tests, 0 failed after `--import`.
+- `tb/fights` (this NOTE's head). Landed on main: everything up to a55b0fa4b. That is the generic fight presentation (no outlines, dust tells, slim HUD, grounded impacts, horizon lens, Veyra streaks, pilot rim), r6/r7 ON, the pilot ghost fix ef4591a18 and the review follow-ups.
+- **Unlanded** on tb/fights. All code here is off by default, or is a fix that has a test:
+  - 844dad9e0: follower cover fade skipped for a body a running fight pilots (test).
+  - 3f24b65df: HUD `_combat_is_running()` falls back to FOUNDATION_GROUP; kit_move_effects `flash_scale` and `flash_life_scale` (OFF).
+  - 1d511d18b and 43d7e6d6b: `telegraph.soft_style.dust_lane_alpha_max` (OFF).
+  - ed4ba3ebd: camera.json `fight.per_trainer.<id>.face_yaw_deg` (absent = off).
+  - Overlays cand_r8, cand_r9, cand_r10, and tools/ (this commit).
+
+**Open candidates**
+
+| candidate | flag(s) | verdict so far | exact next step |
+|---|---|---|---|
+| r9 dust regression fix | `dust_lane_alpha_max` 0.35 + `dust_alpha` 0.9 -> 0.6 (`cand_r9.py.txt`) | not judged (captures cut by the pause) | Capture r9 for Venn, Stormwood and f38 (`capture_queue.sh.txt`, one arm; r8/pre is the shipped look, but those frames were deleted for disk, so recapture pre too). Judge, then ship if no worse. **Highest value**: every r8 judge named dust columns burying the pilot. |
+| r10 Venn lens faces the sea | `per_trainer.water_trainer_venn.face_yaw_deg -90` (`cand_r10.py.txt`; needs ed4ba3ebd) | not captured | Capture Venn pre and r10 (`tools/phase2_capture_tidewake_fights.gd`), judge. If the overhang is still in frame, try -60 or -120 (check frames.json camera vs fighters). |
+| r8 smaller kit flash / contact disc / pilot floor 0.13 | `flash_scale` 0.5, `flash_life_scale` 0.65, impact radii 0.32/0.42, ground burst 5 puffs alpha 0.5, `fight.pilot_min_screen_fraction` 0.13 | **flat, kept OFF** (Stormwood 6.17->6.21, Warden f38 7.01->6.97, Venn 6.02->5.84, grunt 6.72->6.57) | Do not retry scaling. Redesign the impact (a feet-level burst instead of a lens-facing bloom). |
+| r7 steadier lens | camera.json `orbit_speed_deg_s` 70, `lag` 2.5 | judges still saw cuts on both sides; never shipped | Cuts come from the solver re-picking orbit candidates at fences and gates. Add hysteresis to the candidate choice instead. |
+
+**Open criteria** (GPU J = tb/gpu-pass 34b190ad1 on a55b0fa4b, Medium/High; CPU = my latest mapped)
+
+| criterion / fight | GPU Med / High | CPU | dominant remaining defect (judges) |
+|---|---|---|---|
+| F22#4 Riverwatch (visual) | 6.98 / 6.83 | 7.05 (r6) | HUD over the left action; impact spray on the target |
+| F22#4 Warden | 7.08 / 6.99 | 6.81 hall (r6), 7.01 f38 (r8 pre) | dust over the struck creature; camera cuts at fences |
+| F10#2 Stormwood camera | 6.48 / 6.09 | 6.17-6.38 | Sparkit tiny and buried in tell dust; no storm sky in frame; canopy |
+| F39 Venn (Tidewake) | 5.82 / **4.64** | 5.84-6.56 | pilot ghost on GPU (fix unlanded); black overhang; bleached sand, no sea; "Gather Reef Stone" prompt |
+| F40 Veyra (Cloudreach) | 6.14 / 6.60 | 6.54 (r6) | flat sand arena, mid-screen prompt panel, white impact disc |
+| F38#5-F41#5 telegraph slab defect | outlines FIXED in every set since the generic batch | | wind-up "where" still PARTIAL or PRESENT: text plus dust only |
+| F22#4 C2/C3 | | finale 6/6; Meadows 22/24; Stormwood 15/18; water 48/54 | Riverwatch rerun (power 27.0) and Stormwood Terrapup trivial-floor rerun not run. Venn and Nerissa ratio ~0.75 (Water lane). Meadows chapter Galewisp 0.12 < 0.25 (Balance). |
+
+**What worked and what didn't** (mapped CPU deltas unless noted)
+- **Worked:**
+  - Pilot ghost fix (follower fade scoped to following): Venn +0.64, Warden hall +0.62, Riverwatch +0.62 (r6). GPU Warden +0.84/+0.99, Riverwatch +1.29/+0.95.
+  - Generic presentation (outlines off, dust tells, slim HUD, grounded impacts, horizon lens, Veyra streaks): Warden +1.03, Riverwatch +1.35 (r4); Veyra +0.61, Stormwood +0.42, Venn +0.69 (r5).
+  - Bodied tells, curtain and dust over outlines: +0.3 to +1.0 (r1-r3).
+- **Did not work:**
+  - Smaller impact scales (r8): -0.08.
+  - Slower orbit and softer lag (r7): cuts unchanged.
+  - Stagger label placement: fixed the ambiguity (GPU 3/3), but there is no score gain without the Creatures-lane body wince.
+  - Hue-only telegraph changes (#8c6cff, #b16cff): small.
+  - Aura 0.9: washed large bodies pale.
+- **Regressions I introduced:**
+  - r6 dust fill rows plus pulse at dust_alpha 0.9 bury the pilot (fix staged as r9).
+  - Duplicate dust keys from re-running an overlay on an already-overlaid tree (fixed fd121b1e5).
+
+## Harness runbook (exactly what I ran; CPU container, Mesa llvmpipe, Godot 4.7-stable)
+
+**Setup**
+- Godot 4.7-stable is at /usr/local/bin/godot (downloaded; not preinstalled).
+- After any checkout or main merge, run `godot --headless --path . --import` (about 10-25 min). Without it, captures fail with "FIGHT DID NOT START" on unimported assets.
+- Export `XDG_DATA_HOME=<scratch>/xdg` for captures, so saves and settings stay out of $HOME.
+- One Godot at a time. To pause a long smoke, `kill -STOP` **the godot process itself** (`pgrep -f "^godot --headless.*smoke_"`), not the `timeout` wrapper; then `kill -CONT` it afterwards. The wrapper's wall-clock timeout keeps running while the smoke is paused.
+
+**Fight captures** (xvfb, 1280x720, Compatibility; prefix `timeout 2700 xvfb-run -a -s "-screen 0 1280x720x24" godot --path . --rendering-driver opengl3 --resolution 1280x720`)
+- **Warden hall / Riverwatch:** `--script res://tools/art_pipeline/capture_named_fight.gd -- --trainer=warden_aldis --ally=ripplet --frames=12 --interval=0.5 --tell-frames --out=res://shots/<dir>`
+  - Riverwatch adds `--trainer=captain_riverwatch --live-member=captain_riverwatch:4`.
+  - Judged frames: `<id>-t01-stand-mid`, `-t02-stand-mid`, `-04`, `-08`.
+  - About 10-17 min.
+- **Stormwood (F10#2):** add `--fixed-fps 20 --script res://tools/capture_named_fights_f10_6.gd -- --ids=glass_field_alpha --seconds=14 --interval=2.0 --camera-view=north --fixture-seed=1042206 --out=res://shots/<dir>`
+  - Frames: `glass_field_alpha-tell1-b-mid`, `tell2-b-mid`, `tell1-e-impact`, `tell3-c-late`.
+  - About 16 min.
+- **Veyra:** `--script res://tools/phase2_capture_cloudreach_live_fight.gd -- --output=res://ralph/reports/VISUAL/phase2/cloudreach/<name> --seed=7`
+  - The output must be under that folder (the tool refuses otherwise); move the frames out of the repo afterwards.
+  - It often hits the 2700 s timeout (exit 124) after writing frames. A late frame (live-2262) can be missing, so compare live-1362/1722/1902/2082.
+  - About 45 min.
+- **Venn:** `--script res://tools/phase2_capture_tidewake_fights.gd -- --trainer=water_trainer_venn --seed=2042 --out=res://ralph/reports/VISUAL/phase2/tidewake/<name>`
+  - Exit 1 "Capture rejected: frame_cap" is normal (40 frames written).
+  - Frames are in `<name>/venn/`: tell-start-000.65, t-006.02, t-012.00, t-024.02. frames.json has camera and fighter positions (use it to find camera pops).
+  - About 10 min. One run stalled for 30+ min when the disk filled; kill it and rerun.
+- **f38 trainer runs (GPU G3 set):** `--script res://tools/capture_f38_fight.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=32 --interval=0.15 --attack --dodge --tell-frames --preset=Low --low-resolution=1280x720 --source-commit=<FULL 40-char pushed sha> --out=res://shots/<fresh dir>`
+  - It needs the full SHA and a fresh output dir (`lookdev_capture_bootstrap.gd` refuses a short SHA or an existing dir).
+  - The Warden fight may end early (frame 22), so pick frames present in both arms.
+  - About 20 min for both trainers.
+- Candidates are config overlays: `python3 ralph/reports/FIGHTS/close-1024/cand_*.py.txt` on a **clean** tree, and `git checkout data/config/` to restore.
+  - Commit any new default keys **before** running an overlay, or the restore wipes them.
+  - Never run an overlay twice: it duplicates JSON keys, which happened with cand_r6 inside cand_r7.
+- Queue template: `tools/capture_queue.sh.txt` (pause smoke, pre arm, overlay, candidate arm, restore, resume).
+
+**Smokes (F22#4 C2/C3)** (`godot --headless --path . --fixed-fps 60 --script <smoke> -- --seeds=24 --json=<out.json>`)
+
+| smoke | wall time | notes |
+|---|---|---|
+| `tests/smoke_finale_named_c2c3.gd` (Veyra, Marrow) | ~2.5 h | |
+| `tests/smoke_stormwood_b_named_c2c3.gd` | ~2.8 h | `--starter=terrapup` for the Terrapup rerun |
+| `tests/smoke_meadows_named_c2c3.gd` | ~5.2 h | `--case=captain_riverwatch` for the Riverwatch rerun |
+| `tests/smoke_water_named_c2c3.gd` | ~9 h | It prints measurements only; apply `tools/water_verdict.py.txt` (rule plus trivial floor). Galewisp is type-advantaged against all five water named wilds. |
+
+- The water smoke ran under `timeout 36000`; pausing it eats into that budget.
+- Per-fight table: `python3 tools/c2table.py.txt <json>...`, which uses `runs[].pattern_attacks`; the water JSON rows have no `verdict` (use water_verdict).
+
+**Unit tests**
+- `godot --headless --path . --script tests/run_tests.gd -- --only=a,b,c` (file stems without `test_`).
+- My standard fights set is listed in the 05:20 and 11:20 READY entries (about 280 tests, about 5 min).
+
+**Code-blind judging** (tools/visual_judge)
+1. Contact grids: `python3 tools/grid.py.txt out.png f1 f2 f3 f4` (2x2 at half size; 8 frames gives 2x4).
+2. Spec JSON: `[{"label","a","b","brief","defects":[...]}]`.
+3. Run `python3 tools/visual_judge/anchor_tiles.py --out <judge dir> --key <outside>/key.json --candidates spec.json --pairs 3 --seed <n> --include f36_0_npc:C1`. The include makes it a confirming batch.
+4. Copy `docs/reference` into `<judge dir>/reference` (anchor_tiles does not; I copied a prepared one).
+5. Fill the prompt: `python3 tools/judge_prompt.py.txt <judge dir> <outside>/recorded_defects.txt`. Give it verbatim to three fresh general-purpose agents, in parallel, with only the folder path.
+6. Read A/B per set from key.json and write `rN_batch.json` (`anchors` by key id: [j1,j2,j3]; `candidates`: [j1,j2,j3]).
+7. Run `python3 tools/visual_judge/calibrate.py rN_batch.json --out rN_calibrate.json`.
+8. Commit only rN_{batch,key,spec,calibrate}.json plus at most one `_sheet*.png` under 1.5 MB (quantize with PIL; resize if needed).
+
+**Harness problems hit** (cause, then fix, then where the fix lives)
+1. **Godot missing:** downloaded 4.7-stable (local only).
+2. **"FIGHT DID NOT START" after a main merge:** unimported assets. Run `--import` (procedure).
+3. **Cloudreach capture refuses other outputs:** the tool restricts the path. Write under phase2/cloudreach, then move (procedure).
+4. **f38 capture exit 1, no frames:** short SHA or existing dir. Full SHA, fresh dir (procedure).
+5. **`git checkout data/config` wiped uncommitted defaults:** commit defaults first (procedure).
+6. **pkill -f pattern killed my own shell (exit 144):** kill by PID (procedure).
+7. **sed -i on a running queue script did nothing:** sed replaces the inode, and running bash keeps the old one. Edit with in-place writes, and only after the current position (procedure).
+8. **SIGSTOP on `timeout` did not pause the smoke:** stop the godot child (procedure). The earlier mistake is disclosed in the 01:25 READY.
+9. **Disk full:** `git worktree add` (3 GB of assets), and later the capture folders. Use `git merge-tree --write-tree` plus `commit-tree` for land branches instead of worktrees, and prune shots/ and old judge folders (procedure).
+10. **Unquoted heredoc ran backtick commands:** quote heredocs (`<<'EOF'`) (procedure).
+11. **Water smoke has no verdict:** `tools/water_verdict.py.txt` (this commit).
+12. **test_enemy_pattern_telegraph sample budget:** fill rows sampled the ground. Interpolate from seated edges (code, 3e028626f..fd121b1e5 series).
+
 ## TO COORDINATOR
 - 2026-10-25 13:30 CT **READY tb/fights-land 4ae4433da**: exactly a55b0fa4b's lane content on current origin/main 1d5faebac. Main has not moved since; `git diff a55b0fa4b 4ae4433da` equals main's own changes. Checks on 4ae4433da after `godot --import`: 283 tests, 11394 assertions, 0 failed (the 11:20 set). **The Fights lane pauses after this entry** (owner: cut usage); no new work.
 - 2026-10-25 13:30 CT INFO F22#4 C2/C3 final state (24 seeds, READER vs MASHER, live f22 patterns; per-fight tables in the 05:20 and 10:40 entries):
