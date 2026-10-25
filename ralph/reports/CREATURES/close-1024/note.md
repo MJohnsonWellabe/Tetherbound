@@ -3,6 +3,10 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct MESHY (rule 2): **Mirejaw retexture of the existing mesh.** GPU 6.92, one dominant defect (the near-black back, a 'dark smear' at faint end). Two albedo nudges gained under 0.5 (b34 -1.17, b35 -0.05), so per rule 1 I'm switching to the Mosshock route. Spec, palette and refs: `close-1024/mirejaw-retex-spec/` (back about value 0.28, olive-umber with thinner ochre seams; cream belly and amber frills kept; no red; texture only, same mesh, rig and recipe). I'll grade, wire, re-pin and CPU-judge it when the task lands.
+  - The lane's `lift_dark_back` touch (4e5dc1d35) is superseded by this; drop it from GPU READY.
+  - Status of my order: the Mosshock regrade (01b054770) and the bigger wince (2a1eb2d98) are both posted GPU READY.
+
 - 25 Oct GPU READY tb/creatures-land 2a1eb2d98 (= 01b054770 + G5): **P2-016 bigger wince.** On top of the third-of-height head drop (04ee56bcd): a 0.08 s squash on contact (0.86 high, 1.08 wide) and a shove away from the attacker of 0.2 m per metre of body (was 0.11). Hold timing unchanged; art node only, body and collider untouched (`test_creature_flinch_head_drop` + hit-window + remote-stagger: 9 tests, 0 failed).
   - CPU b37 grunt fight vs main: 5.81 -> 6.12 (+0.31); the defect moves PRESENT 2 / PARTIAL 1 -> PARTIAL 3/3 ('lowered or pulled back after an impact' in a few frames). Evidence: `close-1024/b37/judges.md`.
   - What still hides it on CPU, per all three judges: the dust puffs and the contact disc over the body at impact (fights lane), and the boar's facing turns reading as repositioning. If the GPU still calls it PRESENT, the next lever is a larger dip cap (25 deg now) or a stagger step back of about half a body length.
