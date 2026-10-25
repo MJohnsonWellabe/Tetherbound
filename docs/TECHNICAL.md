@@ -228,6 +228,8 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
   - Remove `.godot/imported` entries that no `.import` file references.
   - The classifier refuses `git reset --hard` and `git restore` over work; use `git stash push` instead.
   - A merge interrupted by a full disk leaves partial copies of the other side's files. Check each against `git hash-object`/`git rev-parse <ref>:<path>` before removing them.
+  - Never `git fetch --depth=N` an asset branch (tb/meshy-1024, tb/creatures) to read a few files: depth 50 of two branches pulled 14 GB. To read files, fetch, `git archive <ref> <paths> | tar -x -C <scratch>`, then delete the remote refs and the new pack and put `.git/shallow` back to HEAD's line.
+  - To post a lane NOTE line on another branch without its blobs: `git fetch --depth=1 --filter=blob:none origin <branch>`, `git hash-object -w` the edited note, then build the commit with a temporary `GIT_INDEX_FILE` (`read-tree`, `update-index --cacheinfo`, `write-tree`, `commit-tree -p origin/<branch>`) and push `<sha>:refs/heads/<branch>`. It costs under 1 MB.
 
 **CPU judging (the `visual-judge` yardstick)**
 1. **Contact sheets:** 2×2 per side at 640×360 per tile. Write a spec `[{label, a, b, brief, defects}]`.
