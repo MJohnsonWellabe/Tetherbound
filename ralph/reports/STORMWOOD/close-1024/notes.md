@@ -1,5 +1,45 @@
 # Stormwood lane, close-1024 (F41#1, #2, #3, #5; F10#2)
 
+## HANDOFF (25 Oct 22:30Z, session paused for a fresh Stormwood session)
+
+**State**
+- Branches: `tb/stormwood` (lane head, includes main 18c9ddc05 via the 21:10Z merge; see `git log`), `tb/stormwood-routes` c29905d40 (S3 + S5 READY), `tb/stormwood-land7` bd5dba893 (LANDED as #751). Superseded land branches: land3..land6, land6-on.
+- Landed in #751: item-6 r16 batch (Ashfoot kit furniture + planked floor, Lantern Pools dressing `stormwood_lantern_pools.json`, Stormheart deck supports + finer bark) and the Ashfoot interior finish ON (timber lining + Meshy ranger hearth; GPU SW6 +0.99 Medium / +1.71 High -> 5.82).
+- Routes: S5 (home_relic -> home_credits) and S3 (T5 altar_5 -> kitchen_1..4 -> feed -> return) READY on tb/stormwood-routes, all seams MATCH (`seams/`, ROUTES.md). Nothing handed back to Routes.
+
+**Open candidates (all in main or the lane, flag OFF)**
+| Candidate | Flag | Verdict | Next |
+|---|---|---|---|
+| Stormheart `meshy_interior` (root-wall panel ring at r 45.4, arched deck walk on the OuterWorks lip) | `stormheart_presentation.json meshy_interior.enabled` | CPU r18 +0.75; GPU SW6 -0.24 Medium / +0.59 High: OFF | judges: wall still "a smooth dark drum with no core", panels read as a tiled strip. Replace with the hero-interior plan below |
+| Heartstone `hero` (Meshy standing stone, 1.25 m collider, glow) | `stormwood_heartstone_visual.json hero.enabled` | CPU r18 +0.71; GPU +0.42 / +0.28: OFF | reads as "a small cyan glow" at about 2% of frame; frame it (plan below) |
+| Pool basin | `stormwood_lantern_pools.json basin.enabled` | not judged: buried by terrain twice (seated at lowest and at mid-relief) | needs a carved hollow or a different seating; low priority |
+| Crystal crown, satellites, hollow floor clear, candle light | various | CPU r16/r17 no gain: OFF | drop |
+| near_lens_hide (vegetation) | `foliage_camera_visibility.json` | r15 no gain; lane only, never landed | drop |
+
+**Plan: Stormheart hero interior (one candidate, expected > +0.5)**
+- Whole-wall bark relief: the GPU and every CPU judge read the trunk as a smooth drum. Use the root-wall panel model in several rows (0-12, 12-24, 24-36 m, staggered, varied scale and yaw) instead of one strip, so no repeat reads; or request one taller Meshy "hollow trunk interior wall" piece (about 30 m tall, curved, with buttresses) and tile it at 4-6 angles.
+- A glowing core column: the boards show a lightning-lit crystal core column up the hollow axis. `core_finish` exists (a thin line); add a thick emissive column mesh (6-8 m wide, lightning-blue, natural glow) plus 2-3 warm lantern clusters and navy banners on the deck lip (`built_detail` banner colours exist).
+- Fix the v03 white strip (top of frame: sky through the split, unlit) and the v04 fog sprites at the camera (surge `steam` puffs in Fading, `stormwood_surge.gd` steam emitter, which spawns at the camera).
+
+**Plan: heartstone framing**
+- The survey stand (`debug_teleport_spots.json` Crown Heartstone `f41_survey`, 691.5, 2703.5, heading 27) is 12 m out; at 4 m tall the stone is about 2% of frame width on GPU. Move the stand to about 5-6 m south-west of (700, 2712), pitch slightly up, so the stone fills about 30%; or scale the hero to 7-8 m (its collider follows `collider_radius_m`). Keep wild creatures out of that cone: the catalogue already clears 18 m around camera and trainer (`SURVEY_CLEARANCE_M`); widen it for this stand or add the view cone to the clearance.
+
+**Plan: authored ground (gap 1, PRESENT almost everywhere)**
+- Break the one grass/moss carpet into authored zones: soil, moss and rock patches, dark pools and groves. Levers: terrain splat layers (`stormwood_ground_finish.json`, `stormwood_look.json terrain`), ground-cover tier density masks per region (`stormwood_ground_cover.gd` tiers), and authored patch lists per survey stand. One candidate across the worst stands, judged against main.
+
+**Tidewake items to pick up (from the coordinator; handoff in `ralph/reports/TIDEWAKE/close-1024/NOTES.md`)**
+- Veilfall mountain and cliff facade (Meshy, already on tb/meshy-1024; flag-off candidates in #747).
+- Pumps and jetty seated at the shore.
+
+**What worked / what did not**
+- Worked: replacing the dominant object (Ashfoot lining + hearth +1.7 GPU High; survey stand off the Capacitor alpha's seat +2.6/+2.7 GPU); structural fixes the judges name (floor z-fight, red rails, magenta ring).
+- Did not: scene tweaks around an object (lighting, candle, crystal crown, floor clear: r17 all lost); small props at survey distance (heartstone at 12 m); repeated single-row panels (read as a tiled strip).
+- CPU r18 gains overstated GPU for the two large spaces (Stormheart, heartstone): judge with the object large in frame.
+
+**Harness lessons:** added to TECHNICAL §8.1 (stand screening with `--custom`, F41 catalogue needs one commit per GPU arm, Meshy fitting/glow helpers, `_`-prefixed reference crops, tidewake runner seams by save sha256).
+
+PAUSED 25 Oct 22:30Z: handed to a fresh Stormwood session.
+
 Baseline: origin/main 5f1f388cc, where the r11 look is ON (commit 30b8264f4). Previous round notes: `../close-1022/notes.md`.
 Renderer: Godot 4.7 Compatibility, Mesa llvmpipe CPU, 1280x720, Xvfb. CPU-provisional bar 6.7 mapped; GPU 7.5.
 

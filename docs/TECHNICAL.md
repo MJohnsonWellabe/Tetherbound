@@ -207,6 +207,9 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
   - Never apply an overlay twice; it duplicates keys.
   - Edit JSON with targeted line edits validated by `json.loads`, never a whole-file `json.dump`.
 - **Determinism:** random wild spawns differ between arms; note them in the verdict. Terrain bakes are not byte-deterministic, so keep only the regions you changed.
+- **Stand screening (Stormwood):** `capture_stormwood_f10_matrix.gd -- --custom="id@x,z@fx,fy_above_ground,fz@pitch;…" --stands=<ids> --phases=calm --no-aftermath` renders any number of ad-hoc stands in one boot (about 10 min boot on CPU). Use it to screen candidate survey stands before committing an `f41_survey` override; the custom ids must also be listed in `--stands`.
+- **F41 Stormwood catalogue** refuses CPU (High/Medium presets only) and a dirty tree. A GPU A/B therefore needs one commit per arm: build the flags-on arm as its own branch with `commit-tree` (for example `tb/stormwood-land6-on`). A CPU subset check may bypass the gate only in an uncommitted, reverted edit.
+- **Meshy hero props** arrive unit-normalised (longest side about 1.9). Fit them to the prompt size with `scripts/world/meshy_hero_prop.gd` (`fit_height`), and give painted crystal or lightning veins natural glow with its `glow` next pass (`shaders/blue_vein_glow.gdshader`, blue-dominant texels only).
 - **GPU form for READY lines:** the same tool and arguments with `--rendering-method forward_plus --resolution 1920x1080 --preset=<Medium|High>`. The GPU session captures both arms itself.
 
 **CPU judging (the `visual-judge` yardstick)**
@@ -217,6 +220,7 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
 5. **Batch file:** map A/B per set from `key.json`; sides are shuffled per set. Copy each score from the judges' JSON, never from memory. Write `batch.json` as `{"anchors": {id: [j1,j2,j3]}, "candidates": {label: [j1,j2,j3]}}`.
 6. **Calibrate:** `python3 tools/visual_judge/calibrate.py batch.json --out mapped.json`. Flag RMSE > 0.75.
 7. **Commit only** VERDICT.md, the batch/key/spec/mapped JSON and one `_sheet*` image under 1.5 MB.
+- **Reference crops:** `.gitignore` drops `ralph/reports/**/*.jpg` unless the file name starts with `_`. Name Meshy reference crops `_<name>.jpg` (or the coordinator never sees them) and check `git show --stat` after committing.
 - **What CPU scores are good for:** ranking candidates only. CPU mapped ≈ GPU − 0.8, and CPU wins have failed on GPU (P2-016 twice). A candidate goes to the GPU queue only when its expected gain is above 0.5 (owner, 25 Oct).
 
 **Route pieces (F49#0 and chapter cards)**
@@ -230,6 +234,7 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
   - `earned_chain_runner.gd` (Meadows story pieces; every continuation needs `--generated-fixture`)
   - `tidewake_piece_runner.gd` (homestead and training; prefer the split `training_tN_kitchen_<k>` pieces)
   - `cloudreach_chain_runner.gd`
+- **Seams for `tidewake_piece_runner.gd`:** its receipts record no position. A seam there matches when every receipt field matches and the next piece loaded the previous piece's committed save byte-identical (sha256 of the save tree); record both in the seam JSON (`ralph/reports/STORMWOOD/close-1024/seams/s3_*.json`).
 - **Piece size (owner, 25 Oct):** a piece proves one seam and runs about 30 minutes, starting from a generated boundary save placed just before that seam.
   - It replaces the 12 h per-piece timeout these runners used before.
   - When a seam lacks a boundary save, add a generator profile; never lengthen a run to reach it.
