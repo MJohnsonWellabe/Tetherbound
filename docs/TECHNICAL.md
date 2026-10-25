@@ -151,6 +151,90 @@ xvfb-run -a -s "-screen 0 1280x800x24" "$GODOT" --path . --rendering-driver open
 
 **Planned Forward+ captures (F26, unproven):** Forward+ needs a RenderingDevice driver (`--rendering-method forward_plus --rendering-driver vulkan`, or `d3d12` on Windows). Linux xvfb captures would need a working Vulkan ICD, either a GPU or a software rasterizer such as lavapipe. Neither has been validated on this project's CI or containers. F26 must prove a capture path and record per-preset frame time at 1920×1080 (F26#4) before relying on it. Software-rasterized frame times are never device performance. One import/export/render writer per machine. Independent pure read-only tests can parallelize against an already-imported cache; full Terrain3D smokes serialize if memory would contend. `tools/capture_diag_minimal.gd` is a bounded invocation check; fix capture setup before blaming scene art. Inspect stale process cwd before worktree cleanup; do not kill unrelated user processes.
 
+### 8.1 Lane runbook: setup, captures, judging and route pieces
+
+Every lane reuses this runbook; do not rebuild a harness that is listed here. It is merged from the 25 Oct lane handoffs. Each lane's full runbook, with tool-specific frame names, is at the top of its NOTE:
+- `ralph/reports/TIDEWAKE/close-1024/NOTES.md` (scripts in `runbook/`)
+- `ralph/reports/CLOUDREACH/close-1024/NOTE.md`
+- `ralph/reports/FIGHTS/close-1024/NOTE.md` (helpers in `tools/*.txt`)
+- `ralph/reports/ROUTES/close-1024/NOTE.md`
+
+When a lane hits a new harness problem, it adds the problem, its cause and its fix to its NOTE runbook and to this list.
+
+**Container setup (cloud, CPU only)**
+- **Install Godot 4.7-stable** from the CI URL:
+  - `curl -sSL -o /tmp/godot.zip https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip`
+  - unzip it and install the binary as `/usr/local/bin/godot`.
+- **Import before any capture or smoke:** run `godot --headless --path . --import` after every checkout, merge or new asset. It takes about 45 min the first time and 8–25 min after that.
+  - Skipping it causes "FIGHT DID NOT START", placeholder creatures and size-admission refusals.
+- **Meshy textures:** set each texture `.import` to `compress/mode=2` and `detect_3d/compress_to=0`, then import again. Commit the `.import` files and the extracted images.
+- **Disk:** the allowance is small and `.git` alone is about 18–21 GB.
+  - Fetch single branches, shallow where possible.
+  - Build land branches with `git merge-tree --write-tree` plus `commit-tree`, never `git worktree add` (about 3 GB).
+  - Delete old capture folders, `.godot/imported` and pushed GLBs before big runs.
+  - A capture that stalls for 30+ min usually means the disk is full.
+- **One Godot process at a time.** Serialize captures, imports and smokes with a queue that waits on `pgrep -x godot`.
+  - Kill by PID. `pkill -f <pattern>` from a shell whose own command line contains that pattern kills the shell (exit 144).
+  - To pause a smoke, `kill -STOP` the godot child, not the `timeout` wrapper; the wrapper's clock keeps running.
+- **Shell pitfalls:**
+  - Quote heredocs (`<<'EOF'`).
+  - `sed -i` does not reach a running bash script. Write a new queue file that waits for the old one.
+  - Run long jobs detached (`nohup setsid … & disown`) and wait with a Monitor or an `until grep` loop, not foreground `sleep`.
+- **Lane-to-coordinator messages** from a lane session can be refused (untrusted device). The lane NOTE is the channel; the coordinator reads it.
+
+**CPU captures (xvfb, Compatibility, Low)**
+- **Prefix:** `timeout <s> xvfb-run -a -s "-screen 0 1280x800x24" godot --path . --rendering-driver opengl3 --rendering-method gl_compatibility --resolution 1280x720 --script res://tools/<tool>.gd -- …`
+  - Never combine `--headless` with a capture.
+  - Set `XDG_DATA_HOME=<scratch>/xdg` so saves stay out of `$HOME`.
+- **Source SHA:** look-dev tools need the full 40-character pushed SHA (`--source-commit`/`--source-sha`, never `-dirty`) and a fresh, absent output dir.
+  - Low preset also needs `--low-resolution=1280x720`.
+  - Some tools (Cloudreach live fight, high perch) only write under `ralph/reports/VISUAL/phase2/<biome>/`. Move frames to `.artifacts/` afterwards and never commit them.
+- **Matrix and look tools:**
+  - `capture_f38_matrix.gd` (Meadows: `--seed=2042 --f38-preset=Low --f38-baseline --times=day --subset=<stand> --output=res://…`)
+  - `capture_cloudreach_f40_matrix.gd` (`--piece=N`, where N = stand×8 + time×2 + weather + 1)
+  - `capture_tidewake_f13_5.gd` (`--camera-set=res://tools/visual_judge/camera_sets/<set>.json --views=… --preset=Low`)
+  - `phase2_capture_locations.gd`
+  - `capture_view_fallback.gd` re-seats approach views that fail; a view with no valid seat fails closed.
+- **Fight tools:**
+  - `art_pipeline/capture_named_fight.gd`
+  - `capture_named_fights_f10_6.gd` (Stormwood; `--fixed-fps 20`)
+  - `phase2_capture_tidewake_fights.gd` ("frame_cap" exit 1 is normal)
+  - `phase2_capture_cloudreach_live_fight.gd` (about 45 min, often exits 124 after writing frames)
+  - `capture_f38_fight.gd` (the GPU G3/G5 set)
+- **Candidate overlays:**
+  - Never edit the config a running capture reads.
+  - Apply overlays only on a clean tree, and commit new default keys first, because restoring with `git checkout data/config/` wipes uncommitted keys.
+  - Never apply an overlay twice; it duplicates keys.
+  - Edit JSON with targeted line edits validated by `json.loads`, never a whole-file `json.dump`.
+- **Determinism:** random wild spawns differ between arms; note them in the verdict. Terrain bakes are not byte-deterministic, so keep only the regions you changed.
+- **GPU form for READY lines:** the same tool and arguments with `--rendering-method forward_plus --resolution 1920x1080 --preset=<Medium|High>`. The GPU session captures both arms itself.
+
+**CPU judging (the `visual-judge` yardstick)**
+1. **Contact sheets:** 2×2 per side at 640×360 per tile. Write a spec `[{label, a, b, brief, defects}]`.
+2. **Judge folder:** `python3 tools/visual_judge/anchor_tiles.py --out <judge dir> --key <outside>/key.json --candidates spec.json --pairs 3 --seed <new each batch> --include craft`. Then copy `docs/reference` into `<judge dir>/reference`; the tool does not.
+3. **Prompt:** take the text block of `tools/visual_judge/JUDGE_PROMPT.md` and fill in `[JUDGE FOLDER]`, `[SET LIST]` and `[RECORDED DEFECTS]`.
+4. **Judges:** give the filled prompt verbatim to three fresh agents in parallel, with only the folder path.
+5. **Batch file:** map A/B per set from `key.json`; sides are shuffled per set. Copy each score from the judges' JSON, never from memory. Write `batch.json` as `{"anchors": {id: [j1,j2,j3]}, "candidates": {label: [j1,j2,j3]}}`.
+6. **Calibrate:** `python3 tools/visual_judge/calibrate.py batch.json --out mapped.json`. Flag RMSE > 0.75.
+7. **Commit only** VERDICT.md, the batch/key/spec/mapped JSON and one `_sheet*` image under 1.5 MB.
+- **What CPU scores are good for:** ranking candidates only. CPU mapped ≈ GPU − 0.8, and CPU wins have failed on GPU (P2-016 twice). A candidate goes to the GPU queue only when its expected gain is above 0.5 (owner, 25 Oct).
+
+**Route pieces (F49#0 and chapter cards)**
+- **Kit:** committed in `tools/earned_saves/routes_kit/`.
+  - `chain.sh` is the piece driver.
+  - `commit_piece.sh` commits each passing save immediately.
+  - `seam_receipts.py` and `seam_earned.py` check seams; a seam matches when the output has `matches: true` and `differences: []`.
+  - The whole-chain status is `ralph/reports/ROUTES/close-1024/LEDGER.md`.
+- **Start saves:** `godot --headless --fixed-fps 60 --path . --script tools/earned_saves/generate_boundary_save.gd -- --profile=<profile> --slot=0 --out=<absent dir>`. Profiles are in `tests/fixtures/earned_saves/generated_boundary_profiles.json`.
+- **Runners:**
+  - `earned_chain_runner.gd` (Meadows story pieces; every continuation needs `--generated-fixture`)
+  - `tidewake_piece_runner.gd` (homestead and training; prefer the split `training_tN_kitchen_<k>` pieces)
+  - `cloudreach_chain_runner.gd`
+- **Piece size (owner, 25 Oct):** a piece proves one seam and runs about 30 minutes, starting from a generated boundary save placed just before that seam.
+  - It replaces the 12 h per-piece timeout these runners used before.
+  - When a seam lacks a boundary save, add a generator profile; never lengthen a run to reach it.
+  - Never commit in a run checkout while a chain uses it; the consumer checks the exact source commit.
+
 ## 9. CI and packaging
 
 `.github/workflows/ci.yml` is execution truth: import, targeted grouped/sharded tests, scatter freshness and Windows export gates. CI runs a fast tier on main pushes and the full suite every 8 hours on main, on dispatch, or on a `full-ci`-labelled PR (WORKFLOW §8). Check the `changes` job and actual job list for what a pull request really ran. **Landing (owner, 2026-10-10; WORKFLOW §8):** lanes push their branches and report the head SHA; the coordinator merges ready lanes into one consolidated PR (`tb/ev-coordinator`) with the `full-ci` label and auto-merge, after one full unit suite on the merged head (import, then 4 shards). `verify-suite` checks out sparsely (no `docs/`, `ralph/`, `shots/`, `assets_raw/`, `archive/`); fixtures a test reads from there are listed in ci.yml's materialize step. Use `full-ci` for net, harness, save or authority changes; every redesign PR touching §11.3 or §10 of MULTIPLAYER is one. `multiplayer-wide.yml` runs the wider peer matrix nightly and on dispatch. Never push main directly. Review actual job/log execution, not just green status or elapsed time. `.github/workflows/render.yml` is the on-demand render/smoke offload (dispatch from `main`, inputs validated, artifact of written files); `tools/cloud_setup.sh` prepares a cloud container.
