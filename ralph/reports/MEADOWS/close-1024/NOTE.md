@@ -359,6 +359,11 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - The "window-strip plaster wall" the judges name is not in the shell prefab. The wall behind the faced arches is already fieldstone. The pale plaster panels in the arch frames are interior partitions from another source.
   - Next for the arch stands (GPU: still below 7.5): find that interior plaster source (the arch_home/arch_stormwood detail frames show it on the left and right walls) and the flat Hall light (L3, which the owner has held).
 
+- 2026-10-25 22:01 UTC READY **tb/meadows-land15 d126bf64ee** (from origin/main 18c9ddc05, which has #751). This is the coordinator's 21:58 ask.
+  - **What it contains:** land14 with only `ironwood_grove_presentation.json hero_tree.model_candidate.enabled: true`. The GPU MH2 gain (+0.84 Medium, +0.88 High, 6.53) is recorded in `_why_on_gpu`. The keep and the war banners stay OFF; the courtyard camp-prop move ships with it.
+  - **Test update:** `test_ironwood_grove_identity` asserted the R13 colour-grade shader on the installed landmark. With the candidate ON, it now asserts the Meshy landmark installs with its own textured material. The R13 check still applies when OFF.
+  - **Tests on land15's own files:** test_ironwood_grove_identity, test_meadows_tier1_art_gates, test_texture_import_policy and test_stronghold_banner_camera_occluder: 12 tests, 1414 assertions, 0 failed.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
