@@ -18,6 +18,7 @@ func _block(path: String, key: String) -> Dictionary:
 func test_shipping_configs_gate_the_new_art() -> void:
 	assert_true(bool(_block("res://data/config/crossing_hall.json", "arch_facades").get("enabled", false)), "facades ON after the GPU pass")
 	assert_false(bool(_block("res://data/config/stronghold.json", "hero_gatehouse").get("enabled", true)))
+	assert_false(bool(_block("res://data/config/stronghold.json", "courtyard_daylight_candidate").get("enabled", true)), "courtyard daylight OFF until judged")
 	var pieces := HERO_PIECES.settings()
 	for group: String in pieces.keys():
 		if pieces[group] is Dictionary and (pieces[group] as Dictionary).has("pieces"):
