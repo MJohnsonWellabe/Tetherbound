@@ -25,10 +25,19 @@ static func settings() -> Dictionary:
 
 static func enabled() -> bool:
 	if _active < 0:
-		var args := OS.get_cmdline_user_args()
-		_active = 1 if not args.has("--f38-baseline") and \
-				(bool(settings().get("enabled", false)) or args.has("--f38-candidate")) else 0
+		_active = 1 if resolve_active(bool(settings().get("enabled", false)), OS.get_cmdline_user_args()) else 0
 	return _active == 1
+
+
+## `--f38-baseline` withholds an OFF candidate; it must never strip shipped
+## dressing. This layer ships ON, and under the old gate every F38 matrix frame
+## lost it -- including the Hall's two end banners, whose absence made the
+## shipped Hall waymark fail and the Hall skip `set_process` (no day/night
+## interior response in matrix captures). close-1024 F38 L3 finding.
+static func resolve_active(config_enabled: bool, args: PackedStringArray) -> bool:
+	if config_enabled:
+		return true
+	return args.has("--f38-candidate") and not args.has("--f38-baseline")
 
 
 ## Filter only decorative draw instances AFTER harvest identity assignment.
