@@ -21,9 +21,10 @@
     "enabled": true,
     "_comment": "P2-037: articulated outer bark and split crown tips around the unchanged inner clearance. Visual geometry and UVs only; native comparison required.",
     "lobe_depth_m": 8.0,
-    "bark_repeat_m": 16.0,
+    "bark_repeat_m": 9.0,
     "bark_tint": "#c7b697",
-    "normal_depth": 0.65
+    "normal_depth": 1.0,
+    "_why_relief": "GPU F41#0 gap 2 (25 Oct): the trunk walls read smooth. Bark repeats at 9 m (was 16) for finer furrows up close, full normal depth (was 0.65)."
   },
   "split_bark_finish": {
     "enabled": true,
@@ -47,6 +48,45 @@
     "_why_weathered_wood": "GPU F41#0 Stormwood matrix (25 Oct, all three judges on the Stormheart stand): the decks and rails read as plain red, close to the oxblood reserved for Team Tether. The atlas's orange grain under the old warm tint gave albedo about (111,66,29); 0.75 weathering with a cool grey tint gives aged timber about (101,87,74), the same value band with a quarter of the saturation.",
     "banner_colour": "#183e65",
     "banner_trim": "#d5b466"
+  },
+  "deck_supports": {
+    "enabled": true,
+    "scope": "client_presentation",
+    "_why": "GPU F41#0 (Stormheart 3.51, 25 Oct): smooth bare trunk walls; add structure and supports. Timber posts and knee braces carry the OuterWorks deck at the trunk wall, lanterns hang under its inner lip. Presentation only; posts stand at the wall edge, lanterns overhead.",
+    "post_count": 24,
+    "post_inset_m": 0.7,
+    "post_width_m": 0.6,
+    "lantern_count": 12,
+    "light_every": 2,
+    "lantern_inset_m": 0.6,
+    "lantern_y_m": 4.9,
+    "light_energy": 2.6,
+    "light_range_m": 16.0
+  },
+  "meshy_interior": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_candidate": "r18 Meshy candidate (OFF until judged; coordinator big-swing order 25 Oct): carved root-wall panels around the trunk's inner wall (skipping the split openings) and arched walkway segments with lantern railings on the OuterWorks deck's inner lip. tb/meshy-1024 ae67083ec. Presentation only.",
+    "wall_model": "res://assets/props/meshy-1024/stormheart_root_wall_panel/stormheart_root_wall_panel.glb",
+    "wall_radius_m": 45.4,
+    "wall_width_m": 8.0,
+    "wall_height_m": 12.0,
+    "wall_sink_m": 0.4,
+    "wall_gaps": [[-1.84, -1.30], [1.43, 1.71]],
+    "vein_colour": "#9fd0ff",
+    "vein_energy": 1.1,
+    "deck_model": "res://assets/props/meshy-1024/stormheart_deck_segment/stormheart_deck_segment.glb",
+    "deck_radius_m": 19.4,
+    "deck_length_m": 8.0,
+    "deck_sink_m": 0.15,
+    "deck_tint": "#a99f96"
+  },
+  "hollow_floor": {
+    "enabled": false,
+    "_why_off": "r17 code-blind CPU round (25 Oct): clearing the hollow's ground cover mapped 5.24 -> 4.75 against r16. OFF.",
+    "scope": "client_presentation",
+    "_why": "r17 (25 Oct): r16 judges read the hollow's grass carpet as outdoors. Ground-cover tiers keep out of clear_radius_m around the trunk axis.",
+    "clear_radius_m": 40.0
   },
   "branching_crown": {
     "enabled": true,
