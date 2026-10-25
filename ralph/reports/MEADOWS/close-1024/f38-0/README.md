@@ -65,3 +65,39 @@ Each row is one sheet of that row's Meadows sightings, with frames numbered as i
 - P2-020: the dark grass band swallows feet.
 
 Every row in this pass is below 6.7 mapped. The fixes the judges name are the catch presentation (P2-058 to 061, one bounded UI and effects pass) and the creature pose and scale rows (P2-015/016/017). Those creature rows overlap F36#1/F29 in `data/creatures/f36_pose_candidates.json`, which the creatures lane owns.
+
+## Pass 3: UI and fight rows (25 Oct 03:30 UTC)
+
+**Frames:** close-1024 supplemental captures at Low/CPU, run with the catalog's own repro commands:
+- `phase2_capture_ui.gd --biome=meadows --seed=2042`: 12 frames.
+- `phase2_capture_fights.gd --trainer=south_bridge_grunt,warden_aldis ...`: 71 frames.
+
+Each row is one sheet of its Meadows sightings, numbered as in `rows-b-sheet-index.json`. The only missing sighting is `warden_aldis-r21`.
+
+**Judging:** three fresh code-blind judges, standard prompt. Anchors: craft (confirming), f36_0_gap and f36_0_npc.
+- Calibration: linear, slope 0.84, **r 0.52, RMSE 0.73**. That is a weak fit: the anchors scored close together.
+- Read these mapped values as ±0.7. The raw means and their order are the more reliable signal.
+- Files: `rows-b-*`.
+
+| Row | Impact | Subject | Raw mean | Mapped | Defect (j1/j2/j3) |
+|---|---|---|---|---|---|
+| P2-002 | 80 | map | 5.90 | 6.02 | PARTIAL x3 (terrain and roads now show in the explored circle; fog elsewhere) |
+| P2-001 | 60 | menu shell | 5.80 | 5.94 | PARTIAL/PRESENT/PARTIAL |
+| P2-007 | 60 | secondary panels | 5.63 | 5.80 | PRESENT x3 |
+| P2-062 | 100 | fight camera and creature scale | 5.30 | 5.52 | PARTIAL/PRESENT/PRESENT |
+| P2-063 | 60 | fight tells and hits | 5.10 | 5.35 | PRESENT x3 |
+| P2-004 | 45 | exploration HUD | 5.63 | 5.80 | PARTIAL x3 (about 15–25% of the view now) |
+| P2-031 | 36 | settings and bindings | 5.87 | 5.99 | PARTIAL x3 |
+| P2-064 | 36 | Warden arena boundary | 5.17 | 5.40 | PRESENT x3 |
+| P2-065 | 36 | trainer defeated presentation | 5.30 | 5.52 | PRESENT x3 |
+
+**What the judges named:**
+- The flat magenta tell cones and rings, plus the text banners, stand in for real impacts (P2-063).
+- Turquoise guide rails cross the Warden floor (P2-064).
+- The fight camera swings between top-down blobs and an ally filling half the frame (P2-062).
+- Beaten trainers stay upright (P2-065).
+- The secondary panels are half empty (P2-007).
+- Grey small text and literal key labels (P2-031).
+- Map fog outside the explored circle (P2-002).
+
+The fight rows (P2-062, 063, 065) go to Fights, per the coordinator's routing. P2-064's rails are F22-era fight-boundary presentation, also Fights. The UI rows sit with the UI lane's open candidates.
