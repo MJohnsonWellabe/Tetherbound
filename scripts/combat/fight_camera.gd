@@ -154,6 +154,18 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 			var gap_a: float = side_gap.call(float(a))
 			var gap_b: float = side_gap.call(float(b))
 			return gap_a < gap_b or (gap_a == gap_b and absf(float(a)) < absf(float(b))))
+	# Fights close-1025 (per-trainer `face_yaw_deg`, absent = off): an arena
+	# with one good backdrop (Venn: the sea, not the cliff overhang) tries the
+	# views nearest that world yaw first, the exact one included, and takes the
+	# first that passes within `side_view_max_steps`. Same constraints and caps.
+	var face_yaw: Variant = config.get("prefer_world_yaw_deg")
+	var prefer_face := face_yaw != null and not prefer_side
+	if prefer_face:
+		var exact := rad_to_deg(wrapf(deg_to_rad(float(face_yaw)) - yaw,-PI,PI))
+		if not offsets.has(exact): offsets.append(exact)
+		var face_gap := func(value: float) -> float: return absf(wrapf(value - exact,-180.0,180.0))
+		offsets.sort_custom(func(a: Variant,b: Variant) -> bool:
+			return face_gap.call(float(a)) < face_gap.call(float(b)))
 	var maximum := maxf(0.01,float(config.get("max_distance_m",48.0)))
 	var distance_steps := clampi(int(config.get("separation_distance_steps",8)),1,12)
 	var distance_scale := clampf(float(config.get("separation_distance_scale",1.2)),1.01,2.0)
@@ -237,7 +249,7 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 						and absf(offset)<absf(float(nearest_safe.yaw_offset_deg))):
 					nearest_safe = candidate
 				# A side view that needs a long pull-back loses to the ordinary search.
-				if prefer_side and step <= int(config.get("side_view_max_steps",2)): return nearest_safe
+				if (prefer_side or prefer_face) and step <= int(config.get("side_view_max_steps",2)): return nearest_safe
 				break # First passing distance on this angle; no larger zoom needed.
 			if distance >= maximum: break
 	if not nearest_safe.is_empty(): return nearest_safe
