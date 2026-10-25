@@ -1,13 +1,15 @@
 extends RefCounted
 
-## F17#6 close-1020 r2 "great hall" interior candidate (presentation only;
-## OFF via crossing_hall.json hall_great_hall). r1 judges: the nave read as an
+## F17#6 "great hall" interior dressing (presentation; crossing_hall.json
+## hall_great_hall, ON from F17#6 r9). r1 judges: the nave read as an
 ## outdoor courtyard between house fronts, the night pools had no source, and
 ## the Hall had no tether landmark or blue accent. This dresses the interior as
 ## one hall: a woven runner down the nave, cloth hangings over alternate
 ## clerestory windows, iron candle rings hung from the roof with their own
 ## light and night pools, and a rune inlay with a hanging tether crystal in the
-## Shrine Room. Nothing collides; no route, portal state or save changes.
+## Shrine Room. Only a piece with `collider_radius_m` collides (a static
+## cylinder, e.g. the shrine altar); the dressing pieces do not. No route,
+## portal state or save changes.
 const WOOD_TEXTURE := "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png"
 const STONE_TEXTURE := "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"
 const GLOW := preload("res://scripts/world/crossing_hall_claude.gd")
@@ -30,11 +32,13 @@ static func build(hall: Node3D, cfg: Dictionary, arches: Dictionary = {}) -> Dic
 		_hangings(root, cfg.hangings)
 	if cfg.has("facade_hangings"):
 		_hangings(root, cfg.facade_hangings)
+	var weights := renderer_scale(cfg, RenderingServer.get_current_rendering_method())
 	if cfg.has("arch_trim"):
 		for slot: Node3D in arches.values():
-			_arch_trim(slot, cfg.arch_trim, out)
-	for row: Dictionary in cfg.get("shafts", []):
-		_shaft(root, row, cfg.shaft, out)
+			_arch_trim(slot, cfg.arch_trim, out, weights.y)
+	if weights.x > 0.0:
+		for row: Dictionary in cfg.get("shafts", []):
+			_shaft(root, row, cfg.shaft, out, weights.x)
 	for row: Dictionary in cfg.get("pieces", []):
 		_piece(root, row)
 	for node_name: String in cfg.get("hide_nodes", []):
@@ -48,6 +52,20 @@ static func build(hall: Node3D, cfg: Dictionary, arches: Dictionary = {}) -> Dic
 	if cfg.has("shrine"):
 		_shrine(root, cfg.shrine, out)
 	return out
+
+
+## F17#6 GPU pass (tb/gpu-pass d4ded67f4): the additive daylight shafts and the
+## arch rune rims are tuned on Compatibility, where they draw softly. Forward+
+## and Mobile draw the same additive quads at full weight, so the shafts read
+## as hard white bars and the rims as neon. There the shafts take
+## `forward_plus_shaft_scale` of their strength (0 = not built) and the rims,
+## veils and floor spill `forward_plus_arch_rim_scale`. Compatibility keeps
+## both at 1. Returns (shafts, rims).
+static func renderer_scale(cfg: Dictionary, rendering_method: String) -> Vector2:
+	if rendering_method == "gl_compatibility":
+		return Vector2.ONE
+	return Vector2(maxf(0.0, float(cfg.get("forward_plus_shaft_scale", 0.0))),
+		maxf(0.0, float(cfg.get("forward_plus_arch_rim_scale", 0.35))))
 
 
 ## r1 judges: a reserved arch's plaque read "Sealed / Sealed" (its reserved
@@ -497,7 +515,7 @@ void fragment() {
 ## A thin rune band glows round each opening's edge (dim on a sealed arch,
 ## brighter on a live one) with a faint blue spill on the floor in front,
 ## and a carved shield crest hangs on the wall above. Home arch excluded.
-static func _arch_trim(slot: Node3D, cfg: Dictionary, out: Dictionary) -> void:
+static func _arch_trim(slot: Node3D, cfg: Dictionary, out: Dictionary, weight: float = 1.0) -> void:
 	if slot.get_node_or_null("StateSign") == null or str(slot.get_meta("arch_id", slot.name)).to_lower().contains("home"):
 		return
 	var state := (slot.get_node("StateSign") as Label3D).text.strip_edges().to_lower()
@@ -545,11 +563,11 @@ void fragment() {
 	var biome_id := str(slot.name).trim_prefix("Arch_")
 	var colour := Color(str(colours.get(biome_id, cfg.colour)))
 	material.set_shader_parameter("glow", colour)
-	material.set_shader_parameter("strength", float(cfg.sealed_strength if sealed else cfg.live_strength))
+	material.set_shader_parameter("strength", float(cfg.sealed_strength if sealed else cfg.live_strength) * weight)
 	material.set_shader_parameter("half_w", half)
 	material.set_shader_parameter("height", height)
 	material.set_shader_parameter("band", float(cfg.get("band_m", 0.09)))
-	material.set_shader_parameter("veil_strength", float(cfg.sealed_veil if sealed else cfg.live_veil))
+	material.set_shader_parameter("veil_strength", float(cfg.sealed_veil if sealed else cfg.live_veil) * weight)
 	material.set_shader_parameter("rune_mix", float(cfg.get("rune_mix", 1.0)))
 	var quad := QuadMesh.new()
 	quad.size = Vector2((half + 0.3) * 2.0, height + 0.3)
@@ -564,7 +582,7 @@ void fragment() {
 	var spill := MeshInstance3D.new()
 	spill.name = "ArchSpill"
 	spill.mesh = spill_quad
-	spill.material_override = GLOW._glow_material(colour, float(cfg.spill_strength) * (0.6 if sealed else 1.0))
+	spill.material_override = GLOW._glow_material(colour, float(cfg.spill_strength) * (0.6 if sealed else 1.0) * weight)
 	spill.rotation.x = -PI * 0.5
 	spill.position = Vector3(0, float(cfg.spill_y_m), float(cfg.spill_z_m))
 	slot.add_child(_quiet(spill))
@@ -580,7 +598,7 @@ void fragment() {
 
 ## Daylight shaft: two crossed soft additive planes from a window to the floor,
 ## shown on a clear day only.
-static func _shaft(root: Node3D, row: Dictionary, cfg: Dictionary, out: Dictionary) -> void:
+static func _shaft(root: Node3D, row: Dictionary, cfg: Dictionary, out: Dictionary, weight: float = 1.0) -> void:
 	var a := _v(row.from)
 	var b := _v(row.to)
 	var shader := Shader.new()
@@ -598,7 +616,7 @@ void fragment() {
 	var material := ShaderMaterial.new()
 	material.shader = shader
 	material.set_shader_parameter("glow", Color(str(cfg.colour)))
-	material.set_shader_parameter("strength", float(cfg.strength))
+	material.set_shader_parameter("strength", float(cfg.strength) * weight)
 	var group := Node3D.new()
 	group.name = "DaylightShaft"
 	var dir := (b - a).normalized()
