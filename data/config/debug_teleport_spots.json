@@ -94,7 +94,7 @@
           "display_name": "Region 5 — Upper Cloudreach",
           "spots": [
             { "display_name": "Cliffhold", "position": [-340.0, 3970.0] },
-            { "display_name": "Old Wind Observatory", "position": [430.0, 4500.0] }
+            { "display_name": "Old Wind Observatory", "position": [441.0, 4489.0], "view_heading_deg": -45.0, "_comment": "24 Oct (GPU F40 baseline 4.74, every view boxed in by trunks): the former landmark-centre stand put the trainer and camera inside the tower's 13 m rib ring. This stand is on the open crown south-east of the tower, facing it (sin h, cos h); the production checks pass at the stand, the 8 m approach and the 3 m detail." }
           ]
         },
         {
