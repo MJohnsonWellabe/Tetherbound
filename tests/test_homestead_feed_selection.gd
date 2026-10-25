@@ -166,3 +166,16 @@ func test_only_non_attachment_buildings_count_as_socket_blockers() -> void:
 	assert_false(preload("res://scripts/build/station_rules.gd").attachment(cfg, "kitchen_meadows").is_empty())
 	assert_true(preload("res://scripts/build/station_rules.gd").attachment(cfg, "forge").is_empty())
 	assert_eq(HOME.DISMANTLE_STANDOFFS.size(), 5)
+
+## From behind a station, the walk to its prompt comes round the player's own
+## side to the working face (training_t4_feed: the Kitchen's north-face prompt
+## from the south-west).
+func test_prompt_walk_comes_round_to_the_working_face() -> void:
+	var kitchen := Vector3(-10.0, 0.9, 14.0)
+	var prompt := Vector3(-10.0, 1.8, 14.95)
+	var side := HOME.front_side_waypoint(prompt, kitchen, Vector3(-11.6, 0.9, 12.4))
+	assert_true(side != Vector3.INF)
+	assert_true(side.x < -11.2, "west of the Kitchen body, on the player's side")
+	assert_true(side.z > 14.7 and side.z < 15.95, "in the pocket before the tier-2 attachment")
+	assert_eq(HOME.front_side_waypoint(prompt, kitchen, Vector3(-10.0, 0.9, 18.5)), Vector3.INF, "already in front")
+	assert_true(HOME.front_side_waypoint(prompt, kitchen, Vector3(-8.0, 0.9, 12.0)).x > -8.8, "east side from the south-east")
