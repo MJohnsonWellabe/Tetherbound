@@ -10,4 +10,4 @@ Yardstick: JUDGE_PROMPT v1, 3 fresh judges, 4 anchor pairs (craft 7.35, f10_2_r3
 | Stormheart interior | 4.37 | 5.12 | +0.75 | 5.20 / 4.96 / 5.20 |
 | Crown heartstone | 3.89 | 4.60 | +0.71 | 4.37 / 4.60 / 4.84 |
 
-Remaining defects named by all three: Stormheart wall panels read as a repeated tiled strip and the walls above stay smooth; heartstone is trainer-height and unframed, flat grey horizon, wild herds in view; Ashfoot over-warm flat light, pale floor rug patch. The heartstone frames were captured before 1c34 fix restored the stone's own light (the hero branch had skipped the light and prompt; fixed and covered by smoke_stormwood_crown_heartstone 12/0 with the hero ON and OFF).
+Remaining defects named by all three: Stormheart wall panels read as a repeated tiled strip and the walls above stay smooth; heartstone is trainer-height and unframed, flat grey horizon, wild herds in view; Ashfoot over-warm flat light, pale floor rug patch. The heartstone frames were captured before the fix that restored the stone's own light (the hero branch had skipped the light and prompt; fixed and covered by smoke_stormwood_crown_heartstone 12/0 with the hero ON and OFF).
