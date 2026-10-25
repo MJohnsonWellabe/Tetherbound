@@ -131,6 +131,7 @@ func _ready() -> void:
 	_stand_up_ground_cover()
 	_build_landmark_masses()
 	await preload("res://scripts/world/stormwood_destination_dressing.gd").install(self, budget)
+	preload("res://scripts/world/stormwood_lantern_pools.gd").install(self)
 	_build_glass_field_identity()
 	_build_return_gate()
 	_build_rootgate()

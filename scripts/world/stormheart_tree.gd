@@ -21,6 +21,8 @@ const PRESENTATION_PATH := "res://data/config/stormheart_presentation.json"
 const CANOPY_SHADER := preload("res://scripts/world/stormheart_canopy.gdshader")
 const CUT_WOOD_SHADER := preload("res://scripts/world/stormheart_cut_wood.gdshader")
 const SPLIT_BARK := preload("res://scripts/world/stormheart_split_bark.gd")
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
+const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 var simulation_only := false
 var _presentation: Dictionary = {}
 var _wood: StandardMaterial3D
@@ -98,6 +100,19 @@ func build() -> void:
 	set_process(_core_material != null or _hero != null)
 	if _presentation_enabled("built_detail"):
 		_built_detail()
+	if _presentation_enabled("deck_supports"):
+		_deck_supports(_presentation.get("deck_supports", {}))
+	if _presentation_enabled("meshy_interior"):
+		_meshy_interior(_presentation.get("meshy_interior", {}))
+	if _presentation_enabled("hollow_floor"):
+		# r16 judges: the hollow's floor was the outdoor grass carpet. The
+		# ground-cover tiers (grass_field.gd) keep out of the trunk's own
+		# footprint so the packed earth under the decks shows.
+		var floor_clear := Node3D.new()
+		floor_clear.name = "HollowFloorClear"
+		floor_clear.set_meta(GRASS_FIELD.CLEAR_RADIUS_META, float((_presentation.get("hollow_floor", {}) as Dictionary).get("clear_radius_m", 40.0)))
+		floor_clear.add_to_group(GRASS_FIELD.CLEAR_GROUP)
+		add_child(floor_clear)
 
 
 func _presentation_enabled(key: String) -> bool:
@@ -838,6 +853,158 @@ func _visual_beam(parent: Node3D, id: String, start: Vector3, finish: Vector3,
 		Vector3(thickness, thickness, vector.length()), material)
 	visual.basis = Basis.looking_at(vector.normalized())
 	return visual
+
+
+## GPU F41#0 (Stormheart 3.51) and the coordinator's big-swing order (25 Oct):
+## the dominant objects are the bare trunk wall and the plain deck band, so
+## Meshy hero pieces replace their look (tb/meshy-1024 ae67083ec). A ring of
+## carved root-wall panels lines the trunk's inner wall, skipping the two
+## split openings, and arched walkway segments with lantern railings ring the
+## OuterWorks deck's inner lip. Presentation only: the deck's own surface and
+## colliders are unchanged.
+func _meshy_interior(cfg: Dictionary) -> void:
+	var root := Node3D.new()
+	root.name = "MeshyInterior"
+	add_child(root)
+	var wall_path := str(cfg.get("wall_model", ""))
+	if ResourceLoader.exists(wall_path):
+		var radius := float(cfg.get("wall_radius_m", 45.4))
+		var width := float(cfg.get("wall_width_m", 8.0))
+		var height := float(cfg.get("wall_height_m", 12.0))
+		var step := width / radius
+		var gaps: Array = cfg.get("wall_gaps", [[-1.84, -1.30], [1.43, 1.71]])
+		var angle := -PI
+		var index := 0
+		while angle < PI:
+			var centre := angle + step * 0.5
+			var blocked := false
+			for gap: Array in gaps:
+				if centre > float(gap[0]) - step * 0.5 and centre < float(gap[1]) + step * 0.5:
+					blocked = true
+			if not blocked:
+				var panel := HERO_PROP.load_model(wall_path)
+				HERO_PROP.fit_height(panel, height, float(cfg.get("wall_sink_m", 0.4)))
+				var holder := Node3D.new()
+				holder.name = "RootWall%02d" % index
+				holder.position = Vector3(cos(centre) * radius, 0.0, sin(centre) * radius)
+				holder.rotation.y = atan2(-holder.position.x, -holder.position.z)
+				root.add_child(holder)
+				holder.add_child(panel)
+				HERO_PROP.glow(panel, Color(str(cfg.get("vein_colour", "#9fd0ff"))), float(cfg.get("vein_energy", 1.1)))
+			angle += step
+			index += 1
+	var deck_path := str(cfg.get("deck_model", ""))
+	if ResourceLoader.exists(deck_path):
+		var lip_r := float(cfg.get("deck_radius_m", 19.4))
+		var length := float(cfg.get("deck_length_m", 8.0))
+		var count := int(floor(TAU * lip_r / length))
+		for index in count:
+			var phi := TAU * (float(index) + 0.5) / float(count)
+			var segment := HERO_PROP.load_model(deck_path)
+			var bounds := HERO_PROP.BOUNDS.measure(segment)
+			var factor := length / maxf(0.01, bounds.size.x)
+			segment.scale = Vector3.ONE * factor
+			segment.position.y = -bounds.position.y * factor - float(cfg.get("deck_sink_m", 0.15))
+			var holder := Node3D.new()
+			holder.name = "DeckWalk%02d" % index
+			holder.position = Vector3(cos(phi) * lip_r, 6.0, sin(phi) * lip_r)
+			holder.rotation.y = -phi - PI * 0.5
+			root.add_child(holder)
+			holder.add_child(segment)
+			_tint_model(segment, Color(str(cfg.get("deck_tint", "#ffffff"))))
+
+
+## Multiplies each surface's albedo by `tint` (the Meshy deck reads orange
+## against the weathered cut-wood decks; the oxblood rule keeps timber off red).
+func _tint_model(model: Node, tint: Color) -> void:
+	if tint == Color.WHITE:
+		return
+	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+		for surface in visual.mesh.get_surface_count():
+			var source := visual.get_active_material(surface) as BaseMaterial3D
+			if source == null:
+				continue
+			var tinted := source.duplicate() as BaseMaterial3D
+			tinted.albedo_color = source.albedo_color * tint
+			visual.set_surface_override_material(surface, tinted)
+
+
+## GPU F41#0 (Stormheart 3.51, 25 Oct: "smooth bare trunk walls ... add
+## structure and supports"): timber posts carry the OuterWorks deck where it
+## meets the trunk wall, each with a knee brace under the deck, and lanterns
+## hang under the deck's inner lip. Presentation only and out of the walking
+## floor: the posts stand at the wall edge, the lanterns overhead.
+func _deck_supports(cfg: Dictionary) -> void:
+	var root := Node3D.new()
+	root.name = "DeckSupports"
+	add_child(root)
+	var wood: Material = _cut_wood if _cut_wood != null else _wood
+	var count := int(cfg.get("post_count", 24))
+	var post_r := OUTER_WORKS_OUTER_RADIUS - float(cfg.get("post_inset_m", 0.7))
+	var deck_y := 6.0
+	var width := float(cfg.get("post_width_m", 0.6))
+	var posts: Array[Transform3D] = []
+	var braces: Array[Transform3D] = []
+	for index in count:
+		var angle := TAU * float(index) / float(count)
+		var radial := Vector3(cos(angle), 0.0, sin(angle))
+		var base := radial * post_r
+		var height := deck_y + 1.0
+		posts.append(Transform3D(Basis(Vector3.UP, -angle) * Basis.from_scale(Vector3(width, height, width)),
+			base + Vector3.UP * (deck_y - height * 0.5)))
+		# Knee brace from the post, 2.2 m down, up and inward to the deck.
+		var from := base + Vector3.UP * (deck_y - 2.2)
+		var to := base - radial * 2.0 + Vector3.UP * (deck_y - 0.15)
+		var along := to - from
+		var y_axis := along.normalized()
+		var x_axis := y_axis.cross(radial.cross(Vector3.UP)).normalized()
+		var z_axis := x_axis.cross(y_axis).normalized()
+		braces.append(Transform3D(Basis(x_axis * width * 0.55, y_axis * along.length(), z_axis * width * 0.55),
+			(from + to) * 0.5))
+	_instances(root, posts, wood)
+	_instances(root, braces, wood)
+	var glow := StandardMaterial3D.new()
+	glow.albedo_color = Color("ffbd62")
+	glow.emission_enabled = true
+	glow.emission = Color("ff9a3d")
+	glow.emission_energy_multiplier = 3.2
+	var lanterns := int(cfg.get("lantern_count", 12))
+	var lit_every := maxi(1, int(cfg.get("light_every", 2)))
+	var lip_r := 18.0 + float(cfg.get("lantern_inset_m", 0.6))
+	for index in lanterns:
+		var angle := TAU * (float(index) + 0.5) / float(lanterns)
+		var at := Vector3(cos(angle), 0.0, sin(angle)) * lip_r + Vector3.UP * float(cfg.get("lantern_y_m", 4.9))
+		var holder := Node3D.new()
+		holder.name = "DeckLantern%02d" % index
+		holder.position = at
+		root.add_child(holder)
+		var chain := MeshInstance3D.new()
+		var chain_mesh := BoxMesh.new()
+		chain_mesh.size = Vector3(0.05, 6.0 - 0.15 - at.y - 0.2, 0.05)
+		chain.mesh = chain_mesh
+		chain.material_override = _metal
+		chain.position.y = 0.2 + chain_mesh.size.y * 0.5
+		holder.add_child(chain)
+		var cage := MeshInstance3D.new()
+		var cage_mesh := BoxMesh.new()
+		cage_mesh.size = Vector3(0.34, 0.42, 0.34)
+		cage.mesh = cage_mesh
+		cage.material_override = _metal
+		holder.add_child(cage)
+		var flame := MeshInstance3D.new()
+		var sphere := SphereMesh.new()
+		sphere.radius = 0.15
+		sphere.height = 0.3
+		flame.mesh = sphere
+		flame.material_override = glow
+		holder.add_child(flame)
+		if index % lit_every == 0:
+			var light := OmniLight3D.new()
+			light.light_color = Color("ffb15c")
+			light.light_energy = float(cfg.get("light_energy", 1.8))
+			light.omni_range = float(cfg.get("light_range_m", 13.0))
+			light.shadow_enabled = false
+			holder.add_child(light)
 
 
 func _add_wayfinding_lamp(parent: Node3D, at: Vector3, glow: Material, id: String) -> void:
