@@ -58,6 +58,7 @@ func _ready() -> void:
 		_visual = preload("res://scripts/world/tidewake_look_profile.gd").overlay(_visual, "surfaces_candidate")
 		# T4 surf-line candidate: an unjudged section (OFF in play).
 		_visual = preload("res://scripts/world/tidewake_look_profile.gd").overlay(_visual, "shore_surf_candidate")
+		_visual = preload("res://scripts/world/tidewake_look_profile.gd").overlay(_visual, "shore_surf_vary_candidate")
 	var look_models := _request_look_models()
 	field = FIELD.new(config)
 	var traversal: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_swimming.json"))

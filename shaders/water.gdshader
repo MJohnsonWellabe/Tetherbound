@@ -60,6 +60,9 @@ uniform float foam_speed = 0.03;
 uniform float surf_strength = 0.0;
 uniform float surf_depth_m = 0.35;
 uniform float surf_breakup = 0.4;
+// 0..1: how much the surf band's reach wanders along the shore (a broad
+// world-space noise), so it never reads as one even drawn line.
+uniform float surf_vary = 0.0;
 
 uniform sampler2D wave_normal_a;
 uniform sampler2D wave_normal_b;
@@ -181,7 +184,12 @@ void fragment() {
 	float noise = n1 * 0.55 + n2 * 0.45;
 	float foam = smoothstep(0.6, 0.78, noise * 0.55 + contact * 0.4) * contact;
 	if (surf_strength > 0.0) {
-		float surf_band = (1.0 - smoothstep(surf_depth_m * 0.4, surf_depth_m, depth)) * smoothstep(0.0, 0.04, depth);
+		float surf_reach = surf_depth_m;
+		if (surf_vary > 0.0) {
+			float wander = texture(foam_noise, uv * 0.018 + vec2(0.71, 0.29)).r;
+			surf_reach *= mix(1.0, mix(0.25, 1.6, wander), surf_vary);
+		}
+		float surf_band = (1.0 - smoothstep(surf_reach * 0.4, surf_reach, depth)) * smoothstep(0.0, 0.04, depth);
 		float surf_noise = n2 * 0.6 + n1 * 0.4;
 		foam = max(foam, surf_band * smoothstep(surf_breakup, surf_breakup + 0.12, surf_noise) * surf_strength);
 	}

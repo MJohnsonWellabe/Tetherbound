@@ -464,6 +464,7 @@ func _build_material(region: Rect2, tag: String = "pond", mask := PackedByteArra
 	material.set_shader_parameter("surf_strength", float(surface.get("surf_strength", 0.0)))
 	material.set_shader_parameter("surf_depth_m", float(surface.get("surf_depth_m", 0.35)))
 	material.set_shader_parameter("surf_breakup", float(surface.get("surf_breakup", 0.4)))
+	material.set_shader_parameter("surf_vary", float(surface.get("surf_vary", 0.0)))
 	material.set_shader_parameter("wave_uv_scale", float(surface.get("wave_uv_scale", 0.09)))
 	material.set_shader_parameter("wave_speed", float(surface.get("wave_speed", 0.016)))
 	material.set_shader_parameter("wave_strength", float(surface.get("wave_strength", 0.35)))
