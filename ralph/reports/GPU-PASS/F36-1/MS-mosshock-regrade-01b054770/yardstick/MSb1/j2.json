@@ -1,0 +1,102 @@
+{
+ "sets": {
+  "Bc": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+     "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+     "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A single-value moss-green lump with no readable eye, belly or accent colour sits well below the Palworld/style-bar creature finish even though the moss surface itself is naturalistic."
+  },
+  "Sm": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+     "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT",
+     "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A is a flat mossy blob and side B's lime-and-black camouflage shatters the silhouette, so neither reaches Palworld creature readability."
+  },
+  "Fy": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's torn banners, opened cage and smoke tell site-specific stories, but flat smeared ground textures, sparse even scatter, a wall-like treeline and a pale flat midday grade sit well below Palworld density and Valheim-class atmosphere."
+  },
+  "Sb": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated boar has a solid grounded silhouette, but dark-on-dark muddy values, a near-black faint-end render and (B) red ember seams keep it below the style-bar finish."
+  },
+  "Ud": {
+   "A": {
+    "bar_a": 3.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Flat magenta ground outlines as telegraphs, a murky brown-green grade with no purple storm sky or lightning, a barely visible player creature and a HUD covering a third of each frame sink it."
+  },
+  "Tj": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder with a readable face and an earthy Meadows costume palette sits at Palworld human-NPC finish, though the large-eyed cartoon face is softer than the naturalistic creature style."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Ud fight: replace the flat magenta ground outlines with real-object telegraphs and impacts (cracking earth, crackling white-violet lightning, dust bursts), pull or collide the camera so canopy and trunks never fill the frame, grade the scene to Stormwood's purple storm sky with lightning, and slim the HUD so both fighters, including the small player creature, read at a glance.",
+   "kind": "scene"
+  },
+  {
+   "change": "Moss newt (Bc/Sm) and plated boar (Sb): rework the models and materials to the owner style bar and boards. The newt needs large orange eyes, a cream belly, cyan storm veins in the moss and a clear head, with no camouflage blotching. The boar needs a lifted value range, natural brown/moss accents instead of red ember seams, a fix for the near-black faint-end shading and a hit react that differs from standing.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fy aftermath and Meadows ground: adopt side B's site-specific aftermath everywhere and always remove or tear down the enemy banner after the win. Also replace the smeared ground textures and even scatter with grouped groves, flower clusters and path wear, under a warmer grade with blue distance haze.",
+   "kind": "scene"
+  }
+ ]
+}

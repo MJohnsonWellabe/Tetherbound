@@ -1,0 +1,34 @@
+{
+ "Bc": {
+  "anchor": false,
+  "label": "MS mosshock Medium cand|p",
+  "A": "D:\\tb-gpu-runs\\yard\\MS\\sides\\mosshock-p-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MS\\sides\\mosshock-cand-Medium.png"
+ },
+ "Sm": {
+  "anchor": false,
+  "label": "MS mosshock Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MS\\sides\\mosshock-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MS\\sides\\mosshock-ship-Medium.png"
+ },
+ "Fy": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Sb": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "Ud": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Tj": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

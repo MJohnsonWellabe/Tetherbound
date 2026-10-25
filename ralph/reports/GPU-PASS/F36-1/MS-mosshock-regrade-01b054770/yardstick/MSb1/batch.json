@@ -1,0 +1,66 @@
+{
+ "anchors": {
+  "f04_6_r22:control": [
+   4.0,
+   4.4,
+   4.3
+  ],
+  "f04_6_r22:r22": [
+   4.8,
+   5.6,
+   5.4
+  ],
+  "f36_0_gap:C7B": [
+   6.0,
+   5.4,
+   6.0
+  ],
+  "f36_0_gap:C7A": [
+   5.2,
+   4.8,
+   5.5
+  ],
+  "f10_2_r3_capacitor:control": [
+   2.8,
+   3.3,
+   3.6
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   3.6,
+   4.0,
+   4.4
+  ],
+  "f36_0_npc:C1A": [
+   6.8,
+   6.6,
+   6.8
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   6.6,
+   6.8
+  ]
+ },
+ "candidates": {
+  "MS mosshock Medium cand|p | mosshock-p-Medium": [
+   5.5,
+   5.0,
+   5.7
+  ],
+  "MS mosshock Medium cand|p | mosshock-cand-Medium": [
+   5.7,
+   5.2,
+   6.0
+  ],
+  "MS mosshock Medium cand|ship | mosshock-cand-Medium": [
+   5.5,
+   5.0,
+   5.7
+  ],
+  "MS mosshock Medium cand|ship | mosshock-ship-Medium": [
+   3.6,
+   3.6,
+   3.8
+  ]
+ }
+}

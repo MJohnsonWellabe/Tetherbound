@@ -1,0 +1,102 @@
+{
+ "sets": {
+  "Bc": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+     "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+     "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean naturalistic moss surface carries it, but one flat mid-green with no readable eyes and no rim or accent colour falls short of Palworld creature finish."
+  },
+  "Sm": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+     "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT",
+     "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's moss read is believable but flat in value, and side B's lime-and-black camouflage sinks it to placeholder level."
+  },
+  "Fy": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's removed banners, broken crates, opened cage and smoke tell the aftermath, but smeared ground textures, flat grey-green light, sparse low-poly trees and stretched wall textures sit far below Palworld density and Valheim light."
+  },
+  "Sb": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The naturalistic armoured boar with real fur and stone plates is close to the owner's style bar, but crushed-black faint frames (A) and red lava seams with reddened tusks (B) keep it short of shipping finish."
+  },
+  "Ud": {
+   "A": {
+    "bar_a": 2.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spider is visible, but murky unlit frames, flat magenta telegraph rings, an invisible player creature, no storm sky or lightning, HUD panels over a third of the frame and (A) camera-in-canopy frames sink it."
+  },
+  "Tj": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable stylised elder with clear eyes and an earthy green-brown palette matching the key art's trainer carries it; only a slightly plastic skin sheen holds it back."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight framing: pull the camera out of the canopy and fade trunks and leaves between the camera and the fighters, light the fight with the purple storm sky and white-violet lightning, replace the flat magenta telegraph rings with real ground cracks or lightning strikes, and shrink or translucent the HUD panels.",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows ground and light in the trainer-site scenes: replace the smeared ground textures with grass groves, flower clusters and dirt edges, add a warm key light with cast shadows and cool blue distance, and fix the stretched textures on the fort walls.",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature material value structure: give the moss creature visible orange eyes, a darker belly and accent veins per its Stormwood board, keep the boar's faint frames out of crushed black, and remove red seams and red tusks from friendly creatures.",
+   "kind": "scene"
+  }
+ ]
+}

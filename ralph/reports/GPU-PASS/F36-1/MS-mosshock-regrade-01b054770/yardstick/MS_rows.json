@@ -1,0 +1,106 @@
+[
+ {
+  "batch": 1,
+  "code": "Bc",
+  "label": "MS mosshock Medium cand|p",
+  "side": "mosshock-p-Medium",
+  "mapped": 6.62,
+  "judges": [
+   6.69,
+   6.32,
+   6.84
+  ],
+  "defects": [
+   {
+    "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+    "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+   },
+   {
+    "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+    "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+   },
+   {
+    "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+    "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Bc",
+  "label": "MS mosshock Medium cand|p",
+  "side": "mosshock-cand-Medium",
+  "mapped": 6.79,
+  "judges": [
+   6.84,
+   6.47,
+   7.07
+  ],
+  "defects": [
+   {
+    "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+    "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+   },
+   {
+    "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+    "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+   },
+   {
+    "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+    "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Sm",
+  "label": "MS mosshock Medium cand|ship",
+  "side": "mosshock-cand-Medium",
+  "mapped": 6.62,
+  "judges": [
+   6.69,
+   6.32,
+   6.84
+  ],
+  "defects": [
+   {
+    "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+    "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+   },
+   {
+    "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+    "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+   },
+   {
+    "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+    "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Sm",
+  "label": "MS mosshock Medium cand|ship",
+  "side": "mosshock-ship-Medium",
+  "mapped": 5.32,
+  "judges": [
+   5.27,
+   5.27,
+   5.42
+  ],
+  "defects": [
+   {
+    "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT",
+    "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+   },
+   {
+    "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT",
+    "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+   },
+   {
+    "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT",
+    "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+   }
+  ]
+ }
+]
