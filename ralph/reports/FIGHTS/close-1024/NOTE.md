@@ -1,6 +1,16 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-25 12:00 CT INFO J items, in progress on tb/fights (all OFF or code-only until judged):
+  1. **Venn ghost.**
+     - 844dad9e0: the follower cover fade is also skipped for any body a running fight pilots (FOUNDATION_GROUP manager, `is_fighting()`, `_ally_body`), whatever its follow state. New test.
+     - A CPU Venn capture on the current tree shows Ripplet solid in every frame. Your GPU frames on a55b0fa4b still dithered; the new gate covers the follow-state path you suspected.
+     - The same capture still drew "Gather Reef Stone". playground_hud `_combat_is_running()` only looked for a CombatManager under the current scene, and the Tidewake captures mount the world elsewhere, so the HUD read "no fight". It now also counts any fighting manager in FOUNDATION_GROUP (code).
+  2. **Venn 4.64 (High).** The judges' causes were the ghost, the prompt, cyan discs on Cannonback's shell (impacts, item 3), the black overhang wedge at the frame top and the flat sand. The first three are addressed. The overhang is the fight lens under a cliff lip, which is the next camera item after r8.
+  3. **Impacts.** New OFF keys: kit_move_effects `flash_scale` and `flash_life_scale`. Every kit move's contact flash draws a 1.6x bloom nudged 0.45 m toward the lens, which covers the target. r8 tries flash x0.5, life x0.65, contact disc 0.32/0.42, and a lighter ground burst (5 puffs, alpha 0.5).
+  4. **Stagger body read.** This is Creatures' wince and recoil; I will not duplicate it. The label side is done (owners 3/3 on Veyra).
+  5. **Stormwood Sparkit.** The 0.10 pilot floor already applies there since r7. r8 tries 0.13 everywhere; nothing is shrunk.
+  - r8 captures (current default vs `cand_r8.py.txt`; Venn, Stormwood glass_field, f38 grunt and Warden) are running; judging and READY follow.
 - 2026-10-25 11:20 CT READY tb/fights-land 4ae4433da: a55b0fa4b's content on current origin/main 1d5faebac (merge commit; lane-side content identical to a55b0fa4b plus NOTE lines). `godot --import` was run for main's 461 new files. Checks on 4ae4433da: 283 tests, 11394 assertions, 0 failed. The suites are the a55b0fa4b set plus main's touched stormwood_b_combat_camera_fit and stormwood_strike_countdown, follower_leader_view_fade, effect_banner_owner and band_content.
   - Next candidate (your J items 1-5) has started on tb/fights. Item 1 is in (a running fight that pilots the body now skips the follower cover fade, whatever its follow state; new test), and capture checks of the Venn tool's fight state are next.
 - 2026-10-25 10:40 CT INFO F22#4 C2/C3, water (smoke_water_named_c2c3, 24 seeds, 54 rows, 2592 runs, 0 errors).
