@@ -1,0 +1,40 @@
+{
+ "Vu": {
+  "anchor": false,
+  "label": "MH2 gate1 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH2\\sides\\MH2-gate1-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH2\\sides\\MH2-gate1-ctl-Medium.png"
+ },
+ "Ru": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Wq": {
+  "anchor": false,
+  "label": "MH2 gate0 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH2\\sides\\MH2-gate0-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH2\\sides\\MH2-gate0-ctl-High.png"
+ },
+ "Kv": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Zw": {
+  "anchor": false,
+  "label": "MH2 gate0 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH2\\sides\\MH2-gate0-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH2\\sides\\MH2-gate0-ctl-Medium.png"
+ },
+ "Yd": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Cg": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

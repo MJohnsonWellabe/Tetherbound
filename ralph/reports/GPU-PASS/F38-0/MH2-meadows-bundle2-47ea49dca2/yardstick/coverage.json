@@ -1,0 +1,74 @@
+[
+    {
+        "group":  "gate0",
+        "preset":  "Medium",
+        "judged":  [
+                       "band5_stronghold_approach_0__day__clear__approach",
+                       "band5_stronghold_approach_0__day__clear__gameplay",
+                       "band5_stronghold_approach_0__day__clear__reverse",
+                       "band5_stronghold_approach_0__day__clear__detail",
+                       "band5_stronghold_approach_0__night__clear__gameplay",
+                       "band5_stronghold_approach_0__day__rain__gameplay"
+                   ]
+    },
+    {
+        "group":  "gate1",
+        "preset":  "Medium",
+        "judged":  [
+                       "band5_stronghold_approach_1__day__clear__approach",
+                       "band5_stronghold_approach_1__day__clear__gameplay",
+                       "band5_stronghold_approach_1__day__clear__reverse",
+                       "band5_stronghold_approach_1__day__clear__detail",
+                       "band5_stronghold_approach_1__night__clear__gameplay",
+                       "band5_stronghold_approach_1__day__rain__gameplay"
+                   ]
+    },
+    {
+        "group":  "ironwood0",
+        "preset":  "Medium",
+        "judged":  [
+                       "band4_upper_meadows_ironwood_0__day__clear__approach",
+                       "band4_upper_meadows_ironwood_0__day__clear__gameplay",
+                       "band4_upper_meadows_ironwood_0__day__clear__reverse",
+                       "band4_upper_meadows_ironwood_0__day__clear__detail",
+                       "band4_upper_meadows_ironwood_0__night__clear__gameplay",
+                       "band4_upper_meadows_ironwood_0__day__rain__gameplay"
+                   ]
+    },
+    {
+        "group":  "gate0",
+        "preset":  "High",
+        "judged":  [
+                       "band5_stronghold_approach_0__day__clear__approach",
+                       "band5_stronghold_approach_0__day__clear__gameplay",
+                       "band5_stronghold_approach_0__day__clear__reverse",
+                       "band5_stronghold_approach_0__day__clear__detail",
+                       "band5_stronghold_approach_0__night__clear__gameplay",
+                       "band5_stronghold_approach_0__day__rain__gameplay"
+                   ]
+    },
+    {
+        "group":  "gate1",
+        "preset":  "High",
+        "judged":  [
+                       "band5_stronghold_approach_1__day__clear__approach",
+                       "band5_stronghold_approach_1__day__clear__gameplay",
+                       "band5_stronghold_approach_1__day__clear__reverse",
+                       "band5_stronghold_approach_1__day__clear__detail",
+                       "band5_stronghold_approach_1__night__clear__gameplay",
+                       "band5_stronghold_approach_1__day__rain__gameplay"
+                   ]
+    },
+    {
+        "group":  "ironwood0",
+        "preset":  "High",
+        "judged":  [
+                       "band4_upper_meadows_ironwood_0__day__clear__approach",
+                       "band4_upper_meadows_ironwood_0__day__clear__gameplay",
+                       "band4_upper_meadows_ironwood_0__day__clear__reverse",
+                       "band4_upper_meadows_ironwood_0__day__clear__detail",
+                       "band4_upper_meadows_ironwood_0__night__clear__gameplay",
+                       "band4_upper_meadows_ironwood_0__day__rain__gameplay"
+                   ]
+    }
+]

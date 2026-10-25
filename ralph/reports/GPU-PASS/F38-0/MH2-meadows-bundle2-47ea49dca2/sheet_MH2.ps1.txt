@@ -1,0 +1,12 @@
+# Item MH2 sheet: 3 control|candidate pairs at High (left flags off, right flags on). Neutral labels; key in VERDICT.md.
+$o = "D:\tb-gpu-runs\out"
+$rows = @(
+    @("1", "band5_stronghold_approach_0__day__clear__approach"),
+    @("2", "band5_stronghold_approach_1__day__clear__approach"),
+    @("3", "band4_upper_meadows_ironwood_0__day__clear__approach")
+)
+$spec = [ordered]@{ title = "MH2 Meadows hero bundle 2 (tb/meadows-land14 47ea49dca2), High: left flags off | right flags on"; cols = 2; thumb_w = 520; label_w = 50
+    rows = @($rows | ForEach-Object { [ordered]@{ label = $_[0]; files = @("$o\MH2-ctl-High\frames\$($_[1]).jpg", "$o\MH2-cand-High\frames\$($_[1]).jpg"); captions = @("off", "on") } }); out = "D:\tb-gpu-runs\staging\MH2-meadows-bundle2-47ea49dca2\_sheet_mh2.png" }
+New-Item -ItemType Directory -Force "D:\tb-gpu-runs\staging\MH2-meadows-bundle2-47ea49dca2" | Out-Null
+[IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_sheet_MH2.json", ($spec | ConvertTo-Json -Depth 5))
+& D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_sheet_MH2.json"

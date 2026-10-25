@@ -1,0 +1,146 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.963,
+  "least_squares_slope": 1.1975,
+  "method": "linear",
+  "slope": 1.1975,
+  "intercept": -0.337,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.369,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.1,
+   "reference": 7.35,
+   "mapped": 6.968,
+   "residual": 0.382
+  },
+  "craft:before": {
+   "measured": 4.433,
+   "reference": 4.83,
+   "mapped": 4.972,
+   "residual": -0.142
+  },
+  "f36_0_gap:C4A": {
+   "measured": 5.633,
+   "reference": 6.77,
+   "mapped": 6.409,
+   "residual": 0.361
+  },
+  "f36_0_gap:C4B": {
+   "measured": 6.0,
+   "reference": 7.17,
+   "mapped": 6.848,
+   "residual": 0.322
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.933,
+   "reference": 7.53,
+   "mapped": 7.965,
+   "residual": -0.435
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.933,
+   "reference": 7.47,
+   "mapped": 7.965,
+   "residual": -0.495
+  },
+  "p2_094_r4:X_before": {
+   "measured": 3.5,
+   "reference": 3.5,
+   "mapped": 3.854,
+   "residual": -0.354
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 5.6,
+   "reference": 6.73,
+   "mapped": 6.369,
+   "residual": 0.361
+  }
+ },
+ "candidates": {
+  "MH2 gate1 High cand|ship | MH2-gate1-cand-High": {
+   "measured_mean": 3.667,
+   "mapped_mean": 4.05,
+   "mapped_judges": [
+    3.97,
+    4.21,
+    3.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH2 gate1 High cand|ship | MH2-gate1-ctl-High": {
+   "measured_mean": 3.4,
+   "mapped_mean": 3.73,
+   "mapped_judges": [
+    3.49,
+    3.97,
+    3.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH2 ironwood0 High cand|ship | MH2-ironwood0-ctl-High": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.65,
+   "mapped_judges": [
+    5.65,
+    5.65,
+    5.65
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH2 ironwood0 High cand|ship | MH2-ironwood0-cand-High": {
+   "measured_mean": 5.733,
+   "mapped_mean": 6.53,
+   "mapped_judges": [
+    6.61,
+    6.61,
+    6.37
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH2 ironwood0 Medium cand|ship | MH2-ironwood0-ctl-Medium": {
+   "measured_mean": 5.033,
+   "mapped_mean": 5.69,
+   "mapped_judges": [
+    5.65,
+    5.65,
+    5.77
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH2 ironwood0 Medium cand|ship | MH2-ironwood0-cand-Medium": {
+   "measured_mean": 5.733,
+   "mapped_mean": 6.53,
+   "mapped_judges": [
+    6.61,
+    6.61,
+    6.37
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

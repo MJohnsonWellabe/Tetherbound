@@ -1,0 +1,37 @@
+"""Set the Meadows hero bundle 2 flags in a checkout's data/config (local GPU-pass helper).
+
+    python meadows_flags2.py <checkout> on|off
+
+For each flag, walks its key path in the file's text and flips the first "enabled" value after the last key, keeping the
+file's text otherwise byte-identical; then re-parses and verifies that exactly the named path holds the requested value.
+"""
+import json
+import re
+import sys
+from pathlib import Path
+
+FLAGS = [("stronghold", ["hero_gatehouse"]), ("stronghold", ["banner_model_candidate"]),
+         ("ironwood_grove_presentation", ["hero_tree", "model_candidate"])]
+
+
+def main(root, state):
+    want = state == "on"
+    for name, keys in FLAGS:
+        p = Path(root) / "data" / "config" / f"{name}.json"
+        raw = p.read_bytes().decode("utf-8")
+        pos = 0
+        for k in keys:
+            pos = raw.index(f'"{k}":', pos)
+        m = re.compile(r'"enabled":\s*(true|false)').search(raw, pos)
+        raw = raw[:m.start()] + f'"enabled": {"true" if want else "false"}' + raw[m.end():]
+        node = json.loads(raw)
+        for k in keys:
+            node = node[k]
+        if node["enabled"] is not want:
+            sys.exit(f"FLAG MISMATCH {name}.{'.'.join(keys)}={node['enabled']}")
+        p.write_bytes(raw.encode("utf-8"))
+        print(f"{name}.{'.'.join(keys)}.enabled = {node['enabled']}")
+
+
+if __name__ == "__main__":
+    main(sys.argv[1], sys.argv[2])

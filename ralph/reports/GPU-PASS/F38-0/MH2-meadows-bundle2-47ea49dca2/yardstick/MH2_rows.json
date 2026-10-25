@@ -1,0 +1,410 @@
+[
+ {
+  "batch": 1,
+  "code": "Vu",
+  "label": "MH2 gate1 Medium cand|ship",
+  "side": "MH2-gate1-cand-Medium",
+  "mapped": 5.07,
+  "judges": [
+   5.07,
+   5.07,
+   5.07
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Vu",
+  "label": "MH2 gate1 Medium cand|ship",
+  "side": "MH2-gate1-ctl-Medium",
+  "mapped": 4.98,
+  "judges": [
+   4.89,
+   4.89,
+   5.16
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Wq",
+  "label": "MH2 gate0 High cand|ship",
+  "side": "MH2-gate0-cand-High",
+  "mapped": 6.05,
+  "judges": [
+   5.9,
+   6.36,
+   5.9
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Wq",
+  "label": "MH2 gate0 High cand|ship",
+  "side": "MH2-gate0-ctl-High",
+  "mapped": 5.75,
+  "judges": [
+   5.62,
+   5.99,
+   5.62
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Zw",
+  "label": "MH2 gate0 Medium cand|ship",
+  "side": "MH2-gate0-cand-Medium",
+  "mapped": 6.09,
+  "judges": [
+   5.9,
+   6.36,
+   5.99
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Zw",
+  "label": "MH2 gate0 Medium cand|ship",
+  "side": "MH2-gate0-ctl-Medium",
+  "mapped": 5.87,
+  "judges": [
+   5.72,
+   6.09,
+   5.81
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Kh",
+  "label": "MH2 gate1 High cand|ship",
+  "side": "MH2-gate1-cand-High",
+  "mapped": 4.05,
+  "judges": [
+   3.97,
+   4.21,
+   3.97
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Kh",
+  "label": "MH2 gate1 High cand|ship",
+  "side": "MH2-gate1-ctl-High",
+  "mapped": 3.73,
+  "judges": [
+   3.49,
+   3.97,
+   3.73
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Oy",
+  "label": "MH2 ironwood0 High cand|ship",
+  "side": "MH2-ironwood0-ctl-High",
+  "mapped": 5.65,
+  "judges": [
+   5.65,
+   5.65,
+   5.65
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Oy",
+  "label": "MH2 ironwood0 High cand|ship",
+  "side": "MH2-ironwood0-cand-High",
+  "mapped": 6.53,
+  "judges": [
+   6.61,
+   6.61,
+   6.37
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Qn",
+  "label": "MH2 ironwood0 Medium cand|ship",
+  "side": "MH2-ironwood0-ctl-Medium",
+  "mapped": 5.69,
+  "judges": [
+   5.65,
+   5.65,
+   5.77
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Qn",
+  "label": "MH2 ironwood0 Medium cand|ship",
+  "side": "MH2-ironwood0-cand-Medium",
+  "mapped": 6.53,
+  "judges": [
+   6.61,
+   6.61,
+   6.37
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PARTIAL"
+   }
+  ]
+ }
+]

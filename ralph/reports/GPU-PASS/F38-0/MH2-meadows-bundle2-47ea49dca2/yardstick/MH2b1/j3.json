@@ -1,0 +1,138 @@
+{
+ "sets": {
+  "Vu": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.7,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown-green enclosed courtyard with almost no sky, no sun direction and flat wall-sized banners sinks it beside Palworld's bright readable bases and Valheim's atmospheric light."
+  },
+  "Ru": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermath storytelling (torn banners, opened cage, smoking camp) carries it, but smeared low-res ground textures, flat tiled walls and plain flat daylight sink the finish."
+  },
+  "Wq": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Good near grass and painterly skies carry it, but an empty flat carpet meadow with evenly scattered stones and no visible lit stronghold landmark sinks it."
+  },
+  "Kv": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Neither snake reaches the owner bar's naturalistic scale detail: A is a muddy low-contrast mottle and B's clean yellow bands read toy-like and its faint poses float in mid-air."
+  },
+  "Zw": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Grazing creature herds add some life, but the meadow is still a sparse uniform carpet with no grove structure and no tall lit landmark on the approach."
+  },
+  "Yd": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A dark brown murk with no purple storm sky or lightning, flat magenta telegraph decals and a HUD covering much of the frame sink it beside Palworld's bright, impact-heavy boss fights."
+  },
+  "Cg": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, warm, appealing elder with readable eyes and a meadow-green palette would sit comfortably next to Palworld's human characters."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Build a tall, lit hero stronghold keep (towers, braziers, lit gate, war banners on poles with draped cloth) that dominates the Meadows approach over the pylons and frames the courtyard",
+   "kind": "new_art"
+  },
+  {
+   "change": "Re-light and re-grade the stronghold courtyard and Stormwood fight: visible sky, directional key light and rim light, purple storm sky with white-violet lightning, depth fog; add camera collision so trunks and canopy never fill the fight frame",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace flat magenta telegraph decals with real-object tells and impacts (cracking ground, debris, lightning strikes), shrink the combat HUD to edge panels, and break the uniform meadow carpet into groves, edges and clearings",
+   "kind": "scene"
+  }
+ ]
+}

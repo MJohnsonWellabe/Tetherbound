@@ -1,0 +1,34 @@
+# Item MH2 (local): Meadows hero bundle 2 on tb/meadows-land14 47ea49dca2, candidate (three flags on) vs control (flags off), same SHA.
+# The lit keep and war banners are judged on the two stronghold approach stands, the giant ironwood on ironwood_0. One set per stand per preset.
+$o = "D:\tb-gpu-runs\out"; $od = "D:\tb-gpu-runs\yard\MH2\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out, [int] $cols, [int] $tw) {
+    $s = [ordered]@{ title = ""; cols = $cols; thumb_w = $tw; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_MH2.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_MH2.json" | Out-Null; return $out
+}
+$generic = @("Placeholder or untextured materials (flat grey, checker or faceted blocks)", "Floating bodies or props (a gap between an object and the ground under it)", "Clipping (geometry passing through geometry, or the camera inside geometry)")
+$stand6 = @("day__clear__approach", "day__clear__gameplay", "day__clear__reverse", "day__clear__detail", "night__clear__gameplay", "day__rain__gameplay")
+$p2003 = "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark"
+$flatban = "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth"
+$groups = @(
+    @("gate0", @($stand6 | ForEach-Object { "band5_stronghold_approach_0__$_" }), @($p2003, $flatban), "the stronghold approach"),
+    @("gate1", @($stand6 | ForEach-Object { "band5_stronghold_approach_1__$_" }), @($p2003, $flatban), "the stronghold approach, near the gate"),
+    @("ironwood0", @($stand6 | ForEach-Object { "band4_upper_meadows_ironwood_0__$_" }), @("the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown"), "the Upper Meadows Ironwood Grove")
+)
+$sets = @(); $cover = @()
+foreach ($pr in "Medium", "High") {
+    foreach ($g in $groups) {
+        $ids = @($g[1] | Where-Object { (Test-Path "$o\MH2-cand-$pr\frames\$_.jpg") -and (Test-Path "$o\MH2-ctl-$pr\frames\$_.jpg") })
+        $caps = @($ids | ForEach-Object { ($_ -replace '^[a-z0-9_]+?__', '') -replace '__', ' ' })
+        $sd = @{}
+        foreach ($arm in "cand", "ctl") { $sd[$arm] = Side @($ids | ForEach-Object { "$o\MH2-$arm-$pr\frames\$_.jpg" }) $caps "$od\MH2-$($g[0])-$arm-$pr.png" 3 420 }
+        $cover += [ordered]@{ group = $g[0]; preset = $pr; judged = $ids }
+        $brief = "Fixed production-camera views of $($g[3]) in the Meadows, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world."
+        $sets += [ordered]@{ label = "MH2 $($g[0]) $pr cand|ship"; a = $sd["cand"]; b = $sd["ctl"]; brief = $brief; defects = @($generic) + $g[2] }
+    }
+}
+$rng = New-Object System.Random 2049; $sets = @($sets | Sort-Object { $rng.Next() })
+$nb = [math]::Ceiling($sets.Count / 5); $buckets = @(for ($k = 0; $k -lt $nb; $k++) { , @() })
+for ($i = 0; $i -lt $sets.Count; $i++) { $buckets[$i % $nb] += , $sets[$i] }
+for ($k = 0; $k -lt $nb; $k++) { New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\MH2\b$($k+1)" | Out-Null; [IO.File]::WriteAllText("D:\tb-gpu-runs\yard\MH2\b$($k+1)\candidates.json", (ConvertTo-Json -InputObject @($buckets[$k]) -Depth 5)) }
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\MH2\coverage.json", (ConvertTo-Json -InputObject @($cover) -Depth 4))
+"MH2 sets: $($sets.Count) in $nb batches"; $cover | ForEach-Object { "$($_.group) $($_.preset) frames=$($_.judged.Count)" }

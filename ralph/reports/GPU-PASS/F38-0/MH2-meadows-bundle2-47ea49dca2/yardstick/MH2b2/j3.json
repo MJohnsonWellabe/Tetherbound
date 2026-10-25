@@ -1,0 +1,144 @@
+{
+ "sets": {
+  "Mc": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's larger blue-grey panel with wrapped recipe lines and labelled Craft/Leave hints is close to a shipping crafting menu, but neither side has teal interaction accents or controller glyph prompts, and B's tiny truncated rows and footnote-sized hints sink it."
+  },
+  "Kh": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Both sides are a murky, near-black walled yard where 'day clear' reads as dusk, with foreground beams and planks intruding into frame and no tall lit keep, so neither the Palworld daylight finish nor Valheim-class atmosphere is present."
+  },
+  "My": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The wolf is large against the ruler and B's navy-and-white standing coat matches the style bar well, but A's oversaturated electric-blue fur looks plastic and B's faint poses float a body-height above their shadows, which breaks the read."
+  },
+  "Yx": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The elder villager has a clear face with expressive eyes and a warm earthy green palette that fits the Meadows, and reads as shipping-quality stylised character art (a touch more cartoon than the key art's stylised realism)."
+  },
+  "Oy": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm grass, a blue sky and the dirt path are on palette, but the grove is an even grass carpet with evenly spaced same-size saplings, no props or lived-in detail, flat distance and murky night/rain grades, short of Palworld density and Valheim light."
+  },
+  "Qn": {
+   "A": {
+    "bar_a": 5.1,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's rounded leafy ironwood crown helps it read as a landmark, but the uniform grass carpet, generator-even sapling scatter and empty, flat-lit clearing keep it below Palworld's lived-in density and Valheim-class atmosphere."
+  },
+  "Eu": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, diagonal brace, plank cap and stone footing read as a built piece, but its flat untextured beige infill and lone door-like proportions, beside a faceted grey placeholder boulder, fall short of Palworld's base-building finish; A is a blank white card."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Relight and regrade the Kh stronghold yard to read as Meadows daylight: lift exposure and ambient light, give the sky and fog some blue, light the gate and keep, and pull foreground beams and planks out of the production cameras.",
+   "kind": "scene"
+  },
+  {
+   "change": "Author the Ironwood Grove and meadow: break the uniform grass carpet into clearings and edges, vary sapling scale and spacing into real groves, add lived-in props and wildflower patches, keep B's broad leafy ironwood crown, and add distance haze so the background separates.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build a tall, lit stronghold keep or tower landmark with war banners on poles with draped cloth, replacing the flat wall-hung banners, and give the placed homestead wall a textured wattle-and-daub or plank infill with real thickness.",
+   "kind": "new_art"
+  }
+ ]
+}

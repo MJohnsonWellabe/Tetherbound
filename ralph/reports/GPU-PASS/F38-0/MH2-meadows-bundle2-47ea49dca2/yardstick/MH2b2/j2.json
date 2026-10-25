@@ -1,0 +1,144 @@
+{
+ "sets": {
+  "Mc": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's larger type is readable, but neither panel has the teal interaction accent, gold progression or controller face-button glyphs that make Palworld's HUD read at a glance."
+  },
+  "Kh": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky, near-black walled box with almost no sky, no warm Meadows grass or blue distance, and no lit tall keep sank it; the day frames look like night."
+  },
+  "My": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's standing wolf matches the Tanglevolt bar, but its faint poses hover above the floor (and A's emissive overlay floods the fur and its faint-end pose twists unreadably), which no shipping game would show."
+  },
+  "Yx": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder with readable eyes and a Meadows-green palette carried it; only the softer, slightly plastic material finish keeps it below top-tier."
+  },
+  "Oy": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Good sky and warm grass help, but an even grass carpet, one repeated sapling at regular spacing, flat midday light without shafts or haze, and an empty middle distance keep it short of Palworld's lived-in density."
+  },
+  "Qn": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "the giant ironwood's canopy reads as flat, faceted low-poly canopy shards rather than a believable broad leafy crown": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's rounded ironwood crown is a real landmark, but the uniform grass carpet, cloned saplings and flat light without atmospheric depth still read as a sparse prototype next to Palworld."
+  },
+  "Eu": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, brace, cap and stone footing read as built, but it is still a lone thin flat panel beside a pale faceted placeholder boulder, below Palworld's base-building finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Relight and open up the Kh stronghold approach: raise exposure and sky visibility, add warm lit torches/windows on a tall keep, and replace the flat wall-hung banners with pole-mounted draped war banners.",
+   "kind": "scene"
+  },
+  {
+   "change": "Break up the Meadows grove (Oy/Qn) into authored groves, edges and clearings: vary sapling species and scale, cluster them, thin the grass carpet near paths, and add distance haze and light shafts for depth.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix creature faint poses so the body lies on the floor (B floats; A twists), and tone A's emissive lightning overlay back to thin veins so the fur reads like the Tanglevolt bar.",
+   "kind": "scene"
+  }
+ ]
+}
