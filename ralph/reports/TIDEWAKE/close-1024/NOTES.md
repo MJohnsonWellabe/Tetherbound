@@ -2,6 +2,131 @@
 
 Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md`.
 
+## Handoff (state, 25 Oct 2026 13:30 UTC; lane PAUSED by owner usage cut)
+
+### Branch heads
+- **`tb/tidewake`** at `aa35d0d45` (pushed). It carries 153 commits not on main. **Nothing from close-1024 has landed.** Main's `tidewake_look.json` has none of the sections listed below. All close-1024 work sits here, every candidate OFF in play (listed in `sections_off`).
+- **`tb/tidewake-land`** at `a6bbba553`. This is already merged into main: the fight-HUD prompt-yield fix only.
+- **Main** at `1d5faebac` when checked.
+
+### Open candidates
+All are OFF. Each is enabled for a capture with `--tidewake-look-sections=`. Scores are mapped CPU Bar A. Each round's A/B is its own batch, so compare deltas, not absolute numbers across rounds. Evidence is in `close-1024/<round>/`.
+
+| Candidate (sections) | CPU verdict | GPU | Next step |
+|---|---|---|---|
+| **Veilfall face fc3:** `current_flow,veilfall_falls_candidate,rain_fog_candidate,rain_veil_candidate,veilfall_mountain_candidate` | fc2 5.27→5.98 vs shipping; fc3 beat fc2 4.41→5.34 | GPU L (older crown) 5.65 clear / 5.44 rain | GPU it. Then flank massif MESHY (request below). Judges: "a cone with a hat", falls are flat sheets, rain greys it |
+| `veilfall_buttress_candidate` (fc4, cliff_facade ×4 flank) | PARKED, not judged: buried pale blocks | – | Replace with the flank-massif mesh |
+| **Destinations s4:** `destination_landmarks_candidate,destination_landmarks_s3_candidate,destination_landmarks_s4_candidate` (P2-011 `pumps-shore,jetty`) | lm2 4.60 → s3 6.07 (b2); s3 6.36 → s4 **6.84** (b5) | GPU K (lm2-era): pumps 5.79, jetty 5.58 | GPU it. Then MESHY: sluice-channel pump station, long Shellwatch walkway |
+| **Swimmer sw2:** `current_flow,swim_candidate` | 5.25→6.03 (b2) | currents set GPU 3.61 | GPU it |
+| `current_bands_candidate` (on sw2) | 5.87→6.05 (b3), x2/3 | – | GPU it with sw2 |
+| `swim_stroke_candidate` (on sw2 + bands) | captured (`st_b`), **unjudged** (judges stopped at pause) | – | Judge vs bands (spec in `key_b6` recipe); then a real crawl animation if it isn't enough |
+| **Shore wl3:** `current_flow,shore_surf_candidate,shore_surf_vary_candidate,first_shore_declutter_candidate,stones_candidate,golden_sky_candidate,lesson_clusters_candidate` | wl1 base 5.91 → wl2 6.30 (b3); wl2 6.32 → wl3 **6.71** (b4, weak fit r 0.77) | GPU lt2 sheet: owner "sand good, cluttered, water could use work" | GPU it |
+| Earlier READY, still OFF: `t1e current_flow`, `shore_surf(_vary)`, `rain_fog`, `veilfall_falls`, landmarks lm2 | see t1e/t4/rf1/vv1/lm2 verdicts | GPU queued by coordinator | – |
+
+### Open criteria (CPU-provisional floor 6.7 mapped; bar 7.5)
+- **F39 Veilfall (#4/#5):** GPU 5.65 / CPU 5.34–5.98. Dominant defect: the mountain mass, a smooth cone under the crown. New art is needed.
+- **F13#5 currents:** GPU 3.61 / CPU 6.05. Dominant defect: the swimmer, which is tiny, head-up and has its arms raised.
+- **P2-011 destinations:** CPU 6.84. Pumps read as a mill on sand; Shellwatch is small.
+- **F39 shore:** CPU 6.71. Dunes are bare; 18:00 has no sun-side glow.
+- **Oxblood:** a dark-red wild spawn (Sluice table `water_sluice_isle_land`: mirejaw/riptusk/cragclaw, maybe a shiny hue) shows near the pumps and on the current shores. It is untouched; it belongs to the creatures lane.
+
+### What worked and what didn't
+
+**Worked** (mapped CPU delta):
+
+| Change | Delta | Round |
+|---|---|---|
+| Destinations: shore seats and scale | +1.47 | b2 |
+| Destinations: rescue-post dressing and 25 m jetty | +0.48 | b5 |
+| Swimmer: ring faded and half-submerged | +0.78 | b2 |
+| Veilfall: crown + terraces + rain veil | +0.71 | fc2 |
+| Veilfall: softer 28 m terraces, dark ledges (fc3 over fc2) | +0.93 | fc3 |
+| Shore: lesson clusters | +0.39 | b4 |
+| Shore: grouped stones + warm 18:00 sky | +0.39 | b3 |
+| Current bands | +0.18 | b3 |
+| Earlier: currents | +0.52 | t1e |
+| Earlier: surf | +0.57 | t4 |
+| Earlier: rain fog | +0.51 | rf1 |
+| Earlier: lm2 landmarks | +1.45 | lm2 |
+
+**Dead ends** (don't repeat):
+
+| Change | Result | Round |
+|---|---|---|
+| Fewer drift markers / buoys | level, +0.11 | wl1 |
+| Swim pose only, ring visible | level, −0.12 | sw1 |
+| Lighter in-lane tint | −0.49, flattens the whole sea | b4 |
+| Rain overcast grade | level | rg1 |
+| Shore water colour / mid stop | level | t2, t2b, shore_water |
+| Dune grass density | level | dw1 |
+| Sharp 22 m terraces | read as a sawtooth zigzag | fc2 vs fc3 |
+| Unterraced crown on a smooth cone | 4.51 vs 4.75 | nv1 |
+| Terraces without the ledge tint | sand stripes | fc1 |
+| `veilfall_cliff_facade` as flank buttresses | buried blocks | fc4 |
+
+## Harness runbook (exactly what this lane ran)
+
+Committed copies of every local script are in `close-1024/runbook/` (this commit): `capture.sh`, `stack.py`, `judge_prep.py`, `height_probe.gd`.
+
+### Environment
+- **Godot:** `~/godot-bin/godot` (v4.7.stable), CPU (Mesa llvmpipe) through `xvfb-run`, Compatibility renderer, preset Low. No `XDG_*` overrides were needed.
+- **Captures:** go to `~/cap/<name>/` (frames, `metadata.json`), with the log at `~/cap/<name>.log`.
+
+### Capture
+`runbook/capture.sh <name> <camera_set.json> "<args>"` runs:
+```
+timeout 1800 xvfb-run -a -s "-screen 0 1920x1080x24" ~/godot-bin/godot --path . --rendering-method gl_compatibility --rendering-driver opengl3 --resolution 1920x1080 --script res://tools/capture_tidewake_f13_5.gd -- --out=$HOME/cap/<name> --camera-set=res://tools/visual_judge/camera_sets/<set> --source-sha=<full HEAD sha> --capture-size=1920x1080 --preset=Low --views=a,b --tidewake-look-sections=s1,s2
+```
+
+**Camera sets:**
+- `F39-look.json`: shore-day, lesson-dune, shore-golden, veilfall-vista, veilfall-vista-rain (750 m stand).
+- `T2-current.json`: swim-away-day, swim-across-day, swim-away-night.
+- `P2-011-destinations.json`: pumps, pumps-shore, jetty.
+
+**Timing:** about 4–6 min per run of 2–3 views.
+
+**Contact sheets:** `python3 runbook/stack.py out.png f1.jpg f2.jpg ...` (960×540 tiles, stacked vertically).
+
+### CPU judge (code-blind, standard prompt)
+1. Write a `spec.json` with the sets, then run `python3 runbook/judge_prep.py <name> <seed> spec.json`. It runs `anchor_tiles.py --pairs 3 --include craft --include f36_0_npc:C1`, copies `docs/reference`, and builds the prompt from `JUDGE_PROMPT.md` lines [36:155] with the folder, set list and recorded defects filled in.
+2. Run three fresh background general-purpose agents on `p.txt`. Each takes about 60–90 s.
+3. Map each set's A/B through `key.json`. Sides are shuffled per set, so check every time.
+4. Copy the anchor scores from each judge's JSON, never from memory. Keep the judge order the same across rows.
+5. Write `batch.json` (`{"anchors":{tile:[j1,j2,j3]}, "candidates":{label:[j1,j2,j3]}}`) and run `python3 tools/visual_judge/calibrate.py batch.json --out mapped.json`.
+6. Commit only VERDICT.md, batch.json, key.json, mapped.json and one `_sheet*.jpg` under 1.5 MB.
+
+### Tests
+```
+godot --headless --path . --script tests/run_tests.gd -- --only=test_a,test_b
+```
+The ones used here:
+- `test_tidewake_look_profile` (asserts every new section ships OFF; add each new section to its list)
+- `test_water_veilfall_relief_walk`, `test_water_veilfall_geometry`
+- `test_water_landmark_trimesh_collision`, `test_water_landmark_destinations`, `test_veilfall_buttress_seats`
+- `test_human_swim_visual`, `test_human_water_contact_visual`
+
+### Veilfall cap bake
+1. `godot --headless --path . --script res://scripts/world/build_water_terrain.gd -- --veilfall-cap` (about 10 min). It writes all of `data/terrain/water_veilfall_cap/`.
+2. The bake is **not byte-deterministic**: every region differs from shipping. Keep only the six regions that intersect the Veilfall disk (r 400 m around (200, 4140), with 512 m regions): `terrain3d-01_07, -01_08, _00_07, _00_08, _01_07, _01_08`. Copy every other `.res` back from `data/terrain/water/`.
+
+### Harness problems hit
+Each entry gives the cause, the fix, and where the fix lives.
+
+1. **Disk allowance:** about 600 MB free, `.git` is 18 GB. Fetch shallow (`git fetch --depth=1 origin <branch>`) and delete old `~/cap/*`. Local workaround.
+2. **`--source-sha` with a `-dirty` suffix is refused.** Commit and push first, then pass the full SHA. `capture.sh` reads HEAD.
+3. **Editing `tidewake_look.json` during a capture:** `settings()` re-reads the file, so edits race the capture. Never edit config while a capture runs.
+4. **Corrupt JSON was pushed once** (a sed comment edit dropped a quote). Edit with Python plus `json.loads` validation; `capture.sh` validates both JSON files first.
+5. **A JSON reformat produced a huge diff.** Do targeted line edits only; never `json.dump` the whole file.
+6. **One-Godot rule:** headless tests once overlapped a capture. Serialize them. Use `kill $(pgrep -x godot)`, never `pkill -f` with a pattern that matches your own shell (it killed the shell, exit 144).
+7. **Bash `cat` without input hung on stdin.** Local workaround.
+8. **The cap bake is not deterministic.** Use the region dedupe above.
+9. **A wrong region set:** the first dedupe kept only the four summit regions, but the terraces reach x 600. Keep the six regions above.
+10. **Typed GDScript probes:** `var p := c + Vector2(...) * r` fails to infer. Annotate `var p: Vector2 = ...`.
+11. **Analytic heights in a probe are uncapped:** the cap applies only with `veilfall_mountain_candidate` ON. See `height_probe.gd` header.
+12. **Rain streaks were invisible from far stands:** the shared rain ring follows the player 6.5–20 m out, and the vista eye is about 400 m from its stand. Fixed in game code with `rain_veil_candidate` (camera-following far layer, `scripts/world/tidewake_rain_veil.gd`), not in the harness.
+13. **Random wild spawns change between captures** (species and colour). Expect creature differences between A and B; note them in the verdict.
+14. **Cross-session messaging to the coordinator is refused** ("needs proof of a trusted device"). This NOTES file is the channel.
+
 ## TO COORDINATOR
 
 - 2026-10-25 03:00 CT **READY: `tb/tidewake-land` at a6bbba553** (a6bbba553e87bd5d22a964202a6977ae7e87e99b). The fight HUD prompt-yield fix only (one cherry-picked commit on origin/main 124a7393c).
