@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "_why_on": "GPU SW6 (tb/gpu-pass 329b98a41, ralph/reports/GPU-PASS/F41-0/SW6-stormwood-land6-1680e579f): Ashfoot interior +0.99 Medium / +1.71 High (4.1-4.8 -> 5.82), bare plaster box PRESENT -> PARTIAL 6/6. Landed ON.",
+  "_candidate": "r18 candidate (OFF until judged; coordinator big-swing order 25 Oct): the timber lining plus the Meshy ranger hearth, one candidate for the Ashfoot shelter.",
+  "scope": "client_presentation",
+  "_why": "GPU F41#0 + r16 judges (Ashfoot inside: a bare plaster box with a blown-out window). Structural rebuild: a timber lining over the plaster interior walls, full height, door left open, windows behind it as closed shutters, with a dark rail at chair height. Only the buildings named here by village role (village.gd sets `village_role` from the settlement id). Presentation only, no collider.",
+  "lined_roles": [
+    "ashfoot_shelter"
+  ],
+  "lining_height_m": 2.45,
+  "lining_inset_m": 0.03,
+  "lining_tint": "#c4b5a2",
+  "lining_weathering": 0.6,
+  "rail_colour": "#4a3a2c",
+  "rail_height_m": 0.95,
+  "hearth": {
+    "model": "res://assets/props/meshy-1024/ranger_hearth/ranger_hearth.glb",
+    "height_m": 2.0,
+    "x_offset_m": -0.28,
+    "fire_colour": "#ffb066",
+    "fire_energy": 1.8,
+    "fire_range_m": 5.5
+  }
+}

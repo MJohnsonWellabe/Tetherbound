@@ -8,9 +8,12 @@ uniform vec4 wood_tint : source_color = vec4(0.77,0.67,0.53,1.0);
 // 0 keeps the atlas's own orange grain; 1 is fully grey. A multiply tint alone
 // cannot take that orange to aged timber without crushing the value.
 uniform float weathering : hint_range(0.0, 1.0) = 0.0;
+// Metres per UV unit, for meshes whose UVs run 0-1 across their whole size
+// (a PlaneMesh floor). The Stormheart decks already carry metre UVs: 1, 1.
+uniform vec2 uv_metres = vec2(1.0, 1.0);
 
 void fragment() {
-	vec2 board = vec2(UV.x / 0.36, UV.y / 3.2);
+	vec2 board = vec2(UV.x * uv_metres.x / 0.36, UV.y * uv_metres.y / 3.2);
 	float row = floor(board.x);
 	board.y += mod(row, 3.0) / 3.0;
 	vec2 local = fract(board);
