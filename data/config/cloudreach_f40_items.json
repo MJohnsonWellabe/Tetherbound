@@ -679,6 +679,45 @@
           }
         }
       }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-aerie-perch-candidate",
+      "_why": "F40 C4 / P2-024 Windscar Flight Aerie (GPU 4.91; CPU b2 5.14 after the heading fix: 'only poles and banners hint at an aerie behind trees'). Two copies of the installed Meshy aerie perch platform (assets/props/meshy-1020/cloudreach_aerie_perch_platform: a deck on a stone pedestal with a curved perch bar, provenance.json) stand on the dais edge facing the catalogue stand (which is 30 m out at local (-27, 12.5)), 9 and 7 m tall (5x and 4x the 1.80 m trainer), so a launch structure reads in front of the trees. Untinted, visual only, no collision; the five timber perches, compass and lesson stay. Flag OFF; not judged yet.",
+      "overlay": {
+        "settlements": {
+          "WindscarFlightAerie": {
+            "buildings": [
+              {
+                "asset": "aerie_perch_platform",
+                "glb": "res://assets/props/meshy-1020/cloudreach_aerie_perch_platform/cloudreach_aerie_perch_platform.glb",
+                "at": [
+                  -12.0,
+                  0.0,
+                  7.0
+                ],
+                "height": 9.0,
+                "yaw": -65.0,
+                "collision_fraction": 0.0,
+                "tint": "#ffffff"
+              },
+              {
+                "asset": "aerie_perch_platform",
+                "glb": "res://assets/props/meshy-1020/cloudreach_aerie_perch_platform/cloudreach_aerie_perch_platform.glb",
+                "at": [
+                  -14.5,
+                  0.0,
+                  -3.0
+                ],
+                "height": 7.0,
+                "yaw": -100.0,
+                "collision_fraction": 0.0,
+                "tint": "#ffffff"
+              }
+            ]
+          }
+        }
+      }
     }
   ]
 }
