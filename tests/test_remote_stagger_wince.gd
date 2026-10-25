@@ -6,6 +6,7 @@ extends "res://tests/test_case.gd"
 
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const REMOTE_CREATURE := preload("res://scripts/creatures/remote_creature.gd")
+const CREATURE_ANIMATOR := preload("res://scripts/creatures/creature_animator.gd")
 const RUNS_IN_INITIALIZED_TREE := true
 
 var _root: Node3D = null
@@ -35,7 +36,8 @@ func test_a_plain_hit_and_a_huge_report_are_bounded() -> void:
 	var body := await _remote("mudsnout")
 	body.call("play_presentation", "hit", {"kind": "hit", "fraction": 0.2})
 	var animator: Object = body.get("_animator")
-	assert_almost_eq(float(animator.get("_stagger_left")), 0.0, 0.0001, "a plain hit holds nothing")
+	assert_almost_eq(float(animator.get("_stagger_left")), float(CREATURE_ANIMATOR.HIT_WINCE_HOLD_S), 0.0001,
+		"a plain hit holds only the short readable wince every hit gets (GPU G3)")
 	body.call("play_presentation", "hit", {"kind": "hit", "fraction": 0.2, "stagger_seconds": 99.0})
 	assert_almost_eq(float(animator.get("_stagger_left")), REMOTE_CREATURE.MAX_REMOTE_STAGGER_S, 0.0001,
 		"a peer's report is clamped")

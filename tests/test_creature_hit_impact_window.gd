@@ -39,11 +39,15 @@ func test_named_impact_window_starts_at_the_wince_and_survives_movement() -> voi
 	var animator := _animator({"hit_start_phase": 0.12, "hit_release_phase": 0.5})
 	animator.call("play_once", "hit")
 	assert_eq(_player.current_animation, "hit", "the hit clip plays")
-	assert_almost_eq(float(animator.get("_hold")), HIT_LENGTH * (1.0 - 0.12), 0.0001,
-		"the hold starts from the impact sample, not the neutral lead-in")
+	assert_almost_eq(_player.current_animation_position, HIT_LENGTH * (0.12 + 0.5) * 0.5, 0.0001,
+		"the body shows the wince inside the impact window, not the neutral lead-in")
+	assert_almost_eq(float(animator.get("_stagger_left")), float(ANIMATOR.HIT_WINCE_HOLD_S), 0.0001,
+		"every hit holds its wince long enough to read in 0.15 s fight frames (GPU G3)")
 	animator.call("cancel_hold")
 	assert_true(float(animator.get("_hold")) > 0.0,
-		"a same-step movement request cannot cancel the wince inside its window")
+		"a same-step movement request cannot cancel the wince")
+	animator.call("tick", ANIMATOR.HIT_WINCE_HOLD_S + 0.01, 0.0, 1.0)
+	assert_almost_eq(_player.speed_scale, 1.0, 0.0001, "after the hold the clip plays out its release")
 
 
 func test_without_a_window_the_installed_hit_behaves_as_before() -> void:

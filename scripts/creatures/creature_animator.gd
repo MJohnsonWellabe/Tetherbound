@@ -29,6 +29,11 @@ const FAINT := "faint"
 const STILL_SPEED := 0.35
 ## Above this fraction of its top speed, it is running rather than walking.
 const RUN_FRACTION := 0.55
+## P2-016 (GPU G3, 25 Oct): a named impact window alone showed the wince for
+## about 0.19 s before the next movement cancelled the release, so it landed
+## in one 0.15 s fight frame in 32. Every such hit now holds its wince at
+## least this long, the same way a stagger does (`hold_wince`).
+const HIT_WINCE_HOLD_S := 0.3
 
 var _player: AnimationPlayer = null
 var _clips: Dictionary = {}
@@ -135,18 +140,16 @@ func play_once(role: String) -> void:
 		_telegraph_attack_clip = ""
 		_telegraph_contact_position = 0.0
 		return
+	if role == HIT and hold_wince(HIT_WINCE_HOLD_S):
+		# Damage can freeze animation immediately, then locomotion cancels the
+		# hold on the first resumed tick. Show the authored wince now and keep
+		# it long enough to read; the clip then plays out its release.
+		return
 	_clear_telegraph_attack()
 	_hold = _player.get_animation(clip).length
-	if clip.begins_with("f36_candidate/") or (role == HIT and _has_impact_window()):
+	if clip.begins_with("f36_candidate/"):
 		_current = ""
 	_play(role, false)
-	if role == HIT and _has_impact_window():
-		# Damage can freeze animation immediately, then locomotion cancels the
-		# hold on the first resumed tick. Apply the authored impact sample now
-		# so hitstop shows the wince rather than the clip's neutral lead-in.
-		var start_phase := clampf(float(_clips.get("hit_start_phase", 0.0)), 0.0, 1.0)
-		_player.seek(_hold * start_phase, true)
-		_hold *= 1.0 - start_phase
 
 
 ## Start an attack while its gameplay telegraph begins, but only for an
