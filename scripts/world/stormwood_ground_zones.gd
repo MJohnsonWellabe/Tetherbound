@@ -22,6 +22,8 @@ uniform vec2 sz_bare = vec2(0.26, 0.36);
 uniform vec2 sz_moss = vec2(0.64, 0.74);
 uniform vec4 sz_soil_colour : source_color = vec4(0.17, 0.14, 0.11, 1.0);
 uniform vec4 sz_moss_colour : source_color = vec4(0.14, 0.22, 0.12, 1.0);
+uniform vec2 sz_pool = vec2(0.0, 0.0);
+uniform vec4 sz_pool_colour : source_color = vec4(0.05, 0.06, 0.07, 1.0);
 
 float sz_hash12(vec2 p) {
     vec3 p3 = fract(vec3(p.xyx) * 0.1031);
@@ -61,6 +63,13 @@ const TAIL := """
             ALBEDO = mix(ALBEDO, sz_moss_rgb, sz_moss_w * 0.85);
             ALBEDO = mix(ALBEDO, sz_soil, sz_bare_w);
             ROUGHNESS = mix(ROUGHNESS, 0.92, sz_bare_w);
+            // Black pools in the lowest part of the loam: dark, wet, glossy.
+            if (sz_pool.y > sz_pool.x) {
+                float sz_pool_w = (1.0 - smoothstep(sz_pool.x, sz_pool.y, sz_n)) * sz_green * sz_strength;
+                ALBEDO = mix(ALBEDO, sz_pool_colour.rgb, sz_pool_w);
+                ROUGHNESS = mix(ROUGHNESS, 0.08, sz_pool_w);
+                SPECULAR = mix(SPECULAR, 0.7, sz_pool_w);
+            }
         }
     }
 """
@@ -112,10 +121,10 @@ static func install(terrain: Object) -> void:
 		material.call("enable_shader_override", true)
 	material.call("set_shader_param", "sz_strength", float(zones.get("strength", 1.0)))
 	material.call("set_shader_param", "sz_scale", float(zones.get("scale", 0.028)))
-	for key: String in ["bare", "moss"]:
+	for key: String in ["bare", "moss", "pool"]:
 		var pair: Array = zones.get(key, [])
 		if pair.size() == 2:
 			material.call("set_shader_param", "sz_" + key, Vector2(float(pair[0]), float(pair[1])))
-	for key: String in ["soil_colour", "moss_colour"]:
+	for key: String in ["soil_colour", "moss_colour", "pool_colour"]:
 		if zones.has(key):
 			material.call("set_shader_param", "sz_" + key, Color(str(zones[key])))

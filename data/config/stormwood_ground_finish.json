@@ -8,12 +8,15 @@
     "_candidate": "r20 authored ground (OFF until judged). GPU F41#0 gap 1 (25 Oct, PRESENT at every outdoor Stormwood stand): one grass/moss carpet. A world-space zone field (stormwood_ground_zones.gd) turns green terrain into bare dark loam where it runs low and deep moss where it runs high; the grass tufts read the same field (grass_field.gdshader zone_*), thinning out over loam and standing short and dark in moss. Paths, rock and the Glass Sink are untouched (green ground only). Presentation only.",
     "strength": 1.0,
     "scale": 0.055,
-    "bare": [0.4, 0.46],
-    "moss": [0.54, 0.6],
-    "soil_colour": "#2b241c",
-    "moss_colour": "#24381f",
-    "moss_shorten": 0.75,
-    "moss_tint": "#8cb27f"
+    "bare": [0.36, 0.47],
+    "pool": [0.3, 0.335],
+    "moss": [0.53, 0.62],
+    "soil_colour": "#24241f",
+    "pool_colour": "#0c1013",
+    "moss_colour": "#1d3a2d",
+    "moss_shorten": 0.9,
+    "moss_tint": "#6f9a7a",
+    "_why_r21": "r20 CPU judges x3 (+0.54 mapped): the loam leaned maroon (oxblood is Team Tether's) with hard decal edges, no moss read, and the opened far sheet showed a pink horizon strip. r21: cool umber loam, softer edges, flatter blue-green moss, black pools in the lowest loam, far sheet tints only."
   },
   "grass": {
     "height_near": 0.2,
