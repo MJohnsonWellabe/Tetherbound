@@ -2,7 +2,7 @@
 
 **Verdict: the Stormwood named fights FAIL, at 4.74 High and 4.38 Medium.** Tier: below 6.
 
-The F41 matrix is **not captured yet**. Its capture tool refused both runs on its own guards (see "F41 matrix status"), and it will be added here once it runs.
+The F41 matrix was refused here by its own guards (see "F41 matrix status"). It has since been captured and judged on main 9099a88: see `../stormwood-matrix-9099a88/VERDICT.md` (FAIL, 5.07 High / 4.80 Medium).
 
 ## Named fights (F10#2)
 
