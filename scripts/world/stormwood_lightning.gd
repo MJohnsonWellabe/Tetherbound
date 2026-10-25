@@ -592,6 +592,7 @@ uniform float spark_gain = 1.6;
 uniform float spark_width_mul = 2.5;
 uniform float crackle_alpha = 0.7;
 uniform float crackle_scale = 1.0;
+uniform float inner_pull = 0.1;
 varying float r;
 varying vec2 ground_xz;
 void vertex() {
@@ -613,9 +614,10 @@ void vertex() {
 	// Only the rim and glow are pulled toward the camera (about grass
 	// height), never the dark fill, so the fill cannot draw over a trainer
 	// standing at the near rim.
-	// Ringless, the char and its current are the whole tell, so all of it
-	// rises above the grass; there is no opaque fill to cover a trainer.
-	float pull = (len >= pull_start_radius || outline_off > 0.5) ? depth_pull : 0.0;
+	// Ringless, the char and its current are the whole tell, so the inside
+	// also lifts, but only to grass-tuft height (`inner_pull`): the full rim
+	// pull drew the current over the boots of a trainer standing in it.
+	float pull = len >= pull_start_radius ? depth_pull : inner_pull * step(0.5, outline_off);
 	view.xyz *= max(0.2, 1.0 - pull / max(dist, 0.001));
 	POSITION = PROJECTION_MATRIX * view;
 }
@@ -720,11 +722,13 @@ void fragment() {
 		// fights' cue_crackle, tell_style.gd): natural lightning light, not paint,
 		// brightening as the strike nears, so the area still reads at night.
 		vec2 w = ground_xz * crackle_scale;
-		float ct = TIME;
+		// Reduced motion freezes the current in place; the countdown still
+		// grows it. Otherwise a slow soft shimmer, no hard flashing.
+		float ct = TIME * pulse_enabled;
 		float ca = sin(w.x * 3.1 + sin(w.y * 1.7 + ct * 5.0) * 2.0 + ct * 9.0);
 		float cb = sin(w.y * 2.6 + sin(w.x * 2.3 - ct * 6.0) * 2.0 - ct * 7.0);
 		float crackle = max(1.0 - smoothstep(0.0, 0.12, abs(ca)), 0.75 * (1.0 - smoothstep(0.0, 0.10, abs(cb))));
-		crackle *= mix(1.0, 0.6 + 0.4 * step(0.3, fract(sin(floor(ct * 14.0) * 12.9898) * 43758.5453)), pulse_enabled);
+		crackle *= mix(1.0, 0.8 + 0.2 * sin(ct * 6.2832 * 1.5), pulse_enabled);
 		leaders += crackle * reach * crackle_alpha * (0.25 + 0.75 * progress) * (1.0 - strike);
 		leaders *= spark_gain;
 		spark = mix(rim_colour, vec3(0.92, 0.9, 1.0), spark_whiten);
@@ -841,6 +845,7 @@ func _telegraph_material() -> ShaderMaterial:
 		material.set_shader_parameter("spark_width_mul", float(cfg.get("spark_width_mul", 2.5)))
 		material.set_shader_parameter("crackle_alpha", float(cfg.get("crackle_alpha", 0.7)))
 		material.set_shader_parameter("crackle_scale", float(cfg.get("crackle_scale", 1.0)))
+		material.set_shader_parameter("inner_pull", float(cfg.get("inner_pull_m", 0.1)))
 	material.set_shader_parameter("pulse_hz_start", float(cfg.get("pulse_hz_start", 2.0)))
 	material.set_shader_parameter("pulse_hz_end", float(cfg.get("pulse_hz_end", 7.0)))
 	material.set_shader_parameter("telegraph_seconds", float(rules.config.strike.telegraph_seconds))
