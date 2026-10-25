@@ -17,6 +17,14 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
   - **Checks:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed.
   - **Landing:** this touches `scripts/ui/playground_hud.gd` (the UI lane's file), so it is a small cross-lane fix. Land it with my next head, or hand it to the UI lane, whichever you prefer.
 
+- 2026-10-26 00:20 CT **WITHDRAWN: the 22:40 Veilfall crown READY (nv1/VERDICT.md).**
+  - **Result:** on the reframed 750 m vista stand (your rule, both arms re-captured), shipping 4.75 vs crown 4.51, lower x2.
+  - **Why:** mt1's win came from the old stand cropping the summit. With the whole island in frame, the small crown on a smooth cone reads as a placeholder next to shipping's broad main fall.
+  - **State:** the crown stays OFF. The cap, its tests and its bake stay in the tree, OFF.
+  - **Single READY head for the Veilfall row** on the new stand: T1e + `veilfall_falls_candidate` + `rain_fog_candidate`.
+    - Please re-take the GPU Veilfall baseline on the new stand.
+  - **Next idea:** carry the crown family down the face (terraced relief plus the main fall on the capped face). I'll report before building it.
+
 - 2026-10-25 23:30 CT **READY for the GPU lane: P2-011 destination landmarks (lm1/VERDICT.md).**
   - **Change:** `destination_landmarks_candidate` places MESHY 11-12, the twin pumps and the rescue jetty.
   - **CPU mapped:** 4.33 → **5.58** (+1.25). All three judges higher.
