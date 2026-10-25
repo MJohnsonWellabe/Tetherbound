@@ -354,6 +354,11 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Prompt: "broadleaf oak tree with a dense canopy of many layered leaf-card clusters (not blobs), gnarled trunk with bark and moss, natural asymmetric crown, warm green with sunlit yellow-green tips, stylised realism like Valheim and Palworld, game asset".
   - These replace the scatter's grove-tree models at the Ironwood stands as one candidate.
 
+- 2026-10-25 21:21 UTC DROPPED (no judge round): the Hall shell plaster→brick swap (`building_prefabs.json crossing_hall_shell.module_swap_candidate`, OFF).
+  - The CPU A/B pixel diff (`f38_hall_ship` vs `f38_hall_cand`) is 0.0% at all four arch detail stands and both hall_nave views, and 0.5–1.9% at hall_front.
+  - The "window-strip plaster wall" the judges name is not in the shell prefab. The wall behind the faced arches is already fieldstone. The pale plaster panels in the arch frames are interior partitions from another source.
+  - Next for the arch stands (GPU: still below 7.5): find that interior plaster source (the arch_home/arch_stormwood detail frames show it on the left and right walls) and the flat Hall light (L3, which the owner has held).
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
