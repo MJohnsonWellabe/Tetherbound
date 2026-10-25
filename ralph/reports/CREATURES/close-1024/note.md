@@ -3,7 +3,11 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
-- 25 Oct **Terrapup: shipped model passes (GPU 7.61/7.64); dog3 retired.** f0ada94b5 and the dog3 candidate are not landed, and no further dog3 work.
+- 25 Oct MESHY (order 2): **Terrapup dog3 retexture of the existing rigged mesh.** Spec, palette and the seat pad: `close-1024/dog3-retex-spec/spec.md`. The GPU M path-to-7.5 item 1 is stone plates grown into the coat: fur over the plate rims, contact shadow, moss creeping into the fur, weathered earth-grey plates, plus a worn leather pad in a dip between the shoulder plates. Mesh: `tb/creatures` `terrapup/candidate_dog3/models/creature_terrapup_dog3.glb`, Image_0, original UVs.
+  - Once it lands, it becomes one bundled candidate with the lowered seat, the cower, rim 0.3 and f0ada94b5.
+  - Meanwhile I'm finishing the big wince CPU check (order 3, captured), then Tanglevolt's vein emission (order 4).
+
+- 25 Oct ~~Terrapup: shipped model passes; dog3 retired~~ **superseded by the owner's correction: "Terrapup should be a dog"; dog3 is the Terrapup.**
 
 - 25 Oct MESHY (rule 2): **Mirejaw retexture of the existing mesh.** GPU 6.92, one dominant defect (the near-black back, a 'dark smear' at faint end). Two albedo nudges gained under 0.5 (b34 -1.17, b35 -0.05), so per rule 1 I'm switching to the Mosshock route. Spec, palette and refs: `close-1024/mirejaw-retex-spec/` (back about value 0.28, olive-umber with thinner ochre seams; cream belly and amber frills kept; no red; texture only, same mesh, rig and recipe). I'll grade, wire, re-pin and CPU-judge it when the task lands.
   - The lane's `lift_dark_back` touch (4e5dc1d35) is superseded by this; drop it from GPU READY.
