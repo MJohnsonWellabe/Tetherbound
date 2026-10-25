@@ -1,5 +1,20 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (25 Oct, later)
+
+- **dog3 r3 (6c63dfa6d) graded and judged: CPU b41 ties r1** (6.89 vs 6.95 mapped; RMSE 0.35, confirming; `close-1024/b41/VERDICT.md` on tb/creatures-land). Plates strapped on: PRESENT x3 for r1, PRESENT x2 and PARTIAL for r3. r1 stays the candidate; the r3 grade commit b6129230 is reverted in a9e286d3, and the assets are byte-identical to the READY head ebec8e36. Both beat main's badger by about +0.5 (b41 +0.57); judges again read the badger as off-identity.
+- **PROPOSAL (mesh, as you asked; no more retextures):** the "strapped on" read comes from the dog3 mesh's raised shoulder lumps. Every texture so far, including separate stones, sits on a hard-edged mound that stops at the shoulders and haunches.
+  - Fix in Blender on `candidate_dog3/models/creature_terrapup_dog3.glb`. Select the lump vertices by the plate mask in UV space (`grade_retex.py`'s plate mask, dilated by about 6 px), then shrink them along their normals toward a smoothed copy of the body surface (about 70% of the lump height), feathering 4-6 cm into the coat.
+  - Keep two or three low stones along the spine and over each shoulder blade as small relief. Weights, rig and clips are unchanged (vertex positions only; skin weights carried).
+  - The texture then follows the smoothed form, with fur reaching the stone edges.
+  - Expected: removes the "pack" read, the remaining dog3 defect. b40/b41 put dog3 at about 6.6-6.95 CPU, so the gain is likely above 0.5.
+  - This is a mesh edit, so it is yours or Codex's call. I can do it if you say the Creatures lane may edit this vertex data.
+- **FIXED the companion-presence regression** (you were right: not pre-existing). Root cause: the P2-016 0.55 s hit-wince hold lives in `creature_animator.play_once("hit")` and also caught Companion Presence's out-of-combat hurt flinch (via `play_if_exists`). It froze the clip at speed_scale 0, so Presence read 0 after healing.
+  - The fix is in code (ab2ea606): `play_if_exists`, used only by Presence, plays the clip straight through; combat hits (`play_hit`, `play_combat_flinch`, remote stagger) keep the hold. The test is unchanged.
+  - Focused tests: companion_presence, creature_flinch, hit_flash, hit_impact, remote_stagger, combat_feedback, impact, creature_animator, f36_pose, hurt: 55 tests, 0 failed.
+  - Any land carrying the wince code should include ab2ea606. Texture-only lands (Mirejaw, dog3 at ebec8e36) don't need it.
+- tb/creatures-land head: ab2ea606433868b4b33ce8645bb8bac8fd6272b8.
+
 ## TO COORDINATOR (25 Oct, resumed session; orders 1-2 done)
 
 - **GPU READY tb/creatures-land ebec8e36 (Mirejaw retexture, one candidate).** Full SHA ebec8e36732c9b4d8f573956f7953ba32e9cd8ea (= 4f7c8d31c + one commit).
