@@ -56,6 +56,7 @@ extends Node3D
 ## credit balance, so nothing in here creates a creature and nothing may.
 
 const CONFIG_PATH := "res://data/config/stronghold.json"
+const STRONGHOLD_HERO_GATEHOUSE := preload("res://scripts/world/stronghold_hero_gatehouse.gd")
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 ## ROUND-5, FIX3. The same rigged-human builder `trainer_npc.gd`'s own bodies
 ## and `village_npcs.gd`'s decorative NPCs both build on -- used here directly
@@ -308,6 +309,8 @@ func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 	if not _markers.has("entrance"):
 		_markers["entrance"] = _markers.get("ramp_foot",
 			to_global(Vector3(0.0, _floor_y, _mouth_outer_z() - 4.0)))
+	# F38 P2-003 (OFF unless stronghold.json hero_gatehouse.enabled).
+	STRONGHOLD_HERO_GATEHOUSE.build(self, _config.get("hero_gatehouse", {}), _floor_y, _mouth_outer_z())
 	set_process(true)
 	_report_light_budget()
 	print("[stronghold] %d spaces on the route (%s), floor y=%.2f, %d gauntlet trainer(s), %d approach pylon(s)%s" % [
