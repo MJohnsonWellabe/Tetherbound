@@ -164,7 +164,9 @@
         7590.0
       ],
       "heading_deg": 0,
-      "source": "debug_teleport_spots.json:Meadows Hall"
+      "source": "debug_teleport_spots.json:Meadows Hall",
+      "view_headings": {"gameplay": 45, "detail": 45},
+      "_why_view_headings": "F38 L1 close-1024 (GPU 4.59): the heading-0 gameplay and detail stands framed the courtyard through a foreground pillar and stacked crates (judges: 'framed through foreground pillars and banners'). A CPU probe of headings 45/90/135 (shots/f38_1024_shprobe, unchanged preflight) found heading 45 clear for both: the trainer, the forge machinery and the far banners with sky above the wall. Approach keeps the site heading."
     },
     {
       "id": "farm_to_hall",
