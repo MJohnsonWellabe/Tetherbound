@@ -1795,6 +1795,9 @@ func _on_hit_effectiveness(on_enemy: bool, effectiveness: int) -> void:
 		else:
 			text = "▲  your type held — that barely landed"
 	_effect_banner.text = text
+	# A type verdict is about the enemy plate's matchup: always under it, even
+	# right after the player's own stagger line sat by the player's panel.
+	_effect_banner_mine = false
 	_effect_banner.add_theme_color_override("font_color", colour)
 	# Re-measured every time it is shown rather than once at build: the plate
 	# above it is a PanelContainer whose height follows its content, and the
@@ -1812,7 +1815,7 @@ func _on_staggered(on_enemy: bool) -> void:
 	if not on_enemy and mine != null:
 		who = "%s " % mine.label()
 	_effect_banner.text = "STAGGERED — punish now" if on_enemy else "%sSTAGGERED — recovering" % who
-	# Fights close-1025 candidate (`effect_banner.stagger_by_owner`, OFF): GPU
+	# Fights close-1025 (`effect_banner.stagger_by_owner`, ON since 25 Oct): GPU
 	# G3 judges read the stagger line under the enemy plate as ambiguous. With
 	# it on, each line names whose creature it is, and the player's own sits
 	# beside the player's panel instead of under the enemy's.

@@ -267,7 +267,7 @@ static func draw_dust(instance: MultiMeshInstance3D, lines: Array, style: Dictio
 		placed += _dust_walk(points, spacing, count - placed, multimesh, placed, style, alpha, time, flow)
 
 
-## Fights close-1025 candidate (`soft_style.dust_fill_rows`; 0/absent = off).
+## Fights close-1025 (ON since 25 Oct; `soft_style.dust_fill_rows`; 0/absent = off).
 ## The judges read outline dust as diffuse: they asked for dust filling the
 ## danger footprint. Callers add this many inner rows inside the real hit
 ## shape (never in a ring's safe hole), each at `fraction` of the way from

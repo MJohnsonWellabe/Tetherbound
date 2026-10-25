@@ -121,7 +121,7 @@ func _draw() -> void:
 		box.set_corner_radius_all(10)
 		draw_style_box(box, rect)
 
-## Fights close-1025 candidate (hud.json new_system_screens.combat.panel_scale;
+## Fights close-1025 (ON since 25 Oct; hud.json new_system_screens.combat.panel_scale;
 ## 1/absent = off): the judges still read the right-hand panels as covering
 ## the fight. Scales `control` about `corner` (0..1 of its size, so the
 ## screen-edge corner stays put) and keeps the pivot there as it resizes.
