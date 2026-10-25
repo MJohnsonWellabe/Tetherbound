@@ -1,5 +1,16 @@
 # Stormwood lane, close-1024 (F41#1, #2, #3, #5; F10#2)
 
+## Session 2 log (newest first)
+
+- 25 Oct 23:10Z READY (GPU A/B) on arm `tb/stormwood-r19-on` 67d95770b5ecd4823926d371e9108587e6391f09, off arm its parent `tb/stormwood` 41db6f9685ffb792c0bf220136b68afd3adc461c (one config commit apart; the F41 catalogue needs a clean tree per SHA). Judge two stands: `dynamo_the_stormheart_tree` (all six views, calm + fading) and `hollow_crown_the_crown_heartstone` (the on arm moves its `f41_survey` stand to 696.11, 2708.11 heading 20).
+  - On arm turns ON: Stormheart `hero_interior` (three staggered rows of the Meshy root-wall panel up to about 50 m, thin lightning core column on the axis, lantern clusters and navy lip banners, the Meshy deck walk), Fading steam `lens_fade_m` [3, 7] (the v04 camera fog sprites), heartstone `hero` at 7 m with a 1.6 m collider.
+  - Both arms carry the catalogue's new view-cone clearance: wild bodies inside the camera's horizontal view within 45 m are set down just outside the cone, disclosed per frame (`survey_clearance.view_cone_depth_m`, `moved`).
+  - CPU r19 code-blind (`r19/VERDICT.md`, fit r 0.86, RMSE 0.42): Stormheart 3.79 -> 5.80 (+2.01), heartstone 3.96 -> 5.63 (+1.67).
+  - Checks with the flags ON: 80 unit tests, 0 failed (stormheart*, stormwood_surge*, stormwood_named_crown); smoke_stormwood_crown_heartstone 12/0 with the 7 m hero.
+  - GPU form: `capture_f41_stormwood_catalog.gd --preset=<Medium|High> --source-commit=<arm SHA> --label=f41-r19-<arm>-<preset> --phases=calm,building,break,fading --no-aftermath`, Forward+ 1920x1080.
+  - v03 white strip: the core column now stands in front of the north split in v03 (CPU), so the sky slot is mostly hidden; check it on GPU.
+  - Next here: authored ground (gap 1) as a terrain-shader zone field shared with the grass tufts (`stormwood_ground_zones.gd`, in progress, not wired).
+
 ## HANDOFF (25 Oct 22:30Z, session paused for a fresh Stormwood session)
 
 **State**
