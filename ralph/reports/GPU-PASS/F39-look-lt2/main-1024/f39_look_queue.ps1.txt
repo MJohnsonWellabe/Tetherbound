@@ -1,0 +1,18 @@
+﻿# Tidewake time-of-day regrade (lt2) on main (local): candidate = main (lighting_candidate ON); control = lighting_candidate added to sections_off. Medium and High.
+$proj = "D:\tb-gpu-pass"; $cfg = "data/config/tidewake_look.json"; $root = "D:\tb-gpu-runs\out\F39-look3"
+$py = "$env:LOCALAPPDATA\Programs\Python\Python312\python.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_RUN_TIMEOUT_MIN = "40"
+foreach ($arm in "candidate", "control") {
+    if ($arm -eq "control") {
+        & $py -I -c "import json,sys; p=sys.argv[1]; d=json.load(open(p,encoding='utf-8')); d['sections_off'].append('lighting_candidate'); open(p,'w',encoding='utf-8',newline='\n').write(json.dumps(d,indent=2,ensure_ascii=False)+'\n')" "$proj\data\config\tidewake_look.json"
+        & $py -I -c "import json,sys; print('sections_off', json.load(open(sys.argv[1],encoding='utf-8'))['sections_off'])" "$proj\data\config\tidewake_look.json"
+    }
+    foreach ($p in "Medium", "High") {
+        & D:\tb-gpu-runs\tools\run_tool.ps1 -Preset $p -Script "res://tools/capture_tidewake_f13_5.gd" -OutDir "$root\$arm-$p" -Resolution "1920x1080" -ProjectPath $proj -UserArgs @("--camera-set=res://tools/visual_judge/camera_sets/F39-look.json", "--out={FRAMES}", "--source-sha=45865499d4830a9c2281f82da4f18311e1e646a8", "--capture-size=1920x1080", "--preset=$p")
+    }
+}
+git -C $proj checkout -- $cfg
+git -C $proj status --short -- $cfg
+"f39 look done"
+
+

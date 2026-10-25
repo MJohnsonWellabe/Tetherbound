@@ -377,11 +377,33 @@ func test_host_sequence_gap_and_initial_remote_pose_refused() -> void:
 	stream.error = ""
 	packet.sequence = 1
 	service.receive_host(2, _envelope({"op": "inputs", "inputs": [packet]}))
-	service.receive_host(2, _envelope({"op": "inputs", "inputs": [{"version": 1, "sequence": 2,
+	var far := _envelope({"op": "inputs", "inputs": [{"version": 1, "sequence": 2,
 		"op": "discovery", "realm": "meadows", "from": [0,0,0], "to": [100,0,0],
-		"travel_valid": false, "new_landmarks": []}]}))
+		"travel_valid": false, "new_landmarks": []}]})
+	service.receive_host(2, far)
+	assert_eq(stream.error, "", "an unobserved first pose first waits for the host's own view")
+	assert_eq(stream.cursor.sequence, 1)
+	_age_pose_wait(stream)
+	service.receive_host(2, far)
 	assert_eq(stream.error, "owner_passive_initial_pose_unconfirmed")
 	assert_eq(stream.cursor.sequence, 1)
+
+## Past the configured first-pose wait since the first refusal of the waiting input.
+func _age_pose_wait(stream: Dictionary) -> void:
+	assert_true(stream.has("pose_wait"), "fixture: the first discovery is waiting")
+	stream.pose_wait.since_ms = int(stream.pose_wait.since_ms) - SYNC.first_pose_wait_ms() - 500
+
+func _first_discovery_packet(at: Array) -> Dictionary:
+	return _envelope({"op": "inputs", "inputs": [{"version": 1, "sequence": 2,
+		"op": "discovery", "realm": "meadows", "from": at, "to": at,
+		"travel_valid": false, "new_landmarks": []}]})
+
+## The same first discovery resent after its wait expired (the owner's resend).
+func _first_discovery_resent_late(stream: Dictionary, at: Array) -> void:
+	assert_eq(stream.error, "", "a not-yet-observed first pose waits before it is refused")
+	assert_eq(stream.cursor.sequence, 1)
+	_age_pose_wait(stream)
+	service.receive_host(2, _first_discovery_packet(at))
 
 func _first_discovery_after(at: Array) -> Dictionary:
 	# A host stream whose cursor has applied one condition tick, then the
@@ -390,9 +412,7 @@ func _first_discovery_after(at: Array) -> Dictionary:
 	var stream := _host_stream()
 	service.receive_host(2, _envelope({"op": "inputs", "inputs": [service.local.inputs[0].duplicate(true)]}))
 	assert_eq(stream.cursor.sequence, 1, "fixture: the condition tick applied")
-	service.receive_host(2, _envelope({"op": "inputs", "inputs": [{"version": 1, "sequence": 2,
-		"op": "discovery", "realm": "meadows", "from": at, "to": at,
-		"travel_valid": false, "new_landmarks": []}]}))
+	service.receive_host(2, _first_discovery_packet(at))
 	return stream
 
 func test_a_first_discovery_from_before_a_teleport_matches_the_hosts_recent_pose() -> void:
@@ -410,13 +430,64 @@ func test_a_first_discovery_far_from_every_observed_pose_is_refused() -> void:
 	service.body_position = Vector3(-4.4, 0.9, 21.6)
 	service._record_pose(2, "meadows", Vector3(96.2, 0.9, 14.0), Time.get_ticks_msec() - 300)
 	var stream := _first_discovery_after([186.2, 0.9, 14.0]) # 90 m beyond the landing, 191 m from now
+	_first_discovery_resent_late(stream, [186.2, 0.9, 14.0])
 	assert_eq(stream.error, "owner_passive_initial_pose_unconfirmed", "beyond 80 m of every sample")
+	assert_eq(stream.cursor.sequence, 1)
+
+func test_a_first_discovery_the_host_has_not_yet_observed_waits_then_matches_its_body() -> void:
+	# CI 40163114819: the guest's fly landing was granted, and its first
+	# discovery (at the landing) reached the host while the host's replica and
+	# every recent sample still stood at the take-off point ~87 m back. That
+	# made the stream's error terminal and wedged the round reward. The host now
+	# waits; once its own body is observed there, the resent prefix applies.
+	service.body_position = Vector3(-1.4, 4.65, 14.3)
+	service._record_pose(2, "meadows", Vector3(-1.4, 4.65, 14.3), Time.get_ticks_msec() - 100)
+	var landing := [80.0, 0.9, 46.0]
+	var stream := _first_discovery_after(landing)
+	assert_eq(stream.error, "", "not refused while the host's view trails the landing")
+	assert_eq(stream.cursor.sequence, 1, "nothing applied from an unobserved pose")
+	assert_eq(int(stream.pose_wait.sequence), 2)
+	assert_false(stream.first_input_refusal.is_empty(), "the first refusal stays recorded for diagnostics")
+	service.body_position = Vector3(80.0, 0.9, 46.0) # the host's replica arrives
+	service.receive_host(2, _first_discovery_packet(landing))
+	assert_eq(stream.error, "")
+	assert_eq(stream.cursor.sequence, 2, "the same input applies against the host-observed pose")
+	assert_false(stream.has("pose_wait"), "the wait ends with the accepted input")
+
+func test_a_waiting_first_discovery_is_accepted_through_a_host_sample_taken_meanwhile() -> void:
+	# The replica passed the landing during the wait and moved on: the host's
+	# current body is elsewhere, but its own recent sample stood there.
+	service.body_position = Vector3(-1.4, 4.65, 14.3)
+	var landing := [80.0, 0.9, 46.0]
+	var stream := _first_discovery_after(landing)
+	assert_eq(stream.error, "")
+	assert_eq(stream.cursor.sequence, 1)
+	service._record_pose(2, "meadows", Vector3(80.0, 0.9, 46.0), Time.get_ticks_msec() - 200)
+	service.body_position = Vector3(-30.0, 0.9, 46.0) # 110 m on: only the sample matches
+	service.receive_host(2, _first_discovery_packet(landing))
+	assert_eq(stream.error, "")
+	assert_eq(stream.cursor.sequence, 2, "accepted against the host's own sample, inside the window")
+	assert_false(stream.has("pose_wait"))
+
+func test_a_far_first_discovery_resent_inside_the_wait_is_still_not_applied() -> void:
+	service.body_position = Vector3(-4.4, 0.9, 21.6)
+	var far := [186.2, 0.9, 14.0] # 191 m from the body; no sample anywhere near
+	var stream := _first_discovery_after(far)
+	var since := int(stream.pose_wait.since_ms)
+	service.receive_host(2, _first_discovery_packet(far)) # the owner's resend, inside the window
+	assert_eq(stream.cursor.sequence, 1, "an unobserved pose is never applied, however often it is resent")
+	assert_eq(stream.error, "", "still waiting inside the window")
+	assert_eq(int(stream.pose_wait.since_ms), since, "a resend does not restart the wait")
+	_age_pose_wait(stream)
+	service.receive_host(2, _first_discovery_packet(far))
+	assert_eq(stream.error, "owner_passive_initial_pose_unconfirmed")
 	assert_eq(stream.cursor.sequence, 1)
 
 func test_an_observed_pose_older_than_the_lag_window_does_not_count() -> void:
 	service.body_position = Vector3(-4.4, 0.9, 21.6)
 	service._record_pose(2, "meadows", Vector3(96.2, 0.9, 14.0), Time.get_ticks_msec() - 2500)
 	var stream := _first_discovery_after([96.2, 0.9, 14.0])
+	_first_discovery_resent_late(stream, [96.2, 0.9, 14.0])
 	assert_eq(stream.error, "owner_passive_initial_pose_unconfirmed", "2.5 s old: outside INITIAL_POSE_LAG_S")
 
 func test_a_pose_observed_in_another_realm_does_not_count_and_a_realm_change_clears_the_ring() -> void:
@@ -424,6 +495,7 @@ func test_a_pose_observed_in_another_realm_does_not_count_and_a_realm_change_cle
 	var now := Time.get_ticks_msec()
 	service._record_pose(2, "water", Vector3(96.2, 0.9, 14.0), now - 300)
 	var stream := _first_discovery_after([96.2, 0.9, 14.0])
+	_first_discovery_resent_late(stream, [96.2, 0.9, 14.0])
 	assert_eq(stream.error, "owner_passive_initial_pose_unconfirmed", "a water pose never matches a meadows input")
 	service._record_pose(2, "meadows", Vector3(0, 0, 0), now)
 	assert_eq((service._pose_ring[2].samples as Array).size(), 1, "the realm change started a fresh ring")

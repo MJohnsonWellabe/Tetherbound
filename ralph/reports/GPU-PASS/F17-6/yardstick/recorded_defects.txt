@@ -1,0 +1,10 @@
+Nm: none
+Ty: "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall"; "Structural posts sit in the camera's near field and frame or block the views"; "The shrine end has no warm focal point that draws the eye"
+Ij: "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall"; "Structural posts sit in the camera's near field and frame or block the views"; "The shrine end has no warm focal point that draws the eye"
+Gm: "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall"; "Structural posts sit in the camera's near field and frame or block the views"; "The shrine end has no warm focal point that draws the eye"
+Bb: "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall"; "Structural posts sit in the camera's near field and frame or block the views"; "The shrine end has no warm focal point that draws the eye"
+Is: "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall"; "Structural posts sit in the camera's near field and frame or block the views"; "The shrine end has no warm focal point that draws the eye"
+Iw: "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall"; "Structural posts sit in the camera's near field and frame or block the views"; "The shrine end has no warm focal point that draws the eye"
+Vy: none
+Zz: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Xl: none

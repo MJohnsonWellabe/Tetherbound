@@ -1,0 +1,47 @@
+[
+    {
+        "label":  "F36#1 main stormraven recipe|shipping Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-stormraven-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-stormraven-shipping.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#1 main tidecoil recipe|shipping Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-tidecoil-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-tidecoil-shipping.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#1 main frostclaw recipe|shipping Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-frostclaw-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-frostclaw-shipping.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#1 main solmane recipe|shipping Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-solmane-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-solmane-shipping.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "F36#1 main aquaryn recipe|shipping Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-aquaryn-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-aquaryn-shipping.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, hit recover, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+
+                    ]
+    }
+]

@@ -1,0 +1,66 @@
+{
+ "anchors": {
+  "craft:before": [
+   4.4,
+   4.5,
+   4.0
+  ],
+  "craft:after": [
+   6.2,
+   6.6,
+   6.6
+  ],
+  "f36_0_gap:C4A": [
+   5.3,
+   5.4,
+   5.6
+  ],
+  "f36_0_gap:C4B": [
+   5.7,
+   6.4,
+   6.3
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.2,
+   4.4,
+   3.4
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.8,
+   5.5,
+   4.3
+  ],
+  "f36_0_npc:C1A": [
+   6.0,
+   7.0,
+   7.0
+  ],
+  "f36_0_npc:C1B": [
+   6.0,
+   7.0,
+   7.0
+  ]
+ },
+ "candidates": {
+  "F22#4 EF overlay Medium vs Low | F22-ef-low": [
+   5.9,
+   5.8,
+   5.2
+  ],
+  "F22#4 EF overlay Medium vs Low | F22-ef-overlay": [
+   6.3,
+   6.5,
+   6.2
+  ],
+  "F22#4 EF overlay Medium vs shipped Medium | F22-ef-overlay": [
+   6.1,
+   6.4,
+   6.1
+  ],
+  "F22#4 EF overlay Medium vs shipped Medium | F22-ef-shipped": [
+   4.4,
+   4.3,
+   4.4
+  ]
+ }
+}

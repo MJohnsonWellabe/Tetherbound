@@ -144,3 +144,40 @@ func test_station_candidates_refuse_a_world_queued_for_deletion() -> void:
 	var nodes: Array[Node] = [kitchen]
 	assert_true(HOME.placed_buildings(world, nodes, "kitchen").is_empty())
 	world.free()
+
+## A station placed beside the Kitchen must leave its tier 1-4 attachment
+## sockets clear: the Forge east of it covered tier 3 (training_t4_kitchen_3).
+func test_plot_spots_keep_the_kitchen_attachment_sockets_clear() -> void:
+	var sockets: Array[Vector2] = HOME.kitchen_sockets(Vector2(-10.0, 14.0), 0.0)
+	assert_eq(sockets.size(), 4)
+	assert_true(sockets[0].distance_to(Vector2(-13.0, 14.0)) < 0.01, "tier 1 west")
+	assert_true(sockets[1].distance_to(Vector2(-10.0, 16.5)) < 0.01, "tier 2 north")
+	assert_true(sockets[2].distance_to(Vector2(-7.0, 14.0)) < 0.01, "tier 3 east")
+	assert_true(sockets[3].distance_to(Vector2(-10.0, 11.5)) < 0.01, "tier 4 south")
+	assert_false(HOME.spot_clear_of_sockets(Vector2(-6.0, 14.0), sockets), "the old Forge spot covers tier 3")
+	assert_false(HOME.spot_clear_of_sockets(Vector2(-10.0, 10.0), sockets), "covers tier 4")
+	assert_true(HOME.spot_clear_of_sockets(Vector2(-8.0, 20.0), sockets))
+	assert_true(HOME.spot_clear_of_sockets(Vector2(-12.0, 20.0), sockets), "the Altar spot")
+
+## A save made before the socket rule keeps its Forge on the tier-3 socket;
+## kitchen() dismantles a non-attachment building found there.
+func test_only_non_attachment_buildings_count_as_socket_blockers() -> void:
+	var cfg: Dictionary = preload("res://scripts/build/station_rules.gd").config()
+	assert_false(preload("res://scripts/build/station_rules.gd").attachment(cfg, "kitchen_meadows").is_empty())
+	assert_true(preload("res://scripts/build/station_rules.gd").attachment(cfg, "forge").is_empty())
+	assert_eq(HOME.DISMANTLE_STANDOFFS.size(), 5)
+
+## From behind a station, the walk to its prompt comes round the player's own
+## side to the working face (training_t4_feed: the Kitchen's north-face prompt
+## from the south-west).
+func test_prompt_walk_comes_round_to_the_working_face() -> void:
+	var kitchen := Vector3(-10.0, 0.9, 14.0)
+	var prompt := Vector3(-10.0, 1.8, 14.95)
+	var side := HOME.front_side_waypoint(prompt, kitchen, Vector3(-11.6, 0.9, 12.4))
+	assert_true(side != Vector3.INF)
+	assert_true(side.x < -11.2, "west of the Kitchen body, on the player's side")
+	assert_true(side.z > 14.7 and side.z < 15.95, "in the pocket before the tier-2 attachment")
+	var north := HOME.front_side_waypoint(prompt, kitchen, Vector3(-10.6, 0.9, 21.6))
+	assert_true(north.x < -10.55 and north.z < 15.95, "from the north: into the pocket beside the tier-2 attachment")
+	assert_eq(HOME.front_side_waypoint(prompt, kitchen, Vector3(-10.5, 0.9, 15.6)), Vector3.INF, "already at the face")
+	assert_true(HOME.front_side_waypoint(prompt, kitchen, Vector3(-8.0, 0.9, 12.0)).x > -8.8, "east side from the south-east")

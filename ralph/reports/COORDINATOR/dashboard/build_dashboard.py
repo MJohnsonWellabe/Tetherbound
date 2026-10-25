@@ -28,6 +28,13 @@ _ORIG = {i for _n, _l, ids in CHAPTERS for i in ids}
 _crit_rows = json.loads((HERE / "criteria.json").read_text(encoding="utf-8"))["rows"]
 for _wave in dict.fromkeys(r.get("chapter", "Redesign") for r in _crit_rows if r["id"] not in _ORIG):
     CHAPTERS.append((_wave, "R", [r["id"] for r in _crit_rows if r["id"] not in _ORIG and r.get("chapter", "Redesign") == _wave]))
+# Owner 25 Oct ("why aren't they with the rest of the visual cards"): every GPU-judged
+# visual criterion sits in one Visual section at the end; the visual criteria of other
+# features move there as one card, and their home rows count only what is left.
+VISUAL_ROWS = ["F36", "F38", "F39", "F40", "F41"]
+VISUAL_OTHER = ["F04#6", "F08#3", "F10#2", "F13#5", "F17#6", "F22#4", "F26#3"]
+CHAPTERS = [(n, l, [i for i in ids if i not in VISUAL_ROWS]) for n, l, ids in CHAPTERS]
+CHAPTERS.append(("Visual · judged on the GPU", "V", ["VISUAL_OTHER"] + VISUAL_ROWS))
 
 
 def norm(s):
@@ -47,6 +54,10 @@ rows = {r["id"]: r for r in crit["rows"]}
 all_c = [x for r in crit["rows"] for x in r.get("criteria", [])]
 counts = {k: sum(1 for x in all_c if norm(x.get("status")) == k) for k in ORDER}
 overall = round(sum(pct(r) for r in crit["rows"]) / max(1, len(crit["rows"])))
+_open_by = {"F36": 0, "look": 0, "other": 0}
+for _r in crit["rows"]:
+    _o = sum(1 for x in _r.get("criteria", []) if norm(x.get("status")) != "met")
+    _open_by["F36" if _r["id"] == "F36" else "look" if _r["id"] in ("F38", "F39", "F40", "F41") else "other"] += _o
 # Owner 2026-10-07: a criterion counts once evidenced on a lane branch; show how many are not yet on main.
 evidenced_only = sum(1 for x in all_c if norm(x.get("status")) == "met" and str(x.get("note", "")).startswith("Landed: Evidenced"))
 redesign_c = [x for r in crit["rows"] if r["id"] not in _ORIG for x in r.get("criteria", [])]
@@ -73,31 +84,70 @@ def stack(cs):
 
 
 # ---- sections -------------------------------------------------------------
-# Owner 12 Oct: F38-F41 are their own features on the Visual catalog tab.
-VISUAL_FEATURES = {"F38", "F39", "F40", "F41"}
+# Owner 24 Oct: every feature, F38-F41 included, sits on this tab; a row with
+# per-unit sub-rows shows them as nested cards whose counts add up to the row total.
+VISUAL_FEATURES = set()
+_GROUP_NAMES = {"0": "priority assets", "1": "top-20 catalog items", "2": "impact >12 catalog items"}
+
+
+def _crit_li(x, label=""):
+    return (f'<li class="crit s-{norm(x.get("status"))}"><div class="crit-head">{pill(x.get("status"))}'
+            f'<span class="crit-text">{("<b>" + E(label) + "</b> ") if label else ""}{E(x.get("text", ""))}</span></div>'
+            f'<dl><div><dt>Evidence</dt><dd>{E(x.get("evidence") or "None recorded")}</dd></div>'
+            f'<div><dt>Remaining</dt><dd>{E(x.get("gap") or "Nothing")}</dd></div></dl></li>')
+
+
+def _subcard(title, group):
+    m = sum(1 for x in group if norm(x.get("status")) == "met")
+    p_ = round(100 * m / max(1, len(group)))
+    return (f'<li class="crit sub"><details class="frow"><summary><span class="fid"></span><span class="ftitle">{E(title)}</span>'
+            f'<span class="fnum">{m}/{len(group)} met</span>{bar(p_)}<span class="fpct">{p_}%</span>{stack(group)}</summary>'
+            f'<ol class="crits">{"".join(_crit_li(x, x.get("subject", "")) for x in group)}</ol></details></li>')
 chapter_html = []
 for name, letter, ids in CHAPTERS:
     cards = []
+    _shown = []
     for fid in ids:
-        r = rows.get(fid)
+        if fid == "VISUAL_OTHER":
+            _vo = []
+            for _sel in VISUAL_OTHER:
+                _f, _, _i = _sel.partition("#")
+                _c = rows.get(_f, {}).get("criteria", [])
+                if _i.isdigit() and int(_i) < len(_c):
+                    _vo.append(dict(_c[int(_i)], text=f"{_sel} · " + str(_c[int(_i)].get("text", ""))))
+            r = {"title": "Visual criteria from other features", "criteria": _vo}
+        else:
+            r = rows.get(fid)
+            if r and any(s.startswith(fid + "#") for s in VISUAL_OTHER):
+                r = dict(r, criteria=[x for _n, x in enumerate(r.get("criteria", []))
+                                      if f"{fid}#{_n}" not in VISUAL_OTHER])
         if not r or fid in VISUAL_FEATURES:
             continue
+        _shown.extend(r.get("criteria", []))
         p = pct(r)
         cs = r.get("criteria", [])
         met = sum(1 for x in cs if norm(x.get("status")) == "met")
-        items = "".join(
-            f'<li class="crit s-{norm(x.get("status"))}"><div class="crit-head">{pill(x.get("status"))}'
-            f'<span class="crit-text">{E(x.get("text", ""))}</span></div>'
-            f'<dl><div><dt>Evidence</dt><dd>{E(x.get("evidence") or "None recorded")}</dd></div>'
-            f'<div><dt>Remaining</dt><dd>{E(x.get("gap") or "Nothing")}</dd></div></dl></li>'
-            for x in cs)
+        _top = [x for x in cs if not x.get("parent")]
+        _groups = {}
+        for x in cs:
+            if x.get("parent"):
+                _groups.setdefault(x["parent"], []).append(x)
+        _parents = {}
+        for _n, x in enumerate(_top):
+            _parents[f"{fid}#{x.get('audit_index', _n)}"] = x
+        items = (_subcard(f"{fid} biome-level criteria" if fid in ("F38", "F39", "F40", "F41") else f"{fid} other criteria", _top)
+                 if _groups else "".join(_crit_li(x) for x in _top))
+        for _par, _g in _groups.items():
+            _k = _par.split("#")[-1]
+            _name = "roster pose subjects" if fid == "F36" and _k == "1" else _GROUP_NAMES.get(_k, "items")
+            items += _subcard(f"{fid} ({_k}) {_name}", _g)
         cards.append(
             f'<details class="frow" id="{fid}"><summary>'
             f'<span class="fid">{fid}</span><span class="ftitle">{E(r.get("title", ""))}</span>'
             f'<span class="fnum">{met}/{len(cs)} met</span>{bar(p)}<span class="fpct">{p}%</span>{stack(cs)}'
             f'</summary><ol class="crits">{items}</ol></details>')
-    ch_rows = [rows[i] for i in ids if i in rows]
-    ch_pct = round(sum(pct(r) for r in ch_rows) / max(1, len(ch_rows)))
+    # Owner 25 Oct: the section figure is met / total over the criteria shown in it.
+    ch_pct = round(100 * sum(1 for x in _shown if norm(x.get("status")) == "met") / max(1, len(_shown)))
     if not cards:
         continue
     cards_html = "".join(cards)
@@ -295,7 +345,7 @@ def render_gantt(_plan_path, heading, hid, blurb, summary=None):
         cs = [x for f in feats for x in _items(f)]
         if not cs:
             return 0.0, 0, 0
-        done = sum(1 for x in cs if norm(x.get("status")) in ("met", "blocked"))
+        done = sum(1 for x in cs if norm(x.get("status")) == "met")  # owner 24 Oct: blocked is not done
         return 100.0 * sum(W.get(norm(x.get("status")), 0) for x in cs) / len(cs), done, len(cs)
 
     # Freeze each bar's starting progress the first time the plan is rendered,
@@ -422,6 +472,16 @@ plan_html = render_gantt(HERE / "plan.json", "Delivery plan", "plan-h",
 # ---- visual catalog tab (owner 12 Oct) ----------------------------------------
 _VPILL = {"done": "met", "parked": "failing", "open": "not_started"}
 _VLABEL = {"done": "Done", "parked": "Parked", "open": "Open"}
+# Task status follows the Acceptance tab's per-item rows (owner 24 Oct: one source,
+# GPU-judged), so the two tabs cannot disagree; the catalog file keeps the defect text.
+_vboard = {x["subject"]: norm(x.get("status")) for r_ in crit["rows"] if r_["id"] in ("F38", "F39", "F40", "F41")
+           for x in r_.get("criteria", []) if x.get("parent")}
+for _b in vcat["biomes"]:
+    for _t in _b["tasks"]:
+        if _t["id"] in _vboard:
+            _s = _vboard[_t["id"]]
+            _t["status"] = "done" if _s == "met" else "parked" if _s in ("failing", "blocked") else "open"
+            _t["note"] = "Board: " + _s.replace("_", " ")
 _vu = {}
 for _b in vcat["biomes"]:
     for _t in _b["tasks"]:
@@ -486,8 +546,8 @@ _vlegend = "".join(f'<span class="leg">{_vpill(k)} {sum(1 for v_ in _vu.values()
 visual_html = (
     '<div class="kpis">'
     f'<div class="kpi"><b>{_vdone} / {len(_vu)}</b><span>Catalog tasks done (each row once across biomes)</span></div>'
-    f'<div class="kpi"><b>{sum(1 for v_ in _vcodex.values() if v_ == "done")} / {len(_vcodex)}</b><span>Codex tasks done (scene, mesh, material, lighting, camera)</span></div>'
-    f'<div class="kpi"><b>{sum(1 for v_ in _vclaude.values() if v_ == "done")} / {len(_vclaude)}</b><span>Claude tasks done (UI and creature-pose rows)</span></div>'
+    f'<div class="kpi"><b>{sum(1 for v_ in _vcodex.values() if v_ == "done")} / {len(_vcodex)}</b><span>Scene, mesh, material, lighting and camera tasks done</span></div>'
+    f'<div class="kpi"><b>{sum(1 for v_ in _vclaude.values() if v_ == "done")} / {len(_vclaude)}</b><span>UI and creature-pose tasks done</span></div>'
     f'<div class="kpi"><b>{_vk["crit_met"]} / {_vk["crit"]}</b><span>F38–F41 criteria met</span></div>'
     f'<div class="kpi"><b>{_vparked}</b><span>Tasks parked (need a fresh approach)</span></div>'
     '</div>'
@@ -495,7 +555,7 @@ visual_html = (
     '<section class="panel"><h2>About this tab</h2><p class="note">Each biome pass is its own feature: its top-20 catalog rows, then every other row over impact 12, '
     'each fixed to the full bar with a before/after code-blind PASS on main, then a full matrix and defect scan. Codex owns scene, mesh, material, lighting and camera rows; '
     'UI rows go to Claude (F42) and creature-pose rows to Claude (F36#1). Planned last, after the main delivery plan; the plan is at the bottom of this tab. '
-    f'Source: ralph/reports/VISUAL/phase2/catalog.csv with the latest judge verdicts ({E(vcat.get("generated_at", ""))}).</p></section>'
+    f'Defects from ralph/reports/VISUAL/phase2/catalog.csv; status from the board (GPU-judged, owner 24 Oct), so this tab and Acceptance agree.</p></section>'
     + "".join(_vsections) + vplan_html)
 
 # A complete document (owner report, 2026-09-30): the board is also served raw by
@@ -548,7 +608,7 @@ h2{{font-size:20px;font-weight:700}} h3{{font-size:16px;font-weight:700}}
 .chapter{{display:grid;gap:8px}}
 .chapter header{{display:flex;align-items:baseline;gap:12px;border-bottom:3px solid var(--chc);padding-bottom:6px}}
 .chpct{{font:600 14px "JetBrains Mono",monospace;color:var(--chc)}}
-.ch-M{{--chc:var(--meadows)}} .ch-C{{--chc:var(--cloud)}} .ch-S{{--chc:var(--storm)}} .ch-T{{--chc:var(--tide)}} .ch-R{{--chc:var(--redesign)}}
+.ch-M{{--chc:var(--meadows)}} .ch-C{{--chc:var(--cloud)}} .ch-S{{--chc:var(--storm)}} .ch-T{{--chc:var(--tide)}} .ch-R{{--chc:var(--redesign)}} .ch-V{{--chc:var(--storm)}}
 .frow{{background:var(--panel);border:1px solid var(--line);border-radius:10px}}
 .frow summary{{list-style:none;cursor:pointer;display:grid;grid-template-columns:44px minmax(0,1fr) auto 120px 44px;grid-template-areas:"id title num meter pct" "id stack stack stack stack";gap:6px 12px;align-items:center;padding:12px 14px}}
 .frow summary::-webkit-details-marker{{display:none}}
@@ -563,6 +623,7 @@ h2{{font-size:20px;font-weight:700}} h3{{font-size:16px;font-weight:700}}
 .seg.s-failing{{background:var(--fail)}} .seg.s-blocked{{background:var(--block)}} .seg.s-not_started{{background:var(--none)}}
 .crits{{margin:0;padding:0 14px 14px 58px;display:grid;gap:10px}}
 .crit{{padding:10px 12px;border-radius:8px;border:1px solid var(--line)}}
+.crit.sub{{padding:0;border:none}} .crit.sub .frow{{border-color:var(--line)}} .crit.sub .crits{{padding-left:14px}}
 .crit-head{{display:flex;gap:10px;align-items:flex-start}} .crit-text{{font-weight:500}}
 .crit dl{{margin:8px 0 0;display:grid;gap:4px;font-size:13.5px}}
 .crit dl div{{display:grid;grid-template-columns:86px minmax(0,1fr);gap:8px}}
@@ -578,9 +639,9 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
 .tabs{{display:flex;gap:6px;border-bottom:1px solid var(--line)}}
 .tabs label{{font:600 14px Figtree,sans-serif;padding:8px 14px;border-radius:8px 8px 0 0;cursor:pointer;color:var(--muted);border:1px solid transparent;border-bottom:none}}
 .tabsel{{position:absolute;opacity:0;pointer-events:none}}
-#tab-acc:checked ~ .tabs label[for=tab-acc], #tab-plan:checked ~ .tabs label[for=tab-plan], #tab-lanes:checked ~ .tabs label[for=tab-lanes], #tab-vis:checked ~ .tabs label[for=tab-vis]{{color:var(--ink);background:var(--panel);border-color:var(--line)}}
-#tab-acc:focus-visible ~ .tabs label[for=tab-acc], #tab-plan:focus-visible ~ .tabs label[for=tab-plan], #tab-lanes:focus-visible ~ .tabs label[for=tab-lanes], #tab-vis:focus-visible ~ .tabs label[for=tab-vis]{{outline:2px solid var(--accent)}}
-.pane{{display:none;gap:28px;grid-template-columns:minmax(0,1fr)}} .wrap,.panel{{grid-template-columns:minmax(0,1fr)}} #tab-acc:checked ~ .pane-acc, #tab-plan:checked ~ .pane-plan, #tab-lanes:checked ~ .pane-lanes, #tab-vis:checked ~ .pane-vis{{display:grid}}
+#tab-acc:checked ~ .tabs label[for=tab-acc], #tab-plan:checked ~ .tabs label[for=tab-plan], #tab-lanes:checked ~ .tabs label[for=tab-lanes]{{color:var(--ink);background:var(--panel);border-color:var(--line)}}
+#tab-acc:focus-visible ~ .tabs label[for=tab-acc], #tab-plan:focus-visible ~ .tabs label[for=tab-plan], #tab-lanes:focus-visible ~ .tabs label[for=tab-lanes]{{outline:2px solid var(--accent)}}
+.pane{{display:none;gap:28px;grid-template-columns:minmax(0,1fr)}} .wrap,.panel{{grid-template-columns:minmax(0,1fr)}} #tab-acc:checked ~ .pane-acc, #tab-plan:checked ~ .pane-plan, #tab-lanes:checked ~ .pane-lanes{{display:grid}}
 .gscroll{{overflow-x:auto}} .gantt{{min-width:980px;display:grid;gap:6px}}
 .glane{{display:grid;grid-template-columns:190px minmax(0,1fr);gap:10px;align-items:center}}
 .gname{{font-weight:600;font-size:13px;display:grid}} .gname .meta{{font-weight:400;font-size:11.5px}}
@@ -614,21 +675,19 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
   <input type="radio" name="tab" id="tab-acc" class="tabsel" checked>
   <input type="radio" name="tab" id="tab-plan" class="tabsel">
   <input type="radio" name="tab" id="tab-lanes" class="tabsel">
-  <input type="radio" name="tab" id="tab-vis" class="tabsel">
   <div class="top">
     <span class="eyebrow">Project update · F01–{E(last_id)} acceptance</span>
     <h1>Tetherbound Acceptance Board</h1>
     <p class="meta">Updated {E(crit.get("generated_at") or status.get("updated", ""))} · main <code>{E(crit.get("main_sha", ""))}</code> · batch in flight <code>{E(crit.get("batch4_sha", ""))}</code> · rebuilt hourly by the coordinator</p>
   </div>
-  <nav class="tabs" aria-label="Board views"><label for="tab-acc">Acceptance</label><label for="tab-plan">Delivery plan</label><label for="tab-lanes">Active lanes</label><label for="tab-vis">Visual catalog (F38–F41)</label></nav>
+  <nav class="tabs" aria-label="Board views"><label for="tab-acc">Acceptance</label><label for="tab-plan">Delivery plan</label><label for="tab-lanes">Active lanes</label></nav>
   <div class="pane pane-plan">{plan_html}</div>
   <div class="pane pane-lanes">{active_lanes_html}</div>
-  <div class="pane pane-vis">{visual_html}</div>
   <div class="pane pane-acc">
   <div class="kpis">
     <div class="kpi"><b>{accepted} / {len(crit["rows"])}</b><span>F rows accepted (every criterion met)</span></div>
-    <div class="kpi"><b>{overall}%</b><span>Criteria met, averaged across features (met criteria only)</span></div>
-    <div class="kpi"><b>{counts["met"]} / {len(all_c)}</b><span>Criteria met: {counts["met"] - evidenced_only} on main, {evidenced_only} evidenced on lane branches</span></div>
+    <div class="kpi"><b>{len(all_c) - counts["met"]}</b><span>Criteria not done: {_open_by["F36"]} creatures (F36), {_open_by["look"]} biome looks (F38–F41), {_open_by["other"]} everything else</span></div>
+    <div class="kpi"><b>{counts["met"]} / {len(all_c)}</b><span>Criteria met on main</span></div>
     <div class="kpi"><b>{redesign_met} / {len(redesign_c)}</b><span>Redesign criteria met (F16 onward)</span></div>
     <div class="kpi"><b>{counts["failing"] + counts["blocked"]}</b><span>Criteria failing or blocked</span></div>
   </div>

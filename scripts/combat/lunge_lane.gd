@@ -55,6 +55,10 @@ var _xray_alpha := 0.0
 ## F22#4 storm tell: STYLE.CRACKLE_GLSL filaments inside the lane (0 = off).
 var _crackle := 0.0
 var _xray: MeshInstance3D = null
+## Bodied-tell curtains on the two rails (STYLE.curtain_height; null = off).
+var _curtain: MeshInstance3D = null
+## Round-2 kicked dust drifting down the rails (STYLE.draw_dust; null = off).
+var _dust: MultiMeshInstance3D = null
 
 ## P2-093/P2-063 soft style (`telegraph.soft_style`; empty = off).
 var _soft: Dictionary = {}
@@ -130,6 +134,12 @@ func _ready() -> void:
 		_xray.material_override = ghost_material
 		_xray.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(_xray)
+	if not _soft.is_empty() and STYLE.curtain_height(_soft, 1.0) > 0.0:
+		_curtain = STYLE.make_curtain(AABB())
+		_instance.add_child(_curtain)
+	if not _soft.is_empty() and STYLE.dust_enabled(_soft):
+		_dust = STYLE.make_dust()
+		_instance.add_child(_dust)
 	_refresh_aabb()
 
 
@@ -252,6 +262,10 @@ func _refresh_aabb() -> void:
 	_instance.custom_aabb = AABB(Vector3(-reach, -4.0, -reach), Vector3(reach * 2.0, 8.0, reach * 2.0))
 	if _xray != null:
 		_xray.custom_aabb = _instance.custom_aabb
+	if _curtain != null:
+		_curtain.custom_aabb = _instance.custom_aabb
+	if _dust != null:
+		_dust.custom_aabb = _instance.custom_aabb
 
 
 ## World offset from the lane origin for a point `along` the heading and
@@ -367,6 +381,34 @@ func _draw_soft(base: Color, fade: float) -> void:
 		var phase := fmod(_life / CHEVRON_PERIOD + float(i) / float(CHEVRONS), 1.0)
 		var tip := _start + 0.6 + phase * maxf(0.1, _length - 1.2)
 		_chevron(tip, arm, Color(core, core.a * sin(phase * PI)))
+	if _curtain != null or _dust != null:
+		var rails: Array = []
+		for side: float in [-1.0, 1.0]:
+			var rail := PackedVector3Array()
+			var along := _start
+			while true:
+				rail.append(_point(along, side * _half_width))
+				if along >= _start + _length - 0.001:
+					break
+				along = minf(_start + _length, along + STEP)
+			rails.append(rail)
+		STYLE.draw_curtain(_curtain, rails, base, glow_alpha * float(_soft.get("curtain_alpha", 0.6)),
+			STYLE.curtain_height(_soft, build), _soft, _life)
+		var dust_lines := rails
+		var fills := STYLE.fill_fractions(_soft, build)
+		if not fills.is_empty():
+			dust_lines = rails.duplicate()
+			for fraction: float in fills:
+				for side: float in [-1.0, 1.0]:
+					var row := PackedVector3Array()
+					var along := _start
+					while true:
+						row.append(_point(along, side * _half_width * (1.0 - fraction)))
+						if along >= _start + _length - 0.001:
+							break
+						along = minf(_start + _length, along + STEP)
+					dust_lines.append(row)
+		STYLE.draw_dust(_dust, dust_lines, _soft, build, _life, fade, true)
 
 
 ## Round 4 (P2-063 judge: "reads as a static UI outline, nothing shows the

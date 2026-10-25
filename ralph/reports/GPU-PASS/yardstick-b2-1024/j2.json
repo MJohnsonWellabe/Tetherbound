@@ -1,0 +1,11 @@
+{"sets": {
+"Ag": {"A": {"bar_a": 6.4}, "B": {"bar_a": 6.3}, "bar_b": "no"},
+"Yx": {"A": {"bar_a": 4.0, "defects": {"boss": "PARTIAL", "magenta": "FIXED", "impact": "FIXED", "ghost": "PRESENT"}}, "B": {"bar_a": 5.3, "defects": {"boss": "PARTIAL", "magenta": "FIXED", "impact": "PARTIAL", "ghost": "FIXED"}}, "bar_b": "no"},
+"Vl": {"A": {"bar_a": 6.8}, "B": {"bar_a": 5.6}, "bar_b": "no"},
+"Cv": {"A": {"bar_a": 3.0, "defects": {"wall": "PRESENT"}}, "B": {"bar_a": 5.0, "defects": {"wall": "PARTIAL"}}, "bar_b": "no"},
+"Oc": {"A": {"bar_a": 5.5, "defects": {"bare": "PARTIAL", "posts": "PRESENT", "shrine": "PARTIAL"}}, "B": {"bar_a": 4.3, "defects": {"bare": "PARTIAL", "posts": "PRESENT", "shrine": "PARTIAL"}}, "bar_b": "no"},
+"Fc": {"A": {"bar_a": 5.0, "defects": {"bare": "PARTIAL", "posts": "PARTIAL", "shrine": "PARTIAL"}}, "B": {"bar_a": 4.2, "defects": {"bare": "PARTIAL", "posts": "PARTIAL", "shrine": "PARTIAL"}}, "bar_b": "no"},
+"Nv": {"A": {"bar_a": 5.3, "defects": {"boss": "PARTIAL", "magenta": "FIXED", "impact": "PARTIAL", "ghost": "FIXED"}}, "B": {"bar_a": 4.0, "defects": {"boss": "PARTIAL", "magenta": "FIXED", "impact": "FIXED", "ghost": "PRESENT"}}, "bar_b": "no"},
+"Ix": {"A": {"bar_a": 5.8}, "B": {"bar_a": 3.8}, "bar_b": "no"},
+"Ko": {"A": {"bar_a": 5.5, "defects": {"bare": "PARTIAL", "posts": "PARTIAL", "shrine": "PARTIAL"}}, "B": {"bar_a": 3.8, "defects": {"bare": "PARTIAL", "posts": "PARTIAL", "shrine": "PARTIAL"}}, "bar_b": "no"}},
+"note": "Defect keys abbreviated; full names in recorded_defects.txt. Judge 2: ghost sides Yx A / Nv B mauve-grey see-through otter every frame with strong white splashes; solid sides warmer with smaller sprays; player creature unreadable; HUD over lower third; Hall B white streaks."}

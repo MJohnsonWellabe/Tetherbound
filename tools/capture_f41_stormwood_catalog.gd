@@ -40,6 +40,14 @@ const EXTRA_ANGLE_SUBJECTS := [
 const THREE_VIEW_OFFSETS := [-90.0, 0.0, 90.0]
 const SIX_VIEW_OFFSETS := [-150.0, -90.0, -30.0, 30.0, 90.0, 150.0]
 const ASHFOOT_CENTER := Vector2(-365.0, 460.0)
+## Survey-lens clearance (GPU F41#0 verdict, 25 Oct: wild creatures wandering
+## into the fixed Capacitor Grove cameras blocked whole frames, 1.07 Medium).
+## Before each frame, a wild body within this radius of the camera or the
+## trainer is set down just outside it, on the ground, along its own bearing
+## from the trainer. Disclosed per frame in the receipt (`survey_clearance`);
+## the population, species and everything past the radius are unchanged.
+const SURVEY_CLEARANCE_M := 18.0
+const SURVEY_CLEARANCE_MARGIN_M := 3.0
 
 var _requested_preset := ""
 var _source_commit := ""
@@ -131,6 +139,12 @@ func _matrix_stands() -> Array:
 			# This exact Crown Arch view is a separate P2-041 carryover witness.
 			if name == "The Crown Arch":
 				continue
+			# A spot may carry its own catalogue stand (`f41_survey`, old and new
+			# coordinates and its _why in the spot) when the teleport arrival
+			# must stay where it is.
+			var survey: Variant = spot.get("f41_survey", null)
+			if survey is Dictionary:
+				spot = spot.merged(survey, true)
 			var at := _parse_position(spot.get("position", null))
 			if not at.is_finite():
 				_failures.append("F41 has an invalid authored stand: " + name)
@@ -224,11 +238,43 @@ func _matrix_pass(aftermath: bool) -> void:
 
 
 func _capture(frame_id: String, description: String, full_size: bool, extra: Dictionary = {}) -> void:
+	var cleared := _clear_survey_lens()
 	var receipt: Dictionary = await _stormwood_support_receipt(frame_id)
 	if receipt.is_empty():
 		return
+	receipt["survey_clearance"] = {"radius_m": SURVEY_CLEARANCE_M, "moved": cleared}
 	await super._capture(frame_id, description, full_size,
 		extra.merged({"stormwood_support_receipt": receipt}, true))
+
+
+func _clear_survey_lens() -> Array:
+	var moved: Array = []
+	var director: Node = _world.get_node_or_null(^"EncounterDirector")
+	if director == null or not director.has_method("wild_creatures") or _player == null or _camera == null:
+		return moved
+	var trainer := Vector2(_player.global_position.x, _player.global_position.z)
+	var lens := Vector2(_camera.global_position.x, _camera.global_position.z)
+	for wild: Variant in director.call("wild_creatures"):
+		var body := wild as Node3D
+		if body == null or not is_instance_valid(body) or not body.is_inside_tree():
+			continue
+		var at := Vector2(body.global_position.x, body.global_position.z)
+		if at.distance_to(trainer) >= SURVEY_CLEARANCE_M and at.distance_to(lens) >= SURVEY_CLEARANCE_M:
+			continue
+		var bearing := (at - trainer).normalized() if at.distance_squared_to(trainer) > 0.01 else Vector2.RIGHT
+		var to := trainer + bearing * (SURVEY_CLEARANCE_M + SURVEY_CLEARANCE_MARGIN_M)
+		# Leaving the trainer's side can still leave the body by the lens.
+		if to.distance_to(lens) < SURVEY_CLEARANCE_M:
+			to = lens + (to - lens).normalized() * (SURVEY_CLEARANCE_M + SURVEY_CLEARANCE_MARGIN_M)
+		var ground := float(_world.call("ground_height_at", to.x, to.y))
+		if not is_finite(ground):
+			continue
+		var from := body.global_position
+		body.global_position = Vector3(to.x, ground + 0.1, to.y)
+		if body is CharacterBody3D:
+			(body as CharacterBody3D).velocity = Vector3.ZERO
+		moved.append({"node": str(body.name), "from": [from.x, from.y, from.z], "to": [to.x, ground + 0.1, to.y]})
+	return moved
 
 
 func _stormwood_support_receipt(frame_id: String) -> Dictionary:
@@ -271,8 +317,16 @@ func _stormwood_support_receipt(frame_id: String) -> Dictionary:
 			_failures.append(frame_id + ": near rain was not suppressed under the actual Ashfoot roof")
 			return {}
 	elif frame_id.begins_with("ashfoot_shelter_outside_"):
-		if roofed or sheltered or surge_sheltered:
-			_failures.append(frame_id + ": Ashfoot 11 m exterior incorrectly received roof/lightning shelter")
+		if roofed:
+			_failures.append(frame_id + ": Ashfoot 11 m exterior incorrectly received the roof")
+			return {}
+		# 11 m out is still inside the Ashfoot camp safe zone (stormwood_surge.json
+		# safe_zones.ashfoot, r 42; WORLD §5.2 "camps with rods ... are safe"), so
+		# lightning shelter there is the zone rule's own answer, not the roof's.
+		var region := str(_surge.call("region_at", _player.global_position))
+		var zone_safe := bool(_lightning.get("rules").call("sheltered", _player.global_position, region, false, []))
+		if sheltered != zone_safe:
+			_failures.append(frame_id + ": Ashfoot 11 m exterior lightning shelter %s disagrees with the camp safe-zone rule %s" % [sheltered, zone_safe])
 			return {}
 		if expected_phase == "break" and rain_ratio < 0.10:
 			_failures.append(frame_id + ": near rain did not remain visible outside the Ashfoot roof")

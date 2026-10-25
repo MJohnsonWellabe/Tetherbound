@@ -1,0 +1,29 @@
+# F25#4 confirmation on main (local): same harness as the baseline and the fix proof.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"
+$root = "D:\tb-gpu-runs\out\F25-main"
+$env:TB_GRADE_VARIANT = ""; $env:TB_RUN_TIMEOUT_MIN = "20"; $env:TB_F25_DIAG = ""
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+New-Item -ItemType Directory -Force $root | Out-Null
+$env:APPDATA = "D:\tb-gpu-runs\appdata-Medium"
+$p = Start-Process -FilePath $godot -ArgumentList "--headless --path D:\tb-gpu-pass --import" -NoNewWindow -PassThru -RedirectStandardOutput "$root\import.log" -RedirectStandardError "$root\import.err.log"
+$null = $p.Handle; if (-not $p.WaitForExit(3000000)) { Stop-Process -Id $p.Id -Force; "import killed" }; "import exit=$($p.ExitCode)"
+$sets = [ordered]@{
+    starters = "ultimate_terrapup,ultimate_ripplet,ultimate_galewisp,ultimate_veridian"
+    heavy    = "ultimate_solmane,ultimate_stormursa,ultimate_abyssal_guardian,ultimate_fulgocobra"
+}
+function One($preset, $set, $budget, $prewarm, $mult, $snap, $name) {
+    $dir = "$root\$name"; New-Item -ItemType Directory -Force $dir | Out-Null
+    $env:TB_VFX_BUDGET = $budget; $env:TB_F25_PREWARM = $prewarm; $env:TB_F25_MULT = $mult; $env:TB_F25_SNAP = $snap
+    $env:TB_F25_LOG = ($dir -replace '\\', '/') + "/frames_log.csv"
+    "-- $name"
+    $ua = @("--batch=ultimates", "--stage=meadows", "--simultaneous=$($sets[$set])", "--out={FRAMES}")
+    if ($preset -ne "Low") { $ua = @("--medium") + $ua }
+    & $run -Preset $preset -Script "D:/tb-gpu-runs/tools/f25_four.gd" -OutDir $dir -Resolution "1920x1080" -ProjectPath "D:\tb-gpu-pass" -UserArgs $ua
+}
+foreach ($rep in 1, 2, 3) { foreach ($s in $sets.Keys) { foreach ($b in "on", "off") { One "Medium" $s $b "1" "1" "" "Medium-$s-budget_$b-prewarm-r$rep" } } }
+foreach ($s in $sets.Keys) { One "Medium" $s "on" "0" "1" "" "Medium-$s-budget_on-noprewarm-r1" }
+foreach ($s in $sets.Keys) { foreach ($b in "on", "off") { One "Medium" $s $b "1" "3" "" "Medium-$s-budget_$b-prewarm-x3-r1" } }
+foreach ($b in "on", "off") { One "Medium" "heavy" $b "1" "3" "1" "SNAP-Medium-heavy-budget_$b-x3" }
+foreach ($s in $sets.Keys) { foreach ($pw in "1", "0") { One "Low" $s "on" $pw "1" "" "Low-$s-budget_on-prewarm$pw-r1" } }
+$env:TB_F25_PREWARM = ""; $env:TB_F25_MULT = ""; $env:TB_F25_SNAP = ""
+"f25 fix queue done"

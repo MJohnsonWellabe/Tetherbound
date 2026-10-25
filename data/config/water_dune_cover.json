@@ -157,6 +157,10 @@
   "shore_ecology_candidate": {
     "_comment": "P2-008 authored coastal composition candidate. Disabled until matched before/after blind review. Small, irregular rock, strand-grass and flowering-scrub colonies sit in selected shoreline arcs; route, landmark, camp, NPC and encounter clearances plus terrain support checks remain authoritative.",
     "enabled": false,
+    "_why_shipped_sites": "close-1024 p2 (24 Oct 2026; coordinator: ship Deep Watch alone under beats-main): the Deep Watch site mapped 6.02 against shipping 5.72 on the P2-008-shore day/night views, all three code-blind judges higher (confirming batch, slope 0.991, r 0.86, anchor RMSE 0.62). CPU-provisional evidence only, below the 6.7 bar, so P2-008 is not met. The other islands' sites stay OFF until judged. Evidence: ralph/reports/TIDEWAKE/close-1024/p2.",
+    "shipped_sites": [
+      "f26_deep_watch_beach_transition"
+    ],
     "preserve_islands": [
       "veilfall"
     ],
@@ -323,14 +327,14 @@
       "deep_watch": [
         {
           "id": "f26_deep_watch_beach_transition",
-          "_comment": "Bounded P2-008 candidate from retained source-122 Deep Watch Beach frames water__deep_watch__24__deep_watch_beach__day/night: broad smooth sand with isolated rocks and grass. Centered on the authored Deep Watch landing sector; disabled with the parent candidate pending matched review.",
+          "_comment": "Bounded P2-008 candidate from retained source-122 Deep Watch Beach frames water__deep_watch__24__deep_watch_beach__day/night: broad smooth sand with isolated rocks and grass. Centered on the authored Deep Watch landing sector; disabled with the parent candidate pending matched review. close-1024 p2: the P2-008-shore stand is itself 18 m inland on this bearing and looks out to sea, so the old 18-34 m offsets put every cluster behind the camera (control and candidate frames were identical). Offsets now 4-14 m, between the stand and the waterline, with a wider span and one more cluster so the colonies sit in the judged view.",
           "bearing_deg": -132.797,
-          "half_span_deg": 10.0,
+          "half_span_deg": 14.0,
           "shore_offset_m": [
-            18.0,
-            34.0
+            4.0,
+            14.0
           ],
-          "clusters": 2,
+          "clusters": 3,
           "layers": [
             "stone_pockets",
             "strand_grass"

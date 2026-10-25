@@ -32,6 +32,15 @@ uniform vec4 deep_colour: source_color = vec4(0.11, 0.32, 0.38, 1.0);
 uniform vec4 shallow_colour: source_color = vec4(0.48, 0.68, 0.58, 1.0);
 // How many metres of depth it takes to reach the deep colour.
 uniform float depth_falloff = 1.6;
+// F39 P2-009: a middle band so open water is a gradient from shallow through
+// a mid shelf to the deep colour, instead of one ramp that saturates and then
+// reads as a hard navy band at the shelf edge. mid_depth_m <= 0 keeps the old
+// two-colour ramp exactly. depth_band_break_m wanders the depth every colour
+// ramp reads (the Tidewake offshore variant's included), so no ramp draws a
+// straight contour over a flat seabed; 0 keeps the measured depth everywhere.
+uniform vec4 mid_colour: source_color = vec4(0.11, 0.32, 0.38, 1.0);
+uniform float mid_depth_m = 0.0;
+uniform float depth_band_break_m = 0.0;
 uniform float alpha_deep = 0.88;
 uniform float alpha_shallow = 0.42;
 // Fade alpha to zero over this many metres of depth right at the shoreline,
@@ -88,6 +97,17 @@ void fragment() {
 		ground = height_min + texture(terrain_height, (uv - region.xy) / region.zw).r * (height_max - height_min);
 	}
 	float depth = max(world_pos.y - ground, 0.0);
+	if (depth_band_break_m > 0.0) {
+		// P2-009: a flat seabed turns every depth ramp into a straight contour
+		// across the frame. One broad world-space wander (about 40 m) plus a
+		// finer one bend it into a coastline. World space, so it does not swim
+		// with the camera; faded out in the first metre so the waterline, its
+		// foam band and the alpha feather stay exactly where the ground says.
+		float band_ramp = smoothstep(0.4, 1.5, depth);
+		float broad = texture(foam_noise, uv * 0.025 + vec2(0.17)).r - 0.5;
+		float fine = texture(foam_noise, uv * 0.09 + vec2(0.63)).r - 0.5;
+		depth = max(0.0, depth + (broad * 1.6 + fine * 0.6) * depth_band_break_m * band_ramp);
+	}
 
 	// Two noise-normal layers scrolling in different directions; their sum
 	// stops either one's drift reading as a conveyor belt. In flow mode both
@@ -115,6 +135,16 @@ void fragment() {
 	float shallowness = 1.0 - smoothstep(0.0, depth_falloff, depth);
 	shallowness = clamp(shallowness + (n_a.g - 0.5) * 0.05, 0.0, 1.0);
 	vec3 colour = mix(deep_colour.rgb, shallow_colour.rgb, shallowness);
+	if (mid_depth_m > 0.0) {
+		// A third stop on the shelf, as a band that rises out of the shallow
+		// colour and falls back into the deep one. Written as a mix INTO the
+		// existing colour, never a replacement: the Tidewake offshore variant
+		// injects its own deep tone on the line above, and overwriting here
+		// would throw that away.
+		float up = smoothstep(0.0, mid_depth_m, depth);
+		float down = 1.0 - smoothstep(mid_depth_m, max(depth_falloff, mid_depth_m + 0.5), depth);
+		colour = mix(colour, mid_colour.rgb, clamp(up * down, 0.0, 1.0));
+	}
 
 	// View-angle blend toward the sky family — a flat look-down shows the
 	// water's own colour, a grazing look across shows the sky's, which is

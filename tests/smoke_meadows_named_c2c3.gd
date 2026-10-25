@@ -158,7 +158,9 @@ func _run() -> void:
 	var failures := 0
 	for entry in cases:
 		if not _selected(str(entry.id)): continue
-		var party_level := _party_level_override if _party_level_override > 0 else _entry_level(str(entry.band))
+		# A case may carry its own region-entry level (tests/smoke_finale_named_c2c3.gd).
+		var party_level := _party_level_override if _party_level_override > 0 \
+			else int(entry.get("party_level", _entry_level(str(entry.band))))
 		for starter: String in STARTERS:
 			if not _starter_only.is_empty() and starter != _starter_only: continue
 			var row := {"case": entry.id, "kind": entry.kind, "band": entry.band,
@@ -188,7 +190,7 @@ func _run() -> void:
 					GEAR.equip(self, party, _gear_tier, _gear_upgrade)
 					var pilot := PILOT.new()
 					pilot.set("punish_window", _reader_mode == "punish" and policy == "READER")
-					pilot.context = {"chapter": "meadows", "band": entry.band,
+					pilot.context = {"chapter": str(entry.get("chapter", "meadows")), "band": entry.band,
 						"after_south_bridge": entry.kind != "named_wild", "pattern_id": "named_" + str(entry.id)}
 					var result: Dictionary = await pilot.fight(self, party, foes, bool(entry.owned),
 						hash("meadows/%s/%s/%d" % [entry.id, starter, seed_index]),
@@ -197,13 +199,18 @@ func _run() -> void:
 						"SWITCH_READER" if policy == "READER" else policy)
 					var tells: Array = []
 					var diver_tells: Array = []
+					var attacks: Array = []
 					for event: Dictionary in result.get("events", []):
 						if str(event.get("event", "")) != "telegraph": continue
+						# F22#4 evidence: which authored pattern attacks the fight showed.
+						var attack := str((event.get("enemy_config", {}) as Dictionary).get("pattern_attack_id", ""))
+						if not attack.is_empty() and not attacks.has(attack): attacks.append(attack)
 						if _diver_cue(event.get("enemy_config", {})): diver_tells.append(float(event.seconds))
 						else: tells.append(float(event.seconds))
 					result.erase("events")
 					result["tells"] = tells
 					result["diver_tells"] = diver_tells
+					result["pattern_attacks"] = attacks
 					result["case"] = entry.id
 					result["starter"] = starter
 					result["policy"] = policy

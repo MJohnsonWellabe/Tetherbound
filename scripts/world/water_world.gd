@@ -53,6 +53,9 @@ func _ready() -> void:
 	_visual = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_PATH))
 	if not simulation_only:
 		_visual = preload("res://scripts/world/tidewake_look_profile.gd").overlay(_visual, "surfaces")
+		# P2-009 shelf-gradient candidate: an unjudged section (OFF in play)
+		# that overlays the judged surfaces under the capture flag only.
+		_visual = preload("res://scripts/world/tidewake_look_profile.gd").overlay(_visual, "surfaces_candidate")
 	var look_models := _request_look_models()
 	field = FIELD.new(config)
 	var traversal: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_swimming.json"))
@@ -434,6 +437,12 @@ func _stand_up_ground_cover() -> void:
 		return
 	var dunes := preload("res://scripts/world/water_dune_cover.gd")
 	profile = dunes.ground_profile(profile as Dictionary, dunes.config())
+	# close-1024 `stones_candidate` (OFF in play): grouped pebbles and a tide band.
+	var stones_candidate: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get("stones_candidate", {})
+	if not stones_candidate.is_empty():
+		var stones: Dictionary = ((profile as Dictionary).get("stones", {}) as Dictionary).duplicate()
+		stones.merge(stones_candidate, true)
+		(profile as Dictionary)["stones"] = stones
 	var texture_names: Array = []
 	for spec: Dictionary in _visual.terrain.textures:
 		texture_names.append(str(spec.name))

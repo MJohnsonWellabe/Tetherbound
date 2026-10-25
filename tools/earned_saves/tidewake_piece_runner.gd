@@ -5,6 +5,7 @@ const MEADOWS_HANDOFF := preload("res://tests/helpers/f49_disk_handoff.gd")
 const SAVE_DOCUMENT := preload("res://scripts/save/save_document.gd")
 const LINEAGE := preload("res://tools/earned_saves/checkpoint_lineage.gd")
 const HOMESTEAD := preload("res://tools/earned_saves/chapter_homestead.gd")
+const MEADOWS_TRAINING := preload("res://tools/earned_saves/wip_fights/meadows_training_piece.gd")
 const HUMAN_LATE := preload("res://tests/helpers/water_human_late_segment.gd")
 
 ## F19#5 Tidewake pieces: one ordinary-input segment per process, mirroring
@@ -62,7 +63,8 @@ const SEGMENTS := ["01_opening", "02_reedhaven", "03_brine", "04_shellwatch", "0
 	"05i_ione_approach", "05j_ione_duel",
 	"05j_ione_duel_only", "05k_ione_chest",
 	"05r_first_shore", "05s_reedhaven_ione", "05t_reedhaven_brine", "05u_brine_shellwatch", "05v_shellwatch_tidal",
-	"06_swimmer", "07_late", "07_human_late", "07a_salt_bex", "07b_calder", "07c_venn", "07d_nerissa", "08_ending", "09_cloudreach_handoff"]
+	"06_swimmer", "07_late", "07_human_late", "07a_salt_bex", "07b_calder", "07c_venn", "07d_nerissa", "08_ending", "09_cloudreach_handoff",
+	"training_t2_master"]
 const LOAD_SETTLE_FRAMES := 300
 
 var segment := ""
@@ -199,6 +201,7 @@ func _run() -> void:
 	if failures.is_empty():
 		var after_uids: Array = _snapshot().uids
 		var end_realm := "cloudreach" if segment == "09_cloudreach_handoff" else "water"
+		if segment == "training_t2_master": end_realm = "meadows"
 		if not training_job.is_empty(): end_realm = str(training_job.realm) if training_job.phase in ["return", "preparereturn"] else "meadows"
 		if after_uids.size() != 5 or str(game.current_realm) != end_realm or bool(game.get("free_build")):
 			failures.append("Piece must end with five companions in %s without free build" % end_realm)
@@ -528,6 +531,17 @@ func _play() -> void:
 		if not completed and failures.is_empty(): failures.append("Short late piece returned false")
 		return
 	match segment:
+		"training_t2_master":
+			# Meadows T2 from the disclosed meadows_t2_independent boundary:
+			# Mira's duel and recipe chest (storage trip home and back if the
+			# kit needs room), then the shared homestead Kitchen/feed pieces.
+			var provenance: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("PROVENANCE.json")))
+			if not provenance is Dictionary or provenance.get("kind") != "generated_boundary_save" \
+					or provenance.get("profile") != "meadows_t2_independent":
+				failures.append("training_t2_master starts only from the generated meadows_t2_independent boundary save")
+				return
+			_take(await MEADOWS_TRAINING.new().run(self, world, game, {"tier": 2, "phase": "master",
+				"previous_training": before.get("training", {})}), "passed", segment)
 		"01_opening":
 			var opening: RefCounted = load("res://tests/helpers/f49_tidewake_opening.gd").new()
 			_take(await opening.run(self, world, game), "passed", "opening")

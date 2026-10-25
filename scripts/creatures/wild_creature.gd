@@ -128,6 +128,8 @@ var _poise_resist_left: float = 0.0
 var _synced_poise_max: float = -1.0
 var _staggered: bool = false
 var _stagger_critical_ready: bool = false
+## A guest's synced stagger starts the held wince once, not on every resync.
+var _was_staggered_for_wince := false
 
 ## F04 travelling lunge (combat.json `charger_lunge`). Only a body whose
 ## per-member override sets `lunge_travels` ever sets any of these; every other
@@ -1699,6 +1701,16 @@ func _show_guard_cone(reach_override: float = 0.0, cone_override: float = 0.0) -
 	_guard_cone.set_meta("reach", reach)
 	_guard_cone.set_meta("cone_degrees", cone)
 	add_child(_guard_cone)
+	if not soft.is_empty() and TELL_STYLE.curtain_height(soft, 1.0) > 0.0:
+		# Bodied tell: the fan's rim stands up as a fading light curtain.
+		var rim := PackedVector3Array()
+		for i in steps + 1:
+			var a := -half + (2.0 * half) * float(i) / float(steps)
+			rim.append(Vector3(sin(a) * reach, 0.05, cos(a) * reach))
+		var curtain := TELL_STYLE.make_curtain(AABB(Vector3(-reach, -1.0, -reach), Vector3(reach * 2.0, 4.0, reach * 2.0)))
+		_guard_cone.add_child(curtain)
+		TELL_STYLE.draw_curtain(curtain, [rim], tell_colour(), float(soft.get("edge_alpha", 0.7))
+			* float(soft.get("curtain_alpha", 0.6)), TELL_STYLE.curtain_height(soft, 1.0), soft, 0.0)
 
 
 func _hide_guard_cone() -> void:
@@ -2029,7 +2041,8 @@ func apply_poise_damage(amount: float, force_stagger: bool = false, striker: Nod
 	# TELEGRAPH exit as impact and would emit the cancelled strike.
 	_intent = AI.Intent.RECOVER
 	_beat_left = float(_combat_cfg.get("stagger_seconds", _poise_config().get("stagger_seconds", 0.6)))
-	if _animator != null:
+	# P2-016: the stagger shows as a held wince rather than the idle body.
+	if _animator != null and not hold_combat_wince(_beat_left):
 		_animator.call("cancel_hold")
 	return true
 
@@ -2065,9 +2078,13 @@ func sync_poise(value: float, staggered_now: bool, critical_ready: bool = true,
 		_cancel_lunge()
 		_selected_attack.clear()
 		_selected_heading_locked = false
+		var fresh := not _was_staggered_for_wince
 		_intent = AI.Intent.RECOVER
 		_beat_left = stagger_left if stagger_left >= 0.0 else float(_combat_cfg.get(
 			"stagger_seconds", _poise_config().get("stagger_seconds", 0.6)))
+		if fresh:
+			hold_combat_wince(_beat_left)
+	_was_staggered_for_wince = staggered_now
 
 
 func stagger_seconds_left() -> float:

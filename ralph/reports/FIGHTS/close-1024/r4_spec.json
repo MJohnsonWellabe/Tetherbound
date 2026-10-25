@@ -1,0 +1,26 @@
+[
+ {
+  "label": "gen-r4 riverwatch",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/rh/riverwatch_ctl.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/rh/riverwatch_H.png",
+  "brief": "Meadows river named-trainer fight against a large otter boss: four frames during its wind-ups",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect is a flat disc hiding the struck creature"
+  ]
+ },
+ {
+  "label": "gen-r4 warden",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/rh/warden_ctl.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/rh/warden_H.png",
+  "brief": "Meadows stronghold hall named-trainer fight: four frames during the opponent's wind-ups",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect is a flat disc hiding the struck creature"
+  ]
+ }
+]

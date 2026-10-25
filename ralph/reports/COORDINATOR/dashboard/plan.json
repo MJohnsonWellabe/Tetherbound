@@ -1,241 +1,541 @@
 {
-  "_comment": "Baseline delivery plan (owner request 2026-10-04). A sprint is one 8-hour session; sprints run back to back from `start`. Each bar's `start`/`end` are positions on a sprint axis: 0 is the start of sprint 1, 1 the end of sprint 1, 2.5 the middle of sprint 3. `features` lists what measures the bar: whole F rows, single criteria (\"F19#5\"), one chapter card (\"CARD:M2\") or one release-wide row (\"XCUT:...\"). The baseline is frozen; progress is read live from criteria.json. Re-baseline only on an owner decision and record it in `rebaselines`.",
-  "baseline_set": "2026-10-10T10:45:00Z",
-  "start": "2026-10-04T23:00:00Z",
-  "sprint_hours": 8,
-  "sprints": 53,
-  "rebaselines": [
-    "2026-10-04 6:50 PM CDT, before any tracking: baseline measurement corrected. F29#3, F36#0, F36#3 and F47#0 (agent half) were labelled blocked but are agent work. The F49 bars now also measure the 13 chapter cards and the 4 release-wide requirements. Bar dates unchanged.",
-    "2026-10-04 7:50 PM CDT (owner): added lane P, a temporary performance lane for sprints 1–4. Codex's desktop timings showed Meadows 11, Tidewake 7 and Stormwood 17 fps average at Medium 1080p. No other bar moved.",
-    "2026-10-05 6:15 AM CDT (owner: rebaseline to measured pace, scope kept, old baseline shown as a dashed ghost). Measured at sprint 1.5: F27 and F18 take ~2.0 sprints vs 1.5 planned (pace 1.33: the actor_vitals and portals flips each needed a fix-review-CI loop), F22 ~2.8 vs 2.5, F26 slipped ~0.9 sprint while Codex sat idle 11:45 PM–6 AM CT. Later bars in lanes B, D and E scale by 1.33 and lane C by 1.2; lane A keeps 1.0 (F17 done but #6 blocked on Codex; F31 started at sprint 1.3). F30 shortens to 0.5 (4 of 5 criteria already met). F49 starts when the last feature lane clears (sprint 14.7). Planned finish moves from Fri 9 Oct 2 AM CT (S13) to Sat 10 Oct 10 AM CT (S17).",
-    "2026-10-05 9:05 AM CDT: F02 (earned Meadows spine, 7 open rows) moved from lane A's F17 bar to its F49 bar: every open F02 row's audit gap reads 'Folds into F49' (or F47), so F17 was being measured on end-of-pass integrated runs. F01's four open rows stay on F17; they are stale 2026-10-04 re-proofs of criteria F17 has since closed and are being re-run now.",
-    "2026-10-06 7:20 AM CDT (owner: 'redo the delivery board based on actual progress'). Measured pace 10-04 6:30 PM → 10-06 7 AM CT: 26 criteria met in ~37 h across 6–9 lanes, about one criterion per lane per 8-hour sprint, Claude and Codex alike. Lanes now match reality: Claude Lane A and F18 finish their bars and archive (owner 10-05: no new Claude lanes); six Codex lanes (root, R1–R5) take their current work, then pull the rest in ROADMAP order. Features over 6 open criteria are split across lanes. Each bar is sized at 1 sprint per open criterion. F49 follows the last feature. Planned finish moves from Sat 10 Oct 10 AM CT (S17) to Thu 15 Oct 12 PM CT (S33). Old bars stay as dashed ghosts.",
-    "2026-10-06 7:15 AM CDT (owner): F03#0/#1 move from Claude Lane A to Codex R3; Lane A keeps F01#6b and F17#6 then archives.",
-    "2026-10-06 12:35 PM CDT: Claude Lane A archived (owner: no more Claude lanes); its F17#6 scene items and hero art move to Codex root (M1). No other dates change.",
-    "2026-10-07 9:15 AM CDT (owner): Codex restarted as five sprint lanes A–E from consolidated main b3ad69a; target about 24 hours (lane work ends Thu 08 Oct about 7 AM CDT, owner items after). A criterion counts once evidenced on its lane branch (READY on #572); Claude consolidates to main every 2 hours. Previous plan (finish Thu 15 Oct) kept as history.",
-    "2026-10-10 5:45 AM CDT (owner: 'update the delivery plan'): rebaselined to five Claude lanes A–E plus the Codex service from sprint 16.5. Codex lanes retired 10-09. Bars sized from open criteria at ~0.6 criteria per lane per 8-hour sprint (~9/day, mid of the 6–10/day target; overnight 10-09→10-10 actual was 1 criterion, lost ~5 h to the #604 actor_vitals regression and its #613 revert). Load-balanced (B's F37/F46 → D; C's F27/F28 → A, F31/F33 → E). Projected lane finish Wed 21 Oct 10 PM CDT, owner items after.",
-    "2026-10-12 8:51 PM CDT (owner: 'change the delivery plan; start with right now and plan what's open; F38–F41 last, not planned; close everything else except what waits on me'): rebaselined from now to five lanes (Routes, Fights, Systems, Visuals, Codex service) over the 26 open in-scope items; F38–F41 (23 criteria) and the Visual-bar row are unplanned and follow last; owner items (Ally, play pass, F47#0 confirmation, co-op AppID, Stormwood audio assets) sit in the owner lane. Bars sized ~1 criterion per lane per 8-hour sprint, longer for route and release clears. Lanes restart after #681 merges and branches are cleaned. F38–F41 now have their own plan (visual_plan.json, Visual catalog tab).",
-    "2026-10-14 7:00 AM CDT (owner: stop all eight lanes, 'we will kick off more focused lanes'): 13-14 Oct ran eight Codex lanes, about 280 commits in 12 h, and closed zero criteria (233/271 for 18 h). The work went into tooling, diagnostics and evidence plumbing, plus queueing behind one native writer. Rebaselined from the restart to four focused lanes under docs/CRITERION_DELIVERY.md, one criterion at a time. Look is one GPU lane, biome by biome. Fights, Routes and Creatures run in parallel. The 38 open criteria are all placed; the owner lane follows. Bars sized ~1 criterion per lane per 8-hour sprint (2 for a whole biome row).",
-    "2026-10-14 4:50 PM CDT: the four-lane plan had been anchored at 7 AM, but the lanes have not started, so its first bars read LATE. All bars shifted to start now; they re-anchor to the actual restart time when Codex restarts (CODEX_START_HERE 'Restart').",
-    "2026-10-14 5:41:42 PM CDT (owner restart Tetherbound): all bars shifted equally to actual verified restart. Four fixed lanes from origin/main 6b13cc0851; durations/order unchanged. App permission mismatch corrected by resuming same four tasks with explicit never/danger-full-access.",
-    "2026-10-16 4:45 AM CDT: owner shut Codex down; no criterion closed in the restart. Bars shifted 4.38 sprints to now so nothing reads LATE while stopped; they re-anchor to the actual restart time when lanes restart.",
-    "2026-10-17 7:22 AM CDT (owner restart, new Claude coordinator): all bars shifted 3.33 sprints so the first bar starts at the actual restart; four lanes now run as cloud sessions. Durations and order unchanged."
-  ],
-  "lanes": [
+ "_comment": "Baseline delivery plan (owner request 2026-10-04). A sprint is one 8-hour session; sprints run back to back from `start`. Each bar's `start`/`end` are positions on a sprint axis: 0 is the start of sprint 1, 1 the end of sprint 1, 2.5 the middle of sprint 3. `features` lists what measures the bar: whole F rows, single criteria (\"F19#5\"), one chapter card (\"CARD:M2\") or one release-wide row (\"XCUT:...\"). The baseline is frozen; progress is read live from criteria.json. Re-baseline only on an owner decision and record it in `rebaselines`.",
+ "baseline_set": "2026-10-25T00:40:00Z",
+ "start": "2026-10-25T00:40:00Z",
+ "sprint_hours": 8,
+ "sprints": 42,
+ "rebaselines": [
+  "2026-10-04 6:50 PM CDT, before any tracking: baseline measurement corrected. F29#3, F36#0, F36#3 and F47#0 (agent half) were labelled blocked but are agent work. The F49 bars now also measure the 13 chapter cards and the 4 release-wide requirements. Bar dates unchanged.",
+  "2026-10-04 7:50 PM CDT (owner): added lane P, a temporary performance lane for sprints 1–4. Codex's desktop timings showed Meadows 11, Tidewake 7 and Stormwood 17 fps average at Medium 1080p. No other bar moved.",
+  "2026-10-05 6:15 AM CDT (owner: rebaseline to measured pace, scope kept, old baseline shown as a dashed ghost). Measured at sprint 1.5: F27 and F18 take ~2.0 sprints vs 1.5 planned (pace 1.33: the actor_vitals and portals flips each needed a fix-review-CI loop), F22 ~2.8 vs 2.5, F26 slipped ~0.9 sprint while Codex sat idle 11:45 PM–6 AM CT. Later bars in lanes B, D and E scale by 1.33 and lane C by 1.2; lane A keeps 1.0 (F17 done but #6 blocked on Codex; F31 started at sprint 1.3). F30 shortens to 0.5 (4 of 5 criteria already met). F49 starts when the last feature lane clears (sprint 14.7). Planned finish moves from Fri 9 Oct 2 AM CT (S13) to Sat 10 Oct 10 AM CT (S17).",
+  "2026-10-05 9:05 AM CDT: F02 (earned Meadows spine, 7 open rows) moved from lane A's F17 bar to its F49 bar: every open F02 row's audit gap reads 'Folds into F49' (or F47), so F17 was being measured on end-of-pass integrated runs. F01's four open rows stay on F17; they are stale 2026-10-04 re-proofs of criteria F17 has since closed and are being re-run now.",
+  "2026-10-06 7:20 AM CDT (owner: 'redo the delivery board based on actual progress'). Measured pace 10-04 6:30 PM → 10-06 7 AM CT: 26 criteria met in ~37 h across 6–9 lanes, about one criterion per lane per 8-hour sprint, Claude and Codex alike. Lanes now match reality: Claude Lane A and F18 finish their bars and archive (owner 10-05: no new Claude lanes); six Codex lanes (root, R1–R5) take their current work, then pull the rest in ROADMAP order. Features over 6 open criteria are split across lanes. Each bar is sized at 1 sprint per open criterion. F49 follows the last feature. Planned finish moves from Sat 10 Oct 10 AM CT (S17) to Thu 15 Oct 12 PM CT (S33). Old bars stay as dashed ghosts.",
+  "2026-10-06 7:15 AM CDT (owner): F03#0/#1 move from Claude Lane A to Codex R3; Lane A keeps F01#6b and F17#6 then archives.",
+  "2026-10-06 12:35 PM CDT: Claude Lane A archived (owner: no more Claude lanes); its F17#6 scene items and hero art move to Codex root (M1). No other dates change.",
+  "2026-10-07 9:15 AM CDT (owner): Codex restarted as five sprint lanes A–E from consolidated main b3ad69a; target about 24 hours (lane work ends Thu 08 Oct about 7 AM CDT, owner items after). A criterion counts once evidenced on its lane branch (READY on #572); Claude consolidates to main every 2 hours. Previous plan (finish Thu 15 Oct) kept as history.",
+  "2026-10-10 5:45 AM CDT (owner: 'update the delivery plan'): rebaselined to five Claude lanes A–E plus the Codex service from sprint 16.5. Codex lanes retired 10-09. Bars sized from open criteria at ~0.6 criteria per lane per 8-hour sprint (~9/day, mid of the 6–10/day target; overnight 10-09→10-10 actual was 1 criterion, lost ~5 h to the #604 actor_vitals regression and its #613 revert). Load-balanced (B's F37/F46 → D; C's F27/F28 → A, F31/F33 → E). Projected lane finish Wed 21 Oct 10 PM CDT, owner items after.",
+  "2026-10-12 8:51 PM CDT (owner: 'change the delivery plan; start with right now and plan what's open; F38–F41 last, not planned; close everything else except what waits on me'): rebaselined from now to five lanes (Routes, Fights, Systems, Visuals, Codex service) over the 26 open in-scope items; F38–F41 (23 criteria) and the Visual-bar row are unplanned and follow last; owner items (Ally, play pass, F47#0 confirmation, co-op AppID, Stormwood audio assets) sit in the owner lane. Bars sized ~1 criterion per lane per 8-hour sprint, longer for route and release clears. Lanes restart after #681 merges and branches are cleaned. F38–F41 now have their own plan (visual_plan.json, Visual catalog tab).",
+  "2026-10-14 7:00 AM CDT (owner: stop all eight lanes, 'we will kick off more focused lanes'): 13-14 Oct ran eight Codex lanes, about 280 commits in 12 h, and closed zero criteria (233/271 for 18 h). The work went into tooling, diagnostics and evidence plumbing, plus queueing behind one native writer. Rebaselined from the restart to four focused lanes under docs/CRITERION_DELIVERY.md, one criterion at a time. Look is one GPU lane, biome by biome. Fights, Routes and Creatures run in parallel. The 38 open criteria are all placed; the owner lane follows. Bars sized ~1 criterion per lane per 8-hour sprint (2 for a whole biome row).",
+  "2026-10-14 4:50 PM CDT: the four-lane plan had been anchored at 7 AM, but the lanes have not started, so its first bars read LATE. All bars shifted to start now; they re-anchor to the actual restart time when Codex restarts (CODEX_START_HERE 'Restart').",
+  "2026-10-14 5:41:42 PM CDT (owner restart Tetherbound): all bars shifted equally to actual verified restart. Four fixed lanes from origin/main 6b13cc0851; durations/order unchanged. App permission mismatch corrected by resuming same four tasks with explicit never/danger-full-access.",
+  "2026-10-16 4:45 AM CDT: owner shut Codex down; no criterion closed in the restart. Bars shifted 4.38 sprints to now so nothing reads LATE while stopped; they re-anchor to the actual restart time when lanes restart.",
+  "2026-10-17 7:22 AM CDT (owner restart, new Claude coordinator): all bars shifted 3.33 sprints so the first bar starts at the actual restart; four lanes now run as cloud sessions. Durations and order unchanged.",
+  "2026-10-24 3:30 PM CDT (owner: \"fix the delivery plan to something reasonable\"): rebaselined from now over every open criterion (231, each catalog item once: 228 in lane bars, 3 owner items), plus the chapter exit cards and release-wide rows on the Routes bar. Eight lanes: Creatures, Meadows, Tidewake, Cloudreach, Stormwood, Fights, Routes and the GPU judge; owner items follow. Visual bars are sized at about 4 catalog items or 10 creature items per 8-hour sprint, which assumes the GPU judges each READY batch within a sprint. The visual catalog plan is folded into this one.",
+  "2026-10-24 7:40 PM CDT (owner: \"Yes do whatever you think is best\" on the offered two-week rebaseline): the 24 Oct plan assumed the GPU judges every READY batch within a sprint; measured, one GPU judges about one batch every 2-3 sprints and the owner's raise-the-floor tiers (everything to 6, then 7, then 7.5) add rounds. Biome bars scale by 3, Fights and Routes by 2; Creatures run 0-6 priority creatures, 6-15 poses, 15-18 the rest; the GPU judge runs to sprint 39 and the owner items follow. Scope unchanged; planned finish moves from Wed 28 Oct to about Sat 7 Nov."
+ ],
+ "lanes": [
+  {
+   "id": "C",
+   "name": "Creatures · cloud session, tb/creatures",
+   "bars": [
     {
-      "id": "L",
-      "name": "Look · Claude cloud session (CPU renders, biome by biome)",
-      "session": "tb/look",
-      "bars": [
-        {
-          "label": "F17#6 Village + Hall to 7.5 Bar A",
-          "features": [
-            "F17#6"
-          ],
-          "start": 37.672719,
-          "end": 38.672719,
-          "note": "Fixed camera set; Pair02 is +1.53. Meshy-first hero assets, no generation cap.",
-          "baseline_pct": 0.0
-        },
-        {
-          "label": "F38 Meadows: look pass on, top-20, matrix, defects",
-          "features": [
-            "F38"
-          ],
-          "start": 38.672719,
-          "end": 40.672719,
-          "note": "Only after F17#6; reuse capture_meadows_look.gd.",
-          "baseline_pct": 16.7
-        },
-        {
-          "label": "Tidewake: F13#5 currents/docks + F39",
-          "features": [
-            "F13#5",
-            "F39"
-          ],
-          "start": 40.672719,
-          "end": 42.672719,
-          "note": "Shutdown tracing stays parked unless it blocks capture.",
-          "baseline_pct": 14.3
-        },
-        {
-          "label": "Cloudreach: F08#3 settlements/cliffs + F40",
-          "features": [
-            "F08#3",
-            "F40"
-          ],
-          "start": 42.672719,
-          "end": 44.672719,
-          "note": "Allocation profiling stays parked unless capture can't run.",
-          "baseline_pct": 14.3
-        },
-        {
-          "label": "Stormwood: F41 + F26#3 biome matrices",
-          "features": [
-            "F41",
-            "F26#3"
-          ],
-          "start": 44.672719,
-          "end": 46.672719,
-          "note": "One biome at a time: one native writer.",
-          "baseline_pct": 28.6
-        }
-      ]
+     "label": "F36 (0) priority creatures, incl. Terrapup dog, touches, Aquaryn/Tidecoil",
+     "features": [
+      "F36#0",
+      "F36#1",
+      "F36#2",
+      "F36#3",
+      "F36#4",
+      "F36#5",
+      "F36#6",
+      "F36#7",
+      "F36#8",
+      "F36#9",
+      "F36#10",
+      "F36#11",
+      "F36#12",
+      "F36#13",
+      "F36#14",
+      "F36#15",
+      "F36#16",
+      "F36#17",
+      "F36#18",
+      "F36#19",
+      "F36#20",
+      "F36#21",
+      "F36#22",
+      "F36#23",
+      "F36#24",
+      "F36#25",
+      "F36#26",
+      "F36#27",
+      "F36#28",
+      "F36#29"
+     ],
+     "start": 0.0,
+     "end": 6.0,
+     "note": "Candidates queued on GPU; owner touch pass (energy, elemental, war-worn) on existing meshes.",
+     "baseline_pct": 3.3
     },
     {
-      "id": "F",
-      "name": "Fights · combat feel and named fights (cloud)",
-      "session": "tb/fights",
-      "bars": [
-        {
-          "label": "F22#4 named-fight signatures to the bar",
-          "features": [
-            "F22#4"
-          ],
-          "start": 37.672719,
-          "end": 38.672719,
-          "note": "In-world best 6.5.",
-          "baseline_pct": 0.0
-        },
-        {
-          "label": "F04#6 distinct aftermath per fight",
-          "features": [
-            "F04#6"
-          ],
-          "start": 38.672719,
-          "end": 39.672719,
-          "note": "Best 6.5 (r13).",
-          "baseline_pct": 0.0
-        },
-        {
-          "label": "F10#2 C3 near-lens foliage dither",
-          "features": [
-            "F10#2"
-          ],
-          "start": 39.672719,
-          "end": 40.672719,
-          "note": "Line-of-sight fade is off; enable for Stormwood and judge.",
-          "baseline_pct": 0.0
-        },
-        {
-          "label": "F21#5 weighty-hits judge half",
-          "features": [
-            "F21#5"
-          ],
-          "start": 40.672719,
-          "end": 41.672719,
-          "note": "Judge half outstanding.",
-          "baseline_pct": 0.0
-        }
-      ]
+     "label": "F36 (1) pose subjects (hit, faint, ride, swim)",
+     "features": [
+      "F36#30",
+      "F36#31",
+      "F36#32",
+      "F36#33",
+      "F36#34",
+      "F36#35",
+      "F36#36",
+      "F36#37",
+      "F36#38",
+      "F36#39",
+      "F36#40",
+      "F36#41",
+      "F36#42",
+      "F36#43",
+      "F36#44",
+      "F36#45",
+      "F36#46",
+      "F36#47",
+      "F36#48",
+      "F36#49",
+      "F36#50",
+      "F36#51",
+      "F36#52",
+      "F36#53",
+      "F36#54",
+      "F36#55",
+      "F36#56",
+      "F36#57",
+      "F36#58",
+      "F36#59",
+      "F36#60",
+      "F36#61",
+      "F36#62",
+      "F36#63",
+      "F36#64",
+      "F36#65",
+      "F36#66",
+      "F36#67",
+      "F36#68",
+      "F36#69",
+      "F36#70",
+      "F36#71",
+      "F36#72",
+      "F36#73",
+      "F36#74",
+      "F36#75",
+      "F36#76",
+      "F36#77",
+      "F36#78",
+      "F36#79",
+      "F36#80",
+      "F36#81",
+      "F36#82",
+      "F36#83",
+      "F36#84",
+      "F36#85",
+      "F36#86",
+      "F36#87",
+      "F36#88",
+      "F36#89",
+      "F36#90",
+      "F36#91",
+      "F36#92",
+      "F36#93",
+      "F36#94",
+      "F36#95",
+      "F36#96",
+      "F36#97",
+      "F36#98",
+      "F36#99"
+     ],
+     "start": 6.0,
+     "end": 15.0,
+     "note": "Pose batches of about 12 per GPU round.",
+     "baseline_pct": 0.0
     },
     {
-      "id": "R",
-      "name": "Routes · integrated four-biome run (cloud, headless)",
-      "session": "tb/routes",
-      "bars": [
-        {
-          "label": "F49#0 earned, matched chapter seams with real Masters and feasts (closes F19#5)",
-          "features": [
-            "F49#0",
-            "F19#5"
-          ],
-          "start": 37.672719,
-          "end": 40.172719,
-          "note": "Pieces chained through saved checkpoints (WORKFLOW §8.1 r9). Reuse run_routes_scoped_checks.ps1.",
-          "baseline_pct": 0.0
-        },
-        {
-          "label": "F47#0 clear-time tuning proposal (8.8-12.5 h vs 15-25 h)",
-          "features": [
-            "F47#0"
-          ],
-          "start": 40.172719,
-          "end": 41.172719,
-          "note": "Config numbers only; no hard-rule change; owner confirms.",
-          "baseline_pct": 0.0
-        },
-        {
-          "label": "F49#3 rolling download from the passing commit",
-          "features": [
-            "F49#3"
-          ],
-          "start": 41.172719,
-          "end": 41.672719,
-          "note": "",
-          "baseline_pct": 0.0
-        }
-      ]
-    },
-    {
-      "id": "A",
-      "name": "Creatures & effects · cloud (judging; Meshy waits for key)",
-      "session": "tb/creatures",
-      "bars": [
-        {
-          "label": "F36#1 pose matrix judged; enable passing species",
-          "features": [
-            "F36#1"
-          ],
-          "start": 37.672719,
-          "end": 38.672719,
-          "note": "",
-          "baseline_pct": 0.0
-        },
-        {
-          "label": "F36#0 remaining priority assets",
-          "features": [
-            "F36#0"
-          ],
-          "start": 38.672719,
-          "end": 40.172719,
-          "note": "RD-26 per-asset rules.",
-          "baseline_pct": 0.0
-        },
-        {
-          "label": "F29#3 Stormursa via drafted reference + Meshy",
-          "features": [
-            "F29#3"
-          ],
-          "start": 40.172719,
-          "end": 41.172719,
-          "note": "Existing license only.",
-          "baseline_pct": 0.0
-        },
-        {
-          "label": "F25#4 four-creature worst-case frame budget on Medium",
-          "features": [
-            "F25#4"
-          ],
-          "start": 41.172719,
-          "end": 42.172719,
-          "note": "GPU machine.",
-          "baseline_pct": 0.0
-        }
-      ]
-    },
-    {
-      "id": "owner",
-      "name": "Owner (waits on you)",
-      "session": "owner",
-      "bars": [
-        {
-          "label": "Owner: ROG Ally test (F26#5, F49#2), play pass (F49#1) and clear-time confirmation (F47#0); co-op AppID, Ally perf, Stormwood audio assets",
-          "features": [
-            "F26#5",
-            "F49#2",
-            "F49#1",
-            "F47#0",
-            "XCUT:Internet co-op",
-            "XCUT:Ally device",
-            "CARD:S2"
-          ],
-          "start": 42.172719,
-          "end": 42.922719,
-          "note": "Not scheduled by the coordinator; shown after the lanes.",
-          "baseline_pct": 0.0
-        }
-      ]
+     "label": "F36 remaining criteria and F29#3 storm bear",
+     "features": [
+      "F29#3"
+     ],
+     "start": 15.0,
+     "end": 18.0,
+     "note": "",
+     "baseline_pct": 0.0
     }
-  ]
+   ]
+  },
+  {
+   "id": "M",
+   "name": "Meadows · cloud session, tb/meadows",
+   "bars": [
+    {
+     "label": "F17#6 hall beams and F04#6 aftermath",
+     "features": [
+      "F17#6",
+      "F04#6"
+     ],
+     "start": 0.0,
+     "end": 6.0,
+     "note": "Hall beams renderer-aware; aftermath Meshy props in judging.",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F38 camera stands and defects, recapture",
+     "features": [
+      "F38#0",
+      "F38#41"
+     ],
+     "start": 6.0,
+     "end": 12.0,
+     "note": "174 rejected stands and clipping at arch, hall and river-lock sites.",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F38 top-20 catalog items",
+     "features": [
+      "F38#1",
+      "F38#2",
+      "F38#3",
+      "F38#4",
+      "F38#5",
+      "F38#6",
+      "F38#7",
+      "F38#8",
+      "F38#9",
+      "F38#10",
+      "F38#11",
+      "F38#12",
+      "F38#13",
+      "F38#14",
+      "F38#15",
+      "F38#16",
+      "F38#17",
+      "F38#18",
+      "F38#19"
+     ],
+     "start": 12.0,
+     "end": 24.0,
+     "note": "",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F38 impact >12 catalog items",
+     "features": [
+      "F38#20",
+      "F38#21",
+      "F38#22",
+      "F38#23",
+      "F38#24",
+      "F38#25",
+      "F38#26",
+      "F38#27",
+      "F38#28",
+      "F38#29",
+      "F38#30",
+      "F38#31",
+      "F38#32",
+      "F38#33",
+      "F38#34",
+      "F38#35",
+      "F38#36",
+      "F38#37",
+      "F38#38"
+     ],
+     "start": 24.0,
+     "end": 36.0,
+     "note": "",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F38 matrix at the bar",
+     "features": [
+      "F38#39"
+     ],
+     "start": 36.0,
+     "end": 39.0,
+     "note": "GPU High and Medium.",
+     "baseline_pct": 0.0
+    }
+   ]
+  },
+  {
+   "id": "T",
+   "name": "Tidewake · cloud session, tb/tidewake",
+   "bars": [
+    {
+     "label": "F13#5 and F39#4 Veilfall (gully terrain queued on GPU)",
+     "features": [
+      "F13#5",
+      "F39#31"
+     ],
+     "start": 0.0,
+     "end": 6.0,
+     "note": "",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F39 top-20 catalog items",
+     "features": [
+      "F39#1",
+      "F39#2",
+      "F39#3",
+      "F39#4",
+      "F39#5",
+      "F39#6",
+      "F39#7",
+      "F39#8",
+      "F39#9",
+      "F39#10"
+     ],
+     "start": 6.0,
+     "end": 18.0,
+     "note": "Shore declutter and water first (owner).",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F39 impact >12 catalog items",
+     "features": [
+      "F39#11",
+      "F39#12",
+      "F39#13",
+      "F39#14",
+      "F39#15",
+      "F39#16",
+      "F39#17",
+      "F39#18",
+      "F39#19",
+      "F39#20",
+      "F39#21",
+      "F39#22",
+      "F39#23",
+      "F39#24",
+      "F39#25",
+      "F39#26",
+      "F39#27",
+      "F39#28",
+      "F39#29"
+     ],
+     "start": 18.0,
+     "end": 27.0,
+     "note": "",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F39 matrix and defects",
+     "features": [
+      "F39#30",
+      "F39#32"
+     ],
+     "start": 27.0,
+     "end": 30.0,
+     "note": "",
+     "baseline_pct": 0.0
+    }
+   ]
+  },
+  {
+   "id": "L",
+   "name": "Cloudreach · cloud session, tb/cloudreach",
+   "bars": [
+    {
+     "label": "F08#3 settlements and F40 recapture",
+     "features": [
+      "F08#3",
+      "F40#0"
+     ],
+     "start": 0.0,
+     "end": 6.0,
+     "note": "GPU captures the matrix; lane does scene fixes (owner 24 Oct).",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F40 catalog items (heartstone, island shell first)",
+     "features": [
+      "F40#1",
+      "F40#2",
+      "F40#3",
+      "F40#4",
+      "F40#5",
+      "F40#6",
+      "F40#7",
+      "F40#8",
+      "F40#9",
+      "F40#10",
+      "F40#11",
+      "F40#12",
+      "F40#13",
+      "F40#14",
+      "F40#15",
+      "F40#16",
+      "F40#17",
+      "F40#18"
+     ],
+     "start": 6.0,
+     "end": 21.0,
+     "note": "",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F40 landmark, matrix and defects",
+     "features": [
+      "F40#20",
+      "F40#19",
+      "F40#21"
+     ],
+     "start": 21.0,
+     "end": 24.0,
+     "note": "",
+     "baseline_pct": 33.3
+    }
+   ]
+  },
+  {
+   "id": "S",
+   "name": "Stormwood · cloud session, tb/stormwood",
+   "bars": [
+    {
+     "label": "Finish Stormwood feast route piece (F49#0 piece)",
+     "features": [],
+     "start": 0.0,
+     "end": 3.0,
+     "note": "Route piece only (F49#0 is measured on the Routes bar); then hands remaining pieces to Routes.",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F10#2 named-fight camera",
+     "features": [
+      "F10#2"
+     ],
+     "start": 3.0,
+     "end": 6.0,
+     "note": "From Fights.",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F41 catalog items",
+     "features": [
+      "F41#1",
+      "F41#2",
+      "F41#3",
+      "F41#4",
+      "F41#5",
+      "F41#6",
+      "F41#7",
+      "F41#8",
+      "F41#9",
+      "F41#10",
+      "F41#11",
+      "F41#12",
+      "F41#13",
+      "F41#14",
+      "F41#15",
+      "F41#16",
+      "F41#17",
+      "F41#18",
+      "F41#19",
+      "F41#20",
+      "F41#21"
+     ],
+     "start": 6.0,
+     "end": 21.0,
+     "note": "",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F41 matrix and defects",
+     "features": [
+      "F41#22",
+      "F41#24"
+     ],
+     "start": 21.0,
+     "end": 24.0,
+     "note": "",
+     "baseline_pct": 0.0
+    }
+   ]
+  },
+  {
+   "id": "F",
+   "name": "Fights · cloud session, tb/fights",
+   "bars": [
+    {
+     "label": "F22#4 named-fight patterns and fight HUD",
+     "features": [
+      "F22#4"
+     ],
+     "start": 0.0,
+     "end": 4.0,
+     "note": "Then the lane folds into the biome lanes.",
+     "baseline_pct": 0.0
+    }
+   ]
+  },
+  {
+   "id": "R",
+   "name": "Routes · cloud session, tb/routes",
+   "bars": [
+    {
+     "label": "F49#0 and F19#5 route pieces (Cloudreach, Stormwood, homecoming)",
+     "features": [
+      "F49#0",
+      "F19#5",
+      "CARDS",
+      "XCUT"
+     ],
+     "start": 0.0,
+     "end": 8.0,
+     "note": "Pieces with matched saves; never a full run. Also measures the 13 chapter exit cards and the release-wide rows.",
+     "baseline_pct": 47.4
+    },
+    {
+     "label": "F47#0 agent clear-time estimate",
+     "features": [
+      "F47#0"
+     ],
+     "start": 8.0,
+     "end": 10.0,
+     "note": "Owner play pass confirms (owner lane).",
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F49#3 rolling download from the passing commit",
+     "features": [
+      "F49#3"
+     ],
+     "start": 10.0,
+     "end": 12.0,
+     "note": "",
+     "baseline_pct": 0.0
+    }
+   ]
+  },
+  {
+   "id": "G",
+   "name": "GPU judge · owner desktop, tb/gpu-pass",
+   "bars": [
+    {
+     "label": "F26#3 biome matrices on High and Medium; judging every READY candidate",
+     "features": [
+      "F26#3"
+     ],
+     "start": 0.0,
+     "end": 39.0,
+     "note": "One GPU process at a time; the pace of every visual lane depends on it.",
+     "baseline_pct": 0.0
+    }
+   ]
+  },
+  {
+   "id": "owner",
+   "name": "Owner (waits on you)",
+   "bars": [
+    {
+     "label": "ROG Ally test (F26#5, F49#2) and play pass (F49#1)",
+     "features": [
+      "F26#5",
+      "F49#1",
+      "F49#2"
+     ],
+     "start": 39.0,
+     "end": 42.0,
+     "note": "Not scheduled by the coordinator; shown after the lanes.",
+     "baseline_pct": 0.0
+    }
+   ]
+  }
+ ]
 }

@@ -1,4 +1,6 @@
 {
+  "_why_fight_presentation_1025b": "Fights close-1025 ON (coordinator asks after r4/r5 + GPU G3): code-blind CPU r6, 3 fresh judges, mapped, shipped look -> r6: Venn 5.92 -> 6.56, Warden 6.19 -> 6.81, Riverwatch 6.43 -> 7.05, Stormwood 6.27 -> 6.38, Veyra 6.46 -> 6.54 (with the pilot ghost fix ef4591a18); r7 trainer fights (r6 + stagger label + flash drop + a steadier lens, the lens kept OFF): Warden 5.93 -> 6.32, grunt 6.08 -> 5.93. ralph/reports/FIGHTS/close-1024/NOTE.md Here: ui.compact_rows_fixed.",
+  "_why_fight_presentation_1025": "Fights close-1024 generic fight presentation ON (owner 24 Oct: 'I don't like how the fights outline the area of the attack'; cand_gen_h). Code-blind yardstick, CPU, 3 fresh judges, mapped, before -> after: Meadows Warden hall 4.85 -> 5.88, Riverwatch 5.64 -> 6.99 (r4); Veyra 5.60 -> 6.21, Stormwood glass_field 5.71 -> 6.13, Venn 5.38 -> 6.07 (r5). Outlines and impact disc FIXED in every after set; tell 'where' still PARTIAL/PRESENT (dust only). Presentation only: timings, footprints and the AI's telegraph unchanged. GPU confirms 7.5. ralph/reports/FIGHTS/close-1024/NOTE.md Here: ui.compact_when_idle true (slim command lane while nothing is usable).",
   "version": 1,
   "feature_flags": {"runtime_enabled": true, "network_enabled": true, "ui_enabled": true},
   "scope": "encounter_participant",
@@ -22,7 +24,7 @@
   },
   "snare_bounds": {"minimum_movement_multiplier": 0.45, "maximum_catch_bonus": 0.16},
   "item_bounds": {"maximum_heal": 1000000, "maximum_nourishment": 100, "maximum_happiness": 100, "minimum_buff_scale": 0.001, "maximum_buff_scale": 2.0, "maximum_buff_seconds": 3600, "buff_stats": ["attack", "defence", "speed", "wind_regen"]},
-  "ui": {"width": 580, "font_size": 22, "bar_height": 18, "refusal_seconds": 2.5},
+  "ui": {"width": 580, "font_size": 22, "bar_height": 18, "refusal_seconds": 2.5, "compact_when_idle": true, "_why_compact_rows_fixed": "Fights close-1025 (ON since 25 Oct, r6/r7): with compact_when_idle the lane is laid out from the screen bottom, so the returning command grid pushed the title and meter up by its height. true puts the grid above them, so the meter row holds still. Device-local presentation only.", "_scope_compact_rows_fixed": "Client-local presentation only: read by each peer's renderer/HUD; no host authority, save, transaction, network message or gameplay state. Absent = previous behaviour.", "compact_rows_fixed": true, "_why_compact_when_idle": "F22#4 named-fight HUD candidate (Fights lane, 24 Oct; GPU/CPU judges: the bottom band covers about a third of the fight frame). true: while no command is usable the lane shows only its title and meter (scripts/ui/tether_command_meter.gd). ON since 25 Oct (code-blind r4/r5; see _why_fight_presentation_1025).", "_scope_compact_when_idle": "Client-local presentation only: read by each peer's renderer/HUD; no host authority, save, transaction, network message or gameplay state. Absent = previous behaviour."},
   "refusals": {
     "disabled": "Tether Commands are unavailable.",
     "stale_actor": "Your creature changed. Try again.",

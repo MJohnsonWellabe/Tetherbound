@@ -1,0 +1,7 @@
+﻿# F36#0 naturalistic creatures on main (local): whole-body + context, Medium and High, no --candidate.
+$env:TB_GRADE_VARIANT = ""; $env:TB_RUN_TIMEOUT_MIN = "45"
+$sp = "--species=ripplet,cindercub,terrapup,bramblebun,mudsnout,trailpup,paddlenewt,burrowback,veridian,mosshell,water_mosshell,nightburrow,stormtrail,riftfrill"
+foreach ($p in "Medium", "High") {
+    & D:\tb-gpu-runs\tools\run_tool.ps1 -Preset $p -Script "res://tools/art_pipeline/capture_f36_poses.gd" -OutDir "D:\tb-gpu-runs\out\F36-0-main\$p" -Resolution "1920x1080" -ProjectPath "D:\tb-gpu-pass" -UserArgs @($sp, "--whole-body", "--context", "--out={FRAMES}")
+}
+"f36-0 main done"

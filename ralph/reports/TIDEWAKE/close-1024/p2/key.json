@@ -1,0 +1,28 @@
+{
+ "Zi": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Vo": {
+  "anchor": false,
+  "label": "P2-008 shore landforms vs main",
+  "A": "/tmp/claude-0/sp/p2_ctl.png",
+  "B": "/tmp/claude-0/sp/p2_cand.png"
+ },
+ "Ea": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ },
+ "Hh": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Kl": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ }
+}

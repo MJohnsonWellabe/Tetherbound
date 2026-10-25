@@ -1,0 +1,64 @@
+{
+ "Rk": {
+  "anchor": false,
+  "label": "F36#0 main nightburrow Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-nightburrow-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-nightburrow-Medium.png"
+ },
+ "Cp": {
+  "anchor": false,
+  "label": "F36#0 main burrowback Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-burrowback-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-burrowback-Medium.png"
+ },
+ "Gr": {
+  "anchor": false,
+  "label": "F36#0 main veridian Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-veridian-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-veridian-High.png"
+ },
+ "Ar": {
+  "anchor": false,
+  "label": "F36#0 main mosshell Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-mosshell-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-mosshell-High.png"
+ },
+ "Yj": {
+  "anchor": false,
+  "label": "F36#0 main riftfrill Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-riftfrill-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-riftfrill-Medium.png"
+ },
+ "Vn": {
+  "anchor": false,
+  "label": "F36#0 main stormtrail Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-stormtrail-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-stormtrail-Medium.png"
+ },
+ "Ae": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Zo": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Uo": {
+  "anchor": false,
+  "label": "F36#0 main water_mosshell Medium|High",
+  "A": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-water_mosshell-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36main\\sides\\F36main-water_mosshell-High.png"
+ },
+ "Gn": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Mp": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ }
+}
