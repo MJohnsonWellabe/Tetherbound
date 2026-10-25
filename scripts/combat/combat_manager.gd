@@ -3937,6 +3937,9 @@ func _take_player_poise_damage(amount: float) -> bool:
 		_ally_body.call("cancel_combat_burst")
 	_action = Action.STAGGER
 	_action_timer = float(_poise_config().get("stagger_seconds", 0.6))
+	# P2-016: the player's creature shows its stagger as a held wince.
+	if _ally_body != null and _ally_body.has_method("hold_combat_wince"):
+		_ally_body.call("hold_combat_wince", _action_timer)
 	return true
 
 
@@ -6841,6 +6844,12 @@ func player_poise_fraction() -> float:
 
 func player_is_staggered() -> bool:
 	return _action == Action.STAGGER
+
+
+## Seconds left on the local player's creature's stagger (0 when not staggered).
+## Its remote proxy publishes this with the hit so other peers hold the wince too.
+func player_stagger_seconds_left() -> float:
+	return maxf(0.0, _action_timer) if _action == Action.STAGGER else 0.0
 
 
 func outcome() -> String:

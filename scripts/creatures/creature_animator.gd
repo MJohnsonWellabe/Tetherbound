@@ -49,6 +49,8 @@ var _candidate_pivot_before := Transform3D.IDENTITY
 var _candidate_skeleton: Skeleton3D = null
 var _candidate_bones_before: Array[Transform3D] = []
 var _candidate_pose_active := false
+## Seconds left on a stagger's held wince (see `hold_wince`).
+var _stagger_left := 0.0
 
 
 func _init(animation_player: AnimationPlayer, clips: Dictionary) -> void:
@@ -83,9 +85,18 @@ func tick(delta: float, speed: float, top_speed: float) -> void:
 	if _player == null or _finished:
 		return
 	_hold = maxf(0.0, _hold - delta)
+	if _stagger_left > 0.0:
+		_stagger_left = maxf(0.0, _stagger_left - delta)
+		if _stagger_left > 0.0:
+			return
+		# The stagger is over: the clip plays out its release from the held wince.
+		_player.speed_scale = 1.0
+		var clip := _resolve(HIT)
+		if clip != "" and _current == clip:
+			_hold = maxf(0.0, _player.get_animation(clip).length - _player.current_animation_position)
 	if _candidate_impact_pending():
 		return
-	if speed >= STILL_SPEED and _candidate_pose_active and _current == _resolve(HIT):
+	if speed >= STILL_SPEED and (_candidate_pose_active or _has_impact_window()) and _current == _resolve(HIT):
 		# Remote bodies follow a transform rather than calling request_move.
 		# They need the same release into gait after the visible impact sample.
 		_hold = 0.0
@@ -109,6 +120,8 @@ func tick(delta: float, speed: float, top_speed: float) -> void:
 func play_once(role: String) -> void:
 	if _player == null or _finished:
 		return
+	if role == HIT and _stagger_left > 0.0:
+		return  # already holding the stagger's wince
 	var clip := _resolve(role)
 	if clip == "":
 		return
@@ -124,10 +137,10 @@ func play_once(role: String) -> void:
 		return
 	_clear_telegraph_attack()
 	_hold = _player.get_animation(clip).length
-	if clip.begins_with("f36_candidate/"):
+	if clip.begins_with("f36_candidate/") or (role == HIT and _has_impact_window()):
 		_current = ""
 	_play(role, false)
-	if role == HIT and clip.begins_with("f36_candidate/"):
+	if role == HIT and _has_impact_window():
 		# Damage can freeze animation immediately, then locomotion cancels the
 		# hold on the first resumed tick. Apply the authored impact sample now
 		# so hitstop shows the wince rather than the clip's neutral lead-in.
@@ -160,6 +173,31 @@ func begin_attack_telegraph(seconds_to_impact: float) -> bool:
 	# change. A new telegraph is a new committed wind-up and starts at frame zero.
 	_current = ""
 	_play(ATTACK, false, playback_speed)
+	return true
+
+
+## P2-016 (GPU, 24 Oct): a stagger showed its label over an idle body once the
+## 0.25 s wince had run out. A stagger now holds the hit clip's wince, the middle
+## of its impact window, for the whole stagger, then lets the clip play out its
+## release. Only for a hit that names its window (an installed recipe, or a
+## remake's `hit_impact`); any other rig keeps its old behaviour. Returns whether
+## it is holding.
+func hold_wince(seconds: float) -> bool:
+	if _player == null or _finished or seconds <= 0.0 or not _has_impact_window():
+		return false
+	var clip := _resolve(HIT)
+	if clip == "":
+		return false
+	_clear_telegraph_attack()
+	_current = ""
+	_play(HIT, false)
+	var length := float(_player.get_animation(clip).length)
+	var start := clampf(float(_clips.get("hit_start_phase", 0.0)), 0.0, 1.0)
+	var release := clampf(float(_clips.get("hit_release_phase", start)), start, 1.0)
+	_player.seek(length * (start + release) * 0.5, true)
+	_player.speed_scale = 0.0
+	_stagger_left = seconds
+	_hold = seconds
 	return true
 
 
@@ -250,7 +288,7 @@ func play_if_exists(role: String) -> bool:
 ## direction, so a creature already back under way is never shown standing
 ## still for a pose that finished being true.
 func cancel_hold() -> void:
-	if _candidate_impact_pending():
+	if _stagger_left > 0.0 or _candidate_impact_pending():
 		return
 	_hold = 0.0
 	_clear_telegraph_attack()
@@ -260,7 +298,7 @@ func cancel_hold() -> void:
 ## in the very same physics step as damage. After it, movement resumes gait.
 ## Animation position also respects hitstop without adding a gameplay timer.
 func _candidate_impact_pending() -> bool:
-	if _player == null or not _candidate_pose_active or _current != _resolve(HIT):
+	if _player == null or not (_candidate_pose_active or _has_impact_window()) or _current != _resolve(HIT):
 		return false
 	var start_phase := clampf(float(_clips.get("hit_start_phase", 0.0)), 0.0, 1.0)
 	var release_phase := clampf(float(_clips.get("hit_release_phase", start_phase)), start_phase, 1.0)
@@ -277,7 +315,7 @@ func set_hitstop(active: bool) -> void:
 		_hitstop_speed_before = _player.speed_scale
 		_player.speed_scale = 0.0
 	else:
-		_player.speed_scale = _hitstop_speed_before
+		_player.speed_scale = 0.0 if _stagger_left > 0.0 else _hitstop_speed_before
 
 
 func _play(role: String, looping: bool, playback_speed: float = 1.0) -> void:
@@ -285,6 +323,8 @@ func _play(role: String, looping: bool, playback_speed: float = 1.0) -> void:
 	if clip == "" or clip == _current:
 		return
 	_current = clip
+	if role != HIT:
+		_stagger_left = 0.0
 	var leaving_candidate := _candidate_pose_active and not clip.begins_with("f36_candidate/")
 	if not clip.begins_with("f36_candidate/"):
 		_restore_candidate_pivot()
@@ -301,8 +341,15 @@ func _play(role: String, looping: bool, playback_speed: float = 1.0) -> void:
 	_player.speed_scale = playback_speed
 	# Blending the old candidate would reapply its unkeyed bones and pivot
 	# after restoration. The installed clip starts from the restored rig.
-	var impact_pose := role == HIT and clip.begins_with("f36_candidate/")
+	var impact_pose := role == HIT and (clip.begins_with("f36_candidate/") or _has_impact_window())
 	_player.play(clip, 0.0 if leaving_candidate or impact_pose else 0.15)
+
+
+## An installed recipe hit, or a remake's own held hit that names its window
+## (`hit_impact` in species.json): either starts at its impact sample and holds
+## it until the release phase, through hitstop and same-step movement.
+func _has_impact_window() -> bool:
+	return _clips.has("hit_start_phase")
 
 
 func _clear_telegraph_attack() -> void:

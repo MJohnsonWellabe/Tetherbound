@@ -1,0 +1,52 @@
+{
+ "Tp": {
+  "anchor": false,
+  "label": "F36#1 main cliffspike recipe|shipping Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-cliffspike-shipping.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-cliffspike-candidate.png"
+ },
+ "Cf": {
+  "anchor": false,
+  "label": "F36#1 main voltwig recipe|shipping Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-voltwig-shipping.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-voltwig-candidate.png"
+ },
+ "Bs": {
+  "anchor": false,
+  "label": "F36#1 main pebbik recipe|shipping Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-pebbik-candidate.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-pebbik-shipping.png"
+ },
+ "Mn": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Vz": {
+  "anchor": false,
+  "label": "F36#1 main galecrest recipe|shipping Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-galecrest-shipping.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-galecrest-candidate.png"
+ },
+ "Ly": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ },
+ "Zs": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Ey": {
+  "anchor": false,
+  "label": "F36#1 main thundertunnel recipe|shipping Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-thundertunnel-candidate.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f36_1\\sides\\F36-1-thundertunnel-shipping.png"
+ },
+ "Rw": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

@@ -5203,6 +5203,13 @@ func _combat_command_bar_shown() -> bool:
 		var grid: Variant = node.get("_grid_panel")
 		if grid is Control and is_instance_valid(grid) and (grid as Control).is_visible_in_tree():
 			return true
+		# The F42 system overlay hides the legacy grid and draws the command
+		# strip itself (close-1024: "Gather Reef Stone" still drew over it in
+		# every Venn fight frame). A relay phase keeps its interaction prompt.
+		var overlay: Variant = node.get("_system_overlay")
+		if overlay is Control and is_instance_valid(overlay) and (overlay as Control).is_visible_in_tree() \
+				and str(node.get("_world_presentation_mode")) != "relays":
+			return true
 	return false
 
 

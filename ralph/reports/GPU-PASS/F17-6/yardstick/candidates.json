@@ -1,0 +1,68 @@
+[
+    {
+        "label":  "F17#6 r9 GPU Medium approach-nave",
+        "a":  "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-approach-nave-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-approach-nave-control.png",
+        "brief":  "Fixed views of the Crossing Hall in a Meadows village (outside approach, nave, side arches, shrine end) by day and night, one in rain, with the 1.80 m trainer as a ruler. Judge whether the Hall reads as a warm, lived-in great hall that belongs in the key art\u0027s world.",
+        "defects":  [
+                        "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall",
+                        "Structural posts sit in the camera\u0027s near field and frame or block the views",
+                        "The shrine end has no warm focal point that draws the eye"
+                    ]
+    },
+    {
+        "label":  "F17#6 r9 GPU Medium nave-sides",
+        "a":  "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-nave-sides-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-nave-sides-control.png",
+        "brief":  "Fixed views of the Crossing Hall in a Meadows village (outside approach, nave, side arches, shrine end) by day and night, one in rain, with the 1.80 m trainer as a ruler. Judge whether the Hall reads as a warm, lived-in great hall that belongs in the key art\u0027s world.",
+        "defects":  [
+                        "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall",
+                        "Structural posts sit in the camera\u0027s near field and frame or block the views",
+                        "The shrine end has no warm focal point that draws the eye"
+                    ]
+    },
+    {
+        "label":  "F17#6 r9 GPU Medium shrine",
+        "a":  "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-shrine-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-Medium-shrine-control.png",
+        "brief":  "Fixed views of the Crossing Hall in a Meadows village (outside approach, nave, side arches, shrine end) by day and night, one in rain, with the 1.80 m trainer as a ruler. Judge whether the Hall reads as a warm, lived-in great hall that belongs in the key art\u0027s world.",
+        "defects":  [
+                        "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall",
+                        "Structural posts sit in the camera\u0027s near field and frame or block the views",
+                        "The shrine end has no warm focal point that draws the eye"
+                    ]
+    },
+    {
+        "label":  "F17#6 r9 GPU High approach-nave",
+        "a":  "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-High-approach-nave-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-High-approach-nave-control.png",
+        "brief":  "Fixed views of the Crossing Hall in a Meadows village (outside approach, nave, side arches, shrine end) by day and night, one in rain, with the 1.80 m trainer as a ruler. Judge whether the Hall reads as a warm, lived-in great hall that belongs in the key art\u0027s world.",
+        "defects":  [
+                        "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall",
+                        "Structural posts sit in the camera\u0027s near field and frame or block the views",
+                        "The shrine end has no warm focal point that draws the eye"
+                    ]
+    },
+    {
+        "label":  "F17#6 r9 GPU High nave-sides",
+        "a":  "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-High-nave-sides-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-High-nave-sides-control.png",
+        "brief":  "Fixed views of the Crossing Hall in a Meadows village (outside approach, nave, side arches, shrine end) by day and night, one in rain, with the 1.80 m trainer as a ruler. Judge whether the Hall reads as a warm, lived-in great hall that belongs in the key art\u0027s world.",
+        "defects":  [
+                        "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall",
+                        "Structural posts sit in the camera\u0027s near field and frame or block the views",
+                        "The shrine end has no warm focal point that draws the eye"
+                    ]
+    },
+    {
+        "label":  "F17#6 r9 GPU High shrine",
+        "a":  "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-High-shrine-candidate.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\f17\\sides\\F17-6-High-shrine-control.png",
+        "brief":  "Fixed views of the Crossing Hall in a Meadows village (outside approach, nave, side arches, shrine end) by day and night, one in rain, with the 1.80 m trainer as a ruler. Judge whether the Hall reads as a warm, lived-in great hall that belongs in the key art\u0027s world.",
+        "defects":  [
+                        "The Hall reads as a bare courtyard under a cold blue-grey grade instead of a warm, furnished great hall",
+                        "Structural posts sit in the camera\u0027s near field and frame or block the views",
+                        "The shrine end has no warm focal point that draws the eye"
+                    ]
+    }
+]

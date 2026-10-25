@@ -42,6 +42,10 @@ def reset():
   b.rotation_mode='QUATERNION';b.rotation_quaternion=Quaternion((1,0,0),0);b.location=(0,0,0)
 def rotate(name,degrees,axis=(1,0,0)):
  basis=bases[name];rig.pose.bones[name].rotation_quaternion=basis.inverted()@Quaternion(Vector(axis),math.radians(degrees))@basis
+def turn(name,parts):
+ q=Quaternion((1,0,0,0))
+ for degrees,axis in parts:q=Quaternion(Vector(axis),math.radians(degrees))@q
+ basis=bases[name];rig.pose.bones[name].rotation_quaternion=basis.inverted()@q@basis
 def low(skip=(),q=0.0):
  graph=bpy.context.evaluated_depsgraph_get();result=math.inf
  for o in bpy.data.objects:
@@ -90,13 +94,16 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
     rotate('front_upper_'+side,-30*pulse);rotate('front_lower_'+side,25*pulse)
    rotate('head',-10*pulse);rotate('spine',-4*pulse)
   if role=='hit':
-   # Close-1022: the held body-carried shove that judged 7.5+ on Meadowhart and
-   # Riverdrake (b3): the chest rears back off the blow, held to .5, back by .97.
+   # Close-1022 envelope: peaks at .12, held to .5, back by .97.
    e=min(1,t/.12);e=e*e*(3-2*e)
    r=max(0,min(1,(t-.5)/.47));e*=1-r*r*(3-2*r)
-   rotate('root',REAR*16*e);rotate('spine',REAR*8*e);rotate('neck',-REAR*6*e);rotate('head',8*e,(0,0,1))
-   for side in ['l','r']:
-    rotate('front_upper_'+side,-26*e);rotate('front_lower_'+side,30*e)
+   # P2-016 / b31 (25 Oct): the rear-back read as a pounce or lunge. Cower
+   # instead: the head ducks low and aside, the body rolls away from the blow
+   # and the tail tucks. No root pitch or bent knee: either lifts a foot off
+   # the floor in this rig.
+   turn('root',[(12*e,(0,1,0))]);turn('spine',[(-8*e,(0,0,1))])
+   turn('neck',[(-NOD*30*e,(1,0,0)),(-14*e,(0,0,1))]);turn('head',[(-NOD*14*e,(1,0,0)),(14*e,(0,1,0))])
+   rotate('tail_1',-25*e)
   if role=='faint':
    # Close-1024: the side roll (back to camera), grounded on the body (see low()).
    phase=phase_of(t)

@@ -4,7 +4,142 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
 
 ## TO COORDINATOR
 
+- 2026-10-24 19:20 CT **INFO (rf1/VERDICT.md): one rock family ships ON at `tb/tidewake` deb793527.** Every view it changes was judged; confirming batch, no extrapolation.
+  - **Close-up:** 4.51 against 3.90, all three judges higher.
+  - **Shore views:** 6.08 against 6.08, level.
+  - **Matched fight:** 5.01 against 4.85.
+  - The fight's top-right "black slab" is untouched by it. It isn't the kitbash or the formations; next I'll identify which piece it is.
+  - **vf3** (the facade, lifted 14 m and facing the stand, 35.8 m off the hike) is capturing for its close-up and matched-fight round.
+  - **After vf3**, your GPU asks: night shadow on Forward+ and the noon seam.
+
+- 2026-10-24 18:15 CT **MESHY: `assets/props/meshy-1025/veilfall_cliff_facade/reference/`, 35 m wide x 30 m tall x 6 m deep (flat back), a slope-hugging Veilfall gully-wall cliff facade with a 2-3 tier white falls.**
+  - **Placement:** flush on the west gully wall at (338.0, 3836.0), normal (0.902, -0.431), yaw 115.5. Clearance from the hike: 35.8 m at the centre, 24.8 m minimum at the front face.
+  - **Inputs:** board crops (text, figures and structures removed), stone swatches, `prompt.txt`, `scale_check.png` (about 17x the 1.80 m trainer) and `placement.md`.
+  - **Gate:** OFF until judged.
+
+- 2026-10-24 17:55 CT **PARKED, with a MESHY suggestion: vf2 placement.** Off the hike, the veilfall-near slope is too steep for the cascade tier.
+  - **Why it fails:** at 15 m or more from the trail, the tiers bury into the slope, and only their crowns show as pale lumps. Lifting them floats their downhill fronts toward the camera, which judges already called "pasted, floating".
+  - **What it showed:** the only spot where the tier read (the close-up gain) was the trail itself, the gully floor.
+  - **My call:** park vf2 OFF. Keep the GLBs on the lane and the config placement with its clearance test.
+  - **The real fit is a slope-hugging asset,** not a free-standing tier. MESHY suggestion:
+    - **What:** a 30-40 m wide stratified limestone cliff face with a 2-3 tier white falls.
+    - **Form:** made as a thin, back-flat facade (about 6 m deep) to sit flush against the west gully wall, off the trail, like a skin over the existing slope.
+    - **References:** the c2 cascade-tier concepts plus the board's exterior crop under `assets/props/meshy-1025/veilfall_cascade_tier/reference/`.
+    - **Scale:** about 30 m tall against the 1.80 m trainer (about 17x).
+  - **Your call:** should I draft the reference and scale check?
+
+- 2026-10-24 17:30 CT **INFO: vf2's matched-moment fight is level (vfm: 3.56 against 3.64), but vf2 is withdrawn because it sat on the hike.**
+  - **The problem:** the `veilfall_exploration_spine` (4 m, main path to the gate) runs up the gully floor I had placed in.
+    - The plunge ring, which has a collider, sat 6.5 m from the trail centreline. The lower tier sat 8.4 m away.
+    - My raycast probe read the graded trail as cliff.
+  - **The fix:** every piece is now 15 m or more clear, with a regression test, `test_veilfall_hero_pieces_stay_clear_of_the_hike`, which fails on the old positions (`tb/tidewake` 5c… / d1939622c).
+  - **Next for vf2:** the moved placement is re-capturing for its own close-up round.
+  - **Land a167d0f67 is unaffected:** the limestone is a material change, and vf2 was OFF and excluded there.
+  - **One rock family** (`veilfall_family_candidate`, OFF): the gate formations and crown crags move toward the limestone, material only.
+    - The first look shows the crown crags pale tan.
+    - Its views (Veilfall close-up and rain, the seven shore/lesson views) and matched fight frames are capturing for a judged round.
+
+- 2026-10-24 16:30 CT **READY: `tb/tidewake-land` at a167d0f67** (a167d0f674e28cb143f891909183f71c0b2d0df9), one commit on origin/main 4fde48210, after #725 and #726.
+  - **ON:** the Veilfall limestone (`veilfall_rock_candidate`), with every view it changes judged:
+    - close-up 4.20 against 3.35 (vf1);
+    - the seven F39-look views 5.29 against 5.24, which is level (ls1);
+    - the Venn fight 4.90 against 4.77 (ls1).
+  - **Staged OFF:** the `veilfall_hero_candidate` config and the `lift_m` spec key. The Meshy 7-8 GLBs are **not** in the land.
+  - **Checks:** tidewake look, model preload, material family, dune cover and groves, and the five Veilfall test files: 35 tests, 2816 assertions, 0 failed.
+  - I force-pushed over my own earlier land head; #725 has already merged it.
+- 2026-10-24 16:30 CT **QUESTION (vf2/VERDICT.md): the Meshy 7-8 hero pieces split.**
+  - **Close-up:** they beat vf1, 3.55 against limestone 2.85, with all three judges higher.
+  - **Venn fight frames:** they lose, 4.29 against 4.72, with all three judges lower.
+  - **Why the fight result is suspect:** every judge credits the control's frames 3-4 for the camp its live fight happened to swing towards, and no judge mentions the cascade in either side's fight frames.
+  - **Shore views:** the hero pieces change them by less than run-to-run noise.
+  - **Status:** OFF under the rule.
+  - **The question:** do you want a matched-moment fight round (the same frame index, judged alone), or should the close-up decide? Either way, the judges' next ask is one rock family: the pale tiers against the black formation slabs.
+
+- 2026-10-24 15:20 CT **INFO (ls1/VERDICT.md): the limestone ships ON; vf2 beats vf1.** All captures are on the #725-fixed code.
+  - **Limestone on its other views** (seven F39-look shore and lesson views): 5.29 against main 5.24, which is level.
+  - **Limestone in the Venn fight:** 4.90 against 4.77.
+  - **Decision:** with vf1's close-up (+0.85), every view it changes is judged and none regresses, so `veilfall_rock_candidate` ships **ON** at `tb/tidewake` 76865d9ec.
+  - **vf2:** the Meshy 7-8 cascade tiers plus the plunge ring on the probed gully ground score **3.55 against limestone 2.85**, all three judges higher (extrapolated below the anchors).
+    - It stays OFF until its fight frames are judged, because the Venn fight camera stands at the Veilfall camp. Those are capturing now.
+    - The judges still want one rock family: the pale tiers read pasted against the black formation slabs.
+  - **F39#4 and F39#5 stay open** (all below 6.7).
+  - A new land head with the limestone follows once the captures free Godot.
+
+- 2026-10-24 14:10 CT **ANSWER (#725 review): p1 and p2 were not skewed. Regression test at `tb/tidewake` ff70faa67.**
+  1. **p1 and p2 capture code.**
+     - All four p1/p2 arms were captured at **8ce49fdaf**: `p1_ctl`, `p1_cand`, `p2_ctl` and `p2_cand` (each frame's `metadata.json` `source_sha`).
+     - At that commit `shaders/stone_field.gdshader` has no `clump_patch`/`tide_band` uniforms, and `_build_stones` has no such keys. The grouping code first appears at 46d30d74d.
+     - So neither arm rendered grouped pebbles. The 5.59 against 5.02 and 6.02 against 5.72 deltas are the props and the Deep Watch clusters alone.
+     - The only frames that carried the bug are my limestone `ls_ctl`/`ls_cand` captures (46d30d74d), in both arms, and they have not been judged. I am recapturing them on the fixed code before judging.
+  2. **The fix** is cherry-picked onto the lane as cabf2caab.
+  3. **The regression test** is `test_water_dune_cover.gd::test_stone_grouping_never_inherits_the_grass_profile_keys`.
+     - It builds the stone tier from the real shipping Tidewake profile, which sets grass `clump_patch_*` at the top level and has no stones override.
+     - It asserts all five stone uniforms stay at the shader's 0.0 default.
+     - It also asserts that a `stones` override still reaches the shader.
+     - It **fails on the pre-fix `grass_field.gd` and passes on the fix**. `test_water_dune_cover`: 10 tests, 168 assertions, 0 failed.
+
+- 2026-10-24 13:40 CT **READY: `tb/tidewake-land` at c542dcd8c** (c542dcd8cbdc99efa9a24c010a60066dd8e6af42), one commit on origin/main 45865499d.
+  - **ON:** the Meshy beach props (p1: 5.59 against 5.02) and the Deep Watch shore site through `shipped_sites` (p2: 6.02 against 5.72).
+  - **OFF:**
+    - `stones_candidate`: the grouped-pebble shader uniforms, which do nothing at their defaults.
+    - The capture-only `--tidewake-look-sections` arg.
+  - **Not included:** the limestone and the Meshy 7-8 GLBs.
+    - The limestone's extra views are captured, but the fight frames failed on a fresh main asset that was not yet imported here. Both are rerunning now.
+    - The Meshy 7-8 GLBs (vf2) stay on the lane, unjudged.
+  - **Checks:** 24 tests and 384 assertions covering tidewake look, model preload, material family, dune cover and groves, 0 failed. `water_alpha` is per your note: CI-green on main and environmental here.
+  - **No F39 row closes**, because every score here is below 6.7.
+  - I force-pushed this branch over beeea5516. Both are my own land heads; this one is rebuilt from origin/main.
+
+- 2026-10-24 13:05 CT **INFO / BLOCKED (not this lane's): `smoke_net_water_alpha` is red on unchanged origin/main 45865499d in this container.**
+  - Run: `tools/net/run_net_smoke.sh water_alpha` on two real peers.
+  - The failing check is s15, "Client's engagement is authorized by remote host", with detail "No host-authorized local fight". Every other step passes.
+  - The land head beeea5516 fails identically, so this lane's diff does not cause it. It may be the CPU container's timing, or something from the fights landing (#724); I have not root-caused it.
+  - Logs are local (`/tmp/claude-0/sp/net_alpha*.log`).
+  - **Please check it on CI.** The brief asks this lane to keep the smoke green, and I can't from here.
+- 2026-10-24 13:05 CT INFO: your answers are applied on `tb/tidewake` 46d30d74d.
+  - **Deep Watch:** it ships alone through a new `shipped_sites` switch on the shore-ecology candidate. The parent stays OFF, and a focused test covers both halves.
+  - **Limestone:** the views it changes outside vf1 are being captured now: the seven F39-look shore and lesson views, plus the Venn fight where the judges saw the "black slab". They will be judged before it goes ON.
+  - **Pebbles:** `stones_candidate` (grouped pebbles plus a tide band, OFF) is staged for the next round.
+
+- 2026-10-24 12:45 CT **READY / INFO: 12:12 work order, all three steps done.** The land branch is `tb/tidewake-land` (SHA in the next line).
+  1. **Meshy props (p1/VERDICT.md).**
+     - What shipped: driftwood, a deck-work cluster and a 6.5 m hauled-up sloop on the First Shore and lesson beaches, plus driftwood at Deep Watch.
+     - Score: mapped **5.59 against main 5.02** on the six F39-look views. All three judges scored it higher, and empty foreground moved from PRESENT to PARTIAL.
+     - Decision: by your beats-main rule, `landmark_props_candidate` ships **ON**. It is presentation only with no colliders, so routes and encounters are unchanged.
+     - The dock sections stay OFF (dk1 judged them level).
+     - All six GLBs are already on main, so nothing has to be excluded from the land branch.
+     - No F39 row closes: 5.59 is below 6.7.
+  2. **P2-008 (p2/VERDICT.md).**
+     - Fix: the Deep Watch clusters were behind the camera. They now sit 4-14 m out from the stand.
+     - Score: mapped **6.02 against main 5.72**. All three judges scored it higher. **Not met.**
+     - The candidate **stays OFF**: its parent flag would also turn on six other islands' clusters that nobody has judged.
+     - **QUESTION:** do you want a per-site switch so Deep Watch alone ships ON by the beats-main rule?
+     - What the judges still want: rock outcrops or a headland at the waterline (new-art scale), and the even `stone_field` pebble scatter fixed.
+  3. **F39#4, said plainly: the Veilfall close-up cannot reach 6.7 in-scene.**
+     - Shipping maps to **3.35** (vf1/). The best in-scene change, the limestone material, maps to **4.20**.
+     - Four earlier OFF massing candidates from prior lanes did not get there either.
+     - Every judge since mx1 names the same causes: low-poly faceted cliff slabs, the near-black kitbash crown, and a stand at the cliff foot where the falls read as a blown white smear.
+     - Two of those are new art: **MESHY requests 7-8** (`meshy-requests.md`, references and scale checks under `assets/props/meshy-1025/`).
+     - **Please reopen F39#4.** I'll integrate 7-8 when they arrive.
+     - The limestone material also beats shipping (+0.85) but stays OFF under the "OFF until passing" rule. **QUESTION:** apply beats-main to it as well?
+  - **Next:** I'll rerun F39#5/#3 now that `tb/fights` has landed (#724). Then I'll work the shared top asks: the pebble scatter clustering (scene) and the horizon haze band (scene).
+
 (send_message refused: elevated_session_untrusted_device. Newest first.)
+
+- 2026-10-24 06:45 CT INFO: thanks for landing #718. `tb/tidewake` has origin/main 7480d1a27 merged in (Creatures #717), and both review nits are fixed in ae5db2d29 (comments only, 7 look tests 0 failed): `tidewake_world_look.gd` no longer calls the regrade OFF, and the config's top-level `_comment` now describes the shipped state. These ride the next landing; nothing else is pending on the lane branch beyond notes and the Meshy 1025 reference inputs.
+
+- 2026-10-24 06:00 CT INFO: **P2-008 (shore landforms, impact 100), first of the 12 Tidewake-scene items.** No judge round was run, because the existing candidate cannot move its own camera:
+  - **The candidate places nothing in view.** `water_dune_cover.json` `shore_ecology_candidate` (via `--tidewake-shore-candidate`) does place 108 instances, two small clusters at Deep Watch among them. Those clusters sit in a sector at bearing -132.8 degrees, behind `P2-008-shore.json`'s camera (yaw 24.6). The control and candidate frames are identical, with identical per-island counts.
+  - **The grass is not what reads as even.** The shipping dune profile already clumps it with real clearings (`clump_scale` 0.065, `clump_contrast` 1.0, `clump_patch_start/full` 0.47/0.64).
+  - **The even scatter every judge names is the pebble field.** `grass_field.gd` hands the stones the same noise (stones fall back to the grass `clump_*` keys), but `stone_field.gdshader` only does `mix(1.0, noise, contrast)`, with no clearing threshold. So pebble density never reaches zero, and the beach reads as one even sprinkle.
+  - **Smallest real fix:** add the grass shader's `clump_patch_start/full` smoothstep to `stone_field.gdshader`. That is a shared shader used by every biome, so it needs an OFF uniform default and a Meadows no-change check. Then judge P2-008 on a camera that faces the shore it changes.
+  - **Next in this lane's 12:** P2-115 camp bed (ON since close-1022, never judged on today's yardstick) and P2-057 grass around named characters (candidate OFF). Both are bounded captures with existing candidates.
+
+- 2026-10-24 05:40 CT **READY: `tb/tidewake-land` = 2a111298a** (contains origin/main 816dfa60f; merged after PR #716 landed, no file overlap). This is the land branch with the 7.07 time-of-day grade ON; everything else in it is OFF, a capture fix or evidence. Checks on that tree: 578 water/tidewake/veilfall/dock/drift/clock/weather/world-look/texture tests 0 failed, smoke_net_water_alpha ALL CHECKS PASSED, and after the merge `tidewake_look/water_surface/water_offshore/veilfall` re-ran with 20 tests, 0 failed. Commits on `tb/tidewake` after 2a111298a are notes and Meshy reference inputs only; they do not need to land.
+- 2026-10-24 05:40 CT **MESHY (Veilfall hero, the real fix for F39#5's placeholder rock):** inputs are on `tb/tidewake` under `assets/props/meshy-1025/<name>/reference/` (each with `.gdignore`):
+  - **(7) veilfall_cascade_tier**, 18 m wide x 10 m deep x 12 m tall (6.7x the 1.80 m trainer, see `scale_check.png`). Refs: `board_exterior_crop.png`, `board_falls_entrance_crop.png`, `board_palette_crop.png`, cropped from `docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png`. Full prompt in `prompt.txt`: pale stratified limestone tier with a pour notch, a wet pour line, mossy ledges and a turquoise catch basin; stackable flat base and top; no red.
+  - **(8) veilfall_plunge_rocks**, 9 x 7 x 3 m. Refs: `board_approach_crop.png`, `board_palette_crop.png`. Prompt: water-worn pale limestone boulders around a shallow turquoise plunge basin.
+  - Both land flag-OFF and get judged against vf1 (limestone 4.20, shipping 3.35). Acknowledged: the limestone material stays OFF meanwhile; telegraphs are left to tb/fights, and F39#5/F39#3 rerun once it lands.
 
 - 2026-10-24 05:15 CT **READY: `tb/tidewake-land` (head named in the commit after this note).** It is origin/main plus lane work only. Everything since the 02:45 READY is OFF, a capture fix, or evidence:
   - **Meshy 1024 batch wired in OFF** (all judged: docks level, currents level).

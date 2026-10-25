@@ -19,10 +19,18 @@ func build(water_world: Node3D) -> void:
 	var landmarks := {}
 	for raw: Variant in (water_world.get("config") as Dictionary).get("landmarks", []):
 		landmarks[str((raw as Dictionary).get("id", ""))] = raw
-	for raw: Variant in look.get("landmark_models", []):
+	# `landmark_props_candidate` (judged, ON) and `veilfall_hero_candidate`
+	# (unjudged, OFF in play) add props by absolute `position_xz_m` as well as
+	# by landmark offset.
+	var specs: Array = (look.get("landmark_models", []) as Array) + (look.get("landmark_props_candidate", []) as Array) \
+		+ (look.get("veilfall_hero_candidate", []) as Array) + (look.get("veilfall_facade_candidate", []) as Array)
+	for raw: Variant in specs:
 		var spec := raw as Dictionary
 		var landmark: Dictionary = landmarks.get(str(spec.get("landmark_id", "")), {})
 		var at_raw: Array = landmark.get("position", [])
+		if spec.has("position_xz_m"):
+			var placed: Array = spec.position_xz_m
+			at_raw = [float(placed[0]), 0.0, float(placed[1])]
 		if at_raw.size() < 3:
 			push_warning("landmark model has no authored landmark: %s" % spec.get("landmark_id", ""))
 			continue
@@ -39,20 +47,23 @@ func build(water_world: Node3D) -> void:
 			continue
 		var factor := float(spec.get("height_m", 5.0)) / bounds.size.y
 		var holder := Node3D.new()
-		holder.name = "Landmark_%s" % str(spec.landmark_id)
+		holder.name = "Landmark_%s" % str(spec.get("landmark_id", "prop"))
 		model.scale = Vector3.ONE * factor
 		model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
 		holder.add_child(model)
 		var yaw := deg_to_rad(float(spec.get("yaw_deg", 0.0)))
 		var half := Vector2(bounds.size.x, bounds.size.z) * factor * 0.5
 		holder.rotation.y = yaw
-		holder.position = Vector3(at.x, _floor(water_world, at, yaw, half) - float(spec.get("sink_m", 0.15)), at.y)
+		# `lift_m` raises a piece set into a steep slope, where the lowest footprint
+		# point would bury most of it (close-1024 vf2, the upper Veilfall tier).
+		holder.position = Vector3(at.x, _floor(water_world, at, yaw, half) - float(spec.get("sink_m", 0.15))
+			+ float(spec.get("lift_m", 0.0)), at.y)
 		add_child(holder)
 		var box: Array = spec.get("collider_fraction", [])
 		if box.size() == 3:
 			var body := StaticBody3D.new()
 			var shape := CollisionShape3D.new()
-			var size := Vector3(half.x * 2.0 * float(box[0]), float(spec.height_m) * float(box[1]),
+			var size := Vector3(half.x * 2.0 * float(box[0]), float(spec.get("height_m", 5.0)) * float(box[1]),
 				half.y * 2.0 * float(box[2]))
 			shape.shape = BoxShape3D.new()
 			(shape.shape as BoxShape3D).size = size

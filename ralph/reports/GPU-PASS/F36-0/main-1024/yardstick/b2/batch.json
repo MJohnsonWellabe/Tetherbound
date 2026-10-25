@@ -1,0 +1,116 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:control": [
+   3.3,
+   3.4,
+   3.0
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.1,
+   4.2,
+   3.7
+  ],
+  "f36_0_npc:C1B": [
+   6.5,
+   6.5,
+   6.8
+  ],
+  "f36_0_npc:C1A": [
+   6.5,
+   6.5,
+   6.7
+  ],
+  "f04_6_r22:control": [
+   4.1,
+   4.3,
+   4.4
+  ],
+  "f04_6_r22:r22": [
+   5.1,
+   5.2,
+   5.5
+  ],
+  "f36_0_gap:C1A": [
+   4.5,
+   4.6,
+   4.9
+  ],
+  "f36_0_gap:C1B": [
+   5.1,
+   3.8,
+   4.3
+  ]
+ },
+ "candidates": {
+  "F36#0 main nightburrow Medium|High | F36main-nightburrow-High": [
+   6.0,
+   5.9,
+   5.6
+  ],
+  "F36#0 main nightburrow Medium|High | F36main-nightburrow-Medium": [
+   6.0,
+   5.9,
+   5.6
+  ],
+  "F36#0 main burrowback Medium|High | F36main-burrowback-High": [
+   6.8,
+   6.2,
+   6.6
+  ],
+  "F36#0 main burrowback Medium|High | F36main-burrowback-Medium": [
+   6.8,
+   6.2,
+   6.6
+  ],
+  "F36#0 main veridian Medium|High | F36main-veridian-Medium": [
+   5.3,
+   5.2,
+   5.2
+  ],
+  "F36#0 main veridian Medium|High | F36main-veridian-High": [
+   5.3,
+   5.3,
+   5.2
+  ],
+  "F36#0 main mosshell Medium|High | F36main-mosshell-Medium": [
+   6.5,
+   6.3,
+   5.9
+  ],
+  "F36#0 main mosshell Medium|High | F36main-mosshell-High": [
+   6.5,
+   6.3,
+   5.9
+  ],
+  "F36#0 main riftfrill Medium|High | F36main-riftfrill-High": [
+   4.9,
+   4.6,
+   4.6
+  ],
+  "F36#0 main riftfrill Medium|High | F36main-riftfrill-Medium": [
+   4.9,
+   4.6,
+   4.6
+  ],
+  "F36#0 main stormtrail Medium|High | F36main-stormtrail-High": [
+   5.0,
+   5.0,
+   4.5
+  ],
+  "F36#0 main stormtrail Medium|High | F36main-stormtrail-Medium": [
+   5.0,
+   5.0,
+   4.5
+  ],
+  "F36#0 main water_mosshell Medium|High | F36main-water_mosshell-Medium": [
+   6.6,
+   6.3,
+   6.0
+  ],
+  "F36#0 main water_mosshell Medium|High | F36main-water_mosshell-High": [
+   6.6,
+   6.3,
+   6.0
+  ]
+ }
+}
