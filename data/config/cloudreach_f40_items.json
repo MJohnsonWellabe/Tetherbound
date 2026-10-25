@@ -722,7 +722,7 @@
     {
       "enabled": false,
       "preview_arg": "--cloudreach-f40-sage-grass-candidate",
-      "_why": "F40 C1 / P2-021 (every judge, b2 and b3 and the GPU baseline: 'a uniform, highly saturated mid-green grass carpet leads every Cloudreach frame and blocks the pale stratified stone, bright sky read; lower saturation and value'). Realm visual overlay only: terrain upland tint #abc89f -> #b9c0a4 and dry upland #c3c6a2 -> #c8c3a8 (paler, less green), grass blades base #2c4214 -> #36442a, tip #91a947 -> #a4ac6a, dry tip #a89b42 -> #b0a468, bush tip #647a31 -> #6f7a47. No density, terrain, collision or route change. Flag OFF; not judged yet. r1 CPU look: no change (hue/saturation of the lower frame identical) because the terrain material comes from the geology ground builder and most blades from the look's ground-cover finish; r2 also retints the look's finish blades (tint_base #33421a -> #3a4527, tip #889a3f -> #a3aa69, dry base #4b4919 -> #514c2a, dry tip #a89b42 -> #b2a66a).",
+      "_why": "F40 C1 / P2-021 (every judge, b2 and b3 and the GPU baseline: 'a uniform, highly saturated mid-green grass carpet leads every Cloudreach frame and blocks the pale stratified stone, bright sky read; lower saturation and value'). Realm visual overlay only: terrain upland tint #abc89f -> #b9c0a4 and dry upland #c3c6a2 -> #c8c3a8 (paler, less green), grass blades base #2c4214 -> #36442a, tip #91a947 -> #a4ac6a, dry tip #a89b42 -> #b0a468, bush tip #647a31 -> #6f7a47. No density, terrain, collision or route change. Flag OFF; not judged yet. r1 CPU look: no change (hue/saturation of the lower frame identical) because the terrain material comes from the geology ground builder and most blades from the look's ground-cover finish; r2 also retints the look's finish blades (tint_base #33421a -> #3a4527, tip #889a3f -> #a3aa69, dry base #4b4919 -> #514c2a, dry tip #a89b42 -> #b2a66a). r2 CPU look: still no change; the turf shader's grass_tint is hard-coded (#8ca867 / dry #a2ad78) and both blade layers match the turf at turf_match 0.85. r3 retints the turf itself: #8ca867 -> #9aa57c, dry #a2ad78 -> #aca985 (paler, less saturated sage).",
       "overlay": {
         "visual": {
           "surface": {
@@ -747,6 +747,10 @@
             "dry_tint_base": "#514c2a",
             "dry_tint_tip": "#b2a66a"
           }
+        },
+        "turf": {
+          "grass_tint": "#9aa57c",
+          "dry_grass_tint": "#aca985"
         }
       }
     }

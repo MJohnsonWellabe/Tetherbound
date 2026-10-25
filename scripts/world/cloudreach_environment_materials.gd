@@ -79,7 +79,10 @@ static func banner(size: Vector2, phase: float) -> ShaderMaterial:
 static func turf_parameters(material: ShaderMaterial,dry: bool) -> void:
 	preload("res://scripts/world/cloudreach_biome_look.gd").material_detail(material, "turf")
 	material.set_shader_parameter("grass_texture",preload("res://assets/environment/terrain/stylised/verge_grass_Color.png") if dry else preload("res://assets/environment/terrain/stylised/meadow_grass_Color.png"))
-	material.set_shader_parameter("grass_tint",Color("#a2ad78") if dry else Color("#8ca867"))
+	# An F40 items candidate may retint the turf (blades match it via turf_match).
+	var turf: Dictionary = preload("res://scripts/world/cloudreach_settlement_life.gd").items_config().get("turf", {})
+	material.set_shader_parameter("grass_tint",Color(str(turf.get("dry_grass_tint", "#a2ad78"))) if dry \
+		else Color(str(turf.get("grass_tint", "#8ca867"))))
 	material.set_shader_parameter("grass_scale",0.65)
 
 static func ground_cover_parameters(material: ShaderMaterial, dry: bool, config: Dictionary) -> void:
