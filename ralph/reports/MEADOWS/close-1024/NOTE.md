@@ -364,6 +364,13 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - **Test update:** `test_ironwood_grove_identity` asserted the R13 colour-grade shader on the installed landmark. With the candidate ON, it now asserts the Meshy landmark installs with its own textured material. The R13 check still applies when OFF.
   - **Tests on land15's own files:** test_ironwood_grove_identity, test_meadows_tier1_art_gates, test_texture_import_policy and test_stronghold_banner_camera_occluder: 12 tests, 1414 assertions, 0 failed.
 
+- 2026-10-25 22:17 UTC STATUS, grove (the coordinator's 21:58 item 2). Two routes tried on CPU, neither judged, because neither visibly changes the stands.
+  - **Render-only alias** (`vegetation_presentation.json model_alias_candidate`, OFF): this swaps the scatter's CommonTree_1–3 and TwistedTree_2/4 for the grove oaks. At ironwood_0/1 it changes only a few far background trees, which read pale and puffy.
+  - **Clustered oaks** (`meadows_hero_pieces.json grove_oaks`, OFF): eight oaks in three mixed-size clusters around the giant. They show only in the approach view, as small pale-lime clumps beside the giant. That is the same "lime broccoli" read GPU MH gave the r1 Ironwood trees. Gameplay and detail views are nearly unchanged.
+  - **The trees that dominate those frames** are the five harvestable ironwoods (band4 harvest nodes, `tree_footings`). Replacing their model is the real grove lever, but it is a gameplay-node presentation change: a model override per harvest type, with harvest prompts, yields and collision kept. I'm proposing it as the next grove candidate rather than shipping it blind.
+  - **Haze/light:** L5 haze has had four sub-0.5 rounds this week, and L3 (interior grade) is held by the owner. It rides along only inside a big change.
+  - **Next here:** the stronghold candidate from the 21:58 item 3. That means a keep several times larger in frame, the pylons out of that view, courtyard daylight and props cleared, and then a re-judge of the banners.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
