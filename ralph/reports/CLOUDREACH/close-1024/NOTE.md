@@ -1,5 +1,130 @@
 # Cloudreach lane — close 24 Oct 2026 (tb/cloudreach)
 
+## Handoff (state) — 25 Oct 2026 08:55 CT, lane PAUSED
+
+**Branch heads**
+- `tb/cloudreach` @ 43614cff9: 56 commits ahead of origin/main 1d5faebac, **nothing landed**. GPU batches 1–3 capture from 2ca35bc7d (coordinator lands from there). Commits after 2ca35bc7d add only new flag-OFF candidates (`stone-ground`, `overlook-r3`, sage r3 turf override), the per-stand `pattern` key in `cloudreach_settlement_life.gd`, the `strata_ledge` prop entry, the imported `cloudreach_stratified_overhang`, four Meshy references and these notes. The batch 1–3 flag overlays are byte-identical to 2ca35bc7d (checked).
+- `tb/cloudreach-land`: **never pushed** (no row closed; GPU decides done).
+
+**Open candidates** (all flag OFF; scores are CPU-mapped Bar A, candidate vs control; GPU column = GPU baseline of the stand)
+| Flag / change | Stand (GPU) | CPU verdict | Next step |
+|---|---|---|---|
+| `--cloudreach-high-perches-compass-candidate` (+`--cloudreach-f40-perches-tidy-candidate`) | high_perches 5.43 | b1 day 6.49 vs 5.10, night 5.51 vs 4.27; b2 with tidy 6.44 vs 5.20 | GPU batch 1/2 (capturing). Land if GPU gains. |
+| `--cloudreach-f40-island-shell-candidate` (Meshy) | high_perches 5.43 | b3 6.64 vs 5.98 | GPU batch 3. |
+| `--cloudreach-f40-heartstone-candidate` (Meshy) | sky_shrine 5.20 | b1 5.61 vs 4.73 | GPU batch 1 (use matrix `--piece=49-56`; the catalog cams crop it). |
+| `--cloudreach-f40-gate-shell-candidate` (Meshy shell around the gate mesa) | realm_gate 5.26 | b3 6.86 vs 5.49 | GPU batch 3. |
+| `--cloudreach-f40-beacon-spire-candidate` (Meshy) | windscar_beacon 5.08 | b2 5.74 vs 5.20 | GPU batch 2. |
+| `--cloudreach-f40-aerie-perch-candidate` (installed Meshy platforms) | flight_aerie 4.91 | b3 5.98 vs 4.89 | GPU batch 3; add the launch tower (MESHY requested). |
+| capture fallback (no flag) + Cliffhold arm check | cliffhold 5.02 | b2 6.50 vs 5.68 | GPU batch 2 `--piece=65-72`. |
+| observatory stand moved to (441, 4489) h −45 (no flag) | observatory 4.74 | b2 5.52 vs 4.22 | GPU batch 2 `--piece=73-80`; then the observatory Meshy. |
+| aerie heading −115 → +115 (no flag) | flight_aerie | b2 5.14 vs 5.01 | in batch 1. |
+| `--cloudreach-settlement-r18-candidate` (r18d) | F08#3 | b3 7.02 vs 6.26 (b1 r18b 6.49 vs 6.02) | GPU via `capture_cloudreach_settlement_identity.gd`. |
+| `--cloudreach-overlook-cleanup-candidate` (r3: pale piers, no needle/wings/pavers/banners) + `--cloudreach-f40-overlook-r3-candidate` (look-tree clearing, stone ground) | overlook 4.60 | r1 4.92 vs 4.82, r2 5.38 vs 5.00; r3 captured (`.artifacts/f40/ovl-a3b`), **not judged** | Replace with the overlook gateway Meshy (two rounds under +0.5). The tree through the arch is still untraced. |
+| `--cloudreach-f40-stone-ground-candidate` (strata columns and scree at the gate and summit matrix cams) | realm_gate 5.26, summit 5.62 | captured r1b (`.artifacts/f40/stone1b-3`, `stone1b-83`), **not judged** (b5 key/prompt committed, judges stopped) | Judge b5 with the committed key, or skip to the terrace-tier Meshy. |
+| `--cloudreach-f40-haze-candidate` | all | r1 0, r2 0 (judges saw identical sides) | Dead as fog values. Midground cloud volumes would be a different approach. |
+| `--cloudreach-f40-sage-grass-candidate` (retint, r3 via `turf` override) | all | r1/r2 no visible change, r3 gate 5.75 vs 5.78, summit 6.43 vs 6.32 (b4) | Dead. Judges want structure, not colour. |
+
+**Open criteria** (GPU = `ralph/reports/GPU-PASS/F40-0/main-1024/VERDICT.md` on tb/gpu-pass; CPU = best candidate above)
+- F40#0/#3/#5 matrix and catalog items: every stand FAILs on GPU. Dominant remaining defect from the judges:
+  - P2-021: a flat, saturated lawn leads every frame.
+  - P2-023: blunt undersides.
+  - Per-stand dominant objects are in the 08:35 INFO line below.
+- broken_skyroad_arch: no frames; no grounded stand exists more than 20 m from the old slabs within 40 m. Needs authored ground or a design call.
+- Fight 4.45: the white wind-lane planes are Fights PR #738; the grey slab plaza is untouched.
+- F08#3: GPU pending; CPU r18d 7.02.
+- F40#1/#2: one row per catalog item; none closed.
+
+**What worked and what didn't** (CPU-mapped deltas)
+- Worked, i.e. replacing the dominant object:
+  - Meshy hero pieces:
+    - gate shell +1.37
+    - aerie platforms +1.09
+    - heartstone +0.88
+    - island shell +0.66
+    - beacon spire +0.54
+  - Recoloring the flat blue compass to stone: +1.39 day, +1.24 night.
+  - Camera/stand fixes: observatory +1.30, Cliffhold arm check +0.82.
+  - F08#3 near-field dressing plus warm lamps: +0.76.
+- Didn't:
+  - Haze/fog values: 0, twice.
+  - Grass retint: about 0 over three rounds. Most retints don't reach the screen because terrain colour comes from the geology ground shader and blades from the look's ground-cover finish plus turf `grass_tint`.
+  - Overlook material and cleanup tweaks: +0.10, +0.38.
+  - Aerie heading alone: +0.13.
+  - Meshy stratified ledges sunk as ground shelves: their grass lip reads as raised grass slabs (self-look, dropped before judging).
+  - Paving pieces in the stand pattern: they scale by height into a huge rubble carpet (r18).
+
+## Harness runbook (how this lane actually ran things)
+
+**Setup**
+- Godot 4.7-stable: `curl -sSL -o /tmp/godot.zip https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip`, unzip, install as `/usr/local/bin/godot` (the CI URL, `ci.yml` `GODOT_VERSION`).
+- Import after checkout and after any new asset: `timeout 1800 godot --headless --path . --import`. The first run takes about 45 min; later runs take about 8 min.
+- Meshy assets need their texture `.import` set to `compress/mode=2` and `detect_3d/compress_to=0`, then a second import (local sed; commit the `.import` files and the extracted `_Image_*.jpg` / `_normal.png`, as the other meshy-1024 assets do).
+
+**CPU capture** (one Godot process at a time; serialised by a local queue that waits on `pgrep -x godot`)
+```
+timeout 3600 xvfb-run -a -s "-screen 0 1280x800x24" godot --path . --rendering-driver opengl3 --rendering-method gl_compatibility --resolution 1280x720 \
+  --script res://tools/capture_cloudreach_f40_matrix.gd -- --biome=cloudreach --preset=Low --low-resolution=1280x720 \
+  --source-commit=$(git rev-parse HEAD) --piece=<N> --output=res://.artifacts/f40/<name> [candidate flags] > .artifacts/f40/<name>.log 2>&1
+```
+- **Pieces:** piece = stand*8 + time*2 + weather + 1, with time dawn 0, day 1, golden 2, night 3 and weather clear 0, rain 1. Day clear for stand d is d*8+3: gate 3, summit 83, overlook 91.
+- **Views per piece:** four (approach, gameplay, reverse, detail).
+- **Timing:** about 9 min world load, then 1–6 min per frame on llvmpipe, so about 25 min per piece.
+- **Other tools** (same xvfb/opengl3/1280x720 prefix):
+  - `tools/capture_cloudreach_settlement_identity.gd -- --preset=Low --low-resolution=1280x720 --source-commit=$SHA --output=res://.artifacts/f08/<name> [--cloudreach-settlement-r18-candidate]`. Timeout 7000; produces 10 views, day and night.
+  - `tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --subset=sky_shrine_heartstone --times=day,night --output=res://.artifacts/hs/<arm>`.
+  - `tools/phase2_capture_cloudreach_high_perch.gd -- --seed=2042 --output=res://ralph/reports/VISUAL/phase2/cloudreach/p23-1024-<arm>`. This tool refuses any output outside that folder; move the PNGs to `.artifacts` afterwards, or the stop hook flags them as untracked.
+- **GPU form** (for READY lines): `godot --path . --rendering-method forward_plus --resolution 1920x1080 --script <tool> -- <args> --preset=<High|Medium> --source-commit=<head>`.
+
+**CPU judge** (per batch; skill `visual-judge`)
+1. Build each side as a 2x2 contact sheet of the four day-clear views (approach, gameplay / reverse, detail), 640x360 per tile with a 6 px gutter. The spec JSON entries are `{label, a, b, brief, defects}`.
+2. Build the judge folder: `python3 tools/visual_judge/anchor_tiles.py --out /tmp/.../bN/judge --key ralph/reports/CLOUDREACH/close-1024/bN/key.json --candidates spec.json --pairs 4 --include craft --seed <new each batch>`. Then `cp -r docs/reference <judge>/reference`.
+3. Fill the prompt: take the ```text block of `tools/visual_judge/JUDGE_PROMPT.md`, replace `[JUDGE FOLDER]`, `[SET LIST]` (the folder's sets.md) and `[RECORDED DEFECTS]` (bN/recorded_defects.txt), and write it to `bN/judge_prompt_filled.txt`.
+4. Run three fresh general-purpose subagents with "Follow the instructions in <filled prompt> exactly; open only files inside <judge folder>". Save each one's last ```json block as `bN/j1..j3.json`.
+5. Build `bN/batch.json` from key.json:
+   - `anchors`: each anchor id gets its three judge scores.
+   - `candidates`: each "<label> candidate|control" gets its three scores. The `_c.jpg` side is the control.
+6. Calibrate: `python3 tools/visual_judge/calibrate.py bN/batch.json > bN/mapped.json`.
+7. Write `bN/VERDICT.md`. Warn when RMSE > 0.75 (b4 had 0.77).
+
+**Tests** (always selective under RD-37): `godot --headless --path . --script tests/run_tests.gd -- --only=<test_file.gd>`. Used here:
+- `test_capture_view_fallback` 5/13/0
+- `test_cloudreach_flight_aerie_presentation` 4/48/0
+- `test_four_biome_debug_teleport` 10/1094/0
+
+Also run `godot --headless --path . --check-only --script <changed.gd>`.
+
+**Harness problems hit, cause → fix (where it lives)**
+- **No Godot in the container** → installed 4.7-stable from the CI URL. Local only.
+- **`pkill -f godot` killed its own shell** (exit 144) → `ps -eo pid,args | awk` plus an explicit `kill`. Local only.
+- **Probe and tool argument refusals:**
+  - "Look-dev Low resolution must be 1280x720" → pass `--low-resolution=1280x720`.
+  - "requires source SHA" → pass `--source-commit=<sha>` (any string works for a probe).
+  - Both are arguments, not tool fixes.
+- **Approach views refused or pointed into the void at Galefoot, Bells and Aerie, and the Cliffhold camera against a wall:**
+  - Cause: the fixed 12 m approach offset backed off the island or into a wall.
+  - Fix: `tools/capture_view_fallback.gd`, a shared helper. It steps the offset 12/10/8…4 m, then tries ±15° and ±30° turns, and accepts a point only if it passes the production `_debug_teleport_walkable` and `ground_height_at` checks, an eye-height line of sight and a clear 6 m camera arm. The result is recorded as `view_fallback` in the manifest; if nothing passes, the view fails closed.
+  - Committed in the batch-1/2 commits (4da38819 and after), with `tests/test_capture_view_fallback.gd`.
+- **Aerie catalogue heading sign error** (−115 faced away from the compass) → `data/config/debug_teleport_spots.json` set to +115, and the test now asserts intent. Committed (batch 1).
+- **Observatory stand inside the tower's rib ring** → stand moved in `debug_teleport_spots.json`. Committed (batch 2).
+- **Candidate overlays with no visible effect:**
+  - The realm `visual` merge never reaches the look's ground-cover finish or the turf blades.
+  - Fix: items candidates now take `look` and `turf` overlays (`cloudreach_look.gd`, `cloudreach_environment_materials.gd`). Committed.
+- **Arrays replace on merge, they don't append.** An overlay that touches `stands`, `tree_exclusions` or `architectural_clearings` must copy the shipping list and append to it (done in the JSON).
+- **Shared `stand_pattern` is global** → per-stand `pattern` key (`cloudreach_settlement_life.gd`). Committed 7e4446fe and after.
+- **New Meshy textures imported as VRAM-compressed / detect-3D** → set the `.import` keys and import again. The committed `.import` files carry the fix.
+- **Container restart killed the background queue** → restart the queue; check `.artifacts/qm.log` START/END lines. Local only.
+- **Stop-hook "untracked files" warnings** come from capture folders under `ralph/reports/VISUAL` → move them to `.artifacts`. Commit only verdicts, small JSON and judge files.
+- **Background queue scripts are read lazily by bash**, so a `sed -i` on a running queue does not reach it → write a new queue file that waits for the old one.
+- **Disk:** 2.3 GB free of the allowance at pause; `.artifacts` is 485 MB. Delete old `.artifacts/f40/*` capture folders before big runs.
+- **send_message to the coordinator is refused** (`elevated_session_untrusted_device`) → reply through this NOTE.
+
+**Local-only scripts** (not committed; convenience only, all reproducible from the commands above)
+- `/tmp/claude-0/lane/qm.sh` and its siblings: `matrix <name> <piece> [flags]` and `probe <script> <out>` wrappers around the capture command, with `wait_free` (poll `pgrep -x godot`) and START/END lines in `.artifacts/qm.log`.
+- `/tmp/claude-0/lane/sheets.py`: per-stand contact sheets.
+- `/tmp/claude-0/lane/ref_*.py`: the Meshy reference sheets, already committed as JPGs.
+- `.artifacts/probe_*.gd`: scratch probes that extend the matrix tool and override `_capture_row`. Examples: pixel→mesh hit list, stand ground checks.
+
+
 Rows in order: F40#0 recapture + rescore, F40#5 defect pass, F40#3 matrix bar, F08#3, F40#1/#2.
 Renderer for every capture: Low preset, Compatibility (`gl_compatibility`/`opengl3`), Mesa llvmpipe CPU, xvfb.
 Judging: `tools/visual_judge/` yardstick (standard prompt, ≥3 anchor pairs, `calibrate.py`); CPU-provisional bar 6.7.
