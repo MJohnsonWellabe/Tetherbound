@@ -1,6 +1,22 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-25 13:30 CT **READY tb/fights-land 4ae4433da**: exactly a55b0fa4b's lane content on current origin/main 1d5faebac. Main has not moved since; `git diff a55b0fa4b 4ae4433da` equals main's own changes. Checks on 4ae4433da after `godot --import`: 283 tests, 11394 assertions, 0 failed (the 11:20 set). **The Fights lane pauses after this entry** (owner: cut usage); no new work.
+- 2026-10-25 13:30 CT INFO F22#4 C2/C3 final state (24 seeds, READER vs MASHER, live f22 patterns; per-fight tables in the 05:20 and 10:40 entries):
+  - Finale (Veyra, Marrow): 6/6 PASS.
+  - Meadows named: 22/24. Riverwatch Terrapup and Galewisp C3 were 0.501 against the 0.5 ceiling. Brooktail power 27.5 -> 27.0 is landed; its 24-seed rerun was **not run** (stopped for the pause).
+  - Stormwood named: 15/18. The three Terrapup rows fail the ratio only (reader win 1.00, max hit 3-5%). The rerun under the COMBAT §7 trivial-fight floor was **stopped before finishing** (pause).
+  - Water: 48/54. Venn and Nerissa fail the ratio (about 0.75) with Ripplet and Galewisp; Songweaver and Tidecoil Galewisp miss the trivial floor by noise. Water-lane rows.
+  - Chapter row for Balance: Meadows Galewisp `masher_loses_a_named_fight` 0.12 < 0.25.
+  - F22#4 does not close on this evidence: the two reruns are open, and Venn/Nerissa need a tune.
+- 2026-10-25 13:30 CT HANDOFF open high-gain fight items, for the Creatures lane (or whoever resumes fights). Code on tb/fights after the land, all OFF or untested on GPU:
+  1. **Venn pilot fade during fights.** 844dad9e0 (unlanded) skips the follower cover fade for any body a running fight pilots, whatever its follow state, with a new test. CPU shows Ripplet solid; GPU J still showed it dithered on a55b0fa4b. Land 844dad9e0 and re-judge on GPU.
+  2. **Venn below 6** (GPU High 4.64). The dominant problem is the lens under the cliff overhang (black wedge), bleached sand and no sea. Structural fix staged: ed4ba3ebd adds per-trainer `face_yaw_deg` to the fight camera solver (absent = off), and `cand_r10.py.txt` sets Venn to -90 (looking at the sea). Not captured or judged yet.
+     - The "Gather Reef Stone" prompt still drew in the CPU Venn capture even with 3f24b65df's `_combat_is_running()` group fallback. Main's a6bbba553 also targets it; verify on GPU.
+  3. **Impact discs over targets.** Kit move contact flashes draw a 1.6x bloom nudged 0.45 m toward the lens. 3f24b65df adds kit_move_effects `flash_scale` and `flash_life_scale` (OFF). r8 tried x0.5 with smaller contact discs: flat (-0.08 mean), so OFF. Needs a redesign (feet-level burst), not a scale.
+  4. **Heavy-trail opacity.** Judges in r8 and GPU G5: the wind-up dust columns bury the struck creature. This is the r6 fill rows and pulse at dust_alpha 0.9, a regression from my change. 1d511d18b/43d7e6d6b add `dust_lane_alpha_max` (OFF), and `cand_r9.py.txt` (lane dust at most 0.35, tell dust 0.6) is staged; its captures were cut by the pause. Highest-value next step: capture and judge r9, and ship it if no worse.
+  5. **Flash at the feet.** `impact.flash_drop` 1.0 is ON (landed), but the judges still see a disc on the struck body from the kit move flash (item 3) and the ground burst puffs. Same fix as item 3.
+  - Stagger body read: main has 4b2a5fa63 (stagger holds the wince); labels name their owner (landed).
 - 2026-10-25 12:45 CT INFO r8 (J items 3 and 5: kit flash x0.5 and life x0.65, contact disc 0.32/0.42, lighter ground burst, pilot floor 0.13), code-blind CPU, 3 fresh judges, mapped (confirming, slope 1.10, r 0.89, RMSE 0.63; files r8_*):
   - Shipped look -> r8: Stormwood 6.17 -> 6.21, Warden f38 7.01 -> 6.97, Venn 6.02 -> 5.84, grunt f38 6.72 -> 6.57. **Not better: r8 stays OFF** (`flash_scale`, `flash_life_scale` 1.0; radii and pilot floor unchanged).
   - All three judges name the same main cause: **the wind-up dust columns** bury the player's creature (Stormwood Sparkit, Terrapup). That density is my r6 fill rows and pulse at dust_alpha 0.9, so it is a regression in my own change. r9 tests your G5 cap (charge-lane dust at most 0.35) with tell dust at 0.6; that arm is capturing now against r8's shipped-look frames.
