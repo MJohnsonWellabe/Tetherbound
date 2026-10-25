@@ -308,6 +308,15 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Prompt: "ancient colossal ironwood tree, massive buttressed trunk with gnarled bark and moss, enormous layered canopy of dense leaf-card clusters with light breaking through, warm green with sunlit tips, stylised realism like Valheim and Palworld, game asset, single hero tree".
   - It replaces the existing giant (one change); the r1 Ironwood trees stay as they are.
 
+- 2026-10-25 16:16 UTC STATUS (waiting): nothing in this lane is expected to gain more than 0.5 without new art or a GPU verdict, so no captures are running.
+  - **Board rows:**
+    - F17#6: READY tb/meadows-land3 4d204e402 (no shafts on Forward+; CPU r9 6.84).
+    - F04#6: READY tb/meadows-land6 3e06c8ddf (Meshy aftermath heroes OFF; CPU r31 6.23 vs 5.86).
+    - Both wait on the GPU pass.
+  - **Tier-1 heroes:** READY tb/meadows-land11 89c5b91f64 (all OFF) plus tb/meadows-land10 0133455e34 (camera seats). These are waiting on the GPU pass too.
+  - **MESHY:** none of the eight requested assets is on tb/meshy-1024 yet (checked 14:42, 15:14 and 16:16): burrow mound, lock-yard paving, quarry blocks, home arch, war banner, lit keep, Stormwood arch, giant ironwood. I wire each OFF on delivery and post a CPU A/B READY.
+  - tb/meadows has origin/main merged (0fe451688).
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
