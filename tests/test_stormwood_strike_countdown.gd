@@ -48,3 +48,16 @@ func test_building_and_fading_are_distinct() -> void:
 	assert_true(float(building.sheet_glow) > float(fading.sheet_glow), "Building flickers in-cloud; Fading does not")
 	assert_true(float(fading.ceiling_breakup) > float(building.ceiling_breakup), "Fading opens gaps in the ceiling")
 	assert_true(float(fading.steam) > 0.0 and float(building.steam) == 0.0, "only Fading steams")
+
+
+func test_the_warning_drops_its_painted_outline_unless_high_contrast() -> void:
+	var cfg: Dictionary = _surge().presentation.telegraph
+	assert_true(cfg.get("outline_off") == true, "the strike warning has no painted outline (GPU F41#0, 25 Oct)")
+	var style := preload("res://scripts/combat/tell_style.gd")
+	var combat: Dictionary = preload("res://scripts/combat/combat_math.gd").config()
+	assert_eq(style.outlines_off(cfg), combat.get("telegraph", {}).get("high_contrast_markers") != true,
+		"high_contrast_markers brings the outline back")
+	var code: String = LIGHTNING.TELEGRAPH_SHADER
+	assert_true(code.contains("if (outline_off > 0.5) {\n\t\ta_rim = 0.0;\n\t\ta_edge = 0.0;"), "no rim or glow band")
+	assert_true(code.contains("fill_colour = scorch_colour;"), "the fill chars the soil instead of a hazard-hue disc")
+	assert_true(code.find("float charge_radius") < code.find("if (outline_off > 0.5)"), "the leaders keep the countdown")
