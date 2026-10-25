@@ -718,6 +718,29 @@
           }
         }
       }
+    },
+    {
+      "enabled": false,
+      "preview_arg": "--cloudreach-f40-sage-grass-candidate",
+      "_why": "F40 C1 / P2-021 (every judge, b2 and b3 and the GPU baseline: 'a uniform, highly saturated mid-green grass carpet leads every Cloudreach frame and blocks the pale stratified stone, bright sky read; lower saturation and value'). Realm visual overlay only: terrain upland tint #abc89f -> #b9c0a4 and dry upland #c3c6a2 -> #c8c3a8 (paler, less green), grass blades base #2c4214 -> #36442a, tip #91a947 -> #a4ac6a, dry tip #a89b42 -> #b0a468, bush tip #647a31 -> #6f7a47. No density, terrain, collision or route change. Flag OFF; not judged yet.",
+      "overlay": {
+        "visual": {
+          "surface": {
+            "upland": {
+              "tint": "#b9c0a4"
+            },
+            "upland_dry": {
+              "tint": "#c8c3a8"
+            }
+          },
+          "ground_cover": {
+            "grass_base": "#36442a",
+            "grass_tip": "#a4ac6a",
+            "dry_grass_tip": "#b0a468",
+            "bush_tip": "#6f7a47"
+          }
+        }
+      }
     }
   ]
 }
