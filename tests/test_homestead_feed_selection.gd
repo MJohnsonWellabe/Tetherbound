@@ -158,3 +158,11 @@ func test_plot_spots_keep_the_kitchen_attachment_sockets_clear() -> void:
 	assert_false(HOME.spot_clear_of_sockets(Vector2(-10.0, 10.0), sockets), "covers tier 4")
 	assert_true(HOME.spot_clear_of_sockets(Vector2(-8.0, 20.0), sockets))
 	assert_true(HOME.spot_clear_of_sockets(Vector2(-12.0, 20.0), sockets), "the Altar spot")
+
+## A save made before the socket rule keeps its Forge on the tier-3 socket;
+## kitchen() dismantles a non-attachment building found there.
+func test_only_non_attachment_buildings_count_as_socket_blockers() -> void:
+	var cfg: Dictionary = preload("res://scripts/build/station_rules.gd").config()
+	assert_false(preload("res://scripts/build/station_rules.gd").attachment(cfg, "kitchen_meadows").is_empty())
+	assert_true(preload("res://scripts/build/station_rules.gd").attachment(cfg, "forge").is_empty())
+	assert_eq(HOME.DISMANTLE_STANDOFFS.size(), 5)
