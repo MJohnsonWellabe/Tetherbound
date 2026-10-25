@@ -60,9 +60,11 @@
   "clump_contrast": 0.55,
   "carpet_candidate": {
     "_why": "F38 L4 / P2-005 close-1024 candidate (OFF until judged): GPU and CPU judges at every exterior Meadows site read a uniform grass carpet. Broader drift noise (clump_scale 0.11 -> 0.07) bitten harder (clump_contrast 0.55 -> 0.8) so the field forms meadow patches and clearings instead of an even lawn. When enabled these keys override the top-level ones at load (grass_field.gd config()).",
+    "_why_r2": "r1 (0.07 / 0.8) captured near-identical to shipping on CPU (farm_to_hall, band2_stone_and_root_1, band5_0): not worth a judge round. r2 goes bolder: drift noise twice as broad as shipping, full contrast so drift gaps go short and sparse, and more blade-height variation so the patches read at camera distance.",
     "enabled": false,
-    "clump_scale": 0.07,
-    "clump_contrast": 0.8
+    "clump_scale": 0.045,
+    "clump_contrast": 1.0,
+    "height_jitter": 0.6
   },
   "_comment_colour": "Derived from measurement, not by eye. Sampled off-route on WORLD-GRASS's own frames, the meadow's ground reads #798732 (hue 68.3, value 0.529) against the owner reference's foreground grass at #7c8737 (hue 68.4, value 0.529) -- the palette was already right, so these sit around it rather than replacing it. `ground_blend` is the fix for the defect three blind rounds named: it mixes the terrain's OWN colour map into the base of every blade, so growth appears to come out of the ground instead of standing on a picture of it. `translucency` fakes the light through a blade; the Compatibility renderer has no subsurface scattering, so it lifts the tip rather than pretending to transmit.",
   "_comment_lens_clear": "MEADOWS-VISUAL-PASS round 5: the over-the-shoulder aim camera sits low enough that blades a metre from the lens rendered as giant flat cards over most of the frame (blind judge, combat 07). Blades within lens_clear_m of a low eye shrink away over lens_clear_band metres (grass_field.gdshader). TUNABLE.",
