@@ -224,6 +224,9 @@ const FRIENDLY_SIDES := [Vector3(0.0, 0.0, 1.0), Vector3(1.0, 0.0, 0.0), Vector3
 const FRIENDLY_TRIES := 12
 ## How many FRIENDLY_SETTLE waits a swing's refusal may take to arrive.
 const REFUSAL_POLLS := 12
+## Host refusals that turn a swing away before it is resolved against any
+## target (encounter_director.gd: move start / strike commit gates).
+const PRE_RESOLVE_REFUSALS := ["pending_vitals", "move_start_required"]
 ## A short settle for that staging, for the same reason: a long one gives each
 ## manager time to pull its creature back.
 const FRIENDLY_SETTLE := 8
@@ -858,6 +861,9 @@ func _run() -> void:
 		at_teammate.y = 0.0
 		if at_teammate.length() < 0.05:
 			continue
+		# The striker's refusal is never cleared, so only one that differs from
+		# this read counts as this swing's answer (until the polls run out).
+		var refusal_before: Dictionary = (await _boss(1)).get("refusal", {}) as Dictionary
 		friendly = await step(1, "strike",
 			{"target": [host_creature_at.x, host_creature_at.y, host_creature_at.z], "slot": "quick",
 			 "settle": STRIKE_SETTLE})
@@ -873,10 +879,19 @@ func _run() -> void:
 		# the next swing went stale). The HP and tally reads above stay inside
 		# the window; only the refusal's arrival is waited for.
 		for _wait in REFUSAL_POLLS:
-			if not str(refusal.get("code", "")).is_empty():
+			if not str(refusal.get("code", "")).is_empty() and refusal != refusal_before:
 				break
 			await step(1, "wait", {"frames": FRIENDLY_SETTLE})
 			refusal = (await _boss(1)).get("refusal", {}) as Dictionary
+		# A swing the host turned away BEFORE resolving it never reached the
+		# friendly-fire check: its move start waited on the striker's previous
+		# health change still saving (pending_vitals), so the strike had no
+		# committed start (move_start_required). CI 40150677244 read that as
+		# the arrival on attempt 1. Re-stage; `friendly_target` stays required.
+		if str(refusal.get("code", "")) in PRE_RESOLVE_REFUSALS:
+			print("[shared-boss friendly] attempt=%d re-staged: host refused before resolving (%s)"
+				% [staged, str(refusal.get("code", ""))])
+			continue
 		# The refusal's ARRIVAL is part of `clean`, not merely something read
 		# once the swing looked good. Without this the loop exits the moment the
 		# swing lands cleanly, and if the host's answer has not made the round
