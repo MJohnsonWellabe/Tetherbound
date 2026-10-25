@@ -151,6 +151,12 @@ static func config() -> Dictionary:
 	file.close()
 	if parsed is Dictionary:
 		_config = parsed
+		# F38 L4 (P2-005): an OFF overlay of field keys, judged before it ships.
+		var carpet: Variant = _config.get("carpet_candidate", {})
+		if carpet is Dictionary and bool((carpet as Dictionary).get("enabled", false)):
+			for key: String in (carpet as Dictionary).keys():
+				if key != "enabled" and not key.begins_with("_"):
+					_config[key] = carpet[key]
 	return _config
 
 
