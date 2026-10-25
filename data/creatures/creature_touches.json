@@ -61,5 +61,28 @@
     "softness": 0.1
    }
   ]
+ },
+ "cindercub": {
+  "source_model": "cindercub/candidate_nat1024b",
+  "_why": "Owner 25 Oct: Cindercub needs definition and features. The near-black coat read as one value and the face was lost. A pale ash-grey mask on the muzzle, cheeks and brow gives the face and eyes a read; the ember cracks stay (embers are natural to fire).",
+  "overlays": [
+   {
+    "id": "ash_mask",
+    "_why": "Definition: a pale ash-grey muzzle, cheeks and brow, so the face and eyes read.",
+    "where": {
+     "z_min": 0.86
+    },
+    "match": {
+     "val_max": 0.6
+    },
+    "mode": "shade",
+    "val_scale": 1.5,
+    "sat_scale": 0.55,
+    "coverage": 0.6,
+    "grain": 4.0,
+    "clump_softness": 0.2,
+    "softness": 0.12
+   }
+  ]
  }
 }
