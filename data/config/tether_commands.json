@@ -1,4 +1,5 @@
 {
+  "_why_fight_presentation_1025": "Fights close-1024 generic fight presentation ON (owner 24 Oct: 'I don't like how the fights outline the area of the attack'; cand_gen_h). Code-blind yardstick, CPU, 3 fresh judges, mapped, before -> after: Meadows Warden hall 4.85 -> 5.88, Riverwatch 5.64 -> 6.99 (r4); Veyra 5.60 -> 6.21, Stormwood glass_field 5.71 -> 6.13, Venn 5.38 -> 6.07 (r5). Outlines and impact disc FIXED in every after set; tell 'where' still PARTIAL/PRESENT (dust only). Presentation only: timings, footprints and the AI's telegraph unchanged. GPU confirms 7.5. ralph/reports/FIGHTS/close-1024/NOTE.md Here: ui.compact_when_idle true (slim command lane while nothing is usable).",
   "version": 1,
   "feature_flags": {"runtime_enabled": true, "network_enabled": true, "ui_enabled": true},
   "scope": "encounter_participant",
@@ -22,7 +23,7 @@
   },
   "snare_bounds": {"minimum_movement_multiplier": 0.45, "maximum_catch_bonus": 0.16},
   "item_bounds": {"maximum_heal": 1000000, "maximum_nourishment": 100, "maximum_happiness": 100, "minimum_buff_scale": 0.001, "maximum_buff_scale": 2.0, "maximum_buff_seconds": 3600, "buff_stats": ["attack", "defence", "speed", "wind_regen"]},
-  "ui": {"width": 580, "font_size": 22, "bar_height": 18, "refusal_seconds": 2.5},
+  "ui": {"width": 580, "font_size": 22, "bar_height": 18, "refusal_seconds": 2.5, "compact_when_idle": true, "_why_compact_when_idle": "F22#4 named-fight HUD candidate (Fights lane, 24 Oct; GPU/CPU judges: the bottom band covers about a third of the fight frame). true: while no command is usable the lane shows only its title and meter (scripts/ui/tether_command_meter.gd). ON since 25 Oct (code-blind r4/r5; see _why_fight_presentation_1025).", "_scope_compact_when_idle": "Client-local presentation only: read by each peer's renderer/HUD; no host authority, save, transaction, network message or gameplay state. Absent = previous behaviour."},
   "refusals": {
     "disabled": "Tether Commands are unavailable.",
     "stale_actor": "Your creature changed. Try again.",
