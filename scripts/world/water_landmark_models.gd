@@ -23,7 +23,8 @@ func build(water_world: Node3D) -> void:
 	# (unjudged, OFF in play) add props by absolute `position_xz_m` as well as
 	# by landmark offset.
 	var specs: Array = (look.get("landmark_models", []) as Array) + (look.get("landmark_props_candidate", []) as Array) \
-		+ (look.get("veilfall_hero_candidate", []) as Array) + (look.get("veilfall_facade_candidate", []) as Array)
+		+ (look.get("veilfall_hero_candidate", []) as Array) + (look.get("veilfall_facade_candidate", []) as Array) \
+		+ (look.get("veilfall_mountain_candidate", []) as Array)
 	# `first_shore_declutter_candidate` (OFF in play) drops named props by id.
 	var dropped: Array = (look.get("first_shore_declutter_candidate", {}) as Dictionary).get("drop_landmark_props", [])
 	for raw: Variant in specs:
@@ -52,11 +53,16 @@ func build(water_world: Node3D) -> void:
 		var factor := float(spec.get("height_m", 5.0)) / bounds.size.y
 		var holder := Node3D.new()
 		holder.name = "Landmark_%s" % str(spec.get("landmark_id", "prop"))
-		model.scale = Vector3.ONE * factor
-		model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
+		# Optional `stretch_xz` widens a fitted model without changing its height
+		# (close-1024: the generated Veilfall crown is narrower than the cone).
+		var stretch: Array = spec.get("stretch_xz", [1.0, 1.0])
+		var sx := float(stretch[0])
+		var sz := float(stretch[1])
+		model.scale = Vector3(factor * sx, factor, factor * sz)
+		model.position = -Vector3(bounds.get_center().x * sx, bounds.position.y, bounds.get_center().z * sz) * factor
 		holder.add_child(model)
 		var yaw := deg_to_rad(float(spec.get("yaw_deg", 0.0)))
-		var half := Vector2(bounds.size.x, bounds.size.z) * factor * 0.5
+		var half := Vector2(bounds.size.x * sx, bounds.size.z * sz) * factor * 0.5
 		holder.rotation.y = yaw
 		# `lift_m` raises a piece set into a steep slope, where the lowest footprint
 		# point would bury most of it (close-1024 vf2, the upper Veilfall tier).
