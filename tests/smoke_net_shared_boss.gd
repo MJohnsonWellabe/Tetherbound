@@ -727,6 +727,15 @@ func _run() -> void:
 			+ " over %d placement attempt(s); the host last held its creature %.2f m from the boss"
 				% [attempts, last_gap])
 		var guest_hp := float(((await _boss(1)).get("record", {}) as Dictionary).get("hp", -1.0))
+		# The host's number travels to the guest after the blow. Under load one
+		# read came back a blow early (guest 222.109 against host 214.717, the
+		# guest's previous value). Wait, bounded, for the replicated value; a
+		# copy that never matches still fails below.
+		for _wait in REFUSAL_POLLS:
+			if absf(guest_hp - host_hp) < 0.001:
+				break
+			await step(1, "wait", {"frames": FRIENDLY_SETTLE})
+			guest_hp = float(((await _boss(1)).get("record", {}) as Dictionary).get("hp", -1.0))
 		# §3: the record's hp is THE hit points and both peers render it. A client
 		# decrementing its own copy "for responsiveness" diverges here by exactly
 		# one blow.
