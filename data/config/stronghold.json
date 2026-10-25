@@ -8,11 +8,12 @@
   "_comment_stone_skirt": "T1-HALL-REBUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §5's foundation tier -- the darkest step on the ladder (skirt < works walls < DarkRock < LightRock < coping), at the coarser 0.22 tile so the foundation reads as BIGGER blocks than the wall above it. It is worn by a facing skin (`stronghold.gd::_build_skirt_facing`), not by the skirt slab itself: each chamber's floor slab IS its skirt (one box 18m deep whose top face is the room's walkable floor), so retinting the slab would repaint five interiors. Before this the building's whole visible plinth rendered as yard cobble seen edge-on, at a smaller stone scale than the wall standing on it -- the exact scale collision §5 resolves with a stated ladder.",
   "hero_gatehouse": {
     "_why_r1": "close-1024 r1: mapped Bar A 5.44 ON = shipping 5.44 (CPU, 25 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, anchors f36_0_npc:C1 / p2_094_r4 / craft, calibrate.py linear slope 1.64 r 0.98 RMSE 0.31, confirming batch; Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/art1024-mapped.json): at 28 m the gatehouse is not visible as a change from band5_0 (550 m) and is out of frame at band5_1. No gain; resize round follows.",
+    "_why_r2": "close-1024 r2 (OFF, unjudged): the 28 m piece in front of the mouth was a 30 px speck from band5_0. r2 stands it behind the stronghold as a keep on the skyline: 60 m wide (about 54 m tall, 30x the 1.80 m trainer), 130 m beyond the mouth, past the last chamber (z 103), so it rises over the hall roofline from the plain and over the walls from the courtyard, with nothing walkable inside it.",
     "_why": "F38 P2-003 close-1024 candidate (OFF until judged): GPU judges read the stronghold as 'a small dark ruin behind dominant pylons' (band5_stronghold_approach_0 5.66) and band5_1 as near-black with giant flat banners (4.59). The coordinator's Meshy gatehouse (tb/meshy-1024 4eb886a11, key-art stronghold panel ref; oxblood only on its banners) stands in front of the gate mouth: 28 m wide, uniform scale (about 25 m tall, roughly 14x the 1.80 m trainer), visual only, no collision, so the gate, ramp and route are unchanged. stronghold_hero_gatehouse.gd.",
     "enabled": false,
     "path": "res://assets/props/meshy-1024/meadows_stronghold_gatehouse/meadows_stronghold_gatehouse.glb",
-    "width_m": 28.0,
-    "offset": [0.0, 0.0, -4.0],
+    "width_m": 60.0,
+    "offset": [0.0, 0.0, 130.0],
     "yaw_deg": 0.0
   },
   "site": {
