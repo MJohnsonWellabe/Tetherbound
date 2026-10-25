@@ -11,6 +11,8 @@ func _load() -> Dictionary:
 	# at mapped CPU 7.07, close-1024 lt2; score in `_why_lighting_candidate`)
 	# and drops out of play only if it is listed in `sections_off` again.
 	loaded = TIDEWAKE_PROFILE.overlay(loaded, "lighting_candidate")
+	# close-1024 `golden_sky_candidate` (OFF in play): warmer 18:00 upper sky.
+	loaded = TIDEWAKE_PROFILE.overlay(loaded, "golden_sky_candidate")
 	# close-1024 GPU asks (OFF until the GPU lane judges it): `_forward_plus`
 	# keys that only Forward+/Mobile read, for the night shadow and noon seam.
 	loaded = TIDEWAKE_PROFILE.overlay(loaded, "forward_plus_candidate")
