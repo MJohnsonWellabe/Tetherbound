@@ -224,10 +224,16 @@ func _run() -> void:
 						# alpha's own pilot keeps its policy name.
 						"SWITCH_READER" if policy == "READER" and entry.kind != "alpha" else policy)
 					var tells: Array = []
+					var attacks: Array = []
 					for event: Dictionary in result.get("events", []):
-						if str(event.get("event", "")) == "telegraph": tells.append(float(event.seconds))
+						if str(event.get("event", "")) != "telegraph": continue
+						tells.append(float(event.seconds))
+						# F22#4 evidence: which authored pattern attacks the fight showed.
+						var attack := str((event.get("enemy_config", {}) as Dictionary).get("pattern_attack_id", ""))
+						if not attack.is_empty() and not attacks.has(attack): attacks.append(attack)
 					result.erase("events")
 					result["tells"] = tells
+					result["pattern_attacks"] = attacks
 					result["case"] = entry.id
 					result["starter"] = starter
 					if entry.kind == "alpha": result["phases"] = pilot.phase_log

@@ -237,6 +237,7 @@
         "source_species": "paddlenewt",
         "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
         "model": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native.glb",
+        "colourway_source_species": "mirejaw_native_review",
         "fit_candidate": {
           "enabled": true,
           "_enabled_close1024": "Coordinator 25 Oct: the shipped mesh logged a silent 8% footprint shrink (3.28 m instead of its declared 3.55 m); the fit grows it back to the declared height, per the scale hard rule.",
@@ -581,6 +582,7 @@
         "source_species": "paddlenewt",
         "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
         "model": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0.glb",
+        "colourway_source_species": "abyssal_guardian_installed_retex_r6_review",
         "source_height_m": 2.15,
         "target_height_m": 7.2,
         "model_scale": 1.0,
