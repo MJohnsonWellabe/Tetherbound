@@ -27,7 +27,7 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 			"veilfall_rock_detail_candidate", "first_shore_declutter_candidate",
 			"veilfall_formation_relief_candidate", "veilfall_formation_relief_fill_candidate",
 				"shore_surf_candidate", "shore_surf_vary_candidate", "veilfall_falls_candidate", "rain_fog_candidate",
-				"rain_grade_candidate"]:
+				"rain_grade_candidate", "dune_grass_candidate", "shore_water_candidate"]:
 		assert_true(off.has(section), "%s is unjudged and must ship off" % section)
 		assert_true(raw.has(section), "%s ships in the file for capture" % section)
 	# close-1024 lt2: the time-of-day regrade cleared the CPU-provisional bar
