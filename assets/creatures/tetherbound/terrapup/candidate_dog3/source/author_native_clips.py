@@ -91,9 +91,11 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
    # P2-016 (25 Oct): the head-up recoil still read as rearing in real fights.
    # Cower instead, as the other remakes: the head ducks low and aside, the
    # body rolls away from the blow and the tail tucks, feet planted.
-   turn('root',[(12*e,(0,1,0))]);turn('spine',[(-8*e,(0,0,1))])
-   turn('neck',[(-NOD*30*e,(1,0,0)),(-14*e,(0,0,1))]);turn('head',[(-NOD*14*e,(1,0,0)),(14*e,(0,1,0))])
-   rotate('tail_1',-25*e)
+   # GPU 25 Oct (0aad259db): at strip size the cower read close to standing.
+   # The head drops much further and the body rolls harder.
+   turn('root',[(16*e,(0,1,0))]);turn('spine',[(-10*e,(0,0,1))])
+   turn('neck',[(-NOD*48*e,(1,0,0)),(-16*e,(0,0,1))]);turn('head',[(-NOD*24*e,(1,0,0)),(16*e,(0,1,0))])
+   rotate('tail_1',-32*e)
   if role=='faint':
    # close-1024 b26 judges (three of three): the +90 roll (belly, pads and legs to
    # camera) read as the listed belly-up flip; the -90 roll lying prone with the

@@ -63,7 +63,7 @@
    },
    {
     "id": "plates_into_fur",
-    "_why": "Tier 3 (coordinator queue): the green stone plates read as stuck-on stones over the coat. Desaturate and darken them toward a weathered, earth-grey stone, so they read as hardened plates grown into the fur.",
+    "_why": "Tier 3 (coordinator queue): the green stone plates read as stuck-on stones over the coat. Desaturate and darken them toward a weathered, earth-grey stone, so they read as hardened plates grown into the fur. GPU 25 Oct (0aad259db): still a separate blanket; darker weathered value.",
     "match": {
      "hue": [
       70,
@@ -72,11 +72,26 @@
      "sat_min": 0.1
     },
     "mode": "shade",
-    "sat_scale": 0.42,
-    "val_scale": 0.74,
+    "sat_scale": 0.38,
+    "val_scale": 0.62,
     "coverage": 0.95,
     "grain": 3.0,
     "clump_softness": 0.2,
+    "softness": 0.15
+   },
+   {
+    "id": "moss_at_plate_edges",
+    "_why": "GPU 25 Oct (0aad259db) path to 7.5: blend the plates into the fur. Clumps of moss creep from the plates onto the coat of the upper back, so plate and fur share an edge instead of a hard border.",
+    "where": {
+     "y_min": 0.7,
+     "up_min": 0.25
+    },
+    "mode": "grow",
+    "color": "#556232",
+    "shade": "#2d391b",
+    "coverage": 0.38,
+    "grain": 6.0,
+    "clump_softness": 0.16,
     "softness": 0.15
    }
   ]

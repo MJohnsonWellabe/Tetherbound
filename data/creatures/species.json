@@ -88,7 +88,7 @@
         "requires_item": "saddle",
         "_comment_shrink_owner_1024": "Owner 24 Oct: Just shrink it (exception to the never-shrink rule for this naturalistic pilot only). At 3.85 m the pilot is 6.84 m nose to tail and combat admission could not seat it in the Warrens mouth (6.0 m ring) or the Hall elite room (7.0 m) with the 0.6 m clearance, so the elite fight never formed. Uniform scale 3.85 -> 3.20 m (x0.8312): radius, seat and dismount distance scaled by the same ratio; still well above the 1.80 m trainer. Terrapup has no evolution line, so no ladder order changes.",
         "_comment_mount_nat1022": "Close-1024: the naturalistic pilot's stone-plated back stands 3.71 m at the seat (measured on its ride clip; installed back about 3.10 m), so the seat rose 3.264 -> 3.80 m at 3.85 m; after the owner's 24 Oct shrink to 3.20 m the back measures 3.08 m and the seat is 3.16 m, inside the declared height (test_rideable_roster).",
-        "mount_offset": [0.0, 2.58, 0.0],
+        "mount_offset": [0.0, 2.36, 0.0],
         "ride_speed_multiplier": 1.7,
         "dismount_distance": 2.226087
       },
@@ -102,7 +102,7 @@
         "radius": 1.216834,
         "_comment_rest_roll": "OWNER-0912-TERRAPUP-LAY R41 keeps whole-body runtime roll disabled. The installed GLB now carries a dedicated authored rest clip: its skeletal root rolls around the rig's verified flank axis while the four legs, head, spine and tail fold as one animation. This replaces the R25-R38 attempt to rescue the crouching faint clip with runtime transforms.",
         "rest_roll_deg": 0.0,
-        "field_rim": 0.25,
+        "field_rim": 0.3,
         "rest_use_body_pose": true,
         "_comment_rest_pose": "R41 uses the dedicated baked rest clip and applies only a measured model translation after the clip completes. The final 90-degree flank pose uses mirrored local-Z limb tucks. The live-skin probe excludes CreatureBody's four-vertex ContactShadow helper from anatomical bounds: R40 grounded that helper while the visible creature hovered. The real unshifted skinned minimum is 1.1302m below the anchor plane, so +1.0302m targets 0.100m of bedding compression. The no-op root recipe preserves the authored final frame through the reversible rest lifecycle; no runtime skeletal distortion, mesh scaling or vertex deformation is used.",
         "_comment_rest_nat1022": "Close-1024: the naturalistic pilot's own rest clip ends grounded (author_native_clips.py grounds every frame; Blender: lowest vertex 0.00 m, 3.05 m tall = 0.79 of standing), so the installed model's +1.0302 m translation is 0.",
