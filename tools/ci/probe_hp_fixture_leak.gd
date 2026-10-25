@@ -2,16 +2,10 @@ extends SceneTree
 ## Temporary NETFIX probe: run the hp-fixture child repeatedly with --verbose
 ## (CPU contended) and print what leaks at exit. Removed with the fix.
 func _initialize() -> void:
-	var src := FileAccess.get_file_as_string("res://tests/test_director_join_snapshot.gd")
-	var start := src.find("runner.store_string('") + "runner.store_string('".length()
-	var body := src.substr(start, src.find("')\n", start) - start).c_unescape()
-	var path := ProjectSettings.globalize_path("user://probe_hp_runner.gd")
-	var f := FileAccess.open(path, FileAccess.WRITE)
-	f.store_string(body)
-	f.close()
+	var path := ProjectSettings.globalize_path("res://tools/ci/probe_hp_fixture_runner.gd")
 	var burners: Array[int] = []
 	for i in 3: burners.append(OS.create_process("sh", ["-c", "while :; do :; done"]))
-	var runs := 30
+	var runs := int(OS.get_environment("PROBE_RUNS")) if OS.has_environment("PROBE_RUNS") else 40
 	var leaks := 0
 	for i in runs:
 		var out: Array = []
@@ -20,6 +14,7 @@ func _initialize() -> void:
 		var text := "\n".join(out)
 		var leaked := text.contains("ObjectDB instances leaked") or text.contains("resources still in use")
 		print("PROBE run=%d code=%d ms=%d leaked=%s" % [i, code, Time.get_ticks_msec() - t, leaked])
+		if code != 0 and not leaked: print(text.right(1500))
 		if leaked:
 			leaks += 1
 			for line: String in text.split("\n"):
