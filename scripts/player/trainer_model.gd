@@ -736,6 +736,11 @@ static func load_human_swim_visual() -> Dictionary:
 	if candidate.has("swim_pose"):
 		loaded = loaded.duplicate()
 		loaded.merge(candidate.swim_pose, true)
+	# close-1024 `swim_stroke_candidate` (OFF in play), layered on swim_candidate.
+	var stroke: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get("swim_stroke_candidate", {})
+	if stroke.has("swim_pose"):
+		loaded = loaded.duplicate()
+		loaded.merge(stroke.swim_pose, true)
 	return loaded
 
 
