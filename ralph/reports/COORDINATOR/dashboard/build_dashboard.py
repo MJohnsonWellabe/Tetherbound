@@ -106,6 +106,7 @@ def _subcard(title, group):
 chapter_html = []
 for name, letter, ids in CHAPTERS:
     cards = []
+    _shown = []
     for fid in ids:
         if fid == "VISUAL_OTHER":
             _vo = []
@@ -122,6 +123,7 @@ for name, letter, ids in CHAPTERS:
                                       if f"{fid}#{_n}" not in VISUAL_OTHER])
         if not r or fid in VISUAL_FEATURES:
             continue
+        _shown.extend(r.get("criteria", []))
         p = pct(r)
         cs = r.get("criteria", [])
         met = sum(1 for x in cs if norm(x.get("status")) == "met")
@@ -144,8 +146,8 @@ for name, letter, ids in CHAPTERS:
             f'<span class="fid">{fid}</span><span class="ftitle">{E(r.get("title", ""))}</span>'
             f'<span class="fnum">{met}/{len(cs)} met</span>{bar(p)}<span class="fpct">{p}%</span>{stack(cs)}'
             f'</summary><ol class="crits">{items}</ol></details>')
-    ch_rows = [rows[i] for i in ids if i in rows]
-    ch_pct = round(sum(pct(r) for r in ch_rows) / max(1, len(ch_rows)))
+    # Owner 25 Oct: the section figure is met / total over the criteria shown in it.
+    ch_pct = round(100 * sum(1 for x in _shown if norm(x.get("status")) == "met") / max(1, len(_shown)))
     if not cards:
         continue
     cards_html = "".join(cards)
