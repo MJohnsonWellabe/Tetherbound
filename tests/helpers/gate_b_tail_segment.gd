@@ -1022,8 +1022,9 @@ func _walk_to_prompt(prompt: Node3D, what: String) -> bool:
 		return false
 	var side := front_side_waypoint(prompt.global_position, (prompt.get_parent() as Node3D).global_position \
 		if prompt.get_parent() is Node3D else prompt.global_position, _player.global_position)
-	if side != Vector3.INF and not await _walk_to(side, "round to the front of the %s" % what, 0.6):
-		return false
+	# Best effort: the direct walk below still decides.
+	if side != Vector3.INF:
+		await _walk_to(side, "round to the front of the %s" % what, 0.6, false, false)
 	if not await _walk_to(prompt.global_position, "the %s" % what, 1.4):
 		return false
 	for attempt in 3:
