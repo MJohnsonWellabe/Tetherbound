@@ -94,7 +94,8 @@ func build(water_world: Node3D) -> void:
 ## lm2 destination pieces: its entries replace lm2's by landmark_id.
 static func _destinations(look: Dictionary) -> Array:
 	var base: Array = look.get("destination_landmarks_candidate", [])
-	var s3: Array = look.get("destination_landmarks_s3_candidate", [])
+	var s3: Array = (look.get("destination_landmarks_s3_candidate", []) as Array) \
+		+ (look.get("destination_landmarks_s4_candidate", []) as Array)
 	if s3.is_empty():
 		return base
 	var replaced: Array = []
@@ -104,7 +105,17 @@ static func _destinations(look: Dictionary) -> Array:
 	for raw: Variant in base:
 		if not replaced.has(str((raw as Dictionary).get("landmark_id", ""))):
 			merged.append(raw)
-	return merged + s3
+	# A later entry with the same landmark_id (s4 over s3) wins.
+	var last: Dictionary = {}
+	for index in s3.size():
+		var id := str((s3[index] as Dictionary).get("landmark_id", ""))
+		if not id.is_empty():
+			last[id] = index
+	for index in s3.size():
+		var id := str((s3[index] as Dictionary).get("landmark_id", ""))
+		if id.is_empty() or int(last[id]) == index:
+			merged.append(s3[index])
+	return merged
 
 
 ## Optional per-surface materials, by surface index (the installed castle kit's
