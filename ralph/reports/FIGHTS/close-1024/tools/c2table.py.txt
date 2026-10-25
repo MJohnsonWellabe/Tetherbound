@@ -1,0 +1,16 @@
+import json,sys,collections
+out=[]
+for f in sys.argv[1:]:
+    d=json.load(open(f))
+    atk=collections.defaultdict(collections.Counter)
+    for r in d['runs']:
+        for a in r.get('pattern_attacks',[]): atk[r['case']][a]+=1
+    res=collections.OrderedDict()
+    for r in d['rows']:
+        if 'case' not in r or 'starter' not in r: continue
+        v='PASS' if r['verdict']['pass'] else 'FAIL'
+        res.setdefault(r['case'],[]).append(f"{r['starter']} {v}")
+    for c,vs in res.items():
+        a=', '.join(k for k,_ in atk[c].most_common())
+        out.append(f"| {c} | named_{c} | {a or '-'} | {'; '.join(vs)} |")
+print('\n'.join(out))

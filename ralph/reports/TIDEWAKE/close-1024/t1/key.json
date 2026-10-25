@@ -1,0 +1,29 @@
+{
+ "Ok": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Bp": {
+  "anchor": false,
+  "label": "currents: shipping vs t1",
+  "A": "/tmp/claude-0/sp/t1_cur_base.png",
+  "B": "/tmp/claude-0/sp/t1_cur_cand2.png"
+ },
+ "Fa": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Fg": {
+  "anchor": false,
+  "label": "shore: shipping vs t1",
+  "A": "/tmp/claude-0/sp/t1_sh_cand2.png",
+  "B": "/tmp/claude-0/sp/t1_sh_base.png"
+ },
+ "Sz": {
+  "anchor": true,
+  "A": "f36_0_gap:C4A",
+  "B": "f36_0_gap:C4B"
+ }
+}

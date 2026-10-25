@@ -17,10 +17,10 @@ The committed fixtures are the older chain from before the training loop: genera
 | M3 | Meadows t2 loop (Mira): generated `meadows_t2_independent` (post-Relay at Mira's sign, L20/cap20 [1], master_t1) → training_t2_master → t2_home → t2_kitchen → t2_feed | GENERATED start (coordinator ruling b); 3 inner seams **MATCH-SAVED** (25 Oct): saves `f49_m2_*`, seams close-1024/seams/m2_*; real master_t2 (Mira) and five feast_t2 cooked and fed. Trained order corrected (bf66c02f1): the t2 loop follows relay | |
 | M4 | t2_return → warrens | MISSING | |
 | M5 | warrens → relay | GENERATED (relay from the `relay` profile, PASS 1c0078796) | |
-| M6 | relay → sigils | MISSING (sigils abandoned: entombed near the Sigil gate (-224,6602)) | |
-| M7 | sigils → hall | GENERATED (hall from the `hall` profile, PASS ac9a32e22) | |
-| M8 | hall → warden → tidewake_handoff | MATCH-RECEIPT | seams/hall__warden, warden__tidewake_handoff |
-| T1 | tidewake_handoff → tidewake 01_opening | GENERATED (`tidewake_arrival_generated`, L20) | |
+| M6 | relay → sigils | **MATCH-SAVED** (25 Oct): `f49_ms_relay` (relay from the generated `relay` profile, 5056 s) → `f49_ms_sigils` (18747 s: three captains 5/5 rounds, three sigils spent, Sigil Gate crossed); seam close-1024/seams/ms_relay__ms_sigils.json (consumer's hash-bound predecessor = producer receipt) | |
+| M7 | sigils → hall | **MATCH-SAVED** (25 Oct): `f49_ms_hall` (7514 s) from `f49_ms_sigils`; seam ms_sigils__ms_hall | |
+| M8 | hall → warden → tidewake_handoff | **MATCH-SAVED** (25 Oct): `f49_ms_warden` (1866 s), `f49_ms_tidewake_handoff` (696 s, ends in Tidewake); seams ms_hall__ms_warden, ms_warden__ms_tidewake_handoff | |
+| T1 | tidewake_handoff → tidewake 01_opening | GENERATED (`tidewake_arrival_generated`, L20) still. Prepared: 01 loads `f49_ms_tidewake_handoff` (pinned start, generated-origin Meadows lineage; 05e3fc8b2). Run stopped at load for the owner's pause, not a failure | |
 | T2 | 01 → 02 → 03 → 04 → 05_tidal | MATCH-SAVED | fixtures tidewake_01..05 |
 | T3 | 05_tidal → T3 loop (05i Ione → … → training_t3_return) | GENERATED start (`tidewake_t3_ione_independent`, L29); 12 inner seams MATCH-RECEIPT, real master_t3 and feasts | close-1020 |
 | T4 | t3_return → 07a_salt_bex | GENERATED (`tidewake_late_independent`, L31) | |
@@ -45,6 +45,6 @@ The committed fixtures are the older chain from before the training loop: genera
 - Stormwood: master_t5 proven; Kitchen and feed MISSING (S3).
 
 ## Count
-Missing pieces: M4, M6, S3 (C6, C7 and M3 closed 25 Oct; S5 home_credits passed on tb/stormwood-routes as f49_s5b_home_credits). Generated seams no run proves: M5, M7, T1, T3, T4, C1, C3, C5, S2, S4. A generated seam closes only by running the left piece's real end save into the right piece. The bulk of that is level: generated L29/L31/L39/L49 against earned L20/L31/L40.
+Missing pieces: M4, S3 (C6, C7 and M3 closed 25 Oct; S5 home_credits passed on tb/stormwood-routes as f49_s5b_home_credits). Generated seams no run proves: M5, T1, T3, T4, C1, C3, C5, S2, S4. A generated seam closes only by running the left piece's real end save into the right piece. The bulk of that is level: generated L29/L31/L39/L49 against earned L20/L31/L40.
 
 Owners (coordinator, 24 Oct 06:21Z): Routes owns C6, C7 and the Meadows rows (M3–M7); the Stormwood lane owns S3 and S5.

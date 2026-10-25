@@ -23,7 +23,12 @@ var buoy_count := 0
 
 func build(world_config: Dictionary, flow_config: Dictionary, flags: RefCounted) -> void:
 	_flags = flags
-	var cfg: Dictionary = flow_config.get("drift_markers", {})
+	var cfg: Dictionary = (flow_config.get("drift_markers", {}) as Dictionary).duplicate(true)
+	# close-1024 `waterline_declutter_candidate` (OFF in play): the owner called
+	# the beach cluttered; fewer floating markers along each lane near the shore.
+	var declutter: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get(
+		"waterline_declutter_candidate", {}).get("drift_markers", {})
+	cfg.merge(declutter, true)
 	if not bool(cfg.get("enabled", true)):
 		return
 	_sea = float(world_config.get("terrain", {}).get("sea_level_m", 0.0)) + float(cfg.get("float_lift_m", 0.05))

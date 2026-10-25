@@ -267,6 +267,12 @@ static func draw_dust(instance: MultiMeshInstance3D, lines: Array, style: Dictio
 		multimesh.instance_count = count
 	var alpha := float(style.get("dust_alpha", 0.0)) * lerpf(float(style.get("dust_build_start", 0.35)), 1.0,
 		clampf(build, 0.0, 1.0)) * clampf(fade, 0.0, 1.0) * pulse(style, build, time)
+	# GPU G5 (P2-016): a heavy charge's lane of puffs buried the struck creature
+	# and hid its flinch. `dust_lane_alpha_max` (0/absent = off) caps the
+	# drifting lane dust only; rings and pattern footprints keep `dust_alpha`.
+	var lane_cap := float(style.get("dust_lane_alpha_max", 0.0))
+	if flow and lane_cap > 0.0:
+		alpha = minf(alpha, lane_cap)
 	var placed := 0
 	for points: PackedVector3Array in lines:
 		placed += _dust_walk(points, spacing, count - placed, multimesh, placed, style, alpha, time, flow, clear)

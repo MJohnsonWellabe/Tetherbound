@@ -1,0 +1,21 @@
+# water_verdict.py.txt: tests/smoke_water_named_c2c3.gd only measures (`accepted` is always false).
+# This applies the Stormwood harness's verdict rule (ratio <= 0.55, reader win >= 0.90, hit < 0.50,
+# tells >= 0.8 s, no stalls) to its JSON. The COMBAT section 7 trivial-fight floor needs the type chart:
+# pass `floor` rows as case:starter pairs whose lead is type-advantaged and whose MASHER party cost <= 0.15
+# (judged reader-no-worse on win rate and party cost instead of the ratio).
+# python3 water_verdict.py.txt <smoke.json> [case:starter ...]
+import json, sys
+d = json.load(open(sys.argv[1])); floor = {tuple(a.split(':')) for a in sys.argv[2:]}
+for r in d['rows']:
+    m, R = r['pilots']['MASHER'], r['pilots']['READER']
+    ratio = R['median_lead_cost'] / m['median_lead_cost'] if m['median_lead_cost'] > 1e-4 else float('inf')
+    why = []
+    if (r['case'], r['starter']) in floor:
+        if R['win_rate'] < m['win_rate'] or R['median_party_cost'] > m['median_party_cost']: why.append('trivial floor: reader worse')
+    elif ratio > 0.55: why.append('ratio %.2f' % ratio)
+    if R['win_rate'] < 0.9: why.append('reader win %.2f' % R['win_rate'])
+    if max(m['max_single_hit_frac'], R['max_single_hit_frac']) >= 0.5: why.append('hit ceiling')
+    tells = [t for t in (m['min_tell_s'], R['min_tell_s']) if t >= 0]
+    if not tells or min(tells) < 0.799: why.append('tell')
+    if m['stalled'] + R['stalled']: why.append('stalled')
+    print(r['case'], r['starter'], 'PASS' if not why else 'FAIL ' + '; '.join(why))

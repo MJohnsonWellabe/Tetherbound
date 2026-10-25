@@ -1,0 +1,10 @@
+{"sets": {
+ "Gf": {"A": {"bar_a": 4.6}, "B": {"bar_a": 5.3}},
+ "Bv": {"A": {"bar_a": 5.5, "defects": {"egg": "FIXED", "rock": "PRESENT"}}, "B": {"bar_a": 4.9, "defects": {"egg": "PRESENT", "rock": "PRESENT"}}},
+ "Vs": {"A": {"bar_a": 5.2, "defects": {"blue": "FIXED", "caption": "PRESENT"}}, "B": {"bar_a": 4.4, "defects": {"blue": "PRESENT", "caption": "PRESENT"}}},
+ "Ps": {"A": {"bar_a": 6.0}, "B": {"bar_a": 5.8}},
+ "Rb": {"A": {"bar_a": 6.6}, "B": {"bar_a": 4.6}},
+ "Lr": {"A": {"bar_a": 5.9, "defects": {"blue": "FIXED", "caption": "PRESENT"}}, "B": {"bar_a": 4.9, "defects": {"blue": "PRESENT", "caption": "PRESENT"}}},
+ "Zm": {"A": {"bar_a": 5.6, "defects": {"foreground": "PRESENT", "moon_blue": "PRESENT", "rust": "PARTIAL", "white_windows": "PARTIAL"}}, "B": {"bar_a": 5.9, "defects": {"foreground": "PARTIAL", "moon_blue": "PRESENT", "rust": "PARTIAL", "white_windows": "PARTIAL"}}},
+ "Ua": {"A": {"bar_a": 4.7}, "B": {"bar_a": 4.7}}},
+ "top_changes": ["inset stone court markings; anchor/remove world-space caption (scene)", "warm local light at night, lift subjects off murky grounds (scene)", "higher-detail NPC faces and non-smearing ground (new_art)"]}

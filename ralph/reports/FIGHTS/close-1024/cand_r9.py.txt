@@ -1,0 +1,11 @@
+# Fights r9 candidate overlay (capture-only; repo root, clean tree). r8's judges (and GPU G5): the
+# wind-up dust columns bury the player's creature. The r6 fill rows and pulse made the tell dust
+# denser; this lowers all tell dust (0.9 -> 0.6) and caps a charge lane's drifting dust at 0.35.
+# Nothing else changes from the shipped look. `git checkout data/config/` restores.
+import json
+p = 'data/config/combat.json'; s = open(p).read()
+for a, b in [('"dust_lane_alpha_max": 0.0', '"dust_lane_alpha_max": 0.35'), ('"dust_alpha": 0.9,', '"dust_alpha": 0.6,')]:
+    assert s.count(a) == 1, a
+    s = s.replace(a, b)
+json.loads(s); open(p, 'w').write(s)
+print('r9 candidate applied')

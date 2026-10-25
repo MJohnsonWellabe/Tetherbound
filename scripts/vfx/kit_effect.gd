@@ -1060,8 +1060,13 @@ func _build_impact() -> void:
 	# the contact and impact frames, then gone (never a lingering dome).
 	var flash_size := float(cfg.get("flash_m", 0.85))
 	if _family == "self": flash_size = maxf(flash_size, _source_volume().size.length() * float(cfg.get("self_flash_scale", 0.0)))
-	_flash_pool.call("emit", flash_at, Vector3.ZERO, {"life": 0.3, "size0": flash_size, "size1": flash_size * 1.15, "colour": Color(1, 1, 0.95, 1.0), "fade_in": 0.0})
-	_flash_pool.call("emit", flash_at, Vector3.ZERO, {"life": 0.3, "size0": flash_size * 1.6, "size1": flash_size * 1.8, "colour": Color(flash_colour, 0.9), "fade_in": 0.0})
+	# Fights close-1025 (`flash_scale`, `flash_life_scale`; 1/absent = off):
+	# GPU J judges still saw the contact flash and its bloom cover the struck
+	# body. A smaller, shorter flash keeps the hit readable on the target.
+	flash_size *= float(tuning.get("flash_scale", 1.0))
+	var flash_life := 0.3 * float(tuning.get("flash_life_scale", 1.0))
+	_flash_pool.call("emit", flash_at, Vector3.ZERO, {"life": flash_life, "size0": flash_size, "size1": flash_size * 1.15, "colour": Color(1, 1, 0.95, 1.0), "fade_in": 0.0})
+	_flash_pool.call("emit", flash_at, Vector3.ZERO, {"life": flash_life, "size0": flash_size * 1.6, "size1": flash_size * 1.8, "colour": Color(flash_colour, 0.9), "fade_in": 0.0})
 	var back := -_direction if _family not in ["self"] else Vector3.UP
 	if _family == "self":
 		# Self effects burst soft glowing motes outward from the whole body.

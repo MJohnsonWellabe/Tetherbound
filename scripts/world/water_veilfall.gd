@@ -120,6 +120,14 @@ func build(realm: Node3D) -> void:
 	# tint toward the shipped limestone; geometry, collision and clearances unchanged.
 	var family: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get(
 		"veilfall_family_candidate", {}).get("exterior_composition", {})
+	# F39#4 (close-1024, OFF until judged): render-only relief on the gate crags.
+	family = preload("res://scripts/world/tidewake_look_profile.gd").merge(family,
+		preload("res://scripts/world/tidewake_look_profile.gd").settings().get(
+			"veilfall_formation_relief_candidate", {}).get("exterior_composition", {}))
+	# Arm 2 (OFF): larger relief plus a crag-only shadow-side fill.
+	family = preload("res://scripts/world/tidewake_look_profile.gd").merge(family,
+		preload("res://scripts/world/tidewake_look_profile.gd").settings().get(
+			"veilfall_formation_relief_fill_candidate", {}).get("exterior_composition", {}))
 	exterior_presentation.call("build", world,
 		preload("res://scripts/world/tidewake_look_profile.gd").merge(rules.get("exterior_composition", {}), family))
 	_build_distance_presentation()
@@ -139,6 +147,10 @@ func build(realm: Node3D) -> void:
 	crag_kitbash.name = "VeilfallCragKitbash"
 	add_child(crag_kitbash)
 	crag_kitbash.build(world, self)
+	# close-1024 `veilfall_mountain_candidate` (OFF in play): the generated crown
+	# replaces the render-only crag heap, which otherwise buries it.
+	if preload("res://scripts/world/tidewake_look_profile.gd").settings().has("veilfall_mountain_candidate"):
+		crag_kitbash.visible = false
 	_entry_prompt = _prompt(exterior, "Enter behind the waterfall", Vector3(0, 1.4, 0), _enter)
 	interior = Node3D.new()
 	interior.name = "VeilfallInterior"
@@ -301,13 +313,24 @@ func _build_distance_presentation() -> void:
 	# F39#5 (close-1024): the pale-limestone regrade is its own section, ON
 	# since round ls1 (scores in `_why_veilfall_rock_candidate`).
 	rock_rules = preload("res://scripts/world/tidewake_look_profile.gd").overlay(rock_rules, "veilfall_rock_candidate")
+	# F39#4 (close-1024, coordinator: fix the gully terrain, not the camera): finer
+	# cliff texture, shorter runnels and tighter bedding so the steep faces stop
+	# reading as one stretched smear. Material only; OFF until judged.
+	rock_rules = preload("res://scripts/world/tidewake_look_profile.gd").overlay(rock_rules, "veilfall_rock_detail_candidate")
+	# fc2 (close-1024): with the terraced crown ON, flat tier tops on the face
+	# tint as mossy ledges so the terraces read as cliff tiers, not sand stripes.
+	var crown_specs: Variant = preload("res://scripts/world/tidewake_look_profile.gd").settings().get("veilfall_mountain_candidate", [])
+	if crown_specs is Array and not (crown_specs as Array).is_empty() and (crown_specs as Array)[0] is Dictionary:
+		var ledges: Dictionary = ((crown_specs as Array)[0] as Dictionary).get("rock_ledges", {})
+		rock_rules = rock_rules.duplicate()
+		rock_rules.merge(ledges, true)
 	material_receipt = ROCK_MATERIAL.install(world.get("terrain"), rock_rules)
 	var falls := FALLS.new()
 	falls.name = "VeilfallWhiteFalls"
 	add_child(falls)
 	var centre: Array = rules.get("rock_material", {}).get("centre_xz", [200.0, 4140.0])
 	var centre_xz := Vector2(float(centre[0]), float(centre[1]))
-	falls.build(world, rules.get("falls", {}), centre_xz)
+	falls.build(world, _falls_with_candidate(rules.get("falls", {})), centre_xz)
 	var silhouette := SILHOUETTE.new()
 	silhouette.name = "VeilfallFarSilhouette"
 	add_child(silhouette)
@@ -318,6 +341,9 @@ func _build_distance_presentation() -> void:
 	# presentation; flow vectors, strengths and the restored flag are untouched.
 	var flow_config: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").overlay(
 		rules.get("current_flow", {}), "current_flow")
+	# close-1024 `current_bands_candidate` (OFF in play): aligned flow bands.
+	flow_config = preload("res://scripts/world/tidewake_look_profile.gd").overlay(flow_config, "current_bands_candidate")
+	flow_config = preload("res://scripts/world/tidewake_look_profile.gd").overlay(flow_config, "current_tint_candidate")
 	if bool(flow_config.get("enabled", true)):
 		var flow := CURRENT_FLOW.new()
 		flow.name = "WaterCurrentFlow"
@@ -963,3 +989,27 @@ func _build_camera_occluders() -> void:
 	for raw: Variant in boxes:
 		var box := raw as Dictionary
 		_collision_box(body, _v(box.get("at", [0.0, 0.0, 0.0])), _v(box.get("size", [1.0, 1.0, 1.0])))
+
+
+## close-1024 `veilfall_falls_candidate` (OFF in play): per-column overrides by
+## id, so a judged fall shape can replace one column without copying the rest.
+static func _falls_with_candidate(falls_cfg: Dictionary) -> Dictionary:
+	var settings: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings()
+	var candidate: Dictionary = settings.get("veilfall_falls_candidate", {})
+	var overrides: Dictionary = (candidate.get("columns_by_id", {}) as Dictionary).duplicate(true)
+	# The crown candidate caps the summit at ~240 m, so the columns that began
+	# at 390-520 m restart at the plateau edge and fall down the terraced face.
+	var crown: Array = settings.get("veilfall_mountain_candidate", [])
+	if not crown.is_empty():
+		var crown_falls: Dictionary = (crown[0] as Dictionary).get("falls_columns_by_id", {})
+		for id: String in crown_falls:
+			var merged: Dictionary = (overrides.get(id, {}) as Dictionary).duplicate(true)
+			merged.merge((crown_falls[id] as Dictionary).duplicate(true), true)
+			overrides[id] = merged
+	if overrides.is_empty():
+		return falls_cfg
+	var result := falls_cfg.duplicate(true)
+	for column: Dictionary in result.get("columns", []):
+		if overrides.has(str(column.get("id", ""))):
+			column.merge((overrides[str(column.id)] as Dictionary).duplicate(true), true)
+	return result

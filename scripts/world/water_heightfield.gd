@@ -29,6 +29,13 @@ var _dune_passages: Array = []
 ## that blend back to an authored coast profile (e.g. a gated cliff wall).
 var _profile_zones: Array = []
 var _dune_relief: Dictionary = {}
+## F39#4 (close-1024): Veilfall-only crag relief, route-masked (see _veilfall_relief_at).
+var _veilfall_relief: Dictionary = {}
+## close-1024 MESHY 10: a soft summit cap on Veilfall only, so the generated
+## terraced crown (a landmark model) replaces the analytic peak. Heights below
+## cap_y_m - blend_m are untouched (every walkable height sits below that).
+var _veilfall_cap: Dictionary = {}
+var _veilfall_index := -1
 ## Per island: cell key -> flat [ax, az, bx, bz, ...] authored-site segments
 ## (island-local offsets) whose flat+fade zone touches that cell.
 var _site_cells: Array = []
@@ -74,6 +81,8 @@ func _init(config: Dictionary = {}) -> void:
 	_config = (config if not config.is_empty() else load_config()).duplicate(true)
 	var terrain: Dictionary = _config.get("terrain", {})
 	_dune_relief = terrain.get("dune_relief", {})
+	_veilfall_relief = terrain.get("veilfall_relief", {})
+	_veilfall_cap = terrain.get("veilfall_summit_cap", {})
 	_sea_level = float(terrain.get("sea_level_m", 0.0))
 	_seabed_depth = maxf(0.0, float(terrain.get("seabed_depth_m", 65.0)))
 	_outer_slope = maxf(0.0001, float(terrain.get("outer_shore_slope", 0.35)))
@@ -98,6 +107,8 @@ func _compile_landform(spec: Dictionary, membership_id: String, rest_shoal: bool
 	var id := str(spec.get("id", ""))
 	if centre.size() != 2 or radius <= 0.0 or id.is_empty() or membership_id.is_empty():
 		return
+	if id == "veilfall":
+		_veilfall_index = _ids.size()
 	_ids.append(id)
 	_membership_ids.append(membership_id)
 	_cx.append(float(centre[0]))
@@ -282,6 +293,10 @@ func _append_source_geometry(segments: Array, value: Variant, extra: float) -> v
 
 ## 1 = full dunes, 0 = authored-site flat zone.
 func _site_relief_factor(index: int, dx: float, dz: float) -> float:
+	return _site_relief_factor_with(index, dx, dz, _site_clear, _site_fade)
+
+
+func _site_relief_factor_with(index: int, dx: float, dz: float, clear: float, fade: float) -> float:
 	var cells: Dictionary = _site_cells[index]
 	if cells.is_empty():
 		return 1.0
@@ -290,7 +305,7 @@ func _site_relief_factor(index: int, dx: float, dz: float) -> float:
 		return 1.0
 	var list: PackedFloat64Array = cells[key]
 	var best_sq := INF
-	var far := _site_clear + _site_fade
+	var far := clear + fade
 	var i := 0
 	while i < list.size():
 		var abx := list[i + 2] - list[i]
@@ -306,7 +321,7 @@ func _site_relief_factor(index: int, dx: float, dz: float) -> float:
 		i += 5
 	if best_sq >= far * far:
 		return 1.0
-	return smoothstep(_site_clear, far, sqrt(best_sq))
+	return smoothstep(clear, far, sqrt(best_sq))
 
 
 func water_level() -> float:
@@ -342,7 +357,101 @@ func height_at(x: float, z: float) -> float:
 		if absf(dx) > extent or absf(dz) > extent:
 			continue
 		best = maxf(best, _height_for(index, dx, dz))
-	return _grade_trails(x, z, best)
+	var graded := _grade_trails(x, z, best)
+	if _veilfall_index >= 0 and bool(_veilfall_relief.get("enabled", false)):
+		graded += _veilfall_relief_after_grading(x, z)
+	if _veilfall_index >= 0 and bool(_veilfall_cap.get("enabled", false)):
+		graded = _veilfall_capped(x, z, graded)
+		if float(_veilfall_cap.get("terrace_m", 0.0)) > 0.0:
+			graded += _veilfall_terrace_delta(x, z, graded)
+	return graded
+
+
+## The crown family carried down the face: the capped cone's flanks step into
+## stratified tiers (a plateau, then a short riser). Masked exactly like the
+## crag relief (shore band, site and gate clearances) and zero on every walk
+## band, so the hike, anchors and gate keep their height.
+func _veilfall_terrace_delta(x: float, z: float, h: float) -> float:
+	var index := _veilfall_index
+	var dx := x - _cx[index]
+	var dz := z - _cz[index]
+	var r := sqrt(dx * dx + dz * dz)
+	var interior_radius := _radius[index] - _beach_width[index]
+	if r >= interior_radius:
+		return 0.0
+	var cfg := _veilfall_cap
+	var mask := smoothstep(0.0, float(cfg.get("terrace_shore_preserve_m", 30.0)), interior_radius - r)
+	for raw: Variant in _veilfall_relief.get("clear_points", []):
+		var point: Array = raw
+		var away := Vector2(x - float(point[0]), z - float(point[1])).length()
+		mask *= smoothstep(float(point[2]), float(point[2]) + float(point[3]), away)
+	if mask <= 0.0:
+		return 0.0
+	mask *= _site_relief_factor_with(index, dx, dz,
+		float(_veilfall_relief.get("site_clear_m", 4.0)), maxf(0.001, float(_veilfall_relief.get("site_fade_m", 4.0))))
+	if mask <= 0.0:
+		return 0.0
+	var walk := _nearest_trail_distance(x, z)
+	var margin := _trail_flat + float(_veilfall_relief.get("walk_margin_m", 1.0))
+	mask *= smoothstep(margin, margin + float(_veilfall_relief.get("walk_fade_m", 4.0)), walk)
+	if mask <= 0.0:
+		return 0.0
+	var tier := float(cfg.terrace_m)
+	# A wandering tier phase so the ledges are not ruled contour lines.
+	var wobble := (_relief_value_noise(x / 90.0 + 3.1, z / 90.0 - 7.4) - 0.5) * tier * 0.6
+	var t := (h + wobble) / tier
+	var riser := clampf(float(cfg.get("terrace_riser", 0.3)), 0.05, 0.95)
+	var stepped := (floorf(t) + smoothstep(1.0 - riser, 1.0, t - floorf(t))) * tier - wobble
+	return (stepped - h) * mask * float(cfg.get("terrace_strength", 0.85))
+
+
+## Soft clamp: identity below cap - blend, then an exponential approach to the
+## cap with slope 1 at the knee, so the summit becomes a gently rounded plateau
+## with no crease. Veilfall's island footprint only.
+func _veilfall_capped(x: float, z: float, h: float) -> float:
+	var cap := float(_veilfall_cap.get("cap_y_m", 240.0))
+	var blend := maxf(0.5, float(_veilfall_cap.get("blend_m", 30.0)))
+	var knee := cap - blend
+	if h <= knee:
+		return h
+	var dx := x - _cx[_veilfall_index]
+	var dz := z - _cz[_veilfall_index]
+	if dx * dx + dz * dz > _radius[_veilfall_index] * _radius[_veilfall_index]:
+		return h
+	return knee + blend * (1.0 - exp(-(h - knee) / blend))
+
+
+## Applied after trail grading so it also breaks up the graded cut walls; zero
+## on every trail's walk surface (flat half-width + `walk_margin_m`), fading in
+## over `walk_fade_m`, so the walked path keeps exactly its graded height.
+func _veilfall_relief_after_grading(x: float, z: float) -> float:
+	var index := _veilfall_index
+	var dx := x - _cx[index]
+	var dz := z - _cz[index]
+	var r := sqrt(dx * dx + dz * dz)
+	var interior_radius := _radius[index] - _beach_width[index]
+	if r >= interior_radius:
+		return 0.0
+	var relief := _veilfall_relief_at(index, dx, dz, interior_radius - r, r)
+	if relief == 0.0:
+		return 0.0
+	var walk := _nearest_trail_distance(x, z)
+	var margin := _trail_flat + float(_veilfall_relief.get("walk_margin_m", 1.0))
+	return relief * smoothstep(margin, margin + float(_veilfall_relief.get("walk_fade_m", 4.0)), walk)
+
+
+func _nearest_trail_distance(x: float, z: float) -> float:
+	var cell := Vector2i(floori(x / _trail_pitch), floori(z / _trail_pitch))
+	if not _trail_cells.has(cell):
+		return INF
+	var nearest := INF
+	for segment: Array in _trail_cells[cell]:
+		var a: Vector3 = segment[0]
+		var b: Vector3 = segment[1]
+		var delta: Vector2 = segment[2]
+		var t := clampf(Vector2(x - a.x, z - a.z).dot(delta) / float(segment[3]), 0.0, 1.0)
+		nearest = minf(nearest, Vector2(x - lerpf(a.x, b.x, t), z - lerpf(a.z, b.z, t)).length())
+	return nearest
 
 
 func _compile_trails() -> void:
@@ -524,3 +633,48 @@ func _profile_height(index: int, dx: float, dz: float, default_width: float, def
 		fade *= _site_relief_factor(index, dx, dz)
 		height += amplitude * fade * sin(phase)
 	return height
+
+
+## F39#4 (close-1024): breaks Veilfall's huge smooth cone flanks into ridged
+## crag relief. Masked to zero on the shore band, near the summit, around the
+## gate entrance and within `site_clear_m` (+ `site_fade_m`) of every authored
+## route, loop, shortcut and anchor (the same site cells the dune relief uses,
+## with a tighter clearance that still sits outside the graded trail corridor),
+## so the hike keeps its baked grade. Deterministic: hash value noise only.
+func _veilfall_relief_at(index: int, dx: float, dz: float, inland: float, r: float) -> float:
+	var cfg := _veilfall_relief
+	var mask := smoothstep(0.0, float(cfg.get("shore_preserve_m", 30.0)), inland) \
+		* smoothstep(0.0, float(cfg.get("summit_preserve_m", 60.0)), r)
+	if mask <= 0.0:
+		return 0.0
+	for raw: Variant in cfg.get("clear_points", []):
+		var point: Array = raw
+		var away := Vector2(dx + _cx[index] - float(point[0]), dz + _cz[index] - float(point[1])).length()
+		mask *= smoothstep(float(point[2]), float(point[2]) + float(point[3]), away)
+	if mask <= 0.0:
+		return 0.0
+	mask *= _site_relief_factor_with(index, dx, dz,
+		float(cfg.get("site_clear_m", 18.0)), maxf(0.001, float(cfg.get("site_fade_m", 12.0))))
+	if mask <= 0.0:
+		return 0.0
+	var wave := maxf(1.0, float(cfg.get("wavelength_m", 55.0)))
+	var px := (dx + _cx[index]) / wave
+	var pz := (dz + _cz[index]) / wave
+	var ridge := 1.0 - absf(_relief_value_noise(px, pz) * 2.0 - 1.0)
+	var detail := 1.0 - absf(_relief_value_noise(px * 2.3 + 17.0, pz * 2.3 - 9.0) * 2.0 - 1.0)
+	var shape := (ridge * 0.7 + detail * 0.3) - 0.55
+	return float(cfg.get("amplitude_m", 10.0)) * mask * shape
+
+
+static func _relief_value_noise(x: float, z: float) -> float:
+	var ix := floorf(x)
+	var iz := floorf(z)
+	var fx := x - ix
+	var fz := z - iz
+	fx = fx * fx * (3.0 - 2.0 * fx)
+	fz = fz * fz * (3.0 - 2.0 * fz)
+	var a := fposmod(sin(ix * 127.1 + iz * 311.7) * 43758.5453, 1.0)
+	var b := fposmod(sin((ix + 1.0) * 127.1 + iz * 311.7) * 43758.5453, 1.0)
+	var c := fposmod(sin(ix * 127.1 + (iz + 1.0) * 311.7) * 43758.5453, 1.0)
+	var d := fposmod(sin((ix + 1.0) * 127.1 + (iz + 1.0) * 311.7) * 43758.5453, 1.0)
+	return lerpf(lerpf(a, b, fx), lerpf(c, d, fx), fz)

@@ -1,0 +1,6 @@
+Xe: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Yg: "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read"
+Nb: "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read"
+Vd: none
+Sa: none
+Ql: none

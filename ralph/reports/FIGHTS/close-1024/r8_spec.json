@@ -1,0 +1,58 @@
+[
+ {
+  "label": "r8 venn",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r8/venn_pre.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r8/venn_r8.png",
+  "brief": "Tidewake beach trainer fight against a large shelled water creature: four frames over the fight",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect or dust covers the struck creature",
+   "camera jumps, cuts or swings between frames instead of a stable low view",
+   "the player's creature is hard to find or reads as a translucent ghost"
+  ]
+ },
+ {
+  "label": "r8 stormwood",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r8/stormwood_pre.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r8/stormwood_r8.png",
+  "brief": "Stormwood forest named-wild fight against a large electric spider: four frames at its wind-ups",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect or dust covers the struck creature",
+   "camera jumps, cuts or swings between frames instead of a stable low view",
+   "the player's creature is hard to find or reads as a translucent ghost"
+  ]
+ },
+ {
+  "label": "r8 grunt",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r8/grunt_pre.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r8/grunt_r8.png",
+  "brief": "Meadows trainer fight against an enemy-faction grunt at a fenced crossing: eight frames in order across the fight, attacks and dodges",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect or dust covers the struck creature",
+   "camera jumps, cuts or swings between frames instead of a stable low view",
+   "the player's creature is hard to find or reads as a translucent ghost"
+  ]
+ },
+ {
+  "label": "r8 warden",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r8/warden_pre.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r8/warden_r8.png",
+  "brief": "Meadows named-trainer fight on open grass: eight frames in order across the fight, attacks and dodges",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect or dust covers the struck creature",
+   "camera jumps, cuts or swings between frames instead of a stable low view",
+   "the player's creature is hard to find or reads as a translucent ghost"
+  ]
+ }
+]

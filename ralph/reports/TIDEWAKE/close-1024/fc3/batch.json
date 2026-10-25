@@ -1,0 +1,10 @@
+{"anchors":{
+ "f36_0_npc:C1B":[6.8,6.8,6.8],
+ "f36_0_npc:C1A":[6.8,6.8,6.9],
+ "craft:after":[6.6,6.6,6.1],
+ "craft:before":[4.7,4.6,4.2],
+ "f36_0_gap:C1A":[5.9,5.7,5.9],
+ "f36_0_gap:C1B":[4.8,4.9,4.8]},
+"candidates":{
+ "Veilfall vista: fc2 (22 m sharp terraces, lime ledges)":[4.2,4.3,3.9],
+ "Veilfall vista: fc3 (28 m soft terraces, dark ledges)":[4.9,5.0,4.9]}}

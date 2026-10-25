@@ -460,6 +460,11 @@ func _build_material(region: Rect2, tag: String = "pond", mask := PackedByteArra
 	material.set_shader_parameter("foam_depth", float(surface.get("foam_depth", 0.3)))
 	material.set_shader_parameter("foam_scale", float(surface.get("foam_scale", 0.14)))
 	material.set_shader_parameter("foam_speed", float(surface.get("foam_speed", 0.03)))
+	# T4 surf line (OFF unless a surface sets it).
+	material.set_shader_parameter("surf_strength", float(surface.get("surf_strength", 0.0)))
+	material.set_shader_parameter("surf_depth_m", float(surface.get("surf_depth_m", 0.35)))
+	material.set_shader_parameter("surf_breakup", float(surface.get("surf_breakup", 0.4)))
+	material.set_shader_parameter("surf_vary", float(surface.get("surf_vary", 0.0)))
 	material.set_shader_parameter("wave_uv_scale", float(surface.get("wave_uv_scale", 0.09)))
 	material.set_shader_parameter("wave_speed", float(surface.get("wave_speed", 0.016)))
 	material.set_shader_parameter("wave_strength", float(surface.get("wave_strength", 0.35)))
