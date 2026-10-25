@@ -82,7 +82,7 @@
     "deck_tint": "#a99f96"
   },
   "hero_interior": {
-    "enabled": false,
+    "enabled": true,
     "scope": "client_presentation",
     "_candidate": "r19 Stormheart hero interior (OFF until GPU-judged). GPU SW6 (25 Oct): the single root-wall ring read as a tiled strip and the wall above stayed a smooth dark drum with no core. Replaces meshy_interior's wall ring with three staggered rows of the Meshy root-wall panel (tb/meshy-1024 ae67083ec) up to about 50 m, varied scale and yaw from a fixed seed; a lightning core column on the hollow axis (natural glow, cools after the storm ends); warm lantern clusters and short navy banners on the OuterWorks lip; keeps meshy_interior's deck walk. Presentation only: no collider, floor or route change.",
     "deck_walk": true,
