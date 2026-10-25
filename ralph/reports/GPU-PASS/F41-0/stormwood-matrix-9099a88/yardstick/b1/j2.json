@@ -1,0 +1,170 @@
+{
+ "sets": {
+  "Ej": {
+   "A": {
+    "bar_a": 2.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A blank cream plaster box with outdoor green ground showing through the floor and a flat white window glow, identical in every storm phase, has none of Palworld's lived-in props or Valheim's storm light leaking in."
+  },
+  "Ff": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's site-specific aftermaths (opened cage, torn-down banners, smoke plume) carry the idea, but blurry flat grass, low-poly tree walls and flat midday light sit well below Palworld's density and finish."
+  },
+  "Lf": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's coiled cobra reads and stays grounded but its noisy black-gold mottle is busy beside the board's gold-veined scales, and B's bold banded snake floats high off the stage with a detached shadow in faint mid/end."
+  },
+  "By": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky, white-violet lightning and rain set the Stormwood mood, but the flat dark mud ground, faceted low-poly trees and sprite mist puffs read a tier below Palworld's finish."
+  },
+  "Nf": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Glowing blue mushrooms and the violet sky gap carry some mood, but the frames are too dark, the fallen-giant landmark never reads, and opaque white fog blobs sit in front of the camera in v04."
+  },
+  "Jm": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder with readable face, eyes and earthy green-brown palette that fits the key art's village family, though the face leans more animated-film than the naturalistic creature bar."
+  },
+  "Pq": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple sky and gold ground-lightning veins look on-theme, but an evenly spaced tree line over a uniform dark carpet gives no overlook vista and no depth."
+  },
+  "Eu": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold-black Voltarach reads, but flat magenta telegraph outlines, a dense HUD covering a third of each frame, a nearly invisible player creature and (in A) canopy occluding whole frames sink it."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood ground pass: break the uniform dark mud and tuft carpet with authored moss, soil, rock and black-pool patches and lift ground value so terrain form and the fallen-giant/overlook landmarks read (By, Nf, Pq).",
+   "kind": "scene"
+  },
+  {
+   "change": "Fight readability: fade or cull trunks and canopy between camera and fighters, swap flat magenta telegraph outlines for real lightning or stone effects with impacts, slim the HUD and rim-light the player creature (Eu).",
+   "kind": "scene"
+  },
+  {
+   "change": "Ashfoot shelter interior: remove outdoor ground poking through the floor, dress the room with props, and let the storm phase show through the window and in the interior light grade (Ej).",
+   "kind": "scene"
+  }
+ ]
+}

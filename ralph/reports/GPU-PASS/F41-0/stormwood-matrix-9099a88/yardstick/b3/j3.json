@@ -1,0 +1,176 @@
+{
+ "sets": {
+  "Mo": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.9,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple sky and white-violet lightning carry the storm mood, but an empty flat green carpet under a flat grey horizon band with no readable heartstone landmark sinks it far below Palworld density."
+  },
+  "Uw": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's site-specific aftermaths (banner down, crates broken, cage opened, tent smoking) carry the storytelling, but smeared low-resolution terrain, sparse props and flat midday light keep it short of Palworld finish."
+  },
+  "Wx": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Lit cottage windows, giant twisted roots and gold ground veins give a real place, but murky crushed values, smooth bare dirt and sprite-like lilac fog puffs fall short of Valheim-class atmosphere."
+  },
+  "Co": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The lattice rod tower, cable and blue mushrooms read as Stormwood, but the smooth dark path, thin undergrowth and blob-like fog in v04 keep it below Palworld density and Valheim light."
+  },
+  "Mw": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, diagonal brace, cap board and stone footing read as built, but a lone thin panel beside a faceted grey placeholder rock on a sunny meadow does not reach Palworld base-building finish."
+  },
+  "Sk": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder with readable eyes, a warm green-brown palette and a clear full-body silhouette sits comfortably beside Palworld's character finish."
+  },
+  "Da": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A vivid blue finned water drake with a strong silhouette taller than the ruler carries it, though A's faint end collapses into an unreadable knot."
+  },
+  "Ko": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PRESENT",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A smooth, dark, near-featureless trunk interior with plain red ring rails and no lanterns, banners, platforms or lightning core is nowhere near the board's Stormheart or Palworld finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the Stormheart tree interior with an authored hero asset: deep carved bark, stacked plank platforms on visible brackets, banners, warm lanterns and a visible lightning core column (Ko).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Break up the Stormwood ground carpet with authored soil, moss and rock transitions, root clusters, black pools, groves and clearings, and replace the flat grey horizon band with layered purple-lit forest silhouettes (Mo, Co, Wx, Ko).",
+   "kind": "scene"
+  },
+  {
+   "change": "Retune Stormwood lighting and weather: lift crushed shadows into a real value range with rim light and lightning flashes on the ground, add volumetric fog and shafts, and replace the soft lilac sprite puffs and the magenta impact ring with grounded mist and real lightning-strike effects.",
+   "kind": "scene"
+  }
+ ]
+}

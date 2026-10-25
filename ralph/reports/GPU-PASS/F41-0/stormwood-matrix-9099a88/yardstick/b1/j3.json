@@ -1,0 +1,170 @@
+{
+ "sets": {
+  "Ej": {
+   "A": {
+    "bar_a": 3.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A bare cream plaster box with green ground showing through the floor, a chest-height camera and no visible storm through the window sinks it; nothing reads as Stormwood."
+  },
+  "Ff": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's banners torn down, debris and smoke give real aftermaths, but the blurry low-res repeated grass ground, flat fortress wall and sparse pasted props sit far below Palworld density and finish."
+  },
+  "Lf": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's clean black-and-yellow banding reads well standing but its faint poses rear into the air above a detached shadow, and A's noisy mottled skin loses the silhouette; neither reaches the Stormursa/Tanglevolt bar."
+  },
+  "By": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Purple storm sky, lightning and warm-lit cottages carry the mood, but the flat dark mud ground, clumpy blob trees and the absent rodline-post landmark sink it."
+  },
+  "Nf": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Giant purple-brown trunks, glowing blue mushrooms and slices of violet sky give the best Stormwood mood in the batch, but the frames are underlit and murky, with a flat dark path and no fallen-giant landmark you can read."
+  },
+  "Jm": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing old villager with readable eyes and a coherent olive/brown palette that would sit beside Palworld NPCs, though the face is more cartoon than the naturalistic creature bar."
+  },
+  "Pq": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The violet sky and gold lightning cracks set the tone, but there is no crown or overlook landmark, the ground is a uniform dark grass carpet and the horizon is an empty grey band."
+  },
+  "Eu": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The golden spider reads as the boss, but a thick debug-style HUD covers about a third of each frame, the player's creature is a speck, telegraphs are flat magenta outlines, and in A canopy fills whole frames (i11, i13, i15)."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood ground pass on By/Nf/Pq/Eu: break the uniform dark mud and grass carpet into authored soil, cool blue-green moss, rock and root transitions with black pools and copper/glass accents, and lift the fill light so terrain form and the 1.80 m trainer read in every storm phase.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fight readability on Eu: fade or collide the camera with canopy and trunks, cut the HUD to a slim controller-first boss bar plus party strip, make the player's creature larger and rim-lit, and replace flat magenta telegraph outlines with real-object effects that show an impact.",
+   "kind": "scene"
+  },
+  {
+   "change": "Hero landmark and set dressing for each Stormwood location (a rodline post with copper rods, a fallen giant trunk, a crown overlook vista) and a furnished Ashfoot shelter interior with the storm visible through its window.",
+   "kind": "new_art"
+  }
+ ]
+}

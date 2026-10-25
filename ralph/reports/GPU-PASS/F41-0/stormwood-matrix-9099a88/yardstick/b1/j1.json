@@ -1,0 +1,170 @@
+{
+ "sets": {
+  "Ej": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "An empty cream plaster box with outdoor grass growing through the floor and no storm reading through the blown-out window sinks it; nothing says Stormwood."
+  },
+  "Ff": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's torn-down banners, opened cage, collapsed tent and smoke give site-specific aftermaths, but smeared flat ground textures, blobby low-poly trees and a flat sky keep both sides well short of Palworld's finish."
+  },
+  "Lf": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's dark gold-veined scales are close to the Fulgocobra board but the coiled pose hides the hood and the ruler; B's flat black-and-yellow banding drifts off-board and its faint frames float a metre off the stage."
+  },
+  "By": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple sky, rain and gold ground lightning carry the storm mood, but a uniform dark mud ground, blobby trees, Meadows-style cottages and creatures shorter than the trainer sink it."
+  },
+  "Nf": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Massive trunks, blue glow mushrooms and the violet sky gap give the strongest Stormwood mood of the batch, but crushed dark values, no readable fallen-giant landmark and camera-filling fog puffs in v04 fading sink it."
+  },
+  "Jm": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder with expressive eyes, readable white hair and an earthy green-and-brown outfit sits at a shipping stylised-character finish, held back only by a slightly oversized head in the full-body view."
+  },
+  "Pq": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Called an overlook, it shows no vista: a flat dark ground carpet runs to an empty lilac horizon behind evenly spaced blob trees, and only the rain and lightning carry any mood."
+  },
+  "Eu": {
+   "A": {
+    "bar_a": 3.7,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold-and-blue Voltarach is readable, but the player's creature is near invisible, the telegraphs are flat magenta outlines, the HUD covers about a third of each frame, and in A (i11, i13, i15) the canopy fills the camera."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild the Stormwood ground and value structure: replace the uniform dark mud plus tuft carpet with moss, root, rock and black-pool transitions, lift the midtones, and add fog depth and light shafts so landmarks (fallen giant, overlook vista) read at 30% size",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix creature scale and grounding: every Stormwood creature taller than the 1.80 m trainer, Fulgocobra faint poses kept on the ground with its hood and olive/gold veined board palette, and the player's creature kept readable in fights",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fight and interior cameras: keep the fight camera out of canopy, swap flat magenta telegraphs for real lightning/stone effects, slim the HUD, and stop terrain grass from rendering inside the Ashfoot shelter",
+   "kind": "scene"
+  }
+ ]
+}

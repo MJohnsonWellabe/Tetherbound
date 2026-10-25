@@ -1,0 +1,174 @@
+{
+ "sets": {
+  "Kt": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths (toppled banners, opened cage with freed captive, smoke plume) tell a site story, but the smeared low-res ground, flat stone wall texture in row 1 and sparse props sink both sides below Palworld finish."
+  },
+  "Ip": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder with readable face, warm green/brown palette and a strong full-body silhouette that would sit comfortably beside Palworld's characters."
+  },
+  "Zd": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, diagonal brace, cap and stone footing read as built, but a lone thin panel with flat pale infill on a stylised field is still well short of Palworld's chunky, lived-in build pieces; B is a blank white card."
+  },
+  "Tb": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky, white-violet lightning and rain carry the mood, but a uniform dark-green ground carpet, faceted flat-shaded canopies and a thin glowing strip standing in for the struck sentinel sink it."
+  },
+  "Mu": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 1.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold-veined capacitor creature and lightning sky look good in the opening frames, but the camera ends up inside geometry or creature fur (A v05-v06, B v03-v06), so the location cannot be read at all."
+  },
+  "Oi": {
+   "A": {
+    "bar_a": 4.7,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The dynamo pylon, path and storm grade give the strongest Stormwood composition of the batch, but flat gold crack decals, rigid cyan glass panes, a moss-carpet ground and blobby fog sprites (heavier in B v04) keep it below shipping finish."
+  },
+  "Nv": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The hut and blue glowmoss give a cozy focal point under the storm sky, but there are no readable black lantern pools, the ground is a uniform dark carpet with flat gold crack decals, and the fading-phase fog washes out the frame (worse in B v01)."
+  },
+  "Lj": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's furred, naturalistic boar is close to the owner style bar but its noisy gold blotches and floating faint-mid pose let it down; A's clay-toy surface and odd camera-facing faint end read as a placeholder next to Palworld creatures."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Keep every production camera out of geometry and creatures and stop the foreground creature filling the frame (Mu A v05-v06, B v03-v06), so each storm phase actually shows the location",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the uniform dark-green Stormwood ground carpet with authored soil, moss and rock blends, real black pools and grounded copper/glass details, and seat the flat gold crack decals into the terrain",
+   "kind": "scene"
+  },
+  {
+   "change": "Swap the faceted, flat-shaded Stormwood canopies and stand-in landmarks (glowing strip sentinel, lattice pylon) for hero trees and landmark meshes at Stormheart-board fidelity",
+   "kind": "new_art"
+  }
+ ]
+}

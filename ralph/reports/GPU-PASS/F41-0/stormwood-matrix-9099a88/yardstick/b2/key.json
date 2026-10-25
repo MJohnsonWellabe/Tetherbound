@@ -1,0 +1,46 @@
+{
+ "Kt": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Ip": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Zd": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Tb": {
+  "anchor": false,
+  "label": "F41 Stormwood cinder_verge_the_struck_sentinel High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-cinder_verge_the_struck_sentinel-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-cinder_verge_the_struck_sentinel-Medium.png"
+ },
+ "Mu": {
+  "anchor": false,
+  "label": "F41 Stormwood conductor_run_the_capacitor_grove High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-conductor_run_the_capacitor_grove-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-conductor_run_the_capacitor_grove-Medium.png"
+ },
+ "Oi": {
+  "anchor": false,
+  "label": "F41 Stormwood dynamo_the_glass_field High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-dynamo_the_glass_field-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-dynamo_the_glass_field-High.png"
+ },
+ "Nv": {
+  "anchor": false,
+  "label": "F41 Stormwood glowmoss_hollows_the_lantern_pools High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-glowmoss_hollows_the_lantern_pools-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-glowmoss_hollows_the_lantern_pools-Medium.png"
+ },
+ "Lj": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ }
+}

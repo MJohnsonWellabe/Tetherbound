@@ -1,0 +1,46 @@
+{
+ "Ej": {
+  "anchor": false,
+  "label": "F41 Stormwood ashfoot_shelter_inside High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-ashfoot_shelter_inside-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-ashfoot_shelter_inside-High.png"
+ },
+ "Ff": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Lf": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "By": {
+  "anchor": false,
+  "label": "F41 Stormwood conductor_run_rodline_post High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-conductor_run_rodline_post-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-conductor_run_rodline_post-Medium.png"
+ },
+ "Nf": {
+  "anchor": false,
+  "label": "F41 Stormwood deepwood_the_fallen_giant High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-deepwood_the_fallen_giant-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-deepwood_the_fallen_giant-Medium.png"
+ },
+ "Jm": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Pq": {
+  "anchor": false,
+  "label": "F41 Stormwood glowmoss_hollows_crown_overlook High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-glowmoss_hollows_crown_overlook-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-glowmoss_hollows_crown_overlook-Medium.png"
+ },
+ "Eu": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ }
+}

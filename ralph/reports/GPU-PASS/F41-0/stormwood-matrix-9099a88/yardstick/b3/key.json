@@ -1,0 +1,46 @@
+{
+ "Mo": {
+  "anchor": false,
+  "label": "F41 Stormwood hollow_crown_the_crown_heartstone High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-hollow_crown_the_crown_heartstone-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-hollow_crown_the_crown_heartstone-Medium.png"
+ },
+ "Uw": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Wx": {
+  "anchor": false,
+  "label": "F41 Stormwood deepwood_lantern_hollow High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-deepwood_lantern_hollow-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-deepwood_lantern_hollow-Medium.png"
+ },
+ "Co": {
+  "anchor": false,
+  "label": "F41 Stormwood cinder_verge_verge_rod_station High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-cinder_verge_verge_rod_station-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-cinder_verge_verge_rod_station-Medium.png"
+ },
+ "Mw": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Sk": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Da": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Ko": {
+  "anchor": false,
+  "label": "F41 Stormwood dynamo_the_stormheart_tree High|Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-dynamo_the_stormheart_tree-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\f41\\sides\\F41-dynamo_the_stormheart_tree-Medium.png"
+ }
+}

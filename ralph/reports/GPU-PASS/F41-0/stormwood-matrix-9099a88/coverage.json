@@ -1,0 +1,156 @@
+[
+    {
+        "stand":  "ashfoot_shelter_inside",
+        "frames_high":  4,
+        "frames_medium":  4,
+        "judged":  [
+                       "ashfoot_shelter_inside_calm",
+                       "ashfoot_shelter_inside_building",
+                       "ashfoot_shelter_inside_break",
+                       "ashfoot_shelter_inside_fading"
+                   ]
+    },
+    {
+        "stand":  "cinder_verge_the_struck_sentinel",
+        "frames_high":  12,
+        "frames_medium":  12,
+        "judged":  [
+                       "cinder_verge_the_struck_sentinel_v01_calm",
+                       "cinder_verge_the_struck_sentinel_v02_building",
+                       "cinder_verge_the_struck_sentinel_v03_break",
+                       "cinder_verge_the_struck_sentinel_v01_fading",
+                       "cinder_verge_the_struck_sentinel_v02_break",
+                       "cinder_verge_the_struck_sentinel_v03_calm"
+                   ]
+    },
+    {
+        "stand":  "cinder_verge_verge_rod_station",
+        "frames_high":  24,
+        "frames_medium":  24,
+        "judged":  [
+                       "cinder_verge_verge_rod_station_v01_calm",
+                       "cinder_verge_verge_rod_station_v02_building",
+                       "cinder_verge_verge_rod_station_v03_break",
+                       "cinder_verge_verge_rod_station_v04_fading",
+                       "cinder_verge_verge_rod_station_v05_break",
+                       "cinder_verge_verge_rod_station_v06_calm"
+                   ]
+    },
+    {
+        "stand":  "conductor_run_rodline_post",
+        "frames_high":  12,
+        "frames_medium":  12,
+        "judged":  [
+                       "conductor_run_rodline_post_v01_calm",
+                       "conductor_run_rodline_post_v02_building",
+                       "conductor_run_rodline_post_v03_break",
+                       "conductor_run_rodline_post_v01_fading",
+                       "conductor_run_rodline_post_v02_break",
+                       "conductor_run_rodline_post_v03_calm"
+                   ]
+    },
+    {
+        "stand":  "conductor_run_the_capacitor_grove",
+        "frames_high":  24,
+        "frames_medium":  24,
+        "judged":  [
+                       "conductor_run_the_capacitor_grove_v01_calm",
+                       "conductor_run_the_capacitor_grove_v02_building",
+                       "conductor_run_the_capacitor_grove_v03_break",
+                       "conductor_run_the_capacitor_grove_v04_fading",
+                       "conductor_run_the_capacitor_grove_v05_break",
+                       "conductor_run_the_capacitor_grove_v06_calm"
+                   ]
+    },
+    {
+        "stand":  "deepwood_lantern_hollow",
+        "frames_high":  12,
+        "frames_medium":  12,
+        "judged":  [
+                       "deepwood_lantern_hollow_v01_calm",
+                       "deepwood_lantern_hollow_v02_building",
+                       "deepwood_lantern_hollow_v03_break",
+                       "deepwood_lantern_hollow_v01_fading",
+                       "deepwood_lantern_hollow_v02_break",
+                       "deepwood_lantern_hollow_v03_calm"
+                   ]
+    },
+    {
+        "stand":  "deepwood_the_fallen_giant",
+        "frames_high":  24,
+        "frames_medium":  24,
+        "judged":  [
+                       "deepwood_the_fallen_giant_v01_calm",
+                       "deepwood_the_fallen_giant_v02_building",
+                       "deepwood_the_fallen_giant_v03_break",
+                       "deepwood_the_fallen_giant_v04_fading",
+                       "deepwood_the_fallen_giant_v05_break",
+                       "deepwood_the_fallen_giant_v06_calm"
+                   ]
+    },
+    {
+        "stand":  "dynamo_the_glass_field",
+        "frames_high":  24,
+        "frames_medium":  24,
+        "judged":  [
+                       "dynamo_the_glass_field_v01_calm",
+                       "dynamo_the_glass_field_v02_building",
+                       "dynamo_the_glass_field_v03_break",
+                       "dynamo_the_glass_field_v04_fading",
+                       "dynamo_the_glass_field_v05_break",
+                       "dynamo_the_glass_field_v06_calm"
+                   ]
+    },
+    {
+        "stand":  "dynamo_the_stormheart_tree",
+        "frames_high":  24,
+        "frames_medium":  24,
+        "judged":  [
+                       "dynamo_the_stormheart_tree_v01_calm",
+                       "dynamo_the_stormheart_tree_v02_building",
+                       "dynamo_the_stormheart_tree_v03_break",
+                       "dynamo_the_stormheart_tree_v04_fading",
+                       "dynamo_the_stormheart_tree_v05_break",
+                       "dynamo_the_stormheart_tree_v06_calm"
+                   ]
+    },
+    {
+        "stand":  "glowmoss_hollows_crown_overlook",
+        "frames_high":  12,
+        "frames_medium":  12,
+        "judged":  [
+                       "glowmoss_hollows_crown_overlook_v01_calm",
+                       "glowmoss_hollows_crown_overlook_v02_building",
+                       "glowmoss_hollows_crown_overlook_v03_break",
+                       "glowmoss_hollows_crown_overlook_v01_fading",
+                       "glowmoss_hollows_crown_overlook_v02_break",
+                       "glowmoss_hollows_crown_overlook_v03_calm"
+                   ]
+    },
+    {
+        "stand":  "glowmoss_hollows_the_lantern_pools",
+        "frames_high":  12,
+        "frames_medium":  12,
+        "judged":  [
+                       "glowmoss_hollows_the_lantern_pools_v01_calm",
+                       "glowmoss_hollows_the_lantern_pools_v02_building",
+                       "glowmoss_hollows_the_lantern_pools_v03_break",
+                       "glowmoss_hollows_the_lantern_pools_v01_fading",
+                       "glowmoss_hollows_the_lantern_pools_v02_break",
+                       "glowmoss_hollows_the_lantern_pools_v03_calm"
+                   ]
+    },
+    {
+        "stand":  "hollow_crown_the_crown_heartstone",
+        "frames_high":  12,
+        "frames_medium":  12,
+        "judged":  [
+                       "hollow_crown_the_crown_heartstone_v01_calm",
+                       "hollow_crown_the_crown_heartstone_v02_building",
+                       "hollow_crown_the_crown_heartstone_v03_break",
+                       "hollow_crown_the_crown_heartstone_v01_fading",
+                       "hollow_crown_the_crown_heartstone_v02_break",
+                       "hollow_crown_the_crown_heartstone_v03_calm"
+                   ]
+    }
+]
