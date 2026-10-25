@@ -62,6 +62,7 @@ func _ready() -> void:
 	_moves.offset_bottom = -float(cfg.get("inset", 56))
 	_moves.custom_minimum_size.x = float(cfg.get("move_width", 420))
 	add_child(_moves)
+	corner_scale(_moves, float(cfg.get("panel_scale", 1.0)), Vector2.ONE)
 	var ultimate := HBoxContainer.new()
 	_moves.add_child(ultimate)
 	_ring = UltimateRing.new()
@@ -113,11 +114,25 @@ const PLATE_PAD := 12.0
 func _draw() -> void:
 	for block: Control in [_command_box, _moves]:
 		if not is_instance_valid(block) or not block.visible: continue
-		var rect := Rect2(block.position, block.size).grow(PLATE_PAD)
+		var rect := Rect2(block.position + block.pivot_offset * (Vector2.ONE - block.scale),
+			block.size * block.scale).grow(PLATE_PAD)
 		var box := StyleBoxFlat.new()
 		box.bg_color = Color(PLATE, PLATE.a * block.modulate.a)
 		box.set_corner_radius_all(10)
 		draw_style_box(box, rect)
+
+## Fights close-1025 (ON since 25 Oct; hud.json new_system_screens.combat.panel_scale;
+## 1/absent = off): the judges still read the right-hand panels as covering
+## the fight. Scales `control` about `corner` (0..1 of its size, so the
+## screen-edge corner stays put) and keeps the pivot there as it resizes.
+## Device-local presentation only.
+static func corner_scale(control: Control, factor: float, corner: Vector2) -> void:
+	if control == null or is_equal_approx(factor, 1.0) or factor <= 0.0:
+		return
+	control.scale = Vector2.ONE * factor
+	var keep := func() -> void: control.pivot_offset = control.size * corner
+	keep.call()
+	control.resized.connect(keep)
 
 func occupied_controls() -> Array[Control]:
 	return [_command_box, _moves]

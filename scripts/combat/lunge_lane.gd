@@ -394,7 +394,21 @@ func _draw_soft(base: Color, fade: float) -> void:
 			rails.append(rail)
 		STYLE.draw_curtain(_curtain, rails, base, glow_alpha * float(_soft.get("curtain_alpha", 0.6)),
 			STYLE.curtain_height(_soft, build), _soft, _life)
-		STYLE.draw_dust(_dust, rails, _soft, build, _life, fade, true)
+		var dust_lines := rails
+		var fills := STYLE.fill_fractions(_soft, build)
+		if not fills.is_empty():
+			dust_lines = rails.duplicate()
+			for fraction: float in fills:
+				for side: float in [-1.0, 1.0]:
+					var row := PackedVector3Array()
+					var along := _start
+					while true:
+						row.append(_point(along, side * _half_width * (1.0 - fraction)))
+						if along >= _start + _length - 0.001:
+							break
+						along = minf(_start + _length, along + STEP)
+					dust_lines.append(row)
+		STYLE.draw_dust(_dust, dust_lines, _soft, build, _life, fade, true)
 
 
 ## Round 4 (P2-063 judge: "reads as a static UI outline, nothing shows the
