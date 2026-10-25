@@ -1065,43 +1065,8 @@
     {
       "enabled": false,
       "preview_arg": "--cloudreach-f40-overlook-r3-candidate",
-      "_why": "Stormward Overlook r3 (r1 +0.10, r2 +0.38: a clearly different approach). Judges' remaining asks: a route tree grows through the arch so the compass ring reads as hung from a tree; bare lawn near the camera. r3 keeps route trees out of a 14 m circle round the arch and lays the stone-ground shelves and scree at the matrix stand. Captured with --cloudreach-overlook-cleanup-candidate (r3 there also drops the two flat banner cards). CPU pre-judge pending.",
+      "_why": "Stormward Overlook r3 (r1 +0.10, r2 +0.38: a clearly different approach). Judges' remaining asks: a route tree grows through the arch so the compass ring reads as hung from a tree; bare lawn near the camera. r3 keeps the look's tree clusters out of a 16 m clearing round the arch (r3a used a route-tree exclusion and the tree stayed: it is a look tree) and lays the stone-ground shelves and scree at the matrix stand. Captured with --cloudreach-overlook-cleanup-candidate (r3 there also drops the two flat banner cards). CPU pre-judge pending.",
       "overlay": {
-        "visual": {
-          "nature": {
-            "tree_exclusions": [
-              {
-                "id": "windscar_beacon_aperture",
-                "centre_xz": [
-                  -248.64766,
-                  2689.8042
-                ],
-                "radius_m": 7.0
-              },
-              {
-                "id": "aviary_finale_road_sightline",
-                "_comment": "F40#4: the Sky Aviary must read from the finale road at ~400 m (frame-matrix row 33 stand) -- three route trees stood on that line. Route trees within half_width_m of the segment are not planted.",
-                "from_xz": [
-                  353.9,
-                  5040.8
-                ],
-                "to_xz": [
-                  100.0,
-                  5350.0
-                ],
-                "half_width_m": 9.0
-              },
-              {
-                "id": "stormward_overlook_arch",
-                "centre_xz": [
-                  -420.0,
-                  5651.0
-                ],
-                "radius_m": 14.0
-              }
-            ]
-          }
-        },
         "settlements": {
           "WaterwardOverlook": {
             "stands": [
@@ -1232,6 +1197,30 @@
                     "yaw": 35
                   }
                 ]
+              }
+            ]
+          }
+        },
+        "look": {
+          "trees_stones": {
+            "architectural_clearings": [
+              {
+                "landmark_id": "summit_eyrie_stronghold",
+                "radius_m": 35.0,
+                "height_tolerance_m": 30.0,
+                "approach_offset": [
+                  111.3,
+                  12.9,
+                  45.05
+                ],
+                "approach_half_width_m": 12.0,
+                "_why": "Keep decorative trunks out of the inhabited aviary footprint and the elevated eastern road's view toward its entrance. The exposed summit's trees remain outside this corridor."
+              },
+              {
+                "landmark_id": "waterward_overlook",
+                "radius_m": 16.0,
+                "height_tolerance_m": 30.0,
+                "_why": "Overlook r3: no look tree through the compass arch."
               }
             ]
           }
