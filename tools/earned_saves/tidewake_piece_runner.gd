@@ -400,7 +400,8 @@ func _prepare_meadows_prefix() -> bool:
 	# A Meadows lineage that began at a disclosed generated boundary (relay,
 	# sigils or hall profile) imports as such; its origin and provenance are
 	# verified and carried in meadows_origin, never relabelled earned.
-	var input_mode := "generated_fixture" if receipt.get("kind", "") == "f49_generated_fixture_handoff" else "earned"
+	var input_mode := "generated_fixture" if receipt.get("kind", "") == "f49_generated_fixture_handoff" \
+			or receipt.get("input_mode", "") == "generated_fixture" else "earned"
 	if meadows_prefix.call("import_prefix", from_dir, input_mode) != "tidewake_handoff":
 		failures.append_array(meadows_prefix.failures)
 		return false
