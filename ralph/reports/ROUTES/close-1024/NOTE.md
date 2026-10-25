@@ -1,5 +1,76 @@
 # Routes close-1024: work note (F49#0 + F19#5, F49#3)
 
+## Handoff (state, 25 Oct 2026 13:40Z, PAUSED by owner direction)
+
+**Pieces this lane ran** (saves = `tests/fixtures/earned_saves/<name>/` with save/, receipt.json, PROVENANCE.json for generated; seams = `ralph/reports/ROUTES/close-1024/seams/`; ledger of every F49#0 seam = `LEDGER.md` beside this note):
+
+| Piece | Result | Handoff save | Seam it proves | SHA |
+|---|---|---|---|---|
+| generate `cloudreach_t4_aster_independent` | PASS 218 s | `cloudreach_t4_aster_generated` | generated start (disclosed) | 698f1a8d4 |
+| 06k, 06l, 06m (master_t4), t4_home, t4_storage, t4_return, 06l, 06p (feast_t4 chest), t4_preparehome, t4_altar_1..5 | all PASS | `f49_c4_06k` … `f49_c4_a5` | c4_*__* (14) MATCH | 698f1a8d4 |
+| training_t4_kitchen_1 | PASS 16834 s | `f49_c4_kitchen_1` | c4_a5__c4_kitchen_1 MATCH | c19dd3cc7 |
+| training_t4_kitchen_2 | PASS 438 s | `f49_c4_kitchen_2` | MATCH | c19dd3cc7 |
+| training_t4_kitchen_3 | PASS 350 s (Forge dismantled off socket) | `f49_c4_kitchen_3` | MATCH | 43a336202 |
+| training_t4_feed | PASS 642 s, five feast_t4 cooked + fed, breakthroughs [1-4] | `f49_c4_feed` | MATCH | 4fcf9dd1c |
+| training_t4_return, 07_stormward_handoff | PASS 587 s / 479 s (ends in Stormwood) | `f49_c4_return2`, `f49_c4_07` | MATCH | 4fcf9dd1c |
+| generate `meadows_t2_independent` | PASS 98 s | `f49_m2_gen` | generated start (coordinator ruling b) | 3c4a10337 |
+| training_t2_master (Mira), t2_home, t2_kitchen, t2_feed | PASS 761/445/1989/431 s | `f49_m2_master` … `f49_m2_feed` | m2_* (3) MATCH | 3c4a10337 |
+| relay (generated `relay` profile) | PASS 5056 s | `f49_ms_relay` (+ its generated warrens input) | generated start | ef2759352 |
+| sigils | PASS 18747 s | `f49_ms_sigils` | ms_relay__ms_sigils MATCH | ef2759352 |
+| hall, warden, tidewake_handoff | PASS 7514/1866/696 s | `f49_ms_hall`, `f49_ms_warden`, `f49_ms_tidewake_handoff` | ms_* (3) MATCH | ef2759352 |
+| Tidewake 01_opening from `f49_ms_tidewake_handoff` | NOT RUN (stopped after a successful Load at the pause) | none | would replace generated T1 | 05e3fc8b2 |
+| Meadows warrens | NOT RUN: start save lost; QUESTION in TO COORDINATOR (fresh-title rerun vs generated bridge start) | none | M4 | none |
+| Stormwood S3 (T5 Kitchen/feed/return), S5 home_credits | Stormwood lane (tb/stormwood-routes); S5 PASS there as `f49_s5b_home_credits` | — | — | — |
+| Superseded attempts (evidence only) | `f49_c4_kitchen_*` names are the passing ones; failed Kitchen/feed runs saved nothing | — | — | — |
+
+**Next:** Tidewake `01_opening` from the Meadows handoff, then 02→05. The importer reads the whole Meadows lineage from one root (one dir per boundary, byte-identical to the committed fixtures), so rebuild it first:
+```
+F=tests/fixtures/earned_saves; M=$RB/ms_root; mkdir -p $M
+cp -r $F/f49_ms_relay/generated_input_warrens $M/warrens
+for b in relay sigils hall warden tidewake_handoff; do mkdir -p $M/$b; cp -r $F/f49_ms_$b/save $F/f49_ms_$b/receipt.json $M/$b/; done
+tools/earned_saves/routes_kit/chain.sh $M/tidewake_handoff tw:01_opening:tw_01 tw:02_reedhaven:tw_02 tw:03_brine:tw_03 tw:04_shellwatch:tw_04 tw:05_tidal:tw_05
+```
+Then the warrens decision (TO COORDINATOR QUESTION), then the Stormwood pieces the Stormwood lane hands over.
+
+**Branch heads:** `tb/routes` head = this commit. Landed on main (PR #723 and the consolidated PRs through #744): everything up to ef2759352 (T4 + Meadows T2 saves, trained-order fix, all homestead helper fixes). Unlanded on tb/routes: `f49_ms_*` saves (relay → tidewake_handoff), ae933f5f5 + b70140e4c + 05e3fc8b2 (Tidewake runner imports a generated-origin Meadows prefix with a pinned start), `tools/earned_saves/routes_kit/`, notes/ledger/seams after ef2759352.
+
+**What worked / what didn't:**
+- Worked: one Godot at a time from a run checkout that never moves during a chain (edit + commit in a second worktree; altar pieces need their predecessor's exact SHA); committing each passing save at once (autocommit); splitting the Kitchen per attachment tier; resuming a mid-chain save and repairing its state in-game (dismantle) instead of re-earning.
+- Didn't: a 6 h driver timeout on the unsplit Kitchen (killed a run); `pkill -f <pattern>` from a shell whose own command line contains the pattern (kills the calling shell, exit 144: kill by PID); `sleep` loops in the tool (blocked; use a background `until` loop or Monitor); assuming a committed fixture reaches a training piece (none of the pre-training fixtures do).
+- Disk: the session allowance filled at ~39 GB (the second worktree is 5.5 GB, .git 17 GB, .godot 2.2 GB); delete run dirs once their saves are committed.
+
+## Harness runbook (how this lane actually ran things)
+
+**Setup (once per container):** Godot 4.7: `curl -sSL -o /tmp/godot.zip https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip && unzip -q /tmp/godot.zip -d /tmp && mv /tmp/Godot_v4.7-stable_linux.x86_64 /usr/local/bin/godot`. Import assets (≈20 min on CPU; required after any merge that adds models, else creatures load as placeholders and size admission fails): `godot --headless --path . --import`. Edit worktree: `git worktree add --detach ~/edit HEAD` and push with `git push origin HEAD:tb/routes`.
+
+**Kit (committed, `tools/earned_saves/routes_kit/`):** `chain.sh` (piece driver), `commit_piece.sh` + `autocommit.sh` (commit each passing piece's save at once), `seam_receipts.py` (seams for cloudreach/tidewake/stormwood runner pieces: `after` vs next `before`, fields realm/position ≤1 m/flags/inventory/party uid-species-level-cap-tiers/master wins/recipes) and `seam_earned.py` (seams for earned_chain_runner pieces: consumer's hash-bound predecessor receipt == producer receipt).
+
+**Exact commands that worked:**
+- Generated boundary: `godot --headless --fixed-fps 60 --path . --script tools/earned_saves/generate_boundary_save.gd -- --profile=<profile> --slot=0 --out=<absent dir>` (profiles in `tests/fixtures/earned_saves/generated_boundary_profiles.json`; this lane added `meadows_t2_independent`).
+- Cloudreach pieces: `… --script tools/earned_saves/cloudreach_chain_runner.gd -- --segment=<06k_return_cliffhold|06l_return_aerie|06m_aster_duel_only|06p_aster_chest|07_stormward_handoff> --from=<prev dir> --out=<absent dir>`.
+- Homestead/training pieces (T2–T5): `… --script tools/earned_saves/tidewake_piece_runner.gd -- --segment=training_t<2..5>_<home|storage|return|preparehome|altar_1..5|kitchen|kitchen_<k>|feed> --from=<prev> --out=<absent>`; `training_t2_master` (Mira) runs here too and only from the `meadows_t2_independent` boundary save. Prefer `training_tN_kitchen_1..K` over `training_tN_kitchen`.
+- Meadows story pieces on a generated lineage: `… --script tools/earned_saves/earned_chain_runner.gd -- --segment=<relay|sigils|hall|warden|tidewake_handoff> --save-dir=<root>/<seg>/save --receipt=<root>/<seg>/receipt.json [--handoff-from=<prevroot>/<prevseg>] --generated-fixture` (the first piece, relay, without --handoff-from; **every continuation also needs --generated-fixture**; root must be absent).
+- All with `--fixed-fps 60`; per-piece timeout 12 h (`PIECE_TIMEOUT=43200`); run detached (`nohup setsid … & disown`) and wait with a background `until grep -qE "^END|^STOP" <chain.out>; do sleep 60; done` (tool limit 2 h; re-arm) or Monitor on `tail -f <chain.out> | grep --line-buffered -E "^END|^STOP|^COMPLETE|COMMIT"`.
+- Focused checks: `godot --headless --path . --check-only --script <changed.gd>` (ignore only "Identifier not found: Game"); `godot --headless --path . --script tests/run_tests.gd -- --only=test_chapter_homestead.gd,test_homestead_feed_selection.gd,test_meadows_master_adapter.gd,test_f49_training_prefix.gd,test_altar_training_piece.gd,test_material_bridge_legs.gd,test_essence_earning_piece.gd,test_f49_light_cut.gd`.
+- Chain manifest check: per seam, `python3 tools/earned_saves/routes_kit/seam_receipts.py <from> <to> <out.json>` or `seam_earned.py`; `matches: true` with `differences: []`; whole-chain status is LEDGER.md.
+
+**Harness problems hit, cause, fix, where:**
+| Problem | Cause | Fix | Where |
+|---|---|---|---|
+| Kitchen clear-step walked into Grandpa's farmhouse | 3.5 m step aimed through the Forge; navigator detoured through the door | step takes the nearest heading whose straight line is collider-free | e75770fd1 (gate_b_tail_segment `_open_heading`) |
+| Clear-step hopped Forge→Altar→Kitchen prompts | stations ~4 m apart | step lengthens per attempt pair (3.5→8 m) | 693277bb2 |
+| 3 h stall walking far bank → ironwood | straight line grazed the Warrens mound (BLOCKERS B3) | material walks pass one waypoint 15 m outside the mound rim | c19dd3cc7 (meadows_earned_material_segment `mound_detour`) |
+| One late failure repeated ~4 h of gathering | Kitchen was one piece | `training_tN_kitchen_<k>` per attachment tier | cd5f6a647 (chapter_homestead) |
+| kitchen_cloudreach ghost always red | helper put the Forge on the Kitchen's tier-3 socket | plot spots keep tier 1–4 sockets clear; a blocker on the next socket is dismantled in-game | 5a3140067, 43a336202 (homestead_common) |
+| Feed walk to the Kitchen stopped 3 m short | prompt is on the north face, behind/beside the tier-2 attachment | prompt walk first goes to a side point in front of the face (best effort) | d11694458, 2ebcc451d, 120115e40, 4fcf9dd1c (gate_b_tail_segment `front_side_waypoint`) |
+| Mira unreachable in the trained order | t2 loop placed before warrens/relay; Mira is past the Old Mill Crossing | trained order … t1_return → warrens → relay → t2 loop → t2_return (to the mill) → sigils | bf66c02f1 (f49_disk_handoff), 77eae251a (Mira route, t2 boundary), 2d4bc3ee1 |
+| Tidewake 01 refused the Meadows handoff ("no readable exact receipt for opening_village", then "generated lineage changed its exact source") | importer assumed an earned lineage and the same commit | import with the receipt's declared input_mode; disclosed pinned start | ae933f5f5, b70140e4c, 05e3fc8b2 (tidewake_piece_runner) |
+| sigils continuation refused | generated lineage continuations need --generated-fixture | flag (no code change) | command only |
+| Placeholder creatures / size-admission refusals after a merge | headless runs never re-import | `godot --headless --path . --import` | command only |
+| Altar piece refused "exact consumer source commit" (seen on the Stormwood lane) | run checkout moved between preparehome and altars | never commit in the run checkout during a chain | process |
+| Driver killed the unsplit Kitchen | 6 h PIECE_TIMEOUT | 12 h + Kitchen split | routes_kit/chain.sh |
+
+
 Prior work: `ralph/reports/ROUTES/close-1020/NOTE.md` (Meadows, Tidewake) and `ralph/reports/ROUTES-B/close-1020/NOTE.md` (Cloudreach T4, Stormwood T5, Stormwood ending). Proven pieces there stand and are not rerun. Their saves were container-local and lost, so a start save for an unproven piece is regenerated from its disclosed boundary and the accepted pieces before it.
 
 ## TO COORDINATOR
