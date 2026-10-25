@@ -12,10 +12,37 @@ const MATH := preload("res://scripts/combat/combat_math.gd")
 
 
 static func soft() -> Dictionary:
-	var cfg: Variant = MATH.config().get("telegraph", {}).get("soft_style", {})
+	var telegraph: Dictionary = MATH.config().get("telegraph", {})
+	var cfg: Variant = telegraph.get("soft_style", {})
 	if cfg is Dictionary and cfg.get("enabled") == true:
+		if outlines_off(cfg):
+			return _without_outlines(cfg)
 		return cfg
 	return {}
+
+
+## Owner, 24 Oct: "I don't like how the fights outline the area of the
+## attack." With `soft_style.outline_off`, every wind-up drops its painted
+## area (fill, glow band, rim, curtain, lane chevrons) and reads through the
+## world instead: kicked dust along the real hit geometry (dust_*) and the
+## attacker's own wind-up glow (tell_aura). Hit geometry and timing are
+## unchanged. `telegraph.high_contrast_markers` (accessibility, default OFF)
+## brings the outlines back.
+static func outlines_off(style: Dictionary) -> bool:
+	return style.get("outline_off") == true \
+		and MATH.config().get("telegraph", {}).get("high_contrast_markers") != true
+
+
+static func _without_outlines(style: Dictionary) -> Dictionary:
+	var out := style.duplicate()
+	for key: String in ["edge_alpha", "locked_edge_alpha", "build_start_alpha", "core_alpha",
+			"curtain_height_m", "sweep_alpha", "sweep_front_alpha"]:
+		out[key] = 0.0
+	# A wash just above the shaders' 0.001 draw test: invisible, but it keeps
+	# a row's ground crackle (cue_crackle / cue_lane_crackle) inside its area.
+	out["fill_alpha"] = 0.002
+	out["locked_fill_alpha"] = 0.002
+	return out
 
 
 ## The bright core line: the tell's own hue lifted toward white, so the edge

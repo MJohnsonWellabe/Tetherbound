@@ -100,7 +100,7 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 		colour = Color(str(profile.get("cue_water_tell_colour", "#4aa9c7")))
 		cue._fill_alpha = float(profile.get("cue_water_wall_fill_alpha", 0.28)) \
 			if profile.get("cue_water_wall") == true else float(profile.get("cue_water_fill_alpha", 0.08))
-		if not cue._soft.is_empty():
+		if not cue._soft.is_empty() and not STYLE.outlines_off(cue._soft):
 			cue._soft["fill_alpha"] = cue._fill_alpha
 	cue._tint = Color(colour, 1.0)
 	cue._edge_tint = cue._tint
@@ -112,7 +112,7 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 		cue._tint = Color(str(profile.get("cue_water_fan_colour", "#d8f6ff")))
 		cue._edge_tint = Color(str(profile.get("cue_water_fan_edge_colour", "#0f5a78")))
 		cue._fill_alpha = float(profile.get("cue_water_fan_fill_alpha", 0.32))
-		if not cue._soft.is_empty():
+		if not cue._soft.is_empty() and not STYLE.outlines_off(cue._soft):
 			cue._soft["fill_alpha"] = cue._fill_alpha
 	# Top-level BEFORE entering the tree: its vertices are world coordinates,
 	# and turning top_level on afterwards keeps the parent's global transform,
