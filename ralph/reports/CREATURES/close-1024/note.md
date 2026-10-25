@@ -3,6 +3,13 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct batch-2 pose notes: tried, nothing committed.
+  - **Faint rolls (Mosshock, Mirejaw):** rolling the other way (-90) shows the pale belly and splayed legs, a clear belly-up flip, worse. A partial 65 deg roll reads as propped or mid-tip, not down. So the shipped +90 roll (back to camera) stays as the least-bad option.
+    - Mosshock's "feet up" read is its dorsal spikes.
+    - Mirejaw's "dark smear" is its dark back.
+    - A real fix is a new side-lying faint authored per rig with the head toward camera. Tell me if you want that queued.
+  - **Land Riverdrake's faint coil:** the top hind leg sticks up after the roll. Folding the legs in the recipe did not move it (likely a sign or axis mismatch on this rig). Parked after two attempts.
+  - **water_riverdrake rider size:** this is the 1.80 m trainer on a large drake. It is a strip-framing matter, not a creature change.
 - 25 Oct GPU READY tb/creatures-land a888fb436: Mosshock's graded Meshy retexture, separate from land2 as you asked.
   - **Source:** your r1 retexture of the existing mesh, graded by `mosshock/retex/grade_retex.py`, with provenance and task ids beside it.
   - **Grade:**
