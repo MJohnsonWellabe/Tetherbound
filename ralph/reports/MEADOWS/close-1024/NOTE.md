@@ -211,23 +211,23 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Queued next: a heading probe for band5_stronghold_approach_1 (4.59). Its gameplay and detail cameras press into machinery and a pillar in the courtyard, the same L1 fix as river lock 0.
   - Not delivered yet on tb/meshy-1024: the arch facades, the stronghold hero, the stone_and_root cliffs and the Ironwood canopies. Those tier-1 stands (arch_*, band5_0/1, stone_and_root_1) wait on them after L1 and L2.
 
-- 2026-10-25 11:40 UTC READY (GPU confirm) tier-1 new art r1, CPU A/B vs shipping (`art1024-batch.json`, `art1024-mapped.json`, `_sheet_art1024_r1.png`; key `art1024-key.json`). Three fresh code-blind judges; anchors f36_0_npc:C1, p2_094_r4, craft; calibrate slope 1.64, r 0.98, RMSE 0.31 (confirming batch).
+- 2026-10-25 11:20 UTC READY (GPU confirm) tier-1 new art r1, CPU A/B vs shipping (`art1024-batch.json`, `art1024-mapped.json`, `_sheet_art1024_r1.png`; key `art1024-key.json`). Three fresh code-blind judges; anchors f36_0_npc:C1, p2_094_r4, craft; calibrate slope 1.64, r 0.98, RMSE 0.31 (confirming batch).
   - **Arch facades** (`crossing_hall.json arch_facades`): mapped **6.92 vs 5.50** (+1.42). Meets the 6.7 CPU-provisional bar. Judges still flag the violet rims on the unfaced arches (stormwood, biome6–8) next to the new surrounds; r2 below.
   - **Cliffs** (`meadows_hero_pieces.json cliffs`): mapped **5.93 vs 4.89** (+1.04) at band2_stone_and_root_1. Clears tier 1 (≥5.2 CPU), below 6.7. Remaining: the faceted Burrow hill flank and the ramp slab (terrain, not this asset).
   - **Gatehouse** (`stronghold.json hero_gatehouse`): **5.44 = 5.44**, no visible change. At 28 m wide it is a speck from band5_0 (550 m) and out of frame at band5_1. Resize round queued.
   - All three stay OFF until GPU confirms. GPU command, each with its flag set `enabled: true` for the candidate side and `false` for shipping: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=arch_tidewake,arch_cloudreach,arch_biome5,band2_stone_and_root_1 --output=res://<round>`. Recommend turning arch_facades and cliffs ON if GPU agrees (both are clear gains with no judged regression).
   - Next here: arches r2 (reuse the sealed biome5 surround on biome6–8 and a carved surround on stormwood so no neon rim sits beside a faced arch), gatehouse r2 (larger, until it reads from 550 m), then the cover r2 capture already queued.
 
-- 2026-10-25 12:00 UTC MESHY (F38 L6, arch r2 follow-up): arch_stormwood, one asset. Until it lands, r2 reuses the tidewake surround on the stormwood arch.
+- 2026-10-25 11:24 UTC MESHY (F38 L6, arch r2 follow-up): arch_stormwood, one asset. Until it lands, r2 reuses the tidewake surround on the stormwood arch.
   - Same envelope as the r1 surrounds: about 4.4 m wide x 5.2 m tall x 0.7 m deep, framing the existing ~2.6 x 3.8 m door, open centre; the 1.80 m trainer stands about a third of its height.
   - Ref: `docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png`, with the key art's Meadows stone palette so it sits in the Hall.
   - Prompt: "carved dark oak and grey stone portal surround for a doorway, twisted root and branch relief climbing both jambs, a small pale-blue lightning glass keystone, iron straps, stylised realism, game asset, open centre". No oxblood.
 
-- 2026-10-25 12:30 UTC READY (test pending) tb/meadows-land8 7472798460 (from origin/main): tier-1 new art wired OFF.
+- 2026-10-25 11:28 UTC READY (test pending) tb/meadows-land8 7472798460 (from origin/main): tier-1 new art wired OFF.
   - Contents: Hall arch facades (`crossing_hall_arch_facades.gd`, `crossing_hall.json arch_facades`, now covering all seven chapter arches), the stronghold hero gatehouse (`stronghold_hero_gatehouse.gd`, `stronghold.json hero_gatehouse`, r2 placement), and the Meadows hero pieces (`meadows_hero_pieces.gd`, `meadows_hero_pieces.json`: cliffs and Ironwood). It also carries their ten `assets/props/meshy-1024/meadows_*` assets, imported with policy passed, and three one-line hooks.
   - Every flag is false, so shipping is unchanged. Test: `tests/test_meadows_tier1_art_gates.gd`, queued behind the CPU captures; I'll post the result here.
   - It lands alongside land3, land6 and land7 with no overlapping hunks (land3 touches other keys in `crossing_hall.json`).
-  - Use it for the GPU art pass in the 11:40 READY (flip each flag on for the candidate side).
+  - Use it for the GPU art pass in the 11:20 READY (flip each flag on for the candidate side).
 
 ## Work log
 
