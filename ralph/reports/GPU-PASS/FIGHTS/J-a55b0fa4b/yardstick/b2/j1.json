@@ -1,0 +1,176 @@
+{
+ "sets": {
+  "Ue": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "FIXED",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The warm torchlit hall has real mood, but the fight is carried by HUD text and loops of white dust puffs, and in B the player's Ripplet is ghosted or missing, which sinks it."
+  },
+  "Mo": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Dark muddy brown frames with no purple storm sky or lightning, the player's creature hard to find under the spider, flat magenta floor marks, and (in A) canopy blocking i11/i13/i15 sink it."
+  },
+  "Gk": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Flat, blurry ground textures, sparse placeholder trees and a featureless grade read well below Palworld's density and finish, although A's site-specific aftermaths (freed captive, broken crates, smoking camp) help."
+  },
+  "Ik": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Tanglevolt's standing model is close to the owner bar, but A's faint frames lose the fur and lightning material and float off the ground, and B's faint end tips the wolf onto its nose."
+  },
+  "Ij": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "FIXED",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "FIXED",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The warm meadow and solid creature models get close, but the uniform grass carpet, flat gold hit discs on Terrapup and giant white puff rings (A f04-f08) keep it below Palworld's finish."
+  },
+  "Rn": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The dusk sky and colourful creatures carry some appeal, but dust-ring telegraphs, flat white speed streaks, a camera jammed into Aeriex's wings (B 27750) and a heavy HUD sink it."
+  },
+  "Pe": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Voltarach is a strong hero asset and the purple storm sky is on board, but a grey hazed, sparse forest, a player Sparkit too tiny to find and white flash and dust columns over the impact sink it."
+  },
+  "Pf": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder with readable eyes and a Meadows-green palette that sits at Palworld-class character finish, though it is shown only on a black stage."
+  },
+  "Ge": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.3,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Empty pale dunes with no Tidewake water, a ghosted (A) or missing (B) Ripplet and flat cyan hit discs on Cannonback sink it, even though Cannonback itself reads well."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Make the player's creature always opaque, on screen and scaled above the 1.80 m trainer. Replace the white dust-puff loops, gold or cyan hit discs and white flash columns with grounded impacts at the struck creature's feet (debris, sparks, lightning), and show telegraphs on the attacker's body instead of in HUD text and floor marks.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build the world around the fights: groves, edges and clearings instead of uniform grass or sand carpets, detailed ground textures, Valheim-style fog, sky and time-of-day grade per chapter (Stormwood purple storm with lightning, Tidewake open water), and a camera that stays out of trunks, canopy and wings.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix the faint/hurt states: keep the full fur and lightning material through faint (Ik A), ground the faint poses so bodies neither float nor tip onto their noses (Ik B), and clear faction banners from post-win sites (Gk B rows 1, 3, 5).",
+   "kind": "scene"
+  }
+ ]
+}

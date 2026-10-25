@@ -1,0 +1,176 @@
+{
+ "sets": {
+  "Ue": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "FIXED",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The warm firelit hall gives real mood, but the rings of identical smoke puffs, the text-led tells and (on B) a ghosted or missing player creature sink it below Palworld's chunky readable combat."
+  },
+  "Mo": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky, nearly monochrome dark-green frame with no visible purple storm sky, flat magenta floor shapes and (on A) canopy filling whole frames sinks it; the gold spider silhouette is the only thing that carries."
+  },
+  "Gk": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry smeared ground textures, a flat untextured tunnel wall, flat midday light and empty plains read as prototype next to Palworld's dense lit fields, though A's after frames at least tell a story."
+  },
+  "Ik": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing wolf meets the owner's Tanglevolt bar, but A's faint frames break into black-and-white blotches and float off the floor, and B's faint end tips the wolf up onto its nose, so it falls short of a shipping finish."
+  },
+  "Ij": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "FIXED",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "FIXED",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The lush grass and solid creatures come close to Palworld's meadow fights, but a blown-out white sky, a uniform tree line and puff-ring and gold-disc effects keep it short of the same finish."
+  },
+  "Rn": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PRESENT",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The colourful creatures and dusk castle silhouettes help, but the flat dark paving, crate clutter, smoke rings and (on B) flat white speed slashes plus a camera buried in the bird sink it."
+  },
+  "Pe": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky, rain, glass shards and a striking gold spider come close to the brief, but the dark mossy carpet and a player Sparkit too small to find keep it short of Palworld-class readability."
+  },
+  "Pf": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder with readable eyes and a Meadows green/brown palette would sit comfortably beside Palworld's humans, though a slightly more cartoon face than the naturalistic creatures is the only friction."
+  },
+  "Ge": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Pale dunes and a well-built Cannonback carry some of it, but no Tidewake water, a flat black cliff mass, and a player Ripplet that is ghosted (A) or reduced to a shadow (B) sink it."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Make the player's creature always solid and findable: fix the translucent or invisible Ripplet (Ge A/B, Ue B), keep both fighters in frame, never put the camera inside a creature or the canopy (Rn B 27750, Mo A i11-i16), and add a rim light so small partners (Sparkit, Terrapup, Brooktail) separate from the ground.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the text-led tells, puff-rings, gold discs, white flash pillars and flat magenta or cyan floor shapes with body-led wind-ups and grounded element impacts at the struck creature's feet (cracked earth, stones, sparks, water splash), and show the stagger in the body.",
+   "kind": "scene"
+  },
+  {
+   "change": "Bring the world up to finish: sharper ground materials and grouped vegetation on the Meadows sites (Gk, Ij), a graded sky instead of blown-out white, Tidewake water and textured cliffs (Ge), a purple sky and lifted values in Stormwood (Mo), and a fix for the Tanglevolt faint material swap and faint-end pose (Ik).",
+   "kind": "scene"
+  }
+ ]
+}

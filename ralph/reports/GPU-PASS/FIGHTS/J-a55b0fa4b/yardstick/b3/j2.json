@@ -1,0 +1,154 @@
+{
+ "sets": {
+  "Em": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's site-specific aftermaths (freed captive, smoking wrecked camp, revealed emblem stone) carry the idea, but smeared low-res ground, uniform grass carpet, tiled cliff wall and flat noon light with no fog or sky depth sink it beside Palworld/Valheim."
+  },
+  "Ai": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "FIXED",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Brooktail otter is a genuinely appealing hero creature and B finally shows both fighters, but the bubble/puff effects are generic sprites, the meadow backdrop is flat and fogless, and tells still live in panel text."
+  },
+  "Fo": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A warm, readable elder with clear eyes and a good green/brown palette, but the soft toy-like animated-film finish leans more cartoon than the key art's stylised realism and the costume materials are plain."
+  },
+  "Fj": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PRESENT",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's open-field framing keeps the Mudsnout and Terrapup readable, but the small player creature, puff-cloud attacks smothering it, dark muddy grass and absent sky/fog depth keep it well short of Palworld finish (A is sunk by a gate filling the frame)."
+  },
+  "Ay": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spider boss silhouette reads in B, but both sides are a dark brown-green murk with no purple storm sky, lightning or copper/glass highlights, flat magenta floor glyphs carry the attacks, and A's camera repeatedly ends up inside trunks and canopy."
+  },
+  "Pm": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's long blue-and-gold drake has a strong readable silhouette and scale over the ruler, but surface detail is thin next to the owner's furred/plated bar and A's faint end collapses into an unreadable crumpled heap."
+  },
+  "Uz": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "FIXED",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "FIXED",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PRESENT",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "FIXED",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm brazier-lit stone hall gives the closest Valheim-style mood in the batch and B frames both fighters well, but tiled brick walls, generic puff-cloud attacks and text-only tells keep it below shipping finish."
+  },
+  "Ys": {
+   "A": {
+    "bar_a": 4.7,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PRESENT",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "FIXED",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Aeriex and Cloudfang are attractive sky creatures, but A drowns the fight in speed lines, puffs and a white disc flash while B's murky blue-grey dusk grade flattens values and leaves dark player creatures on dark sand."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix fight cameras and effects together: keep the player's creature framed and unoccluded (no gates, trunks or canopy between camera and fighters), replace white puff-cloud and disc-flash hits with grounded stone/water/spark impacts at the struck creature's feet, and give every tell a body wind-up plus an in-world (non-magenta, non-text) danger cue.",
+   "kind": "scene"
+  },
+  {
+   "change": "Lift the world grade to the key art: warm saturated grass with clumped groves and clearings instead of smeared uniform carpet, cool blue aerial-perspective fog and real skies in Meadows, and the purple storm sky with lightning and copper/glass highlights in Stormwood so fights are not dark mid-tone murk.",
+   "kind": "scene"
+  },
+  {
+   "change": "Raise creature surface quality toward the owner style bar (fur/scale/plate detail and rim light on the Pm drake, Terrapup and Bramblebun) and author readable grounded faint-end poses.",
+   "kind": "new_art"
+  }
+ ]
+}

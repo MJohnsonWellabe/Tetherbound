@@ -1,0 +1,154 @@
+{
+ "sets": {
+  "Em": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's aftermaths are distinct per site (fallen banner, freed captive, revealed waystone, smoking ruin), but the blurry, smeared grass carpet, flat noon light and stretched cliff texture in row 1 are nowhere near Palworld density or Valheim atmosphere."
+  },
+  "Ai": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Brooktail otter is an appealing, well-lit hero subject, but on side A the player's creature is missing from every frame, and the spray-puff effects plus a plain green-hill backdrop keep it short of Palworld's finish."
+  },
+  "Fo": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder with readable eyes, a warm green/brown palette and a clear full-body silhouette sits close to Palworld's human finish, though the large-headed toon proportions lean cartoonier than the naturalistic creature bar."
+  },
+  "Fj": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PRESENT",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B frames both fighters cleanly (shell-backed Mudsnout vs the small player creature), but the uniform dark-green grass carpet, murky grade and white dust clouds sink it, and side A is mostly a wooden fence and banners in front of the camera."
+  },
+  "Ay": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Voltarach spider model is legible, but the frames are underexposed brown-black, with no purple storm sky, lightning or moss/copper accents, flat magenta floor shapes carry the tells, and on side A canopy and trunks swallow whole frames."
+  },
+  "Pm": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Both water-drake models carry a saturated blue/white palette and a crest silhouette that clears the 1.80 m ruler, but the surfaces read smooth and toy-like rather than with the scale detail and rim light of the owner's naturalistic style bar."
+  },
+  "Uz": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PRESENT",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm torch-lit stone hall light and two large, readable creatures come closest to Valheim mood in the batch, but the dust-puff hit trails, the semi-translucent Ripplet tail and the text-only tells still read as prototype."
+  },
+  "Ys": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PRESENT",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "FIXED",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Aeriex and Cloudfang are attractive hero creatures, but side A buries the fighters under flash discs and puffs with staggers labelled under the opponent's panel, and side B's dim navy dusk grade drops Cloudreach's bright sky and pale stone, so neither reaches Palworld finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fight camera and occlusion rule: always frame both fighters, keep the player's creature fully opaque and on screen, and fade or cull fences, banners, trunks and canopy between camera and fighters (Fj A, Ay A, Ai A, Uz A).",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace white dust-puff rings, flash discs and magenta floor shapes with grounded impact effects at the struck creature's feet (stone chips, water splash, lightning strike) and in-world telegraphs, with the stagger shown in the body and labelled under the correct panel.",
+   "kind": "scene"
+  },
+  {
+   "change": "Grade and ground pass per chapter: break the blurry uniform Meadows grass carpet into groves and clearings with proper ground textures, lift Stormwood exposure with a purple storm sky, lightning rim and moss/copper accents, and restore Cloudreach's bright sky in place of the murky dusk grade.",
+   "kind": "scene"
+  }
+ ]
+}

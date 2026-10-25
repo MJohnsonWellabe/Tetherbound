@@ -1,0 +1,176 @@
+{
+ "sets": {
+  "Ue": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "FIXED",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm torch-lit hall with real value range and two solid creatures in A carries it, but the white puff-ring telegraph, text-led tells and (in B) a missing player creature keep it below a shipping fight."
+  },
+  "Mo": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold spider reads, but murky low-value forest, flat magenta floor shapes as telegraphs, a near-invisible player creature and (A i11/i13/i15) canopy filling the frame sink it; no storm sky or lightning mood reads."
+  },
+  "Gk": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's aftermaths are site-specific (freed villager by an open cage, smoking collapsed camp, banners down) but smeared low-res ground, sparse even scatter and flat walls sit far below Palworld density and Valheim light."
+  },
+  "Ik": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Standing Tanglevolt matches the owner bar in silhouette and scale, but A's faint poses float above their shadow with the lightning material washing out to black-and-white, and B's faint end tips the wolf nose-down near vertical."
+  },
+  "Ij": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "FIXED",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "FIXED",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm meadow grass, a tree line and two solid naturalistic creatures come close, but the screen-wide dust-puff ring (A f04-f08), flat gold disc markers on the target and soft featureless ground keep it short of shipping finish."
+  },
+  "Rn": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Dusk stronghold sky and the colourful bird and white wolf are appealing, but a dark, empty courtyard floor, puff-ring telegraphs, a stray winged creature hovering at frame edge (A 25527/26787) and B's camera jammed into the bird with speed-line streaks (27750) sink it."
+  },
+  "Pe": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Purple storm sky, rain, glass shards and the rim-lit gold Voltarach carry the Stormwood mood, but the player's Sparkit is a speck under the spider and the moss floor is a uniform dark carpet."
+  },
+  "Pf": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager with readable eyes and a natural green-brown palette at a finish a shipping game would accept, though its rounded animated-film face is softer than the naturalistic creature bar."
+  },
+  "Ge": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Pale dunes and the barnacled Cannonback suit Tidewake, but the player's Ripplet is a ghost in A and absent in B, flat disc markers sit on the turtle's shell, and there is no water, sky or fog to give depth."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Make the player's creature always present: opaque, full scale and framed by the combat camera alongside the opponent (Ge, Pe, Ue B, Rn, Mo), with a camera rule that stops it pushing inside a creature (Rn B 27750) or behind canopy (Mo A).",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace telegraph and hit language (white puff rings, flat gold/blue discs on the target, flat magenta floor shapes, speed-line streaks) with grounded element effects: real stones, dust, water and lightning that strike at the target's feet, with a body stagger instead of a text label.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Give the ground and lighting form: crisp tiled grass, moss and sand materials, clustered groves and props instead of even scatter, plus sky, fog and a time-of-day grade that separates foreground, midground and distance (Gk, Ge, Mo, Rn).",
+   "kind": "scene"
+  }
+ ]
+}

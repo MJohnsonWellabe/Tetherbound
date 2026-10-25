@@ -1,0 +1,46 @@
+{
+ "Em": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Ai": {
+  "anchor": false,
+  "label": "J riverwatch High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-riverwatch-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-riverwatch-cand-High.png"
+ },
+ "Fo": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Fj": {
+  "anchor": false,
+  "label": "J f38 south_bridge_grunt f17-32 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-f38-south_bridge_grunt-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-f38-south_bridge_grunt-cand-High.png"
+ },
+ "Ay": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Pm": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Uz": {
+  "anchor": false,
+  "label": "J warden Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-warden-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-warden-cand-Medium.png"
+ },
+ "Ys": {
+  "anchor": false,
+  "label": "J veyra High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-veyra-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-veyra-cand-High.png"
+ }
+}

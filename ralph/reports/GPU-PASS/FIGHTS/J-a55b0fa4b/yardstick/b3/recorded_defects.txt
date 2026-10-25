@@ -1,0 +1,8 @@
+Em: none
+Ai: "The player's own creature is translucent, ghosted or too small to find in the fight"; "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body"; "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet"; "P2-063: tells rely on text while flat magenta floor marks carry the attack"
+Fo: none
+Fj: "The player's own creature is translucent, ghosted or too small to find in the fight"; "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body"; "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet"; "P2-063: tells rely on text while flat magenta floor marks carry the attack"
+Ay: none
+Pm: none
+Uz: "The player's own creature is translucent, ghosted or too small to find in the fight"; "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body"; "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet"; "P2-063: tells rely on text while flat magenta floor marks carry the attack"
+Ys: "The player's own creature is translucent, ghosted or too small to find in the fight"; "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body"; "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet"; "P2-063: tells rely on text while flat magenta floor marks carry the attack"

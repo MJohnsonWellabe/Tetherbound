@@ -1,0 +1,154 @@
+{
+ "sets": {
+  "Em": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Site-specific aftermath story (open cage, fallen banner, smoking collapsed tent, revealed rune stone) carries side A, but smeared low-detail ground textures, flat noon light and sparse floating props sink both sides well below Palworld density and Valheim atmosphere."
+  },
+  "Ai": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Brooktail is a Palworld-class hero model, but a bare blurry meadow, puff-ball spray VFX and a HUD that frames the fighters keep it from reading as the same finish."
+  },
+  "Fo": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing, clearly identifiable elder villager with readable eyes and a natural olive/cream/leather palette carries it, though he sits on a void stage with flat fill light rather than Valheim-class rim and grade."
+  },
+  "Fj": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PRESENT",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B frames both fighters cleanly on a grass slope, but tiny distant creatures, white puff clouds and yellow ring icons over the struck creature, and side A's fence-and-banner occlusion sink it."
+  },
+  "Ay": {
+   "A": {
+    "bar_a": 3.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Voltarach's copper-and-blue silhouette is on-board, but a murky brown-grey forest with no purple storm sky or lightning, flat magenta floor shapes, a near-invisible player creature, a HUD covering much of each frame and (side A) trunk/canopy blackouts sink it."
+  },
+  "Pm": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Saturated blue-and-gold aquatic drake with a clear spined silhouette reads at a shipping-creature finish, held back by a back height only about level with the 1.80 m trainer, A's collapsed faint-end heap and B's floating faint-mid pose."
+  },
+  "Uz": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Torch-lit stone hall has real Valheim-like warmth and two large readable creatures, but the player's Ripplet vanishing in side A and cotton-ball dust trails covering both fighters keep it short of shipping finish."
+  },
+  "Ys": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PRESENT",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PARTIAL",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "FIXED",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Aeriex and the castle arena give a strong landmark backdrop and B's dusk/rain grade adds mood, but puff rings, speed-line streaks, A's white impact disc and an empty flat arena floor read as prototype rather than Palworld finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the shared combat VFX language (white puff-ball trails, white impact discs, yellow ring icons, flat magenta floor triangles/rings) with grounded real-object effects: water splash and spray sheets, kicked stones/dust at the struck creature's feet, lightning arcs, plus body-driven tell anticipation so tells no longer depend on HUD text.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fight camera and framing rules: always keep the player's creature on screen, solid and at readable size, push the camera past occluders (Fj A fence/banners, Ay A trunks and canopy), and shrink/realign HUD panels so they never sit over the fighters (Ay especially).",
+   "kind": "scene"
+  },
+  {
+   "change": "Terrain and atmosphere pass: replace smeared low-res ground textures with detailed grass/dirt materials and clumped vegetation (Em, Ai, Fj), and give Stormwood its purple storm sky, rim light and white-violet lightning so Ay separates from mud-brown.",
+   "kind": "scene"
+  }
+ ]
+}

@@ -1,0 +1,62 @@
+[
+    {
+        "label":  "J stormwood High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\J\\sides\\J-stormwood-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\J\\sides\\J-stormwood-ship-High.png",
+        "brief":  "Frames from one real trainer fight through the production camera, with the player\u0027s creature fighting the opponent\u0027s. Judge whether the fight reads on screen - both fighters visible, telegraphs and impacts readable, the player\u0027s own creature clearly present - and whether it looks like an event that belongs to this realm of the key art.",
+        "defects":  [
+                        "The player\u0027s own creature is translucent, ghosted or too small to find in the fight",
+                        "A stagger is announced by a label under the wrong creature\u0027s panel, or with no change in the creature\u0027s body",
+                        "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet",
+                        "P2-063: tells rely on text while flat magenta floor marks carry the attack"
+                    ]
+    },
+    {
+        "label":  "J venn High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\J\\sides\\J-venn-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\J\\sides\\J-venn-ship-High.png",
+        "brief":  "Frames from one real trainer fight through the production camera, with the player\u0027s creature fighting the opponent\u0027s. Judge whether the fight reads on screen - both fighters visible, telegraphs and impacts readable, the player\u0027s own creature clearly present - and whether it looks like an event that belongs to this realm of the key art.",
+        "defects":  [
+                        "The player\u0027s own creature is translucent, ghosted or too small to find in the fight",
+                        "A stagger is announced by a label under the wrong creature\u0027s panel, or with no change in the creature\u0027s body",
+                        "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet",
+                        "P2-063: tells rely on text while flat magenta floor marks carry the attack"
+                    ]
+    },
+    {
+        "label":  "J riverwatch Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\J\\sides\\J-riverwatch-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\J\\sides\\J-riverwatch-ship-Medium.png",
+        "brief":  "Frames from one real trainer fight through the production camera, with the player\u0027s creature fighting the opponent\u0027s. Judge whether the fight reads on screen - both fighters visible, telegraphs and impacts readable, the player\u0027s own creature clearly present - and whether it looks like an event that belongs to this realm of the key art.",
+        "defects":  [
+                        "The player\u0027s own creature is translucent, ghosted or too small to find in the fight",
+                        "A stagger is announced by a label under the wrong creature\u0027s panel, or with no change in the creature\u0027s body",
+                        "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet",
+                        "P2-063: tells rely on text while flat magenta floor marks carry the attack"
+                    ]
+    },
+    {
+        "label":  "J f38 south_bridge_grunt f17-32 Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\J\\sides\\J-f38-south_bridge_grunt-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\J\\sides\\J-f38-south_bridge_grunt-ship-Medium.png",
+        "brief":  "Frames from one real trainer fight through the production camera, with the player\u0027s creature fighting the opponent\u0027s. Judge whether the fight reads on screen - both fighters visible, telegraphs and impacts readable, the player\u0027s own creature clearly present - and whether it looks like an event that belongs to this realm of the key art.",
+        "defects":  [
+                        "The player\u0027s own creature is translucent, ghosted or too small to find in the fight",
+                        "A stagger is announced by a label under the wrong creature\u0027s panel, or with no change in the creature\u0027s body",
+                        "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet",
+                        "P2-063: tells rely on text while flat magenta floor marks carry the attack"
+                    ]
+    },
+    {
+        "label":  "J f38 warden_aldis f1-16 High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\J\\sides\\J-f38-warden_aldis-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\J\\sides\\J-f38-warden_aldis-ship-High.png",
+        "brief":  "Frames from one real trainer fight through the production camera, with the player\u0027s creature fighting the opponent\u0027s. Judge whether the fight reads on screen - both fighters visible, telegraphs and impacts readable, the player\u0027s own creature clearly present - and whether it looks like an event that belongs to this realm of the key art.",
+        "defects":  [
+                        "The player\u0027s own creature is translucent, ghosted or too small to find in the fight",
+                        "A stagger is announced by a label under the wrong creature\u0027s panel, or with no change in the creature\u0027s body",
+                        "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet",
+                        "P2-063: tells rely on text while flat magenta floor marks carry the attack"
+                    ]
+    }
+]

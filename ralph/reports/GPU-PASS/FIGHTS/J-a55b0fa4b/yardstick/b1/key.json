@@ -1,0 +1,52 @@
+{
+ "Lv": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Zn": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Rw": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Ni": {
+  "anchor": false,
+  "label": "J stormwood High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-stormwood-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-stormwood-cand-High.png"
+ },
+ "Pw": {
+  "anchor": false,
+  "label": "J venn High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-venn-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-venn-ship-High.png"
+ },
+ "Hf": {
+  "anchor": false,
+  "label": "J f38 warden_aldis f1-16 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-f38-warden_aldis-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-f38-warden_aldis-ship-High.png"
+ },
+ "Gf": {
+  "anchor": false,
+  "label": "J f38 south_bridge_grunt f17-32 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-f38-south_bridge_grunt-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-f38-south_bridge_grunt-cand-Medium.png"
+ },
+ "Sk": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "To": {
+  "anchor": false,
+  "label": "J riverwatch Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-riverwatch-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-riverwatch-cand-Medium.png"
+ }
+}

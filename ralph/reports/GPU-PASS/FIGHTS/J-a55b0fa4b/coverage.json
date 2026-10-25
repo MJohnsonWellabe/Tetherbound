@@ -1,0 +1,62 @@
+[
+    {
+        "fight":  "warden",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "fight":  "riverwatch",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "fight":  "stormwood",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "fight":  "veyra",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "fight":  "venn",
+        "preset":  "Medium",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "fight":  "warden",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "fight":  "riverwatch",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "fight":  "stormwood",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "fight":  "veyra",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  4
+    },
+    {
+        "fight":  "venn",
+        "preset":  "High",
+        "cand":  4,
+        "ship":  4
+    }
+]

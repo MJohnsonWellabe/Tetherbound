@@ -1,0 +1,186 @@
+{
+ "sets": {
+  "Lv": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager whose olive/cream/leather palette fits the Meadows; the soft cartoon face sits a little apart from the naturalistic creature bar, but the finish matches a shipping stylised game."
+  },
+  "Zn": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's panel is legible and on-palette, but small keyboard-glyph hints, a three-row list with dead space and a murky, near-black rain backdrop are below Palworld's HUD finish."
+  },
+  "Rw": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's mottled black-gold serpent is grounded and naturalistic, but busy low-value scales and a small head stop it reaching the Galecrest/Stormursa bar; A's flat black-yellow model floats in mid-air through its faint poses."
+  },
+  "Ni": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple Stormwood sky and the gold-and-violet Voltarach carry the realm, but the player's tiny Sparkit lost under its legs, white puff clouds and a dark, flat moss floor sink it."
+  },
+  "Pw": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.3,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A flat, empty sand plane with evenly scattered grass tufts and no water, falls or sky depth, plus a ghosted (A) or missing (B) player creature, reads nothing like Tidewake or a shipping fight."
+  },
+  "Hf": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "FIXED",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Both fighters are naturalistic and readable in A, but a flat mid-tone grass slope under a grey haze band, and B's far camera with long white smoke trails, keep it below Palworld's meadow-fight finish."
+  },
+  "Gf": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "FIXED",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PRESENT",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "FIXED",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Team Tether banners and grounded creatures read as the right world, but gold discs on the bodies, B's full-frame white puff burst (f22-f24) and a foreground post blocking the right third sink the finish."
+  },
+  "Sk": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Meadows backdrop is pleasant, but a lone thin timber frame (A), or a blown-out white board with no cap or footing (B), reads as a placeholder card rather than Palworld-class base building."
+  },
+  "To": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "PRESENT",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PARTIAL",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "The player's own creature is translucent, ghosted or too small to find in the fight": "FIXED",
+     "A stagger is announced by a label under the wrong creature's panel, or with no change in the creature's body": "PARTIAL",
+     "Hits read as flat discs, rings or flashes that cover the struck creature instead of an impact at its feet": "PRESENT",
+     "P2-063: tells rely on text while flat magenta floor marks carry the attack": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's two opaque otters in a lush grove by the stream come closest, but white spray dots across both bodies, a flat cyan floor arc and a flat, soft-lit grade without Valheim-class light keep it short."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the white puff clouds, gold rings and cyan discs drawn over the creatures with grounded impacts at the struck creature's feet: dust, thrown stones, water splash or sparks, plus a visible body recoil on stagger (Ni, Pw, Hf, Gf, To).",
+   "kind": "scene"
+  },
+  {
+   "change": "Keep the player's creature present in every fight frame: render it opaque at full scale, never ghosted or culled, and frame the production camera so it sits in the near third at a readable size (Ni, Pw, Hf B, To A).",
+   "kind": "scene"
+  },
+  {
+   "change": "Dress the fight arenas to their realm, with real light: Tidewake needs open water, pale dunes, falls and grouped vegetation instead of an empty sand plane with even tuft scatter, and the Meadows fights need warm directional light and cool blue distance instead of a flat grey haze band.",
+   "kind": "scene"
+  }
+ ]
+}

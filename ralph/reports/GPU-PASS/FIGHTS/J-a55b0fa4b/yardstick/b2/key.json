@@ -1,0 +1,52 @@
+{
+ "Ue": {
+  "anchor": false,
+  "label": "J warden High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-warden-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-warden-ship-High.png"
+ },
+ "Mo": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Gk": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Ik": {
+  "anchor": true,
+  "A": "f36_0_gap:C4B",
+  "B": "f36_0_gap:C4A"
+ },
+ "Ij": {
+  "anchor": false,
+  "label": "J f38 warden_aldis f1-16 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-f38-warden_aldis-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-f38-warden_aldis-cand-Medium.png"
+ },
+ "Rn": {
+  "anchor": false,
+  "label": "J veyra Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-veyra-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-veyra-cand-Medium.png"
+ },
+ "Pe": {
+  "anchor": false,
+  "label": "J stormwood Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-stormwood-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-stormwood-ship-Medium.png"
+ },
+ "Pf": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ge": {
+  "anchor": false,
+  "label": "J venn Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-venn-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\J\\sides\\J-venn-ship-Medium.png"
+ }
+}

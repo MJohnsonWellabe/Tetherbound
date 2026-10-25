@@ -1,0 +1,198 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8344,
+  "least_squares_slope": 0.8005,
+  "method": "linear",
+  "slope": 0.8005,
+  "intercept": 2.3735,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.594,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.533,
+   "reference": 4.0,
+   "mapped": 5.202,
+   "residual": -1.202
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.133,
+   "reference": 6.53,
+   "mapped": 5.682,
+   "residual": 0.848
+  },
+  "f04_6_r22:r22": {
+   "measured": 4.967,
+   "reference": 6.75,
+   "mapped": 6.349,
+   "residual": 0.401
+  },
+  "f04_6_r22:control": {
+   "measured": 4.1,
+   "reference": 5.83,
+   "mapped": 5.656,
+   "residual": 0.174
+  },
+  "f36_0_gap:C4B": {
+   "measured": 5.333,
+   "reference": 7.17,
+   "mapped": 6.643,
+   "residual": 0.527
+  },
+  "f36_0_gap:C4A": {
+   "measured": 5.833,
+   "reference": 6.77,
+   "mapped": 7.043,
+   "residual": -0.273
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.7,
+   "reference": 7.53,
+   "mapped": 7.737,
+   "residual": -0.207
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.7,
+   "reference": 7.47,
+   "mapped": 7.737,
+   "residual": -0.267
+  }
+ },
+ "candidates": {
+  "J warden High cand|ship | J-warden-cand-High": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.99,
+   "mapped_judges": [
+    6.38,
+    7.18,
+    7.42
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "J warden High cand|ship | J-warden-ship-High": {
+   "measured_mean": 4.533,
+   "mapped_mean": 6.0,
+   "mapped_judges": [
+    5.42,
+    6.06,
+    6.54
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "J f38 warden_aldis f1-16 Medium cand|ship | J-f38-warden_aldis-ship-Medium": {
+   "measured_mean": 5.2,
+   "mapped_mean": 6.54,
+   "mapped_judges": [
+    5.98,
+    6.78,
+    6.86
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "J f38 warden_aldis f1-16 Medium cand|ship | J-f38-warden_aldis-cand-Medium": {
+   "measured_mean": 5.567,
+   "mapped_mean": 6.83,
+   "mapped_judges": [
+    6.22,
+    7.1,
+    7.18
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "J veyra Medium cand|ship | J-veyra-ship-Medium": {
+   "measured_mean": 5.233,
+   "mapped_mean": 6.56,
+   "mapped_judges": [
+    6.22,
+    6.62,
+    6.86
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "J veyra Medium cand|ship | J-veyra-cand-Medium": {
+   "measured_mean": 4.7,
+   "mapped_mean": 6.14,
+   "mapped_judges": [
+    5.82,
+    6.22,
+    6.38
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "J stormwood Medium cand|ship | J-stormwood-cand-Medium": {
+   "measured_mean": 5.133,
+   "mapped_mean": 6.48,
+   "mapped_judges": [
+    5.82,
+    6.78,
+    6.86
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "J stormwood Medium cand|ship | J-stormwood-ship-Medium": {
+   "measured_mean": 5.4,
+   "mapped_mean": 6.7,
+   "mapped_judges": [
+    5.98,
+    7.1,
+    7.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "J venn Medium cand|ship | J-venn-cand-Medium": {
+   "measured_mean": 4.3,
+   "mapped_mean": 5.82,
+   "mapped_judges": [
+    5.42,
+    5.98,
+    6.06
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "J venn Medium cand|ship | J-venn-ship-Medium": {
+   "measured_mean": 3.9,
+   "mapped_mean": 5.5,
+   "mapped_judges": [
+    5.02,
+    5.58,
+    5.9
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
