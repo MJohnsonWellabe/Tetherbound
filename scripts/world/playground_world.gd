@@ -1303,11 +1303,13 @@ func _apply_ground_shader(material: Object) -> void:
 			cfg[key] = overrides[key]
 		# A judged look candidate rides beside the shipped overrides and applies
 		# only with its own `enabled` (F04#6/F38: "smeared, blurry ground").
-		var candidate: Dictionary = (presentation as Dictionary).get("shader_candidate", {})
-		if bool(candidate.get("enabled", false)):
-			for key: String in candidate.keys():
-				if key != "enabled" and not key.begins_with("_"):
-					cfg[key] = candidate[key]
+		# F38 L4 (P2-005) carpet patches ride the same way under their own flag.
+		for block: String in ["shader_candidate", "carpet_candidate"]:
+			var candidate: Dictionary = (presentation as Dictionary).get(block, {})
+			if bool(candidate.get("enabled", false)):
+				for key: String in candidate.keys():
+					if key != "enabled" and not key.begins_with("_"):
+						cfg[key] = candidate[key]
 	if cfg.is_empty():
 		# FLAT rather than NOISE, matching the shader's own default, so a missing
 		# config is the old look rather than an unlit void.

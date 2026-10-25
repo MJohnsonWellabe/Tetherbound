@@ -39,5 +39,12 @@
     "macro_variation2": "#e4eedd",
     "mipmap_bias": 0.7,
     "grain_strength": 0.32
+  },
+  "carpet_candidate": {
+    "enabled": false,
+    "_scope": "F38 L4 / P2-005 close-1024 candidate (OFF until judged): judges at every exterior Meadows site read a uniform grass carpet. Grass blade coverage cannot fix it (grass_field.json carpet_candidate, parked: the terrain under the blades is painted the same grass). The shipped macro octaves are ~83 m and ~33 m and near white, so the ground has no mid-scale variation. This moves the second octave to ~12 m patches (noise2_scale 0.08) in a cooler clover green, and keeps the first octave light so the large scale does not smear.",
+    "noise2_scale": 0.08,
+    "macro_variation2": "#b6cfa4",
+    "macro_variation1": "#e3ead6"
   }
 }
