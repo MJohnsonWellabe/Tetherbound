@@ -2501,6 +2501,15 @@ func hold_combat_wince(seconds: float) -> bool:
 	return _animator != null and bool(_animator.call("hold_wince", seconds))
 
 
+const FLINCH_SHOVE_PER_M := 0.11
+const FLINCH_SINK_PER_M := 0.02
+const FLINCH_LEAN_DEG := 8.0
+const FLINCH_MIN_HEIGHT := 0.8
+const FLINCH_MAX_HEIGHT := 4.0
+const FLINCH_OUT_S := 0.06
+const FLINCH_HOLD_S := 0.14
+const FLINCH_BACK_S := 0.2
+
 ## Recoil stays visual, never moving collision or attack geometry. Enabled
 ## hurt clips own Model's grounded transform, so their additive recoil uses
 ## the fitted art child instead of competing for the same animation tracks.
@@ -2515,12 +2524,21 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
 	_combat_flinch_rest_rotation = _combat_flinch_target.rotation
 	var recoil_parent := _combat_flinch_target.get_parent() as Node3D
 	var local_away := recoil_parent.global_basis.inverse() * away.normalized()
-	var recoil := Vector3(local_away.x, 0.08, local_away.z) * 0.14
+	# P2-016 (GPU, 25 Oct): a fixed 0.14 m shove over 0.16 s vanished between
+	# 0.15 s fight frames and beside 2-3 m bodies. Scale the shove and a sink
+	# with the body, lean it away from the blow, and hold it briefly.
+	var size := clampf(_height, FLINCH_MIN_HEIGHT, FLINCH_MAX_HEIGHT)
+	var recoil := Vector3(local_away.x, 0.0, local_away.z) * FLINCH_SHOVE_PER_M * size \
+		+ Vector3(0.0, -FLINCH_SINK_PER_M * size, 0.0)
+	var lean := deg_to_rad(FLINCH_LEAN_DEG) * (-1.0 if local_away.x < 0.0 else 1.0)
 	_combat_flinch_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
-	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position + recoil, 0.045).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(-7.0), 0.045)
-	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x, 0.11)
+	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position + recoil, FLINCH_OUT_S).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(-7.0), FLINCH_OUT_S)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:z", _combat_flinch_rest_rotation.z + lean, FLINCH_OUT_S)
+	_combat_flinch_tween.tween_interval(FLINCH_HOLD_S)
+	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position, FLINCH_BACK_S).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x, FLINCH_BACK_S)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:z", _combat_flinch_rest_rotation.z, FLINCH_BACK_S)
 
 
 func _clear_combat_flinch() -> void:
