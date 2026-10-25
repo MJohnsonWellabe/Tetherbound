@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+"""retex.py <name> <tag> <glb_path> <prompt_file> : Meshy retexture of an existing mesh (original UVs kept)."""
+import base64, json, os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import meshy as M
+name, tag, glb, pf = sys.argv[1:5]
+prompt = open(pf).read().strip()
+body = {"model_url": "data:application/octet-stream;base64," + base64.b64encode(open(glb, "rb").read()).decode(),
+        "text_style_prompt": prompt[:600], "enable_original_uv": True, "enable_pbr": False}
+j = M.req("POST", "/openapi/v1/retexture", body)
+tid = j.get("result")
+print("task", tid, flush=True)
+res = M.poll(f"/openapi/v1/retexture/{tid}", every=15)
+out = os.path.join(M.OUT, name)
+files = []
+if res.get("status") == "SUCCEEDED":
+    for k, u in (res.get("model_urls") or {}).items():
+        if k == "glb": files.append(M.dl(u, os.path.join(out, f"{name}.glb")))
+    for i, t in enumerate(res.get("texture_urls") or []):
+        for k, u in t.items():
+            files.append(M.dl(u, os.path.join(out, "textures", f"{tag}_{i}_{k}.png")))
+    if res.get("thumbnail_url"): files.append(M.dl(res["thumbnail_url"], os.path.join(out, "thumbnail.png")))
+M.log(name, {"step": "retexture", "tag": tag, "task_id": tid, "endpoint": "/openapi/v1/retexture", "input_mesh": os.path.basename(glb),
+             "enable_original_uv": True, "prompt": prompt, "status": res.get("status"), "files": files})
+print(json.dumps({"status": res.get("status"), "files": files, "err": res.get("task_error")})[:600])
