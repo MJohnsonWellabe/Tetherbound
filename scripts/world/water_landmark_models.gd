@@ -25,7 +25,7 @@ func build(water_world: Node3D) -> void:
 	var specs: Array = (look.get("landmark_models", []) as Array) + (look.get("landmark_props_candidate", []) as Array) \
 		+ (look.get("veilfall_hero_candidate", []) as Array) + (look.get("veilfall_facade_candidate", []) as Array) \
 		+ (look.get("veilfall_mountain_candidate", []) as Array) \
-		+ _destinations(look)
+		+ _destinations(look) + (look.get("lesson_clusters_candidate", []) as Array)
 	# `first_shore_declutter_candidate` (OFF in play) drops named props by id.
 	var dropped: Array = (look.get("first_shore_declutter_candidate", {}) as Dictionary).get("drop_landmark_props", [])
 	for raw: Variant in specs:
