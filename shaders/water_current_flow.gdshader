@@ -95,6 +95,10 @@ uniform float seam_taper_m = 0.0;
 // t1b: moonlit foam. A small emission on the foam only, so the lane still
 // reads at night; 0 keeps the lit foam exactly.
 uniform float moon_glint = 0.0;
+// t1f: a faint cool sheen over the channel tint so the lane itself (not only
+// its foam) still reads at night; 0 keeps the tint exactly.
+uniform float lane_glint = 0.0;
+uniform vec4 lane_glint_colour : source_color = vec4(0.62, 0.77, 0.88, 1.0);
 // b6: the lane tint fades over a wandering soft edge instead of the ribbon rim.
 uniform bool soft_channel_tint = false;
 varying vec3 v_world;
@@ -291,6 +295,7 @@ void fragment() {
 	// The tide-line seam sits on the banks, outside the soft foam edge mask.
 	premult = premult * (1.0 - seam_a) + brightness * foam_colour.rgb * seam_a;
 	alpha = alpha + seam_a * (1.0 - alpha);
+	float lane_glow = 0.0;
 	if (channel_tint_opacity > 0.0 || channel_edge_opacity > 0.0) {
 		// Under the foam: the dashed rim, then the channel tint. Not dimmed by
 		// the soft foam edge mask, so the bank line sits at the ribbon's edge.
@@ -308,6 +313,7 @@ void fragment() {
 		float tint_a = inside * channel_tint_opacity * base * mix(0.6, 1.0, calm_scale);
 		vec3 under = channel_edge_colour.rgb * rim_a + channel_tint_colour.rgb * tint_a * (1.0 - rim_a);
 		float under_a = rim_a + tint_a * (1.0 - rim_a);
+		lane_glow = tint_a * (1.0 - alpha);
 		premult += under * (1.0 - alpha);
 		alpha += under_a * (1.0 - alpha);
 	}
@@ -316,6 +322,9 @@ void fragment() {
 	if (moon_glint > 0.0) {
 		float foam_share = clamp((foam * mask + seam_a) / max(alpha, 0.001), 0.0, 1.0);
 		EMISSION = foam_colour.rgb * foam_share * moon_glint;
+	}
+	if (lane_glint > 0.0) {
+		EMISSION += lane_glint_colour.rgb * lane_glow / max(alpha, 0.001) * lane_glint;
 	}
 	ROUGHNESS = 0.7;
 	ALPHA = alpha;
