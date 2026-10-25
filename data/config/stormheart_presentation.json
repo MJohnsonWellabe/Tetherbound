@@ -78,7 +78,8 @@
     "deck_model": "res://assets/props/meshy-1024/stormheart_deck_segment/stormheart_deck_segment.glb",
     "deck_radius_m": 19.4,
     "deck_length_m": 8.0,
-    "deck_sink_m": 0.15
+    "deck_sink_m": 0.15,
+    "deck_tint": "#a99f96"
   },
   "hollow_floor": {
     "enabled": false,

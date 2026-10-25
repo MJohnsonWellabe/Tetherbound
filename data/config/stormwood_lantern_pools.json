@@ -89,7 +89,7 @@
     "_candidate": "r18 Meshy candidate (OFF until judged; coordinator big-swing order 25 Oct): the root-rimmed pool basin replaces each flat disc and its loose stones; the square slab is sunk below the lowest ground.",
     "model": "res://assets/props/meshy-1024/glowmoss_pool_basin/glowmoss_pool_basin.glb",
     "radius_scale": 1.25,
-    "height_scale": 0.45,
-    "rim_lift_m": 0.2
+    "height_scale": 0.6,
+    "rim_lift_m": 0.15
   }
 }

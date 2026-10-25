@@ -911,6 +911,22 @@ func _meshy_interior(cfg: Dictionary) -> void:
 			holder.rotation.y = -phi - PI * 0.5
 			root.add_child(holder)
 			holder.add_child(segment)
+			_tint_model(segment, Color(str(cfg.get("deck_tint", "#ffffff"))))
+
+
+## Multiplies each surface's albedo by `tint` (the Meshy deck reads orange
+## against the weathered cut-wood decks; the oxblood rule keeps timber off red).
+func _tint_model(model: Node, tint: Color) -> void:
+	if tint == Color.WHITE:
+		return
+	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+		for surface in visual.mesh.get_surface_count():
+			var source := visual.get_active_material(surface) as BaseMaterial3D
+			if source == null:
+				continue
+			var tinted := source.duplicate() as BaseMaterial3D
+			tinted.albedo_color = source.albedo_color * tint
+			visual.set_surface_override_material(surface, tinted)
 
 
 ## GPU F41#0 (Stormheart 3.51, 25 Oct: "smooth bare trunk walls ... add

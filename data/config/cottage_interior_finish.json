@@ -8,8 +8,8 @@
   ],
   "lining_height_m": 2.45,
   "lining_inset_m": 0.03,
-  "lining_tint": "#b39a7c",
-  "lining_weathering": 0.3,
+  "lining_tint": "#c4b5a2",
+  "lining_weathering": 0.6,
   "rail_colour": "#4a3a2c",
   "rail_height_m": 0.95,
   "hearth": {

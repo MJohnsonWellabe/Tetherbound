@@ -86,7 +86,7 @@ static func install(world: Node3D) -> void:
 			continue
 		var basin: Dictionary = cfg.get("basin", {})
 		if bool(basin.get("enabled", false)) and ResourceLoader.exists(str(basin.get("model", ""))):
-			_build_basin(root, Vector3(centre.x, low, centre.y), radius, basin)
+			_build_basin(root, Vector3(centre.x, level, centre.y), radius, basin)
 		else:
 			_build_pool(root, shader, Vector3(centre.x, level, centre.y), radius, cfg)
 			_rim_stones(world, root, centre, radius, pool, cfg)
@@ -100,6 +100,8 @@ static func install(world: Node3D) -> void:
 ## ground; the model is flattened (`height_scale`) so only the root lip and
 ## water show, `rim_lift_m` above the lowest ground.
 static func _build_basin(root: Node3D, low_at: Vector3, radius: float, cfg: Dictionary) -> void:
+	# `low_at` is the disc's own mid-relief water level (first CPU try seated
+	# it on the lowest ground and the terrain buried the whole basin).
 	var model := HERO_PROP.load_model(str(cfg.model))
 	var bounds := BOUNDS.measure(model)
 	var across := radius * 2.0 * float(cfg.get("radius_scale", 1.25))
