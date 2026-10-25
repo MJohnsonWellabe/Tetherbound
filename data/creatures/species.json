@@ -1111,6 +1111,8 @@
         "height": 3.45,
         "radius": 1.156345,
         "footprint_allowance": 3.2,
+        "_comment_field_rim_1025": "GPU batch 1 (25 Oct, 6.96): a dark wolf with blue storm accents, but the near-black body had no rim light. The same 0.25 silhouette rim Terrapup, Galecrest, Voltarach and Tanglevolt carry (it did not help pale Trailpup; it is for dark coats).",
+        "field_rim": 0.25,
         "model": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024.glb",
         "_comment_model": "Deliberately the SAME mesh as trailpup. This is an aspect variant, not a new creature: CLAUDE.md's rule that Meadows creatures are differentiated by materials, textures, modest scale, animation, VFX, habitat, behaviour, traits and encounter context IS the build path the owner's sheet specifies for it ('VARIANT RECOLOR'). The recolour, emissive and VFX treatment belongs to the T1-CREATURE-ART lane; this entry is the identity it attaches to. Do NOT repoint this at a new .glb without an owner directive -- the expansion brief names a new mesh for five OTHER creatures and explicitly not for this one.",
         "model_scale": 1.0,
