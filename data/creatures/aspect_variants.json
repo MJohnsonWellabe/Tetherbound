@@ -43,7 +43,8 @@
           "set_hue": 270,
           "set_sat": 0.05,
           "val_scale": 0.6
-        }
+        },
+        {"_why": "GPU batch 2 (6c12bf6f6): the mustard-yellow fill between the black back plates broke the silhouette into noise. Pull it to the same violet charcoal as the coat so the plates read as one armoured mass.", "match": {"hue": [40, 85], "sat_min": 0.25}, "set_hue": 266, "set_sat": 0.1, "val_scale": 0.55}
       ],
       "finish": {
         "feature_percentile": 3.0,

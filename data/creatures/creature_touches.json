@@ -31,7 +31,7 @@
      "y_max": 0.7
     },
     "mode": "shade",
-    "val_scale": 1.9,
+    "val_scale": 2.5,
     "sat_scale": 0.3,
     "coverage": 0.45,
     "grain": 6.0,
@@ -135,6 +135,27 @@
     "coverage": 0.6,
     "grain": 4.0,
     "clump_softness": 0.2,
+    "softness": 0.12
+   }
+  ]
+ },
+ "mirejaw": {
+  "source_model": "mirejaw/candidate",
+  "_why": "GPU batch 2 (tb/gpu-pass 6c12bf6f6): the faint end's near-black back read as 'a dark smear' (2 of 3). A belly-to-camera roll lost on CPU (b34, belly-up read), so the pose stays and the back's darkest scales lift toward a mossy charcoal, keeping the gold scale net.",
+  "overlays": [
+   {
+    "id": "lift_dark_back",
+    "_why": "Lift only the near-black scale fill on the upper body so the back keeps a value structure instead of a black mass.",
+    "where": {
+     "up_min": 0.1
+    },
+    "match": {
+     "val_max": 0.22
+    },
+    "mode": "shade",
+    "val_scale": 2.5,
+    "sat_scale": 1.1,
+    "coverage": 1.0,
     "softness": 0.12
    }
   ]

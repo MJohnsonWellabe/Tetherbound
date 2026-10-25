@@ -1070,6 +1070,7 @@
       },
       "placeholder": {
         "colour": "#2a2430",
+        "_why_rim_1025": "GPU batch 2 (tb/gpu-pass 6c12bf6f6) path to 7.5: a dark body needs a rim light to separate from the ground; same opt-in strength as Terrapup.", "field_rim": 0.3,
         "height": 3.5,
         "radius": 1.268167,
         "footprint_allowance": 3.2,
@@ -1151,6 +1152,7 @@
       },
       "placeholder": {
         "colour": "#1d6b8c",
+        "_why_rim_1025": "GPU batch 2 (tb/gpu-pass 6c12bf6f6) path to 7.5: a dark body needs a rim light to separate from the ground; same opt-in strength as Terrapup.", "field_rim": 0.3,
         "height": 2.15,
         "radius": 0.716043,
         "footprint_allowance": 4.8,
