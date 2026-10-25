@@ -535,6 +535,11 @@ func _play() -> void:
 			# Meadows T2 from the disclosed meadows_t2_independent boundary:
 			# Mira's duel and recipe chest (storage trip home and back if the
 			# kit needs room), then the shared homestead Kitchen/feed pieces.
+			var provenance: Variant = JSON.parse_string(FileAccess.get_file_as_string(from_dir.path_join("PROVENANCE.json")))
+			if not provenance is Dictionary or provenance.get("kind") != "generated_boundary_save" \
+					or provenance.get("profile") != "meadows_t2_independent":
+				failures.append("training_t2_master starts only from the generated meadows_t2_independent boundary save")
+				return
 			_take(await MEADOWS_TRAINING.new().run(self, world, game, {"tier": 2, "phase": "master",
 				"previous_training": before.get("training", {})}), "passed", segment)
 		"01_opening":

@@ -1,4 +1,6 @@
 {
+  "_why_fight_presentation_1025b": "Fights close-1025 ON (coordinator asks after r4/r5 + GPU G3): code-blind CPU r6, 3 fresh judges, mapped, shipped look -> r6: Venn 5.92 -> 6.56, Warden 6.19 -> 6.81, Riverwatch 6.43 -> 7.05, Stormwood 6.27 -> 6.38, Veyra 6.46 -> 6.54 (with the pilot ghost fix ef4591a18); r7 trainer fights (r6 + stagger label + flash drop + a steadier lens, the lens kept OFF): Warden 5.93 -> 6.32, grunt 6.08 -> 5.93. ralph/reports/FIGHTS/close-1024/NOTE.md Here: dust_fill_rows 2 / reveal 0.8, dust_pulse 0.45 (1.5 -> 4.5 Hz), dust_max 260; effect_banner.stagger_by_owner; impact.flash_drop 1.0 with radii 0.42/0.55.",
+  "_why_fight_presentation_1025": "Fights close-1024 generic fight presentation ON (owner 24 Oct: 'I don't like how the fights outline the area of the attack'; cand_gen_h). Code-blind yardstick, CPU, 3 fresh judges, mapped, before -> after: Meadows Warden hall 4.85 -> 5.88, Riverwatch 5.64 -> 6.99 (r4); Veyra 5.60 -> 6.21, Stormwood glass_field 5.71 -> 6.13, Venn 5.38 -> 6.07 (r5). Outlines and impact disc FIXED in every after set; tell 'where' still PARTIAL/PRESENT (dust only). Presentation only: timings, footprints and the AI's telegraph unchanged. GPU confirms 7.5. ralph/reports/FIGHTS/close-1024/NOTE.md Here: telegraph.soft_style outline_off true (high_contrast_markers is the accessibility override, default OFF), tell_aura_element true, dust 0.9 alpha / 0.45 m, tell_aura 0.45; impact radii 0.9/1.2 -> 0.55/0.75 plus impact.ground_burst; fight lens pitch_start -25 -> -15 deg, composition_yaw 35 -> 50 deg.",
   "_comment": "Combat tuning. ALL of it is TUNABLE and none of it is a mechanic. M2 exists to answer one question: is the fight worth repeating? The expected feedback is 'too slow', 'too spongy', 'the charged attack isn't worth waiting for', 'I keep missing' \u2014 every one of those has to be answerable by editing this file.",
   "_comment_model": "Combat is PILOTED, not commanded: see docs/decisions/D07-combat-is-piloted-not-commanded.md. The player takes over their creature, both fighters move inside a bounded arena, and attacks are aimed and can miss.",
   "actor_vitals": {
@@ -254,7 +256,7 @@
     "distance": 9.5,
     "_comment_height": "Pivot height above the creature's feet. Above the creature rather than at its shoulder, so the camera looks slightly DOWN on the fight and the ground the opponent is standing on stays in frame.",
     "height": 2.3,
-    "pitch_start_deg": -25.0,
+    "pitch_start_deg": -15.0,
     "_comment_fov": "Narrower than exploration's 70, but no longer as tight as the old 62 -- OP-0905-17 read the whole shot as cramped, not just the lens.",
     "fov": 46.0,
     "_comment_shoulder": "Metres the lens slides sideways -- FALLBACK ONLY. `combat_manager.gd::_combat_shoulder_offset()` recomputes this during combat from the REAL ally-wild gap and overwrites it; this flat number is used only if the bodies are somehow unavailable. VISUAL-CENSUS-2026-08-31 defects 121/122 found the OLD flat 2.6 (chosen only against one assumed 2.1m gap) overshooting at the real post-engage gap (2.63m): it put the ally 25 degrees off the crosshair -- most of the way to the 31-degree vfov edge, reading as 'cropped to shell and one leg' -- while only bringing the (already tiny, separately-tracked-defect-123/124) wild creature to 18 degrees off, still edge-adjacent enough to read as 'not in the frame'. A flat metres constant cannot get this right at every gap a fight can be at, because the lateral shift is pure parallax (`camera_rig.gd::_follow()` translates the pivot without changing where the rig looks) and both bodies swing toward the SAME edge by `atan(shoulder / depth)` -- worse for the ally specifically, since it sits nearest the lens. `_combat_shoulder_offset()` solves the same clearance arithmetic this comment used to work out by hand, the other way around: given the CURRENT gap and ally body radius, a shoulder that targets at least the existing 0.6m clearance floor (the original OP23/R9.4 bug this mechanism exists to fix), bounded by max_shoulder_offset. Large bodies need more lateral clearance than the former 2.2m cap allowed. CameraRig sweeps the requested pivot against walls, while live render-bounds framing keeps both bodies in view where the room permits.",
@@ -271,7 +273,7 @@
       "enabled": true,
       "dead_zone_deg": 10.0,
       "_comment_composition": "Bias neutral combat tracking off the ally-opponent axis so similarly sized creatures do not hide each other's attack stance. Manual look retains priority; the dead zone keeps this a soft composition rather than a locked angle.",
-      "composition_yaw_deg": 35.0,
+      "composition_yaw_deg": 50.0,
       "strength": 4.0,
       "max_speed_deg": 120.0,
       "manual_grace_seconds": 0.4
@@ -368,21 +370,24 @@
     "pause_min": 1.5,
     "pause_max": 4.0
   },
-  "impact": {
+  "impact": { "_scope_ground_burst": "Client-local presentation only: read by each peer's renderer/HUD; no host authority, save, transaction, network message or gameplay state. Absent = previous behaviour.", "ground_burst": {"enabled": true, "quick": false, "cue_contact_puffs": 8, "cue_contact_reach_m": 1.4, "cue_contact_seconds": 0.7, "cue_contact_dust_alpha": 0.7, "cue_contact_debris_scale": 1.6, "cue_contact_light_energy": 2.0},
     "_comment": "The visual event of a blow landing. ALL tunable presentation; nothing here touches damage, reach or timing.",
     "_comment_measured": "The blind critic counted bright warm pixels at the instant of contact: 10 in `combat/05-quick-attack-lands`, 295 in `combat/06`, and 24,623 in `palworld-01` \u2014 roughly ten thousand times the visual energy for the same beat. Its reading was that the only difference between the frame before a hit and the frame of the hit was that the health bar got shorter. Turn `enabled` off to get that back.",
     "enabled": true,
+    "_why_flash_drop": "Fights close-1025 (ON since 25 Oct, r6/r7): GPU G3 judges saw the gold impact disc cover the struck body and hide its react. 0..1 moves the contact flash that fraction of the way from the contact point down to the struck creature's feet (combat_manager.gd), where ground_burst carries the hit.",
+    "_scope_flash_drop": "Client-local presentation only; no authority, save or network state.",
+    "flash_drop": 1.0,
     "_comment_round5": "MEADOWS-VISUAL-PASS round 5: at 0.85m/strength 1.0 the burst rendered (isolated probe) as a pale ring about 60 pixels across at fight distance, and two blind rounds found no impact effect on either hit. `strength` scales the radius, so the burst grows a little (about 1.2m quick, 1.8m charged, well short of the 5m ground-decal read) and impact_flash.gd now holds its opacity through the beat instead of halving it in the first quarter.",
     "quick": {
       "colour": "#ffe19a",
-      "radius": 0.9,
+      "radius": 0.42,
       "duration": 0.3,
       "strength": 1.3
     },
     "_comment_charged": "Bigger and warmer than a quick hit. If the expensive move looks like the free one, building energy was never worth doing.",
     "charged": {
       "colour": "#ffc063",
-      "radius": 1.2,
+      "radius": 0.55,
       "duration": 0.4,
       "strength": 1.5
     },
@@ -538,7 +543,8 @@
     "charge_text": "!  CHARGE — step off the lane",
     "dive_text": "!  DIVE — step out of its line",
     "_comment": "R9.4-remainder-9-combat: the wind-up's own visual event. A blind critic covering the HUD's '! incoming' text found the frame indistinguishable from ordinary standing \u2014 this is a pulsing warning ring at the opponent's feet for the exact length of its wind-up beat, so the read survives with the text covered. ALL tunable presentation; nothing here touches the AI's actual telegraph duration (enemy.telegraph).",
-    "_why_colour_1024": "#b16cff (hue 268): r1/r2 judges read the magenta ring/slab as the catalogue defect; violet is 40 deg from magenta, 74 deg from Riverwatch water #4aa9c7, clear of both reserved oxbloods (hue 8/352) and of tether_teal and the cyan stagger ring. #0905 history below.",
+    "_why_high_contrast_markers": "Accessibility (owner 24 Oct): with soft_style.outline_off, true brings the outlined attack areas back. Default OFF; UX defines no settings screen for it yet.", "high_contrast_markers": false,
+ "_why_colour_1024": "#b16cff (hue 268): r1/r2 judges read the magenta ring/slab as the catalogue defect; violet is 40 deg from magenta, 74 deg from Riverwatch water #4aa9c7, clear of both reserved oxbloods (hue 8/352) and of tether_teal and the cyan stagger ring. #0905 history below.",
  "_why_colour_0905": "N07-VFX-POLISH (D87): #ff5a3c (hue 9, sat 0.76) sat inside the band palette.json reserves for Team Tether (#6b2a20 hue 8 / #7a2430 hue 352, both sat 0.70) and W09-VFX's blind judge read it, at partial opacity over fur and grass, as 'a dull oxblood torus' on the FRIENDLY creature. Round 1 of this lane tried the HUD's own WARNING amber (#ffbe47, hue 39); a blind judge found it three degrees from the reward gold the orb band, the catch sparkle and the level-up rings all use, at a value inside the sunlit-grass band -- 'a dropped coin', a buff, not a warning. This is magenta on purpose: hue 308, the complement of the meadow's green, a colour nothing in the world or the reward layer carries, 44 degrees of hue from the nearest painted oxblood and 31 from the palette's near-black tether_oxblood, and the genre's established colour for an attack you cannot block and must MOVE off -- which, with no shields in this game, is every wind-up. The 'on the friendly' half of that finding was telegraph_glow.gd drawing without a depth test through the ally's back; fixed there. Colour only here; radius untouched. tests/test_telegraph_glow.gd holds the ring at least 25 degrees of hue from every reserved oxblood.",
     "enabled": true,
     "colour": "#b16cff",
@@ -567,7 +573,7 @@
       "core_width_m": 0.1,
       "core_alpha": 0.75,
       "core_whiten": 0.45,
-      "outer_feather_m": 0.1, "_why_bodied_1024": "F38#5-F41#5 (Fights close-1024; COMBAT section 13: telegraphs are shaped bodies, not flat magenta rings or slabs). Wind-up marks stand up off the ground: a low light curtain on each rim (curtain_*, shimmer), kicked dust rising along every outline and drifting down a lane toward the strike (dust_*), a faint rim glow on the attacker for its wind-up (tell_aura, Compatibility weight; x tell_aura_forward_plus elsewhere), and a fainter painted line (edge/core/build_start). Hue telegraph.colour #b16cff (was #ff40e6; judged at #8c6cff, moved to hue 268 to keep 72 deg from Riverwatch water #4aa9c7, test_f22_riverwatch_presentation; r3 re-judges it). Yardstick r2 (CPU Compatibility, 3 fresh judges, mapped): Meadows 6.54 vs shipping 5.51, Tidewake 6.38 vs 5.97, Stormwood 6.13 vs 5.87; judged slab defect PRESENT -> PARTIAL, so the 7.5 bar and the defect rows stay open. ON by the 22 Oct judged-better rule. Glow 0.9 washed large bodies pale on Compatibility; 0.3 judged fine. Evidence ralph/reports/FIGHTS/close-1024/.", "curtain_height_m": 0.4, "curtain_alpha": 0.5, "shimmer": 0.5, "dust_alpha": 0.75, "dust_spacing_m": 0.55, "dust_size_m": 0.8, "dust_rise_m": 0.9, "dust_hz": 1.1, "dust_colour": "#cdb894", "tell_aura": 0.3
+      "outer_feather_m": 0.1, "_why_bodied_1024": "F38#5-F41#5 (Fights close-1024; COMBAT section 13: telegraphs are shaped bodies, not flat magenta rings or slabs). Wind-up marks stand up off the ground: a low light curtain on each rim (curtain_*, shimmer), kicked dust rising along every outline and drifting down a lane toward the strike (dust_*), a faint rim glow on the attacker for its wind-up (tell_aura, Compatibility weight; x tell_aura_forward_plus elsewhere), and a fainter painted line (edge/core/build_start). Hue telegraph.colour #b16cff (was #ff40e6; judged at #8c6cff, moved to hue 268 to keep 72 deg from Riverwatch water #4aa9c7, test_f22_riverwatch_presentation; r3 re-judges it). Yardstick r2 (CPU Compatibility, 3 fresh judges, mapped): Meadows 6.54 vs shipping 5.51, Tidewake 6.38 vs 5.97, Stormwood 6.13 vs 5.87; judged slab defect PRESENT -> PARTIAL, so the 7.5 bar and the defect rows stay open. ON by the 22 Oct judged-better rule. Glow 0.9 washed large bodies pale on Compatibility; 0.3 judged fine. Evidence ralph/reports/FIGHTS/close-1024/.", "_why_outline_off": "Owner 24 Oct: \"I don't like how the fights outline the area of the attack.\" true: wind-ups drop the painted area (fill, glow band, rim, curtain, lane chevrons; tell_style.gd outlines_off) and read through the world: kicked dust along the real hit geometry and the attacker's wind-up glow (tell_aura, tell_aura_element = its element colour). Timing and hit geometry unchanged. ON since 25 Oct (code-blind r4/r5; see _why_fight_presentation_1025).", "_scope_outline_off": "Client-local presentation only: read by each peer's renderer/HUD; no host authority, save, transaction, network message or gameplay state. Absent = previous behaviour.", "outline_off": true, "tell_aura_element": true, "curtain_height_m": 0.4, "curtain_alpha": 0.5, "shimmer": 0.5, "dust_alpha": 0.9, "_scope_dust_fill": "Client-local presentation only: read by each peer's renderer/HUD; no host authority, save, transaction, network message or gameplay state. Absent = previous behaviour. Covers dust_fill_rows, dust_fill_reveal and dust_max.", "_scope_dust_pulse": "Client-local presentation only: read by each peer's renderer/HUD; no host authority, save, transaction, network message or gameplay state. Absent = previous behaviour. Covers dust_pulse, dust_pulse_hz and dust_pulse_hz_end.", "dust_fill_rows": 2, "dust_fill_reveal": 0.8, "dust_pulse": 0.45, "dust_pulse_hz": 1.5, "dust_pulse_hz_end": 4.5, "dust_max": 260, "dust_spacing_m": 0.45, "dust_size_m": 0.8, "dust_rise_m": 0.9, "dust_hz": 1.1, "dust_colour": "#cdb894", "tell_aura": 0.45
     }
   },
   "charger_lunge": {
@@ -610,7 +616,10 @@
   "effect_banner": {
     "_comment": "T3-COMBAT. The type-verdict line combat_hud.gd puts under the enemy plate when a hit lands strong or weak. `seconds` is how long one showing lasts. `repeat_seconds` is how long the SAME verdict stays quiet before it may be said again, and it is the number this block exists for: a verdict is a fact about the pairing, not about the swing, so once the player has been told that Water beats this Ground creature, every subsequent hit of that fight was re-telling them. MEASURED in four real non-mirror fights by tools/_probe_combat_matchup.gd -- Ripplet into Burrowback landed 11 hits, all of them 'strong', in a 10.2-second fight, which at 0.7s each is 7.7 seconds of banner; Galewisp into Burrowback produced 22 verdict events in 14.6 seconds, alternating between 'it shrugged that off' and 'it hit YOUR weakness'. The banner is re-armed by a new fight (so every creature a trainer sends out is judged fresh) and by a mid-fight switch (a different creature is a different question), so lengthening this never silences a verdict the player has not already been given. TUNABLE, and the first number to move if a playtester says they did not notice a matchup.",
     "seconds": 0.7,
-    "repeat_seconds": 6.0
+    "repeat_seconds": 6.0,
+    "_why_stagger_by_owner": "Fights close-1025 (ON since 25 Oct, r6/r7): GPU G3 (P2-016 verdict) judges read 'STAGGERED — punish now' under the enemy plate as ambiguous. true names the creature in each stagger line ('<foe> staggered — punish now'; '<yours> staggered — recovering') and puts the player's own beside the player's panel instead of under the enemy's.",
+    "_scope_stagger_by_owner": "Client-local presentation only; no authority, save or network state.",
+    "stagger_by_owner": true
   },
   "switch": {
     "_comment": "D32: voluntary mid-combat creature switching. lockout_seconds is how long after ANY switch before another is allowed, so a press of `party_cycle` (LB, since CONTROLLER-MAP; two directional actions before that) cannot be spammed into a stutter of creatures. No auto-switch-on-faint: this only ever fires from the player's own choice. TUNABLE.",

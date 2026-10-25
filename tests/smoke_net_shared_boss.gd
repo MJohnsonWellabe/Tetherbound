@@ -83,7 +83,19 @@ const OWNER_POSE_PREFIX := preload("res://tests/helpers/net_owner_pose_prefix.gd
 ## which pulls the opponent's `hp` down. It never touches `max_hp`, `attack` or
 ## `defence` -- the three this asserts on -- but reading them afterwards would
 ## invite the next reader to assume it might.
-## The fight driver supplies no self-HP top-ups in any of this smoke's modes.
+## The fight driver supplies no self-HP top-ups in any of this smoke's modes,
+## with ONE disclosed exception in the main mode: after the two damage halves
+## and before the friendly half, the host's own creature receives a single
+## typed aid through `tools/net/f48_actor_topup.gd` (`actor_topup_once`, the
+## same disclosed provider and owner save/ACK the Warden mechanics fixtures
+## use; its contract is a full heal and it never revives). Why: the boss's
+## landed hits all go to the host's creature, since the damage halves keep
+## the guest's creature outside the boss's swing arc and `pick_struck` only
+## spreads among creatures that arc reaches. With no aid the host's creature
+## reached the friendly half on 24-59 hp and fainted in about 1 run in 9,
+## ending the host's battle (netfix NOTE, Follow-ups 5 and 9). Every check on
+## the damage halves reads before the aid; nothing after it asserts on the
+## host creature's HP total.
 ##
 ## ### FINDING F1, CLOSED: the stat multiplier and the cooldown now reach the
 ## ### creature, and this file asserts it
@@ -195,6 +207,8 @@ const SEAT_FALLBACK := 1.4
 ## Metres along Z each creature stands off the boss, on opposite sides, so
 ## neither is ever in the other's arc during the shared-damage half.
 const NEAR_Z := 1.6
+## Frames the one disclosed aid may take through its owner save/ACK.
+const TOPUP_FRAMES := 600
 ## The friendly-fire staging: how far along Z the striker stands off the victim.
 const APART_Z := 1.5
 ## Which side of peer 1's creature peer 0's is stood on, in turn, one per
@@ -224,6 +238,9 @@ const FRIENDLY_SIDES := [Vector3(0.0, 0.0, 1.0), Vector3(1.0, 0.0, 0.0), Vector3
 const FRIENDLY_TRIES := 12
 ## How many FRIENDLY_SETTLE waits a swing's refusal may take to arrive.
 const REFUSAL_POLLS := 12
+## Host refusals that turn a swing away before it is resolved against any
+## target (encounter_director.gd: move start / strike commit gates).
+const PRE_RESOLVE_REFUSALS := ["pending_vitals", "move_start_required"]
 ## A short settle for that staging, for the same reason: a long one gives each
 ## manager time to pull its creature back.
 const FRIENDLY_SETTLE := 8
@@ -243,6 +260,11 @@ const FRIENDLY_BOSS_CLEAR_DEG := 65.0
 ## and how far inside the live arena radius the teammate's stand must be.
 const FRIENDLY_RAYS := 24
 const FRIENDLY_RING_MARGIN_M := 0.3
+## Farther than this from its stand after the settle, the host's creature did
+## not hold it (a wall or the ring returned it); the next attempt re-aims.
+const STAND_HELD_M := 1.0
+## A guest's creature found outside the ring is seated this far inside its edge.
+const GUEST_SEAT_INSET_M := 1.5
 
 ## `smoke_boss.gd`'s allowance, by its own name and for its own stated reason.
 ## The Warden fields five creatures at levels 18-20 and a headless peer fights
@@ -719,6 +741,15 @@ func _run() -> void:
 			+ " over %d placement attempt(s); the host last held its creature %.2f m from the boss"
 				% [attempts, last_gap])
 		var guest_hp := float(((await _boss(1)).get("record", {}) as Dictionary).get("hp", -1.0))
+		# The host's number travels to the guest after the blow. Under load one
+		# read came back a blow early (guest 222.109 against host 214.717, the
+		# guest's previous value). Wait, bounded, for the replicated value; a
+		# copy that never matches still fails below.
+		for _wait in REFUSAL_POLLS:
+			if absf(guest_hp - host_hp) < 0.001:
+				break
+			await step(1, "wait", {"frames": FRIENDLY_SETTLE})
+			guest_hp = float(((await _boss(1)).get("record", {}) as Dictionary).get("hp", -1.0))
 		# §3: the record's hp is THE hit points and both peers render it. A client
 		# decrementing its own copy "for responsiveness" diverges here by exactly
 		# one blow.
@@ -726,6 +757,16 @@ func _run() -> void:
 			"and both peers draw the same boss health bar after it (host %.3f, guest %.3f)"
 				% [host_hp, guest_hp])
 		hp_before = host_hp
+
+	# --- the one disclosed aid (see the header) ------------------------------
+	# The damage halves are checked above, before this. One typed full heal of
+	# the host's own creature, through the disclosed provider and its owner
+	# save/ACK; never a revive, never repeated.
+	var aided: Dictionary = await step(0, "actor_topup_once", {"budget_frames": TOPUP_FRAMES}, TOPUP_FRAMES + 300)
+	print("[shared-boss aid] %s" % JSON.stringify(aided))
+	check(str(aided.get("verdict", "")) == "PASS",
+		"the host's creature took its one disclosed aid before the friendly half (%s)"
+			% str(aided.get("detail", "")))
 
 	# --- 5. friendly fire between the two pilots, in the BOSS fight -----------
 	#
@@ -782,6 +823,8 @@ func _run() -> void:
 	var refusal: Dictionary = {}
 	var staged := 0
 	var clean := false
+	# Where the host's creature actually ended up after a stand it did not hold.
+	var held_at := Vector3.INF
 	while staged < FRIENDLY_TRIES and not clean:
 		staged += 1
 		guest_at = await _host_view_of_guest_creature()
@@ -799,8 +842,27 @@ func _run() -> void:
 		var boss_at := _vec((boss_view.get("record", {}) as Dictionary).get("position", []))
 		var side: Vector3 = FRIENDLY_SIDES[(staged - 1) % FRIENDLY_SIDES.size()]
 		var ring: Dictionary = boss_view.get("arena", {}) as Dictionary
-		var inside := _inside_friendly_side(guest_at, boss_at, _vec(ring.get("centre", [])),
-			float(ring.get("radius", -1.0)), staged)
+		var ring_centre := _vec(ring.get("centre", []))
+		var ring_radius := float(ring.get("radius", -1.0))
+		if ring_centre != Vector3.INF and ring_radius > 0.0 \
+				and _planar(guest_at - ring_centre) > ring_radius - FRIENDLY_RING_MARGIN_M:
+			# CI 40152511791: the guest's creature stood 4.05 m outside the
+			# 6.45 m ring, and the host's, held at the edge, could never come
+			# within SWING_REACH_M of it. Seat the guest's own creature back
+			# inside first (its position replicates to the host).
+			var inward := guest_at - ring_centre
+			inward.y = 0.0
+			var seat := ring_centre + inward.normalized() * (ring_radius - GUEST_SEAT_INSET_M)
+			seat.y = guest_at.y
+			print("[shared-boss friendly] attempt=%d guest %.2f m outside the ring; seating it at %s"
+				% [staged, _planar(guest_at - ring_centre) - ring_radius, str(seat)])
+			await step(1, "place_creature", {"at": [seat.x, seat.y, seat.z], "exact": true,
+				"settle": FRIENDLY_SETTLE})
+			guest_at = await _host_view_of_guest_creature()
+			if guest_at == Vector3.INF:
+				continue
+		var inside := _inside_friendly_side(guest_at, boss_at, ring_centre,
+			ring_radius, staged)
 		if inside != Vector3.INF:
 			# A teammate stand inside the live ring, as far off the boss's line
 			# as the ring allows. CI 37314849247: every "away from the boss"
@@ -818,6 +880,16 @@ func _run() -> void:
 			if away.length() > 0.05:
 				var fan: float = [0.0, 30.0, -30.0][(staged - 1) % 3]
 				side = away.normalized().rotated(Vector3.UP, deg_to_rad(fan))
+		if held_at != Vector3.INF:
+			# CI 40152511791: with the guest by the Warden Arena's +Z face, every
+			# roomiest in-ring stand lay in that wall, and the host's creature
+			# came back ~4.4 m away 12 times. Stand toward where it was held:
+			# the side of the guest the room allows. The clean check below still
+			# skips a swing the boss would take.
+			var toward := held_at - guest_at
+			toward.y = 0.0
+			if toward.length() > 0.05:
+				side = toward.normalized()
 		var stand := guest_at + side * APART_Z
 		var placed: Dictionary = await step(0, "place_creature",
 			{"at": [stand.x, stand.y, stand.z], "exact": true,
@@ -828,9 +900,15 @@ func _run() -> void:
 		guest_at = await _host_view_of_guest_creature()
 		var mine: Dictionary = await _encounter(0)
 		host_creature_at = _vec(mine.get("my_creature_pos", []))
-		print("[shared-boss friendly] attempt=%d side=%s stand=%s guest=%s host=%s (%s)"
+		print("[shared-boss friendly] attempt=%d side=%s stand=%s guest=%s host=%s ring=%s r=%s%s (%s)"
 			% [staged, str(side), str(stand), str(guest_at), str(host_creature_at),
-				str(placed.get("detail", ""))])
+				str(ring.get("centre", [])), str(ring.get("radius", -1.0)),
+				" held_retarget" if held_at != Vector3.INF else "", str(placed.get("detail", ""))])
+		held_at = Vector3.INF
+		if host_creature_at != Vector3.INF and _planar(host_creature_at - stand) > STAND_HELD_M:
+			held_at = host_creature_at
+			print("[shared-boss friendly] attempt=%d stand not held (%.2f m off); next attempt stages toward %s"
+				% [staged, _planar(host_creature_at - stand), str(host_creature_at)])
 		if guest_at == Vector3.INF or host_creature_at == Vector3.INF:
 			continue
 		if guest_at.distance_to(host_creature_at) >= SWING_REACH_M:
@@ -858,6 +936,9 @@ func _run() -> void:
 		at_teammate.y = 0.0
 		if at_teammate.length() < 0.05:
 			continue
+		# The striker's refusal is never cleared, so only one that differs from
+		# this read counts as this swing's answer (until the polls run out).
+		var refusal_before: Dictionary = (await _boss(1)).get("refusal", {}) as Dictionary
 		friendly = await step(1, "strike",
 			{"target": [host_creature_at.x, host_creature_at.y, host_creature_at.z], "slot": "quick",
 			 "settle": STRIKE_SETTLE})
@@ -873,10 +954,19 @@ func _run() -> void:
 		# the next swing went stale). The HP and tally reads above stay inside
 		# the window; only the refusal's arrival is waited for.
 		for _wait in REFUSAL_POLLS:
-			if not str(refusal.get("code", "")).is_empty():
+			if not str(refusal.get("code", "")).is_empty() and refusal != refusal_before:
 				break
 			await step(1, "wait", {"frames": FRIENDLY_SETTLE})
 			refusal = (await _boss(1)).get("refusal", {}) as Dictionary
+		# A swing the host turned away BEFORE resolving it never reached the
+		# friendly-fire check: its move start waited on the striker's previous
+		# health change still saving (pending_vitals), so the strike had no
+		# committed start (move_start_required). CI 40150677244 read that as
+		# the arrival on attempt 1. Re-stage; `friendly_target` stays required.
+		if str(refusal.get("code", "")) in PRE_RESOLVE_REFUSALS:
+			print("[shared-boss friendly] attempt=%d re-staged: host refused before resolving (%s)"
+				% [staged, str(refusal.get("code", ""))])
+			continue
 		# The refusal's ARRIVAL is part of `clean`, not merely something read
 		# once the swing looked good. Without this the loop exits the moment the
 		# swing lands cleanly, and if the host's answer has not made the round

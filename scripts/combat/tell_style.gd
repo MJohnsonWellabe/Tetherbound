@@ -12,10 +12,37 @@ const MATH := preload("res://scripts/combat/combat_math.gd")
 
 
 static func soft() -> Dictionary:
-	var cfg: Variant = MATH.config().get("telegraph", {}).get("soft_style", {})
+	var telegraph: Dictionary = MATH.config().get("telegraph", {})
+	var cfg: Variant = telegraph.get("soft_style", {})
 	if cfg is Dictionary and cfg.get("enabled") == true:
+		if outlines_off(cfg):
+			return _without_outlines(cfg)
 		return cfg
 	return {}
+
+
+## Owner, 24 Oct: "I don't like how the fights outline the area of the
+## attack." With `soft_style.outline_off`, every wind-up drops its painted
+## area (fill, glow band, rim, curtain, lane chevrons) and reads through the
+## world instead: kicked dust along the real hit geometry (dust_*) and the
+## attacker's own wind-up glow (tell_aura). Hit geometry and timing are
+## unchanged. `telegraph.high_contrast_markers` (accessibility, default OFF)
+## brings the outlines back.
+static func outlines_off(style: Dictionary) -> bool:
+	return style.get("outline_off") == true \
+		and MATH.config().get("telegraph", {}).get("high_contrast_markers") != true
+
+
+static func _without_outlines(style: Dictionary) -> Dictionary:
+	var out := style.duplicate()
+	for key: String in ["edge_alpha", "locked_edge_alpha", "build_start_alpha", "core_alpha",
+			"curtain_height_m", "sweep_alpha", "sweep_front_alpha"]:
+		out[key] = 0.0
+	# A wash just above the shaders' 0.001 draw test: invisible, but it keeps
+	# a row's ground crackle (cue_crackle / cue_lane_crackle) inside its area.
+	out["fill_alpha"] = 0.002
+	out["locked_fill_alpha"] = 0.002
+	return out
 
 
 ## The bright core line: the tell's own hue lifted toward white, so the edge
@@ -234,10 +261,40 @@ static func draw_dust(instance: MultiMeshInstance3D, lines: Array, style: Dictio
 	if multimesh.instance_count != count:
 		multimesh.instance_count = count
 	var alpha := float(style.get("dust_alpha", 0.0)) * lerpf(float(style.get("dust_build_start", 0.35)), 1.0,
-		clampf(build, 0.0, 1.0)) * clampf(fade, 0.0, 1.0)
+		clampf(build, 0.0, 1.0)) * clampf(fade, 0.0, 1.0) * pulse(style, build, time)
 	var placed := 0
 	for points: PackedVector3Array in lines:
 		placed += _dust_walk(points, spacing, count - placed, multimesh, placed, style, alpha, time, flow)
+
+
+## Fights close-1025 (ON since 25 Oct; `soft_style.dust_fill_rows`; 0/absent = off).
+## The judges read outline dust as diffuse: they asked for dust filling the
+## danger footprint. Callers add this many inner rows inside the real hit
+## shape (never in a ring's safe hole), each at `fraction` of the way from
+## the edge toward the centre or spine, and a row joins only once the tell has
+## built past `fraction * dust_fill_reveal`: the fill closes in toward the
+## strike. Returns the fractions of the rows shown at `build`.
+static func fill_fractions(style: Dictionary, build: float) -> PackedFloat32Array:
+	var shown := PackedFloat32Array()
+	var rows := int(style.get("dust_fill_rows", 0))
+	var reveal := float(style.get("dust_fill_reveal", 0.8))
+	for row in range(1, rows + 1):
+		var fraction := float(row) / float(rows + 1)
+		if build >= fraction * reveal:
+			shown.append(fraction)
+	return shown
+
+
+## Candidate timing pulse (`soft_style.dust_pulse` 0..1; 0/absent = off): the
+## dust breathes at a rate rising from `dust_pulse_hz` to `dust_pulse_hz_end`
+## as the tell builds, so the strike's approach reads without a ring.
+static func pulse(style: Dictionary, build: float, time: float) -> float:
+	var depth := clampf(float(style.get("dust_pulse", 0.0)), 0.0, 1.0)
+	if depth <= 0.0:
+		return 1.0
+	var hz := lerpf(float(style.get("dust_pulse_hz", 1.5)), float(style.get("dust_pulse_hz_end", 4.5)),
+		clampf(build, 0.0, 1.0))
+	return 1.0 - depth * 0.5 * (1.0 - cos(TAU * time * hz))
 
 
 ## Walks one polyline at `spacing`, at most `limit` puffs. With a multimesh,

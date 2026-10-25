@@ -268,7 +268,10 @@ func _blocks_leader_view(model: Node3D, eye: Vector3) -> bool:
 	var local := model.global_transform.affine_inverse() * eye
 	if _camera_fade_bounds.grow(float(cfg.get("near_margin_m", 1.5))).has_point(local):
 		return true
-	if leader == null or not is_instance_valid(leader):
+	# Fights close-1025: only while following. In a fight the trainer stands
+	# behind its piloted creature, so this test held the pilot at 0.85 dither
+	# for the whole fight (judges: "Ripplet renders as a translucent ghost").
+	if not _following or leader == null or not is_instance_valid(leader):
 		return false
 	var base := _world_position(leader)
 	for height: Variant in cfg.get("leader_heights_m", [0.5, 1.0, 1.6]):

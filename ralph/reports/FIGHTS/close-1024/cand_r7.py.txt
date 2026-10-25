@@ -1,0 +1,22 @@
+# Fights r7 candidate overlay (capture-only; repo root, clean tree on the r7 code). r6 (dust fill +
+# pulse, right panels 0.8, fixed meter row, pilot floor 0.10 everywhere) plus the GPU G3 / P2-016
+# trainer-fight asks: the stagger line names its owner (the player's own beside the player's
+# panel), the impact flash drops to the struck creature's feet and shrinks, and a steadier fight
+# lens (slower orbit, softer lag). `git checkout data/config/` restores.
+import json, subprocess, sys
+subprocess.run([sys.executable, 'ralph/reports/FIGHTS/close-1024/cand_r6.py.txt'], check=True)
+def edit(p, pairs):
+    s = open(p).read()
+    for a, b in pairs:
+        assert s.count(a) == 1, (p, a)
+        s = s.replace(a, b)
+    json.loads(s); open(p, 'w').write(s)
+s = open('data/config/combat.json').read()
+d = json.loads(s)
+pairs = [('"stagger_by_owner": false', '"stagger_by_owner": true'), ('"flash_drop": 0.0', '"flash_drop": 1.0')]
+for key, old, new in [('quick', 0.55, 0.42), ('charged', 0.75, 0.55)]:
+    a = '"%s": {\n      "colour": "%s",\n      "radius": %s,' % (key, d['impact'][key]['colour'], old)
+    pairs.append((a, a.replace('"radius": %s' % old, '"radius": %s' % new)))
+edit('data/config/combat.json', pairs)
+edit('data/config/camera.json', [('"orbit_speed_deg_s": 180.0', '"orbit_speed_deg_s": 70.0'), ('"lag": 4.0', '"lag": 2.5')])
+print('r7 candidate applied')

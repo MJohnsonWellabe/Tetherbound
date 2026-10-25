@@ -29,6 +29,7 @@ const FADE_TAIL := 0.12
 ## `creature_body.gd::_fit` puts at the feet.
 const GROUND_LIFT := 0.08
 const STYLE := preload("res://scripts/combat/tell_style.gd")
+const COMBAT_VFX := preload("res://scripts/vfx/combat_vfx.gd")
 
 var _follow_body: Node3D = null
 var _state_active: Callable
@@ -168,7 +169,15 @@ func follow_state(body: Node3D, active: Callable) -> void:
 	_follow_body = body
 	_state_active = active
 	if _wind_up and not _soft.is_empty() and _aura_body == null:
-		_aura_body = STYLE.apply_aura(body, _colour, _soft)
+		# `tell_aura_element`: the glow builds in the attacker's element colour
+		# (vfx.json type_colours), the owner's "a glow building on the creature".
+		var aura_colour := _colour
+		var creature: Variant = body.get("instance") if is_instance_valid(body) else null
+		if _soft.get("tell_aura_element") == true and creature is Object:
+			var tint: Variant = COMBAT_VFX.tint_for_type(str((creature as Object).get("creature_type")))
+			if tint != null:
+				aura_colour = tint
+		_aura_body = STYLE.apply_aura(body, aura_colour, _soft)
 	if is_instance_valid(body) and body.has_method("body_radius"):
 		# The inner edge (72% of radius) must clear the live footprint.
 		_radius = maxf(_radius, float(body.call("body_radius")) * 1.5)
@@ -299,8 +308,21 @@ func _draw_ring(radius: float, alpha: float) -> void:
 		var loop := rim.duplicate()
 		if not loop.is_empty():
 			loop.append(loop[0])
-		STYLE.draw_dust(_dust, [loop], _soft, clampf(_life / maxf(0.05, _duration), 0.0, 1.0), _life,
-			clampf(alpha / 0.55, 0.0, 1.0))
+		var build := clampf(_life / maxf(0.05, _duration), 0.0, 1.0)
+		var lines: Array = [loop]
+		var fills := STYLE.fill_fractions(_soft, build)
+		if not fills.is_empty() and not rim.is_empty():
+			# Heights between the rim (already sampled) and one centre sample,
+			# so fill rows add one ground query per redraw, not one per point.
+			var centre_y := _ground_vertex(Vector3.ZERO).y
+			for fraction: float in fills:
+				var row := PackedVector3Array()
+				for i in rim.size() + 1:
+					var edge: Vector3 = rim[i % rim.size()]
+					row.append(Vector3(edge.x * (1.0 - fraction), lerpf(edge.y, centre_y, fraction),
+						edge.z * (1.0 - fraction)))
+				lines.append(row)
+		STYLE.draw_dust(_dust, lines, _soft, build, _life, clampf(alpha / 0.55, 0.0, 1.0))
 
 
 func _exit_tree() -> void:
