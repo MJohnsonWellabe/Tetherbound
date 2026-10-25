@@ -1122,9 +1122,12 @@ func _aim_soft(shape: String) -> void:
 				var rows := int(_soft.get("dust_fill_rows", 0))
 				for row in range(1, rows + 1):
 					var fraction := float(row) / float(rows + 1)
-					var inset := side * half_width * fraction
-					_fill_lines.append([fraction, _seated_line([left + inset, far_left + inset])])
-					_fill_lines.append([fraction, _seated_line([right - inset, far_right - inset])])
+					# Between the seated rail ends the wash already samples.
+					var ends := _seated_line([left, right, far_left, far_right])
+					_fill_lines.append([fraction, PackedVector3Array([ends[0].lerp(ends[1], fraction * 0.5),
+						ends[2].lerp(ends[3], fraction * 0.5)])])
+					_fill_lines.append([fraction, PackedVector3Array([ends[1].lerp(ends[0], fraction * 0.5),
+						ends[3].lerp(ends[2], fraction * 0.5)])])
 	_fit_curtain_bounds()
 	_draw_curtain()
 
@@ -1199,10 +1202,18 @@ func _soft_disc(centre: Vector3, inner: float, outer: float, arc: float) -> void
 		for row in range(1, rows + 1):
 			var fraction := float(row) / float(rows + 1)
 			var radius := outer - (outer - inner) * fraction
-			var arc_line: Array = []
-			for index: int in count + 1:
-				arc_line.append(centre + _heading.rotated(Vector3.UP, -arc * 0.5 + arc * float(index) / float(count)) * radius)
-			_fill_lines.append([fraction, _seated_line(arc_line)])
+			# Heights between the seated outer and inner edge points the wash
+			# already samples, so a fill row adds no ground queries.
+			var arc_line := PackedVector3Array()
+			for index: int in count + (1 if arc < TAU else 0):
+				var direction := _heading.rotated(Vector3.UP, -arc * 0.5 + arc * float(index) / float(count))
+				var edge := _seated(centre + direction * outer)
+				var rim := _seated(centre + direction * inner)
+				var at := centre + direction * radius
+				arc_line.append(Vector3(at.x, lerpf(edge.y, rim.y, fraction), at.z))
+			if arc >= TAU:
+				arc_line.append(arc_line[0])
+			_fill_lines.append([fraction, arc_line])
 	for index: int in count:
 		var a := -arc * 0.5 + arc * float(index) / float(count)
 		var b := -arc * 0.5 + arc * float(index + 1) / float(count)
