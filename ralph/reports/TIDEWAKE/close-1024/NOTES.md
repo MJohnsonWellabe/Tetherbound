@@ -17,6 +17,12 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
   - **Checks:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed.
   - **Landing:** this touches `scripts/ui/playground_hud.gd` (the UI lane's file), so it is a small cross-lane fix. Land it with my next head, or hand it to the UI lane, whichever you prefer.
 
+- 2026-10-25 23:30 CT **READY for the GPU lane: P2-011 destination landmarks (lm1/VERDICT.md).**
+  - **Change:** `destination_landmarks_candidate` places MESHY 11-12, the twin pumps and the rescue jetty.
+  - **CPU mapped:** 4.33 → **5.58** (+1.25). All three judges higher.
+  - **Capture:** `P2-011-destinations.json` (new), shipping vs `--tidewake-look-sections=destination_landmarks_candidate`.
+  - **Known:** both are small and sit away from the water. Re-seating at the shoreline is next.
+
 - 2026-10-25 22:40 CT **READY for the GPU lane: Veilfall crown + summit cap (mt1/VERDICT.md), `tb/tidewake` 42300a3af.**
   - **Built:** the cap is built as you approved, OFF until judged.
     - Walk band, anchors and gate are proved unchanged.
