@@ -1064,6 +1064,7 @@
     "_comment_camp": "The garrison camp in the gatehouse yard -- the board's Inner Yard stalls with a hostile owner. Same prop family the retired castle's checkpoint used (`generated_camp` tents/firewood, `kenney_survival` bedroll, `quaternius_fantasy` crates/barrel), so this is the Meadows' one camp vocabulary rather than a new one. Every entry sits on the yard's own built floor. THE CLEARANCES THIS LIST OBEYS, because a prop that blocks the route is worse than no prop: the gate/passage lane x[-4.5,4.5] stays empty end to end, the patrol trainer's stand (-5,6) keeps a 5m radius, and nothing sits closer than 1m to the yard walls at x=+-10.",
     "_comment_camp_t1_hall_3": "T1-HALL-3, 2026-08-30. The 18 entries after the Workbench dress the COURTYARD; everything before it is the outer-works garrison camp and is unchanged. JUDGE-5 ranked D2 second of sixteen: \"the Warden arena is four untextured-looking tiled stone walls and a cobble floor -- no crates, no braziers, no banners, no apparatus, nothing that says anyone occupies it\", and named occupation the FIRST of the three things separating these frames from the reference key art (\"the reference stronghold is occupied; this one is empty\"). Two things were true at once. The courtyard genuinely had one object in it (the relay hub) -- and that object sits at local z 27.4 while the H-07 stand looks SOUTH from the courtyard trainer, so the room's only piece of dressing was directly BEHIND the camera in every frame ever shot of it. Placement obeys the room's own two constraints rather than filling it: the courtyard is a trainer FIGHT room, so the fight floor (x[-5,5], z[24,42]) stays clear and every prop hugs a wall, and nothing sits in either doorway line at x~0. Same prop families the outer-works camp already uses (D24's one-camp-vocabulary rule) -- no new assets, no Meshy generation. The warden_arena itself is left deliberately bare per HALL_DESIGN sec8: that fight owns its floor.",
     "_comment_causeway_dressing_t1_hall_4": "T1-HALL-4, 2026-08-30, JUDGE-6 defect 7: \"the causeway is 530px of EMPTY STONE in every frame that shows it ... from y 800 up to y 270 there is unbroken cobble with NOTHING ON IT -- no rubble, no crates, no barricade, no Tether machinery, no scorch, no wear track. The most important approach in the chapter is a bare ramp\", against a board whose stronghold foreground \"is littered -- a wheeled cart, cut stumps, an altar block, scattered rock\". Its conclusion is the one that decided this: \"empty ground in a game reads as 'the level isn't dressed yet'.\" Dressed from the prop family the garrison camp at the ramp foot already uses, per D24's one-vocabulary rule -- no new asset, and the oxblood `tint` is the same one those camp crates carry, so this reads as the same occupying force's stores rather than as generic clutter. Placement obeys the thing the causeway is FOR. It is the chapter's approach and the player walks up it, so the props hug the kerbs at local x -0.2 and 4.2 (the deck's interior runs x -1.3 to 5.3, from the ramp braziers' own stations) and the centre lane x 1.0-3.0 stays completely clear end to end -- a barricade the player has to path around would be a worse defect than the bare ramp. They also stop short of the gate head: `_build_causeway_dressing` puts banner piers at z -19 and -31, and stores standing in a banner pier read as a mistake. `on_causeway` is the flag `braziers` in this same block already uses, and it is not optional -- the deck climbs ~10m over its 40m run, so a prop placed at the floor plane is inside the slab. That is exactly the defect JUDGE-5's D1 spent its top-ranked finding on one lane ago, from the other end (a camera, not a crate). See `stronghold.gd::_build_garrison_camp`.",
+    "_why_camp_close1024": "F38 band5_stronghold_approach_1 (rides along with the lit keep): the heading-45 gameplay seat (land12) stands at about local (-5.7, 24.3), and camp entries 18-20 (FarmCrate_Empty, crate, barrel at x -9, z 23-28) filled the lower frame as orange placeholder props in front of the camera (GPU MH note). They move 12 m along the same west wall (z 35-40), still against it and clear of the courtyard path.",
     "camp": [
       {
         "model": "camp_tent",
@@ -1201,21 +1202,21 @@
       },
       {
         "model": "FarmCrate_Empty",
-        "at": [-8.8, 23.0],
+        "at": [-10.0, 35.0],
         "yaw_deg": -36.0,
         "scale": 1.0,
         "on_floor": true
       },
       {
         "model": "Crate_Wooden",
-        "at": [-8.4, 25.2],
+        "at": [-10.1, 37.2],
         "yaw_deg": 20.0,
         "scale": 0.9,
         "on_floor": true
       },
       {
         "model": "Barrel",
-        "at": [-9.0, 27.9],
+        "at": [-10.2, 39.6],
         "yaw_deg": 0.0,
         "scale": 1.0,
         "on_floor": true
