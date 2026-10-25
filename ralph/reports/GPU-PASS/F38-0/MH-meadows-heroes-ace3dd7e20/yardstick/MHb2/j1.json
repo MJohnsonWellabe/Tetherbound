@@ -1,0 +1,160 @@
+{
+ "sets": {
+  "Rl": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-grey translucent panel fits the UI direction, but the small salmon-on-teal recipe sublines and tiny hints fall short of Palworld's crisp high-contrast HUD hierarchy, and the dark rain-grey world behind it has no Valheim-style mood."
+  },
+  "Yg": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's furred, tusked boar is close to the naturalistic owner bar but stands no taller than the 1.80 m trainer and floats above its shadow in faint mid; B's smooth clay/piggy-bank boar with moss decals would look like a different, toy-like game beside Palworld."
+  },
+  "Cd": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable elder villager with clear face and eyes and a key-art-matched green/brown palette carries it, though he is more Pixar-cartoon than the naturalistic creature line."
+  },
+  "Se": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky, enclosed courtyard of dark-green ground and banner walls with a sliver of sky gives no daylight, depth or atmosphere; it sinks on light and on flat orange foreground crates."
+  },
+  "Ji": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths (toppled banners, opened cage, smoke from a struck camp) tell a story, but the smeared, low-res ground and stone-wall textures, sparse ground cover and flat grade sit well below Palworld's density and finish."
+  },
+  "Jn": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Identical in substance to Se: a dark, boxed-in courtyard with no sky, fog or time-of-day grade, and glowing orange crate placeholders right in front of the camera."
+  },
+  "Dr": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A wall of trunks with no visible watch structure, ridgeline or distance gives no landmark or depth, and the camera sits inside a trunk in A's reverse frame, so it never reads as a Palworld-grade vista."
+  },
+  "Xh": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bright sky and lush grass are close to the Meadows palette, but a uniform grass carpet with lone trees and a tiny, unlit stronghold on the horizon reads emptier and flatter than Palworld's grouped, landmarked fields."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give the Meadows stronghold a tall lit hero keep (towers, braziers, warm window light) that dominates the approach from distance, and open the courtyard to sky and daylight in Se/Jn",
+   "kind": "new_art"
+  },
+  {
+   "change": "Re-light and recompose the stronghold courtyard and Ridgeline Watch cameras: lift exposure, add sky/fog depth and sun shafts, move cameras out of trunks and pillars, remove or retexture the flat orange foreground crates",
+   "kind": "scene"
+  },
+  {
+   "change": "Break the uniform grass carpet into groves, edges and clearings with shrub and rock clusters, and replace the smeared low-res ground textures seen in Ji and Xh",
+   "kind": "scene"
+  }
+ ]
+}

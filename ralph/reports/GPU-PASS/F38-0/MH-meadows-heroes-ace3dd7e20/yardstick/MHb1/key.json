@@ -1,0 +1,46 @@
+{
+ "Fw": {
+  "anchor": false,
+  "label": "MH arches High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-arches-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-arches-ctl-High.png"
+ },
+ "Kt": {
+  "anchor": false,
+  "label": "MH gate0 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-gate0-ctl-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-gate0-cand-Medium.png"
+ },
+ "Mz": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Bz": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Wp": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Iv": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Oc": {
+  "anchor": false,
+  "label": "MH ironwood1 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-ironwood1-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-ironwood1-ctl-Medium.png"
+ },
+ "Kv": {
+  "anchor": false,
+  "label": "MH ironwood0 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-ironwood0-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-ironwood0-ctl-High.png"
+ }
+}

@@ -1,0 +1,13 @@
+# Item MH sheet: 4 control|candidate pairs at High (left flags off, right flags on). Neutral labels; key in VERDICT.md.
+$o = "D:\tb-gpu-runs\out"
+$rows = @(
+    @("1", "arch_cloudreach__day__clear__detail"),
+    @("2", "band2_stone_and_root_1__day__clear__approach"),
+    @("3", "band4_upper_meadows_ironwood_1__day__clear__reverse"),
+    @("4", "band5_stronghold_approach_0__day__clear__approach")
+)
+$spec = [ordered]@{ title = "MH Meadows heroes (local merge ace3dd7e20), High: left flags off | right flags on"; cols = 2; thumb_w = 520; label_w = 50
+    rows = @($rows | ForEach-Object { [ordered]@{ label = $_[0]; files = @("$o\MH-ctl-High\frames\$($_[1]).jpg", "$o\MH-cand-High\frames\$($_[1]).jpg"); captions = @("off", "on") } }); out = "D:\tb-gpu-runs\staging\MH-meadows-heroes-ace3dd7e20\_sheet_mh.png" }
+New-Item -ItemType Directory -Force "D:\tb-gpu-runs\staging\MH-meadows-heroes-ace3dd7e20" | Out-Null
+[IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_sheet_MH.json", ($spec | ConvertTo-Json -Depth 5))
+& D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_sheet_MH.json"

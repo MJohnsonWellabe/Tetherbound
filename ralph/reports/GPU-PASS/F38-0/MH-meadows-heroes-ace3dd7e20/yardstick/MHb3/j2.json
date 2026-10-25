@@ -1,0 +1,154 @@
+{
+ "sets": {
+  "Hx": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A uniform waist-high grass carpet under a flat noon grade with a featureless horizon sinks it; only the giant ironwood trunk carries any landmark read."
+  },
+  "Vv": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's furred, spotted boar is close to the naturalistic style bar but both boars stand no taller than the 1.80 m trainer and A reads as a glossy clay toy."
+  },
+  "Oc": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bank face is a distant cluster of faceted tan planes and a flat white column behind an empty grass foreground; B's mossy stratified outcrop is the only finished-looking landmark."
+  },
+  "Ol": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown floor with no purple storm sky, flat magenta telegraph rings, a HUD covering a third of the frame and (in B) the camera buried in foliage put it far from Palworld's boss-fight read."
+  },
+  "To": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's carved stone and mossy portal surrounds start to read as authored, but the flat plaster window-strip hall, plain wooden doors and B's neon-rimmed blank arches keep it below shipping finish."
+  },
+  "Fp": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same frames as Oc: a far-off faceted bank face and white column behind an undifferentiated grass carpet, with only B's stratified outcrop approaching the bar."
+  },
+  "Hc": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's per-site aftermaths (banners down, cage opened, smoking camp) tell a story, but the smeared low-resolution ground, flat noon light and tiled tunnel wall are far from Palworld's finish."
+  },
+  "Zb": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder with a readable face, warm eyes and a green-brown key-art palette would sit comfortably beside Palworld's characters."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Recompose the Meadows exterior cameras (Hx, Oc/Fp, Hc): break the uniform grass carpet into paths, clearings and grove edges, bring the landmark (bank face, ironwood) into the midground, and add a warm sun grade with blue aerial-perspective distance and stronger contact shadows.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix the Stormwood fight read (Ol): camera collision or fade for trunks and foliage, replace the flat magenta telegraph rings with grounded effects (dust, rock, lightning), slim the left HUD stack, and add the purple storm sky and rim light so both fighters separate from the floor.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the faceted bank-face cliff planes and blobby ironwood canopies with a sculpted stratified rock kit and leaf-card canopies, and give the realm arches carved portal surrounds instead of neon rims.",
+   "kind": "new_art"
+  }
+ ]
+}

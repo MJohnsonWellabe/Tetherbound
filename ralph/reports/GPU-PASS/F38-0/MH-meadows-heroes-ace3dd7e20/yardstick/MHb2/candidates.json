@@ -1,0 +1,50 @@
+[
+    {
+        "label":  "MH ironwood1 High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-ironwood1-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-ironwood1-ctl-High.png",
+        "brief":  "Fixed production-camera views of the Upper Meadows Ridgeline Watch in the Meadows, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies"
+                    ]
+    },
+    {
+        "label":  "MH gate0 High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-gate0-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-gate0-ctl-High.png",
+        "brief":  "Fixed production-camera views of the stronghold approach in the Meadows, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark"
+                    ]
+    },
+    {
+        "label":  "MH gate1 Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-gate1-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-gate1-ctl-Medium.png",
+        "brief":  "Fixed production-camera views of the stronghold approach, near the gate in the Meadows, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark"
+                    ]
+    },
+    {
+        "label":  "MH gate1 High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-gate1-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-gate1-ctl-High.png",
+        "brief":  "Fixed production-camera views of the stronghold approach, near the gate in the Meadows, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark"
+                    ]
+    }
+]

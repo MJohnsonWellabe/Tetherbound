@@ -1,0 +1,160 @@
+{
+ "sets": {
+  "Rl": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The deep blue-grey translucent panel fits the UI direction, but it has no teal interaction or gold accents and uses keyboard glyphs; it sits over a murky rain-dark world that is nowhere near Palworld's HUD clarity or Valheim's atmosphere."
+  },
+  "Yg": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's furred boar is on the naturalistic style but stands no taller than the trainer and floats in faint mid; B's glossy clay piggy-bank body with moss decals looks like a toy, not a Palworld-class creature."
+  },
+  "Cd": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "This warm, readable old villager has a clear face and eyes and a Meadows-green palette, so it could sit in a shipping stylised game; only the slightly flat material sheen holds it back."
+  },
+  "Se": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A cramped, near-black courtyard: 'day clear' reads as dusk, the sky is a sliver, and foreground crates and posts cut by the camera sink it; it lacks Valheim's light shafts or any readable keep."
+  },
+  "Ji": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths (banners torn down, cage opened with a freed captive, collapsed tent with smoke) tell a story, but blurry stretched ground textures, sparse lollipop trees and flat light read well below Palworld's finish."
+  },
+  "Jn": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This matches Se frame for frame: oppressive darkness, oxblood banners filling the frame, camera-clipped foreground props and no lit landmark, so it does not read as the key art's sunlit Meadows Hall."
+  },
+  "Dr": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A wall-to-wall forest of toon-shaded trunks and blobby canopies with no clearing, view or watch landmark; there is no sky or light shaft to give the Valheim mood, and night is near black."
+  },
+  "Xh": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The open sky, saturated grass and distant creatures come closest to Palworld's open field, but a tiny stronghold, lone scattered trees and a path strip that lifts off the ground keep it short of that finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-stage the stronghold approach (Se/Jn/Xh): pull the cameras out of the cramped courtyard, light it as true day with sky and sun, cut the black foreground posts and camera-clipped crates, and frame a tall lit keep as the landmark visible from the meadow path",
+   "kind": "scene"
+  },
+  {
+   "change": "Compose the Meadows ground into groves, edges and clearings (Xh/Dr/Ji): cluster trees instead of a lone-tree scatter or wall-to-wall trunks, open a clearing and view at Ridgeline Watch, replace the blurry stretched ground tiling, and seat path decals flush to the terrain",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the boar (Yg B) to the owner's naturalistic bar: real fur and tusks instead of a glossy clay body with moss decals, scaled taller than the 1.80 m trainer, with grounded faint poses",
+   "kind": "new_art"
+  }
+ ]
+}

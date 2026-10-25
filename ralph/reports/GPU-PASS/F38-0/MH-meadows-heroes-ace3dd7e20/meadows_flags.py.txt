@@ -1,0 +1,32 @@
+"""Set the four Meadows hero flags in a checkout's data/config (local GPU-pass helper).
+
+    python meadows_flags.py <checkout> on|off
+
+Flips only the first "enabled" value inside each named top-level block, keeps the file's text otherwise byte-identical,
+and re-parses to verify that exactly those four flags hold the requested value.
+"""
+import json
+import re
+import sys
+from pathlib import Path
+
+FLAGS = [("crossing_hall", "arch_facades"), ("meadows_hero_pieces", "cliffs"), ("meadows_hero_pieces", "ironwood"), ("stronghold", "hero_gatehouse")]
+
+
+def main(root, state):
+    want = state == "on"
+    for name, key in FLAGS:
+        p = Path(root) / "data" / "config" / f"{name}.json"
+        raw = p.read_bytes().decode("utf-8")
+        start = raw.index(f'\n  "{key}": {{')
+        m = re.compile(r'"enabled":\s*(true|false)').search(raw, start)
+        raw = raw[:m.start()] + f'"enabled": {"true" if want else "false"}' + raw[m.end():]
+        p.write_bytes(raw.encode("utf-8"))
+        got = json.loads(raw)[key]["enabled"]
+        if got is not want:
+            sys.exit(f"FLAG MISMATCH {name}.{key}={got}")
+        print(f"{name}.{key} = {got}")
+
+
+if __name__ == "__main__":
+    main(sys.argv[1], sys.argv[2])

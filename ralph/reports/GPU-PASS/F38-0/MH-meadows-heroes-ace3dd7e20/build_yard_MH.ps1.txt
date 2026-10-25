@@ -1,0 +1,48 @@
+# Item MH (local): Meadows heroes on the local merge ace3dd7e20, candidate (four flags on) vs control (flags off), same SHA.
+# Each flag is judged only on its own stands (it goes ON where its own gain is > 0.5). One set per stand group per preset.
+$o = "D:\tb-gpu-runs\out"; $od = "D:\tb-gpu-runs\yard\MH\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out, [int] $cols, [int] $tw) {
+    $s = [ordered]@{ title = ""; cols = $cols; thumb_w = $tw; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_MH.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_MH.json" | Out-Null; return $out
+}
+$generic = @("Placeholder or untextured materials (flat grey, checker or faceted blocks)", "Floating bodies or props (a gap between an object and the ground under it)", "Clipping (geometry passing through geometry, or the camera inside geometry)")
+$stand6 = @("day__clear__approach", "day__clear__gameplay", "day__clear__reverse", "day__clear__detail", "night__clear__gameplay", "day__rain__gameplay")
+$archs = @("arch_tidewake", "arch_cloudreach", "arch_stormwood", "arch_biome5", "arch_biome6", "arch_biome7", "arch_biome8")
+# group: id, flag, frame ids, cols, thumb, defects, place
+$groups = @(
+    @("arches", "arch_facades", @(($archs | ForEach-Object { "$($_)__day__clear__detail" }) + "arch_tidewake__night__clear__detail"), 4, 360,
+      @("F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds"), "the Crossing Hall's realm arches (detail view of each arch)"),
+    @("cliffs", "cliffs", @($stand6 | ForEach-Object { "band2_stone_and_root_1__$_" }), 3, 420,
+      @("P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock"), "Stone and Root, the bank face by the Burrow mouth"),
+    @("ironwood0", "ironwood", @($stand6 | ForEach-Object { "band4_upper_meadows_ironwood_0__$_" }), 3, 420,
+      @("the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies"), "the Upper Meadows Ironwood Grove"),
+    @("ironwood1", "ironwood", @($stand6 | ForEach-Object { "band4_upper_meadows_ironwood_1__$_" }), 3, 420,
+      @("the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies"), "the Upper Meadows Ridgeline Watch"),
+    @("gate0", "hero_gatehouse", @($stand6 | ForEach-Object { "band5_stronghold_approach_0__$_" }), 3, 420,
+      @("P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark"), "the stronghold approach"),
+    @("gate1", "hero_gatehouse", @($stand6 | ForEach-Object { "band5_stronghold_approach_1__$_" }), 3, 420,
+      @("P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark"), "the stronghold approach, near the gate")
+)
+$sets = @(); $cover = @()
+foreach ($pr in "Medium", "High") {
+    foreach ($g in $groups) {
+        $sd = @{}; $n = @{}
+        foreach ($arm in "cand", "ctl") {
+            $files = @(); $caps = @()
+            foreach ($id in $g[2]) { $f = "$o\MH-$arm-$pr\frames\$id.jpg"; if (Test-Path $f) { $files += $f; $caps += (($id -replace '^[a-z0-9_]+?__', '') -replace '__', ' ') } }
+            $n[$arm] = $files.Count
+            if ($files.Count -gt 0) { $sd[$arm] = Side $files $caps "$od\MH-$($g[0])-$arm-$pr.png" $g[3] $g[4] }
+        }
+        $cover += [ordered]@{ group = $g[0]; flag = $g[1]; preset = $pr; cand = $n["cand"]; ship = $n["ctl"] }
+        if ($sd["cand"] -and $sd["ctl"]) {
+            $brief = "Fixed production-camera views of $($g[6]) in the Meadows, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world."
+            $sets += [ordered]@{ label = "MH $($g[0]) $pr cand|ship"; a = $sd["cand"]; b = $sd["ctl"]; brief = $brief; defects = @($generic) + $g[5] }
+        }
+    }
+}
+$rng = New-Object System.Random 2047; $sets = @($sets | Sort-Object { $rng.Next() })
+$nb = [math]::Ceiling($sets.Count / 5); $buckets = @(for ($k = 0; $k -lt $nb; $k++) { , @() })
+for ($i = 0; $i -lt $sets.Count; $i++) { $buckets[$i % $nb] += , $sets[$i] }
+for ($k = 0; $k -lt $nb; $k++) { New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\MH\b$($k+1)" | Out-Null; [IO.File]::WriteAllText("D:\tb-gpu-runs\yard\MH\b$($k+1)\candidates.json", (ConvertTo-Json -InputObject @($buckets[$k]) -Depth 5)) }
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\MH\coverage.json", (ConvertTo-Json -InputObject @($cover) -Depth 4))
+"MH sets: $($sets.Count) in $nb batches"; $cover | ForEach-Object { "$($_.group) $($_.preset) cand=$($_.cand) ship=$($_.ship)" }

@@ -1,0 +1,172 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.918,
+  "least_squares_slope": 1.1513,
+  "method": "linear",
+  "slope": 1.1513,
+  "intercept": 0.0675,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.489,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f04_6_r22:control": {
+   "measured": 4.433,
+   "reference": 5.83,
+   "mapped": 5.172,
+   "residual": 0.658
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.567,
+   "reference": 6.75,
+   "mapped": 6.476,
+   "residual": 0.274
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 5.4,
+   "reference": 6.73,
+   "mapped": 6.285,
+   "residual": 0.445
+  },
+  "p2_094_r4:X_before": {
+   "measured": 3.633,
+   "reference": 3.5,
+   "mapped": 4.251,
+   "residual": -0.751
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.5,
+   "reference": 7.53,
+   "mapped": 7.551,
+   "residual": -0.021
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.5,
+   "reference": 7.47,
+   "mapped": 7.551,
+   "residual": -0.081
+  },
+  "f36_0_gap:C1B": {
+   "measured": 4.367,
+   "reference": 5.33,
+   "mapped": 5.095,
+   "residual": 0.235
+  },
+  "f36_0_gap:C1A": {
+   "measured": 5.9,
+   "reference": 6.1,
+   "mapped": 6.86,
+   "residual": -0.76
+  }
+ },
+ "candidates": {
+  "MH arches High cand|ship | MH-arches-cand-High": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.82,
+   "mapped_judges": [
+    6.05,
+    6.05,
+    5.36
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH arches High cand|ship | MH-arches-ctl-High": {
+   "measured_mean": 4.033,
+   "mapped_mean": 4.71,
+   "mapped_judges": [
+    4.9,
+    4.67,
+    4.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH gate0 Medium cand|ship | MH-gate0-ctl-Medium": {
+   "measured_mean": 4.4,
+   "mapped_mean": 5.13,
+   "mapped_judges": [
+    5.59,
+    4.67,
+    5.13
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH gate0 Medium cand|ship | MH-gate0-cand-Medium": {
+   "measured_mean": 4.467,
+   "mapped_mean": 5.21,
+   "mapped_judges": [
+    5.82,
+    4.67,
+    5.13
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH ironwood1 Medium cand|ship | MH-ironwood1-cand-Medium": {
+   "measured_mean": 3.933,
+   "mapped_mean": 4.6,
+   "mapped_judges": [
+    4.9,
+    4.33,
+    4.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH ironwood1 Medium cand|ship | MH-ironwood1-ctl-Medium": {
+   "measured_mean": 4.467,
+   "mapped_mean": 5.21,
+   "mapped_judges": [
+    5.48,
+    5.02,
+    5.13
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH ironwood0 High cand|ship | MH-ironwood0-cand-High": {
+   "measured_mean": 4.8,
+   "mapped_mean": 5.59,
+   "mapped_judges": [
+    5.82,
+    5.13,
+    5.82
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH ironwood0 High cand|ship | MH-ironwood0-ctl-High": {
+   "measured_mean": 4.933,
+   "mapped_mean": 5.75,
+   "mapped_judges": [
+    6.28,
+    5.59,
+    5.36
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

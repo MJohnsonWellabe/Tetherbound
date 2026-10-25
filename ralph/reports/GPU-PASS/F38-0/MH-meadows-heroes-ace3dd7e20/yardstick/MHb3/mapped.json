@@ -1,0 +1,172 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8392,
+  "least_squares_slope": 0.7443,
+  "method": "linear",
+  "slope": 0.7443,
+  "intercept": 2.4987,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.594,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C1B": {
+   "measured": 4.3,
+   "reference": 5.33,
+   "mapped": 5.699,
+   "residual": -0.369
+  },
+  "f36_0_gap:C1A": {
+   "measured": 5.6,
+   "reference": 6.1,
+   "mapped": 6.667,
+   "residual": -0.567
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 3.6,
+   "reference": 6.53,
+   "mapped": 5.178,
+   "residual": 1.352
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 2.933,
+   "reference": 4.0,
+   "mapped": 4.682,
+   "residual": -0.682
+  },
+  "f04_6_r22:control": {
+   "measured": 4.6,
+   "reference": 5.83,
+   "mapped": 5.923,
+   "residual": -0.093
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.7,
+   "reference": 6.75,
+   "mapped": 6.741,
+   "residual": 0.009
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.5,
+   "reference": 7.53,
+   "mapped": 7.337,
+   "residual": 0.193
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.467,
+   "reference": 7.47,
+   "mapped": 7.312,
+   "residual": 0.158
+  }
+ },
+ "candidates": {
+  "MH ironwood0 Medium cand|ship | MH-ironwood0-cand-Medium": {
+   "measured_mean": 4.867,
+   "mapped_mean": 6.12,
+   "mapped_judges": [
+    6.22,
+    5.92,
+    6.22
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH ironwood0 Medium cand|ship | MH-ironwood0-ctl-Medium": {
+   "measured_mean": 5.267,
+   "mapped_mean": 6.42,
+   "mapped_judges": [
+    6.52,
+    6.15,
+    6.59
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH cliffs Medium cand|ship | MH-cliffs-ctl-Medium": {
+   "measured_mean": 4.367,
+   "mapped_mean": 5.75,
+   "mapped_judges": [
+    5.77,
+    5.7,
+    5.77
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH cliffs Medium cand|ship | MH-cliffs-cand-Medium": {
+   "measured_mean": 4.9,
+   "mapped_mean": 6.15,
+   "mapped_judges": [
+    6.15,
+    6.07,
+    6.22
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH arches Medium cand|ship | MH-arches-cand-Medium": {
+   "measured_mean": 5.167,
+   "mapped_mean": 6.34,
+   "mapped_judges": [
+    6.22,
+    6.37,
+    6.44
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH arches Medium cand|ship | MH-arches-ctl-Medium": {
+   "measured_mean": 4.1,
+   "mapped_mean": 5.55,
+   "mapped_judges": [
+    5.33,
+    5.62,
+    5.7
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH cliffs High cand|ship | MH-cliffs-ctl-High": {
+   "measured_mean": 4.367,
+   "mapped_mean": 5.75,
+   "mapped_judges": [
+    5.77,
+    5.7,
+    5.77
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH cliffs High cand|ship | MH-cliffs-cand-High": {
+   "measured_mean": 4.9,
+   "mapped_mean": 6.15,
+   "mapped_judges": [
+    6.15,
+    6.07,
+    6.22
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

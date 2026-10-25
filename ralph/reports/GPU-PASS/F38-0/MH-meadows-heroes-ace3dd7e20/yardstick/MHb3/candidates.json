@@ -1,0 +1,50 @@
+[
+    {
+        "label":  "MH arches Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-arches-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-arches-ctl-Medium.png",
+        "brief":  "Fixed production-camera views of the Crossing Hall\u0027s realm arches (detail view of each arch) in the Meadows, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds"
+                    ]
+    },
+    {
+        "label":  "MH cliffs High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-cliffs-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-cliffs-ctl-High.png",
+        "brief":  "Fixed production-camera views of Stone and Root, the bank face by the Burrow mouth in the Meadows, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock"
+                    ]
+    },
+    {
+        "label":  "MH cliffs Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-cliffs-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-cliffs-ctl-Medium.png",
+        "brief":  "Fixed production-camera views of Stone and Root, the bank face by the Burrow mouth in the Meadows, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock"
+                    ]
+    },
+    {
+        "label":  "MH ironwood0 Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-ironwood0-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MH\\sides\\MH-ironwood0-ctl-Medium.png",
+        "brief":  "Fixed production-camera views of the Upper Meadows Ironwood Grove in the Meadows, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies"
+                    ]
+    }
+]

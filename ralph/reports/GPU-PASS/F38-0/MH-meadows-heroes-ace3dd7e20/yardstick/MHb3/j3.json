@@ -1,0 +1,154 @@
+{
+ "sets": {
+  "Hx": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Dense flowered grass and a warm path help, but flat midday light with no shafts or haze, a uniform grass carpet and a tiny trainer against an empty horizon keep it short of Palworld/Valheim finish."
+  },
+  "Vv": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's furred, spotted boar approaches the naturalistic style bar but, like A's smooth clay-toy boar with moss decals, it stands no taller than the 1.80 m trainer and lacks the rim-lit hero finish of a shipping creature."
+  },
+  "Oc": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The landmark is a small faceted bank with a smooth white cone plume on the horizon behind a featureless grass field, so neither density nor atmosphere reaches the reference finish."
+  },
+  "Ol": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 2.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown floor, no purple storm sky or lightning, flat magenta ring telegraphs, a near-invisible player creature and a HUD covering much of the frame (plus B's camera buried in trunks/foliage at i12-i15) sink it."
+  },
+  "To": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's carved stone surrounds with keystone emblems start to feel authored, but the flat plaster window-strip walls, even lamp light and B's thin neon-rimmed blank arches read as a set, not a lived-in hall."
+  },
+  "Fp": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same as Oc: B's mossy stratified rock stack is the right direction, but the landmark is tiny, the bank still faceted and the field an even grass carpet under flat light."
+  },
+  "Hc": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths are site-specific (banner torn down, cage opened with a freed villager, tent struck with a smoke plume), but blurry smeared ground and wall textures and sparse props keep it below the reference finish."
+  },
+  "Zb": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A warm, appealing elder villager whose green-and-brown palette fits the Meadows, but the soft animated-film face is a step more cartoon than the world's naturalistic creatures, and the stiff full-body pose and plain stage stop it matching a shipping game's character finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Recompose the Meadows production cameras (Hx, Oc, Fp) so the landmark fills the midground, and break the uniform grass carpet into groves, edges, paths and clearings, with warm key light, cool blue distance haze and contact shadows.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the Stone and Root faceted bank planes, grey slabs and smooth white cone plume with a sculpted, stratified, mossy rock kit (extend B's rock stack to the whole bank face), and carry the carved-stone portal surrounds from To A across all arches.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Ol fight: add camera collision/fade for trunks and canopy, replace flat magenta ring telegraphs with grounded stone/lightning effects that land with an impact, add the purple storm sky and rim light, and slim the HUD so both fighters read.",
+   "kind": "scene"
+  }
+ ]
+}

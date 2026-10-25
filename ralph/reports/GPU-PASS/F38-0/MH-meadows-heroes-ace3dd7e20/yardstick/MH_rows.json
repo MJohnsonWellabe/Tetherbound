@@ -1,0 +1,770 @@
+[
+ {
+  "batch": 1,
+  "code": "Fw",
+  "label": "MH arches High cand|ship",
+  "side": "MH-arches-cand-High",
+  "mapped": 5.82,
+  "judges": [
+   6.05,
+   6.05,
+   5.36
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Fw",
+  "label": "MH arches High cand|ship",
+  "side": "MH-arches-ctl-High",
+  "mapped": 4.71,
+  "judges": [
+   4.9,
+   4.67,
+   4.56
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Kt",
+  "label": "MH gate0 Medium cand|ship",
+  "side": "MH-gate0-ctl-Medium",
+  "mapped": 5.13,
+  "judges": [
+   5.59,
+   4.67,
+   5.13
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Kt",
+  "label": "MH gate0 Medium cand|ship",
+  "side": "MH-gate0-cand-Medium",
+  "mapped": 5.21,
+  "judges": [
+   5.82,
+   4.67,
+   5.13
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Oc",
+  "label": "MH ironwood1 Medium cand|ship",
+  "side": "MH-ironwood1-cand-Medium",
+  "mapped": 4.6,
+  "judges": [
+   4.9,
+   4.33,
+   4.56
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Oc",
+  "label": "MH ironwood1 Medium cand|ship",
+  "side": "MH-ironwood1-ctl-Medium",
+  "mapped": 5.21,
+  "judges": [
+   5.48,
+   5.02,
+   5.13
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Kv",
+  "label": "MH ironwood0 High cand|ship",
+  "side": "MH-ironwood0-cand-High",
+  "mapped": 5.59,
+  "judges": [
+   5.82,
+   5.13,
+   5.82
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Kv",
+  "label": "MH ironwood0 High cand|ship",
+  "side": "MH-ironwood0-ctl-High",
+  "mapped": 5.75,
+  "judges": [
+   6.28,
+   5.59,
+   5.36
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Se",
+  "label": "MH gate1 High cand|ship",
+  "side": "MH-gate1-ctl-High",
+  "mapped": 4.45,
+  "judges": [
+   4.42,
+   4.42,
+   4.52
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Se",
+  "label": "MH gate1 High cand|ship",
+  "side": "MH-gate1-cand-High",
+  "mapped": 4.45,
+  "judges": [
+   4.42,
+   4.42,
+   4.52
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Jn",
+  "label": "MH gate1 Medium cand|ship",
+  "side": "MH-gate1-cand-Medium",
+  "mapped": 4.45,
+  "judges": [
+   4.42,
+   4.42,
+   4.52
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Jn",
+  "label": "MH gate1 Medium cand|ship",
+  "side": "MH-gate1-ctl-Medium",
+  "mapped": 4.45,
+  "judges": [
+   4.42,
+   4.42,
+   4.52
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Dr",
+  "label": "MH ironwood1 High cand|ship",
+  "side": "MH-ironwood1-cand-High",
+  "mapped": 5.06,
+  "judges": [
+   4.8,
+   5.38,
+   5.0
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Dr",
+  "label": "MH ironwood1 High cand|ship",
+  "side": "MH-ironwood1-ctl-High",
+  "mapped": 5.67,
+  "judges": [
+   5.57,
+   5.95,
+   5.47
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Xh",
+  "label": "MH gate0 High cand|ship",
+  "side": "MH-gate0-cand-High",
+  "mapped": 5.86,
+  "judges": [
+   5.86,
+   5.76,
+   5.95
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Xh",
+  "label": "MH gate0 High cand|ship",
+  "side": "MH-gate0-ctl-High",
+  "mapped": 5.92,
+  "judges": [
+   6.05,
+   5.76,
+   5.95
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Hx",
+  "label": "MH ironwood0 Medium cand|ship",
+  "side": "MH-ironwood0-cand-Medium",
+  "mapped": 6.12,
+  "judges": [
+   6.22,
+   5.92,
+   6.22
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Hx",
+  "label": "MH ironwood0 Medium cand|ship",
+  "side": "MH-ironwood0-ctl-Medium",
+  "mapped": 6.42,
+  "judges": [
+   6.52,
+   6.15,
+   6.59
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Oc",
+  "label": "MH cliffs Medium cand|ship",
+  "side": "MH-cliffs-ctl-Medium",
+  "mapped": 5.75,
+  "judges": [
+   5.77,
+   5.7,
+   5.77
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Oc",
+  "label": "MH cliffs Medium cand|ship",
+  "side": "MH-cliffs-cand-Medium",
+  "mapped": 6.15,
+  "judges": [
+   6.15,
+   6.07,
+   6.22
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "To",
+  "label": "MH arches Medium cand|ship",
+  "side": "MH-arches-cand-Medium",
+  "mapped": 6.34,
+  "judges": [
+   6.22,
+   6.37,
+   6.44
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "To",
+  "label": "MH arches Medium cand|ship",
+  "side": "MH-arches-ctl-Medium",
+  "mapped": 5.55,
+  "judges": [
+   5.33,
+   5.62,
+   5.7
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Fp",
+  "label": "MH cliffs High cand|ship",
+  "side": "MH-cliffs-ctl-High",
+  "mapped": 5.75,
+  "judges": [
+   5.77,
+   5.7,
+   5.77
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Fp",
+  "label": "MH cliffs High cand|ship",
+  "side": "MH-cliffs-cand-High",
+  "mapped": 6.15,
+  "judges": [
+   6.15,
+   6.07,
+   6.22
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-014: faceted cliff planes with dark slashes rather than sculpted, stratified rock": "PARTIAL"
+   }
+  ]
+ }
+]

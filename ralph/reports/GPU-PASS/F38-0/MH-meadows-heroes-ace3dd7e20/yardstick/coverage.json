@@ -1,0 +1,86 @@
+[
+    {
+        "group":  "arches",
+        "flag":  "arch_facades",
+        "preset":  "Medium",
+        "cand":  8,
+        "ship":  8
+    },
+    {
+        "group":  "cliffs",
+        "flag":  "cliffs",
+        "preset":  "Medium",
+        "cand":  6,
+        "ship":  6
+    },
+    {
+        "group":  "ironwood0",
+        "flag":  "ironwood",
+        "preset":  "Medium",
+        "cand":  6,
+        "ship":  6
+    },
+    {
+        "group":  "ironwood1",
+        "flag":  "ironwood",
+        "preset":  "Medium",
+        "cand":  6,
+        "ship":  6
+    },
+    {
+        "group":  "gate0",
+        "flag":  "hero_gatehouse",
+        "preset":  "Medium",
+        "cand":  6,
+        "ship":  6
+    },
+    {
+        "group":  "gate1",
+        "flag":  "hero_gatehouse",
+        "preset":  "Medium",
+        "cand":  6,
+        "ship":  6
+    },
+    {
+        "group":  "arches",
+        "flag":  "arch_facades",
+        "preset":  "High",
+        "cand":  8,
+        "ship":  8
+    },
+    {
+        "group":  "cliffs",
+        "flag":  "cliffs",
+        "preset":  "High",
+        "cand":  6,
+        "ship":  6
+    },
+    {
+        "group":  "ironwood0",
+        "flag":  "ironwood",
+        "preset":  "High",
+        "cand":  6,
+        "ship":  6
+    },
+    {
+        "group":  "ironwood1",
+        "flag":  "ironwood",
+        "preset":  "High",
+        "cand":  6,
+        "ship":  6
+    },
+    {
+        "group":  "gate0",
+        "flag":  "hero_gatehouse",
+        "preset":  "High",
+        "cand":  6,
+        "ship":  6
+    },
+    {
+        "group":  "gate1",
+        "flag":  "hero_gatehouse",
+        "preset":  "High",
+        "cand":  6,
+        "ship":  6
+    }
+]

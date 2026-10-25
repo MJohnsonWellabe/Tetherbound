@@ -1,0 +1,158 @@
+{
+ "sets": {
+  "Fw": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.9,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F38 L6: the realm arches read as plaster window-strip walls with blank arches and violet neon rims rather than carved portal surrounds": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's carved stone surrounds help, but a flat-lit wooden hall with a lone figure and neon-rimmed doors (B) has none of Valheim's interior firelight, haze or lived-in clutter."
+  },
+  "Kt": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Sky and grass density are close to Palworld, but the empty flat field with a tiny dark stronghold silhouette and no aerial depth gives no destination or Valheim-class atmosphere."
+  },
+  "Mz": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths (banners torn down, cage opened, tent collapsed, smoking fire) tell the story, but smeared low-res ground textures and blocky walls keep the finish below Palworld."
+  },
+  "Bz": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, brace, cap and stone footing read as a Palworld-style build piece, but B's blank white board and the faceted grey boulder beside both sink the set."
+  },
+  "Wp": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder with readable eyes, a clear silhouette and a natural green/brown palette sits at Palworld's character finish."
+  },
+  "Iv": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "B's furred, mottled boar approaches the owner's naturalistic bar and carries it; A's smooth clay toy with moss decals would not pass beside Palworld."
+  },
+  "Oc": {
+   "A": {
+    "bar_a": 3.9,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A dim, closed-in trunk forest with no visible watch landmark, no sun shafts and no distance plane, so neither Palworld appeal nor Valheim light comes through."
+  },
+  "Kv": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "the ironwood canopies read as faceted, blobby shapes rather than real leaf-card canopies": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The giant ironwood and the creatures give it a landmark, but faceted canopies, an even grass carpet and flat, haze-free light read a tier below Palworld."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace faceted/blobby canopies (ironwood and grove trees) with layered leaf-card canopies, and break the uniform grass carpet into groves, edges and clearings",
+   "kind": "new_art"
+  },
+  {
+   "change": "Give every Meadows survey a tall, warm-lit hero landmark (stronghold keep, ridgeline watch tower) that clears the horizon and outranks the pylons",
+   "kind": "new_art"
+  },
+  {
+   "change": "Re-grade lighting: warm directional sun with cast shadows, aerial-perspective blue distance and sun shafts in the forests, and real fire/lamp pools in the Crossing Hall, while lifting forest and night exposure",
+   "kind": "scene"
+  }
+ ]
+}
