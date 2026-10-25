@@ -249,11 +249,18 @@ func _build_template(prefab_name: String) -> Node3D:
 		return null
 	var root := Node3D.new()
 	root.name = prefab_name
+	# F38 close-1024 (OFF until judged): a recipe may carry
+	# `module_swap_candidate` {enabled, swap: {from: to}} to rebuild the same
+	# footprint from a sibling kit module (the Hall shell's plaster window-strip
+	# walls as uneven brick). Same transforms, colliders and doors.
+	var swap_cfg: Dictionary = recipe.get("module_swap_candidate", {})
+	var swaps: Dictionary = swap_cfg.get("swap", {}) if bool(swap_cfg.get("enabled", false)) else {}
 	for entry: Variant in recipe.get("modules", []):
 		if not entry is Dictionary:
 			continue
 		var spec := entry as Dictionary
 		var module := str(spec.get("module", ""))
+		module = str(swaps.get(module, module))
 		var dir := str(spec.get("dir", MODULES_DIR))
 		# OF4-rebuild: the castle kit (BG2) ships OBJ+MTL, not glTF -- the same
 		# format the Furniture/Survival props already use directly as a bare

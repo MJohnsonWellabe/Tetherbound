@@ -4,6 +4,7 @@
   "_comment_colliders": "A prefab with no `colliders` gets one combined-AABB box from the placer, same as the old farm pack. The workshop authors its own so the open arch bay is genuinely enterable -- an open doorway with an invisible wall across it is the hologram village.gd's own header warns about, from the other side.",
   "prefabs": {
       "crossing_hall_shell": {
+        "module_swap_candidate": {"enabled": false, "swap": {"Wall_Plaster_Straight": "Wall_UnevenBrick_Straight", "Wall_Plaster_Window_Wide_Flat": "Wall_UnevenBrick_Window_Wide_Flat"}, "_why": "F38 arch stands close-1024 (OFF until judged): every GPU and CPU batch names the Hall's 'plaster window-strip walls' around the faced arches (GPU MH: still below 7.5 after arch_facades ON). The same 33 shell modules rebuilt as the installed kit's uneven-brick equivalents, matching the fieldstone wall judges praised; same transforms, colliders and doors."},
         "_why_window_glass": "F17#6 r1 judge: the nave and shrine windows were raw holes showing the roof outside, and sun through them left hard white rectangles on the floor. Each window module now carries the installed family's matching Window_Wide_Flat1 insert at its own transform (the frontage tower's pattern), glass from this recipe's MI_WindowGlass retint. Presentation only.",
         "modules": [
           {
