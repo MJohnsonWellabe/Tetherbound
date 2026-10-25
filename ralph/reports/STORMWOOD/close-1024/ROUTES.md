@@ -54,3 +54,9 @@ Chains:
 - MATCH-RECEIPT f49_s5b_home_relic -> f49_s5b_home_credits: matches, 0 differences (`seams/s5b_home_relic__home_credits.json`)
 - READY S5 (home_relic -> home_credits) on tb/stormwood-routes: every piece's save, receipt and PROVENANCE committed under tests/fixtures/earned_saves/f49_s5b_*; all four seams MATCH. Start: disclosed generated boundary `stormwood_rootgate_crown` (profile corrected efb4b5389).
 - 25 Oct 11:24Z S3 RUNNING on c3244a50d (tb/routes fixes merged: Kitchen socket clearing 5a3140067/43a336202, Kitchen split cd5f6a647, prompt walk 120115e40/4fcf9dd1c, Warrens mound walk c19dd3cc7): training_t5_kitchen_1 -> _2 -> _3 -> _4 -> feed -> return from the committed `f49_s3_a5`; each pass commits its save at once.
+
+### S3 seams (MATCH-RECEIPT) and READY
+- MATCH-RECEIPT f49_s3_a5 -> f49_s3_kitchen_1 -> f49_s3_kitchen_2 -> f49_s3_kitchen_3 -> f49_s3_kitchen_4 -> f49_s3_feed -> f49_s3_return: six seams, every receipt field (realm, uids, species, creature progression, items, portal unlocks, training, world/player flags) MATCH, 0 differences; position is not recorded by tidewake_piece_runner receipts, so each seam also proves the next piece loaded the previous piece's committed save byte-identical (sha256 of the save tree) (`seams/s3_*.json`).
+- READY S3 (T5 feast: altar_5 -> Kitchen -> feed -> return) on tb/stormwood-routes, run on c3244a50d (tb/routes fixes + main): kitchen_1 21263 s (Kitchen + kitchen_meadows, 67b9a2554), kitchen_2 493 s (772c20176), kitchen_3 538 s (b0ae8cd28), kitchen_4 548 s (12890cbec; Kitchen tier 4), feed 983 s (df4431aa5; five fed, breakthroughs to [1,2,3,4,5]), return 759 s (962ae9a8a). Every piece's save, receipt and PROVENANCE is under tests/fixtures/earned_saves/f49_s3_*.
+- HANDED TO ROUTES: nothing left from S3/S5 on this lane.
+
