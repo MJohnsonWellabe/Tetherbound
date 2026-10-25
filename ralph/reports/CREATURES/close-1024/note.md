@@ -3,6 +3,21 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures-land 9463a4326: one head for your batch 1 verdict, in your priority order. CPU sanity frames only; not CPU-judged.
+  - **Red check (48c7c2c0a), both repainted from the pre-shift originals in git:**
+    - Riverdrake: the crest and frill edges move to gold (hue 42; the band now reaches 32 deg, 10.8% of texels).
+    - Mirejaw: the rust frill roots move to tan (hue 40; saturated rust only, 6%; its taupe body under sat 0.55 untouched).
+    - Mirejaw's faint now curls the tail toward the camera. The tail was the same length as standing, not stretched, but rolled on its side it read as a straight rod.
+    - **Water forms:** they share the land mesh and albedo by design. The roster's water Mirejaw uses the same `creature_mirejaw_native.glb`, and since f3d6d65f0 it no longer pulls the old lod0 repaint. So they look identical to land on purpose, and a fresh import loads the committed GLB.
+  - **Mosshock (a3aab1cf5):**
+    - The repaint did land. `mosshock/models/mosshock_extracted_base_color_vivid.png` is committed and is the path `_texture_for` resolves. "Yellow-black blotches" is that olive-and-lichen texture: the blotch pattern itself read as camo.
+    - Fix: the value range compresses into one mossy hide. Black patches go to a deep olive at 0.3, the growth and lichen darken toward them, and the eyes and near-black features are kept.
+    - Grown 2.95 to 3.6 m, clearly over the trainer. The footprint allowance scaled with it; collider unchanged. creature_scale_ladder passes.
+  - **Riftfrill (9463a4326):**
+    - Gloss: its plastic sheen is Paddlenewt's shared roughness map (mean 0.32, against about 0.9 on the other remakes). Raised to about 0.63, so Paddlenewt changes too.
+    - Height: not grown. Riftfrill is in the owner's small class with Paddlenewt and Mudsnout (owner direction, standing).
+  - **Stormtrail (9463a4326):** the 0.25 silhouette rim for its near-black coat.
+  - **Tests:** f36_pose_candidates, water_species_catalog, texture_import_policy, rest_pose, four_biome_roster_population, creature_scale_ladder: all 0 failed.
 - 25 Oct GPU READY tb/creatures-land 78361d936 (tier 3 and the owner notes). CPU b31 is in `b31/judges.md`.
   - **Mudsnout (66612a79b):** its small tusks (the lane's candidate_nat1024t, CPU b27 7.51 vs 7.04), the hardened shoulder hide and the snout scar. Height stays 2.0 m, in its small class. Its hit is the cower.
   - **Trailpup (14639c373, then 78361d936):** one subtle touch, light trail dust in the paws and lower legs. I dropped the rim: b31 judges read it as bleached legs, and b20 had found no rim gain. Its hit is now the cower too, which Stormtrail shares.
