@@ -1,0 +1,11 @@
+{"anchors":{
+ "f36_0_npc:C1B":[7.0,6.8,6.8],
+ "f36_0_npc:C1A":[7.0,6.8,6.8],
+ "craft:after":[6.3,6.5,6.2],
+ "craft:before":[4.8,5.0,5.0],
+ "f36_0_gap:C1A":[6.6,6.0,5.8],
+ "f36_0_gap:C1B":[5.2,4.8,4.6]},
+"candidates":{
+ "Veilfall vista: shipping":[3.3,3.6,4.1],
+ "Veilfall vista: t1e + falls f2":[4.0,4.0,4.5],
+ "Veilfall vista: crown + summit cap (+ t1e, falls f2, rain fog)":[4.3,4.6,4.8]}}

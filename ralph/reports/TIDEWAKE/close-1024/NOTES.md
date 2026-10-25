@@ -17,6 +17,17 @@ Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md
   - **Checks:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed.
   - **Landing:** this touches `scripts/ui/playground_hud.gd` (the UI lane's file), so it is a small cross-lane fix. Land it with my next head, or hand it to the UI lane, whichever you prefer.
 
+- 2026-10-25 22:40 CT **READY for the GPU lane: Veilfall crown + summit cap (mt1/VERDICT.md), `tb/tidewake` 42300a3af.**
+  - **Built:** the cap is built as you approved, OFF until judged.
+    - Walk band, anchors and gate are proved unchanged.
+    - The cap's knee is 210 m, above the 196.9 m maximum walk.
+    - Crown collision follows the drawn mesh (test). The terrain collision matches the capped bake.
+    - The new key carries `scope` and `_why`.
+  - **CPU mapped, veilfall-vista:** shipping 3.52 → **4.64**. That is +0.50 over T1e + falls. All three judges higher.
+  - **Caveat:** the vista crops the crown, so judges mostly scored the smoother lower island. It is still under the 5.2 floor.
+  - **QUESTION:** may I pitch the vista stand up so the whole landmark is in frame (the judges' ask)? It is a yardstick change.
+  - **Dropped:** the two HUD READY entries (landed in #734).
+
 - 2026-10-25 20:30 CT **INFO + QUESTION (MESHY 10-12 received, thank you).**
   - **Integration:** all three are in `tb/tidewake` flag-OFF. Textures are on mode 2 (policy check PASS on 9 sidecars) and the import is clean.
   - **`veilfall_terraced_mountain`:** placed as `veilfall_mountain_candidate`. The landmark loader gained an optional `stretch_xz`.
