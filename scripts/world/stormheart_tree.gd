@@ -24,6 +24,7 @@ const SPLIT_BARK := preload("res://scripts/world/stormheart_split_bark.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 const CORE_COLUMN_SHADER := preload("res://scripts/world/stormheart_core_column.gdshader")
+const CORE_COLUMN_BODY_SHADER := preload("res://scripts/world/stormheart_core_column_core.gdshader")
 var simulation_only := false
 var _presentation: Dictionary = {}
 var _wood: StandardMaterial3D
@@ -37,7 +38,7 @@ var _core_flags_id := 0
 var _core_released := false
 var _hero: Node3D
 var _procedural_shell: Array[Node] = []
-var _column_core_material: StandardMaterial3D
+var _column_core_material: ShaderMaterial
 var _column_sheath_material: ShaderMaterial
 var _column_lights: Array[OmniLight3D] = []
 var _column_energy := Vector2.ZERO
@@ -1014,8 +1015,8 @@ func _relative_pose(model: Node3D, node: Node3D) -> Transform3D:
 	return pose
 
 
-## The board's lightning core: a bright round core inside a soft additive
-## sheath, both on the hollow axis behind the forked charge, with a few
+## The board's lightning core: a deep blue core threaded with drifting
+## lightning filaments inside a soft additive halo, both on the hollow axis behind the forked charge, with a few
 ## blue lights down its length. Natural glow (the trunk's own lightning).
 ## After the authoritative release it cools with the charge (set_core_released).
 func _core_column(root: Node3D, cfg: Dictionary) -> void:
@@ -1037,12 +1038,11 @@ func _core_column(root: Node3D, cfg: Dictionary) -> void:
 	var core := MeshInstance3D.new()
 	core.name = "Core"
 	core.mesh = core_mesh
-	_column_core_material = StandardMaterial3D.new()
-	_column_core_material.albedo_color = Color(str(cfg.get("core_colour", "#e4f4ff")))
-	_column_core_material.emission_enabled = true
-	_column_core_material.emission = Color(str(cfg.get("colour", "#a9dcff")))
-	_column_core_material.emission_energy_multiplier = float(cfg.get("energy", 2.6))
-	_column_core_material.roughness = 0.4
+	_column_core_material = ShaderMaterial.new()
+	_column_core_material.shader = CORE_COLUMN_BODY_SHADER
+	_column_core_material.set_shader_parameter("body_colour", Color(str(cfg.get("core_colour", "#2a5492"))))
+	_column_core_material.set_shader_parameter("glow_colour", Color(str(cfg.get("colour", "#d2ecff"))))
+	_column_core_material.set_shader_parameter("energy", float(cfg.get("energy", 1.0)))
 	core.material_override = _column_core_material
 	core.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	column.add_child(core)
@@ -1064,7 +1064,7 @@ func _core_column(root: Node3D, cfg: Dictionary) -> void:
 	sheath.material_override = _column_sheath_material
 	sheath.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	column.add_child(sheath)
-	_column_energy = Vector2(float(cfg.get("energy", 2.6)), float(cfg.get("sheath_energy", 1.2)))
+	_column_energy = Vector2(float(cfg.get("energy", 1.0)), float(cfg.get("sheath_energy", 1.2)))
 	_column_cooled = float(cfg.get("cooled_scale", 0.12))
 	for y: Variant in cfg.get("light_heights_m", [4.0, 30.0, 70.0, 120.0]):
 		var light := OmniLight3D.new()
@@ -1560,7 +1560,7 @@ func set_core_released(released: bool) -> void:
 	_core_released = released
 	if _column_core_material != null:
 		var cool := _column_cooled if released else 1.0
-		_column_core_material.emission_energy_multiplier = _column_energy.x * cool
+		_column_core_material.set_shader_parameter("energy", _column_energy.x * cool)
 		_column_sheath_material.set_shader_parameter("energy", _column_energy.y * cool)
 		for light: OmniLight3D in _column_lights:
 			light.visible = not released
