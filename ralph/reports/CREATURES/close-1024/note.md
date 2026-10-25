@@ -3,6 +3,11 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures 41b3b19c0 (Grandpa hair and beard, on top of the 30a52c7de eyes you have queued for the next PR):
+  - **Change:** same head, mesh and atlas. Only the white-grey hair and beard texels (7.6%) change: a 3 px median removes the felt speckle, and an unsharp pass at strand scale (4 px) makes the strands crisper. Colours and identity unchanged.
+  - **Method:** a wide smoothing was tried first and rejected; it blurred the strands into more felt.
+  - **Script:** `assets/characters/grandpa/candidate/source/smooth_hair.py`, which repaints from a kept base.
+  - **Check:** at the cast distance the change is invisible (mean difference 0.05/255). At atlas scale the strands read clearly crisper. Please judge it on your face close-ups (the f36_0_npc layout).
 - 25 Oct GPU READY tb/creatures 17ce37f88 (tier 3, dog3 Terrapup; lane-only like the earlier dog3 posts):
   - **Hit:** now the cower. The head-up recoil read as rearing.
   - **Plates:** the green stone plates are desaturated and darkened toward a weathered earth-grey, so they read as grown into the coat (`creature_touches.json` terrapup `plates_into_fur`).
