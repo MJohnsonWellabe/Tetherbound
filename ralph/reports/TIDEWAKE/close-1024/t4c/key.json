@@ -1,0 +1,41 @@
+{
+ "Po": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Dv": {
+  "anchor": false,
+  "label": "Deep Watch: surf vs surf+stones",
+  "A": "/tmp/claude-0/sp/t4_dw_b.png",
+  "B": "/tmp/claude-0/sp/t4s_dw.png"
+ },
+ "Zn": {
+  "anchor": false,
+  "label": "shore: surf vs surf+vary",
+  "A": "/tmp/claude-0/sp/t4v_sh.png",
+  "B": "/tmp/claude-0/sp/t4_sh_b.png"
+ },
+ "Ry": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Iy": {
+  "anchor": false,
+  "label": "Deep Watch: surf vs surf+vary",
+  "A": "/tmp/claude-0/sp/t4v_dw.png",
+  "B": "/tmp/claude-0/sp/t4_dw_b.png"
+ },
+ "Fm": {
+  "anchor": false,
+  "label": "shore: surf vs surf+stones",
+  "A": "/tmp/claude-0/sp/t4_sh_b.png",
+  "B": "/tmp/claude-0/sp/t4s_sh.png"
+ },
+ "Rh": {
+  "anchor": true,
+  "A": "f36_0_gap:C4A",
+  "B": "f36_0_gap:C4B"
+ }
+}

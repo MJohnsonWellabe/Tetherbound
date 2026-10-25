@@ -1,0 +1,23 @@
+{
+ "Hc": {
+  "anchor": false,
+  "label": "Deep Watch: shipping vs t1e",
+  "A": "/tmp/claude-0/sp/dw_ship.png",
+  "B": "/tmp/claude-0/sp/dw_t1e.png"
+ },
+ "Su": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Xb": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ },
+ "Ff": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

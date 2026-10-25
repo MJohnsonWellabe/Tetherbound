@@ -1,0 +1,10 @@
+{"anchors":{
+ "f36_0_npc:C1A":[6.7,6.6,6.7],
+ "f36_0_npc:C1B":[6.7,6.7,6.7],
+ "f36_0_gap:C6A":[6.6,6.6,7.3],
+ "f36_0_gap:C6B":[5.9,5.8,6.3],
+ "craft:after":[5.8,5.6,6.5],
+ "craft:before":[4.2,4.4,5.3]},
+"candidates":{
+ "Deep Watch: shipping":[4.2,5.0,5.3],
+ "Deep Watch: t1e currents":[4.8,5.6,6.0]}}

@@ -1,0 +1,12 @@
+{"anchors":{
+ "craft:before":[5.0,4.8,5.6],
+ "craft:after":[6.6,6.3,7.1],
+ "f36_0_npc:C1B":[6.8,6.6,7.3],
+ "f36_0_npc:C1A":[6.8,6.6,7.4],
+ "f36_0_gap:C1B":[5.5,5.4,5.7],
+ "f36_0_gap:C1A":[6.1,6.2,6.1]},
+"candidates":{
+ "Deep Watch: t1e":[5.2,5.5,5.9],
+ "Deep Watch: t1e+surf":[5.5,5.9,6.2],
+ "Shore views: t1e":[5.8,6.0,6.2],
+ "Shore views: t1e+surf":[6.2,6.4,6.5]}}

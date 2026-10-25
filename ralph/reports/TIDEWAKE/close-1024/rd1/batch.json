@@ -1,0 +1,14 @@
+{"anchors":{
+ "f36_0_npc:C1A":[7.4,7.4,6.5],
+ "f36_0_npc:C1B":[7.4,7.4,6.5],
+ "f36_0_gap:C3B":[6.9,6.7,5.0],
+ "f36_0_gap:C3A":[6.1,6.1,6.5],
+ "craft:after":[6.6,6.5,6.6],
+ "craft:before":[4.6,5.0,5.0]},
+"candidates":{
+ "Close-up: shipping":[4.3,4.6,4.0],
+ "Close-up: rock detail":[3.9,4.2,3.8],
+ "Shore views: shipping":[6.0,6.4,5.8],
+ "Shore views: rock detail":[5.9,6.2,5.8],
+ "Matched fight: shipping":[4.8,5.2,4.8],
+ "Matched fight: rock detail":[4.5,5.0,4.7]}}

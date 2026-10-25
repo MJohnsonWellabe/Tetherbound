@@ -1,0 +1,35 @@
+{
+ "Oh": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Qp": {
+  "anchor": false,
+  "label": "Heightfield relief: Veilfall close-up vs shipping",
+  "A": "/tmp/claude-0/sp/hfv_base.png",
+  "B": "/tmp/claude-0/sp/hfv_cand.png"
+ },
+ "Ko": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Jg": {
+  "anchor": false,
+  "label": "Heightfield relief: matched-moment Venn fight vs shipping",
+  "A": "/tmp/claude-0/sp/hff_ctl.png",
+  "B": "/tmp/claude-0/sp/hff_cand.png"
+ },
+ "Lv": {
+  "anchor": true,
+  "A": "f36_0_gap:C3B",
+  "B": "f36_0_gap:C3A"
+ },
+ "Tw": {
+  "anchor": false,
+  "label": "Heightfield relief: shore views vs shipping",
+  "A": "/tmp/claude-0/sp/hfs_cand.png",
+  "B": "/tmp/claude-0/sp/hfs_base.png"
+ }
+}

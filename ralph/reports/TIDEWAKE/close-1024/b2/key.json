@@ -1,0 +1,29 @@
+{
+ "Ei": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ie": {
+  "anchor": false,
+  "label": "destinations: lm2 vs s3 shore seats",
+  "A": "/tmp/claude-0/sp/lm3_a.png",
+  "B": "/tmp/claude-0/sp/lm3_b.png"
+ },
+ "Gm": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Aj": {
+  "anchor": false,
+  "label": "currents swim: base vs faded ring",
+  "A": "/tmp/claude-0/sp/sw_a.png",
+  "B": "/tmp/claude-0/sp/sw2.png"
+ },
+ "Ef": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ }
+}

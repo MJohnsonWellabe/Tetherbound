@@ -164,6 +164,45 @@
       "fov": 70,
       "time": 12,
       "weather": "rain"
+    },
+    {
+      "id": "veilfall-vista",
+      "stand": [
+        384.311,
+        2.229,
+        3805.405
+      ],
+      "pos": [
+        560.0,
+        40.0,
+        3480.0
+      ],
+      "yaw": 151.39,
+      "pitch": 17.7,
+      "fov": 70,
+      "time": 12,
+      "weather": "clear",
+      "_why": "close-1024 mt1 judges x3: the 200 m stand cropped the summit, so the landmark had no silhouette; coordinator approved a reframe (same subject, same purpose). Old pose {\"pos\": [480.31, 20.0, 3629.41], \"yaw\": 149.27, \"pitch\": 11.0, \"fov\": 70}. New: ~750 m offshore on the same bearing, aimed at mid-mountain so the whole island, crown and sea are in frame. Earlier scores on the old stand do not carry over."
+    },
+    {
+      "id": "veilfall-vista-rain",
+      "stand": [
+        384.311,
+        2.229,
+        3805.405
+      ],
+      "pos": [
+        560.0,
+        40.0,
+        3480.0
+      ],
+      "yaw": 151.39,
+      "pitch": 17.7,
+      "fov": 70,
+      "time": 12,
+      "weather": "rain",
+      "_why": "close-1024 mt1 judges x3: the 200 m stand cropped the summit, so the landmark had no silhouette; coordinator approved a reframe (same subject, same purpose). Old pose {\"pos\": [480.31, 20.0, 3629.41], \"yaw\": 149.27, \"pitch\": 11.0, \"fov\": 70}. New: ~750 m offshore on the same bearing, aimed at mid-mountain so the whole island, crown and sea are in frame. Earlier scores on the old stand do not carry over."
     }
-  ]
+  ],
+  "_veilfall_vista": "close-1024 T3 (coordinator, GPU baseline: the Veilfall views were camera-on-rock): veilfall-vista and veilfall-vista-rain sit 200 m offshore of the landing stand and look back at the mountain, the falls and the sea. They are the Veilfall row's views from now on; veilfall-near and veilfall-rain stay unchanged for the close-up rock comparisons already queued."
 }

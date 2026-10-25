@@ -730,7 +730,18 @@ func _aim_hang_bone(rig: Skeleton3D, bone_name: String, child_name: String, dire
 ## it never changes the swimmer, resource simulation, camera or collider.
 static func load_human_swim_visual() -> Dictionary:
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(HUMAN_SWIM_CONFIG))
-	return raw if raw is Dictionary else {}
+	var loaded: Dictionary = raw if raw is Dictionary else {}
+	# close-1024 `swim_candidate` (Tidewake look, OFF in play): P2-071 pose keys.
+	var candidate: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get("swim_candidate", {})
+	if candidate.has("swim_pose"):
+		loaded = loaded.duplicate()
+		loaded.merge(candidate.swim_pose, true)
+	# close-1024 `swim_stroke_candidate` (OFF in play), layered on swim_candidate.
+	var stroke: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get("swim_stroke_candidate", {})
+	if stroke.has("swim_pose"):
+		loaded = loaded.duplicate()
+		loaded.merge(stroke.swim_pose, true)
+	return loaded
 
 
 static func human_swim_snapshot(player: Node) -> Dictionary:

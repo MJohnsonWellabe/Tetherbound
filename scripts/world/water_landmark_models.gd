@@ -23,9 +23,15 @@ func build(water_world: Node3D) -> void:
 	# (unjudged, OFF in play) add props by absolute `position_xz_m` as well as
 	# by landmark offset.
 	var specs: Array = (look.get("landmark_models", []) as Array) + (look.get("landmark_props_candidate", []) as Array) \
-		+ (look.get("veilfall_hero_candidate", []) as Array) + (look.get("veilfall_facade_candidate", []) as Array)
+		+ (look.get("veilfall_hero_candidate", []) as Array) + (look.get("veilfall_facade_candidate", []) as Array) \
+		+ (look.get("veilfall_mountain_candidate", []) as Array) + (look.get("veilfall_buttress_candidate", []) as Array) \
+		+ _destinations(look) + (look.get("lesson_clusters_candidate", []) as Array)
+	# `first_shore_declutter_candidate` (OFF in play) drops named props by id.
+	var dropped: Array = (look.get("first_shore_declutter_candidate", {}) as Dictionary).get("drop_landmark_props", [])
 	for raw: Variant in specs:
 		var spec := raw as Dictionary
+		if dropped.has(str(spec.get("id", ""))):
+			continue
 		var landmark: Dictionary = landmarks.get(str(spec.get("landmark_id", "")), {})
 		var at_raw: Array = landmark.get("position", [])
 		if spec.has("position_xz_m"):
@@ -48,16 +54,24 @@ func build(water_world: Node3D) -> void:
 		var factor := float(spec.get("height_m", 5.0)) / bounds.size.y
 		var holder := Node3D.new()
 		holder.name = "Landmark_%s" % str(spec.get("landmark_id", "prop"))
-		model.scale = Vector3.ONE * factor
-		model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
+		# Optional `stretch_xz` widens a fitted model without changing its height
+		# (close-1024: the generated Veilfall crown is narrower than the cone).
+		var stretch: Array = spec.get("stretch_xz", [1.0, 1.0])
+		var sx := float(stretch[0])
+		var sz := float(stretch[1])
+		model.scale = Vector3(factor * sx, factor, factor * sz)
+		model.position = -Vector3(bounds.get_center().x * sx, bounds.position.y, bounds.get_center().z * sz) * factor
 		holder.add_child(model)
 		var yaw := deg_to_rad(float(spec.get("yaw_deg", 0.0)))
-		var half := Vector2(bounds.size.x, bounds.size.z) * factor * 0.5
+		var half := Vector2(bounds.size.x * sx, bounds.size.z * sz) * factor * 0.5
 		holder.rotation.y = yaw
 		# `lift_m` raises a piece set into a steep slope, where the lowest footprint
 		# point would bury most of it (close-1024 vf2, the upper Veilfall tier).
 		holder.position = Vector3(at.x, _floor(water_world, at, yaw, half) - float(spec.get("sink_m", 0.15))
 			+ float(spec.get("lift_m", 0.0)), at.y)
+		# `float_y_m` seats a moored boat on the sea surface instead of the seabed.
+		if spec.has("float_y_m"):
+			holder.position.y = float(spec.float_y_m)
 		add_child(holder)
 		var box: Array = spec.get("collider_fraction", [])
 		if box.size() == 3:
@@ -70,6 +84,38 @@ func build(water_world: Node3D) -> void:
 			shape.position = Vector3(0.0, size.y * 0.5, 0.0)
 			body.add_child(shape)
 			holder.add_child(body)
+		# `trimesh_collider`: collision that matches the drawn mesh, for pieces a
+		# flyer or glider can reach (close-1024: the generated Veilfall crown).
+		if bool(spec.get("trimesh_collider", false)):
+			add_trimesh_collision(model)
+
+
+## `destination_landmarks_s3_candidate` (OFF in play) re-seats and adds to the
+## lm2 destination pieces: its entries replace lm2's by landmark_id.
+static func _destinations(look: Dictionary) -> Array:
+	var base: Array = look.get("destination_landmarks_candidate", [])
+	var s3: Array = (look.get("destination_landmarks_s3_candidate", []) as Array) \
+		+ (look.get("destination_landmarks_s4_candidate", []) as Array)
+	if s3.is_empty():
+		return base
+	var replaced: Array = []
+	for raw: Variant in s3:
+		replaced.append(str((raw as Dictionary).get("landmark_id", "")))
+	var merged: Array = []
+	for raw: Variant in base:
+		if not replaced.has(str((raw as Dictionary).get("landmark_id", ""))):
+			merged.append(raw)
+	# A later entry with the same landmark_id (s4 over s3) wins.
+	var last: Dictionary = {}
+	for index in s3.size():
+		var id := str((s3[index] as Dictionary).get("landmark_id", ""))
+		if not id.is_empty():
+			last[id] = index
+	for index in s3.size():
+		var id := str((s3[index] as Dictionary).get("landmark_id", ""))
+		if id.is_empty() or int(last[id]) == index:
+			merged.append(s3[index])
+	return merged
 
 
 ## Optional per-surface materials, by surface index (the installed castle kit's
@@ -120,3 +166,25 @@ func _floor(world: Node3D, centre: Vector2, yaw: float, half: Vector2) -> float:
 			if is_finite(y):
 				low = minf(low, y)
 	return low if is_finite(low) else 0.0
+
+
+## One static trimesh body per drawn mesh, in the mesh's own transform, so the
+## collision follows exactly what is rendered. Returns the bodies it added.
+static func add_trimesh_collision(root: Node) -> Array:
+	var bodies: Array = []
+	var stack: Array = [root]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		stack.append_array(node.get_children())
+		if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+			var shape := (node as MeshInstance3D).mesh.create_trimesh_shape()
+			if shape == null:
+				continue
+			var body := StaticBody3D.new()
+			body.name = "TrimeshCollision"
+			var collider := CollisionShape3D.new()
+			collider.shape = shape
+			body.add_child(collider)
+			node.add_child(body)
+			bodies.append(body)
+	return bodies

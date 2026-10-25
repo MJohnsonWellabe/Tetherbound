@@ -1,0 +1,64 @@
+{
+  "item": "P2-011 named destination read (Tidewake)",
+  "realm": "water",
+  "_fixture": "close-1024 lm1: one stand per P2-011 destination (sluice_twin_pumps, shellwatch_rescue_jetty), camera 28 m back and 12 m up looking at the destination, trainer at the destination point, midday clear. Reuse unchanged for matched OFF/ON rounds.",
+  "_veilfall_vista": "close-1024 T3 (coordinator, GPU baseline: the Veilfall views were camera-on-rock): veilfall-vista and veilfall-vista-rain sit 200 m offshore of the landing stand and look back at the mountain, the falls and the sea. They are the Veilfall row's views from now on; veilfall-near and veilfall-rain stay unchanged for the close-up rock comparisons already queued.",
+  "views": [
+    {
+      "id": "pumps",
+      "stand": [
+        905.1,
+        34.32,
+        2864.564
+      ],
+      "pos": [
+        888.1,
+        46.32,
+        2842.564
+      ],
+      "yaw": -135.0,
+      "pitch": -12.8,
+      "fov": 65,
+      "time": 12,
+      "weather": "clear"
+    },
+    {
+      "id": "jetty",
+      "stand": [
+        267.004,
+        16.732,
+        1006.349
+      ],
+      "pos": [
+        280.1,
+        22.0,
+        1004.2
+      ],
+      "yaw": 53.71,
+      "pitch": -23.26,
+      "fov": 70,
+      "time": 12,
+      "weather": "clear",
+      "_why": "lm1 s2: the rescue jetty moved to the nearest shoreline (64 m from the destination point), so this stand frames both the destination and the shore; old pose pos [249.00400000000002, 28.732, 986.349] yaw -135.0 pitch -12.8."
+    },
+    {
+      "id": "pumps-shore",
+      "stand": [
+        985.0,
+        8.08,
+        2745.0
+      ],
+      "pos": [
+        989.9,
+        18.2,
+        2757.7
+      ],
+      "yaw": -0.3,
+      "pitch": -12.0,
+      "fov": 65,
+      "time": 12,
+      "weather": "clear",
+      "_why": "close-1024 s3: the pumps move to the nearest shore (990.1, 2717.4) because no water lies within 180 m of their destination point; this stand frames that shore seat from inland, 40 m back and 10 m up, trainer in frame. The original pumps view stays for matched lm1/lm2 rounds."
+    }
+  ]
+}

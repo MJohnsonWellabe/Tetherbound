@@ -1,0 +1,12 @@
+{"anchors":{
+ "f36_0_gap:C2B":[5.6,6.2,5.7],
+ "f36_0_gap:C2A":[6.9,7.3,6.7],
+ "f36_0_npc:C1A":[7.0,6.8,6.8],
+ "f36_0_npc:C1B":[7.0,6.9,6.8],
+ "craft:before":[4.8,5.5,4.8],
+ "craft:after":[6.6,6.9,6.5]},
+"candidates":{
+ "Swim views: t1b":[5.8,6.0,5.6],
+ "Swim views: t1b+t2b":[5.0,5.4,5.0],
+ "Shore views: t1b":[6.3,6.4,5.8],
+ "Shore views: t1b+t2b":[6.2,6.4,5.6]}}
