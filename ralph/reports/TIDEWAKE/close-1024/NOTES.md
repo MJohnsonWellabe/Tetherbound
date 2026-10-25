@@ -513,3 +513,4 @@ F39#1 = every top-20 Tidewake item fixed on main with a before/after code-blind 
 | P2-074 dialogue speaker visibility | 18 | camera | camera | needs_capture |
 
 **Count:** 20 top-20 + 23 impact>12 = 43 items; 12 are Tidewake-scene rows this lane can fix, the other 31 belong to the animation, UI, camera and shared-art lanes. Neither row can close until those lanes land PASSes on the same items.
+- 2026-10-25 INFO wl1: waterline_declutter_candidate level on CPU (6.36 → 6.47 mapped), stays OFF. Judges name the pier stakes, the even pebble carpet and the cold 18:00 sky, not the drift markers. Evidence: wl1/.
