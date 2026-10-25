@@ -1,0 +1,172 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.835,
+  "least_squares_slope": 0.791,
+  "method": "linear",
+  "slope": 0.791,
+  "intercept": 2.2782,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.669,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1B": {
+   "measured": 6.7,
+   "reference": 7.47,
+   "mapped": 7.578,
+   "residual": -0.108
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.7,
+   "reference": 7.53,
+   "mapped": 7.578,
+   "residual": -0.048
+  },
+  "f36_0_gap:C6B": {
+   "measured": 4.767,
+   "reference": 6.9,
+   "mapped": 6.049,
+   "residual": 0.851
+  },
+  "f36_0_gap:C6A": {
+   "measured": 5.9,
+   "reference": 6.47,
+   "mapped": 6.945,
+   "residual": -0.475
+  },
+  "craft:before": {
+   "measured": 4.1,
+   "reference": 4.83,
+   "mapped": 5.521,
+   "residual": -0.691
+  },
+  "craft:after": {
+   "measured": 6.267,
+   "reference": 7.35,
+   "mapped": 7.235,
+   "residual": 0.115
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.233,
+   "reference": 4.0,
+   "mapped": 4.836,
+   "residual": -0.836
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 3.867,
+   "reference": 6.53,
+   "mapped": 5.337,
+   "residual": 1.193
+  }
+ },
+ "candidates": {
+  "G2 warden_aldis f17-32 High cand|ship | G2-warden_aldis-17-ship-High": {
+   "measured_mean": 4.7,
+   "mapped_mean": 6.0,
+   "mapped_judges": [
+    5.84,
+    6.23,
+    5.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G2 warden_aldis f17-32 High cand|ship | G2-warden_aldis-17-cand-High": {
+   "measured_mean": 5.133,
+   "mapped_mean": 6.34,
+   "mapped_judges": [
+    6.23,
+    6.63,
+    6.15
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G2 warden_aldis f1-16 High cand|ship | G2-warden_aldis-1-cand-High": {
+   "measured_mean": 4.867,
+   "mapped_mean": 6.13,
+   "mapped_judges": [
+    6.08,
+    6.39,
+    5.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G2 warden_aldis f1-16 High cand|ship | G2-warden_aldis-1-ship-High": {
+   "measured_mean": 5.0,
+   "mapped_mean": 6.23,
+   "mapped_judges": [
+    6.08,
+    6.63,
+    6.0
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G2 south_bridge_grunt f1-16 High cand|ship | G2-south_bridge_grunt-1-ship-High": {
+   "measured_mean": 4.667,
+   "mapped_mean": 5.97,
+   "mapped_judges": [
+    5.84,
+    6.23,
+    5.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G2 south_bridge_grunt f1-16 High cand|ship | G2-south_bridge_grunt-1-cand-High": {
+   "measured_mean": 4.967,
+   "mapped_mean": 6.21,
+   "mapped_judges": [
+    6.08,
+    6.55,
+    6.0
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G2 south_bridge_grunt f17-32 High cand|ship | G2-south_bridge_grunt-17-ship-High": {
+   "measured_mean": 4.867,
+   "mapped_mean": 6.13,
+   "mapped_judges": [
+    6.08,
+    6.39,
+    5.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "G2 south_bridge_grunt f17-32 High cand|ship | G2-south_bridge_grunt-17-cand-High": {
+   "measured_mean": 4.933,
+   "mapped_mean": 6.18,
+   "mapped_judges": [
+    6.08,
+    6.55,
+    5.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

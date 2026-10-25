@@ -1,0 +1,46 @@
+{
+ "Pf": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Rg": {
+  "anchor": false,
+  "label": "G2 warden_aldis f17-32 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-warden_aldis-17-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-warden_aldis-17-cand-High.png"
+ },
+ "Gm": {
+  "anchor": true,
+  "A": "f36_0_gap:C6B",
+  "B": "f36_0_gap:C6A"
+ },
+ "Ll": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Dp": {
+  "anchor": false,
+  "label": "G2 warden_aldis f1-16 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-warden_aldis-1-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-warden_aldis-1-ship-High.png"
+ },
+ "Yk": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Ou": {
+  "anchor": false,
+  "label": "G2 south_bridge_grunt f1-16 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-south_bridge_grunt-1-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-south_bridge_grunt-1-cand-High.png"
+ },
+ "He": {
+  "anchor": false,
+  "label": "G2 south_bridge_grunt f17-32 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-south_bridge_grunt-17-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-south_bridge_grunt-17-cand-High.png"
+ }
+}

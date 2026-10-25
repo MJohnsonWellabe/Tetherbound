@@ -1,0 +1,134 @@
+{
+ "sets": {
+  "Yd": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A near-top-down camera on a flat olive-green carpet with no sky, horizon or light direction leaves the brown boar as one mid-tone blob under oversized white telegraph cones, far below Palworld's readable field fights."
+  },
+  "Rd": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's braced timber frame, capping board and stone footing begin to read as built, but it is still one pale, thin, isolated panel beside a flat-shaded boulder in an empty field, nothing like Palworld's lived-in base clutter."
+  },
+  "Fn": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's closer framing of the armoured badger and hedgehog against the palisade reads better, but the hot yellow-green grade, foreground trunk and bush occlusion in A, and creatures that hold the same pose through hits keep it short of Palworld finish."
+  },
+  "Va": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired elder in a moss-green vest and scarf has a warm, readable face and clean silhouette that would sit in a Palworld-style village, though his rounded toon face is softer than the key art's stylised realism."
+  },
+  "Eo": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's dark, mottled coiled serpent has a noisy material that loses the head and body read, and B's bold black-and-yellow banding reads well standing but its faint mid and faint end rear up off the floor with a detached shadow, so neither reaches the owner's naturalistic creature bar."
+  },
+  "Wx": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown-green forest floor with no purple storm sky, lightning or copper/glass highlights, debug panels covering a third of each frame, flat magenta ground rings as telegraphs and (in A i11, i13, i15) the camera blocked by trunks and canopy sank it."
+  },
+  "Js": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Both fighters are large and readable against the grass, but the hedgehog and badger hold their idle silhouettes under STAGGER and HEAVY hits, the white puff trails and gold rings stand in for impacts, and the flat yellow-green grade has none of Valheim's light."
+  },
+  "Fi": {
+   "A": {
+    "bar_a": 4.1,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's foreground bush and white smoke clouds (f21-f27) bury the hedgehog, and B is 16 almost identical frames with both creatures frozen in idle, so neither reads as a live fight."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Author real hit, flinch, stagger and move poses (body lean, recoil, squash) for the Meadows fighters, and make faint poses collapse onto the ground instead of rearing up or holding idle.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Rework fight cameras and grade: a lower three-quarter view that shows sky and horizon, warm key light with cool distance, foliage and trunk fade between camera and fighters, and smaller, cleaner telegraphs in place of white puff clouds and flat magenta rings; hide debug panels in Stormwood.",
+   "kind": "scene"
+  },
+  {
+   "change": "Give the homestead wall proper thickness, timber or plank infill instead of the pale blown-out plaster, a cap and a stone footing, and place it with neighbouring props so it reads as part of a lived-in homestead.",
+   "kind": "scene"
+  }
+ ]
+}

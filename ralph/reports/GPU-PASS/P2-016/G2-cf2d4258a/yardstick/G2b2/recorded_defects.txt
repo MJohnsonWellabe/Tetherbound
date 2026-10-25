@@ -1,0 +1,8 @@
+Pf: none
+Rg: "P2-016: hurt and moving frames keep the idle silhouette"
+Gm: none
+Ll: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Dp: "P2-016: hurt and moving frames keep the idle silhouette"
+Yk: none
+Ou: "P2-016: hurt and moving frames keep the idle silhouette"
+He: "P2-016: hurt and moving frames keep the idle silhouette"

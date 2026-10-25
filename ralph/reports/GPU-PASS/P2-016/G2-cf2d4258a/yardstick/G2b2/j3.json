@@ -1,0 +1,136 @@
+{
+ "sets": {
+  "Pf": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A warm, readable cozy elder with clear face, eyes and an earthy palette that fits the village, but he is shown only on a dark void and his soft toy-like rendering is a notch below Palworld finish."
+  },
+  "Rg": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured badger reads well but the flat mustard-green grass carpet, muddy mid-tone grade, tiny player creature and flat lilac cones sink it below Palworld field fights."
+  },
+  "Gm": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ram's fur and horn mass read on-style and tower over the ruler, but A's faint floats and flips belly-up off the floor, and both lack Palworld-level rim light and material finish."
+  },
+  "Ll": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger blue-grey panel with wrapped recipes is readable, but the gloomy dark world behind it and small hint glyphs fall short of Palworld's crisp UI over a vivid world."
+  },
+  "Dp": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The enemy lunges carry some energy, but the small hamster holds one pose through hits and the uniform yellow-green grade with no sky or depth sinks it."
+  },
+  "Yk": {
+   "A": {
+    "bar_a": 3.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Near-black murky frames with no visible purple storm sky or lightning, dense debug-like HUD panels covering the fight, flat magenta telegraph rings, and canopy blocking the view in A sink it far below Palworld."
+  },
+  "Ou": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A top-down camera on a flat grass carpet with a small brown creature that blends into the brown-green ground and flat lilac cones reads like a prototype, not a shipping Palworld fight."
+  },
+  "He": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same Meadows arena with no horizon, sky or light direction, and a player creature that stays in its idle silhouette under STAGGER and impact markers, so it misses Palworld finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give player creatures readable hurt and move poses (flinch, recoil, lean, stagger) and make them larger, higher-value subjects that separate from the brown-green ground",
+   "kind": "new_art"
+  },
+  {
+   "change": "Regrade and relight the combat arenas: a real value range, a directional sun with rim light, sky and blue distance in the combat camera, and grass broken into clumps and clearings instead of a uniform mustard carpet; for Stormwood lift exposure, add the purple storm sky and lightning, and keep canopy out of the camera",
+   "kind": "scene"
+  },
+  {
+   "change": "Strip debug-style HUD panels from the fight view and swap the flat magenta and lilac telegraph rings and cones for grounded, object-based effects with impacts",
+   "kind": "scene"
+  }
+ ]
+}

@@ -1,0 +1,136 @@
+{
+ "sets": {
+  "Pf": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing elder with readable face and eyes and on-palette moss and leather clothes, but he is more cartoon-toon than the naturalistic creatures and is shown on a void with no Valheim-class light, so it sits short of the Palworld finish."
+  },
+  "Rg": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The badger-shell creature is well made and the meadow is warm, but the small brown player creature melts into olive grass, the creatures barely move, pale-violet telegraph slabs and white puffs stand in for real effects, and the downward camera hides any sky or depth."
+  },
+  "Gm": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormcapra model matches the owner style bar in fleece, horns and scale, but A's faint poses float above their shadows and B's faint end sinks into the floor, and the neutral stage gives no world light to judge."
+  },
+  "Ll": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's blue-grey translucent panel with large ingredient text is on direction, but the hints are small pale glyphs with no teal or controller emphasis, the list shows only about three recipes, and the dark rainy backdrop is flat and murky."
+  },
+  "Dp": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The enemy gets lunge poses (A f09; B f04, f13, f14), but the player creature holds its idle pose through hits, large violet-outlined slabs (A f06-f08, B f01-f03, f12-f13) cover the fighters, and there is no sky, shafts or atmospheric depth."
+  },
+  "Yk": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Dark, muddy frames with a debug-heavy HUD covering about a third of the screen, flat magenta ground shapes for telegraphs, no purple storm sky or lightning, and in A the camera goes into canopy or trunks (i11, i13, i15), so it reads nothing like the Stormwood board or a shipping game."
+  },
+  "Ou": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Close shots of the player creature against busy olive grass, with violet cone slabs (A f02-f04, f11-f13; B f02-f04, f12-f13) as the main effect; only B f14 shows the enemy rearing, and the camera never shows horizon or light."
+  },
+  "He": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A few lunge frames (A f23, B f27) and a STAGGER label (B f21-f22) suggest reaction, but the player creature's silhouette barely changes, a huge violet slab covers A f20-f22, and the flat top-down meadow has no Valheim-class atmosphere."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Author real hit-flinch, recoil and stagger clips for both fighters, the player creature in particular, so hits and moves change the silhouette instead of only flashing a burst or a label",
+   "kind": "new_art"
+  },
+  {
+   "change": "Replace the flat violet and magenta telegraph slabs and rings with physical effects (dust, cracked ground, stones, lightning) and rim-light or brighten the small player creature so it separates from the olive grass",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix the Stormwood fight presentation: camera collision with foliage fade-out, a slimmer HUD, and the fixed purple storm sky with white-violet lightning light so the fight reads and belongs to the chapter",
+   "kind": "scene"
+  }
+ ]
+}

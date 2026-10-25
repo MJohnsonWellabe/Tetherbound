@@ -1,0 +1,134 @@
+{
+ "sets": {
+  "Yd": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A distant top-down camera over a flat olive grass carpet shrinks the creatures to specks, and cotton-ball smoke puffs replace impacts, so the fight has none of Palworld's close, saturated, impact-heavy framing."
+  },
+  "Rd": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame with brace, cap and stone footing reads as built, but a single freestanding panel in flat, evenly lit grass with a painted-card mountain backdrop is a long way from Palworld's base-building finish and Valheim's light."
+  },
+  "Fn": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The naturalistic badger-turtle and hedgehog creatures and the warm grade help, but rigid idle bodies under hits, smoke-puff effects and foreground trunks and bushes (A) keep it below shipping finish."
+  },
+  "Va": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing elder with readable eyes and a warm, natural palette, but the soft toon-film face is more cartoon than the naturalistic world and is only shown on a flat studio backdrop."
+  },
+  "Eo": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's speckled black-gold snake is grounded but its busy mottling muddies the silhouette; B's bold banding reads well standing, but its faint poses rise up and float clear of their shadows, and neither reaches the style bar's fur and scale finish."
+  },
+  "Wx": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky, near-black frames with no purple storm sky or lightning, debug-style panels covering a third of the screen, flat magenta ground markers for telegraphs and an almost invisible player creature sink it; A also has frames swallowed by trunks and canopy."
+  },
+  "Js": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Creature models and the warm Meadows grade are close to on-style, but hit flashes and smoke arcs land on bodies that never flinch, and B's camera cuts to a high overhead view mid-fight."
+  },
+  "Fi": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B is a clean, well-framed but frozen tableau in which neither creature moves across 16 frames, while A is buried behind foreground bushes and trunks and big white smoke clouds (f23-f24)."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Author additive hit-flinch, recoil, stagger and lean layers (plus locomotion lean) for every creature so hits and moves visibly change the body silhouette, and keep faint poses grounded on their shadows",
+   "kind": "new_art"
+  },
+  {
+   "change": "Combat camera framing: a closer three-quarter view that keeps both fighters large, never cuts to a high overhead view, and fades or avoids trunks, bushes and canopy between camera and fighters",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace cotton-ball smoke puffs and flat magenta telegraph markers with physical impact effects (dust, stones, lightning), remove debug panels from gameplay frames, and give Stormwood its purple storm sky and rim light",
+   "kind": "scene"
+  }
+ ]
+}

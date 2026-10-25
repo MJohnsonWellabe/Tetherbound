@@ -1,0 +1,136 @@
+{
+ "sets": {
+  "Pf": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing elder villager with a readable face and an earthy green/brown palette that fits the village family, but it has a soft toon-doll finish and is shown only on a flat dark stage, so there is no light or atmosphere to put it at Palworld/Valheim finish."
+  },
+  "Rg": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The grass and warm sun grade are pleasant, but a low camera crowded by the HUD, pale flat cone telegraphs and creatures that mostly hold their idle pose make it read as a prototype rather than a Palworld-class fight."
+  },
+  "Gm": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ram's horns and fleece match the Stormcapra bar and it towers correctly over the ruler, but on a grey stage with no rim light it is only near the bar; A also sinks because its faint poses float in mid-air."
+  },
+  "Ll": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's blue-grey translucent panel with full recipe lines and glyph-labelled Craft/Leave hints is serviceable, but it is plain, has no teal/gold accents and sits over a dim, empty world, so it is not at a shipping finish."
+  },
+  "Yk": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The frames are dark and murky with no visible purple storm sky or lightning, the player creature is tiny, the HUD walls off both sides, the telegraphs are flat magenta outlines, and in A canopy and foliage fill whole frames, so it is not the same kind of game."
+  },
+  "Dp": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured badger has a strong silhouette, but the hit target barely changes pose and the effects are white puff smears in pale flat cones under a heavy HUD, which sinks it against Palworld's punchy combat."
+  },
+  "Ou": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Most frames are a flat wall of grass seen from a low camera, with a stiff small creature and flat cone telegraphs, so there is no sky, depth or atmosphere to carry it."
+  },
+  "He": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Lunges now show some body lean, but the hurt target still holds its idle silhouette and the camera alternates between top-down grass and cramped close views with no horizon, so the finish falls short."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Raise and pull back the combat camera so the horizon, sky and fog depth are in frame, both fighters read against the ground, and the HUD is slimmed so it stops walling off the action (Meadows fights and Stormwood Yk, including canopy/trunk fading).",
+   "kind": "scene"
+  },
+  {
+   "change": "Author real hit, flinch and stagger poses for both creatures and keep faint poses grounded, so hurt frames break the idle silhouette and nothing floats (Rg/Dp/Ou/He, Gm A).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Replace the flat pale-violet/magenta cone and ring telegraphs with telegraphs and impacts built from real objects (dust, stone, lightning) in chapter colours, and check the oxblood banners on the Meadows arena fence.",
+   "kind": "scene"
+  }
+ ]
+}

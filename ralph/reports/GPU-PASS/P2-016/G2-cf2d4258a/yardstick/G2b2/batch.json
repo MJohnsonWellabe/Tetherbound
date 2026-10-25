@@ -1,0 +1,86 @@
+{
+ "anchors": {
+  "f36_0_npc:C1B": [
+   6.8,
+   6.5,
+   6.8
+  ],
+  "f36_0_npc:C1A": [
+   6.8,
+   6.5,
+   6.8
+  ],
+  "f36_0_gap:C6B": [
+   4.0,
+   5.5,
+   4.8
+  ],
+  "f36_0_gap:C6A": [
+   5.8,
+   6.3,
+   5.6
+  ],
+  "craft:before": [
+   3.8,
+   4.5,
+   4.0
+  ],
+  "craft:after": [
+   6.0,
+   6.5,
+   6.3
+  ],
+  "f10_2_r3_capacitor:control": [
+   3.0,
+   3.5,
+   3.2
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   3.8,
+   4.2,
+   3.6
+  ]
+ },
+ "candidates": {
+  "G2 warden_aldis f17-32 High cand|ship | G2-warden_aldis-17-ship-High": [
+   4.5,
+   5.0,
+   4.6
+  ],
+  "G2 warden_aldis f17-32 High cand|ship | G2-warden_aldis-17-cand-High": [
+   5.0,
+   5.5,
+   4.9
+  ],
+  "G2 warden_aldis f1-16 High cand|ship | G2-warden_aldis-1-cand-High": [
+   4.8,
+   5.2,
+   4.6
+  ],
+  "G2 warden_aldis f1-16 High cand|ship | G2-warden_aldis-1-ship-High": [
+   4.8,
+   5.5,
+   4.7
+  ],
+  "G2 south_bridge_grunt f1-16 High cand|ship | G2-south_bridge_grunt-1-ship-High": [
+   4.5,
+   5.0,
+   4.5
+  ],
+  "G2 south_bridge_grunt f1-16 High cand|ship | G2-south_bridge_grunt-1-cand-High": [
+   4.8,
+   5.4,
+   4.7
+  ],
+  "G2 south_bridge_grunt f17-32 High cand|ship | G2-south_bridge_grunt-17-ship-High": [
+   4.8,
+   5.2,
+   4.6
+  ],
+  "G2 south_bridge_grunt f17-32 High cand|ship | G2-south_bridge_grunt-17-cand-High": [
+   4.8,
+   5.4,
+   4.6
+  ]
+ }
+}

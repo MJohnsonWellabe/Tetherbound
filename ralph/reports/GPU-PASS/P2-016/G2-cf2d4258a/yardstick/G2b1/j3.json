@@ -1,0 +1,134 @@
+{
+ "sets": {
+  "Yd": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A high, distant camera over a uniform olive grass carpet with no sky or horizon, small creatures holding rigid poses and flat white-lilac cone telegraphs sink it next to Palworld's close, readable, light-filled fights."
+  },
+  "Rd": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's braced timber frame, cap board and stone footing read as a built piece, but it still stands alone as a thin panel in a flat-lit field with painted-card mountains and a pale low-poly boulder, well short of Palworld's base-building density and finish."
+  },
+  "Fn": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured badger and the stockade with banners make a good set piece, but the oversaturated yellow-green grade, rigid poses and soft flat telegraphs (plus a trunk and bush covering the fight in A) keep it below Palworld finish."
+  },
+  "Va": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing elder villager with a warm earthy outfit and expressive eyes carries it, but the soft feature-film cartoon face is rounder and plainer than the key art's stylised-realism characters, and the grey void shows none of the world's light."
+  },
+  "Eo": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A large, menacing black-and-gold serpent that clearly outsizes the ruler, but the noisy mottled surface in A and the glowing yellow body in B that floats into the air with a detached shadow in faint mid/end fall short of the owner bar's naturalistic scale and fur-quality material."
+  },
+  "Wx": {
+   "A": {
+    "bar_a": 2.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky brown-black frames with no purple storm sky, lightning or copper and glass highlights, dense debug-style HUD panels, foliage blocking the camera and flat magenta ring and rectangle telegraphs sink it."
+  },
+  "Js": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The readable creature pair and the stockade backdrop help, but a flat, overly bright olive grade, no sky depth and bodies that hold their pose through STAGGER and hit frames keep it short of Palworld's lively combat."
+  },
+  "Fi": {
+   "A": {
+    "bar_a": 3.9,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "P2-016: hurt and moving frames keep the idle silhouette": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B is clear but frozen, with 16 near-identical frames and no visible fight action; A is hidden behind a foreground bush and a white smoke blob, so neither reads like a living, well-lit Palworld-class encounter."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Author real hit-react, flinch, stagger and locomotion lean animations (an additive hit layer plus body lean when moving) so creatures leave their idle silhouette when hit or moving, and keep faint poses grounded instead of floating",
+   "kind": "new_art"
+  },
+  {
+   "change": "Make the combat camera fight-aware: fade or cull trunks, bushes and canopy between camera and fighters, frame closer with sky and horizon in shot, and replace flat magenta or lilac telegraph rings and cones with physical effects (dust, stones, lightning) that land with an impact",
+   "kind": "scene"
+  },
+  {
+   "change": "Regrade the world toward the key art: tone down the yellow-olive Meadows saturation, add a warm-light, cool-distance value range and fog depth, give Stormwood its purple storm sky with lightning and copper highlights, and trim the debug-style HUD panels",
+   "kind": "scene"
+  }
+ ]
+}

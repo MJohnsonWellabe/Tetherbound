@@ -1,0 +1,46 @@
+{
+ "Yd": {
+  "anchor": false,
+  "label": "G2 south_bridge_grunt f1-16 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-south_bridge_grunt-1-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-south_bridge_grunt-1-cand-Medium.png"
+ },
+ "Rd": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Fn": {
+  "anchor": false,
+  "label": "G2 warden_aldis f1-16 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-warden_aldis-1-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-warden_aldis-1-ship-Medium.png"
+ },
+ "Va": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Eo": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Wx": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Js": {
+  "anchor": false,
+  "label": "G2 south_bridge_grunt f17-32 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-south_bridge_grunt-17-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-south_bridge_grunt-17-ship-Medium.png"
+ },
+ "Fi": {
+  "anchor": false,
+  "label": "G2 warden_aldis f17-32 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-warden_aldis-17-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G2\\sides\\G2-warden_aldis-17-ship-Medium.png"
+ }
+}

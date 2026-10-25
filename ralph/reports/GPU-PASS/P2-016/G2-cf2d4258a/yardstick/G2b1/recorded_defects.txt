@@ -1,0 +1,8 @@
+Yd: "P2-016: hurt and moving frames keep the idle silhouette"
+Rd: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Fn: "P2-016: hurt and moving frames keep the idle silhouette"
+Va: none
+Eo: none
+Wx: none
+Js: "P2-016: hurt and moving frames keep the idle silhouette"
+Fi: "P2-016: hurt and moving frames keep the idle silhouette"
