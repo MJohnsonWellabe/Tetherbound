@@ -211,6 +211,13 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Queued next: a heading probe for band5_stronghold_approach_1 (4.59). Its gameplay and detail cameras press into machinery and a pillar in the courtyard, the same L1 fix as river lock 0.
   - Not delivered yet on tb/meshy-1024: the arch facades, the stronghold hero, the stone_and_root cliffs and the Ironwood canopies. Those tier-1 stands (arch_*, band5_0/1, stone_and_root_1) wait on them after L1 and L2.
 
+- 2026-10-25 11:40 UTC READY (GPU confirm) tier-1 new art r1, CPU A/B vs shipping (`art1024-batch.json`, `art1024-mapped.json`, `_sheet_art1024_r1.png`; key `art1024-key.json`). Three fresh code-blind judges; anchors f36_0_npc:C1, p2_094_r4, craft; calibrate slope 1.64, r 0.98, RMSE 0.31 (confirming batch).
+  - **Arch facades** (`crossing_hall.json arch_facades`): mapped **6.92 vs 5.50** (+1.42). Meets the 6.7 CPU-provisional bar. Judges still flag the violet rims on the unfaced arches (stormwood, biome6–8) next to the new surrounds; r2 below.
+  - **Cliffs** (`meadows_hero_pieces.json cliffs`): mapped **5.93 vs 4.89** (+1.04) at band2_stone_and_root_1. Clears tier 1 (≥5.2 CPU), below 6.7. Remaining: the faceted Burrow hill flank and the ramp slab (terrain, not this asset).
+  - **Gatehouse** (`stronghold.json hero_gatehouse`): **5.44 = 5.44**, no visible change. At 28 m wide it is a speck from band5_0 (550 m) and out of frame at band5_1. Resize round queued.
+  - All three stay OFF until GPU confirms. GPU command, each with its flag set `enabled: true` for the candidate side and `false` for shipping: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=arch_tidewake,arch_cloudreach,arch_biome5,band2_stone_and_root_1 --output=res://<round>`. Recommend turning arch_facades and cliffs ON if GPU agrees (both are clear gains with no judged regression).
+  - Next here: arches r2 (reuse the sealed biome5 surround on biome6–8 and a carved surround on stormwood so no neon rim sits beside a faced arch), gatehouse r2 (larger, until it reads from 550 m), then the cover r2 capture already queued.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
