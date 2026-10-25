@@ -757,7 +757,7 @@
     {
       "enabled": false,
       "preview_arg": "--cloudreach-f40-stone-ground-candidate",
-      "_why": "Judges' shared ask in b2-b4 (sage-grass retint parked at +0.1 after three rounds): break the lawn carpet near the camera with pale stratified stone shelves and scree. r1: the delivered Meshy stratified ledge sunk flush as low shelves either side of the path, plus scree and two outcrops, at the matrix Realm Gate (stand 0) and Summit Eyrie (stand 10) cameras. CPU pre-judge pending.",
+      "_why": "Judges' shared ask in b2-b4 (sage-grass retint parked at +0.1 after three rounds): break the lawn carpet near the camera with pale stratified stone shelves and scree. r1: the delivered Meshy stratified ledge sunk flush as low shelves either side of the path, plus scree and two outcrops, at the matrix Realm Gate (stand 0) and Summit Eyrie (stand 10) cameras. r1 (unjudged, self-look on CPU piece 3): the ledges sunk flush showed their grass lip and read as raised grass slabs, a recorded defect class, so r1b uses the installed strata spire cluster sunk ~1 m as stone shelves of columns either side of the path plus larger scree rocks. CPU pre-judge pending.",
       "overlay": {
         "settlements": {
           "RealmGateCrag": {
@@ -810,44 +810,62 @@
                 "y": -40.5,
                 "pattern": [
                   {
-                    "asset": "strata_ledge",
+                    "asset": "strata_outcrop",
                     "along_m": 1.5,
-                    "lateral_m": 4.6,
-                    "height": 6.0,
+                    "lateral_m": 4.4,
+                    "height": 3.2,
                     "yaw": 90,
-                    "rise_m": -5.3
+                    "rise_m": -1.2
                   },
                   {
-                    "asset": "strata_ledge",
+                    "asset": "strata_outcrop",
                     "along_m": 5.0,
-                    "lateral_m": -4.8,
-                    "height": 6.5,
-                    "yaw": -90,
-                    "rise_m": -5.8
+                    "lateral_m": -4.6,
+                    "height": 3.6,
+                    "yaw": -70,
+                    "rise_m": -1.4
                   },
                   {
-                    "asset": "strata_ledge",
+                    "asset": "strata_outcrop",
                     "along_m": 10.0,
-                    "lateral_m": 6.8,
-                    "height": 8.0,
-                    "yaw": 120,
-                    "rise_m": -6.8
+                    "lateral_m": 6.5,
+                    "height": 4.5,
+                    "yaw": 130,
+                    "rise_m": -1.2,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
                   },
                   {
-                    "asset": "strata_ledge",
+                    "asset": "strata_outcrop",
                     "along_m": 13.0,
-                    "lateral_m": -7.5,
-                    "height": 7.0,
-                    "yaw": -60,
-                    "rise_m": -5.9
+                    "lateral_m": -7.2,
+                    "height": 4.2,
+                    "yaw": -40,
+                    "rise_m": -1.0,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
                   },
                   {
-                    "asset": "cliff_shelf",
+                    "asset": "strata_outcrop",
                     "along_m": -1.5,
-                    "lateral_m": -4.2,
-                    "height": 3.0,
+                    "lateral_m": -4.0,
+                    "height": 2.4,
                     "yaw": 20,
-                    "rise_m": -2.4
+                    "rise_m": -1.0
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 2.5,
+                    "lateral_m": 6.2,
+                    "height": 1.1,
+                    "yaw": 60
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 8.0,
+                    "lateral_m": -5.6,
+                    "height": 1.2,
+                    "yaw": -20
                   },
                   {
                     "asset": "rock_low",
@@ -883,6 +901,13 @@
                     "lateral_m": -3.1,
                     "height": 0.45,
                     "yaw": 15
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 11.0,
+                    "lateral_m": 3.6,
+                    "height": 0.55,
+                    "yaw": 75
                   },
                   {
                     "asset": "strata_outcrop",
@@ -917,44 +942,62 @@
                 "y": 0.0,
                 "pattern": [
                   {
-                    "asset": "strata_ledge",
+                    "asset": "strata_outcrop",
                     "along_m": 1.5,
-                    "lateral_m": 4.6,
-                    "height": 6.0,
+                    "lateral_m": 4.4,
+                    "height": 3.2,
                     "yaw": 90,
-                    "rise_m": -5.3
+                    "rise_m": -1.2
                   },
                   {
-                    "asset": "strata_ledge",
+                    "asset": "strata_outcrop",
                     "along_m": 5.0,
-                    "lateral_m": -4.8,
-                    "height": 6.5,
-                    "yaw": -90,
-                    "rise_m": -5.8
+                    "lateral_m": -4.6,
+                    "height": 3.6,
+                    "yaw": -70,
+                    "rise_m": -1.4
                   },
                   {
-                    "asset": "strata_ledge",
+                    "asset": "strata_outcrop",
                     "along_m": 10.0,
-                    "lateral_m": 6.8,
-                    "height": 8.0,
-                    "yaw": 120,
-                    "rise_m": -6.8
+                    "lateral_m": 6.5,
+                    "height": 4.5,
+                    "yaw": 130,
+                    "rise_m": -1.2,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
                   },
                   {
-                    "asset": "strata_ledge",
+                    "asset": "strata_outcrop",
                     "along_m": 13.0,
-                    "lateral_m": -7.5,
-                    "height": 7.0,
-                    "yaw": -60,
-                    "rise_m": -5.9
+                    "lateral_m": -7.2,
+                    "height": 4.2,
+                    "yaw": -40,
+                    "rise_m": -1.0,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
                   },
                   {
-                    "asset": "cliff_shelf",
+                    "asset": "strata_outcrop",
                     "along_m": -1.5,
-                    "lateral_m": -4.2,
-                    "height": 3.0,
+                    "lateral_m": -4.0,
+                    "height": 2.4,
                     "yaw": 20,
-                    "rise_m": -2.4
+                    "rise_m": -1.0
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 2.5,
+                    "lateral_m": 6.2,
+                    "height": 1.1,
+                    "yaw": 60
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 8.0,
+                    "lateral_m": -5.6,
+                    "height": 1.2,
+                    "yaw": -20
                   },
                   {
                     "asset": "rock_low",
@@ -990,6 +1033,13 @@
                     "lateral_m": -3.1,
                     "height": 0.45,
                     "yaw": 15
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 11.0,
+                    "lateral_m": 3.6,
+                    "height": 0.55,
+                    "yaw": 75
                   },
                   {
                     "asset": "strata_outcrop",
@@ -1068,44 +1118,62 @@
                 "y": 0.0,
                 "pattern": [
                   {
-                    "asset": "strata_ledge",
+                    "asset": "strata_outcrop",
                     "along_m": 1.5,
-                    "lateral_m": 4.6,
-                    "height": 6.0,
+                    "lateral_m": 4.4,
+                    "height": 3.2,
                     "yaw": 90,
-                    "rise_m": -5.3
+                    "rise_m": -1.2
                   },
                   {
-                    "asset": "strata_ledge",
+                    "asset": "strata_outcrop",
                     "along_m": 5.0,
-                    "lateral_m": -4.8,
-                    "height": 6.5,
-                    "yaw": -90,
-                    "rise_m": -5.8
+                    "lateral_m": -4.6,
+                    "height": 3.6,
+                    "yaw": -70,
+                    "rise_m": -1.4
                   },
                   {
-                    "asset": "strata_ledge",
+                    "asset": "strata_outcrop",
                     "along_m": 10.0,
-                    "lateral_m": 6.8,
-                    "height": 8.0,
-                    "yaw": 120,
-                    "rise_m": -6.8
+                    "lateral_m": 6.5,
+                    "height": 4.5,
+                    "yaw": 130,
+                    "rise_m": -1.2,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
                   },
                   {
-                    "asset": "strata_ledge",
+                    "asset": "strata_outcrop",
                     "along_m": 13.0,
-                    "lateral_m": -7.5,
-                    "height": 7.0,
-                    "yaw": -60,
-                    "rise_m": -5.9
+                    "lateral_m": -7.2,
+                    "height": 4.2,
+                    "yaw": -40,
+                    "rise_m": -1.0,
+                    "scale_min": 0.8,
+                    "scale_max": 1.2
                   },
                   {
-                    "asset": "cliff_shelf",
+                    "asset": "strata_outcrop",
                     "along_m": -1.5,
-                    "lateral_m": -4.2,
-                    "height": 3.0,
+                    "lateral_m": -4.0,
+                    "height": 2.4,
                     "yaw": 20,
-                    "rise_m": -2.4
+                    "rise_m": -1.0
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 2.5,
+                    "lateral_m": 6.2,
+                    "height": 1.1,
+                    "yaw": 60
+                  },
+                  {
+                    "asset": "rock",
+                    "along_m": 8.0,
+                    "lateral_m": -5.6,
+                    "height": 1.2,
+                    "yaw": -20
                   },
                   {
                     "asset": "rock_low",
@@ -1141,6 +1209,13 @@
                     "lateral_m": -3.1,
                     "height": 0.45,
                     "yaw": 15
+                  },
+                  {
+                    "asset": "rock_low",
+                    "along_m": 11.0,
+                    "lateral_m": 3.6,
+                    "height": 0.55,
+                    "yaw": 75
                   },
                   {
                     "asset": "strata_outcrop",
