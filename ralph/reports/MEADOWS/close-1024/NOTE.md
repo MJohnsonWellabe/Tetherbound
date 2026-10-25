@@ -317,6 +317,12 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - **MESHY:** none of the eight requested assets is on tb/meshy-1024 yet (checked 14:42, 15:14 and 16:16): burrow mound, lock-yard paving, quarry blocks, home arch, war banner, lit keep, Stormwood arch, giant ironwood. I wire each OFF on delivery and post a CPU A/B READY.
   - tb/meadows has origin/main merged (0fe451688).
 
+- 2026-10-25 17:49 UTC READY tb/meadows-land12 a634da3791 (from origin/main 0fe451688): **use this in place of land10 for the queued GPU hero run.**
+  - land10 and land7 carried a leaked capture trim (committed in a3f1e8cfc). It limited band2_stone_and_root_1, band5_stronghold_approach_0 and farm_to_hall to the approach and gameplay views, so a GPU run on land10 would skip their reverse and detail views.
+  - land12 is land10 without that trim. The deliberate detail-only arch views stay.
+  - Hero run: land11 + land12 + land3, with the GPU command in the land11 READY.
+  - Coordinator's 17:46 note received: eight MESHY assets generating. I wire each OFF on delivery.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
