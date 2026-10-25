@@ -126,6 +126,39 @@ Verdict: **still not PR #738.** One failure is the race fixed in 7e7e2e84; the o
   - Unmodified main's smoke hit the same failure in base b1 (Follow-up 2), so it is about 2 in 18 local runs and predates #738 and these fixes.
   - Not fixed here: it needs an owner-level choice on top-ups, or a tougher fixture, for the friendly phase. Proposal: before the friendly loop, stop with a clear "teammate creature fainted before the friendly phase" detail instead of the misleading friendly_target failure, or re-deploy a live creature for peer 0.
 
+## Follow-up 5: shared_boss "host creature fainted before the friendly phase", root cause (no change yet)
+
+- **Measured:** 8 runs, two at a time, of a temporary copy of the branch smoke (main plus 7e7e2e84 and 7b85a73a) with HP prints at each phase boundary.
+  - The host's creature has about 134 HP (the guest's reads 134.4) and each boss hit costs about 15.5.
+  - "after_mover_N" below means after pilot N (0 = host, 1 = guest) has landed its blow on the boss.
+
+| run | after first_down | after host's half (boss hits on host) | after guest's half (boss hits on host) | friendly |
+|---|---|---|---|---|
+| d1 | 85.0 | 37.0 (3) | **0.0** (4th hit, during the guest's half) | FAIL (fainted) |
+| d2 | 84.5 | 55.4 (2) | 24.3 (4) | pass |
+| d3 | 89.2 | 72.5 (1) | 42.1 (3) | pass |
+| d4 | 81.7 | 49.8 (2) | 34.3 (3) | see below |
+| d5 | 90.0 | 58.9 (2) | 43.7 (3) | pass |
+| d6 | 84.1 | 67.9 (1) | 52.8 (2) | pass |
+| d7 | 89.6 | 74.1 (1) | 58.9 (2) | pass |
+| d8 | 81.9 | 49.4 (2) | 49.4 (2), 34.6 at the swing | pass |
+
+- **Root cause:** the boss's landed hits all go to the host's creature.
+  - `struck_counts` only ever names peer 1, and the guest's creature stays at 134.4 except in d1.
+  - `pick_struck` spreads only among candidates its swing reaches (`encounter_host.gd:1482`), so the least-struck rule never shares the load here.
+  - The host's creature is left standing beside the boss (at -NEAR_Z from its own half) through the whole guest's half and still takes 0–2 hits there (6 of 8 runs).
+  - With top-ups off it reaches the friendly phase with 24–59 HP, a 1.5–3.8 hit margin. When the host's half runs long (d1: 3 hits), the guest's half finishes it.
+  - Measured rate: 1/8 here, 2/18 before (b1, n5). It is the same on main; not #738.
+- **A timer would not help.** Each damage half already ends on its first landed blow. Capping attempts only trades this failure for the "landed a blow" assertion failing.
+- **Options (tell me which):**
+  - **A (recommended):** move the host's creature out of the boss's reach before the guest's half (one `place_creature` on peer 0, at the far side of the ring), so the boss's swings during that half have no host candidate.
+    - Staging only. It keeps the smoke's stated rule "the fight driver supplies no self-HP top-ups in any of this smoke's modes", and no assertion changes.
+    - Risk: the boss AI may chase the host's creature. That needs a trial, with HP prints showing 0 host hits during the guest's half.
+  - **B:** one bounded typed heal of the host's creature before the friendly phase, through the disclosed fixture provider `tools/net/f48_actor_topup.gd` (the durable save/ACK path win_trainer_battle already uses).
+    - Most deterministic, but it reverses the smoke's explicit no-top-ups rule, so it needs your (or the owner's) call.
+  - **C:** run the friendly half before the boss-damage half (the host's creature is at 82–90 HP then). This is a larger reorder of the smoke's narrative.
+- **Separate new flake seen in d4:** "both peers draw the same boss health bar after it (host 214.717, guest 222.109)". The guest's boss HP was read before the second blow replicated; it is a single read with no wait. A small poll, like the refusal wait, would fix it. Say if you want that too.
+
 ## TO COORDINATOR
 
-READY tb/netfix-wedge (head = this note commit): shared_boss fixes 7e7e2e84 (pre-resolve refusal race) + 7b85a73a (seat an out-of-ring guest, re-aim an unheld stand, ring diagnostics). Validated on 590973c7: forced failure-2 geometry 2/2 (plus a forced unheld stand 1/1, pre-seat build); normal runs 12/13 across two batches (7/7 pre-seat build, 5/6 final); the one failure is the separate pre-existing 'host creature fainted before the friendly phase' failure, which unmodified main also hit. Fix 7e7e2e84 (shared_boss re-stages a swing the host refused before resolving, pending_vitals or move_start_required; a test race, not PR #738). Earlier fixes: 294e6709 boss_rewards, 19a1733e client_trainer_rewards. origin/main f7b9b6a1 merged in. Root cause: tests/smoke_net_boss_rewards_each_participant.gd:194 sent its 6000-frame budget only as the step deadline. tools/net/peer_runner.gd:4395 bounds the win arm by args.budget_frames (default 2160 effective), so a slow 37-swing CI fight timed out 0.6 s into a normal final-round settlement. There was no owner-passive race; the "released then re-held" log pair is round 1 and round 2 sharing one hold key. Fix: pass args budget_frames 6000 with step 6400. Results: the CI signature reproduced locally at budget 1650; boss_rewards 6/6 local passes after the fix, run in parallel pairs. client_trainer_rewards got the same gap fixed (budget_frames 4000 / step 12600) and passed 3/3 locally. Unit suites not run (no production change).
+VERDICT (Follow-up 5): the 'fainted before friendly' failure is the boss concentrating every landed hit on the host's idle creature through the guest's damage half. Options A/B/C await your choice; no change made. Previously READY: shared_boss fixes 7e7e2e84 (pre-resolve refusal race) + 7b85a73a (seat an out-of-ring guest, re-aim an unheld stand, ring diagnostics). Validated on 590973c7: forced failure-2 geometry 2/2 (plus a forced unheld stand 1/1, pre-seat build); normal runs 12/13 across two batches (7/7 pre-seat build, 5/6 final); the one failure is the separate pre-existing 'host creature fainted before the friendly phase' failure, which unmodified main also hit. Fix 7e7e2e84 (shared_boss re-stages a swing the host refused before resolving, pending_vitals or move_start_required; a test race, not PR #738). Earlier fixes: 294e6709 boss_rewards, 19a1733e client_trainer_rewards. origin/main f7b9b6a1 merged in. Root cause: tests/smoke_net_boss_rewards_each_participant.gd:194 sent its 6000-frame budget only as the step deadline. tools/net/peer_runner.gd:4395 bounds the win arm by args.budget_frames (default 2160 effective), so a slow 37-swing CI fight timed out 0.6 s into a normal final-round settlement. There was no owner-passive race; the "released then re-held" log pair is round 1 and round 2 sharing one hold key. Fix: pass args budget_frames 6000 with step 6400. Results: the CI signature reproduced locally at budget 1650; boss_rewards 6/6 local passes after the fix, run in parallel pairs. client_trainer_rewards got the same gap fixed (budget_frames 4000 / step 12600) and passed 3/3 locally. Unit suites not run (no production change).
