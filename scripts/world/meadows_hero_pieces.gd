@@ -3,7 +3,8 @@ extends RefCounted
 ## F38 tier-1 new art (close-1024, OFF until judged): authored Meshy hero pieces
 ## placed in Meadows world coordinates -- the stratified cliffs that replace the
 ## read of the Burrow bank's faceted planes (P2-014, band2_stone_and_root_1)
-## and the Ironwood hero trees (band4). Each GLB is scaled uniformly to its
+## and the Ironwood hero trees (band4), plus any later group with `pieces`
+## (the dominant-object assets). Each GLB is scaled uniformly to its
 ## `width_m`, stood on the terrain at its `at` (x, z) and buried by `sink_m`.
 ## Visual only: no collision, walkability, vegetation-placement or bake change.
 
@@ -19,8 +20,12 @@ static func settings() -> Dictionary:
 static func build(world: Node3D) -> int:
 	var cfg := settings()
 	var built := 0
-	for group: String in ["cliffs", "ironwood"]:
-		var block: Dictionary = cfg.get(group, {})
+	# Every block with `pieces` is a group under its own flag (cliffs, ironwood,
+	# and each later dominant-object asset), so a new one is config only.
+	for group: String in cfg.keys():
+		if not (cfg[group] is Dictionary) or not (cfg[group] as Dictionary).has("pieces"):
+			continue
+		var block: Dictionary = cfg[group]
 		if not bool(block.get("enabled", false)):
 			continue
 		for row: Dictionary in block.get("pieces", []):

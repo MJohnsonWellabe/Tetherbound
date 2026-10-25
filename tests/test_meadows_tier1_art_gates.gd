@@ -18,8 +18,9 @@ func test_shipping_configs_gate_the_new_art() -> void:
 	assert_true(bool(_block("res://data/config/crossing_hall.json", "arch_facades").get("enabled", false)), "facades judged passing ship ON")
 	assert_false(bool(_block("res://data/config/stronghold.json", "hero_gatehouse").get("enabled", true)))
 	var pieces := HERO_PIECES.settings()
-	for group: String in ["cliffs", "ironwood"]:
-		assert_false(bool((pieces.get(group, {}) as Dictionary).get("enabled", true)), group + " stays OFF")
+	for group: String in pieces.keys():
+		if pieces[group] is Dictionary and (pieces[group] as Dictionary).has("pieces"):
+			assert_false(bool((pieces[group] as Dictionary).get("enabled", true)), group + " stays OFF")
 
 
 func test_off_builders_add_nothing() -> void:
