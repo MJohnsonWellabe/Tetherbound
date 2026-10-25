@@ -380,6 +380,7 @@ var _combat_flinch_art: Node3D = null
 var _combat_flinch_target: Node3D = null
 var _combat_flinch_rest_position := Vector3.ZERO
 var _combat_flinch_rest_rotation := Vector3.ZERO
+var _combat_flinch_length := -1.0
 var _combat_hitstop_active := false
 var _combat_hitstop_physics_was_active := true
 
@@ -497,6 +498,7 @@ func suspend_visuals(bounds: AABB) -> bool:
 	_model.visible = false
 	_clear_combat_flinch()
 	_combat_flinch_art = null
+	_combat_flinch_length = -1.0
 	_animator = null
 	_disconnect_rest_pose_signal()
 	_rest_pose_skeleton = null
@@ -704,6 +706,7 @@ func _build_placeholder() -> void:
 	_suspended_render_bounds = AABB()
 	_clear_combat_flinch()
 	_combat_flinch_art = null
+	_combat_flinch_length = -1.0
 	if _rest_pose_active or _rest_pose_pending:
 		stop_rest()
 	var look: Dictionary = SPECIES.placeholder(species_id).duplicate(true)
@@ -789,6 +792,7 @@ func _build_model(look: Dictionary) -> bool:
 		art.scale.z *= length_factor
 		_render_half_extents.y *= length_factor
 	_combat_flinch_art = art
+	_combat_flinch_length = -1.0
 
 	# Sourced models point in whatever direction their author chose, and there
 	# is no convention to rely on. Combat faces creatures along +Z (`facing()`),
@@ -2502,13 +2506,16 @@ func hold_combat_wince(seconds: float) -> bool:
 
 
 const FLINCH_SHOVE_PER_M := 0.11
-const FLINCH_SINK_PER_M := 0.02
-const FLINCH_LEAN_DEG := 8.0
 const FLINCH_MIN_HEIGHT := 0.8
 const FLINCH_MAX_HEIGHT := 4.0
 const FLINCH_OUT_S := 0.06
 const FLINCH_HOLD_S := 0.14
 const FLINCH_BACK_S := 0.2
+## P2-016 G4 fallback (GPU, 25 Oct): the head drops about a third of the
+## body's height, pitched nose-down about the hindquarters, so the flinch
+## reads from the high grunt camera and past the contact disc.
+const FLINCH_HEAD_DROP_FRACTION := 0.33
+const FLINCH_MAX_DIP_DEG := 25.0
 
 ## Recoil stays visual, never moving collision or attack geometry. Enabled
 ## hurt clips own Model's grounded transform, so their additive recoil uses
@@ -2525,20 +2532,37 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
 	var recoil_parent := _combat_flinch_target.get_parent() as Node3D
 	var local_away := recoil_parent.global_basis.inverse() * away.normalized()
 	# P2-016 (GPU, 25 Oct): a fixed 0.14 m shove over 0.16 s vanished between
-	# 0.15 s fight frames and beside 2-3 m bodies. Scale the shove and a sink
-	# with the body, lean it away from the blow, and hold it briefly.
+	# 0.15 s fight frames and beside 2-3 m bodies. Scale the shove with the
+	# body, drop the head (FLINCH_HEAD_DROP_FRACTION) and hold it briefly.
 	var size := clampf(_height, FLINCH_MIN_HEIGHT, FLINCH_MAX_HEIGHT)
-	var recoil := Vector3(local_away.x, 0.0, local_away.z) * FLINCH_SHOVE_PER_M * size \
-		+ Vector3(0.0, -FLINCH_SINK_PER_M * size, 0.0)
-	var lean := deg_to_rad(FLINCH_LEAN_DEG) * (-1.0 if local_away.x < 0.0 else 1.0)
+	var recoil := Vector3(local_away.x, 0.0, local_away.z) * FLINCH_SHOVE_PER_M * size
+	var rest := _combat_flinch_target.transform
+	var dipped := rest
+	var forward := recoil_parent.global_basis.inverse() * facing()
+	forward.y = 0.0
+	var length := _combat_flinch_body_length()
+	if forward.length() > 0.01 and length > 0.01:
+		forward = forward.normalized()
+		var dip := minf(asin(clampf(FLINCH_HEAD_DROP_FRACTION * _height / length, 0.0, 1.0)),
+			deg_to_rad(FLINCH_MAX_DIP_DEG))
+		# Turning about forward x up by -dip lowers the forward end; shifting by
+		# pivot - R * pivot keeps the hindquarters where they stood.
+		var turn := Basis(forward.cross(Vector3.UP).normalized(), -dip)
+		var pivot := rest.origin - forward * length * 0.5
+		dipped = Transform3D(turn * rest.basis, pivot + turn * (rest.origin - pivot))
+	dipped.origin += recoil
 	_combat_flinch_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
-	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position + recoil, FLINCH_OUT_S).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(-7.0), FLINCH_OUT_S)
-	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:z", _combat_flinch_rest_rotation.z + lean, FLINCH_OUT_S)
+	_combat_flinch_tween.tween_property(_combat_flinch_target, "transform", dipped, FLINCH_OUT_S).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	_combat_flinch_tween.tween_interval(FLINCH_HOLD_S)
-	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position, FLINCH_BACK_S).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x, FLINCH_BACK_S)
-	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:z", _combat_flinch_rest_rotation.z, FLINCH_BACK_S)
+	_combat_flinch_tween.tween_property(_combat_flinch_target, "transform", rest, FLINCH_BACK_S).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+
+
+## Nose-to-tail length of the recoiling art, measured once as it renders.
+func _combat_flinch_body_length() -> float:
+	if _combat_flinch_length < 0.0 and is_instance_valid(_combat_flinch_target):
+		var box := _combat_flinch_target.transform * _bounds(_combat_flinch_target)
+		_combat_flinch_length = maxf(box.size.x, box.size.z)
+	return maxf(_combat_flinch_length, 0.0)
 
 
 func _clear_combat_flinch() -> void:
