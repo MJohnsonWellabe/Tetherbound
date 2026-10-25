@@ -60,12 +60,29 @@ static func _place(world: Node3D, row: Dictionary, group: String) -> bool:
 	pivot.position = Vector3(-bounds.get_center().x, -bounds.position.y, -bounds.get_center().z) * fit
 	# `height_m` flattens a piece vertically (the paving tile is about a quarter
 	# as thick as it is wide); the holder only yaws, so its y stays world-up.
+	var flatten := 1.0
 	if row.has("height_m") and bounds.size.y > 0.001:
-		holder.scale = Vector3(1.0, float(row["height_m"]) / (bounds.size.y * fit), 1.0)
+		flatten = float(row["height_m"]) / (bounds.size.y * fit)
 	var at: Array = row.get("at", [0.0, 0.0])
 	var x := float(at[0])
 	var z := float(at[1])
-	var ground := float(world.call("ground_height_at", x, z)) if world.has_method("ground_height_at") else 0.0
-	holder.position = Vector3(x, ground - float(row.get("sink_m", 0.0)), z)
-	holder.rotation.y = deg_to_rad(float(row.get("yaw_deg", 0.0)))
+	var ground := _ground(world, x, z)
+	var basis := Basis(Vector3.UP, deg_to_rad(float(row.get("yaw_deg", 0.0))))
+	# `conform` tilts a flat piece (a paving tile) to the ground under it, from
+	# four samples at its half-width, so tiles follow a sloped yard instead of
+	# stepping into floating slabs.
+	if bool(row.get("conform", false)):
+		var half := float(row.get("width_m", 10.0)) * 0.5
+		var dx := (_ground(world, x + half, z) - _ground(world, x - half, z)) / (2.0 * half)
+		var dz := (_ground(world, x, z + half) - _ground(world, x, z - half)) / (2.0 * half)
+		var normal := Vector3(-dx, 1.0, -dz).normalized()
+		basis = Basis(Quaternion(Vector3.UP, normal)) * basis
+		ground = (_ground(world, x + half, z) + _ground(world, x - half, z)
+			+ _ground(world, x, z + half) + _ground(world, x, z - half)) * 0.25
+	holder.transform = Transform3D(basis * Basis.from_scale(Vector3(1.0, flatten, 1.0)),
+		Vector3(x, ground - float(row.get("sink_m", 0.0)), z))
 	return true
+
+
+static func _ground(world: Node3D, x: float, z: float) -> float:
+	return float(world.call("ground_height_at", x, z)) if world.has_method("ground_height_at") else 0.0
