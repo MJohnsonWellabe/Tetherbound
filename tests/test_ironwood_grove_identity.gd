@@ -307,9 +307,19 @@ func test_r13_has_an_owner_scaled_textured_world_tree_clear_of_the_workyard_and_
 		"Ironwood lost both its selected model and procedural fallback silhouette")
 	var hero_node := presentation.get_node_or_null(^"AncientIronwoodHero") as Node3D
 	var hero_meshes := hero_node.find_children("*", "MeshInstance3D", true, false) if hero_node != null else []
-	assert_true(not hero_meshes.is_empty()
-		and (hero_meshes[0] as MeshInstance3D).material_override is ShaderMaterial,
-		"R13 did not apply its texture-preserving Ironwood colour grade to the installed mesh")
+	# F38 close-1024 (GPU MH2, +0.84/+0.88): with hero_tree.model_candidate ON
+	# the Meshy landmark replaces the R13 model and keeps its own textured
+	# material instead of the R13 colour-grade shader.
+	var hero_cfg := (JSON.parse_string(FileAccess.get_file_as_string(PRESENTATION_PATH)) as Dictionary).get("hero_tree", {}) as Dictionary
+	if bool((hero_cfg.get("model_candidate", {}) as Dictionary).get("enabled", false)):
+		var surface := (hero_meshes[0] as MeshInstance3D).get_active_material(0) if not hero_meshes.is_empty() else null
+		assert_true(bool(stats.get("hero_model_installed", false)) and surface is BaseMaterial3D
+			and (surface as BaseMaterial3D).albedo_texture != null,
+			"the GPU-approved Meshy landmark did not install with its own textured material")
+	else:
+		assert_true(not hero_meshes.is_empty()
+			and (hero_meshes[0] as MeshInstance3D).material_override is ShaderMaterial,
+			"R13 did not apply its texture-preserving Ironwood colour grade to the installed mesh")
 	assert_true(int(stats.get("arrival_stations", 0)) >= 24,
 		"R6 lost the continuous terrain-conforming worn arrival")
 	assert_true(int(stats.get("workyard_structures", 0)) >= 4
