@@ -47,6 +47,10 @@ static func for_trainer(id: String) -> Dictionary:
 	# Presentation only: r14/r15 stay OFF until the fixed-camera judge passes.
 	# Override the site object alone; defeat flags and rewards are untouched.
 	var sites: Dictionary = cfg.get("visual_candidate_sites", {})
+	# F04#6 r31 (OFF until judged): the Meshy aftermath heroes replace whole sites.
+	if bool(cfg.get("meshy_heroes_enabled", false)) and cfg.get("meshy_heroes") is Dictionary:
+		sites = sites.duplicate()
+		sites.merge(cfg.meshy_heroes as Dictionary, true)
 	if bool(cfg.get("visual_candidate_enabled", false)) and not entry.is_empty() and sites.get(id) is Dictionary:
 		entry = entry.duplicate(true)
 		entry["site_object"] = (sites[id] as Dictionary).duplicate(true)
