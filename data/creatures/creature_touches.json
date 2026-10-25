@@ -1,67 +1,85 @@
 {
-  "_comment": "Owner 24 Oct 2026 creature touches: 'adding some energy, some elemental effects, and some war torn appearance or hardened appearance to give the unique but still realistic look. Don't go overboard.' One or two light touches per species on the existing model, a small part of the body, realistic first; no red/oxblood. Baked into the remake's own albedo by tools/art_pipeline/creature_touch.py (overlays as in tools/creature_overlays.py, placed by the anatomy map: unit y = height, z = length with the head near 0.85-1.0, radial = distance from the body axis).",
-  "mudsnout": {
-    "source_model": "mudsnout/candidate_nat1024",
-    "also": [
-      "mudsnout/candidate_nat1024t"
-    ],
-    "overlays": [
-      {
-        "id": "hardened_shoulder_hide",
-        "_why": "Hardened: a darker, mud-crusted shield of hide over the shoulders, the way a wallowing boar's shoulders cake and toughen.",
-        "where": {
-          "z_min": 0.55,
-          "z_max": 0.8,
-          "y_min": 0.35
-        },
-        "mode": "shade",
-        "val_scale": 0.42,
-        "sat_scale": 0.65,
-        "coverage": 0.9,
-        "grain": 3.5,
-        "clump_softness": 0.16,
-        "softness": 0.14
-      },
-      {
-        "id": "snout_scar",
-        "_why": "War-torn: a pale scar line across the snout and cheek.",
-        "where": {
-          "z_min": 0.86,
-          "y_min": 0.3,
-          "y_max": 0.7
-        },
-        "mode": "shade",
-        "val_scale": 1.9,
-        "sat_scale": 0.3,
-        "coverage": 0.45,
-        "grain": 6.0,
-        "clump_softness": 0.04,
-        "softness": 0.05,
-        "ring": 3
-      }
-    ],
-    "_why_gpu_1024": "GPU A+C (24 Oct): invisible at stage distance and 'a plain real-world boar'. Bolder hardened hide and scar, plus amber earth-glow seams cracking the shoulder hide (glow); the tusks are the nat1024t build.",
-    "_why_close1024_b26": "b26 (CPU, three judges): the amber seam shell read as gold glitter or an artefact on fur (-0.6 mapped), so the glow is off; the bolder weathering stays for b27."
-  },
-  "terrapup": {
-    "source_model": "terrapup/candidate_dog3",
-    "_why": "b26 judges read dog3's coat as orange-red (red is Team Tether's). Pull the chestnut toward brown: less saturation, value unchanged.",
-    "overlays": [
-      {
-        "id": "chestnut_not_red",
-        "mode": "shade",
-        "sat_scale": 0.72,
-        "val_scale": 0.97,
-        "match": {
-          "hue": [
-            0,
-            40
-          ],
-          "sat_min": 0.3
-        },
-        "softness": 0.05
-      }
-    ]
-  },
-  "_why_close1024_b27_trailpup": "b27 (CPU, three judges, confirming batch): Trailpup's bolder weathering mapped 7.51 against shipping 7.88. The pale scar lines read as a texture seam on the shoulder and foreleg. Trailpup stays on its shipping albedo; the b24 light touch was score-neutral and invisible at stage distance."
+ "_comment": "Owner 24 Oct 2026 creature touches: 'adding some energy, some elemental effects, and some war torn appearance or hardened appearance to give the unique but still realistic look. Don't go overboard.' One or two light touches per species on the existing model, a small part of the body, realistic first; no red/oxblood. Baked into the remake's own albedo by tools/art_pipeline/creature_touch.py (overlays as in tools/creature_overlays.py, placed by the anatomy map: unit y = height, z = length with the head near 0.85-1.0, radial = distance from the body axis).",
+ "mudsnout": {
+  "source_model": "mudsnout/candidate_nat1024",
+  "also": [
+   "mudsnout/candidate_nat1024t"
+  ],
+  "overlays": [
+   {
+    "id": "hardened_shoulder_hide",
+    "_why": "Hardened: a darker, mud-crusted shield of hide over the shoulders, the way a wallowing boar's shoulders cake and toughen.",
+    "where": {
+     "z_min": 0.55,
+     "z_max": 0.8,
+     "y_min": 0.35
+    },
+    "mode": "shade",
+    "val_scale": 0.42,
+    "sat_scale": 0.65,
+    "coverage": 0.9,
+    "grain": 3.5,
+    "clump_softness": 0.16,
+    "softness": 0.14
+   },
+   {
+    "id": "snout_scar",
+    "_why": "War-torn: a pale scar line across the snout and cheek.",
+    "where": {
+     "z_min": 0.86,
+     "y_min": 0.3,
+     "y_max": 0.7
+    },
+    "mode": "shade",
+    "val_scale": 1.9,
+    "sat_scale": 0.3,
+    "coverage": 0.45,
+    "grain": 6.0,
+    "clump_softness": 0.04,
+    "softness": 0.05,
+    "ring": 3
+   }
+  ],
+  "_why_gpu_1024": "GPU A+C (24 Oct): invisible at stage distance and 'a plain real-world boar'. Bolder hardened hide and scar, plus amber earth-glow seams cracking the shoulder hide (glow); the tusks are the nat1024t build.",
+  "_why_close1024_b26": "b26 (CPU, three judges): the amber seam shell read as gold glitter or an artefact on fur (-0.6 mapped), so the glow is off; the bolder weathering stays for b27."
+ },
+ "terrapup": {
+  "source_model": "terrapup/candidate_dog3",
+  "_why": "b26 judges read dog3's coat as orange-red (red is Team Tether's). Pull the chestnut toward brown: less saturation, value unchanged.",
+  "overlays": [
+   {
+    "id": "chestnut_not_red",
+    "mode": "shade",
+    "sat_scale": 0.72,
+    "val_scale": 0.97,
+    "match": {
+     "hue": [
+      0,
+      40
+     ],
+     "sat_min": 0.3
+    },
+    "softness": 0.05
+   },
+   {
+    "id": "plates_into_fur",
+    "_why": "Tier 3 (coordinator queue): the green stone plates read as stuck-on stones over the coat. Desaturate and darken them toward a weathered, earth-grey stone, so they read as hardened plates grown into the fur.",
+    "match": {
+     "hue": [
+      70,
+      175
+     ],
+     "sat_min": 0.1
+    },
+    "mode": "shade",
+    "sat_scale": 0.42,
+    "val_scale": 0.74,
+    "coverage": 0.95,
+    "grain": 3.0,
+    "clump_softness": 0.2,
+    "softness": 0.15
+   }
+  ]
+ },
+ "_why_close1024_b27_trailpup": "b27 (CPU, three judges, confirming batch): Trailpup's bolder weathering mapped 7.51 against shipping 7.88. The pale scar lines read as a texture seam on the shoulder and foreleg. Trailpup stays on its shipping albedo; the b24 light touch was score-neutral and invisible at stage distance."
 }

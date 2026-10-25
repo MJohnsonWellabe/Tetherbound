@@ -85,13 +85,15 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
     rotate('front_upper_'+side,-30*pulse);rotate('front_lower_'+side,25*pulse)
    rotate('head',-10*pulse);rotate('spine',-4*pulse)
   if role=='hit':
-   # F36#1 roster r1 judges: the rear-back shove read as a leap or a lunge. A
-   # recoil instead: the head snaps up and away, the chest pulls back and leans
-   # aside, the feet stay planted (the grounding below keeps them on the floor).
+   # F36#1 roster r1 judges: the rear-back shove read as a leap or a lunge.
    e=min(1,t/.12);e=e*e*(3-2*e)
    r=max(0,min(1,(t-.5)/.47));e*=1-r*r*(3-2*r)
-   turn('root',[(REAR*4*e,(1,0,0)),(9*e,(0,1,0))]);rotate('spine',REAR*6*e)
-   rotate('neck',NOD*18*e);turn('head',[(NOD*8*e,(1,0,0)),(22*e,(0,0,1))])
+   # P2-016 (25 Oct): the head-up recoil still read as rearing in real fights.
+   # Cower instead, as the other remakes: the head ducks low and aside, the
+   # body rolls away from the blow and the tail tucks, feet planted.
+   turn('root',[(12*e,(0,1,0))]);turn('spine',[(-8*e,(0,0,1))])
+   turn('neck',[(-NOD*30*e,(1,0,0)),(-14*e,(0,0,1))]);turn('head',[(-NOD*14*e,(1,0,0)),(14*e,(0,1,0))])
+   rotate('tail_1',-25*e)
   if role=='faint':
    # close-1024 b26 judges (three of three): the +90 roll (belly, pads and legs to
    # camera) read as the listed belly-up flip; the -90 roll lying prone with the
