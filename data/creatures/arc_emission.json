@@ -13,6 +13,45 @@
    "blur_px": 6.0,
    "soften_px": 1.0,
    "gain": 1.6
+  },
+  "staticub": {
+   "_why": "Coordinator 25 Oct (order 4, 'check every other storm creature'): lightning painted into the albedo with no emissive map (scan of every electric species, close-1024 note).",
+   "model": "assets/creatures/tetherbound/staticub/models/creature_staticub_lod0.glb",
+   "hue": [
+    230,
+    295
+   ],
+   "sat_min": 0.3,
+   "lift": 0.15,
+   "blur_px": 6.0,
+   "soften_px": 1.0,
+   "gain": 1.6
+  },
+  "thundertunnel": {
+   "_why": "Coordinator 25 Oct (order 4, 'check every other storm creature'): lightning painted into the albedo with no emissive map (scan of every electric species, close-1024 note).",
+   "model": "assets/creatures/tetherbound/thundertunnel/models/creature_thundertunnel_lod0.glb",
+   "hue": [
+    230,
+    295
+   ],
+   "sat_min": 0.3,
+   "lift": 0.15,
+   "blur_px": 6.0,
+   "soften_px": 1.0,
+   "gain": 1.6
+  },
+  "voltarach": {
+   "_why": "Coordinator 25 Oct (order 4, 'check every other storm creature'): lightning painted into the albedo with no emissive map (scan of every electric species, close-1024 note). Its lightning is the gold vein network.",
+   "model": "assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native.glb",
+   "hue": [
+    30,
+    60
+   ],
+   "sat_min": 0.5,
+   "lift": 0.12,
+   "blur_px": 6.0,
+   "soften_px": 1.0,
+   "gain": 1.3
   }
  }
 }
