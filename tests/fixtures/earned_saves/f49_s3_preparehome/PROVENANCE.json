@@ -1,0 +1,12 @@
+{
+ "piece": "f49_s3_preparehome",
+ "runner": "tide",
+ "segment_or_profile": "training_t5_preparehome",
+ "from": "tests/fixtures/earned_saves/f49_s3_rowan_chest",
+ "source_commit": "6fc5c4b237ffcb1944654b95dbc641fa8f26cc48",
+ "wall_seconds": 306,
+ "command": "godot --headless --fixed-fps 60 --path . --script tools/earned_saves/tidewake_piece_runner.gd -- --segment=training_t5_preparehome --from=<rb>/f49_s3_rowan_chest --out=<rb>/f49_s3_preparehome",
+ "lane": "tb/stormwood-routes (Stormwood lane, S3/S5 for F49#0)",
+ "renderer": "Godot 4.7 headless, CPU container",
+ "result": "PASS"
+}

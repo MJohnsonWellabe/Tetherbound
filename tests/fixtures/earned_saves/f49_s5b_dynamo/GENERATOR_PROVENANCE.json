@@ -1,0 +1,17 @@
+{
+  "command": "godot --headless --path . --script tools/earned_saves/stormwood_chain_runner.gd -- --segment=dynamo --from=/root/rb/f49_s5b_gen --out=/root/rb/f49_s5b_dynamo",
+  "commit": "1ace2679dd19e4c7dc9b600d11684e18c4154bf3",
+  "helper": "res://tests/helpers/stormwood_earned_dynamo_segment.gd",
+  "injections": [
+    "Lineage starts from a disclosed generated arrival: f49_s5b_gen"
+  ],
+  "kind": "stormwood_earned_checkpoint",
+  "load_path": "production title Load -> Autosave (slot 0)",
+  "no_fixture_statement": "No teleport, flag/inventory/party write, HP pin or debug skip during play.",
+  "save_path": "Game.save_game(0)",
+  "segment": "dynamo",
+  "shortcuts": [
+    "Simulation clock 8x at 480 Hz, 8 physics steps per frame (smoke_stormwood_continuous.gd's scale; the 8-step cap keeps production's per-frame granularity, <= 0.13 s of sim between process frames, so input releases and claim settlement are not starved on a slow host); helpers switch fights/walks to 1x themselves"
+  ],
+  "start_save": "/root/rb/f49_s5b_gen"
+}

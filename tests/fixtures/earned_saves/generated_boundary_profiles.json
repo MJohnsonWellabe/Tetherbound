@@ -1742,7 +1742,7 @@
         "defeated_warden",
         "learned_legendary_is_the_source",
         "legendary_freed",
-        "legendary_settled",
+        "legendary_settled", "cloudreach:legendary_settled",
         "realm_key_cloudreach",
         "realm_heart_meadows_earned",
         "water_aquaryn_resolved",
@@ -1833,7 +1833,7 @@
         "water_cordage_recipe_gated",
         "water_swim_lesson_briefed",
         "water_swim_stone_earned",
-        "water:legendary_refused",
+        "water:legendary_refused", "cloudreach:legendary_refused",
         "fly_tutorial_completed"
       ],
       "inventory_add": {},
@@ -1855,7 +1855,7 @@
         "cloudreach",
         "stormwood"
       ],
-      "disclosure": "Generated mid-Stormwood boundary after the Crown heartstone released the Rootgate (act II complete), standing on the Hollow Crown return ring at (805, 2545), for Stormwood pieces dynamo -> settlement (proof rules v2; coordinator approved the paid-arch opt-in 2026-10-11). NOT earned. Five ordered template UIDs/species at a generated L50 with generated caps and full HP; prior facts as stormwood_crown_build plus generated act-II flags. One paid stormglass_arch placed_buildings record on the Still Grove footing (twin e_crown) is generated setup via the real register_building + arch-link shape; no materials were spent and no build/harvest/battle-reward/transaction receipts are fabricated. Claims no earned segment PASS.",
+      "disclosure": "Includes the Cloudreach Solmane answer (personal cloudreach:legendary_refused, world cloudreach:legendary_settled) a player reaching this boundary has given after Captain Veyra (owner ruling 2026-09-27, #356); added 24 Oct 2026 after home_credits failed on three chapter choices. Generated mid-Stormwood boundary after the Crown heartstone released the Rootgate (act II complete), standing on the Hollow Crown return ring at (805, 2545), for Stormwood pieces dynamo -> settlement (proof rules v2; coordinator approved the paid-arch opt-in 2026-10-11). NOT earned. Five ordered template UIDs/species at a generated L50 with generated caps and full HP; prior facts as stormwood_crown_build plus generated act-II flags. One paid stormglass_arch placed_buildings record on the Still Grove footing (twin e_crown) is generated setup via the real register_building + arch-link shape; no materials were spent and no build/harvest/battle-reward/transaction receipts are fabricated. Claims no earned segment PASS.",
       "stormwood_paid_crown_arch": true
     },
     "f44_tidewake_endgame": {

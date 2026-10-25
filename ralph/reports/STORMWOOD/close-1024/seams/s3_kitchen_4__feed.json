@@ -1,0 +1,21 @@
+{
+ "kind": "f49_piece_seam",
+ "from_piece": "training_t5_kitchen_4",
+ "from_fixture": "tests/fixtures/earned_saves/f49_s3_kitchen_4",
+ "from_commit": "b0ae8cd28a9e211499d55fa4db3aac91ca71b88a",
+ "to_piece": "training_t5_feed",
+ "to_fixture": "tests/fixtures/earned_saves/f49_s3_feed",
+ "to_commit": "12890cbec478ee53a176498fd8843ad184457e79",
+ "to_loaded_from": "/root/rb/f49_s3_kitchen_4",
+ "runner_handoff": null,
+ "position_gap_m": null,
+ "differences": [],
+ "matches": true,
+ "position_check": {
+  "note": "tidewake_piece_runner receipts record no position; the next piece loaded the previous piece's save itself",
+  "committed_save_sha256": "22c53557b9d58824756f22e77eaa5b3098586c12d9d158220f8535983242081b",
+  "loaded_save_sha256": "22c53557b9d58824756f22e77eaa5b3098586c12d9d158220f8535983242081b",
+  "identical": true,
+  "end_position_in_save": null
+ }
+}

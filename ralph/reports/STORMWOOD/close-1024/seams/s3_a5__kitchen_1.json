@@ -1,0 +1,21 @@
+{
+ "kind": "f49_piece_seam",
+ "from_piece": "training_t5_altar_5",
+ "from_fixture": "tests/fixtures/earned_saves/f49_s3_a5",
+ "from_commit": "6e2c3a15f9599cdf170aafb089db119d7b9ccb8d",
+ "to_piece": "training_t5_kitchen_1",
+ "to_fixture": "tests/fixtures/earned_saves/f49_s3_kitchen_1",
+ "to_commit": "f090c2db2961c793b49179d4c6ae25522104c9aa",
+ "to_loaded_from": "/root/rb/f49_s3_a5",
+ "runner_handoff": null,
+ "position_gap_m": null,
+ "differences": [],
+ "matches": true,
+ "position_check": {
+  "note": "tidewake_piece_runner receipts record no position; the next piece loaded the previous piece's save itself",
+  "committed_save_sha256": "8d3b403464365b1df180ab8097897e34da7dde3bf16705e35cf675596799ee4b",
+  "loaded_save_sha256": "8d3b403464365b1df180ab8097897e34da7dde3bf16705e35cf675596799ee4b",
+  "identical": true,
+  "end_position_in_save": null
+ }
+}
