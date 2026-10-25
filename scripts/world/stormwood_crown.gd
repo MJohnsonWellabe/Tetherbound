@@ -19,19 +19,23 @@ func mount(owner_world: Node3D) -> void:
 	game = get_node("/root/Game")
 	position = Vector3(700, world.ground_height_at(700, 2712), 2712)
 	add_to_group("progression_restore")
+	# Read on every shell: the stone's size sets its collider too, so host
+	# and clients agree on the body whatever they draw.
+	_finish = JSON.parse_string(FileAccess.get_file_as_string(FINISH_CONFIG))
+	var height := float(_finish.get("height_m", 2.4))
 	var solid := StaticBody3D.new()
 	var collision := CollisionShape3D.new()
 	var sphere := SphereShape3D.new()
-	sphere.radius = 1.2
+	sphere.radius = height * 0.5
 	collision.shape = sphere
-	collision.position.y = 1.2
+	collision.position.y = height * 0.5
 	solid.add_child(collision)
 	add_child(solid)
+	_satellites(height, bool(world.get("simulation_only")))
 	if not bool(world.get("simulation_only")):
-		_finish = JSON.parse_string(FileAccess.get_file_as_string(FINISH_CONFIG))
 		var stone := (load("res://assets/environment/stylized_nature/Rock_Medium_3.gltf") as PackedScene).instantiate() as Node3D
 		var bounds := BOUNDS.measure(stone)
-		var factor := 2.4 / maxf(0.1, bounds.size.y)
+		var factor := height / maxf(0.1, bounds.size.y)
 		stone.scale = Vector3.ONE * factor
 		stone.position.y = -bounds.position.y * factor
 		add_child(stone)
@@ -45,10 +49,53 @@ func mount(owner_world: Node3D) -> void:
 		add_child(light)
 		prompt = INTERACTABLE.new()
 		prompt.name = "HeartstoneInteractable"
-		prompt.position = Vector3(0, 0.8, -2)
+		prompt.position = Vector3(0, 0.8, -(height * 0.5 + 0.8))
 		add_child(prompt)
 		prompt.activated.connect(_touch)
 	restore_progression_from_game(game)
+
+
+## GPU F41#0 (Crown heartstone, 25 Oct: "frame the stone and give it
+## presence"): a broken ring of lesser stones around the heartstone, the
+## same installed rock family, each a small solid body. Layout is config
+## (`satellites`), identical on every shell.
+func _satellites(height: float, simulation_only: bool) -> void:
+	var cfg: Dictionary = _finish.get("satellites", {})
+	if not bool(cfg.get("enabled", false)):
+		return
+	var count := int(cfg.get("count", 7))
+	var ring := float(cfg.get("ring_m", height + 2.0))
+	var models: Array = cfg.get("models", ["Rock_Medium_1", "Rock_Medium_2"])
+	var heights: Array = cfg.get("heights_m", [1.2])
+	var skip := int(cfg.get("gap_index", -1))
+	for index in count:
+		if index == skip:
+			continue
+		var angle := TAU * (float(index) + 0.31 * sin(float(index) * 2.3)) / float(count)
+		var at := Vector3(sin(angle), 0.0, cos(angle)) * ring * (0.92 + 0.08 * cos(float(index) * 1.7))
+		var ground := float(world.ground_height_at(position.x + at.x, position.z + at.z)) - position.y
+		var h := float(heights[index % heights.size()])
+		var body := StaticBody3D.new()
+		body.name = "HeartstoneRing%d" % index
+		body.position = Vector3(at.x, ground, at.z)
+		var shape := CollisionShape3D.new()
+		var sphere := SphereShape3D.new()
+		sphere.radius = h * 0.45
+		shape.shape = sphere
+		shape.position.y = h * 0.45
+		body.add_child(shape)
+		add_child(body)
+		if simulation_only:
+			continue
+		var rock := (load("res://assets/environment/stylized_nature/%s.gltf" % str(models[index % models.size()])) as PackedScene).instantiate() as Node3D
+		var bounds := BOUNDS.measure(rock)
+		var factor := h / maxf(0.1, bounds.size.y)
+		rock.scale = Vector3.ONE * factor
+		rock.position.y = -bounds.position.y * factor - 0.08
+		rock.rotation = Vector3(0.08 * sin(float(index) * 3.1), angle + 0.6 * float(index), 0.06 * cos(float(index) * 2.2))
+		body.add_child(rock)
+		if bool(cfg.get("veins", true)):
+			_finish_stone(rock)
 
 
 func _finish_stone(node: Node) -> void:
