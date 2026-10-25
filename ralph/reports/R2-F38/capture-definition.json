@@ -77,11 +77,7 @@
         2581.7
       ],
       "heading_deg": 0,
-      "source": "debug_teleport_spots.json:The Burrow Warrens",
-      "views": [
-        "approach",
-        "gameplay"
-      ]
+      "source": "debug_teleport_spots.json:The Burrow Warrens"
     },
     {
       "id": "band3_the_river_lock_0",
@@ -150,11 +146,7 @@
         7000.0
       ],
       "heading_deg": 0,
-      "source": "debug_teleport_spots.json:Stronghold Approach",
-      "views": [
-        "approach",
-        "gameplay"
-      ]
+      "source": "debug_teleport_spots.json:Stronghold Approach"
     },
     {
       "id": "band5_stronghold_approach_1",
@@ -181,10 +173,6 @@
         "approach": 135
       },
       "_why_view_headings": "approach only; see _why_close1024_at.",
-      "views": [
-        "approach",
-        "gameplay"
-      ],
       "_why_close1024_at": "F38 tier-1 close-1024: at (8.3, 14) the gameplay and detail stands landed inside Grandpa's house (GPU: 'five of its six frames are one orange-washed interior'). The site is the farm-to-Hall walk, so it moves east onto the road at (24, 14), still facing the Hall: CPU capture gives gameplay, reverse and detail on the village road with the Hall at its end. The 32 m approach at heading 90 lands back near the house with no physical floor; it takes heading 135 (verification pending)."
     },
     {
