@@ -3,6 +3,12 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures f0ada94b5 (dog3 Terrapup, your 0aad259db path to 7.5, all four levers):
+  1. **Plates:** darker and weathered (val 0.62, sat 0.38), with moss clumps creeping from them onto the upper-back coat (`moss_at_plate_edges`, grow mode, 18.5% of the surface), so plate and fur share an edge.
+  2. **Seat:** lowered 2.58 to 2.36 m. The rider sits into the back in CPU frames, with no clipping visible at stage distance.
+  3. **Cower:** much bigger. The neck pitch goes 30 to 48 deg and the head 14 to 24 deg, with a harder roll; the head now drops near the ground.
+  4. **Rim:** the coat's `field_rim` goes 0.25 to 0.30, the ceiling (an ordinary creature stays under the alpha rim).
+  - **Check:** CPU stage frames only, not CPU-judged.
 - 25 Oct batch-2 pose notes: tried, nothing committed.
   - **Faint rolls (Mosshock, Mirejaw):** rolling the other way (-90) shows the pale belly and splayed legs, a clear belly-up flip, worse. A partial 65 deg roll reads as propped or mid-tip, not down. So the shipped +90 roll (back to camera) stays as the least-bad option.
     - Mosshock's "feet up" read is its dorsal spikes.
