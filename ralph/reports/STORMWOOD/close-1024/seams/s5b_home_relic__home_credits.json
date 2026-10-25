@@ -1,0 +1,37 @@
+{
+ "kind": "f49_piece_seam",
+ "from_piece": "home_relic",
+ "from_fixture": "tests/fixtures/earned_saves/f49_s5b_home_relic",
+ "from_commit": "3d9c0b8e148b9c64f8fa57df70e5d48b68512e8b",
+ "to_piece": "home_credits",
+ "to_fixture": "tests/fixtures/earned_saves/f49_s5b_home_credits",
+ "to_commit": "76aefce6a999c0bf0f33f0811fe672caa66e7a3d",
+ "to_loaded_from": "/root/rb/f49_s5b_home_relic",
+ "runner_handoff": {
+  "checked": true,
+  "cross_runner": false,
+  "ending_matches": true,
+  "ending_required": true,
+  "keys": [
+   "uids",
+   "species",
+   "world_flags",
+   "player_flags",
+   "items",
+   "portal_unlocks",
+   "realm",
+   "creature_progression"
+  ],
+  "mismatched": [],
+  "passed": true,
+  "previous": "f49_s5b_home_relic",
+  "training": {
+   "checked": true,
+   "matches": true,
+   "reason": ""
+  }
+ },
+ "position_gap_m": 0.0,
+ "differences": [],
+ "matches": true
+}
