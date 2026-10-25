@@ -45,6 +45,7 @@
     "_scope": "F38 L4 / P2-005 close-1024 candidate (OFF until judged): judges at every exterior Meadows site read a uniform grass carpet. Grass blade coverage cannot fix it (grass_field.json carpet_candidate, parked: the terrain under the blades is painted the same grass). The shipped macro octaves are ~83 m and ~33 m and near white, so the ground has no mid-scale variation. This moves the second octave to ~12 m patches (noise2_scale 0.08) in a cooler clover green, and keeps the first octave light so the large scale does not smear.",
     "noise2_scale": 0.08,
     "macro_variation2": "#b6cfa4",
-    "macro_variation1": "#e3ead6"
+    "macro_variation1": "#e3ead6",
+    "_parked": "PARKED close-1024: CPU capture near-identical to shipping at farm_to_hall, band2_stone_and_root_1 and band5_0 (approach and gameplay). With grass coverage (grass_field.json carpet_candidate, parked after r1 and r2) that is three attempts on the carpet with no visible change. The near-field read is the grass blades plus the baked terrain colour map, which these shader knobs do not reach. P2-005 needs authored ground variation in the bake (worn earth, clover and moss patches, rock outcrops, grove edges) or new ground-cover art. Left OFF; not for GPU."
   }
 }

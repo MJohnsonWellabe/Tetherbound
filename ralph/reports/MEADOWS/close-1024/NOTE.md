@@ -167,6 +167,14 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - CPU: r31 6.23 vs 5.86.
   - GPU: judge with `meshy_heroes_enabled` on as the candidate side; the command is in the line below.
 
+- 2026-10-25 03:15 UTC STATUS F38 L4 (P2-005 carpet): PARKED after three CPU attempts with no visible change.
+  - Attempts, on farm_to_hall, band2_stone_and_root_1 and band5_0, approach and gameplay, ship vs candidate: grass drift r1 (0.07/0.8), grass drift r2 (0.045/1.0 plus height jitter), and terrain macro patches at 12 m in clover green.
+  - Why it fails: the drift gaps lose blades, but the ground under them is the same painted grass, and the near-field read is the blades plus the baked terrain colour map, which the shader knobs don't reach.
+  - What it needs, as a bake/art change rather than tuning: authored ground variation in the terrain colour bake (worn earth, clover and moss patches, rock outcrops, grove edges) or new ground-cover art.
+  - Both candidates stay OFF with `_parked` notes and are not for the GPU.
+  - QUESTION: is a Meadows terrain colour-bake pass (it fingerprints the terrain and vegetation bakes) in scope for this lane, or does it go to a world/terrain owner?
+- 2026-10-25 03:15 UTC NOTE L3 (interior time-of-day grade): not started, deliberately. Per your relay of the owner's F17#6 verdict ("the rest looks mostly fine", don't re-dress the hall), the Hall interior stays as is apart from the shafts (land3). Tell me if L3 should override that.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
