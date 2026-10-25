@@ -1,0 +1,29 @@
+{
+ "Tr": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Eh": {
+  "anchor": false,
+  "label": "currents: bands vs bands + lighter lane tint",
+  "A": "/tmp/claude-0/sp/cb_b.png",
+  "B": "/tmp/claude-0/sp/ct_b.png"
+ },
+ "Sy": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Yf": {
+  "anchor": false,
+  "label": "shore: wl2 vs wl2 + authored lesson clusters",
+  "A": "/tmp/claude-0/sp/wl3_b.png",
+  "B": "/tmp/claude-0/sp/wl2_b.png"
+ },
+ "Mf": {
+  "anchor": true,
+  "A": "f36_0_gap:C3B",
+  "B": "f36_0_gap:C3A"
+ }
+}
