@@ -218,6 +218,11 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - All three stay OFF until GPU confirms. GPU command, each with its flag set `enabled: true` for the candidate side and `false` for shipping: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=arch_tidewake,arch_cloudreach,arch_biome5,band2_stone_and_root_1 --output=res://<round>`. Recommend turning arch_facades and cliffs ON if GPU agrees (both are clear gains with no judged regression).
   - Next here: arches r2 (reuse the sealed biome5 surround on biome6–8 and a carved surround on stormwood so no neon rim sits beside a faced arch), gatehouse r2 (larger, until it reads from 550 m), then the cover r2 capture already queued.
 
+- 2026-10-25 12:00 UTC MESHY (F38 L6, arch r2 follow-up): arch_stormwood, one asset. Until it lands, r2 reuses the tidewake surround on the stormwood arch.
+  - Same envelope as the r1 surrounds: about 4.4 m wide x 5.2 m tall x 0.7 m deep, framing the existing ~2.6 x 3.8 m door, open centre; the 1.80 m trainer stands about a third of its height.
+  - Ref: `docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png`, with the key art's Meadows stone palette so it sits in the Hall.
+  - Prompt: "carved dark oak and grey stone portal surround for a doorway, twisted root and branch relief climbing both jambs, a small pale-blue lightning glass keystone, iron straps, stylised realism, game asset, open centre". No oxblood.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
