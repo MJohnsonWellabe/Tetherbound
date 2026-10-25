@@ -1,7 +1,8 @@
 extends "res://tests/test_case.gd"
 
-# P2-016 G4 fallback (GPU, 25 Oct): from the high grunt camera and under the
-# contact disc a few-pixel head dip did not read. The hit recoil now drops the
+# P2-016 G4/G5 big wince (combat.json `impact.hurt_wince`, OFF since 25 Oct;
+# forced on here). From the high grunt camera and under the contact disc a
+# few-pixel head dip did not read. When on, the hit recoil drops the
 # head about a third of the body's height, pitched about the hindquarters,
 # pushes away from the blow and squashes briefly on contact. Visual only: the
 # art moves, the body and its collider do not.
@@ -30,6 +31,7 @@ func test_the_recoil_drops_the_head_a_third_of_the_body_and_keeps_the_collider()
 	var body: Node3D = CREATURE_SCENE.instantiate()
 	body.set_script(BODY)
 	body.set("species_id", "mudsnout")
+	body.set("_hurt_wince_forced", true)
 	_root.add_child(body)
 	await _frames(3)
 	var collider := _first_collider(body)

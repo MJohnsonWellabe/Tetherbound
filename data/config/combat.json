@@ -377,6 +377,10 @@
     "_why_flash_drop": "Fights close-1025 (ON since 25 Oct, r6/r7): GPU G3 judges saw the gold impact disc cover the struck body and hide its react. 0..1 moves the contact flash that fraction of the way from the contact point down to the struck creature's feet (combat_manager.gd), where ground_burst carries the hit.",
     "_scope_flash_drop": "Client-local presentation only; no authority, save or network state.",
     "flash_drop": 1.0,
+    "_why_hit_flash": "P2-016 (coordinator GO 25 Oct): five rounds of pose work did not read from the grunt camera (b37 +0.31, b38 +0.00). A struck creature's own surface pulses warm-white for `seconds` (an additive overlay on its art, strength fading to 0), so the hit lands on the body at any distance. Client-local presentation only; enabled false/absent = off.",
+    "hit_flash": {"enabled": true, "colour": "#fff0d2", "strength": 0.55, "seconds": 0.12},
+    "_why_hurt_wince": "P2-016 G4/G5 big wince (head drop of a third of height, squash, 0.2 m/m shove; creature_body.gd). OFF since 25 Oct: two CPU rounds under 0.5, replaced by hit_flash. Client-local presentation only.",
+    "hurt_wince": {"enabled": false},
     "_comment_round5": "MEADOWS-VISUAL-PASS round 5: at 0.85m/strength 1.0 the burst rendered (isolated probe) as a pale ring about 60 pixels across at fight distance, and two blind rounds found no impact effect on either hit. `strength` scales the radius, so the burst grows a little (about 1.2m quick, 1.8m charged, well short of the 5m ground-decal read) and impact_flash.gd now holds its opacity through the beat instead of halving it in the first quarter.",
     "quick": {
       "colour": "#ffe19a",

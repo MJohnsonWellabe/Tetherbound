@@ -497,6 +497,7 @@ func suspend_visuals(bounds: AABB) -> bool:
 	_visual_suspended = true
 	_model.visible = false
 	_clear_combat_flinch()
+	_clear_hit_flash()
 	_combat_flinch_art = null
 	_combat_flinch_length = -1.0
 	_animator = null
@@ -705,6 +706,7 @@ func _build_placeholder() -> void:
 	_visual_suspended = false
 	_suspended_render_bounds = AABB()
 	_clear_combat_flinch()
+	_clear_hit_flash()
 	_combat_flinch_art = null
 	_combat_flinch_length = -1.0
 	if _rest_pose_active or _rest_pose_pending:
@@ -2505,21 +2507,25 @@ func hold_combat_wince(seconds: float) -> bool:
 	return _animator != null and bool(_animator.call("hold_wince", seconds))
 
 
-const FLINCH_SHOVE_PER_M := 0.2
+const FLINCH_SHOVE_PER_M := 0.11
+const FLINCH_SINK_PER_M := 0.02
+const FLINCH_LEAN_DEG := 8.0
 const FLINCH_MIN_HEIGHT := 0.8
 const FLINCH_MAX_HEIGHT := 4.0
 const FLINCH_OUT_S := 0.06
 const FLINCH_HOLD_S := 0.14
 const FLINCH_BACK_S := 0.2
-## P2-016 G4 fallback (GPU, 25 Oct): the head drops about a third of the
-## body's height, pitched nose-down about the hindquarters, so the flinch
-## reads from the high grunt camera and past the contact disc.
+## P2-016 G4/G5 big wince (combat.json `impact.hurt_wince`, OFF since 25 Oct:
+## two CPU rounds under 0.5, replaced by the body hit-flash below). When on, the
+## head drops about a third of the body's height about the hindquarters, with a
+## short squash on contact and a bigger shove.
 const FLINCH_HEAD_DROP_FRACTION := 0.33
 const FLINCH_MAX_DIP_DEG := 25.0
-## A short squash on contact (G5): flattened and widened for FLINCH_SQUASH_S,
-## then the held dip.
 const FLINCH_SQUASH := Vector3(1.08, 0.86, 1.08)
 const FLINCH_SQUASH_S := 0.08
+const FLINCH_WINCE_SHOVE_PER_M := 0.2
+## Tests force the big wince on without editing combat.json.
+var _hurt_wince_forced := false
 
 ## Recoil stays visual, never moving collision or attack geometry. Enabled
 ## hurt clips own Model's grounded transform, so their additive recoil uses
@@ -2529,17 +2535,36 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
 	play_hit()
 	if _model == null or not is_inside_tree():
 		return
+	_play_hit_flash()
 	_combat_flinch_target = _combat_flinch_art \
 		if bool(get_meta("f36_pose_candidate_installed", false)) and is_instance_valid(_combat_flinch_art) else _model
 	_combat_flinch_rest_position = _combat_flinch_target.position
 	_combat_flinch_rest_rotation = _combat_flinch_target.rotation
 	var recoil_parent := _combat_flinch_target.get_parent() as Node3D
 	var local_away := recoil_parent.global_basis.inverse() * away.normalized()
-	# P2-016 (GPU, 25 Oct): a fixed 0.14 m shove over 0.16 s vanished between
-	# 0.15 s fight frames and beside 2-3 m bodies. Scale the shove with the
-	# body, drop the head (FLINCH_HEAD_DROP_FRACTION) and hold it briefly.
 	var size := clampf(_height, FLINCH_MIN_HEIGHT, FLINCH_MAX_HEIGHT)
-	var recoil := Vector3(local_away.x, 0.0, local_away.z) * FLINCH_SHOVE_PER_M * size
+	var wince: Dictionary = (MATH.config().get("impact", {}) as Dictionary).get("hurt_wince", {})
+	if _hurt_wince_forced or wince.get("enabled") == true:
+		_play_big_wince(recoil_parent, local_away, size)
+		return
+	# P2-016 (GPU, 25 Oct): a fixed 0.14 m shove over 0.16 s vanished between
+	# 0.15 s fight frames and beside 2-3 m bodies. Scale the shove and a sink
+	# with the body, lean it away from the blow, and hold it briefly.
+	var recoil := Vector3(local_away.x, 0.0, local_away.z) * FLINCH_SHOVE_PER_M * size \
+		+ Vector3(0.0, -FLINCH_SINK_PER_M * size, 0.0)
+	var lean := deg_to_rad(FLINCH_LEAN_DEG) * (-1.0 if local_away.x < 0.0 else 1.0)
+	_combat_flinch_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position + recoil, FLINCH_OUT_S).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(-7.0), FLINCH_OUT_S)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:z", _combat_flinch_rest_rotation.z + lean, FLINCH_OUT_S)
+	_combat_flinch_tween.tween_interval(FLINCH_HOLD_S)
+	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position, FLINCH_BACK_S).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x, FLINCH_BACK_S)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:z", _combat_flinch_rest_rotation.z, FLINCH_BACK_S)
+
+
+func _play_big_wince(recoil_parent: Node3D, local_away: Vector3, size: float) -> void:
+	var recoil := Vector3(local_away.x, 0.0, local_away.z) * FLINCH_WINCE_SHOVE_PER_M * size
 	var rest := _combat_flinch_target.transform
 	var dipped := rest
 	var forward := recoil_parent.global_basis.inverse() * facing()
@@ -2562,6 +2587,54 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
 	_combat_flinch_tween.tween_interval(maxf(0.0, FLINCH_HOLD_S - FLINCH_SQUASH_S))
 	_combat_flinch_tween.tween_property(_combat_flinch_target, "transform", rest, FLINCH_BACK_S).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 
+
+## P2-016 (coordinator GO, 25 Oct; combat.json `impact.hit_flash`, absent = off):
+## five rounds of pose work did not read from the grunt camera. A struck
+## creature's own surface pulses warm-white for `seconds` -- an additive
+## overlay on every mesh of its art, fading from `strength` to nothing -- so
+## the hit lands on the body at any distance and under any dust. Visual only.
+var _hit_flash_material: StandardMaterial3D = null
+var _hit_flash_meshes: Array[MeshInstance3D] = []
+var _hit_flash_tween: Tween = null
+
+
+func _play_hit_flash() -> void:
+	var cfg: Dictionary = (MATH.config().get("impact", {}) as Dictionary).get("hit_flash", {})
+	if cfg.get("enabled") != true or _model == null:
+		return
+	if _hit_flash_material == null:
+		_hit_flash_material = StandardMaterial3D.new()
+		_hit_flash_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		_hit_flash_material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+		_hit_flash_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		_hit_flash_material.cull_mode = BaseMaterial3D.CULL_BACK
+	_clear_hit_flash()
+	for node in _model.find_children("*", "MeshInstance3D", true, false):
+		var mesh := node as MeshInstance3D
+		if mesh.visible and mesh.material_overlay == null:
+			mesh.material_overlay = _hit_flash_material
+			_hit_flash_meshes.append(mesh)
+	if _hit_flash_meshes.is_empty():
+		return
+	var colour := Color(str(cfg.get("colour", "#fff0d2")))
+	var strength := clampf(float(cfg.get("strength", 0.55)), 0.0, 1.0)
+	_hit_flash_material.albedo_color = Color(colour, strength)
+	_hit_flash_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+	_hit_flash_tween.tween_property(_hit_flash_material, "albedo_color:a", 0.0,
+		maxf(0.02, float(cfg.get("seconds", 0.12)))).set_ease(Tween.EASE_IN)
+	_hit_flash_tween.tween_callback(func() -> void:
+		_hit_flash_tween = null
+		_clear_hit_flash())
+
+
+func _clear_hit_flash() -> void:
+	if _hit_flash_tween != null and _hit_flash_tween.is_valid():
+		_hit_flash_tween.kill()
+	_hit_flash_tween = null
+	for mesh in _hit_flash_meshes:
+		if is_instance_valid(mesh) and mesh.material_overlay == _hit_flash_material:
+			mesh.material_overlay = null
+	_hit_flash_meshes.clear()
 
 ## Nose-to-tail length of the recoiling art, measured once as it renders.
 func _combat_flinch_body_length() -> float:
@@ -2617,6 +2690,7 @@ func play_faint() -> void:
 		presence.call("_suspend", "faint_pose")
 	# A hit-recoil tween must not overwrite the collapse's grounded pivot.
 	_clear_combat_flinch()
+	_clear_hit_flash()
 	if _animator != null:
 		_animator.call("play_faint")
 
