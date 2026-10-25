@@ -1,0 +1,5 @@
+Hm: none
+Gj: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Xh: "the heartstone is not framed or has no presence"; "flat grey horizon"; "wild creatures crowd the survey view"
+Mh: "smooth bare trunk walls"; "no lightning core in the hollow"; "dark monochrome interior"
+Iy: none
