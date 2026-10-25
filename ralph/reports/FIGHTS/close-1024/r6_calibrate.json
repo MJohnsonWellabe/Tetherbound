@@ -1,0 +1,186 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.7821,
+  "least_squares_slope": 0.8076,
+  "method": "linear",
+  "slope": 0.8076,
+  "intercept": 1.7724,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.738,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C6B": {
+   "measured": 5.933,
+   "reference": 6.9,
+   "mapped": 6.564,
+   "residual": 0.336
+  },
+  "f36_0_gap:C6A": {
+   "measured": 6.767,
+   "reference": 6.47,
+   "mapped": 7.237,
+   "residual": -0.767
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.867,
+   "reference": 7.53,
+   "mapped": 7.318,
+   "residual": 0.212
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.867,
+   "reference": 7.47,
+   "mapped": 7.318,
+   "residual": 0.152
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.467,
+   "reference": 6.53,
+   "mapped": 5.38,
+   "residual": 1.15
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.1,
+   "reference": 4.0,
+   "mapped": 5.084,
+   "residual": -1.084
+  }
+ },
+ "candidates": {
+  "venn pre": {
+   "measured_mean": 5.133,
+   "mapped_mean": 5.92,
+   "mapped_judges": [
+    5.65,
+    6.29,
+    5.81
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "venn r6": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.56,
+   "mapped_judges": [
+    6.29,
+    6.94,
+    6.46
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "stormwood pre": {
+   "measured_mean": 5.567,
+   "mapped_mean": 6.27,
+   "mapped_judges": [
+    5.97,
+    6.7,
+    6.13
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "stormwood r6": {
+   "measured_mean": 5.7,
+   "mapped_mean": 6.38,
+   "mapped_judges": [
+    6.05,
+    6.78,
+    6.29
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "warden pre": {
+   "measured_mean": 5.467,
+   "mapped_mean": 6.19,
+   "mapped_judges": [
+    5.97,
+    6.46,
+    6.13
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "warden r6": {
+   "measured_mean": 6.233,
+   "mapped_mean": 6.81,
+   "mapped_judges": [
+    6.54,
+    7.1,
+    6.78
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "riverwatch pre": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.43,
+   "mapped_judges": [
+    6.29,
+    6.54,
+    6.46
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "riverwatch r6": {
+   "measured_mean": 6.533,
+   "mapped_mean": 7.05,
+   "mapped_judges": [
+    6.86,
+    7.18,
+    7.1
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "veyra pre": {
+   "measured_mean": 5.8,
+   "mapped_mean": 6.46,
+   "mapped_judges": [
+    6.21,
+    6.62,
+    6.54
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "veyra r6": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.54,
+   "mapped_judges": [
+    6.29,
+    6.7,
+    6.62
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

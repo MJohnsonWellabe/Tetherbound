@@ -43,3 +43,14 @@ func test_same_side_or_closed_bridge_adds_no_legs() -> void:
 	var closed := _world(false)
 	assert_eq(MATERIAL.bridge_legs(closed, Vector2(-22.7, 22.7), Vector2(399.0, 1792.0)).size(), 0)
 	closed.free()
+
+## The far bank -> ironwood walk grazed the Warrens mound and stalled on its
+## flank for hours; it now passes one waypoint outside the rim.
+func test_walks_that_graze_the_warrens_mound_pass_outside_it() -> void:
+	var detour := MATERIAL.mound_detour(Vector2(8.0, 1340.0), Vector2(-379.3, 2569.8))
+	assert_eq(detour.size(), 1)
+	assert_true(detour[0].distance_to(MATERIAL.WARRENS_MOUND) > MATERIAL.WARRENS_MOUND_R + 10.0)
+	var line := Vector2(-379.3, 2569.8) - Vector2(8.0, 1340.0)
+	var side_of_line := signf(line.cross(detour[0] - Vector2(8.0, 1340.0)))
+	assert_eq(side_of_line, signf(line.cross(MATERIAL.WARRENS_MOUND - Vector2(8.0, 1340.0))) * -1.0, "passes on the walk's own side")
+	assert_eq(MATERIAL.mound_detour(Vector2(8.0, 1340.0), Vector2(399.0, 1792.0)).size(), 0, "quarry walks are untouched")
