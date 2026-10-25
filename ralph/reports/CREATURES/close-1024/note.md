@@ -3,6 +3,14 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures-land 471d7ff3e (your G2 verdict on cf2d4258a): the struck enemy now flinches in named-trainer fights.
+  - **Path:** the enemy in a named-trainer fight is the same wild_creature body; its hit clip fires with its impact window. The hit pose itself was the problem: a rear-back that read as attacking, and Mudsnout's had never been strengthened.
+  - **21714fd2f:** Mudsnout, Burrowback and the Terrapup badger now cower when hit (head ducks low and aside, body rolls away, tail tucks; feet planted). Only the hit clip changes.
+  - **471d7ff3e:** every creature's hit shove now scales with its size (0.11 m per metre of height, about 0.27 m on a 2.4 m body), adds an 8 deg lean away and holds about 0.4 s, so it spans two or three 0.15 s frames. Before, it was a fixed 0.14 m over 0.16 s.
+  - **CPU proof:** your exact `capture_f38_fight` command (grunt and Warden, 32 frames at 0.15 s, --attack --dodge --tell-frames, Low). In frames with a damage number, Mudsnout's head drops low and Burrowback ducks and turns away. Sheet: `p2016-g3/_sheet_fight.png` (left: grunt f17-32, Mudsnout; right: Warden f15-30).
+  - **The STAGGER label in these fights is the player's:** it reads "Terrapup STAGGERED — recovering". A temporary log showed the ally's stagger hold fires (0.6 s) and nothing clears it. But during those frames Terrapup is usually between the camera and its target, so the camera draws it see-through (dithered), or it is out of shot. That is camera framing (F38 L1), not the pose. Worth telling the judges, or fixing in the camera lane.
+  - **Tests:** combat_feel, combat_stagger, hit_impact_window, hit_feedback, remote_stagger_wince: 41 tests, 0 failed.
+  - **Owner glow rule (25 Oct):** none of my pending touch candidates has glowing seams (Mudsnout's hardened shoulder hide and snout scar, Terrapup's chestnut-to-brown coat), so nothing needs reworking.
 - 25 Oct GPU READY tb/creatures-land f3d6d65f0 (hard rule, from your GPU roster baseline): the crimson frills on Riverdrake and Mirejaw (land and water) are amber now. Please GPU-judge mirejaw, water_mirejaw, riverdrake and water_riverdrake.
   - Albedo texels in the saturated red band were shifted to amber, keeping each texel's value: Riverdrake 8.5%, Mirejaw 1.6%. Tool: `tools/art_pipeline/shift_reserved_red.py`. GLB-embedded and extracted images are both rewritten, and the f36 recipe hashes re-pinned.
   - Found while checking: water Mirejaw had been loading the previous lod0 mesh's vivid repaint onto the native UVs, which gave the garbled camo and most of its red. Its water roster entry now has the land form's `colourway_source_species`, so it wears its own texture. Abyssal Guardian's water form had the same gap and got the same fix; CPU frames show the water and land Guardians now match.
