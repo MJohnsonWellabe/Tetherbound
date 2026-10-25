@@ -293,6 +293,21 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
      - Prompt: "heavy hanging war banner, deep oxblood wool with deep vertical folds and a tattered, frayed hem, a pale stitched circle-and-cross emblem, iron-capped wooden crossbar and pole, stylised realism, game asset".
      - Why replacement rather than a rescale: earlier judges asked for the banners 3–4x larger (T1-HALL-4); the GPU judge now reads them as "giant flat banners". Flat cloth is the defect, and a rescale would oscillate.
 
+- 2026-10-25 14:10 UTC READY (GPU) **one combined hero candidate**: tb/meadows-land11 89c5b91f64 (from origin/main 818e5afe3; supersedes land8 and land9). Focused tests pass: `test_meadows_tier1_art_gates`, `test_trainer_aftermath_meshy_heroes` and `test_meadows_catalog_presentation_gate`, 7 tests, 23 assertions, 0 failed.
+  - **Correction:** land9 shipped `arch_facades` ON on a CPU score. Main's CLAUDE.md says GPU judging replaced the CPU-provisional rule on 24 Oct. land11 keeps every flag OFF; the scores live in each `_why`.
+  - Contents: all 9 heroes from 4eb886a11, each behind its own flag. CPU A/B vs shipping (three code-blind judges, mapped):
+    - `crossing_hall.json arch_facades` (all seven arches): 8.08 vs 5.28 (r1 6.92 vs 5.50).
+    - `meadows_hero_pieces.json cliffs` at band2_stone_and_root_1: 5.93 vs 4.89.
+    - `meadows_hero_pieces.json ironwood` at band4 ironwood 0/1: 5.86 vs 5.20 (`iw1024-*`, `_sheet_iw1024_r1.png`).
+    - `stronghold.json hero_gatehouse` at band5_0/1: parked (+0.00, then +0.39), included for completeness. The band5_1 courtyard seat (land10) rides along.
+  - GPU command: on land11 merged with land10 (fixture) and land3 (shafts), set all four flags `enabled: true`, then run `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=arch_ --subset=band2_stone_and_root_1 --subset=band4_upper_meadows_ironwood --subset=band5_stronghold_approach --output=res://<round>`. Compare against the same command with the flags off.
+  - Each flag goes ON only where GPU gains more than 0.5 on its own stands.
+- 2026-10-25 14:10 UTC MESHY (band4, dominant object after the Ironwood trees): **meadows_giant_ironwood**. All three judges name the existing giant ironwood behind the Grove stand: "flat, faceted low-poly canopy shards against the sky".
+  - Size: about 30 m tall with a 24 m crown and a 3 m trunk with buttress roots, matching the existing giant at the Grove stand (-345, 5060) looking +z.
+  - Ref: owner key art, oak-grove panel (crop (0, 333)–(540, 600)).
+  - Prompt: "ancient colossal ironwood tree, massive buttressed trunk with gnarled bark and moss, enormous layered canopy of dense leaf-card clusters with light breaking through, warm green with sunlit tips, stylised realism like Valheim and Palworld, game asset, single hero tree".
+  - It replaces the existing giant (one change); the r1 Ironwood trees stay as they are.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
