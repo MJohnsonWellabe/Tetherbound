@@ -5,8 +5,12 @@ and sage, with a reddish mouth line and eye rims. This grades r1 toward the
 retexture spec (ralph/reports/CREATURES/close-1024/mosshock-retex-spec):
 - the orange mouth line and eye rims move to olive-brown (the brighter amber
   irises are kept);
-- the coat moves to a deeper moss at about 72 deg, out of the meadow grass band;
-- the folds deepen and the cream belly stays.
+- the coat moves to a moss green at about 100 deg with lighter values (GPU
+  P, 26d54b066: lighter belly and throat; CI: the coat must read as moss,
+  test_stormwood_source_colourways), saturation floored so it stays moss;
+- the coat's darker folds (below its median value) become olive-brown, so the
+  moss reads as growth over a darker hide rather than one flat green;
+- the cream belly and throat lighten and desaturate toward pale cream.
 It writes the graded image into the model's embedded base colour and the
 extracted image beside it, so the mesh, rig, UVs and clips are untouched.
 
@@ -40,10 +44,16 @@ RIM_TO_HUE = 45.0
 RIM_SAT = 0.32
 BELLY_HUE = (35.0, 50.0)
 BELLY_VAL_MIN = 0.55
-COAT_HUE = 72.0
+COAT_HUE = 100.0
 COAT_SAT_SCALE = 1.35
-COAT_SAT_MAX = 0.55
-COAT_VAL_SCALE = 0.72
+COAT_SAT_MIN = 0.34
+COAT_SAT_MAX = 0.6
+COAT_VAL_SCALE = 0.95
+FOLD_HUE = 62.0
+FOLD_VAL_SCALE = 0.8
+BELLY_TO_HUE = 44.0
+BELLY_SAT = 0.16
+BELLY_VAL_SCALE = 1.08
 
 
 def grade(rgb):
@@ -61,8 +71,14 @@ def grade(rgb):
     out_h[rim] = RIM_TO_HUE
     out_s[rim] = RIM_SAT
     out_h[coat] = COAT_HUE
-    out_s[coat] = np.minimum(COAT_SAT_MAX, s[coat] * COAT_SAT_SCALE)
+    out_s[coat] = np.clip(s[coat] * COAT_SAT_SCALE, COAT_SAT_MIN, COAT_SAT_MAX)
     out_v[coat] = v[coat] * COAT_VAL_SCALE
+    fold = coat & (v < np.median(v[coat]))
+    out_h[fold] = FOLD_HUE
+    out_v[fold] = v[fold] * FOLD_VAL_SCALE
+    out_h[belly] = BELLY_TO_HUE
+    out_s[belly] = np.minimum(s[belly], BELLY_SAT)
+    out_v[belly] = np.minimum(1.0, v[belly] * BELLY_VAL_SCALE)
     print("iris %.2f%%" % (iris.mean() * 100))
     return T._rgb(out_h, out_s, out_v), rim.mean(), coat.mean(), belly.mean()
 
@@ -80,7 +96,7 @@ def main():
     views[target["bufferView"]] = data
     target["mimeType"] = "image/jpeg"
     T._write_glb(GLB, gltf, views)
-    print("graded: rims %.1f%%, coat %.1f%%, belly kept %.1f%%" % (red * 100, coat * 100, belly * 100))
+    print("graded: rims %.1f%%, coat %.1f%%, belly %.1f%%" % (red * 100, coat * 100, belly * 100))
 
 
 if __name__ == "__main__":
