@@ -1,0 +1,90 @@
+{
+ "sets": {
+  "Df": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT",
+     "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+     "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's mossy olive surface is on-style naturalistic but the face and eyes never pop, the faint-end pose collapses into a shapeless mound, and A's lime-and-black toy camouflage is nowhere near the Palworld creature finish."
+  },
+  "Uh": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing grandfatherly villager with a warm earthy palette and a clear face that would sit beside Palworld's stylised humans, held back only by a slightly more cartoon face than the key-art world."
+  },
+  "Sh": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger wrapped text and icon-led Craft/Leave hints read at a glance, but the panel lacks the teal interaction accent and controller-glyph polish of a shipping UI and sits over a murky, flat dark world."
+  },
+  "Sn": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Voltarach spider reads, but flat magenta telegraph shapes, a tiny near-invisible player creature, heavy HUD panels and a dim brown floor with no purple storm sky or lightning sink it, and A also loses whole frames to camera-in-foliage."
+  },
+  "Hv": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's white-and-ice-blue wolf has a crisp, taller-than-trainer silhouette near the owner style bar, but white-on-white faces with weak eye read and A's odd upright faint-end pose keep it below Palworld creature finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight (Sn): add camera collision/foliage fade so trunks and canopy never fill the frame, replace the flat magenta telegraph rings and rectangles with grounded white-violet lightning and stone-impact effects, put the player's creature in a readable rim-lit spot, and restore the purple storm sky grade.",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature face and value read (Df, Hv): give eyes a bright, high-contrast iris and highlight, add rim light and darker accent values around the head so the face separates on grey and white, and keep a recognisable head-and-body silhouette in faint poses instead of a flattened mound or upright crouch.",
+   "kind": "scene"
+  },
+  {
+   "change": "Moss-newt creature (Df): rebuild as a clearly headed, taller hero model matching the Mosshock board (big amber eyes, moss crown, pale belly), so it stands taller than the 1.80 m trainer and its face reads at 30%.",
+   "kind": "new_art"
+  }
+ ]
+}

@@ -1,0 +1,5 @@
+Df: "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face"; "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)"
+Uh: none
+Sh: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Sn: none
+Hv: none

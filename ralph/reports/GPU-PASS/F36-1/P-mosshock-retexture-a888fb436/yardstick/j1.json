@@ -1,0 +1,90 @@
+{
+ "sets": {
+  "Df": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT",
+     "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+     "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's mossy olive newt has the right naturalistic family, but it is a low, mid-value mound that barely clears the trainer and dissolves into a log shape in the faint poses; A's lime-and-black camo reads as a placeholder texture, not a Palworld-class creature."
+  },
+  "Uh": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder villager (expressive eyes, white hair, olive vest and green scarf) whose palette sits in the key art's earthy world; only the slightly toy-like face separates it from the naturalistic creature style."
+  },
+  "Sh": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's panel is legible and on-direction (blue-grey translucent, warm gold ingredient lines, iconised Craft/Leave), but the oversized recipe cells show only about three recipes and the murky, near-black world behind it is nowhere near Palworld's bright finish."
+  },
+  "Sn": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A dark brown-green murk with no purple storm sky, lightning or light shafts, flat magenta ground rings as telegraphs, a tiny barely visible player creature and a HUD that covers much of each frame sank it, although the golden Voltarach spider itself is on-board."
+  },
+  "Hv": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's white-and-ice-blue wolf has a clear silhouette, black ear tips and proper scale over the trainer, but its fur is flat white with little value structure and the faint mid frame floats above its shadow; A's faint end collapses into an upright white blob."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Relight Stormwood fights: purple storm sky and white-violet lightning, rim light on both fighters, a camera that keeps trunks and canopy out of frame, and replace the flat magenta telegraph rings with real lightning/stone ground effects; slim down the fight HUD.",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature material pass for value range and rim light (Df newt moss and belly, Hv fur shading, Voltarach blue glow), plus fix the faint-end poses so the face stays visible and the body stays grounded.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the Df moss newt to the Mosshock board: taller-than-trainer body, a big amber-eyed readable head and a clear silhouette instead of a low lumpy mound.",
+   "kind": "new_art"
+  }
+ ]
+}

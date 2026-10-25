@@ -1,0 +1,90 @@
+{
+ "sets": {
+  "Df": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "PRESENT",
+     "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "a yellow-black or lime-and-black camouflage blotch pattern that breaks up the silhouette and hides the face": "FIXED",
+     "mouth, lips or eye rims in dark red or oxblood (a colour reserved for the enemy faction)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's mossy naturalistic newt is on-style but a single muddy olive mid-tone with no eye pop or rim light, and both sides stand barely as tall as the trainer, so neither reaches Palworld creature finish (A's toy-like lime-black camo sinks it outright)."
+  },
+  "Uh": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A polished, warm, readable elder with an earthy key-art palette carries it, though the face is a touch more Pixar-cartoon than the naturalistic creature style and is shown only on a dark void."
+  },
+  "Sh": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's panel is legible and on-palette, but plain keyboard-glyph hints with no teal interaction accent, only three recipes visible and a murky rain-dark world behind keep it short of shipping finish."
+  },
+  "Sn": {
+   "A": {
+    "bar_a": 3.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The board-faithful gold Voltarach reads, but flat magenta ring/slab telegraphs, a near-invisible player creature, a heavy HUD and a brown murky grade with no purple storm sky or lightning sink it (A also loses frames to foliage)."
+  },
+  "Hv": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A large, clearly-above-ruler white wolf with fur close to the owner style bar carries it, but A's faint end collapses into an unreadable blob and B's faint mid floats above its shadow."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight (Sn): replace flat magenta rings/slabs with grounded lightning-strike and ground-crack telegraphs, pull the combat camera clear of trunks/canopy, add the purple storm sky, blue-green moss and rim light on both fighters, and slim the HUD so the player's creature reads",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature materials and scale (Df, Hv): give Df a naturalistic moss palette with contrasting eyes/face and rim light (B direction, not lime-black camo), scale all creatures clearly above the 1.80 m trainer, and fix faint poses that blob or float",
+   "kind": "scene"
+  },
+  {
+   "change": "Craft panel (Sh): keep B's larger untruncated text, add controller-first button glyphs with teal/cyan accent for Craft/Leave, and tighten row height so more recipes show at once",
+   "kind": "scene"
+  }
+ ]
+}

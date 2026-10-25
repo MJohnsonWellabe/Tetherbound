@@ -1,0 +1,56 @@
+{
+ "anchors": {
+  "f36_0_npc:C1A": [
+   6.8,
+   6.8,
+   6.6
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   6.7,
+   6.5
+  ],
+  "craft:before": [
+   4.4,
+   4.8,
+   4.4
+  ],
+  "craft:after": [
+   6.5,
+   6.5,
+   6.2
+  ],
+  "f10_2_r3_capacitor:control": [
+   3.6,
+   4.0,
+   3.9
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.6,
+   5.2,
+   4.7
+  ],
+  "f36_0_gap:C3A": [
+   5.4,
+   6.1,
+   6.1
+  ],
+  "f36_0_gap:C3B": [
+   6.3,
+   6.8,
+   6.4
+  ]
+ },
+ "candidates": {
+  "P mosshock Medium cand|ship | mosshock-ship-Medium": [
+   3.6,
+   4.5,
+   4.4
+  ],
+  "P mosshock Medium cand|ship | mosshock-cand-Medium": [
+   5.8,
+   5.8,
+   5.7
+  ]
+ }
+}
