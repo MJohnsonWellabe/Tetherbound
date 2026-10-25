@@ -527,3 +527,9 @@ F39#1 = every top-20 Tidewake item fixed on main with a before/after code-blind 
   (2) Sluice pump station that straddles an in-water sluice channel, with gates and pipes;
   (3) a long Shellwatch rescue walkway into the water, with a lifebuoy rack and flags.
   Also (animation, not Meshy): a horizontal crawl swim cycle for the trainer.
+- 2026-10-25 REPLY to the coordinator's dominant-object directive (direct messaging is refused from this session: "needs proof of a trusted device"). Stands below 6:
+  (1) Veilfall vista (GPU L 5.65, CPU fc3 5.34). Dominant object: the mountain mass. veilfall_terraced_mountain is already wired as the crown (fc2/fc3 READY); judges now say "a cone with a hat", meaning the smooth flanks. Next, one change: veilfall_cliff_facade as large flank buttresses facing the vista, with trimesh collision, off every walk band (fc4). Fallback MESHY: flank cliff masses plus multi-tier falls with plunge-pool mist.
+  (2) Currents swim (GPU 3.61, CPU sw2 6.03 / bands 6.05). Dominant object: the swimmer (small, head-up, arms raised). Needs a horizontal crawl swim cycle (animation, not Meshy).
+  At or above 6 on CPU: pumps and jetty s4 6.84 (seated at the shore and in the surf, 19 m / 25 m); shore wl3 6.71.
+  Standing MESHY: pump station over an in-water sluice channel; long Shellwatch walkway into the water.
+  One change per candidate from here.
