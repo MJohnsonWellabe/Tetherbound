@@ -1,0 +1,34 @@
+{
+ "Xe": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Yg": {
+  "anchor": false,
+  "label": "sage gate",
+  "A": "/tmp/claude-0/lane/b4/sides/gate_a.jpg",
+  "B": "/tmp/claude-0/lane/b4/sides/gate_c.jpg"
+ },
+ "Nb": {
+  "anchor": false,
+  "label": "sage summit",
+  "A": "/tmp/claude-0/lane/b4/sides/summit_a.jpg",
+  "B": "/tmp/claude-0/lane/b4/sides/summit_c.jpg"
+ },
+ "Vd": {
+  "anchor": true,
+  "A": "f36_0_npc:C6A",
+  "B": "f36_0_npc:C6B"
+ },
+ "Sa": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Ql": {
+  "anchor": true,
+  "A": "f36_0_gap:C4B",
+  "B": "f36_0_gap:C4A"
+ }
+}

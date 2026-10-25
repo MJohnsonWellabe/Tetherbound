@@ -19,7 +19,12 @@ func build(materials: Dictionary) -> void:
 		push_error("Stormward Overlook visual config is invalid")
 		return
 	var cfg := parsed as Dictionary
-	var masonry := _material(materials, "masonry")
+	# A judged-next round, OFF unless enabled or a capture passes its preview arg.
+	var next: Variant = cfg.get("candidate", {})
+	if next is Dictionary and (bool(next.get("enabled", false))
+			or OS.get_cmdline_user_args().has(str(next.get("preview_arg", "--none")))):
+		cfg.merge(next.get("overlay", {}), true)
+	var masonry := _material(materials, str(cfg.get("ruin_material", "masonry")))
 	var trim := _material(materials, "masonry_trim")
 	var bronze := _material(materials, "bronze")
 	var piers: Array[MeshInstance3D] = []
@@ -41,7 +46,8 @@ func build(materials: Dictionary) -> void:
 			_v3(spec.size), trim, "approach_paver")
 		paver.rotation = Vector3(deg_to_rad(float(spec.get("pitch_deg", 0.0))),
 			deg_to_rad(float(spec.get("yaw_deg", 0.0))), 0.0)
-	_add_needle(cfg.get("stormward_needle", {}) as Dictionary, bronze)
+	if bool(cfg.get("show_needle", true)):
+		_add_needle(cfg.get("stormward_needle", {}) as Dictionary, bronze)
 	_add_compass_signal(cfg.get("compass_signal", {}) as Dictionary, bronze)
 	_add_compass_support(cfg, piers, _material(materials, "weathered_timber"), bronze)
 	_add_banners(cfg.get("banners", []) as Array)

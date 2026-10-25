@@ -1,0 +1,8 @@
+Gf: none
+Bv: "The heartstone is a smooth untextured cyan egg rather than a crafted crystal"; "The approach camera is blocked by a large rock beside the trainer"
+Vs: "Flat saturated blue rings and spokes lie on the landing court like painted plastic bands"; "A large world-space character caption overlaps the right third of some frames"
+Ps: none
+Rb: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Lr: "Flat saturated blue rings and spokes lie on the landing court like painted plastic bands"; "A large world-space character caption overlaps the right third of some frames"
+Zm: "The fixed stands' foregrounds are flat lawn or bare dirt, so the settlement does not start at the viewer's feet"; "Some night frames stay flat moon-blue instead of reading as lamp-lit, inhabited settlements"; "Under the warm lamps the night road reads rust-red, close to the oxblood reserved for the enemy faction"; "Window glow blows out to flat white instead of reading as lit windows"
+Ua: none

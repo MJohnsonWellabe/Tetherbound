@@ -1,39 +1,43 @@
-# Tidewake close-1024 batch b5: F13#5 currents (24 Oct 2026, CT)
+# Tidewake close-1024 round b5: destinations s4, CPU pre-judge (25 Oct 2026, CT)
 
-- **Item:** F13#5 currents frame (P2-066). Fixed views from `tools/capture_tidewake_f13_5.gd --only=currents`: three departure beaches (First Shore, Brine Steps, Salt Crown) plus the Brine Steps swimmer view.
-- **Control:** main 5f1f388cc, shipping look (`current_flow` is in `sections_off`).
-- **Candidate b5:** `--tidewake-look-candidate` at 57eadb9f1. Tide-line seams along both banks, wavelet caps, dashes at 0.3, no floaters.
-- **Renderer:** CPU llvmpipe, Low/Compatibility, 1920x1080.
-- **Yardstick:**
-  - `JUDGE_PROMPT.md` verbatim, three fresh code-blind judges.
-  - `anchor_tiles.py --seed 1024` gave the anchors f36_0_npc C3, f04_6_r22 and f36_0_gap C2.
-  - `calibrate.py` used the offset fallback (least-squares slope 2.02), anchor RMSE 0.72, top anchor 6.9.
+## What changed (`destination_landmarks_s4_candidate`, OFF in play, layered on s3)
+
+s4 entries replace s3 entries by `landmark_id`; a later layer wins. The new test `tests/test_water_landmark_destinations.gd` covers this (2 tests, 6 assertions).
+
+- **Pumps:** 5 m further seaward, to (993.0, 2712.3), so the wheels stand in the surf. Still 19 m.
+- **Shellwatch jetty:** grows from 19 m to 25 m, the top of the coordinator's 1.5–2x range over 13 m.
+- **Rescue-post group:** built from the installed Tidewake family:
+  - keeper hut, 7 m
+  - signal lantern post
+  - buoy and pot stack
+  - net drying rack
+  - beached rowboat
+- **Arms:** A = `destination_landmarks_candidate,destination_landmarks_s3_candidate` (s3, judged in b2). B = A plus `destination_landmarks_s4_candidate`.
+- **Stands:** `pumps-shore` and `jetty` (P2-011-destinations.json).
 
 ## Mapped Bar A
 
-| Side | Raw (j1/j2/j3) | Mapped mean |
-|---|---|---|
-| Control (main) | 5.0 / 5.3 / 4.9 | 5.64 |
-| **b5** | 5.4 / 5.8 / 5.4 | **6.11** |
+- **Yardstick:** standard prompt, three code-blind judges, 3 anchor pairs (seed 24733).
+- **Calibration:** slope 1.30, r 0.93, anchor RMSE 0.51.
 
-- Previous best was 4.96 (close-1022 b3, different batch), so the gain on best is +1.15.
-- Not at 6.7 CPU-provisional or 7.5. The candidate stays OFF.
+| Set | s3 | s4 | Δ | Judges |
+|---|---|---|---|---|
+| Pumps and Shellwatch | 6.36 | **6.84** | +0.48 | higher x3 |
 
-## Recorded defects (b5, three judges)
+**Defect changes:**
+- **Structures read small:** PRESENT x3 → PARTIAL x3.
+- **Unmarked or generic:** PRESENT x1, PARTIAL x2 → PARTIAL x3.
+- **Away from its water:** PARTIAL on both sides. The pumps base still reads as on dry sand, with only the wheel at the waterline.
 
-| Defect | Result |
-|---|---|
-| Road markings | PARTIAL x3 |
-| Direction unreadable | PARTIAL x3 |
-| Markers read as boxes/debris | PARTIAL x3 |
+## Disposition
 
-The control was PRESENT on all three, except one judge's "direction" PARTIAL.
+s4 is above the 6.7 CPU-provisional floor in this batch. Across rounds the destinations went from lm2 4.60 → s3 6.07 (b2), and from s3 6.36 → s4 6.84 here. The two batches are separate scales.
 
-## Judges' asks
+**READY for the GPU, CPU-provisional.** A GPU pass is owed before 7.5 is claimed.
 
-1. Show a direction: tapered, curving, streaming foam instead of straight parallel streaks. The swim-view streaks still read as markings.
-2. A colour shift along the lane (deeper lane water) and visible chop or swell.
-3. Proper buoys. The yellow pennants are tiny, and a blue object by the dock reads as clutter. A Meshy spar buoy and driftwood are requested.
-4. Outside the row: navy depth in open water, and dune value and texture.
+## Remaining (all three)
 
-**Process note:** the side-by-side 2x2 sheet was downscaled to 2000 px wide for the judges. Later batches stack each side's frames vertically.
+1. **Pumps:** read as a mill or twin towers. They need a sluice gate or channel with pipes in the water (new art).
+2. **Shellwatch:** still small at its stand's distance. Judges ask for a long walkway into the water, lifebuoys and flags.
+3. **Dune foreground:** empty and uniform, with evenly scattered grass.
+4. **Shoreline:** a flat white band blows out at the right edge.

@@ -1,0 +1,104 @@
+{
+ "sets": {
+  "Xe": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A is readable, but the panel lacks controller-first glyphs and the teal/gold accent hierarchy of a shipping UI."
+  },
+  "Yg": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A flat, saturated lawn and a placeholder grass slab over the gate sink it despite a good sky."
+  },
+  "Nb": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "A uniform, highly saturated mid-green grass carpet leads the frame and blocks the pale-stone, bright-sky read": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The dome landmark carries it, but the uniform grass foreground and flat midday light keep it below the Palworld finish."
+  },
+  "Vd": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The outfit silhouette is fine, but the stiff face and dead eyes are below Palworld character finish."
+  },
+  "Sa": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Magenta ring telegraphs, an invisible player creature, foliage blocking the camera (B) and no storm atmosphere sink it."
+  },
+  "Ql": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B is close and on the owner style bar for fur and lightning; A's material breaking in the faint poses and the floating body hold it back."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Break the Cloudreach grass carpet: desaturate toward pale ochre and stone, expose stratified rock shelves and scree, cluster grass into edges and clearings, curve the paths",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight view: camera collision with or fade-out of trunks and canopy, rim-light the player creature, replace the magenta ring telegraphs with lightning or stone effects under a purple storm sky",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the gate's flat grass/rock cap slab with a modelled pale-stone crag/arch hero piece",
+   "kind": "new_art"
+  }
+ ]
+}

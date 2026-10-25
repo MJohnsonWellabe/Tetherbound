@@ -2,7 +2,360 @@
 
 Rows: F13#5 (failing), F39#1, #2, #3, #5. Previous note: `../close-1022/NOTES.md`.
 
+## Handoff (state, 25 Oct 2026 13:30 UTC; lane PAUSED by owner usage cut)
+
+### Branch heads
+- **`tb/tidewake`** at the commit that carries this handoff (last code commit `e02065d74`, swim_stroke_candidate). It carries 153 commits not on main. **Nothing from close-1024 has landed.** Main's `tidewake_look.json` has none of the sections listed below. All close-1024 work sits here, every candidate OFF in play (listed in `sections_off`).
+- **`tb/tidewake-land`** at `a6bbba553`. This is already merged into main: the fight-HUD prompt-yield fix only.
+- **Main** at `1d5faebac` when checked.
+
+### Open candidates
+All are OFF. Each is enabled for a capture with `--tidewake-look-sections=`. Scores are mapped CPU Bar A. Each round's A/B is its own batch, so compare deltas, not absolute numbers across rounds. Evidence is in `close-1024/<round>/`.
+
+| Candidate (sections) | CPU verdict | GPU | Next step |
+|---|---|---|---|
+| **Veilfall face fc3:** `current_flow,veilfall_falls_candidate,rain_fog_candidate,rain_veil_candidate,veilfall_mountain_candidate` | fc2 5.27→5.98 vs shipping; fc3 beat fc2 4.41→5.34 | GPU L (older crown) 5.65 clear / 5.44 rain | GPU it. Then flank massif MESHY (request below). Judges: "a cone with a hat", falls are flat sheets, rain greys it |
+| `veilfall_buttress_candidate` (fc4, cliff_facade ×4 flank) | PARKED, not judged: buried pale blocks | – | Replace with the flank-massif mesh |
+| **Destinations s4:** `destination_landmarks_candidate,destination_landmarks_s3_candidate,destination_landmarks_s4_candidate` (P2-011 `pumps-shore,jetty`) | lm2 4.60 → s3 6.07 (b2); s3 6.36 → s4 **6.84** (b5) | GPU K (lm2-era): pumps 5.79, jetty 5.58 | GPU it. Then MESHY: sluice-channel pump station, long Shellwatch walkway |
+| **Swimmer sw2:** `current_flow,swim_candidate` | 5.25→6.03 (b2) | currents set GPU 3.61 | GPU it |
+| `current_bands_candidate` (on sw2) | 5.87→6.05 (b3), x2/3 | – | GPU it with sw2 |
+| `swim_stroke_candidate` (on sw2 + bands) | captured (`st_b`), **unjudged** (judges stopped at pause) | – | Judge vs bands (spec in `key_b6` recipe); then a real crawl animation if it isn't enough |
+| **Shore wl3:** `current_flow,shore_surf_candidate,shore_surf_vary_candidate,first_shore_declutter_candidate,stones_candidate,golden_sky_candidate,lesson_clusters_candidate` | wl1 base 5.91 → wl2 6.30 (b3); wl2 6.32 → wl3 **6.71** (b4, weak fit r 0.77) | GPU lt2 sheet: owner "sand good, cluttered, water could use work" | GPU it |
+| Earlier READY, still OFF: `t1e current_flow`, `shore_surf(_vary)`, `rain_fog`, `veilfall_falls`, landmarks lm2 | see t1e/t4/rf1/vv1/lm2 verdicts | GPU queued by coordinator | – |
+
+### Open criteria (CPU-provisional floor 6.7 mapped; bar 7.5)
+- **F39 Veilfall (#4/#5):** GPU 5.65 / CPU 5.34–5.98. Dominant defect: the mountain mass, a smooth cone under the crown. New art is needed.
+- **F13#5 currents:** GPU 3.61 / CPU 6.05. Dominant defect: the swimmer, which is tiny, head-up and has its arms raised.
+- **P2-011 destinations:** CPU 6.84. Pumps read as a mill on sand; Shellwatch is small.
+- **F39 shore:** CPU 6.71. Dunes are bare; 18:00 has no sun-side glow.
+- **Oxblood:** a dark-red wild spawn (Sluice table `water_sluice_isle_land`: mirejaw/riptusk/cragclaw, maybe a shiny hue) shows near the pumps and on the current shores. It is untouched; it belongs to the creatures lane.
+
+### What worked and what didn't
+
+**Worked** (mapped CPU delta):
+
+| Change | Delta | Round |
+|---|---|---|
+| Destinations: shore seats and scale | +1.47 | b2 |
+| Destinations: rescue-post dressing and 25 m jetty | +0.48 | b5 |
+| Swimmer: ring faded and half-submerged | +0.78 | b2 |
+| Veilfall: crown + terraces + rain veil | +0.71 | fc2 |
+| Veilfall: softer 28 m terraces, dark ledges (fc3 over fc2) | +0.93 | fc3 |
+| Shore: lesson clusters | +0.39 | b4 |
+| Shore: grouped stones + warm 18:00 sky | +0.39 | b3 |
+| Current bands | +0.18 | b3 |
+| Earlier: currents | +0.52 | t1e |
+| Earlier: surf | +0.57 | t4 |
+| Earlier: rain fog | +0.51 | rf1 |
+| Earlier: lm2 landmarks | +1.45 | lm2 |
+
+**Dead ends** (don't repeat):
+
+| Change | Result | Round |
+|---|---|---|
+| Fewer drift markers / buoys | level, +0.11 | wl1 |
+| Swim pose only, ring visible | level, −0.12 | sw1 |
+| Lighter in-lane tint | −0.49, flattens the whole sea | b4 |
+| Rain overcast grade | level | rg1 |
+| Shore water colour / mid stop | level | t2, t2b, shore_water |
+| Dune grass density | level | dw1 |
+| Sharp 22 m terraces | read as a sawtooth zigzag | fc2 vs fc3 |
+| Unterraced crown on a smooth cone | 4.51 vs 4.75 | nv1 |
+| Terraces without the ledge tint | sand stripes | fc1 |
+| `veilfall_cliff_facade` as flank buttresses | buried blocks | fc4 |
+
+## Harness runbook (exactly what this lane ran)
+
+Committed copies of every local script are in `close-1024/runbook/` (this commit): `capture.sh`, `stack.py`, `judge_prep.py`, `height_probe.gd`.
+
+### Environment
+- **Godot:** `~/godot-bin/godot` (v4.7.stable), CPU (Mesa llvmpipe) through `xvfb-run`, Compatibility renderer, preset Low. No `XDG_*` overrides were needed.
+- **Captures:** go to `~/cap/<name>/` (frames, `metadata.json`), with the log at `~/cap/<name>.log`.
+
+### Capture
+`runbook/capture.sh <name> <camera_set.json> "<args>"` runs:
+```
+timeout 1800 xvfb-run -a -s "-screen 0 1920x1080x24" ~/godot-bin/godot --path . --rendering-method gl_compatibility --rendering-driver opengl3 --resolution 1920x1080 --script res://tools/capture_tidewake_f13_5.gd -- --out=$HOME/cap/<name> --camera-set=res://tools/visual_judge/camera_sets/<set> --source-sha=<full HEAD sha> --capture-size=1920x1080 --preset=Low --views=a,b --tidewake-look-sections=s1,s2
+```
+
+**Camera sets:**
+- `F39-look.json`: shore-day, lesson-dune, shore-golden, veilfall-vista, veilfall-vista-rain (750 m stand).
+- `T2-current.json`: swim-away-day, swim-across-day, swim-away-night.
+- `P2-011-destinations.json`: pumps, pumps-shore, jetty.
+
+**Timing:** about 4–6 min per run of 2–3 views.
+
+**Contact sheets:** `python3 runbook/stack.py out.png f1.jpg f2.jpg ...` (960×540 tiles, stacked vertically).
+
+### CPU judge (code-blind, standard prompt)
+1. Write a `spec.json` with the sets, then run `python3 runbook/judge_prep.py <name> <seed> spec.json`. It runs `anchor_tiles.py --pairs 3 --include craft --include f36_0_npc:C1`, copies `docs/reference`, and builds the prompt from `JUDGE_PROMPT.md` lines [36:155] with the folder, set list and recorded defects filled in.
+2. Run three fresh background general-purpose agents on `p.txt`. Each takes about 60–90 s.
+3. Map each set's A/B through `key.json`. Sides are shuffled per set, so check every time.
+4. Copy the anchor scores from each judge's JSON, never from memory. Keep the judge order the same across rows.
+5. Write `batch.json` (`{"anchors":{tile:[j1,j2,j3]}, "candidates":{label:[j1,j2,j3]}}`) and run `python3 tools/visual_judge/calibrate.py batch.json --out mapped.json`.
+6. Commit only VERDICT.md, batch.json, key.json, mapped.json and one `_sheet*.jpg` under 1.5 MB.
+
+### Tests
+```
+godot --headless --path . --script tests/run_tests.gd -- --only=test_a,test_b
+```
+The ones used here:
+- `test_tidewake_look_profile` (asserts every new section ships OFF; add each new section to its list)
+- `test_water_veilfall_relief_walk`, `test_water_veilfall_geometry`
+- `test_water_landmark_trimesh_collision`, `test_water_landmark_destinations`, `test_veilfall_buttress_seats`
+- `test_human_swim_visual`, `test_human_water_contact_visual`
+
+### Veilfall cap bake
+1. `godot --headless --path . --script res://scripts/world/build_water_terrain.gd -- --veilfall-cap` (about 10 min). It writes all of `data/terrain/water_veilfall_cap/`.
+2. The bake is **not byte-deterministic**: every region differs from shipping. Keep only the six regions that intersect the Veilfall disk (r 400 m around (200, 4140), with 512 m regions): `terrain3d-01_07, -01_08, _00_07, _00_08, _01_07, _01_08`. Copy every other `.res` back from `data/terrain/water/`.
+
+### Harness problems hit
+Each entry gives the cause, the fix, and where the fix lives.
+
+1. **Disk allowance:** about 600 MB free, `.git` is 18 GB. Fetch shallow (`git fetch --depth=1 origin <branch>`) and delete old `~/cap/*`. Local workaround.
+2. **`--source-sha` with a `-dirty` suffix is refused.** Commit and push first, then pass the full SHA. `capture.sh` reads HEAD.
+3. **Editing `tidewake_look.json` during a capture:** `settings()` re-reads the file, so edits race the capture. Never edit config while a capture runs.
+4. **Corrupt JSON was pushed once** (a sed comment edit dropped a quote). Edit with Python plus `json.loads` validation; `capture.sh` validates both JSON files first.
+5. **A JSON reformat produced a huge diff.** Do targeted line edits only; never `json.dump` the whole file.
+6. **One-Godot rule:** headless tests once overlapped a capture. Serialize them. Use `kill $(pgrep -x godot)`, never `pkill -f` with a pattern that matches your own shell (it killed the shell, exit 144).
+7. **Bash `cat` without input hung on stdin.** Local workaround.
+8. **The cap bake is not deterministic.** Use the region dedupe above.
+9. **A wrong region set:** the first dedupe kept only the four summit regions, but the terraces reach x 600. Keep the six regions above.
+10. **Typed GDScript probes:** `var p := c + Vector2(...) * r` fails to infer. Annotate `var p: Vector2 = ...`.
+11. **Analytic heights in a probe are uncapped:** the cap applies only with `veilfall_mountain_candidate` ON. See `height_probe.gd` header.
+12. **Rain streaks were invisible from far stands:** the shared rain ring follows the player 6.5–20 m out, and the vista eye is about 400 m from its stand. Fixed in game code with `rain_veil_candidate` (camera-following far layer, `scripts/world/tidewake_rain_veil.gd`), not in the harness.
+13. **Random wild spawns change between captures** (species and colour). Expect creature differences between A and B; note them in the verdict.
+14. **Cross-session messaging to the coordinator is refused** ("needs proof of a trusted device"). This NOTES file is the channel.
+
 ## TO COORDINATOR
+
+- 2026-10-25 03:00 CT **READY: `tb/tidewake-land` at a6bbba553** (a6bbba553e87bd5d22a964202a6977ae7e87e99b). The fight HUD prompt-yield fix only (one cherry-picked commit on origin/main 124a7393c).
+  - **Files:** `scripts/ui/playground_hud.gd` and `tests/smoke_fight_world_prompt_yield.gd`.
+  - **Checks there:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed. `smoke_fight_world_prompt_yield` passed.
+  - **Not included:** the heightfield relief and every other OFF candidate.
+
+- 2026-10-25 02:40 CT **READY (functional fix, worst-first on the sub-6 Venn fight): the fight HUD overlap, `tb/tidewake` fe26613a5.**
+  - **The defect:** "E Gather Reef Stone" drew over "C Switch / Esc Flee" in every Venn fight frame. Every Tidewake fight judge since mx1 has flagged it.
+  - **Why the earlier fix missed it:** 5fb669d7b hid the world prompt only while the legacy `_grid_panel` showed. The F42 system overlay hides that grid and draws the command strip itself.
+  - **Fix:** the prompt now also yields while the overlay shows, except in a relay phase.
+  - **Test:** `smoke_fight_world_prompt_yield` now covers the overlay path. It fails without the fix and passes with it.
+  - **Checks:** HUD and prompt tests, 90 tests and 560 assertions, 0 failed.
+  - **Landing:** this touches `scripts/ui/playground_hud.gd` (the UI lane's file), so it is a small cross-lane fix. Land it with my next head, or hand it to the UI lane, whichever you prefer.
+
+- 2026-10-26 00:20 CT **WITHDRAWN: the 22:40 Veilfall crown READY (nv1/VERDICT.md).**
+  - **Result:** on the reframed 750 m vista stand (your rule, both arms re-captured), shipping 4.75 vs crown 4.51, lower x2.
+  - **Why:** mt1's win came from the old stand cropping the summit. With the whole island in frame, the small crown on a smooth cone reads as a placeholder next to shipping's broad main fall.
+  - **State:** the crown stays OFF. The cap, its tests and its bake stay in the tree, OFF.
+  - **Single READY head for the Veilfall row** on the new stand: T1e + `veilfall_falls_candidate` + `rain_fog_candidate`.
+    - Please re-take the GPU Veilfall baseline on the new stand.
+  - **Next idea:** carry the crown family down the face (terraced relief plus the main fall on the capped face). I'll report before building it.
+
+- 2026-10-26 12:00 CT **INFO: the Veilfall face (fc1/VERDICT.md) is parked after three attempts that did not beat shipping on the 750 m stand.**
+  - **Terraces:** they banded into sand stripes, so they are back to off and rebaked.
+  - **Falls:** they are hidden under the crown's base.
+  - **Options:**
+    1. A terrain material pass so ledges get rock and grass instead of sand.
+    2. A narrower crown so the falls show.
+    3. A full-mountain Meshy asset instead of a crown. If you want this one, I can draft the request.
+  - **Veilfall READY head is unchanged:** T1e + falls f2 + rain fog.
+
+- 2026-10-26 10:10 CT **READY update: P2-011 destination landmarks s2 (lm2/VERDICT.md) replaces the lm1 numbers.**
+  - **Change:** the jetty moved to the shoreline, and both are 13 m.
+  - **CPU mapped, reframed P2-011 stand:** 5.36 → **6.81** (+1.45). All three judges higher.
+
+- 2026-10-25 23:30 CT **READY for the GPU lane: P2-011 destination landmarks (lm1/VERDICT.md).**
+  - **Change:** `destination_landmarks_candidate` places MESHY 11-12, the twin pumps and the rescue jetty.
+  - **CPU mapped:** 4.33 → **5.58** (+1.25). All three judges higher.
+  - **Capture:** `P2-011-destinations.json` (new), shipping vs `--tidewake-look-sections=destination_landmarks_candidate`.
+  - **Known:** both are small and sit away from the water. Re-seating at the shoreline is next.
+
+- 2026-10-25 22:40 CT **READY for the GPU lane: Veilfall crown + summit cap (mt1/VERDICT.md), `tb/tidewake` 42300a3af.**
+  - **Built:** the cap is built as you approved, OFF until judged.
+    - Walk band, anchors and gate are proved unchanged.
+    - The cap's knee is 210 m, above the 196.9 m maximum walk.
+    - Crown collision follows the drawn mesh (test). The terrain collision matches the capped bake.
+    - The new key carries `scope` and `_why`.
+  - **CPU mapped, veilfall-vista:** shipping 3.52 → **4.64**. That is +0.50 over T1e + falls. All three judges higher.
+  - **Caveat:** the vista crops the crown, so judges mostly scored the smoother lower island. It is still under the 5.2 floor.
+  - **QUESTION:** may I pitch the vista stand up so the whole landmark is in frame (the judges' ask)? It is a yardstick change.
+  - **Dropped:** the two HUD READY entries (landed in #734).
+
+- 2026-10-25 20:30 CT **INFO + QUESTION (MESHY 10-12 received, thank you).**
+  - **Integration:** all three are in `tb/tidewake` flag-OFF. Textures are on mode 2 (policy check PASS on 9 sidecars) and the import is clean.
+  - **`veilfall_terraced_mountain`:** placed as `veilfall_mountain_candidate`. The landmark loader gained an optional `stretch_xz`.
+    - The crown cannot read as a render shell over the shipped terrain. Five far and vista probes showed why:
+      1. At 1.4x it is buried by the render-only crag heap. The candidate now hides that heap while ON.
+      2. With the heap hidden, it is buried by the 620 m terrain cone itself.
+      3. Widened to 2.0x on a ~200 m base, it shows as a floating collar with the smooth summit poking through.
+  - **QUESTION:** the fix is to cap the Veilfall terrain cone below the crown, above every walkable height, so the crown replaces the summit.
+    - This uses the same masked heightfield mechanism as hf1 (`veilfall_relief`) and needs a rebake of the six Veilfall regions.
+    - Walk band, anchors and gate would be proved unchanged, as in hf1.
+    - Shall I build it? It is a terrain change.
+  - **Twin pumps and rescue jetty:** imported, not yet placed. Each destination stand needs a placement probe first.
+  - **Two rounds level, both OFF:**
+    - `dune_grass_candidate` (the probe proved the tufts are the ground-cover grass field; random keep in colonies);
+    - `shore_water_candidate` (shipping colours, softer step). See gw1/VERDICT.md.
+
+- 2026-10-25 18:10 CT **READY addendum (rf1/VERDICT.md): `rain_fog_candidate`.**
+  - **What it does:** Tidewake-only rain mist at 0.35 of the shared preset.
+  - **CPU mapped, rain views:** 5.67 → **6.18**. All three judges higher. The fog-flattening defect is FIXED x3.
+  - **Trade-off:** rain now reads only through streaks. A darker overcast grade is next.
+  - **Overcast grade (rg1):** a darker sky, dimmer sun and ambient was level (6.36 vs 6.29), so it stays OFF. Making rain read needs wet sand and sea ripples, a material job.
+
+- 2026-10-25 16:40 CT **STATUS against the 5.2 CPU floor (coordinator 25 Oct), plus READY addenda.**
+  - **Currents:** T1e. Swim views 5.77, Deep Watch 6.09. Above the floor. READY.
+  - **Shore:** T1e plus the surf line, 6.67 (vary 6.86). Above the floor. READY. Declutter D is READY separately.
+  - **Deep Watch landforms:** T1e plus the surf line, 5.89 (vary 6.18). Above the floor. READY.
+  - **Veilfall vista (vv1, vf4):** shipping 3.92 → T1e 5.06 (vv1).
+    - **READY addendum: f2 `veilfall_falls_candidate`,** another +0.36 in a matched batch (vf4).
+    - **The Meshy hero pieces** (cascade tier, plunge rocks, facade) lower the vista to 4.82, so they stay OFF.
+    - **The rest is new art:** the mountain (MESHY 10). Please generate it when you can.
+  - **Venn fight:** Fights PR #738. Not mine.
+
+- 2026-10-25 13:30 CT **INFO (T4 beach grass): `dune_grass_candidate` reverted, not judged.**
+  - **Tried:** fewer shore pioneers and tighter colonies in `water_ground_cover`.
+  - **Result:** no visible change at Deep Watch. The even tufts there come from another layer.
+  - **Plan:** the clump fix needs the layer that places those tufts found first.
+  - **14:10 update:** a second try (`dune_groundcover_candidate`: fewer, denser Grass_Wispy_Tall clusters) also made no visible change, so it is reverted too.
+  - **Re-scoped:** that's two candidates with no visible effect on the beach tufts. The beach-clump item is parked until the placing layer is identified with a toggle-off probe. Not guessing further.
+  - **State of `tb/tidewake`:** head carries only judged candidates, T1e and T4 plus vary, all OFF in play.
+
+- 2026-10-25 12:40 CT **READY addendum (t4c/VERDICT.md): optional `shore_surf_vary_candidate` on top of T4.**
+  - **CPU mapped:** shore 6.63 → 6.86, Deep Watch 6.04 → 6.18. A small gain, every judge +0.1 to +0.2.
+  - **Capture:** add it to the T4 section list.
+  - **Grouped stones:** level to slightly lower, stays OFF.
+
+- 2026-10-25 10:30 CT **READY for the GPU lane: T4 surf line, `tb/tidewake` 510f05426 (t4/VERDICT.md).**
+  - **CPU mapped, on top of T1e in both arms:** shore views 6.10 → **6.67**, Deep Watch 5.37 → **5.89**. All three judges higher; r 0.993.
+  - **Change:** a new optional water-shader surf band. It is 0 for every realm, so shipping is unchanged.
+  - **Capture:** commands in the verdict, with `--tidewake-look-sections=current_flow,shore_surf_candidate`.
+
+- 2026-10-25 08:10 CT **READY addendum (T1e also lifts Deep Watch landforms, dw1/VERDICT.md).**
+  - The Deep Watch bay carries the same road markings (glowing at 23:00).
+  - **CPU mapped:** shipping 5.46 → **T1e 6.09** (+0.63, all three judges higher).
+  - **Please add to the T1e GPU run:** `P2-008-shore.json`, without and with `--tidewake-look-sections=current_flow`.
+
+- 2026-10-25 07:20 CT **INFO (T1 parked at T1e): `tb/tidewake` head keeps the judged T1e candidate.**
+  - **T1f made no visible change:** a deeper channel tint (0.22) and a lane sheen (new optional `lane_glint` uniform, inert at 0) barely showed in the captures. Not judged, config reverted.
+  - **Two night-read attempts both made no visible difference:** `moon_glint`, then `lane_glint`. Per the two-attempt rule the night read changes approach, so T1 stops at T1e.
+  - **T1e stays READY** (06:40 line).
+
+- 2026-10-25 06:40 CT **READY for the GPU lane, replacing the 03:40 T1 line: T1e currents, `tb/tidewake` 63aeaefe6 (t1e/VERDICT.md).**
+  - **CPU mapped, same batch as T1:** swim views T1 5.25 → **T1e 5.77** (+0.52), shore views 6.54 → 6.66. All three judges higher. The loud yellow pennants are FIXED.
+  - **Capture:** same commands as `t1/VERDICT.md`, with `--tidewake-look-sections=current_flow`.
+  - **Known gaps:** direction and the night read got weaker. That's the next round.
+  - **INFO:** the water-colour route (T2, T2b) lost twice and is parked. Verdicts in `t2/` and `t2b/`.
+
+- 2026-10-25 04:20 CT **MESHY: requests 10-12 (`meshy-requests.md`, third batch; inputs under `assets/props/meshy-1025/<name>/reference/`).**
+  - **10, `veilfall_terraced_mountain` (P2-010):** 520 x 360 m render-only shell over the upper cone, from the board's exterior view. Scale check and placement are included.
+    - The re-seated `veilfall-vista` views show the mountain as a heap of blocky crag pieces over a smooth cone, which scene work cannot turn into the terraced green cliff mountain.
+  - **11, `tidewake_sluice_twin_pumps`, and 12, `tidewake_shellwatch_rescue_jetty` (P2-011):** destination landmarks for the two stands that still read as generic structures.
+  - **Integration:** this lane integrates each result flag-OFF and judges it against shipping.
+- 2026-10-25 04:20 CT **INFO (T3): re-seated Veilfall views are on `tb/tidewake` in F39-look.json.**
+  - `veilfall-vista` and `veilfall-vista-rain` sit 200 m offshore of the landing stand, looking back at the mountain, the falls and the sea.
+  - Please use them for the Veilfall row from now on. `veilfall-near` and `veilfall-rain` are unchanged, so the queued close-up comparisons (hf1, rock) still match.
+  - Shipping and T1+T2 vista captures are running here.
+
+- 2026-10-25 03:40 CT **READY for the GPU lane: T1 currents flow foam (P2-066), `tb/tidewake` 131b098c9 (t1/VERDICT.md).**
+  - **CPU mapped:** currents swim views 3.66 → **5.92** (+2.26), shore views 5.87 → **6.64**. All three judges higher on both; road markings FIXED x3 on the swim views; r 0.961.
+  - **Capture:** T2-current.json, plus F39-look.json `--views=shore-day,lesson-dune`. Each with and without `--tidewake-look-sections=current_flow`, at Medium and High (commands in the verdict).
+  - **Still OFF in play** until the GPU passes it.
+  - **Next:** night lane visibility, and quieter buoy pennants.
+
+- 2026-10-25 02:00 CT **READY for the GPU lane: the Tidewake F39 matrix baseline (owner: worst-first to 6, then 7, then 7.5).**
+  - **Capture:** at main (124a7393c or later), once at Medium and once at High, each command with `--capture-size=1920x1080 --preset=<Medium|High> --source-sha=<main sha>`:
+    1. Look and weather, all nine stands: `tools/capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json`.
+       - First Shore at 12:00, 18:00, 23:00 and in rain.
+       - The swim-lesson dune at 12:00, 05:00 and in rain.
+       - The Veilfall close-up, clear and in rain.
+    2. Currents and docks, the F13#5 stands: `tools/capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/T2-current.json`.
+    3. Shore landforms: `tools/capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/P2-008-shore.json` (Deep Watch day and night).
+    4. A real fight: `tools/phase2_capture_tidewake_fights.gd --trainer=water_trainer_venn --seed=2042 --expected-resolution=1920x1080`.
+       - The output must be a fresh `res://ralph/reports/VISUAL/phase2/tidewake/<dir>`.
+       - Judge four matched-moment state frames: tell-start 0.65, hit 0.70, hit 1.08 and tell-ended 1.32 s, which all seeded runs share.
+  - **Known sub-6 on CPU:** the Veilfall close-up (4.2-4.4, with the heightfield relief F queued) and the Venn fight (5.4-5.7).
+  - **Still queued:** declutter D and the Forward+ fixes.
+
+- 2026-10-25 01:30 CT **READY for the GPU lane: F39#4 heightfield relief (hf1/VERDICT.md), `tb/tidewake` 2ea20e386.**
+  - **CPU-visible:** close-up 4.39 against 4.17, matched Venn fight 5.72 against 5.36 (both all three judges higher), shore views level. The fight's black slab moved from PRESENT to PARTIAL.
+  - **Gameplay:** the hike's walk band is byte-identical with the relief on and off (new `test_water_veilfall_relief_walk`). The route-grade audit is identical. Anchors and gate are unchanged.
+  - **Bake:** only the six Veilfall terrain regions changed (3.8 MB).
+  - **Capture command:** in the verdict.
+  - **Not in any land head until GPU passes.**
+
+- 2026-10-25 00:20 CT **READY for the GPU lane: F39#4 relief, two arms, on `tb/tidewake` dba5f5e8a.**
+  - **Command:** `capture_tidewake_f13_5.gd --camera-set=res://tools/visual_judge/camera_sets/F39-look.json --views=veilfall-near,veilfall-rain`, on Medium and High.
+  - **Control:** no `--tidewake-look-sections`.
+  - **Arm 1:** `--tidewake-look-sections=veilfall_formation_relief_candidate`.
+  - **Arm 2:** `--tidewake-look-sections=veilfall_formation_relief_fill_candidate` (judge it alone).
+  - **Both arms are verified live in game:** each gate crag renders about 10k relief vertices instead of the coarse ~190, and arm 2's crag material carries the 0.14 fill. The inside-the-collider test covers both amplitudes.
+  - **Plainly, though:** on CPU neither arm changes the veilfall-near frame (pixel diff at noise level).
+    - The crags sit mostly behind or inside the terrain from that stand.
+    - The huge dark faceted planes that fill the frame are Terrain3D, per the raycast probe: the hike's graded corridor and the steep cone flanks.
+    - So the GPU arms may show little. The heightfield is the real target, as you said. I'm on it next, under the hike walk and route constraints.
+
+- 2026-10-24 23:50 CT **INFO / QUESTION: F39#4 relief pass, the first result.**
+  - **Why not the heightfield:** the Veilfall base terrain is a smooth analytic cone. The faceted "slabs" are:
+    - (a) the `exterior_composition` gate crags: 9 segments x 4 rings, 34-76 m tall;
+    - (b) the hike's trail-grading cut, which is the central ramp.
+
+    Re-baking the heightfield would move the hike itself.
+  - **What I built instead** (on the lane, OFF as `veilfall_formation_relief_candidate`):
+    - a render-only relief mesh on the crags: faces subdivided 6x and pushed inward up to 1.6 m by noise plus bedding;
+    - collision is still the coarse trimesh, so the hike and route clearances cannot change;
+    - a test proves every relief point stays inside the collider shell (`test_crag_relief_stays_inside_the_coarse_shell`).
+  - **CPU result: no visible change** (about 30k pixels, capture-noise level). The crag faces in the veilfall-near frame are in full shadow. On Compatibility there is no SSAO and the ambient is flat, so the varied normals do not shade.
+  - **My read:** the "near-black faceted slab" is mainly the unlit shadow side of the crags, not their geometry.
+  - **QUESTION:** do you want me to:
+    - (1) try the relief at a larger amplitude plus a shadow-side fill (a local ambient lift on the crag material, which would change the look, not the geometry); or
+    - (2) queue the relief for the GPU lane as it stands? Forward+ SSAO/SSIL would show the relief where CPU cannot.
+
+- 2026-10-24 23:30 CT **READY for the GPU lane (dc1/VERDICT.md): First Shore declutter.**
+  - **CPU pre-judge:** 5.77 against shipping 5.25, all three judges higher. "Cluttered" moved from PRESENT to PARTIAL or FIXED.
+  - **Candidate:** the two OFF sections `stones_candidate` and `first_shore_declutter_candidate`.
+  - **Capture command:** in the verdict, on `tb/tidewake` 57acc2c0a or later.
+  - **Next:** the owner's water point, then the formation relief (F39#4). The relief code and its inside-the-collider test are on the lane, OFF.
+
+- 2026-10-24 22:30 CT **INFO / QUESTION (rd1/VERDICT.md): F39#4's material route is exhausted; what remains is geometry.**
+  - **Result:** the material-only gully fix (finer texture, short runnels, tighter bedding) loses the CPU pre-judge: close-up 3.94 against 4.34, all three judges lower. Shore and fight were also slightly lower. It stays OFF.
+  - **Why:** the judges read shipping's long runnels as welcome "wet-streak detail". The "stretched slab" they name is the few huge faceted terrain faces themselves.
+  - **QUESTION:** do you want either:
+    - (1) a heightfield relief pass on the gully (a terrain bake on the hike: route and walk check plus earned-save pieces), or
+    - (2) a Meshy slab-wall fitted to these exact faces?
+- 2026-10-24 22:30 CT INFO: **owner declutter.**
+  - **Candidate:** `first_shore_declutter_candidate` (OFF) drops the three First Shore p1 props by id (ids added to the shipped props). `stones_candidate` (OFF) is thinned to 0.2, grouped, with a soft tide band.
+  - **Confirmed:** the beach "dot field" is the stone tier. With it off, the sand reads clean.
+  - **Next:** the First Shore and lesson views are capturing for a CPU pre-judge, then READY for the GPU lane.
+
+- 2026-10-24 21:00 CT **READY for the GPU lane: the Forward+ night-shadow and noon-seam fixes are staged OFF on `tb/tidewake` 3d0de8a9c.** This container has no Vulkan, so I could not render or verify them.
+  - **Mechanism:** in `world_look.gd`, a key named `<key>_forward_plus` replaces `<key>` only on Forward+/Mobile. Compatibility is unchanged, with a test.
+  - **Section:** `forward_plus_candidate`.
+  - **Noon:** horizon haze 0.46/0.17 -> 0.62/0.22, to answer the Forward+ grade halving fog density.
+  - **Night:** moon key 0.95 -> 1.35, ambient 0.26 -> 0.16, sky contribution 0.2 -> 0.08.
+  - **Blending:** golden and dawn carry their own base values, so keyframe blending stays exact.
+  - **Capture with:** `--tidewake-look-sections=forward_plus_candidate` on Medium/High.
+  - **Rule:** please judge it against main and ship it if it beats.
+
+- 2026-10-24 20:40 CT **INFO / QUESTION (vf3/VERDICT.md): the facade is level, so it stays OFF.**
+  - **Scores:** close-up 4.59 against 4.56; matched fight 4.98 against 4.98.
+  - **Judges' read:** a small tile pasted mid-slab at an odd angle. They unanimously name the giant stretched faceted terrain slabs and the wall-facing camera as the real fault.
+  - **The F39#4 close-up now sits at 4.56 shipping,** after limestone and the rock family.
+  - **QUESTION:** next step for F39#4, either:
+    - (a) reshape or retexture the Veilfall terrain in that gully (gameplay terrain; needs a route and walk check); or
+    - (b) reframe the `veilfall-near` stand toward the falls and water (that changes the yardstick, so it is your call).
+  - Meanwhile I'm on your GPU asks: night shadow on Forward+ and the noon seam.
+
+- 2026-10-24 20:10 CT **READY: `tb/tidewake-land` at 3e852e6be** (3e852e6be33f98ec068b3122efa75a199d99dc1a), one commit on origin/main d71bd31f6 (#728).
+  - **ON:** `veilfall_family_candidate` (rf1: close-up 4.51 against 3.90, shore level, matched fight 5.01 against 4.85).
+  - **Lane fixes:**
+    - `test_veilfall_hero_pieces_stay_clear_of_the_hike`;
+    - the `lift_m` key with its indent fix;
+    - the vf2 re-placement off the hike (OFF);
+    - the vf3 facade staged (OFF);
+    - the facade request inputs under `assets/props/meshy-1025/veilfall_cliff_facade/reference/`.
+  - **No Meshy GLBs** are in the land.
+  - **Checks:** tidewake look, model preload, material family, dune cover and groves, and the five Veilfall test files: 36 tests, 2827 assertions, 0 failed.
+  - **vf3** is being judged now, for a later land.
 
 - 2026-10-24 19:20 CT **INFO (rf1/VERDICT.md): one rock family ships ON at `tb/tidewake` deb793527.** Every view it changes was judged; confirming batch, no extrapolation.
   - **Close-up:** 4.51 against 3.90, all three judges higher.
@@ -285,3 +638,30 @@ F39#1 = every top-20 Tidewake item fixed on main with a before/after code-blind 
 | P2-074 dialogue speaker visibility | 18 | camera | camera | needs_capture |
 
 **Count:** 20 top-20 + 23 impact>12 = 43 items; 12 are Tidewake-scene rows this lane can fix, the other 31 belong to the animation, UI, camera and shared-art lanes. Neither row can close until those lanes land PASSes on the same items.
+- 2026-10-25 INFO wl1: waterline_declutter_candidate level on CPU (6.36 → 6.47 mapped), stays OFF. Judges name the pier stakes, the even pebble carpet and the cold 18:00 sky, not the drift markers. Evidence: wl1/.
+- 2026-10-25 READY fc2 (Veilfall face, OFF): terraced flanks + mossy ledges + narrower crown + far rain veil, CPU mapped 5.27 → 5.98 (+0.71, x3); rain streaks FIXED x3. Sections: current_flow,veilfall_falls_candidate,rain_fog_candidate,rain_veil_candidate,veilfall_mountain_candidate. Head: 2b0d9b543. Judges name sawtooth terraces next; fc3 in progress.
+- 2026-10-25 QUESTION (coordinator messaging is refused from this session): the dark-red creature in the pumps view is a wild spawn from water_sluice_isle_land (mirejaw/riptusk/cragclaw). Recolour that species, or move the pumps/camera to the shore so it is out of frame? Taking the move route unless told otherwise.
+- 2026-10-25 READY fc3 (Veilfall face, OFF; supersedes fc2): 28 m soft terraces + dark ledges beat fc2 head to head, CPU mapped 4.41 → 5.34 (+0.93, x3); fc2 was +0.71 over shipping. Same sections as fc2. Config head d1e9250b4. Next asks from judges: flank cliff masses, falls with mist, rain value.
+- 2026-10-25 INFO sw1: swim_candidate (half-submerged swimmer, 1.2 m ring) level on CPU (5.87 → 5.75), stays OFF. All three judges blame the white contact ring, not the pose; sw2 tries the ring faded out under the pose.
+- 2026-10-25 READY b2 (OFF): swim_candidate sw2 (half-submerged swimmer, ring faded) currents 5.25 → 6.03 (+0.78, x3), sections current_flow,swim_candidate; destination_landmarks_s3_candidate (pumps at the shore 19 m, jetty 19 m + moored boat, new pumps-shore stand) 4.60 → 6.07 (+1.47, x3), sections destination_landmarks_candidate,destination_landmarks_s3_candidate. Config head 83a66880b. Evidence b2/.
+- 2026-10-25 READY b3 (OFF): shore wl2 = stones_candidate + golden_sky_candidate on the wl1 base, 5.91 → 6.30 (+0.39, x3); current_bands_candidate on sw2, 5.87 → 6.05 (+0.18, x2/3). Config head beed29ad2. Both under 0.5: next round changes approach (dune clusters, foam ribbons). Also: the dark-red spiky wild creature lying on its side recurs on the Sluice and current shores; it may be a shiny hue shift (riptusk 0.7, mirejaw 0.42 in creature_surface_finishes.json) – creatures lane's call.
+- 2026-10-25 READY b4 (OFF): shore wl3 = wl2 + lesson_clusters_candidate 6.32 → 6.71 (+0.39, x3), at the 6.7 CPU-provisional floor on a weak fit (r 0.77); GPU pass owed. Sections current_flow,shore_surf_candidate,shore_surf_vary_candidate,first_shore_declutter_candidate,stones_candidate,golden_sky_candidate,lesson_clusters_candidate. current_tint_candidate loses (6.35 → 5.86), parked OFF. Config head 33039af52.
+- 2026-10-25 READY b5 (OFF): destination_landmarks_s4_candidate (pumps in the surf, 25 m Shellwatch + keeper hut/lantern/buoys/net rack/rowboat) s3 6.36 → s4 6.84 (+0.48, x3), CPU-provisional floor met in this batch; sections destination_landmarks_candidate,destination_landmarks_s3_candidate,destination_landmarks_s4_candidate on P2-011-destinations pumps-shore,jetty. Config head 33b3d09ca.
+- 2026-10-25 MESHY (new_art asks named by all three judges across fc2/fc3/b2/b5; for the Meshy lane, not done here):
+  (1) Veilfall flank cliff masses / buttresses, so the terraced cone stops reading as "a cone with a hat", and multi-tier falls with plunge-pool mist;
+  (2) Sluice pump station that straddles an in-water sluice channel, with gates and pipes;
+  (3) a long Shellwatch rescue walkway into the water, with a lifebuoy rack and flags.
+  Also (animation, not Meshy): a horizontal crawl swim cycle for the trainer.
+- 2026-10-25 REPLY to the coordinator's dominant-object directive (direct messaging is refused from this session: "needs proof of a trusted device"). Stands below 6:
+  (1) Veilfall vista (GPU L 5.65, CPU fc3 5.34). Dominant object: the mountain mass. veilfall_terraced_mountain is already wired as the crown (fc2/fc3 READY); judges now say "a cone with a hat", meaning the smooth flanks. Next, one change: veilfall_cliff_facade as large flank buttresses facing the vista, with trimesh collision, off every walk band (fc4). Fallback MESHY: flank cliff masses plus multi-tier falls with plunge-pool mist.
+  (2) Currents swim (GPU 3.61, CPU sw2 6.03 / bands 6.05). Dominant object: the swimmer (small, head-up, arms raised). Needs a horizontal crawl swim cycle (animation, not Meshy).
+  At or above 6 on CPU: pumps and jetty s4 6.84 (seated at the shore and in the surf, 19 m / 25 m); shore wl3 6.71.
+  Standing MESHY: pump station over an in-water sluice channel; long Shellwatch walkway into the water.
+  One change per candidate from here.
+- 2026-10-25 INFO fc4 (probe, parked, not judged): veilfall_cliff_facade wired as four 100 m flank buttresses (veilfall_buttress_candidate, trimesh collision, 40 m+ trail clearance, tested). On the 750 m stand they sit mostly buried in the steep cone and show as small pale blocks that don't match the crown's grey rock. The facade is the wrong shape for a cone flank.
+- 2026-10-25 MESHY (dominant object, Veilfall vista): "Veilfall flank massif". 3-4 separate cliff-buttress meshes, each 160-200 m tall and ~200 m wide at the base, with a back face sloped about 35 deg so it sits on the cone flank rather than standing as a wall. Grey wet limestone in stacked tiers matching veilfall_terraced_mountain's crown, pine clumps on the ledges, one narrow white fall down each, with plunge-pool rocks and mist at the foot. The silhouette should break the cone's outline (secondary peaks and shoulders). It will be seated on the vista flanks either side of the landing gully (bearings -50/-25/+25/+50 deg, 300-315 m from (200, 4140)), flag-OFF until judged, with trimesh collision. Reference: the Veilfall board exterior view.
+- 2026-10-25 PAUSED (owner: cut usage). Open high-gain items for another lane, all on tb/tidewake, OFF in play:
+  (1) Veilfall vista. veilfall_terraced_mountain is wired as the crown on a capped, terraced summit: fc3 is READY, sections current_flow,veilfall_falls_candidate,rain_fog_candidate,rain_veil_candidate,veilfall_mountain_candidate. veilfall_cliff_facade is also wired, as flank buttresses (veilfall_buttress_candidate), but parked: it reads as buried pale blocks. The flanks need the "Veilfall flank massif" MESHY asset requested above.
+  (2) Pumps and jetty are seated at the shore and scaled (19 m / 25 m), with rescue-post dressing: s4 is READY at CPU 6.84. Left over: a pump station over an in-water sluice channel, and a long Shellwatch walkway (MESHY).
+  (3) The oxblood creature near the pumps and on the current shores is a Sluice wild spawn (table water_sluice_isle_land: mirejaw/riptusk/cragclaw, possibly a shiny hue shift). Not touched here; it needs a colourway swap in the creatures lane, or a spawn move. The s3/s4 pumps-shore stand already keeps it out of frame.
+  (4) swim_stroke_candidate (crawl reach under the surface, layered on sw2 + current bands) is committed and captured (st_b) but unjudged; its judges were stopped at the pause.

@@ -1,0 +1,29 @@
+{
+ "Jn": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Wb": {
+  "anchor": false,
+  "label": "shore views: t1 vs t1+t2",
+  "A": "/tmp/claude-0/sp/t2_sh_b.png",
+  "B": "/tmp/claude-0/sp/t2_sh_a.png"
+ },
+ "Cc": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Wg": {
+  "anchor": false,
+  "label": "swim views: t1 vs t1+t2",
+  "A": "/tmp/claude-0/sp/t2_cur_b.png",
+  "B": "/tmp/claude-0/sp/t2_cur_a.png"
+ },
+ "Cn": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

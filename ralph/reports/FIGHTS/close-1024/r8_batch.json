@@ -1,0 +1,7 @@
+{"anchors": {"f36_0_npc:C1A": [6.7, 7.0, 6.8], "f36_0_npc:C1B": [6.8, 7.0, 6.8],
+             "craft:after": [6.5, 6.6, 6.3], "craft:before": [4.8, 5.2, 4.7],
+             "f10_2_r3_capacitor:control": [3.9, 4.4, 3.9], "f10_2_r3_capacitor:candidate_r3": [4.5, 5.0, 4.6]},
+ "candidates": {"stormwood pre": [5.3, 5.9, 5.4], "stormwood r8": [5.4, 5.7, 5.6],
+                "warden f38 pre": [5.9, 6.6, 6.4], "warden f38 r8": [6.0, 6.4, 6.4],
+                "venn pre": [5.3, 5.6, 5.3], "venn r8": [5.1, 5.5, 5.1],
+                "grunt pre": [5.7, 6.3, 6.1], "grunt r8": [5.6, 6.3, 5.8]}}

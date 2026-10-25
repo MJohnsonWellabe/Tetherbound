@@ -12,6 +12,14 @@ const RUNS_IN_INITIALIZED_TREE := true
 var _root: Node3D = null
 
 
+class FightingManager extends Node:
+	var _ally_body: Node = null
+	func _enter_tree() -> void:
+		add_to_group(&"foundation_combat_managers")
+	func is_fighting() -> bool:
+		return true
+
+
 func after_each() -> void:
 	FOLLOWER._follow_fade_cfg = null
 	if is_instance_valid(_root):
@@ -65,3 +73,15 @@ func test_ally_standing_clear_does_not_fade() -> void:
 	FOLLOWER._follow_fade_cfg = {"enabled": true, "near_margin_m": 1.5, "leader_heights_m": [0.5, 1.0, 1.6]}
 	var parts := _setup(Vector3(5, 0, -2))
 	assert_false(parts[0]._blocks_leader_view(parts[0], Vector3(0, 1.5, 6.0)), "a body beside and ahead of the trainer stays solid")
+
+
+## GPU J pass: a fight whose pilot was left in its following state still
+## ghosted it. A running fight that pilots the body keeps it solid.
+func test_following_body_piloted_by_a_running_fight_stays_solid() -> void:
+	FOLLOWER._follow_fade_cfg = {"enabled": true, "near_margin_m": 0.1, "leader_heights_m": [0.5, 1.0, 1.6]}
+	var parts := _setup(Vector3(0, 0, 4))
+	parts[0].set_following(true)
+	var manager := FightingManager.new()
+	manager._ally_body = parts[0]
+	_root.add_child(manager)
+	assert_false(parts[0]._blocks_leader_view(parts[0], Vector3(0, 1.5, 9.0)), "a fight's pilot stays solid even while following")

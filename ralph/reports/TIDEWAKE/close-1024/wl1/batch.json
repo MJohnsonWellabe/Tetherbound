@@ -1,0 +1,10 @@
+{"anchors":{
+ "p2_094_r4:X_before":[3.6,4.5,4.5],
+ "p2_094_r4:Y_after":[5.3,5.9,5.8],
+ "craft:before":[4.5,4.8,5.0],
+ "craft:after":[6.3,6.6,6.6],
+ "f36_0_npc:C1B":[6.5,7.0,6.5],
+ "f36_0_npc:C1A":[6.5,7.0,6.6]},
+"candidates":{
+ "Waterline (first shore, swim dune, 18:00): t1e+surf+first-shore declutter":[5.5,6.0,6.0],
+ "Waterline: + waterline_declutter (fewer markers, 2 buoys)":[5.6,6.0,6.1]}}

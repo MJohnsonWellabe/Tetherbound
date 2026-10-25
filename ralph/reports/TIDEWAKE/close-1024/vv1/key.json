@@ -1,0 +1,29 @@
+{
+ "Cz": {
+  "anchor": false,
+  "label": "vista: shipping vs t1e",
+  "A": "/tmp/claude-0/sp/vista_t1e.png",
+  "B": "/tmp/claude-0/sp/vista_base.png"
+ },
+ "Ok": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Df": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Ry": {
+  "anchor": false,
+  "label": "vista: t1e vs t1e+hero",
+  "A": "/tmp/claude-0/sp/vista_t1e.png",
+  "B": "/tmp/claude-0/sp/vista_hero.png"
+ },
+ "Ba": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ }
+}

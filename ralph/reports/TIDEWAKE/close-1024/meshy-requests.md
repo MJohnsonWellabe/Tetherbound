@@ -24,3 +24,15 @@ All three w1 judges call the Veilfall close-up the weakest frame in the batch an
 |---|---|---|---|---|
 | 7 | veilfall_cascade_tier | 18 x 10 x 12 m | F39#4 / P2-010: one modular tier of the hero falls, three or four stacked and offset make the cascade | Pale stratified limestone cliff tier: horizontal bedding courses with a weathered lip, a wide notch where the water pours, wet darker stone in the pour line, moss and sea-grass on the dry shoulders, a shallow turquoise catch basin cut into the top. Flat base and top so tiers stack. |
 | 8 | veilfall_plunge_rocks | 9 x 7 x 3 m | The base of the falls: the frame currently ends in mid-air with no pool | Cluster of water-worn pale limestone boulders around a shallow basin, polished and darker where the water strikes, white mineral crust at the waterline, a few ferns in the crevices. |
+
+## Third batch, 25 Oct 2026 (GPU baseline work order, T3 and T4)
+
+The GPU baseline put Veilfall at 3.20. The re-seated `veilfall-vista` views (F39-look.json) show the mountain as a heap of blocky crag pieces over a smooth cone, and no scene setting turns that into the board's terraced green cliff mountain. P2-011: two named destinations still read as generic structures (the drowned-garden terraces and Lantern Cove drift arch already have landmark models).
+
+Each item has its references, prompt.txt and (for the mountain) scale_check.png and placement.md under `assets/props/meshy-1025/<name>/reference/`. Every result lands flag-OFF in `data/config/tidewake_look.json` until judged.
+
+| # | Name | Size (W x D x H) | Purpose | Brief |
+|---|---|---|---|---|
+| 10 | veilfall_terraced_mountain | 520 x 420 x 360 m (fitted) | P2-010 / T3: the Veilfall silhouette from the sea, a render-only shell over the upper cone | Board exterior view: pale limestone cliff terraces in 4-5 tiers, green pines on every ledge, one broad white main fall dropping tier by tier into mist, two or three side falls, an archway behind the main fall, a jagged crowned summit. References: `exterior_view.png`, `front_elevation_sketch.png`, `island_profile_sketch.png`, `biome_context.png` (crops of `water-veilfall-stronghold-board.png`). |
+| 11 | tidewake_sluice_twin_pumps | 14 x 8 x 9 m | P2-011: `sluice_twin_pumps` destination reads as its name | Two round fieldstone pump towers joined by a timber walkway, half-sunk wooden water wheels in a stone channel, brass pipes and valve wheels, reed-thatch caps, teal shutters, a stone sluice gate. Style refs: installed `meshy-1020/tidewake_fisher_hut` and `tidewake_woven_reed_hall`. |
+| 12 | tidewake_shellwatch_rescue_jetty | 16 x 6 x 10 m | P2-011: `shellwatch_rescue_jetty` destination reads as a rescue station | Timber pier on thick piles, a 10 m open lookout tower with a big brass rescue bell, a lifeboat on davits, white-and-teal life rings, a navy pennant. Same style refs. |
