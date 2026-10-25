@@ -1,0 +1,12 @@
+[
+    {
+        "label":  "M terrapup dog3 new|old Medium",
+        "a":  "D:\\tb-gpu-runs\\yard\\M\\sides\\terrapup-new-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\M\\sides\\terrapup-old-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature ridden with the trainer on its back. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the rider floats above the creature\u0027s back instead of sitting on it",
+                        "stone plates read as bright green add-ons stuck on the coat rather than grown into it"
+                    ]
+    }
+]

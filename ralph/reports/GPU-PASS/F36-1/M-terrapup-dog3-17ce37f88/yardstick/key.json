@@ -1,0 +1,28 @@
+{
+ "Rj": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Ni": {
+  "anchor": true,
+  "A": "f36_0_gap:C3B",
+  "B": "f36_0_gap:C3A"
+ },
+ "Ps": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Mh": {
+  "anchor": false,
+  "label": "M terrapup dog3 new|old Medium",
+  "A": "D:\\tb-gpu-runs\\yard\\M\\sides\\terrapup-old-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\M\\sides\\terrapup-new-Medium.png"
+ },
+ "Gy": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ }
+}

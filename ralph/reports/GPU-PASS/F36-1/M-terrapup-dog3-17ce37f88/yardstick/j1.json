@@ -1,0 +1,84 @@
+{
+ "sets": {
+  "Rj": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared, low-contrast ground textures, flat noon light with no fog or sky depth, and a sparse prop-on-grass layout sink it beside Palworld's dense, saturated fields, even though side A's aftermath storytelling is clear."
+  },
+  "Ni": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The wolf's silhouette and scale hold up, but blown-out white fur with little rim light or value modelling (A) and faint poses that don't read (B) keep it below the Tanglevolt and Stormursa bar."
+  },
+  "Ps": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown frame with no purple storm sky, light shafts or lightning, flat magenta telegraph rings, a player creature you can't find and a HUD covering about a third of the screen are nowhere near Palworld's bright, readable boss fight."
+  },
+  "Mh": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "the rider floats above the creature's back instead of sitting on it": "PARTIAL",
+     "stone plates read as bright green add-ons stuck on the coat rather than grown into it": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the rider floats above the creature's back instead of sitting on it": "PARTIAL",
+     "stone plates read as bright green add-ons stuck on the coat rather than grown into it": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fur and grounded anatomy approach the owner's naturalistic bar, but the plate shell still reads as a separate add-on and the rider sits high on it rather than on the creature, so it doesn't look finished."
+  },
+  "Gy": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing face with readable eyes and a warm Meadows palette carries it, though the oversized cartoon head sits slightly apart from the naturalistic creature style."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Relight and regrade the world scenes (Meadows sites, Stormwood arena) with a strong key light and rim light, aerial-perspective fog, a visible sky (warm Meadows and blue distance; fixed purple storm sky with white-violet lightning for Stormwood), plus sharper, higher-contrast ground materials, and pull the fight camera out of the trunks and canopy so it frames both fighters",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the flat magenta telegraph rings with real-object effects (cracking ground, sparks or lightning with an impact burst), and shrink and dim the fight HUD so the left panel and bottom bar stop covering the action and the player's creature gets a readable outline or rim",
+   "kind": "scene"
+  },
+  {
+   "change": "Rework creature materials and rigs to the owner bar: plates grown into the coat with darker, weathered stone values, a real rider seat and saddle contact, rim-lit fur with value range on the white wolf, and faint-mid and faint-end poses that read and stay grounded",
+   "kind": "new_art"
+  }
+ ]
+}

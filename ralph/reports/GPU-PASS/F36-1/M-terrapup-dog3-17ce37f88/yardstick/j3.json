@@ -1,0 +1,84 @@
+{
+ "sets": {
+  "Rj": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry smeared grass textures, flat tiled stone wall, lollipop low-poly trees and a flat grey-blue sky with no light shafts or time-of-day grade sink it well below Palworld finish, even where A's aftermath props (fallen banner, freed cage, smoke) tell a story."
+  },
+  "Ni": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A large readable white-and-blue wolf that clears the ruler carries it, but blown-out flat white fur (A) or low-contrast pale fur with faint poses that do not read (B) stops short of the owner bar's rim-lit Tanglevolt finish."
+  },
+  "Ps": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Dark muddy brown frames with no purple storm sky or lightning, flat magenta telegraph rings, a barely visible player creature and a HUD covering a third of the screen sink it against Palworld's bright, impact-heavy boss fight."
+  },
+  "Mh": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "the rider floats above the creature's back instead of sitting on it": "FIXED",
+     "stone plates read as bright green add-ons stuck on the coat rather than grown into it": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the rider floats above the creature's back instead of sitting on it": "FIXED",
+     "stone plates read as bright green add-ons stuck on the coat rather than grown into it": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Naturalistic brown fur and grounded faint poses are on-style, but the sage plate mass still sits like a separate blanket on the coat and the material lacks the rim light and fur breakup of the owner bar's Stormursa."
+  },
+  "Gy": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing, clearly characterful grandfather with readable eyes, a coherent earthy green-brown palette and a clean silhouette carries it, though the soft cartoon face leans a little further from stylised realism than the key art."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the flat magenta telegraph rings in Stormwood with physical tells (cracking ground, copper sparks, white-violet lightning strikes with impact debris), lift the fight's exposure and add the fixed purple storm sky, and keep the camera out of trunks and canopy so both fighters stay in frame.",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-grade the Meadows sites toward the key art: sharper grass and ground textures, groves of fuller-canopy oaks instead of lollipop trees, warm sun with cool blue distance haze and visible shadows, and keep A's site-specific aftermath props (fallen banners, freed cage, smoke) while removing enemy banners from after frames.",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature material pass to the owner bar: rim light and fur breakup on white and brown coats so whites do not blow out, and blend Mh's stone plates into the coat with moss transition and fur growing around plate edges.",
+   "kind": "scene"
+  }
+ ]
+}

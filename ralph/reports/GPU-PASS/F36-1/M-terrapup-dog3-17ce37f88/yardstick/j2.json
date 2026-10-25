@@ -1,0 +1,84 @@
+{
+ "sets": {
+  "Rj": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared low-resolution ground and grass textures, flat tiled castle wall in row 1 and flat midday light with no atmosphere sink it next to Palworld's crisp, dense fields, even where A's aftermaths (open cage, smouldering camp) read well."
+  },
+  "Ni": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's fur is close to the owner's Tanglevolt bar, but A's blown-out white with black-blotch faint frames and B's faint poses that read as standing or sitting keep it short of shipping finish."
+  },
+  "Ps": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky single mid-dark brown value, no purple storm sky or lightning, flat magenta telegraph rings, a large debug-style HUD and (B) camera-in-foliage frames sink it against Palworld's bright, readable boss fights."
+  },
+  "Mh": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {
+     "the rider floats above the creature's back instead of sitting on it": "PARTIAL",
+     "stone plates read as bright green add-ons stuck on the coat rather than grown into it": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "the rider floats above the creature's back instead of sitting on it": "PARTIAL",
+     "stone plates read as bright green add-ons stuck on the coat rather than grown into it": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fur body and scale against the trainer are close to the owner bar, but the sage-green plate shell still reads as a separate add-on and the rider is perched high on the plate hump rather than seated in the coat."
+  },
+  "Gy": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Appealing stylised face, expressive eyes, clear hair and beard shapes and an earthy green-brown palette match Palworld-class NPC finish and the key art's villagers, though shown here without any scene lighting."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight readability: replace flat magenta telegraph rings and slabs with grounded effects (cracking ground, white-violet arcs, debris), add camera collision so trunks and canopy never fill the frame, and lift the scene with the fixed purple storm sky, rim light on both fighters and a smaller combat HUD",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows ground and aftermath: replace the smeared low-resolution ground and grass material with crisp grass clumps, wildflowers and grove edges, and give each defeated site its own aftermath (take down the enemy banners, vary the props) instead of reusing the same emblem stone",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature mesh and rig fixes: blend Mh's stone plates into the fur with a coat-coloured transition and fit a saddle seat that sits the rider on the back; give Ni readable lying faint-mid and faint-end poses and remove the black blotches from its material",
+   "kind": "new_art"
+  }
+ ]
+}
