@@ -87,7 +87,7 @@
         "can_carry": true,
         "requires_item": "saddle",
         "_comment_shrink_owner_1024": "Owner 24 Oct: Just shrink it (exception to the never-shrink rule for this naturalistic pilot only). At 3.85 m the pilot is 6.84 m nose to tail and combat admission could not seat it in the Warrens mouth (6.0 m ring) or the Hall elite room (7.0 m) with the 0.6 m clearance, so the elite fight never formed. Uniform scale 3.85 -> 3.20 m (x0.8312): radius, seat and dismount distance scaled by the same ratio; still well above the 1.80 m trainer. Terrapup has no evolution line, so no ladder order changes.",
-        "_comment_mount_nat1022": "Close-1024: the naturalistic pilot's stone-plated back stands 3.71 m at the seat (measured on its ride clip; installed back about 3.10 m), so the seat rises 3.264 -> 3.80 m, 0.09 m above the plates and inside the 3.85 m declared height (test_rideable_roster).",
+        "_comment_mount_nat1022": "Close-1024: the naturalistic pilot's stone-plated back stands 3.71 m at the seat (measured on its ride clip; installed back about 3.10 m), so the seat rose 3.264 -> 3.80 m at 3.85 m; after the owner's 24 Oct shrink to 3.20 m the back measures 3.08 m and the seat is 3.16 m, inside the declared height (test_rideable_roster).",
         "mount_offset": [0.0, 3.16, -0.208696],
         "ride_speed_multiplier": 1.7,
         "dismount_distance": 2.226087
@@ -153,6 +153,7 @@
           "fly_grip": "fly_grip",
           "ride": "ride"
         },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."},
         "_comment_size": "Chibi bipeds beside a 1.8m trainer, so they read as companions rather than as livestock \u2014 which is the Palworld register. Sized against each other so the practice creature is smaller than your partner and the one that ambushes you is bigger than both.",
         "_comment_pack": "Plumberry Plains Vol. 2, and it answers the review's first and largest complaint directly. The critic's words were 'none of them is a designed creature... Palworld's entire proposition is that its creatures are drawn characters \u2014 bold silhouette, hue-opposed to the environment, exaggerated proportion, expression', and that the previous roster put 'a naturalistic tree frog, a faceted grey low-poly goat, and a Nintendo Mii in the same 300 pixels'. These are ten designed chibi characters from ONE artist, which fixes the design AND the cohesion complaint at once.",
         "_comment_pick": "Chosen on MEASURED colour, not taste. The first pick was fox, rabbit and wolf \u2014 which turned out to be the three LEAST saturated characters in the pack (0.20, 0.19, 0.15), i.e. exactly the defect the critic named on the creature they replaced: 'saturation 0.12... a grey rock standing on olive ground... your own creature is the least readable object in your own fight'. Re-picked against its stated criterion \u2014 hue-opposed to a green world, and readable at 40px:\n  bear      hue  23 deg, sat 0.77, val 0.61  \u2014 orange-brown, the most saturated thing in the pack\n  duck      hue  42 deg, sat 0.67, val 0.95  \u2014 bright gold\n  songbird  hue 194 deg, sat 0.36, val 0.72  \u2014 blue, the only cool hue available\nThree hues, three values, none of them the chartreuse the ground is made of.",
@@ -187,26 +188,20 @@
         "_comment_height_2026_09_01_correction": "OD-0901-1 (`archive/owner/OWNER_DIRECTIVES_2026-09-01.md`): the owner directly overrode the 08-31 cut above -- 'almost all creatures should stand taller than the character... that's part of the allure.' RIPPLET_PRODUCTION_REPORT.md and ralph/BLOCKED.md's own account of the sheet describe 'chibi' as a PROPORTION read -- 'stubbier and larger-headed', held-paw sitter posture -- not a literal-smallness instruction; nothing in the sheet materials says Ripplet must be the smallest starter or must sit below the player. So 'chibi mascot' and 'towers over the player' are not actually in tension: a stout, big-headed, big creature is still readably chibi. Raised to 2.15m -- past the pre-08-31 value of 1.95m (D19), not merely back to it -- and kept a step below Terrapup's own 2.30m so the two starters keep their prior relative order (Ripplet the stouter, slightly shorter of the pair) while both clear the player by a wide, unambiguous margin; 2.15m is comfortably above the 1.80m floor OD-0901-1 sets as the one hard constraint. `radius` raised by the same ratio in reverse (radius/height held at Ripplet's own 0.3793 constant, per D12), giving 0.8155. Verified by direct re-render with tools/_capture_creature_roster.gd: render-measured height equals the declared 2.15m. Burrowback (defect 65's 'badger line' pairing with Terrapup) is left untouched: Terrapup and Burrowback are not a real `evolves_into`/`evolves_from` pair (verified prior session -- 'badger line' is a thematic label only), so D17 imposes no ordering requirement, and OD-0901-1 says any relative-ordering fix in this area should raise the smaller side rather than lower the larger one -- but the ordering concern itself was only ever a coincidence the census flagged, not a real defect, and this pass makes no claim that Burrowback needs to change to stay coherent next to a bigger Terrapup.",
         "height": 3.6,
         "radius": 1.365488,
-        "_comment_footprint": "Upright sitter with a torso-sized tail fan behind it; the fan is most of the footprint.",
+        "_comment_footprint": "Close-1024: the four-legged otter remake (5.73 m nose to tail at 3.6 m) clears this allowance (9.83 m). Was: upright sitter with a torso-sized tail fan behind it; the fan is most of the footprint.",
         "footprint_allowance": 3.6,
-        "model": "res://assets/creatures/tetherbound/ripplet/candidate_installed_retex/models/creature_ripplet_installed_retex_r6_lod0.glb", "_comment_model_close1020": "F36#0 close-1020 art pass 4: installed-rig retex r6 (ripplet/candidate_installed_retex/source/species_candidate_r6.json); three code-blind judges 6.70 vs 6.13 installed at the fight camera (CPU-provisional).",
+        "colourway_source_species": "ripplet_nat1024b", "_comment_model_nat1024b": "F36#0 owner style direction 22 Oct: naturalistic four-legged otter remake (coordinator Meshy batch 3, candidate_nat1024b; measured quadruped rig, own clips; provenance candidate_nat1024b/source/meshy_provenance.jsonl). close-1024 b11 (CPU three-judge yardstick, confirming batch): mapped 7.40 vs shipping 5.51 (CPU-provisional). Seat 1.45 -> 2.58 m on the measured 2.45 m back (ride clip), inside the 3.6 m height.", "model": "res://assets/creatures/tetherbound/ripplet/candidate_nat1024b/models/creature_ripplet_nat1024b.glb", "_comment_model_close1020": "Superseded by the close-1024 naturalistic remake (history only). F36#0 close-1020 art pass 4: installed-rig retex r6 (ripplet/candidate_installed_retex/source/species_candidate_r6.json); three code-blind judges 6.70 vs 6.13 installed at the fight camera (CPU-provisional).",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Produced by the tools/art_pipeline chain from sheet 02; see archive/docs/art/RIPPLET_PRODUCTION_REPORT.md.",
-        "animations": {
-          "idle": "idle",
-          "walk": "walk",
-          "run": "run",
-          "attack": "attack",
-          "hit": "hit",
-          "faint": "faint"
-        }
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "rideable": {
         "can_carry": true,
         "required_realm": "water",
         "requires_item": "",
-        "mount_offset": [0.0, 1.45, -0.15],
+        "mount_offset": [0.0, 2.58, -0.15],
         "ride_speed_multiplier": 1.0,
         "dismount_distance": 2.5
       },
@@ -328,7 +323,8 @@
           "swim": "swim",
           "fly_grip": "fly_grip",
           "ride": "ride"
-        }
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "bramblebun"
     },
@@ -368,8 +364,8 @@
         "_comment_field_emission_0904": "G3-CREATURE-COLOUR-0904. Re-measured against Gate 2.4's stricter 1.5:1 bar, which only Bramblebun had been re-checked against (docs/CURRENT_STATE.md \u00a73 flagged Mudsnout/Terrapup/Burrowback as open). tools/_probe_grass_separation.gd --species=mudsnout --time=day, tighter creature box (600,375)-(690,440) (the original (560,340)-(720,445) box above dilutes with surrounding grass at this stricter bar's scale), same open-grass reference box (150,260,380,340) CREATURE-LEGIBILITY-0903 used: SHIPPED (1.4) measured 1.347-1.428 across two crop widths -- FAILS the 1.5:1 bar, confirming the open item. Swept: 1.8->1.558, 2.2->1.734, 2.6->1.886, 3.0->2.016. Hue held flat at ~44 degrees (a plain warm dirt-brown, `_comment_field_emission_0901`'s own `#6e492c`) across the whole sweep since this species carries no `field_degreen` -- no pink-shift risk the way Bramblebun's did. 2.2 clears the bar with real margin (1.734, the same discipline CREATURE-LEGIBILITY-0903 used for Bramblebun's own 2.5) while staying short of 3.0's washed-out saturation (sat 0.427 at 2.2 vs 0.360 at 3.0, measured off the rendered frame). TUNABLE.",
         "field_emission": 0.0,
         "_comment_model_nat1024": "F36#0 owner style direction 22 Oct: naturalistic remake (coordinator Meshy, candidate_nat1024; measured quadruped rig, own clips; provenance candidate_nat1024/source/meshy_provenance.jsonl, drafted concept reference/nat1024-concept.png). close-1024 b6: mapped 7.40 vs live 5.61 (CPU three-judge yardstick, confirming batch; CPU-provisional).",
-        "model": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024/models/creature_mudsnout_nat1024.glb",
-        "colourway_source_species": "mudsnout_nat1024",
+        "model": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t.glb",
+        "colourway_source_species": "mudsnout_nat1024t",
         "model_scale": 1.0,
         "model_yaw": 0.0,
         "_comment_art": "Wild Ground Sheet A; see docs/art/MEADOWS_WILD_PRODUCTION_REPORT.md.",
@@ -385,7 +381,8 @@
           "swim": "swim",
           "fly_grip": "fly_grip",
           "ride": "ride"
-        }
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "mudsnout",
       "evolution_breaks_level": 20,
@@ -413,8 +410,9 @@
       },
       "placeholder": {
         "colour": "#b3925e",
-        "height": 2.3,
-        "radius": 0.770859,
+        "_comment_grow_gpu_1024": "GPU F36#0 (24 Oct): the remake stood at or below the 1.80 m trainer; grown 2.3 -> 3.1 m (x1.348), radius with it, per the grow-the-smaller-side rule.",
+        "height": 3.1,
+        "radius": 1.038984,
         "_comment_footprint": "Long-bodied and narrow -- the leanest silhouette in the Ground group.",
         "footprint_allowance": 3.2,
         "_comment_rest_roll": "BACKLOG-VISUAL-BED-ROSTER-FIT (2026-09-01). FOLLOWUP-2026-09-01.md flagged this species with the same DEFAULT_REST_ROLL_DEG back-flip as terrapup (idle paws lifted off centreline, so a 90-degree roll swings them into the air instead of settling). -45 degrees, the same angle that fixed terrapup, produces a genuine lying-on-side pose here too -- verified by render (`ralph/reports/audit/bed-roster-fit/shots/`), not assumed to generalize just because the root cause matches.",
@@ -437,7 +435,8 @@
           "swim": "swim",
           "fly_grip": "fly_grip",
           "ride": "ride"
-        }
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "trailpup"
     },
@@ -502,7 +501,8 @@
           "swim": "swim",
           "fly_grip": "fly_grip",
           "ride": "ride"
-        }
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "burrowback"
     },
@@ -581,6 +581,7 @@
           "fly_grip": "fly_grip",
           "ride": "ride"
         },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."},
         "field_emission": 0.0,
         "rest_model_position_offset": 0.0
       },
@@ -696,7 +697,8 @@
           "swim": "swim",
           "fly_grip": "fly_grip",
           "ride": "ride"
-        }
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "paddlenewt"
     },
@@ -749,7 +751,8 @@
           "swim": "swim",
           "fly_grip": "fly_grip",
           "ride": "ride"
-        }
+        },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "mosshell",
       "evolves_into": "cannonback",
@@ -1032,6 +1035,7 @@
           "fly_grip": "fly_grip",
           "ride": "ride"
         },
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."},
         "field_emission": 0.0,
         "rest_model_position_offset": 0.0,
         "colourway_source_species": "veridian_nat1024"
@@ -1073,7 +1077,8 @@
         "aspect_source_species": "burrowback",
         "_comment_aspect": "D1 / DARK-FEATURES 2026-08-30. The two keys creature_body.gd::_build_placeholder() reads to dress this body as its Aspect variant. T1-CREATURE-ART generated and committed the recolour+emissive siblings and built the runtime hook, but deliberately left these keys to T3-CREATURES (its handover: that file is T3-CREATURES own); T3-CREATURES then landed this entry without them. Neither lane held both halves -- the textures and this file were on separate branches -- so until those merged nobody could have added these. Without them the variant renders in its base species shipped textures, i.e. as a plain burrowback. aspect_source_species names whose texture FOLDER the siblings live in (not this species own id), which is why it repeats variant_of above.",
         "model_yaw": 0.0,
-        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"}
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "nightburrow"
     },
@@ -1102,8 +1107,9 @@
       },
       "placeholder": {
         "colour": "#4a463c",
-        "height": 2.55,
-        "radius": 0.85469,
+        "_comment_grow_gpu_1024": "GPU F36#0 (24 Oct): the remake stood at or below the 1.80 m trainer; grown 2.55 -> 3.45 m (x1.353), radius with it, per the grow-the-smaller-side rule.",
+        "height": 3.45,
+        "radius": 1.156345,
         "footprint_allowance": 3.2,
         "model": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024.glb",
         "_comment_model": "Deliberately the SAME mesh as trailpup. This is an aspect variant, not a new creature: CLAUDE.md's rule that Meadows creatures are differentiated by materials, textures, modest scale, animation, VFX, habitat, behaviour, traits and encounter context IS the build path the owner's sheet specifies for it ('VARIANT RECOLOR'). The recolour, emissive and VFX treatment belongs to the T1-CREATURE-ART lane; this entry is the identity it attaches to. Do NOT repoint this at a new .glb without an owner directive -- the expansion brief names a new mesh for five OTHER creatures and explicitly not for this one.",
@@ -1112,7 +1118,8 @@
         "aspect_source_species": "trailpup",
         "_comment_aspect": "D1 / DARK-FEATURES 2026-08-30. The two keys creature_body.gd::_build_placeholder() reads to dress this body as its Aspect variant. T1-CREATURE-ART generated and committed the recolour+emissive siblings and built the runtime hook, but deliberately left these keys to T3-CREATURES (its handover: that file is T3-CREATURES own); T3-CREATURES then landed this entry without them. Neither lane held both halves -- the textures and this file were on separate branches -- so until those merged nobody could have added these. Without them the variant renders in its base species shipped textures, i.e. as a plain trailpup. aspect_source_species names whose texture FOLDER the siblings live in (not this species own id), which is why it repeats variant_of above.",
         "model_yaw": 0.0,
-        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"}
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "stormtrail"
     },
@@ -1151,7 +1158,8 @@
         "aspect_source_species": "paddlenewt",
         "_comment_aspect": "D1 / DARK-FEATURES 2026-08-30. The two keys creature_body.gd::_build_placeholder() reads to dress this body as its Aspect variant. T1-CREATURE-ART generated and committed the recolour+emissive siblings and built the runtime hook, but deliberately left these keys to T3-CREATURES (its handover: that file is T3-CREATURES own); T3-CREATURES then landed this entry without them. Neither lane held both halves -- the textures and this file were on separate branches -- so until those merged nobody could have added these. Without them the variant renders in its base species shipped textures, i.e. as a plain paddlenewt. aspect_source_species names whose texture FOLDER the siblings live in (not this species own id), which is why it repeats variant_of above.",
         "model_yaw": 0.0,
-        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"}
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."}
       },
       "learnset": "riftfrill"
     },
@@ -1271,20 +1279,15 @@
       },
       "placeholder": {
         "colour": "#b5552c",
-        "height": 2.5,
-        "radius": 0.833929,
+        "_comment_grow_gpu_1024": "GPU F36#0 (24 Oct): the remake stood at or below the 1.80 m trainer; grown 2.5 -> 3.25 m (x1.300), radius with it, per the grow-the-smaller-side rule.",
+        "height": 3.25,
+        "radius": 1.084108,
         "footprint_allowance": 3.2,
-        "model": "res://assets/creatures/tetherbound/cindercub/models/creature_cindercub_lod0.glb",
+        "colourway_source_species": "cindercub_nat1024b", "_comment_model_nat1024b": "F36#0 owner style direction 22 Oct: naturalistic ember wolf cub remake (coordinator Meshy batch 2 quadruped redraft, candidate_nat1024b; measured quadruped rig, own clips; provenance candidate_nat1024b/source/meshy_provenance.jsonl). close-1024 b11 (CPU three-judge yardstick, confirming batch): mapped 7.63 vs shipping 5.59 (CPU-provisional).", "model": "res://assets/creatures/tetherbound/cindercub/candidate_nat1024b/models/creature_cindercub_nat1024b.glb",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "animations": {
-          "idle": "idle",
-          "walk": "walk",
-          "run": "run",
-          "attack": "attack",
-          "hit": "hit",
-          "faint": "faint"
-        },
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."},
         "_comment_art": "T3-INSTALL, 2026-08-30: Meshy mesh generated and committed by the coordinator against the owner's creature-expansion reference boards (docs/art/reference/creature-expansion-2026-08-30/); moved here from data/creatures/species_pending.json now that the model exists on disk. T1-CREATURE-RIG, same day: rigged and animated through `tools/art_pipeline/finish.py rig <species> --kind quadruped` (the LOCAL Blender quadruped rigger every other production creature in this roster already goes through -- rig_quadruped.py + animate_quadruped.py -- not Meshy's own auto-rigger, which is documented humanoid-only). Verified against a rendered posed frame (ralph/reports/T1-CREATURE-RIG/shots/pose_check/) before installing, not just a passing skins-count check; now plays idle/walk/run/attack/hit/faint like every other production creature."
       },
       "learnset": "cindercub"
@@ -1872,9 +1875,9 @@
       },
       "placeholder": {
         "colour": "#8899aa",
-        "height": 2.95,
-        "radius": 1.475,
-        "footprint_allowance": 2.24,
+        "_comment_height_1025": "GPU batch 1 (25 Oct): the long, low newt stood no taller than the 1.80 m trainer. Hard rule (grow the smaller side): 2.95 -> 3.6 m, collider radius grown with it to the ladder ceiling (1.475 -> 1.8 = 0.5 x 3.6) so spacing reach keeps clearing the 22% larger art (the F10#2 invariant), and footprint_allowance 2.237 keeps radius x allowance at the scaled art fit (3.304 x 3.6/2.95 = 4.03). Its colour stays main's here: the batch-2 repaint fell on GPU (4.82), and a Meshy retexture of this mesh is being judged separately.", "height": 3.6,
+        "radius": 1.8,
+        "footprint_allowance": 2.237,
         "_why_radius_f10": "F10#2 C3 code-blind judge (Blackwater Elder): the 1.0325 m collider sat inside ~6.4 x 3.9 m art, so fights spaced by it closed to 2.4-3.1 m and the art swallowed the pilot (hidden 2-3 of 3 ally sample heights; none from 3.24 m). The collider grows to the scale ladder's radius/height ceiling of 0.5 (hard rule: grow the smaller side), so spacing reach is ~3.38 m; radius x footprint_allowance stays ~3.304, so the art fit and spawn spacing are unchanged.",
         "model": "res://assets/creatures/tetherbound/mosshock/models/creature_mosshock_lod0.glb",
         "model_scale": 1.0,
@@ -2079,17 +2082,14 @@
         "height": 3.25,
         "radius": 1.1375,
         "footprint_allowance": 3.0,
-        "model": "res://assets/creatures/tetherbound/pebbik/models/creature_pebbik_lod0.glb",
+        "model": "res://assets/creatures/tetherbound/pebbik/candidate_b4/models/creature_pebbik_b4.glb",
+        "colourway_source_species": "pebbik_b4",
+        "field_emission": 0.0,
+        "_comment_remake_b4": "Close-1024 Meshy batch 4 naturalistic remake (identity kept; task ids in candidate_b4/source/meshy_provenance.jsonl), native clips; ON at close-1024 b14 7.16 vs 5.69 mapped (CPU-provisional; three code-blind judges, confirming batch).",
         "model_scale": 1.0,
         "model_yaw": 0.0,
-        "animations": {
-          "idle": "idle",
-          "walk": "walk",
-          "run": "run",
-          "attack": "attack",
-          "hit": "hit",
-          "faint": "faint"
-        },
+        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+        "hit_impact": {"start_phase": 0.12, "release_phase": 0.5, "_why": "P2-016: the held shove peaks at .12 and holds to .5 (source/author_native_clips.py); a real blow starts at the wince and holds it through hitstop."},
         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
       },
       "learnset": "pebbik"

@@ -186,3 +186,65 @@ func test_pioneer_eligibility_tracks_only_the_requested_shore_texture() -> void:
 	assert_eq(GRASS.pioneer_ground_mask(["grass", "shore", "rock"], cfg), 0)
 	cfg.dune_colony_shape = false
 	assert_eq(GRASS.pioneer_ground_mask(["grass", "shore", "rock"], cfg), 0)
+
+
+class ShorePlacementProbe extends "res://scripts/world/water_vegetation.gd":
+	var placed_layers: Array = []
+
+	func _accept(point: Vector2, _centre: Vector2, _radius: float, _layer: Dictionary) -> Dictionary:
+		return {"valid": true, "position": Vector3(point.x, 2.0, point.y), "normal": Vector3.UP}
+
+	func _append_batch(_batches: Dictionary, _model_path: String, island_id: String,
+			_position: Vector3, _entry: Dictionary, layer: String = "") -> void:
+		placed_layers.append("%s/%s" % [island_id, layer])
+
+
+## close-1024 p2: the shore-ecology candidate stays OFF as a whole, but a site
+## listed in `shipped_sites` (judged better than shipping) places on its own.
+func test_shipped_shore_site_places_while_the_candidate_stays_off() -> void:
+	var settings := DUNES.config()
+	var candidate: Dictionary = settings.get("shore_ecology_candidate", {})
+	assert_false(bool(candidate.get("enabled", true)), "the whole shore-ecology candidate ships off")
+	var shipped: Array = candidate.get("shipped_sites", [])
+	assert_eq(shipped, ["f26_deep_watch_beach_transition"], "only the judged Deep Watch site ships")
+	assert_true(str(candidate.get("_why_shipped_sites", "")).contains("6.02"), "its score is recorded")
+	var probe := ShorePlacementProbe.new()
+	probe._dune_settings = settings
+	for island_id: String in ["deep_watch", "first_shore"]:
+		probe._place_shore_ecology_candidate({"scatter_seed": 7}, {}, Vector2.ZERO, 120.0, island_id)
+	assert_true(probe.placed_layers.size() > 0, "the shipped Deep Watch site places")
+	for entry: String in probe.placed_layers:
+		assert_true(entry.begins_with("deep_watch/"), "an unjudged island's site stays off: %s" % entry)
+	probe.free()
+
+
+## #725 review: Tidewake's dune profile sets clump_patch_* at its top level for
+## the grass. The stone tier must not inherit them, or shipping pebbles group
+## with `stones_candidate` OFF; only a `stones` override sets the stone uniforms.
+func test_stone_grouping_never_inherits_the_grass_profile_keys() -> void:
+	var source: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_ground_cover.json"))
+	var profile := DUNES.ground_profile(source, DUNES.config())
+	assert_true(float(profile.get("clump_patch_full", 0.0)) > 0.0,
+		"precondition: the shipping profile sets grass clump_patch_* at its top level")
+	assert_false((profile.get("stones", {}) as Dictionary).has("clump_patch_start"),
+		"precondition: no stones override ships")
+	var stone_keys := ["clump_patch_start", "clump_patch_full", "tide_band_low_y", "tide_band_high_y", "tide_band_gain"]
+	var shipping := profile.duplicate(true)
+	shipping.stones.count = 64
+	var field := GRASS.new()
+	field._build_stones(shipping, 40.0)
+	for key: String in stone_keys:
+		# Unset reads back null, which is the shader's own 0.0 default.
+		var value: Variant = field._stone_material.get_shader_parameter(key)
+		assert_true(value == null or is_zero_approx(float(value)),
+			"shipping stones leave %s at the old shader math, got %s" % [key, value])
+	field.free()
+	var override := profile.duplicate(true)
+	override.stones.count = 64
+	override.stones.merge({"clump_patch_start": 0.45, "clump_patch_full": 0.62, "tide_band_high_y": 1.4}, true)
+	var candidate := GRASS.new()
+	candidate._build_stones(override, 40.0)
+	assert_almost_eq(float(candidate._stone_material.get_shader_parameter("clump_patch_full")), 0.62, 0.0001,
+		"a stones override still reaches the shader")
+	assert_almost_eq(float(candidate._stone_material.get_shader_parameter("tide_band_high_y")), 1.4)
+	candidate.free()

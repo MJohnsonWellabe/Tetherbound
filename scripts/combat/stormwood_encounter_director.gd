@@ -229,7 +229,12 @@ func observe_hosted_event(id: String, event: Dictionary) -> void:
 	if str(event.get("kind", "")) == "swing":
 		body.call("play_attack")
 	elif str(event.get("kind", "")) == "telegraph":
-		preload("res://scripts/combat/telegraph_glow.gd").begin(get_parent(), body.global_position, Color("ff5a3c"), 1.1, float(event.get("seconds", 0.5)))
+		# The observed body's own tell hue (its row colour, else telegraph.colour);
+		# the old fixed #ff5a3c sat in Team Tether's reserved oxblood band.
+		var tint: Color = body.call("tell_colour") if body.has_method("tell_colour") \
+			else Color(str(preload("res://scripts/combat/combat_math.gd").config().get("telegraph", {}).get("colour", "#ff40e6")))
+		preload("res://scripts/combat/telegraph_glow.gd").begin(get_parent(), body.global_position, tint, 1.1,
+			float(event.get("seconds", 0.5)), true)
 
 
 func remove_hosted_observer(id: String) -> void:

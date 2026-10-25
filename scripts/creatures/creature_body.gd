@@ -873,6 +873,13 @@ func _build_animator(art: Node3D, look: Dictionary) -> void:
 	# Authored bed recipes finish the installed faint clip. Combat's new
 	# collapse must not replace their endpoint or completion signal.
 	clips["rest_faint"] = str((look.get("animations", {}) as Dictionary).get("faint", ""))
+	# A remake's own held hit clip names its impact window too (P2-016), so a
+	# real blow shows the wince through hitstop rather than the neutral lead-in.
+	var impact: Variant = look.get("hit_impact", null)
+	if impact is Dictionary and not clips.has("hit_start_phase"):
+		clips["hit_start_phase"] = float((impact as Dictionary).get("start_phase", 0.0))
+		clips["hit_release_phase"] = float((impact as Dictionary).get("release_phase",
+			(impact as Dictionary).get("start_phase", 0.0)))
 	_animator = ANIMATOR.new(player, clips)
 	if bool(get_meta("f36_pose_candidate_installed", false)):
 		_animator.call("bind_candidate_pivot", _model)
@@ -1497,8 +1504,8 @@ static func _apply_field_bright_values(info: Dictionary) -> void:
 ## albedo and emission; a night floor owns its emission (the night scale) and
 ## takes the albedo only.
 static func _sync_field_bright_derived(source: BaseMaterial3D, albedo: Color, emission_mult: float) -> void:
-	for ref: WeakRef in _field_bright_derived.get(source.get_instance_id(), []):
-		var copy := ref.get_ref() as BaseMaterial3D
+	for entry: Array in _field_bright_derived.get(source.get_instance_id(), []):
+		var copy := (entry[0] as WeakRef).get_ref() as BaseMaterial3D
 		if copy == null:
 			continue
 		copy.albedo_color = albedo
@@ -1522,7 +1529,17 @@ static func _track_field_bright_copy(source: BaseMaterial3D, copy: BaseMaterial3
 		root = source.get_instance_id()
 	if not _field_bright_derived.has(root):
 		_field_bright_derived[root] = []
-	(_field_bright_derived[root] as Array).append(weakref(copy))
+	var refs := _field_bright_derived[root] as Array
+	# The shared night floor is re-registered by each new body: keep one entry
+	# ([weakref, instance id]) per live copy and drop freed ones from both maps.
+	for index in range(refs.size() - 1, -1, -1):
+		var held: Object = (refs[index][0] as WeakRef).get_ref()
+		if held == null:
+			_field_bright_root.erase(refs[index][1])
+			refs.remove_at(index)
+		elif held == copy:
+			return
+	refs.append([weakref(copy), copy.get_instance_id()])
 	_field_bright_root[copy.get_instance_id()] = root
 
 
@@ -2476,6 +2493,23 @@ func play_hit() -> void:
 		_animator.call("play_once", "hit")
 
 
+## A stagger holds the creature's wince for its length (creature_animator.gd
+## `hold_wince`). Returns false for a rig without a named hit window, so the
+## caller keeps its old behaviour there.
+func hold_combat_wince(seconds: float) -> bool:
+	ensure_visual_resident()
+	return _animator != null and bool(_animator.call("hold_wince", seconds))
+
+
+const FLINCH_SHOVE_PER_M := 0.11
+const FLINCH_SINK_PER_M := 0.02
+const FLINCH_LEAN_DEG := 8.0
+const FLINCH_MIN_HEIGHT := 0.8
+const FLINCH_MAX_HEIGHT := 4.0
+const FLINCH_OUT_S := 0.06
+const FLINCH_HOLD_S := 0.14
+const FLINCH_BACK_S := 0.2
+
 ## Recoil stays visual, never moving collision or attack geometry. Enabled
 ## hurt clips own Model's grounded transform, so their additive recoil uses
 ## the fitted art child instead of competing for the same animation tracks.
@@ -2490,12 +2524,21 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
 	_combat_flinch_rest_rotation = _combat_flinch_target.rotation
 	var recoil_parent := _combat_flinch_target.get_parent() as Node3D
 	var local_away := recoil_parent.global_basis.inverse() * away.normalized()
-	var recoil := Vector3(local_away.x, 0.08, local_away.z) * 0.14
+	# P2-016 (GPU, 25 Oct): a fixed 0.14 m shove over 0.16 s vanished between
+	# 0.15 s fight frames and beside 2-3 m bodies. Scale the shove and a sink
+	# with the body, lean it away from the blow, and hold it briefly.
+	var size := clampf(_height, FLINCH_MIN_HEIGHT, FLINCH_MAX_HEIGHT)
+	var recoil := Vector3(local_away.x, 0.0, local_away.z) * FLINCH_SHOVE_PER_M * size \
+		+ Vector3(0.0, -FLINCH_SINK_PER_M * size, 0.0)
+	var lean := deg_to_rad(FLINCH_LEAN_DEG) * (-1.0 if local_away.x < 0.0 else 1.0)
 	_combat_flinch_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
-	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position + recoil, 0.045).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(-7.0), 0.045)
-	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position, 0.11).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x, 0.11)
+	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position + recoil, FLINCH_OUT_S).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x + deg_to_rad(-7.0), FLINCH_OUT_S)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:z", _combat_flinch_rest_rotation.z + lean, FLINCH_OUT_S)
+	_combat_flinch_tween.tween_interval(FLINCH_HOLD_S)
+	_combat_flinch_tween.tween_property(_combat_flinch_target, "position", _combat_flinch_rest_position, FLINCH_BACK_S).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:x", _combat_flinch_rest_rotation.x, FLINCH_BACK_S)
+	_combat_flinch_tween.parallel().tween_property(_combat_flinch_target, "rotation:z", _combat_flinch_rest_rotation.z, FLINCH_BACK_S)
 
 
 func _clear_combat_flinch() -> void:

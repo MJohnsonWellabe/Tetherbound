@@ -1,0 +1,108 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9138,
+  "least_squares_slope": 1.4595,
+  "method": "linear",
+  "slope": 1.4595,
+  "intercept": -3.0208,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.555,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1A": {
+   "measured": 7.067,
+   "reference": 7.53,
+   "mapped": 7.293,
+   "residual": 0.237
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.133,
+   "reference": 7.47,
+   "mapped": 7.39,
+   "residual": 0.08
+  },
+  "f36_0_gap:C6B": {
+   "measured": 6.467,
+   "reference": 6.9,
+   "mapped": 6.417,
+   "residual": 0.483
+  },
+  "f36_0_gap:C6A": {
+   "measured": 7.2,
+   "reference": 6.47,
+   "mapped": 7.487,
+   "residual": -1.017
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 6.267,
+   "reference": 6.73,
+   "mapped": 6.125,
+   "residual": 0.605
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.733,
+   "reference": 3.5,
+   "mapped": 3.887,
+   "residual": -0.387
+  }
+ },
+ "candidates": {
+  "warden pre": {
+   "measured_mean": 6.133,
+   "mapped_mean": 5.93,
+   "mapped_judges": [
+    5.88,
+    5.88,
+    6.03
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "warden r7": {
+   "measured_mean": 6.4,
+   "mapped_mean": 6.32,
+   "mapped_judges": [
+    6.17,
+    6.32,
+    6.47
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "grunt pre": {
+   "measured_mean": 6.233,
+   "mapped_mean": 6.08,
+   "mapped_judges": [
+    6.03,
+    6.03,
+    6.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "grunt r7": {
+   "measured_mean": 6.133,
+   "mapped_mean": 5.93,
+   "mapped_judges": [
+    6.17,
+    5.74,
+    5.88
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

@@ -1,11 +1,10 @@
 {
- "updated": "2026-10-21T14:45:00Z (9:45 AM CT Wed 21 Oct)",
+ "updated": "2026-10-24T19:55:00Z (2:55 PM CT Sat 24 Oct)",
  "headline": [
-  "Closed today: F04#6 (#697), F36#0 (#699), F39#0 (#701); F10#2 landing now (Stormwood named-fight camera, 6.77 vs 5.61, C3 6/6). Acceptance 238 of 271 once it lands. All CPU-provisional; GPU 7.5 confirmations owed.",
-  "PR #698 merged 6:52 AM CT: Veridian/Aeriex/Ripplet retex, Bramblebun 3.0 m, native-clip poses, Mosshock shiny, plus a fix for a pre-existing Veridian choice-prompt placement bug (refuse prompt could land behind a wall).",
-  "F04#6 closed earlier today (PR #697, 6.75 vs control 5.83, CPU-provisional).",
-  "Near the bar on CPU: F10#2 6.58-6.60 (one more batched round with filled lane cues queued), F22#4 6.40, F17#6 6.26, F13#5 6.10. Meshy hero art delivered today for Cloudreach (aviary shell, curtain arcade, Cliffhold tiered quarter, Galefoot cliff dwellings), Tidewake (Veilfall gate, terrace steps, wet-cliff texture), UI region bands and 11 item props.",
-  "Recapture sessions for F38#0, F39#0 and F40#0 still rendering (Meadows about 17Z). Blocked: GPU-only F25#4, F21#5 frame time, F26#3; owner-only F49#1, F49#2, F26#5, F47#0 (option B recommended)."
+  "Board 236 of 526 since the owner's 24 Oct split: big visual rows now count each creature, pose and catalog item, and the GPU (owner's GTX 1060, Medium and High, mapped Bar A 7.5) is the only judge that closes a visual row.",
+  "Merged today: #722-#730 (fights, routes, Tidewake props and rock family, creature growth, Forward+ emission floor, board split).",
+  "GPU Meadows matrix (F38#0/F26#3): no site at 7.5; best village road 7.09 Medium. The main score sink is camera stands inside rock or walls at the arch, hall and river-lock sites, plus 174 stands the tool could not place.",
+  "Owner calls 24 Oct: Terrapup is a large dog (Meshy redraft rigged, GPU next); creatures keep their meshes and gain light energy, elemental and war-worn touches; Cloudreach moved from CPU capture to scene fixes."
  ],
  "batches": [
   {
@@ -750,11 +749,11 @@
   "Coordinator 11:31 PM CT 12 Oct: reverted the deferred mastery-flush series (7910ca114..baedacc50, 7ef846e59) on tb/ev-coordinator to land #681; main nightlies passed all four affected smokes, and the reverted head passed them locally and in full CI. The series returns with the Systems lane's fixes after each smoke passes 3/3 locally."
  ],
  "owner_needs": [
-  "ROG Ally device tests (F26#5, F49#2), play pass (F49#1) and the 15–25 h clear confirmation (F47#0). Recommended early (they answer the combat frame-rate and build-freeze questions); owner schedules."
+  "ROG Ally device tests (F26#5, F49#2), play pass (F49#1) and the 15-25 h clear confirmation (F47#0)."
  ],
  "four_chapter_run": null,
  "wip": [],
- "last_lane_refresh": "10:06 PM CT Tue 20 Oct 2026",
+ "last_lane_refresh": "2:55 PM CT Sat 24 Oct 2026",
  "lane_activity": [],
  "active_work": [],
  "preserved_work": [
@@ -823,49 +822,55 @@
    "sandbox_mode": "danger-full-access"
   }
  ],
- "active_lanes_note": "Owner kickoff 20 Oct: seven cloud lanes work continuously through fixed criterion lists; visual criteria use the owner's CPU-provisional 6.7 threshold until a GPU pass. Meshy art comes from the coordinator on tb/meshy-batch.",
+ "active_lanes_note": "Owner 24 Oct: the GPU lane judges; cloud lanes iterate on CPU and send READY candidates with capture commands. Meshy art comes from the coordinator on tb/meshy-1024.",
  "active_lanes": [
   {
-   "lane": "Routes · cloud session · tb/routes",
-   "doing": "Starting",
-   "criteria": "F49#0 + F19#5 → F49#3 → F47#0 proposal",
-   "next": "Continuous; READY criteria land in consolidated full-ci PRs"
-  },
-  {
-   "lane": "Fights · cloud session · tb/fights",
-   "doing": "Starting",
-   "criteria": "F22#4 → F10#2 → F04#6 (F21#5 frame time needs a GPU)",
-   "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+   "lane": "GPU judge · owner desktop (GTX 1060) · tb/gpu-pass",
+   "doing": "Meadows matrix judged; next the Terrapup dog with five creatures, then the Cloudreach matrix",
+   "criteria": "Every visual row (judge of record)",
+   "next": "Queue: Grandpa face, Tidewake (Forward+ fixes, declutter, gully terrain), creature touches and repaints, Aquaryn and Tidecoil"
   },
   {
    "lane": "Creatures · cloud session · tb/creatures",
-   "doing": "Starting",
-   "criteria": "F29#3 → F36#0 → F36#1 (F25#4 needs a GPU)",
-   "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+   "doing": "Owner touch pass (scars, weathering, ember motes); rigging the Terrapup dog, Aquaryn and Tidecoil",
+   "criteria": "F36 (0) per asset, F36 (1) per pose subject",
+   "next": "Energy seams and elemental effects on Bramblebun, Nightburrow and the ledger"
   },
   {
-   "lane": "Meadows · cloud session · tb/look",
-   "doing": "Starting",
-   "criteria": "F17#6 → F38 #0 #1 #2 #3 #5",
-   "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+   "lane": "Meadows · cloud session · tb/meadows",
+   "doing": "Camera stands at the arch, hall and river-lock sites; the 174 rejected stands",
+   "criteria": "F38 per catalog item, F17#6, F04#6",
+   "next": "Hall shafts and orb chains, interior time-of-day grade, ground cover, stronghold"
   },
   {
    "lane": "Tidewake · cloud session · tb/tidewake",
-   "doing": "Starting",
-   "criteria": "F13#5 → F39 #0 #1 #2 #3 #5",
-   "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+   "doing": "Veilfall gully terrain reshape (F39#4) and the shore declutter, both queued on GPU",
+   "criteria": "F39 per catalog item, F13#5",
+   "next": "The water (owner note)"
   },
   {
    "lane": "Cloudreach · cloud session · tb/cloudreach",
-   "doing": "Starting",
-   "criteria": "F08#3 → F40 #0 #1 #2 #3 #5",
-   "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+   "doing": "Scene fixes from the catalog (owner 24 Oct); placing the Meshy heartstone and island shell",
+   "criteria": "F40 per catalog item, F08#3",
+   "next": "Settlement foreground dressing, night lighting, varied islets"
   },
   {
-   "lane": "Stormwood · cloud session · tb/stormwood",
-   "doing": "Starting",
-   "criteria": "F41 #1 #2 #3 #5 (F26#3 needs a GPU)",
-   "next": "Continuous; READY criteria land in consolidated full-ci PRs"
+   "lane": "Fights · cloud session · tb/fights",
+   "doing": "F22#4 24-seed pattern table; fight HUD and ally crowding fixes for every named fight",
+   "criteria": "F22#4",
+   "next": "Hand F10#2 to Stormwood, then stop"
+  },
+  {
+   "lane": "Routes · cloud session · tb/routes",
+   "doing": "Cloudreach kitchen/feast route piece",
+   "criteria": "F49#0, F19#5",
+   "next": "Takes Stormwood's remaining route pieces (homecoming credits)"
+  },
+  {
+   "lane": "Stormwood · cloud session · tb/stormwood-routes",
+   "doing": "Finishing the Stormwood feast route piece",
+   "criteria": "F49#0 pieces, then F41",
+   "next": "Back to Stormwood visuals (F41, F10#2)"
   }
  ]
 }

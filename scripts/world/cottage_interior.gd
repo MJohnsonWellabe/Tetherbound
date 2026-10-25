@@ -13,6 +13,9 @@ extends Node3D
 ## everything loose inside it.
 
 const COL_FLOOR := Color("#6b4f30")
+## The room floor's walking surface in building-local metres; every prop
+## stands on it (see `_build_floor`).
+const FLOOR_TOP := 0.10
 const COL_WOOD := Color("#5a4030")
 const COL_RUG := Color("#7a4a35")
 
@@ -37,13 +40,16 @@ func build(room: Dictionary = {}) -> void:
 	_build_light()
 
 
-## Top level with the terrain outside, same reasoning as shop_interior.gd:
 ## village.gd sinks the building to `ground - 0.05`, so a slab centred at
-## -0.10 with a 0.30-tall body puts its surface exactly on the doorsill.
+## -0.05 with a 0.30-tall body puts its surface 5 cm proud of the terrain
+## outside. Level with it (the old -0.10 centre) the two surfaces were
+## coplanar on a flat settlement pad and the terrain z-fought up through the
+## room (Stormwood Ashfoot shelter, GPU F41 matrix, 25 Oct); a 5 cm sill is
+## well inside the character's step height.
 func _build_floor() -> void:
 	_box(
 		Vector3(_half_w * 2.0 + 0.6, 0.3, _half_d * 2.0 + 0.6),
-		Vector3(0.0, -0.10, 0.0),
+		Vector3(0.0, FLOOR_TOP - 0.15, 0.0),
 		COL_FLOOR
 	)
 
@@ -61,13 +67,13 @@ func _build_floor() -> void:
 func _build_furniture() -> void:
 	var bed_x := -_half_w + 0.85
 	var bed_z := -_half_d + 0.75
-	_box(Vector3(1.5, 0.5, 0.9), Vector3(bed_x, 0.25, bed_z), COL_WOOD)
+	_box(Vector3(1.5, 0.5, 0.9), Vector3(bed_x, FLOOR_TOP + 0.25, bed_z), COL_WOOD)
 	var chest_z := clampf(bed_z + 1.2, bed_z + 0.8, _half_d - 0.6)
-	_box(Vector3(0.6, 0.45, 0.5), Vector3(bed_x, 0.225, chest_z), COL_WOOD)
+	_box(Vector3(0.6, 0.45, 0.5), Vector3(bed_x, FLOOR_TOP + 0.225, chest_z), COL_WOOD)
 
 
 func _build_rug() -> void:
-	_box(Vector3(1.4, 0.02, 1.2), Vector3(0.0, 0.13, 0.2), COL_RUG, false)
+	_box(Vector3(1.4, 0.02, 1.2), Vector3(0.0, FLOOR_TOP + 0.01, 0.2), COL_RUG, false)
 
 
 func _build_light() -> void:

@@ -1,0 +1,67 @@
+[
+ {
+  "label": "r6 warden",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/warden_pre.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/warden_r6.png",
+  "brief": "Meadows stronghold hall named-trainer fight: four frames during the opponent's wind-ups",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect is a flat disc hiding the struck creature",
+   "the player's creature is hard to find or reads as a translucent ghost"
+  ]
+ },
+ {
+  "label": "r6 riverwatch",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/riverwatch_pre.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/riverwatch_r6.png",
+  "brief": "Meadows river named-trainer fight against a large otter boss: four frames during its wind-ups",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect is a flat disc hiding the struck creature",
+   "the player's creature is hard to find or reads as a translucent ghost"
+  ]
+ },
+ {
+  "label": "r6 stormwood",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/stormwood_pre.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/stormwood_r6.png",
+  "brief": "Stormwood forest named-wild fight against a large electric spider: four frames at its wind-ups",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect is a flat disc hiding the struck creature",
+   "the player's creature is hard to find or reads as a translucent ghost"
+  ]
+ },
+ {
+  "label": "r6 veyra",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/veyra_pre.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/veyra_r6.png",
+  "brief": "Cloudreach captain fight in a stone summit arena against a large bird: four frames during the fight",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect is a flat disc hiding the struck creature",
+   "the player's creature is hard to find or reads as a translucent ghost"
+  ]
+ },
+ {
+  "label": "r6 venn",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/venn_pre.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/5616d755-a5e3-565c-ba7f-2cb399b6d25a/scratchpad/r6/venn_r6.png",
+  "brief": "Tidewake beach trainer fight against a large shelled water creature: four frames over the fight",
+  "defects": [
+   "flat outlined ring, cone or slab marking the attack area on the ground",
+   "wind-up warning does not show where and when to move",
+   "HUD covers the fight action",
+   "impact effect is a flat disc hiding the struck creature",
+   "the player's creature is hard to find or reads as a translucent ghost"
+  ]
+ }
+]

@@ -1,0 +1,120 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8935,
+  "least_squares_slope": 0.9562,
+  "method": "linear",
+  "slope": 0.9562,
+  "intercept": 0.5784,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.605,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.967,
+   "reference": 7.35,
+   "mapped": 7.24,
+   "residual": 0.11
+  },
+  "craft:before": {
+   "measured": 4.2,
+   "reference": 4.83,
+   "mapped": 4.594,
+   "residual": 0.236
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.033,
+   "reference": 7.53,
+   "mapped": 7.304,
+   "residual": 0.226
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.033,
+   "reference": 7.47,
+   "mapped": 7.304,
+   "residual": 0.166
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 5.2,
+   "reference": 6.73,
+   "mapped": 5.551,
+   "residual": 1.179
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.033,
+   "reference": 3.5,
+   "mapped": 4.435,
+   "residual": -0.935
+  },
+  "f36_0_gap:C6A": {
+   "measured": 6.533,
+   "reference": 6.47,
+   "mapped": 6.826,
+   "residual": -0.356
+  },
+  "f36_0_gap:C6B": {
+   "measured": 7.267,
+   "reference": 6.9,
+   "mapped": 7.527,
+   "residual": -0.627
+  }
+ },
+ "candidates": {
+  "F13#5 currents control (main)": {
+   "measured_mean": 5.067,
+   "mapped_mean": 5.42,
+   "mapped_judges": [
+    5.17,
+    5.17,
+    5.93
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F13#5 currents b6 (set Us-B)": {
+   "measured_mean": 5.733,
+   "mapped_mean": 6.06,
+   "mapped_judges": [
+    5.84,
+    5.84,
+    6.51
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F13#5 currents b5 (set Kj-A)": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.09,
+   "mapped_judges": [
+    5.84,
+    5.84,
+    6.6
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F13#5 currents b6 (set Kj-B)": {
+   "measured_mean": 5.733,
+   "mapped_mean": 6.06,
+   "mapped_judges": [
+    5.84,
+    5.84,
+    6.51
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

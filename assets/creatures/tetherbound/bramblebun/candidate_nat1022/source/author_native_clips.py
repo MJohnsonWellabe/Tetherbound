@@ -45,6 +45,19 @@ def low():
   if o.type!='MESH' or not o.vertex_groups:continue
   e=o.evaluated_get(graph);m=e.to_mesh();result=min(result,min((e.matrix_world@v.co).z for v in m.vertices));e.to_mesh_clear()
  return result
+# F36#1 r1: compose several turns on one bone (rotate() sets it outright).
+def turn(name,parts):
+ basis=bases[name];q=Quaternion((1,0,0,0))
+ for deg,axis in parts:q=Quaternion(Vector(axis),math.radians(deg))@q
+ rig.pose.bones[name].rotation_quaternion=basis.inverted()@q@basis
+def _tail_x(name,angle):
+ b=rig.pose.bones[name];b.rotation_mode='QUATERNION'
+ b.rotation_quaternion=bases[name].inverted()@Quaternion(Vector((0,1,0)),math.radians(angle))@bases[name]
+ bpy.context.view_layer.update();x=abs((rig.matrix_world@b.tail).x)
+ b.rotation_quaternion=Quaternion((1,0,0,0));bpy.context.view_layer.update();return x
+# SPLAY: per side, the sign about the body's length axis that swings the foot outward.
+SPLAY_DEG=70
+SPLAY={side:(1 if _tail_x('front_upper_'+side,25)>_tail_x('front_upper_'+side,-25) else -1) for side in ('l','r')}
 for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('attack',24,False),('charged',42,False),('hit',12,False),('faint',36,False),('rest',36,False),('swim',40,True),('fly_grip',48,True),('ride',72,True)]:
  action=bpy.data.actions.new(role);rig.animation_data.action=action
  for f in sorted(set(range(0,frames+1,2))|{frames}):
@@ -67,13 +80,15 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
     rotate('front_upper_'+side,-30*pulse);rotate('front_lower_'+side,25*pulse)
    rotate('head',-10*pulse);rotate('spine',-4*pulse)
   if role=='hit':
-   # Close-1022: the held body-carried shove that judged 7.5+ on Meadowhart and
-   # Riverdrake (b3): the chest rears back off the blow, held to .5, back by .97.
+   # F36#1 roster r1 judges: the rear-back shove read as a leap or a lunge. A
+   # recoil instead: the head snaps up and away, the chest pulls back and leans
+   # aside, the feet stay planted (the grounding below keeps them on the floor).
    e=min(1,t/.12);e=e*e*(3-2*e)
    r=max(0,min(1,(t-.5)/.47));e*=1-r*r*(3-2*r)
-   rotate('root',REAR*16*e);rotate('spine',REAR*8*e);rotate('neck',-REAR*6*e);rotate('head',8*e,(0,0,1))
-   for side in ['l','r']:
-    rotate('front_upper_'+side,-26*e);rotate('front_lower_'+side,30*e)
+   # P2-016 (GPU, 24 Oct): at fight distance this recoil (4 deg pitch, 9 deg lean)
+   # read as idle under hits. Roughly double it, feet still planted.
+   turn('root',[(REAR*9*e,(1,0,0)),(16*e,(0,1,0))]);rotate('spine',REAR*11*e)
+   rotate('neck',NOD*26*e);turn('head',[(NOD*12*e,(1,0,0)),(30*e,(0,0,1))])
   if role in ['faint','rest']:
    # b4 judges: rolling belly-to-camera showed the unlit underside as a dark blob.
    # Roll the other way, so the back and markings face the stage camera (the
