@@ -1,6 +1,36 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-25 10:40 CT INFO F22#4 C2/C3, water (smoke_water_named_c2c3, 24 seeds, 54 rows, 2592 runs, 0 errors).
+  - This harness only measures (`accepted` is fixed false). I applied the same verdict rule as the Stormwood harness: READER/MASHER median lead cost <= 0.55; READER win >= 0.90; single hit < 0.50; tells >= 0.8 s; and the COMBAT §7 trivial-fight floor for a type-advantaged lead whose MASHER party cost is <= 0.15.
+  - Galewisp (air) is advantaged against all five water named wilds (attack +1, defence -1).
+  - **Result: 48/54 PASS.** Every row passes win, hit ceiling and tells; the failures are ratio-only:
+    1. **Venn: Ripplet 0.75, Galewisp 0.76.** Real C2 misses, not trivial (MASHER party 0.54 / 0.46): the reader wins every run but saves too little lead HP.
+    2. **Nerissa: Ripplet 0.76, Galewisp 0.76** (MASHER party 0.78 / 0.71).
+    3. **Songweaver and Tidecoil, Galewisp:** fail the trivial floor's "reader no worse" by margins at noise level (reader party 0.040 vs 0.032, 0.045 vs 0.044). Brine Root's Galewisp row passes the floor (0.024 vs 0.025).
+  - These are Water-lane fights (F14#0 rows). I am reporting them and changing no numbers, since a Venn or Nerissa tune belongs with the owner of those trainers' rows. If you want it here, the lever is the trainers' `foe_power_multiplier`, or a stronger tell on their heaviest move, re-run with this smoke.
+
+    | case | pattern | attacks | result (starter) |
+    |---|---|---|---|
+    | water_lantern_shell_sentinel | named_water_lantern_shell_sentinel | water_lantern_shell_sentinel_wall_check, water_lantern_shell_sentinel_wall_slam | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_gull_basalt_claw | named_water_gull_basalt_claw | water_gull_basalt_claw_wall_check, water_gull_basalt_claw_wall_slam | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_brine_root_watcher | named_water_brine_root_watcher | water_brine_root_watcher_charger_rush, water_brine_root_watcher_charger_check | terrapup PASS; ripplet PASS; galewisp PASS (trivial floor, party 0.024/0.025) |
+    | water_drowned_garden_songweaver | named_water_drowned_garden_songweaver | water_drowned_garden_songweaver_current_volley, water_drowned_garden_songweaver_current_zone | terrapup PASS; ripplet PASS; galewisp FAIL (trivial floor, party 0.040/0.032) |
+    | water_deep_watch_tidecoil | named_water_deep_watch_tidecoil | tidecoil_sweep | terrapup PASS; ripplet PASS; galewisp FAIL (trivial floor, party 0.045/0.044) |
+    | water_aquaryn_alpha | named_water_aquaryn_alpha | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_pell_trial | named_water_trainer_pell_trial | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_tovin | named_water_trainer_tovin | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_solm | named_water_trainer_solm | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_irva | named_water_trainer_irva | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_bex | named_water_trainer_bex | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_calder | named_water_trainer_calder | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_tess | named_water_trainer_tess | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_fennel | named_water_trainer_fennel | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_venn | named_water_trainer_venn | wall_check, wall_quake, venn_charger_rush, venn_charger_double_rush, current_volley, current_zone | terrapup PASS; ripplet FAIL 0.75; galewisp FAIL 0.76 |
+    | water_trainer_morra | named_water_trainer_morra | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_evi | named_water_trainer_evi | - | terrapup PASS; ripplet PASS; galewisp PASS |
+    | water_trainer_nerissa | named_water_trainer_nerissa | wall_check, wall_slam, wall_quake, current_volley, current_zone, charger_check, nerissa_lane | terrapup PASS; ripplet FAIL 0.76; galewisp FAIL 0.76 |
+  - Still queued: the Terrapup Stormwood rerun (trivial floor) and the Riverwatch rerun (Brooktail 27.0).
 - 2026-10-25 05:55 CT READY tb/fights-land a55b0fa4b (origin/main 1c64efc1a + tb/fights fd121b1e5): your review follow-up on 3e028626f.
   1. **Bug fixed.** `_on_hit_effectiveness` clears `_effect_banner_mine`, so a type verdict after the player's own stagger goes back under the enemy plate. New tests/test_effect_banner_owner.gd: fails without the fix, passes with it.
   2. **Duplicate keys.** The duplicated dust keys in `telegraph.soft_style` are removed; my second overlay run while assembling the ON config left them. One copy remains, same values.
