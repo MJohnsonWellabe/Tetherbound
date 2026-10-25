@@ -1,8 +1,8 @@
 extends "res://tests/test_case.gd"
 
-## F38 tier-1 new art (close-1024): the Hall arch facades, the stronghold hero
-## gatehouse and the Meadows hero pieces ship OFF and build nothing while off;
-## on, a facade is fitted inside its arch slot.
+## F38 tier-1 new art (close-1024): the Hall arch facades ship ON (judged
+## passing); the stronghold hero gatehouse and the Meadows hero pieces ship OFF
+## and build nothing while off; on, a facade is fitted inside its arch slot.
 
 const ARCH_FACADES := preload("res://scripts/world/crossing_hall_arch_facades.gd")
 const GATEHOUSE := preload("res://scripts/world/stronghold_hero_gatehouse.gd")
@@ -14,8 +14,8 @@ func _block(path: String, key: String) -> Dictionary:
 	return (parsed as Dictionary).get(key, {}) if parsed is Dictionary else {}
 
 
-func test_shipping_configs_keep_the_new_art_off() -> void:
-	assert_false(bool(_block("res://data/config/crossing_hall.json", "arch_facades").get("enabled", true)))
+func test_shipping_configs_gate_the_new_art() -> void:
+	assert_true(bool(_block("res://data/config/crossing_hall.json", "arch_facades").get("enabled", false)), "facades judged passing ship ON")
 	assert_false(bool(_block("res://data/config/stronghold.json", "hero_gatehouse").get("enabled", true)))
 	var pieces := HERO_PIECES.settings()
 	for group: String in ["cliffs", "ironwood"]:
@@ -26,7 +26,8 @@ func test_off_builders_add_nothing() -> void:
 	var root := Node3D.new()
 	var arch := Node3D.new()
 	root.add_child(arch)
-	var cfg := _block("res://data/config/crossing_hall.json", "arch_facades")
+	var cfg := _block("res://data/config/crossing_hall.json", "arch_facades").duplicate(true)
+	cfg["enabled"] = false
 	assert_eq(ARCH_FACADES.build(root, cfg, {"tidewake": arch}), 0)
 	assert_eq(arch.get_child_count(), 0)
 	assert_eq(GATEHOUSE.build(root, _block("res://data/config/stronghold.json", "hero_gatehouse"), 0.0, 0.0), null)

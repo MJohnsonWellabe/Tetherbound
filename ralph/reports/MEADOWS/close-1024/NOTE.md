@@ -229,6 +229,17 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - It lands alongside land3, land6 and land7 with no overlapping hunks (land3 touches other keys in `crossing_hall.json`).
   - Use it for the GPU art pass in the 11:20 READY (flip each flag on for the candidate side).
 
+- 2026-10-25 13:05 UTC READY (GPU confirm) tier-1 art r2 (`art1024r2-*.json`, `_sheet_art1024_r2.png`). Three fresh code-blind judges; anchors p2_094_r4, f04_6_r22, craft; slope 1.96, r 0.97, RMSE 0.34; confirming batch.
+  - **Arch facades r2** (all seven chapter arches faced; stormwood borrows the tidewake surround, biome6–8 the sealed one): mapped **8.08 vs 5.28** shipping. r1 was 6.92 vs 5.50. CPU-provisional met in two batches, so `arch_facades.enabled` is now **ON** on tb/meadows (score in `_why_on_r2`).
+  - GPU command: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=arch_ --output=res://<round>` on tb/meadows-land9 (facades ON) against main (OFF). A GPU score below 7.5 reopens it.
+  - Remaining judge notes: the pale Cloudreach surround washes out by day and greys at night; the window-strip wall still shows behind.
+  - **Gatehouse r2** (a 60 m keep behind the stronghold): 6.58 vs 6.19 (+0.39). r1 gained 0.00, so that is two rounds under 0.5 and it is **PARKED**, OFF. All judges still read a speck that vanishes at night; MESHY line below.
+- 2026-10-25 13:05 UTC MESHY (P2-003, replaces the gatehouse approach): Meadows stronghold skyline landmark, a lit keep.
+  - Ref: owner key art, the stronghold/hall panel (`docs/reference/tetherbound-meadows-keyart.png`).
+  - Size: about 70 m tall overall with two towers, roughly 40x the 1.80 m trainer, so it reads from 550 m.
+  - Prompt: "tall fortified stone keep with two slender towers and a high central hall, warm lit windows, braziers on the battlements, oxblood banners only on the towers, weathered grey stone, stylised realism, game asset, readable silhouette from a distance".
+  - It must carry emissive window and brazier materials so it holds at night (all three judges named the night vanish).
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
