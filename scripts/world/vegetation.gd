@@ -1272,6 +1272,7 @@ func _make_mesh_asset(model_path: String) -> Object:
 	if mesh == null:
 		push_error("scatter model %s could not be loaded; that layer will be missing" % model_path)
 		return null
+	mesh = _aliased_mesh(model_path, mesh)
 
 	var layer_cfg := _layer_for(model_path)
 	var policy := retint_policy(model_path, layer_cfg, _presentation_retint())
@@ -2361,6 +2362,33 @@ func _layer_name_for(model_path: String) -> String:
 ## first mesh found, baked with its local transform, is the whole prop. A model
 ## with several parts would lose them here — which is why this reports rather
 ## than guesses.
+## F38 band4 (close-1024, OFF until judged): `vegetation_presentation.json
+## model_alias_candidate` renders a scattered model with an authored Meshy mesh
+## instead, scaled to the original's width and decimated to `max_tris`. Render
+## only: placements, the bake fingerprint, collision and footprints all keep
+## the original model (they read `_mesh_for()` directly).
+func _aliased_mesh(model_path: String, mesh: Mesh) -> Mesh:
+	var cfg: Dictionary = _presentation_retint().get("model_alias_candidate", {})
+	if not bool(cfg.get("enabled", false)):
+		return mesh
+	var row: Variant = (cfg.get("models", {}) as Dictionary).get(model_path)
+	if not row is Dictionary:
+		return mesh
+	var original := mesh.get_aabb()
+	var width := maxf(original.size.x, original.size.z) * float((row as Dictionary).get("width_scale", 1.0))
+	var built: Dictionary = GRASS_FIELD.authored_cover_mesh(str((row as Dictionary).get("path", "")),
+		[width, width, width], int((row as Dictionary).get("max_tris", 4000)))
+	if built.is_empty():
+		push_warning("model alias for %s did not load; the original renders" % model_path.get_file())
+		return mesh
+	var aliased := built["mesh"] as ArrayMesh
+	var material := StandardMaterial3D.new()
+	material.resource_name = "MeshyAlias"
+	material.albedo_texture = built.get("albedo")
+	aliased.surface_set_material(0, material)
+	return aliased
+
+
 func _mesh_for(path: String) -> Mesh:
 	if not ResourceLoader.exists(path):
 		return null
