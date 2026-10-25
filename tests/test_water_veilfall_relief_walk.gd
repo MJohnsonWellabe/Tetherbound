@@ -100,5 +100,32 @@ func test_veilfall_summit_cap_leaves_every_walked_height_and_caps_the_peak() -> 
 					float(off.height_at(float(at[0]), float(at[2]))), 0.0001, "%s %s keeps its height" % [anchor.get("id", "?"), key])
 	assert_almost_eq(float(on.height_at(335.208, 3885.711)), float(off.height_at(335.208, 3885.711)), 0.0001,
 		"the gate entrance keeps its height")
+	# The face terraces (cap terrace_m) step the flanks but never a walk band:
+	# sample the whole hike across its walked width, as for the crag relief.
+	var half := float(capped.terrain.trail_grading.flat_half_width_m)
+	var band_worst := 0.0
+	for route: Dictionary in capped.land_routes:
+		if str(route.id) != "veilfall_exploration_spine":
+			continue
+		var spine: Array = route.polyline
+		for k in spine.size() - 1:
+			var a := Vector2(float(spine[k][0]), float(spine[k][2]))
+			var b := Vector2(float(spine[k + 1][0]), float(spine[k + 1][2]))
+			var across := Vector2(-(b - a).normalized().y, (b - a).normalized().x)
+			var steps := int(a.distance_to(b))
+			for i in steps + 1:
+				var centre := a.lerp(b, float(i) / maxf(1.0, float(steps)))
+				for offset: float in [-half, 0.0, half]:
+					var p := centre + across * offset
+					band_worst = maxf(band_worst, absf(float(on.height_at(p.x, p.y)) - float(off.height_at(p.x, p.y))))
+	assert_almost_eq(band_worst, 0.0, 0.0001, "the hike's walked width keeps its height under the cap and its terraces")
+	if float(cap.get("terrace_m", 0.0)) > 0.0:
+		var stepped := 0
+		for x in range(-180, 580, 24):
+			for z in range(3760, 4520, 24):
+				var base := float(off.height_at(x, z))
+				if base > 5.0 and base < 200.0 and absf(float(on.height_at(x, z)) - base) > 2.0:
+					stepped += 1
+		assert_true(stepped > 100, "the terraces reshape the lower flanks (%d samples)" % stepped)
 	assert_true(float(off.height_at(200.0, 4140.0)) > 500.0, "precondition: the uncapped summit is the tall cone")
 	assert_true(float(on.height_at(200.0, 4140.0)) <= float(cap.cap_y_m) + 0.001, "the summit is capped")

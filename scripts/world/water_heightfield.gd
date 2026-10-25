@@ -362,7 +362,47 @@ func height_at(x: float, z: float) -> float:
 		graded += _veilfall_relief_after_grading(x, z)
 	if _veilfall_index >= 0 and bool(_veilfall_cap.get("enabled", false)):
 		graded = _veilfall_capped(x, z, graded)
+		if float(_veilfall_cap.get("terrace_m", 0.0)) > 0.0:
+			graded += _veilfall_terrace_delta(x, z, graded)
 	return graded
+
+
+## The crown family carried down the face: the capped cone's flanks step into
+## stratified tiers (a plateau, then a short riser). Masked exactly like the
+## crag relief (shore band, site and gate clearances) and zero on every walk
+## band, so the hike, anchors and gate keep their height.
+func _veilfall_terrace_delta(x: float, z: float, h: float) -> float:
+	var index := _veilfall_index
+	var dx := x - _cx[index]
+	var dz := z - _cz[index]
+	var r := sqrt(dx * dx + dz * dz)
+	var interior_radius := _radius[index] - _beach_width[index]
+	if r >= interior_radius:
+		return 0.0
+	var cfg := _veilfall_cap
+	var mask := smoothstep(0.0, float(cfg.get("terrace_shore_preserve_m", 30.0)), interior_radius - r)
+	for raw: Variant in _veilfall_relief.get("clear_points", []):
+		var point: Array = raw
+		var away := Vector2(x - float(point[0]), z - float(point[1])).length()
+		mask *= smoothstep(float(point[2]), float(point[2]) + float(point[3]), away)
+	if mask <= 0.0:
+		return 0.0
+	mask *= _site_relief_factor_with(index, dx, dz,
+		float(_veilfall_relief.get("site_clear_m", 4.0)), maxf(0.001, float(_veilfall_relief.get("site_fade_m", 4.0))))
+	if mask <= 0.0:
+		return 0.0
+	var walk := _nearest_trail_distance(x, z)
+	var margin := _trail_flat + float(_veilfall_relief.get("walk_margin_m", 1.0))
+	mask *= smoothstep(margin, margin + float(_veilfall_relief.get("walk_fade_m", 4.0)), walk)
+	if mask <= 0.0:
+		return 0.0
+	var tier := float(cfg.terrace_m)
+	# A wandering tier phase so the ledges are not ruled contour lines.
+	var wobble := (_relief_value_noise(x / 90.0 + 3.1, z / 90.0 - 7.4) - 0.5) * tier * 0.6
+	var t := (h + wobble) / tier
+	var riser := clampf(float(cfg.get("terrace_riser", 0.3)), 0.05, 0.95)
+	var stepped := (floorf(t) + smoothstep(1.0 - riser, 1.0, t - floorf(t))) * tier - wobble
+	return (stepped - h) * mask * float(cfg.get("terrace_strength", 0.85))
 
 
 ## Soft clamp: identity below cap - blend, then an exponential approach to the

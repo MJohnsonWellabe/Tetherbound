@@ -984,11 +984,21 @@ func _build_camera_occluders() -> void:
 ## close-1024 `veilfall_falls_candidate` (OFF in play): per-column overrides by
 ## id, so a judged fall shape can replace one column without copying the rest.
 static func _falls_with_candidate(falls_cfg: Dictionary) -> Dictionary:
-	var candidate: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings().get("veilfall_falls_candidate", {})
-	if candidate.is_empty():
+	var settings: Dictionary = preload("res://scripts/world/tidewake_look_profile.gd").settings()
+	var candidate: Dictionary = settings.get("veilfall_falls_candidate", {})
+	var overrides: Dictionary = (candidate.get("columns_by_id", {}) as Dictionary).duplicate(true)
+	# The crown candidate caps the summit at ~240 m, so the columns that began
+	# at 390-520 m restart at the plateau edge and fall down the terraced face.
+	var crown: Array = settings.get("veilfall_mountain_candidate", [])
+	if not crown.is_empty():
+		var crown_falls: Dictionary = (crown[0] as Dictionary).get("falls_columns_by_id", {})
+		for id: String in crown_falls:
+			var merged: Dictionary = (overrides.get(id, {}) as Dictionary).duplicate(true)
+			merged.merge((crown_falls[id] as Dictionary).duplicate(true), true)
+			overrides[id] = merged
+	if overrides.is_empty():
 		return falls_cfg
 	var result := falls_cfg.duplicate(true)
-	var overrides: Dictionary = candidate.get("columns_by_id", {})
 	for column: Dictionary in result.get("columns", []):
 		if overrides.has(str(column.get("id", ""))):
 			column.merge((overrides[str(column.id)] as Dictionary).duplicate(true), true)
