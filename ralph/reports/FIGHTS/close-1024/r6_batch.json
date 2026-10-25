@@ -1,0 +1,8 @@
+{"anchors": {"f36_0_gap:C6B": [6.0, 6.0, 5.8], "f36_0_gap:C6A": [6.8, 6.9, 6.6],
+             "f36_0_npc:C1A": [7.0, 6.8, 6.8], "f36_0_npc:C1B": [7.0, 6.8, 6.8],
+             "f10_2_r3_capacitor:candidate_r3": [4.6, 4.6, 4.2], "f10_2_r3_capacitor:control": [4.2, 4.3, 3.8]},
+ "candidates": {"venn pre": [4.8, 5.6, 5.0], "venn r6": [5.6, 6.4, 5.8],
+                "stormwood pre": [5.2, 6.1, 5.4], "stormwood r6": [5.3, 6.2, 5.6],
+                "warden pre": [5.2, 5.8, 5.4], "warden r6": [5.9, 6.6, 6.2],
+                "riverwatch pre": [5.6, 5.9, 5.8], "riverwatch r6": [6.3, 6.7, 6.6],
+                "veyra pre": [5.5, 6.0, 5.9], "veyra r6": [5.6, 6.1, 6.0]}}

@@ -1,6 +1,17 @@
 # Fights lane close-1024 (tb/fights)
 
 ## TO COORDINATOR
+- 2026-10-25 04:15 CT INFO r6 (your four asks), code-blind CPU batch, 3 fresh judges, mapped (confirming, slope 0.81, r 0.78, RMSE 0.74; files r6_*):
+  - Shipped generic look before -> r6 after: Venn 5.92 -> **6.56**, Warden 6.19 -> **6.81**, Riverwatch 6.43 -> **7.05**, Stormwood 6.27 -> 6.38, Veyra 6.46 -> 6.54. Every fight holds or improves and all are above the 5.2 floor.
+  - **The big gain is a bug fix, ef4591a18.** P2-062's follower fade (`camera.occlusion_fade.follow_candidate`, ON since 22 Oct) dithers the follower body at 0.85 while it covers the trainer from the camera. In a fight the follower *is* the piloted creature and the trainer stands behind it, so the pilot was a ghost for whole fights. This is the "Ripplet translucent" ask; in the Warden hall the pilot was effectively invisible. The cover test now runs only while following, as its `_why` scopes it, with a new unit test.
+    - Judges, 3/3: the player's creature PRESENT -> FIXED at Venn and Riverwatch; at Warden PRESENT -> FIXED or PARTIAL.
+  - The rest of r6 (all OFF until this READY):
+    1. Dust fill rows plus a timing pulse inside the danger footprint.
+    2. Right panels at 0.8.
+    3. A fixed meter row in the compact lane: the HUD height jump was real, since the returning grid pushed the title and meter up.
+    4. A pilot size floor of 0.10 in every fight. It used to apply only in Stormwood sight-line fights, so the Riverwatch per-trainer 0.10 had been inert.
+    - Judges still mark the wind-up "where" PARTIAL or PRESENT everywhere.
+  - I turn r6 ON with the r7 READY (your G3 items), which is capturing now on the trainer fights (south_bridge_grunt, warden_aldis, capture_f38_fight.gd). The r7 overlay builds on r6, so r6 stays an overlay until then.
 - 2026-10-25 02:25 CT INFO smoke_net_shared_boss vs the fights batch (read from the code; I have not run it):
   - **No new colliders or host positions.** `impact.ground_burst` (enemy_pattern_telegraph.gd contact_burst) adds only a Node3D with MeshInstance3D quads and an OmniLight3D. pilot_mark.all_fights enables combat_arena `_process`, which only moves the pilot light and sets the rim. `sight_fade_active()` still requires a real sight fade, so `_fight_world_sight_targets()` (camera caps, the pilot floor) is unchanged outside Stormwood. `fallback_max_steps` only chooses among fight-camera poses. `compact_when_idle` is UI.
   - **The one input-relevant change is `camera.tracking.composition_yaw_deg` 35 -> 50** (and pitch_start -25 -> -15). The occlusion_fade comment in combat.json says the tracker's composition "moves the camera basis that camera-relative movement reads". Any client or pilot steering by stick input instead of exact placement now maps about 15 deg differently, and the fight lens sits higher. If the smoke's guest creature moves by input after `place_creature` (settle, a pilot approach, hold_inside), that is the prime suspect.
