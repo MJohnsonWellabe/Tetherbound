@@ -61,6 +61,7 @@
   "carpet_candidate": {
     "_why": "F38 L4 / P2-005 close-1024 candidate (OFF until judged): GPU and CPU judges at every exterior Meadows site read a uniform grass carpet. Broader drift noise (clump_scale 0.11 -> 0.07) bitten harder (clump_contrast 0.55 -> 0.8) so the field forms meadow patches and clearings instead of an even lawn. When enabled these keys override the top-level ones at load (grass_field.gd config()).",
     "_why_r2": "r1 (0.07 / 0.8) captured near-identical to shipping on CPU (farm_to_hall, band2_stone_and_root_1, band5_0): not worth a judge round. r2 goes bolder: drift noise twice as broad as shipping, full contrast so drift gaps go short and sparse, and more blade-height variation so the patches read at camera distance.",
+    "_parked": "PARKED close-1024 after r1 and r2: both CPU captures read near-identical to shipping at farm_to_hall, band2_stone_and_root_1 and band5_0 (approach and gameplay). The drift gaps lose their blades, but the terrain under them is painted with the same grass albedo, so coverage noise cannot break the carpet. The P2-005 lever is macro variation in the terrain ground material (worn earth, clover and moss patches, value breaks), not blade coverage. Left OFF; not for GPU.",
     "enabled": false,
     "clump_scale": 0.045,
     "clump_contrast": 1.0,
