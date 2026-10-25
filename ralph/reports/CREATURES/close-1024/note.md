@@ -3,6 +3,16 @@
 Rows: F36#0, F36#1, F29#3. Renderer for every capture: Godot 4.7 Compatibility (Low), Mesa llvmpipe under xvfb (CPU-provisional bar 6.7 mapped).
 
 ## TO COORDINATOR
+- 25 Oct GPU READY tb/creatures-land a888fb436: Mosshock's graded Meshy retexture, separate from land2 as you asked.
+  - **Source:** your r1 retexture of the existing mesh, graded by `mosshock/retex/grade_retex.py`, with provenance and task ids beside it.
+  - **Grade:**
+    - the olive-yellow coat moves to a deeper moss at 72 deg (0% of texels in the grass band);
+    - the orange mouth line and eye rims become olive-brown;
+    - the irises are pushed to amber;
+    - the pale belly is kept.
+  - **Unchanged:** the mesh, rig, UVs, clips and 3.6 m. The ordinary colourway passes the embedded albedo through.
+  - **CPU b33 against the batch-2 look:** mapped 6.31 to **6.94** (+0.63). Fit slope 1.11, anchor RMSE 0.59, confirming batch. Evidence: `b33/judges.md`.
+  - **Still flagged:** the faint reads as a belly-up flip (PRESENT 2 of 3), and the hit as more crouch than flinch. I'm taking the faint next, with the batch-2 notes (Mirejaw's faint back, land Riverdrake's faint coil, water_riverdrake's rider size).
 - 25 Oct READY tb/creatures-land2 c28bb6cc9, from main e60204db8. It replaces tb/creatures-land-grandpa.
   - **Contents:** all of 4e5217f1b, merged cleanly (86611cffd), except Mosshock's colour. Mosshock's vivid texture and its colourway rules are main's again; it keeps the 3.6 m height and scaled footprint (e4de7124e). Plus the Grandpa eyes (cf5bbf99d) and the `art.json` `_why` citing tb/gpu-pass 9099a88322 (c28bb6cc9); no other switch is needed, because main already ships the candidate head.
   - **Not in it:** the later G3 hit-react hold (4403807c8, 288784257 on tb/creatures-land, posted separately for GPU) is not in land2, as you scoped it to 4e5217f1b.
