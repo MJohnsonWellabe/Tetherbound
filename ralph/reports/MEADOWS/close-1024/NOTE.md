@@ -137,6 +137,19 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - Across both parts, 73 of 73 reached rows captured. Every stand that was rejected on the GPU, at the 10 seated sites, now yields a frame on CPU.
   - Open: band3_the_river_lock_0. It passes the checks, but its gameplay and detail stands frame the trainer under the gate wall, beside a timber wall. A heading probe (90/135/225/270) is capturing now; the chosen seat follows as a separate READY.
 
+- 2026-10-25 01:40 UTC READY tb/meadows-land5 d9f675f3b (from origin/main; supersedes land4 62e64e6bf): the F38 tier-1 camera fixture (L1). Fixture only.
+  - Everything in land4, plus band3_the_river_lock_0: its gameplay view moves to heading 270 and its detail view to 135, off the gate wall onto the open yard (chosen from a CPU probe at 90/135/225/270).
+  - CPU verification: 73 of 73 seated rows captured, 0 rejected.
+  - GPU recapture stands (tier 1): arch_* (all 9), hall_nave, shrine_room, hall_front, farm_to_hall, band2_stone_and_root_0 and band3_the_river_lock_0.
+  - Command: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=arch_ --subset=hall_nave --subset=shrine_room --subset=hall_front --subset=farm_to_hall --subset=band2_stone_and_root_0 --subset=band3_the_river_lock_0 --output=res://<round>`
+  - Land with land3 (4d204e402, F17#6/L2: no shafts on Forward+). The owner's "white beams" and the GPU's "orb chains" are both those Forward+ shaft quads. On Compatibility the shafts stay as judged (CPU r9 6.84).
+- 2026-10-25 01:40 UTC READY (test pending) F04#6 r31 Meshy aftermath heroes, wired as an OFF candidate on tb/meadows 6549fbaee:
+  - `trainer_aftermath.json`: `meshy_heroes_enabled: false`, and `meshy_heroes` holds the whole r31 sites (Dell, Riverwatch, Field and Ridge).
+  - `trainer_aftermath.gd`: when the flag is on, those sites replace `visual_candidate_sites`.
+  - Test: `tests/test_trainer_aftermath_meshy_heroes.gd`, queued behind the CPU supplementals. I'll report the result here, then build a land branch.
+  - CPU pre-judge (already done, `F04-6.md`): r31 6.23 vs shipping 5.86, parked under the gain rule.
+  - GPU command: `tools/_probe_aftermath_sites.gd --cameras=res://tools/visual_judge/camera_sets/F04-6.json --candidate`, with `meshy_heroes_enabled` on for the candidate side.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
