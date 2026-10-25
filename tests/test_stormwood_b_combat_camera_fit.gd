@@ -121,9 +121,13 @@ func test_the_occlusion_swing_never_puts_the_foe_in_front_of_the_ally() -> void:
 
 ## The Mosshock collider covers its art's width, so spacing by it keeps the
 ## pilot out of the frog; the art fit (radius x allowance) is unchanged.
+## Hard rule, GPU batch 1 (25 Oct): the body grew 2.95 -> 3.6 m, so the art and
+## the spacing reach that clears it both scale by 3.6 / 2.95.
+const MOSSHOCK_GROWTH := 3.6 / 2.95
+
 func test_mosshock_collider_covers_its_art_width() -> void:
 	var look: Dictionary = SPECIES_DATA.placeholder("mosshock")
-	assert_true(float(look.radius) >= 1.45, "collider radius %.2f: spacing reach clears the art (hidden below 3.24 m)" % float(look.radius))
-	assert_almost_eq(float(look.radius) * float(look.footprint_allowance), 1.0325 * 3.2, 0.01,
-		"the art fit bound is unchanged")
-	assert_almost_eq(float(look.height), 2.95, 0.0001)
+	assert_true(float(look.radius) >= 1.45 * MOSSHOCK_GROWTH, "collider radius %.2f: spacing reach clears the art (hidden below 3.24 m at 2.95 m)" % float(look.radius))
+	assert_almost_eq(float(look.radius) * float(look.footprint_allowance), 1.0325 * 3.2 * MOSSHOCK_GROWTH, 0.01,
+		"the art fit bound only scales with the body")
+	assert_almost_eq(float(look.height), 3.6, 0.0001)
