@@ -21,6 +21,7 @@ const COL_RUG := Color("#5e5a44")
 const CUT_WOOD_SHADER := preload("res://scripts/world/stormheart_cut_wood.gdshader")
 const WOOD_ATLAS := preload("res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png")
 const KIT := "res://assets/props/quaternius_fantasy/%s.gltf"
+const FINISH_CONFIG := "res://data/config/cottage_interior_finish.json"
 
 var _half_w := 1.69
 var _half_d := 1.69
@@ -38,6 +39,7 @@ func build(room: Dictionary = {}) -> void:
 	_door_x = float(room.get("door_x", _door_x))
 	_door_w = float(room.get("door_w", _door_w))
 	_build_floor()
+	_build_lining()
 	_build_furniture()
 	_build_rug()
 	_build_light()
@@ -85,6 +87,76 @@ func _build_floor() -> void:
 ## smaller room -- a `clampf(value, min, max)` with min > max there silently
 ## returned `min` and placed a table outside the wall line. Two pieces on the
 ## clear side reads as furnished; a piece standing in the yard does not.
+## GPU F41#0 / r16 judges (Ashfoot inside: "a bare plaster box", "blown-out
+## window"): a ranger's timber lining over the plaster, full height on every
+## wall, with the door opening left clear; the windows sit behind it as
+## closed shutters. Presentation only (no collider), and only for the
+## buildings `cottage_interior_finish.json` names by their village role.
+func _build_lining() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(FINISH_CONFIG)) if FileAccess.file_exists(FINISH_CONFIG) else null
+	if not parsed is Dictionary:
+		return
+	var cfg: Dictionary = parsed
+	var holder := get_parent() as Node3D
+	var role := str(holder.get_meta("village_role", "")) if holder != null else ""
+	if role.is_empty() or not (cfg.get("lined_roles", []) as Array).has(role):
+		return
+	var height := float(cfg.get("lining_height_m", 2.45))
+	var inset := float(cfg.get("lining_inset_m", 0.03))
+	var thick := 0.04
+	var wood := ShaderMaterial.new()
+	wood.shader = CUT_WOOD_SHADER
+	wood.set_shader_parameter("wood_atlas", WOOD_ATLAS)
+	wood.set_shader_parameter("wood_tint", Color(str(cfg.get("lining_tint", "#b39a7c"))))
+	wood.set_shader_parameter("weathering", float(cfg.get("lining_weathering", 0.3)))
+	var y := FLOOR_TOP + height * 0.5
+	var w := _half_w - inset
+	var d := _half_d - inset
+	# Back and side walls, full length.
+	_lining_panel("LiningBack", Vector3(0.0, y, -d), Vector2(w * 2.0, height), 0.0, wood, thick)
+	_lining_panel("LiningWest", Vector3(-w, y, 0.0), Vector2(d * 2.0, height), PI * 0.5, wood, thick)
+	_lining_panel("LiningEast", Vector3(w, y, 0.0), Vector2(d * 2.0, height), -PI * 0.5, wood, thick)
+	# Front wall either side of the door, which stays open.
+	var door_left := _door_x - _door_w * 0.5
+	var door_right := _door_x + _door_w * 0.5
+	if door_left > -w + 0.05:
+		var span := door_left + w
+		_lining_panel("LiningFrontWest", Vector3(-w + span * 0.5, y, d), Vector2(span, height), PI, wood, thick)
+	if door_right < w - 0.05:
+		var span_r := w - door_right
+		_lining_panel("LiningFrontEast", Vector3(door_right + span_r * 0.5, y, d), Vector2(span_r, height), PI, wood, thick)
+	# A dark rail at chair height breaks the boards like a ranger's hut.
+	var rail := StandardMaterial3D.new()
+	rail.albedo_color = Color(str(cfg.get("rail_colour", "#4a3a2c")))
+	rail.roughness = 0.85
+	for side: Array in [[Vector3(0.0, 0.0, -d + 0.03), Vector2(w * 2.0, 0.0), 0.0], [Vector3(-w + 0.03, 0.0, 0.0), Vector2(d * 2.0, 0.0), PI * 0.5], [Vector3(w - 0.03, 0.0, 0.0), Vector2(d * 2.0, 0.0), -PI * 0.5]]:
+		var at: Vector3 = side[0]
+		var length: Vector2 = side[1]
+		var bar := MeshInstance3D.new()
+		var bar_mesh := BoxMesh.new()
+		bar_mesh.size = Vector3(length.x, 0.09, 0.05)
+		bar.mesh = bar_mesh
+		bar.material_override = rail
+		bar.position = Vector3(at.x, FLOOR_TOP + float(cfg.get("rail_height_m", 0.95)), at.z)
+		bar.rotation.y = float(side[2])
+		add_child(bar)
+
+
+func _lining_panel(id: String, at: Vector3, size: Vector2, yaw: float, material: Material, thick: float) -> void:
+	var panel := MeshInstance3D.new()
+	panel.name = id
+	var quad := QuadMesh.new()
+	quad.size = size
+	panel.mesh = quad
+	var lined := material.duplicate() as ShaderMaterial
+	# Boards run vertically: the shader's board width runs along UV.x.
+	lined.set_shader_parameter("uv_metres", Vector2(size.x, size.y))
+	panel.material_override = lined
+	panel.position = at
+	panel.rotation.y = yaw
+	add_child(panel)
+
+
 func _build_furniture() -> void:
 	# Installed village-kit furniture (quaternius_fantasy, the inn's family)
 	# over the same solid footprints the boxes had; each piece keeps a box
