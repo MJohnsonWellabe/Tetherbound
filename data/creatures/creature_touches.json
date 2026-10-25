@@ -48,14 +48,14 @@
   "overlays": [
    {
     "id": "trail_dusted_paws",
-    "_why": "Weathered (owner 25 Oct, one subtle unique touch): pale trail dust worked into the paws and lower legs of a coyote that lives on the roads. No scars: b26 judges read bolder scars as a seam.",
+    "_why": "Weathered (owner 25 Oct, one subtle unique touch): pale trail dust worked into the paws and lower legs of a coyote that lives on the roads. No scars: b26 judges read bolder scars as a seam. b31: at 1.22 the paws read bleached; softened to 1.1.",
     "where": {
      "y_max": 0.2
     },
     "mode": "shade",
-    "val_scale": 1.22,
-    "sat_scale": 0.6,
-    "coverage": 0.55,
+    "val_scale": 1.1,
+    "sat_scale": 0.8,
+    "coverage": 0.45,
     "grain": 6.0,
     "clump_softness": 0.16,
     "softness": 0.1
