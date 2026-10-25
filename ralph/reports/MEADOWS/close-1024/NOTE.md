@@ -150,6 +150,17 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - CPU pre-judge (already done, `F04-6.md`): r31 6.23 vs shipping 5.86, parked under the gain rule.
   - GPU command: `tools/_probe_aftermath_sites.gd --cameras=res://tools/visual_judge/camera_sets/F04-6.json --candidate`, with `meshy_heroes_enabled` on for the candidate side.
 
+- 2026-10-25 01:55 UTC MESHY batch (F38 tier-1 and L6 new art).
+  - Sizes are against the 1.80 m trainer, measured from the close-1024 CPU Hall frames.
+  - Each asset installs flag-off and is judged on its own stands before going ON.
+  1. Travel-arch facades, three assets, one per destination. Each is an arch surround that frames the existing door opening (about 2.6 m wide x 3.8 m tall), overall about 4.4 m wide x 5.2 m tall x 0.7 m deep, open in the middle.
+     - (a) arch_tidewake. Ref: `docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png`. Prompt: "carved stone portal surround for a doorway, pale limestone weathered by sea spray, inlaid shells and wave scroll carving, a small cyan glass keystone, rope-and-driftwood trim, stylised realism, game asset, open centre".
+     - (b) arch_cloudreach. Ref: `docs/reference/boards-2026-09-06/cloudreach-sky-aviary-stronghold-board.png`. Prompt: "carved stone portal surround for a doorway, pale stratified sandstone in horizontal bands, feather and wing relief carving up both jambs, a bronze eagle keystone, stylised realism, game asset, open centre".
+     - (c) arch_biome5 (sealed, unbuilt chapter). Ref: owner key art, standing-stone panel, `docs/reference/tetherbound-meadows-keyart.png` crop (1027, 333)–(1535, 600). Prompt: "sealed ancient stone portal surround for a doorway, dark grey monolith blocks with a faint blue spiral rune carved in the keystone, moss in the joints, heavy and closed-looking, stylised realism, game asset, open centre".
+  2. Ironwood canopy trees (band4 ironwood stands). Ref: owner key art, oak-grove panel, crop (0, 333)–(540, 600). Two variants, about 14 m tall with a 10–12 m crown and a 1.2 m trunk. Prompt: "huge old broadleaf ironwood tree, thick gnarled dark trunk with exposed roots, dense layered leaf-card canopy in clustered clumps, warm green with lighter tips, stylised realism like Valheim and Palworld, game asset".
+  3. Sculpted stratified cliff faces for band2_stone_and_root_1, replacing the flat facets and dark slash shapes (P2-014). Ref: `docs/reference/boards-2026-09-06/cloudreach-cliffs-creature-roster-board.png` (stratified stone), with the key art's Meadows grey-stone palette. Two modular pieces, about 30 m wide x 15 m tall x 10 m deep, plus a 12 m corner piece. Prompt: "modular grassy hillside cliff face, layered grey sedimentary rock strata with rounded weathered edges, grass and moss spilling over the top lip, small ledges and boulders at the foot, stylised realism, game asset".
+  - Also outstanding: the stronghold hero gatehouse (posted 22:30 UTC above).
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
