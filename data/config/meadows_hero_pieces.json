@@ -42,7 +42,12 @@
   },
   "ironwood": {
     "enabled": false,
-    "_why": "band4 ironwood (GPU 6.29/6.12, not tier 1): 'replace the faceted, blobby canopies with real leaf-card canopies'. Two coordinator Meshy hero trees (about 14 m) beside the band4 ironwood stands. Not yet placed: positions follow the cliffs and gatehouse.",
-    "pieces": []
+    "_why": "band4 ironwood (GPU 6.29/6.12, not tier 1): 'replace the faceted, blobby canopies with real leaf-card canopies'. Two coordinator Meshy hero trees (about 14 m) beside the band4 ironwood stands. Placed (r1, unjudged) framing each stand's subject: the Ironwood Grove stand (gameplay and detail look +z) gets one either side 8-12 m past the player; the Ridgeline Watch stand (heading 45) one right and one left-behind the site. Crowns 11-12 m wide, so about 14 m tall, roughly 8x the 1.80 m trainer.",
+    "pieces": [
+      {"id": "grove_a", "path": "res://assets/props/meshy-1024/meadows_ironwood_a/meadows_ironwood_a.glb", "at": [-336.0, 5068.0], "width_m": 11.0, "sink_m": 0.3, "yaw_deg": 20.0},
+      {"id": "grove_b", "path": "res://assets/props/meshy-1024/meadows_ironwood_b/meadows_ironwood_b.glb", "at": [-356.0, 5072.0], "width_m": 12.0, "sink_m": 0.3, "yaw_deg": 200.0},
+      {"id": "ridge_a", "path": "res://assets/props/meshy-1024/meadows_ironwood_a/meadows_ironwood_a.glb", "at": [-240.9, 6489.3], "width_m": 11.0, "sink_m": 0.3, "yaw_deg": 110.0},
+      {"id": "ridge_b", "path": "res://assets/props/meshy-1024/meadows_ironwood_b/meadows_ironwood_b.glb", "at": [-248.6, 6502.8], "width_m": 12.0, "sink_m": 0.3, "yaw_deg": 290.0}
+    ]
   }
 }
