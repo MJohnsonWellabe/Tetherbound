@@ -168,6 +168,7 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
 - **Import before any capture or smoke:** run `godot --headless --path . --import` after every checkout, merge or new asset. It takes about 45 min the first time and 8–25 min after that.
   - Skipping it causes "FIGHT DID NOT START", placeholder creatures and size-admission refusals.
 - **Meshy textures:** set each texture `.import` to `compress/mode=2` and `detect_3d/compress_to=0`, then import again. Commit the `.import` files and the extracted images.
+- **Derived or hand-made textures** (outside `meshy-*`): `texture_import_policy.py --apply` takes directories, so `--apply <file>` updates nothing. Set `compress/mode=2`, `mipmaps/generate=true` and `detect_3d/compress_to=0` in the new `.import` by hand, reimport, and run `--check` before landing. CI suite 3 (`test_texture_import_policy`) fails otherwise.
 - **Disk:** the allowance is small and `.git` alone is about 18–21 GB.
   - Fetch single branches, shallow where possible.
   - Build land branches with `git merge-tree --write-tree` plus `commit-tree`, never `git worktree add` (about 3 GB).
