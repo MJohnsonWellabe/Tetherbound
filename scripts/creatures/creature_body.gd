@@ -26,6 +26,7 @@ const POSE_CANDIDATES := preload("res://scripts/creatures/creature_pose_candidat
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
 const REST_VISUAL := preload("res://scripts/creatures/water_rest_pose_visual.gd")
+const POSED_BOUNDS := preload("res://scripts/vfx/astra_whole_bounds_r4.gd")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 const ALPHA_AURA := preload("res://scripts/creatures/alpha_aura.gd")
@@ -54,6 +55,9 @@ const ALPHA_RIM_STRENGTH := 0.65
 ## gives: an alpha's rim is its identity tell, so an ordinary creature's must
 ## stay clearly under it. Species opt in below this via `placeholder.field_rim`.
 const FIELD_RIM_MAX := 0.30
+## A species rim plus its rarity tier's (CLOSE-OUT shared rim, owner 25 Oct)
+## tops out here, still well under `ALPHA_RIM_STRENGTH`.
+const FIELD_TIER_RIM_MAX := 0.45
 
 ## OWNER DIRECTIVE 2026-09-01 ("some of the smaller creatures blend into the
 ## environment too well... they either need to be bigger or brighter"), and
@@ -377,6 +381,10 @@ var _rest_pose_vertex_deform_receipt: Dictionary = {}
 var _rest_pose_applied_bones: Array[String] = []
 var _combat_flinch_tween: Tween = null
 var _combat_flinch_art: Node3D = null
+## The visual node `settle_faint()` moved and its transform before, so the
+## settle is exactly reversible.
+var _faint_settle_target: Node3D = null
+var _faint_settle_before := Transform3D.IDENTITY
 var _combat_flinch_target: Node3D = null
 var _combat_flinch_rest_position := Vector3.ZERO
 var _combat_flinch_rest_rotation := Vector3.ZERO
@@ -498,6 +506,7 @@ func suspend_visuals(bounds: AABB) -> bool:
 	_model.visible = false
 	_clear_combat_flinch()
 	_clear_hit_flash()
+	clear_faint_settle()
 	_combat_flinch_art = null
 	_combat_flinch_length = -1.0
 	_animator = null
@@ -707,6 +716,7 @@ func _build_placeholder() -> void:
 	_suspended_render_bounds = AABB()
 	_clear_combat_flinch()
 	_clear_hit_flash()
+	clear_faint_settle()
 	_combat_flinch_art = null
 	_combat_flinch_length = -1.0
 	if _rest_pose_active or _rest_pose_pending:
@@ -1225,11 +1235,15 @@ func _apply_aspect_vfx() -> void:
 func _apply_field_separation() -> void:
 	if not _has_model:
 		return
+	# CLOSE-OUT (owner, 25 Oct): every species wears the shared subtle rim
+	# unless it sets its own; a rarity tier adds on top so the tier ladder still
+	# reads above the shared base, and everything stays under an alpha's rim.
+	var look := SPECIES.placeholder(species_id)
 	var field_strength := clampf(
-		float(SPECIES.placeholder(species_id).get("field_rim", 0.0)), 0.0, FIELD_RIM_MAX)
+		float(look.get("field_rim", VISUAL.field_rim_default())), 0.0, FIELD_RIM_MAX)
 	var tier_strength := clampf(
 		float(TIER_RIM_STRENGTH.get(tier, 0.0)), 0.0, FIELD_RIM_MAX)
-	var strength := maxf(field_strength, tier_strength)
+	var strength := minf(field_strength + tier_strength, FIELD_TIER_RIM_MAX)
 	if strength <= 0.0:
 		return
 	_rim_light_node(_model, strength, "field")
@@ -2683,7 +2697,14 @@ func set_combat_hitstop(active: bool) -> void:
 		_animator.call("set_hitstop", freeze_visual)
 
 
+## A combat knockout (local, remote or director-driven). Bed rest plays the
+## same clip through `_play_faint_clip()` and keeps its own authored grounding.
 func play_faint() -> void:
+	_play_faint_clip()
+	_schedule_faint_settle()
+
+
+func _play_faint_clip() -> void:
 	ensure_visual_resident()
 	var presence := get_node_or_null("Presence")
 	if presence != null:
@@ -2691,8 +2712,84 @@ func play_faint() -> void:
 	# A hit-recoil tween must not overwrite the collapse's grounded pivot.
 	_clear_combat_flinch()
 	_clear_hit_flash()
+	clear_faint_settle()
 	if _animator != null:
 		_animator.call("play_faint")
+
+
+## CLOSE-OUT (owner, 25 Oct; creatures_visual.json `faint_settle`). GPU judges
+## failed faints across the roster for a few shared reads, one of them an end
+## pose that floats above or sinks into the ground. One rule for every species,
+## applied once the faint clip has finished: a posed whole body (every skinned
+## vertex) that floats above the floor is lowered to sit `sink_m` into it. A generic roll for
+## upright faints was tried and dropped (26 Oct): a height test cannot tell an
+## upright faint from a sideways one with raised legs or a wide splayed body,
+## and it rolled correct faints onto their backs. Upright, seated and belly-up
+## faints stay per-species pose recipes. Cosmetic only: the visual node moves,
+## never the gameplay body or collider, and `clear_faint_settle()` restores it
+## exactly (revive, the next faint, a model swap).
+func _schedule_faint_settle() -> void:
+	if not VISUAL.faint_settle_enabled() or _animator == null:
+		return
+	var player := _animator.call("animation_player") as AnimationPlayer
+	if player == null:
+		return
+	if player.animation_finished.is_connected(_on_faint_finished):
+		player.animation_finished.disconnect(_on_faint_finished)
+	player.animation_finished.connect(_on_faint_finished, CONNECT_ONE_SHOT)
+
+
+func _on_faint_finished(animation_name: StringName) -> void:
+	if str(animation_name).ends_with("faint"):
+		settle_faint()
+
+
+func settle_faint() -> void:
+	if not VISUAL.faint_settle_enabled() or not _has_model or not is_inside_tree():
+		return
+	clear_faint_settle()
+	var target: Node3D = _combat_flinch_art \
+		if bool(get_meta("f36_pose_candidate_installed", false)) and is_instance_valid(_combat_flinch_art) else _model
+	if target == null or not is_instance_valid(target):
+		return
+	var box := _posed_body_box()
+	if box.size == Vector3.ZERO:
+		return
+	_faint_settle_target = target
+	_faint_settle_before = target.transform
+	var settle := VISUAL.faint_settle()
+	# Lower only: a faint that sinks a little into the ground reads as a heavy
+	# collapse (lifting Mosshell, Burrowback and Mirejaw out of it exposed their
+	# legs and read as standing, 26 Oct), so only a floating body is brought down.
+	var lift := -box.position.y - float(settle.get("sink_m", 0.03))
+	if lift < -float(settle.get("ground_tolerance_m", 0.03)):
+		_move_in_body_space(target, Transform3D(Basis(), Vector3(0.0, lift, 0.0)))
+
+
+func clear_faint_settle() -> void:
+	if _faint_settle_target != null and is_instance_valid(_faint_settle_target):
+		_faint_settle_target.transform = _faint_settle_before
+	_faint_settle_target = null
+
+
+## The whole posed body (every skinned vertex, current pose) in this body's
+## own space; a zero box when the art has no skinned surface to measure.
+func _posed_body_box() -> AABB:
+	# A seeked or just-finished clip may not have refreshed the skeletons'
+	# cached global poses yet; the box must be the pose on screen.
+	for skeleton: Node in find_children("*", "Skeleton3D", true, false):
+		(skeleton as Skeleton3D).force_update_all_bone_transforms()
+	var bounds: RefCounted = POSED_BOUNDS.new()
+	if not bool(bounds.call("bind", self)):
+		return AABB()
+	return bounds.call("measure") as AABB
+
+
+func _move_in_body_space(target: Node3D, delta: Transform3D) -> void:
+	var parent := target.get_parent() as Node3D
+	var body_from_parent := global_transform.affine_inverse() * parent.global_transform \
+		if parent != null else Transform3D.IDENTITY
+	target.transform = body_from_parent.affine_inverse() * delta * body_from_parent * target.transform
 
 
 ## A rolled body's own rigid rotation dips one side below its own origin by
@@ -2748,7 +2845,7 @@ func play_rest() -> void:
 		if _animator != null:
 			_animator.call("play_terminal", "rest_faint")
 		else:
-			play_faint()
+			_play_faint_clip()
 		return
 	if _animator != null:
 		_animator.call("tick", 0.0, 0.0, 1.0)
@@ -2797,20 +2894,20 @@ func play_rest() -> void:
 ## applying the offsets earlier would be overwritten on its next process tick.
 func _begin_authored_rest_pose(config: Dictionary, look: Dictionary) -> void:
 	if not _has_model or _model == null:
-		play_faint()
+		_play_faint_clip()
 		return
 	var skeletons := _model.find_children("*", "Skeleton3D", true, false)
 	var players := _model.find_children("*", "AnimationPlayer", true, false)
 	if skeletons.is_empty() or players.is_empty():
 		push_error("species '%s' authored rest pose requires its installed skeleton and animator" % species_id)
-		play_faint()
+		_play_faint_clip()
 		return
 	var skeleton := skeletons[0] as Skeleton3D
 	var player := players[0] as AnimationPlayer
 	var bones: Variant = config.get("bones", {})
 	if not bones is Dictionary or (bones as Dictionary).is_empty():
 		push_error("species '%s' authored rest pose has no bone recipe" % species_id)
-		play_faint()
+		_play_faint_clip()
 		return
 	var before: Dictionary = {}
 	var snapshot_names: Array[String] = []
@@ -2823,19 +2920,19 @@ func _begin_authored_rest_pose(config: Dictionary, look: Dictionary) -> void:
 		if local_scale.x <= 0.0 or local_scale.y <= 0.0 or local_scale.z <= 0.0 \
 				or local_scale.x >= 1.0 or local_scale.y > 1.0 or local_scale.z > 1.0:
 			push_error("species '%s' authored torso contact deform requires a positive bounded local scale" % species_id)
-			play_faint()
+			_play_faint_clip()
 			return
 		for field: String in ["bones", "preserve_children"]:
 			var names: Variant = deform.get(field, [])
 			if not names is Array or (names as Array).is_empty():
 				push_error("species '%s' authored torso contact deform has no %s" % [species_id, field])
-				play_faint()
+				_play_faint_clip()
 				return
 			for raw_deform_name: Variant in names as Array:
 				var deform_name := str(raw_deform_name)
 				if skeleton.find_bone(deform_name) < 0:
 					push_error("species '%s' authored torso contact deform is missing bone '%s'" % [species_id, deform_name])
-					play_faint()
+					_play_faint_clip()
 					return
 				if deform_name not in snapshot_names:
 					snapshot_names.append(deform_name)
@@ -2852,20 +2949,20 @@ func _begin_authored_rest_pose(config: Dictionary, look: Dictionary) -> void:
 				or contact_span <= 0.0 or contact_span > float(
 					config.get("max_torso_contact_offset_m", 0.20)):
 			push_error("species '%s' authored torso vertex contact deform is outside its acceptance gate" % species_id)
-			play_faint()
+			_play_faint_clip()
 			return
 	for bone_name: String in snapshot_names:
 		var bone := skeleton.find_bone(bone_name)
 		if bone < 0:
 			push_error("species '%s' authored rest pose is missing bone '%s'" % [species_id, bone_name])
-			play_faint()
+			_play_faint_clip()
 			return
 		if (bones as Dictionary).has(bone_name):
 			var bone_spec := (bones as Dictionary).get(bone_name, {}) as Dictionary
 			var authored_scale := _rest_scale(bone_spec.get("scale", []))
 			if authored_scale.x <= 0.0 or authored_scale.y <= 0.0 or authored_scale.z <= 0.0:
 				push_error("species '%s' authored rest pose has non-positive scale on bone '%s'" % [species_id, bone_name])
-				play_faint()
+				_play_faint_clip()
 				return
 		before[bone_name] = skeleton.get_bone_pose(bone)
 	_rest_pose_config = config.duplicate(true)
@@ -2885,7 +2982,7 @@ func _begin_authored_rest_pose(config: Dictionary, look: Dictionary) -> void:
 	if _animator != null and _animator.has_method("play_terminal"):
 		_animator.call("play_terminal", "rest_faint" if rest_role == "faint" else rest_role)
 	else:
-		play_faint()
+		_play_faint_clip()
 	var expected := str((look.get("animations", {}) as Dictionary).get(
 		rest_role, ""))
 	if expected == "" or not player.is_playing():
@@ -3262,6 +3359,7 @@ func rest_pose_receipt() -> Dictionary:
 
 func revive_animation() -> void:
 	ensure_visual_resident()
+	clear_faint_settle()
 	if _animator != null:
 		_animator.call("revive")
 
