@@ -26,6 +26,7 @@ func build(water_world: Node3D) -> void:
 		+ (look.get("veilfall_hero_candidate", []) as Array) + (look.get("veilfall_facade_candidate", []) as Array) \
 		+ (look.get("veilfall_mountain_candidate", []) as Array) + (look.get("veilfall_buttress_candidate", []) as Array) \
 		+ _destinations(look) + (look.get("lesson_clusters_candidate", []) as Array)
+	_cladding(water_world, look.get("veilfall_cladding_candidate", {}))
 	# `first_shore_declutter_candidate` (OFF in play) drops named props by id.
 	var dropped: Array = (look.get("first_shore_declutter_candidate", {}) as Dictionary).get("drop_landmark_props", [])
 	for raw: Variant in specs:
@@ -88,6 +89,108 @@ func build(water_world: Node3D) -> void:
 		# flyer or glider can reach (close-1024: the generated Veilfall crown).
 		if bool(spec.get("trimesh_collider", false)):
 			add_trimesh_collision(model)
+
+
+## `veilfall_cladding_candidate` (OFF in play; Stormwood lane 26 Oct, after the
+## vf3 judges named "giant stretched faceted terrain slabs" in the Veilfall
+## gully): instead of one facade pasted mid-slab, many staggered facade pieces
+## lie flat on every steep face in the gully, each aligned to the terrain
+## normal, varied in size and roll from a fixed seed, kept off the hike and the
+## cascade. One MultiMesh per facade surface; presentation only, no collider
+## (only faces too steep to walk are clad).
+func _cladding(world: Node3D, cfg: Dictionary) -> void:
+	if cfg.is_empty():
+		return
+	var template := _instantiate(str(cfg.get("model", "")))
+	if template == null:
+		return
+	var bounds := RENDER_BOUNDS.measure(template)
+	if bounds.size.x <= 0.001:
+		template.free()
+		return
+	var spine: Array[Vector2] = []
+	for route: Dictionary in (world.get("config") as Dictionary).get("land_routes", []):
+		if str(route.get("id", "")) == str(cfg.get("clear_route", "veilfall_exploration_spine")):
+			for point: Array in route.get("polyline", []):
+				spine.append(Vector2(float(point[0]), float(point[2])))
+	var excludes: Array = cfg.get("exclude", [])
+	var centre := Vector2(float(cfg.area_centre[0]), float(cfg.area_centre[1]))
+	var radius := float(cfg.get("area_radius_m", 100.0))
+	var cell := float(cfg.get("cell_m", 20.0))
+	var size_range: Array = cfg.get("width_m", [22.0, 34.0])
+	var max_up := float(cfg.get("max_normal_y", 0.7))
+	var clear := float(cfg.get("route_clear_m", 12.0))
+	var sink := float(cfg.get("sink_m", 1.5))
+	var roll := deg_to_rad(float(cfg.get("roll_jitter_deg", 12.0)))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cfg.get("seed", 39))
+	var poses: Array[Transform3D] = []
+	var steps := int(ceil(radius / cell))
+	for gx in range(-steps, steps + 1):
+		for gz in range(-steps, steps + 1):
+			var at := centre + Vector2(gx, gz) * cell + Vector2(rng.randf_range(-0.4, 0.4), rng.randf_range(-0.4, 0.4)) * cell
+			var width := rng.randf_range(float(size_range[0]), float(size_range[1]))
+			var twist := rng.randf_range(-roll, roll)
+			if at.distance_to(centre) > radius:
+				continue
+			var blocked := false
+			for index in spine.size() - 1:
+				if at.distance_to(Geometry2D.get_closest_point_to_segment(at, spine[index], spine[index + 1])) < clear:
+					blocked = true
+			for raw: Variant in excludes:
+				var ex: Array = raw
+				if at.distance_to(Vector2(float(ex[0]), float(ex[1]))) < float(ex[2]):
+					blocked = true
+			if blocked:
+				continue
+			var y := float(world.call("ground_height_at", at.x, at.y))
+			if not is_finite(y) or y < float(cfg.get("min_height_m", 4.0)):
+				continue
+			var d := 2.0
+			var normal := Vector3(
+				float(world.call("ground_height_at", at.x - d, at.y)) - float(world.call("ground_height_at", at.x + d, at.y)),
+				2.0 * d,
+				float(world.call("ground_height_at", at.x, at.y - d)) - float(world.call("ground_height_at", at.x, at.y + d))).normalized()
+			if not normal.is_finite() or normal.y > max_up:
+				continue
+			# The facade's front (+Z) faces out of the slope; its up runs up the face.
+			var up := (Vector3.UP - normal * normal.dot(Vector3.UP)).normalized()
+			var basis := Basis(up.cross(normal).normalized(), up, normal).rotated(normal, twist)
+			var factor := width / bounds.size.x
+			var fit := Transform3D(Basis.from_scale(Vector3.ONE * factor),
+				-Vector3(bounds.get_center().x, bounds.get_center().y, bounds.position.z) * factor)
+			poses.append(Transform3D(basis, Vector3(at.x, y, at.y) - normal * sink) * fit)
+	if poses.is_empty():
+		template.free()
+		return
+	var tint := Color(str(cfg.get("tint", "#ffffff")))
+	var root := Node3D.new()
+	root.name = "VeilfallCladding"
+	add_child(root)
+	for visual: MeshInstance3D in template.find_children("*", "MeshInstance3D", true, false):
+		var mesh := visual.mesh.duplicate() as Mesh
+		for surface in mesh.get_surface_count():
+			var source := visual.get_active_material(surface) as BaseMaterial3D
+			if source != null and tint != Color.WHITE:
+				var tinted := source.duplicate() as BaseMaterial3D
+				tinted.albedo_color = source.albedo_color * tint
+				mesh.surface_set_material(surface, tinted)
+		var local := Transform3D.IDENTITY
+		var node: Node = visual
+		while node != null and node != template:
+			if node is Node3D:
+				local = (node as Node3D).transform * local
+			node = node.get_parent()
+		var multi := MultiMesh.new()
+		multi.transform_format = MultiMesh.TRANSFORM_3D
+		multi.mesh = mesh
+		multi.instance_count = poses.size()
+		for index in poses.size():
+			multi.set_instance_transform(index, poses[index] * local)
+		var batch := MultiMeshInstance3D.new()
+		batch.multimesh = multi
+		root.add_child(batch)
+	template.free()
 
 
 ## `destination_landmarks_s3_candidate` (OFF in play) re-seats and adds to the
