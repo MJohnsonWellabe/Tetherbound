@@ -187,5 +187,12 @@ static func _massif(world: Node3D, cfg: Dictionary) -> void:
 			stormed.albedo_color = source.albedo_color * tint
 			stormed.roughness = 1.0
 			stormed.metallic_specular = 0.2
+			# GPU SW18: the Crown reads "pale, low-contrast against the sky".
+			# A rim lifts the spires' edges off the storm deck once the
+			# stone itself is darker.
+			if cfg.has("rim"):
+				stormed.rim_enabled = true
+				stormed.rim = float(cfg.get("rim", 0.0))
+				stormed.rim_tint = float(cfg.get("rim_tint", 0.3))
 			visual.set_surface_override_material(surface, stormed)
 	world.add_child(holder)
