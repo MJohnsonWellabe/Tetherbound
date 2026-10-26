@@ -2,6 +2,16 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 23:58Z Coordinator, 23:52Z:
+  - Ashfoot `storm_view` is on main (#767). land13 is done; no PR.
+  - The m45c storm sky is queued as GPU **SW19**.
+  - **SW17 junction lamp posts: no gain (-0.03/-0.06). PARKED; not retried as built.** The judges' path, for any new idea: a taller, sturdier post with an arm and a stone/root footing off the trunk, a smaller halo, real light pooling instead of sprite discs, and a softer guide beam.
+  - Lane `tb/stormwood` 74d41412: main #768 merged.
+- 26 Oct 23:58Z In progress, **r48 Ashfoot** (coordinator priority 1; SW16 at 6.96, 0.54 short). One candidate:
+  - `storm_room` ON (r47's window wash and dimmed lamps);
+  - a new `window_patch`: the window's pane pattern on the west wall per phase, lifted by the flash;
+  - a new `stormwood_dressing`: blue-green moss runs and strands, small storm-glass crystals on the sill and shelf, a copper lightning rod and chain coil.
+  - CPU capture is running against r47's OFF frames.
 - 26 Oct 22:08Z **READY to land land13 de5e5f8508626f0d5b510ea32ac5ebeeca653987** (`tb/stormwood-land13`). It **supersedes land12**: main #766 already carries the SW18 Crown Overlook vista, so land13 is origin/main f0bd9f05 plus only **Ashfoot `storm_view` ON** with `_why_on` (GPU SW16 +1.13).
   - **Checks:** main's cottage config is unchanged since land12 and land13 uses the same config file, so land12's checks carry over (`smoke_stormwood_ashfoot_shelter.gd` 16/0).
 - 26 Oct 22:08Z Lane `tb/stormwood` fb919fb5: main #766 merged.
