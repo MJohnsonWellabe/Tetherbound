@@ -60,18 +60,21 @@ func test_cables_only_span_neighbours() -> void:
 
 func test_stand_clear_keeps_pylons_out_of_named_frames() -> void:
 	var cfg := ROD_LINE.config()
+	var off := cfg.duplicate(true)
+	off["stand_clear"] = {"enabled": false}
 	var on := cfg.duplicate(true)
 	on["stand_clear"] = {"enabled": true, "points": [[-240.0, 4463.6, 14.0]]}
-	var before := ROD_LINE.layout(cfg, _routes())
+	var before := ROD_LINE.layout(off, _routes())
 	var after := ROD_LINE.layout(on, _routes())
 	var near_before := 0
 	for stand: Dictionary in before:
 		if (stand.at as Vector2).distance_to(Vector2(-240.0, 4463.6)) < 14.0:
 			near_before += 1
+	assert_true(near_before >= 1, "a pylon stands in the Fallen Giant frame without stand_clear (%d)" % near_before)
 	if bool((cfg.get("stand_clear", {}) as Dictionary).get("enabled", false)):
-		assert_eq(near_before, 0, "stand_clear is on: no pylon within 14 m of the Fallen Giant stand")
-	else:
-		assert_true(near_before >= 1, "a pylon stands in the Fallen Giant frame without stand_clear (%d)" % near_before)
+		for stand: Dictionary in ROD_LINE.layout(cfg, _routes()):
+			for point: Array in cfg.stand_clear.points:
+				assert_true((stand.at as Vector2).distance_to(Vector2(float(point[0]), float(point[1]))) >= float(point[2]), "no pylon inside a stand_clear circle")
 	for stand: Dictionary in after:
 		assert_true((stand.at as Vector2).distance_to(Vector2(-240.0, 4463.6)) >= 14.0, "no pylon within 14 m of the Fallen Giant stand")
 	assert_eq(after.size(), before.size() - near_before, "only the pylons in the cleared circle are dropped")
