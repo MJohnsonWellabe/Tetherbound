@@ -41,6 +41,12 @@ static func rig_overrides(base: Dictionary, profile: Dictionary) -> Dictionary:
 		var values: Dictionary = overrides.get(section, {}).duplicate(true)
 		values.merge(profile.rig[section], true)
 		overrides[section] = values
+	# r26 storm light (OFF until judged): its environment keys ride on the rig.
+	var storm: Dictionary = profile.get("storm_light", {})
+	if bool(storm.get("enabled", false)):
+		var environment: Dictionary = overrides.get("environment", {}).duplicate(true)
+		environment.merge(storm.get("environment", {}), true)
+		overrides["environment"] = environment
 	out["overrides"] = overrides
 	# Stormwood never acquires a day/night presentation, even in aftermath.
 	out["pin_time_of_day"] = true
@@ -54,6 +60,26 @@ func _ready() -> void:
 	if not bool(config.get("enabled", false)):
 		return
 	_build_detail_textures()
+	_add_storm_rim.call_deferred()
+
+
+## r26 (GPU R verdict, path item 2: "lift the single dark mid-tone with
+## storm-light key and rim light"): a cool, low, shadowless back light from
+## the side opposite the sun, so trunks, creatures and the trainer pick up a
+## lit edge against the storm. Presentation only.
+func _add_storm_rim() -> void:
+	var storm: Dictionary = config.get("storm_light", {})
+	if not bool(storm.get("enabled", false)) or get_parent() == null:
+		return
+	var rim := DirectionalLight3D.new()
+	rim.name = "StormRimLight"
+	rim.light_color = Color(str(storm.get("rim_colour", "#93a8ff")))
+	rim.light_energy = float(storm.get("rim_energy", 0.55))
+	rim.shadow_enabled = false
+	rim.light_specular = float(storm.get("rim_specular", 0.6))
+	var angle: Array = storm.get("rim_rotation_deg", [-14.0, 320.0])
+	rim.rotation_degrees = Vector3(float(angle[0]), float(angle[1]), 0.0)
+	get_parent().add_child(rim)
 
 
 func begin_world_walk() -> void:
