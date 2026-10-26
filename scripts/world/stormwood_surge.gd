@@ -1234,6 +1234,7 @@ func _advance_flash(delta: float) -> void:
 		_flash_light.light_energy = _flash * float(cfg.get("light_energy", 2.2))
 	_advance_bolt_exposure(cfg)
 	_advance_height_fog()
+	_advance_depth_fog()
 	if _ceiling_material != null:
 		_ceiling_material.set_shader_parameter("flash", _flash * float(cfg.get("sky_strength", 1.0)))
 		# Sheet lightning: the phase's glow, scaled like any flash under
@@ -1553,6 +1554,39 @@ func _advance_height_fog() -> void:
 		env.fog_height = height
 	if absf(env.fog_height_density - _height_fog_density) > 0.0005:
 		env.fog_height_density = _height_fog_density
+
+## R verdict path item 2 and every stand's "flat grey band": at the distance
+## of the Crown or a far ridge the exponential fog swallows almost all of the
+## landmark, so it reads as a flat pale wall. With presentation.depth_fog ON
+## (OFF until judged) the fog runs in depth mode instead: it starts at
+## begin_m, reaches its strongest at end_m along `curve`, and never covers
+## more than `max_density`, so far landmarks keep a silhouette while near
+## layers still separate. Client-local presentation.
+func _advance_depth_fog() -> void:
+	var cfg: Dictionary = _pres_cfg().get("depth_fog", {})
+	if not bool(cfg.get("enabled", false)) or world == null:
+		return
+	var look := world.get_node_or_null("WorldLook")
+	if look == null:
+		return
+	var holder := look.get_node_or_null(look.get("environment_path")) as WorldEnvironment
+	if holder == null or holder.environment == null:
+		return
+	var env := holder.environment
+	if env.fog_mode != Environment.FOG_MODE_DEPTH:
+		env.fog_mode = Environment.FOG_MODE_DEPTH
+	var begin := float(cfg.get("begin_m", 60.0))
+	var end := float(cfg.get("end_m", 1600.0))
+	var curve := float(cfg.get("curve", 1.0))
+	if not is_equal_approx(env.fog_depth_begin, begin):
+		env.fog_depth_begin = begin
+	if not is_equal_approx(env.fog_depth_end, end):
+		env.fog_depth_end = end
+	if not is_equal_approx(env.fog_depth_curve, curve):
+		env.fog_depth_curve = curve
+	var density := float(cfg.get("max_density", 0.7))
+	if not is_equal_approx(env.fog_density, density):
+		env.fog_density = density
 
 func bolt_level() -> float:
 	var top := 0.0
