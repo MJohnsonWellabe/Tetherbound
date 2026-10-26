@@ -2,6 +2,10 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 04:40Z READY (GPU A/B, Ashfoot; SUPERSEDES the 03:30Z r23 arm) on arm `tb/stormwood-r24-on` ab6769edb32371566a751ce3be7d17fde293336c, off arm its parent `tb/stormwood` 20b49fe1daf59d5bff4c162a8210745c1e643160. Same stands as the r23 line (`ashfoot_shelter_inside`, plus `ashfoot_shelter_outside` as a no-change check).
+  - On arm: r23's `storm_finish` plus its `grade` block ON: weathered cool timber (#a8a299, weathering 0.9) on the walls, both ceiling pitches and the floor, and a dimmer, less orange room light (#d9c6b0, 0.75), so the hearth and the cool window fill carry the room.
+  - CPU r24 code-blind (`r24/VERDICT.md`, r 0.98, RMSE 0.20): main 4.34 -> r23 4.93 -> r24 6.19 (+1.85 over main, +1.26 over r23); orange-box defect PARTIAL 3/3.
+  - Same checks as r23 (the grade only changes materials and the room light's colour and energy). If both Ashfoot arms are already captured, judge r24 against r23's off arm: the two off arms differ only in config defaults and notes.
 - 26 Oct 03:30Z READY (GPU A/B, Ashfoot to 7) on arm `tb/stormwood-r23-on` 9707888997a7ecea775c3718df5e577ad644da01, off arm its parent `tb/stormwood` c580ffb36aae20001a8a68cf29db46b88a123222. Judge `ashfoot_shelter_inside` (and `ashfoot_shelter_outside` as a no-change check); the flag touches only the Ashfoot shelter interior (`lined_roles`).
   - On arm turns ON `cottage_interior_finish.json storm_finish`: lining to the 3 m wall top with a flush timber trim around the ranger station's east window (open shutters, the real exterior), lined gable triangles, a cool storm fill at the window against the warm hearth, copper-tinted kit lantern, pot and bucket, herb bundles over the bed side, moss at the wall foot. No colliders.
   - CPU r23 code-blind (`r23/VERDICT.md`, r 0.76, RMSE 0.52): 4.82 -> 5.72 (+0.90); gable FIXED 3/3, window and dressing PARTIAL 3/3. The deep window frame the judges called a floating slab is now a flush 5 cm trim (fixed after judging, checked by eye).
