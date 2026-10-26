@@ -168,6 +168,7 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
 - **Import before any capture or smoke:** run `godot --headless --path . --import` after every checkout, merge or new asset. It takes about 45 min the first time and 8–25 min after that.
   - Skipping it causes "FIGHT DID NOT START", placeholder creatures and size-admission refusals.
 - **Meshy textures:** set each texture `.import` to `compress/mode=2` and `detect_3d/compress_to=0`, then import again. Commit the `.import` files and the extracted images.
+- **Disk-tight cloud containers:** a CPU capture rebuilds about 250 MB of Godot shader cache under `XDG_DATA_HOME`, plus a mesa cache under `~/.cache/mesa_shader_cache`. Point both at the RAM-backed `/dev/shm`: `export XDG_DATA_HOME=/dev/shm/xdg` and `ln -s /dev/shm/mesa_shader_cache ~/.cache/mesa_shader_cache`. Move finished capture folders out of `shots/` to `/dev/shm` as well. Also check that no capture `godot` is still running (`ps -eo pid,args | grep "[/]godot"`) before starting the next one.
 - **Derived or hand-made textures** (outside `meshy-*`): `texture_import_policy.py --apply` takes directories, so `--apply <file>` updates nothing. Set `compress/mode=2`, `mipmaps/generate=true` and `detect_3d/compress_to=0` in the new `.import` by hand, reimport, and run `--check` before landing. CI suite 3 (`test_texture_import_policy`) fails otherwise.
 - **Disk:** the allowance is small and `.git` alone is about 18–21 GB.
   - Fetch single branches, shallow where possible.

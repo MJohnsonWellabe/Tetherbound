@@ -420,6 +420,27 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - **MESHY:** none needed for this round.
   - **Earlier READYs on this branch still stand:** keep r5 and courtyard MH3 (with the night step-down). One GPU run can take all three arms.
 
+- 2026-10-26 04:50 UTC RESULT, not a close-out: **F22#4 co2** (the coordinator's 02:47 item 1). It was CPU-judged and does not cross 7.5, so there is no READY.
+  - **Candidate** (config overlay `cand_co2`, not applied on the branch):
+    - `combat.json impact.enabled false`, which removes the gold contact disc and the ground-burst puffs;
+    - `kit_move_effects flash_scale 0`, which removes the white contact flash and its 1.6x bloom;
+    - `vfx.json hit_flash` strength 0.3/0.4 → 0.55/0.7, so the struck creature's own body flashes;
+    - the Fights lane's r9 tell dust: `dust_alpha` 0.9 → 0.6 and `dust_lane_alpha_max` 0.35;
+    - the new `hud.json combat.command_scale` and `ally_panel_scale` set to 0.8. The code is on tb/meadows 9a7310b46; both keys are absent, which means off.
+  - **Result** (`f22-4-co2-mapped.json`, `_sheet_f22-4-co2.png`; capture_named_fight, frames t01/t02-mid, 04 and 08; three fresh code-blind judges; anchors include f36_0_npc:C1; linear fit, r 0.99, RMSE 0.18, confirming batch):
+    - Warden hall: 6.01 → 6.29 (+0.28).
+    - Riverwatch: 6.87 → 6.87 (0.00).
+    - Added to the GPU baseline, Warden would be about 7.36 (7.08 + 0.28), still under 7.5.
+  - **Why it stalls:** the judges agree the impact discs are gone. What still covers Burrowback in frame 02 is the wind-up telegraph's own dust ring, which is the bodied tell (COMBAT §13), not an impact. On top of that come the four-panel HUD, the dark badger on the dark floor, and a translucent, plastic-looking Ripplet.
+  - **Checks:** the HUD and hit tests (combat_hud_handheld_floors, combat_system_overlay_layout, hud_presentation_lifecycle, hud_widgets, f21_hit_presentation, effect_banner_owner) pass both with the overlay OFF and with co2 applied (63 tests, 0 failed each).
+  - **What would cross 7.5 is not a small change:**
+    - a telegraph that doesn't wrap the attacker in dust (a ground-decal or a body-pose tell, which is a COMBAT design change);
+    - a merged one-strip fight HUD;
+    - a rim key in the Warden hall.
+
+    I'm not starting those under the close-out exception. Say if one of them should go ahead as a full candidate.
+  - **Harness fix:** the disk filled during the captures, so `XDG_DATA_HOME` and the mesa shader cache now go to /dev/shm (16 GB tmpfs), with finished frames moved there as well. Added to TECHNICAL §8.1.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
