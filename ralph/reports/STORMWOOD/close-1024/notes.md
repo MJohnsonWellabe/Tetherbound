@@ -2,6 +2,12 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 07:55Z **Finding (no candidate): Crown Overlook (GPU SW8 5.20 / 5.61).**
+  - Its catalogue views never face the Crown. The spot (160, 1980) has no `view_heading_deg`, so the views take their heading from the neighbouring spot and point at 133°, 223° and 313°. The Crown is at 37°, 900 m away.
+  - A CPU capture facing 37° shows only a thin flat grey slab on the horizon. The stand sits at ground level among trees, so turning the views alone would show nothing.
+  - **A real vista needs three things:** a raised overlook, a cleared sightline, and a Crown silhouette that reads at 900 m. Today's massif reads at that distance as the "flat grey band" every judge names.
+  - That is terrain or new-art work, so this lane does not start it. **QUESTION:** do you want an authored heading of 37° for this spot (a yardstick change) only once a vista exists, or never?
+
 - 26 Oct 07:45Z **MESHY: `stormwood_ranger_shelter`** (Ashfoot shelter exterior; F41 `ashfoot_shelter_outside` is GPU 5.54/5.58).
   - **Why:** every judge in GPU SW9 and CPU r38 names "a small Meadows-style cottage, not a Stormwood shelter" as the top defect, and judges ask for "dark timber, copper fittings, storm-glass lantern, a raised deck or lightning rod". Scene dressing does not move it: r38's grove, lightning rod, lantern post and barrel came to +0.49 and are PARKED.
   - **The asset:** an exterior shell that wraps the existing ranger_station footprint (4 x 6 m, 3 m walls, gable roof about 6.8 m). It has:
