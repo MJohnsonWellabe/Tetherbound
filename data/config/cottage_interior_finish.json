@@ -74,6 +74,12 @@
       "tie_beam_z": [-0.4],
       "lantern_light": ["#ffb066", 0.55, 2.6]
     },
+    "planks": {
+      "enabled": false,
+      "_candidate": "r37 Ashfoot hut-scale planks (OFF until judged; needs storm_finish on). r34-r36 judges x3: 'huge flat stretched plank walls'. The lining's boards go from 0.36 x 3.2 m to 0.18 x 1.5 m with stronger board-to-board tone, on the walls, gables, ceiling and floor lining.",
+      "board_m": [0.18, 1.5],
+      "variation": 0.16
+    },
     "storm_view": {
       "enabled": false,
       "_candidate": "r36 Ashfoot storm view (OFF until judged; needs storm_finish and window_pane on). r35 judges x3: 'no sky, rain or lightning through the window, only a tint'. A storm card 3 m outside the east window, facing the room only (back faces culled): storm sky over a dark treeline, drifting cloud, rain, and the surge's own flash lighting the cloud; sky, cloud and rain per phase. The pane goes lighter so the view shows through.",
