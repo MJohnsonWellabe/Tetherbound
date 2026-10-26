@@ -19,6 +19,9 @@ func test_shipping_configs_gate_the_new_art() -> void:
 	assert_true(bool(_block("res://data/config/crossing_hall.json", "arch_facades").get("enabled", false)), "facades ON after the GPU pass")
 	assert_false(bool(_block("res://data/config/stronghold.json", "hero_gatehouse").get("enabled", true)))
 	var pieces := HERO_PIECES.settings()
+	var clearings: Dictionary = pieces.get("clearings", {})
+	assert_true(bool(clearings.get("enabled", false)), "clearings ON after GPU MH7")
+	assert_true(str(clearings.get("_why_on", "")).contains("GPU MH7"), "ON carries its GPU verdict")
 	for group: String in pieces.keys():
 		if pieces[group] is Dictionary and (pieces[group] as Dictionary).has("pieces"):
 			assert_false(bool((pieces[group] as Dictionary).get("enabled", true)), group + " stays OFF")
@@ -34,6 +37,7 @@ func test_off_builders_add_nothing() -> void:
 	assert_eq(arch.get_child_count(), 0)
 	assert_eq(GATEHOUSE.build(root, _block("res://data/config/stronghold.json", "hero_gatehouse"), 0.0, 0.0), null)
 	assert_eq(HERO_PIECES.build(root), 0)
+	assert_eq(HERO_PIECES.clear(root), 0, "no Vegetation node: clearings cut nothing")
 	assert_eq(root.get_child_count(), 1)
 	root.free()
 
