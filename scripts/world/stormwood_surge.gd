@@ -59,6 +59,15 @@ uniform float crawlers = 0.0;
 uniform float crawler_scale = 0.9;
 uniform float crawler_width = 0.035;
 uniform float crawler_cover = 0.55;
+// Distant treeline (F41 gap: "flat grey horizon band", r19-r21 judges): two
+// silhouette layers of storm-forest crowns just above the horizon, a pale far
+// ridge and a darker nearer one. Terrain in front still draws over them.
+// Sampled on the azimuth circle (no seam). skyline_strength 0 = off.
+uniform float skyline_strength = 0.0;
+uniform vec3 skyline_far_colour : source_color = vec3(0.36, 0.34, 0.47);
+uniform vec3 skyline_near_colour : source_color = vec3(0.22, 0.22, 0.31);
+uniform vec2 skyline_far_height = vec2(0.035, 0.03);
+uniform vec2 skyline_near_height = vec2(0.02, 0.045);
 varying vec3 dir;
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 p) {
@@ -75,6 +84,14 @@ float fbm(vec2 p) {
 	return v;
 }
 float ridge(vec2 p) { return 1.0 - abs(2.0 * noise(p) - 1.0); }
+// Height (dir.y) of a treeline at this azimuth: a rolling ridge plus crown
+// tips. `ring` is the unit azimuth vector; base/swell come from the uniforms.
+float treeline(vec2 ring, vec2 h, float seed, float crowns) {
+	float roll = fbm(ring * 2.2 + vec2(seed, seed * 1.7));
+	float tips = pow(ridge(ring * crowns + vec2(seed * 3.1, 0.7)), 4.0);
+	float fine = noise(ring * crowns * 2.7 + vec2(1.3, seed));
+	return h.x + h.y * roll + 0.012 * tips + 0.004 * fine;
+}
 void vertex() { dir = normalize(VERTEX); }
 void fragment() {
 	float up = clamp(dir.y, 0.0, 1.0);
@@ -114,6 +131,18 @@ void fragment() {
 	float low = smoothstep(0.04, 0.14, dir.y) * (1.0 - smoothstep(0.2, 0.5, dir.y));
 	float warm = low * (0.4 + 0.6 * smoothstep(0.3, 0.75, body)) * (0.55 + 0.45 * fbm(uv * 0.2 + vec2(3.1, 7.3)));
 	colour = mix(colour, afterglow_colour, clamp(afterglow * warm, 0.0, 0.75));
+	float skyline = 0.0;
+	if (skyline_strength > 0.0) {
+		vec2 ring = normalize(dir.xz + vec2(0.00001));
+		float aa = max(fwidth(dir.y), 0.0005);
+		float far_mask = 1.0 - smoothstep(-aa, aa, dir.y - treeline(ring, skyline_far_height, 11.0, 70.0));
+		float near_mask = 1.0 - smoothstep(-aa, aa, dir.y - treeline(ring, skyline_near_height, 47.0, 46.0));
+		// The far ridge sinks into the haze at its foot; the near one is solid.
+		vec3 far_col = mix(horizon_colour, skyline_far_colour, smoothstep(0.0, 0.03, dir.y));
+		colour = mix(colour, far_col, far_mask * skyline_strength);
+		colour = mix(colour, skyline_near_colour, near_mask * skyline_strength);
+		skyline = max(far_mask, near_mask) * skyline_strength;
+	}
 	ALBEDO = colour;
 	// Opaque almost down to eye level: the art.json sky's lit cumulus band
 	// must not show under a storm ceiling.
@@ -124,7 +153,7 @@ void fragment() {
 	// own horizon haze and sun/moon glow show through as a pale "shelf" and
 	// a ghost disc (round-2 judge (e)).
 	colour = mix(horizon_colour, colour, smoothstep(0.0, 0.12, dir.y));
-	ALPHA = opacity * gaps;
+	ALPHA = max(opacity * gaps, skyline);
 }
 """
 
@@ -184,6 +213,7 @@ var _shelter_check_left := 0.0
 var _aftermath := false
 var _ceiling: MeshInstance3D
 var _ceiling_material: ShaderMaterial
+var _skyline_on := false
 var _flash_light: DirectionalLight3D
 ## Cross-fade between presentations. `_to` is the target row as authored
 ## (daylight colours); `_from` is the FINAL on-screen values (already night
@@ -1053,7 +1083,7 @@ func _update_ceiling(p: Dictionary) -> void:
 	_ceiling_material.set_shader_parameter("rim", float(p.get("ceiling_rim", 0.0)))
 	_ceiling_material.set_shader_parameter("thin_glow", float(p.get("ceiling_thin_glow", 0.0)))
 	_ceiling_material.set_shader_parameter("crawlers", float(p.get("crawlers", 0.0)) * _crawler_gate)
-	_ceiling.visible = float(p.get("ceiling_opacity", 0.0)) > 0.001
+	_ceiling.visible = float(p.get("ceiling_opacity", 0.0)) > 0.001 or _skyline_on
 
 func _build_ceiling() -> void:
 	var cfg: Dictionary = _pres_cfg().get("ceiling", {})
@@ -1071,6 +1101,17 @@ func _build_ceiling() -> void:
 	for key: String in ["crawler_scale", "crawler_width", "crawler_cover"]:
 		if cfg.has(key):
 			_ceiling_material.set_shader_parameter(key, float(cfg[key]))
+	var skyline: Dictionary = cfg.get("skyline", {})
+	_skyline_on = bool(skyline.get("enabled", false))
+	if _skyline_on:
+		_ceiling_material.set_shader_parameter("skyline_strength", float(skyline.get("strength", 1.0)))
+		for key: String in ["far_colour", "near_colour"]:
+			if skyline.has(key):
+				_ceiling_material.set_shader_parameter("skyline_" + key, Color(str(skyline[key])))
+		for key: String in ["far_height", "near_height"]:
+			var pair: Array = skyline.get(key, [])
+			if pair.size() == 2:
+				_ceiling_material.set_shader_parameter("skyline_" + key, Vector2(float(pair[0]), float(pair[1])))
 	var sky: Dictionary = _pres_cfg().get("sky_lightning", {})
 	_ceiling_material.set_shader_parameter("cloud_flash_size", float(sky.get("cloud_flash_size", 0.06)))
 	var radius := float(cfg.get("radius_m", 2400.0))
