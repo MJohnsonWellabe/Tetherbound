@@ -52,7 +52,7 @@
       "room_light_energy": 0.75
     },
     "seated": {
-      "enabled": false,
+      "enabled": true,
       "_candidate": "r34 Ashfoot to 7.5 (OFF until judged; needs storm_finish and window_pane on). GPU SW9 judges: the storm window is 'a rigid glowing slab that stands out from the wall' (5/6), the phases barely differ through it, a pale shard pokes through the roof apex, and the hearth hides behind the trainer. The pane sits behind the lining plane inside the kit window's own frame and smaller; a flush 2.5 cm trim; the window light itself changes by phase; a stone chimney breast rises from the hearth stack to the ceiling (hides the exterior chimney's base, which drops below the lined ceiling); a stronger, wider hearth fire for a two-tone room.",
       "trim_depth_m": 0.025,
       "pane": {
