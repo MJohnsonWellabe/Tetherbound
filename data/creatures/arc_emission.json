@@ -16,7 +16,9 @@
    "_why_close_out_1026": "GPU ST (tb/gpu-pass e3ea962a9): arcs PARTIAL 6/6, 'a little soft'; path to 7.5 on High is thinner, brighter white-violet arcs with a tight bloom. The painted arcs are already 1-2 px wide (a 1 px erosion would delete 83% of them), so the edge is crisped instead (soften 1.0 -> 0.4), the core mixes halfway to white-violet, and the emission is lifted past 1.0 so glow blooms on the lines only.",
    "core_tint": [0.933, 0.894, 1.0],
    "core_mix": 0.5,
-   "emissive_strength": 3.0
+   "emissive_strength": 5.0,
+   "thicken_px": 1,
+   "_why_close_out_co34": "GPU CO34 (tb/gpu-pass 5b52c695c): the crisp 3.0 arcs FIXED soft arcs 3/3 in a close crop (+0.57) but did not register at the standard roster crop. Thicker (1 px dilation) and brighter (5.0) so they read at roster and play scale."
   },
   "staticub": {
    "_why": "Coordinator 25 Oct (order 4, 'check every other storm creature'): lightning painted into the albedo with no emissive map (scan of every electric species, close-1024 note).",

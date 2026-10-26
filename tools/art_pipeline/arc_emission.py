@@ -53,6 +53,10 @@ def build(species, rule):
     # KHR_materials_emissive_strength) so GPU glow blooms tightly on the lines.
     for _ in range(int(rule.get("thin_px", 0))):
         alpha = alpha.filter(ImageFilter.MinFilter(3))
+    # `thicken_px` (CO34 GPU: the crisp arcs read only in a close crop) grows
+    # the arc lines so they survive the roster and play-scale crop.
+    for _ in range(int(rule.get("thicken_px", 0))):
+        alpha = alpha.filter(ImageFilter.MaxFilter(3))
     alpha = alpha.filter(ImageFilter.GaussianBlur(float(rule.get("soften_px", 1.0))))
     weight = np.asarray(alpha).astype(np.float64)[..., None] / 255.0
     colour = rgb
@@ -92,7 +96,7 @@ def build(species, rule):
         material.pop("extensions", None)
     T._write_glb(glb, gltf, views)
     glowing = np.asarray(alpha) > 127
-    print("%s: arc emission over %.2f%% of the albedo (%.2f%% after thinning), strength %.1f -> %s" % (
+    print("%s: arc emission over %.2f%% of the albedo (%.2f%% after shaping), strength %.1f -> %s" % (
         species, arc.mean() * 100, glowing.mean() * 100, strength, rule["model"]))
 
 
