@@ -2,6 +2,9 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 13:20Z r44 Struck Sentinel stand move (Ash Road (-314, 272), off Pax's seat): **no gain**, mapped 4.80 -> 4.90 (+0.10, offset-fallback map). No arm (`r44/VERDICT.md`).
+  - The landmark defect stays PRESENT/PARTIAL: a normal-height pale tree can't be a hero from any stand.
+  - All three judges name a cleaved giant several times tree height, which is the MESHY `stormwood_struck_sentinel` request below. The stand move waits to ride with that asset.
 - 26 Oct 13:20Z **MESHY: `stormwood_struck_sentinel`** (Cinder Verge opening landmark; GPU SW8 4.71 Medium / 5.79 High, the lowest untried stand).
   - **Today:** the landmark is the kit DeadTree_1 scaled 4.4x with a thin procedural cyan line (`stormwood_struck_sentinel.gd`). On CPU it reads as a pale generic dead tree in one of three views.
   - **The asset:** one ancient storm-forest giant split down its trunk by a lightning strike.
