@@ -22,6 +22,10 @@ var _water: MeshInstance3D = null
 ## Only species with a `rideable` block can be ridden in game, so the ride row
 ## is captured for those alone; the receipt records the rest as not rideable.
 const TRAINER_MODEL := preload("res://scripts/player/trainer_model.gd")
+## CLOSE-OUT 26 Oct (GPU: water_cannonback's rider "perched on the cannons"):
+## mounting always fits the species' saddle in play (riding_controller.gd
+## `mount` -> `fit_saddle`), so the ride row wears it too.
+const RIDING := preload("res://scripts/world/riding_controller.gd")
 var _rider: Node3D = null
 const FLY_VIEW_TURN_DEG := 35.0
 const TRAINER_CLEARANCE_M := 1.4
@@ -304,6 +308,9 @@ func _stage_role(role: String, body: Node3D, height: float, resting: AABB) -> Di
 			_rider.global_transform = Transform3D(body.global_basis.orthonormalized(),
 				body.global_transform * (offset as Vector3))
 			_trainer.visible = false
+			var species_id := str(body.get("species_id"))
+			if RIDING.saddle_belongs_on(species_id):
+				RIDING._attach_saddle(body, species_id)
 	return staged
 
 
@@ -344,5 +351,6 @@ func _unstage_role(staged: Dictionary, body: Node3D) -> void:
 	if _rider != null:
 		_rider.queue_free()
 		_rider = null
+		RIDING._detach_saddle(body)
 	if _water != null:
 		_water.visible = false
