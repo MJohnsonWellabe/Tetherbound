@@ -126,6 +126,15 @@ Land on main only the files in `LANDABLE.txt`: verdict .md, key and score .json,
 3. Re-confirm F25#4 on main after tb/vfx-launch lands (`F25-4/f25_fix_queue.ps1.txt`, about 12 minutes).
 4. F08#3: judges ask for foreground dressing, a night lighting pass and varied islets (scene work for the Cloudreach lane).
 
+## GPU QUEUE UPDATE (coordinator, 26 Oct 3:30 PM CT; the coordinator session cannot reply to messages, so the queue is here)
+
+Order after TW1: **CO8 (close-out) first**, then SW17, then SW13.
+
+- **CO8 close-out:** current origin/main vs tb/co8-on 7e6b868d72e04e517ac49e6c90519dd47d0bdb63. That branch is tb/co7-on (Galecrest owner-approved matte slate/tan finish, plus a grounded flinch) plus one commit: the Stormcapra faint faces the camera.
+  - **Judge:** Galecrest (all roles), Cloudfang and Breezetail (hit), and Stormcapra (hit and faint).
+  - **Method:** `capture_f36_poses.gd --candidate --whole-body --context`, standard roster crop, report MET per preset. The game installs the F36 recipe profile (creature_body.gd -> creature_pose_candidates.gd install()), so the recipe pass is the record. CPU b51: 6.87 vs main 4.60.
+- **Board:** CO-1 / CO-2 rows (Grandpa; Tanglevolt, Frostclaw and Craghorn hurt and faint) are marked MET in PR #765. MJ/TP is received: neither lands.
+
 ## GPU QUEUE (coordinator, 24 Oct midday; run top to bottom; work from origin/main 45865499d or later)
 
 Each row is CPU-provisional until this pass. Capture at Medium and High, judge with the yardstick (`tools/visual_judge/`: standard prompt, at least 3 anchor pairs, `calibrate.py`). A mapped Bar A of 7.5 or above confirms the row; below 7.5 reopens it. Commit verdicts per `LANDABLE.txt` rules to tb/gpu-pass and write a READY line at the top of this note.
