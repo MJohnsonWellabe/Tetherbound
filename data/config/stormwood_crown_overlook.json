@@ -19,10 +19,11 @@
   "massif": {
     "enabled": false,
     "_candidate": "Distant-only Hollow Crown silhouette (MESHY stormwood_hollow_crown_silhouette, requested 26 Oct): drawn beyond visible_from_m so play inside the Crown is untouched; no collision.",
-    "model": "",
+    "model": "res://assets/props/meshy-1024/stormwood_hollow_crown_silhouette/stormwood_hollow_crown_silhouette.glb",
+    "_why_model": "tb/meshy-1024 2cbd71381 concept c1_0 (provenance beside the GLB): a ring of jagged spires round a hollow plateau, sheer cliffed sides, conifer ledges, crystal glints. The GLB is 1.9 wide x 1.36 tall: at 560 m wide over a 30 m base the spires top out about 400 m, above the Crown's terrain walls (max 360 m), so the crown reads at 900 m.",
     "at": [700.0, 2700.0],
-    "base_y": 60.0,
-    "width_m": 520.0,
+    "base_y": 30.0,
+    "width_m": 560.0,
     "yaw_deg": 0.0,
     "visible_from_m": 300.0,
     "fade_m": 40.0
