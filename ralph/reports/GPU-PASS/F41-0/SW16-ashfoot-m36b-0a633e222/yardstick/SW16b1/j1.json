@@ -1,0 +1,182 @@
+{
+ "sets": {
+  "Ss": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the shelter interior reads as a bare plaster box with no Stormwood lining, hearth or lived-in dressing": "FIXED",
+     "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 7.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the shelter interior reads as a bare plaster box with no Stormwood lining, hearth or lived-in dressing": "FIXED",
+     "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The plank-lined, hearth-lit, dressed interior carries it on side B (inset window with sill and an outside view); side A's purple lightbox window with painted-on white rain strips standing off the wall sinks it toward prototype."
+  },
+  "On": {
+   "A": {
+    "bar_a": 7.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, appealing elder villager with readable eyes, white-hair silhouette and an earthy green/brown palette that fits the key art; the full-body view is small and slightly stiff but nothing sinks it."
+  },
+  "Jr": {
+   "A": {
+    "bar_a": 7.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the shelter interior reads as a bare plaster box with no Stormwood lining, hearth or lived-in dressing": "FIXED",
+     "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the shelter interior reads as a bare plaster box with no Stormwood lining, hearth or lived-in dressing": "FIXED",
+     "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase": "PRESENT"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side A's inset window, crossbeam and warm hearth glow read as a cozy lived-in shelter; side B's emissive purple slab window with white rain strips and a light-leak triangle at the roof apex is what keeps it from finished."
+  },
+  "Lg": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The white-violet lightning in the break frames and the rain carry the storm, but a flat lavender sky, an empty flat horizon, a uniform dark grass carpet, a toy-sized box shelter and a hard-edged sprite fog band in fading sink it."
+  },
+  "Tj": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's lava-seamed plates give the boar an identity and value break, but on both sides the armour reads as glued-on cubes and side A is dark-on-dark, collapsing to a near-black blob in faint end, well short of the Stormursa/Stormcapra bar."
+  },
+  "Ll": {
+   "A": {
+    "bar_a": 6.7,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's braced timber frame with cream infill, overhanging cap and stone footing reads as a built wall in a Palworld-dense meadow, but side B's blank white card and the pale faceted placeholder rock beside the wall on both sides sink the set."
+  },
+  "Vh": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Storm phases read through rain, darkening and lightning, but the flat lavender sky, empty horizon with no Stormwood landmark, uniform grass carpet, small box shelter and the hard-bottomed white fog band in fading keep it below Palworld/Valheim finish."
+  },
+  "Mc": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side B matches the owner's Tanglevolt bar with a readable rear in hit react and grounded faint poses; side A loses its fur material in faint mid/end, turning into a black-and-white blotched cow-like blob, and its hit react is indistinguishable from standing."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood exterior (Lg, Vh): break the uniform dark grass carpet into soil, moss, rock and black-pool transitions, group vegetation into groves and edges, add layered storm-cloud structure to the flat lavender sky and a distant landmark silhouette, and give the fading fog soft ground-hugging edges instead of a sprite band",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature hurt/faint states (Mc A, Tj A): keep the base fur/plate material and lighting through faint mid and faint end (no black-and-white swap or near-black collapse) and give hit react a distinct pose",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the toy-scale box shelter exterior and the pale faceted placeholder rock beside the homestead wall with authored assets at trainer scale (Stormwood shelter with copper/glass accents and an inset storm window that passes purple storm light by phase)",
+   "kind": "new_art"
+  }
+ ]
+}

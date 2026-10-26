@@ -1,0 +1,182 @@
+{
+ "sets": {
+  "Ss": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the shelter interior reads as a bare plaster box with no Stormwood lining, hearth or lived-in dressing": "PARTIAL",
+     "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the shelter interior reads as a bare plaster box with no Stormwood lining, hearth or lived-in dressing": "PARTIAL",
+     "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's hearth-lit plank cabin with a cased window is cozy and Valheim-adjacent, but the blown-out window, sparse dressing and weak storm-phase change keep it short; A's purple glowing slab window reads as a placeholder panel."
+  },
+  "On": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager with readable eyes, warm natural palette and a clear full-body silhouette sits comfortably beside Palworld's characters, though his soft animated-film face is a touch more cartoon than the naturalistic creatures."
+  },
+  "Jr": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the shelter interior reads as a bare plaster box with no Stormwood lining, hearth or lived-in dressing": "PARTIAL",
+     "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the shelter interior reads as a bare plaster box with no Stormwood lining, hearth or lived-in dressing": "PARTIAL",
+     "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same pair as Ss: A's warm firelit cabin with a cased window carries the mood, but an overexposed window and trainer back, a near-empty back wall and little storm-phase light change sink the finish; B's glowing purple slab looks unfinished."
+  },
+  "Lg": {
+   "A": {
+    "bar_a": 4.7,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Rain and a white-violet lightning bolt give the storm phases some life, but a lone box cabin on a flat, near-black uniform grass plain under a pale lilac sky, with no forest depth or lit ground, reads as a test map rather than Stormwood."
+  },
+  "Tj": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The boar's fur and ivory tusks are naturalistic and it clearly outsizes the ruler, but the back plates read as loose rubble cubes, A's faint end goes almost pure black, and B's red-glowing cracks and reddened tusks muddy its identity and edge into the reserved danger red."
+  },
+  "Ll": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's half-timber wall with braced frame, plank cap and stone footing belongs in the Meadows, but the flat-grey faceted boulder beside it and the uniform grass carpet keep the scene below Palworld's base-building finish; B's blank white board sinks it."
+  },
+  "Vh": {
+   "A": {
+    "bar_a": 4.7,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same as Lg: the lightning and rain carry the weather, but the dark uniform grass carpet, empty flat horizon, generic blobby trees and a sprite-like pink fog band in the fading phase sink it below Valheim-class atmosphere."
+  },
+  "Mc": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "B's Tanglevolt keeps its storm-blue fur, white ruff and readable silhouette through a clear rear-up hit react and grounded faint, matching the owner's style bar; A is sunk by its faint frames turning into a white-and-black blotched base mesh."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood exterior (Lg/Vh): replace the uniform near-black grass carpet and empty flat plain with authored ground (soil, moss and rock transitions, black pools, copper and glass accents), add layered forest depth and fog, darken and grade the sky to the board's storm purple, and let lightning light the ground",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix material and lighting breaks: keep Tanglevolt's fur material through faint poses (Mc A), stop Tj A going black at faint end and drop B's red crack glow, set the shelter window into the wall with casing and drive its light from the storm phase (Ss A / Jr B), and use the half-timber wall variant (Ll A) over the blank panel",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood hero vegetation and landmark: gnarled storm trees and a readable Stormheart-language landmark to replace the generic blobby broadleaf trees and dark lattice tower, plus Stormwood-specific interior dressing (moss, copper, glass charms) for the shelter",
+   "kind": "new_art"
+  }
+ ]
+}

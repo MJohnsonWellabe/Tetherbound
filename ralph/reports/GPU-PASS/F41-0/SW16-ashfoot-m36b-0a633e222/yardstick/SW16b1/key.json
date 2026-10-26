@@ -1,0 +1,46 @@
+{
+ "Ss": {
+  "anchor": false,
+  "label": "SW16 ashfoot_shelter_inside Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW16-ashfoot_shelter_inside-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW16-ashfoot_shelter_inside-cand-Medium.png"
+ },
+ "On": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Jr": {
+  "anchor": false,
+  "label": "SW16 ashfoot_shelter_inside High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW16-ashfoot_shelter_inside-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW16-ashfoot_shelter_inside-ship-High.png"
+ },
+ "Lg": {
+  "anchor": false,
+  "label": "SW16 ashfoot_shelter_outside Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW16-ashfoot_shelter_outside-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW16-ashfoot_shelter_outside-cand-Medium.png"
+ },
+ "Tj": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "Ll": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Vh": {
+  "anchor": false,
+  "label": "SW16 ashfoot_shelter_outside High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW16-ashfoot_shelter_outside-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW16-ashfoot_shelter_outside-cand-High.png"
+ },
+ "Mc": {
+  "anchor": true,
+  "A": "f36_1_gpu:tanglevolt_shipping",
+  "B": "f36_1_gpu:tanglevolt_candidate"
+ }
+}
