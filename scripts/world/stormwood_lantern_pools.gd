@@ -12,6 +12,7 @@ const CONFIG := "res://data/config/stormwood_lantern_pools.json"
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
+const WARM_PANE_GLOW := preload("res://shaders/warm_pane_glow.gdshader")
 const WATER_SHADER := """
 shader_type spatial;
 render_mode blend_mix, depth_draw_opaque, cull_disabled;
@@ -285,6 +286,45 @@ static func _rim_stones(world: Node3D, root: Node3D, centre: Vector2, radius: fl
 		root.add_child(rock)
 
 
+## The Meshy lantern post (tb/meshy-1024 a24b25f7a, provenance beside the
+## GLB): an aged timber post with a carved bracket and a hanging copper-and-
+## glass storm lantern, in place of the box post. Its lit panes glow (warm
+## flame light, warm_pane_glow.gdshader) and one warm light hangs at the
+## lantern. Visual only, like the box post. False when the model is missing.
+static func _hero_lantern(body: Node3D, hero: Dictionary, cfg: Dictionary) -> bool:
+	var model := HERO_PROP.load_model(str(hero.get("model", "")))
+	if model == null:
+		return false
+	model.name = "LanternPostModel"
+	HERO_PROP.fit_height(model, float(hero.get("height_m", 2.6)), float(hero.get("sink_m", 0.05)))
+	var seat := Node3D.new()
+	seat.rotation.y = deg_to_rad(float(hero.get("yaw_deg", 90.0)))
+	body.add_child(seat)
+	seat.add_child(model)
+	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+		for surface in visual.mesh.get_surface_count():
+			var source := visual.get_active_material(surface) as BaseMaterial3D
+			if source == null or source.albedo_texture == null:
+				continue
+			var lit := source.duplicate() as BaseMaterial3D
+			var panes := ShaderMaterial.new()
+			panes.shader = WARM_PANE_GLOW
+			panes.set_shader_parameter("albedo_tex", source.albedo_texture)
+			panes.set_shader_parameter("glow_colour", Color(str(hero.get("glow_colour", "#ffc77a"))))
+			panes.set_shader_parameter("glow_energy", float(hero.get("glow_energy", 1.4)))
+			lit.next_pass = panes
+			visual.set_surface_override_material(surface, lit)
+	var at: Array = hero.get("lantern_local", [-0.38, 0.17, 0.0])
+	var light := OmniLight3D.new()
+	light.name = "LanternLight"
+	light.light_color = Color(str(cfg.get("light_colour", "#ffc77a")))
+	light.light_energy = float(cfg.get("light_energy", 1.6))
+	light.omni_range = float(cfg.get("light_range_m", 9.0))
+	light.position = model.transform * Vector3(float(at[0]), float(at[1]), float(at[2]))
+	seat.add_child(light)
+	return true
+
+
 static func _lantern_post(world: Node3D, root: Node3D, centre: Vector2, radius: float, pool: Dictionary, cfg: Dictionary) -> void:
 	var side := float(pool.get("lantern_angle_deg", 40.0))
 	var a := deg_to_rad(side)
@@ -296,6 +336,9 @@ static func _lantern_post(world: Node3D, root: Node3D, centre: Vector2, radius: 
 	body.position = Vector3(p.x, ground, p.y)
 	body.rotation.y = atan2(centre.x - p.x, centre.y - p.y)
 	root.add_child(body)
+	var hero: Dictionary = cfg.get("lantern_model", {})
+	if bool(hero.get("enabled", false)) and _hero_lantern(body, hero, cfg):
+		return
 	var post := MeshInstance3D.new()
 	var post_mesh := BoxMesh.new()
 	post_mesh.size = Vector3(0.22, post_height, 0.22)

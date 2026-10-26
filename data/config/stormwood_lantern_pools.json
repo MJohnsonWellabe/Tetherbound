@@ -99,6 +99,18 @@
     "water_clear_m": 0.03,
     "max_lift_m": 0.25
   },
+  "lantern_model": {
+    "enabled": false,
+    "_candidate": "r33 (OFF until judged). r30b/r31/r32 judges x3: the posts read as 'flat black bars'; asked for real lanterns with lit glass and copper. The Meshy stormwood_lantern_post (tb/meshy-1024 a24b25f7a, concept c1_1: aged timber post, carved bracket, hanging aged-copper lantern with patina and lit square panes, mossy stone footing) replaces the box post at each pool. Lit panes glow (warm flame light only), one warm light at the lantern.",
+    "model": "res://assets/props/meshy-1024/stormwood_lantern_post/stormwood_lantern_post.glb",
+    "height_m": 2.6,
+    "sink_m": 0.05,
+    "yaw_deg": 90.0,
+    "_why_yaw": "The GLB's lantern hangs toward its -X; +90 degrees turns it down the post's +Z arm, toward the pool.",
+    "lantern_local": [-0.38, 0.17, 0.0],
+    "glow_colour": "#ffc77a",
+    "glow_energy": 1.4
+  },
   "glow_fungi": {
     "enabled": false,
     "_candidate": "r30 (rides with the basin): bioluminescent storm fungi (the storm_mushroom layer's own Meshy model) in clumps on each basin rim. Natural glow, Glowmoss Hollows' living light.",

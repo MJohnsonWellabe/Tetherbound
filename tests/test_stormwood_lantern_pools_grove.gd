@@ -81,3 +81,17 @@ func test_trunk_colliders_are_built_on_a_simulation_shell() -> void:
 	assert_eq(body.get_child_count(), (grove.trees as Array).size(), "one trunk collider per tree")
 	assert_eq(root.get_node("HollowGrove").get_child_count(), 1, "nothing is drawn on a simulation shell")
 	world.free()
+
+
+func test_meshy_lantern_post_replaces_the_box_post_with_a_lit_lantern() -> void:
+	var cfg: Dictionary = _read(POOLS.CONFIG)
+	var hero: Dictionary = (cfg.lantern_model as Dictionary).duplicate()
+	var body := Node3D.new()
+	assert_true(POOLS._hero_lantern(body, hero, cfg), "the Meshy lantern post loads")
+	var model := body.find_child("LanternPostModel", true, false) as Node3D
+	assert_true(model != null, "the post model is seated")
+	var light := body.find_child("LanternLight", true, false) as OmniLight3D
+	assert_true(light != null, "one warm light hangs at the lantern")
+	if light != null:
+		assert_true(light.position.y > 1.0 and light.position.y < float(hero.height_m), "the light sits at lantern height, below the post top")
+	body.free()
