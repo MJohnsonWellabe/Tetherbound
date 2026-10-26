@@ -1,0 +1,18 @@
+{
+ "_comment": "Storm-creature arc emission (tools/art_pipeline/arc_emission.py). Owner 25 Oct: glow only where natural to the element -- lightning arcs on storm creatures, never seams on fur or hide. Each entry builds an emissiveTexture from the albedo's painted arcs only.",
+ "species": {
+  "tanglevolt": {
+   "_why": "Coordinator 25 Oct (order 4): Tanglevolt's lightning veins are painted into the albedo with no emissive map, so since the 24 Oct Forward+ emission-floor change they light like fur on Medium and High. Stormursa ships a real emissive map and is unaffected.",
+   "model": "assets/creatures/tetherbound/tanglevolt/candidate/models/creature_tanglevolt_native.glb",
+   "hue": [
+    215,
+    290
+   ],
+   "sat_min": 0.3,
+   "lift": 0.15,
+   "blur_px": 6.0,
+   "soften_px": 1.0,
+   "gain": 1.6
+  }
+ }
+}
