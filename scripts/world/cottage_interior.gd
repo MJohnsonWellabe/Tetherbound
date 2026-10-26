@@ -25,6 +25,7 @@ const FINISH_CONFIG := "res://data/config/cottage_interior_finish.json"
 const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 const STORM_PANE_SHADER := preload("res://scripts/world/cottage_storm_pane.gdshader")
 const STORM_VIEW_SHADER := preload("res://scripts/world/cottage_storm_view.gdshader")
+const WINDOW_PATCH_SHADER := preload("res://scripts/world/cottage_window_patch.gdshader")
 const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
 const SHELL_SHADER := preload("res://shaders/shell_door_cutout.gdshader")
 const CAMP_FLAME := "res://assets/props/generated_camp/camp_flame.glb"
@@ -50,6 +51,7 @@ var _room_light: SpotLight3D
 var _room_cfg: Dictionary = {}
 var _room_lamp: OmniLight3D
 var _room_lamp_base := -1.0
+var _window_patch: ShaderMaterial
 var _flicker := 0.0
 var _flicker_time := 0.0
 
@@ -335,6 +337,9 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
 	var room_cfg := _finish_block({"enabled": true, "storm_finish": cfg}, "storm_room")
 	if not room_cfg.is_empty():
 		_build_storm_room_light(room_cfg, w, z0, z1, y0, y1)
+	var dressing := _finish_block({"enabled": true, "storm_finish": cfg}, "stormwood_dressing")
+	if not dressing.is_empty():
+		_stormwood_dressing(dressing, w, d, top, z0, z1, y0)
 	var pane_cfg: Dictionary = (cfg.get("window_pane", {}) as Dictionary).duplicate()
 	pane_cfg.merge(seated.get("pane", {}), true)
 	var view_cfg := _finish_block({"enabled": true, "storm_finish": cfg}, "storm_view")
@@ -591,6 +596,105 @@ func _build_storm_room_light(cfg: Dictionary, w: float, z0: float, z1: float, y0
 	add_child(spot)
 	_room_light = spot
 	set_process(true)
+	# r48: the window's own pane pattern laid on the west wall opposite it,
+	# a little lower (the light falls), steady per phase and lifted by the
+	# flash: "lightning shaped on the walls", not a whole-frame tint.
+	var patch_cfg: Dictionary = cfg.get("window_patch", {})
+	if patch_cfg.is_empty():
+		return
+	_window_patch = ShaderMaterial.new()
+	_window_patch.shader = WINDOW_PATCH_SHADER
+	var panes: Array = patch_cfg.get("panes", [3, 2])
+	_window_patch.set_shader_parameter("panes", Vector2(float(panes[0]), float(panes[1])))
+	var patch := MeshInstance3D.new()
+	patch.name = "StormWindowPatch"
+	var quad := QuadMesh.new()
+	var stretch := float(patch_cfg.get("stretch", 1.25))
+	quad.size = Vector2((z1 - z0) * stretch, (y1 - y0) * stretch)
+	patch.mesh = quad
+	patch.material_override = _window_patch
+	patch.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	patch.position = Vector3(-w + float(patch_cfg.get("inset_m", 0.03)), (y0 + y1) * 0.5 - float(patch_cfg.get("drop_m", 0.45)), (z0 + z1) * 0.5)
+	patch.rotation.y = PI * 0.5
+	add_child(patch)
+
+
+func _place_glass(model_path: String, index: int, at: Vector3, height: float) -> void:
+	var model := HERO_PROP.load_model(model_path)
+	if model == null:
+		return
+	var bounds := HERO_PROP.BOUNDS.measure(model)
+	var fit := height / maxf(0.01, bounds.size.y)
+	var seat := Node3D.new()
+	seat.name = "StormGlass%d" % index
+	seat.position = at
+	seat.rotation.y = deg_to_rad(float(index) * 70.0)
+	model.scale = Vector3.ONE * fit
+	model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * fit
+	seat.add_child(model)
+	add_child(seat)
+
+
+func _place_glass_on(anchor: String, model_path: String, index: int, dz: float, height: float) -> void:
+	var host := get_node_or_null(NodePath(anchor)) as Node3D
+	if host == null:
+		return
+	# The kit shelf's board sits about 0.2 m above its origin at 0.8 scale.
+	_place_glass(model_path, index, host.position + Vector3(0.05, 0.2, dz), height)
+
+
+## r48 (GPU SW16 and r47 judges x3: "nothing in the room says Stormwood: no
+## moss, copper or glass, no storm gear"): blue-green moss along the wall
+## plates and tie beam with a few hanging strands, storm-glass crystals (the
+## Glass Field's own Meshy crystal, small, no glow) on the shelf and the
+## window sill, a copper lightning rod leaning in the back corner and a
+## copper chain coil by the door. Presentation only, no colliders.
+func _stormwood_dressing(cfg: Dictionary, w: float, d: float, top: float, z0: float, z1: float, y0: float) -> void:
+	var moss := StandardMaterial3D.new()
+	moss.albedo_color = Color(str(cfg.get("moss_colour", "#34503f")))
+	moss.roughness = 1.0
+	var post := 0.14
+	for side: float in [-1.0, 1.0]:
+		_visual_box("MossPlate%s" % ("E" if side > 0.0 else "W"), Vector3(0.16, 0.05, d * 1.9), Vector3(side * (w - 0.1), top + 0.02, 0.0), moss)
+	for z: Variant in cfg.get("tie_beam_z", [-0.4]):
+		_visual_box("MossBeam%d" % int(float(z) * 10.0), Vector3(w * 1.7, 0.05, 0.17), Vector3(0.0, top + 0.01, float(z)), moss)
+	var strands: Array = cfg.get("strands", [])
+	for index in strands.size():
+		var at: Array = strands[index]
+		_visual_box("MossStrand%d" % index, Vector3(0.05, float(at[2]), 0.04), Vector3(float(at[0]), top - post * 1.2 - float(at[2]) * 0.5, float(at[1])), moss)
+	_visual_box("MossSill", Vector3(0.14, 0.04, (z1 - z0) * 0.9), Vector3(w - 0.12, y0 + 0.02, (z0 + z1) * 0.5), moss)
+	# Storm glass: anchored to the window sill (known here) or to the kit
+	# shelf (placed by _build_furniture after the lining, so deferred).
+	var glass_cfg: Dictionary = cfg.get("glass", {})
+	for index in (glass_cfg.get("at", []) as Array).size():
+		var spot: Array = glass_cfg.at[index]
+		if str(spot[0]) == "sill":
+			_place_glass(str(glass_cfg.get("model", "")), index, Vector3(w - 0.12, y0 + 0.04, (z0 + z1) * 0.5 + float(spot[1])), float(spot[2]))
+		else:
+			call_deferred("_place_glass_on", str(spot[0]), str(glass_cfg.get("model", "")), index, float(spot[1]), float(spot[2]))
+	var copper := StandardMaterial3D.new()
+	copper.albedo_color = Color(str(cfg.get("copper_colour", "#b8794a")))
+	copper.metallic = 0.75
+	copper.roughness = 0.35
+	var rod_cfg: Array = cfg.get("rod", [])
+	if rod_cfg.size() >= 4:
+		var rod := MeshInstance3D.new()
+		rod.name = "CopperLightningRod"
+		var cylinder := CylinderMesh.new()
+		cylinder.top_radius = 0.018
+		cylinder.bottom_radius = 0.024
+		cylinder.height = float(rod_cfg[3])
+		cylinder.radial_segments = 8
+		rod.mesh = cylinder
+		rod.material_override = copper
+		rod.position = Vector3(float(rod_cfg[0]), FLOOR_TOP + float(rod_cfg[3]) * 0.5, float(rod_cfg[1]))
+		rod.rotation.z = deg_to_rad(float(rod_cfg[2]))
+		rod.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(rod)
+	var coil_at: Array = cfg.get("chain_coil", [])
+	if coil_at.size() >= 2:
+		var coil := _kit("CopperChainCoil", "Chain_Coil", Vector3(float(coil_at[0]), FLOOR_TOP, float(coil_at[1])), 30.0, 0.6)
+		_tint(coil, Color(str(cfg.get("copper_colour", "#b8794a"))))
 
 
 func _apply_view_phase(phase: String) -> void:
@@ -655,6 +759,10 @@ func _process(delta: float) -> void:
 					_room_lamp_base = _room_lamp.light_energy
 			if _room_lamp != null and room_look.size() >= 4:
 				_room_lamp.light_energy = _room_lamp_base * float(room_look[3])
+			if _window_patch != null:
+				var patch_level := float(room_look[4]) if room_look.size() >= 5 else 0.0
+				_window_patch.set_shader_parameter("colour", Color(str(room_look[0])))
+				_window_patch.set_shader_parameter("level", patch_level + flash * float(_room_cfg.get("patch_flash_gain", 1.2)))
 
 
 ## r24 grade: the roof underside and the kit floor stayed saturated orange
