@@ -2,7 +2,7 @@
 
 ## Session 2 log (newest first)
 
-- 26 Oct 12:10Z **READY (GPU arm) `tb/stormwood-m39-on` de3d78ffd2361c3922c3f72b74041b954e8d4803** (your item 2, path posts): the lane plus one line, `stormwood_path_posts.json` enabled.
+- 26 Oct 11:55Z **READY (GPU arm) `tb/stormwood-m39-on` de3d78ffd2361c3922c3f72b74041b954e8d4803** (your item 2, path posts): the lane plus one line, `stormwood_path_posts.json` enabled.
   - **What changes:** the spur-junction lamps on Ash Road, Conductor Run and Deepwood take the Meshy Stormwood lantern post at 6.6 m, with warm pane glow and the lamps' daylight halo. The colliders are unchanged. The flag lives outside `stormwood_pockets.json`, which is a scatter-bake input.
   - **CPU r39b** (`r39/VERDICT.md`): 5.88 -> 6.43 mapped (**+0.55**; weak fit, r 0.64, RMSE 0.64), 3/3 judges prefer ON. Placeholder lanterns go PRESENT 2 / PARTIAL 1 -> PARTIAL 3/3.
   - **These junctions are not F41 catalogue stands.** The GPU form is `capture_stormwood_f10_matrix.gd --custom="pv@-334.39,355.97@-323.30,3,370.70@3;pm@105.45,1754.49@89.90,3,1764.40@3;pd@-1016.56,3889.77@-1019.70,3,3871.60@3" --stands=pv,pm,pd --phases=calm --no-aftermath` (Forward+ 1920x1080, Medium/High), with the lane as the off arm.
