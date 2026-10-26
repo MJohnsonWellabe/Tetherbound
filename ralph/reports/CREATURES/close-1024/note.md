@@ -1,5 +1,20 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (26 Oct, after CO34)
+
+- **GPU READY (CLOSE-OUT, on main): CO5-ON e78759f17bbc8e0d7959b5ecbbcfbcae2b5d8ada** (tb/co5-on = origin/main ac5e1426 + only the Tanglevolt arcs; no rim/settle, no other lane work).
+  - Arcs v2: crisp edge (soften 0.4), **dilated 1 px** (coverage 0.68% -> 2.08%), core halfway to #EEE4FF, **emission 5.0** (was 3.0).
+  - The GLB reproduces byte-for-byte from main's GLB with the tool; f36 pin updated. Import + texture policy PASS (981); f36_pose, texture_import, colourways, creature_body: 5 tests, 0 failed.
+  - The arcs now show even on the CPU stage at the roster crop.
+  - Judge main vs co5-on at the standard roster crop.
+- **Tanglevolt faint-mid float: not a pose gap.** A probe measured the lowest skinned vertex through the faint at every 1/16 phase: never more than 1 cm off the floor.
+  - A crouch-topple candidate (+90 roll, crouch 30, fold 25) kept the body standing with the head up at faint mid on CPU, where the current faint is already a low slink. Dropped, not shipped.
+  - The GPU "hangs above its shadow" is likely the directional shadow falling away from a rolled body, or the contact-shadow blob staying under the origin. If you want it chased, it is a shadow or presentation item, not a recipe one.
+- **Galecrest fly_grip:** fixed in the harness (e9a6681f, see above). Plain captures no longer exit 1. Galecrest flies on its procedural wingbeat by design.
+- **Shared rim parked** per your call; tb/co3-on stays unlanded.
+- **Next:** Stormtrail (value separation, brighter streaks), then Ripplet (fur detail; tail spacing on the stage), as per-species texture work, CPU-checked, then bundled on main.
+- tb/creatures-land head 1812f5d7eb19554465326df87ba3800b8a0db3b2.
+
 ## TO COORDINATOR (26 Oct, missing-clip check)
 
 - **Galecrest fly_grip: not a game bug.** Galecrest is a Fly carrier (fly_traversal.json `can_carry`) but is not an f36 recipe species, so it has no fly_grip clip by design.
