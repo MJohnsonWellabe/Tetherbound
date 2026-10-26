@@ -1,0 +1,6 @@
+El: none
+Dl: "Hit react leaps clear of the stage: a pounce, not a flinch"
+Kh: "Hit react leaps clear of the stage: a pounce, not a flinch"
+Gc: none
+Kt: "Hit react leaps clear of the stage: a pounce, not a flinch"
+Tn: none
