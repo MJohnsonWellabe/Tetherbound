@@ -19,6 +19,15 @@
     "crown_support_source_y": [5.0, 12.95],
     "road_clearance_m": 9.5,
     "actor_clearance_m": 18.0,
+    "hero": {
+      "enabled": false,
+      "_candidate": "r28 Fallen Giant hero (OFF until judged). GPU F41 R verdict: the Fallen Giant stand is 4.64/4.69 with 'no change', path item 3 asks for a hero landmark. Meshy stormwood_fallen_giant (tb/meshy-1024 edd21e2f3; the concept rounds gave a hollow fallen log, not an arch, per the coordinator's delivery note) replaces the installed dead tree beside the road, hollow root end toward the approach. Render-only first.",
+      "model": "res://assets/props/meshy-1024/stormwood_fallen_giant/stormwood_fallen_giant.glb",
+      "length_m": 55.0,
+      "at_xz": [-150.0, 4495.0],
+      "yaw_deg": 270.0,
+      "sink_m": 1.5
+    },
     "_geometry": "One intact installed tree, uniform scale. Axial roll precedes fall rotation; pitch is selected against shipping Terrain3D mesh samples. Both root and crown must seat within the support tolerance; otherwise no candidate is mounted. No grounding rocks needed when the tree has two terrain supports.",
     "_reference": "Stormwood Stormheart boards A/B: coherent installed wood/stone, monumental natural silhouette. CPU installed mesh inspection and revised full-footprint audit accompany the candidate; the earlier flat draft lift and distant placement are superseded. Original Bark_DeadTree materials and asset provenance retained."
   }

@@ -4,6 +4,7 @@ extends RefCounted
 ## The feature stays OFF until its separate collision and native proofs close.
 const CONFIG := "res://data/config/stormwood_destination_dressing.json"
 const TERRAIN_HEIGHT := preload("res://scripts/world/terrain_height.gd")
+const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 
 
 static func install(world: Node3D, budget: RefCounted) -> void:
@@ -11,6 +12,10 @@ static func install(world: Node3D, budget: RefCounted) -> void:
 		return
 	var cfg: Dictionary = _read(CONFIG).get("fallen_giant", {})
 	if not bool(cfg.get("enabled", false)):
+		return
+	var hero: Dictionary = cfg.get("hero", {})
+	if bool(hero.get("enabled", false)):
+		_install_hero(world, hero)
 		return
 	var terrain := world.get_node_or_null("Terrain")
 	var scene := load(str(cfg.asset)) as PackedScene
@@ -30,6 +35,40 @@ static func install(world: Node3D, budget: RefCounted) -> void:
 	tree.set_meta("terrain_fit", fit)
 	tree.set_meta("collision_scope_pending", true)
 	world.add_child(tree)
+
+
+## r28 (GPU R verdict: the Fallen Giant stand is 4.6-4.7 with "no change";
+## path item 3, a hero landmark): the Meshy fallen giant (tb/meshy-1024
+## edd21e2f3, provenance beside the GLB) replaces the installed dead tree,
+## lying along `yaw_deg` beside the road with its hollow root end toward the
+## approach. Fitted along its long axis, seated on the lowest ground under its
+## footprint. Render-only (collision scope stays pending, as for the tree).
+static func _install_hero(world: Node3D, cfg: Dictionary) -> void:
+	var model := HERO_PROP.load_model(str(cfg.get("model", "")))
+	if model == null:
+		push_warning("Fallen Giant hero: model unavailable")
+		return
+	var bounds := HERO_PROP.BOUNDS.measure(model)
+	var factor := float(cfg.get("length_m", 55.0)) / maxf(0.01, bounds.size.z)
+	model.scale = Vector3.ONE * factor
+	model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
+	var holder := Node3D.new()
+	holder.name = "FallenGiantHero"
+	var at: Array = cfg.get("at_xz", [-150.0, 4478.0])
+	var yaw := deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
+	holder.rotation.y = yaw
+	var half := Vector2(bounds.size.x, bounds.size.z) * factor * 0.5
+	var low := INF
+	for u: float in [-1.0, 0.0, 1.0]:
+		for v: float in [-1.0, 0.0, 1.0]:
+			var offset := Vector3(half.x * u, 0.0, half.y * v).rotated(Vector3.UP, yaw)
+			var y := float(world.call("ground_height_at", float(at[0]) + offset.x, float(at[1]) + offset.z))
+			if is_finite(y):
+				low = minf(low, y)
+	holder.position = Vector3(float(at[0]), (low if is_finite(low) else 0.0) - float(cfg.get("sink_m", 1.5)), float(at[1]))
+	holder.add_child(model)
+	holder.set_meta("collision_scope_pending", true)
+	world.add_child(holder)
 
 
 static func _read(path: String) -> Dictionary:
