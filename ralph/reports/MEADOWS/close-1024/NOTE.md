@@ -505,6 +505,21 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
 - 2026-10-26 12:40 UTC Merged origin/main (#761, path ON) into tb/meadows. In `grass_field.gd` and `grass_field.gdshader` I took both sides: my carpet keys and the Stormwood zone keys are independent additions. Your updated path gate test is kept.
   - **Next:** the relay yard r2 capture (smaller flags, uv 0.22 → 0.6), restarted on the merged build. Then the village path r3 the GPU judges asked for (warm brown, narrower, ruts and pebbles; the slab under the bench; night ground).
 
+- 2026-10-26 15:10 UTC RESULT, not READY:
+  - **Village path r3** (`terrain_presentation.json texture_candidates.path_r3`, OFF, parked): a warm-brown trodden-earth albedo over the shipped r2 path.
+    - CPU mapped: village_road 5.92 → 6.34, farm_to_hall 6.03 → 6.44, hall_front 6.08 → 6.44. That is +0.36 to +0.42, under 0.5. The fit is linear, r 0.93.
+    - The judges fixed the olive hue 9/9. They still see a uniform blob texture, and the warm road goes near-black at night, worse than r2.
+    - The road needs authored ruts, pebbles and broken grass edges (decals or Meshy ground pieces), not a recolour.
+  - **First r3 capture was void:** `path_r3` was listed before `path`, and the shipped swap won. It is reordered now; the per-surface rule is last enabled wins.
+  - **Relay yard r2** (on tb/meadows `tether_relay.json ground_pad.surface_candidate`, OFF): the r1 judges' size ask is folded in (uv 0.22 → 0.6, a warmer #a39684). I checked one CPU frame; there was no separate judge round. The GPU MH4 verdict on r1 still covers the swap.
+  - **MESHY** (village road ground; the judges' named fix for village_road, farm_to_hall and hall_front):
+    1. **meadows_road_ruts_a/b:** low-profile trodden-earth road strips, about 3 m wide x 6 m long and under 0.08 m thick, with twin wheel ruts, embedded pebbles, a damp darker centre and broken grass-tuft edges.
+       - Ref: the key art's village road (`docs/reference/tetherbound-meadows-keyart.png`) and `docs/reference/palworld-02-open-field-path.jpg`.
+       - Prompt: "flat dirt road segment with two worn wheel ruts, small embedded pebbles, slightly damp darker centre line, ragged grass tufts along both edges, warm brown earth, stylised realism, game asset, very low profile, tileable along its length".
+    2. **meadows_road_verge_tufts:** grass-edge clumps, about 1.2 m long and 0.3 m tall, to break the road/grass seam.
+       - Prompt: "ragged clump of meadow grass and small weeds growing along a dirt road edge, stylised realism, game asset, flat base".
+    - These install OFF as placed strips along the village road polyline at the three stands.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
