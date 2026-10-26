@@ -1,0 +1,23 @@
+{
+ "Ag": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Wa": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Wi": {
+  "anchor": false,
+  "label": "R21 ground",
+  "A": "<scratch>/sides/gr_off.jpg",
+  "B": "<scratch>/sides/gr_on7.jpg"
+ },
+ "Bg": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ }
+}
