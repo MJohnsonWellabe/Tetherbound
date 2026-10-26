@@ -45,6 +45,9 @@ var _shell_inside := false
 var _view: ShaderMaterial
 var _view_cfg: Dictionary = {}
 var _hearth_base := 0.0
+var _hearth_scale := 1.0
+var _room_light: SpotLight3D
+var _room_cfg: Dictionary = {}
 var _flicker := 0.0
 var _flicker_time := 0.0
 
@@ -327,6 +330,9 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
 	add_child(storm)
 	_storm_light = storm
 	_storm_light_base = storm.light_energy
+	var room_cfg := _finish_block({"enabled": true, "storm_finish": cfg}, "storm_room")
+	if not room_cfg.is_empty():
+		_build_storm_room_light(room_cfg, w, z0, z1, y0, y1)
 	var pane_cfg: Dictionary = (cfg.get("window_pane", {}) as Dictionary).duplicate()
 	pane_cfg.merge(seated.get("pane", {}), true)
 	var view_cfg := _finish_block({"enabled": true, "storm_finish": cfg}, "storm_view")
@@ -561,6 +567,30 @@ func _clear_window_glass(w: float, z0: float, z1: float, alpha: float) -> void:
 			visual.set_surface_override_material(surface, clear)
 
 
+## r47 (GPU SW16 x3: "warm orange in every phase, not purple storm light",
+## "no lightning flash on the walls at break"): a wide spot from the window
+## washes the room in the phase's storm colour (cool violet building and
+## break, white-violet at break, cooling in fading), the surge flash lifts
+## it, and the hearth dims a little in the storm phases so the storm colour
+## reads on the walls against it. Presentation only, no shadows.
+func _build_storm_room_light(cfg: Dictionary, w: float, z0: float, z1: float, y0: float, y1: float) -> void:
+	_room_cfg = cfg
+	var spot := SpotLight3D.new()
+	spot.name = "StormRoomLight"
+	spot.position = Vector3(w - float(cfg.get("inset_m", 0.25)), (y0 + y1) * 0.5 + float(cfg.get("lift_m", 0.2)), (z0 + z1) * 0.5)
+	# A spot looks down -Z; a quarter turn about Y aims it at -X, into the
+	# room from the east window, tilted down by pitch_deg.
+	spot.rotation = Vector3(deg_to_rad(-float(cfg.get("pitch_deg", 18.0))), PI * 0.5, 0.0)
+	spot.spot_range = float(cfg.get("range_m", 7.5))
+	spot.spot_angle = float(cfg.get("angle_deg", 62.0))
+	spot.spot_attenuation = float(cfg.get("attenuation", 0.8))
+	spot.light_energy = 0.0
+	spot.shadow_enabled = false
+	add_child(spot)
+	_room_light = spot
+	set_process(true)
+
+
 func _apply_view_phase(phase: String) -> void:
 	var look: Dictionary = (_view_cfg.get("phases", {}) as Dictionary).get(phase, {})
 	for key: String in ["sky_top", "sky_low", "tree_colour"]:
@@ -577,7 +607,7 @@ func _process(delta: float) -> void:
 	if _hearth_light != null and _flicker > 0.0:
 		_flicker_time += delta
 		var noise := sin(_flicker_time * 9.0) * 0.6 + sin(_flicker_time * 24.3 + 1.3) * 0.4
-		_hearth_light.light_energy = _hearth_base * (1.0 + noise * _flicker)
+		_hearth_light.light_energy = _hearth_base * _hearth_scale * (1.0 + noise * _flicker)
 	if _pane == null:
 		if _hearth_light == null and _shell == null:
 			set_process(false)
@@ -609,6 +639,12 @@ func _process(delta: float) -> void:
 			_storm_light.light_color = Color(str(look[0]))
 			base = float(look[1])
 		_storm_light.light_energy = base * (1.0 + flash * float(_pane_cfg.get("flash_light_gain", 3.0)))
+	if _room_light != null:
+		var room_look: Array = (_room_cfg.get("phases", {}) as Dictionary).get(phase, [])
+		if room_look.size() >= 2:
+			_room_light.light_color = Color(str(room_look[0]))
+			_room_light.light_energy = float(room_look[1]) * (1.0 + flash * float(_room_cfg.get("flash_gain", 2.5)))
+			_hearth_scale = float(room_look[2]) if room_look.size() >= 3 else 1.0
 
 
 ## r24 grade: the roof underside and the kit floor stayed saturated orange

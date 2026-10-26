@@ -94,6 +94,16 @@
       "_why_door_cut_m": "The prefab's open doorway (door_x 1.0, 1.6 m wide, front wall at z about 2.7-3.1, porch beyond) cut through the closed Meshy shell, shelter-local metres, so players and the interior catalogue camera see in.",
       "_why_albedo_gain": "r42 judges x3: the hut reads small and near-black in calm and building; 1.9 lifts the weathered timber about a stop, and the shell is 5% larger than the prefab footprint so it reads at distance."
     },
+    "storm_room": {
+      "enabled": false,
+      "_candidate": "r47 storm-driven room light (OFF until judged; needs storm_finish and window_pane on). GPU SW16 judges x3: the room is 'warm orange in every phase, not purple storm light', with 'no lightning flash on the walls' at break. A wide spot from the east window washes the room in the phase's storm colour and the surge flash lifts it; the hearth dims a little in the storm phases. phases: [colour, energy, hearth scale].",
+      "range_m": 7.5,
+      "angle_deg": 62.0,
+      "pitch_deg": 18.0,
+      "attenuation": 0.8,
+      "flash_gain": 2.5,
+      "phases": {"calm": ["#a6a2c8", 0.9, 1.0], "building": ["#7a70c0", 1.6, 0.8], "break": ["#d8d2ff", 2.6, 0.65], "fading": ["#94b4d0", 1.2, 0.9]}
+    },
     "storm_view": {
       "enabled": true,
       "_why_on": "GPU SW16 (tb/gpu-pass fcf26c7f, ralph/reports/GPU-PASS/F41-0/SW16-ashfoot-m36b-0a633e222/VERDICT.md): m36b (seated + firelit + storm view) interior 5.83 -> 6.96 (+1.13) at Medium and High; storm-window defect PRESENT 3/3 -> PARTIAL 2 / FIXED 1, roof-apex clipping FIXED 3/3; outside level. One Medium device loss (TDR) before any Ashfoot frame; the re-run was clean 200/200.",
