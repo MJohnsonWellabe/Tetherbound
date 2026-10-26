@@ -1,0 +1,30 @@
+{
+  "_comment": "r41 Crown Overlook vista (coordinator, 26 Oct). GPU SW8: 'no vista at crown overlook'; r40: the Crown massif reads at 900 m as a flat grey slab. Two flagged pieces, both OFF until judged.",
+  "scope": "deck: world geometry with colliders on every shell (presentation build only on drawing shells); massif: client presentation, no collision",
+  "deck": {
+    "enabled": false,
+    "_candidate": "A raised timber lookout 15 m along the 37 deg Crown sightline from the Crown Overlook spot (on crown_sightline_loop), clear of the path corridor (route_half_width 7.5 + 1 m), its 7 m ramp running back down to the path. Weathered timber (the Ashfoot storm finish's wood), dark rails on three sides, the Meshy Stormwood lantern post lit on the front corner. The F41 survey stand moves onto the deck with this flag (debug_teleport_spots f41_survey).",
+    "at": [169.0, 1992.0],
+    "heading_deg": 37.0,
+    "half_m": [3.0, 3.0],
+    "height_m": 2.6,
+    "ramp_m": 7.0,
+    "ramp_width_m": 2.2,
+    "rail_height_m": 1.05,
+    "wood_tint": "#a8a299",
+    "weathering": 0.8,
+    "frame_colour": "#3f3226",
+    "lantern_post": {"model": "res://assets/props/meshy-1024/stormwood_lantern_post/stormwood_lantern_post.glb", "at": [2.5, 0.0, 2.5], "turn_deg": 0.0, "height_m": 2.6, "sink_m": 0.0, "yaw_deg": 90.0, "lantern_local": [-0.38, 0.17, 0.0], "glow_colour": "#ffc77a", "glow_energy": 1.8, "light_colour": "#ffc77a", "light_energy": 1.6, "light_range_m": 8.0}
+  },
+  "massif": {
+    "enabled": false,
+    "_candidate": "Distant-only Hollow Crown silhouette (MESHY stormwood_hollow_crown_silhouette, requested 26 Oct): drawn beyond visible_from_m so play inside the Crown is untouched; no collision.",
+    "model": "",
+    "at": [700.0, 2700.0],
+    "base_y": 60.0,
+    "width_m": 520.0,
+    "yaw_deg": 0.0,
+    "visible_from_m": 300.0,
+    "fade_m": 40.0
+  }
+}
