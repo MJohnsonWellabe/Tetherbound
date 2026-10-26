@@ -2,6 +2,12 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 09:40Z **READY (GPU arm) `tb/stormwood-m33-on` 619dd7fdd07327f612eda14afdba349ac06ce45a**: lane head 9065dad7 (on the merged main) plus one config commit (6 lines in `stormwood_lantern_pools.json`). Lantern Pools finish: judge `glowmoss_hollows_the_lantern_pools` (all three views).
+  - **Lantern posts:** the delivered Meshy `stormwood_lantern_post` (a24b25f7a) replaces the black-bar box posts. Lit panes glow (warm flame light only, `warm_pane_glow.gdshader`) with a warm lantern light.
+  - **Black pools:** `deep_colour` #030607 and `water_specular` 0.12.
+  - **CPU r33** (forest present): 4.83 -> 5.58 mapped (**+0.75**, r 0.96, RMSE 0.42). Grey-puddle defect FIXED 3/3; black-bar posts PRESENT -> PARTIAL 3/3.
+  - Checks with the flags ON: lantern_pools and texture_import_policy pass, 0 failed.
+  - Still asked: larger, clustered pools on the path; lantern light that reads at distance; floor breakup; light shafts.
 - 26 Oct 08:50Z **MESHY: `stormwood_lantern_post`** (Lantern Pools first, then any Stormwood path post). Every judge in r30b, r31 and r32 names the black-bar lantern posts and asks for "real lanterns with lit glass and copper fittings".
   - **The asset:** one aged timber post about 2.6 m tall, with a short bracket arm and a hanging copper-and-glass storm lantern. Small square glass panes, a domed aged-copper cap with green patina, and a warm candle core. Moss at the foot. No red.
   - **References** (owner Stormheart board B crops, inspected; in `meshy-refs/`):
