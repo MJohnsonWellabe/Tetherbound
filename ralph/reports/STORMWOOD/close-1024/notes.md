@@ -2,7 +2,7 @@
 
 ## Session 2 log (newest first)
 
-- 26 Oct 13:30Z PARKED the Ashfoot exterior shell approach after two misses.
+- 26 Oct 13:10Z PARKED the Ashfoot exterior shell approach after two misses.
   - **r42:** +0.47 alone.
   - **r43:** shell gain 1.9 + grove behind-right + dressing, 5.88 -> 5.31 mapped (-0.57); 3/3 judges prefer the kit cottage (`r43/VERDICT.md`).
   - **Why r43 lost:**
