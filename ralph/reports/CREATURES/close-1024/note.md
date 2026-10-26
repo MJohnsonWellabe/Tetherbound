@@ -1,5 +1,21 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (26 Oct, isolated arms on main)
+
+- **CO3-ON 33ba3f2a2bc8a22bd625cd8b4f4839796a4c0c27** (tb/co3-on = origin/main ac5e1426 + only da816e00's change: shared rim + faint settle).
+  - The creature_body.gd conflicts were the lane-only `_clear_hit_flash()` calls next to `clear_faint_settle()`. Resolved without any hit-flash or wince code.
+  - Checks (after `--import`): creature_body, companion_presence, f36_pose, faint, rest_pose, flinch, field/rim/alpha/tier, remote/wild creature: 224 tests, 0 failed.
+  - **smoke_art:** fails the same four checks as plain main ac5e1426 (run on both). None is new:
+    - shiny (Terrapup);
+    - shiny repaint (Paddlenewt nat1024);
+    - alpha swap (Burrowback nat1024);
+    - rarity tier. The tier check fails differently: on main it trips on Terrapup's own 0.25 rim; on co3-on the tier rims never reach the nat1022 remake's material (all three tiers read 0.25).
+  - The tier ladder order holds in code (common 0.15 < uncommon 0.29 < rare 0.41 < alpha 0.65 for a species without its own rim). Reaching the remakes is a pre-existing colourway-path gap, not part of this change. For the PR body: smoke_art's tier and alpha checks now take the rim an untiered body already wears as the baseline instead of zero; the invariant is the same.
+- **CO4-ON 4c35d5d7eba4d9e4e32913a877f8eb53c6362297** (tb/co4-on = co3-on + only c6941e68's change: Tanglevolt arcs).
+  - Only Tanglevolt's arc_emission.json entry is on main, so the conflict kept that entry alone.
+  - The GLB reproduces byte-for-byte from main's GLB with the tool. Texture policy PASS (981); f36_pose and texture tests pass.
+- tb/creatures-land is unchanged (cc8d7599).
+
 ## TO COORDINATOR (26 Oct, per-species faints judged)
 
 - **No faint candidate gains; nothing to bundle; reverted (cc8d7599).** CPU b44 (`close-1024/b44/VERDICT.md`; not confirming, r 0.79):
