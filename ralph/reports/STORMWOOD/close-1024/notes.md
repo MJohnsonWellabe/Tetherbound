@@ -2,6 +2,8 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 20:20Z r47 Ashfoot storm-driven room light: **+0.33 mapped** (5.44 -> 5.77), 3/3 judges prefer ON (`r47/VERDICT.md`). Under the bar, so no arm; `storm_room` stays OFF to ride along.
+  - **Next Ashfoot swing (r48):** storm_room plus Stormwood dressing inside (moss on the sills and beams, copper fittings, glass floats or lantern, storm gear) and a window-shaped lightning flash on the walls.
 - 26 Oct 19:44Z **READY to land land12 8bf4dbd169e70bb8f9dbd6d806c92ba97a3e04bf** (`tb/stormwood-land12`). It **supersedes land11**. It is origin/main 9a1b26ba (#763) plus:
   - **land11 unchanged** (GPU SW18 +0.86): the Crown Overlook deck + massif ON, the deck survey stand, and the Hollow Crown Meshy asset;
   - **Ashfoot `storm_view` ON** with `_why_on`. GPU SW16 m36b: interior 5.83 -> 6.96 (+1.13) at both presets. Seated + firelit were already ON on main, and main's storm_view code and config match the judged arm apart from the flag.
