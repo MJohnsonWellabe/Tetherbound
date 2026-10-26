@@ -2,7 +2,7 @@
 
 ## Session 2 log (newest first)
 
-- 26 Oct 11:55Z PARKED r40 (your item 4, depth fog): 4.89 -> 4.66 mapped (-0.23; `r40/VERDICT.md`). The grey band stays PRESENT 3/3 on both arms; it is the Crown massif's flat terrain read at 900 m, not fog. The judges' ask is a shaped, rim-lit massif silhouette and a storm sky with cloud structure and lightning. That is new art or terrain work; a possible MESHY or sky-art item if you want it.
+- 26 Oct 11:30Z PARKED r40 (your item 4, depth fog): 4.89 -> 4.66 mapped (-0.23; `r40/VERDICT.md`). The grey band stays PRESENT 3/3 on both arms; it is the Crown massif's flat terrain read at 900 m, not fog. The judges' ask is a shaped, rim-lit massif silhouette and a storm sky with cloud structure and lightning. That is new art or terrain work; a possible MESHY or sky-art item if you want it.
 
 - 26 Oct 08:05Z **MERGED MAIN 07e1b277 (#760 land9) into `tb/stormwood` 9b28ee9d.** Main's tree equals land9, so the lane only takes land9's config commit: Fallen Giant hero + bark ON.
   - **The pending GPU arms are rebuilt on the merged head.** Each is the same config flip as before, on top of a lane that now has the Fallen Giant ON. **Please judge these and drop the old SHAs:**
