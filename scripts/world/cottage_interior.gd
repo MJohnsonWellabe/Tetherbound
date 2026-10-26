@@ -226,6 +226,8 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
 	var apex := float(cfg.get("gable_apex_m", 5.1))
 	for side: float in [-1.0, 1.0]:
 		_gable_panel("Gable%s" % ("Back" if side < 0.0 else "Front"), side * (d - 0.02), w, top, apex, wood, side)
+	if not _storm_grade({"enabled": true, "storm_finish": cfg}).is_empty():
+		_graded_ceiling_and_floor(wood, w, d, top, apex)
 	# Cool storm light at the window, a counterweight to the warm hearth.
 	var storm := OmniLight3D.new()
 	storm.name = "StormWindowLight"
@@ -285,6 +287,53 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
 		clump.position = spot + Vector3(0.0, FLOOR_TOP + 0.02, 0.0)
 		clump.scale = Vector3(1.4, 1.0, 0.8)
 		add_child(clump)
+
+
+## r24 grade: the roof underside and the kit floor stayed saturated orange
+## under the cooled walls, so the same weathered timber lines both pitches of
+## the ceiling (wall top to just under the ridge) and lies over the floor a
+## few millimetres up. Visual only: the floor's collider is unchanged.
+func _graded_ceiling_and_floor(wood: Material, w: float, d: float, top: float, apex: float) -> void:
+	var rise := apex - top
+	var slope := sqrt(w * w + rise * rise)
+	for side: float in [-1.0, 1.0]:
+		var eave_back := Vector3(side * w, top, -d)
+		var eave_front := Vector3(side * w, top, d)
+		var ridge_front := Vector3(0.0, apex, d)
+		var ridge_back := Vector3(0.0, apex, -d)
+		# Clockwise from inside the room; normals face the room (see _gable_panel).
+		var corners := [eave_back, eave_front, ridge_back, eave_front, ridge_front, ridge_back] if side < 0.0 \
+			else [eave_back, ridge_back, eave_front, ridge_back, ridge_front, eave_front]
+		var normal := Vector3(-side * rise, -w, 0.0).normalized()
+		var uvs := PackedVector2Array()
+		for corner: Vector3 in corners:
+			uvs.append(Vector2((corner.z + d) / (d * 2.0), 1.0 - (corner.y - top) / rise))
+		var arrays := []
+		arrays.resize(Mesh.ARRAY_MAX)
+		arrays[Mesh.ARRAY_VERTEX] = PackedVector3Array(corners)
+		arrays[Mesh.ARRAY_NORMAL] = PackedVector3Array([normal, normal, normal, normal, normal, normal])
+		arrays[Mesh.ARRAY_TEX_UV] = uvs
+		var mesh := ArrayMesh.new()
+		mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+		var panel := MeshInstance3D.new()
+		panel.name = "CeilingLining%s" % ("West" if side < 0.0 else "East")
+		panel.mesh = mesh
+		var lined := wood.duplicate() as ShaderMaterial
+		lined.set_shader_parameter("uv_metres", Vector2(d * 2.0, slope))
+		panel.material_override = lined
+		add_child(panel)
+	var boards := MeshInstance3D.new()
+	boards.name = "FloorBoards"
+	var quad := QuadMesh.new()
+	quad.size = Vector2(w * 2.0, d * 2.0)
+	boards.mesh = quad
+	var floor_wood := wood.duplicate() as ShaderMaterial
+	floor_wood.set_shader_parameter("uv_metres", Vector2(w * 2.0, d * 2.0))
+	boards.material_override = floor_wood
+	boards.rotation.x = -PI * 0.5
+	boards.position = Vector3(0.0, FLOOR_TOP + 0.008, 0.0)
+	boards.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(boards)
 
 
 ## The storm finish's `grade` block when the finish and its grade are both on.
