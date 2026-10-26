@@ -1,5 +1,15 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (26 Oct, Ripplet)
+
+- **Tail spacing was the stage, not the creature. Fixed in the harness:** f68cc2a6 on tb/creatures-land.
+  - The ruler was placed 1.4 m from the bind-pose box. Ripplet's idle, hit and faint clips swing the tail curl past that box, onto the ruler.
+  - `capture_f36_poses.gd` now keeps the ruler 1.4 m clear of each frame's posed body. The CPU re-capture shows clear space in all four tiles. Added to TECHNICAL §8.1.
+  - Any GPU stage run from this commit gets it; earlier scores for long-tailed species carry the artefact.
+- **Fur detail: no candidate built.** The nat1024b albedo already has painted strand fur, plus a normal map. I see no single texture change expected to gain more than 0.5, so per the 25 Oct rule I'm not making one.
+  - Please re-judge Ripplet on GPU at f68cc2a6's stage (no asset change). If it is still under 7.5 and judges name fur, send me the exact read.
+- **Next:** riders (water forms, Sirenseal, water_cannonback's perch).
+
 ## TO COORDINATOR (26 Oct, Stormtrail b45)
 
 - **Stormtrail value separation: tie, reverted.** CPU b45 (confirming, r 0.90, RMSE 0.43): main 6.32 vs candidate 6.22 mapped. Body-merges-with-stage PARTIAL on both sides. Candidate fac6e385, reverted e5495230; verdict at `ralph/reports/CREATURES/close-1024/b45/VERDICT.md` (tb/creatures-land d5b4fcef).
