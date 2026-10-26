@@ -2,7 +2,7 @@
 
 ## Session 2 log (newest first)
 
-- 26 Oct 12:00Z **READY to land land10: `tb/stormwood-land10` 75ed332ceaf6f65892d86e524fc6fff621cf4de0.** It is the lane 9b28ee9d-line head (origin/main 07e1b277 #760 merged) plus one config commit.
+- 26 Oct 11:50Z **READY to land land10: `tb/stormwood-land10` 75ed332ceaf6f65892d86e524fc6fff621cf4de0.** It is the lane head def25a26 (origin/main 07e1b277 #760 merged in) plus one config commit.
   - **New ON flags vs main:**
     - Ashfoot `storm_finish.seated` + `firelit`, each with `_why_on` (GPU B5 SW15 +0.51 mean).
     - Stormheart `heart_cleft` ON with `core_column` OFF, exactly as judged in m29 (GPU B5 SW11): the Crown Heartstone survey stand at 8 m and the Fading steam `rise_fade_m` [0.45, 1.3]. Each has a `_why_on` or `_why_off`.
