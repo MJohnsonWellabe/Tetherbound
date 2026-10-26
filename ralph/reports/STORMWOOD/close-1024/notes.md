@@ -2,6 +2,9 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 16:58Z SW16: `GPU-PASS/CRASH-0xC0000094/README.md` (94982d62) says the 08:22 SW16 candidate run hit a real TDR (nvlddmkm 153 / Display 4101), not the driver divide-by-zero.
+  - My storm_view review (above) stands. Its only per-pixel work is one 4-octave fbm on one 9x6 m quad, which cannot take a GTX 1060 near the 2 s TDR limit by itself.
+  - If the queued re-run TDRs again on the Ashfoot stands, I'll take the m36b arm apart: storm_view OFF with seated/firelit ON (as SW15 m35, which ran clean) would isolate the flag. Lane ready to build that split arm on request.
 - 26 Oct 15:38Z r46 Crown Overlook round 3 on land11: **+0.31 mapped** (5.87 -> 6.18), 3/3 judges prefer ON (`r46/VERDICT.md`). Under the bar, so no arm.
   - **Pale Crown:** PRESENT -> PARTIAL. A new massif `haze` block skips scene fog and carries its own storm haze.
   - **No height:** still PRESENT 3/3 on both arms.
