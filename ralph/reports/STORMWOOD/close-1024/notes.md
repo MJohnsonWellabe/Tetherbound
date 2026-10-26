@@ -2,6 +2,19 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 06:40Z **READY (GPU arm) `tb/stormwood-m31-on` daf57de50722d7a71ac7ab64317dffe0dea4b73e**: lane head c9347e52 plus one config commit. This is your SW8 next swing (Fading atmosphere + ground pass 2), judged on all 12 stands.
+  1. **Ground pass 2:** `ground_zones` ON with moss and black pools only. Bare loam is off (`bare` [-1, -0.9]), and tufts thin only in the pools (`grass_bare`, new key in `stormwood_ground_zones.gd`), so Medium keeps its tufts.
+  2. **`storm_light` ON:** the cool rim light and grade (r26, never GPU-judged).
+  - **CPU r31** (mapped): calm 3.82 -> 4.36 (+0.54), fading 4.12 -> 4.65 (+0.53). The raw gains are about 0.3 and the slope is 1.78, so this is marginal. Judges credit only the black pools; the rim light does not register on CPU (Forward+ lights rims differently, so it gets its one GPU look here).
+  - **Height fog:** built (`presentation.height_fog`, OFF) but left out of the arm. Godot's height fog is uniform near-ground haze, not distance layering, and it showed nothing on CPU.
+  - Checks with the arm's flags ON: ground_zones, grass_field, stormwood_look, stormwood_surge, ground_finish, 87 tests, 0 failed.
+- 26 Oct 06:40Z SW8 bugs closed in the lane:
+  - **Sky text:** Rowan Stormwise's signpost words now draw within 12 m (the survey stand is 15 m away) and the Master's site words within 30 m.
+  - **Grey blocks:** the Master arena pad gets dark moss-stone and the pole storm bark. The large grey "wall" in capacitor v05/v06 is a steep terrain ridge flattened by distance fog, not a prop; it belongs to the horizon item.
+  - **Cottages:** fixed; the settlement traversal smoke passes 9/9.
+  - **Reddish blocks:** the heartstone ones are wild bears. The red panel on the Glass Field horizon is Team Tether's own warning standard (correct use of red).
+  - CPU capture after the fix (cg1): no text in any capacitor view.
+- Next from here: every r31 judge's top ask, on every stand, is real forest (groves, edges and clearings); the stands read as open plains. Extending the Lantern Pools authored grove (r30, +1.15) to the other open stands is the next big swing.
 - 26 Oct 05:20Z **READY (GPU arm) `tb/stormwood-m30-on` d9014a530de117ad9294ab86ea3f491c4db32fa1**: lane head 72efcf43 plus one config commit (3 lines). Lantern Pools hollow: judge `glowmoss_hollows_the_lantern_pools` (all three views).
   - **Grove:** 66 storm-canopy trees, the Ash Road layer's own models and tints, 24-62 m round the pools.
     - Trunk colliders are built on every shell.
