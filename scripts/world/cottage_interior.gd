@@ -48,6 +48,8 @@ var _hearth_base := 0.0
 var _hearth_scale := 1.0
 var _room_light: SpotLight3D
 var _room_cfg: Dictionary = {}
+var _room_lamp: OmniLight3D
+var _room_lamp_base := -1.0
 var _flicker := 0.0
 var _flicker_time := 0.0
 
@@ -645,6 +647,14 @@ func _process(delta: float) -> void:
 			_room_light.light_color = Color(str(room_look[0]))
 			_room_light.light_energy = float(room_look[1]) * (1.0 + flash * float(_room_cfg.get("flash_gain", 2.5)))
 			_hearth_scale = float(room_look[2]) if room_look.size() >= 3 else 1.0
+			# The warm overhead RoomLight (built after the lining) is what
+			# kept the room orange in every phase; it dims with the storm too.
+			if _room_lamp == null:
+				_room_lamp = get_node_or_null(^"RoomLight") as OmniLight3D
+				if _room_lamp != null:
+					_room_lamp_base = _room_lamp.light_energy
+			if _room_lamp != null and room_look.size() >= 4:
+				_room_lamp.light_energy = _room_lamp_base * float(room_look[3])
 
 
 ## r24 grade: the roof underside and the kit floor stayed saturated orange
