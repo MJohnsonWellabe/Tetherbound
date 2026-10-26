@@ -481,6 +481,20 @@ func _swap_shell(cfg: Dictionary) -> void:
 	seat.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
 	seat.add_child(model)
 	add_child(seat)
+	# Meshy GLBs draw double-sided: from inside the lined room (and the
+	# catalogue camera at the door) the shell's walls covered the view. Back
+	# faces are culled so the shell shows only from outside, and the dark
+	# timber is lifted a little so it does not read black under the storm.
+	var gain := float(cfg.get("albedo_gain", 1.0))
+	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+		for surface in visual.mesh.get_surface_count():
+			var source := visual.get_active_material(surface) as BaseMaterial3D
+			if source == null:
+				continue
+			var outside := source.duplicate() as BaseMaterial3D
+			outside.cull_mode = BaseMaterial3D.CULL_BACK
+			outside.albedo_color = Color(source.albedo_color.r * gain, source.albedo_color.g * gain, source.albedo_color.b * gain, source.albedo_color.a)
+			visual.set_surface_override_material(surface, outside)
 
 
 func _clear_window_glass(w: float, z0: float, z1: float, alpha: float) -> void:
