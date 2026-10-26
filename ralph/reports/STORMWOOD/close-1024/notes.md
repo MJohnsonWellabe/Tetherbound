@@ -2,6 +2,14 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 13:05Z **Crown Overlook vista round 2** (committed OFF on the lane: storm tint #7d7896 on the Crown, a 3.5 m braced deck, weathered moss-edged planks). Not judged and not armed.
+  - **What the CPU frames show:** the Crown sits in the haze and reads further away, as asked, but in Break it almost vanishes. The braces do not show from the deck views, and the moss is subtle. By eye that is no clear gain over r1.
+  - **Decision:** **m41 (r1, +2.46) stays the vista candidate for SW18.**
+  - **Next for the vista, after SW18:** a lighter tint (between r1 and r2) that holds in Break, and a mid-distance ridge layer.
+- 26 Oct 13:05Z Ashfoot exterior:
+  - **r42** (Meshy shell alone, interior cutaway verified on CPU): +0.47 mapped, PARTIAL 3/3 on the cottage defect (`r42/VERDICT.md`).
+  - **r43** (shell + grove kept behind and right of the hut + brighter, larger shell) is capturing on CPU now.
+
 - 26 Oct 12:25Z **READY (GPU arm) `tb/stormwood-m41-on` aa74c99787bbdc2b065a28c971f8f8ef1272bc19** (Crown Overlook vista; your item 3 big swing). It is the lane plus one config commit:
   - `stormwood_crown_overlook.json` `deck` + `massif` ON;
   - a Crown Overlook `f41_survey` stand on the deck at (172, 1996), heading 37 (capture-only; the teleport arrival is unchanged).
