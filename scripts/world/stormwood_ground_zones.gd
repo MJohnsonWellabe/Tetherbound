@@ -95,7 +95,9 @@ static func grass_keys() -> Dictionary:
 	return {
 		"zone_strength": float(zones.get("strength", 1.0)),
 		"zone_scale": float(zones.get("scale", 0.028)),
-		"zone_bare": zones.get("bare", [0.26, 0.36]),
+		# `grass_bare` (pass 2): tufts thin only where this range runs (the
+		# black pools) while the terrain's own loam band is switched off.
+		"zone_bare": zones.get("grass_bare", zones.get("bare", [0.26, 0.36])),
 		"zone_moss": zones.get("moss", [0.64, 0.74]),
 		"zone_moss_shorten": float(zones.get("moss_shorten", 0.6)),
 		"zone_moss_tint": str(zones.get("moss_tint", "#b3cca6")),

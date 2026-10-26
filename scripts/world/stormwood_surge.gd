@@ -1233,6 +1233,7 @@ func _advance_flash(delta: float) -> void:
 		_flash_light.visible = _flash > 0.0
 		_flash_light.light_energy = _flash * float(cfg.get("light_energy", 2.2))
 	_advance_bolt_exposure(cfg)
+	_advance_height_fog()
 	if _ceiling_material != null:
 		_ceiling_material.set_shader_parameter("flash", _flash * float(cfg.get("sky_strength", 1.0)))
 		# Sheet lightning: the phase's glow, scaled like any flash under
@@ -1522,6 +1523,36 @@ func _advance_bolt_exposure(flash_cfg: Dictionary) -> void:
 	if not is_equal_approx(target, env.tonemap_exposure):
 		env.tonemap_exposure = target
 	_bolt_exposure_written = target
+
+## GPU SW8 path item 2 ("layered height fog instead of camera-height puffs and
+## white-outs"): ground-hugging height fog that follows the local ground
+## (presentation.height_fog, OFF until judged). The fog band starts
+## `offset_m` above the framed subject's grounded height, so it sits low over
+## every stand however high the terrain runs; each phase (and the aftermath)
+## sets its own density, eased like the rest of the look. Client-local
+## presentation: it changes only what this client draws.
+var _height_fog_density := 0.0
+
+func _advance_height_fog() -> void:
+	var cfg: Dictionary = _pres_cfg().get("height_fog", {})
+	if not bool(cfg.get("enabled", false)) or world == null or is_nan(_anchor_y):
+		return
+	var look := world.get_node_or_null("WorldLook")
+	if look == null:
+		return
+	var holder := look.get_node_or_null(look.get("environment_path")) as WorldEnvironment
+	if holder == null or holder.environment == null:
+		return
+	var table: Dictionary = cfg.get("aftermath" if _aftermath else "density", {})
+	var target := float(table.get(phase, table.get("calm", 0.0)))
+	_height_fog_density = lerpf(_height_fog_density, target, clampf(float(cfg.get("ease", 0.02)), 0.0, 1.0))
+	var env := holder.environment
+	var height := _anchor_y + float(cfg.get("offset_m", 2.0))
+	# Write only on change: an Environment write every frame is not free.
+	if absf(env.fog_height - height) > 0.05:
+		env.fog_height = height
+	if absf(env.fog_height_density - _height_fog_density) > 0.0005:
+		env.fog_height_density = _height_fog_density
 
 func bolt_level() -> float:
 	var top := 0.0
