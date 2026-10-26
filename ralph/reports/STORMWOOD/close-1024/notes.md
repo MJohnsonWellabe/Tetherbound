@@ -2,6 +2,15 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 07:40Z **READY (GPU arm) `tb/stormwood-m35-on` 16101403bd063bbe56e72a020d055fff1dec94d0**: the lane plus one config commit that turns ON both `storm_finish.seated` (m34) and `storm_finish.firelit`. Judge `ashfoot_shelter_inside` (four phases) against m34 if m34 is judged in the same pass, or against the lane otherwise.
+  - **Firelit (r34 judges x3: "a stone box with no visible fire", "huge flat stretched plank walls"):**
+    - The camp flame sculpt burns in the hearth firebox, with a flickering fire light and a warm floor pool.
+    - Dark timber posts, wall plates and a tie beam frame the lining as a ranger hut.
+    - The copper lantern by the window is lit.
+  - **CPU r35** (`r35/VERDICT.md`): over seated, 4.36 -> 5.12 mapped (**+0.76**, r 0.87, RMSE 0.49). The hearth goes PRESENT -> PARTIAL; the walls do not move.
+  - **Checks with both ON:** cottage/interior, 12 tests, 0 failed; smoke_stormwood_ashfoot_shelter 16/0.
+  - **Next:** the one ask all three judges still share is a visible storm through the glass (purple sky, rain, a lightning flash per phase). It will be a storm backdrop card seen only from inside, built as r36.
+
 - 26 Oct 07:05Z **READY (GPU arm) `tb/stormwood-m34-on` 4c6d0756690d242fa82d626fc3dd9f1ee8bbc8b1**: lane head d8758c70 (main #759 merged) plus one config line (`cottage_interior_finish.json storm_finish.seated` ON). Judge `ashfoot_shelter_inside` (four phases) against the lane, with `ashfoot_shelter_outside` as a no-change check.
   - **Ashfoot path to 7.5 (SW9 asks):**
     - The storm pane sits behind the lining inside the kit window's own frame, with a 2.5 cm flush trim.
