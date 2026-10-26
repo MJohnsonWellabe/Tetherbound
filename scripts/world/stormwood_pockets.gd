@@ -519,6 +519,19 @@ func _lamp_post(world: Node3D, body: StaticBody3D, at: Vector2, facing: Vector2,
 	# post collider above is unchanged.
 	var meshy: Dictionary = lure.get("meshy_post", {})
 	if not meshy.is_empty() and LANTERN_POOLS._hero_lantern(holder, meshy, meshy):
+		# Keep the junction lamps' daylight halo at the new lantern, so they
+		# still read from the road at 30 m (WO-F09-04/round 7 tuning).
+		var lit := holder.find_child("LanternLight", true, false) as Node3D
+		if lit != null and materials.has("halo") and bool(meshy.get("keep_halo", true)):
+			var halo := MeshInstance3D.new()
+			halo.name = "DaylightHalo"
+			var quad := QuadMesh.new()
+			quad.size = Vector2.ONE * float(lure.halo_radius_m) * 2.0
+			halo.mesh = quad
+			halo.material_override = materials.halo
+			halo.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			lit.get_parent().add_child(halo)
+			halo.transform = lit.transform
 		_draw_range(holder, draw)
 		if not draw.is_empty():
 			for lamp: OmniLight3D in holder.find_children("*", "OmniLight3D", true, false):
