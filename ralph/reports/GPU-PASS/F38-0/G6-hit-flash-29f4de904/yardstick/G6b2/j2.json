@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Uz": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Lush grass and a good armoured-badger silhouette, but a low camera buried in a uniform grass carpet with no sky or distance, cotton-ball smoke over both creatures and no body hit response leave it well short of Palworld combat finish."
+  },
+  "Yx": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fenced arena on the slope gives a sense of place, but the struck boar is tiny and low-contrast against the mud, the light is flat with no atmosphere, and the hits barely register."
+  },
+  "Uy": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's wolf matches the owner's Tanglevolt bar in silhouette and fur, but B's faint frames turn its material white with black blotches, so the set does not hold a shipping finish."
+  },
+  "Zn": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's furred boar is close to the naturalistic owner bar but is let down by its flat gold disc decals and a floating faint pose, and A's smooth clay toy material is off-style."
+  },
+  "Uh": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable, friendly elder with clear eyes and a Meadows-green palette that sits plausibly beside Palworld's stylised humans, but it is only shown on a neutral stage."
+  },
+  "Cv": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Impact bursts finally appear, but white cotton-ball smoke whites out the creatures for several frames and the flat, hazeless light gives none of Valheim's atmosphere."
+  },
+  "Dl": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared, blurry ground textures, empty flat terrain and the same emblem-stone used as the aftermath at several sites sink it next to Palworld's dense, lived-in world."
+  },
+  "Zj": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's full-body white flash makes one hit land, but the camera cutting between angles, a fence filling the foreground and blob smoke keep the fight from reading as cleanly as Palworld's."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the opaque white cotton-ball dust puffs with small, grounded dirt, stone or leaf impact effects. Apply one consistent full-body flash or tint plus a recoil on every hit (as in Zj A f23), so neither creature is ever whited out or left unchanged.",
+   "kind": "scene"
+  },
+  {
+   "change": "Raise and pull back the fight camera so both creatures, the trainer, the arena and some sky or distance stay in frame without cuts. Add atmospheric haze, a stronger time-of-day grade and rim light so the creatures separate from the grass.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix the broken materials: Uy B faint frames (white with black blotches), the smeared Dl ground texture, and Zn A's clay or toy boar surface (move it to B's fur). Give each Dl site its own aftermath and remove the oxblood banners after a win.",
+   "kind": "scene"
+  }
+ ]
+}

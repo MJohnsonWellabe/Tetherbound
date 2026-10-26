@@ -1,0 +1,38 @@
+[
+    {
+        "label":  "G6 south_bridge_grunt f1-16 High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-south_bridge_grunt-1-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-south_bridge_grunt-1-ship-High.png",
+        "brief":  "A real Meadows trainer fight seen through the production camera with ordinary attack and dodge inputs: 16 consecutive frames 0.15 s apart (read left to right, top to bottom). Judge whether the creatures read as alive in combat - in particular whether a creature that is struck visibly shows the hit on its body (a flash, tint or recoil) at the moment of impact - and whether the fight reads clearly on screen.",
+        "defects":  [
+                        "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact"
+                    ]
+    },
+    {
+        "label":  "G6 south_bridge_grunt f17-32 High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-south_bridge_grunt-17-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-south_bridge_grunt-17-ship-High.png",
+        "brief":  "A real Meadows trainer fight seen through the production camera with ordinary attack and dodge inputs: 16 consecutive frames 0.15 s apart (read left to right, top to bottom). Judge whether the creatures read as alive in combat - in particular whether a creature that is struck visibly shows the hit on its body (a flash, tint or recoil) at the moment of impact - and whether the fight reads clearly on screen.",
+        "defects":  [
+                        "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact"
+                    ]
+    },
+    {
+        "label":  "G6 warden_aldis f1-16 High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-warden_aldis-1-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-warden_aldis-1-ship-High.png",
+        "brief":  "A real Meadows trainer fight seen through the production camera with ordinary attack and dodge inputs: 16 consecutive frames 0.15 s apart (read left to right, top to bottom). Judge whether the creatures read as alive in combat - in particular whether a creature that is struck visibly shows the hit on its body (a flash, tint or recoil) at the moment of impact - and whether the fight reads clearly on screen.",
+        "defects":  [
+                        "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact"
+                    ]
+    },
+    {
+        "label":  "G6 warden_aldis f17-32 High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-warden_aldis-17-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-warden_aldis-17-ship-High.png",
+        "brief":  "A real Meadows trainer fight seen through the production camera with ordinary attack and dodge inputs: 16 consecutive frames 0.15 s apart (read left to right, top to bottom). Judge whether the creatures read as alive in combat - in particular whether a creature that is struck visibly shows the hit on its body (a flash, tint or recoil) at the moment of impact - and whether the fight reads clearly on screen.",
+        "defects":  [
+                        "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact"
+                    ]
+    }
+]

@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Yy": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Creatures are well furred and readable, but a flat grass carpet with no sky, tiny trainers and white puff spam (B f23-f24 whiteout) sink it below Palworld-class combat finish."
+  },
+  "Ey": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "P2-016": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's clean full-body hit flash on the boar (f06) is the right idea, but the badger's hits are hidden in particle bursts and the scene lacks sky, light shafts or any depth."
+  },
+  "Lk": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A warm, appealing elder villager in an earthy palette that fits the settlement, but shown in a dark void the frames cannot prove world finish or lighting."
+  },
+  "Iu": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "P2-016": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "P2-016": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Damage numbers land on the badger (A f05, A f15, B f05, B f15) with no body flash or recoil, and the camera cut behind fence and crates (A f13-f14) loses the fight."
+  },
+  "Pl": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-016": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A shows a clear white body flash on the boar (f22, f27), but heavy white puffs wash out f29-f32 (A) and f22-f25 (B), and B's f26 camera jump breaks the read."
+  },
+  "Iy": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing wolf is close to the owner's Tanglevolt bar, but the faint poses break it: A floats in faint mid and loses its material in faint end, and B ends nose-down with the body pitched vertically."
+  },
+  "Vz": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A debug-heavy HUD covers most of every frame, the player's creature is not identifiable, telegraphs are flat magenta rings, and there is no purple storm sky or lightning; B also has the camera inside foliage (i12-i15)."
+  },
+  "Ip": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths tell site-specific stories (freed captive at the open cage, torn banner, collapsed tent smoking), but blurry flat ground, the tiled stone wall and a sparse, repeated emblem stone keep it below Palworld's lived-in density."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the large white puff particle clouds in combat with small short-lived dust or impact bursts that carry a real object, and give every struck creature, including the enemy badger, a brief full-body flash or recoil at impact",
+   "kind": "scene"
+  },
+  {
+   "change": "In Stormwood fight captures, hide the debug HUD, replace the flat magenta telegraph rings with grounded lightning or earth telegraphs, keep the camera out of the canopy, and show the purple storm sky",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the creature faint animations so the creature stays grounded with its material intact (Tanglevolt faint mid floats, faint end loses texture or stands nose-down)",
+   "kind": "new_art"
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "Uz": {
+  "anchor": false,
+  "label": "G6 south_bridge_grunt f1-16 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-south_bridge_grunt-1-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-south_bridge_grunt-1-cand-High.png"
+ },
+ "Yx": {
+  "anchor": false,
+  "label": "G6 warden_aldis f17-32 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-warden_aldis-17-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-warden_aldis-17-ship-High.png"
+ },
+ "Uy": {
+  "anchor": true,
+  "A": "f36_1_gpu:tanglevolt_candidate",
+  "B": "f36_1_gpu:tanglevolt_shipping"
+ },
+ "Zn": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Uh": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Cv": {
+  "anchor": false,
+  "label": "G6 warden_aldis f1-16 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-warden_aldis-1-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-warden_aldis-1-ship-High.png"
+ },
+ "Dl": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Zj": {
+  "anchor": false,
+  "label": "G6 south_bridge_grunt f17-32 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-south_bridge_grunt-17-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\G6\\sides\\G6-south_bridge_grunt-17-ship-High.png"
+ }
+}

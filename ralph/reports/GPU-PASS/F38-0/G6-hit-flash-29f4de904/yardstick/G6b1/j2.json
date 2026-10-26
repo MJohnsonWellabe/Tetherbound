@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Yy": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The boar and armoured badger are on-style, but big flat white puff sprites swallow the fighters (A f24-f26 and f30-f31, B f22-f24) and there is no clear body hit, so it never gets Palworld's punchy impact read."
+  },
+  "Ey": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's full-body white flash (f06) and the burst on the badger (f12) make the hits land, but the puff clouds (A f08-f11, B f06-f10) and the flat midday grade keep it short of Palworld/Valheim finish."
+  },
+  "Lk": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A likeable, clearly read elderly villager whose earthy green/brown palette fits the Meadows, but the soft toy-like cartoon face does not match the naturalistic creatures and is shown only on a flat studio backdrop."
+  },
+  "Iu": {
+   "A": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The creatures read well against the grass, but damage numbers pop with no body reaction (A f05, f15; B f05), puff clouds bury the boar (A f03-f04, B f03-f04, f14), and A f13-f14 is blocked by a foreground fence/prop."
+  },
+  "Pl": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's white body flash on the boar (f22, f27) carries the hits, but a full-frame puff storm (A f29-f32, B f22-f25) and the camera behind a fence (B f26) sink both the clarity and the finish."
+  },
+  "Iy": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's Tanglevolt keeps its violet fur and lightning veins through every pose and sits near the owner's bar, while A loses the material in the faint poses (flat black/white with a floating shadow); neither has a hit react that differs visibly from standing."
+  },
+  "Vz": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky brown-black frames with no purple storm sky, tiny fighters, flat magenta telegraph shapes and debug-style HUD panels over a third of each frame (in B, trunk/canopy blocks i12-i16) are nothing like Palworld's readable boss fights."
+  },
+  "Ip": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths tell site-specific stories (opened cage with a freed captive, fallen banners, smoking rubble), but smeared low-resolution ground textures, a flat grade and plain wall textures keep both sides well below the Palworld/Valheim finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the large flat white puff/dust sprites in Meadows combat with small, short-lived, ground-anchored dust and debris, and give every struck creature a consistent 1-2 frame full-body flash/tint plus recoil (as in Ey A f06 / Pl A f22, f27), so the fighters are never hidden and every hit lands on the body.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight presentation: camera collision with fade-out for trunks and canopy, a purple storm-sky grade with brighter rim light on the fighters, real-object telegraphs (lightning or debris) instead of flat magenta shapes, and a much smaller combat HUD.",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows ground and lighting pass on the trainer sites: higher-resolution, less smeared grass/dirt materials, warmer key light with cool blue distance haze, and clutter-free aftermath dressing that removes the Team Tether banners after a win (as B does).",
+   "kind": "scene"
+  }
+ ]
+}

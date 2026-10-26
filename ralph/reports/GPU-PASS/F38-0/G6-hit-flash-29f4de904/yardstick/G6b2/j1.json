@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Uz": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Camera jammed into a uniform grass carpet with flat light, no sky or depth, and opaque white cotton-ball smoke smothering both creatures sinks it; the furred, plated badger is the only Palworld-grade element."
+  },
+  "Yx": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The arena with fort and stream gives a place, but flat even lighting, a low-detail grass slope, no atmosphere and billboard smoke keep it well short of Palworld/Valheim finish."
+  },
+  "Uy": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's wolf matches the owner's Tanglevolt-style bar in silhouette and fur, but side B's faint frames lose the material to white-and-black blotches, and a grey stage can't carry Valheim-class light."
+  },
+  "Zn": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's naturalistic fur boar is on-style but noisy, A's glossy clay-toy boar is off the naturalistic bar, and neither stands clearly taller than the trainer."
+  },
+  "Uh": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A warm, appealing elder with good hair and costume palette, but the rounder animated-film face reads a notch more cartoon than the naturalistic creatures and key art."
+  },
+  "Cv": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Impact starbursts add some punch, but white smoke walls covering half the frame, flat lighting and a featureless terrain slope sink it next to Palworld's fights."
+  },
+  "Dl": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry low-resolution ground, a flat tiled stone wall and flat noon light with no atmospheric depth read as a prototype, not the key art's lived-in meadow."
+  },
+  "Zj": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Hard camera cuts to a fence post filling the foreground, flat lighting and opaque smoke break the read, though the creatures themselves are decent."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the opaque white cotton-ball smoke with thinner, shorter-lived dust or impact VFX that never covers a creature's face. Make the hit flash or tint consistent on every strike, keeping the creature's features visible through it.",
+   "kind": "scene"
+  },
+  {
+   "change": "Combat camera: pull back and up so both creatures and the trainer stay in frame, stop hard cuts to occluding fence or fort pieces, and keep foreground grass from filling the bottom third.",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows lighting and ground: add a warm directional sun grade, rim light, blue distance fog and sky, and replace the blurry, uniform grass and dirt textures with clumped grass, clearings and higher-resolution ground. Also fix the white/black material loss in creature faint poses.",
+   "kind": "scene"
+  }
+ ]
+}

@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Yy": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Saturated meadow grass and a well-built badger help, but flat white puff spam whites out the fighters, the light is a flat overhead grade with no atmosphere, and hits land without reading on the bodies."
+  },
+  "Ey": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's full-body white flash on the boar is the right kind of feedback, but the puff-cloud effects, flat noon light and smeared terrain keep it short of Palworld finish."
+  },
+  "Lk": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager with expressive face and eyes and a key-art earth/green palette carries it, though the full-body view is small and the look is more cartoon than the naturalistic creatures."
+  },
+  "Iu": {
+   "A": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Damage numbers and impact bursts float over bodies that never react, the camera clips behind a wooden structure (A f13-f14), and the white puff trails bury both creatures."
+  },
+  "Pl": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A shows a clear white body flash on hits, but puff-cloud spam (A f29-f32, B f23-f25), a jarring cut to a fence close-up (B f26) and flat lighting sink it."
+  },
+  "Iy": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing wolf reaches the style bar, but A's faint poses float well above their shadows with the storm veins lost to a black-and-white patch material, and B's faint end folds into an unreadable upright heap."
+  },
+  "Vz": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown-black frame with no purple storm sky or lightning, a large debug-style panel stack covering the left and bottom, flat magenta ring and slab telegraphs, a barely visible player creature, and (B) the camera inside foliage."
+  },
+  "Ip": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's per-site aftermaths (torn banners, broken cage, collapsed tent, smoke) tell a story, but smeared low-res ground, a flatly tiled wall and harsh flat light read nothing like Palworld or Valheim finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Combat feedback pass: put a short full-body white/tint flash plus recoil on every struck creature (the badger never reacts in any set), and replace the flat white puff-ball trails and clouds with small real-object effects (stones, dust, sparks) that never cover the fighters.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight: strip the debug panel stack from the capture HUD, replace the magenta ring and slab telegraphs with ground cracks or lightning, add the fixed purple storm sky with violet rim light so the spider and player creature separate from the ground, and keep the camera out of trunks and foliage.",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows ground and light: swap the smeared low-res terrain texture for crisp grass with groves and clearings, and add a warm sun grade, cast shadows and blue distance haze so combat and site frames have depth.",
+   "kind": "scene"
+  }
+ ]
+}

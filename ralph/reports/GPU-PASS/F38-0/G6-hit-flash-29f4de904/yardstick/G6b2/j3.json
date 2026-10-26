@@ -1,0 +1,130 @@
+{
+ "sets": {
+  "Uz": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-016": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "P2-016": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Creature models hold up, but a ground-filling close camera with no sky or depth, opaque white cotton-ball smoke smothering both creatures (f02-f04, f11-f13) and no body hit-flash keep it short of Palworld combat finish and Valheim atmosphere."
+  },
+  "Yx": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "P2-016": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "P2-016": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm slope, river and stronghold give a readable Meadows place, but the struck boar is tiny beside a camera-hogging badger and the only body hit read (A f24) is a flat white silhouette, so the fight lacks Palworld-level punch."
+  },
+  "Uy": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side A's indigo-and-white spiky-fur wolf matches the owner's Tanglevolt bar and its hurt and faint poses read; side B is sunk by its faint frames turning into a white-and-black patched material."
+  },
+  "Zn": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's furred, naturalistic boar is close to the owner bar but is only about trainer height and has an odd gold-speckle coat; side A's smooth clay-orange toy material is off-style."
+  },
+  "Uh": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder with a clear face, eyes and an earthy green-brown outfit that fits the settlement palette, though the soft cartoon face sits a step away from the naturalistic creature style."
+  },
+  "Cv": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {
+     "P2-016": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "P2-016": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The sunlit golden slope and stronghold read well on B, but opaque white smoke swallows the creatures (A f01-f03 and f14-f16, B f13-f15) and the hits are carried by sparks rather than by the bodies."
+  },
+  "Dl": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared, low-detail ground, a flat tiled stone wall in row 1 and sparse props read as a prototype rather than a lived-in Palworld or Valheim world; A's aftermaths are at least distinct."
+  },
+  "Zj": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "P2-016": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "P2-016": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The camera keeps clipping into the wooden gate on the left of frame (f20-f24 on both sides) and smoke and VFX cover the action; A's f23 whole-body white flash is visible but erases the creature's form."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Make a struck creature show a short, partial hit tint plus a recoil on every hit (an additive rim or emissive pulse that keeps fur detail, not an opaque white silhouette), and keep the target framed and unoccluded at the moment of impact.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the opaque white cotton-ball smoke attack with a semi-transparent, directional projectile with an impact burst, and keep the combat camera out of props (gate posts, banners) while showing some horizon and sky.",
+   "kind": "scene"
+  },
+  {
+   "change": "Bring every creature up to the owner's naturalistic bar: replace the clay-toy Mudsnout material, fix the Tanglevolt faint-state material swap, and scale creatures clearly above the 1.80 m trainer.",
+   "kind": "new_art"
+  }
+ ]
+}

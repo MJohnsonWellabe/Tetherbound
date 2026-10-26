@@ -1,0 +1,370 @@
+[
+ {
+  "batch": 1,
+  "code": "Yy",
+  "label": "G6 warden_aldis f17-32 Medium cand|ship",
+  "side": "G6-warden_aldis-17-ship-Medium",
+  "mapped": 6.51,
+  "judges": [
+   6.45,
+   6.58,
+   6.51
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+   },
+   {
+    "P2-016": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Yy",
+  "label": "G6 warden_aldis f17-32 Medium cand|ship",
+  "side": "G6-warden_aldis-17-cand-Medium",
+  "mapped": 6.24,
+  "judges": [
+   6.19,
+   6.26,
+   6.26
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+   },
+   {
+    "P2-016": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ey",
+  "label": "G6 warden_aldis f1-16 Medium cand|ship",
+  "side": "G6-warden_aldis-1-cand-Medium",
+  "mapped": 6.85,
+  "judges": [
+   6.89,
+   6.89,
+   6.77
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "FIXED"
+   },
+   {
+    "P2-016": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ey",
+  "label": "G6 warden_aldis f1-16 Medium cand|ship",
+  "side": "G6-warden_aldis-1-ship-Medium",
+  "mapped": 6.49,
+  "judges": [
+   6.45,
+   6.51,
+   6.51
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+   },
+   {
+    "P2-016": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Iu",
+  "label": "G6 south_bridge_grunt f1-16 Medium cand|ship",
+  "side": "G6-south_bridge_grunt-1-cand-Medium",
+  "mapped": 6.34,
+  "judges": [
+   6.32,
+   6.32,
+   6.38
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+   },
+   {
+    "P2-016": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Iu",
+  "label": "G6 south_bridge_grunt f1-16 Medium cand|ship",
+  "side": "G6-south_bridge_grunt-1-ship-Medium",
+  "mapped": 6.49,
+  "judges": [
+   6.45,
+   6.58,
+   6.45
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+   },
+   {
+    "P2-016": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Pl",
+  "label": "G6 south_bridge_grunt f17-32 Medium cand|ship",
+  "side": "G6-south_bridge_grunt-17-cand-Medium",
+  "mapped": 6.79,
+  "judges": [
+   6.83,
+   6.89,
+   6.64
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "FIXED"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "FIXED"
+   },
+   {
+    "P2-016": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Pl",
+  "label": "G6 south_bridge_grunt f17-32 Medium cand|ship",
+  "side": "G6-south_bridge_grunt-17-ship-Medium",
+  "mapped": 6.3,
+  "judges": [
+   6.32,
+   6.32,
+   6.26
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+   },
+   {
+    "P2-016": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Uz",
+  "label": "G6 south_bridge_grunt f1-16 High cand|ship",
+  "side": "G6-south_bridge_grunt-1-ship-High",
+  "mapped": 6.29,
+  "judges": [
+   6.46,
+   6.11,
+   6.29
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+   },
+   {
+    "P2-016": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Uz",
+  "label": "G6 south_bridge_grunt f1-16 High cand|ship",
+  "side": "G6-south_bridge_grunt-1-cand-High",
+  "mapped": 6.4,
+  "judges": [
+   6.55,
+   6.2,
+   6.46
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+   },
+   {
+    "P2-016": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Yx",
+  "label": "G6 warden_aldis f17-32 High cand|ship",
+  "side": "G6-warden_aldis-17-cand-High",
+  "mapped": 6.63,
+  "judges": [
+   6.72,
+   6.46,
+   6.72
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+   },
+   {
+    "P2-016": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Yx",
+  "label": "G6 warden_aldis f17-32 High cand|ship",
+  "side": "G6-warden_aldis-17-ship-High",
+  "mapped": 6.46,
+  "judges": [
+   6.55,
+   6.29,
+   6.55
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+   },
+   {
+    "P2-016": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Cv",
+  "label": "G6 warden_aldis f1-16 High cand|ship",
+  "side": "G6-warden_aldis-1-cand-High",
+  "mapped": 6.43,
+  "judges": [
+   6.63,
+   6.29,
+   6.37
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+   },
+   {
+    "P2-016": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Cv",
+  "label": "G6 warden_aldis f1-16 High cand|ship",
+  "side": "G6-warden_aldis-1-ship-High",
+  "mapped": 6.37,
+  "judges": [
+   6.46,
+   6.2,
+   6.46
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+   },
+   {
+    "P2-016": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Zj",
+  "label": "G6 south_bridge_grunt f17-32 High cand|ship",
+  "side": "G6-south_bridge_grunt-17-cand-High",
+  "mapped": 6.66,
+  "judges": [
+   6.81,
+   6.63,
+   6.55
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "FIXED"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "FIXED"
+   },
+   {
+    "P2-016": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Zj",
+  "label": "G6 south_bridge_grunt f17-32 High cand|ship",
+  "side": "G6-south_bridge_grunt-17-ship-High",
+  "mapped": 6.4,
+  "judges": [
+   6.55,
+   6.29,
+   6.37
+  ],
+  "defects": [
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PRESENT"
+   },
+   {
+    "P2-016: a struck creature shows no visible hit on its body (no flash, tint or recoil) at the moment of impact": "PARTIAL"
+   },
+   {
+    "P2-016": "PRESENT"
+   }
+  ]
+ }
+]
