@@ -2,6 +2,11 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 15:55Z r46 Crown Overlook round 3 on land11: **+0.31 mapped** (5.87 -> 6.18), 3/3 judges prefer ON (`r46/VERDICT.md`). Under the bar, so no arm.
+  - **Pale Crown:** PRESENT -> PARTIAL. A new massif `haze` block skips scene fog and carries its own storm haze.
+  - **No height:** still PRESENT 3/3 on both arms.
+  - The values stay OFF and ride along with the height change.
+  - **Height:** a deck on flat ground cannot show a drop. Next idea: a taller lookout over lower canopy, which needs the catalogue's deck-floor probe (terrain + 4 m) raised; or relocating the deck to a real slope edge.
 - 26 Oct 14:48Z **READY to land land11 df283d439ecae7f4f7020b9bbfce166af7efbc3f** (`tb/stormwood-land11`). It is origin/main d212fbed (#762) plus exactly the GPU SW18-judged m41 pieces, and nothing else:
   - `stormwood_crown_overlook.json` from m41, with the deck and massif ON;
   - the Crown Overlook `f41_survey` stand on the deck (37 deg) in `debug_teleport_spots.json` (main's newer Heartstone stand is kept);
