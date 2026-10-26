@@ -2,6 +2,20 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 12:00Z **READY to land land10: `tb/stormwood-land10` 75ed332ceaf6f65892d86e524fc6fff621cf4de0.** It is the lane 9b28ee9d-line head (origin/main 07e1b277 #760 merged) plus one config commit.
+  - **New ON flags vs main:**
+    - Ashfoot `storm_finish.seated` + `firelit`, each with `_why_on` (GPU B5 SW15 +0.51 mean).
+    - Stormheart `heart_cleft` ON with `core_column` OFF, exactly as judged in m29 (GPU B5 SW11): the Crown Heartstone survey stand at 8 m and the Fading steam `rise_fade_m` [0.45, 1.3]. Each has a `_why_on` or `_why_off`.
+  - **Stays OFF:**
+    - `storm_view` (until SW16) and `shell`;
+    - the Lantern Pools finish (SW14);
+    - path posts, Crown Overlook deck and massif, Ashfoot exterior grove, rod `stand_clear`, depth fog.
+  - **Checks on the land10 tree** (separate worktree):
+    - 103 unit tests, 0 failed (stormheart*, stormwood_surge*, cottage, interior, named_crown, debug_teleport);
+    - smoke_stormwood_ashfoot_shelter 16/0;
+    - smoke_stormheart_ascent PASS (core reached by continuous ramp walk).
+  - **Also carries, OFF:** this lane's later candidates and their assets: the Meshy ranger shelter, the Hollow Crown silhouette, the Crown Overlook deck, path posts and the Ashfoot exterior. The Crown Overlook `view_heading_deg` 37 is ON as the data fix you asked for.
+
 - 26 Oct 11:40Z **MESHY: `stormwood_hollow_crown_silhouette`** (Crown Overlook vista; the Crown massif reads at 900 m as "a flat grey slab / table shape", r40 and GPU SW8).
   - **The asset:** a distant-only landmark silhouette of the Hollow Crown.
     - A broad storm-weathered rock massif whose rim breaks into a ring of tall, jagged, slightly outward-leaning spires: the "crown". The centre is hollow, implied by the ring.
