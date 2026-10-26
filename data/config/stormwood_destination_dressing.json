@@ -24,10 +24,10 @@
       "_candidate": "r28 Fallen Giant hero (OFF until judged). GPU F41 R verdict: the Fallen Giant stand is 4.64/4.69 with 'no change', path item 3 asks for a hero landmark. Meshy stormwood_fallen_giant (tb/meshy-1024 edd21e2f3; the concept rounds gave a hollow fallen log, not an arch, per the coordinator's delivery note) replaces the installed dead tree beside the road, hollow root end toward the approach. Render-only first.",
       "model": "res://assets/props/meshy-1024/stormwood_fallen_giant/stormwood_fallen_giant.glb",
       "length_m": 55.0,
-      "at_xz": [-195.0, 4492.0],
+      "at_xz": [-180.0, 4492.0],
       "_why_at": "In the catalogue stand's view corridor (stand -240, 4463.6 heading 92): at the seat itself (-150) the grove hid it from 90 m. Its 35 m girth keeps 9.5 m from the road axis (z 4463.6).",
-      "clear_circles": [[-215.0, 4492.0, 19.0], [-195.0, 4492.0, 19.0], [-175.0, 4492.0, 19.0]],
-      "yaw_deg": 270.0,
+      "clear_circles": [[-202.0, 4485.0, 19.0], [-180.0, 4492.0, 19.0], [-158.0, 4499.0, 19.0]],
+      "yaw_deg": 250.0,
       "sink_m": 1.5
     },
     "_geometry": "One intact installed tree, uniform scale. Axial roll precedes fall rotation; pitch is selected against shipping Terrain3D mesh samples. Both root and crown must seat within the support tolerance; otherwise no candidate is mounted. No grounding rocks needed when the tree has two terrain supports.",
