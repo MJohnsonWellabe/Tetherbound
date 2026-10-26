@@ -1,0 +1,26 @@
+[
+    {
+        "label":  "MH7 band4_upper_meadows_ironwood_1 Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MH7\\sides\\MH7-band4_upper_meadows_ironwood_1-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MH7\\sides\\MH7-band4_upper_meadows_ironwood_1-ship-Medium.png",
+        "brief":  "Fixed production-camera views of the Ridgeline Watch in the Upper Meadows, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks, believable ground and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all"
+                    ]
+    },
+    {
+        "label":  "MH7 band4_upper_meadows_ironwood_1 High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MH7\\sides\\MH7-band4_upper_meadows_ironwood_1-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MH7\\sides\\MH7-band4_upper_meadows_ironwood_1-ship-High.png",
+        "brief":  "Fixed production-camera views of the Ridgeline Watch in the Upper Meadows, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent, lived-in place with readable landmarks, believable ground and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all"
+                    ]
+    }
+]

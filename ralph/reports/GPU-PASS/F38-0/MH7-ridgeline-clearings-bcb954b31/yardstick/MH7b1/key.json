@@ -1,0 +1,34 @@
+{
+ "Kz": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Pt": {
+  "anchor": false,
+  "label": "MH7 band4_upper_meadows_ironwood_1 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH7\\sides\\MH7-band4_upper_meadows_ironwood_1-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH7\\sides\\MH7-band4_upper_meadows_ironwood_1-ship-Medium.png"
+ },
+ "Sm": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Zc": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Vy": {
+  "anchor": false,
+  "label": "MH7 band4_upper_meadows_ironwood_1 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH7\\sides\\MH7-band4_upper_meadows_ironwood_1-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH7\\sides\\MH7-band4_upper_meadows_ironwood_1-ship-High.png"
+ },
+ "Ln": {
+  "anchor": true,
+  "A": "f36_0_gap:C3A",
+  "B": "f36_0_gap:C3B"
+ }
+}

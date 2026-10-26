@@ -1,0 +1,110 @@
+{
+ "sets": {
+  "Kz": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable stylised elder with a clear face, big eyes, white-hair silhouette and an olive/cream/brown outfit on the key-art palette carries it; the slightly plastic skin and the sad, droopy mouth (heavier on B's half-lidded eyes) are the only drag."
+  },
+  "Pt": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's open grassy ridge, sky and stilted watchtower give a Meadows read, but cel-shaded cartoon trees beside realistic grass, flat light, and B's trunk-wall framing that turns the night view into a blue-black mass sink it."
+  },
+  "Sm": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold Voltarach spider holds its silhouette, but the fight sinks on dark brown frames with no purple storm sky or lightning, a tiny unreadable player creature, flat magenta telegraph rings, a HUD covering about a third of each frame, and in A canopy masses blacking out i11/i13/i15/i16."
+  },
+  "Zc": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's site-specific aftermaths (freed captive at the cage, smoking doused camp, revealed emblem stones, dropped banners) carry the idea, but smeared low-res ground textures, flat noon light and blocky low-detail stronghold walls in row 1 keep it well below Palworld finish."
+  },
+  "Vy": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "These frames look the same as Pt: A's open ridge and watchtower nearly get there, but the mixed toon-tree/realistic-grass style, flat light and B's enclosing trunk wall stop it reading as the same finish."
+  },
+  "Ln": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "B's sleek white wolf with a blue flank-and-tail gradient, dark ear tips and strand fur sits near the Tanglevolt bar; A's cotton-wool fur, small head and balled-up faint end read more like a sheep or samoyed and pull the set down."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Ridgeline Watch (Pt/Vy): clear a real clearing around the watchtower and move the gameplay, detail and night cameras out of the trunk wall; move the approach camera off the chained beam that fills the frame; swap the faceted grey boulders for the textured rock family.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight (Sm): replace the flat magenta telegraph rings with grounded white-violet lightning/impact effects, lift exposure and add the purple storm sky plus rim light on both fighters, keep canopy out of the camera volume, and shrink or fade the HUD side panel during combat so the player's creature reads.",
+   "kind": "scene"
+  },
+  {
+   "change": "Unify the vegetation style: the cel-shaded cartoon tree canopies clash with the realistic grass and the naturalistic creatures; a stylised-realism tree set (key-art oaks) would lift Pt, Vy, Zc and Sm together.",
+   "kind": "new_art"
+  }
+ ]
+}

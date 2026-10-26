@@ -1,0 +1,110 @@
+{
+ "sets": {
+  "Kz": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, warm, readable elder villager with good face and eyes and an earthy green-brown palette that fits the Meadows; the sides are near-identical and the full-body view is small but holds its silhouette."
+  },
+  "Pt": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's open grassy ridge with the watchtower and cool sky is on the right road, but the evenly spaced cartoon tree wall, the approach camera jammed against a giant chain prop and B's trunk-filled gameplay/detail views sink it."
+  },
+  "Sm": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Voltarach model matches its board, but the fight is a dim brown murk with no purple storm sky or lightning, flat magenta telegraph rings, a barely visible player creature and a HUD covering much of the frame; A also has foliage filling the camera."
+  },
+  "Zc": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's afters (banner gone, freed captive, smoke plume) read as wins, but smeared low-resolution ground textures, a tiled flat stone wall at site 1 and B keeping the enemy banner standing in three afters keep it short of shipping finish."
+  },
+  "Vy": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same frames as Pt: A's open ridge with the watchtower reads as a place, but the uniform tree wall, the camera against the chain prop in the approach view and B's trunk-enclosed views sink it."
+  },
+  "Ln": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The naturalistic white wolf fur with blue accents sits near the owner's Tanglevolt in-game bar and stands larger than the trainer, though A's faint end collapses into an unreadable white blob and B's faint mid floats above its shadow."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight: replace the flat magenta telegraph rings and slabs with real-object telegraphs (lightning, cracked ground), keep foliage and trunks off the camera, add the purple storm sky and white-violet rim light so both fighters separate from the ground, and slim the HUD over the action.",
+   "kind": "scene"
+  },
+  {
+   "change": "Ridgeline Watch: clear a readable clearing around the watchtower in every production camera, break the evenly spaced tree wall into groves and edges, and move the approach camera off the giant chain/beam prop.",
+   "kind": "scene"
+  },
+  {
+   "change": "Faction-site aftermaths: always remove the oxblood banners after the win, give each site its own aftermath (freed captive, smoke, toppled gear), and replace the smeared ground and tiled stone-wall textures with sharper materials.",
+   "kind": "scene"
+  }
+ ]
+}

@@ -1,0 +1,110 @@
+{
+ "sets": {
+  "Kz": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable elder villager with clear eyes, a white-hair silhouette and an earthy green/brown outfit that fits the Meadows palette carried it; the face is slightly softer and more cartoon than the key art's figures, and the two sides look the same."
+  },
+  "Pt": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's open hilltop with the watchtower and a blue sky helps, but the flat grade, the repeated tree-line wall, no atmospheric depth and the camera jammed against the gate beam keep it short of Palworld/Valheim finish; B is sunk by the trunk wall."
+  },
+  "Sm": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spider boss reads, but flat magenta ground rings, a muddy dark-brown grade with no purple storm sky or lightning, a heavy HUD and an unreadable player creature sink it; A also loses whole frames to canopy and foliage."
+  },
+  "Zc": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's site-specific aftermaths (enemy banners struck, a freed captive, revealed waystones, smoke) carry the story, but smeared low-res ground, a flat blotchy stone wall at site 1 and plain open-field lighting fall short of Palworld finish."
+  },
+  "Vy": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same frames as Pt: A's open ridge and readable tower help, but the flat grade, the uniform tree-line wall and the gate beam filling the approach frame sink it; B is a dark trunk wall."
+  },
+  "Ln": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A large, clean white wolf silhouette that stands well over the trainer with believable fur and an ice-blue accent carried it; A's upright faint-end pose and B's flatter, patchy fur hold it below the style bar."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Pull the Ridgeline Watch cameras out of the trunk wall and off the gate beam: thin the trees into a grove edge, frame the tower against the open ridge and cool blue distance, and add aerial-perspective fog and a warmer sun grade.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the flat magenta telegraph rings/triangles in the Stormwood fight with real-object tells (crackling white-violet lightning, ground cracks, kicked-up stones), keep the canopy and trunks out of the fight camera, and apply the purple storm-sky grade so both fighters separate from the ground.",
+   "kind": "scene"
+  },
+  {
+   "change": "Raise ground and wall texture resolution and authoring in the Meadows aftermath sites (smeared grass and dirt, blotchy stone wall) and always strike the enemy banner in the after frame so every site reads as a won aftermath.",
+   "kind": "scene"
+  }
+ ]
+}

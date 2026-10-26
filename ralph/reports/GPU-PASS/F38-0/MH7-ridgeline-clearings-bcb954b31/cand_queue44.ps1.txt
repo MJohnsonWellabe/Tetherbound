@@ -1,0 +1,29 @@
+# Queue 44: MH7 Meadows Ridgeline Watch authored clearings on tb/meadows-land18 bcb954b31 (on main f876b1749), coordinator 26 Oct.
+# A/B is meadows_hero_pieces.json clearings.enabled on vs off; both arms --f38-baseline. Moved out of queue 31 (already parsed when MH7
+# was added); called from the top of queue 22, so it runs after the Meadows block and before hit-flash. out\MH7.done marks a finished run.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $main = "D:\tb-gpu-pass"; $crA = "D:\tb-gpu-wt-crA"; $tide = "D:\tb-gpu-wt-tide"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "45"
+$PY = "C:\Users\mattj\AppData\Local\Programs\Python\Python312\python.exe"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+function MoveOut($proj, $rel, $dest) { $abs = Join-Path $proj ($rel -replace '/', '\'); if (Test-Path $abs) { New-Item -ItemType Directory -Force "$dest\frames" | Out-Null; Move-Item "$abs\*" "$dest\frames\" -Force; cmd /c "rmdir /s /q `"$abs`""; "  moved $((Get-ChildItem "$dest\frames" -Recurse -Filter *.png).Count) png -> $dest" } else { "  NO OUTPUT at $rel" } }
+if (Test-Path "$out\MH7.done") { "MH7 already captured; skipping"; return }
+Gate "MH7"
+$mh7 = "bcb954b315293a4e8afdfb8fa3d225c86fcb1ba8"
+"== MH7: Meadows Ridgeline Watch clearings, tb/meadows-land18 bcb954b31, clearings off vs on"
+CheckoutCrA $mh7; Import $crA "crA-MH7"
+foreach ($arm in "off", "on") {
+    & $PY D:\tb-gpu-runs\tools\meadows_flags7.py $crA $arm
+    if ($LASTEXITCODE -ne 0) { "FLAG SET FAILED for MH7 $arm; stopping queue"; return }
+    foreach ($pr in "Medium", "High") {
+        Gate "MH7 $arm $pr"
+        $rel = "shots/gpu/mh7-$arm-$pr"; $a = Join-Path $crA ($rel -replace '/', '\'); if (Test-Path $a) { cmd /c "rmdir /s /q `"$a`"" }
+        if (Test-Path "$out\MH7-$arm-$pr") { Remove-Item "$out\MH7-$arm-$pr" -Recurse -Force }
+        & $run -Preset $pr -Script "res://tools/capture_f38_matrix.gd" -OutDir "$out\MH7-$arm-$pr" -Resolution "1920x1080" -ProjectPath $crA -UserArgs @("--seed=2042", "--f38-preset=$pr", "--f38-baseline", "--times=day,night", "--subset=band4_upper_meadows_ironwood_1", "--output=res://$rel")
+        MoveOut $crA $rel "$out\MH7-$arm-$pr"
+    }
+}
+& $PY D:\tb-gpu-runs\tools\meadows_flags7.py $crA off
+New-Item -ItemType File -Force "$out\MH7.done" | Out-Null
+"MH7 done"
+"queue44 done"

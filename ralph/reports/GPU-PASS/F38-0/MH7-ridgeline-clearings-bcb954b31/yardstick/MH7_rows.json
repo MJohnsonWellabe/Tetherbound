@@ -1,0 +1,130 @@
+[
+ {
+  "batch": 1,
+  "code": "Pt",
+  "label": "MH7 band4_upper_meadows_ironwood_1 Medium cand|ship",
+  "side": "MH7-band4_upper_meadows_ironwood_1-cand-Medium",
+  "mapped": 6.4,
+  "judges": [
+   6.62,
+   6.28,
+   6.28
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Pt",
+  "label": "MH7 band4_upper_meadows_ironwood_1 Medium cand|ship",
+  "side": "MH7-band4_upper_meadows_ironwood_1-ship-Medium",
+  "mapped": 4.76,
+  "judges": [
+   4.93,
+   4.76,
+   4.59
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Vy",
+  "label": "MH7 band4_upper_meadows_ironwood_1 High cand|ship",
+  "side": "MH7-band4_upper_meadows_ironwood_1-cand-High",
+  "mapped": 6.4,
+  "judges": [
+   6.62,
+   6.28,
+   6.28
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Vy",
+  "label": "MH7 band4_upper_meadows_ironwood_1 High cand|ship",
+  "side": "MH7-band4_upper_meadows_ironwood_1-ship-High",
+  "mapped": 4.76,
+  "judges": [
+   4.93,
+   4.76,
+   4.59
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "the gameplay and detail views stand inside a dark wall of tree trunks, so the Ridgeline Watch reads as no place at all": "PRESENT"
+   }
+  ]
+ }
+]

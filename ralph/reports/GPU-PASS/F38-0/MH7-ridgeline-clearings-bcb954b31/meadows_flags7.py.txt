@@ -1,0 +1,31 @@
+"""Set the MH7 Ridgeline Watch clearings flag in a checkout's data/config/meadows_hero_pieces.json (local GPU-pass helper).
+
+    python meadows_flags7.py <checkout> on|off
+
+Flips the first "enabled" value after "clearings", keeps the file's text otherwise byte-identical, then re-parses and
+verifies clearings.enabled is as asked.
+"""
+import json
+import re
+import sys
+from pathlib import Path
+
+
+def main(root, arm):
+    want = arm == "on"
+    p = Path(root) / "data" / "config" / "meadows_hero_pieces.json"
+    raw = p.read_bytes().decode("utf-8")
+    pos = raw.index('"clearings":')
+    m = re.compile(r'"enabled":\s*(true|false)').search(raw, pos)
+    raw = raw[:m.start()] + f'"enabled": {"true" if want else "false"}' + raw[m.end():]
+    node = json.loads(raw)
+    if node["clearings"]["enabled"] is not want:
+        sys.exit(f"FLAG MISMATCH clearings.enabled={node['clearings']['enabled']}")
+    p.write_bytes(raw.encode("utf-8"))
+    print(f"meadows_hero_pieces.clearings.enabled = {want}")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3 or sys.argv[2] not in ("on", "off"):
+        sys.exit(__doc__)
+    main(sys.argv[1], sys.argv[2])
