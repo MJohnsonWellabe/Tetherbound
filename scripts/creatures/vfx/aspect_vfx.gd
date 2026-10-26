@@ -85,6 +85,23 @@ const PRESETS := {
 		"paw_colour": Color(1.0, 0.86, 0.35),
 		"paw_count": 4,
 		"eye_colour": Color(0.5, 0.85, 1.0),
+		## CLOSE-OUT 26 Oct (b47 judges, 3/3: the painted bolts "sit on the
+		## fur as lines, not arcing off the body"): a few short lightning
+		## arcs that jump between nearby points of the posed body and bow
+		## out off the fur. Owner 25 Oct: lightning arcs on storm creatures.
+		"arcs": {
+			"count": 3,
+			"refresh_s": 0.16,
+			"length_m": [0.6, 1.3],
+			"bow_m": 0.38,
+			"jag_m": 0.09,
+			"segments": 8,
+			"core_width_m": 0.03,
+			"halo_width_m": 0.12,
+			"core_colour": Color(0.9, 0.96, 1.0, 0.95),
+			"halo_colour": Color(0.55, 0.78, 1.0, 0.3),
+			"min_height_frac": 0.55,
+		},
 	},
 	"riftfrill": {
 		"primary_colour": Color(0.68, 0.5, 1.0),
@@ -124,6 +141,14 @@ var _mesh: ImmediateMesh = null
 var _instance: MeshInstance3D = null
 var _eye_mesh: ImmediateMesh = null
 var _eye_instance: MeshInstance3D = null
+## Arcs (`arcs` preset block): the posed body's surface samples, refreshed
+## with the arcs themselves every `refresh_s`, and the current arc polylines.
+const POSED_BOUNDS := preload("res://scripts/vfx/astra_whole_bounds_r4.gd")
+const ARC_SAMPLE_STRIDE := 24
+var _bounds: RefCounted = null
+var _arc_paths: Array = []
+var _arc_clock := INF
+var _rng := RandomNumberGenerator.new()
 
 
 ## `radius`/`height` are the creature's own gameplay body size (same PW2
@@ -224,6 +249,7 @@ func _physics_process(delta: float) -> void:
 	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 	_draw_primary(right, up)
 	_draw_paws(right, up)
+	_draw_arcs(delta, camera)
 	_mesh.surface_end()
 
 	# Eyes and tusks share the depth-test-disabled mesh -- see `_ready()`'s
@@ -283,6 +309,118 @@ func _draw_primary(right: Vector3, up: Vector3) -> void:
 		var size: float = _radius * size_scale * (0.6 + 0.4 * fade)
 		var draw_colour := Color(colour.r, colour.g, colour.b, fade * 0.75)
 		_disc(_mesh, centre, right * size, up * size, draw_colour)
+
+
+func _draw_arcs(delta: float, camera: Camera3D) -> void:
+	var spec: Dictionary = _preset.get("arcs", {})
+	if spec.is_empty():
+		return
+	# Far creatures (presentation_lod.json mote_vfx far_m) show no arcs and
+	# pay nothing for them; up close a refresh skins a vertex subset (~3 ms
+	# on the CPU stage).
+	var far := float(PRESENTATION_LOD.block("mote_vfx").get("far_m", 50.0))
+	if camera.global_position.distance_to(global_position) > far:
+		_arc_paths = []
+		return
+	_arc_clock += delta
+	if _arc_clock >= float(spec.get("refresh_s", 0.16)):
+		_arc_clock = 0.0
+		_arc_paths = _new_arcs(spec, to_local(camera.global_position))
+	var eye := to_local(camera.global_position)
+	for path: PackedVector3Array in _arc_paths:
+		_ribbon(path, eye, float(spec.get("halo_width_m", 0.05)), spec.get("halo_colour", Color(0.55, 0.78, 1.0, 0.3)))
+		_ribbon(path, eye, float(spec.get("core_width_m", 0.012)), spec.get("core_colour", Color(0.9, 0.96, 1.0, 0.95)))
+
+
+## Short jagged arcs between two nearby surface points of the CURRENT pose,
+## bowed outward from the body's centre so they stand off the fur.
+func _new_arcs(spec: Dictionary, eye: Vector3) -> Array:
+	var body := get_parent() as Node3D
+	if body == null:
+		return []
+	if _bounds == null:
+		_bounds = POSED_BOUNDS.new()
+		if not bool(_bounds.call("bind", body)):
+			return []
+		# Skin only every ARC_SAMPLE_STRIDE-th vertex: arcs need surface
+		# points, not an exact box, and the whole-body skin is tens of
+		# milliseconds in GDScript (CLOSE-OUT 26 Oct timing).
+		for surface: Dictionary in _bounds.get("_surfaces"):
+			var count: int = (surface.vertices as PackedVector3Array).size()
+			var subset := PackedInt32Array()
+			for v in range(0, count, ARC_SAMPLE_STRIDE):
+				subset.append(v)
+			surface.selected = subset
+	for skeleton: Node in body.find_children("*", "Skeleton3D", true, false):
+		(skeleton as Skeleton3D).force_update_all_bone_transforms()
+	var samples: PackedVector3Array = _bounds.call("anchors")
+	var box: AABB = _bounds.call("measure")
+	if samples.size() < 8 or box.size == Vector3.ZERO:
+		return []
+	var centre := box.get_center()
+	var floor_y := box.position.y + box.size.y * float(spec.get("min_height_frac", 0.35))
+	# Only the flank facing the camera: an arc on the far side is hidden by
+	# the body it bows away from.
+	var toward := Vector3(eye.x - centre.x, 0.0, eye.z - centre.z).normalized()
+	var facing := PackedVector3Array()
+	for point in samples:
+		if point.y >= floor_y and Vector3(point.x - centre.x, 0.0, point.z - centre.z).dot(toward) > 0.0:
+			facing.append(point)
+	samples = facing
+	if samples.size() < 8:
+		return []
+	var lengths: Array = spec.get("length_m", [0.35, 0.8])
+	var paths: Array = []
+	for _i in int(spec.get("count", 3)):
+		var a := samples[_rng.randi_range(0, samples.size() - 1)]
+		if a.y < floor_y:
+			continue
+		var want := _rng.randf_range(float(lengths[0]), float(lengths[1]))
+		var b := a
+		for _try in 12:
+			var c := samples[_rng.randi_range(0, samples.size() - 1)]
+			if c.y >= floor_y and absf(a.distance_to(c) - want) < want * 0.35:
+				b = c
+				break
+		if b == a:
+			continue
+		var segments := maxi(int(spec.get("segments", 7)), 2)
+		var mid := (a + b) * 0.5
+		var out := Vector3(mid.x - centre.x, maxf(mid.y - centre.y, 0.0) + 0.2, mid.z - centre.z).normalized()
+		var path := PackedVector3Array()
+		for s in segments + 1:
+			var f := float(s) / float(segments)
+			var p := a.lerp(b, f) + out * float(spec.get("bow_m", 0.12)) * sin(f * PI)
+			if s > 0 and s < segments:
+				p += Vector3(_rng.randf_range(-1, 1), _rng.randf_range(-1, 1), _rng.randf_range(-1, 1)) \
+					* float(spec.get("jag_m", 0.05))
+			path.append(p)
+		paths.append(path)
+	return paths
+
+
+## A camera-facing ribbon along a polyline, full colour along its spine and
+## transparent at both edges.
+func _ribbon(path: PackedVector3Array, eye: Vector3, width: float, colour: Color) -> void:
+	var edge := Color(colour.r, colour.g, colour.b, 0.0)
+	for i in path.size() - 1:
+		var a := path[i]
+		var b := path[i + 1]
+		var side := (b - a).cross(eye - (a + b) * 0.5).normalized() * width * 0.5
+		for quad in [[a, b, side], [a, b, -side]]:
+			var s: Vector3 = quad[2]
+			_mesh.surface_set_color(colour)
+			_mesh.surface_add_vertex(a)
+			_mesh.surface_set_color(edge)
+			_mesh.surface_add_vertex(a + s)
+			_mesh.surface_set_color(colour)
+			_mesh.surface_add_vertex(b)
+			_mesh.surface_set_color(colour)
+			_mesh.surface_add_vertex(b)
+			_mesh.surface_set_color(edge)
+			_mesh.surface_add_vertex(a + s)
+			_mesh.surface_set_color(edge)
+			_mesh.surface_add_vertex(b + s)
 
 
 func _draw_paws(right: Vector3, up: Vector3) -> void:
