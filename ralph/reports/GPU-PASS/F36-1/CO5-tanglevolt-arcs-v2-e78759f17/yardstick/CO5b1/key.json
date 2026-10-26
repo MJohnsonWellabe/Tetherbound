@@ -1,0 +1,34 @@
+{
+ "Jg": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Cg": {
+  "anchor": false,
+  "label": "CO5 tanglevolt High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO5\\sides\\CO5-tanglevolt-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO5\\sides\\CO5-tanglevolt-cand-High.png"
+ },
+ "Dz": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ },
+ "Qp": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Gd": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Jx": {
+  "anchor": false,
+  "label": "CO5 tanglevolt Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO5\\sides\\CO5-tanglevolt-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO5\\sides\\CO5-tanglevolt-cand-Medium.png"
+ }
+}

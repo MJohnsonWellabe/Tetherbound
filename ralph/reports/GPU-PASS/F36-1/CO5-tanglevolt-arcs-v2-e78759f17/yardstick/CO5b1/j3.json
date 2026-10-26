@@ -1,0 +1,102 @@
+{
+ "sets": {
+  "Jg": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry smeared ground textures, sparse evenly placed props, a uniform grass carpet and flat noon light with no fog or shafts sink it; B's specific aftermaths (torn banners, opened cage with freed villager, smoking collapsed tent) are the only thing that carries it."
+  },
+  "Cg": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The wolf model and silhouette are close to the style bar, but the arcs are not the crisp, glowing lightning a shipping game would show, and the faint mid pose leaves a gap between the body and its shadow."
+  },
+  "Dz": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormcapra fleece and horns match the style bar while standing, but the faint poses sink it: in A they collapse into a faceless fleece lump, and in B the body floats with a stretched, mottled mesh."
+  },
+  "Qp": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A reads as a smooth clay toy, which is off the naturalistic style bar; B has real fur, but its noisy yellow blotches and a floating faint mid hold it back, and neither boar stands clearly taller than the trainer."
+  },
+  "Gd": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The appealing, clearly lit stylised elder face, with readable eyes and a palette that fits the meadows, matches a shipping creature-collector's NPC finish; the stiff full-body pose is the weak point."
+  },
+  "Jx": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This is the same wolf as Cg in frames that look identical: the silhouette is strong, but the arcs are soft or blotchy rather than tight white-violet lightning, and the faint mid floats."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-author the storm-arc material on the storm creatures as thin, bright white-violet emissive lines with a tight bloom over the dark fur, replacing dull soft streaks (A) or broad white blotches (B)",
+   "kind": "scene"
+  },
+  {
+   "change": "Ground every faint and hit-react pose (snap the root to the stage so the body meets its shadow, and keep the face visible in faint end), and make the hit react visibly different from standing",
+   "kind": "scene"
+  },
+  {
+   "change": "Raise the Meadows aftermath scenes: remove or tear down the enemy banners after the win, replace the identical emblem stone at every site with site-specific aftermath props, and fix the smeared ground textures with groves, edges and a warmer grade with blue distance haze",
+   "kind": "scene"
+  }
+ ]
+}

@@ -1,0 +1,102 @@
+{
+ "sets": {
+  "Jg": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared low-res ground and stretched rock-wall textures, sparse lollipop trees on a flat field and no fog, shafts or time-of-day grade sink it well below Palworld density and Valheim-class atmosphere; B's clearer aftermath storytelling does not lift the finish."
+  },
+  "Cg": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The wolf's naturalistic anatomy is on the owner bar, but dull (A) or blotchy white (B) arcs and a floating, broken-looking faint keep it short of Palworld-class creature finish."
+  },
+  "Dz": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's fleece, horns and rearing hit react come close to the owner's Stormcapra bar, but faint frames hide the face (A) or float and twist the body belly-up (B), so it falls short of shipping finish."
+  },
+  "Qp": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A is a smooth clay-toy boar off the naturalistic bar; B has on-style bristly fur but noisy yellow back patches and a faint that clearly hovers above its shadow."
+  },
+  "Gd": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder with readable eyes, clean hair and beard silhouette and an olive/brown Meadows palette sits at Palworld-class character finish, although the neutral stage cannot show any lighting atmosphere."
+  },
+  "Jx": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "These frames are the same as Cg: a good naturalistic wolf base let down by soft purple (A) or broad white marbled (B) arcs and a faint-mid body hovering over its shadow."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Ground every faint and faint-end pose: snap the body and limbs to the stage so they touch their shadow (Cg/Jx faint mid, Dz B faint mid/end, Qp B faint mid/end), and keep the face visible in Dz A's faint.",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-author storm-arc materials on the storm creatures as thin emissive white-violet lines with tight bloom over dark fur, matching the owner's Tanglevolt/Stormursa bar, instead of soft purple smears (A) or broad white marbling (B).",
+   "kind": "scene"
+  },
+  {
+   "change": "Lift the Meadows aftermath sites: sharper grass and ground textures, retile the stretched stronghold wall, add grove/edge density and distance fog, and give each site its own aftermath beat (banner felled, cage open, smoke) instead of repeating the same emblem stone. Replace Qp A's clay-toy boar with a naturalistic fur mesh.",
+   "kind": "scene"
+  }
+ ]
+}

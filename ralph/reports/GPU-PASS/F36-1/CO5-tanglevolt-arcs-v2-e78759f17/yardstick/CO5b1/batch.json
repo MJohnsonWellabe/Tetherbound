@@ -1,0 +1,66 @@
+{
+ "anchors": {
+  "f04_6_r22:control": [
+   5.2,
+   5.0,
+   4.0
+  ],
+  "f04_6_r22:r22": [
+   6.1,
+   5.7,
+   5.2
+  ],
+  "f36_1_gpu:stormcapra_candidate": [
+   6.9,
+   6.6,
+   6.3
+  ],
+  "f36_1_gpu:stormcapra_shipping": [
+   6.6,
+   5.4,
+   5.2
+  ],
+  "f36_0_gap:C1B": [
+   5.6,
+   5.5,
+   4.8
+  ],
+  "f36_0_gap:C1A": [
+   6.7,
+   5.9,
+   5.6
+  ],
+  "f36_0_npc:C1B": [
+   7.0,
+   7.2,
+   6.8
+  ],
+  "f36_0_npc:C1A": [
+   7.0,
+   7.3,
+   6.8
+  ]
+ },
+ "candidates": {
+  "CO5 tanglevolt High cand|ship | CO5-tanglevolt-ship-High": [
+   6.5,
+   6.2,
+   6.4
+  ],
+  "CO5 tanglevolt High cand|ship | CO5-tanglevolt-cand-High": [
+   6.6,
+   5.6,
+   5.9
+  ],
+  "CO5 tanglevolt Medium cand|ship | CO5-tanglevolt-ship-Medium": [
+   6.5,
+   6.2,
+   6.4
+  ],
+  "CO5 tanglevolt Medium cand|ship | CO5-tanglevolt-cand-Medium": [
+   6.6,
+   5.6,
+   5.9
+  ]
+ }
+}

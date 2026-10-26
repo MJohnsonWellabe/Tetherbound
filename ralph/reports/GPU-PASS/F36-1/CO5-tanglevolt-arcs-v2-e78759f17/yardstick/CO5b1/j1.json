@@ -1,0 +1,102 @@
+{
+ "sets": {
+  "Jg": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths (cage opened with a freed figure, banner torn down, tent replaced by smoke) are specific to each site, but on both sides the blurry ground, sparse even grass, flat noon light and tiled cave wall fall well short of Palworld density and Valheim-class atmosphere."
+  },
+  "Cg": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The wolf's silhouette and scale hold up, but A's dull, smeared arcs and B's broad white blotches, plus a faint-mid body hanging over its shadow, are below Palworld's crisp creature finish."
+  },
+  "Dz": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The fleece, horn and gem read is close to the owner's Stormcapra bar and would sit beside Palworld creatures; it is let down only by faint poses that hide the face (A) or lift the body (B faint mid)."
+  },
+  "Qp": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's glossy terracotta-clay hide with green moss decals looks like a ceramic toy, and B's naturalistic fur is let down by noisy gold leopard-like blotches and a faint-mid body floating over its shadow."
+  },
+  "Gd": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable elder with a clean silhouette and a palette (moss vest, sage scarf, brown leather) that fits the Meadows. His Pixar-like face is more cartoon than the naturalistic creatures but at a comparable finish."
+  },
+  "Jx": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same read as Cg: a strong wolf silhouette undermined by arcs that are either smeared violet (A) or broad white marbling (B), and by a faint-mid body lifted off the stage."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild the storm-arc material on the wolf (Cg/Jx) as thin, high-value white-violet emissive lines with a tight bloom over the dark fur, matching the owner's Tanglevolt in game, instead of smeared violet (A) or broad white marbling (B).",
+   "kind": "scene"
+  },
+  {
+   "change": "Ground every hurt and faint pose (Cg/Jx/Dz B/Qp B faint mid) so the body touches its contact shadow, and keep the head and face visible in faint end (Dz A).",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows trainer sites (Jg): in every after frame, take down Team Tether banners and leave one site-specific aftermath beat, as side B does. Then lift the world with sharper ground textures, clustered grass and flower edges, and a warmer time-of-day grade with blue distance haze.",
+   "kind": "scene"
+  }
+ ]
+}
