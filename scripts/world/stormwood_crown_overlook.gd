@@ -194,5 +194,17 @@ static func _massif(world: Node3D, cfg: Dictionary) -> void:
 				stormed.rim_enabled = true
 				stormed.rim = float(cfg.get("rim", 0.0))
 				stormed.rim_tint = float(cfg.get("rim_tint", 0.3))
+			# r46: at 900 m the scene fog washed the stone to the pale horizon
+			# colour whatever its tint. With `haze` the massif skips scene fog
+			# and carries its own fixed storm haze: the lit stone is scaled
+			# down and the haze colour is added, so it sits darker in the storm.
+			var haze: Dictionary = cfg.get("haze", {})
+			if not haze.is_empty():
+				var amount := clampf(float(haze.get("amount", 0.4)), 0.0, 1.0)
+				stormed.disable_fog = true
+				stormed.albedo_color = stormed.albedo_color * (1.0 - amount)
+				stormed.emission_enabled = true
+				stormed.emission = Color(str(haze.get("colour", "#4e4868")))
+				stormed.emission_energy_multiplier = amount
 			visual.set_surface_override_material(surface, stormed)
 	world.add_child(holder)

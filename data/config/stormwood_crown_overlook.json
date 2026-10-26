@@ -35,6 +35,8 @@
     "rim": 0.7,
     "rim_tint": 0.25,
     "_why_rim": "GPU SW18 path item 1: a darker Crown with a lit rim on the spire edges.",
+    "haze": {"colour": "#4a4566", "amount": 0.45},
+    "_why_haze": "r46 first CPU look: scene fog at 900 m washed the tinted stone to the pale horizon colour (tint and rim barely visible). The massif skips scene fog and carries a fixed darker storm haze.",
     "fade_m": 40.0
   }
 }
