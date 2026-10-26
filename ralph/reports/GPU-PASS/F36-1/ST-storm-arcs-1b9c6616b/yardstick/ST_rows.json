@@ -1,0 +1,382 @@
+[
+ {
+  "batch": 1,
+  "code": "Tk",
+  "label": "ST staticub Medium cand|ship",
+  "side": "ST-staticub-cand-Medium",
+  "mapped": 7.34,
+  "judges": [
+   7.2,
+   7.09,
+   7.73
+  ],
+  "defects": [
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Tk",
+  "label": "ST staticub Medium cand|ship",
+  "side": "ST-staticub-ship-Medium",
+  "mapped": 6.77,
+  "judges": [
+   6.66,
+   6.66,
+   6.98
+  ],
+  "defects": [
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ie",
+  "label": "ST thundertunnel Medium cand|ship",
+  "side": "ST-thundertunnel-cand-Medium",
+  "mapped": 6.2,
+  "judges": [
+   5.92,
+   6.24,
+   6.45
+  ],
+  "defects": [
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ie",
+  "label": "ST thundertunnel Medium cand|ship",
+  "side": "ST-thundertunnel-ship-Medium",
+  "mapped": 6.06,
+  "judges": [
+   5.81,
+   6.45,
+   5.92
+  ],
+  "defects": [
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "No",
+  "label": "ST tanglevolt High cand|ship",
+  "side": "ST-tanglevolt-cand-High",
+  "mapped": 7.3,
+  "judges": [
+   7.09,
+   7.52,
+   7.3
+  ],
+  "defects": [
+   {
+    "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "FIXED",
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+   },
+   {
+    "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "FIXED",
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+   },
+   {
+    "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "FIXED",
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "No",
+  "label": "ST tanglevolt High cand|ship",
+  "side": "ST-tanglevolt-ship-High",
+  "mapped": 6.2,
+  "judges": [
+   6.13,
+   6.24,
+   6.24
+  ],
+  "defects": [
+   {
+    "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "PRESENT",
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "PRESENT",
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "PRESENT",
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ws",
+  "label": "ST staticub High cand|ship",
+  "side": "ST-staticub-ship-High",
+  "mapped": 7.37,
+  "judges": [
+   7.3,
+   7.09,
+   7.73
+  ],
+  "defects": [
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ws",
+  "label": "ST staticub High cand|ship",
+  "side": "ST-staticub-cand-High",
+  "mapped": 6.95,
+  "judges": [
+   6.66,
+   6.98,
+   7.2
+  ],
+  "defects": [
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Gg",
+  "label": "ST voltarach Medium cand|ship",
+  "side": "ST-voltarach-ship-Medium",
+  "mapped": 5.32,
+  "judges": [
+   5.32,
+   5.9,
+   4.73
+  ],
+  "defects": [
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Gg",
+  "label": "ST voltarach Medium cand|ship",
+  "side": "ST-voltarach-cand-Medium",
+  "mapped": 5.32,
+  "judges": [
+   5.32,
+   5.9,
+   4.73
+  ],
+  "defects": [
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ql",
+  "label": "ST thundertunnel High cand|ship",
+  "side": "ST-thundertunnel-ship-High",
+  "mapped": 6.29,
+  "judges": [
+   6.49,
+   6.26,
+   6.14
+  ],
+  "defects": [
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ql",
+  "label": "ST thundertunnel High cand|ship",
+  "side": "ST-thundertunnel-cand-High",
+  "mapped": 6.53,
+  "judges": [
+   6.49,
+   6.61,
+   6.49
+  ],
+  "defects": [
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Wu",
+  "label": "ST tanglevolt Medium cand|ship",
+  "side": "ST-tanglevolt-ship-Medium",
+  "mapped": 5.98,
+  "judges": [
+   5.9,
+   6.14,
+   5.9
+  ],
+  "defects": [
+   {
+    "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "PRESENT",
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "PRESENT",
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "PRESENT",
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Wu",
+  "label": "ST tanglevolt Medium cand|ship",
+  "side": "ST-tanglevolt-cand-Medium",
+  "mapped": 7.66,
+  "judges": [
+   8.01,
+   7.43,
+   7.55
+  ],
+  "defects": [
+   {
+    "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "FIXED",
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+   },
+   {
+    "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "FIXED",
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+   },
+   {
+    "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "FIXED",
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Hv",
+  "label": "ST voltarach High cand|ship",
+  "side": "ST-voltarach-cand-High",
+  "mapped": 5.32,
+  "judges": [
+   5.32,
+   5.9,
+   4.73
+  ],
+  "defects": [
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Hv",
+  "label": "ST voltarach High cand|ship",
+  "side": "ST-voltarach-ship-High",
+  "mapped": 5.32,
+  "judges": [
+   5.32,
+   5.9,
+   4.73
+  ],
+  "defects": [
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   },
+   {
+    "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+   }
+  ]
+ }
+]

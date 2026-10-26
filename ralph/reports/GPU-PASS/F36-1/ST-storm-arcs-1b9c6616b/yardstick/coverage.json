@@ -1,0 +1,42 @@
+[
+    {
+        "species":  "tanglevolt",
+        "preset":  "Medium",
+        "complete":  true
+    },
+    {
+        "species":  "staticub",
+        "preset":  "Medium",
+        "complete":  true
+    },
+    {
+        "species":  "thundertunnel",
+        "preset":  "Medium",
+        "complete":  true
+    },
+    {
+        "species":  "voltarach",
+        "preset":  "Medium",
+        "complete":  true
+    },
+    {
+        "species":  "tanglevolt",
+        "preset":  "High",
+        "complete":  true
+    },
+    {
+        "species":  "staticub",
+        "preset":  "High",
+        "complete":  true
+    },
+    {
+        "species":  "thundertunnel",
+        "preset":  "High",
+        "complete":  true
+    },
+    {
+        "species":  "voltarach",
+        "preset":  "High",
+        "complete":  true
+    }
+]

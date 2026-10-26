@@ -1,0 +1,142 @@
+{
+ "sets": {
+  "Gg": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A neutral stage gives no world light, and the creature is a gold-and-black mottled mass, not the Voltarach on the board: a dark bronze spider with thin gold arcs and blue eyes."
+  },
+  "Ql": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fur mass and pink snout are on-style, but there are no arcs that pop, it stands about the trainer's height, and the neutral stage gives no Valheim-class light."
+  },
+  "Wu": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "PRESENT",
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "FIXED",
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's dark navy wolf matches the owner's in-game Tanglevolt and would sit beside Palworld creatures, but on a bare stage with no atmosphere it can't read as the same finish."
+  },
+  "Hv": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same as Gg: the gold floods the body as blotches, the face and eyes are lost at size, and the hit react can't be told from standing."
+  },
+  "Le": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A warm, appealing grandpa in a Meadows palette, but the large-eyed Pixar-toon face is a step more cartoon than the key art's stylised realism, and it's shown on a black void."
+  },
+  "Ns": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, cap and stone footing read as built, but the flat painted mountain backdrop, the faceted grey boulder and the thin, even grass keep the world short of Palworld density and Valheim light."
+  },
+  "Zr": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The deep blue-grey translucent panel fits the UI direction, but the world behind it is a murky dark storm scene with no light shafts or grade, and there are no teal or gold accents."
+  },
+  "Xh": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's saturated blue newt with white spots and fins is close to the board's water creatures, but A's toon flat shading and grey faint material, plus B's twisted faint end, keep it off the Palworld creature finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild the storm-creature emissive (Voltarach Gg/Hv, Thundertunnel Ql, Tanglevolt Wu): keep the base coat dark and confine emission to thin, high-intensity branching arcs with bloom, so the arcs pop against the coat instead of flooding it as blotches or sitting flat as dull lines.",
+   "kind": "scene"
+  },
+  {
+   "change": "Bring the remaining creatures (Voltarach, Thundertunnel, Xh newt) to the owner style bar: readable face and eyes at small size, consistent naturalistic materials (no toon shader, no material swap in faint), height clearly above the 1.80 m trainer, and a hit react that visibly differs from standing.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Ship side A's craft panel layout (large unclipped recipe text, prominent action hints) with controller-first glyphs, teal selection and gold accents; build the homestead wall from A's timber frame, cap and stone footing rather than B's flat pale panel.",
+   "kind": "scene"
+  }
+ ]
+}

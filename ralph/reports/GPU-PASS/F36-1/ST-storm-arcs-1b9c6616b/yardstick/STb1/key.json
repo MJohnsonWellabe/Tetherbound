@@ -1,0 +1,46 @@
+{
+ "Wj": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Am": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Tk": {
+  "anchor": false,
+  "label": "ST staticub Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-staticub-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-staticub-ship-Medium.png"
+ },
+ "Cy": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ie": {
+  "anchor": false,
+  "label": "ST thundertunnel Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-thundertunnel-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-thundertunnel-ship-Medium.png"
+ },
+ "No": {
+  "anchor": false,
+  "label": "ST tanglevolt High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-tanglevolt-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-tanglevolt-ship-High.png"
+ },
+ "Kt": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Ws": {
+  "anchor": false,
+  "label": "ST staticub High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-staticub-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-staticub-cand-High.png"
+ }
+}

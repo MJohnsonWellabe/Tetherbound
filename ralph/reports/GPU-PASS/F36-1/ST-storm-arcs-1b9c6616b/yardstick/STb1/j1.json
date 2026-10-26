@@ -1,0 +1,142 @@
+{
+ "sets": {
+  "Wj": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A functional but bare dark panel with no teal interaction or gold progression accents and (on B) tiny clipped text sits well below Palworld's HUD hierarchy and finish."
+  },
+  "Am": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The grass and sky are serviceable, but a lone free-standing wall piece beside a flat-shaded low-poly boulder against a painted mountain backdrop reads as a prototype rather than a lived-in Palworld-class base."
+  },
+  "Tk": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The naturalistic bear model and fur sit at the owner's Stormursa bar, though the storm arcs are the weak link (purple patches on A, near-invisible on B)."
+  },
+  "Cy": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, warm, stylised elder with readable face and eyes and a meadow-green palette fits a Palworld-class cozy cast, held back only by plain clothing material detail."
+  },
+  "Ie": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The dark spiny mole reads as a hedgehog-like lump with only faint blue streaks, missing the bright arcs and fur detail that make the Thundertunnel board and the owner bar pop."
+  },
+  "No": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "FIXED",
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "PRESENT",
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side A's dark navy wolf holds the owner's Tanglevolt bar in the standing and hit frames, but both sides' faint poses collapse into a pale belly-up slab that breaks the read."
+  },
+  "Kt": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's naturalistic fur is let down by a blotchy yellow leopard pattern and a floating faint-mid frame, and B is a smooth clay-toy pig, so neither reaches Palworld finish or the owner's naturalistic bar."
+  },
+  "Ws": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The bear model reaches the owner's Stormursa naturalism, but the arcs read as purple paint patches on A and fade to dull lines on B, so the storm identity doesn't pop."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-author the storm-arc material on the storm creatures (bear Tk/Ws, mole Ie, wolf No): thin, bright white-violet emissive arcs with a tight bloom over a darker, desaturated coat, instead of purple painted patches, faint blue streaks or a lavender wash.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build the homestead wall as a real piece: visible plank/post thickness, darker weathered wattle or plank infill instead of the pale flat panel, a capped top and a stone footing set into the ground, designed to tile into a run of wall rather than standing alone like a door.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Replace the Kt boar with a naturalistic boar at the owner bar (real bristle fur in a coherent brown palette, tusks, standing taller than the 1.80 m trainer) and ground its faint poses; drop the clay-toy B version.",
+   "kind": "new_art"
+  }
+ ]
+}

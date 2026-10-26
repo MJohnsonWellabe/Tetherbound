@@ -1,0 +1,142 @@
+{
+ "sets": {
+  "Gg": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A neutral grey stage with flat light gives no Valheim-class atmosphere, and the gold-blotched spider reads as a patterned asset, not a Palworld-finish creature with rim-lit material."
+  },
+  "Ql": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The dark mole silhouette and pink snout read cleanly, but there is no world light and the spines carry only a dim violet sheen instead of bright storm arcs."
+  },
+  "Wu": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "PRESENT",
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "FIXED",
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's dark navy wolf matches the owner bar, but the neutral stage gives no atmosphere and the belly-up faint roll breaks the finish."
+  },
+  "Hv": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The frames look the same as Gg: yellow blotches cover the black coat, with no bright arcs and no world light."
+  },
+  "Le": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable stylised elder villager whose green-and-brown palette sits in the key art's world, though he is shown on a black void with no scene light."
+  },
+  "Ns": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Meadows has flat, even light, a low-poly grey boulder and sparse grass cards, so it falls short of Palworld density and Valheim light whichever wall is placed."
+  },
+  "Zr": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-grey translucent panel fits the UI direction, but the muddy, near-black rainy world behind it has no readable light or depth."
+  },
+  "Xh": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's saturated blue finned drake is appealing and grounded, but it is shown on a bare stage, and side A's faint frames float and lose texture."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild the storm-creature materials (Gg/Hv spider, Ql mole, Wu wolf) as a dark base coat with thin, bright white-violet emissive arcs and light bloom, so the arcs pop as on the owner's Stormursa and Tanglevolt, instead of yellow blotches or dim painted streaks.",
+   "kind": "scene"
+  },
+  {
+   "change": "Ship side A's craft panel scale (large recipe and ingredient text, nothing truncated) and turn the Craft/Leave hints into controller-first glyph buttons with teal/gold accent, sized to read on a 7-inch screen. Use side A's built homestead wall (stone footing, cap, braced frame) rather than side B's pale card panel, and give the wall thicker posts and tinted infill.",
+   "kind": "scene"
+  },
+  {
+   "change": "Redo the faint clips so they stay grounded and keep their material: Xh-A floats in faint mid and turns grey/untextured in faint end, and Wu rolls belly-up through a black blob in faint mid. Raise Ql above the 1.80 m trainer.",
+   "kind": "new_art"
+  }
+ ]
+}

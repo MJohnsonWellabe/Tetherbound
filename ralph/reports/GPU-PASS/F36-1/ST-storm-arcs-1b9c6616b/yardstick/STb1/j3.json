@@ -1,0 +1,142 @@
+{
+ "sets": {
+  "Wj": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A plain teal box with keyboard-glyph hints over a murky, unlit rainy backdrop has none of Palworld's HUD polish or Valheim's mood lighting."
+  },
+  "Am": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, cap and stone footing help, but a lone flat-infill panel beside a faceted placeholder boulder under flat light reads well below Palworld base-building finish."
+  },
+  "Tk": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The naturalistic fur bear with bright violet arcs (side A) matches the owner Stormursa bar and would sit beside Palworld creatures; the neutral stage gives no atmosphere either way."
+  },
+  "Cy": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, expressive elder with clear eyes and an earthy green-brown palette carries the cozy Meadows villager read at Palworld-class finish."
+  },
+  "Ie": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A low, dark, blobby quill mound no taller than the trainer, with a face that disappears at small size, sinks the read against Palworld's hero creatures."
+  },
+  "No": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "FIXED",
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "PRESENT",
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing wolf is close to the owner bar, but the faint mid/end poses on both sides collapse into a folded, upside-down tangle that breaks the creature read."
+  },
+  "Kt": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's bristled naturalistic boar is on-style, but its faint-mid frame floats above its shadow, and B's smooth terracotta toy-pig with moss decals is off-style for the owner's naturalistic bar."
+  },
+  "Ws": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The fur bear with violet storm arcs matches the owner Stormursa bar at Palworld creature finish; B's lighter coat and softer arcs pop slightly less."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "One storm-creature material pass: darken the base coat (navy for Tanglevolt, deep brown for Stormursa, near-black for the quill mole) and drive the arcs as thin, high-intensity emissive lines with bloom, never a body-wide tint (Tk B, Ie A/B, No B, Ws B).",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix the faint animations and ground contact: Tanglevolt faint mid/end fold into an upside-down tangle on both sides, and the Kt A boar floats above its shadow in faint mid; keep faints grounded, readable lie-downs.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the homestead wall as a thick timber-frame panel with textured wattle-and-daub or plank infill that takes the Meadows light, a proud cap and a stone footing (Am), and scale the Ie and Kt creatures so each stands clearly taller than the 1.80 m trainer.",
+   "kind": "new_art"
+  }
+ ]
+}

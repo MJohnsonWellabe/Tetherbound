@@ -1,0 +1,142 @@
+{
+ "sets": {
+  "Wj": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-grey translucent panel fits the UI direction, but the hints use small keyboard-style glyphs instead of teal controller prompts, and the world behind is a murky, low-value rainy night with no light or atmosphere to carry it."
+  },
+  "Am": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, brace, cap and stone footing start to read as a build piece, but the infill is still a flat untextured beige card and the flat painted sky and pale untextured rock keep it below Palworld base-building finish."
+  },
+  "Tk": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The naturalistic fur bear carries it at Palworld creature finish, though the faint-end pose (sitting upright facing camera) and dim arcs on B weaken it."
+  },
+  "Cy": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, appealing elder villager with readable eyes, warm earthy Meadows palette and a strong silhouette; its rounder cartoon face is a step more stylised than the naturalistic creatures but still sits in the same game."
+  },
+  "Ie": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A low dark navy quilled mass whose blue streaks barely separate from the coat, with a face that is lost at small size and a height that only matches the trainer, so it lacks the high-contrast read of a Palworld creature."
+  },
+  "No": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "FIXED",
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "PRESENT",
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A's dark indigo wolf with lighter streaks matches the owner bar and carries it, while B's washed lavender coat and both sides' legs-up faint poses (an upturned black-and-white blob) sink the later frames."
+  },
+  "Kt": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's bristly tawny boar is close to on-style but floats above its detached shadow in faint mid; B's smooth terracotta clay body with moss blobs reads as a toy, far off the naturalistic style bar."
+  },
+  "Ws": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The fur bear model matches the owner's Stormursa bar, but the arcs are violet strokes rather than emissive pops and the faint end sits upright instead of collapsing."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Make storm arcs/veins a thin, high-intensity emissive (white-violet core, bloom) on a darker coat for Stormursa, the quilled creature and Tanglevolt, so they pop rather than read as painted violet strokes",
+   "kind": "scene"
+  },
+  {
+   "change": "Author grounded faint poses: bears and the boar collapse onto their side instead of sitting up facing camera, Tanglevolt lies on its side instead of flipping legs-up, and the faint-mid boar stays planted on its shadow",
+   "kind": "new_art"
+  },
+  {
+   "change": "Give the homestead wall a textured wattle/plank infill with visible thickness and value variation (keep B's frame, cap and stone footing), and keep the craft panel at A's type size with single-line costs, more visible rows and teal controller-glyph prompts",
+   "kind": "scene"
+  }
+ ]
+}

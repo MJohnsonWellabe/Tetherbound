@@ -1,0 +1,172 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.942,
+  "least_squares_slope": 1.0656,
+  "method": "linear",
+  "slope": 1.0656,
+  "intercept": 0.2707,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.457,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.133,
+   "reference": 7.35,
+   "mapped": 6.807,
+   "residual": 0.543
+  },
+  "craft:before": {
+   "measured": 4.567,
+   "reference": 4.83,
+   "mapped": 5.137,
+   "residual": -0.307
+  },
+  "p2_094_r4:X_before": {
+   "measured": 3.333,
+   "reference": 3.5,
+   "mapped": 3.823,
+   "residual": -0.323
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 5.267,
+   "reference": 6.73,
+   "mapped": 5.883,
+   "residual": 0.847
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.0,
+   "reference": 7.53,
+   "mapped": 7.73,
+   "residual": -0.2
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.967,
+   "reference": 7.47,
+   "mapped": 7.695,
+   "residual": -0.225
+  },
+  "f36_0_gap:C1A": {
+   "measured": 6.0,
+   "reference": 6.1,
+   "mapped": 6.664,
+   "residual": -0.564
+  },
+  "f36_0_gap:C1B": {
+   "measured": 4.533,
+   "reference": 5.33,
+   "mapped": 5.102,
+   "residual": 0.228
+  }
+ },
+ "candidates": {
+  "ST staticub Medium cand|ship | ST-staticub-cand-Medium": {
+   "measured_mean": 6.633,
+   "mapped_mean": 7.34,
+   "mapped_judges": [
+    7.2,
+    7.09,
+    7.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "ST staticub Medium cand|ship | ST-staticub-ship-Medium": {
+   "measured_mean": 6.1,
+   "mapped_mean": 6.77,
+   "mapped_judges": [
+    6.66,
+    6.66,
+    6.98
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "ST thundertunnel Medium cand|ship | ST-thundertunnel-cand-Medium": {
+   "measured_mean": 5.567,
+   "mapped_mean": 6.2,
+   "mapped_judges": [
+    5.92,
+    6.24,
+    6.45
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "ST thundertunnel Medium cand|ship | ST-thundertunnel-ship-Medium": {
+   "measured_mean": 5.433,
+   "mapped_mean": 6.06,
+   "mapped_judges": [
+    5.81,
+    6.45,
+    5.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "ST tanglevolt High cand|ship | ST-tanglevolt-cand-High": {
+   "measured_mean": 6.6,
+   "mapped_mean": 7.3,
+   "mapped_judges": [
+    7.09,
+    7.52,
+    7.3
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "ST tanglevolt High cand|ship | ST-tanglevolt-ship-High": {
+   "measured_mean": 5.567,
+   "mapped_mean": 6.2,
+   "mapped_judges": [
+    6.13,
+    6.24,
+    6.24
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "ST staticub High cand|ship | ST-staticub-ship-High": {
+   "measured_mean": 6.667,
+   "mapped_mean": 7.37,
+   "mapped_judges": [
+    7.3,
+    7.09,
+    7.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "ST staticub High cand|ship | ST-staticub-cand-High": {
+   "measured_mean": 6.267,
+   "mapped_mean": 6.95,
+   "mapped_judges": [
+    6.66,
+    6.98,
+    7.2
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

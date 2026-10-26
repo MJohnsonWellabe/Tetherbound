@@ -1,0 +1,33 @@
+[
+    {
+        "label":  "ST voltarach Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-voltarach-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-voltarach-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat"
+    },
+    {
+        "label":  "ST thundertunnel High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-thundertunnel-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-thundertunnel-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat"
+    },
+    {
+        "label":  "ST tanglevolt Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-tanglevolt-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-tanglevolt-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the coat reads lighter, more violet or washed out than the owner\u0027s dark navy Tanglevolt (owner creature style bar)",
+                        "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat"
+                    ]
+    },
+    {
+        "label":  "ST voltarach High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-voltarach-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-voltarach-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat"
+    }
+]

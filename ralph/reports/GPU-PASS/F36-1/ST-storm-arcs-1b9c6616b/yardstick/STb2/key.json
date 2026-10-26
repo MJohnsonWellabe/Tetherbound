@@ -1,0 +1,46 @@
+{
+ "Gg": {
+  "anchor": false,
+  "label": "ST voltarach Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-voltarach-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-voltarach-cand-Medium.png"
+ },
+ "Ql": {
+  "anchor": false,
+  "label": "ST thundertunnel High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-thundertunnel-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-thundertunnel-cand-High.png"
+ },
+ "Wu": {
+  "anchor": false,
+  "label": "ST tanglevolt Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-tanglevolt-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-tanglevolt-cand-Medium.png"
+ },
+ "Hv": {
+  "anchor": false,
+  "label": "ST voltarach High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-voltarach-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\ST\\sides\\ST-voltarach-ship-High.png"
+ },
+ "Le": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ns": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Zr": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Xh": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ }
+}

@@ -1,0 +1,142 @@
+{
+ "sets": {
+  "Gg": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The huge spider has a bold silhouette, but saturated gold covers the whole body in a busy, even wasp pattern, so it reads as a hazard-striped asset rather than a Palworld-finish storm creature."
+  },
+  "Ql": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The naturalistic dark fur, pink snout and claws are on-style, but the creature barely reaches the trainer's height and its blue spine sheen never pops as storm arcs."
+  },
+  "Wu": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "PRESENT",
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the coat reads lighter, more violet or washed out than the owner's dark navy Tanglevolt (owner creature style bar)": "FIXED",
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side B's dark navy wolf with violet arcs matches the owner's in-game Tanglevolt and carries the set; side A's washed-out violet glow would not."
+  },
+  "Hv": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "the storm arcs or veins read as dull painted lines, or as a glow that floods the whole body, rather than bright arcs popping against a darker coat": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This is the same gold-flooded spider as Gg: strong scale and silhouette, but no dark coat for the arcs to pop against, which sinks it."
+  },
+  "Le": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable elder: the face and eyes are clean, and the earthy green-and-brown kit fits the Meadows palette, though the face is more animated-film than stylised realism."
+  },
+  "Ns": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Uniform grass carpet, a pale low-poly rock and flat light sink it, even though side A's timber-and-stone wall at least reads as built."
+  },
+  "Zr": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's large blue-grey panel is legible, but the dark, murky rainy scene behind it has none of Palworld's saturation or Valheim's storm light."
+  },
+  "Xh": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's clean blue dragon with red-orange fins reads well but leans cartoon rather than the owner's naturalistic bar, and side A breaks outright in its faint frames."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild the storm-creature material: a dark base coat (navy or brown) with thin, bright emissive arc lines plus bloom, replacing the full-body gold flood on the spider (Gg, Hv), the dull blue spine sheen (Ql) and the washed violet wolf (Wu A).",
+   "kind": "scene"
+  },
+  {
+   "change": "Keep the larger UI and build layouts: wrap recipe text in a large panel and turn the Craft/Leave hints into teal controller-glyph buttons (Zr); give the wall a timber frame, cap and stone footing, add infill depth and thickness, and tone down the pale infill (Ns).",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix creature presentation errors: Xh A's faint-end material/model swap to tan grey and its detached shadow blob in faint mid; scale Ql so it stands clearly taller than the 1.80 m trainer.",
+   "kind": "scene"
+  }
+ ]
+}
