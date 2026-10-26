@@ -27,9 +27,9 @@
     "storm_light_range_m": 4.0,
     "copper_tint": "#c08250",
     "herb_cord_m": 2.75,
-    "herb_colour": "#5d6b3a",
+    "herb_colour": "#6b6a40",
     "herb_bundles": 5,
-    "moss_colour": "#3d5530"
+    "moss_colour": "#2c3a26"
   },
   "hearth": {
     "model": "res://assets/props/meshy-1024/ranger_hearth/ranger_hearth.glb",

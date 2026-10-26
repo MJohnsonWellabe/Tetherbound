@@ -232,7 +232,7 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
 	add_child(storm)
 	# Copper: a lantern beside the window, a pot and a bucket by the hearth.
 	var copper := Color(str(cfg.get("copper_tint", "#c08250")))
-	var lantern := _kit("CopperLantern", "Lantern_Wall", Vector3(w - 0.05, FLOOR_TOP + 1.7, z1 + 0.55), -90.0, 0.7)
+	var lantern := _kit("CopperLantern", "Lantern_Wall", Vector3(w - 0.05, FLOOR_TOP + 1.7, z0 - 0.45), -90.0, 0.55)
 	_tint(lantern, copper)
 	var pot := _kit("CopperPot", "Pot_1", Vector3(-0.3, FLOOR_TOP, -d + 0.3), 15.0, 0.55)
 	_tint(pot, copper)
@@ -245,22 +245,24 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
 	herb.roughness = 0.95
 	var string := StandardMaterial3D.new()
 	string.albedo_color = Color("#6b5a44")
-	_visual_box("HerbCord", Vector3(0.02, 0.02, d * 1.6), Vector3(-0.2, cord_y, 0.0), string)
+	# Over the bed half of the room, away from the lens at the door.
+	var cord_x := -w * 0.55
+	_visual_box("HerbCord", Vector3(0.02, 0.02, d * 0.9), Vector3(cord_x, cord_y, -d * 0.45), string)
 	var bundles := int(cfg.get("herb_bundles", 5))
 	for index in bundles:
-		var z := lerpf(-d * 0.7, d * 0.7, (float(index) + 0.5) / float(bundles))
+		var z := lerpf(-d * 0.88, -d * 0.05, (float(index) + 0.5) / float(bundles))
 		var drop := 0.12 + 0.06 * float(index % 2)
-		_visual_box("HerbTie%d" % index, Vector3(0.015, drop, 0.015), Vector3(-0.2, cord_y - drop * 0.5, z), string)
+		_visual_box("HerbTie%d" % index, Vector3(0.015, drop, 0.015), Vector3(cord_x, cord_y - drop * 0.5, z), string)
 		var bunch := MeshInstance3D.new()
 		bunch.name = "HerbBundle%d" % index
 		var cone := CylinderMesh.new()
-		cone.top_radius = 0.03
-		cone.bottom_radius = 0.11
-		cone.height = 0.42
+		cone.top_radius = 0.025
+		cone.bottom_radius = 0.07
+		cone.height = 0.28
 		cone.radial_segments = 8
 		bunch.mesh = cone
 		bunch.material_override = herb
-		bunch.position = Vector3(-0.2, cord_y - drop - 0.21, z)
+		bunch.position = Vector3(cord_x, cord_y - drop - 0.14, z)
 		add_child(bunch)
 	# Moss along the wall foot in the corners and under the window.
 	var moss := StandardMaterial3D.new()
@@ -269,8 +271,8 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
 	for spot: Vector3 in [Vector3(-w + 0.12, 0.0, -d + 0.12), Vector3(w - 0.14, 0.0, (z0 + z1) * 0.5), Vector3(w - 0.12, 0.0, -d + 0.15), Vector3(-w + 0.12, 0.0, d - 0.14)]:
 		var clump := MeshInstance3D.new()
 		var sphere := SphereMesh.new()
-		sphere.radius = 0.22
-		sphere.height = 0.14
+		sphere.radius = 0.18
+		sphere.height = 0.07
 		sphere.radial_segments = 10
 		sphere.rings = 4
 		clump.mesh = sphere
@@ -285,9 +287,16 @@ func _gable_panel(id: String, z: float, half_w: float, base: float, apex: float,
 	var arrays := []
 	arrays.resize(Mesh.ARRAY_MAX)
 	var normal := Vector3(0.0, 0.0, -side)
-	arrays[Mesh.ARRAY_VERTEX] = PackedVector3Array([Vector3(-half_w, base, z), Vector3(half_w, base, z), Vector3(0.0, apex, z)])
+	# Clockwise as seen from inside the room (Godot's front face); the other
+	# order lit the back face and drew the gable black (r23 preview).
+	var left := Vector3(-half_w, base, z)
+	var right := Vector3(half_w, base, z)
+	var top := Vector3(0.0, apex, z)
+	var inward_from_back := side < 0.0
+	arrays[Mesh.ARRAY_VERTEX] = PackedVector3Array([left, top, right] if inward_from_back else [left, right, top])
 	arrays[Mesh.ARRAY_NORMAL] = PackedVector3Array([normal, normal, normal])
-	arrays[Mesh.ARRAY_TEX_UV] = PackedVector2Array([Vector2(0.0, 1.0), Vector2(1.0, 1.0), Vector2(0.5, 0.0)])
+	arrays[Mesh.ARRAY_TEX_UV] = PackedVector2Array([Vector2(0.0, 1.0), Vector2(0.5, 0.0), Vector2(1.0, 1.0)] if inward_from_back
+		else [Vector2(0.0, 1.0), Vector2(1.0, 1.0), Vector2(0.5, 0.0)])
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 	var panel := MeshInstance3D.new()
 	panel.name = id
