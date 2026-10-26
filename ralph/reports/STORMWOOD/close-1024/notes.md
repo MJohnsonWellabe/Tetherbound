@@ -2,6 +2,20 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 11:40Z **MESHY: `stormwood_hollow_crown_silhouette`** (Crown Overlook vista; the Crown massif reads at 900 m as "a flat grey slab / table shape", r40 and GPU SW8).
+  - **The asset:** a distant-only landmark silhouette of the Hollow Crown.
+    - A broad storm-weathered rock massif whose rim breaks into a ring of tall, jagged, slightly outward-leaning spires: the "crown". The centre is hollow, implied by the ring.
+    - Deep vertical lightning-scar clefts with pale-blue crystal glints.
+    - Moss and dark conifer fringes on the ledges.
+    - Cool grey-violet stone, no red.
+  - **Silhouette first:** at 900 m it must read as a crown shape against the storm sky. Make the spire heights clearly varied (tallest about 2x the shortest), with deep notches between them.
+  - **Scale:** the footprint fits the Hollow Crown region (about 520 x 520 m). The spires rise about 120-250 m above the plateau rim; the plateau sits about 65-360 m above sea level in world terms.
+  - **Use:** drawn only beyond about 300 m (visibility range), like the Stormheart v3 far swap, so play inside the Hollow Crown is untouched. No collision.
+  - **References:**
+    - owner Stormheart boards A/B (`docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a/b.png`) for the storm palette, crystal and scar language;
+    - `palworld-04-plateau-landmark.jpg` for a distant plateau landmark that reads.
+  - **Wiring:** this lane places it at the Hollow Crown (700, 2700), facing the overlook, flag-off until judged from the 37° Crown Overlook views.
+
 - 26 Oct 11:30Z PARKED r40 (your item 4, depth fog): 4.89 -> 4.66 mapped (-0.23; `r40/VERDICT.md`). The grey band stays PRESENT 3/3 on both arms; it is the Crown massif's flat terrain read at 900 m, not fog. The judges' ask is a shaped, rim-lit massif silhouette and a storm sky with cloud structure and lightning. That is new art or terrain work; a possible MESHY or sky-art item if you want it.
 
 - 26 Oct 08:05Z **MERGED MAIN 07e1b277 (#760 land9) into `tb/stormwood` 9b28ee9d.** Main's tree equals land9, so the lane only takes land9's config commit: Fallen Giant hero + bark ON.
