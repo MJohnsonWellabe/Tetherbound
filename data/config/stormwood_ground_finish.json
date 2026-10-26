@@ -9,14 +9,14 @@
     "strength": 1.0,
     "scale": 0.055,
     "bare": [0.36, 0.47],
-    "pool": [0.3, 0.335],
+    "pool": [0.27, 0.335],
     "moss": [0.53, 0.62],
     "soil_colour": "#24241f",
     "pool_colour": "#07090b",
-    "moss_colour": "#1d3a2d",
+    "moss_colour": "#26361f",
     "moss_shorten": 0.9,
-    "moss_tint": "#6f9a7a",
-    "_why_r21": "r20 CPU judges x3 (+0.54 mapped): the loam leaned maroon (oxblood is Team Tether's) with hard decal edges, no moss read, and the opened far sheet showed a pink horizon strip. r21: cool umber loam, softer edges, flatter blue-green moss, black pools in the lowest loam, far sheet tints only."
+    "moss_tint": "#8a9f7c",
+    "_why_r21": "r20 CPU judges x3 (+0.54 mapped): the loam leaned maroon (oxblood is Team Tether's) with hard decal edges, no moss read, and the opened far sheet showed a pink horizon strip. r21: cool umber loam, softer edges, flatter blue-green moss, black pools in the lowest loam, far sheet tints only. r22 (r21 judges x3: the moss read as over-saturated flat cyan, the pools as hard decals): natural dark-green moss, softer pool edges."
   },
   "grass": {
     "height_near": 0.2,
