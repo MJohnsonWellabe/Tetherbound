@@ -52,7 +52,8 @@
       "room_light_energy": 0.75
     },
     "seated": {
-      "enabled": false,
+      "enabled": true,
+      "_why_on": "GPU B5 (tb/gpu-pass f0d91dcc0, ralph/reports/GPU-PASS/B5-mh6-sw11-sw14-sw15-staticub/VERDICT.md) SW15: m35 (seated + firelit) interior Medium 6.57 -> 6.98, High 6.12 -> 6.73 (+0.51 mean); roof-apex seam FIXED 3/3. ON.",
       "_candidate": "r34 Ashfoot to 7.5 (OFF until judged; needs storm_finish and window_pane on). GPU SW9 judges: the storm window is 'a rigid glowing slab that stands out from the wall' (5/6), the phases barely differ through it, a pale shard pokes through the roof apex, and the hearth hides behind the trainer. The pane sits behind the lining plane inside the kit window's own frame and smaller; a flush 2.5 cm trim; the window light itself changes by phase; a stone chimney breast rises from the hearth stack to the ceiling (hides the exterior chimney's base, which drops below the lined ceiling); a stronger, wider hearth fire for a two-tone room.",
       "trim_depth_m": 0.025,
       "pane": {
@@ -65,7 +66,8 @@
       "hearth": {"fire_energy": 2.6, "fire_range_m": 6.5}
     },
     "firelit": {
-      "enabled": false,
+      "enabled": true,
+      "_why_on": "GPU B5 (tb/gpu-pass f0d91dcc0, ralph/reports/GPU-PASS/B5-mh6-sw11-sw14-sw15-staticub/VERDICT.md) SW15: m35 (seated + firelit) interior Medium 6.57 -> 6.98, High 6.12 -> 6.73 (+0.51 mean); roof-apex seam FIXED 3/3. ON.",
       "_candidate": "r35 Ashfoot firelit hut (OFF until judged; needs storm_finish on). r34 judges x3: the hearth is 'a stone box with a dark mouth and no visible fire', and the walls are 'huge flat stretched plank walls' with no lived-in warmth. The camp flame sculpt burns in the firebox with a flickering fire light and a soft warm pool on the floor; dark timber posts at stud spacing, wall plates and a tie beam frame the lining as a ranger hut; the copper lantern by the window is lit.",
       "hearth": {"flame": {"offset": [0.0, 0.12, 0.25], "scale": 0.35, "energy": 3.5, "pool_m": [1.8, 1.4], "pool_colour": "#ff9a4a", "pool_alpha": 0.35, "flicker": 0.18}},
       "post_width_m": 0.14,
