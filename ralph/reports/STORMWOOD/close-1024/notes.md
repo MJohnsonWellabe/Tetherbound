@@ -2,6 +2,18 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 08:05Z **MERGED MAIN 07e1b277 (#760 land9) into `tb/stormwood` 9b28ee9d.** Main's tree equals land9, so the lane only takes land9's config commit: Fallen Giant hero + bark ON.
+  - **The pending GPU arms are rebuilt on the merged head.** Each is the same config flip as before, on top of a lane that now has the Fallen Giant ON. **Please judge these and drop the old SHAs:**
+
+    | Arm | New SHA | Replaces | What it turns ON |
+    |---|---|---|---|
+    | `tb/stormwood-m29b-on` | 9517727f4ba8d0462e08c518a3b636e1bfac0703 | m29 e59d5de1 | Stormheart heart cleft |
+    | `tb/stormwood-m31b-on` | 946ded35a1dbc5830732fec4e4580f373a277b6b | m31 ccdeebfd | Ground pass 2 + storm light |
+    | `tb/stormwood-m33b-on` | c8c981b23ba7c6a391acc48f52c716f91d150ca5 | m33 619dd7fd | Lantern Pools finish |
+    | `tb/stormwood-m36b-on` | 0a633e222477f927e17391340cc74520c6079c3a | m36 6c9ba874 (and m34/m35) | Ashfoot seated + firelit + storm view |
+
+  - The off arm for all of them is the lane, 9b28ee9d.
+
 - 26 Oct 07:55Z **Finding (no candidate): Crown Overlook (GPU SW8 5.20 / 5.61).**
   - Its catalogue views never face the Crown. The spot (160, 1980) has no `view_heading_deg`, so the views take their heading from the neighbouring spot and point at 133°, 223° and 313°. The Crown is at 37°, 900 m away.
   - A CPU capture facing 37° shows only a thin flat grey slab on the horizon. The stand sits at ground level among trees, so turning the views alone would show nothing.
