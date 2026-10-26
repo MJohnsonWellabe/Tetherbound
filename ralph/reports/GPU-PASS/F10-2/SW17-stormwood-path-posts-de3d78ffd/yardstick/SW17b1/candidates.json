@@ -1,0 +1,74 @@
+[
+    {
+        "label":  "SW17 pd High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\SW17\\sides\\SW17-pd-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\SW17\\sides\\SW17-pd-ship-High.png",
+        "brief":  "One fixed view of a path junction in the Stormwood (a storm forest under a purple sky), calm weather, with the trainer as a 1.80 m ruler. Judge whether the junction reads as a believable, crafted waypoint in the key art\u0027s world: the lamps, the path and the dressing around it, and whether everything sits in the world.",
+        "defects":  [
+                        "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)"
+                    ]
+    },
+    {
+        "label":  "SW17 pd Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\SW17\\sides\\SW17-pd-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\SW17\\sides\\SW17-pd-ship-Medium.png",
+        "brief":  "One fixed view of a path junction in the Stormwood (a storm forest under a purple sky), calm weather, with the trainer as a 1.80 m ruler. Judge whether the junction reads as a believable, crafted waypoint in the key art\u0027s world: the lamps, the path and the dressing around it, and whether everything sits in the world.",
+        "defects":  [
+                        "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)"
+                    ]
+    },
+    {
+        "label":  "SW17 pv Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\SW17\\sides\\SW17-pv-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\SW17\\sides\\SW17-pv-ship-Medium.png",
+        "brief":  "One fixed view of a path junction in the Stormwood (a storm forest under a purple sky), calm weather, with the trainer as a 1.80 m ruler. Judge whether the junction reads as a believable, crafted waypoint in the key art\u0027s world: the lamps, the path and the dressing around it, and whether everything sits in the world.",
+        "defects":  [
+                        "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)"
+                    ]
+    },
+    {
+        "label":  "SW17 pv High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\SW17\\sides\\SW17-pv-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\SW17\\sides\\SW17-pv-ship-High.png",
+        "brief":  "One fixed view of a path junction in the Stormwood (a storm forest under a purple sky), calm weather, with the trainer as a 1.80 m ruler. Judge whether the junction reads as a believable, crafted waypoint in the key art\u0027s world: the lamps, the path and the dressing around it, and whether everything sits in the world.",
+        "defects":  [
+                        "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)"
+                    ]
+    },
+    {
+        "label":  "SW17 pm High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\SW17\\sides\\SW17-pm-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\SW17\\sides\\SW17-pm-ship-High.png",
+        "brief":  "One fixed view of a path junction in the Stormwood (a storm forest under a purple sky), calm weather, with the trainer as a 1.80 m ruler. Judge whether the junction reads as a believable, crafted waypoint in the key art\u0027s world: the lamps, the path and the dressing around it, and whether everything sits in the world.",
+        "defects":  [
+                        "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)"
+                    ]
+    },
+    {
+        "label":  "SW17 pm Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\SW17\\sides\\SW17-pm-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\SW17\\sides\\SW17-pm-ship-Medium.png",
+        "brief":  "One fixed view of a path junction in the Stormwood (a storm forest under a purple sky), calm weather, with the trainer as a 1.80 m ruler. Judge whether the junction reads as a believable, crafted waypoint in the key art\u0027s world: the lamps, the path and the dressing around it, and whether everything sits in the world.",
+        "defects":  [
+                        "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)"
+                    ]
+    }
+]

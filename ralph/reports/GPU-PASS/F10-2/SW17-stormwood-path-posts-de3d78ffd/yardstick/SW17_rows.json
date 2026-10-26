@@ -1,0 +1,386 @@
+[
+ {
+  "batch": 1,
+  "code": "Jy",
+  "label": "SW17 pd High cand|ship",
+  "side": "SW17-pd-cand-High",
+  "mapped": 5.98,
+  "judges": [
+   6.07,
+   6.07,
+   5.79
+  ],
+  "defects": [
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Jy",
+  "label": "SW17 pd High cand|ship",
+  "side": "SW17-pd-ship-High",
+  "mapped": 6.04,
+  "judges": [
+   6.26,
+   5.79,
+   6.07
+  ],
+  "defects": [
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ds",
+  "label": "SW17 pd Medium cand|ship",
+  "side": "SW17-pd-ship-Medium",
+  "mapped": 6.04,
+  "judges": [
+   6.26,
+   5.79,
+   6.07
+  ],
+  "defects": [
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ds",
+  "label": "SW17 pd Medium cand|ship",
+  "side": "SW17-pd-cand-Medium",
+  "mapped": 5.98,
+  "judges": [
+   6.07,
+   6.07,
+   5.79
+  ],
+  "defects": [
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Vb",
+  "label": "SW17 pm High cand|ship",
+  "side": "SW17-pm-cand-High",
+  "mapped": 5.82,
+  "judges": [
+   5.88,
+   5.98,
+   5.6
+  ],
+  "defects": [
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Vb",
+  "label": "SW17 pm High cand|ship",
+  "side": "SW17-pm-ship-High",
+  "mapped": 5.88,
+  "judges": [
+   6.07,
+   5.79,
+   5.79
+  ],
+  "defects": [
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Kj",
+  "label": "SW17 pv High cand|ship",
+  "side": "SW17-pv-cand-High",
+  "mapped": 6.1,
+  "judges": [
+   6.35,
+   6.16,
+   5.79
+  ],
+  "defects": [
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Kj",
+  "label": "SW17 pv High cand|ship",
+  "side": "SW17-pv-ship-High",
+  "mapped": 6.13,
+  "judges": [
+   6.54,
+   5.88,
+   5.98
+  ],
+  "defects": [
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Tx",
+  "label": "SW17 pv Medium cand|ship",
+  "side": "SW17-pv-cand-Medium",
+  "mapped": 6.1,
+  "judges": [
+   6.35,
+   6.16,
+   5.79
+  ],
+  "defects": [
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Tx",
+  "label": "SW17 pv Medium cand|ship",
+  "side": "SW17-pv-ship-Medium",
+  "mapped": 6.13,
+  "judges": [
+   6.54,
+   5.88,
+   5.98
+  ],
+  "defects": [
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Gd",
+  "label": "SW17 pm Medium cand|ship",
+  "side": "SW17-pm-ship-Medium",
+  "mapped": 5.88,
+  "judges": [
+   6.07,
+   5.79,
+   5.79
+  ],
+  "defects": [
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Gd",
+  "label": "SW17 pm Medium cand|ship",
+  "side": "SW17-pm-cand-Medium",
+  "mapped": 5.82,
+  "judges": [
+   5.88,
+   5.98,
+   5.6
+  ],
+  "defects": [
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   },
+   {
+    "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT"
+   }
+  ]
+ }
+]

@@ -1,0 +1,204 @@
+{
+ "sets": {
+  "Bm": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder-villager sculpt with readable eyes, white hair silhouette and an olive/brown palette that sits in the key art's world carries it. The two sides are effectively identical, and the black void stage gives no light or rim to prove in-world finish."
+  },
+  "Jy": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The flat lilac sky and cardboard mountain backdrop have no fog layering, shafts or storm grade, and the lamps are flat yellow sprite discs, so it sinks well below Palworld/Valheim finish despite good stylised trees and ground."
+  },
+  "Ds": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This is the same view as Jy: a flat purple sky card, no depth fog or light shafts, and flat glow-disc lamps. The junction reads as a dirt strip with a pale cobble edge, not a crafted waypoint."
+  },
+  "Ik": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's naturalistic bristled boar is on-style, but its scattered gold blob nodules read as noise and it floats in faint mid. B is a smooth clay piggy-bank toy with moss decals that falls short of the owner's naturalistic bar."
+  },
+  "Ap": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger wrapped recipe text and gold ingredient lines get close, but only three recipes fit in a half-empty list, there is no teal interaction highlight, and the small keyboard-style key glyphs on Craft/Leave are not controller-first, so it does not yet reach Palworld's crisp HUD finish."
+  },
+  "Vb": {
+   "A": {
+    "bar_a": 5.1,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A flat lime-green beam column that is off the Stormwood palette dominates the frame over an unfogged lilac sky. In B it also washes the two hero trunks a muddy olive, which sinks the finish."
+  },
+  "Kj": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This framing reads best as a junction: a forking path, a copper-gold beam and a guide line. But the sky is still a flat lilac wash with no fog bands or storm light, the beam crosses through branches, and the cobble ring is pale and flat."
+  },
+  "Tx": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This is the same view as Kj, and it sinks for the same reasons: an unatmospheric flat purple sky, sprite-disc lamp glow and a beam that passes through the canopy, even though the path fork composition carries some intent."
+  },
+  "Gl": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A matches the owner's Tanglevolt bar across all four poses, with a readable rearing hit react and a grounded faint, which carries it. B's faint mid and faint end swap to a broken white body with black blotches that would sink it on its own."
+  },
+  "Gd": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This is the same view as Vb: an off-palette lime beam, a flat lilac sky with no fog depth, and in A lime spill tinting both hero trunks olive. The thin lamp posts help grounding but do not lift the finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Build one grounded Stormwood lantern-post kit (stone or root footing, chunky copper and wood post with an arm, glass lantern) that reads clearly at 30% and replaces the low floating lanterns, the branch-hung ones and the hair-thin poles at every junction.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Give the Stormwood real atmosphere and light: layered height fog between the trees and the backdrop ridge, a graded storm sky with value variation instead of a flat lilac card, cool rim and fill on trunks, and real lamp light pools on the path that replace the flat yellow sprite discs. Retint or remove the lime waypoint beam (copper or white-violet) so it stops washing the trunks olive and clipping through branches.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix creature materials to the owner's bar: stop Tanglevolt's faint-pose swap to the white and black placeholder body (Gl B), and replace the clay-toy and gold-blob boar surfaces with a naturalistic bristled hide in the style of the Stormursa and Tanglevolt models, with the faint body grounded (Ik).",
+   "kind": "scene"
+  }
+ ]
+}

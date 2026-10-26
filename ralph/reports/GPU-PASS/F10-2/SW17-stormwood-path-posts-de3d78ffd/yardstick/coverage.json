@@ -1,0 +1,26 @@
+[
+    {
+        "stand":  "pv",
+        "preset":  "Medium"
+    },
+    {
+        "stand":  "pm",
+        "preset":  "Medium"
+    },
+    {
+        "stand":  "pd",
+        "preset":  "Medium"
+    },
+    {
+        "stand":  "pv",
+        "preset":  "High"
+    },
+    {
+        "stand":  "pm",
+        "preset":  "High"
+    },
+    {
+        "stand":  "pd",
+        "preset":  "High"
+    }
+]

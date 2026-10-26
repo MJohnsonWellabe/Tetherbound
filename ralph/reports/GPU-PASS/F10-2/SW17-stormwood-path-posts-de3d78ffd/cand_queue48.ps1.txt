@@ -1,0 +1,25 @@
+# Queue 48: SW17 re-run (queue 42 failed: lookdev_capture_bootstrap.gd requires --source-commit=<40-hex>, which queue 42 did not pass).
+# Stormwood m39 junction lamps / path posts, tb/stormwood-m39-on de3d78ffd vs its parent a933314a4; capture_stormwood_f10_matrix.gd,
+# custom stands pv/pm/pd, calm. Called from queue 36 after CO8 (queue 47), before SW13; out\SW17b.done marks a finished run.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $main = "D:\tb-gpu-pass"; $crA = "D:\tb-gpu-wt-crA"; $tide = "D:\tb-gpu-wt-tide"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "45"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+if (Test-Path "$out\SW17b.done") { "SW17 re-run already captured; skipping"; return }
+$custom = "pv@-334.39,355.97@-323.30,3,370.70@3;pm@105.45,1754.49@89.90,3,1764.40@3;pd@-1016.56,3889.77@-1019.70,3,3871.60@3"
+Gate "SW17b"
+"== SW17 re-run: Stormwood m39 path posts, ctl a933314a4 (off, parent) vs cand de3d78ffd (on); f10 matrix, custom stands pv/pm/pd, calm; with --source-commit"
+foreach ($arm in @(@("ctl", "a933314a41ed181d8b5a1919b27744ecc894092f"), @("cand", "de3d78ffd2361c3922c3f72b74041b954e8d4803"))) {
+    $tag = $arm[0]; $sha = $arm[1]
+    CheckoutCrA $sha; Import $crA "crA-SW17b-$tag"
+    foreach ($pr in "Medium", "High") {
+        Gate "SW17b $tag $pr"
+        CleanCrA $sha
+        if (Test-Path "$out\SW17-$tag-$pr") { Remove-Item "$out\SW17-$tag-$pr" -Recurse -Force }
+        & $run -Preset $pr -Script "res://tools/capture_stormwood_f10_matrix.gd" -OutDir "$out\SW17-$tag-$pr" -Resolution "1920x1080" -ProjectPath $crA -UserArgs @("--preset=$pr", "--source-commit=$sha", "--custom=$custom", "--stands=pv,pm,pd", "--phases=calm", "--no-aftermath", "--label=sw17-$tag-$pr", "--out={FRAMES}")
+        "  SW17 $tag $pr files=$((Get-ChildItem "$out\SW17-$tag-$pr\frames" -File -ErrorAction SilentlyContinue).Count)"
+    }
+}
+New-Item -ItemType File -Force "$out\SW17b.done" | Out-Null
+"SW17 re-run done"
+"queue48 done"

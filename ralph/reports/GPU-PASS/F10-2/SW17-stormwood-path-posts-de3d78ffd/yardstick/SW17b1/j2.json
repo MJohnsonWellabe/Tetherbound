@@ -1,0 +1,204 @@
+{
+ "sets": {
+  "Bm": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder villager reads clearly, with a visible face and eyes and a green/brown palette that fits the world, but the soft toy-like face is cartoonier than the naturalistic finish of the Palworld shots and the creature bar, and the bare stage gives no light or atmosphere to carry it."
+  },
+  "Jy": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple sky and blue mushrooms set the chapter, but a flat mid-tone grade, an empty foreground of dark moss, flat grey distant hills and flat yellow glow discs instead of real lamp light keep it well below Palworld density and Valheim-class atmosphere."
+  },
+  "Ds": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This is the same scene as Jy with the sides swapped: the chapter palette reads, but the sparse junction dressing, flat glow-disc lamps that cast no light on the ground, and flat grey distance fall short of Palworld's density and Valheim-class light."
+  },
+  "Ik": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's furred boar is close to the naturalistic bar but carries a noisy yellow blotch pattern and stands only about trainer height, and side B's smooth clay-orange body with moss patches reads as a plastic toy, so neither matches the finish of the owner's bar or Palworld."
+  },
+  "Ap": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's large wrapped recipe text and gold ingredient counts on a blue-grey translucent panel are close to a shipping HUD, but the plain white hint glyphs (no teal/cyan interaction colour, no controller-first prompt styling) and only three visible recipes leave it short of Palworld's HUD polish."
+  },
+  "Vb": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue mushrooms and purple sky carry the chapter, but an opaque lime beam cuts through the trunks and canopy, the distance is flat grey, and the ground is an even dark carpet, so it lacks Palworld's density and any storm-light mood."
+  },
+  "Kj": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The receding path, gold guide line and distant structure give real depth, but the opaque orange beam slicing through the tree, the flat grey cobble slabs and the uniform purple-grey sky with no storm light keep it short of Palworld or Valheim-class finish."
+  },
+  "Tx": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The frames look the same as Kj: path depth and a distant landmark help, but the opaque beam through the trunk, flat glow-disc lamps and a flat sky grade with no fog layering sink it against Palworld and Valheim-class atmosphere."
+  },
+  "Gl": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's storm wolf matches the owner's Tanglevolt bar, with dark fur, violet lightning and clear hurt and faint reads, but side B's hit react is the standing pose again and its faint frames lose the material to a white body with black blotches, which would never pass in a shipping game."
+  },
+  "Gd": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "the path junction lamps hang in mid-air as glowing lanterns with nothing holding them up, rather than lanterns on posts set into the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This is the same scene as Vb with the sides swapped: the chapter colours read, but the opaque lime beam through the canopy, flat grey distance and sparse, evenly spread dressing fall well short of Palworld density and Valheim-class storm atmosphere."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Make the Stormwood junction a crafted waypoint: use ground-post lanterns everywhere, replace the flat yellow glow discs with real warm point light that pools on the path and trunks, swap the flat grey cobble slabs for textured, varied stones, and add a signpost or shrine with copper and glass accents and grouped edge foliage instead of an even moss carpet.",
+   "kind": "scene"
+  },
+  {
+   "change": "Give the Stormwood air and depth: layer fog bands between midground and distance, darken and stratify the purple storm sky with white-violet lightning and rim light, and turn the opaque guide beam into a soft, partly transparent light shaft that does not cut through trunks.",
+   "kind": "scene"
+  },
+  {
+   "change": "Bring the boar to the owner's naturalistic bar: real fur and hide (not B's clay or A's noisy blotches), taller than the 1.80 m trainer, grounded faint poses. Also fix the Tanglevolt material swap to white with black blotches in side B's faint frames, and B's hit react, which repeats the standing pose.",
+   "kind": "new_art"
+  }
+ ]
+}
