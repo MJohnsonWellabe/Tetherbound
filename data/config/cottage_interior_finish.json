@@ -80,6 +80,7 @@
       "distance_m": 3.0,
       "size_m": [9.0, 6.0],
       "lift_m": 0.6,
+      "glass_alpha": 0.1,
       "pane": {"alpha_by_phase": {"calm": 0.18, "building": 0.22, "break": 0.3, "fading": 0.2}},
       "phases": {
         "calm": {"sky_top": "#3a3f5c", "sky_low": "#8a8fa6", "cloud": 0.45, "rain": 0.25},

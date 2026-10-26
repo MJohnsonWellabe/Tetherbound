@@ -436,6 +436,34 @@ func _build_storm_view(cfg: Dictionary, w: float, z0: float, z1: float, y0: floa
 	card.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(card)
 	set_process(true)
+	# The kit window's own glass (MI_WindowGlass) draws as an opaque pale
+	# sheet, which hid the exterior and read as "a glowing panel" (r34/r35):
+	# clear this one window's glass so the storm shows through it.
+	call_deferred("_clear_window_glass", w, z0, z1, float(cfg.get("glass_alpha", 0.1)))
+
+
+func _clear_window_glass(w: float, z0: float, z1: float, alpha: float) -> void:
+	var holder := get_parent() as Node3D
+	if holder == null:
+		return
+	var to_local := global_transform.affine_inverse()
+	for visual: MeshInstance3D in holder.find_children("*", "MeshInstance3D", true, false):
+		if visual.mesh == null or is_ancestor_of(visual):
+			continue
+		var centre := to_local * (visual.global_transform * visual.mesh.get_aabb().get_center())
+		if centre.x < w - 0.2 or centre.x > w + 1.0 or centre.z < z0 - 0.3 or centre.z > z1 + 0.3:
+			continue
+		for surface in visual.mesh.get_surface_count():
+			var source := visual.get_active_material(surface) as BaseMaterial3D
+			if source == null or not source.resource_name.begins_with("MI_WindowGlass"):
+				continue
+			var clear := source.duplicate() as BaseMaterial3D
+			clear.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+			clear.albedo_color = Color(0.7, 0.75, 0.85, alpha)
+			clear.emission_enabled = false
+			clear.metallic_specular = 0.6
+			clear.roughness = 0.1
+			visual.set_surface_override_material(surface, clear)
 
 
 func _apply_view_phase(phase: String) -> void:
