@@ -520,6 +520,23 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
        - Prompt: "ragged clump of meadow grass and small weeds growing along a dirt road edge, stylised realism, game asset, flat base".
     - These install OFF as placed strips along the village road polyline at the three stands.
 
+- 2026-10-27 00:20 UTC **READY to land land19 42bf7bdee** (tb/meadows-land19, from origin/main 16c32126f, 2 files). Relay yard stone flags ON, per GPU MB/MH4.
+  - **Change:** `tether_relay.json ground_pad.surface_candidate` is enabled with the values the GPU judged on d35483f3c: T_UnevenBrick, #9c9284, uv 0.22. It also carries the `tether_relay.gd::_ground_pad_material` support.
+  - **`_why_on`:** records band3_the_river_lock_0 at 4.50 → 5.93 (+1.43, Medium and High).
+  - **Tests:** test_tether_relay_visual_identity and test_realm_look_overlay ran 20 tests, 399 assertions, 0 failed. No test gated the candidate OFF, so there was nothing to flip.
+  - **Red check:** the relay compound is Team Tether's (tether_relay; the gibbet banner is the faction's own retinted oxblood, #7a2430). Red is correct there, so nothing was recoloured.
+  - **Not in the land:** r2 (uv 0.6, smaller flags; the judges' "oversized stamped texture") is unjudged on tb/meadows. It is the next relay step.
+- 2026-10-27 00:20 UTC **MESHY** (P2-003, the next big swing; PRESENT 12/12): a tall, lit keep that dominates the band5_stronghold_approach_0 skyline. The r5 lit keep (150 m wide, low and blocky) gained only +0.22 on GPU; the judges read it as a "small pale-grey block castle behind the pylons".
+  - **meadows_stronghold_spire:** one hero silhouette, sized to read from 300–550 m. About 120 m tall overall, roughly 65 times the 1.80 m trainer, on a footprint of about 45 x 45 m.
+    - **Shape:** a tall, narrow central keep tower with a tapering, crenellated crown and two lower flanking towers. The height-to-width ratio is about 2.5:1, the opposite of the r5 keep's 1:1 block.
+    - **Light:** warm lit windows in vertical bands up the full height, and braziers glowing on the parapets.
+    - **Material:** dark weathered grey-brown stone with moss at the base.
+    - **Faction colour:** oxblood Team Tether banners only, hanging from the crown and the flanking towers. Team Tether iron conduit hardware is strapped up one face, with cyan lamps at intervals.
+  - **Refs:** the owner key art stronghold panel (`docs/reference/tetherbound-meadows-keyart.png`), the 2026-09-06 stronghold board (`docs/reference/boards-2026-09-06/`), and the r5 lit keep for family match (`assets/props/meshy-1024/meadows_lit_keep/`).
+  - **Prompt:** "tall imposing dark stone fortress keep tower with tapering crenellated crown and two lower flanking towers, rows of warm glowing windows climbing the whole height, braziers burning on the battlements, oxblood war banners hanging from the top, iron conduit pipes with small cyan lamps strapped up one face, weathered mossy base, stylised realism like Valheim and Palworld, game asset, strong vertical silhouette readable from far away".
+  - **Install plan:** it replaces the r5 keep in `stronghold.json hero_gatehouse` (OFF), using the existing lit-window emission path. It is judged at band5_0 day and night, with MH3 (courtyard daylight with its night step-down, plus the war banners; GPU +0.48) folded into the same arm as one stronghold candidate.
+  - **Still open:** the road ruts and verge MESHY line (2026-10-26 15:10).
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
