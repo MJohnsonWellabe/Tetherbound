@@ -2,6 +2,8 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 06:25Z Coordinator ruling on m28c: the bark recolour is accepted, so the Fallen Giant lands with `hero` + `hero.bark` ON. Rod line `stand_clear` is rejected and stays OFF: it would change the world to suit the yardstick. **Do not judge or land m28c with stand_clear ON.** land9 waits for #759 (land8) to merge, then = origin/main + Fallen Giant hero and bark ON.
+
 - 26 Oct 06:15Z **READY (GPU arm) `tb/stormwood-m28c-on` 39af61624e6e586e48a8fd508f9a12591af34f30**: lane head a04467fc plus one config commit (3 lines). Judge `deepwood_the_fallen_giant` (six views, calm and fading). Supersedes m28b.
   - **ON in the arm:** Fallen Giant `hero` (as m28b), plus `hero.bark` and rod line `stand_clear`.
   - **Bark recolour (your SW10 order):** a cool moss multiplier (#b4cbbd) on the GLB bark and a soft material rim (0.5). The oxblood-maroon log now reads as weathered grey-brown wood with a lit edge, and it separates from the mauve trunks.
