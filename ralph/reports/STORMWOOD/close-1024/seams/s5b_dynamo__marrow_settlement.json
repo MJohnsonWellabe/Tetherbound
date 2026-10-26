@@ -1,0 +1,37 @@
+{
+ "kind": "f49_piece_seam",
+ "from_piece": "dynamo",
+ "from_fixture": "tests/fixtures/earned_saves/f49_s5b_dynamo",
+ "from_commit": "1ace2679dd19e4c7dc9b600d11684e18c4154bf3",
+ "to_piece": "marrow_settlement",
+ "to_fixture": "tests/fixtures/earned_saves/f49_s5b_marrow_settlement",
+ "to_commit": "f983b9cceb69f34d4037691f971b4cc2678d52b5",
+ "to_loaded_from": "/root/rb/f49_s5b_dynamo",
+ "runner_handoff": {
+  "checked": true,
+  "cross_runner": false,
+  "ending_matches": true,
+  "ending_required": false,
+  "keys": [
+   "uids",
+   "species",
+   "world_flags",
+   "player_flags",
+   "items",
+   "portal_unlocks",
+   "realm",
+   "creature_progression"
+  ],
+  "mismatched": [],
+  "passed": true,
+  "previous": "f49_s5b_dynamo",
+  "training": {
+   "checked": true,
+   "matches": true,
+   "reason": ""
+  }
+ },
+ "position_gap_m": 0.0,
+ "differences": [],
+ "matches": true
+}

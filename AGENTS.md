@@ -6,6 +6,8 @@ Build the GAME_BIBLE product: a four-chapter creature expedition action RPG in t
 
 ## Standing owner directions (override everything below; newest first)
 
+**Owner, 25 Oct 2026 (evening), close-out exception:** a change expected to gain under 0.5 is allowed on its own when it is expected to take a visual item across the 7.5 bar (in practice an item already at about 7.0 or above). The GPU queue puts candidates that would close a criterion first. One lane keeps making big floor-raising swings; the others take near-bar items to 7.5. An approach that fails twice on the same item is parked until there is a new idea.
+
 **Owner, 25 Oct 2026, no long route runs; bigger swings; lane runbook:** "I don't want" routes running one long route. A route piece proves one seam in about 30 minutes from a generated boundary save placed just before that seam; a missing boundary gets a generator profile, never a longer run. Only changes expected to gain more than 0.5 are made; small fixes ride along inside one and never stand alone. Every lane reuses TECHNICAL §8.1 (setup, captures, judging, route pieces) instead of rebuilding harnesses, and adds each new harness fix there. A lane that wraps up writes a handoff (state, open candidates, what worked, its runbook) at the top of its NOTE before its session is archived.
 
 **Owner, 24 Oct 2026, raise the floor:** "We need to bring all the lowest things up to at least 6 first then when everything is at least at 6 bring everything up to 7. Then when everything is at 7 shoot for 7.5." Visual work runs worst-first in tiers on GPU mapped scores: every scored item below 6 is raised to 6, then everything to 7, then to 7.5. Unscored items get a GPU baseline first. The done bar stays 7.5; a candidate already built may still be judged.

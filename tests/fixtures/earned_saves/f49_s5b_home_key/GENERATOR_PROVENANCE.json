@@ -1,0 +1,18 @@
+{
+  "command": "godot --headless --path . --script tools/earned_saves/stormwood_chain_runner.gd -- --segment=home_key --from=/root/rb/f49_s5b_marrow_settlement --out=/root/rb/f49_s5b_home_key",
+  "commit": "3775f93b3dfdbf057ff54e07a4282aac750ac967",
+  "helper": "res://tests/helpers/f49_portal_travel.gd",
+  "injections": [
+    "Lineage starts from a disclosed generated arrival: f49_s5b_gen"
+  ],
+  "kind": "stormwood_earned_checkpoint",
+  "load_path": "production title Load -> Autosave (slot 0)",
+  "no_fixture_statement": "No teleport, flag/inventory/party write, HP pin or debug skip during play.",
+  "save_path": "Game.save_game(0)",
+  "segment": "home_key",
+  "shortcuts": [
+    "Simulation clock 8x at 480 Hz, 8 physics steps per frame (smoke_stormwood_continuous.gd's scale; the 8-step cap keeps production's per-frame granularity, <= 0.13 s of sim between process frames, so input releases and claim settlement are not starved on a slow host); helpers switch fights/walks to 1x themselves",
+    "On load the save opened dialogue 'stormwood_homecoming_aftermath'; read through with ordinary Interact presses"
+  ],
+  "start_save": "/root/rb/f49_s5b_marrow_settlement"
+}

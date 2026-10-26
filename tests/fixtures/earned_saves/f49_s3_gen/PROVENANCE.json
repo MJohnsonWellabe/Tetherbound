@@ -1,0 +1,12 @@
+{
+ "piece": "f49_s3_gen",
+ "runner": "gen",
+ "segment_or_profile": "stormwood_t5_rowan_independent",
+ "from": "generated boundary (disclosed)",
+ "source_commit": "812890f123d65b68316f0859d835bc18617fde76",
+ "wall_seconds": 55,
+ "command": "godot --headless --fixed-fps 60 --path . --script tools/earned_saves/generate_boundary_save.gd -- --profile=stormwood_t5_rowan_independent --slot=0 --out=<rb>/f49_s3_gen",
+ "lane": "tb/stormwood-routes (Stormwood lane, S3/S5 for F49#0)",
+ "renderer": "Godot 4.7 headless, CPU container",
+ "result": "PASS"
+}

@@ -1,0 +1,22 @@
+{
+  "continuous_fresh_save": false,
+  "disclosure": "Generated mid-Stormwood boundary after the Crown heartstone released the Rootgate (act II complete), standing on the Hollow Crown return ring at (805, 2545), for Stormwood pieces dynamo -> settlement (proof rules v2; coordinator approved the paid-arch opt-in 2026-10-11). NOT earned. Five ordered template UIDs/species at a generated L50 with generated caps and full HP; prior facts as stormwood_crown_build plus generated act-II flags. One paid stormglass_arch placed_buildings record on the Still Grove footing (twin e_crown) is generated setup via the real register_building + arch-link shape; no materials were spent and no build/harvest/battle-reward/transaction receipts are fabricated. Claims no earned segment PASS.",
+  "kind": "generated_boundary_save",
+  "portal_leg": "",
+  "prior_earned_play": false,
+  "profile": "stormwood_rootgate_crown",
+  "profile_sha256": "1377b0d8a46764db451cdd8190b0bee7563cba07f6e6640287f4df7bd6e7db03",
+  "slot": 0,
+  "slot_info": {
+    "day": 22,
+    "legacy": false,
+    "load_result": {
+      "code": "ok",
+      "message": "",
+      "ok": true
+    },
+    "party_size": 5,
+    "realm": "stormwood"
+  },
+  "source": "7480d1a27f49c15ead30b9aba7961af9cc80c6f9"
+}

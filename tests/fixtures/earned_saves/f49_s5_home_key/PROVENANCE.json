@@ -1,0 +1,12 @@
+{
+ "piece": "f49_s5_home_key",
+ "runner": "storm",
+ "segment_or_profile": "home_key",
+ "from": "tests/fixtures/earned_saves/f49_s5_marrow_settlement",
+ "source_commit": "a2fc7e4ef00a49d4222adc4422a8e4e53685921a",
+ "wall_seconds": 1147,
+ "command": "godot --headless --fixed-fps 60 --path . --script tools/earned_saves/stormwood_chain_runner.gd -- --segment=home_key --from=<rb>/f49_s5_marrow_settlement --out=<rb>/f49_s5_home_key",
+ "lane": "tb/stormwood-routes (Stormwood lane, S3/S5 for F49#0)",
+ "renderer": "Godot 4.7 headless, CPU container",
+ "result": "PASS"
+}

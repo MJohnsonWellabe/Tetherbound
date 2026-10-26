@@ -1,0 +1,12 @@
+{
+ "piece": "f49_s3_rowan_visit",
+ "runner": "storm",
+ "segment_or_profile": "rowan_visit",
+ "from": "tests/fixtures/earned_saves/f49_s3_gen",
+ "source_commit": "45dad1ad920ef2ed06d68582e7855b9c5a18f8a0",
+ "wall_seconds": 3134,
+ "command": "godot --headless --fixed-fps 60 --path . --script tools/earned_saves/stormwood_chain_runner.gd -- --segment=rowan_visit --from=<rb>/f49_s3_gen --out=<rb>/f49_s3_rowan_visit",
+ "lane": "tb/stormwood-routes (Stormwood lane, S3/S5 for F49#0)",
+ "renderer": "Godot 4.7 headless, CPU container",
+ "result": "PASS"
+}
