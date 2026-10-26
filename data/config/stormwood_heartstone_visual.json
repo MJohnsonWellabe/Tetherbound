@@ -41,7 +41,8 @@
     "emission_energy": 1.4
   },
   "hero": {
-    "enabled": false,
+    "enabled": true,
+    "_why_on": "GPU SW7 (tb/gpu-pass fa583ef7, ralph/reports/GPU-PASS/F41-0/SW7-stormwood-r19-67d95770b): crown heartstone hero at the r19 stand 4.16 -> 5.48 (+1.32) at Medium and High; heartstone missing/primitive PRESENT 6/6 -> PARTIAL 6/6. ON.",
     "_candidate": "r18 Meshy candidate (OFF until judged): enable to replace the installed rock with the hero stone; its collider grows to height_m on every shell.",
     "model": "res://assets/props/meshy-1024/crown_heartstone_hero/crown_heartstone_hero.glb",
     "height_m": 7.0,
