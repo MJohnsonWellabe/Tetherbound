@@ -1608,7 +1608,10 @@ func _finished_energy_seam() -> void:
 			# A branch that would meet a real floor is left out: trimmed, its
 			# end showed through the floor's well edge as a bright chip.
 			if _charge_branch_tip(q,tip,branch_width).is_equal_approx(tip):
-				poses.append(_charge_pose(q,tip,branch_width))
+				if _jagged_branches():
+					_jagged_branch(poses, q, tip, branch_width, index)
+				else:
+					poses.append(_charge_pose(q,tip,branch_width))
 	_instances(root, poses, _core_material,_charge_mesh())
 	for y in [12.0, 75.0, 150.0, 200.0]:
 		var light := OmniLight3D.new()
@@ -1620,6 +1623,22 @@ func _finished_energy_seam() -> void:
 		root.add_child(light)
 		_core_lights.append(light)
 	_refresh_core_state()
+
+
+## SW7 v03 break: a straight 8 m branch read as a white strip. With the heart
+## cleft ON each branch kinks twice and tapers toward its tip.
+func _jagged_branches() -> bool:
+	var hero: Dictionary = _presentation.get("hero_interior", {})
+	return bool(hero.get("enabled", false)) and bool((hero.get("heart_cleft", {}) as Dictionary).get("enabled", false))
+
+
+func _jagged_branch(poses: Array[Transform3D], start: Vector3, tip: Vector3, width: float, seed_index: int) -> void:
+	var span := tip - start
+	var side := span.cross(Vector3.UP).normalized() * span.length() * 0.14
+	var points: Array[Vector3] = [start, start + span * 0.36 + side * (1.0 if seed_index % 2 else -1.0),
+		start + span * 0.7 - side * (0.7 if seed_index % 2 else -0.7), tip]
+	for part in 3:
+		poses.append(_charge_pose(points[part], points[part + 1], width * lerpf(1.0, 0.4, float(part) / 2.0)))
 
 
 ## Unit-height round charge sections end at their anchors. The configured
