@@ -4802,6 +4802,10 @@ func _build_lights() -> void:
 	var daylight := _courtyard_daylight()
 	for entry: Variant in _config.get("lights", []) + _config.get("lights_flanks", []):
 		var spec: Dictionary = entry as Dictionary
+		# A `flag` entry is a candidate light: built only while that config
+		# block is enabled (F22#4 close-out `warden_rim_candidate`).
+		if spec.has("flag") and not bool((_config.get(str(spec["flag"]), {}) as Dictionary).get("enabled", false)):
+			continue
 		if not daylight.is_empty() and spec.get("at", []) == daylight.get("light_at", []):
 			spec = spec.duplicate()
 			spec.merge(daylight.get("light", {}) as Dictionary, true)
