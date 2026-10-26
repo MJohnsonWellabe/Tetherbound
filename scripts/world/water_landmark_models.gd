@@ -146,7 +146,9 @@ func _cladding(world: Node3D, cfg: Dictionary) -> void:
 			var y := float(world.call("ground_height_at", at.x, at.y))
 			if not is_finite(y) or y < float(cfg.get("min_height_m", 4.0)):
 				continue
-			var d := 2.0
+			# The slope under the whole piece, not a 2 m sample: a local
+			# normal left wide pieces floating off the face (cl1 preview).
+			var d := maxf(2.0, width * float(cfg.get("normal_span", 0.35)))
 			var normal := Vector3(
 				float(world.call("ground_height_at", at.x - d, at.y)) - float(world.call("ground_height_at", at.x + d, at.y)),
 				2.0 * d,
