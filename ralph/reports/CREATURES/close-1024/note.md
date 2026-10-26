@@ -1,5 +1,17 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (26 Oct, GPU READY: CO8-ON supersedes CO7-ON)
+
+- **GPU READY (CLOSE-OUT, on main): CO8-ON 7e6b868d72e04e517ac49e6c90519dd47d0bdb63.** tb/co8-on = tb/co7-on (Galecrest matte + grounded flinch) plus one commit:
+  - **Stormcapra faint faces the camera** (your CO-1 "horns stretch into tube loops").
+    - The +90 topple showed the back, so the near horn arched over the body and the head was hidden. It now rolls -90: face, legs and chest gem visible, horns beside the head. Roll sign only.
+    - **CPU b51 (confirming, r 0.84): 6.87 vs main 4.60 (+2.27).** Tube loop PRESENT x3 -> PARTIAL, FIXED, FIXED.
+    - Remaining (3/3): it reads as "a tumble onto its back, legs up", slightly off its shadow at the end.
+- If you have already started co7-on, finish it; co8-on differs only by Stormcapra's faint.
+- Judge main vs co8-on: Galecrest (all roles); Cloudfang/Breezetail hit; Stormcapra hit and faint.
+- Verdict: `close-1024/b51/VERDICT.md`.
+- **Next:** Cloudfang's white-fur contrast.
+
 ## TO COORDINATOR (26 Oct, GPU READY: CO7-ON; co6-on WITHDRAWN)
 
 - **Recipe profile, again, since your 12:16 message asks: the game already uses it** (full code path in the PRIORITY entry below).
