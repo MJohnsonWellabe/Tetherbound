@@ -20,6 +20,7 @@ const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
 const NPC_RANKS := preload("res://scripts/characters/npc_ranks.gd")
 const CREATURE_SCENE := "res://scenes/creatures/creature.tscn"
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
+const CREATURE_VISUAL := preload("res://scripts/creatures/creature_visual.gd")
 
 const SETTLE_FRAMES := 300
 ## How far a rendered model may sit under the collider that represents it.
@@ -364,10 +365,15 @@ func _an_alpha_reads_differently_from_its_own_species() -> void:
 			_fail("alpha check: the alpha burrowback's material has no rim -- the silhouette " +
 				"brightening is the only part of alpha presence that survives at the distance " +
 				"where the player chooses whether to approach")
-		elif plain_base.rim_enabled:
-			_fail("alpha check: an ORDINARY burrowback also renders with a rim; the alpha " +
-				"dressing leaked onto the shared per-species material and now every one of them " +
-				"reads as a leader")
+		elif plain_base.rim_enabled and plain_base.rim > CREATURE_VISUAL.field_rim_default() + 0.001:
+			# CLOSE-OUT (owner, 25 Oct): every creature now wears the shared subtle
+			# rim, so an ordinary body may carry exactly that baseline -- never more.
+			_fail(("alpha check: an ORDINARY burrowback renders with a %.2f rim, above the shared " +
+				"%.2f baseline; the alpha dressing leaked onto the shared per-species material and " +
+				"now every one of them reads as a leader") % [plain_base.rim, CREATURE_VISUAL.field_rim_default()])
+		elif alpha_base.rim < (plain_base.rim if plain_base.rim_enabled else 0.0) + 0.3:
+			_fail("alpha check: the alpha rim (%.2f) is not clearly above an ordinary body's (%.2f)" % [
+				alpha_base.rim, plain_base.rim if plain_base.rim_enabled else 0.0])
 		elif alpha.get_node_or_null(^"AlphaAura") == null:
 			_fail("alpha check: the alpha burrowback has no AlphaAura child -- the idle effect " +
 				"is what marks a leader that is standing still and doing nothing")
@@ -415,9 +421,13 @@ func _rarity_tiers_read_differently_from_each_other() -> void:
 		rim[tier_id] = base.rim if base.rim_enabled else 0.0
 
 	if ok:
-		if rim[""] != 0.0 or rim["common"] != 0.0:
-			_fail("rarity tier check: an untiered or common terrapup renders with a rim (%.2f/%.2f) " % [
-				rim[""], rim["common"]
+		# CLOSE-OUT (owner, 25 Oct): the baseline is the rim an untiered body
+		# already wears (its species' own `field_rim`, else the shared
+		# creatures_visual.json `field_rim_default`), not zero.
+		var baseline := float(SPECIES.placeholder("terrapup").get("field_rim", CREATURE_VISUAL.field_rim_default()))
+		if absf(rim[""] - baseline) > 0.001 or absf(rim["common"] - baseline) > 0.001:
+			_fail("rarity tier check: an untiered or common terrapup renders with a %.2f/%.2f rim, not the shared %.2f baseline " % [
+				rim[""], rim["common"], baseline
 			] + "-- common is the baseline every other tier should read as more-than, not a fourth look")
 		elif not (rim["common"] < rim["uncommon"] and rim["uncommon"] < rim["rare"]):
 			_fail(("rarity tier check: rim strength is not a monotonic ladder " +
