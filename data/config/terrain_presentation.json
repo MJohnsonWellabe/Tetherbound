@@ -16,7 +16,7 @@
     "steep_rock_full_y": 0.25
   },
   "texture_candidates": {
-    "path": {"enabled": false, "tint": "#b9ad9c", "_scope": "F38 village_road / band3_the_river_lock_1 close-out candidate (OFF until judged): the shipped path tint #d0b090 over dirt_path_Color reads as a flat orange road filling the village_road foreground (GPU 7.09 Medium / 6.73 High, P2-005 PARTIAL). A neutral trodden-earth tint lets the texture's own pebbles and wear read. Presentation only, no bake change."},
+    "path": {"enabled": false, "tint": "#b9ad9c", "_scope": "F38 village_road / band3_the_river_lock_1 close-out candidate (OFF until judged): the shipped path tint #d0b090 over dirt_path_Color reads as a flat orange road filling the village_road foreground (GPU 7.09 Medium / 6.73 High, P2-005 PARTIAL). A neutral trodden-earth tint lets the texture's own pebbles and wear read. Presentation only, no bake change.", "_parked": "PARKED, unjudged (26 Oct): the CPU A/B at village_road was nearly identical (the road stays orange; the colour lives in dirt_path_Color itself and the baked colour map), so it is not worth a judge round."},
     "_comment": "Presentation-only terrain surface swaps, keyed by terrain_playground.json texture name. Kept out of terrain_playground.json because that file fingerprints the terrain and scatter bakes (a flag flip there invalidates the vegetation bake). Each applies only with its own enabled.",
     "grass_v2": {
       "enabled": true,

@@ -441,6 +441,12 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
     I'm not starting those under the close-out exception. Say if one of them should go ahead as a full candidate.
   - **Harness fix:** the disk filled during the captures, so `XDG_DATA_HOME` and the mesa shader cache now go to /dev/shm (16 GB tmpfs), with finished frames moved there as well. Added to TECHNICAL §8.1.
 
+- 2026-10-26 05:05 UTC RESULT for the coordinator's 02:47 item 2 (village_road 7.09/6.73, river_lock_1 6.86/6.89): no small change that crosses 7.5. Nothing is READY.
+  - **Relay-yard carry-over:** none. The stone flags replace the relay compound's own pad material. village_road's foreground is the terrain "path" surface, which is the same texture as every wild trail.
+  - **Path retint** (`terrain_presentation.json texture_candidates.path`, OFF, parked): this retints the road from #d0b090 to #b9ad9c at run time, with no bake change. The CPU A/B at village_road is nearly identical. The road stays orange, because the colour sits in `dirt_path_Color` and the baked colour map. Not judged.
+  - **river_lock_1:** on CPU, the approach view at heading 45 looks through a dark trunk and canopy, and the mill is small and far off in the gameplay and detail views. A re-seat would be a fixture change, not art, so I haven't made it under close-out.
+  - **The real P2-005 lever is built but unjudged:** `grass_field.json cover_candidate` r3, the Meshy clover, wildflower, rock and worn-earth tiers (OFF). It is too slow to pre-judge on CPU (r2 took about 55 min per frame; r3 cuts that to about a quarter). If you want it, GPU can judge it directly at village_road and river_lock_1, approach and gameplay, ON against OFF. Tell me and I'll post it as READY with the flag and command.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
