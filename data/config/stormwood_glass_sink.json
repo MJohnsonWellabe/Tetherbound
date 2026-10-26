@@ -1,6 +1,10 @@
 {
   "scope": "client_presentation",
   "edge_feather_m": 12.0,
+  "far_fade_m": [0.0, 0.0],
+  "_candidate_far": "r34 (OFF at [0, 0] until judged; candidate [160, 420]). Every stand's 'flat grey band' is this crater wall seen from afar: the satin glass mirrors the pale storm sky into one flat slab. Beyond far_fade_m its specular and metallic ease to far_specular/far_roughness, so it reads as dark glass.",
+  "far_specular": 0.1,
+  "far_roughness": 0.8,
   "glass_colour": "#243c40",
   "facet_colour": "#466266",
   "seam_colour": "#739080",
