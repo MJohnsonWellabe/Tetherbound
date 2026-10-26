@@ -1,0 +1,76 @@
+{
+ "anchors": {
+  "craft:before": [
+   5.6,
+   5.0,
+   5.0
+  ],
+  "craft:after": [
+   6.8,
+   6.8,
+   6.6
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.4,
+   4.1,
+   4.5
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.2,
+   4.7,
+   5.3
+  ],
+  "f36_0_gap:C2B": [
+   5.8,
+   5.4,
+   5.8
+  ],
+  "f36_0_gap:C2A": [
+   6.9,
+   6.6,
+   6.8
+  ],
+  "f36_0_npc:C5B": [
+   5.0,
+   5.1,
+   5.2
+  ],
+  "f36_0_npc:C5A": [
+   5.2,
+   5.3,
+   5.4
+  ]
+ },
+ "candidates": {
+  "R18 stormheart :: r18b_stormheart": [
+   4.4,
+   4.2,
+   4.3
+  ],
+  "R18 stormheart :: r18_stormheart": [
+   5.0,
+   4.8,
+   5.0
+  ],
+  "R18 heartstone :: r18b_heartstone": [
+   3.8,
+   3.9,
+   4.0
+  ],
+  "R18 heartstone :: r18_heartstone": [
+   4.3,
+   4.5,
+   4.7
+  ],
+  "R18 ashfoot :: r18b_ashfoot": [
+   4.0,
+   4.2,
+   4.6
+  ],
+  "R18 ashfoot :: r18_ashfoot": [
+   5.6,
+   5.6,
+   6.0
+  ]
+ }
+}

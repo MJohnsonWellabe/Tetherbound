@@ -1,0 +1,82 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.7978,
+  "least_squares_slope": 1.0602,
+  "method": "linear",
+  "slope": 1.0602,
+  "intercept": 0.0941,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.718,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C6A": {
+   "measured": 6.6,
+   "reference": 6.47,
+   "mapped": 7.091,
+   "residual": -0.621
+  },
+  "f36_0_gap:C6B": {
+   "measured": 5.7,
+   "reference": 6.9,
+   "mapped": 6.137,
+   "residual": 0.763
+  },
+  "craft:before": {
+   "measured": 5.033,
+   "reference": 4.83,
+   "mapped": 5.43,
+   "residual": -0.6
+  },
+  "craft:after": {
+   "measured": 6.833,
+   "reference": 7.35,
+   "mapped": 7.339,
+   "residual": 0.011
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.0,
+   "reference": 6.53,
+   "mapped": 5.395,
+   "residual": 1.135
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.333,
+   "reference": 4.0,
+   "mapped": 4.688,
+   "residual": -0.688
+  }
+ },
+ "candidates": {
+  "R22 ground OFF (main)": {
+   "measured_mean": 5.067,
+   "mapped_mean": 5.47,
+   "mapped_judges": [
+    5.39,
+    5.39,
+    5.61
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R22 ground ON (zones r22)": {
+   "measured_mean": 5.567,
+   "mapped_mean": 6.0,
+   "mapped_judges": [
+    5.82,
+    5.82,
+    6.35
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

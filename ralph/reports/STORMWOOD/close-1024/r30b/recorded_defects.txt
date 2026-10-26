@@ -1,0 +1,3 @@
+- the pools are flat decals, not a landmark
+- lantern posts read as flat black bars
+- trees out of family (mismatched foliage or trunk colour)

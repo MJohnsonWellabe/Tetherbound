@@ -34,6 +34,18 @@
       "res://assets/environment/stylized_nature/Fern_1.gltf"
     ]
   },
+  "near_lens_hide": {
+    "_why": "F41#5 candidate (Stormwood lane, coordinator ruling 24 Oct 2026: fix the near-lens trunk/root for the player, never reframe the judge stands). Per listed layer: an instance whose surface (axis distance minus collision_radius x scale x reach, which covers root flares and low limbs) comes inside the far edge of the layer's fade band moves from the opaque instancer into a small local MultiMesh drawn with that narrow pixel-dither near fade [invisible below, opaque above] metres from the lens, and moves back past that edge + show_margin_m. A covered layer also drops the wide near_lens_fade band, whose always-on dither left ghost trunks in still frames. Only what is that close to the lens dissolves; the rest of the tree draws, and only swapped instances pay for the dither (a forest-wide dither measured about 3x render cost on llvmpipe, 22 Oct). Colliders, harvest and saves untouched. Presentation only. OFF until judged.",
+    "enabled": false,
+    "realms": ["stormwood"],
+    "layers": {
+      "giant_canopy": {"reach": 4.0, "fade": [5.0, 5.5]},
+      "storm_deadwood": {"reach": 4.5, "fade": [4.0, 4.5]},
+      "storm_canopy": {"reach": 1.0, "fade": [4.5, 5.0]}
+    },
+    "show_margin_m": 1.0,
+    "check_seconds": 0.1
+  },
   "line_of_sight_fade": {
     "enabled": false,
     "_why": "F10#2 (READY, CPU-provisional r8 6.77, C3 6/6): while a Stormwood fight runs, supported StandardMaterial surfaces of the listed models dither out along the lens-to-fighter sight lines and inside the fight's own near-lens band (near_lens_invisible_below_m to near_lens_opaque_above_m). Exploration keeps near_lens_fade's baked band and models unchanged. No render-instance removal, collider, harvest, scale or bake changes. GPU pass still to confirm 7.5.",

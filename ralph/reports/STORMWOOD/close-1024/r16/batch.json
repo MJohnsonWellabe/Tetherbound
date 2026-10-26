@@ -1,0 +1,96 @@
+{
+ "anchors": {
+  "f36_0_npc:C5B": [
+   5.4,
+   6.0,
+   5.0
+  ],
+  "f36_0_npc:C5A": [
+   5.4,
+   6.1,
+   5.0
+  ],
+  "f36_0_gap:C2A": [
+   6.0,
+   6.3,
+   6.1
+  ],
+  "f36_0_gap:C2B": [
+   6.5,
+   6.0,
+   6.6
+  ],
+  "craft:after": [
+   6.0,
+   6.4,
+   6.3
+  ],
+  "craft:before": [
+   4.9,
+   5.0,
+   4.6
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.0,
+   4.1,
+   3.8
+  ],
+  "f10_2_r3_capacitor:control": [
+   3.5,
+   3.4,
+   3.2
+  ]
+ },
+ "candidates": {
+  "WO6 stormheart :: base_stormheart": [
+   4.8,
+   5.0,
+   4.6
+  ],
+  "WO6 stormheart :: r16_stormheart": [
+   5.3,
+   5.5,
+   5.2
+  ],
+  "WO6 ashfoot :: r16_ashfoot": [
+   5.5,
+   5.5,
+   5.0
+  ],
+  "WO6 ashfoot :: base_ashfoot": [
+   3.3,
+   3.4,
+   3.4
+  ],
+  "WO6 heartstone :: r16_heartstone": [
+   4.2,
+   4.4,
+   4.0
+  ],
+  "WO6 heartstone :: base_heartstone": [
+   4.2,
+   4.3,
+   3.9
+  ],
+  "WO6 pools :: r16_pools": [
+   5.7,
+   5.8,
+   5.6
+  ],
+  "WO6 pools :: base_pools": [
+   5.2,
+   5.2,
+   5.0
+  ],
+  "F10#2 fights :: north_fight_capacitor_alpha": [
+   5.6,
+   5.6,
+   5.0
+  ],
+  "F10#2 fights :: north_fight_glass_field_alpha": [
+   5.4,
+   5.2,
+   4.9
+  ]
+ }
+}

@@ -382,6 +382,32 @@ const SOFT_GONE := 2
 ## it, so a ring that closes (even at the end of the frame another opens in)
 ## never puts a plant back inside a ring that is still open.
 var _soft_occluder_fight_holds: PackedInt32Array = PackedInt32Array()
+## F41#5 near-lens rule (`foliage_camera_visibility.json near_lens_hide`, OFF
+## unless enabled for the realm): big trunks and roots of the listed layers
+## that come within `clearance_m` of the camera lens, nearer the lens than the
+## player, are taken out of the render and put back once the camera moves
+## away. The same render-instance remove/restore as the fight ring, so no
+## shader, discard or extra pass; colliders, harvest state and saves are
+## untouched. Packed parallel arrays, one entry per placement, keyed so a
+## regrowth rebuild refreshes its entry instead of adding a second one.
+var _lens_xforms: Array[Transform3D] = []
+var _lens_colours: PackedColorArray = PackedColorArray()
+var _lens_mesh_ids: PackedInt32Array = PackedInt32Array()
+var _lens_reach: PackedFloat32Array = PackedFloat32Array()
+var _lens_clear: PackedFloat32Array = PackedFloat32Array()
+var _lens_keys: PackedStringArray = PackedStringArray()
+var _lens_hidden: PackedByteArray = PackedByteArray()
+var _lens_index: Dictionary = {}
+var _lens_models: PackedStringArray = PackedStringArray()
+## model path -> the finished render mesh with a pixel-dither near fade, and
+## model path -> the small local MultiMeshInstance3D that draws only the
+## swapped-out near-lens instances of that model.
+var _lens_fade_meshes: Dictionary = {}
+var _lens_mmis: Dictionary = {}
+var _lens_cfg: Dictionary = {}
+var _lens_wait := 0.0
+## Tests record near-lens occluders without editing the config.
+var near_lens_override: Dictionary = {}
 ## W18-DENSITY-B4-B5-0904 found the gap this closes: the site validator that
 ## keeps band pickups clear of scatter saw only the collision batches, so a
 ## Rare-tier pickup at the herd bull sat under a shrub that covered 86% of it
@@ -540,6 +566,20 @@ func build(world_size: float, terrain: Node, slicer: RefCounted = null) -> void:
 	_soft_occluder_layer.clear()
 	_soft_occluder_state.clear()
 	_soft_occluder_fight_holds.clear()
+	_lens_xforms.clear()
+	_lens_colours.clear()
+	_lens_mesh_ids.clear()
+	_lens_reach.clear()
+	_lens_clear.clear()
+	_lens_keys.clear()
+	_lens_hidden.clear()
+	_lens_index.clear()
+	_lens_models.clear()
+	_lens_fade_meshes.clear()
+	for mmi: Variant in _lens_mmis.values():
+		if is_instance_valid(mmi):
+			(mmi as Node).queue_free()
+	_lens_mmis.clear()
 	_next_mesh_id = 0
 	_harvested.clear()
 	_harvest_layer_counts.clear()
@@ -1279,13 +1319,18 @@ func _make_mesh_asset(model_path: String) -> Object:
 	var retinted := _retint(mesh, policy.tints, policy.swaps,
 		policy.needs_instance_colour, policy.adjusts)
 	retinted = CAMERA_VISIBILITY.apply(retinted, model_path, layer_cfg)
-	retinted = CAMERA_VISIBILITY.near_lens_fade(retinted, model_path, _realm_bake_name)
+	# A layer covered by near_lens_hide swaps its near instances into a narrow
+	# near fade instead; the wide always-on dither band would leave ghost
+	# trunks in every frame.
+	if _lens_layer(_layer_name_for(model_path)).is_empty():
+		retinted = CAMERA_VISIBILITY.near_lens_fade(retinted, model_path, _realm_bake_name)
 	if presentation_mesh_adapter.is_valid():
 		retinted = presentation_mesh_adapter.call(retinted) as Mesh
 	# Convert the completed StandardMaterial so fight fading retains its detail.
 	retinted = _fight_fade.apply(retinted, model_path, _realm_bake_name,
 		CAMERA_VISIBILITY.config().get("line_of_sight_fade", {}))
-	set_process(_fight_fade.has_materials())
+	set_process(_fight_fade.has_materials() or not _lens_keys.is_empty())
+	_store_lens_fade_mesh(model_path, retinted)
 
 	var holder := MeshInstance3D.new()
 	holder.mesh = retinted
@@ -1584,6 +1629,7 @@ func _build_batch(model_path: String, placements: Array, slicer: RefCounted = nu
 	_instance_positions[mesh_id] = known
 
 	_record_soft_occluders(model_path, layer_cfg, placements, mesh_id)
+	_record_lens_occluders(model_path, layer_cfg, placements, mesh_id, transforms, colours)
 
 	_placed += placements.size()
 	_draw_calls += 1
@@ -2741,7 +2787,7 @@ func _collision_resident_remove_at(resident: Dictionary, removed_index: int) -> 
 
 
 func _ready() -> void:
-	set_process(_fight_fade.has_materials())
+	set_process(_fight_fade.has_materials() or not _lens_keys.is_empty())
 	# The transport is mounted at an identical path in every process
 	# (`ledger_rpc.gd::attach`), and `listen()` is idempotent, so this is also
 	# re-run at the end of `build()` for the case where the scatter is stood up
@@ -3224,6 +3270,206 @@ func set_fight_sight_target(owner_id: int, target: Vector3, second: Vector3 = Ve
 func _process(delta: float) -> void:
 	var camera := get_viewport().get_camera_3d() if get_viewport() != null else null
 	_fight_fade.update(camera.global_position if camera != null else Vector3.INF, delta)
+	if not _lens_keys.is_empty():
+		_lens_wait -= delta
+		if _lens_wait <= 0.0 and camera != null:
+			_lens_wait = maxf(0.0, float(_lens_cfg.get("check_seconds", 0.1)))
+			var pivot := Vector3.INF
+			var rig := camera.get_parent() as Node3D
+			if rig is SpringArm3D:
+				pivot = rig.global_position
+			update_near_lens(camera.global_position, pivot)
+
+
+static func near_lens_config(realm: String) -> Dictionary:
+	var cfg: Dictionary = CAMERA_VISIBILITY.config().get("near_lens_hide", {})
+	if not bool(cfg.get("enabled", false)) or not realm in cfg.get("realms", []):
+		return {}
+	return cfg
+
+
+func _lens_config() -> Dictionary:
+	return near_lens_override if not near_lens_override.is_empty() else near_lens_config(_realm_bake_name)
+
+
+## One layer's entry in `near_lens_hide.layers`: {reach, fade: [invisible
+## below, opaque above] metres from the lens}, or {} when not listed.
+func _lens_layer(layer_name: String) -> Dictionary:
+	var entry: Variant = (_lens_config().get("layers", {}) as Dictionary).get(layer_name, {})
+	return entry if entry is Dictionary else {}
+
+
+static func _lens_band(entry: Dictionary) -> Vector2:
+	var band: Array = entry.get("fade", [2.5, 3.0])
+	var near_m := maxf(0.0, float(band[0]))
+	return Vector2(near_m, maxf(near_m + 0.1, float(band[1])))
+
+
+## The listed layers' finished render mesh, copied with the layer's narrow
+## pixel-dither near fade. Only the few instances swapped near the lens draw
+## with it; a narrow band keeps a still frame from catching a half-dithered
+## "ghost" trunk.
+func _store_lens_fade_mesh(model_path: String, mesh: Mesh) -> void:
+	var entry := _lens_layer(_layer_name_for(model_path))
+	if entry.is_empty() or mesh == null:
+		return
+	var band := _lens_band(entry)
+	var near_m := band.x
+	var far_m := band.y
+	var faded := mesh.duplicate(false) as Mesh
+	for surface in faded.get_surface_count():
+		var source := faded.surface_get_material(surface) as BaseMaterial3D
+		if source == null:
+			continue
+		var material := source.duplicate() as BaseMaterial3D
+		material.distance_fade_mode = BaseMaterial3D.DISTANCE_FADE_PIXEL_DITHER
+		material.distance_fade_min_distance = near_m
+		material.distance_fade_max_distance = far_m
+		faded.surface_set_material(surface, material)
+	_lens_fade_meshes[model_path] = faded
+
+
+func _record_lens_occluders(model_path: String, layer_cfg: Dictionary, placements: Array,
+		mesh_id: int, transforms: Array[Transform3D], colours: PackedColorArray) -> void:
+	if simulation_only or mesh_id < 0 or transforms.size() != placements.size():
+		return
+	var layer_name := _layer_name_for(model_path)
+	var entry := _lens_layer(layer_name)
+	if entry.is_empty():
+		return
+	_lens_cfg = _lens_config()
+	var reach_scale := float(entry.get("reach", 1.0))
+	var clear_m := _lens_band(entry).y
+	var radius := float(layer_cfg.get("collision_radius", 0.5))
+	for i in placements.size():
+		var placement: Dictionary = placements[i]
+		var key := "%s#%d" % [str(placement.get("harvest_layer", layer_name)), int(placement.get("harvest_index", -1))]
+		if int(placement.get("harvest_index", -1)) < 0:
+			key = "%s@%s" % [model_path, str(transforms[i].origin)]
+		var at := int(_lens_index.get(key, -1))
+		if at < 0:
+			at = _lens_keys.size()
+			_lens_index[key] = at
+			_lens_keys.append(key)
+			_lens_models.append(model_path)
+			_lens_xforms.append(transforms[i])
+			_lens_colours.append(colours[i] if i < colours.size() else Color(1, 1, 1, 1))
+			_lens_mesh_ids.append(mesh_id)
+			_lens_reach.append(radius * float(placement.get("scale", 1.0)) * reach_scale)
+			_lens_clear.append(clear_m)
+			_lens_hidden.append(0)
+		else:
+			# A regrowth rebuild just added this instance back to the instancer.
+			_lens_xforms[at] = transforms[i]
+			_lens_hidden[at] = 0
+	set_process(true)
+
+
+## Swap instances whose surface (axis distance minus collision_radius x scale
+## x the layer's reach factor, which covers root flares and low limbs) comes
+## inside the far edge of their layer's fade band at `eye` out of the opaque
+## instancer into their model's small near-fade MultiMesh, and back past that
+## edge + show_margin_m. Only pixels inside the fade band dissolve; the rest of the
+## tree still draws. `_pivot` is the rig pivot (unused by the rule; kept for
+## the caller's contract). Returns how many entries changed. Public for tests.
+func update_near_lens(eye: Vector3, _pivot: Vector3 = Vector3.INF) -> int:
+	if _lens_keys.is_empty() or _instancer == null or not is_instance_valid(_instancer):
+		return 0
+	var margin := maxf(0.0, float(_lens_cfg.get("show_margin_m", 1.0)))
+	var flat_eye := Vector2(eye.x, eye.z)
+	var changed := 0
+	var restore: Dictionary = {}
+	var touched: Dictionary = {}
+	for i in _lens_keys.size():
+		var origin := _lens_xforms[i].origin
+		var surface := Vector2(origin.x, origin.z).distance_to(flat_eye) - _lens_reach[i]
+		var hidden := _lens_hidden[i] == 1
+		var near := surface < (_lens_clear[i] + (margin if hidden else 0.0))
+		if near == hidden:
+			continue
+		var key := _lens_keys[i]
+		if key.contains("#") and not _harvest_lookup.has(key):
+			if hidden:
+				_lens_hidden[i] = 0 # felled or drained while swapped: the world removed it
+				touched[_lens_models[i]] = true
+			continue
+		if near and not _lens_fade_meshes.has(_lens_models[i]):
+			continue
+		if near:
+			_remove_render_instance(_lens_mesh_ids[i], origin + Vector3.UP * SINK, false)
+			_forget_instance_position(_lens_mesh_ids[i], origin + Vector3.UP * SINK)
+			_lens_hidden[i] = 1
+		else:
+			if not restore.has(_lens_mesh_ids[i]):
+				restore[_lens_mesh_ids[i]] = []
+			(restore[_lens_mesh_ids[i]] as Array).append(i)
+			_lens_hidden[i] = 0
+		touched[_lens_models[i]] = true
+		changed += 1
+	for mesh_id: int in restore.keys():
+		var xforms: Array[Transform3D] = []
+		var tints := PackedColorArray()
+		var known: PackedVector3Array = _instance_positions.get(mesh_id, PackedVector3Array())
+		var plain := true
+		for i: int in (restore[mesh_id] as Array):
+			xforms.append(_lens_xforms[i])
+			tints.append(_lens_colours[i])
+			plain = plain and _lens_colours[i] == Color(1, 1, 1, 1)
+			known.append(_lens_xforms[i].origin + Vector3.UP * SINK)
+		_instance_positions[mesh_id] = known
+		_instancer.call("add_transforms", mesh_id, xforms, PackedColorArray() if plain else tints, false)
+	if changed > 0:
+		_refresh_render_instances()
+	for model: String in touched.keys():
+		_sync_lens_mmi(model)
+	return changed
+
+
+## Rebuild one model's near-fade MultiMesh from the entries swapped out of the
+## instancer. Freed when empty.
+func _sync_lens_mmi(model: String) -> void:
+	var xforms: Array[Transform3D] = []
+	var tints := PackedColorArray()
+	for i in _lens_keys.size():
+		if _lens_hidden[i] == 1 and _lens_models[i] == model:
+			xforms.append(_lens_xforms[i])
+			tints.append(_lens_colours[i])
+	var mmi: MultiMeshInstance3D = _lens_mmis.get(model, null)
+	if xforms.is_empty():
+		if mmi != null and is_instance_valid(mmi):
+			mmi.queue_free()
+		_lens_mmis.erase(model)
+		return
+	if mmi == null or not is_instance_valid(mmi):
+		mmi = MultiMeshInstance3D.new()
+		mmi.name = "NearLensFade_%s" % model.get_file().get_basename()
+		mmi.top_level = true
+		mmi.multimesh = MultiMesh.new()
+		mmi.multimesh.transform_format = MultiMesh.TRANSFORM_3D
+		mmi.multimesh.use_colors = true
+		mmi.multimesh.mesh = _lens_fade_meshes[model]
+		var layer_cfg := _layer_for(model)
+		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if bool(layer_cfg.get("casts_shadow", true)) \
+				else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(mmi)
+		_lens_mmis[model] = mmi
+	# Terrain3D lifts each instance by its asset's height_offset along the
+	# instance's own (scaled) up axis; the local copy must sit identically.
+	var lift := float(_layer_for(model).get("height_offset", 0.0))
+	mmi.multimesh.instance_count = xforms.size()
+	for k in xforms.size():
+		var xf := xforms[k]
+		mmi.multimesh.set_instance_transform(k, Transform3D(xf.basis, xf.origin + xf.basis.y * lift))
+		mmi.multimesh.set_instance_color(k, tints[k])
+
+
+func near_lens_hidden_count() -> int:
+	return _lens_hidden.count(1)
+
+
+func near_lens_fade_instances(model: String) -> int:
+	var mmi: MultiMeshInstance3D = _lens_mmis.get(model, null)
+	return mmi.multimesh.instance_count if mmi != null and is_instance_valid(mmi) else 0
 
 
 func hide_fight_occluders(centre: Vector3, radius: float) -> PackedInt32Array:

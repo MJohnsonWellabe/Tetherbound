@@ -1062,6 +1062,15 @@ func _build_far_cover(cfg: Dictionary) -> void:
 	# different meadows meeting -- which is the line, with a softer edge.
 	_far_material.set_shader_parameter("drift_scale", float(cfg.get("clump_scale", 0.11)))
 	_far_material.set_shader_parameter("drift_contrast", float(cfg.get("clump_contrast", 0.78)))
+	for key: String in ["zone_strength", "zone_scale"]:
+		if cfg.has(key):
+			_far_material.set_shader_parameter(key, float(cfg[key]))
+	for key: String in ["zone_bare", "zone_moss"]:
+		var pair: Array = cfg.get(key, [])
+		if pair.size() == 2:
+			_far_material.set_shader_parameter(key, Vector2(float(pair[0]), float(pair[1])))
+	if cfg.has("zone_moss_tint"):
+		_far_material.set_shader_parameter("zone_moss_tint", Color(str(cfg.zone_moss_tint)))
 	# Same ground refusal as the grass, by NAME, and for the sharper reason
 	# here: a green wash over the paths at distance erases the lines the chapter
 	# is navigated by.
@@ -1765,12 +1774,17 @@ func _apply_config(cfg: Dictionary) -> void:
 		"lens_clear_m", "lens_clear_band",
 		"patch_tint_strength", "patch_tint_scale", "patch_height_strength", "patch_height_scale",
 		"patch_height_low", "patch_height_high", "soil_thin", "soil_shorten",
+		"zone_strength", "zone_scale", "zone_moss_shorten",
 	]:
 		if cfg.has(key):
 			_material.set_shader_parameter(key, float(cfg[key]))
-	for key: String in ["tint_base", "tint_tip", "patch_tip_deep", "patch_tip_dry", "soil_reference"]:
+	for key: String in ["tint_base", "tint_tip", "patch_tip_deep", "patch_tip_dry", "soil_reference", "zone_moss_tint"]:
 		if cfg.has(key):
 			_material.set_shader_parameter(key, Color(str(cfg[key])))
+	for key: String in ["zone_bare", "zone_moss"]:
+		var pair: Array = cfg.get(key, [])
+		if pair.size() == 2:
+			_material.set_shader_parameter(key, Vector2(float(pair[0]), float(pair[1])))
 	if cfg.has("wind_dir"):
 		var d: Array = cfg["wind_dir"]
 		_material.set_shader_parameter("wind_dir",

@@ -49,6 +49,13 @@ func mount(world: Node3D, player: Node3D) -> bool:
 	# Free-standing world text: face the camera upright, never read mirrored.
 	reveal.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	reveal.position = Vector3(0, 3, -4)
+	# The site's own words get the signpost's draw distance rule (masters.json
+	# reveal_visible_range_m): GPU SW8 saw them float on a far horizon.
+	var reveal_reach := float(BREAKTHROUGH.masters().sign_presentation.get("reveal_visible_range_m", 0.0))
+	if reveal_reach > 0.0:
+		reveal.visibility_range_end = reveal_reach
+		reveal.visibility_range_end_margin = float(BREAKTHROUGH.masters().sign_presentation.get("fade_margin_m", 0.0))
+		reveal.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	add_child(reveal)
 	var chest := Node3D.new()
 	chest.name = "RecipeChest"

@@ -1,0 +1,12 @@
+[
+ {
+  "label": "R32 storm canopy",
+  "a": "<scratch>/sides/cn_off.jpg",
+  "b": "<scratch>/sides/cn_on.jpg",
+  "brief": "Four Stormwood storm-forest views (2x2 grid: the Lantern Pools twice, Lantern Hollow, the Deepwood road) in the calm storm phase, with the 1.80 m trainer as a ruler. Judge whether the forest reads as the key art's storm forest: trunks, canopy, ground and landmarks.",
+  "defects": [
+   "trunks read mauve-pink, out of the key art's bark family",
+   "flat cutout leaf cards"
+  ]
+ }
+]

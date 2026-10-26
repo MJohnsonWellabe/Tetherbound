@@ -1,0 +1,82 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9398,
+  "least_squares_slope": 1.8276,
+  "method": "linear",
+  "slope": 1.8276,
+  "intercept": -4.6944,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.465,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.367,
+   "reference": 7.35,
+   "mapped": 6.942,
+   "residual": 0.408
+  },
+  "craft:before": {
+   "measured": 5.533,
+   "reference": 4.83,
+   "mapped": 5.419,
+   "residual": -0.589
+  },
+  "f36_0_gap:C7A": {
+   "measured": 6.2,
+   "reference": 7.03,
+   "mapped": 6.637,
+   "residual": 0.393
+  },
+  "f36_0_gap:C7B": {
+   "measured": 6.4,
+   "reference": 6.3,
+   "mapped": 7.002,
+   "residual": -0.702
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.4,
+   "reference": 3.5,
+   "mapped": 3.347,
+   "residual": 0.153
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 6.067,
+   "reference": 6.73,
+   "mapped": 6.393,
+   "residual": 0.337
+  }
+ },
+ "candidates": {
+  "R30b lantern pools OFF (forest present)": {
+   "measured_mean": 5.433,
+   "mapped_mean": 5.24,
+   "mapped_judges": [
+    5.36,
+    5.36,
+    4.99
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R30b lantern pools ON (hollow, forest present)": {
+   "measured_mean": 5.067,
+   "mapped_mean": 4.57,
+   "mapped_judges": [
+    4.81,
+    4.63,
+    4.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

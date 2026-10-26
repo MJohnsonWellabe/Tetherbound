@@ -1,0 +1,82 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.7642,
+  "least_squares_slope": 0.9999,
+  "method": "linear",
+  "slope": 0.9999,
+  "intercept": 0.5821,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.515,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f04_6_r22:control": {
+   "measured": 4.767,
+   "reference": 5.83,
+   "mapped": 5.348,
+   "residual": 0.482
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.633,
+   "reference": 6.75,
+   "mapped": 6.215,
+   "residual": 0.535
+  },
+  "craft:before": {
+   "measured": 4.567,
+   "reference": 4.83,
+   "mapped": 5.148,
+   "residual": -0.318
+  },
+  "craft:after": {
+   "measured": 6.267,
+   "reference": 7.35,
+   "mapped": 6.848,
+   "residual": 0.502
+  },
+  "f36_0_npc:C4A": {
+   "measured": 5.833,
+   "reference": 5.83,
+   "mapped": 6.415,
+   "residual": -0.585
+  },
+  "f36_0_npc:C4B": {
+   "measured": 5.833,
+   "reference": 5.8,
+   "mapped": 6.415,
+   "residual": -0.615
+  }
+ },
+ "candidates": {
+  "R23 ashfoot OFF (main)": {
+   "measured_mean": 4.233,
+   "mapped_mean": 4.82,
+   "mapped_judges": [
+    5.08,
+    4.98,
+    4.38
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R23 ashfoot ON (storm finish)": {
+   "measured_mean": 5.133,
+   "mapped_mean": 5.72,
+   "mapped_judges": [
+    6.08,
+    5.78,
+    5.28
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

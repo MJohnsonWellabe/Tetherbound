@@ -1,0 +1,23 @@
+{
+ "Jj": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Jv": {
+  "anchor": false,
+  "label": "R30 lantern pools",
+  "A": "<scratch>/sides/lp_off.jpg",
+  "B": "<scratch>/sides/lp_on.jpg"
+ },
+ "Kr": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Ce": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ }
+}

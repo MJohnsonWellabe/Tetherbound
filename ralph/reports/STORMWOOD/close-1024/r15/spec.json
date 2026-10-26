@@ -1,0 +1,17 @@
+[
+ {"label": "F41#3 calm", "a": "<scratch>/sides/r15/matrix_calm.png", "b": "<scratch>/sides/base/matrix_calm.png",
+  "brief": "Stormwood storm forest, eight fixed exploration views in the calm storm phase (forest, giant trunks, glass field, rod line road, distant Stormheart tree, reverse road view, Stormheart base, glowmoss hollows).",
+  "defects": ["frames read as dark murk", "near-camera occluder (root or trunk) fills part of the lens", "black ground patches fill the foreground", "bare ground with a single repeating tile", "Stormheart tree reads squat at distance", "glass field strike scar not readable"]},
+ {"label": "F41#3 break", "a": "<scratch>/sides/r15/matrix_break.png", "b": "<scratch>/sides/base/matrix_break.png",
+  "brief": "The same eight Stormwood views in the break storm phase (heaviest rain and lightning).",
+  "defects": ["forest views crushed to near-black", "break only darkens, no lightning light on trunks or ground", "flat magenta strike warning disc on the ground"]},
+ {"label": "F41#3 aftermath", "a": "<scratch>/sides/r15/matrix_aftermath_calm.png", "b": "<scratch>/sides/base/matrix_aftermath_calm.png",
+  "brief": "The same eight Stormwood views after the long storm has been broken (still purple sky, light rain).",
+  "defects": ["frames read as dark murk", "near-camera occluder (root or trunk) fills part of the lens", "black ground patches fill the foreground"]},
+ {"label": "F10#2 glass_field_alpha", "a": "<scratch>/sides/r15/fight_glass_field_alpha.png", "b": "<scratch>/sides/base/fight_glass_field_alpha.png",
+  "brief": "A named Stormwood wild fight (large spider creature against the player's small creature, trainer nearby), six moments including a charge wind-up and its impact, gameplay camera with HUD.",
+  "defects": ["dark monochrome arena", "flat magenta slab telegraph", "no hit effect at impact", "HUD covers the trainer or telegraph", "camera inside canopy or trunk"]},
+ {"label": "F10#2 capacitor_alpha", "a": "<scratch>/sides/r15/fight_capacitor_alpha.png", "b": "<scratch>/sides/base/fight_capacitor_alpha.png",
+  "brief": "A second named Stormwood wild fight in a grove beside a road, six moments including wind-ups and impacts, gameplay camera with HUD.",
+  "defects": ["dark monochrome arena", "flat magenta slab telegraph", "floating NPC text over the enemy panel", "no hit effect at impact", "camera inside canopy or trunk"]}
+]

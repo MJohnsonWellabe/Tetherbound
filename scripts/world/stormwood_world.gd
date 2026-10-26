@@ -14,6 +14,7 @@ const FALL_RECOVERY := preload("res://scripts/world/fall_recovery.gd")
 const STORMHEART := preload("res://scripts/world/stormheart_tree.gd")
 const STRUCK_SENTINEL := preload("res://scripts/world/stormwood_struck_sentinel.gd")
 const GLASS_SINK := preload("res://scripts/world/stormwood_glass_sink.gd")
+const GROUND_ZONES := preload("res://scripts/world/stormwood_ground_zones.gd")
 const POCKETS := preload("res://scripts/world/stormwood_pockets.gd")
 const ROAD_CURRENT := preload("res://scripts/world/stormwood_road_current.gd")
 const ROD_LINE := preload("res://scripts/world/stormwood_rod_line.gd")
@@ -47,6 +48,39 @@ func shell_build_complete() -> bool:
 
 func config_data() -> Dictionary:
 	return _config.duplicate(true)
+
+## GPU SW8: the Master's generic arena pad read as a flat grey placeholder
+## block on the Capacitor Grove horizon, and its signpost pole is a bare white
+## box. In the region's own families: worn moss-stone underfoot and storm-bark
+## timber for the pole. Presentation only (master_site.gd keeps collision and
+## every interaction); skipped on simulation shells.
+func dress_master_site(site: Node3D, definition: Dictionary) -> void:
+	if simulation_only or not is_instance_valid(site):
+		return
+	var floor_mesh := site.get_node_or_null(^"ArenaFloor") as MeshInstance3D
+	if floor_mesh != null:
+		var stone := StandardMaterial3D.new()
+		stone.albedo_texture = load("res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png")
+		stone.albedo_color = Color("46504b")
+		stone.uv1_triplanar = true
+		stone.uv1_scale = Vector3.ONE * 0.35
+		stone.roughness = 1.0
+		floor_mesh.material_override = stone
+	var raw: Array = definition.get("sign_position", [])
+	if raw.size() < 3:
+		return
+	var timber := StandardMaterial3D.new()
+	timber.albedo_texture = load("res://assets/environment/stylized_nature/Bark_TwistedTree.png")
+	timber.albedo_color = Color("5b4a3a")
+	timber.roughness = 0.9
+	for sign: Node in find_children("MasterSignpost*", "Node3D", false, false):
+		var post := sign as Node3D
+		if Vector2(post.global_position.x - float(raw[0]), post.global_position.z - float(raw[2])).length() > 1.0:
+			continue
+		for child: Node in post.get_children():
+			if child is MeshInstance3D and (child as MeshInstance3D).mesh is BoxMesh:
+				(child as MeshInstance3D).material_override = timber
+
 
 func ground_height_at(x: float,z: float,_preferred_y: float = NAN) -> float:
 	return _field.height_at(x,z)
@@ -350,6 +384,7 @@ func _stand_up_ground_cover() -> void:
 		if full_profile:
 			for key: String in finish.get("grass", {}):
 				profile[key] = finish.grass[key]
+			profile.merge(GROUND_ZONES.grass_keys(), true)
 		for tier: Dictionary in profile.get("cover_tiers", []):
 			if full_profile:
 				var overrides: Dictionary = finish.get("tiers", {}).get(str(tier.get("name", "")), {})
@@ -441,3 +476,4 @@ func _apply_ground_materials(budget: RefCounted) -> void:
 	material.set("auto_shader",true)
 	if not simulation_only:
 		GLASS_SINK.install(_terrain, _field.config.glass_sink)
+		GROUND_ZONES.install(_terrain)

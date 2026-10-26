@@ -1,0 +1,2 @@
+- the pools read as grey puddles, not black pools
+- lantern posts read as flat black bars
