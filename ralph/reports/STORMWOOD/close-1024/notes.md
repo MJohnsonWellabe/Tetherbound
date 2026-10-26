@@ -2,6 +2,13 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 13:45Z **SW16 device loss (m36b storm_view, Medium):** I reviewed everything the flag adds. Nothing plausibly hangs a GPU, so there is no new arm.
+  - **What the flag adds:** one 9x6 m `QuadMesh` card (`cottage_storm_view.gdshader`) and a duplicate of one kit glass material.
+    - The card's shader is `unshaded`, `cull_back`, `shadows_disabled` and `fog_disabled`. It has no texture samples and no division, its only loop is a bounded 4-octave fbm, and `flash` is clamped to 0-1.
+    - The glass copy is a plain `TRANSPARENCY_ALPHA` duplicate of `MI_WindowGlass` (roughness 0.1, no emission).
+  - **No new lights, probes, shadows or sky work:** the flag adds none of these. The shadowed hearth/lantern lights are the `seated`/`firelit` ones that SW15 m35 already ran clean at both presets.
+  - **Where it failed:** VkResult -4 with breadcrumbs SKY_PASS / BLIT_PASS points at the world sky's radiance pass, which storm_view never draws into. The card is not in the sky pass.
+  - **If the re-run fails again:** run the Medium control and candidate on just the Ashfoot stands, so a repeat can be tied to the flag or to the stand switch. I'll take any log lines you can share.
 - 26 Oct 13:40Z In progress, r45 **storm-cloud form** (`stormwood_surge.json presentation.ceiling.form`, OFF).
   - **Why:** every Stormwood set in r41-r44 (all judges) names "a flat lavender sky with no cloud form".
   - **What it draws:** large domain-warped cloud masses on the surge ceiling, with dark bases overhead, lit edges, a paler layer between the masses and rain curtains near the horizon. Nothing is bright just above the horizon.
