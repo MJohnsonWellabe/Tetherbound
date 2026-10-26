@@ -2,6 +2,10 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 08:20Z **WITHDRAWN: `tb/stormwood-m30-on` (Lantern Pools hollow). Do not judge or land it.** Re-judged with the baked forest present (r30b): 5.24 -> 4.57 mapped (-0.67, 3/3 judges prefer off). r30's +1.15 was an artefact of the stale bake. With the real `hollows_wood` forest, the basin root rings and fungi bury the pools, and the grove's trees tint paler than the baked canopy. The hollow stays OFF. The code is kept, with the grove test.
+  - Also invalidated by the stale bake: the "open plains, plant groves" lead (the stands already have their baked forest) and r31's CPU numbers (the GPU pass on m31, built from the merged head, is its first real measure).
+  - Still standing: the heartstone survey stand at 8 m was re-checked with trees (fx capture). v01 is clear and v02 shows the whole stone, so m29 stands.
+  - Judges' shared asks at the pools: real lanterns with lit glass and copper instead of the black-bar posts (new art); recessed reflective water with banks; brown-grey trunks instead of the canopy's mauve; layered fog and lightning.
 - 26 Oct 07:40Z **MERGED MAIN ee4e46cf5d2bf83f185617a9d3f323b16c1a1641** (origin/main ac5e1426, #756 SW7, into `tb/stormwood`). The clone is shallow, so the merge was built against the previous main base 768fef00.
   - The 279 main-only files take main's version.
   - The six files both sides changed keep the lane's version, which already contains main's: main carried the r19 arm 67d95770b, and TECHNICAL already has main's exit-leak lines.
