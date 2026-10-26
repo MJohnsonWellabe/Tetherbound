@@ -27,6 +27,10 @@ const FLY_VIEW_TURN_DEG := 35.0
 var _combat_pitch := false
 
 
+## --roles=hit,faint keeps only those rows (pose iteration); empty = every role.
+var _only_roles: Array[String] = []
+
+
 func _run() -> void:
 	var ids: Array[String] = ["terrapup"]
 	var candidate := false
@@ -54,6 +58,8 @@ func _run() -> void:
 			out = arg.trim_prefix("--out=")
 		elif arg.begins_with("--source-commit="):
 			source = arg.trim_prefix("--source-commit=")
+		elif arg.begins_with("--roles="):
+			_only_roles.assign(arg.trim_prefix("--roles=").split(",", false))
 	if all_roster:
 		ids.assign(SPECIES.table().keys())
 		ids.sort()
@@ -149,6 +155,8 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 	var map: Dictionary = look.get("animations", {})
 	var receipt: Array = []
 	var roles: Array = ["standing"] if _scale_only else ROLES
+	if not _only_roles.is_empty() and not _scale_only:
+		roles = ROLES.filter(func(r: String) -> bool: return r in _only_roles)
 	var phases: Array = [0.0, 1.0] if _scale_only else PHASES
 	for role: String in roles:
 		if _context and role == "ride" and _mount_offset(id) == null:
