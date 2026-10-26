@@ -2,14 +2,14 @@
 
 ## Session 2 log (newest first)
 
-- 26 Oct 12:00Z **READY (GPU arm) `tb/stormwood-m28c-on` 39af61624e6e586e48a8fd508f9a12591af34f30**: lane head a04467fc plus one config commit (3 lines). Judge `deepwood_the_fallen_giant` (six views, calm and fading). Supersedes m28b.
+- 26 Oct 06:15Z **READY (GPU arm) `tb/stormwood-m28c-on` 39af61624e6e586e48a8fd508f9a12591af34f30**: lane head a04467fc plus one config commit (3 lines). Judge `deepwood_the_fallen_giant` (six views, calm and fading). Supersedes m28b.
   - **ON in the arm:** Fallen Giant `hero` (as m28b), plus `hero.bark` and rod line `stand_clear`.
   - **Bark recolour (your SW10 order):** a cool moss multiplier (#b4cbbd) on the GLB bark and a soft material rim (0.5). The oxblood-maroon log now reads as weathered grey-brown wood with a lit edge, and it separates from the mauve trunks.
   - **CPU check** (hero ON, bark off vs on, the three fg stands, calm; `r34fg/_sheet_fg_bark.jpg`, off left): the colour is fixed in all three views. Nothing else in the frame changes, so there is no loss.
   - **Lattice figure, identified:** it is Team Tether's F10#4 rod-line relay pylon (`relay_pylon_v1`), which stands 9 m from the Fallen Giant stand and 15 m from the Ashfoot shelter. New `stormwood_rod_line.json stand_clear` (OFF on the lane) drops only the pylons inside those two catalogue circles (14 m / 18 m). The pylons either side stay, and the cable still spans them where they are within max_span_m. It rides along in this arm.
   - **Checks:** `test_stormwood_rod_line` passes with stand_clear on and off (new test `test_stand_clear_keeps_pylons_out_of_named_frames`), and `fallen_giant` passes: 0 failed.
   - **If it holds on GPU,** land it with all three flags ON.
-- 26 Oct 12:00Z Next: Ashfoot r34 `storm_finish.seated` (fbd95d84, OFF) is capturing on CPU now: all four phases, off vs on.
+- 26 Oct 06:15Z Next: Ashfoot r34 `storm_finish.seated` (fbd95d84, OFF) is capturing on CPU now: all four phases, off vs on.
   - **Pane:** it sits behind the lining plane inside the kit window's own frame, smaller, with a 2.5 cm flush trim.
   - **Window light:** its colour and energy change by phase (calm grey-violet, building darker, break white-violet, fading cool), and the pane tint changes with it.
   - **Chimney breast:** a stone chimney breast rises from the hearth stack to the ceiling pitch. The pale apex shard was the exterior Prop_Chimney's base, which drops up to 1 m below the lined ceiling.
