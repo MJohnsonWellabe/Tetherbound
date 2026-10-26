@@ -123,6 +123,9 @@ func _build_lining() -> void:
 	hearth.merge(_seated(cfg).get("hearth", {}), true)
 	hearth.merge(_finish_block(cfg, "firelit").get("hearth", {}), true)
 	_build_hearth(hearth)
+	var shell := _finish_block(cfg, "shell")
+	if not shell.is_empty():
+		call_deferred("_swap_shell", shell)
 	var height := float(cfg.get("lining_height_m", 2.45))
 	var inset := float(cfg.get("lining_inset_m", 0.03))
 	var thick := 0.04
@@ -447,6 +450,37 @@ func _build_storm_view(cfg: Dictionary, w: float, z0: float, z1: float, y0: floa
 	# sheet, which hid the exterior and read as "a glowing panel" (r34/r35):
 	# clear this one window's glass so the storm shows through it.
 	call_deferred("_clear_window_glass", w, z0, z1, float(cfg.get("glass_alpha", 0.1)))
+
+
+## r42 (GPU SW9 and r38 judges x6: "a small Meadows-style cottage, not a
+## Stormwood shelter"): the Meshy Stormwood ranger shelter (tb/meshy-1024
+## 55f9dac55: dark weathered timber on a mossy plinth, moss-edged shingles,
+## copper lightning rod, gable porch) replaces the kit prefab's exterior.
+## The kit pieces stay for their colliders and are only hidden; the shell
+## is fitted to the prefab footprint so the door and the east window line
+## up with the lined room. Presentation only.
+func _swap_shell(cfg: Dictionary) -> void:
+	var holder := get_parent() as Node3D
+	if holder == null:
+		return
+	var model := HERO_PROP.load_model(str(cfg.get("model", "")))
+	if model == null:
+		return
+	for visual: GeometryInstance3D in holder.find_children("*", "GeometryInstance3D", true, false):
+		if not is_ancestor_of(visual) and visual != self:
+			visual.visible = false
+	var bounds := HERO_PROP.BOUNDS.measure(model)
+	var size: Array = cfg.get("size_m", [4.3, 6.8, 6.3])
+	var fit := Vector3(float(size[0]) / maxf(0.01, bounds.size.x), float(size[1]) / maxf(0.01, bounds.size.y), float(size[2]) / maxf(0.01, bounds.size.z))
+	model.scale = fit
+	model.position = -Vector3(bounds.get_center().x * fit.x, bounds.position.y * fit.y, bounds.get_center().z * fit.z)
+	var seat := Node3D.new()
+	seat.name = "StormwoodShelterShell"
+	var offset: Array = cfg.get("offset_m", [0.0, -0.05, 0.0])
+	seat.position = Vector3(float(offset[0]), float(offset[1]), float(offset[2]))
+	seat.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
+	seat.add_child(model)
+	add_child(seat)
 
 
 func _clear_window_glass(w: float, z0: float, z1: float, alpha: float) -> void:

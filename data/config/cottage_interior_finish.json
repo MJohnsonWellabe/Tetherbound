@@ -80,6 +80,14 @@
       "board_m": [0.18, 1.5],
       "variation": 0.16
     },
+    "shell": {
+      "enabled": false,
+      "_candidate": "r42 Ashfoot Stormwood shelter exterior (OFF until judged; needs storm_finish on). GPU SW9 and r38 judges x6: 'a small Meadows-style cottage, not a Stormwood shelter'. The Meshy stormwood_ranger_shelter (tb/meshy-1024 55f9dac55, provenance beside the GLB) replaces the kit exterior on the ashfoot shelter only; the kit pieces stay hidden for their colliders. Fitted to the prefab footprint (4.3 x 6.3 m, 6.8 m ridge) with the door gable on +z.",
+      "model": "res://assets/props/meshy-1024/stormwood_ranger_shelter/stormwood_ranger_shelter.glb",
+      "size_m": [4.3, 6.8, 6.3],
+      "yaw_deg": 0.0,
+      "offset_m": [0.0, -0.05, 0.0]
+    },
     "storm_view": {
       "enabled": false,
       "_candidate": "r36 Ashfoot storm view (OFF until judged; needs storm_finish and window_pane on). r35 judges x3: 'no sky, rain or lightning through the window, only a tint'. A storm card 3 m outside the east window, facing the room only (back faces culled): storm sky over a dark treeline, drifting cloud, rain, and the surge's own flash lighting the cloud; sky, cloud and rain per phase. The pane goes lighter so the view shows through.",
