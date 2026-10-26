@@ -30,6 +30,16 @@
     "herb_colour": "#6b6a40",
     "herb_bundles": 5,
     "moss_colour": "#2c3a26",
+    "window_pane": {
+      "enabled": false,
+      "_candidate": "r25 storm pane (OFF until judged; needs storm_finish on). r24 judges x3: the window shows warm bright light, no storm, and calm and break look alike. A pane in the opening tints the real exterior toward the storm purple, rain runs down it by surge phase, and the surge's own flash level lifts the pane and the cool window light in Break. Presentation only.",
+      "tint": "#5c4f87",
+      "tint_alpha": 0.5,
+      "inset_m": 0.08,
+      "rain_by_phase": {"calm": 0.25, "building": 0.55, "break": 0.95, "fading": 0.45},
+      "alpha_by_phase": {"calm": 0.4, "building": 0.5, "break": 0.66, "fading": 0.48},
+      "flash_light_gain": 3.0
+    },
     "grade": {
       "enabled": false,
       "_candidate": "r24 storm grade (OFF until judged; needs storm_finish on). r23 judges x3: the room is 'a saturated orange pine box' with a flat warm daylight grade and no storm mood. Cooler, more weathered timber and a dimmer, less orange room light, so the hearth pool and the cool window fill carry the room.",
