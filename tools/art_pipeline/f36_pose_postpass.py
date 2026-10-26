@@ -933,19 +933,6 @@ if CANDIDATE_1024:
 # like the boars (close-1024 b13: 7.46 vs 6.17 mapped, faint FIXED x3, ON).
 TOPPLED = tuple(TOPPLED) + ('tuskroot',)
 TOPPLE_ROLL['tuskroot'] = 90.0
-# CLOSE-OUT faints (owner close-out 25 Oct; coordinator 26 Oct, per species,
-# OFF until CPU-judged): GPU read Torrentoad's prone faint as squatting
-# upright, Brooktail's as a curled ball, Tanglevolt's as a belly-up pale slab
-# and Riverdrake's as a seated coil. Torrentoad and Brooktail and Tanglevolt
-# topple onto the side with the back to the camera (+90, the fight-pitch
-# winner).
-CLOSE_OUT_FAINT = '--close-out-faint' in sys.argv
-if CLOSE_OUT_FAINT:
-    PRONE = tuple(s for s in PRONE if s != 'torrentoad')
-    TOPPLED = tuple(TOPPLED) + ('brooktail', 'tanglevolt')
-    TOPPLE_ROLL.update({'torrentoad': 90.0, 'brooktail': 90.0, 'tanglevolt': 90.0})
-    # Riverdrake's belly-down prone was tried (CPU 26 Oct): it held the head
-    # up and read as a low crouch, worse than its side-lie, so it was dropped.
 # Mangrove Monitor's -90 roll (OFF; --candidate-r13) lost in b13 (5.84 vs 7.03:
 # it rolls belly-up), so its +90 topple stays.
 if '--candidate-r13' in sys.argv:
