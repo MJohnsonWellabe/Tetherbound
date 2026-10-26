@@ -1,0 +1,12 @@
+[
+ {
+  "label": "R28 fallen giant",
+  "a": "<scratch>/sides/fg_off.jpg",
+  "b": "<scratch>/sides/fg_on.jpg",
+  "brief": "Deepwood road in Stormwood approaching the Fallen Giant landmark, two fixed exploration views (top and bottom) in the calm storm phase, with the 1.80 m trainer as a ruler. Judge whether the Fallen Giant reads as the landmark of the place and the forest reads as the key art's storm forest.",
+  "defects": [
+   "no hero landmark: the Fallen Giant is not visible or reads as an ordinary dead tree",
+   "dark monochrome forest with a flat road"
+  ]
+ }
+]
