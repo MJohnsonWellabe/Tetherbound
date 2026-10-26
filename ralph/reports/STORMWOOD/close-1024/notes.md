@@ -2,6 +2,16 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 07:05Z **READY (GPU arm) `tb/stormwood-m34-on` 4c6d0756690d242fa82d626fc3dd9f1ee8bbc8b1**: lane head d8758c70 (main #759 merged) plus one config line (`cottage_interior_finish.json storm_finish.seated` ON). Judge `ashfoot_shelter_inside` (four phases) against the lane, with `ashfoot_shelter_outside` as a no-change check.
+  - **Ashfoot path to 7.5 (SW9 asks):**
+    - The storm pane sits behind the lining inside the kit window's own frame, with a 2.5 cm flush trim.
+    - The window light's colour and energy change per phase (calm grey-violet, building darker, break white-violet, fading cool), and the pane tint changes with them.
+    - A stone chimney breast rises from the hearth to the ceiling pitch. The apex shard was the exterior Prop_Chimney's base hanging below the lined ceiling.
+    - The hearth fire is stronger (2.6, 6.5 m).
+  - **CPU r34** (`r34/VERDICT.md`): 4.77 -> 5.81 mapped (**+1.04**, r 0.96, RMSE 0.31). The apex shard is FIXED 3/3 and the phases go PRESENT -> PARTIAL 3/3. The window slab and hearth are still PRESENT 2/3 (PARTIAL 1/3).
+  - **Checks with seated ON:** cottage/interior, 12 tests, 0 failed; smoke_stormwood_ashfoot_shelter 16/0.
+  - **Next asks from all three judges:** a visible storm sky with rain and lightning through the glass; a visibly lit fire with a warm floor and wall pool; moss, copper and glass breaking up the big plank walls.
+
 - 26 Oct 06:45Z **READY to land land9: `tb/stormwood-land9` 5fe5d06375250a19982053e514879551cc4b3348.** It is the lane beea5f57, which merges origin/main 3a0f583b (#759), plus one config commit.
   - **New ON flags vs main:** only `fallen_giant.hero` and `hero.bark`, each with `_why_on` (GPU SW10 +0.56 / +0.59; bark accepted on the CPU check).
   - **Stays OFF:** rod line `stand_clear` and Ashfoot r34 `seated` (code only, inert when off).
