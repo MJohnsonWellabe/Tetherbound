@@ -57,6 +57,7 @@ extends Node3D
 
 const CONFIG_PATH := "res://data/config/stronghold.json"
 const STRONGHOLD_HERO_GATEHOUSE := preload("res://scripts/world/stronghold_hero_gatehouse.gd")
+const COURTYARD_FILL := preload("res://scripts/world/stronghold_courtyard_fill.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 ## ROUND-5, FIX3. The same rigged-human builder `trainer_npc.gd`'s own bodies
@@ -4832,6 +4833,8 @@ func _build_lights() -> void:
 			light = spot
 		else:
 			var omni := OmniLight3D.new()
+			if spec.has("night"):
+				omni.set_script(COURTYARD_FILL)
 			omni.position = position
 			omni.omni_range = float(spec.get("range", 14.0))
 			# VP-HALL-FIX: same shape control `_build_hall_fire()`'s braziers
@@ -4848,6 +4851,8 @@ func _build_lights() -> void:
 		# Shadowless unless an entry asks (N05: `shadow: true`); every entry
 		# that does not ask is exactly the light it was.
 		light.shadow_enabled = bool(spec.get("shadow", false))
+		if light.has_method("configure"):
+			light.call("configure", spec, spec["night"] as Dictionary)
 		add_child(light)
 
 
