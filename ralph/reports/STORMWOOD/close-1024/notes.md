@@ -2,6 +2,20 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 12:25Z **READY (GPU arm) `tb/stormwood-m41-on` aa74c99787bbdc2b065a28c971f8f8ef1272bc19** (Crown Overlook vista; your item 3 big swing). It is the lane plus one config commit:
+  - `stormwood_crown_overlook.json` `deck` + `massif` ON;
+  - a Crown Overlook `f41_survey` stand on the deck at (172, 1996), heading 37 (capture-only; the teleport arrival is unchanged).
+  - **Judge:** `glowmoss_hollows_crown_overlook` (its three views now face the Crown) against the lane.
+  - **Deck:** a 12 x 11 m raised timber lookout, 2.6 m up, beside the Crown Sightline path. Its ramp runs to the path, with rails and a lit Meshy lantern post. It collides on every shell; tests keep it clear of every route corridor.
+  - **Massif:** the Meshy Hollow Crown silhouette (2cbd71381), 560 m wide over a 30 m base. It draws only beyond 300 m and has no collision.
+  - **CPU r41** (`r41/VERDICT.md`): 3.94 -> 6.40 mapped (**+2.46**, r 0.95, RMSE 0.42). Not a lookout: FIXED 3/3. No vista: PRESENT -> FIXED 1 / PARTIAL 2.
+  - **Checks with the arm configs:** debug_teleport + crown_overlook, 12 tests, 0 failed.
+  - **Still asked, next round:**
+    - a darker, hazier Crown that reads as a ring (it renders bleached near-white);
+    - a visible drop at the deck edge;
+    - mid-distance ridges or fog layers;
+    - moss and weathering on the deck.
+
 - 26 Oct 11:55Z **READY (GPU arm) `tb/stormwood-m39-on` de3d78ffd2361c3922c3f72b74041b954e8d4803** (your item 2, path posts): the lane plus one line, `stormwood_path_posts.json` enabled.
   - **What changes:** the spur-junction lamps on Ash Road, Conductor Run and Deepwood take the Meshy Stormwood lantern post at 6.6 m, with warm pane glow and the lamps' daylight halo. The colliders are unchanged. The flag lives outside `stormwood_pockets.json`, which is a scatter-bake input.
   - **CPU r39b** (`r39/VERDICT.md`): 5.88 -> 6.43 mapped (**+0.55**; weak fit, r 0.64, RMSE 0.64), 3/3 judges prefer ON. Placeholder lanterns go PRESENT 2 / PARTIAL 1 -> PARTIAL 3/3.
