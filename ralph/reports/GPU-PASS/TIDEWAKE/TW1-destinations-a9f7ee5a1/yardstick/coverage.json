@@ -1,0 +1,18 @@
+[
+    {
+        "view":  "pumps-shore",
+        "preset":  "Medium"
+    },
+    {
+        "view":  "jetty",
+        "preset":  "Medium"
+    },
+    {
+        "view":  "pumps-shore",
+        "preset":  "High"
+    },
+    {
+        "view":  "jetty",
+        "preset":  "High"
+    }
+]

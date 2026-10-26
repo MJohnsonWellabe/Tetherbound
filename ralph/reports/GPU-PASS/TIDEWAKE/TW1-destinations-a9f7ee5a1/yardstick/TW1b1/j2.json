@@ -1,0 +1,154 @@
+{
+ "sets": {
+  "Wj": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's twin stone pump towers give a real landmark, but both sides sit on an empty flat sand plane with a smeared dark band across the water and flat noon light, far below Palworld's density and Valheim's atmosphere."
+  },
+  "Uw": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber derrick, shack, dock and moored boat give a navigable vertical, but it is small in frame on a bare dune with sparse uniform grass tufts and no haze, surf or lived-in clutter, so it reads as a prototype shore."
+  },
+  "If": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra's white fleece, dark curled horns and blue accents match the owner's in-game style bar and stand clearly taller than the trainer, though B's upside-down twisted faint frames undercut the finish."
+  },
+  "Te": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder with readable eyes, white hair and an earthy green-brown outfit that fits the Meadows palette carried it, held back only by a softer toon face than the naturalistic creatures."
+  },
+  "Wx": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's site-specific aftermaths (fallen banners, opened cage with freed captive, smoke from the burned tent) help, but smeared low-resolution ground, blobby trees and flat light in every row sink it, and B leaves enemy banners hanging or makes props simply vanish."
+  },
+  "Ug": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same as Wj: B's pump towers with walkway and wheel are a believable, grounded landmark, but the empty sand foreground, featureless low islands and flat noon grade keep it short of the Palworld bar."
+  },
+  "Uo": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same as Uw with sides swapped: B's derrick-and-jetty is a usable landmark, but the bare dune, thin grass scatter and atmosphere-free noon light sink it beside Palworld."
+  },
+  "Sg": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The copper-legged spider reads, but flat magenta ground rings as telegraphs, a near-invisible player creature, a dark muddy grade with no purple storm sky or lightning, a debug-heavy HUD and (on A) canopy filling i13/i15 sink it."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Dress every Tidewake destination around its landmark: shape the dunes, add rocks, driftwood, nets, crates and a worn path leading to the structure, white surf at the waterline, aerial haze on the far islands, and remove the smeared dark band across the mid water; scale the landmark up so it holds the frame from the production camera.",
+   "kind": "scene"
+  },
+  {
+   "change": "Make Stormwood fights read: fade or cull trunks and canopy between camera and fighters, replace the flat magenta ground rings with physical telegraphs (cracking ground, sparks, lightning) with a visible impact, rim-light the player's creature, add the purple storm sky, and slim the HUD side panels.",
+   "kind": "scene"
+  },
+  {
+   "change": "Author each enemy-site aftermath and fix the Meadows ground: always take down or drop the enemy banner, open or break props rather than deleting them (B row 2 cage vanishes), add one site-specific story beat per row, and replace the smeared low-resolution ground and blobby tree textures.",
+   "kind": "scene"
+  }
+ ]
+}

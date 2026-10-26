@@ -1,0 +1,154 @@
+{
+ "sets": {
+  "Wj": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The clean sky, cyan shallows and B's twin-tower pump house help, but a near-empty sand foreground, low-detail far islands, a dark smear across the water and long afternoon-looking shadows at 'noon' leave it far below Palworld density and Valheim-grade light."
+  },
+  "Ug": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's stone pump house with conical roofs and water pipe gives a navigable landmark, but it stands alone on an undressed beach (with the blue creature pressed into its foot), A has nothing at all, and the long shadow and dark band across the water break the noon read."
+  },
+  "Uw": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Pale dunes, grass clumps and cyan-to-navy water read as Tidewake, but the jetty (A only) is small and distant, B has no landmark at all, and half of each frame is bare rippled sand under flat light."
+  },
+  "Uo": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's derrick, shed, pier and sailboat give the shore a point of interest and the dunes and shallows are on-palette, but A is an empty beach, the landmark is small at this camera, and the bare sand foreground and dark water wedge keep it well short of Palworld finish."
+  },
+  "If": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The wool, horn and blue-accent model matches the owner's Stormcapra bar and would sit beside Palworld creatures; A's faint frames, which collapse into a headless wool lump with loose-looking horns, are what hold it back."
+  },
+  "Te": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder in the key art's green and brown palette that would pass beside Palworld's humans; the flat stage light and slightly vacant big dark eyes keep it from a higher finish."
+  },
+  "Wx": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurred, smeared ground textures, a low-res tiled stone wall in row 1 and flat light sink it, and in B the enemy banners stay up in three of the five after frames."
+  },
+  "Sg": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky brown frames with no purple storm sky or lightning, flat magenta ground telegraphs, a near-invisible player creature and HUD panels covering much of every frame (plus canopy occlusion in A) are nowhere near Palworld's readable boss fights."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Dress every Tidewake destination around its landmark: piers, sluice channels and pipes, nets, crates, rocks, shoreline paths and grouped dune grass to fill the empty foreground sand; light for real noon (short shadows, sun high) and remove the dark band or smear across the water.",
+   "kind": "scene"
+  },
+  {
+   "change": "Make the Stormwood fight readable: keep the camera clear of trunks and canopy, add the fixed purple storm sky plus rim and key light on both fighters, swap the flat magenta telegraphs for real-object effects (lightning, sparks, debris) with impacts, and shrink or collapse the HUD panels during combat.",
+   "kind": "scene"
+  },
+  {
+   "change": "Give each Tidewake destination a hero landmark at the Veilfall board's scale and language (stone arches, terraces, sluice gates, a tall beacon), so it reads as a named place from the production camera rather than a single shed, derrick or tower.",
+   "kind": "new_art"
+  }
+ ]
+}

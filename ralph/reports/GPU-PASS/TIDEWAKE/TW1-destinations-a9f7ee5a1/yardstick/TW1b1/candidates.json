@@ -1,0 +1,50 @@
+[
+    {
+        "label":  "TW1 jetty Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-jetty-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-jetty-ship-Medium.png",
+        "brief":  "One fixed production-camera view of a named Tidewake destination (the jetty below Shellwatch) at noon, with the trainer as a 1.80 m ruler and the game HUD on screen. Judge whether the destination reads as a distinct, memorable place in the key art\u0027s Tidewake - open sea and shore, a landmark you could navigate by, believable construction that sits in the world. Ignore the HUD, and ignore which wild creatures happen to be on the beach (they spawn differently each capture).",
+        "defects":  [
+                        "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)"
+                    ]
+    },
+    {
+        "label":  "TW1 pumps-shore Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-pumps-shore-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-pumps-shore-ship-Medium.png",
+        "brief":  "One fixed production-camera view of a named Tidewake destination (the pumps shore on Sluice Isle) at noon, with the trainer as a 1.80 m ruler and the game HUD on screen. Judge whether the destination reads as a distinct, memorable place in the key art\u0027s Tidewake - open sea and shore, a landmark you could navigate by, believable construction that sits in the world. Ignore the HUD, and ignore which wild creatures happen to be on the beach (they spawn differently each capture).",
+        "defects":  [
+                        "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)"
+                    ]
+    },
+    {
+        "label":  "TW1 pumps-shore High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-pumps-shore-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-pumps-shore-ship-High.png",
+        "brief":  "One fixed production-camera view of a named Tidewake destination (the pumps shore on Sluice Isle) at noon, with the trainer as a 1.80 m ruler and the game HUD on screen. Judge whether the destination reads as a distinct, memorable place in the key art\u0027s Tidewake - open sea and shore, a landmark you could navigate by, believable construction that sits in the world. Ignore the HUD, and ignore which wild creatures happen to be on the beach (they spawn differently each capture).",
+        "defects":  [
+                        "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)"
+                    ]
+    },
+    {
+        "label":  "TW1 jetty High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-jetty-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-jetty-ship-High.png",
+        "brief":  "One fixed production-camera view of a named Tidewake destination (the jetty below Shellwatch) at noon, with the trainer as a 1.80 m ruler and the game HUD on screen. Judge whether the destination reads as a distinct, memorable place in the key art\u0027s Tidewake - open sea and shore, a landmark you could navigate by, believable construction that sits in the world. Ignore the HUD, and ignore which wild creatures happen to be on the beach (they spawn differently each capture).",
+        "defects":  [
+                        "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces",
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)"
+                    ]
+    }
+]

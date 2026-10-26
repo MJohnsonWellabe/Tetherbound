@@ -1,0 +1,46 @@
+{
+ "Wj": {
+  "anchor": false,
+  "label": "TW1 pumps-shore High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-pumps-shore-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-pumps-shore-cand-High.png"
+ },
+ "Uw": {
+  "anchor": false,
+  "label": "TW1 jetty High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-jetty-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-jetty-ship-High.png"
+ },
+ "If": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ },
+ "Te": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Wx": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Uo": {
+  "anchor": false,
+  "label": "TW1 jetty Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-jetty-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-jetty-cand-Medium.png"
+ },
+ "Ug": {
+  "anchor": false,
+  "label": "TW1 pumps-shore Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-pumps-shore-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\TW1\\sides\\TW1-pumps-shore-cand-Medium.png"
+ },
+ "Sg": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ }
+}

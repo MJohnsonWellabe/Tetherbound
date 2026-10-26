@@ -1,0 +1,258 @@
+[
+ {
+  "batch": 1,
+  "code": "Wj",
+  "label": "TW1 pumps-shore High cand|ship",
+  "side": "TW1-pumps-shore-ship-High",
+  "mapped": 5.35,
+  "judges": [
+   5.44,
+   5.44,
+   5.18
+  ],
+  "defects": [
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Wj",
+  "label": "TW1 pumps-shore High cand|ship",
+  "side": "TW1-pumps-shore-cand-High",
+  "mapped": 6.68,
+  "judges": [
+   6.59,
+   6.86,
+   6.59
+  ],
+  "defects": [
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Uw",
+  "label": "TW1 jetty High cand|ship",
+  "side": "TW1-jetty-cand-High",
+  "mapped": 6.56,
+  "judges": [
+   6.32,
+   6.59,
+   6.77
+  ],
+  "defects": [
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Uw",
+  "label": "TW1 jetty High cand|ship",
+  "side": "TW1-jetty-ship-High",
+  "mapped": 5.41,
+  "judges": [
+   5.44,
+   5.44,
+   5.35
+  ],
+  "defects": [
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Uo",
+  "label": "TW1 jetty Medium cand|ship",
+  "side": "TW1-jetty-ship-Medium",
+  "mapped": 5.41,
+  "judges": [
+   5.44,
+   5.44,
+   5.35
+  ],
+  "defects": [
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Uo",
+  "label": "TW1 jetty Medium cand|ship",
+  "side": "TW1-jetty-cand-Medium",
+  "mapped": 6.56,
+  "judges": [
+   6.32,
+   6.59,
+   6.77
+  ],
+  "defects": [
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ug",
+  "label": "TW1 pumps-shore Medium cand|ship",
+  "side": "TW1-pumps-shore-ship-Medium",
+  "mapped": 5.35,
+  "judges": [
+   5.44,
+   5.44,
+   5.18
+  ],
+  "defects": [
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PRESENT",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ug",
+  "label": "TW1 pumps-shore Medium cand|ship",
+  "side": "TW1-pumps-shore-cand-Medium",
+  "mapped": 6.68,
+  "judges": [
+   6.59,
+   6.86,
+   6.59
+  ],
+  "defects": [
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED"
+   },
+   {
+    "P2-011: named destinations read as unmarked grassy slopes or small generic structures instead of distinct halls, arches or terraces": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL"
+   }
+  ]
+ }
+]
