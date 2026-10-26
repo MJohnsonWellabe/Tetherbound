@@ -61,7 +61,7 @@ func dress_master_site(site: Node3D, definition: Dictionary) -> void:
 	if floor_mesh != null:
 		var stone := StandardMaterial3D.new()
 		stone.albedo_texture = load("res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png")
-		stone.albedo_color = Color("6c7872")
+		stone.albedo_color = Color("46504b")
 		stone.uv1_triplanar = true
 		stone.uv1_scale = Vector3.ONE * 0.35
 		stone.roughness = 1.0
