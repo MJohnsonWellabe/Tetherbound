@@ -1,0 +1,194 @@
+{
+ "sets": {
+  "Kt": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "PRESENT",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+     "Clipping (the rider or plates passing through the body)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's dark-brown badger body with a mossy domed shell is a readable, grounded creature but the shell still sits on the body like a separate green carapace, and B's orange-red dog with a thin plate strip reads as a recoloured dog rather than a Palworld-finish creature; the neutral stage carries no Valheim-class light."
+  },
+  "Ro": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's tan body with dark rosettes gives real surface pattern but both versions go near-black in faint end, A is a flat dark olive with no markings, and the low, long newt barely separates from the stage at small size."
+  },
+  "Zk": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "B keeps the style-bar wolf's violet-blue fur and white ruff through a clear rearing hit react and a grounded faint, which carries it; A's hit react is indistinguishable from standing and its faint frames swap to a white-and-black blotched material that sinks it."
+  },
+  "Wt": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same creature as Ro: B's patterned hide is closer to finish, A's smooth dark olive reads placeholder, and both turn sooty near-black in faint end."
+  },
+  "Ko": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated boar has a strong heavy silhouette and readable ivory tusks in B, but both sides are a low, sooty brown-black with little value separation, faint mid lifts the body off its pooled shadow, faint end collapses into a black crumpled mass, and A's glowing red cracks and pink-red tusks push toward the reserved danger red."
+  },
+  "Nd": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "PRESENT",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+     "Clipping (the rider or plates passing through the body)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Identical frames to Kt: A's brown body and domed mossy shell read as one creature more than B's orange-red dog with a strapped-on plate strip, but neither reaches the style-bar finish."
+  },
+  "Uh": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's spotted tan hide carries some surface interest; B's flat dark olive and both sides' near-black faint end keep it below the shipping-game finish."
+  },
+  "Xn": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame with diagonal brace, tan infill, plank cap and stone footing reads as a built homestead wall, but the scene around it is sunk by a flat-shaded pale grey low-poly boulder, a flat noon grade with little depth haze, and a lone panel standing in open grass rather than a lived-in homestead."
+  },
+  "Rm": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same creature as Ro with swimming: the flat blue water plane and a trainer that seems to stand on the surface ahead of the creature rather than ride it add nothing, and the sooty faint end and A/B colour problems remain."
+  },
+  "Zy": {
+   "A": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable old-villager design (white hair and beard, olive vest, green scarf, brown boots) with clear eyes and a natural palette fits the key art's settlement folk; A's neutral, kind expression carries slightly better than B's more worried brow, and the soft toy-like face is a little more cartoon than the naturalistic creatures."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix creature faint/hurt state rendering: stop the faint-state material swap on the wolf (Zk A white/black blotches), keep albedo and lift values in faint end so the newt (Ro/Wt/Uh/Rm) and plated boar (Ko) do not collapse to near-black, and keep faint-mid bodies on their shadow (Ko).",
+   "kind": "scene"
+  },
+  {
+   "change": "Repaint the newt and the plated burrower: newt base to a warm olive-umber with the spotted side's rosette markings and real surface detail (drop the flat dark-olive variant); Kt/Nd keep side A's chestnut-dark brown coat, never the orange-red; Ko lose the red emissive and pink tusks for ivory tusks and lifted brown values.",
+   "kind": "scene"
+  },
+  {
+   "change": "Integrate the back plates into the Kt/Nd creature's body (plates rooted into fur with a blended edge and a rider seat shaped into the plates) and replace the pale flat-shaded low-poly boulder beside the Xn homestead wall with a textured, naturalistic rock.",
+   "kind": "new_art"
+  }
+ ]
+}

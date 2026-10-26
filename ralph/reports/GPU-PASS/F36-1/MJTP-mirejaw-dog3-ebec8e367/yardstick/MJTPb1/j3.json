@@ -1,0 +1,194 @@
+{
+ "sets": {
+  "Kt": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "PRESENT",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+     "Clipping (the rider or plates passing through the body)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's dark-brown body with a domed green carapace reads as one naturalistic creature, but B's orange-red dog in a strapped-on plate blanket looks like a kitbash, and the flat neutral stage gives no Valheim-class light to carry either."
+  },
+  "Ro": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's patterned hide gives Palworld-level surface interest, but A's flat unmarked olive skin, both sides' sooty faint-end backs and the gold rather than pink frills keep it short of the Mirejaw board finish."
+  },
+  "Zk": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's Tanglevolt holds the owner-bar fur and violet palette through every pose, but A's faint mid/end frames turn into a white body with black blobs, and that broken material sinks the set."
+  },
+  "Wt": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The reticulated hide on B is the side that earns its finish; A's smooth flat olive and the near-black rolled-over backs at faint end on both sides read below the owner creature bar."
+  },
+  "Ko": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Standing frames have naturalistic fur, real tusks and good bulk against the ruler, but the faint mid/end frames collapse to a near-black, splayed shape, and A's orange-red ember seams push toward the reserved red."
+  },
+  "Nd": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "PRESENT",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+     "Clipping (the rider or plates passing through the body)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This set is visually identical to Kt: A's integrated carapace creature is close to shippable, while B's orange-red coat and saddle-like plate pad read as a dog in armour rather than one creature."
+  },
+  "Uh": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The patterned side (A) carries surface detail and the plain olive side (B) reads flat-shaded, and on both the faint-end back goes sooty-black on a bare stage with no atmosphere."
+  },
+  "Xn": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame with a diagonal brace, plank cap and stone footing now reads as built, but it is still a lone thin panel with flat tan infill, standing beside a faceted grey low-poly boulder under flat, shadowless light and a painted-backdrop horizon."
+  },
+  "Rm": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This is the same split as Ro and Uh: the markings on A give the creature a hide, B's plain olive reads untextured, and both go sooty when rolled over in faint end and swim on a flat untextured blue plane."
+  },
+  "Zy": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The clean stylised elder (white hair and beard, readable eyes, moss-green vest and scarf, brown trousers) matches Palworld's human-NPC finish and the key art's warm natural palette; the sides are indistinguishable at this resolution."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix the hurt/faint material and lighting path: Zk A's faint frames swap to a white body with black blobs, Ko's faint frames and the Mirejaw faint-end backs go near-black. Keep the standing material and add rim/fill so rolled-over backs stay mid-value.",
+   "kind": "scene"
+  },
+  {
+   "change": "Mirejaw (Ro/Wt/Uh/Rm): drop the flat-olive variant and recolour the patterned variant to a warm olive-umber base with lighter, softer markings (less black reticulation), moving the gold frills toward the board's pink/coral.",
+   "kind": "scene"
+  },
+  {
+   "change": "Kt/Nd and Xn: commit to the integrated chestnut-brown carapace creature (side A), and give the B homestead wall real thickness, a textured wattle/plaster infill, contact shadow and a world-matched boulder beside it.",
+   "kind": "scene"
+  }
+ ]
+}

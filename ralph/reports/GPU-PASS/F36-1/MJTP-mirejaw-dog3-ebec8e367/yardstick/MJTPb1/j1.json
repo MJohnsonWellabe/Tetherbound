@@ -1,0 +1,194 @@
+{
+ "sets": {
+  "Kt": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "PRESENT",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+     "Clipping (the rider or plates passing through the body)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's dark-brown body with a mossy carapace reads as a grounded naturalistic creature, but the shell is a different green object sitting on the fur and in faint it collapses into a bare shell oval, while B is an orange retriever-dog with a grey plate band strapped on; neither reaches the Stormursa bar."
+  },
+  "Ro": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold frills and long salamander silhouette read well, but A's smooth unmarked olive skin looks like a flat base colour, and B's spotted coat reads as a giraffe-leopard print on a cream base that still goes near-black on the back in faint end."
+  },
+  "Zk": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "B carries it: the blue-violet shaggy wolf matches the Tanglevolt bar in every frame and its hit react rears clearly, whereas A's faint mid and faint end swap to a white body with black blotches (cow-like) and its hit react looks the same as standing."
+  },
+  "Wt": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same creature as Ro: the silhouette and gold frills read, but the unmarked olive skin (A) and the cream rosette print that turns sooty in faint end (B) do not reach the naturalistic surface detail of the owner bar."
+  },
+  "Ko": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The boar's bulk and scale against the trainer are right, but the back plates sit on a regular, tile-like grid, A's red-orange seam glow pushes toward the reserved red and looks like a lava skin, and both faint frames lose the plate detail and go near-black, with the faint-mid shadow sitting apart from the body."
+  },
+  "Nd": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "PRESENT",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+     "Clipping (the rider or plates passing through the body)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Looks identical to Kt: A's brown body with a carapace is close, but the shell still reads as a separate green object, and B's orange dog with a strapped-on plate band is off-palette and off-identity."
+  },
+  "Uh": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same creature as Ro with the sides swapped: the spotted version (A) has surface interest but reads as a borrowed big-cat print, and the olive version (B) is a smooth, unmarked flat colour that goes sooty in faint end."
+  },
+  "Xn": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame with a diagonal brace, plank cap and stone footing finally reads as built, but it stands alone like an outhouse door with a flat tan infill, next to a flat-shaded low-poly grey boulder, under flat noon light with card-like mountains and no haze or light shafts."
+  },
+  "Rm": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same creature as Uh: the swimming frame and gold frills read, but neither skin is the warm olive-umber with natural markings at the finish the owner bar sets."
+  },
+  "Zy": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing grandfather villager with a white mane and beard, expressive eyes and an olive vest and green scarf that sit in the Meadows palette with no oxblood; the finish matches the key-art trainer, though the face is a little more cartoon than the naturalistic creatures."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Keep the base creature material through hit react and faint, and ground faint-end bodies with contact shadows: no swap to white/black blotches (Zk A), no near-black faint skins (Ko, Ro/Wt/Uh/Rm faint end), and no ovoid shell perched on the stage (Kt/Nd A).",
+   "kind": "scene"
+  },
+  {
+   "change": "Repaint the gold-frilled salamander (Ro/Wt/Uh/Rm) to a warm olive-umber back and flanks with natural darker banding or spotting and a pale belly, with real skin detail: neither the flat unmarked olive nor the cream leopard print.",
+   "kind": "scene"
+  },
+  {
+   "change": "Make the Kt/Nd shell part of the body: blend the fur into the carapace edge, carry moss and stone colour down the flanks, and keep the chestnut-brown coat, so the plates stop reading as a strapped-on green pack. Retire the orange dog variant.",
+   "kind": "new_art"
+  }
+ ]
+}

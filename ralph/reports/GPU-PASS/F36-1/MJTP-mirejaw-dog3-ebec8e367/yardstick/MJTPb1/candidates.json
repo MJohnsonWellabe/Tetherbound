@@ -1,0 +1,70 @@
+[
+    {
+        "label":  "MJ mirejaw Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MJTP\\sides\\MJ-mirejaw-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MJTP\\sides\\MJ-mirejaw-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings",
+                        "Placeholder or untextured materials (flat colour, smeared or blurry texture)",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "MJ water_mirejaw Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MJTP\\sides\\MJ-water_mirejaw-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MJTP\\sides\\MJ-water_mirejaw-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings",
+                        "Placeholder or untextured materials (flat colour, smeared or blurry texture)",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "TP terrapup Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MJTP\\sides\\TP-terrapup-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MJTP\\sides\\TP-terrapup-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the coat reads orange-red rather than a natural chestnut brown",
+                        "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature",
+                        "Clipping (the rider or plates passing through the body)",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "MJ water_mirejaw High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MJTP\\sides\\MJ-water_mirejaw-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MJTP\\sides\\MJ-water_mirejaw-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings",
+                        "Placeholder or untextured materials (flat colour, smeared or blurry texture)",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "MJ mirejaw High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MJTP\\sides\\MJ-mirejaw-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MJTP\\sides\\MJ-mirejaw-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings",
+                        "Placeholder or untextured materials (flat colour, smeared or blurry texture)",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "TP terrapup High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MJTP\\sides\\TP-terrapup-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MJTP\\sides\\TP-terrapup-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the coat reads orange-red rather than a natural chestnut brown",
+                        "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature",
+                        "Clipping (the rider or plates passing through the body)",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    }
+]

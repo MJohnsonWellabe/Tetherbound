@@ -1,0 +1,362 @@
+[
+ {
+  "batch": 1,
+  "code": "Kt",
+  "label": "TP terrapup High cand|ship",
+  "side": "TP-terrapup-ship-High",
+  "mapped": 6.75,
+  "judges": [
+   6.97,
+   6.64,
+   6.64
+  ],
+  "defects": [
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Kt",
+  "label": "TP terrapup High cand|ship",
+  "side": "TP-terrapup-cand-High",
+  "mapped": 4.93,
+  "judges": [
+   4.75,
+   4.86,
+   5.19
+  ],
+  "defects": [
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "PRESENT",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+    "Clipping (the rider or plates passing through the body)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "PRESENT",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+    "Clipping (the rider or plates passing through the body)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "PRESENT",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+    "Clipping (the rider or plates passing through the body)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ro",
+  "label": "MJ water_mirejaw High cand|ship",
+  "side": "MJ-water_mirejaw-cand-High",
+  "mapped": 5.45,
+  "judges": [
+   5.64,
+   4.97,
+   5.75
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ro",
+  "label": "MJ water_mirejaw High cand|ship",
+  "side": "MJ-water_mirejaw-ship-High",
+  "mapped": 6.53,
+  "judges": [
+   6.75,
+   6.19,
+   6.64
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Wt",
+  "label": "MJ mirejaw Medium cand|ship",
+  "side": "MJ-mirejaw-cand-Medium",
+  "mapped": 5.45,
+  "judges": [
+   5.64,
+   4.97,
+   5.75
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Wt",
+  "label": "MJ mirejaw Medium cand|ship",
+  "side": "MJ-mirejaw-ship-Medium",
+  "mapped": 6.53,
+  "judges": [
+   6.75,
+   6.19,
+   6.64
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Nd",
+  "label": "TP terrapup Medium cand|ship",
+  "side": "TP-terrapup-ship-Medium",
+  "mapped": 6.75,
+  "judges": [
+   6.97,
+   6.64,
+   6.64
+  ],
+  "defects": [
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Nd",
+  "label": "TP terrapup Medium cand|ship",
+  "side": "TP-terrapup-cand-Medium",
+  "mapped": 4.93,
+  "judges": [
+   4.75,
+   4.86,
+   5.19
+  ],
+  "defects": [
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "PRESENT",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+    "Clipping (the rider or plates passing through the body)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "PRESENT",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+    "Clipping (the rider or plates passing through the body)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "PRESENT",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+    "Clipping (the rider or plates passing through the body)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Uh",
+  "label": "MJ mirejaw High cand|ship",
+  "side": "MJ-mirejaw-ship-High",
+  "mapped": 6.53,
+  "judges": [
+   6.75,
+   6.19,
+   6.64
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Uh",
+  "label": "MJ mirejaw High cand|ship",
+  "side": "MJ-mirejaw-cand-High",
+  "mapped": 5.45,
+  "judges": [
+   5.64,
+   4.97,
+   5.75
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Rm",
+  "label": "MJ water_mirejaw Medium cand|ship",
+  "side": "MJ-water_mirejaw-ship-Medium",
+  "mapped": 6.53,
+  "judges": [
+   6.75,
+   6.19,
+   6.64
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Rm",
+  "label": "MJ water_mirejaw Medium cand|ship",
+  "side": "MJ-water_mirejaw-cand-Medium",
+  "mapped": 5.45,
+  "judges": [
+   5.64,
+   4.97,
+   5.75
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ }
+]

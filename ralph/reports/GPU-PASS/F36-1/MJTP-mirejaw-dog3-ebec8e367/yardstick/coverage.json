@@ -1,0 +1,72 @@
+[
+    {
+        "item":  "MJ",
+        "species":  "mirejaw",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "MJ",
+        "species":  "water_mirejaw",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "swimming"
+                  ]
+    },
+    {
+        "item":  "TP",
+        "species":  "terrapup",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "ridden"
+                  ]
+    },
+    {
+        "item":  "MJ",
+        "species":  "mirejaw",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "MJ",
+        "species":  "water_mirejaw",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "swimming"
+                  ]
+    },
+    {
+        "item":  "TP",
+        "species":  "terrapup",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "ridden"
+                  ]
+    }
+]
