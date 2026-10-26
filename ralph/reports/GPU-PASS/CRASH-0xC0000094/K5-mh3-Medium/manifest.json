@@ -1,0 +1,561 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "meadows",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 453572036816,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 3.26619839668274
+	},
+	"candidate": true,
+	"capture_camera": {
+		"far": 2000.0,
+		"fov": 65.0,
+		"instance_id": 453588814033,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_started_utc": "2026-10-26T15:17:26",
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": false,
+	"display_server": "Windows",
+	"f38_definition": "res://ralph/reports/R2-F38/capture-definition.json",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"fixture_limit": "Debug travel with strict fixed stands; real fight and earned F17 walk are separate required proofs. Rejected stands are missing evidence.",
+	"frames": [
+		{
+			"band_display_name": "band3_the_river_lock",
+			"band_id": "band3_the_river_lock",
+			"biome_display_name": "Meadows",
+			"biome_id": "meadows",
+			"bytes": 537429,
+			"camera_player_distance_m": 5.82146549224854,
+			"camera_position": [
+				350.0,
+				7.88264179229736,
+				3722.91333007813
+			],
+			"camera_purpose": "approach",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.0000000313937924545371,
+					0.978147625923157,
+					0.2079117000103
+				],
+				"basis_z": [
+					0.000000147696184171764,
+					0.2079117000103,
+					-0.978147625923157
+				],
+				"origin": [
+					350.0,
+					6.80151987075806,
+					3728.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					-0.0000000000000163344408528679,
+					-0.000000150995774106377
+				],
+				"basis_y": [
+					-0.0000000313938031126781,
+					0.978147625923157,
+					0.2079117000103
+				],
+				"basis_z": [
+					0.000000147696169960909,
+					0.2079117000103,
+					-0.978147625923157
+				],
+				"origin": [
+					350.0,
+					7.88264179229736,
+					3722.91333007813
+				]
+			},
+			"capture_wall_ms": 3845,
+			"debug_travel": true,
+			"destination_display_name": "band3_the_river_lock_0",
+			"destination_index": 4,
+			"file": "res://shots/gpu/k5-mh3-Medium/band3_the_river_lock_0__day__clear__approach.jpg",
+			"frame_id": "band3_the_river_lock_0__day__clear__approach",
+			"identity": "band3_the_river_lock_0",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_3026_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						307.965606689453,
+						5.52715921401978,
+						3876.30249023438
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 3.0,
+					"body_radius_m": 0.975,
+					"node_path": "Wild_bramblebun_3026_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						313.760070800781,
+						5.87922382354736,
+						3872.05639648438
+					],
+					"species_id": "bramblebun"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_3023_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						219.804183959961,
+						-3.40922498703003,
+						3675.92333984375
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_3023_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						218.525405883789,
+						-4.36014652252197,
+						3685.77270507813
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_3023_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						215.689483642578,
+						-4.66689872741699,
+						3691.2177734375
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 2.3,
+					"body_radius_m": 0.812187,
+					"node_path": "Wild_duskhush_3023_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						225.093322753906,
+						-4.82999563217163,
+						3692.82055664063
+					],
+					"species_id": "duskhush"
+				},
+				{
+					"body_height_m": 3.45,
+					"body_radius_m": 1.245366,
+					"node_path": "Wild_meadowhart_3912_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						307.891021728516,
+						8.80688095092773,
+						3732.8876953125
+					],
+					"species_id": "meadowhart"
+				},
+				{
+					"body_height_m": 3.45,
+					"body_radius_m": 1.245366,
+					"node_path": "Wild_meadowhart_3912_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						303.302337646484,
+						7.60971641540527,
+						3734.04467773438
+					],
+					"species_id": "meadowhart"
+				},
+				{
+					"body_height_m": 3.45,
+					"body_radius_m": 1.245366,
+					"node_path": "Wild_meadowhart_3913_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						314.413879394531,
+						7.04869318008423,
+						3841.23974609375
+					],
+					"species_id": "meadowhart"
+				},
+				{
+					"body_height_m": 3.45,
+					"body_radius_m": 1.245366,
+					"node_path": "Wild_meadowhart_3913_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						317.700744628906,
+						7.20908975601196,
+						3843.12182617188
+					],
+					"species_id": "meadowhart"
+				},
+				{
+					"body_height_m": 2.0,
+					"body_radius_m": 0.8,
+					"node_path": "Wild_mudsnout_3025_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						291.433013916016,
+						1.99258756637573,
+						3815.734375
+					],
+					"species_id": "mudsnout"
+				},
+				{
+					"body_height_m": 2.0,
+					"body_radius_m": 0.8,
+					"node_path": "Wild_mudsnout_3025_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						297.099792480469,
+						3.46755623817444,
+						3809.67309570313
+					],
+					"species_id": "mudsnout"
+				},
+				{
+					"body_height_m": 2.0,
+					"body_radius_m": 0.8,
+					"node_path": "Wild_mudsnout_3025_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						307.054626464844,
+						4.51775884628296,
+						3818.51147460938
+					],
+					"species_id": "mudsnout"
+				},
+				{
+					"body_height_m": 2.0,
+					"body_radius_m": 0.8,
+					"node_path": "Wild_mudsnout_3025_4",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						307.837188720703,
+						5.19136667251587,
+						3810.20483398438
+					],
+					"species_id": "mudsnout"
+				},
+				{
+					"body_height_m": 2.0,
+					"body_radius_m": 0.8,
+					"node_path": "Wild_mudsnout_3071_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						254.768951416016,
+						-2.66636943817139,
+						3601.373046875
+					],
+					"species_id": "mudsnout"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_3061_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						339.615539550781,
+						7.25284957885742,
+						3845.9814453125
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_3061_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						344.703338623047,
+						8.05921459197998,
+						3854.46020507813
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 1.9,
+					"body_radius_m": 0.5675,
+					"node_path": "Wild_pipwing_3061_3",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						334.870025634766,
+						7.71880626678467,
+						3851.83251953125
+					],
+					"species_id": "pipwing"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_3024_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						269.57763671875,
+						1.61300730705261,
+						3743.02661132813
+					],
+					"species_id": "trailpup"
+				},
+				{
+					"body_height_m": 3.1,
+					"body_radius_m": 1.038984,
+					"node_path": "Wild_trailpup_3024_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						280.389678955078,
+						3.37570095062256,
+						3743.146484375
+					],
+					"species_id": "trailpup"
+				}
+			],
+			"nearby_creatures_160m": 20,
+			"observed_clock": {
+				"actual_weather": "clear",
+				"elapsed_seconds": 200.219101,
+				"hour": 8.00876404,
+				"requested": "day",
+				"requested_weather": "clear",
+				"time_of_day": "day"
+			},
+			"physics_cpu_ms": 11.285,
+			"player_character": "trainer",
+			"player_position": [
+				350.0,
+				5.05151987075806,
+				3728.0
+			],
+			"position_xz": [
+				350.0,
+				3760.0
+			],
+			"prefer_terrain_ground": false,
+			"preset": "Medium",
+			"process_cpu_ms": 90.575,
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 5.04921007156372,
+			"selected_stand_lateral_m": 0.0,
+			"selected_stand_offset_m": 32.0,
+			"selected_stand_xz": [
+				350.0,
+				3728.0
+			],
+			"spot_index_in_band": 4,
+			"stand_laterals_m": [
+				0.0
+			],
+			"stand_offsets_m": [
+				32.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 0.994350254535675,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				350.0,
+				3760.0
+			],
+			"terrain_ground_y": 5.04921007156372,
+			"time": "day",
+			"timing_limit": "CPU monitor sample and capture wall time; neither is GPU frame-time or Ally performance acceptance.",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "approach",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": null,
+			"weather": "clear"
+		}
+	],
+	"planned_frame_ids": [
+		"band3_the_river_lock_0__day__clear__approach",
+		"band3_the_river_lock_0__day__clear__gameplay",
+		"band3_the_river_lock_0__day__clear__reverse",
+		"band3_the_river_lock_0__day__clear__detail",
+		"band3_the_river_lock_0__day__rain__approach",
+		"band3_the_river_lock_0__day__rain__gameplay",
+		"band3_the_river_lock_0__day__rain__reverse",
+		"band3_the_river_lock_0__day__rain__detail",
+		"band3_the_river_lock_0__night__clear__approach",
+		"band3_the_river_lock_0__night__clear__gameplay",
+		"band3_the_river_lock_0__night__clear__reverse",
+		"band3_the_river_lock_0__night__clear__detail",
+		"band3_the_river_lock_0__night__rain__approach",
+		"band3_the_river_lock_0__night__rain__gameplay",
+		"band3_the_river_lock_0__night__rain__reverse",
+		"band3_the_river_lock_0__night__rain__detail",
+		"band5_stronghold_approach_0__day__clear__approach",
+		"band5_stronghold_approach_0__day__clear__gameplay",
+		"band5_stronghold_approach_0__day__clear__reverse",
+		"band5_stronghold_approach_0__day__clear__detail",
+		"band5_stronghold_approach_0__day__rain__approach",
+		"band5_stronghold_approach_0__day__rain__gameplay",
+		"band5_stronghold_approach_0__day__rain__reverse",
+		"band5_stronghold_approach_0__day__rain__detail",
+		"band5_stronghold_approach_0__night__clear__approach",
+		"band5_stronghold_approach_0__night__clear__gameplay",
+		"band5_stronghold_approach_0__night__clear__reverse",
+		"band5_stronghold_approach_0__night__clear__detail",
+		"band5_stronghold_approach_0__night__rain__approach",
+		"band5_stronghold_approach_0__night__rain__gameplay",
+		"band5_stronghold_approach_0__night__rain__reverse",
+		"band5_stronghold_approach_0__night__rain__detail",
+		"band5_stronghold_approach_1__day__clear__approach",
+		"band5_stronghold_approach_1__day__clear__gameplay",
+		"band5_stronghold_approach_1__day__clear__reverse",
+		"band5_stronghold_approach_1__day__clear__detail",
+		"band5_stronghold_approach_1__day__rain__approach",
+		"band5_stronghold_approach_1__day__rain__gameplay",
+		"band5_stronghold_approach_1__day__rain__reverse",
+		"band5_stronghold_approach_1__day__rain__detail",
+		"band5_stronghold_approach_1__night__clear__approach",
+		"band5_stronghold_approach_1__night__clear__gameplay",
+		"band5_stronghold_approach_1__night__clear__reverse",
+		"band5_stronghold_approach_1__night__clear__detail",
+		"band5_stronghold_approach_1__night__rain__approach",
+		"band5_stronghold_approach_1__night__rain__gameplay",
+		"band5_stronghold_approach_1__night__rain__reverse",
+		"band5_stronghold_approach_1__night__rain__detail"
+	],
+	"player_character": "trainer",
+	"preset": "Medium",
+	"production_camera": {
+		"far": 2000.0,
+		"fov": 65.0,
+		"instance_id": 453588814033,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"renderer": "forward_plus",
+	"rendering_method": "forward_plus",
+	"requested_times": [
+		"day",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1061
+	],
+	"scene": "res://scenes/world/meadows_playground.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": [
+		"band5_stronghold_approach",
+		"band3_the_river_lock_0"
+	]
+}

@@ -1,0 +1,155 @@
+﻿
+
+TimeCreated : 10/26/2026 10:19:37 AM
+Id          : 1001
+Msg         : Fault bucket 2178775083736245763, type 4
+              Event Name: APPCRASH
+              Response: Not available
+              Cab Id: 0
+              
+              Problem signature:
+              P1: Godot_v4.7-stable_win64.exe
+              P2: 4.7.0.0
+              P3: 6a32f90f
+              P4: nvoglv64.dll
+              P5: 32.0.15.6094
+              P6: 66bc35f7
+              P7: c0000094
+              P8: 0000000000e93647
+              P9: 
+              P10: 
+              
+              Attached files:
+              \\?\C:\ProgramData\Microsoft\Windows\WER\Temp\WERCC61.tmp.mdmp
+              \\?\C:\ProgramData\Microsoft\Windows\WER\Temp\WERCD0D.tmp.WERInternalMetadata.xml
+              \\?\C:\ProgramData\Microsoft\Windows\WER\Temp\WERCD6C.tmp.xml
+              \\?\C:\ProgramData\Microsoft\Windows\WER\Temp\WERCD6A.tmp.csv
+              \\?\C:\ProgramData\Microsoft\Windows\WER\Temp\WERCD8A.tmp.txt
+              
+              These files may be available here:
+              \\?\C:\ProgramData\Microsoft\Windows\WER\ReportArchive\AppCrash_Godot_v4.7-stabl_9928f966f8da1c3f089795ac2d73d1c29c37bfb_6337676d_62beba9e-91b9-41d5-ba0e-d738bf650d28
+              
+              Analysis symbol: 
+              Rechecking for solution: 0
+              Report Id: d878f2e9-e34c-4b86-8154-b779d154ce05
+              Report Status: 268435456
+              Hashed bucket: 68c9ee32a242b0133e3c90651f922603
+              Cab Guid: 0
+
+TimeCreated : 10/26/2026 10:19:36 AM
+Id          : 1000
+Msg         : Faulting application name: Godot_v4.7-stable_win64.exe, version: 4.7.0.0, time stamp: 0x6a32f90f
+              Faulting module name: nvoglv64.dll, version: 32.0.15.6094, time stamp: 0x66bc35f7
+              Exception code: 0xc0000094
+              Fault offset: 0x0000000000e93647
+              Faulting process id: 0x5788
+              Faulting application start time: 0x01dd655d14c90c74
+              Faulting application path: C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64.exe
+              Faulting module path: C:\WINDOWS\System32\DriverStore\FileRepository\nvmd.inf_amd64_aa54f7a758543a0a\nvoglv64.dll
+              Report Id: d878f2e9-e34c-4b86-8154-b779d154ce05
+              Faulting package full name: 
+              Faulting package-relative application ID: 
+
+TimeCreated : 10/26/2026 10:00:55 AM
+Id          : 1001
+Msg         : Fault bucket 2178775083736245763, type 4
+              Event Name: APPCRASH
+              Response: Not available
+              Cab Id: 0
+              
+              Problem signature:
+              P1: Godot_v4.7-stable_win64.exe
+              P2: 4.7.0.0
+              P3: 6a32f90f
+              P4: nvoglv64.dll
+              P5: 32.0.15.6094
+              P6: 66bc35f7
+              P7: c0000094
+              P8: 0000000000e93647
+              P9: 
+              P10: 
+              
+              Attached files:
+              \\?\C:\ProgramData\Microsoft\Windows\WER\Temp\WERAD52.tmp.mdmp
+              \\?\C:\ProgramData\Microsoft\Windows\WER\Temp\WERAFB4.tmp.WERInternalMetadata.xml
+              \\?\C:\ProgramData\Microsoft\Windows\WER\Temp\WERB013.tmp.xml
+              \\?\C:\ProgramData\Microsoft\Windows\WER\Temp\WERB011.tmp.csv
+              \\?\C:\ProgramData\Microsoft\Windows\WER\Temp\WERB031.tmp.txt
+              
+              These files may be available here:
+              \\?\C:\ProgramData\Microsoft\Windows\WER\ReportArchive\AppCrash_Godot_v4.7-stabl_9928f966f8da1c3f089795ac2d73d1c29c37bfb_6337676d_c58b56a1-5cf2-48c7-bcad-026027d8e8e5
+              
+              Analysis symbol: 
+              Rechecking for solution: 0
+              Report Id: a5d0db2c-45f2-4a1b-b1f2-d824204aaf6a
+              Report Status: 268435456
+              Hashed bucket: 68c9ee32a242b0133e3c90651f922603
+              Cab Guid: 0
+
+TimeCreated : 10/26/2026 10:00:54 AM
+Id          : 1000
+Msg         : Faulting application name: Godot_v4.7-stable_win64.exe, version: 4.7.0.0, time stamp: 0x6a32f90f
+              Faulting module name: nvoglv64.dll, version: 32.0.15.6094, time stamp: 0x66bc35f7
+              Exception code: 0xc0000094
+              Fault offset: 0x0000000000e93647
+              Faulting process id: 0x556c
+              Faulting application start time: 0x01dd655a650adcc1
+              Faulting application path: C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64.exe
+              Faulting module path: C:\WINDOWS\System32\DriverStore\FileRepository\nvmd.inf_amd64_aa54f7a758543a0a\nvoglv64.dll
+              Report Id: a5d0db2c-45f2-4a1b-b1f2-d824204aaf6a
+              Faulting package full name: 
+              Faulting package-relative application ID: 
+
+TimeCreated : 10/26/2026 8:22:23 AM
+Id          : 1001
+Msg         : Fault bucket 1303361030976587305, type 4
+              Event Name: APPCRASH
+              Response: Not available
+              Cab Id: 0
+              
+              Problem signature:
+              P1: Godot_v4.7-stable_win64.exe
+              P2: 4.7.0.0
+              P3: 6a32f90f
+              P4: Godot_v4.7-stable_win64.exe
+              P5: 4.7.0.0
+              P6: 6a32f90f
+              P7: c000001d
+              P8: 000000000136e6a1
+              P9: 
+              P10: 
+              
+              Attached files:
+              \\?\C:\ProgramData\Microsoft\Windows\WER\Temp\WER72FE.tmp.mdmp
+              \\?\C:\ProgramData\Microsoft\Windows\WER\Temp\WER7793.tmp.WERInternalMetadata.xml
+              \\?\C:\ProgramData\Microsoft\Windows\WER\Temp\WER77F2.tmp.xml
+              \\?\C:\ProgramData\Microsoft\Windows\WER\Temp\WER77F0.tmp.csv
+              \\?\C:\ProgramData\Microsoft\Windows\WER\Temp\WER7810.tmp.txt
+              
+              These files may be available here:
+              \\?\C:\ProgramData\Microsoft\Windows\WER\ReportArchive\AppCrash_Godot_v4.7-stabl_7e179f6264e49beae6cde4cdbb73c58368daaa_6337676d_761bfee3-3e2f-4dfe-ac51-2c749b790eea
+              
+              Analysis symbol: 
+              Rechecking for solution: 0
+              Report Id: fc95a178-f7b7-4f21-84f7-9bfd89678655
+              Report Status: 268435456
+              Hashed bucket: 1b0faa6f7252d8f6421677f3c1724629
+              Cab Guid: 0
+
+TimeCreated : 10/26/2026 8:22:20 AM
+Id          : 1000
+Msg         : Faulting application name: Godot_v4.7-stable_win64.exe, version: 4.7.0.0, time stamp: 0x6a32f90f
+              Faulting module name: Godot_v4.7-stable_win64.exe, version: 4.7.0.0, time stamp: 0x6a32f90f
+              Exception code: 0xc000001d
+              Fault offset: 0x000000000136e6a1
+              Faulting process id: 0x577c
+              Faulting application start time: 0x01dd654c49490130
+              Faulting application path: C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64.exe
+              Faulting module path: C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64.exe
+              Report Id: fc95a178-f7b7-4f21-84f7-9bfd89678655
+              Faulting package full name: 
+              Faulting package-relative application ID: 
+
+
+
+

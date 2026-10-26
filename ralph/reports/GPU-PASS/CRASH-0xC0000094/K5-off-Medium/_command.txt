@@ -1,0 +1,1 @@
+﻿godot --path D:\tb-gpu-wt-crA --rendering-method forward_plus --rendering-driver vulkan --resolution 1920x1080 --script res://tools/capture_f38_matrix.gd -- --seed=2042 --f38-preset=Medium --f38-baseline --times=day,night --subset=band5_stronghold_approach --subset=band3_the_river_lock_0 --output=res://shots/gpu/k5-off-Medium
