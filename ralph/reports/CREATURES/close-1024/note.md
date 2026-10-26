@@ -1,5 +1,23 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (26 Oct, GPU READY: CO7-ON; co6-on WITHDRAWN)
+
+- **Recipe profile, again, since your 12:16 message asks: the game already uses it** (full code path in the PRIORITY entry below).
+  - `creature_body.gd:884` -> `creature_pose_candidates.gd install()` remaps hit/faint/swim/fly_grip/ride to `f36_candidate/*` for every species in `enabled_species`, for every CreatureBody (wild, combat, companion, camp).
+  - Main lists all seven CO-1 species. Only the plain capture was wrong; fixed in 0d2e61ba.
+  - **Mark the MET rows. There is nothing to wire.**
+- **Tanglevolt arcs: parked** per your CO-5 verdict. **co6-on is WITHDRAWN** (it carried arcs v2); don't judge or land it.
+- **GPU READY (CLOSE-OUT, on main): CO7-ON e6225b2153de22444440a5009f15d78baa851d14.** tb/co7-on = origin/main d212fbed plus two commits:
+  1. **Galecrest matte** (owner ruling): x1.35 value lift dropped, rim 0.25 -> 0.1. **CPU b49 +1.23** (6.96 vs 5.73; halo PRESENT x3 -> FIXED/PARTIAL/PARTIAL). The brightness-smoke probe moves to Voltarach; same assertions, PASS.
+  2. **Grounded flinch** for Cloudfang, Breezetail and Stormcapra (your CO-1 item): the held shove regenerated at gain 0.75 instead of 1.5, hit role only.
+     - **CPU b50, every judge preferred it in every set (9/9):** Cloudfang +0.77 (pounce PRESENT x3 -> PARTIAL x3), Stormcapra +0.47 (-> FIXED x3), Breezetail +0.44 (-> FIXED x3).
+     - Both batches had non-confirming fits (inverted gap anchors), so the gains are within-set.
+     - Cloudfang still "rears, hind feet planted"; a lower gain is next if the GPU agrees.
+- Judge main vs co7-on: Galecrest (all roles), and Cloudfang/Breezetail/Stormcapra hit rows.
+- Verdicts: `close-1024/b49/VERDICT.md`, `close-1024/b50/VERDICT.md`.
+- **Next:** Stormcapra's horn tube-loop skinning in the faint, then Cloudfang's white-fur contrast.
+- tb/creatures-land head: see branch (b50 verdict on top of 80200d1f).
+
 ## TO COORDINATOR (26 Oct, GPU READY: CO6-ON)
 
 - **GPU READY (CLOSE-OUT, on main): CO6-ON f3664d8e2585b2e6cac6ada5a946176c401c3097.** tb/co6-on = origin/main f876b174 plus two commits, nothing else:
