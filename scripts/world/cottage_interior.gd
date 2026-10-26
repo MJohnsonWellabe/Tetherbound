@@ -24,6 +24,7 @@ const KIT := "res://assets/props/quaternius_fantasy/%s.gltf"
 const FINISH_CONFIG := "res://data/config/cottage_interior_finish.json"
 const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 const STORM_PANE_SHADER := preload("res://scripts/world/cottage_storm_pane.gdshader")
+const STORM_VIEW_SHADER := preload("res://scripts/world/cottage_storm_view.gdshader")
 const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
 const CAMP_FLAME := "res://assets/props/generated_camp/camp_flame.glb"
 
@@ -37,6 +38,8 @@ var _storm_light: OmniLight3D
 var _storm_light_base := 0.0
 var _surge: Node
 var _hearth_light: OmniLight3D
+var _view: ShaderMaterial
+var _view_cfg: Dictionary = {}
 var _hearth_base := 0.0
 var _flicker := 0.0
 var _flicker_time := 0.0
@@ -312,8 +315,12 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
 	_storm_light_base = storm.light_energy
 	var pane_cfg: Dictionary = (cfg.get("window_pane", {}) as Dictionary).duplicate()
 	pane_cfg.merge(seated.get("pane", {}), true)
+	var view_cfg := _finish_block({"enabled": true, "storm_finish": cfg}, "storm_view")
+	pane_cfg.merge(view_cfg.get("pane", {}), true)
 	if bool(pane_cfg.get("enabled", false)):
 		_build_storm_pane(pane_cfg, w, z0, z1, y0, y1)
+	if not view_cfg.is_empty():
+		_build_storm_view(view_cfg, w, z0, z1, y0, y1)
 	if seated.has("chimney_breast"):
 		_chimney_breast(seated.chimney_breast, w, d, top, float(cfg.get("gable_apex_m", 5.1)))
 	# Copper: a lantern beside the window, a pot and a bucket by the hearth.
@@ -408,6 +415,39 @@ func _build_storm_pane(cfg: Dictionary, w: float, z0: float, z1: float, y0: floa
 	set_process(true)
 
 
+## r36 (r35 judges x3: "no sky, rain or lightning through the window, only a
+## tint"): a storm card a few metres outside the east window, facing the room
+## with back faces culled so it never draws from outside. Its sky, cloud and
+## rain follow the surge phase and its cloud lights with the surge's flash.
+func _build_storm_view(cfg: Dictionary, w: float, z0: float, z1: float, y0: float, y1: float) -> void:
+	_view_cfg = cfg
+	_view = ShaderMaterial.new()
+	_view.shader = STORM_VIEW_SHADER
+	_apply_view_phase("calm")
+	var card := MeshInstance3D.new()
+	card.name = "StormView"
+	var quad := QuadMesh.new()
+	var size: Array = cfg.get("size_m", [9.0, 6.0])
+	quad.size = Vector2(float(size[0]), float(size[1]))
+	card.mesh = quad
+	card.material_override = _view
+	card.position = Vector3(w + float(cfg.get("distance_m", 3.0)), (y0 + y1) * 0.5 + float(cfg.get("lift_m", 0.6)), (z0 + z1) * 0.5)
+	card.rotation.y = -PI * 0.5
+	card.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(card)
+	set_process(true)
+
+
+func _apply_view_phase(phase: String) -> void:
+	var look: Dictionary = (_view_cfg.get("phases", {}) as Dictionary).get(phase, {})
+	for key: String in ["sky_top", "sky_low", "tree_colour"]:
+		if look.has(key):
+			_view.set_shader_parameter(key, Color(str(look[key])))
+	for key: String in ["cloud", "rain", "treeline"]:
+		if look.has(key):
+			_view.set_shader_parameter(key, float(look[key]))
+
+
 func _process(delta: float) -> void:
 	if _hearth_light != null and _flicker > 0.0:
 		_flicker_time += delta
@@ -428,6 +468,9 @@ func _process(delta: float) -> void:
 	_pane.set_shader_parameter("tint_alpha", float(alpha_by_phase.get(phase, _pane_cfg.get("tint_alpha", 0.5))))
 	var flash := float(_surge.call("flash_level")) if _surge.has_method("flash_level") else 0.0
 	_pane.set_shader_parameter("flash", flash)
+	if _view != null:
+		_apply_view_phase(phase)
+		_view.set_shader_parameter("flash", flash)
 	var tint_by_phase: Dictionary = _pane_cfg.get("tint_by_phase", {})
 	if tint_by_phase.has(phase):
 		_pane.set_shader_parameter("tint", Color(str(tint_by_phase[phase])))

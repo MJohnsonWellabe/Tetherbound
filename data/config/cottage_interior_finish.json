@@ -73,6 +73,20 @@
       "post_spacing_m": 1.35,
       "tie_beam_z": [-0.4],
       "lantern_light": ["#ffb066", 0.55, 2.6]
+    },
+    "storm_view": {
+      "enabled": false,
+      "_candidate": "r36 Ashfoot storm view (OFF until judged; needs storm_finish and window_pane on). r35 judges x3: 'no sky, rain or lightning through the window, only a tint'. A storm card 3 m outside the east window, facing the room only (back faces culled): storm sky over a dark treeline, drifting cloud, rain, and the surge's own flash lighting the cloud; sky, cloud and rain per phase. The pane goes lighter so the view shows through.",
+      "distance_m": 3.0,
+      "size_m": [9.0, 6.0],
+      "lift_m": 0.6,
+      "pane": {"alpha_by_phase": {"calm": 0.18, "building": 0.22, "break": 0.3, "fading": 0.2}},
+      "phases": {
+        "calm": {"sky_top": "#3a3f5c", "sky_low": "#8a8fa6", "cloud": 0.45, "rain": 0.25},
+        "building": {"sky_top": "#221c3a", "sky_low": "#4f4870", "cloud": 0.8, "rain": 0.55},
+        "break": {"sky_top": "#2a1f4a", "sky_low": "#6e62a8", "cloud": 0.9, "rain": 0.95},
+        "fading": {"sky_top": "#2e3b52", "sky_low": "#7d93a8", "cloud": 0.6, "rain": 0.4}
+      }
     }
   },
   "hearth": {
