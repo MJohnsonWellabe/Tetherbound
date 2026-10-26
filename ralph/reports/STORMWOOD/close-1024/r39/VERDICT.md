@@ -11,4 +11,4 @@
 
 **Judges' shared ask:** a larger copper-and-glass lantern on a visible post or bracket that reads from the road.
 
-**Also flagged, on both arms:** a flat yellow-green vertical light column behind the trees at the junctions. It reads as an unexplained billboard. To trace: likely the pocket spur's daylight beam marker.
+**Also flagged, on both arms:** a flat yellow-green vertical light column behind the trees at the junctions. It reads as an unexplained billboard. Identified: it is the F09 pocket reward shaft at each gateway (`stormwood_pockets.json reward_beacon.shaft`). It is deliberate wayfinding, tuned in judged rounds 5 and 7 so the reward reads from the road. It is left as it is; a recolour toward white-violet would be the F09 owner's call.
