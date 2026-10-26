@@ -63,6 +63,16 @@
       },
       "chimney_breast": {"x": [0.05, 1.15], "front_z": -1.2, "base_m": 2.0, "ceiling_clear_m": 0.05, "tint": "#8c8a84", "uv_scale": 0.6},
       "hearth": {"fire_energy": 2.6, "fire_range_m": 6.5}
+    },
+    "firelit": {
+      "enabled": false,
+      "_candidate": "r35 Ashfoot firelit hut (OFF until judged; needs storm_finish on). r34 judges x3: the hearth is 'a stone box with a dark mouth and no visible fire', and the walls are 'huge flat stretched plank walls' with no lived-in warmth. The camp flame sculpt burns in the firebox with a flickering fire light and a soft warm pool on the floor; dark timber posts at stud spacing, wall plates and a tie beam frame the lining as a ranger hut; the copper lantern by the window is lit.",
+      "hearth": {"flame": {"offset": [0.0, 0.12, 0.25], "scale": 0.35, "energy": 3.5, "pool_m": [1.8, 1.4], "pool_colour": "#ff9a4a", "pool_alpha": 0.35, "flicker": 0.18}},
+      "post_width_m": 0.14,
+      "post_depth_m": 0.06,
+      "post_spacing_m": 1.35,
+      "tie_beam_z": [-0.4],
+      "lantern_light": ["#ffb066", 0.55, 2.6]
     }
   },
   "hearth": {

@@ -24,6 +24,8 @@ const KIT := "res://assets/props/quaternius_fantasy/%s.gltf"
 const FINISH_CONFIG := "res://data/config/cottage_interior_finish.json"
 const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 const STORM_PANE_SHADER := preload("res://scripts/world/cottage_storm_pane.gdshader")
+const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
+const CAMP_FLAME := "res://assets/props/generated_camp/camp_flame.glb"
 
 var _half_w := 1.69
 var _half_d := 1.69
@@ -34,6 +36,10 @@ var _pane_cfg: Dictionary = {}
 var _storm_light: OmniLight3D
 var _storm_light_base := 0.0
 var _surge: Node
+var _hearth_light: OmniLight3D
+var _hearth_base := 0.0
+var _flicker := 0.0
+var _flicker_time := 0.0
 
 
 ## `room`: the recipe's own `room` dict (building_prefabs.gd::room_spec) —
@@ -112,6 +118,7 @@ func _build_lining() -> void:
 		return
 	var hearth: Dictionary = (cfg.get("hearth", {}) as Dictionary).duplicate()
 	hearth.merge(_seated(cfg).get("hearth", {}), true)
+	hearth.merge(_finish_block(cfg, "firelit").get("hearth", {}), true)
 	_build_hearth(hearth)
 	var height := float(cfg.get("lining_height_m", 2.45))
 	var inset := float(cfg.get("lining_inset_m", 0.03))
@@ -186,6 +193,61 @@ func _build_hearth(cfg: Dictionary) -> void:
 	fire.omni_range = float(cfg.get("fire_range_m", 5.5))
 	fire.shadow_enabled = true
 	add_child(fire)
+	if cfg.has("flame"):
+		_hearth_flame(cfg.flame, at, depth, fire)
+
+
+## r35 (r34 judges x3: "a stone box with a dark mouth and no visible fire"):
+## the camp flame sculpt burns in the firebox, the fire light flickers, and a
+## soft warm pool lies on the floor in front of the hearth. Natural fire glow
+## only; presentation, no collider.
+func _hearth_flame(cfg: Dictionary, at: Vector3, depth: float, light: OmniLight3D) -> void:
+	var scene := load(CAMP_FLAME) as PackedScene
+	if scene != null:
+		var flame := scene.instantiate() as Node3D
+		flame.name = "HearthFlame"
+		var offset: Array = cfg.get("offset", [0.0, 0.12, 0.25])
+		flame.position = at + Vector3(float(offset[0]), float(offset[1]), depth * float(offset[2]))
+		flame.scale = Vector3.ONE * float(cfg.get("scale", 0.35))
+		add_child(flame)
+		CAMPFIRE_GLOW.ignite_mesh(flame, float(cfg.get("energy", 3.5)), true)
+	var pool_size: Array = cfg.get("pool_m", [1.8, 1.4])
+	if float(pool_size[0]) > 0.0:
+		var pool := MeshInstance3D.new()
+		pool.name = "HearthPool"
+		var quad := QuadMesh.new()
+		quad.size = Vector2(float(pool_size[0]), float(pool_size[1]))
+		pool.mesh = quad
+		var glow := StandardMaterial3D.new()
+		glow.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		glow.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+		glow.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		glow.albedo_texture = _soft_disc()
+		glow.albedo_color = Color(str(cfg.get("pool_colour", "#ff9a4a")), float(cfg.get("pool_alpha", 0.35)))
+		glow.disable_receive_shadows = true
+		pool.material_override = glow
+		pool.rotation.x = -PI * 0.5
+		pool.position = Vector3(at.x, FLOOR_TOP + 0.015, at.z + depth * 0.5 + float(pool_size[1]) * 0.5)
+		pool.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(pool)
+	_hearth_light = light
+	_hearth_base = light.light_energy
+	_flicker = float(cfg.get("flicker", 0.18))
+	set_process(true)
+
+
+func _soft_disc() -> GradientTexture2D:
+	var gradient := Gradient.new()
+	gradient.set_color(0, Color(1, 1, 1, 1))
+	gradient.set_color(1, Color(1, 1, 1, 0))
+	var texture := GradientTexture2D.new()
+	texture.gradient = gradient
+	texture.fill = GradientTexture2D.FILL_RADIAL
+	texture.fill_from = Vector2(0.5, 0.5)
+	texture.fill_to = Vector2(0.5, 0.0)
+	texture.width = 64
+	texture.height = 64
+	return texture
 
 
 ## GPU SW6 (25 Oct, Ashfoot 5.82): "no window or view of the storm, so the
@@ -262,6 +324,18 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
 	_tint(pot, copper)
 	var bucket := _kit("CopperBucket", "Bucket_Metal", Vector3(w - 0.22, FLOOR_TOP, -d + 0.9), -20.0, 0.5)
 	_tint(bucket, copper)
+	var firelit := _finish_block({"enabled": true, "storm_finish": cfg}, "firelit")
+	if not firelit.is_empty():
+		_frame_walls(firelit, timber, w, d, top, z0, z1)
+		if lantern != null and firelit.has("lantern_light"):
+			var look: Array = firelit.lantern_light
+			var lamp := OmniLight3D.new()
+			lamp.name = "CopperLanternLight"
+			lamp.position = lantern.position + Vector3(-0.15, 0.1, 0.0)
+			lamp.light_color = Color(str(look[0]))
+			lamp.light_energy = float(look[1])
+			lamp.omni_range = float(look[2])
+			add_child(lamp)
 	# Herb bundles hung from a cord under the ridge, clear of head height.
 	var cord_y := float(cfg.get("herb_cord_m", 2.75))
 	var herb := StandardMaterial3D.new()
@@ -334,9 +408,14 @@ func _build_storm_pane(cfg: Dictionary, w: float, z0: float, z1: float, y0: floa
 	set_process(true)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	if _hearth_light != null and _flicker > 0.0:
+		_flicker_time += delta
+		var noise := sin(_flicker_time * 9.0) * 0.6 + sin(_flicker_time * 24.3 + 1.3) * 0.4
+		_hearth_light.light_energy = _hearth_base * (1.0 + noise * _flicker)
 	if _pane == null:
-		set_process(false)
+		if _hearth_light == null:
+			set_process(false)
 		return
 	if _surge == null or not is_instance_valid(_surge):
 		_surge = get_tree().current_scene.find_child("StormwoodSurge", true, false) if get_tree().current_scene != null else null
@@ -413,11 +492,41 @@ func _graded_ceiling_and_floor(wood: Material, w: float, d: float, top: float, a
 
 ## r34 `storm_finish.seated` when the finish and that block are both on.
 func _seated(cfg: Dictionary) -> Dictionary:
+	return _finish_block(cfg, "seated")
+
+
+func _finish_block(cfg: Dictionary, key: String) -> Dictionary:
 	if not bool(cfg.get("enabled", false)):
 		return {}
 	var storm: Dictionary = cfg.get("storm_finish", {})
-	var seated: Dictionary = storm.get("seated", {})
-	return seated if bool(storm.get("enabled", false)) and bool(seated.get("enabled", false)) else {}
+	var block: Dictionary = storm.get(key, {})
+	return block if bool(storm.get("enabled", false)) and bool(block.get("enabled", false)) else {}
+
+
+## r35 (r34 judges x3: "huge flat stretched plank walls"): dark timber posts
+## at a hut's stud spacing on the back and side walls, a tie beam across the
+## room at the wall top, and wall plates along both eaves, so the lining reads
+## as a framed ranger hut. Presentation only; posts stay against the walls.
+func _frame_walls(cfg: Dictionary, timber: Material, w: float, d: float, top: float, z0: float, z1: float) -> void:
+	var post := float(cfg.get("post_width_m", 0.14))
+	var proud := float(cfg.get("post_depth_m", 0.06))
+	var spacing := float(cfg.get("post_spacing_m", 1.35))
+	var height := top - FLOOR_TOP
+	var y := FLOOR_TOP + height * 0.5
+	var count := int(floor(d * 2.0 / spacing))
+	for side: float in [-1.0, 1.0]:
+		for index in range(1, count + 1):
+			var z := -d + float(index) * (d * 2.0) / float(count + 1)
+			# East wall: clear of the window and of the copper lantern beside it.
+			if side > 0.0 and z > z0 - 0.45 - post * 2.0 and z < z1 + post:
+				continue
+			_visual_box("WallPost%s%d" % ["E" if side > 0.0 else "W", index], Vector3(proud, height, post), Vector3(side * (w - 0.04 - proud * 0.5), y, z), timber)
+		_visual_box("WallPlate%s" % ("E" if side > 0.0 else "W"), Vector3(proud * 1.6, post, d * 2.0), Vector3(side * (w - 0.04 - proud * 0.8), top - post * 0.5, 0.0), timber)
+	for x: float in [-w * 0.5, w * 0.5]:
+		_visual_box("BackPost%d" % int(x > 0.0), Vector3(post, height, proud), Vector3(x, y, -d + 0.04 + proud * 0.5), timber)
+	var beam_z: Array = cfg.get("tie_beam_z", [-0.4])
+	for z: Variant in beam_z:
+		_visual_box("TieBeam%d" % beam_z.find(z), Vector3(w * 2.0 - 0.1, post * 1.2, post), Vector3(0.0, top - post * 0.6, float(z)), timber)
 
 
 ## r34 (GPU SW9: "a pale untextured shard poking through the roof apex"):
