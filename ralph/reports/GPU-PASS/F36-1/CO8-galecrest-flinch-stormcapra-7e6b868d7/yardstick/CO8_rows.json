@@ -1,0 +1,442 @@
+[
+ {
+  "batch": 1,
+  "code": "Uz",
+  "label": "CO8 breezetail High cand|ship",
+  "side": "CO8-breezetail-cand-High",
+  "mapped": 6.89,
+  "judges": [
+   6.89,
+   6.65,
+   7.13
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Uz",
+  "label": "CO8 breezetail High cand|ship",
+  "side": "CO8-breezetail-ship-High",
+  "mapped": 6.46,
+  "judges": [
+   6.42,
+   6.06,
+   6.89
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Xs",
+  "label": "CO8 stormcapra High cand|ship",
+  "side": "CO8-stormcapra-ship-High",
+  "mapped": 7.68,
+  "judges": [
+   7.6,
+   8.08,
+   7.36
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Xs",
+  "label": "CO8 stormcapra High cand|ship",
+  "side": "CO8-stormcapra-cand-High",
+  "mapped": 6.1,
+  "judges": [
+   5.94,
+   6.42,
+   5.94
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Nz",
+  "label": "CO8 galecrest High cand|ship",
+  "side": "CO8-galecrest-cand-High",
+  "mapped": 7.68,
+  "judges": [
+   7.6,
+   7.84,
+   7.6
+  ],
+  "defects": [
+   {
+    "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "FIXED",
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "FIXED",
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "FIXED",
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Nz",
+  "label": "CO8 galecrest High cand|ship",
+  "side": "CO8-galecrest-ship-High",
+  "mapped": 6.22,
+  "judges": [
+   6.18,
+   6.06,
+   6.42
+  ],
+  "defects": [
+   {
+    "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "PRESENT",
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "PRESENT",
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "PRESENT",
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Qg",
+  "label": "CO8 breezetail Medium cand|ship",
+  "side": "CO8-breezetail-ship-Medium",
+  "mapped": 6.46,
+  "judges": [
+   6.42,
+   6.06,
+   6.89
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Qg",
+  "label": "CO8 breezetail Medium cand|ship",
+  "side": "CO8-breezetail-cand-Medium",
+  "mapped": 6.77,
+  "judges": [
+   6.89,
+   6.3,
+   7.13
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Pe",
+  "label": "CO8 stormcapra Medium cand|ship",
+  "side": "CO8-stormcapra-cand-Medium",
+  "mapped": 6.6,
+  "judges": [
+   6.44,
+   6.84,
+   6.54
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Pe",
+  "label": "CO8 stormcapra Medium cand|ship",
+  "side": "CO8-stormcapra-ship-Medium",
+  "mapped": 7.6,
+  "judges": [
+   7.34,
+   8.14,
+   7.34
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Iu",
+  "label": "CO8 cloudfang High cand|ship",
+  "side": "CO8-cloudfang-ship-High",
+  "mapped": 7.14,
+  "judges": [
+   7.14,
+   7.44,
+   6.84
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Iu",
+  "label": "CO8 cloudfang High cand|ship",
+  "side": "CO8-cloudfang-cand-High",
+  "mapped": 7.64,
+  "judges": [
+   7.74,
+   7.84,
+   7.34
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Dm",
+  "label": "CO8 cloudfang Medium cand|ship",
+  "side": "CO8-cloudfang-cand-Medium",
+  "mapped": 7.64,
+  "judges": [
+   7.74,
+   7.84,
+   7.34
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Dm",
+  "label": "CO8 cloudfang Medium cand|ship",
+  "side": "CO8-cloudfang-ship-Medium",
+  "mapped": 7.14,
+  "judges": [
+   7.14,
+   7.44,
+   6.84
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ih",
+  "label": "CO8 galecrest Medium cand|ship",
+  "side": "CO8-galecrest-cand-Medium",
+  "mapped": 7.7,
+  "judges": [
+   7.64,
+   7.84,
+   7.64
+  ],
+  "defects": [
+   {
+    "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "FIXED",
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "FIXED",
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "FIXED",
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ih",
+  "label": "CO8 galecrest Medium cand|ship",
+  "side": "CO8-galecrest-ship-Medium",
+  "mapped": 6.54,
+  "judges": [
+   6.34,
+   6.64,
+   6.64
+  ],
+  "defects": [
+   {
+    "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "PRESENT",
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "PRESENT",
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "PRESENT",
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ }
+]

@@ -1,0 +1,172 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9074,
+  "least_squares_slope": 1.1863,
+  "method": "linear",
+  "slope": 1.1863,
+  "intercept": -0.4648,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.548,
+ "top_anchor_reference": 7.79,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_1_gpu:stormcapra_shipping": {
+   "measured": 5.533,
+   "reference": 6.23,
+   "mapped": 6.099,
+   "residual": 0.131
+  },
+  "f36_1_gpu:stormcapra_candidate": {
+   "measured": 6.867,
+   "reference": 7.79,
+   "mapped": 7.681,
+   "residual": 0.109
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 6.3,
+   "reference": 6.73,
+   "mapped": 7.009,
+   "residual": -0.279
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.133,
+   "reference": 3.5,
+   "mapped": 4.439,
+   "residual": -0.939
+  },
+  "f36_0_gap:C5B": {
+   "measured": 5.367,
+   "reference": 6.93,
+   "mapped": 5.902,
+   "residual": 1.028
+  },
+  "f36_0_gap:C5A": {
+   "measured": 4.8,
+   "reference": 5.7,
+   "mapped": 5.229,
+   "residual": 0.471
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.933,
+   "reference": 7.47,
+   "mapped": 7.76,
+   "residual": -0.29
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.933,
+   "reference": 7.53,
+   "mapped": 7.76,
+   "residual": -0.23
+  }
+ },
+ "candidates": {
+  "CO8 breezetail High cand|ship | CO8-breezetail-cand-High": {
+   "measured_mean": 6.2,
+   "mapped_mean": 6.89,
+   "mapped_judges": [
+    6.89,
+    6.65,
+    7.13
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO8 breezetail High cand|ship | CO8-breezetail-ship-High": {
+   "measured_mean": 5.833,
+   "mapped_mean": 6.46,
+   "mapped_judges": [
+    6.42,
+    6.06,
+    6.89
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO8 stormcapra High cand|ship | CO8-stormcapra-ship-High": {
+   "measured_mean": 6.867,
+   "mapped_mean": 7.68,
+   "mapped_judges": [
+    7.6,
+    8.08,
+    7.36
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "CO8 stormcapra High cand|ship | CO8-stormcapra-cand-High": {
+   "measured_mean": 5.533,
+   "mapped_mean": 6.1,
+   "mapped_judges": [
+    5.94,
+    6.42,
+    5.94
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO8 galecrest High cand|ship | CO8-galecrest-cand-High": {
+   "measured_mean": 6.867,
+   "mapped_mean": 7.68,
+   "mapped_judges": [
+    7.6,
+    7.84,
+    7.6
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "CO8 galecrest High cand|ship | CO8-galecrest-ship-High": {
+   "measured_mean": 5.633,
+   "mapped_mean": 6.22,
+   "mapped_judges": [
+    6.18,
+    6.06,
+    6.42
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO8 breezetail Medium cand|ship | CO8-breezetail-ship-Medium": {
+   "measured_mean": 5.833,
+   "mapped_mean": 6.46,
+   "mapped_judges": [
+    6.42,
+    6.06,
+    6.89
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO8 breezetail Medium cand|ship | CO8-breezetail-cand-Medium": {
+   "measured_mean": 6.1,
+   "mapped_mean": 6.77,
+   "mapped_judges": [
+    6.89,
+    6.3,
+    7.13
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

@@ -1,0 +1,146 @@
+{
+ "sets": {
+  "Uz": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The big-eared fox with warm orange fur and a blue patterned harness reads at Palworld-class creature finish with a clear face and silhouette; the bare grey stage gives no Valheim-class light to add to it, and the busy blue pattern muddies the torso at small size."
+  },
+  "Hf": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-fleeced, curl-horned ram matches the owner's Stormcapra bar in wool and horn finish; side A's unchanged hit react and upside-down, legs-up faint frames are what pull it down."
+  },
+  "Xs": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The ram model carries it at owner-bar wool and horn quality; side B's twisted legs-up faint with dark underside showing is what sinks that side."
+  },
+  "Iw": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A lone wall panel in a uniform grass carpet beside a flat-shaded grey low-poly boulder, under flat midday light with no haze or shafts, falls short of Palworld base-building density and Valheim-class atmosphere even when side A's timber frame, cap and stone footing read as built."
+  },
+  "Ys": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's bold black-and-yellow banding reads well standing but its faint frames rear the snake high into the air with the shadow far below, and side A's near-black mottled gold body sinks into the dark stage; in both, hit react matches standing."
+  },
+  "Nz": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "PRESENT",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side A's matte slate-and-tan feathering matches the Galecrest bar and the carrying flight reads; side B's near-white, over-bright plumage loses the feather read and looks plastic."
+  },
+  "Ct": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable elder villager with white hair and beard, a moss-green vest and scarf, and brown trousers fits the key art's settlement palette; his large-eyed, softer cartoon face sits a step away from the naturalistic creature style."
+  },
+  "Qg": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The fox model reaches Palworld-class creature appeal in fur, ears and face; side A's airborne flinch and the busy blue harness pattern are what hold it back."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-author hit react and faint poses so every creature flinches visibly with all feet planted and faints onto its side, face toward camera, settled on the stage: no airborne flinch (Uz B, Qg A), no unchanged hit react (Hf A, Xs B, Ys A/B), no legs-up twist (Hf A, Xs B) and no snake rearing into the air when fainted (Ys B).",
+   "kind": "scene"
+  },
+  {
+   "change": "Ship the timber-frame homestead wall with cap, diagonal brace, darker weathered plaster and separate stone footing (Iw A), give it real thickness, and replace the flat grey low-poly boulder and uniform grass carpet around it with grouped props and a grove edge.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix creature material values: keep Galecrest matte slate and tan (Nz A), not blown white; lift the snake's base value or banding contrast so it separates from the dark stage (Ys A); simplify the fox's blue harness pattern so the torso reads at 30% (Uz/Qg).",
+   "kind": "scene"
+  }
+ ]
+}

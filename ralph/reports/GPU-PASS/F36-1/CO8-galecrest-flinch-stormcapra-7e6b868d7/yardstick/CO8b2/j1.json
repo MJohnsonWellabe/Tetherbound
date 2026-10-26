@@ -1,0 +1,142 @@
+{
+ "sets": {
+  "Pe": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormcapra fleece, horns and blue accents hold the style bar while standing, but A's faint flips into a brown-and-white twisted lump and B's hit react rears the whole forequarters off the ground, so the poses keep it short of Palworld finish."
+  },
+  "Iu": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The white-and-blue wolf has a clean, large silhouette well above the trainer and a grounded faint, but A's hit react launches the whole body into the air and B's reads as a forward lunge rather than a flinch, and the fur is a flat pale mid-tone without the rim-lit depth of the style bar."
+  },
+  "Cs": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's black-and-yellow banding reads instantly at small size but its faint mid/end lift the serpent into the air with the shadow far below, while A's mottled black-gold coils read glossy and busy, hide the trainer in three of four frames and show almost no change from stand to hit react; neither matches the board's olive scale and gold crack-line Fulgocobra."
+  },
+  "Kh": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "B carried it: the Tanglevolt matches the style bar, with violet-blue fur and lightning, a hit react that rears visibly and a low, grounded faint; A sank, its hit react is identical to standing and its faint mid/end turn the coat white with black blotches (reads as a cow, identity lost)."
+  },
+  "Sz": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Voltarach model reads gold-on-dark as the board's spider, but the fight is a murky mid-tone with no purple storm sky or lightning, telegraphs are flat magenta rings and slabs (A i10, B i10), the player's creature is a speck under the spider, the HUD stack covers the left and bottom third, and in A the camera sits inside canopy and trunks (i11, i13, i15), so the fight does not read as a world event."
+  },
+  "Dm": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same white-and-blue wolf read as Iu: strong, grounded silhouette and faint, but B's hit react leaps clear of the stage and A's is a lunge rather than a flinch, and the pale fur lacks rim-lit value range."
+  },
+  "Ih": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "PRESENT",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A carried it: matte slate-and-tan Galecrest matching the style bar, with a clear hit-react lean and a good carrying silhouette; B sank to a near-white, over-bright bird that loses the Galecrest identity, and in both the faint reads as a hunched crouch rather than a collapse."
+  },
+  "Ed": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable grandpa villager with an olive vest, green scarf and brown boots in the key-art settlement palette, at a Palworld-class finish; held back by large, cartoon eyes that sit more Pixar than the naturalistic creature style, and B's worried brow is slightly less appealing."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix creature hit-react and faint grounding and material swaps: no full-body leaps on hit react (Iu A, Dm B, Pe B), no airborne faint (Cs B), no texture swap to white/black blotches or flipped underside on faint (Kh A, Pe A), and a real side-lying collapse for Galecrest (Ih).",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight: keep the camera out of trunks and canopy (Sz A i11/i13/i15), replace flat magenta telegraph rings and slabs with white-violet lightning and stone-impact effects, raise exposure and show the purple storm sky, rim-light the player's creature, and shrink the left HUD stack and bottom bar.",
+   "kind": "scene"
+  },
+  {
+   "change": "Bring materials to the boards: matte slate-and-tan Galecrest (not Ih B's white), and Fulgocobra in dark olive scale with gold crack lines and a cream belly instead of the yellow banding or mottled glossy gold.",
+   "kind": "scene"
+  }
+ ]
+}

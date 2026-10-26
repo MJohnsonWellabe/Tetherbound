@@ -1,0 +1,146 @@
+{
+ "sets": {
+  "Uz": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A readable orange fox with a clear face and ears that stands taller than the ruler, but the noisy blue patterned coat and the flat grey stage with no sky, fog or time-of-day light leave it far from Palworld/Valheim finish."
+  },
+  "Hf": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fleece-and-horn ram carries the owner's naturalistic style well (B's rear-up flinch and side-lying faint read instantly), but the neutral stage has no world light or atmosphere, and A's twisted upside-down faint breaks the read."
+  },
+  "Xs": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ram model is at the style bar, but on a lightless neutral stage, and B's near-static flinch and upside-down black-and-white faint tangle sink the read."
+  },
+  "Iw": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, diagonal brace, plank cap and stone footing read as a built half-timber wall, but a lone segment beside a low-detail pale boulder, on tiled grass under flat noon light with no haze or shafts, is short of Palworld base-building density and Valheim light."
+  },
+  "Ys": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's banded black-and-yellow snake has a strong hooded silhouette but floats metres above its shadow in both faint frames with an over-bright glowing belly, while A's grounded coils are a dark, muddy gold-mottled mass that loses the head at small size."
+  },
+  "Nz": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "PRESENT",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's matte slate-and-tan raptor matches the Galecrest style bar and its carrying flight reads, but the neutral stage has no world light, and B's silver-white over-bright plumage looks plastic."
+  },
+  "Ct": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "An appealing, readable elder villager with an earthy olive/moss/brown palette and no oxblood, but he is shown on a black void with no world light, and his rounder animated-film face sits apart from the naturalistic creature style."
+  },
+  "Qg": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fox's face and big ears read, but the patchy blue coat texture, a flinch that either hops off the floor (A) or barely moves (B), and a lightless stage keep it below Palworld finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Do a pose pass on hurt and faint: make every hit react a clear flinch that keeps the feet planted (Uz B and Qg A hop; Qg B and Xs B barely move), settle every faint onto its side with the body touching its shadow, and remove the upside-down twisted faints (Hf A, Xs B) and the snake floating metres up (Ys B).",
+   "kind": "scene"
+  },
+  {
+   "change": "Do a material and value pass toward the owner's naturalistic bar: matte fur and feather instead of over-bright gloss (Nz B, Ys B belly), lift the snake's value separation and give it clean banding (Ys A), and replace the fox's noisy blue camo coat with readable fur colour blocks.",
+   "kind": "scene"
+  },
+  {
+   "change": "Ship the timber-framed homestead wall (Iw A: plank cap, stone footing, braced infill) as the placed piece, with real thickness and weathering, and set it in a lived-in homestead context instead of a lone card next to a low-detail boulder.",
+   "kind": "new_art"
+  }
+ ]
+}

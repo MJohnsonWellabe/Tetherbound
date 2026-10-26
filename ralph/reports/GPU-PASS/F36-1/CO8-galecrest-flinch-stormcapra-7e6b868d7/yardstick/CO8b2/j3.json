@@ -1,0 +1,142 @@
+{
+ "sets": {
+  "Pe": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormcapra standing model is at the owner bar, but A's faint frames collapse into a twisted black-and-white piebald lump and B's hit react is a full rear, so the hurt states do not hold Palworld-class finish."
+  },
+  "Iu": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The pale blue-streaked canine reads and is taller than the trainer, but its fur reads as noisy layered cards with low value separation from the grey stage, and A's near-vertical airborne hit react breaks the read."
+  },
+  "Cs": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Neither cobra reaches the Fulgocobra board: A's black-gold mottle is noisy and its hit react matches standing, while B's bold yellow banding reads but its faint frames stand the snake up in a vertical S hovering high above a detached shadow."
+  },
+  "Kh": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's Tanglevolt is near the owner bar with a clear rear-up flinch and grounded faint, but A's hit react is identical to standing and its faints flip it belly-up into a white body with black blotch stumps that reads as a different animal."
+  },
+  "Sz": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown-black floor with no purple storm sky, lightning or rim light, flat magenta ground rings for telegraphs, a player creature that is a tiny blue speck under the spider and a HUD covering about a third of the frame sink it, and A also loses whole frames (i11, i13, i15, i16) to trunks and canopy."
+  },
+  "Dm": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The same pale canine as Iu: an identifiable, grounded model whose card-heavy fur and weak value separation from the stage keep it below Palworld finish, and B's airborne leap hit react breaks the read."
+  },
+  "Ih": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "PRESENT",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A's matte slate-and-tan Galecrest matches the owner bar and reads well in every frame including carrying, which carried it, while B's blown-out white-silver plumage sinks that side."
+  },
+  "Ed": {
+   "A": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A polished, warm, readable elder with a moss-green and brown palette that fits the Meadows key art; it is slightly more cartoon than the naturalistic creature bar, and B's more downturned expression is a little less inviting."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-stage the Stormwood fight (Sz): fade or dither trunks and canopy between camera and fighters, add the fixed purple storm sky with white-violet lightning and a cool rim/fill light on both fighters, scale up or outline the player's creature, replace the flat magenta ground rings with lightning or stone telegraphs, and shrink the left party column and bottom move bar.",
+   "kind": "scene"
+  },
+  {
+   "change": "Author proper hurt and faint clips across the roster: a planted flinch distinct from standing (Kh A, Cs A/B identical to standing; Iu A / Dm B airborne leap) and a grounded lie-on-side faint facing camera (Pe A twisted roll, Kh A belly-up flip, Cs B snake hovering upright in an S above its shadow).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix creature materials: matte slate-and-tan Galecrest with no blown highlights (Ih B), consistent underside fur instead of black-blotch piebald bellies that show in faints (Pe A, Kh A), and a Fulgocobra texture closer to the board's dark olive with gold lightning cracks and a cream belly (Cs).",
+   "kind": "scene"
+  }
+ ]
+}

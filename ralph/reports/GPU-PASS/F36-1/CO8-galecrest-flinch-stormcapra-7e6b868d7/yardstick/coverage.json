@@ -1,0 +1,84 @@
+[
+    {
+        "species":  "galecrest",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "carrying"
+                  ]
+    },
+    {
+        "species":  "cloudfang",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "species":  "breezetail",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "species":  "stormcapra",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "species":  "galecrest",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "carrying"
+                  ]
+    },
+    {
+        "species":  "cloudfang",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "species":  "breezetail",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "species":  "stormcapra",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    }
+]

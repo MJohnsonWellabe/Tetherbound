@@ -1,0 +1,22 @@
+# Queue 47: CLOSE-OUT CO8 (coordinator NOTE.md 26 Oct 3:30 PM CT): current origin/main 76fea04b6 vs tb/co8-on 7e6b868d7 (co7-on Galecrest
+# matte slate/tan + grounded flinch, plus Stormcapra faint facing camera). co8's base d212fbed6 is 8 commits behind main; none touch creature files.
+# capture_f36_poses.gd --candidate --whole-body --context (game installs the F36 recipe profile). Called from the top of queue 36; out\CO8.done marks a finished run.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $main = "D:\tb-gpu-pass"; $crA = "D:\tb-gpu-wt-crA"; $tide = "D:\tb-gpu-wt-tide"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "45"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+if (Test-Path "$out\CO8.done") { "CO8 already captured; skipping"; return }
+$main_sha = "76fea04b619aeb28e99419197a41134d2c488b67"; $co8 = "7e6b868d72e04e517ac49e6c90519dd47d0bdb63"
+Gate "CO8"
+"== CO8 (CLOSE-OUT): Galecrest matte + grounded flinch + Stormcapra faint, tb/co8-on 7e6b868d7 vs main 76fea04b6, --candidate"
+foreach ($arm in @(@("cand", $co8), @("ship", $main_sha))) {
+    CheckoutCrA $arm[1]; Import $crA "crA-CO8-$($arm[0])"
+    foreach ($pr in "Medium", "High") {
+        Gate "CO8 $($arm[0]) $pr"
+        CleanCrA $arm[1]
+        Pose "CO8-$($arm[0])-$pr" $pr "galecrest,cloudfang,breezetail,stormcapra" @("--candidate") $arm[1]
+    }
+}
+New-Item -ItemType File -Force "$out\CO8.done" | Out-Null
+"CO8 done"
+"queue47 done"

@@ -1,0 +1,46 @@
+{
+ "Uz": {
+  "anchor": false,
+  "label": "CO8 breezetail High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-breezetail-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-breezetail-ship-High.png"
+ },
+ "Hf": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_shipping",
+  "B": "f36_1_gpu:stormcapra_candidate"
+ },
+ "Xs": {
+  "anchor": false,
+  "label": "CO8 stormcapra High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-stormcapra-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-stormcapra-cand-High.png"
+ },
+ "Iw": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Ys": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Nz": {
+  "anchor": false,
+  "label": "CO8 galecrest High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-galecrest-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-galecrest-ship-High.png"
+ },
+ "Ct": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Qg": {
+  "anchor": false,
+  "label": "CO8 breezetail Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-breezetail-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-breezetail-cand-Medium.png"
+ }
+}

@@ -1,0 +1,142 @@
+{
+ "sets": {
+  "Pe": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the faint frames read as an upside-down or twisted shape facing away from the camera rather than a creature lying on its side": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra model (shaggy cream fleece, dark curled horns, blue accents) matches the owner bar and dwarfs the trainer at Palworld finish; side A's tumbled, dark-bellied faint frames are what pull it down."
+  },
+  "Iu": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The pale blue-white wolf has naturalistic fur and a large readable silhouette over the trainer, but at small size the white-on-pale fur reads clumpy and the face and eyes get lost, so it lands just under the owner-bar wolves."
+  },
+  "Cs": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side A's black serpent with gold veins matches the Fulgocobra board and stays grounded, which carries it; side B sinks on hard yellow banding and a faint pose that rises upright and floats high above its own shadow."
+  },
+  "Kh": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side B's Tanglevolt keeps its violet-black storm fur through every pose at the owner-bar finish; side A's faint frames break into a white body with black blotches that reads as a different, untextured animal."
+  },
+  "Sz": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown-green grade with no purple storm sky or lightning, flat magenta ground rings as telegraphs, a tiny player creature and a dense HUD stacked over the left and bottom of the frame read as a debug capture, not a Palworld-class boss event."
+  },
+  "Dm": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The same pale wolf model reads big, furry and grounded beside the trainer; on side B a fully airborne hit react and a face that blurs into white fur at small size hold it back."
+  },
+  "Ih": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "FIXED",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the body reads glossy, plastic or over-bright with a hard rim light rather than a matte slate and tan finish": "PRESENT",
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side A's matte slate-and-tan Galecrest matches the owner-bar in-game bird and carries it; side B's bright, glossy white plumage looks plastic and blows out against the stage."
+  },
+  "Ed": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The warm, friendly grandfather (white hair and beard, olive vest, green scarf, brown boots) uses an earthy palette that fits the Meadows settlement, but his big-eyed, smooth cartoon face sits more stylised than the naturalistic creatures beside him."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight presentation: replace the flat magenta ground rings and slabs with real-object telegraphs (lightning bolts, crackling web, stone burst) that land with an impact; keep the camera clear of trunks and canopy (Sz A i11/i13/i15); grade in the fixed purple storm sky and white-violet lightning; slim the HUD stack so both fighters stay visible",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature state-pose pass: keep both hind feet planted in every hit react (no full leaps: Iu A, Dm B), show every faint lying on its side facing the camera (Pe A), keep faint bodies on the ground (Cs B), and hold the same material on every state frame (Kh A faint frames lose their fur texture)",
+   "kind": "scene"
+  },
+  {
+   "change": "Matte material and board-palette pass: remove the glossy, over-bright whites and hard rim (Ih B), bring Cs B back to the Fulgocobra board's black-and-gold veining, and darken the pale wolf's face and eyes so they read at small size (Iu, Dm)",
+   "kind": "scene"
+  }
+ ]
+}

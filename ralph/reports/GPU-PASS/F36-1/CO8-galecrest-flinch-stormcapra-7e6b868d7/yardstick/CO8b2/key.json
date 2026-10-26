@@ -1,0 +1,46 @@
+{
+ "Pe": {
+  "anchor": false,
+  "label": "CO8 stormcapra Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-stormcapra-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-stormcapra-ship-Medium.png"
+ },
+ "Iu": {
+  "anchor": false,
+  "label": "CO8 cloudfang High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-cloudfang-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-cloudfang-cand-High.png"
+ },
+ "Cs": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Kh": {
+  "anchor": true,
+  "A": "f36_1_gpu:tanglevolt_shipping",
+  "B": "f36_1_gpu:tanglevolt_candidate"
+ },
+ "Sz": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Dm": {
+  "anchor": false,
+  "label": "CO8 cloudfang Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-cloudfang-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-cloudfang-ship-Medium.png"
+ },
+ "Ih": {
+  "anchor": false,
+  "label": "CO8 galecrest Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-galecrest-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO8\\sides\\CO8-galecrest-ship-Medium.png"
+ },
+ "Ed": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ }
+}
