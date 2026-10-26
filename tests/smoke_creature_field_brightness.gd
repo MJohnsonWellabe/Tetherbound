@@ -18,11 +18,13 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const CREATURE_SCENE := "res://scenes/creatures/creature.tscn"
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
-## A species still on its installed mesh that ships `field_emission` > 0 and no
-## `field_degreen` (the close-1024 naturalistic remakes ship none). Galecrest
-## also ships `field_rim`, so its live surface is the per-body rim copy and its
-## night floor, the chain the night rescale used to miss (close-1024 fix).
-const LIVE_SPECIES := "galecrest"
+## A species that ships `field_emission` > 0 and no `field_degreen` (the
+## close-1024 naturalistic remakes ship none). Voltarach also ships
+## `field_rim`, so its live surface is the per-body rim copy and its night
+## floor, the chain the night rescale used to miss (close-1024 fix). Galecrest
+## was the probe until its value lift was dropped for a matte finish (owner
+## ruling, 26 Oct); Voltarach is now the one species with both.
+const LIVE_SPECIES := "voltarach"
 
 const SETTLE_FRAMES := 120
 
