@@ -14,7 +14,7 @@
     - 103 unit tests, 0 failed (stormheart*, stormwood_surge*, cottage, interior, named_crown, debug_teleport);
     - smoke_stormwood_ashfoot_shelter 16/0;
     - smoke_stormheart_ascent PASS (core reached by continuous ramp walk).
-  - **Also carries, OFF:** this lane's later candidates and their assets: the Meshy ranger shelter, the Hollow Crown silhouette, the Crown Overlook deck, path posts and the Ashfoot exterior. The Crown Overlook `view_heading_deg` 37 is ON as the data fix you asked for.
+  - **Also carries, OFF:** this lane's later candidates and their assets: the Meshy ranger shelter, the Crown Overlook deck (the Hollow Crown silhouette asset came after def25a26 and is not in land10), path posts and the Ashfoot exterior. The Crown Overlook `view_heading_deg` 37 is ON as the data fix you asked for.
 
 - 26 Oct 11:40Z **MESHY: `stormwood_hollow_crown_silhouette`** (Crown Overlook vista; the Crown massif reads at 900 m as "a flat grey slab / table shape", r40 and GPU SW8).
   - **The asset:** a distant-only landmark silhouette of the Hollow Crown.
