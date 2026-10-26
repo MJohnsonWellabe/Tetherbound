@@ -5,6 +5,9 @@ extends "res://tools/_capture_creature_roster.gd"
 ## This stage is deformation evidence, not an ordinary-input traversal proof.
 const ROLES := ["hit", "faint", "swim", "fly_grip", "ride"]
 const PHASES := [0.0, 0.25, 0.5, 0.75, 1.0]
+## What the game plays for a traversal role a species has no clip for: a
+## moving swimmer walks, a mounted rider's carrier idles (creature_animator.gd).
+const RUNTIME_FALLBACK := {"swim": "walk", "ride": "idle", "fly_grip": "idle"}
 var _pose_failures: Array[String] = []
 var _scale_only := false
 ## Opt-in role staging (--context): fly_grip raised off the stage as in flight,
@@ -174,6 +177,19 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 			receipt.append({"role": role, "status": "not_a_carrier"})
 			continue
 		var clip := "f36_candidate/%s" % role if candidate else str(map.get(role, ""))
+		if not _scale_only and (clip.is_empty() or not player.has_animation(clip)) \
+				and role in RUNTIME_FALLBACK:
+			# The game plays a fallback for a traversal role the species has no
+			# clip for (creature_animator.gd `tick`: locomotion while the role is
+			# set; fly_controller.gd: the procedural wingbeat for a
+			# `procedural_wing_pose` carrier). Show that, and say so.
+			if role == "fly_grip" and _procedural_wings(id):
+				receipt.append({"role": role, "status": "runtime_procedural_wingbeat"})
+				continue
+			var fallback := str(map.get(RUNTIME_FALLBACK[role], ""))
+			if not fallback.is_empty() and player.has_animation(fallback):
+				receipt.append({"role": role, "status": "runtime_fallback", "clip": fallback})
+				clip = fallback
 		if not _scale_only and (clip.is_empty() or not player.has_animation(clip)):
 			receipt.append({"role": role, "status": "missing_baseline_clip"})
 			_pose_failures.append("%s: missing %s clip" % [id, role])
@@ -274,6 +290,12 @@ func _swims(id: String) -> bool:
 		return true
 	var mount: Variant = SPECIES.definition(id).get("swim_mount", null)
 	return mount is Dictionary and bool((mount as Dictionary).get("compatible", false))
+
+
+func _procedural_wings(id: String) -> bool:
+	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/fly_traversal.json"))
+	var row: Variant = (data as Dictionary).get("capabilities", {}).get(id, null) if data is Dictionary else null
+	return row is Dictionary and bool((row as Dictionary).get("procedural_wing_pose", false))
 
 
 func _carries(id: String) -> bool:

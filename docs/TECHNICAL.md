@@ -223,6 +223,7 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
   - Run `texture_import_policy.py --apply <dir>` for new images, then import again.
   - The CPU stage self-lights the whole albedo (field_emission), so emission-only changes (arc emission, Tanglevolt field lift) show only on GPU.
 - **Faint end on the stage:** `capture_f36_poses.gd` calls the body's `settle_faint()` at faint-100 (the shipped combat faint settle) and clears it before the next role. Code that measures a seeked pose (`astra_whole_bounds_r4.gd`) must call `force_update_all_bone_transforms()` on the skeletons first, or it reads the previous pose.
+- **Traversal rows with no clip:** `capture_f36_poses.gd` shows what the game plays instead (creature_animator: swim -> walk, ride -> idle; fly_controller: the procedural wingbeat for a `procedural_wing_pose` carrier) and records `runtime_fallback` / `runtime_procedural_wingbeat` in the receipt rather than failing (Galecrest fly_grip, water_cannonback swim/ride).
 - **What the CPU stage cannot show:** the BaseMaterial3D rim term and emission (llvmpipe self-lights the albedo). A rim or emission candidate goes straight to GPU with a pixel-diff note, not a CPU judge batch.
 - **Net smokes:** `tools/net/run_net_smoke.sh <name> --out=<dir>` (two peers, about 3 min each); it prints ALL CHECKS PASSED.
 - **Disk recovery:**
