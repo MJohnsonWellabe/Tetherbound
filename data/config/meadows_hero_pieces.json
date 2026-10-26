@@ -1,4 +1,13 @@
 {
+  "clearings": {
+    "enabled": true, "_why_on": "GPU MH7 (tb/gpu-pass, ralph/reports/GPU-PASS/F38-0/MH7-ridgeline-clearings-bcb954b31/VERDICT.md): Ridgeline Watch 4.76 -> 6.40 (+1.64) at both presets; dark trunk wall FIXED 3/3. Not yet 7.5.",
+    "_why_r1_cpu": "r1 CPU judged (26 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, 3 anchor pairs incl. craft, confirming batch; calibrate.py linear slope 1.09, r 0.83, RMSE 0.65; Low/Compatibility llvmpipe, day approach/gameplay/detail; ralph/reports/MEADOWS/close-1024/ridge1026-mapped.json): shipping 4.5/4.5/4.0 vs 5.9/6.3/5.8, mapped 4.92 -> 6.74 (+1.82); dark trunk wall PRESENT -> FIXED 2 / PARTIAL 1, the clearing reveals the watch tower against sky. Open: the approach view's foreground beam-and-chain, an even grass carpet, simple repeated canopies. CPU no longer closes a row: OFF until the GPU pass.",
+    "_why": "F38 band4_upper_meadows_ironwood_1 (Ridgeline Watch) close-1024 (OFF until judged; meadows_hero_pieces.gd::clear, called in playground_world's bulk-clear window). GPU main-1024 5.97/6.12 and MH control 5.21-5.67: the gameplay and detail views stand inside a dark wall of trunks, so the watch reads as no place at all. Two authored glades cut out of the baked tree and rock scatter at run time (vegetation.clear_area, the Warrens' own call; harvest nodes untouched) turn it into a sunlit clearing with a grove edge. Visual and walkability only (fewer tree colliders); no bake change.",
+    "spots": [
+      {"id": "ridgeline_glade", "at": [-244.0, 6497.0], "radius_m": 17.0},
+      {"id": "ridgeline_glade_back", "at": [-262.0, 6478.0], "radius_m": 9.0}
+    ]
+  },
   "_comment": "F38 tier-1 hero pieces (close-1024). Each group is OFF until judged on its stands; see meadows_hero_pieces.gd. World coordinates; y comes from the terrain minus sink_m.",
   "cliffs": {
     "_why_r1": "close-1024 r1: mapped Bar A 5.93 ON vs shipping 4.89 at band2_stone_and_root_1 (CPU, 25 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, anchors f36_0_npc:C1 / p2_094_r4 / craft, calibrate.py linear slope 1.64 r 0.98 RMSE 0.31, confirming batch; Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/art1024-mapped.json). +1.04, below 6.7; judges read the outcrop as real stratified rock but still flag the faceted Burrow hill flank and ramp slab.",
