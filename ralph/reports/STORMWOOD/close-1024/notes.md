@@ -2,6 +2,15 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 06:45Z **READY to land land9: `tb/stormwood-land9` 5fe5d06375250a19982053e514879551cc4b3348.** It is the lane beea5f57, which merges origin/main 3a0f583b (#759), plus one config commit.
+  - **New ON flags vs main:** only `fallen_giant.hero` and `hero.bark`, each with `_why_on` (GPU SW10 +0.56 / +0.59; bark accepted on the CPU check).
+  - **Stays OFF:** rod line `stand_clear` and Ashfoot r34 `seated` (code only, inert when off).
+  - **Checks on the land9 tree:**
+    - `test_stormwood_rod_line` + `test_stormwood_fallen_giant_collider` + destination: 5 tests, 0 failed.
+    - cottage/interior: 12 tests, 0 failed.
+    - `smoke_stormwood_ashfoot_shelter` 16/0.
+  - **Merge note:** main's tree equals land8, which the lane already contains, so the lane tree was unchanged by the merge.
+
 - 26 Oct 06:25Z Coordinator ruling on m28c: the bark recolour is accepted, so the Fallen Giant lands with `hero` + `hero.bark` ON. Rod line `stand_clear` is rejected and stays OFF: it would change the world to suit the yardstick. **Do not judge or land m28c with stand_clear ON.** land9 waits for #759 (land8) to merge, then = origin/main + Fallen Giant hero and bark ON.
 
 - 26 Oct 06:15Z **READY (GPU arm) `tb/stormwood-m28c-on` 39af61624e6e586e48a8fd508f9a12591af34f30**: lane head a04467fc plus one config commit (3 lines). Judge `deepwood_the_fallen_giant` (six views, calm and fading). Supersedes m28b.
