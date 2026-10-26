@@ -402,6 +402,24 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - **CPU check:** the night views (approach, gameplay, detail) now read as a moonlit yard with the braziers' warm pools, not as daylight. Not re-judged.
   - **Arms:** off, k5 and mh3 are unchanged (mh3 = `courtyard_daylight_candidate` + `banner_model_candidate`).
 
+- 2026-10-26 01:55 UTC READY for GPU judging: **relay yard stone flags r1 on tb/meadows** (this head; merged with current origin/main). This answers the coordinator's 00:16 item 2, the next big swing.
+  - **Why this stand:** among the lowest Meadows GPU views not yet tried, band3_the_river_lock_0 (5.29) was the lowest one I could act on. hall_nave (4.77) would mean re-dressing the Hall, which the owner's verdict holds.
+  - **What it changes:** the compound's yard pad (`tether_relay.json ground_pad`, the opaque Ground030 earth tinted #463c30) dominates its gameplay and detail views as flat, dark mud.
+    - `ground_pad.surface_candidate.enabled: true` swaps that whole pad material for the stronghold's own worn stone (T_UnevenBrick), at a mid warm grey #9c9284, uv 0.22.
+    - It keeps the same mesh, the same feathered edge and the same per-vertex wear band. The drained-ground skin and the scorch marks still draw on top.
+    - Code: `tether_relay.gd::_ground_pad_material`.
+  - **CPU result** (`lock1026r1-mapped.json`, `_sheet_lock1026r1.png`; day approach, gameplay and detail): shipping 5.1/5.0/5.6 against 6.3/6.2/6.5. Mapped, that is 4.90 → 6.77 (+1.87). The fit is linear (slope 1.70, r 0.98, RMSE 0.21) and the batch is confirming. All three judges moved the flat-ground defect from PRESENT to FIXED.
+  - **Check:** test_tether_relay_visual_identity passes with the flag OFF and ON (5 tests, 190 assertions, 0 failed each).
+  - **GPU A/B:** band3_the_river_lock_0, approach, gameplay and detail, day and night, Medium and High. Flag ON against OFF.
+  - **Still open (judges):**
+    - The stones read oversized and regular; the judges suggest about a third the size.
+    - A dark untextured slab sits at the right edge of the detail view.
+    - The yard is sparsely dressed.
+
+    The next round here, if GPU confirms: smaller flags, dirt and grass seams, and the slab.
+  - **MESHY:** none needed for this round.
+  - **Earlier READYs on this branch still stand:** keep r5 and courtyard MH3 (with the night step-down). One GPU run can take all three arms.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
