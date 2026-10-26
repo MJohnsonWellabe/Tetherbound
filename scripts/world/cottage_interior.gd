@@ -206,17 +206,19 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
 		_lining_panel("LiningBackUpper", Vector3(0.0, old_top + band * 0.5, -d), Vector2(w * 2.0, band), 0.0, wood, thick)
 		_lining_panel("LiningWestUpper", Vector3(-w, old_top + band * 0.5, 0.0), Vector2(d * 2.0, band), PI * 0.5, wood, thick)
 		_lining_panel("LiningFrontUpper", Vector3(0.0, old_top + band * 0.5, d), Vector2(w * 2.0, band), PI, wood, thick)
-	# Window frame: dark timber jambs, head, sill board and a centre mullion.
+	# Window frame: dark timber jambs, head and sill board.
 	var timber := StandardMaterial3D.new()
 	timber.albedo_color = Color(str(cfg.get("frame_colour", "#3f3226")))
 	timber.roughness = 0.85
-	var fx := w - 0.04
-	var t := 0.11
-	_visual_box("FrameHead", Vector3(t, t, z1 - z0 + t * 2.0), Vector3(fx, y1 + t * 0.5, (z0 + z1) * 0.5), timber)
-	_visual_box("FrameSill", Vector3(t * 1.8, t * 0.7, z1 - z0 + t * 2.4), Vector3(fx - 0.04, y0 - t * 0.35, (z0 + z1) * 0.5), timber)
-	_visual_box("FrameJambBack", Vector3(t, y1 - y0, t), Vector3(fx, (y0 + y1) * 0.5, z0 - t * 0.5), timber)
-	_visual_box("FrameJambFront", Vector3(t, y1 - y0, t), Vector3(fx, (y0 + y1) * 0.5, z1 + t * 0.5), timber)
-	_visual_box("FrameMullion", Vector3(t * 0.6, y1 - y0, t * 0.6), Vector3(fx, (y0 + y1) * 0.5, (z0 + z1) * 0.5), timber)
+	# A shallow trim flush on the lining: a deep frame stood out from the wall
+	# like a floating slab (r23 judges x3).
+	var depth := 0.05
+	var fx := w - 0.03 - depth * 0.5
+	var t := 0.09
+	_visual_box("FrameHead", Vector3(depth, t, z1 - z0 + t * 2.0), Vector3(fx, y1 + t * 0.5, (z0 + z1) * 0.5), timber)
+	_visual_box("FrameSill", Vector3(depth * 2.0, t * 0.6, z1 - z0 + t * 2.0), Vector3(fx - depth * 0.5, y0 - t * 0.3, (z0 + z1) * 0.5), timber)
+	_visual_box("FrameJambBack", Vector3(depth, y1 - y0, t), Vector3(fx, (y0 + y1) * 0.5, z0 - t * 0.5), timber)
+	_visual_box("FrameJambFront", Vector3(depth, y1 - y0, t), Vector3(fx, (y0 + y1) * 0.5, z1 + t * 0.5), timber)
 	# Gables: lined triangles from the wall top to just under the ridge.
 	var apex := float(cfg.get("gable_apex_m", 5.1))
 	for side: float in [-1.0, 1.0]:
