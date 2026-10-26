@@ -39,6 +39,9 @@ var _storm_light: OmniLight3D
 var _storm_light_base := 0.0
 var _surge: Node
 var _hearth_light: OmniLight3D
+var _shell: Node3D
+var _kit_exterior: Array[GeometryInstance3D] = []
+var _shell_inside := false
 var _view: ShaderMaterial
 var _view_cfg: Dictionary = {}
 var _hearth_base := 0.0
@@ -468,8 +471,9 @@ func _swap_shell(cfg: Dictionary) -> void:
 	if model == null:
 		return
 	for visual: GeometryInstance3D in holder.find_children("*", "GeometryInstance3D", true, false):
-		if not is_ancestor_of(visual) and visual != self:
+		if not is_ancestor_of(visual) and visual != self and visual.visible:
 			visual.visible = false
+			_kit_exterior.append(visual)
 	var bounds := HERO_PROP.BOUNDS.measure(model)
 	var size: Array = cfg.get("size_m", [4.3, 6.8, 6.3])
 	var fit := Vector3(float(size[0]) / maxf(0.01, bounds.size.x), float(size[1]) / maxf(0.01, bounds.size.y), float(size[2]) / maxf(0.01, bounds.size.z))
@@ -482,6 +486,8 @@ func _swap_shell(cfg: Dictionary) -> void:
 	seat.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
 	seat.add_child(model)
 	add_child(seat)
+	_shell = seat
+	set_process(true)
 	# Meshy GLBs draw double-sided and closed: from inside the lined room and
 	# from the catalogue camera at the open door the shell's walls covered the
 	# view. SHELL_SHADER culls back faces and cuts the prefab's open doorway
@@ -504,6 +510,31 @@ func _swap_shell(cfg: Dictionary) -> void:
 			outside.set_shader_parameter("cut_min", Vector3(float(cut[0][0]), float(cut[0][1]), float(cut[0][2])))
 			outside.set_shader_parameter("cut_max", Vector3(float(cut[1][0]), float(cut[1][1]), float(cut[1][2])))
 			visual.set_surface_override_material(surface, outside)
+
+
+## Interior cutaway for the shell: while the local player stands inside the
+## room the kit exterior shows exactly as it did (its walls frame the lined
+## room for the camera at the door); outside, the Meshy shell shows. Only
+## visibility changes; the kit colliders never move.
+func _update_shell() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	var player: Node3D = null
+	if game != null and game.has_method("local_player"):
+		player = game.call("local_player") as Node3D
+	if player == null:
+		player = get_tree().get_first_node_in_group(&"local_player") as Node3D
+	if player == null:
+		return
+	var local := to_local(player.global_position)
+	var margin := 0.4
+	var inside := absf(local.x) < _half_w + margin and absf(local.z) < _half_d + margin
+	if inside == _shell_inside:
+		return
+	_shell_inside = inside
+	_shell.visible = not inside
+	for visual in _kit_exterior:
+		if is_instance_valid(visual):
+			visual.visible = inside
 
 
 func _clear_window_glass(w: float, z0: float, z1: float, alpha: float) -> void:
@@ -541,12 +572,14 @@ func _apply_view_phase(phase: String) -> void:
 
 
 func _process(delta: float) -> void:
+	if _shell != null:
+		_update_shell()
 	if _hearth_light != null and _flicker > 0.0:
 		_flicker_time += delta
 		var noise := sin(_flicker_time * 9.0) * 0.6 + sin(_flicker_time * 24.3 + 1.3) * 0.4
 		_hearth_light.light_energy = _hearth_base * (1.0 + noise * _flicker)
 	if _pane == null:
-		if _hearth_light == null:
+		if _hearth_light == null and _shell == null:
 			set_process(false)
 		return
 	if _surge == null or not is_instance_valid(_surge):
