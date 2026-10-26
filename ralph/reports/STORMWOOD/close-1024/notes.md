@@ -2,14 +2,14 @@
 
 ## Session 2 log (newest first)
 
-- 26 Oct 14:55Z **READY (GPU candidate): `tb/stormwood-m45-on` 94adcb41, Stormwood storm sky.**
+- 26 Oct 14:24Z **READY (GPU candidate): `tb/stormwood-m45-on` 94adcb41, Stormwood storm sky.**
   - **Change:** `stormwood_surge.json presentation.ceiling.form` + `ceiling.skyline` ON; the lane keeps both OFF.
   - **CPU r45b:** 5.75 -> 6.58 mapped (+0.83), 3/3 judges prefer ON. Flat lavender sky FIXED 3/3; empty horizon PRESENT -> PARTIAL (`r45b/VERDICT.md`).
   - **Why it is a chapter-wide swing:** the sky is in every open Stormwood stand in the catalogue, so judge it on the full F41 catalogue at Medium and High against lane HEAD.
   - **Checks:** surge presentation 53/0 and surge 4/0.
   - **Photosensitivity:** no new flash onsets; the form is a static shape on the deck.
   - **Not a GPU risk:** no texture samples, and only bounded fbm. It is one more 5-octave fbm block and a few noise calls in the existing ceiling dome shader, with no new passes or geometry.
-- 26 Oct 14:55Z r45 (soft masses) was -0.06, a first miss (`r45/VERDICT.md`); r45b's hard edges are what moved it. Next sky refinement: tame the lit rims that two judges read as white smear slabs.
+- 26 Oct 14:24Z r45 (soft masses) was -0.06, a first miss (`r45/VERDICT.md`); r45b's hard edges are what moved it. Next sky refinement: tame the lit rims that two judges read as white smear slabs.
 - 26 Oct 13:45Z **SW16 device loss (m36b storm_view, Medium):** I reviewed everything the flag adds. Nothing plausibly hangs a GPU, so there is no new arm.
   - **What the flag adds:** one 9x6 m `QuadMesh` card (`cottage_storm_view.gdshader`) and a duplicate of one kit glass material.
     - The card's shader is `unshaded`, `cull_back`, `shadows_disabled` and `fog_disabled`. It has no texture samples and no division, its only loop is a bounded 4-octave fbm, and `flash` is clamped to 0-1.
