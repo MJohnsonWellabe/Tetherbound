@@ -1,0 +1,98 @@
+[
+    {
+        "item":  "SW14",
+        "stand":  "glowmoss_hollows_the_lantern_pools-calm-break",
+        "preset":  "Medium",
+        "judged":  [
+                       "glowmoss_hollows_the_lantern_pools_v01_calm",
+                       "glowmoss_hollows_the_lantern_pools_v02_calm",
+                       "glowmoss_hollows_the_lantern_pools_v03_calm",
+                       "glowmoss_hollows_the_lantern_pools_v01_break",
+                       "glowmoss_hollows_the_lantern_pools_v02_break",
+                       "glowmoss_hollows_the_lantern_pools_v03_break"
+                   ]
+    },
+    {
+        "item":  "SW14",
+        "stand":  "glowmoss_hollows_the_lantern_pools-building-fading",
+        "preset":  "Medium",
+        "judged":  [
+                       "glowmoss_hollows_the_lantern_pools_v01_building",
+                       "glowmoss_hollows_the_lantern_pools_v02_building",
+                       "glowmoss_hollows_the_lantern_pools_v03_building",
+                       "glowmoss_hollows_the_lantern_pools_v01_fading",
+                       "glowmoss_hollows_the_lantern_pools_v02_fading",
+                       "glowmoss_hollows_the_lantern_pools_v03_fading"
+                   ]
+    },
+    {
+        "item":  "SW15",
+        "stand":  "ashfoot_shelter_inside",
+        "preset":  "Medium",
+        "judged":  [
+                       "ashfoot_shelter_inside_calm",
+                       "ashfoot_shelter_inside_building",
+                       "ashfoot_shelter_inside_break",
+                       "ashfoot_shelter_inside_fading"
+                   ]
+    },
+    {
+        "item":  "SW15",
+        "stand":  "ashfoot_shelter_outside",
+        "preset":  "Medium",
+        "judged":  [
+                       "ashfoot_shelter_outside_calm",
+                       "ashfoot_shelter_outside_building",
+                       "ashfoot_shelter_outside_break",
+                       "ashfoot_shelter_outside_fading"
+                   ]
+    },
+    {
+        "item":  "SW14",
+        "stand":  "glowmoss_hollows_the_lantern_pools-calm-break",
+        "preset":  "High",
+        "judged":  [
+                       "glowmoss_hollows_the_lantern_pools_v01_calm",
+                       "glowmoss_hollows_the_lantern_pools_v02_calm",
+                       "glowmoss_hollows_the_lantern_pools_v03_calm",
+                       "glowmoss_hollows_the_lantern_pools_v01_break",
+                       "glowmoss_hollows_the_lantern_pools_v02_break",
+                       "glowmoss_hollows_the_lantern_pools_v03_break"
+                   ]
+    },
+    {
+        "item":  "SW14",
+        "stand":  "glowmoss_hollows_the_lantern_pools-building-fading",
+        "preset":  "High",
+        "judged":  [
+                       "glowmoss_hollows_the_lantern_pools_v01_building",
+                       "glowmoss_hollows_the_lantern_pools_v02_building",
+                       "glowmoss_hollows_the_lantern_pools_v03_building",
+                       "glowmoss_hollows_the_lantern_pools_v01_fading",
+                       "glowmoss_hollows_the_lantern_pools_v02_fading",
+                       "glowmoss_hollows_the_lantern_pools_v03_fading"
+                   ]
+    },
+    {
+        "item":  "SW15",
+        "stand":  "ashfoot_shelter_inside",
+        "preset":  "High",
+        "judged":  [
+                       "ashfoot_shelter_inside_calm",
+                       "ashfoot_shelter_inside_building",
+                       "ashfoot_shelter_inside_break",
+                       "ashfoot_shelter_inside_fading"
+                   ]
+    },
+    {
+        "item":  "SW15",
+        "stand":  "ashfoot_shelter_outside",
+        "preset":  "High",
+        "judged":  [
+                       "ashfoot_shelter_outside_calm",
+                       "ashfoot_shelter_outside_building",
+                       "ashfoot_shelter_outside_break",
+                       "ashfoot_shelter_outside_fading"
+                   ]
+    }
+]

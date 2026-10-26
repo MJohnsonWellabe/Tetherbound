@@ -1,0 +1,226 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.7401,
+  "least_squares_slope": 0.6186,
+  "method": "linear",
+  "slope": 0.6186,
+  "intercept": 3.0222,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.76,
+ "top_anchor_reference": 7.79,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1A": {
+   "measured": 7.067,
+   "reference": 7.53,
+   "mapped": 7.394,
+   "residual": 0.136
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.067,
+   "reference": 7.47,
+   "mapped": 7.394,
+   "residual": 0.076
+  },
+  "f36_1_gpu:stormcapra_shipping": {
+   "measured": 6.767,
+   "reference": 6.23,
+   "mapped": 7.208,
+   "residual": -0.978
+  },
+  "f36_1_gpu:stormcapra_candidate": {
+   "measured": 6.067,
+   "reference": 7.79,
+   "mapped": 6.775,
+   "residual": 1.015
+  },
+  "f36_0_gap:C7B": {
+   "measured": 6.1,
+   "reference": 6.3,
+   "mapped": 6.796,
+   "residual": -0.496
+  },
+  "f36_0_gap:C7A": {
+   "measured": 6.2,
+   "reference": 7.03,
+   "mapped": 6.857,
+   "residual": 0.173
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 3.867,
+   "reference": 6.53,
+   "mapped": 5.414,
+   "residual": 1.116
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.267,
+   "reference": 4.0,
+   "mapped": 5.043,
+   "residual": -1.043
+  }
+ },
+ "candidates": {
+  "SW11 hollow_crown_the_crown_heartstone Medium cand|ship | SW11-hollow_crown_the_crown_heartstone-cand-Medium": {
+   "measured_mean": 3.8,
+   "mapped_mean": 5.37,
+   "mapped_judges": [
+    5.5,
+    5.13,
+    5.5
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW11 hollow_crown_the_crown_heartstone Medium cand|ship | SW11-hollow_crown_the_crown_heartstone-ship-Medium": {
+   "measured_mean": 3.567,
+   "mapped_mean": 5.23,
+   "mapped_judges": [
+    5.31,
+    5.0,
+    5.37
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW11 dynamo_the_stormheart_tree-calm High cand|ship | SW11-dynamo_the_stormheart_tree-calm-cand-High": {
+   "measured_mean": 4.8,
+   "mapped_mean": 5.99,
+   "mapped_judges": [
+    5.99,
+    5.87,
+    6.12
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW11 dynamo_the_stormheart_tree-calm High cand|ship | SW11-dynamo_the_stormheart_tree-calm-ship-High": {
+   "measured_mean": 4.133,
+   "mapped_mean": 5.58,
+   "mapped_judges": [
+    5.62,
+    5.43,
+    5.68
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW15 ashfoot_shelter_outside High cand|ship | SW15-ashfoot_shelter_outside-ship-High": {
+   "measured_mean": 4.867,
+   "mapped_mean": 6.03,
+   "mapped_judges": [
+    6.12,
+    5.87,
+    6.12
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW15 ashfoot_shelter_outside High cand|ship | SW15-ashfoot_shelter_outside-cand-High": {
+   "measured_mean": 4.767,
+   "mapped_mean": 5.97,
+   "mapped_judges": [
+    6.05,
+    5.81,
+    6.05
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW15 ashfoot_shelter_inside Medium cand|ship | SW15-ashfoot_shelter_inside-cand-Medium": {
+   "measured_mean": 6.4,
+   "mapped_mean": 6.98,
+   "mapped_judges": [
+    6.98,
+    6.86,
+    7.1
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW15 ashfoot_shelter_inside Medium cand|ship | SW15-ashfoot_shelter_inside-ship-Medium": {
+   "measured_mean": 5.733,
+   "mapped_mean": 6.57,
+   "mapped_judges": [
+    6.61,
+    6.36,
+    6.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW11 dynamo_the_stormheart_tree-calm Medium cand|ship | SW11-dynamo_the_stormheart_tree-calm-cand-Medium": {
+   "measured_mean": 4.8,
+   "mapped_mean": 5.99,
+   "mapped_judges": [
+    5.99,
+    5.87,
+    6.12
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW11 dynamo_the_stormheart_tree-calm Medium cand|ship | SW11-dynamo_the_stormheart_tree-calm-ship-Medium": {
+   "measured_mean": 4.133,
+   "mapped_mean": 5.58,
+   "mapped_judges": [
+    5.62,
+    5.43,
+    5.68
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW14 glowmoss_hollows_the_lantern_pools-calm-break Medium cand|ship | SW14-glowmoss_hollows_the_lantern_pools-calm-break-ship-Medium": {
+   "measured_mean": 5.367,
+   "mapped_mean": 6.34,
+   "mapped_judges": [
+    6.49,
+    6.12,
+    6.42
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW14 glowmoss_hollows_the_lantern_pools-calm-break Medium cand|ship | SW14-glowmoss_hollows_the_lantern_pools-calm-break-cand-Medium": {
+   "measured_mean": 5.567,
+   "mapped_mean": 6.47,
+   "mapped_judges": [
+    6.55,
+    6.3,
+    6.55
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "anchor residual RMSE 0.76 > 0.75: these judges do not rank the anchors like the reference judges; report the mapped scores with this caveat"
+ ]
+}

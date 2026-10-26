@@ -1,0 +1,58 @@
+{
+ "Zs": {
+  "anchor": false,
+  "label": "MH6 hall_front High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-hall_front-on-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-hall_front-off-High.png"
+ },
+ "Ct": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ },
+ "Pb": {
+  "anchor": false,
+  "label": "MH6 farm_to_hall Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-farm_to_hall-on-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-farm_to_hall-off-Medium.png"
+ },
+ "Wd": {
+  "anchor": false,
+  "label": "SW11 dynamo_the_stormheart_tree-fading High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-fading-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-fading-ship-High.png"
+ },
+ "Fa": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Jn": {
+  "anchor": false,
+  "label": "MH6 farm_to_hall High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-farm_to_hall-off-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-farm_to_hall-on-High.png"
+ },
+ "Ui": {
+  "anchor": false,
+  "label": "SW11 dynamo_the_stormheart_tree-fading Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-fading-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-fading-ship-Medium.png"
+ },
+ "By": {
+  "anchor": false,
+  "label": "SW14 glowmoss_hollows_the_lantern_pools-building-fading Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW14-glowmoss_hollows_the_lantern_pools-building-fading-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW14-glowmoss_hollows_the_lantern_pools-building-fading-cand-Medium.png"
+ },
+ "Bj": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Ft": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ }
+}

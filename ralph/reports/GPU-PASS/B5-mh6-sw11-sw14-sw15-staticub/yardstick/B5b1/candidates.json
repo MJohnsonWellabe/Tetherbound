@@ -1,0 +1,92 @@
+[
+ {
+  "label": "SW15 ashfoot_shelter_outside High cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW15-ashfoot_shelter_outside-cand-High.png",
+  "b": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW15-ashfoot_shelter_outside-ship-High.png",
+  "brief": "Fixed production-camera views of one Stormwood location (ashfoot shelter outside) through a storm's calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+  "defects": [
+   "Flat magenta slabs or rings on the ground",
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+   "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain"
+  ]
+ },
+ {
+  "label": "SW11 hollow_crown_the_crown_heartstone Medium cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-hollow_crown_the_crown_heartstone-cand-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-hollow_crown_the_crown_heartstone-ship-Medium.png",
+  "brief": "Fixed production-camera views of one Stormwood location (hollow crown the crown heartstone) through a storm's calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+  "defects": [
+   "Flat magenta slabs or rings on the ground",
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+   "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain",
+   "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark"
+  ]
+ },
+ {
+  "label": "SW14 glowmoss_hollows_the_lantern_pools-calm-break Medium cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW14-glowmoss_hollows_the_lantern_pools-calm-break-cand-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW14-glowmoss_hollows_the_lantern_pools-calm-break-ship-Medium.png",
+  "brief": "Fixed production-camera views of one Stormwood location (glowmoss hollows the lantern pools) through a storm's calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+  "defects": [
+   "Flat magenta slabs or rings on the ground",
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+   "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain",
+   "the lantern pools read as flat discs with smooth glowing rims painted on the ground rather than water set into banks"
+  ]
+ },
+ {
+  "label": "SW15 ashfoot_shelter_inside Medium cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW15-ashfoot_shelter_inside-cand-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW15-ashfoot_shelter_inside-ship-Medium.png",
+  "brief": "Fixed production-camera views of one Stormwood location (ashfoot shelter inside) through a storm's calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+  "defects": [
+   "Flat magenta slabs or rings on the ground",
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+   "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain",
+   "the shelter interior reads as a bare plaster box with no Stormwood lining, hearth or lived-in dressing",
+   "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase"
+  ]
+ },
+ {
+  "label": "SW11 dynamo_the_stormheart_tree-calm Medium cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-calm-cand-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-calm-ship-Medium.png",
+  "brief": "Fixed production-camera views of one Stormwood location (dynamo the stormheart tree) through a storm's calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+  "defects": [
+   "Flat magenta slabs or rings on the ground",
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+   "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain",
+   "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)"
+  ]
+ },
+ {
+  "label": "SW11 dynamo_the_stormheart_tree-calm High cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-calm-cand-High.png",
+  "b": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-calm-ship-High.png",
+  "brief": "Fixed production-camera views of one Stormwood location (dynamo the stormheart tree) through a storm's calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+  "defects": [
+   "Flat magenta slabs or rings on the ground",
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+   "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain",
+   "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)"
+  ]
+ }
+]

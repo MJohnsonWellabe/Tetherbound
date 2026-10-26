@@ -1,0 +1,27 @@
+# Staticub setup check (local, coordinator 26 Oct): today's main 1d5faebac shot plain (out\STC-plain-*) and with --candidate
+# (out\STC-rec-*), each against the 8.10 roster batch frames (out\F36-base\cand-*, tb/creatures-land 1e83cafa0, shot with --candidate).
+# A = today ("cand" in the side name), B = the 8.10 frames ("ship"). Roster layout and crop.
+$o = "D:\tb-gpu-runs\out"; $od = "D:\tb-gpu-runs\yard\STC\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out) {
+    $s = [ordered]@{ title = ""; cols = 5; thumb_w = 300; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out; crop = @(560, 200, 1000, 640) }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_stc.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_stc.json" | Out-Null; return $out
+}
+$brief = "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read."
+$p = @(@("hit-000", "standing"), @("hit-025", "hit react"), @("faint-050", "faint mid"), @("faint-100", "faint end"))
+$sets = @(); $cover = @()
+foreach ($pr in "Medium", "High") {
+    foreach ($mode in "plain", "rec") {
+        $ta = "$o\STC-$mode-$pr\frames"; $tb = "$o\F36-base\cand-$pr\frames"
+        $q = @($p | Where-Object { (Test-Path "$ta\staticub-$($_[0]).png") -and (Test-Path "$tb\staticub-$($_[0]).png") })
+        if ($q.Count -eq 0) { "MISSING staticub $mode $pr"; continue }
+        $caps = @($q | ForEach-Object { $_[1] })
+        $sa = Side @($q | ForEach-Object { "$ta\staticub-$($_[0]).png" }) $caps "$od\STC-staticub-$mode-cand-$pr.png"
+        $sb = Side @($q | ForEach-Object { "$tb\staticub-$($_[0]).png" }) $caps "$od\STC-staticub-$mode-ship-$pr.png"
+        $sets += [ordered]@{ label = "STC staticub-$mode $pr cand|ship"; a = $sa; b = $sb; brief = $brief; defects = @() }
+        $cover += [ordered]@{ mode = $mode; preset = $pr; poses = $caps }
+    }
+}
+New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\STC" | Out-Null
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\STC\all.json", (ConvertTo-Json -InputObject @($sets) -Depth 5))
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\STC\coverage.json", (ConvertTo-Json -InputObject @($cover) -Depth 4))
+"Staticub sets: $($sets.Count)"

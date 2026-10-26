@@ -1,0 +1,58 @@
+{
+ "Jg": {
+  "anchor": true,
+  "A": "f36_0_gap:C4B",
+  "B": "f36_0_gap:C4A"
+ },
+ "Zd": {
+  "anchor": false,
+  "label": "MH6 village_road Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-village_road-on-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-village_road-off-Medium.png"
+ },
+ "Br": {
+  "anchor": false,
+  "label": "STC staticub-rec Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\STC\\sides\\STC-staticub-rec-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\STC\\sides\\STC-staticub-rec-ship-Medium.png"
+ },
+ "Uj": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ag": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Pn": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ },
+ "Xz": {
+  "anchor": false,
+  "label": "SW15 ashfoot_shelter_outside Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW15-ashfoot_shelter_outside-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW15-ashfoot_shelter_outside-cand-Medium.png"
+ },
+ "Bi": {
+  "anchor": false,
+  "label": "SW14 glowmoss_hollows_the_lantern_pools-calm-break High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW14-glowmoss_hollows_the_lantern_pools-calm-break-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW14-glowmoss_hollows_the_lantern_pools-calm-break-cand-High.png"
+ },
+ "Rw": {
+  "anchor": false,
+  "label": "STC staticub-plain Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\STC\\sides\\STC-staticub-plain-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\STC\\sides\\STC-staticub-plain-cand-Medium.png"
+ },
+ "Ti": {
+  "anchor": false,
+  "label": "MH6 hall_front Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-hall_front-off-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-hall_front-on-Medium.png"
+ }
+}

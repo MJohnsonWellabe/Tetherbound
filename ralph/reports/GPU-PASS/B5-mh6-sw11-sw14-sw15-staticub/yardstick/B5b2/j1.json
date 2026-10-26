@@ -1,0 +1,220 @@
+{
+ "sets": {
+  "Zs": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The hall and village landmarks read, but a flat midday grade, a camera jammed against a post and a wall, and a near-black night ground fall short of Palworld density and Valheim-class atmosphere."
+  },
+  "Ct": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The standing Stormcapra's fleece, horns and blue accents match the owner's style bar; B's squashed, splayed faint frames are what would break the read."
+  },
+  "Pb": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The timber cottages and the hall at the end of the street carry a cozy village read, but the path dominating the foreground (a saturated orange smear on B, a uniform olive cobble tile on A) and the flat light sink it."
+  },
+  "Wd": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple sky and lantern-lit ring balcony hint at the board, but the floating lilac fog puffs, flat white ground decal (A) or white light pillars (B) and the absent Stormheart tree sink it."
+  },
+  "Fa": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The appealing, well-lit elder villager with readable eyes, a clean silhouette and a Meadows green-and-brown palette sits at Palworld-class character finish."
+  },
+  "Jn": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This is the same scene as Pb with the sides swapped. The village architecture carries it; the orange (A) or olive tiled (B) path filling the foreground and the flat light sink it."
+  },
+  "Ui": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's v02 lightning strike with a branching ground impact is the one Valheim-class weather beat, but the rigid white light pillars, billboard fog puffs, dark carpet ground and missing tree landmark sink it."
+  },
+  "By": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the lantern pools read as flat discs with smooth glowing rims painted on the ground rather than water set into banks": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the lantern pools read as flat discs with smooth glowing rims painted on the ground rather than water set into banks": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fixed purple sky, twisted trunks, rain and blue glowmoss give real Stormwood mood, but the flat-rimmed pools, the stacked duplicate trainer and the row of floating fog puffs keep it below Palworld finish."
+  },
+  "Bj": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "B's scaled black-gold serpent with an open fanged mouth and grounded coils that collapse belly-up reaches the bar; A's smooth plastic bands and a faint that levitates the body far above its shadow do not."
+  },
+  "Ft": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame with a diagonal brace, plank cap and stone footing reads as built, but the flat untextured beige infill, the lone panel and the faceted flat-grey boulder beside it are below Palworld base-building finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood (Wd, Ui, By): replace the rigid white light pillars, flat white ground decals and knee-high lilac billboard fog puffs with grounded lightning strikes (like Ui B v02) and soft volumetric ground fog; break the dark carpet ground with soil, moss and rock blends; and set the lantern pools into banked, dark water with wet edges instead of glowing-rim discs.",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows village path (Zs, Pb, Jn): author one warm brown trodden-earth material with pebbles, ruts, wheel wear and grass-edge breakup, neither the saturated orange smear nor the olive cobble tile; add warmer, lower-sun light with stronger shadow form, and pull the Zs cameras off the post and wall.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormheart tree hero asset: a colossal split trunk with deep bark, branches, a crown and a visible lightning core that frames the Dynamo arena from the production cameras, matching stronghold board A.",
+   "kind": "new_art"
+  }
+ ]
+}

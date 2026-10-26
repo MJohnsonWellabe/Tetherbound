@@ -1,0 +1,58 @@
+{
+ "Dv": {
+  "anchor": false,
+  "label": "SW11 hollow_crown_the_crown_heartstone Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-hollow_crown_the_crown_heartstone-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-hollow_crown_the_crown_heartstone-ship-Medium.png"
+ },
+ "Ab": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ze": {
+  "anchor": false,
+  "label": "SW11 dynamo_the_stormheart_tree-calm High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-calm-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-calm-ship-High.png"
+ },
+ "Qf": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_shipping",
+  "B": "f36_1_gpu:stormcapra_candidate"
+ },
+ "Cl": {
+  "anchor": false,
+  "label": "SW15 ashfoot_shelter_outside High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW15-ashfoot_shelter_outside-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW15-ashfoot_shelter_outside-cand-High.png"
+ },
+ "Cy": {
+  "anchor": false,
+  "label": "SW15 ashfoot_shelter_inside Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW15-ashfoot_shelter_inside-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW15-ashfoot_shelter_inside-ship-Medium.png"
+ },
+ "Rt": {
+  "anchor": false,
+  "label": "SW11 dynamo_the_stormheart_tree-calm Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-calm-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-calm-ship-Medium.png"
+ },
+ "Oe": {
+  "anchor": false,
+  "label": "SW14 glowmoss_hollows_the_lantern_pools-calm-break Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW14-glowmoss_hollows_the_lantern_pools-calm-break-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW14-glowmoss_hollows_the_lantern_pools-calm-break-cand-Medium.png"
+ },
+ "Iw": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "Uq": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ }
+}

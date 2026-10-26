@@ -1,0 +1,83 @@
+[
+ {
+  "label": "SW11 dynamo_the_stormheart_tree-fading Medium cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-fading-cand-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-fading-ship-Medium.png",
+  "brief": "Fixed production-camera views of one Stormwood location (dynamo the stormheart tree) through a storm's calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+  "defects": [
+   "Flat magenta slabs or rings on the ground",
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+   "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain",
+   "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)"
+  ]
+ },
+ {
+  "label": "SW14 glowmoss_hollows_the_lantern_pools-building-fading Medium cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW14-glowmoss_hollows_the_lantern_pools-building-fading-cand-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW14-glowmoss_hollows_the_lantern_pools-building-fading-ship-Medium.png",
+  "brief": "Fixed production-camera views of one Stormwood location (glowmoss hollows the lantern pools) through a storm's calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+  "defects": [
+   "Flat magenta slabs or rings on the ground",
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+   "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain",
+   "the lantern pools read as flat discs with smooth glowing rims painted on the ground rather than water set into banks"
+  ]
+ },
+ {
+  "label": "MH6 hall_front High cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-hall_front-on-High.png",
+  "b": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-hall_front-off-High.png",
+  "brief": "Fixed production-camera views of the path in front of the village hall in the Meadows village, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Meadows: a coherent, lived-in place with readable landmarks, believable ground and light that belongs to the world.",
+  "defects": [
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear"
+  ]
+ },
+ {
+  "label": "MH6 farm_to_hall High cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-farm_to_hall-on-High.png",
+  "b": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-farm_to_hall-off-High.png",
+  "brief": "Fixed production-camera views of the farm-to-hall path in the Meadows village, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Meadows: a coherent, lived-in place with readable landmarks, believable ground and light that belongs to the world.",
+  "defects": [
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear"
+  ]
+ },
+ {
+  "label": "MH6 farm_to_hall Medium cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-farm_to_hall-on-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-farm_to_hall-off-Medium.png",
+  "brief": "Fixed production-camera views of the farm-to-hall path in the Meadows village, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Meadows: a coherent, lived-in place with readable landmarks, believable ground and light that belongs to the world.",
+  "defects": [
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear"
+  ]
+ },
+ {
+  "label": "SW11 dynamo_the_stormheart_tree-fading High cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-fading-cand-High.png",
+  "b": "D:\\tb-gpu-runs\\yard\\SW11\\sides\\SW11-dynamo_the_stormheart_tree-fading-ship-High.png",
+  "brief": "Fixed production-camera views of one Stormwood location (dynamo the stormheart tree) through a storm's calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+  "defects": [
+   "Flat magenta slabs or rings on the ground",
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+   "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain",
+   "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)"
+  ]
+ }
+]

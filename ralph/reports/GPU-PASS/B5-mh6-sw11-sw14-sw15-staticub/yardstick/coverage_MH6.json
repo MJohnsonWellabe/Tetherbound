@@ -1,0 +1,74 @@
+[
+    {
+        "group":  "village_road",
+        "preset":  "Medium",
+        "judged":  [
+                       "village_road__day__clear__approach",
+                       "village_road__day__clear__gameplay",
+                       "village_road__day__clear__reverse",
+                       "village_road__day__clear__detail",
+                       "village_road__night__clear__gameplay",
+                       "village_road__day__rain__gameplay"
+                   ]
+    },
+    {
+        "group":  "farm_to_hall",
+        "preset":  "Medium",
+        "judged":  [
+                       "farm_to_hall__day__clear__approach",
+                       "farm_to_hall__day__clear__gameplay",
+                       "farm_to_hall__day__clear__reverse",
+                       "farm_to_hall__day__clear__detail",
+                       "farm_to_hall__night__clear__gameplay",
+                       "farm_to_hall__day__rain__gameplay"
+                   ]
+    },
+    {
+        "group":  "hall_front",
+        "preset":  "Medium",
+        "judged":  [
+                       "hall_front__day__clear__approach",
+                       "hall_front__day__clear__gameplay",
+                       "hall_front__day__clear__reverse",
+                       "hall_front__day__clear__detail",
+                       "hall_front__night__clear__gameplay",
+                       "hall_front__day__rain__gameplay"
+                   ]
+    },
+    {
+        "group":  "village_road",
+        "preset":  "High",
+        "judged":  [
+                       "village_road__day__clear__approach",
+                       "village_road__day__clear__gameplay",
+                       "village_road__day__clear__reverse",
+                       "village_road__day__clear__detail",
+                       "village_road__night__clear__gameplay",
+                       "village_road__day__rain__gameplay"
+                   ]
+    },
+    {
+        "group":  "farm_to_hall",
+        "preset":  "High",
+        "judged":  [
+                       "farm_to_hall__day__clear__approach",
+                       "farm_to_hall__day__clear__gameplay",
+                       "farm_to_hall__day__clear__reverse",
+                       "farm_to_hall__day__clear__detail",
+                       "farm_to_hall__night__clear__gameplay",
+                       "farm_to_hall__day__rain__gameplay"
+                   ]
+    },
+    {
+        "group":  "hall_front",
+        "preset":  "High",
+        "judged":  [
+                       "hall_front__day__clear__approach",
+                       "hall_front__day__clear__gameplay",
+                       "hall_front__day__clear__reverse",
+                       "hall_front__day__clear__detail",
+                       "hall_front__night__clear__gameplay",
+                       "hall_front__day__rain__gameplay"
+                   ]
+    }
+]

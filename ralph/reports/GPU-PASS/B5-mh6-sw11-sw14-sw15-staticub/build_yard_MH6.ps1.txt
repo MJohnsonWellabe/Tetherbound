@@ -1,0 +1,30 @@
+# Item MH6 (local, CLOSE-OUT village_road): Meadows village path texture on tb/meadows-land17 436ef3761, terrain_presentation
+# texture_candidates.path on (cand) vs off (ctl), same SHA, --f38-baseline. One set per stand per preset, six standard picks.
+$o = "D:\tb-gpu-runs\out"; $od = "D:\tb-gpu-runs\yard\MH6\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out, [int] $cols, [int] $tw) {
+    $s = [ordered]@{ title = ""; cols = $cols; thumb_w = $tw; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_MH6.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_MH6.json" | Out-Null; return $out
+}
+$generic = @("Placeholder or untextured materials (flat grey, checker or faceted blocks)", "Floating bodies or props (a gap between an object and the ground under it)", "Clipping (geometry passing through geometry, or the camera inside geometry)")
+$stand6 = @("day__clear__approach", "day__clear__gameplay", "day__clear__reverse", "day__clear__detail", "night__clear__gameplay", "day__rain__gameplay")
+$p2005 = "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear"
+$groups = @(
+    @("village_road", "the village road"),
+    @("farm_to_hall", "the farm-to-hall path"),
+    @("hall_front", "the path in front of the village hall"))
+$sets = @(); $cover = @()
+foreach ($pr in "Medium", "High") {
+    foreach ($g in $groups) {
+        $ids = @($stand6 | ForEach-Object { "$($g[0])__$_" } | Where-Object { (Test-Path "$o\MH6-on-$pr\frames\$_.jpg") -and (Test-Path "$o\MH6-off-$pr\frames\$_.jpg") })
+        $caps = @($ids | ForEach-Object { ($_ -replace '^[a-z0-9_]+?__', '') -replace '__', ' ' })
+        $sd = @{}
+        foreach ($arm in "on", "off") { $sd[$arm] = Side @($ids | ForEach-Object { "$o\MH6-$arm-$pr\frames\$_.jpg" }) $caps "$od\MH6-$($g[0])-$arm-$pr.png" 3 420 }
+        $cover += [ordered]@{ group = $g[0]; preset = $pr; judged = $ids }
+        $brief = "Fixed production-camera views of $($g[1]) in the Meadows village, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Meadows: a coherent, lived-in place with readable landmarks, believable ground and light that belongs to the world."
+        $sets += [ordered]@{ label = "MH6 $($g[0]) $pr cand|ship"; a = $sd["on"]; b = $sd["off"]; brief = $brief; defects = @($generic) + $p2005 }
+    }
+}
+New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\MH6" | Out-Null
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\MH6\all.json", (ConvertTo-Json -InputObject @($sets) -Depth 5))
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\MH6\coverage.json", (ConvertTo-Json -InputObject @($cover) -Depth 4))
+"MH6 sets: $($sets.Count)"; $cover | ForEach-Object { "$($_.group) $($_.preset) frames=$($_.judged.Count)" }

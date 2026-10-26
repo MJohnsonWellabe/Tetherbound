@@ -1,0 +1,202 @@
+{
+ "sets": {
+  "Qb": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the shelter interior reads as a bare plaster box with no Stormwood lining, hearth or lived-in dressing": "FIXED",
+     "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the shelter interior reads as a bare plaster box with no Stormwood lining, hearth or lived-in dressing": "FIXED",
+     "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A warm hearth-lit timber interior with bed, barrels and chest carries coziness, but the oversized flat emissive window and generic plank box with no Stormwood copper, moss or storm light in the room keep it below Palworld/Valheim finish (B is dimmer, its window barely changes and a bright triangular gap shows at the gable apex)."
+  },
+  "Ps": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the lantern pools read as flat discs with smooth glowing rims painted on the ground rather than water set into banks": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the lantern pools read as flat discs with smooth glowing rims painted on the ground rather than water set into banks": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Purple storm sky, rain and blue glowmoss give the right mood, but a uniform dark-green ground carpet, flat rimmed pool discs, glowing yellow crack lines on the path and fading-phase fog drawn as opaque white puff sprites across the camera sink it."
+  },
+  "Jn": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's crisp white wolf with black ear tips and a vivid blue gradient tail approaches the owner bar, but A's washed-out white with dull blue patches and a faint end that reads as a sitting lump facing camera, and B's faint mid body lifted over its shadow, keep it short of shipping finish."
+  },
+  "Oz": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "White-violet lightning over a purple sky and a rune-lit heartstone monolith on a mossy base carry the break frames, but the location is a treeless flat grass carpet with a ruler-straight horizon of small reddish blocks, so it reads as an empty test plain rather than a storm forest."
+  },
+  "Ed": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The furred bear with purple lightning veins matches the Stormursa bar and A's rearing hit react reads well, but B's hit react and faint mid barely differ from standing and its faint end is the bear sitting up facing camera, and no travel role is shown on either side."
+  },
+  "Fy": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder villager with a clear face and eyes, soft white hair and beard and an earthy green-brown outfit fits the key art's settlement palette; only slightly plasticky skin holds it back."
+  },
+  "Jm": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Timber-frame houses, a bannered keep, blue sky and wildflowers carry the Meadows, but A's flat orange road and B's olive pebble ground that still fills the foreground, plus a pale flat slab under the bench and building walls cutting into the camera edge, keep it short of Palworld density and finish."
+  },
+  "Xo": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fleece-and-horn Stormcapra identity holds when standing, but A's faint mid and faint end twist the body over and flip it onto its back, and B's faint poses lose the legs so the body reads as a fleece cushion sunk into the floor."
+  },
+  "Mg": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame with diagonal brace, plank cap and separate stone footing finally reads as built, but its infill is still a flat untextured tan field, it stands alone like an outhouse door, and the faceted untextured grey boulder beside it sinks both sides."
+  },
+  "Ot": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The furred, lightning-veined bear matches the owner's Stormursa bar and the rearing hit react and slumped faint read without labels on both sides, but on the flat stage it shows no travel role and the purple vein emissive is the only rim light."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild Stormwood ground (Ps, Oz): break the uniform grass carpet with soil, moss, root and rock transitions, add tree groves and edges around the heartstone plain, sink the lantern pools into banked soil with dark water instead of rimmed discs, and replace fading-phase puff sprites with volumetric ground fog.",
+   "kind": "scene"
+  },
+  {
+   "change": "Frame every Stormwood production camera on its hero landmark (heartstone in all Oz views) and give interiors Stormwood identity: copper and moss lining in the ashfoot shelter, a window set into the wall whose light follows the storm phase.",
+   "kind": "scene"
+  },
+  {
+   "change": "Author grounded, readable hurt and faint poses for Stormcapra, the white wolf and the bear's B variant (no sitting-up faint ends, no legs sinking into the floor, no flipped bodies) and add the travel-role frames.",
+   "kind": "new_art"
+  }
+ ]
+}

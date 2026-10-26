@@ -1,0 +1,188 @@
+{
+ "sets": {
+  "Jg": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's wolf has an on-style dark fur coat with readable lightning veins, but the flat stage light and A's faint frames (fur swapping to a white/black patch texture, body hovering above its shadow) keep it below Palworld finish."
+  },
+  "Zd": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The timber houses, hall and sky carry the Meadows mood, but the road (B's saturated orange smear, A's olive smear) fills half of every frame and the village is too sparse to read as lived-in."
+  },
+  "Br": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A naturalistic bear with real fur, violet lightning veins and grounded hurt and faint poses matches the owner's Stormursa bar, though the flat stage light gives it no Valheim-class rim."
+  },
+  "Uj": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder with readable eyes and a moss and olive Meadows palette at shipping-character finish; his rounder cartoon face is softer than the key art's stylised realism."
+  },
+  "Ag": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown and green forest with no purple storm sky, a tiny player creature, flat magenta ground rings as telegraphs and HUD stacks covering the left and bottom of every frame sink it."
+  },
+  "Pn": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The woolly ram has a strong horned silhouette and is taller than the trainer, but the flat stage light hurts it, and B's faint frames smear into a splayed white and black patchwork."
+  },
+  "Xz": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple sky, rain and white-violet lightning bolt in the break phase carry the storm, but the ground is a uniform dark grass carpet and the fading-phase fog is a row of identical puff cards."
+  },
+  "Bi": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the lantern pools read as flat discs with smooth glowing rims painted on the ground rather than water set into banks": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the lantern pools read as flat discs with smooth glowing rims painted on the ground rather than water set into banks": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Twisted trunks under a purple storm sky with blue glowmoss read as Stormwood, but the pools are flat rimmed discs with no banks and the floor is a dark repeated shrub carpet, so it lacks shipping finish."
+  },
+  "Rw": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's bear meets the owner's bar, but in B the hit react and faint mid barely change from standing and the faint end is the bear sitting up facing the camera without its lightning veins, so the faint does not read."
+  },
+  "Ti": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The hall's banners and the approach view's meadow read well, but the cameras hug a flat clean-tiled wall with a blurred post intruding at frame left, and the path is a smear (orange in A) rather than trodden earth."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the flat-tinted village path and Stormwood ground carpet with blended trodden-earth, pebble, rut, moss and rock materials that break up into patches at the edges (fixes the orange or olive smear in Zd/Ti and the uniform carpet in Xz/Bi).",
+   "kind": "scene"
+  },
+  {
+   "change": "Make the Stormwood fight readable: lift exposure and add a purple storm-sky grade and rim light under the canopy, turn the flat magenta telegraph rings into real-object effects (stones, sparks, lightning), keep the camera out of trunks and foliage, and trim the HUD stacks off the action.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the lantern pools as black water sunk into mossy banks with stones and reeds instead of flat discs with glowing rims.",
+   "kind": "new_art"
+  }
+ ]
+}

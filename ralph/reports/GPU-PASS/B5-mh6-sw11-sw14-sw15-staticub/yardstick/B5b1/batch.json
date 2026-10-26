@@ -1,0 +1,106 @@
+{
+ "anchors": {
+  "f36_0_npc:C1A": [
+   7.0,
+   6.8,
+   7.4
+  ],
+  "f36_0_npc:C1B": [
+   7.0,
+   6.8,
+   7.4
+  ],
+  "f36_1_gpu:stormcapra_shipping": [
+   6.8,
+   7.0,
+   6.5
+  ],
+  "f36_1_gpu:stormcapra_candidate": [
+   6.1,
+   6.6,
+   5.5
+  ],
+  "f36_0_gap:C7B": [
+   5.7,
+   6.2,
+   6.4
+  ],
+  "f36_0_gap:C7A": [
+   6.2,
+   6.5,
+   5.9
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.0,
+   3.8,
+   3.8
+  ],
+  "f10_2_r3_capacitor:control": [
+   3.4,
+   3.2,
+   3.2
+  ]
+ },
+ "candidates": {
+  "SW11 hollow_crown_the_crown_heartstone Medium cand|ship | SW11-hollow_crown_the_crown_heartstone-cand-Medium": [
+   4.0,
+   3.4,
+   4.0
+  ],
+  "SW11 hollow_crown_the_crown_heartstone Medium cand|ship | SW11-hollow_crown_the_crown_heartstone-ship-Medium": [
+   3.7,
+   3.2,
+   3.8
+  ],
+  "SW11 dynamo_the_stormheart_tree-calm High cand|ship | SW11-dynamo_the_stormheart_tree-calm-cand-High": [
+   4.8,
+   4.6,
+   5.0
+  ],
+  "SW11 dynamo_the_stormheart_tree-calm High cand|ship | SW11-dynamo_the_stormheart_tree-calm-ship-High": [
+   4.2,
+   3.9,
+   4.3
+  ],
+  "SW15 ashfoot_shelter_outside High cand|ship | SW15-ashfoot_shelter_outside-ship-High": [
+   5.0,
+   4.6,
+   5.0
+  ],
+  "SW15 ashfoot_shelter_outside High cand|ship | SW15-ashfoot_shelter_outside-cand-High": [
+   4.9,
+   4.5,
+   4.9
+  ],
+  "SW15 ashfoot_shelter_inside Medium cand|ship | SW15-ashfoot_shelter_inside-cand-Medium": [
+   6.4,
+   6.2,
+   6.6
+  ],
+  "SW15 ashfoot_shelter_inside Medium cand|ship | SW15-ashfoot_shelter_inside-ship-Medium": [
+   5.8,
+   5.4,
+   6.0
+  ],
+  "SW11 dynamo_the_stormheart_tree-calm Medium cand|ship | SW11-dynamo_the_stormheart_tree-calm-cand-Medium": [
+   4.8,
+   4.6,
+   5.0
+  ],
+  "SW11 dynamo_the_stormheart_tree-calm Medium cand|ship | SW11-dynamo_the_stormheart_tree-calm-ship-Medium": [
+   4.2,
+   3.9,
+   4.3
+  ],
+  "SW14 glowmoss_hollows_the_lantern_pools-calm-break Medium cand|ship | SW14-glowmoss_hollows_the_lantern_pools-calm-break-ship-Medium": [
+   5.6,
+   5.0,
+   5.5
+  ],
+  "SW14 glowmoss_hollows_the_lantern_pools-calm-break Medium cand|ship | SW14-glowmoss_hollows_the_lantern_pools-calm-break-cand-Medium": [
+   5.7,
+   5.3,
+   5.7
+  ]
+ }
+}

@@ -1,0 +1,106 @@
+{
+ "anchors": {
+  "f36_0_gap:C4B": [
+   6.0,
+   6.4,
+   6.0
+  ],
+  "f36_0_gap:C4A": [
+   6.9,
+   7.2,
+   6.6
+  ],
+  "f36_0_npc:C1B": [
+   7.2,
+   7.4,
+   7.2
+  ],
+  "f36_0_npc:C1A": [
+   7.2,
+   7.4,
+   7.2
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.5,
+   4.0,
+   4.3
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.2,
+   4.6,
+   5.0
+  ],
+  "f36_1_gpu:stormcapra_candidate": [
+   6.8,
+   6.3,
+   6.8
+  ],
+  "f36_1_gpu:stormcapra_shipping": [
+   6.0,
+   6.6,
+   6.2
+  ]
+ },
+ "candidates": {
+  "MH6 village_road Medium cand|ship | MH6-village_road-on-Medium": [
+   6.0,
+   6.2,
+   5.6
+  ],
+  "MH6 village_road Medium cand|ship | MH6-village_road-off-Medium": [
+   5.3,
+   5.6,
+   5.0
+  ],
+  "STC staticub-rec Medium cand|ship | STC-staticub-rec-cand-Medium": [
+   7.3,
+   7.5,
+   7.6
+  ],
+  "STC staticub-rec Medium cand|ship | STC-staticub-rec-ship-Medium": [
+   7.3,
+   7.5,
+   7.6
+  ],
+  "SW15 ashfoot_shelter_outside Medium cand|ship | SW15-ashfoot_shelter_outside-ship-Medium": [
+   5.8,
+   5.6,
+   5.2
+  ],
+  "SW15 ashfoot_shelter_outside Medium cand|ship | SW15-ashfoot_shelter_outside-cand-Medium": [
+   5.7,
+   5.6,
+   5.2
+  ],
+  "SW14 glowmoss_hollows_the_lantern_pools-calm-break High cand|ship | SW14-glowmoss_hollows_the_lantern_pools-calm-break-ship-High": [
+   5.4,
+   5.5,
+   4.6
+  ],
+  "SW14 glowmoss_hollows_the_lantern_pools-calm-break High cand|ship | SW14-glowmoss_hollows_the_lantern_pools-calm-break-cand-High": [
+   5.8,
+   5.8,
+   4.8
+  ],
+  "STC staticub-plain Medium cand|ship | STC-staticub-plain-ship-Medium": [
+   7.3,
+   7.5,
+   7.6
+  ],
+  "STC staticub-plain Medium cand|ship | STC-staticub-plain-cand-Medium": [
+   6.3,
+   6.9,
+   6.8
+  ],
+  "MH6 hall_front Medium cand|ship | MH6-hall_front-off-Medium": [
+   5.6,
+   6.0,
+   5.0
+  ],
+  "MH6 hall_front Medium cand|ship | MH6-hall_front-on-Medium": [
+   6.0,
+   6.3,
+   5.4
+  ]
+ }
+}

@@ -1,0 +1,31 @@
+"""Set the MH6 village path flag in a checkout's data/config/terrain_presentation.json (local GPU-pass helper).
+
+    python meadows_flags6.py <checkout> on|off
+
+Flips the first "enabled" value after "texture_candidates" -> "path", keeps the file's text otherwise byte-identical, then
+re-parses and verifies texture_candidates.path.enabled is as asked.
+"""
+import json
+import re
+import sys
+from pathlib import Path
+
+
+def main(root, arm):
+    want = arm == "on"
+    p = Path(root) / "data" / "config" / "terrain_presentation.json"
+    raw = p.read_bytes().decode("utf-8")
+    pos = raw.index('"path":', raw.index('"texture_candidates":'))
+    m = re.compile(r'"enabled":\s*(true|false)').search(raw, pos)
+    raw = raw[:m.start()] + f'"enabled": {"true" if want else "false"}' + raw[m.end():]
+    node = json.loads(raw)
+    if node["texture_candidates"]["path"]["enabled"] is not want:
+        sys.exit(f"FLAG MISMATCH texture_candidates.path.enabled={node['texture_candidates']['path']['enabled']}")
+    p.write_bytes(raw.encode("utf-8"))
+    print(f"terrain_presentation.texture_candidates.path.enabled = {want}")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3 or sys.argv[2] not in ("on", "off"):
+        sys.exit(__doc__)
+    main(sys.argv[1], sys.argv[2])

@@ -1,0 +1,42 @@
+[
+    {
+        "mode":  "plain",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "mode":  "rec",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "mode":  "plain",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "mode":  "rec",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    }
+]

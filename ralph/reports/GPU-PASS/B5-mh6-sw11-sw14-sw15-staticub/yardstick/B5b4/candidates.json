@@ -1,0 +1,69 @@
+[
+ {
+  "label": "MH6 hall_front Medium cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-hall_front-on-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-hall_front-off-Medium.png",
+  "brief": "Fixed production-camera views of the path in front of the village hall in the Meadows village, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Meadows: a coherent, lived-in place with readable landmarks, believable ground and light that belongs to the world.",
+  "defects": [
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear"
+  ]
+ },
+ {
+  "label": "SW14 glowmoss_hollows_the_lantern_pools-calm-break High cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW14-glowmoss_hollows_the_lantern_pools-calm-break-cand-High.png",
+  "b": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW14-glowmoss_hollows_the_lantern_pools-calm-break-ship-High.png",
+  "brief": "Fixed production-camera views of one Stormwood location (glowmoss hollows the lantern pools) through a storm's calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+  "defects": [
+   "Flat magenta slabs or rings on the ground",
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+   "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain",
+   "the lantern pools read as flat discs with smooth glowing rims painted on the ground rather than water set into banks"
+  ]
+ },
+ {
+  "label": "MH6 village_road Medium cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-village_road-on-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\MH6\\sides\\MH6-village_road-off-Medium.png",
+  "brief": "Fixed production-camera views of the village road in the Meadows village, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Meadows: a coherent, lived-in place with readable landmarks, believable ground and light that belongs to the world.",
+  "defects": [
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "P2-005: the village path reads as a flat orange road or smear filling the foreground rather than trodden earth with pebbles, ruts and wear"
+  ]
+ },
+ {
+  "label": "STC staticub-plain Medium cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\STC\\sides\\STC-staticub-plain-cand-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\STC\\sides\\STC-staticub-plain-ship-Medium.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": []
+ },
+ {
+  "label": "STC staticub-rec Medium cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\STC\\sides\\STC-staticub-rec-cand-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\STC\\sides\\STC-staticub-rec-ship-Medium.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": []
+ },
+ {
+  "label": "SW15 ashfoot_shelter_outside Medium cand|ship",
+  "a": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW15-ashfoot_shelter_outside-cand-Medium.png",
+  "b": "D:\\tb-gpu-runs\\yard\\SW1415\\sides\\SW15-ashfoot_shelter_outside-ship-Medium.png",
+  "brief": "Fixed production-camera views of one Stormwood location (ashfoot shelter outside) through a storm's calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world.",
+  "defects": [
+   "Flat magenta slabs or rings on the ground",
+   "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+   "Floating bodies or props (a gap between an object and the ground under it)",
+   "Clipping (geometry passing through geometry, or the camera inside geometry)",
+   "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+   "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain"
+  ]
+ }
+]
