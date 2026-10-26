@@ -181,6 +181,9 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
   - `sed -i` does not reach a running bash script. Write a new queue file that waits for the old one.
   - Run long jobs detached (`nohup setsid … & disown`) and wait with a Monitor or an `until grep` loop, not foreground `sleep`.
 - **Lane-to-coordinator messages** from a lane session can be refused (untrusted device). The lane NOTE is the channel; the coordinator reads it.
+- **Exit leak checks in child processes:** a one-shot sound still playing when a test child quits can leak "2 ObjectDB instances" and "1 resources still in use" (`AudioStreamPlaybackWAV` and its `.wav`). Freeing a playing player only flags it. The dummy audio thread's next mix removes it, and a loaded CI runner can skip that mix. Stop the players and wait two mixes before `quit` (`_native_drain_audio` in `tests/test_director_join_snapshot.gd`).
+  - To reproduce the leak every time, run the child with `--write-movie <png> --fixed-fps 30` under xvfb. In movie mode audio mixes only on frames, so a sound playing at quit always leaks.
+  - Never loosen the leak assertion. `ralph/reports/NETFIX/leak-1025/NOTE.md` has the details.
 
 **CPU captures (xvfb, Compatibility, Low)**
 - **Prefix:** `timeout <s> xvfb-run -a -s "-screen 0 1280x800x24" godot --path . --rendering-driver opengl3 --rendering-method gl_compatibility --resolution 1280x720 --script res://tools/<tool>.gd -- …`
