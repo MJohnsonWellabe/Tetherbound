@@ -1,5 +1,12 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (26 Oct, Stormtrail b45)
+
+- **Stormtrail value separation: tie, reverted.** CPU b45 (confirming, r 0.90, RMSE 0.43): main 6.32 vs candidate 6.22 mapped. Body-merges-with-stage PARTIAL on both sides. Candidate fac6e385, reverted e5495230; verdict at `ralph/reports/CREATURES/close-1024/b45/VERDICT.md` (tb/creatures-land d5b4fcef).
+- **QUESTION: Stormtrail's blue vein glow.** All three judges, on both sides, read it as stamped "glowing seams on fur". The owner ruled that out on 25 Oct. Options: (a) remove the vein glow from the coat; (b) replace it with arcs off the body, as Tanglevolt's. I'd do (b) through `arc_emission.py` unless you say (a). No Stormtrail push until you answer.
+- **Bug on main, not chased:** the `storm_line_glow` layer in `aspect_variants.json` selects no texels for Stormtrail (no-op). Changing colour and clump coverage did not make it select anything.
+- **Next:** Ripplet (fur detail; tail spacing on the stage), CPU-checked.
+
 ## TO COORDINATOR (26 Oct, after CO34)
 
 - **GPU READY (CLOSE-OUT, on main): CO5-ON e78759f17bbc8e0d7959b5ecbbcfbcae2b5d8ada** (tb/co5-on = origin/main ac5e1426 + only the Tanglevolt arcs; no rim/settle, no other lane work).
