@@ -1,0 +1,198 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8908,
+  "least_squares_slope": 1.1294,
+  "method": "linear",
+  "slope": 1.1294,
+  "intercept": 0.5242,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.653,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f10_2_r3_capacitor:control": {
+   "measured": 3.4,
+   "reference": 4.0,
+   "mapped": 4.364,
+   "residual": -0.364
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.067,
+   "reference": 6.53,
+   "mapped": 5.117,
+   "residual": 1.413
+  },
+  "p2_094_r4:X_before": {
+   "measured": 3.533,
+   "reference": 3.5,
+   "mapped": 4.515,
+   "residual": -1.015
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 5.4,
+   "reference": 6.73,
+   "mapped": 6.623,
+   "residual": 0.107
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.267,
+   "reference": 7.47,
+   "mapped": 7.602,
+   "residual": -0.132
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.267,
+   "reference": 7.53,
+   "mapped": 7.602,
+   "residual": -0.072
+  },
+  "f36_0_gap:C5A": {
+   "measured": 4.267,
+   "reference": 5.7,
+   "mapped": 5.343,
+   "residual": 0.357
+  },
+  "f36_0_gap:C5B": {
+   "measured": 5.933,
+   "reference": 6.93,
+   "mapped": 7.225,
+   "residual": -0.295
+  }
+ },
+ "candidates": {
+  "SW8 ashfoot_shelter_outside Medium cand|ship | SW8-ashfoot_shelter_outside-cand-Medium": {
+   "measured_mean": 4.6,
+   "mapped_mean": 5.72,
+   "mapped_judges": [
+    5.72,
+    5.72,
+    5.72
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW8 ashfoot_shelter_outside Medium cand|ship | SW8-ashfoot_shelter_outside-ship-Medium": {
+   "measured_mean": 4.4,
+   "mapped_mean": 5.49,
+   "mapped_judges": [
+    5.49,
+    5.49,
+    5.49
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW8 dynamo_the_stormheart_tree High cand|ship | SW8-dynamo_the_stormheart_tree-cand-High": {
+   "measured_mean": 3.733,
+   "mapped_mean": 4.74,
+   "mapped_judges": [
+    4.82,
+    4.82,
+    4.59
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW8 dynamo_the_stormheart_tree High cand|ship | SW8-dynamo_the_stormheart_tree-ship-High": {
+   "measured_mean": 4.133,
+   "mapped_mean": 5.19,
+   "mapped_judges": [
+    5.15,
+    5.27,
+    5.15
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW8 glowmoss_hollows_crown_overlook High cand|ship | SW8-glowmoss_hollows_crown_overlook-cand-High": {
+   "measured_mean": 4.5,
+   "mapped_mean": 5.61,
+   "mapped_judges": [
+    5.61,
+    5.72,
+    5.49
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW8 glowmoss_hollows_crown_overlook High cand|ship | SW8-glowmoss_hollows_crown_overlook-ship-High": {
+   "measured_mean": 4.367,
+   "mapped_mean": 5.46,
+   "mapped_judges": [
+    5.38,
+    5.49,
+    5.49
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW8 cinder_verge_the_struck_sentinel High cand|ship | SW8-cinder_verge_the_struck_sentinel-ship-High": {
+   "measured_mean": 4.433,
+   "mapped_mean": 5.53,
+   "mapped_judges": [
+    5.72,
+    5.49,
+    5.38
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW8 cinder_verge_the_struck_sentinel High cand|ship | SW8-cinder_verge_the_struck_sentinel-cand-High": {
+   "measured_mean": 4.667,
+   "mapped_mean": 5.79,
+   "mapped_judges": [
+    5.95,
+    5.72,
+    5.72
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW8 hollow_crown_the_crown_heartstone High cand|ship | SW8-hollow_crown_the_crown_heartstone-ship-High": {
+   "measured_mean": 4.067,
+   "mapped_mean": 5.12,
+   "mapped_judges": [
+    5.04,
+    5.27,
+    5.04
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW8 hollow_crown_the_crown_heartstone High cand|ship | SW8-hollow_crown_the_crown_heartstone-cand-High": {
+   "measured_mean": 4.433,
+   "mapped_mean": 5.53,
+   "mapped_judges": [
+    5.49,
+    5.72,
+    5.38
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

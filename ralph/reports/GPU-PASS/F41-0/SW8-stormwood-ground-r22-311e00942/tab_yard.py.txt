@@ -1,0 +1,54 @@
+"""Tabulate a yardstick run's mapped scores per stand/preset and arm, with defect tallies (local GPU-pass helper).
+
+    python tab_yard.py <prefix> <n_batches> [--rows out.json]
+
+Reads keys/<prefix>b<i>/{key,mapped,j1,j2,j3}.json for i in 1..n and prints one line per (stand, preset):
+cand vs ship mapped means, the delta, and per-arm tallies of PRESENT/PARTIAL/FIXED for every recorded defect.
+"""
+import json
+import sys
+from collections import defaultdict
+from pathlib import Path
+
+KEYS = Path("D:/tb-gpu-runs/keys")
+
+
+def main(prefix, n, rows_out=None):
+    table = defaultdict(dict)
+    rows = []
+    for b in range(1, n + 1):
+        kdir = KEYS / f"{prefix}b{b}"
+        key = json.loads((kdir / "key.json").read_text(encoding="utf-8"))
+        mapped = json.loads((kdir / "mapped.json").read_text(encoding="utf-8"))["candidates"]
+        judges = [json.loads((kdir / f"j{j}.json").read_text(encoding="utf-8")) for j in (1, 2, 3)]
+        judges = [j.get("sets", j) for j in judges]
+        for code, e in key.items():
+            if e.get("anchor"):
+                continue
+            parts = e["label"].split()
+            stand, preset = parts[1], parts[2]
+            for side in ("A", "B"):
+                stem = Path(e[side]).stem
+                arm = "cand" if f"-cand-" in stem else "ship"
+                m = mapped[f"{e['label']} | {stem}"]
+                defects = [j[code][side].get("defects", {}) for j in judges]
+                table[(stand, preset)][arm] = (m["mapped_mean"], m["mapped_judges"], defects)
+                rows.append({"batch": b, "code": code, "label": e["label"], "side": stem, "mapped": m["mapped_mean"],
+                             "judges": m["mapped_judges"], "defects": defects})
+    for (stand, preset), arms in sorted(table.items()):
+        c, s = arms.get("cand"), arms.get("ship")
+        if not (c and s):
+            print(stand, preset, "INCOMPLETE", list(arms))
+            continue
+        print(f"{stand:42s} {preset:6s} ship {s[0]:.2f} -> cand {c[0]:.2f} ({c[0] - s[0]:+.2f})")
+        names = sorted({k for d in c[2] + s[2] for k in d})
+        for name in names:
+            tally = lambda ds: "/".join(str(sum(1 for d in ds if d.get(name) == v)) for v in ("PRESENT", "PARTIAL", "FIXED"))
+            print(f"    {name[:70]:70s} ship {tally(s[2])}  cand {tally(c[2])}")
+    if rows_out:
+        Path(rows_out).write_text(json.dumps(rows, indent=1), encoding="utf-8")
+
+
+if __name__ == "__main__":
+    out = sys.argv[sys.argv.index("--rows") + 1] if "--rows" in sys.argv else None
+    main(sys.argv[1], int(sys.argv[2]), out)

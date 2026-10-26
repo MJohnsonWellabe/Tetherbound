@@ -1,0 +1,52 @@
+{
+ "Wg": {
+  "anchor": false,
+  "label": "SW8 conductor_run_rodline_post Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-conductor_run_rodline_post-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-conductor_run_rodline_post-ship-Medium.png"
+ },
+ "Qm": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Jw": {
+  "anchor": false,
+  "label": "SW8 deepwood_the_fallen_giant Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-deepwood_the_fallen_giant-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-deepwood_the_fallen_giant-ship-Medium.png"
+ },
+ "Hf": {
+  "anchor": false,
+  "label": "SW8 deepwood_lantern_hollow Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-deepwood_lantern_hollow-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-deepwood_lantern_hollow-ship-Medium.png"
+ },
+ "Oe": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ },
+ "Dc": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Gf": {
+  "anchor": false,
+  "label": "SW8 cinder_verge_the_struck_sentinel Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-cinder_verge_the_struck_sentinel-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-cinder_verge_the_struck_sentinel-cand-Medium.png"
+ },
+ "Uy": {
+  "anchor": false,
+  "label": "SW8 cinder_verge_verge_rod_station Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-cinder_verge_verge_rod_station-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-cinder_verge_verge_rod_station-ship-Medium.png"
+ },
+ "Hp": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ }
+}

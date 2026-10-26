@@ -1,0 +1,52 @@
+{
+ "Kx": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Tk": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Dh": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Up": {
+  "anchor": false,
+  "label": "SW8 cinder_verge_verge_rod_station High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-cinder_verge_verge_rod_station-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-cinder_verge_verge_rod_station-ship-High.png"
+ },
+ "Kl": {
+  "anchor": false,
+  "label": "SW8 deepwood_the_fallen_giant High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-deepwood_the_fallen_giant-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-deepwood_the_fallen_giant-cand-High.png"
+ },
+ "Ru": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Hh": {
+  "anchor": false,
+  "label": "SW8 conductor_run_rodline_post High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-conductor_run_rodline_post-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-conductor_run_rodline_post-ship-High.png"
+ },
+ "Rf": {
+  "anchor": false,
+  "label": "SW8 glowmoss_hollows_crown_overlook Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-glowmoss_hollows_crown_overlook-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-glowmoss_hollows_crown_overlook-ship-Medium.png"
+ },
+ "Ga": {
+  "anchor": false,
+  "label": "SW8 dynamo_the_stormheart_tree Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-dynamo_the_stormheart_tree-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-dynamo_the_stormheart_tree-cand-Medium.png"
+ }
+}

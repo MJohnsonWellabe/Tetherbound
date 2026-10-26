@@ -1,0 +1,46 @@
+{
+ "Jf": {
+  "anchor": false,
+  "label": "SW8 conductor_run_the_capacitor_grove Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-conductor_run_the_capacitor_grove-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-conductor_run_the_capacitor_grove-ship-Medium.png"
+ },
+ "Ee": {
+  "anchor": false,
+  "label": "SW8 deepwood_lantern_hollow High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-deepwood_lantern_hollow-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-deepwood_lantern_hollow-ship-High.png"
+ },
+ "Vz": {
+  "anchor": false,
+  "label": "SW8 conductor_run_the_capacitor_grove High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-conductor_run_the_capacitor_grove-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-conductor_run_the_capacitor_grove-cand-High.png"
+ },
+ "Lh": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Yd": {
+  "anchor": false,
+  "label": "SW8 dynamo_the_glass_field High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-dynamo_the_glass_field-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW8\\sides\\SW8-dynamo_the_glass_field-ship-High.png"
+ },
+ "Id": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ },
+ "Dy": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Ik": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}
