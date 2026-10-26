@@ -1280,6 +1280,9 @@ func _build_steam() -> void:
 	# Use the existing puff height for the blend distance; the authored
 	# particle budget, tint, alpha, size and life curves stay unchanged.
 	material.set_shader_parameter("intersection_fade_m", quad.size.y)
+	var lens: Array = cfg.get("lens_fade_m", [0.0, 0.0])
+	if lens.size() == 2:
+		material.set_shader_parameter("lens_fade_m", Vector2(float(lens[0]), float(lens[1])))
 	quad.material = material
 	_steam.draw_pass_1 = quad
 	var reach := process.emission_ring_radius + size + 1.0
@@ -1292,6 +1295,10 @@ render_mode unshaded, blend_mix, depth_draw_never, cull_disabled, shadows_disabl
 uniform sampler2D puff_texture : repeat_disable, filter_linear;
 uniform sampler2D scene_depth : hint_depth_texture, repeat_disable, filter_nearest;
 uniform float intersection_fade_m = 1.0;
+// GPU SW6 (25 Oct): puffs born between the camera and the trainer read as
+// fog sprites on the lens. With lens_fade_m.y > 0 each puff fades out
+// inside that view distance (presentation.steam.lens_fade_m).
+uniform vec2 lens_fade_m = vec2(0.0, 0.0);
 void vertex() {
 	mat4 facing = mat4(INV_VIEW_MATRIX[0], INV_VIEW_MATRIX[1], INV_VIEW_MATRIX[2], MODEL_MATRIX[3]);
 	float angle = INSTANCE_CUSTOM.x;
@@ -1317,7 +1324,8 @@ void fragment() {
 		soft_edge = smoothstep(0.0, intersection_fade_m, max(separation, 0.0));
 	}
 	ALBEDO = COLOR.rgb;
-	ALPHA = COLOR.a * texture(puff_texture, UV).a * soft_edge;
+	float lens_fade = lens_fade_m.y > lens_fade_m.x ? smoothstep(lens_fade_m.x, lens_fade_m.y, -VERTEX.z) : 1.0;
+	ALPHA = COLOR.a * texture(puff_texture, UV).a * soft_edge * lens_fade;
 }
 """
 

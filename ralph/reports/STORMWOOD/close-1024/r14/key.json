@@ -1,0 +1,52 @@
+{
+ "Ri": {
+  "anchor": true,
+  "A": "f36_0_npc:C5A",
+  "B": "f36_0_npc:C5B"
+ },
+ "Qn": {
+  "anchor": false,
+  "label": "F41#3 aftermath",
+  "A": "<scratch>/sides/base/matrix_aftermath_calm.png",
+  "B": "<scratch>/sides/r14/matrix_aftermath_calm.png"
+ },
+ "Or": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Tw": {
+  "anchor": false,
+  "label": "F41#3 break",
+  "A": "<scratch>/sides/r14/matrix_break.png",
+  "B": "<scratch>/sides/base/matrix_break.png"
+ },
+ "Yn": {
+  "anchor": false,
+  "label": "F41#3 calm",
+  "A": "<scratch>/sides/r14/matrix_calm.png",
+  "B": "<scratch>/sides/base/matrix_calm.png"
+ },
+ "Wt": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ },
+ "Dn": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Rr": {
+  "anchor": false,
+  "label": "F10#2 capacitor_alpha",
+  "A": "<scratch>/sides/r14/fight_capacitor_alpha.png",
+  "B": "<scratch>/sides/base/fight_capacitor_alpha.png"
+ },
+ "So": {
+  "anchor": false,
+  "label": "F10#2 glass_field_alpha",
+  "A": "<scratch>/sides/base/fight_glass_field_alpha.png",
+  "B": "<scratch>/sides/r14/fight_glass_field_alpha.png"
+ }
+}

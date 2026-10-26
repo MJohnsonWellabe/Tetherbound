@@ -2,16 +2,181 @@
   "item": "F41-look",
   "realm": "stormwood",
   "_comment": "Locked production CameraRig stands from the established F10 matrix. Positions/focus XZ are metres; y offsets are relative to the production terrain. The rig follows the trainer, so resolved camera transforms are recorded per frame. Clock pins test invariance, not day/night presentation. Reuse unchanged for every round.",
-  "resolution": [1920, 1080],
-  "presets": ["Medium", "High"],
-  "phases": ["calm", "building", "break", "fading"],
-  "clock_hours": [12.0, 0.0],
+  "resolution": [
+    1920,
+    1080
+  ],
+  "presets": [
+    "Medium",
+    "High"
+  ],
+  "phases": [
+    "calm",
+    "building",
+    "break",
+    "fading"
+  ],
+  "clock_hours": [
+    12.0,
+    0.0
+  ],
   "weather": "production Surge, plus long_storm_ended aftermath",
   "views": [
-    {"id": "forest", "pos": [-350.0, 0.0, 4330.0], "focus": [-300.0, 6.0, 4420.0], "pitch": -2.0, "fov": 70.0, "time": 12.0, "weather": "surge", "text": "Deepwood forest heart"},
-    {"id": "giant", "pos": [-232.0, 0.0, 4424.0], "focus": [-189.0, 30.0, 4430.0], "pitch": 12.0, "fov": 70.0, "time": 12.0, "weather": "surge", "text": "Fallen Giant grove trunk beside ordinary canopy"},
-    {"id": "glass", "pos": [-326.0, 0.0, 5036.0], "focus": [-352.0, 1.0, 5054.0], "pitch": -12.0, "fov": 70.0, "time": 12.0, "weather": "surge", "text": "Glass Field scar beside the road"},
-    {"id": "rod_line", "pos": [-442.2, 0.0, 567.5], "focus": [-532.4, 4.0, 667.8], "pitch": 2.0, "fov": 70.0, "time": 12.0, "weather": "surge", "text": "Ash Road rod line toward Verge Rod Station"},
-    {"id": "stormheart", "pos": [-110.0, 0.0, 5170.0], "focus": [-100.0, 70.0, 5470.0], "pitch": 8.0, "fov": 70.0, "time": 12.0, "weather": "surge", "text": "Stormheart southern approach at 300 m"}
-  ]
+    {
+      "id": "forest",
+      "pos": [
+        -347.4,
+        0.0,
+        4328.5
+      ],
+      "focus": [
+        -300.0,
+        6.0,
+        4420.0
+      ],
+      "pitch": -2.0,
+      "fov": 70.0,
+      "time": 12.0,
+      "weather": "surge",
+      "text": "Deepwood forest heart",
+      "old_pos": [
+        -350.0,
+        0.0,
+        4330.0
+      ],
+      "_why_reframed": "Coordinator ruling 25 Oct 2026 (F41#5 near-lens occluders): reframed with the same subject, focus and purpose; old and new kept here; judged before/after on the NEW stand only (fair pair). Chosen from CPU previews of two to three sideways offsets per stand. Old stand put a TwistedTree trunk 5-7 m from the lens at the right edge (r11-r15 judges: 'near-lens ghost trunk')."
+    },
+    {
+      "id": "giant",
+      "pos": [
+        -232.6,
+        0.0,
+        4428.0
+      ],
+      "focus": [
+        -189.0,
+        30.0,
+        4430.0
+      ],
+      "pitch": 12.0,
+      "fov": 70.0,
+      "time": 12.0,
+      "weather": "surge",
+      "text": "Fallen Giant grove trunk beside ordinary canopy",
+      "old_pos": [
+        -232.0,
+        0.0,
+        4424.0
+      ],
+      "_why_reframed": "Coordinator ruling 25 Oct 2026 (F41#5 near-lens occluders): reframed with the same subject, focus and purpose; old and new kept here; judged before/after on the NEW stand only (fair pair). Chosen from CPU previews of two to three sideways offsets per stand. Old stand filled the left third with a giant trunk; the Fallen Giant trunk now sits centre frame."
+    },
+    {
+      "id": "glass",
+      "pos": [
+        -326.0,
+        0.0,
+        5036.0
+      ],
+      "focus": [
+        -352.0,
+        1.0,
+        5054.0
+      ],
+      "pitch": -12.0,
+      "fov": 70.0,
+      "time": 12.0,
+      "weather": "surge",
+      "text": "Glass Field scar beside the road"
+    },
+    {
+      "id": "rod_line",
+      "pos": [
+        -442.2,
+        0.0,
+        567.5
+      ],
+      "focus": [
+        -532.4,
+        4.0,
+        667.8
+      ],
+      "pitch": 2.0,
+      "fov": 70.0,
+      "time": 12.0,
+      "weather": "surge",
+      "text": "Ash Road rod line toward Verge Rod Station"
+    },
+    {
+      "id": "stormheart",
+      "pos": [
+        -110.0,
+        0.0,
+        5170.0
+      ],
+      "focus": [
+        -100.0,
+        70.0,
+        5470.0
+      ],
+      "pitch": 8.0,
+      "fov": 70.0,
+      "time": 12.0,
+      "weather": "surge",
+      "text": "Stormheart southern approach at 300 m"
+    }
+  ],
+  "custom_views": [
+    {
+      "id": "reverse",
+      "old_pos": [
+        -300.0,
+        4.0,
+        4420.0
+      ],
+      "pos": [
+        -302.0,
+        4.0,
+        4413.0
+      ],
+      "focus": [
+        -350.0,
+        4.0,
+        4330.0
+      ],
+      "pitch": -2.0,
+      "text": "Reverse road view into the Deepwood hollow",
+      "_why_reframed": "Coordinator ruling 25 Oct 2026 (F41#5 near-lens occluders): reframed with the same subject, focus and purpose; old and new kept here; judged before/after on the NEW stand only (fair pair). Chosen from CPU previews of two to three sideways offsets per stand. Old stand put giant_canopy#356's root flare across the left third of the lens (all r11-r15 judges); the hollow now reads through the root arches."
+    },
+    {
+      "id": "heart_near",
+      "pos": [
+        -100.0,
+        80.0,
+        5330.0
+      ],
+      "focus": [
+        -100.0,
+        80.0,
+        5470.0
+      ],
+      "pitch": 18.0,
+      "text": "Stormheart base"
+    },
+    {
+      "id": "hollows",
+      "pos": [
+        -500.0,
+        3.0,
+        1550.0
+      ],
+      "focus": [
+        -460.0,
+        3.0,
+        1640.0
+      ],
+      "pitch": 0.0,
+      "text": "Glowmoss Hollows"
+    }
+  ],
+  "_custom_views_comment": "The matrix's three extra stands, passed to capture_stormwood_f10_matrix.gd as --custom=id@pos.x,pos.z@focus.x,focus.y,focus.z@pitch (pos.y is unused there; the y offset belongs to the focus). Reframed forest/giant are passed the same way (ids forest_r, giant_r) because the tool's built-in forest/giant keep the old seats."
 }

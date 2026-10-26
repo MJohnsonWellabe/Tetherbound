@@ -23,6 +23,8 @@ const CUT_WOOD_SHADER := preload("res://scripts/world/stormheart_cut_wood.gdshad
 const SPLIT_BARK := preload("res://scripts/world/stormheart_split_bark.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
+const CORE_COLUMN_SHADER := preload("res://scripts/world/stormheart_core_column.gdshader")
+const CORE_COLUMN_BODY_SHADER := preload("res://scripts/world/stormheart_core_column_core.gdshader")
 var simulation_only := false
 var _presentation: Dictionary = {}
 var _wood: StandardMaterial3D
@@ -36,6 +38,11 @@ var _core_flags_id := 0
 var _core_released := false
 var _hero: Node3D
 var _procedural_shell: Array[Node] = []
+var _column_core_material: ShaderMaterial
+var _column_sheath_material: ShaderMaterial
+var _column_lights: Array[OmniLight3D] = []
+var _column_energy := Vector2.ZERO
+var _column_cooled := 0.12
 
 func build() -> void:
 	_wood = StandardMaterial3D.new()
@@ -102,7 +109,9 @@ func build() -> void:
 		_built_detail()
 	if _presentation_enabled("deck_supports"):
 		_deck_supports(_presentation.get("deck_supports", {}))
-	if _presentation_enabled("meshy_interior"):
+	if _presentation_enabled("hero_interior"):
+		_hero_interior(_presentation.get("hero_interior", {}))
+	elif _presentation_enabled("meshy_interior"):
 		_meshy_interior(_presentation.get("meshy_interior", {}))
 	if _presentation_enabled("hollow_floor"):
 		# r16 judges: the hollow's floor was the outdoor grass carpet. The
@@ -914,6 +923,246 @@ func _meshy_interior(cfg: Dictionary) -> void:
 			_tint_model(segment, Color(str(cfg.get("deck_tint", "#ffffff"))))
 
 
+## GPU SW6 (25 Oct): the single panel ring read as "a tiled strip" and the
+## wall above it stayed "a smooth dark drum with no core". The hero interior
+## lines the whole visible inner wall with the Meshy root-wall panel in
+## staggered rows (varied scale and yaw, so no repeat lines up), stands a
+## lightning core column on the hollow axis, and hangs warm lantern clusters
+## and navy banners from the OuterWorks lip. The Meshy deck walk is kept.
+## Presentation only: no collider, floor or route changes.
+func _hero_interior(cfg: Dictionary) -> void:
+	var root := Node3D.new()
+	root.name = "HeroInterior"
+	add_child(root)
+	var walk: Dictionary = (_presentation.get("meshy_interior", {}) as Dictionary).duplicate()
+	walk.erase("wall_model")
+	if bool(cfg.get("deck_walk", true)):
+		_meshy_interior(walk)
+	_bark_wall_rows(root, cfg)
+	_core_column(root, cfg.get("core_column", {}))
+	_lantern_clusters(root, cfg.get("lantern_clusters", {}))
+	_lip_banners(root, cfg.get("lip_banners", {}))
+	if _column_core_material != null:
+		set_process(true)
+
+
+## Rows of the root-wall panel, each row offset half a step from the one
+## below and every panel jittered in scale and yaw from a fixed seed. One
+## MultiMesh per angular sector lets the camera cull the far side.
+func _bark_wall_rows(root: Node3D, cfg: Dictionary) -> void:
+	var path := str(cfg.get("wall_model", ""))
+	var model := HERO_PROP.load_model(path)
+	if model == null:
+		return
+	HERO_PROP.glow(model, Color(str(cfg.get("vein_colour", "#9fd0ff"))), float(cfg.get("vein_energy", 1.1)))
+	var bounds := HERO_PROP.BOUNDS.measure(model)
+	var unit := 1.0 / maxf(0.01, bounds.size.y)
+	var aspect := bounds.size.x * unit
+	var radius := float(cfg.get("wall_radius_m", 45.4))
+	var overlap := clampf(float(cfg.get("overlap", 0.82)), 0.4, 1.0)
+	var jitter_scale := float(cfg.get("scale_jitter", 0.12))
+	var jitter_yaw := deg_to_rad(float(cfg.get("yaw_jitter_deg", 8.0)))
+	var gaps: Array = cfg.get("wall_gaps", [[-1.84, -1.30], [1.43, 1.71]])
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cfg.get("seed", 1025))
+	var sectors := maxi(1, int(cfg.get("sectors", 12)))
+	var poses: Array = []
+	for sector in sectors:
+		poses.append([] as Array[Transform3D])
+	for row: Dictionary in cfg.get("rows", []):
+		var height := float(row.get("height_m", 12.0))
+		var step := height * aspect * overlap / radius
+		var angle := -PI + step * float(row.get("phase", 0.0))
+		while angle < PI:
+			var blocked := false
+			for gap: Array in gaps:
+				if angle > float(gap[0]) - step * 0.5 and angle < float(gap[1]) + step * 0.5:
+					blocked = true
+			if not blocked:
+				var size := height * (1.0 + rng.randf_range(-jitter_scale, jitter_scale))
+				var at := Vector3(cos(angle) * radius, float(row.get("base_m", 0.0)), sin(angle) * radius)
+				var facing := Basis(Vector3.UP, atan2(-at.x, -at.z) + rng.randf_range(-jitter_yaw, jitter_yaw))
+				var fit := Transform3D(Basis.from_scale(Vector3.ONE * size * unit),
+					Vector3(0.0, -bounds.position.y * size * unit, 0.0))
+				var sector := clampi(int(floor((angle + PI) / TAU * float(sectors))), 0, sectors - 1)
+				(poses[sector] as Array[Transform3D]).append(Transform3D(facing, at) * fit)
+			angle += step
+	var batch := Node3D.new()
+	batch.name = "BarkWallRows"
+	root.add_child(batch)
+	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+		var mesh := visual.mesh.duplicate() as Mesh
+		for surface in mesh.get_surface_count():
+			mesh.surface_set_material(surface, visual.get_active_material(surface))
+		var local := _relative_pose(model, visual)
+		for sector: Array[Transform3D] in poses:
+			if sector.is_empty():
+				continue
+			var instanced: Array[Transform3D] = []
+			for pose in sector:
+				instanced.append(pose * local)
+			_instances(batch, instanced, null, mesh)
+	model.free()
+
+
+func _relative_pose(model: Node3D, node: Node3D) -> Transform3D:
+	var pose := Transform3D.IDENTITY
+	var at: Node = node
+	while at != null and at != model:
+		if at is Node3D:
+			pose = (at as Node3D).transform * pose
+		at = at.get_parent()
+	return pose
+
+
+## The board's lightning core: a deep blue core threaded with drifting
+## lightning filaments inside a soft additive halo, both on the hollow axis behind the forked charge, with a few
+## blue lights down its length. Natural glow (the trunk's own lightning).
+## After the authoritative release it cools with the charge (set_core_released).
+func _core_column(root: Node3D, cfg: Dictionary) -> void:
+	if not bool(cfg.get("enabled", true)) or cfg.is_empty():
+		return
+	var centre_values: Array = cfg.get("centre", [0.0, 5.0])
+	var base := float(cfg.get("base_m", 0.0))
+	var top := float(cfg.get("top_m", CORE_HEIGHT - 0.5))
+	var column := Node3D.new()
+	column.name = "LightningCoreColumn"
+	column.position = Vector3(float(centre_values[0]), (base + top) * 0.5, float(centre_values[1]))
+	root.add_child(column)
+	var core_mesh := CylinderMesh.new()
+	core_mesh.top_radius = float(cfg.get("core_radius_m", 1.3))
+	core_mesh.bottom_radius = core_mesh.top_radius * 1.25
+	core_mesh.height = top - base
+	core_mesh.radial_segments = 24
+	core_mesh.rings = 8
+	var core := MeshInstance3D.new()
+	core.name = "Core"
+	core.mesh = core_mesh
+	_column_core_material = ShaderMaterial.new()
+	_column_core_material.shader = CORE_COLUMN_BODY_SHADER
+	_column_core_material.set_shader_parameter("body_colour", Color(str(cfg.get("core_colour", "#2a5492"))))
+	_column_core_material.set_shader_parameter("glow_colour", Color(str(cfg.get("colour", "#d2ecff"))))
+	_column_core_material.set_shader_parameter("energy", float(cfg.get("energy", 1.0)))
+	core.material_override = _column_core_material
+	core.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	column.add_child(core)
+	var sheath_mesh := CylinderMesh.new()
+	sheath_mesh.top_radius = float(cfg.get("sheath_radius_m", 3.4))
+	sheath_mesh.bottom_radius = sheath_mesh.top_radius * 1.15
+	sheath_mesh.height = top - base
+	sheath_mesh.radial_segments = 32
+	sheath_mesh.rings = 8
+	sheath_mesh.cap_top = false
+	sheath_mesh.cap_bottom = false
+	var sheath := MeshInstance3D.new()
+	sheath.name = "Sheath"
+	sheath.mesh = sheath_mesh
+	_column_sheath_material = ShaderMaterial.new()
+	_column_sheath_material.shader = CORE_COLUMN_SHADER
+	_column_sheath_material.set_shader_parameter("glow_colour", Color(str(cfg.get("colour", "#a9dcff"))))
+	_column_sheath_material.set_shader_parameter("energy", float(cfg.get("sheath_energy", 1.2)))
+	sheath.material_override = _column_sheath_material
+	sheath.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	column.add_child(sheath)
+	_column_energy = Vector2(float(cfg.get("energy", 1.0)), float(cfg.get("sheath_energy", 1.2)))
+	_column_cooled = float(cfg.get("cooled_scale", 0.12))
+	for y: Variant in cfg.get("light_heights_m", [4.0, 30.0, 70.0, 120.0]):
+		var light := OmniLight3D.new()
+		light.name = "CoreLight"
+		light.position = Vector3(0.0, float(y) - (base + top) * 0.5, 0.0)
+		light.light_color = Color(str(cfg.get("colour", "#a9dcff")))
+		light.light_energy = float(cfg.get("light_energy", 2.2))
+		light.omni_range = float(cfg.get("light_range_m", 30.0))
+		light.shadow_enabled = false
+		column.add_child(light)
+		_column_lights.append(light)
+	set_core_released(_core_released)
+
+
+## Warm lantern clusters (three lanterns at staggered drops and one light)
+## hang from the OuterWorks lip, overhead of the walking floor below it.
+func _lantern_clusters(root: Node3D, cfg: Dictionary) -> void:
+	var count := int(cfg.get("count", 0))
+	if count <= 0:
+		return
+	var glow := StandardMaterial3D.new()
+	glow.albedo_color = Color("ffc777")
+	glow.emission_enabled = true
+	glow.emission = Color("ffa04a")
+	glow.emission_energy_multiplier = float(cfg.get("flame_energy", 3.6))
+	var radius := float(cfg.get("radius_m", 18.7))
+	var drops: Array = cfg.get("drops_m", [0.9, 1.6, 2.3])
+	var spread := float(cfg.get("spread_m", 0.9))
+	for index in count:
+		var angle := TAU * (float(index) + float(cfg.get("phase", 0.25))) / float(count)
+		var radial := Vector3(cos(angle), 0.0, sin(angle))
+		var holder := Node3D.new()
+		holder.name = "LanternCluster%02d" % index
+		holder.position = radial * radius + Vector3.UP * 6.0
+		holder.rotation.y = atan2(-radial.x, -radial.z)
+		root.add_child(holder)
+		for lantern_index in drops.size():
+			var side := float(lantern_index - (drops.size() - 1) * 0.5) * spread
+			var drop := float(drops[lantern_index])
+			# The holder faces the axis, so its local X runs along the lip.
+			var at := Vector3(side, -drop, 0.0)
+			var chain := MeshInstance3D.new()
+			var chain_mesh := BoxMesh.new()
+			chain_mesh.size = Vector3(0.05, drop, 0.05)
+			chain.mesh = chain_mesh
+			chain.material_override = _metal
+			chain.position = at + Vector3.UP * drop * 0.5
+			holder.add_child(chain)
+			var lantern := WALL_LANTERN.instantiate() as Node3D
+			lantern.scale = Vector3.ONE * float(cfg.get("lantern_scale", 1.2))
+			# Same flame seat as the route lamps (0.72, 0.62 at 0.85 scale).
+			lantern.position = at - Vector3(0.0, 0.847, 0.729) * lantern.scale.x
+			holder.add_child(lantern)
+			var flame := MeshInstance3D.new()
+			var sphere := SphereMesh.new()
+			sphere.radius = 0.16
+			sphere.height = 0.32
+			flame.mesh = sphere
+			flame.material_override = glow
+			flame.position = at + Vector3.DOWN * 0.03
+			holder.add_child(flame)
+		var light := OmniLight3D.new()
+		light.position = Vector3.DOWN * 1.6
+		light.light_color = Color("ffb15c")
+		light.light_energy = float(cfg.get("light_energy", 3.0))
+		light.omni_range = float(cfg.get("light_range_m", 15.0))
+		light.shadow_enabled = false
+		holder.add_child(light)
+
+
+## Navy banners with gold trim hang from the OuterWorks lip between the
+## lantern clusters, half the ascent banner's drop so they clear the trainer.
+func _lip_banners(root: Node3D, cfg: Dictionary) -> void:
+	var count := int(cfg.get("count", 0))
+	if count <= 0:
+		return
+	var settings: Dictionary = _presentation.get("built_detail", {})
+	var cloth := StandardMaterial3D.new()
+	cloth.albedo_color = Color(str(settings.get("banner_colour", "#183e65")))
+	cloth.roughness = 0.96
+	cloth.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var trim := StandardMaterial3D.new()
+	trim.albedo_color = Color(str(settings.get("banner_trim", "#d5b466")))
+	trim.roughness = 0.72
+	var radius := float(cfg.get("radius_m", 18.35))
+	for index in count:
+		var angle := TAU * (float(index) + float(cfg.get("phase", 0.75))) / float(count)
+		var at := Vector3(cos(angle) * radius, 6.0 - 0.3, sin(angle) * radius)
+		# The cloth faces the axis; its rod brackets reach back under the deck.
+		var holder := Node3D.new()
+		holder.name = "LipBanner%02d" % index
+		holder.position = at
+		holder.rotation.y = atan2(-at.x, -at.z)
+		holder.scale = Vector3(1.0, float(cfg.get("drop_scale", 0.5)), 1.0)
+		root.add_child(holder)
+		_hanging_banner(holder, Vector3.ZERO, cloth, trim, index)
+
+
 ## Multiplies each surface's albedo by `tint` (the Meshy deck reads orange
 ## against the weathered cut-wood decks; the oxblood rule keeps timber off red).
 func _tint_model(model: Node, tint: Color) -> void:
@@ -1203,8 +1452,9 @@ func _charge_branch_tip(start: Vector3,finish: Vector3,width: float) -> Vector3:
 func _process(_delta: float) -> void:
 	if _hero != null:
 		_refresh_hero_swap()
-	if _core_material != null:
+	if _core_material != null or _column_core_material != null:
 		_refresh_core_state()
+	if _core_material != null:
 		_refresh_charge_visibility()
 
 
@@ -1308,6 +1558,12 @@ func _refresh_core_state() -> void:
 
 func set_core_released(released: bool) -> void:
 	_core_released = released
+	if _column_core_material != null:
+		var cool := _column_cooled if released else 1.0
+		_column_core_material.set_shader_parameter("energy", _column_energy.x * cool)
+		_column_sheath_material.set_shader_parameter("energy", _column_energy.y * cool)
+		for light: OmniLight3D in _column_lights:
+			light.visible = not released
 	if _core_material == null:
 		return
 	var settings: Dictionary = _presentation.core_finish

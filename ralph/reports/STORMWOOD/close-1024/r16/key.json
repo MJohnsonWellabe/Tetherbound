@@ -1,0 +1,52 @@
+{
+ "Mw": {
+  "anchor": true,
+  "A": "f36_0_npc:C5B",
+  "B": "f36_0_npc:C5A"
+ },
+ "Qv": {
+  "anchor": false,
+  "label": "WO6 stormheart",
+  "A": "<scratch>/sides/base_stormheart.png",
+  "B": "<scratch>/sides/r16_stormheart.png"
+ },
+ "Ee": {
+  "anchor": false,
+  "label": "WO6 ashfoot",
+  "A": "<scratch>/sides/r16_ashfoot.png",
+  "B": "<scratch>/sides/base_ashfoot.png"
+ },
+ "Qc": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Dd": {
+  "anchor": false,
+  "label": "WO6 heartstone",
+  "A": "<scratch>/sides/r16_heartstone.png",
+  "B": "<scratch>/sides/base_heartstone.png"
+ },
+ "Wm": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Jw": {
+  "anchor": false,
+  "label": "WO6 pools",
+  "A": "<scratch>/sides/r16_pools.png",
+  "B": "<scratch>/sides/base_pools.png"
+ },
+ "Pt": {
+  "anchor": false,
+  "label": "F10#2 fights",
+  "A": "<scratch>/sides/north_fight_capacitor_alpha.png",
+  "B": "<scratch>/sides/north_fight_glass_field_alpha.png"
+ },
+ "Kg": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ }
+}
