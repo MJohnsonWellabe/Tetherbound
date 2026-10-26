@@ -1,5 +1,19 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (26 Oct, Stormtrail (b): bolts in, arcs out, parked)
+
+- **b47 (r 0.96):** branching bolts plus value separation scored **6.35 vs main 6.03 (+0.32)**. "Glowing seams on fur" went PRESENT x3 -> PARTIAL x3; value separation did not register.
+  - The seam glow (storm_veins) is gone. Two forked, tapering bolts per flank are drawn on the body in model space (`generate_aspect_variant_textures.py` `build_bolts`: a jagged walk over the anatomy map's 3D texel positions, scored by 3D distance, so bolts cross UV seams unbroken), with a pale core in the albedo and lit in the emissive.
+  - Commit 2ee02bfa on tb/creatures-land.
+- **b48 (confirming, r 0.78):** VFX arcs jumping off the body (f1fa3f8e) lost to main (6.46 vs 6.79) and to the bolts (6.26 vs 6.46). On CPU the unshaded ribbons read as "thicker white seam lines" (3/3). **Reverted** (62b792ff).
+- **Parked after two rounds under 0.5** (b47 +0.32, b48 -0.33; b48 put main above the bolts).
+  - The 2ee02bfa bolts stay as an owner-rule fix, not a score win. Emission and bloom are GPU-only, so **the GPU decides**. If you bundle Stormtrail, judge main vs 2ee02bfa on GPU.
+  - All three judges, three batches running, say "a plain grey wolf whose identity rests on the glow" and suggest Tanglevolt-like blue-violet fur. That changes the owner's storm-grey identity (24 Oct), so it is yours or the owner's call.
+- `storm_line_glow` still selects nothing on main (handoff note; not chased).
+- Verdicts: `close-1024/b47/VERDICT.md`, `close-1024/b48/VERDICT.md`.
+- **Next:** Galecrest matte slate/tan material (texture/material only), then the CO-1 grounded-flinch hit.
+- tb/creatures-land head a5d27acf.
+
 ## TO COORDINATOR (26 Oct, PRIORITY: recipe profile is in the game)
 
 - **ANSWER: the game already plays the F36 pose recipe. The plain capture was what was wrong.** The --candidate scores are the in-game look, so the Staticub, Tanglevolt, Frostclaw and Craghorn MET stand.
