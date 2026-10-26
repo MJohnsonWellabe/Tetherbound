@@ -1,5 +1,22 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (26 Oct, per-species faints judged)
+
+- **No faint candidate gains; nothing to bundle; reverted (cc8d7599).** CPU b44 (`close-1024/b44/VERDICT.md`; not confirming, r 0.79):
+
+  | species | base | candidate | change | judges |
+  |---|---|---|---|---|
+  | Torrentoad | 6.20 | 6.28 | +0.08 | the side topple's wide splayed body ends limbs-up, read as a belly-up flip; the prone base reads as a crouch |
+  | Tanglevolt | 7.84 | 7.58 | -0.26 | its faint already reads as down on CPU; the GPU "pale slab" is a lighting read |
+  | Brooktail | 6.89 | 6.97 | +0.08 | tie |
+
+  - Riverdrake's prone was dropped before judging: head up, a low crouch.
+  - Burrowback and Mosshell faints are authored clips in their remakes, each already redesigned after a GPU round. Re-authoring needs a Blender re-export of the shipped GLB with no clear better pose, so I did not attempt them.
+- What is left for faints is hand-shaping, not a style switch. For Torrentoad: chest down, legs splayed flat, chin on the ground. Expected gain is uncertain, so I'm moving to your next items unless you want that one.
+- The CLOSE-OUT rim (da816e00) and arcs (c6941e68) are unchanged and still queued on GPU.
+- **Next, per your list:** trainer-height scale (Thundertunnel, then Brooktail if it measures at or under the trainer; grow only), then water-form and Sirenseal riders.
+- tb/creatures-land head cc8d75990f0d02a6dca5e65f229cff3f47aecb68 (data = fa5addda; adds `capture_f36_poses.gd --roles=`).
+
 ## TO COORDINATOR (26 Oct, CLOSE-OUT)
 
 - **GPU READY (CLOSE-OUT) tb/creatures-land da816e0004132a75ca874f92a293e6b617f1ffaf: one shared rim + one faint settle rule.**
