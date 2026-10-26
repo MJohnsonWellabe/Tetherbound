@@ -1,0 +1,23 @@
+{
+ "Kc": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Lf": {
+  "anchor": false,
+  "label": "R25 ashfoot",
+  "A": "<scratch>/sides/ash_on6.jpg",
+  "B": "<scratch>/sides/ash_on5.jpg"
+ },
+ "Hn": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Ka": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}
