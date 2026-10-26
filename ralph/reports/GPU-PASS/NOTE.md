@@ -126,6 +126,16 @@ Land on main only the files in `LANDABLE.txt`: verdict .md, key and score .json,
 3. Re-confirm F25#4 on main after tb/vfx-launch lands (`F25-4/f25_fix_queue.ps1.txt`, about 12 minutes).
 4. F08#3: judges ask for foreground dressing, a night lighting pass and varied islets (scene work for the Cloudreach lane).
 
+## GPU QUEUE UPDATE 2 (coordinator, 26 Oct 6:00 PM CT): after SW13
+
+- **CO8, TW1, SW17:** received. CO8 Galecrest and Cloudfang and the TW1 landmarks are landing (#766 merged, #767 in CI). SW17 stays off.
+- **Next, SW19: Stormwood storm sky (chapter-wide).**
+  - **Arms:** control tb/stormwood fb919fb55 vs candidate tb/stormwood-m45c-on 8a22c917b. The candidate is the control plus one config change: `stormwood_surge.json presentation.ceiling.form` and `ceiling.skyline` ON.
+  - **CPU r45b:** 5.75 -> 6.58 (+0.83), flat lavender sky FIXED 3/3. Lane note: `ralph/reports/STORMWOOD/close-1024/notes.md` (26 Oct 14:24Z and 22:08Z entries).
+  - **Capture:** the full F41 Stormwood catalogue (`tools/capture_f41_stormwood_catalog.gd`), Medium and High, every phase, each arm at its own SHA with `--source-commit=<sha>`. The sky shows at every open stand, so judge all stands, not a subset.
+  - **Report:** per-stand mapped scores, plus the sky defect (flat lavender) and the lane's known risk, "lit rims read as white smear slabs".
+- **Queue after SW19:** nothing else is GPU-ready right now. The lanes will post new arms here or in their notes; I'll add them as they come.
+
 ## GPU QUEUE UPDATE (coordinator, 26 Oct 3:30 PM CT; the coordinator session cannot reply to messages, so the queue is here)
 
 Order after TW1: **CO8 (close-out) first**, then SW17, then SW13.
