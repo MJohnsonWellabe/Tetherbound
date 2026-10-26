@@ -1,0 +1,106 @@
+{
+ "anchors": {
+  "p2_094_r4:Y_after": [
+   5.8,
+   5.8,
+   5.6
+  ],
+  "p2_094_r4:X_before": [
+   3.6,
+   3.8,
+   3.8
+  ],
+  "f36_1_gpu:stormcapra_candidate": [
+   6.4,
+   7.0,
+   7.2
+  ],
+  "f36_1_gpu:stormcapra_shipping": [
+   5.4,
+   6.0,
+   6.5
+  ],
+  "f36_0_gap:C5A": [
+   4.4,
+   3.5,
+   4.8
+  ],
+  "f36_0_gap:C5B": [
+   6.0,
+   6.6,
+   7.2
+  ],
+  "f36_0_npc:C1B": [
+   6.9,
+   6.8,
+   7.2
+  ],
+  "f36_0_npc:C1A": [
+   7.0,
+   6.8,
+   7.2
+  ]
+ },
+ "candidates": {
+  "CO1 breezetail Medium cand|ship | CO1-breezetail-cand-Medium": [
+   6.3,
+   6.6,
+   7.3
+  ],
+  "CO1 breezetail Medium cand|ship | CO1-breezetail-ship-Medium": [
+   5.2,
+   5.6,
+   6.2
+  ],
+  "CO1 craghorn Medium cand|ship | CO1-craghorn-ship-Medium": [
+   5.4,
+   6.0,
+   6.4
+  ],
+  "CO1 craghorn Medium cand|ship | CO1-craghorn-cand-Medium": [
+   6.6,
+   7.0,
+   7.3
+  ],
+  "CO1 tanglevolt Medium cand|ship | CO1-tanglevolt-ship-Medium": [
+   5.3,
+   5.8,
+   6.4
+  ],
+  "CO1 tanglevolt Medium cand|ship | CO1-tanglevolt-cand-Medium": [
+   7.0,
+   7.3,
+   7.4
+  ],
+  "CO1 frostclaw High cand|ship | CO1-frostclaw-ship-High": [
+   5.6,
+   5.5,
+   6.3
+  ],
+  "CO1 frostclaw High cand|ship | CO1-frostclaw-cand-High": [
+   7.0,
+   7.0,
+   7.3
+  ],
+  "CO1 craghorn High cand|ship | CO1-craghorn-ship-High": [
+   5.4,
+   6.0,
+   6.4
+  ],
+  "CO1 craghorn High cand|ship | CO1-craghorn-cand-High": [
+   6.6,
+   7.0,
+   7.3
+  ],
+  "CO1 stormcapra High cand|ship | CO1-stormcapra-cand-High": [
+   6.4,
+   7.0,
+   7.2
+  ],
+  "CO1 stormcapra High cand|ship | CO1-stormcapra-ship-High": [
+   5.2,
+   6.0,
+   6.5
+  ]
+ }
+}

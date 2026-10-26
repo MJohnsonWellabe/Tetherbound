@@ -1,0 +1,554 @@
+[
+ {
+  "batch": 1,
+  "code": "Vt",
+  "label": "CO1 tanglevolt High cand|ship",
+  "side": "CO1-tanglevolt-ship-High",
+  "mapped": 6.86,
+  "judges": [
+   6.8,
+   6.65,
+   7.11
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Vt",
+  "label": "CO1 tanglevolt High cand|ship",
+  "side": "CO1-tanglevolt-cand-High",
+  "mapped": 7.72,
+  "judges": [
+   8.03,
+   7.57,
+   7.57
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Tg",
+  "label": "CO1 breezetail High cand|ship",
+  "side": "CO1-breezetail-ship-High",
+  "mapped": 6.37,
+  "judges": [
+   6.19,
+   6.19,
+   6.73
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Tg",
+  "label": "CO1 breezetail High cand|ship",
+  "side": "CO1-breezetail-cand-High",
+  "mapped": 7.47,
+  "judges": [
+   7.72,
+   7.11,
+   7.57
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Vd",
+  "label": "CO1 cloudfang Medium cand|ship",
+  "side": "CO1-cloudfang-ship-Medium",
+  "mapped": 6.45,
+  "judges": [
+   6.27,
+   6.27,
+   6.8
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Vd",
+  "label": "CO1 cloudfang Medium cand|ship",
+  "side": "CO1-cloudfang-cand-Medium",
+  "mapped": 7.44,
+  "judges": [
+   7.72,
+   7.19,
+   7.42
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Kv",
+  "label": "CO1 frostclaw Medium cand|ship",
+  "side": "CO1-frostclaw-ship-Medium",
+  "mapped": 6.52,
+  "judges": [
+   6.42,
+   6.34,
+   6.8
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Kv",
+  "label": "CO1 frostclaw Medium cand|ship",
+  "side": "CO1-frostclaw-cand-Medium",
+  "mapped": 7.57,
+  "judges": [
+   7.88,
+   7.34,
+   7.49
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Qz",
+  "label": "CO1 cloudfang High cand|ship",
+  "side": "CO1-cloudfang-ship-High",
+  "mapped": 6.45,
+  "judges": [
+   6.27,
+   6.27,
+   6.8
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Qz",
+  "label": "CO1 cloudfang High cand|ship",
+  "side": "CO1-cloudfang-cand-High",
+  "mapped": 7.44,
+  "judges": [
+   7.72,
+   7.19,
+   7.42
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Mm",
+  "label": "CO1 stormcapra Medium cand|ship",
+  "side": "CO1-stormcapra-ship-Medium",
+  "mapped": 6.57,
+  "judges": [
+   6.5,
+   6.5,
+   6.73
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Mm",
+  "label": "CO1 stormcapra Medium cand|ship",
+  "side": "CO1-stormcapra-cand-Medium",
+  "mapped": 7.14,
+  "judges": [
+   7.11,
+   7.26,
+   7.03
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Kh",
+  "label": "CO1 breezetail Medium cand|ship",
+  "side": "CO1-breezetail-cand-Medium",
+  "mapped": 7.35,
+  "judges": [
+   6.91,
+   7.21,
+   7.92
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Kh",
+  "label": "CO1 breezetail Medium cand|ship",
+  "side": "CO1-breezetail-ship-Medium",
+  "mapped": 6.26,
+  "judges": [
+   5.78,
+   6.19,
+   6.8
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Zp",
+  "label": "CO1 craghorn Medium cand|ship",
+  "side": "CO1-craghorn-ship-Medium",
+  "mapped": 6.53,
+  "judges": [
+   5.99,
+   6.6,
+   7.01
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Zp",
+  "label": "CO1 craghorn Medium cand|ship",
+  "side": "CO1-craghorn-cand-Medium",
+  "mapped": 7.58,
+  "judges": [
+   7.21,
+   7.62,
+   7.92
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Yu",
+  "label": "CO1 tanglevolt Medium cand|ship",
+  "side": "CO1-tanglevolt-ship-Medium",
+  "mapped": 6.43,
+  "judges": [
+   5.89,
+   6.4,
+   7.01
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Yu",
+  "label": "CO1 tanglevolt Medium cand|ship",
+  "side": "CO1-tanglevolt-cand-Medium",
+  "mapped": 7.86,
+  "judges": [
+   7.62,
+   7.92,
+   8.03
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Tg",
+  "label": "CO1 frostclaw High cand|ship",
+  "side": "CO1-frostclaw-ship-High",
+  "mapped": 6.4,
+  "judges": [
+   6.19,
+   6.09,
+   6.91
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Tg",
+  "label": "CO1 frostclaw High cand|ship",
+  "side": "CO1-frostclaw-cand-High",
+  "mapped": 7.72,
+  "judges": [
+   7.62,
+   7.62,
+   7.92
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Xp",
+  "label": "CO1 craghorn High cand|ship",
+  "side": "CO1-craghorn-ship-High",
+  "mapped": 6.53,
+  "judges": [
+   5.99,
+   6.6,
+   7.01
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Xp",
+  "label": "CO1 craghorn High cand|ship",
+  "side": "CO1-craghorn-cand-High",
+  "mapped": 7.58,
+  "judges": [
+   7.21,
+   7.62,
+   7.92
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Qg",
+  "label": "CO1 stormcapra High cand|ship",
+  "side": "CO1-stormcapra-cand-High",
+  "mapped": 7.48,
+  "judges": [
+   7.01,
+   7.62,
+   7.82
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Qg",
+  "label": "CO1 stormcapra High cand|ship",
+  "side": "CO1-stormcapra-ship-High",
+  "mapped": 6.5,
+  "judges": [
+   5.78,
+   6.6,
+   7.11
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ }
+]

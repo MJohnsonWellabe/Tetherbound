@@ -1,0 +1,162 @@
+{
+ "sets": {
+  "Yw": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Flat pale sky, smeared low-res ground and no fog, shafts or time-of-day grade sink it; only B's aftermath storytelling (banners down, captive freed, smoking collapsed tent) approaches a shipping game."
+  },
+  "Vt": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The lightning-streaked wolf model, fur and scale beside the ruler carry it; A's belly-up faint roll is the weak point."
+  },
+  "Gv": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Readable warm face, clear eyes and an earthy olive-and-brown outfit in the key-art palette carry it, though the soft cartoon face sits a step away from the naturalistic creatures."
+  },
+  "Tg": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "An appealing fennec model with a clear scarf accent carries it; A's 'faint' frames, which show it sitting upright, would not pass in a shipping game."
+  },
+  "Vd": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The thick white fur with blue markings and the big silhouette carry it; A's sit-up faint and B's fully airborne hit react weaken it."
+  },
+  "Kv": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A naturalistic rosette-patterned snow leopard at Palworld-class scale carries it; A's faint end is a seated pose and B's hit react is a pounce-like leap."
+  },
+  "Ex": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ram model matches the style bar, but A's belly-up flip appears lifted off the floor and B's horns stretch into long tubes in the faint frames, which sinks the finish."
+  },
+  "Qz": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Same white wolf as Vd: the model and fur carry it, and A's seated faint plus B's airborne hit react hold it back."
+  },
+  "Mm": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A good ram model, but A's rolled belly-up body appears raised above its shadow and B's horns deform into long curling tubes when it faints."
+  },
+  "Wd": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's smooth clay-like boar with stuck-on moss reads as a placeholder; B's furrier body is closer, but its yellow leopard spots are off-board, its faint frames look lifted over a blurred shadow and it barely reaches the ruler's height."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-author hit-react and faint animations so they read without a label and stay grounded: no seated 'faint' (Tg, Vd, Qz, Kv, Wd side A), no fully airborne leap as a hit react (Vd, Qz, Kv side B), no belly-up roll (Vt, Ex, Mm side A), and fix the horn skinning that stretches the ram's horns (Ex, Mm side B).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Meadows aftermath and world finish: on every after frame, take down or topple the red enemy banners and leave one site-specific remnant; replace the smeared ground texture with clustered grass, flowers and dirt-path edges; add a clouded blue sky, warm sun grade and distance fog so the shots match the key art.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the Wd boar's material as real fur in the board's brown, with moss accents, and scale it so it stands above the 1.80 m trainer.",
+   "kind": "new_art"
+  }
+ ]
+}

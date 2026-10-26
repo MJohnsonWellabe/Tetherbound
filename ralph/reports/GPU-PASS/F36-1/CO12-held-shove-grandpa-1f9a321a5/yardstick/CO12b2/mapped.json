@@ -1,0 +1,226 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9275,
+  "least_squares_slope": 1.0191,
+  "method": "linear",
+  "slope": 1.0191,
+  "intercept": 0.4848,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.488,
+ "top_anchor_reference": 7.79,
+ "confirming_batch": true,
+ "anchors": {
+  "p2_094_r4:Y_after": {
+   "measured": 5.733,
+   "reference": 6.73,
+   "mapped": 6.328,
+   "residual": 0.402
+  },
+  "p2_094_r4:X_before": {
+   "measured": 3.733,
+   "reference": 3.5,
+   "mapped": 4.29,
+   "residual": -0.79
+  },
+  "f36_1_gpu:stormcapra_candidate": {
+   "measured": 6.867,
+   "reference": 7.79,
+   "mapped": 7.483,
+   "residual": 0.307
+  },
+  "f36_1_gpu:stormcapra_shipping": {
+   "measured": 5.967,
+   "reference": 6.23,
+   "mapped": 6.566,
+   "residual": -0.336
+  },
+  "f36_0_gap:C5A": {
+   "measured": 4.233,
+   "reference": 5.7,
+   "mapped": 4.799,
+   "residual": 0.901
+  },
+  "f36_0_gap:C5B": {
+   "measured": 6.6,
+   "reference": 6.93,
+   "mapped": 7.211,
+   "residual": -0.281
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.967,
+   "reference": 7.47,
+   "mapped": 7.585,
+   "residual": -0.115
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.0,
+   "reference": 7.53,
+   "mapped": 7.619,
+   "residual": -0.089
+  }
+ },
+ "candidates": {
+  "CO1 breezetail Medium cand|ship | CO1-breezetail-cand-Medium": {
+   "measured_mean": 6.733,
+   "mapped_mean": 7.35,
+   "mapped_judges": [
+    6.91,
+    7.21,
+    7.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO1 breezetail Medium cand|ship | CO1-breezetail-ship-Medium": {
+   "measured_mean": 5.667,
+   "mapped_mean": 6.26,
+   "mapped_judges": [
+    5.78,
+    6.19,
+    6.8
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO1 craghorn Medium cand|ship | CO1-craghorn-ship-Medium": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.53,
+   "mapped_judges": [
+    5.99,
+    6.6,
+    7.01
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO1 craghorn Medium cand|ship | CO1-craghorn-cand-Medium": {
+   "measured_mean": 6.967,
+   "mapped_mean": 7.58,
+   "mapped_judges": [
+    7.21,
+    7.62,
+    7.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "CO1 tanglevolt Medium cand|ship | CO1-tanglevolt-ship-Medium": {
+   "measured_mean": 5.833,
+   "mapped_mean": 6.43,
+   "mapped_judges": [
+    5.89,
+    6.4,
+    7.01
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO1 tanglevolt Medium cand|ship | CO1-tanglevolt-cand-Medium": {
+   "measured_mean": 7.233,
+   "mapped_mean": 7.86,
+   "mapped_judges": [
+    7.62,
+    7.92,
+    8.03
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "CO1 frostclaw High cand|ship | CO1-frostclaw-ship-High": {
+   "measured_mean": 5.8,
+   "mapped_mean": 6.4,
+   "mapped_judges": [
+    6.19,
+    6.09,
+    6.91
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO1 frostclaw High cand|ship | CO1-frostclaw-cand-High": {
+   "measured_mean": 7.1,
+   "mapped_mean": 7.72,
+   "mapped_judges": [
+    7.62,
+    7.62,
+    7.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "CO1 craghorn High cand|ship | CO1-craghorn-ship-High": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.53,
+   "mapped_judges": [
+    5.99,
+    6.6,
+    7.01
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO1 craghorn High cand|ship | CO1-craghorn-cand-High": {
+   "measured_mean": 6.967,
+   "mapped_mean": 7.58,
+   "mapped_judges": [
+    7.21,
+    7.62,
+    7.92
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "CO1 stormcapra High cand|ship | CO1-stormcapra-cand-High": {
+   "measured_mean": 6.867,
+   "mapped_mean": 7.48,
+   "mapped_judges": [
+    7.01,
+    7.62,
+    7.82
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO1 stormcapra High cand|ship | CO1-stormcapra-ship-High": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.5,
+   "mapped_judges": [
+    5.78,
+    6.6,
+    7.11
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "meets the bar only above the top anchor (7.79): CO1 tanglevolt Medium cand|ship | CO1-tanglevolt-cand-Medium; extrapolated, but this batch's anchors reach 7.35 or more, so it is the confirming batch"
+ ]
+}

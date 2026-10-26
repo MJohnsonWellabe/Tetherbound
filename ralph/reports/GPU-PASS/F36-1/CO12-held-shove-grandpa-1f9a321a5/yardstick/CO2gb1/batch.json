@@ -1,0 +1,66 @@
+{
+ "anchors": {
+  "f36_1_gpu:stormcapra_candidate": [
+   6.6,
+   7.2,
+   6.8
+  ],
+  "f36_1_gpu:stormcapra_shipping": [
+   5.2,
+   5.6,
+   5.0
+  ],
+  "f36_0_npc:C3A": [
+   4.4,
+   3.8,
+   4.4
+  ],
+  "f36_0_npc:C3B": [
+   4.4,
+   3.8,
+   4.4
+  ],
+  "f36_0_gap:C2B": [
+   5.6,
+   4.8,
+   4.8
+  ],
+  "f36_0_gap:C2A": [
+   6.6,
+   6.8,
+   7.0
+  ],
+  "f36_1_gpu:tanglevolt_candidate": [
+   6.3,
+   7.0,
+   6.4
+  ],
+  "f36_1_gpu:tanglevolt_shipping": [
+   5.0,
+   5.0,
+   5.0
+  ]
+ },
+ "candidates": {
+  "CO2 grandpa Medium cand|ship | CO2-grandpa-cand-Medium": [
+   7.6,
+   7.4,
+   7.3
+  ],
+  "CO2 grandpa Medium cand|ship | CO2-grandpa-ship-Medium": [
+   7.6,
+   7.4,
+   7.3
+  ],
+  "CO2 grandpa High cand|ship | CO2-grandpa-ship-High": [
+   7.6,
+   7.4,
+   7.3
+  ],
+  "CO2 grandpa High cand|ship | CO2-grandpa-cand-High": [
+   7.6,
+   7.4,
+   7.3
+  ]
+ }
+}

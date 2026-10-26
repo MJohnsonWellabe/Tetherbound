@@ -1,0 +1,162 @@
+{
+ "sets": {
+  "Yw": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared low-resolution ground textures, flat featureless grassland and flat midday light with no fog or depth grade sink it beside Palworld's dense, crisp fields, even though B's aftermath storytelling (torn banners, freed captive, smoke) is clear."
+  },
+  "Vt": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 7.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Tanglevolt wolf's naturalistic fur, violet lightning veining and strong silhouette match the owner bar and Palworld creature finish; the neutral stage carries no atmosphere either way."
+  },
+  "Gv": {
+   "A": {
+    "bar_a": 7.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Warm, readable elder face with clear eyes and a green/brown woodsman palette sits comfortably beside Palworld's stylised humans."
+  },
+  "Tg": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "An appealing, readable fennec-like creature with a clear face; it leans slightly more cartoon than the naturalistic owner bar, and A's missing hurt/faint poses would break it in play."
+  },
+  "Vd": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white frost wolf's fur and blue markings reach the owner bar; B's grounded faint carries it, while A's 'faint' is a seated idle."
+  },
+  "Kv": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The snow leopard's rosette fur and grounded, long silhouette read as a shipping-quality naturalistic creature; only A's missing reactions hold it back."
+  },
+  "Ex": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormcapra model meets the bar standing, but A's rigid upside-down floating faint and B's horns stretching into long black tubes in the faint frames would not pass in a shipping game."
+  },
+  "Qz": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Same frost wolf and same result as Vd: the model is at finish and B's grounded faint carries it."
+  },
+  "Mm": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ram's wool and horns are on-bar standing, but the faint frames (A flipped and hovering, B with stretched, detached-looking horn loops) break the finish."
+  },
+  "Wd": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's smooth clay-toy boar with moss decals is far below the naturalistic bar; B's fur is closer but its noisy yellow blotches, near-human height and floating faint-mid keep it short."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give every creature a real hit react and a grounded side-lying faint (A sides of Vt/Tg/Vd/Kv/Qz/Ex/Mm/Wd show standing poses, seated idles or rigid upside-down flips), and fix the Stormcapra horn skinning that stretches the horns in B's faint frames.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Meadows enemy-site scenes (Yw): replace the smeared low-resolution ground with crisp grass/dirt materials, add groves and edge density, add a warm time-of-day grade with cool blue distance fog, and take the oxblood banners down in every after frame (A leaves them standing).",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the Wd boar to the Stormursa naturalistic fur standard: readable legs, a mud-brown coat without the yellow blotch noise, and a size clearly taller than the 1.80 m trainer.",
+   "kind": "new_art"
+  }
+ ]
+}

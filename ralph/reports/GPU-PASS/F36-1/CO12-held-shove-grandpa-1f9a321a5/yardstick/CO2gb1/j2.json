@@ -1,0 +1,90 @@
+{
+ "sets": {
+  "Jk": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side A's Stormcapra keeps its white fleece, dark ram horns and blue accents through every frame and stays grounded, which carries it; side B's faint mid and faint end lose the wool and show a white body with black blotches and splayed legs, which reads as a broken mesh."
+  },
+  "Np": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A polished, appealing grandfather (good hair and beard, readable green, cream and brown outfit, planted boots) carries it; the brown trousers and boots merge into one dark mass and the frayed collar fringe reads noisy, and the two sides look effectively identical."
+  },
+  "Kp": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "This sinks it: the Team Tether member has a low-res, chalk-pale face with black smudged eye sockets, an orange neck that doesn't match the face, a blurry uniform texture, and a black-on-dark full-body silhouette that disappears; both sides look identical."
+  },
+  "Aw": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's scaled blue body with coral fin tips is close to the naturalistic bar and its faint poses read; side A sinks the set: a toy-like flat material, a hit react that matches standing, and faint frames where the creature turns pale cream and then a flat tan-grey lying mesh above a detached shadow blob."
+  },
+  "Pi": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "This matches Np: a well-finished, appealing stylised grandfather with clear face and hair carries it; only the low-value lower body and the busy collar fringe hold it back, and the sides look identical."
+  },
+  "Fj": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side A's Tanglevolt matches the owner's style bar and reads in every pose (rear-up hit, crouch, flat faint); side B's faint mid and faint end lose the purple fur and show a white body with black patches that reads as a broken mesh."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Keep each creature's fur, wool and skin material through the faint states: Jk B and Fj B drop to a white base with black blotches, and Aw A turns pale cream and then flat tan-grey. Also make Aw A's hit react visibly different from standing and ground its faint shadow.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the Team Tether member (Kp) to the grandfather's finish: a high-res face with eyes, matched face and neck skin, no black eye smudges, a crisp uniform texture, and lighter trim or a rim light so the dark uniform separates from the background.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Separate the values in the grandfather's lower body (trousers vs boots) and tidy the frayed collar fringe; on Aw, use the side-B naturalistic scale material and make sure the creature's height clearly passes the 1.80 m trainer.",
+   "kind": "scene"
+  }
+ ]
+}

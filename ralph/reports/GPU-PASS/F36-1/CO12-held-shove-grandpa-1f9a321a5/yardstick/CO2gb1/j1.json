@@ -1,0 +1,90 @@
+{
+ "sets": {
+  "Jk": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ram's horn-and-fleece silhouette matches the Stormcapra style bar, but on a flat grey stage with no sky, fog or rim light it reads as a model check rather than Palworld or Valheim finish, and side B's broken faint frames sink it further."
+  },
+  "Np": {
+   "A": {
+    "bar_a": 7.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing hand-finished grandfather with clear face, hair and Meadows-green clothing at shipping-character quality carries it, though the dim, flat stage light hides its materials."
+  },
+  "Kp": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry low-resolution textures, a chalk-white face with smudged dark eye sockets that does not match the orange neck and ears, and a stiff full-body pose read well below the grandfather and Palworld character finish."
+  },
+  "Aw": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's blue Riverdrake with spotted hide and pink-orange fin tips is close to the board, but A's faint end drains to a flat grey-brown texture and the neutral stage gives no Valheim-class light or atmosphere."
+  },
+  "Pi": {
+   "A": {
+    "bar_a": 7.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The same strong grandfather model, with readable face, soft white hair and a cohesive green and leather palette, carries it despite dull stage lighting."
+  },
+  "Fj": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The wolf silhouette and blue-violet palette fit Tanglevolt, but the faceted shard-like fur is noisier than the style bar's soft fur, and B's faint frames collapse into a white-and-black upside-down blob."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix the faint mid and faint end poses that flip the creature upside down with legs splayed and show the white underside (Jk B, Fj B), and stop the faint texture swap and floating shadow (Aw A); also give hit react a visible flinch distinct from standing (Jk B, Fj B, Aw A).",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the Team Tether member (Kp) face and textures: higher-resolution maps, consistent skin tone between face and neck, clear eyes instead of dark smudged sockets, and a relaxed idle pose.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Light the creature and character stages with a warm key and a cool rim light, with a little more exposure, so fur, fleece, fins and cloth separate from the grey backdrop (all sets).",
+   "kind": "scene"
+  }
+ ]
+}

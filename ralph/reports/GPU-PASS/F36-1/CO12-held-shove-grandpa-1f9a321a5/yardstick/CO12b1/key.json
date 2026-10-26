@@ -1,0 +1,58 @@
+{
+ "Yw": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Vt": {
+  "anchor": false,
+  "label": "CO1 tanglevolt High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-tanglevolt-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-tanglevolt-cand-High.png"
+ },
+ "Gv": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Tg": {
+  "anchor": false,
+  "label": "CO1 breezetail High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-breezetail-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-breezetail-cand-High.png"
+ },
+ "Vd": {
+  "anchor": false,
+  "label": "CO1 cloudfang Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-cloudfang-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-cloudfang-cand-Medium.png"
+ },
+ "Kv": {
+  "anchor": false,
+  "label": "CO1 frostclaw Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-frostclaw-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-frostclaw-cand-Medium.png"
+ },
+ "Ex": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_shipping",
+  "B": "f36_1_gpu:stormcapra_candidate"
+ },
+ "Qz": {
+  "anchor": false,
+  "label": "CO1 cloudfang High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-cloudfang-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-cloudfang-cand-High.png"
+ },
+ "Mm": {
+  "anchor": false,
+  "label": "CO1 stormcapra Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-stormcapra-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-stormcapra-cand-Medium.png"
+ },
+ "Wd": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ }
+}

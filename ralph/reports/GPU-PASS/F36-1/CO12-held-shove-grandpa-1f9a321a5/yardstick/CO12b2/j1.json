@@ -1,0 +1,166 @@
+{
+ "sets": {
+  "Kh": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fox model's fur, scarf and big-eared silhouette are close to Palworld creature finish, but on a flat grey stage with no sky, fog or time-of-day grade there is no Valheim-class light, and B's faint frames show the fox sitting upright and alert, so the faint does not read."
+  },
+  "Zp": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The shaggy white goat with long swept horns has naturalistic fleece at Stormcapra-bar level, but the neutral stage gives no atmosphere, and A's faint end is an upright sit facing camera rather than a collapse."
+  },
+  "Jp": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The meadow, tree line and snowy range are pleasant, but the lone wall panel next to a flat-shaded grey low-poly boulder under flat noon light reads as a placement test, not a lived-in Palworld base under Valheim light."
+  },
+  "Kp": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormcapra ram's fleece, dark legs, curled horns and blue accent match the owner's bar, but the stage has no light or atmosphere, and B's faint rolls the ram belly-up with legs splayed and the body lifted, which hurts the finish."
+  },
+  "Yu": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The violet-black Tanglevolt wolf is at Palworld creature finish and B's prone faint is grounded, but a neutral stage cannot carry Valheim-class sky, fog or grade."
+  },
+  "Tg": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The snow leopard's spotted grey coat and long tail are naturalistic and on-bar, but there is no world light on the stage, and A's hit react barely moves while its faint end is an upright sit."
+  },
+  "Xp": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "These frames look the same as Zp: good fleece and horn detail, but no atmosphere on the stage, and A's faint end is an upright sit rather than a collapse."
+  },
+  "Qg": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormcapra model meets the bar, but the stage has no Valheim-class light, and in B's faint end the belly-up ram hangs above its own shadow."
+  },
+  "Lp": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's coiled, fanged, mottled serpent sits on the ground like a real creature, but A's faint flips the snake into the air with its shadow far below, and the stage has no light or atmosphere either way."
+  },
+  "Yk": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The white-haired grandpa in a green vest and scarf has a warm Meadows palette and readable eyes, but he is shown on a black void with no world light, and his rounded cartoon face is softer than the naturalistic creature bar."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild the faint pose for every creature as one grounded collapse onto the side or belly, with the body touching the stage and its contact shadow. Remove the belly-up rolls that lift the body (Yu A, Qg B, Kp B, Lp A) and the upright sits that do not read as a faint (Kh B, Zp/Xp A, Tg A). Give the hit react visible motion where it is missing (Tg A, Lp, Qg B).",
+   "kind": "scene"
+  },
+  {
+   "change": "Base the homestead wall on Jp A's timber frame, diagonal brace, stone footing and cap. Give it real thickness, use darker weathered daub instead of the blown-out cream infill, darken the cap edge, and snap it to neighbouring wall or post pieces so it reads as part of a building, not a lone panel.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the flat-shaded grey low-poly boulder beside the homestead wall with a rock asset from the same family as the meadow props.",
+   "kind": "new_art"
+  }
+ ]
+}

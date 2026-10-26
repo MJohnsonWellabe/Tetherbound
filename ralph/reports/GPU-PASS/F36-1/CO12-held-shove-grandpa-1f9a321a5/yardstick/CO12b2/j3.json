@@ -1,0 +1,166 @@
+{
+ "sets": {
+  "Kh": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The scarf-wearing fox model has Palworld-class appeal and a clean silhouette, but the neutral stage carries no Valheim-class light or atmosphere and side B's faint frames never collapse."
+  },
+  "Zp": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The fleeced, scimitar-horned goat sits at the owner's naturalistic bar and reads instantly; side A sinks it with a faint that never goes down, and the stage has no atmosphere to compare."
+  },
+  "Jp": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A lone freestanding panel on an even grass carpet beside a flat grey low-poly boulder does not read like Palworld base building, and the flat midday light gives no Valheim-class mood."
+  },
+  "Kp": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra model matches the owner's style bar; side B's upside-down tangle of black and white patches in the faint frames is the weak point."
+  },
+  "Yu": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Tanglevolt wolf is Palworld-class in silhouette and fur; side A's belly-up faint turns it into a black-and-white slab that loses its identity."
+  },
+  "Tg": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The snow leopard's spotted coat and long silhouette reach the naturalistic bar; side A's faint ends with the cat sitting up alert, which breaks the read."
+  },
+  "Xp": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Visually the same as Zp: a strong fleeced goat model, let down on side A by a faint end that stays upright."
+  },
+  "Qg": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra model carries it; side B's rolled-over faint end shows a muddled silhouette that looks slightly lifted off its shadow."
+  },
+  "Lp": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side B's grounded, mottled gold-and-black coiled serpent reaches the bar; side A's faint frames hover far above their own shadow and would sink the set on their own."
+  },
+  "Yk": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable old villager in an earthy olive, cream and brown palette with no oxblood, who fits the key art's cozy settlement, though the soft toon face sits slightly apart from the naturalistic creatures."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix every faint sequence so faint end is a grounded, lying-down collapse that keeps the creature's identity: Kh B, Zp/Xp A and Tg A stay upright or sit alert; Yu A and Kp/Qg B flip belly-up into unreadable two-tone tangles; Lp A rears into the air. Pin the root and contact points to the stage.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the homestead wall as a thick, connected timber-frame segment with a top plate or cap, a visible sill beam, a separate stone footing and textured, value-controlled infill (wattle or plaster), matched to the village family in the key art's Starting Settlement.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Put the Meadows context behind placed builds: break the uniform grass carpet into groves and edges, re-shade the flat grey boulder, and use a warmer time-of-day grade with cool blue distance.",
+   "kind": "scene"
+  }
+ ]
+}

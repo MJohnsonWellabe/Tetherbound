@@ -1,0 +1,90 @@
+{
+ "sets": {
+  "Jk": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fleece, horns and plate legs reach the owner's Stormcapra bar and A's rear and collapse read, but on a bare stage with no sky, fog or time-of-day grade, and with B's upside-down faint, it does not yet sit beside Palworld at the same finish."
+  },
+  "Np": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The grandfather is an appealing, well-built stylised villager whose tailoring and boots would pass in Palworld, but the dim, flat grey-stage light muddies his values and gives no Valheim-class atmosphere."
+  },
+  "Kp": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blurry low-resolution face with a chalk-white mask, smudged eye sockets and an orange neck, plus a black-on-black body that loses its silhouette, sinks it well below Palworld character finish."
+  },
+  "Aw": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's scaled blue body with coral-tipped fins and its grounded curl-up faint could pass in Palworld, but A's material collapsing to grey-beige and floating over a detached shadow, plus the bare unlit stage, sink the set."
+  },
+  "Pi": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The grandfather is an appealing, well-built stylised villager whose tailoring and boots would pass in Palworld, but the dim, flat grey-stage light muddies his values and gives no Valheim-class atmosphere."
+  },
+  "Fj": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The wolf silhouette reads, but its fur renders as glassy purple shards rather than the soft fur on the bar, and B's belly-up faint loses all identity, so it does not match Palworld creature finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix the faint/hit animations on Jk B, Fj B and Aw A. The creature must collapse onto its side, grounded, with its face visible. It must not flip belly-up with splayed legs, float over a detached shadow, or swap its material to grey. Hit react must clearly differ from standing.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the Team Tether member (Kp) with a higher-resolution face texture. Match the face's skin tone to the neck, give it clean readable eyes instead of smudged sockets, and add lighter trim or rim light so the uniform separates from dark backgrounds.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Light the stages properly. Use a brighter key light plus rim light and a warmer, higher-value grade so the characters and creatures (the grandfather in Np/Pi, Tanglevolt's purple coat) show a full value range instead of a dim mid-tone.",
+   "kind": "scene"
+  }
+ ]
+}

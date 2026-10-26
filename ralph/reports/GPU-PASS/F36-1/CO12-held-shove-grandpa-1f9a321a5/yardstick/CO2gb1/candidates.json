@@ -1,0 +1,20 @@
+[
+    {
+        "label":  "CO2 grandpa Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO2-grandpa-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO2-grandpa-ship-Medium.png",
+        "brief":  "A named villager character (the player\u0027s grandfather) shown front and three-quarter on a neutral stage. Judge the character\u0027s model, face, hair, clothing and material as the game\u0027s real look - appeal, readability, palette and finish.",
+        "defects":  [
+
+                    ]
+    },
+    {
+        "label":  "CO2 grandpa High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO2-grandpa-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO2-grandpa-ship-High.png",
+        "brief":  "A named villager character (the player\u0027s grandfather) shown front and three-quarter on a neutral stage. Judge the character\u0027s model, face, hair, clothing and material as the game\u0027s real look - appeal, readability, palette and finish.",
+        "defects":  [
+
+                    ]
+    }
+]

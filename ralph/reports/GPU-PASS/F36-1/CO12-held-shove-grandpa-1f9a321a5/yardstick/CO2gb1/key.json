@@ -1,0 +1,34 @@
+{
+ "Jk": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ },
+ "Np": {
+  "anchor": false,
+  "label": "CO2 grandpa Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO2-grandpa-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO2-grandpa-ship-Medium.png"
+ },
+ "Kp": {
+  "anchor": true,
+  "A": "f36_0_npc:C3A",
+  "B": "f36_0_npc:C3B"
+ },
+ "Aw": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ },
+ "Pi": {
+  "anchor": false,
+  "label": "CO2 grandpa High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO2-grandpa-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO2-grandpa-cand-High.png"
+ },
+ "Fj": {
+  "anchor": true,
+  "A": "f36_1_gpu:tanglevolt_candidate",
+  "B": "f36_1_gpu:tanglevolt_shipping"
+ }
+}

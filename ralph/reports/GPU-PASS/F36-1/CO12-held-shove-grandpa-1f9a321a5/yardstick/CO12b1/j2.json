@@ -1,0 +1,162 @@
+{
+ "sets": {
+  "Yw": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared, low-contrast ground textures, flat tiled stone wall (row 1) and sparse, carpet-like grass sink it against Palworld density; B's after frames at least tell a site-specific story (banner torn down, cage opened with captive freed, tent struck with smoke), while A leaves the crimson enemy banner standing in rows 1, 3 and 5 after the win."
+  },
+  "Vt": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The owner-bar Tanglevolt fur and violet lightning veining carry it; B's grounded faint reads, A's belly-up flip with exposed white underside and a non-reading hit react undercut it."
+  },
+  "Gv": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Appealing, well-shaded elder with a clear green/olive/brown palette that fits Palworld-style humans, though its rounded cartoon face is a step more stylised than the naturalistic creature bar; B's narrowed, downcast eyes read slightly less warm than A's."
+  },
+  "Tg": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Cute fennec with a readable blue-patterned scarf, but it barely reaches the 1.80 m trainer's height and A's hit react/faint mid are near-identical to standing with faint end a seated pose, while B's hit react launches the whole body off the stage."
+  },
+  "Vd": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Fluffy white wolf with blue accents is a fair naturalistic model, but the white fur reads low-contrast and soft-edged, A's 'faint end' is an upright sit, and B's hit react is a full airborne leap with a detached shadow."
+  },
+  "Kv": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The rosetted snow-leopard coat and grounded B faint get close to the owner bar; A's seated faint end and unchanged hit react, and B's airborne hit react, hold it back."
+  },
+  "Ex": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormcapra fleece and horns hold the owner-bar identity, but A's faint mid/end roll the ram belly-up with legs splayed and the body lifted off its shadow, and B's faint collapses to a legless white lump with the horns curling off it."
+  },
+  "Qz": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This set appears frame-for-frame identical to Vd (same white wolf, same poses), so same verdict: soft low-contrast white fur, A's seated 'faint end', B's airborne hit react."
+  },
+  "Mm": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same Stormcapra as Ex: strong fleece and horn silhouette, but A's belly-up faint floats above its shadow and B's faint end loses the legs and reads as a fleece blob."
+  },
+  "Wd": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's boar is glossy terracotta clay with stuck-on moss (toy-like, off the naturalistic bar) and its faint end is an upright sit; B's fur is more naturalistic but noisy gold leopard-like blotches lose the mossy ground-type identity, and its faint mid/end hover over a dark shadow blob."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Unify creature reaction anims to B's grounded faint (body resting on the stage, shadow in contact), replace the full-body airborne hit-react leap with a grounded flinch/recoil, and remove A-style seated 'faint end' poses; fix the boar's floating faint.",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows trainer sites: make every after frame remove or topple the Team Tether banner and show a site-specific aftermath (B's approach), and lift the ground with sharper terrain materials, grass clumps/edges instead of a smeared carpet, and stronger value range.",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-material the boar (Wd) to naturalistic brown fur with moss growth matching its board identity, and scale small creatures such as the fennec (Tg) so they clearly stand taller than the 1.80 m trainer.",
+   "kind": "new_art"
+  }
+ ]
+}

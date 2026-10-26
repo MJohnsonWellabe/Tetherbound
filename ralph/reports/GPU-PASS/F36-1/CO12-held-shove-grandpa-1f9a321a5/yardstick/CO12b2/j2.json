@@ -1,0 +1,166 @@
+{
+ "sets": {
+  "Kh": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "An appealing orange fox with a blue scarf on a flat grey stage with no sky, fog or time-of-day grade; on B the faint frames show the creature sitting upright and alert, so the faint does not read."
+  },
+  "Zp": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fleece and long horns are naturalistic and near the Stormcapra bar, but the neutral stage has no atmosphere, and on A the hit react matches standing and the faint end is a kneel with the horns raised."
+  },
+  "Jp": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Meadows terrain and sky are acceptable, but the wall is a lone thin panel standing in open grass beside a grey placeholder rock; A's braced frame, cap board and stone footing help, and B's blown-white card sinks it."
+  },
+  "Kp": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ram with the blue chest gem matches the Stormcapra style bar well, but there is no environment or light mood, and on B the hit react matches standing and the faint flips the body legs-up into a black-and-white blob."
+  },
+  "Yu": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's Tanglevolt keeps its purple lightning fur through a readable rear, crouch and collapse, close to the style bar, but the empty stage has no Valheim-class light; A's faint frames turn black-and-white and look lifted off the floor."
+  },
+  "Tg": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The naturalistic snow leopard is on-style but grey on grey with little rim separation; A has no visible hit react and its faint end is an alert crouch, while B's crouch-to-collapse reads."
+  },
+  "Xp": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "These are the same frames as Zp: a good fleece and horn creature on a stage with no atmosphere; A's faint ends in a kneel with the horns raised, while B's faint lies flat and grounded."
+  },
+  "Qg": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "These are the same frames as Kp: a strong Stormcapra-class ram, but the stage has no environment light, and on B the hit react matches standing and the faint is an upturned legs-in-air body that appears lifted above its shadow."
+  },
+  "Lp": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A is sunk by flat, oversaturated yellow-and-black banding and a faint where the snake rises into the air far above its shadow; B's mottled gold-black scales are naturalistic and grounded, but there is no world light around it."
+  },
+  "Yk": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder's olive vest, green scarf and leather boots fit the Meadows palette with no oxblood, but the soft rounded face reads more animated-film than the naturalistic creature bar, and the frames are shown on a black backdrop with no world light."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Run a hit-react and faint pass on every creature: a distinct recoil on every hit react (Kp/Qg B, Tg A and Zp/Xp A currently match standing), faint ends that lie on the side and touch the stage (not sitting up as on Kh B, kneeling as on Zp/Xp A or crouching as on Tg A), and no lifted bodies (Lp A, Yu A, Qg B).",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the homestead wall panel with a built wall that has depth: a thick timber frame with a capped top, textured wattle, plank or stone infill at mid value instead of blown white, and a stone footing set into the ground and visibly distinct from the infill.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Do a creature material and value pass: keep the underside and faint-state fur in the same palette as the body (Yu A turns black-and-white), add rim light so grey creatures (Tg) separate from the stage, and tone the Lp A snake's flat saturated yellow banding toward B's naturalistic mottling.",
+   "kind": "scene"
+  }
+ ]
+}

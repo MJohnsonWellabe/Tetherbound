@@ -1,0 +1,56 @@
+[
+    {
+        "label":  "CO1 cloudfang Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-cloudfang-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-cloudfang-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO1 cloudfang High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-cloudfang-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-cloudfang-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO1 breezetail High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-breezetail-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-breezetail-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO1 tanglevolt High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-tanglevolt-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-tanglevolt-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO1 frostclaw Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-frostclaw-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-frostclaw-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO1 stormcapra Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-stormcapra-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO12\\sides\\CO1-stormcapra-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    }
+]

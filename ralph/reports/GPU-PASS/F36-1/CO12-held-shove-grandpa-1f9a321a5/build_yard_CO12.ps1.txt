@@ -1,0 +1,40 @@
+# CO-1 + CO-2 (local, CLOSE-OUT) on main 1f9a321a5.
+# CO-1: the six held-shove creatures, capture_f36_poses.gd --whole-body --context, recipe pass (--candidate, "cand") vs plain ("ship").
+#   None of the six has a swim / fly_grip / ride clip, so the rows are standing / hit react / faint mid / faint end. One set per species per preset.
+# CO-2: Grandpa from _capture_character_cast.gd, front + three-quarter, one-sided (the same frames on both sides) for a re-anchored score.
+$o = "D:\tb-gpu-runs\out"; $od = "D:\tb-gpu-runs\yard\CO12\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out, [int] $cols = 5, [int] $tw = 300, $crop = @(560, 200, 1000, 640)) {
+    $s = [ordered]@{ title = ""; cols = $cols; thumb_w = $tw; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out }
+    if ($crop) { $s.crop = $crop }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_co12.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_co12.json" | Out-Null; return $out
+}
+$brief = "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read."
+$p = @(@("hit-000", "standing"), @("hit-025", "hit react"), @("faint-050", "faint mid"), @("faint-100", "faint end"))
+$co1 = @(); $co2 = @(); $cover = @()
+foreach ($pr in "Medium", "High") {
+    foreach ($sp in "tanglevolt,frostclaw,stormcapra,cloudfang,breezetail,craghorn".Split(",")) {
+        $ta = "$o\CO1-rec-$pr\frames"; $tb = "$o\CO1-plain-$pr\frames"
+        $q = @($p | Where-Object { (Test-Path "$ta\$sp-$($_[0]).png") -and (Test-Path "$tb\$sp-$($_[0]).png") })
+        if ($q.Count -eq 0) { "MISSING $sp $pr"; continue }
+        $caps = @($q | ForEach-Object { $_[1] })
+        $sa = Side @($q | ForEach-Object { "$ta\$sp-$($_[0]).png" }) $caps "$od\CO1-$sp-cand-$pr.png"
+        $sb = Side @($q | ForEach-Object { "$tb\$sp-$($_[0]).png" }) $caps "$od\CO1-$sp-ship-$pr.png"
+        $co1 += [ordered]@{ label = "CO1 $sp $pr cand|ship"; a = $sa; b = $sb; brief = $brief; defects = @("the fainted body floats above the stage, with a gap between the body and its shadow") }
+        $cover += [ordered]@{ item = "CO1"; species = $sp; preset = $pr; poses = $caps }
+    }
+    $g = @("02-grandpa-front", "02-grandpa-threequarter") | ForEach-Object { "$o\CO2-main-$pr\frames\$_.png" } | Where-Object { Test-Path $_ }
+    if ($g.Count -eq 2) {
+        $s1 = Side $g @("front", "three-quarter") "$od\CO2-grandpa-cand-$pr.png" 2 520 $null
+        $s2 = Side $g @("front", "three-quarter") "$od\CO2-grandpa-ship-$pr.png" 2 520 $null
+        $co2 += [ordered]@{ label = "CO2 grandpa $pr cand|ship"; a = $s1; b = $s2; brief = "A named villager character (the player's grandfather) shown front and three-quarter on a neutral stage. Judge the character's model, face, hair, clothing and material as the game's real look - appeal, readability, palette and finish."; defects = @() }
+        $cover += [ordered]@{ item = "CO2"; preset = $pr }
+    } else { "MISSING grandpa $pr" }
+}
+$rng = New-Object System.Random 2101; $co1 = @($co1 | Sort-Object { $rng.Next() })
+foreach ($k in 1, 2) { New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\CO12\b$k" | Out-Null }
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\CO12\b1\candidates.json", (ConvertTo-Json -InputObject @($co1[0..5]) -Depth 5))
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\CO12\b2\candidates.json", (ConvertTo-Json -InputObject @($co1[6..11]) -Depth 5))
+New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\CO2g\b1" | Out-Null
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\CO2g\b1\candidates.json", (ConvertTo-Json -InputObject @($co2) -Depth 5))
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\CO12\coverage.json", (ConvertTo-Json -InputObject @($cover) -Depth 4))
+"CO-1 sets: $($co1.Count) in 2 batches; CO-2 sets: $($co2.Count)"
