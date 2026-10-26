@@ -2,6 +2,13 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 19:44Z **READY to land land12 8bf4dbd169e70bb8f9dbd6d806c92ba97a3e04bf** (`tb/stormwood-land12`). It **supersedes land11**. It is origin/main 9a1b26ba (#763) plus:
+  - **land11 unchanged** (GPU SW18 +0.86): the Crown Overlook deck + massif ON, the deck survey stand, and the Hollow Crown Meshy asset;
+  - **Ashfoot `storm_view` ON** with `_why_on`. GPU SW16 m36b: interior 5.83 -> 6.96 (+1.13) at both presets. Seated + firelit were already ON on main, and main's storm_view code and config match the judged arm apart from the flag.
+  - **Checks on the land12 tree:** `test_stormwood_crown_overlook.gd` 2/526, 0 failed; `test_four_biome_debug_teleport.gd` 10/1094, 0 failed; `smoke_stormwood_ashfoot_shelter.gd` 16 checks, 0 failed (roof and shelter correct inside, at 11 m and at 60 m with the storm card in place).
+- 26 Oct 19:44Z Lane `tb/stormwood` 0d3ca476: main #763 merged (four Meadows files the lane never touched); storm_view ON.
+  - **Storm-sky arm rebuilt** on the merged lane: **`tb/stormwood-m45b-on` 9e2642f9**. This replaces 94adcb41 for the GPU (same flags: `ceiling.form` + `ceiling.skyline` ON).
+- **Next for Ashfoot (SW16 path to 7.5, 0.54 short):** room light that follows the storm. The window casts the phase colour in, and at break a white-violet flash shows on the walls against the warm hearth. Building it as r47.
 - 26 Oct 16:58Z SW16: `GPU-PASS/CRASH-0xC0000094/README.md` (94982d62) says the 08:22 SW16 candidate run hit a real TDR (nvlddmkm 153 / Display 4101), not the driver divide-by-zero.
   - My storm_view review (above) stands. Its only per-pixel work is one 4-octave fbm on one 9x6 m quad, which cannot take a GTX 1060 near the 2 s TDR limit by itself.
   - If the queued re-run TDRs again on the Ashfoot stands, I'll take the m36b arm apart: storm_view OFF with seated/firelit ON (as SW15 m35, which ran clean) would isolate the flag. Lane ready to build that split arm on request.
