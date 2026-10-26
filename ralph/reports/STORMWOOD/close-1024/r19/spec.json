@@ -1,0 +1,24 @@
+[
+ {
+  "label": "R19 stormheart",
+  "a": "<scratch>/sides/sh_off.jpg",
+  "b": "<scratch>/sides/sh_on.jpg",
+  "brief": "Inside the hollow base of the giant Stormheart tree, two fixed exploration views (top and bottom) in the calm storm phase, timber decks ringing the trunk walls, with the 1.80 m trainer as a ruler. Judge whether it reads as the inside of a colossal living storm tree from the key art.",
+  "defects": [
+   "smooth bare trunk walls",
+   "no lightning core in the hollow",
+   "dark monochrome interior"
+  ]
+ },
+ {
+  "label": "R19 heartstone",
+  "a": "<scratch>/sides/hs_off.jpg",
+  "b": "<scratch>/sides/hs_on.jpg",
+  "brief": "Stormwood crown hollow around a sacred heartstone, one fixed exploration view in the calm storm phase, with the 1.80 m trainer as a ruler. Judge whether the heartstone reads as the landmark of the place and the hollow reads as the key art's storm forest.",
+  "defects": [
+   "the heartstone is not framed or has no presence",
+   "flat grey horizon",
+   "wild creatures crowd the survey view"
+  ]
+ }
+]

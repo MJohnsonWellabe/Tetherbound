@@ -1,0 +1,81 @@
+diff --git a/data/config/stormheart_presentation.json b/data/config/stormheart_presentation.json
+index dc8283bae..e190a9199 100644
+--- a/data/config/stormheart_presentation.json
++++ b/data/config/stormheart_presentation.json
+@@ -71,5 +71,5 @@
+     "wind_speed": 0.85
+   },
+   "visible_roots": {"enabled": true, "scope": "client_presentation", "reach_m": 132.0, "_comment": "Reference-backed visual roots anchor in actual outer bark, keeping south/east openings and every physical floor/collider unchanged. Full native landmark judgment required."},
+-  "meshy_hero": {"enabled": true, "scope": "client_presentation", "_comment": "F41/P2-037 candidate, OFF until a three-judge matrix passes. Meshy task provenance: assets/props/meshy-1020/stormheart_tree/provenance.json (cand3 recommended). Shown beyond swap_radius_m from the trunk axis; inside it the procedural hollow shell, decks, ascent and colliders are unchanged.", "model": "res://assets/props/meshy-1020/stormheart_tree_v2/stormheart_tree_v2.glb", "height_m": 380.0, "shape": [0.95, 1.0, 1.05], "yaw_deg": 180.0, "sink_m": 2.0, "swap_radius_m": 75.0, "hide_decks_at_distance": ["DynamoCore", "CrownChamber"], "albedo_tint": "#ffffff", "fog": false, "hide_seam_at_distance": false}
++  "meshy_hero": {"enabled": true, "scope": "client_presentation", "_comment": "F41/P2-037 candidate, OFF until a three-judge matrix passes. Meshy task provenance: assets/props/meshy-1020/stormheart_tree/provenance.json (cand3 recommended). Shown beyond swap_radius_m from the trunk axis; inside it the procedural hollow shell, decks, ascent and colliders are unchanged.", "model": "res://assets/props/meshy-1024/stormwood_stormheart_v3_far/stormwood_stormheart_v3_far.glb", "height_m": 300.0, "shape": [0.8, 1.0, 0.8], "yaw_deg": 180.0, "sink_m": 2.0, "swap_radius_m": 75.0, "hide_decks_at_distance": ["DynamoCore", "CrownChamber"], "albedo_tint": "#ffffff", "fog": false, "hide_seam_at_distance": false}
+ }
+diff --git a/data/config/stormwood_glass_field.json b/data/config/stormwood_glass_field.json
+index 421944563..8050a18db 100644
+--- a/data/config/stormwood_glass_field.json
++++ b/data/config/stormwood_glass_field.json
+@@ -36,5 +36,5 @@
+     {"id":"west_warning", "at":[-21.0,101.0], "height_m":8.0, "yaw_deg":28.0},
+     {"id":"east_warning", "at":[21.0,126.0], "height_m":8.0, "yaw_deg":-24.0}
+   ],
+-  "shard_finish": {"enabled": true, "scope": "client_presentation", "_comment": "F41 round-3 candidate (OFF until judged): taller, brighter fused-glass blades so the Glass Field scar reads at the fixed stand (three round-1 judges: a tiny dark smear). Visual only; no collision or placement change.", "height_scale": 0.45, "crust_model": "res://assets/props/meshy-1020/scar_crust/v1/scar_crust_v1.glb", "crust_footprint": 0.9, "crust_height_m": 0.45, "emission_energy": 0.45}
++  "shard_finish": {"enabled": true, "scope": "client_presentation", "_comment": "F41 round-3 candidate (OFF until judged): taller, brighter fused-glass blades so the Glass Field scar reads at the fixed stand (three round-1 judges: a tiny dark smear). Visual only; no collision or placement change.", "height_scale": 0.8, "crust_model": "res://assets/props/meshy-1020/scar_crust/v1/scar_crust_v1.glb", "crust_footprint": 1.05, "crust_height_m": 0.45, "emission_energy": 1.1, "crystal_model": "res://assets/props/meshy-1024/stormwood_glass_scar_crystals/stormwood_glass_scar_crystals.glb", "crystal_height_scale": 0.55}
+ }
+diff --git a/data/config/stormwood_ground_finish.json b/data/config/stormwood_ground_finish.json
+index 39575a51a..949d51586 100644
+--- a/data/config/stormwood_ground_finish.json
++++ b/data/config/stormwood_ground_finish.json
+@@ -174,7 +174,7 @@
+       "count": 1400,
+       "placement_seed": 392891,
+       "centre_bias": 0.55,
+-      "item_size": 2.8,
++      "item_size": 2.2,
+       "size_jitter": 0.55,
+       "sink": 0.0,
+       "slope_lie": 0.0,
+@@ -184,8 +184,8 @@
+       "drift_gate": 1.0,
+       "patch_start": 0.35,
+       "patch_full": 0.68,
+-      "tint_base": "#1e2420",
+-      "tint_tip": "#2a312b",
++      "tint_base": "#39362b",
++      "tint_tip": "#4a4738",
+       "ground_blend": 0.12,
+       "contact_darken": 0.08,
+       "sway": 0.0,
+diff --git a/data/config/stormwood_look.json b/data/config/stormwood_look.json
+index 607508364..86f601c97 100644
+--- a/data/config/stormwood_look.json
++++ b/data/config/stormwood_look.json
+@@ -5,7 +5,7 @@
+   "rig": {
+     "sun": {"pitch_deg": -44.0, "yaw_deg": 140.0, "energy": 1.65, "colour": "#ddd9f3", "angular_distance": 2.5},
+     "sky": {"top_colour": "#51476f", "horizon_colour": "#6f7a9c", "ground_horizon_colour": "#696485", "ground_bottom_colour": "#303b3a", "energy": 1.0, "cloud_lit": "#b8b2cc", "cloud_shade": "#7e7896", "cloud_base": "#6c6686", "horizon_haze_colour": "#6f7a9c", "sun_colour": "#d8d0ec"},
+-    "environment": {"ambient_colour": "#aab0bc", "ambient_energy": 1.65, "ambient_sky_contribution": 0.18, "exposure": 1.35, "fog_density": 0.00028, "fog_colour": "#6f7a9c", "fog_sky_affect": 0.0, "aerial_perspective": 0.35, "adjustment_enabled": true, "adjustment_brightness": 1.0, "adjustment_contrast": 1.06, "adjustment_saturation": 1.1, "player_character_rim_scale": 1.0}
++    "environment": {"ambient_colour": "#aab0bc", "ambient_energy": 2.3, "ambient_sky_contribution": 0.18, "exposure": 1.35, "fog_density": 0.00028, "fog_colour": "#6f7a9c", "fog_sky_affect": 0.0, "aerial_perspective": 0.35, "adjustment_enabled": true, "adjustment_brightness": 1.0, "adjustment_contrast": 1.06, "adjustment_saturation": 1.1, "player_character_rim_scale": 1.0}
+   },
+   "terrain": {
+     "grass": {"normal_depth": 0.38, "uv_scale": 0.5, "detiling_rotation": 0.35, "detiling_shift": 0.5},
+diff --git a/data/config/stormwood_surge.json b/data/config/stormwood_surge.json
+index b39f10755..397bca781 100644
+--- a/data/config/stormwood_surge.json
++++ b/data/config/stormwood_surge.json
+@@ -31,7 +31,7 @@
+       "far_layer":{"max_drops":1700,"inner_radius_m":17.0,"outer_radius_m":28.0,"lifetime_s":1.4,"ring_height_m":14.0,"centre_offset_m":3.0,"streak_width_m":0.012,"streak_length_m":0.5,"alpha":0.2,"scale_min":0.6,"scale_max":1.2,"alpha_min_fraction":0.4,"night_floor":0.15,"night_alpha_fraction":0.4},
+       "curtain_layer":{"max_drops":800,"inner_radius_m":32.0,"outer_radius_m":62.0,"lifetime_s":1.6,"ring_height_m":26.0,"centre_offset_m":6.0,"streak_width_m":0.06,"streak_length_m":3.0,"alpha":0.14,"scale_min":0.7,"scale_max":1.3,"alpha_min_fraction":0.4,"night_floor":0.15,"night_alpha_fraction":0.4}},
+     "_comment_telegraph": "Ground warning retains the combat hazard purple and exact strike.radius_m boundary as fine broken marks. Six jagged ground leaders converge on the contact point; bright tips move inward over strike.telegraph_seconds and the final quarter increases charge. No opaque zone disc. Reduced motion retains this continuous countdown without rim modulation. Terrain sampling and depth testing remain; no gameplay changes.",
+-    "telegraph": {"soft_style": {"enabled": false, "_why": "F41#5 candidate, coordinator ruling 21 Oct: keep the settled hazard hue and every timing, restyle the shader so the warning is not a flat placeholder disc (radial gradient fill, ground-noise breakup, travelling rim glow). OFF until judged."}, "_why_fill":"F10#3 round 2 (code-blind judge: an empty dashed outline read as a target selector and t080 looked like t110): a translucent fill from the first frame (fill_alpha), a stronger band the leader heads leave behind as they close on the contact point (charged_fill_alpha), and in the final ramp a solid rim over a brighter zone (final_fill_alpha).","fill_alpha":0.22,"charged_fill_alpha":0.38,"final_fill_alpha":0.65,"final_ramp_seconds":0.4,"leader_count":6,"leader_width_m":0.035,"leader_kink_m":0.18,"leader_head_width_m":0.48,"depth_pull_m":0.28,"rim_width_m":0.085,"rim_intensity":1.6,
++    "telegraph": {"soft_style": {"enabled": true, "_why": "F41#5 candidate, coordinator ruling 21 Oct: keep the settled hazard hue and every timing, restyle the shader so the warning is not a flat placeholder disc (radial gradient fill, ground-noise breakup, travelling rim glow). OFF until judged."}, "_why_fill":"F10#3 round 2 (code-blind judge: an empty dashed outline read as a target selector and t080 looked like t110): a translucent fill from the first frame (fill_alpha), a stronger band the leader heads leave behind as they close on the contact point (charged_fill_alpha), and in the final ramp a solid rim over a brighter zone (final_fill_alpha).","fill_alpha":0.22,"charged_fill_alpha":0.38,"final_fill_alpha":0.65,"final_ramp_seconds":0.4,"leader_count":6,"leader_width_m":0.035,"leader_kink_m":0.18,"leader_head_width_m":0.48,"depth_pull_m":0.28,"rim_width_m":0.085,"rim_intensity":1.6,
+       "edge_falloff_m":0.45,"ground_lift_m":0.07,"segments":48,"pulse_hz_start":2.0,"pulse_hz_end":7.0},
+     "night_scale_floor": 0.12,
+     "_comment_storm_base": "OWNER DIRECTION (WO-F10-08): 'We should not have day and night in stormwood. It should just always be that kind of purple rainy sky regardless of time of day', including after the Long Storm is broken. stormwood_surge.gd hands this realm's WorldLook a config in which every time-of-day preset is reference_time plus overrides, so sky, clouds, fog, ambient, exposure and the key light's angle, energy and colour are the same at every hour; the world clock, is_dark(), night rest and encounter timing keep running. pin_time_of_day false restores the clock-blended look. The overrides keep the painted clouds and sun colour in the purple family.",
+@@ -76,7 +76,7 @@
+     "steam": {"max_puffs":110,"lifetime_s":5.0,"inner_radius_m":2.0,"outer_radius_m":16.0,"spawn_height_m":0.4,"spread_deg":25.0,
+       "rise_min":0.15,"rise_max":0.45,"scale_min":0.8,"scale_max":1.5,"start_scale":0.45,"puff_size_m":2.6,"puff_aspect":0.6,"colour":"#8e88ac","alpha":0.24},
+     "_comment_sky_lightning": "Round 3 (blind judge 8: Break had no lightning a still or strip could catch; its thin white horizon sliver read as a low sun): decorative Break-only sky lightning, no telegraph and no damage. Every interval_min..interval_max seconds an event: a distant cloud-to-ground bolt (bolt_chance; a jagged ribbon in the strike's white-violet bolt_distance_min_m..max_m away, top fading out of the cloud, lit cloud above it) or an in-cloud flash lighting the cloud body around one direction (cloud_flash_size is its cos-space radius), with flicker_chance of one weaker flicker. The existing whole-scene distant flash (flash block, 9-16 s, <= 0.35) is the occasional scene flash. UX 8 photosensitivity: every flash onset, including echoes and real strikes, counts; decorative onsets are refused while the last second holds max_flashes_per_second (code clamps to <= 3) less strike_reserve, so with a real strike no second ever holds more than 3. Nothing above the horizon band flashes whole-sky white. Reduced motion: cloud flashes are scaled by flash.reduced_motion_scale (0.15), flickers and restrikes are dropped, and bolts stay visible and are held reduced_motion_bolt_hold times longer instead of flickering.",
+-    "sky_lightning": {"_why_ground_light": "F41#3 candidate (r11 judges: Break bolts light the sky but nothing on trunks or ground): each decorative sky bolt lifts the frame exposure by bolt level x ground_light_exposure, on the bolt's own onset (exposure, not a second light: Compatibility draws every extra light as another pass over all geometry) (no added flash onsets; reduced motion uses flash.reduced_motion_scale). 0 = off.", "ground_light_exposure": 0.0, "hold_bolts_during_warning":true,"_why_crawler_hold":"F10#3 round 6 (code-blind strike judge: Break crawler veins read as lightning already striking elsewhere during a ground warning): the same hold puts them out at once (like a decorative bolt already on screen) and brings them back over crawler_in_seconds after it clears.","crawler_in_seconds":1.5,"_why_hold":"F10#3 blind judge: a decorative bolt in view during a real ground warning read as already striking elsewhere; stormwood_lightning.gd holds decorative bolts for the telegraph plus 0.3 s and those events become in-cloud flashes.","interval_min":0.55,"interval_max":1.3,"bolt_chance":0.35,"max_flashes_per_second":3,"strike_reserve":1,
++    "sky_lightning": {"_why_ground_light": "F41#3 candidate (r11 judges: Break bolts light the sky but nothing on trunks or ground): each decorative sky bolt lifts the frame exposure by bolt level x ground_light_exposure, on the bolt's own onset (exposure, not a second light: Compatibility draws every extra light as another pass over all geometry) (no added flash onsets; reduced motion uses flash.reduced_motion_scale). 0 = off.", "ground_light_exposure": 0.6, "hold_bolts_during_warning":true,"_why_crawler_hold":"F10#3 round 6 (code-blind strike judge: Break crawler veins read as lightning already striking elsewhere during a ground warning): the same hold puts them out at once (like a decorative bolt already on screen) and brings them back over crawler_in_seconds after it clears.","crawler_in_seconds":1.5,"_why_hold":"F10#3 blind judge: a decorative bolt in view during a real ground warning read as already striking elsewhere; stormwood_lightning.gd holds decorative bolts for the telegraph plus 0.3 s and those events become in-cloud flashes.","interval_min":0.55,"interval_max":1.3,"bolt_chance":0.35,"max_flashes_per_second":3,"strike_reserve":1,
+       "cloud_strength_min":0.35,"cloud_strength_max":0.7,"cloud_seconds":0.45,"cloud_flash_size":0.06,"cloud_azimuth_deg":110.0,
+       "flicker_chance":0.35,"flicker_gap_min":0.12,"flicker_gap_max":0.2,"flicker_strength":0.6,
+       "bolt_seconds":0.25,"bolt_pool":2,"bolt_cloud_fraction":0.8,"bolt_azimuth_deg":60.0,"bolt_distance_min_m":260.0,"bolt_distance_max_m":520.0,
