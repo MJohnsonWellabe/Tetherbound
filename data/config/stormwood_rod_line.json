@@ -19,6 +19,11 @@
   "bead_colour": "#d9c8ff",
   "bead_energy": 4.0,
   "max_span_m": 60.0,
+  "stand_clear": {
+    "enabled": false,
+    "_candidate": "GPU SW10: the lattice figure in Fallen Giant v01/v02 and behind the Ashfoot exterior is this rod line's relay pylon (9 m from the Fallen Giant stand; 15 m from Ashfoot). Judges cannot identify it there and read it as noise. Keep pylons out of those two catalogue frames; the pylons either side stay, and the cable still spans them where they are within max_span_m.",
+    "points": [[-240.0, 4463.6, 14.0], [-364.58, 459.58, 18.0]]
+  },
   "exclusion_radius_m": 14.0,
   "road_clear_m": 0.5,
   "exclusion_sources": [

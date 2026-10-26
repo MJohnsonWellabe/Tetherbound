@@ -110,7 +110,9 @@ func _build_lining() -> void:
 	var role := str(holder.get_meta("village_role", "")) if holder != null else ""
 	if role.is_empty() or not (cfg.get("lined_roles", []) as Array).has(role):
 		return
-	_build_hearth(cfg.get("hearth", {}))
+	var hearth: Dictionary = (cfg.get("hearth", {}) as Dictionary).duplicate()
+	hearth.merge(_seated(cfg).get("hearth", {}), true)
+	_build_hearth(hearth)
 	var height := float(cfg.get("lining_height_m", 2.45))
 	var inset := float(cfg.get("lining_inset_m", 0.03))
 	var thick := 0.04
@@ -221,7 +223,8 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
 	timber.roughness = 0.85
 	# A shallow trim flush on the lining: a deep frame stood out from the wall
 	# like a floating slab (r23 judges x3).
-	var depth := 0.05
+	var seated := _seated({"enabled": true, "storm_finish": cfg})
+	var depth := float(seated.get("trim_depth_m", 0.05))
 	var fx := w - 0.03 - depth * 0.5
 	var t := 0.09
 	_visual_box("FrameHead", Vector3(depth, t, z1 - z0 + t * 2.0), Vector3(fx, y1 + t * 0.5, (z0 + z1) * 0.5), timber)
@@ -245,9 +248,12 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
 	add_child(storm)
 	_storm_light = storm
 	_storm_light_base = storm.light_energy
-	var pane_cfg: Dictionary = cfg.get("window_pane", {})
+	var pane_cfg: Dictionary = (cfg.get("window_pane", {}) as Dictionary).duplicate()
+	pane_cfg.merge(seated.get("pane", {}), true)
 	if bool(pane_cfg.get("enabled", false)):
 		_build_storm_pane(pane_cfg, w, z0, z1, y0, y1)
+	if seated.has("chimney_breast"):
+		_chimney_breast(seated.chimney_breast, w, d, top, float(cfg.get("gable_apex_m", 5.1)))
 	# Copper: a lantern beside the window, a pot and a bucket by the hearth.
 	var copper := Color(str(cfg.get("copper_tint", "#c08250")))
 	var lantern := _kit("CopperLantern", "Lantern_Wall", Vector3(w - 0.05, FLOOR_TOP + 1.7, z0 - 0.45), -90.0, 0.55)
@@ -313,10 +319,15 @@ func _build_storm_pane(cfg: Dictionary, w: float, z0: float, z1: float, y0: floa
 	var pane := MeshInstance3D.new()
 	pane.name = "StormPane"
 	var quad := QuadMesh.new()
-	quad.size = Vector2(z1 - z0, y1 - y0)
+	var margin := float(cfg.get("margin_m", 0.0))
+	quad.size = Vector2(z1 - z0 - margin * 2.0, y1 - y0 - margin * 2.0)
 	pane.mesh = quad
 	pane.material_override = _pane
-	pane.position = Vector3(w - float(cfg.get("inset_m", 0.08)), (y0 + y1) * 0.5, (z0 + z1) * 0.5)
+	# r34 seated: behind the lining plane, inside the kit window's own frame,
+	# not 8 cm in front of the wall ("a glowing slab that stands out from the
+	# wall", GPU SW9 judges 5/6).
+	var x := w + float(cfg.recess_m) if cfg.has("recess_m") else w - float(cfg.get("inset_m", 0.08))
+	pane.position = Vector3(x, (y0 + y1) * 0.5, (z0 + z1) * 0.5)
 	pane.rotation.y = -PI * 0.5
 	pane.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(pane)
@@ -338,8 +349,19 @@ func _process(_delta: float) -> void:
 	_pane.set_shader_parameter("tint_alpha", float(alpha_by_phase.get(phase, _pane_cfg.get("tint_alpha", 0.5))))
 	var flash := float(_surge.call("flash_level")) if _surge.has_method("flash_level") else 0.0
 	_pane.set_shader_parameter("flash", flash)
+	var tint_by_phase: Dictionary = _pane_cfg.get("tint_by_phase", {})
+	if tint_by_phase.has(phase):
+		_pane.set_shader_parameter("tint", Color(str(tint_by_phase[phase])))
 	if _storm_light != null:
-		_storm_light.light_energy = _storm_light_base * (1.0 + flash * float(_pane_cfg.get("flash_light_gain", 3.0)))
+		# r34: the window light itself changes by phase (calm grey-violet,
+		# building darker, break white-violet, fading cool), so the four
+		# phases read apart on the walls, not only in the glass.
+		var base := _storm_light_base
+		var look: Array = (_pane_cfg.get("light_by_phase", {}) as Dictionary).get(phase, [])
+		if look.size() == 2:
+			_storm_light.light_color = Color(str(look[0]))
+			base = float(look[1])
+		_storm_light.light_energy = base * (1.0 + flash * float(_pane_cfg.get("flash_light_gain", 3.0)))
 
 
 ## r24 grade: the roof underside and the kit floor stayed saturated orange
@@ -387,6 +409,58 @@ func _graded_ceiling_and_floor(wood: Material, w: float, d: float, top: float, a
 	boards.position = Vector3(0.0, FLOOR_TOP + 0.008, 0.0)
 	boards.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(boards)
+
+
+## r34 `storm_finish.seated` when the finish and that block are both on.
+func _seated(cfg: Dictionary) -> Dictionary:
+	if not bool(cfg.get("enabled", false)):
+		return {}
+	var storm: Dictionary = cfg.get("storm_finish", {})
+	var seated: Dictionary = storm.get("seated", {})
+	return seated if bool(storm.get("enabled", false)) and bool(seated.get("enabled", false)) else {}
+
+
+## r34 (GPU SW9: "a pale untextured shard poking through the roof apex"):
+## the station's exterior chimney drops below the lined ceiling over the
+## hearth. A stone chimney breast rises from the hearth's stack to the
+## ceiling and hides it; its top follows the ceiling pitch so it never
+## pokes out through the roof. Presentation only.
+func _chimney_breast(cfg: Dictionary, w: float, d: float, top: float, apex: float) -> void:
+	var span: Array = cfg.get("x", [0.05, 1.15])
+	var x0 := float(span[0])
+	var x1 := float(span[1])
+	var base := FLOOR_TOP + float(cfg.get("base_m", 2.0))
+	var back := -d + 0.01
+	var front := float(cfg.get("front_z", -1.2))
+	var lift := float(cfg.get("ceiling_clear_m", 0.05))
+	var ceiling := func(x: float) -> float: return top + (apex - top) * (1.0 - absf(x) / w) + lift
+	var c0: float = ceiling.call(x0)
+	var c1: float = ceiling.call(x1)
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var quads := [
+		[Vector3(x0, base, front), Vector3(x1, base, front), Vector3(x1, c1, front), Vector3(x0, c0, front), Vector3(0, 0, 1)],
+		[Vector3(x0, base, back), Vector3(x0, base, front), Vector3(x0, c0, front), Vector3(x0, c0, back), Vector3(-1, 0, 0)],
+		[Vector3(x1, base, front), Vector3(x1, base, back), Vector3(x1, c1, back), Vector3(x1, c1, front), Vector3(1, 0, 0)],
+		[Vector3(x0, base, back), Vector3(x1, base, back), Vector3(x1, base, front), Vector3(x0, base, front), Vector3(0, -1, 0)],
+	]
+	for quad: Array in quads:
+		var n: Vector3 = quad[4]
+		for index: int in [0, 1, 2, 0, 2, 3]:
+			st.set_normal(n)
+			st.add_vertex(quad[index])
+	var stone := StandardMaterial3D.new()
+	stone.albedo_texture = load("res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png")
+	stone.albedo_color = Color(str(cfg.get("tint", "#8c8a84")))
+	stone.uv1_triplanar = true
+	stone.uv1_scale = Vector3.ONE * float(cfg.get("uv_scale", 0.9))
+	stone.roughness = 0.95
+	stone.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var breast := MeshInstance3D.new()
+	breast.name = "ChimneyBreast"
+	breast.mesh = st.commit()
+	breast.material_override = stone
+	add_child(breast)
 
 
 ## The storm finish's `grade` block when the finish and its grade are both on.

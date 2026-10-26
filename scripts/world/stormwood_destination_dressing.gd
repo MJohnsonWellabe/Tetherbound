@@ -95,8 +95,31 @@ static func _install_hero(world: Node3D, cfg: Dictionary, draw: bool) -> void:
 			var factor := float(cfg.get("length_m", 55.0)) / maxf(0.01, bounds.size.z)
 			model.scale = Vector3.ONE * factor
 			model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
+			_finish_bark(model, cfg.get("bark", {}))
 			holder.add_child(model)
 	world.add_child(holder)
+
+
+## GPU SW10 (5 of 6 judges: the bark reads close to Team Tether's oxblood;
+## red is reserved for them): a cool moss multiplier pulls the red-brown out of
+## the GLB's bark, and a soft material rim lifts the log off the trunks behind
+## it (r28/SW10 asks). Empty or disabled leaves the model as imported.
+static func _finish_bark(model: Node3D, bark: Dictionary) -> void:
+	if not bool(bark.get("enabled", false)):
+		return
+	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+		for surface in visual.mesh.get_surface_count():
+			var source := visual.get_active_material(surface) as BaseMaterial3D
+			if source == null:
+				continue
+			var finished := source.duplicate() as BaseMaterial3D
+			finished.albedo_color = Color(str(bark.get("tint", "#b4cbbd")))
+			var rim := float(bark.get("rim", 0.0))
+			if rim > 0.0:
+				finished.rim_enabled = true
+				finished.rim = rim
+				finished.rim_tint = float(bark.get("rim_tint", 0.4))
+			visual.set_surface_override_material(surface, finished)
 
 
 static func _read(path: String) -> Dictionary:

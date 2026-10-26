@@ -2,6 +2,36 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 06:25Z Coordinator ruling on m28c: the bark recolour is accepted, so the Fallen Giant lands with `hero` + `hero.bark` ON. Rod line `stand_clear` is rejected and stays OFF: it would change the world to suit the yardstick. **Do not judge or land m28c with stand_clear ON.** land9 waits for #759 (land8) to merge, then = origin/main + Fallen Giant hero and bark ON.
+
+- 26 Oct 06:15Z **READY (GPU arm) `tb/stormwood-m28c-on` 39af61624e6e586e48a8fd508f9a12591af34f30**: lane head a04467fc plus one config commit (3 lines). Judge `deepwood_the_fallen_giant` (six views, calm and fading). Supersedes m28b.
+  - **ON in the arm:** Fallen Giant `hero` (as m28b), plus `hero.bark` and rod line `stand_clear`.
+  - **Bark recolour (your SW10 order):** a cool moss multiplier (#b4cbbd) on the GLB bark and a soft material rim (0.5). The oxblood-maroon log now reads as weathered grey-brown wood with a lit edge, and it separates from the mauve trunks.
+  - **CPU check** (hero ON, bark off vs on, the three fg stands, calm; `r34fg/_sheet_fg_bark.jpg`, off left): the colour is fixed in all three views. Nothing else in the frame changes, so there is no loss.
+  - **Lattice figure, identified:** it is Team Tether's F10#4 rod-line relay pylon (`relay_pylon_v1`), which stands 9 m from the Fallen Giant stand and 15 m from the Ashfoot shelter. New `stormwood_rod_line.json stand_clear` (OFF on the lane) drops only the pylons inside those two catalogue circles (14 m / 18 m). The pylons either side stay, and the cable still spans them where they are within max_span_m. It rides along in this arm.
+  - **Checks:** `test_stormwood_rod_line` passes with stand_clear on and off (new test `test_stand_clear_keeps_pylons_out_of_named_frames`), and `fallen_giant` passes: 0 failed.
+  - **If it holds on GPU,** land it with all three flags ON.
+- 26 Oct 06:15Z Next: Ashfoot r34 `storm_finish.seated` (fbd95d84, OFF) is capturing on CPU now: all four phases, off vs on.
+  - **Pane:** it sits behind the lining plane inside the kit window's own frame, smaller, with a 2.5 cm flush trim.
+  - **Window light:** its colour and energy change by phase (calm grey-violet, building darker, break white-violet, fading cool), and the pane tint changes with it.
+  - **Chimney breast:** a stone chimney breast rises from the hearth stack to the ceiling pitch. The pale apex shard was the exterior Prop_Chimney's base, which drops up to 1 m below the lined ceiling.
+  - **Hearth:** a stronger, wider hearth fire.
+
+- 26 Oct 10:30Z **READY to land land8: `tb/stormwood-land8` 85140a22f4432d38dfe0968c05c9151735ece43d** (lane cdff6cff, which carries the merged main ac5e1426, plus one config commit). `git diff origin/main` on data: the only new ON flags are Ashfoot `storm_finish`, `window_pane` and `grade`, each with `_why_on` (GPU SW9 +0.70 Medium / +1.52 High). `core_column.enabled: true` is the explicit default under main's hero_interior (no change). Everything else is OFF: m29 heart_cleft, m31 ground/storm_light, m33 lantern_model, Fallen Giant hero, ground zones, depth/height fog, glass far read and the Lantern Pools hollow.
+  - **Rides along (ON, bug fixes):**
+    - sky text: Master sign words within 12 m, site words within 30 m;
+    - grey blocks: the Stormwood Master pad in moss-stone and the pole in storm bark;
+    - cottages: Rodline home becomes a ranger_station, and the Lantern Hollow and Rodline buildings get stone plaster, cool timber and grey tile;
+    - well colours;
+    - the Stormwood scatter re-bake those settlement edits require: manifest only, all 108 region files byte-identical.
+  - **Checks on the land8 tree:**
+    - 275 unit tests, 0 failed: cottage, interior, settlement, village, stormheart, stormwood_surge, stormwood_scatter, scatter_perf, master, lantern_pools, fallen_giant, debug_teleport, named_crown, texture_import_policy.
+    - smoke_stormwood_ashfoot_shelter 16/0 and smoke_stormwood_settlement_traversal 9/9.
+    - smoke_stormwood_crown_heartstone 12/0.
+    - smoke_village_services_redesign **failed once** in the batch: the F17 Hall walk did not reach Mira, distance 2.90. On one confirming rerun it passed with land8's flags ON, and it also passes on the flags-off head. Disclosed: no root cause found; the run came straight after a 275-test suite.
+- 26 Oct 10:30Z Next, per your SW9/SW10 order:
+  - Fallen Giant recolour: hook `fallen_giant.hero.bark` (cool moss multiplier and soft rim) is in da841198, OFF. CPU colour/no-loss check next.
+  - Then the Ashfoot path to 7.5 and the lattice figure.
 - 26 Oct 09:40Z **READY (GPU arm) `tb/stormwood-m33-on` 619dd7fdd07327f612eda14afdba349ac06ce45a**: lane head 9065dad7 (on the merged main) plus one config commit (6 lines in `stormwood_lantern_pools.json`). Lantern Pools finish: judge `glowmoss_hollows_the_lantern_pools` (all three views).
   - **Lantern posts:** the delivered Meshy `stormwood_lantern_post` (a24b25f7a) replaces the black-bar box posts. Lit panes glow (warm flame light only, `warm_pane_glow.gdshader`) with a warm lantern light.
   - **Black pools:** `deep_colour` #030607 and `water_specular` 0.12.

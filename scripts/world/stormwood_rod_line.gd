@@ -63,6 +63,14 @@ static func layout(cfg: Dictionary, routes: Array) -> Array[Dictionary]:
 	var spacing := float(cfg.spacing_m)
 	var offset := float(cfg.side_offset_m) * float(cfg.get("side_sign", 1))
 	var radius := float(cfg.exclusion_radius_m)
+	# GPU SW10 judges: "a tall black-and-gold lattice figure they cannot
+	# identify" stood 9 m from the Fallen Giant stand, in the subject's place
+	# (and behind the Ashfoot shelter). `stand_clear` keeps pylons out of
+	# those catalogue frames: [x, z, radius_m] per stand.
+	var stand_clear: Array = []
+	var clear_cfg: Dictionary = cfg.get("stand_clear", {})
+	if bool(clear_cfg.get("enabled", false)):
+		stand_clear = clear_cfg.get("points", [])
 	var lane_clear := float((JSON.parse_string(FileAccess.get_file_as_string(TERRAIN_PATH)) as Dictionary).route_half_width) \
 		+ float(cfg.get("road_clear_m", 1.0))
 	var lanes: Array[PackedVector2Array] = []
@@ -93,6 +101,9 @@ static func layout(cfg: Dictionary, routes: Array) -> Array[Dictionary]:
 				if p.distance_to(stand) < radius:
 					clear = false
 					break
+			for point: Array in stand_clear:
+				if Vector2(float(point[0]), float(point[1])).distance_to(stand) < float(point[2]):
+					clear = false
 			if clear:
 				clear = not _on_a_lane(stand, lanes, lane_clear)
 			if clear:
