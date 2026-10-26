@@ -2,7 +2,7 @@
 
 ## Session 2 log (newest first)
 
-- 26 Oct 07:45Z PARKED r37 (Ashfoot `planks`, narrower lining boards): 5.77 -> 5.37 mapped (-0.40, 3/3 judges prefer OFF; `r37/VERDICT.md`). The judges read the wide boards as finer. The "stretched planks" complaint is the coarse atlas grain at a close wide-angle stand, so board size will not fix it. m36 stands as the Ashfoot candidate. Next Ashfoot ideas: lightning that lights the room at the break, rain on the glass, cutting the window-frame bloom.
+- 26 Oct 07:25Z PARKED r37 (Ashfoot `planks`, narrower lining boards): 5.77 -> 5.37 mapped (-0.40, 3/3 judges prefer OFF; `r37/VERDICT.md`). The judges read the wide boards as finer. The "stretched planks" complaint is the coarse atlas grain at a close wide-angle stand, so board size will not fix it. m36 stands as the Ashfoot candidate. Next Ashfoot ideas: lightning that lights the room at the break, rain on the glass, cutting the window-frame bloom.
 
 - 26 Oct 07:05Z **READY (GPU arm) `tb/stormwood-m36-on` 6c9ba8743c7c5de442f82c9613159029e4f560cc**: the lane plus one config commit, with Ashfoot `storm_finish.seated` + `firelit` + `storm_view` ON. It supersedes m34 and m35 (both remain valid steps). Judge `ashfoot_shelter_inside` (four phases) against the lane; `ashfoot_shelter_outside` is the no-change check.
   - **Storm view (r35 judges x3: "no sky, rain or lightning through the window, only a tint"):**
