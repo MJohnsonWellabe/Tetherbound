@@ -1,0 +1,62 @@
+# Stormwood lane: F49#0 route pieces S3 and S5 (coordinator direction 24 Oct 06:21Z)
+
+Pieces taken off the Routes queue (`tb/routes` `ralph/reports/ROUTES/close-1024/LEDGER.md`):
+- **S5** home_relic → home_credits (Grandpa and credits).
+- **S3** t5_altar_5 → training_t5_kitchen → training_t5_feed → training_t5_return (the Stormwood chapter feast, cooked and fed).
+
+Protocol (CLAUDE.md standing direction 2): no committed save reaches either piece (every committed Stormwood fixture predates the training loop; Routes-B's S2/S4 saves were container-local and lost), so each start is regenerated from its disclosed generated boundary exactly as Routes-B ran it, with the existing runners only (`generate_boundary_save.gd`, `stormwood_chain_runner.gd`, `tidewake_piece_runner.gd`). Each passing piece commits its end save, receipt and PROVENANCE under `tests/fixtures/earned_saves/<piece>/` at once and pushes. Pieces before the counted ones were proven by Routes-B and are not counted again.
+
+Branch `tb/stormwood-routes` from origin/main 7480d1a27. Godot 4.7 headless `--fixed-fps 60`, CPU container, one Godot process at a time.
+
+Chains:
+- S5: generate `stormwood_rootgate_crown` → dynamo → marrow_settlement (Stormheart refused, five kept) → home_key → home_relic → **home_credits**.
+- S3: generate `stormwood_t5_rowan_independent` → rowan_visit → training_t5_home → storage → return → rowan_visit → rowan_chest → preparehome → altar_1..5 → **training_t5_kitchen → feed → return**.
+
+## Piece table
+| Piece | Runner | From | SHA | Wall | Result |
+|---|---|---|---|---|---|
+| f49_s5_gen | generate_boundary_save `stormwood_rootgate_crown` | generated (disclosed) | 7480d1a27 | 54 s | PASS (d33783708) |
+| f49_s5_dynamo | stormwood_chain_runner dynamo | f49_s5_gen | d33783708 | 10643 s | PASS (a8ea1b504) |
+| f49_s5_marrow_settlement | stormwood_chain_runner | f49_s5_dynamo | a8ea1b504 | 1425 s | PASS (a2fc7e4ef): Stormheart refused, five kept |
+| f49_s5_home_key | stormwood_chain_runner | f49_s5_marrow_settlement | a2fc7e4ef | 1147 s | PASS (a119bec15) |
+| f49_s5_home_relic | stormwood_chain_runner | f49_s5_home_key | a119bec15 | 217 s | PASS (812890f12) |
+| f49_s5_home_credits | stormwood_chain_runner | f49_s5_home_relic | 812890f12 | 678 s | **FAIL**: "F49 homecoming lacks the four actual personal chapter choices" |
+| f49_s3_gen | generate_boundary_save `stormwood_t5_rowan_independent` | generated (disclosed) | 812890f12 | 55 s | PASS (45dad1ad9) |
+| f49_s3_rowan_visit | stormwood_chain_runner | f49_s3_gen | 45dad1ad9 | 3134 s | PASS (6ed02b58f): master_t5 won |
+| f49_s3_home | tidewake_piece_runner training_t5_home | f49_s3_rowan_visit | 6ed02b58f | 342 s | PASS (40353e1c9) |
+| f49_s3_storage | training_t5_storage | f49_s3_home | 40353e1c9 | 1031 s | PASS (87249f49a) |
+| f49_s3_return1 | training_t5_return | f49_s3_storage | 87249f49a | 337 s | PASS (3ee3a508a) |
+| f49_s3_rowan_visit2 | stormwood_chain_runner rowan_visit | f49_s3_return1 | 3ee3a508a | 3018 s | PASS (faec30135) |
+| f49_s3_rowan_chest | stormwood_chain_runner | f49_s3_rowan_visit2 | faec30135 | 55 s | PASS (6fc5c4b23): feast_t5 + kit |
+| f49_s3_preparehome | training_t5_preparehome | f49_s3_rowan_chest | 6fc5c4b23 | 306 s | PASS (f38fbf60a) |
+| f49_s3_a1 | training_t5_altar_1 | f49_s3_preparehome | f38fbf60a | 11 s | REFUSED: "Preparation predecessor must use the exact consumer source commit" |
+| f49_s5b_gen | generate `stormwood_rootgate_crown` (corrected) | generated (disclosed) | f38fbf60a | 50 s | PASS (1ace2679d): carries cloudreach:legendary_refused/settled |
+
+### S3 altar refusal (driver, not game)
+- `chapter_homestead.predecessor_error` requires preparehome → altar_1..5 to run at one source commit (no shared-base reloads within the preparation sequence). This lane's driver committed each passing save at once, so HEAD moved between preparehome (6fc5c4b23) and altar_1 (f38fbf60a). Routes-B ran its altar run at one SHA (e8cff1d5) for the same reason.
+- Resume (queued after S5b): preparehome again from the committed `f49_s3_rowan_chest`, then altar_1..5, all at one HEAD; their saves commit together right after altar_5 passes; then kitchen, feed, return commit one by one. The committed `f49_s3_preparehome` stays as superseded evidence.
+
+### S5 home_credits failure and correction
+- `GameState.regional_ending_context()` builds one chapter choice per biome from personal flags (`legendary_joined/refused`, `water:…`, `cloudreach:…`) plus the Stormwood answer; the F49 helper requires four. The regenerated save carries `legendary_refused`, `water:legendary_refused` and the Stormwood answer, but no Cloudreach answer: the disclosed `stormwood_rootgate_crown` profile predates the Solmane offer (owner ruling 2026-09-27, #356: Solmane is offered after Captain Veyra). Even the committed earned Cloudreach fixtures 06/07 carry none (they predate it too).
+- Correction (efb4b5389, smallest, disclosed): that one profile gains personal `cloudreach:legendary_refused` and world `cloudreach:legendary_settled`, the same shape as its Meadows answer; its disclosure text says so. No game code, no other profile, no relaxed check.
+- Next proof: S5 reruns from a regenerated start as `f49_s5b_*` (gen → dynamo → marrow_settlement → home_key → home_relic → home_credits) once the S3 chain finishes (one Godot at a time). The f49_s5_* saves stay committed as the failed attempt's evidence.
+
+## TO COORDINATOR
+- 25 Oct 02:40Z STOPPED training_t5_kitchen (rerun) on your 02:31Z relay of the Routes finding; confirmed in its log: `EARNED HOMESTEAD forge at (-6.0, 0.9, 14.0) built`, i.e. on the Kitchen tier-3 socket. Merged tb/routes into tb/stormwood-routes (2a68e83be; clean; my stormwood_rootgate_crown correction kept). Plan: (1) one F41 look round now on CPU (tb/stormwood on tb/fights-land 282901fd5: named fights + matrix, judged mapped); (2) then training_t5_kitchen_1 → _2 → _3 → _4 → feed → return from the committed `f49_s3_a5`, each save committed as it passes. ETA: look round about 4 h; Kitchen chain after it.
+- 25 Oct 02:10Z Received your 01:20Z un-park message (floor-raise; reframe stands with old/new coordinates and before/after on the new stand; outlines via #738 / tb/fights-land 282901fd5) and the 02:03Z check-in. Plan: (1) let training_t5_kitchen finish (one Godot; rerun after the 19:30Z container restart killed the first attempt at 2 h 45 m; now about 4 h in, harvesting the Kitchen bill), commit it, then feed and return (Routes-B measured those at minutes, not hours) and the READY line; S5 is already PASS (f49_s5b_home_credits 6e2c3a15f, all seams MATCH). (2) Then F41 look on CPU from tb/fights-land 282901fd5: recapture the two named fights + matrix there, judge mapped, raise each sub-6 item to CPU-mapped 5.2+ (candidates in hand: Stormheart v3 far, glass crystals, interior fill, near-lens stand reframe). ETA: kitchen/feed/return about 2-3 h if kitchen passes; the first look round (capture ~3 h + judging) about 4 h after that. No further long route piece starts before the look round; any route work left after S3 goes to Routes as "HANDED TO ROUTES".
+- 24 Oct 10:35Z S5 home_credits FAIL on the stale generated boundary (no Cloudreach Solmane answer, so three chapter choices, not four). Profile corrected in efb4b5389 (disclosed); S5 reruns as f49_s5b_* after S3. Note for Routes: the `stormwood`, `stormwood_t5_rowan_independent` and Cloudreach-late profiles carry no Cloudreach answer either; any piece that reaches the homecoming from them hits the same check.
+- 24 Oct 06:30Z STARTED S5 then S3 on tb/stormwood-routes (send_message still refused here). Seams go below as MATCH-RECEIPT lines as pieces pass.
+
+### S5 seams (MATCH-RECEIPT)
+- MATCH-RECEIPT f49_s5b_dynamo -> f49_s5b_marrow_settlement: matches, 0 differences (`seams/s5b_dynamo__marrow_settlement.json`)
+- MATCH-RECEIPT f49_s5b_marrow_settlement -> f49_s5b_home_key: matches, 0 differences (`seams/s5b_marrow_settlement__home_key.json`)
+- MATCH-RECEIPT f49_s5b_home_key -> f49_s5b_home_relic: matches, 0 differences (`seams/s5b_home_key__home_relic.json`)
+- MATCH-RECEIPT f49_s5b_home_relic -> f49_s5b_home_credits: matches, 0 differences (`seams/s5b_home_relic__home_credits.json`)
+- READY S5 (home_relic -> home_credits) on tb/stormwood-routes: every piece's save, receipt and PROVENANCE committed under tests/fixtures/earned_saves/f49_s5b_*; all four seams MATCH. Start: disclosed generated boundary `stormwood_rootgate_crown` (profile corrected efb4b5389).
+- 25 Oct 11:24Z S3 RUNNING on c3244a50d (tb/routes fixes merged: Kitchen socket clearing 5a3140067/43a336202, Kitchen split cd5f6a647, prompt walk 120115e40/4fcf9dd1c, Warrens mound walk c19dd3cc7): training_t5_kitchen_1 -> _2 -> _3 -> _4 -> feed -> return from the committed `f49_s3_a5`; each pass commits its save at once.
+
+### S3 seams (MATCH-RECEIPT) and READY
+- MATCH-RECEIPT f49_s3_a5 -> f49_s3_kitchen_1 -> f49_s3_kitchen_2 -> f49_s3_kitchen_3 -> f49_s3_kitchen_4 -> f49_s3_feed -> f49_s3_return: six seams, every receipt field (realm, uids, species, creature progression, items, portal unlocks, training, world/player flags) MATCH, 0 differences; position is not recorded by tidewake_piece_runner receipts, so each seam also proves the next piece loaded the previous piece's committed save byte-identical (sha256 of the save tree) (`seams/s3_*.json`).
+- READY S3 (T5 feast: altar_5 -> Kitchen -> feed -> return) on tb/stormwood-routes, run on c3244a50d (tb/routes fixes + main): kitchen_1 21263 s (Kitchen + kitchen_meadows, 67b9a2554), kitchen_2 493 s (772c20176), kitchen_3 538 s (b0ae8cd28), kitchen_4 548 s (12890cbec; Kitchen tier 4), feed 983 s (df4431aa5; five fed, breakthroughs to [1,2,3,4,5]), return 759 s (962ae9a8a). Every piece's save, receipt and PROVENANCE is under tests/fixtures/earned_saves/f49_s3_*.
+- HANDED TO ROUTES: nothing left from S3/S5 on this lane.
+

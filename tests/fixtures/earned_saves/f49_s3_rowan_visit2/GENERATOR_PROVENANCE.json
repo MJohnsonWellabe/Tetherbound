@@ -1,0 +1,15 @@
+{
+  "command": "godot --headless --path . --script tools/earned_saves/stormwood_chain_runner.gd -- --segment=rowan_visit --from=/root/rb/f49_s3_return1 --out=/root/rb/f49_s3_rowan_visit2",
+  "commit": "3ee3a508a4931cb19ac308420cd26669725a2757",
+  "helper": "res://tools/earned_saves/rowan_visit.gd",
+  "injections": [],
+  "kind": "stormwood_earned_checkpoint",
+  "load_path": "production title Load -> Autosave (slot 0)",
+  "no_fixture_statement": "No teleport, flag/inventory/party write, HP pin or debug skip during play.",
+  "save_path": "Game.save_game(0)",
+  "segment": "rowan_visit",
+  "shortcuts": [
+    "Simulation clock 8x at 480 Hz, 8 physics steps per frame (smoke_stormwood_continuous.gd's scale; the 8-step cap keeps production's per-frame granularity, <= 0.13 s of sim between process frames, so input releases and claim settlement are not starved on a slow host); helpers switch fights/walks to 1x themselves"
+  ],
+  "start_save": "/root/rb/f49_s3_return1"
+}
