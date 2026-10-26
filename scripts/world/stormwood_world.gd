@@ -49,6 +49,39 @@ func shell_build_complete() -> bool:
 func config_data() -> Dictionary:
 	return _config.duplicate(true)
 
+## GPU SW8: the Master's generic arena pad read as a flat grey placeholder
+## block on the Capacitor Grove horizon, and its signpost pole is a bare white
+## box. In the region's own families: worn moss-stone underfoot and storm-bark
+## timber for the pole. Presentation only (master_site.gd keeps collision and
+## every interaction); skipped on simulation shells.
+func dress_master_site(site: Node3D, definition: Dictionary) -> void:
+	if simulation_only or not is_instance_valid(site):
+		return
+	var floor_mesh := site.get_node_or_null(^"ArenaFloor") as MeshInstance3D
+	if floor_mesh != null:
+		var stone := StandardMaterial3D.new()
+		stone.albedo_texture = load("res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png")
+		stone.albedo_color = Color("6c7872")
+		stone.uv1_triplanar = true
+		stone.uv1_scale = Vector3.ONE * 0.35
+		stone.roughness = 1.0
+		floor_mesh.material_override = stone
+	var raw: Array = definition.get("sign_position", [])
+	if raw.size() < 3:
+		return
+	var timber := StandardMaterial3D.new()
+	timber.albedo_texture = load("res://assets/environment/stylized_nature/Bark_TwistedTree.png")
+	timber.albedo_color = Color("5b4a3a")
+	timber.roughness = 0.9
+	for sign: Node in find_children("MasterSignpost*", "Node3D", false, false):
+		var post := sign as Node3D
+		if Vector2(post.global_position.x - float(raw[0]), post.global_position.z - float(raw[2])).length() > 1.0:
+			continue
+		for child: Node in post.get_children():
+			if child is MeshInstance3D and (child as MeshInstance3D).mesh is BoxMesh:
+				(child as MeshInstance3D).material_override = timber
+
+
 func ground_height_at(x: float,z: float,_preferred_y: float = NAN) -> float:
 	return _field.height_at(x,z)
 

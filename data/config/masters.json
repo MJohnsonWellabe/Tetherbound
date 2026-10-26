@@ -28,8 +28,11 @@
     "outline_size": 12,
     "text_offset_m": [0, 3.3, 0.15],
     "_why_visible_range": "Stormwood GPU pass (22 Oct 2026, F10#2 asks): with no draw distance the signpost text floated in the sky beside the enemy panel in Capacitor Grove fights 30+ m away. The words fade out past visible_range_m over fade_margin_m; the pole, lead NPC and prompts are unchanged. 0 = unlimited.",
-    "visible_range_m": 24.0,
-    "fade_margin_m": 4.0
+    "visible_range_m": 12.0,
+    "fade_margin_m": 2.0,
+    "reveal_visible_range_m": 30.0,
+    "_why_reveal_range": "GPU SW8: the Master's own site words (name, level, question) floated on the Capacitor Grove horizon; they now draw within 30 m, about the 18 m arena plus a walk-up.",
+    "_why_12m": "GPU SW8 (26 Oct): all three judges still saw Rowan Stormwise's sign text floating in the sky above the trainer at the Capacitor Grove (the survey stand is 15 m from the sign, its camera about 20 m). At 12 m the words show as a player walks up to the post and are gone from the grove's fights and views."
   },
   "_why_departure_guidance": "Coordinator ruling 2026-10-11: an L20 team that beats the Warden reaches Tidewake (rec. Lv 30) at cap 20, because the chapter route never sends the player to the second Meadows Master. Guidance only, never a gate: the quest log shows this step before the departure row, and the arch adds a notice, only while no owned creature has reached min_cap.",
   "departure_guidance": [
