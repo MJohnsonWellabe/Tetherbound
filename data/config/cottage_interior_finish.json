@@ -14,7 +14,7 @@
   "rail_colour": "#4a3a2c",
   "rail_height_m": 0.95,
   "storm_finish": {
-    "enabled": false,
+    "enabled": true,
     "_candidate": "r23 Ashfoot to 7 (OFF until judged). GPU SW6 (25 Oct, 5.82): no window or view of the storm (the four phases look the same), generic planks without Stormwood copper, glass or moss, plaster gable. Lining to the 3 m wall top with a timber-framed opening on the ranger station's east window (open shutters, the real storm outside), lined gable triangles, a cool storm fill at the window against the warm hearth, copper lantern/pot/bucket (installed kit, tinted), herb bundles under the ridge and moss in the corners. Presentation only, no colliders.",
     "wall_top_m": 3.0,
     "old_lining_top_m": 2.45,
