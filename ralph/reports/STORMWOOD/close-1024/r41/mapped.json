@@ -1,0 +1,82 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9519,
+  "least_squares_slope": 1.8927,
+  "method": "linear",
+  "slope": 1.8927,
+  "intercept": -4.9581,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.417,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C7A": {
+   "measured": 6.0,
+   "reference": 7.03,
+   "mapped": 6.398,
+   "residual": 0.632
+  },
+  "f36_0_gap:C7B": {
+   "measured": 6.3,
+   "reference": 6.3,
+   "mapped": 6.966,
+   "residual": -0.666
+  },
+  "craft:after": {
+   "measured": 6.433,
+   "reference": 7.35,
+   "mapped": 7.218,
+   "residual": 0.132
+  },
+  "craft:before": {
+   "measured": 5.367,
+   "reference": 4.83,
+   "mapped": 5.2,
+   "residual": -0.37
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 6.067,
+   "reference": 6.73,
+   "mapped": 6.524,
+   "residual": 0.206
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.433,
+   "reference": 3.5,
+   "mapped": 3.433,
+   "residual": 0.067
+  }
+ },
+ "candidates": {
+  "R41 Crown Overlook OFF (37 deg views, no deck or massif)": {
+   "measured_mean": 4.7,
+   "mapped_mean": 3.94,
+   "mapped_judges": [
+    4.51,
+    3.56,
+    3.75
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R41 Crown Overlook vista ON (12 x 11 m deck + Hollow Crown silhouette)": {
+   "measured_mean": 6.0,
+   "mapped_mean": 6.4,
+   "mapped_judges": [
+    7.16,
+    6.4,
+    5.64
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
