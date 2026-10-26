@@ -467,6 +467,25 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - **Not judged:** at that size it cannot add the roughly +0.15 that the Warden (7.08 + 0.28) still needs to reach 7.5.
   - **Next:** back to big Meadows swings on the lowest untried GPU views. MH5 (land16 ground cover) is with you.
 
+- 2026-10-26 06:20 UTC READY for GPU: **tb/meadows-land17 436ef3761** (from origin/main ac5e1426c). This is the next big Meadows swing: the village road ground, covering three stands at once.
+  - **Candidate (OFF):** `terrain_presentation.json texture_candidates.path.enabled: true`.
+    - It swaps the path albedo at run time for `derived/dirt_path_trodden_Color.png`, a desaturated, contrast-lifted copy of dirt_path_Color: same 1024 size, mode-2 import, import policy PASS.
+    - The tint goes to near-white #efe9df. No terrain or scatter bake changes.
+    - Every Meadows path takes it, wild trails included.
+  - **Why:** village_road, farm_to_hall and hall_front all frame a flat, saturated orange road across the foreground. The r1 tint alone barely moved it, because the orange lives in the texture itself.
+  - **CPU result** (`vilpath1026-mapped.json`, `_sheet_vilpath1026.png`; day approach, gameplay and detail; three fresh code-blind judges; linear slope 1.90, r 0.97, RMSE 0.20; confirming batch):
+    - village_road 5.95 → 6.97 (+1.02).
+    - farm_to_hall 5.95 → 6.97 (+1.02).
+    - hall_front 5.76 → 6.65 (+0.89).
+    - The orange-smear defect went from PRESENT to FIXED in 9 of 9 calls.
+  - **Test:** `test_meadows_path_candidate_gate` (OFF, installed, 1024 size): 1 test, 0 failed.
+  - **GPU A/B:** the flag ON against OFF. `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=village_road --subset=farm_to_hall --subset=hall_front --output=res://<round>`.
+    - village_road is already at 7.09 Medium on GPU, so this may close it.
+    - Worth also glancing at band1/band3 views with wild trails, since they get the same texture.
+  - **Still open (judges):**
+    - The texture is a single-scale blob repeat, with no ruts, embedded stones or broken grass verge.
+    - Separately, hall_front's detail view presses against the Hall wall (camera).
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
