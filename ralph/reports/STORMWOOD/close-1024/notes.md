@@ -2,6 +2,12 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 07:10Z **CORRECTION: arms m29, m30 and m31 rebuilt; please judge these SHAs, not the earlier ones.** `stormwood_settlements.json` is a whole-file Stormwood scatter bake source, so my well retint (7a20b41d) and later building retints staled `data/scatter/stormwood`. Vegetation then failed closed and the baked forest was missing on every head from 7a20b41d up to and including 7d036c06. The only sign was `ERROR: Missing or stale stormwood scatter bake` in the log. Re-baked in b7811192: all 108 region files are byte-identical, only the manifest fingerprint changed, so placements and harvest ids are unchanged. Runbook (TECHNICAL §8.1) now says to grep every capture log for `stale`.
+  - `tb/stormwood-m29-on` **d590c466a1cc5045b9655ddb947e694e5bff147b** (was 7d32103c): SW7 bundle.
+  - `tb/stormwood-m30-on` **00c22453c3727ee716038c752752d092cbd68ae2** (was d9014a53): Lantern Pools hollow.
+  - `tb/stormwood-m31-on` **762c10e769e9871e4a46a376a0ac9efa35ce7cb4** (was daf57de5): ground pass 2 + storm light.
+  - m28b (21a58247) predates the stale bake and is fine.
+  - Caveat: the CPU checks from hs4 onward rendered without the baked forest. That covers the heartstone stand screens, r30 Lantern Pools, the capacitor bug check and r31, so their gains are measured against treeless scenes (r30 +1.15 likely overstated). I am re-checking the heartstone stand and the Lantern Pools hollow with the forest present.
 - 26 Oct 06:40Z **READY (GPU arm) `tb/stormwood-m31-on` daf57de50722d7a71ac7ab64317dffe0dea4b73e**: lane head c9347e52 plus one config commit. This is your SW8 next swing (Fading atmosphere + ground pass 2), judged on all 12 stands.
   1. **Ground pass 2:** `ground_zones` ON with moss and black pools only. Bare loam is off (`bare` [-1, -0.9]), and tufts thin only in the pools (`grass_bare`, new key in `stormwood_ground_zones.gd`), so Medium keeps its tufts.
   2. **`storm_light` ON:** the cool rim light and grade (r26, never GPU-judged).
