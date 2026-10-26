@@ -2,6 +2,14 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 08:50Z **MESHY: `stormwood_lantern_post`** (Lantern Pools first, then any Stormwood path post). Every judge in r30b, r31 and r32 names the black-bar lantern posts and asks for "real lanterns with lit glass and copper fittings".
+  - **The asset:** one aged timber post about 2.6 m tall, with a short bracket arm and a hanging copper-and-glass storm lantern. Small square glass panes, a domed aged-copper cap with green patina, and a warm candle core. Moss at the foot. No red.
+  - **References** (owner Stormheart board B crops, inspected; in `meshy-refs/`):
+    - `_lantern_post_ref_railing.jpg`: the platform bracket with a hanging lantern, and railing posts topped with glowing lanterns;
+    - `_lantern_post_ref_palette.jpg`: bark, living wood, aged metal, crystal, energy glow.
+  - **Scale:** it stands taller than the 1.80 m trainer, and the lantern body is about 0.45 m.
+  - **Wiring:** this lane wires it into `stormwood_lantern_pools.json` (replacing the box-mesh post in `_lantern_post`), with a warm glow on the glass only (natural flame light), behind a flag until it is judged.
+- 26 Oct 08:50Z PARKED r32 (canopy bark tint #94895a, natural brown): judges scored it identical to the lane (5.3/5.3, 5.6/5.6, 5.5->5.6). A tint does not move the forest read. Three swings in a row were under the bar, so this lane switches approach: the new-art asks the judges converge on (real lanterns above; recessed reflective pools; copper/glass highlights) rather than more tints.
 - 26 Oct 08:20Z **WITHDRAWN: `tb/stormwood-m30-on` (Lantern Pools hollow). Do not judge or land it.** Re-judged with the baked forest present (r30b): 5.24 -> 4.57 mapped (-0.67, 3/3 judges prefer off). r30's +1.15 was an artefact of the stale bake. With the real `hollows_wood` forest, the basin root rings and fungi bury the pools, and the grove's trees tint paler than the baked canopy. The hollow stays OFF. The code is kept, with the grove test.
   - Also invalidated by the stale bake: the "open plains, plant groves" lead (the stands already have their baked forest) and r31's CPU numbers (the GPU pass on m31, built from the merged head, is its first real measure).
   - Still standing: the heartstone survey stand at 8 m was re-checked with trees (fx capture). v01 is clear and v02 shows the whole stone, so m29 stands.
