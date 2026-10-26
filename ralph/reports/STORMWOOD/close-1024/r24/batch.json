@@ -1,0 +1,12 @@
+{"anchors": {
+  "craft:before": [5.0, 4.8, 5.0],
+  "craft:after": [6.6, 6.6, 6.6],
+  "f36_0_npc:C1B": [6.6, 6.6, 7.0],
+  "f36_0_npc:C1A": [6.7, 6.5, 7.0],
+  "f36_0_gap:C1A": [5.6, 6.0, 6.3],
+  "f36_0_gap:C1B": [4.6, 5.0, 5.2]},
+ "candidates": {
+  "R24 ashfoot OFF (main)": [4.2, 4.3, 4.8],
+  "R24 ashfoot r23 (storm finish)": [4.6, 5.0, 5.0],
+  "R24 ashfoot r24 (finish + grade), vs main set": [5.7, 5.8, 5.9],
+  "R24 ashfoot r24 (finish + grade), vs r23 set": [5.7, 5.8, 5.9]}}

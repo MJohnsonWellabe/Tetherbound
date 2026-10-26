@@ -1,0 +1,10 @@
+{"anchors": {
+  "f36_0_gap:C1B": [5.3, 5.0, 5.5],
+  "f36_0_gap:C1A": [6.4, 5.8, 6.3],
+  "f36_0_npc:C2B": [6.3, 6.6, 6.6],
+  "f36_0_npc:C2A": [6.3, 6.6, 6.6],
+  "craft:after": [6.2, 6.6, 6.6],
+  "craft:before": [4.9, 5.2, 5.1]},
+ "candidates": {
+  "R27 stormheart r19 (hero interior)": [5.2, 5.3, 5.2],
+  "R27 stormheart r27 (+ roots, arcs)": [5.6, 5.4, 5.6]}}

@@ -1,0 +1,10 @@
+{"anchors": {
+  "f04_6_r22:r22": [6.0, 5.6, 5.6],
+  "f04_6_r22:control": [5.2, 4.5, 4.9],
+  "craft:after": [6.8, 6.5, 6.5],
+  "craft:before": [4.8, 4.5, 4.8],
+  "p2_094_r4:Y_after": [5.6, 5.8, 5.8],
+  "p2_094_r4:X_before": [3.8, 3.8, 3.8]},
+ "candidates": {
+  "R21 ground OFF (main)": [5.6, 5.3, 5.5],
+  "R21 ground ON (zones r21)": [5.9, 5.1, 5.6]}}

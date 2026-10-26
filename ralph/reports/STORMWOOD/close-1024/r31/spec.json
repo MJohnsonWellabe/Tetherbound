@@ -1,0 +1,24 @@
+[
+ {
+  "label": "SW9 calm",
+  "a": "<scratch>/sides/sw9_calm_off.jpg",
+  "b": "<scratch>/sides/sw9_calm_on.jpg",
+  "brief": "Five Stormwood stands (top to bottom: Rodline Post, Lantern Hollow, Deepwood road, the Glass Field approach, the Crown heartstone), one fixed exploration view each in the calm storm phase, with the 1.80 m trainer as a ruler. Judge whether the ground, light and atmosphere read as the key art's storm forest.",
+  "defects": [
+   "one uniform grass carpet with a smooth brown mud band",
+   "one dark mid-tone with no rim or key light",
+   "fog puffs or white-outs instead of layered fog and depth"
+  ]
+ },
+ {
+  "label": "SW9 fading",
+  "a": "<scratch>/sides/sw9_fading_off.jpg",
+  "b": "<scratch>/sides/sw9_fading_on.jpg",
+  "brief": "Five Stormwood stands (top to bottom: Rodline Post, Lantern Hollow, Deepwood road, the Glass Field approach, the Crown heartstone), one fixed exploration view each in the fading (after the storm breaks) storm phase, with the 1.80 m trainer as a ruler. Judge whether the ground, light and atmosphere read as the key art's storm forest.",
+  "defects": [
+   "one uniform grass carpet with a smooth brown mud band",
+   "one dark mid-tone with no rim or key light",
+   "fog puffs or white-outs instead of layered fog and depth"
+  ]
+ }
+]

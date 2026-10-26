@@ -1,0 +1,23 @@
+{
+ "Bu": {
+  "anchor": true,
+  "A": "f36_0_npc:C5A",
+  "B": "f36_0_npc:C5B"
+ },
+ "Id": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Hp": {
+  "anchor": false,
+  "label": "R32 storm canopy",
+  "A": "<scratch>/sides/cn_on.jpg",
+  "B": "<scratch>/sides/cn_off.jpg"
+ },
+ "Ai": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ }
+}
