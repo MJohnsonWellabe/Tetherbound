@@ -1,10 +1,9 @@
 {
- "updated": "2026-10-26T02:25:00Z (9:25 PM CT Sun 25 Oct)",
+ "updated": "2026-10-26T20:10:00Z (3:10 PM CT Mon 26 Oct)",
  "headline": [
-  "Board 250 of 467 criteria met. No row closed this evening: Tanglevolt reached 7.66 on Medium but 7.30 on High, just under the 7.5 bar. The big-swing rule is working: every look change landed since this morning gained 0.5 to 1.9 on the GPU.",
-  "Merged since 9:45 AM CT: #749 (four Cloudreach pieces ON), #750 (Meadows arch facades), #751 (Stormwood Ashfoot interior), #752 (intermittent test leak fixed at its root), #753 (Meadows giant ironwood), #745 (Mosshock moss-green coat, 5.32 -> 6.62), #754 (Stormwood route pieces S3 feast and S5 homecoming, every seam matches), #755 (Tanglevolt dark navy coat with glowing arcs, 5.98 -> 7.66 / 6.20 -> 7.30). #756 (Stormheart interior +0.95/+0.67 and Crown heartstone +1.32) is in CI.",
-  "Waiting for GPU scoring, in order: Stormwood ground (CPU +0.53), Ashfoot interior r25 (CPU about +2.5), Fallen Giant (CPU +0.86); Meadows keep, courtyard daylight (+1.57) and relay yard stone (+1.87); creature hit-flash; Mirejaw retexture (+0.66) and the Terrapup dog (+0.5 over the badger); Tidewake pumps and jetty.",
-  "Terrapup: three dog plate fixes tied on CPU (retexture, mesh flatten, spine ridge); the GPU verdict on the current dog decides between a combined mesh-and-coat fix and a Meshy shoulder regeneration."
+  "Board 254 of 467 criteria met (+4 today on the GPU: Grandpa at 8.35, and the hurt/faint poses of Tanglevolt 7.86/7.72, Frostclaw 7.57/7.72 and Craghorn 7.58/7.58 on the recipe profile the game uses).",
+  "Merged today: #761 (Meadows village path, +0.56), #762 (Stormwood Ashfoot +0.51, Stormheart cleft fix), #763 (Meadows Ridgeline Watch clearings, 4.76 -> 6.40), #764 (Stormwood Crown Overlook vista, 4.99 -> 5.85).",
+  "Next on the GPU: CO8 close-out (Galecrest matte finish; Cloudfang, Breezetail and Stormcapra just under 7.5), then Tidewake regrade, SW17 and SW13. Session-to-session messaging is down in the coordinator session, so lanes and the GPU judge are not receiving new queue lines until it reconnects."
  ],
  "batches": [
   {
