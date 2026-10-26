@@ -36,6 +36,28 @@ static func build(world: Node3D) -> int:
 	return built
 
 
+## `clearings` (OFF until judged): authored glades cut out of the baked tree
+## and rock scatter at run time through `vegetation.gd::clear_area`, the call
+## the Warrens use to clear their own ground. A stand framed by a wall of
+## trunks becomes a sunlit clearing with a grove edge. Runs inside the world's
+## bulk-clear window, after the settlement has built.
+static func clear(world: Node3D) -> int:
+	var block: Dictionary = settings().get("clearings", {})
+	if not bool(block.get("enabled", false)):
+		return 0
+	var vegetation: Node = world.get_node_or_null(^"Vegetation")
+	if vegetation == null or not vegetation.has_method("clear_area"):
+		return 0
+	var removed := 0
+	for spot: Dictionary in block.get("spots", []):
+		var at: Array = spot.get("at", [0.0, 0.0])
+		removed += int(vegetation.call("clear_area", Vector3(float(at[0]), 0.0, float(at[1])),
+			float(spot.get("radius_m", 10.0))))
+	if removed > 0:
+		print("[hero_pieces] clearings removed %d scattered trees/rocks" % removed)
+	return removed
+
+
 static func _place(world: Node3D, row: Dictionary, group: String) -> bool:
 	var scene := load(str(row.get("path", ""))) as PackedScene
 	if scene == null:

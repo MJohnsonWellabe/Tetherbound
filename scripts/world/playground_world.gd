@@ -879,6 +879,8 @@ func _ready() -> void:
 	if bulk_vegetation != null and bulk_vegetation.has_method("begin_bulk_clear"):
 		bulk_vegetation.call("begin_bulk_clear")
 	await _build_settlement()
+	# F38 authored glades (OFF unless meadows_hero_pieces.json enables `clearings`).
+	MEADOWS_HERO_PIECES.clear(self)
 	if is_instance_valid(bulk_vegetation) and bulk_vegetation.has_method("end_bulk_clear"):
 		bulk_vegetation.call("end_bulk_clear")
 	BOOT_LOG.phase("playground: settlement (house, village, signpost, landmark, perimeter, harvest nodes) built")
