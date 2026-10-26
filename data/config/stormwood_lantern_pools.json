@@ -85,7 +85,7 @@
   "_why_spots": "Spots screened on the Stormwood heightfield for relief under 0.35 m inside the two survey headings, clear of the pools shelter pad and the path.",
   "_why_level": "The surface sits at mid-relief plus surface_lift_m; scatter inside each kept pool is cleared on every shell (vegetation.gd clear_area).",
   "basin": {
-    "enabled": false,
+    "enabled": true,
     "_candidate": "r18 Meshy candidate (OFF until judged; coordinator big-swing order 25 Oct): the root-rimmed pool basin replaces each flat disc and its loose stones; the square slab is sunk below the lowest ground.",
     "model": "res://assets/props/meshy-1024/glowmoss_pool_basin/glowmoss_pool_basin.glb",
     "radius_scale": 1.25,
@@ -100,7 +100,7 @@
     "max_lift_m": 0.25
   },
   "glow_fungi": {
-    "enabled": false,
+    "enabled": true,
     "_candidate": "r30 (rides with the basin): bioluminescent storm fungi (the storm_mushroom layer's own Meshy model) in clumps on each basin rim. Natural glow, Glowmoss Hollows' living light.",
     "model": "res://assets/props/meshy-1020/storm_fungi/v1/storm_fungi_v1.glb",
     "per_pool": 4,
@@ -109,7 +109,7 @@
     "glow_energy": 1.2
   },
   "grove": {
-    "enabled": false,
+    "enabled": true,
     "_candidate": "r30 Lantern Pools hollow (OFF until judged). GPU R: Lantern Pools 5.62 Medium / 5.37 High, 'no change'; every judge asks for groves and clearings instead of the open carpet. A ring of the Ash Road's storm-canopy trees (stormwood_vegetation.json layer storm_canopy: same models, retint and retexture) 24-62 m round the pools, with trunk colliders on every shell. Scatter is baked and fingerprinted (harvest ids), so the grove is authored here instead of a dense stand.",
     "layer": "storm_canopy",
     "collider_height_m": 6.0,
