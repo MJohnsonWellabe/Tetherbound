@@ -43,6 +43,7 @@ var _column_sheath_material: ShaderMaterial
 var _column_lights: Array[OmniLight3D] = []
 var _column_energy := Vector2.ZERO
 var _column_cooled := 0.12
+var _core_arc_holder: Node3D
 
 func build() -> void:
 	_wood = StandardMaterial3D.new()
@@ -942,6 +943,10 @@ func _hero_interior(cfg: Dictionary) -> void:
 	_core_column(root, cfg.get("core_column", {}))
 	_lantern_clusters(root, cfg.get("lantern_clusters", {}))
 	_lip_banners(root, cfg.get("lip_banners", {}))
+	var second: Dictionary = cfg.get("round2", {})
+	if bool(second.get("enabled", false)):
+		_hollow_roots(second.get("roots", {}))
+		_core_arcs(root, second.get("arcs", {}), cfg.get("core_column", {}))
 	if _column_core_material != null:
 		set_process(true)
 
@@ -1077,6 +1082,74 @@ func _core_column(root: Node3D, cfg: Dictionary) -> void:
 		column.add_child(light)
 		_column_lights.append(light)
 	set_core_released(_core_released)
+
+
+## r27 (r19 judges x3: "the floor is a dirt disc in a grass ring, an arena,
+## not a living trunk"): bark roots flow from the trunk wall's foot across
+## the hollow floor toward the centre, the entrance split left clear and the
+## centre (the stand and the core column) untouched. Visual only, low enough
+## to read as ground.
+func _hollow_roots(cfg: Dictionary) -> void:
+	var count := int(cfg.get("count", 20))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cfg.get("seed", 27))
+	var start_r := float(cfg.get("start_radius_m", 45.0))
+	var reach := cfg.get("end_radius_m", [11.0, 18.0]) as Array
+	var thickness := cfg.get("radius_m", [1.9, 0.25]) as Array
+	for index in count:
+		var angle := TAU * (float(index) + rng.randf_range(-0.3, 0.3)) / float(count)
+		var end_r := rng.randf_range(float(reach[0]), float(reach[1]))
+		var swing := rng.randf_range(-0.18, 0.18)
+		if in_trunk_split(angle, 0.1) or in_trunk_split(angle + swing, 0.1):
+			continue
+		var controls: Array[Vector3] = []
+		var radii: Array[float] = []
+		for step in 5:
+			var t := float(step) / 4.0
+			var a := angle + swing * t
+			var r := lerpf(start_r, end_r, t)
+			var at := Vector3(cos(a) * r, 0.0, sin(a) * r)
+			var thick := lerpf(float(thickness[0]), float(thickness[1]), pow(t, 0.7))
+			# Climbs the wall foot, then hugs the ground with a low hump.
+			at.y = _root_ground(at) + thick * 0.45 + (1.4 * (1.0 - t) * (1.0 - t)) + 0.35 * sin(t * PI)
+			controls.append(at)
+			radii.append(thick)
+		_crown_limb("HollowRoot%02d" % index, controls, radii, float(cfg.get("bark_repeat_m", 4.0)))
+
+
+## r27 (r19 judges: "a bloomed light pillar, not arcing lightning"): thin
+## white-violet arcs wind up around the core column. Natural glow (the trunk's
+## own lightning); hidden once the Long Storm is released.
+func _core_arcs(root: Node3D, cfg: Dictionary, column: Dictionary) -> void:
+	var centre_values: Array = column.get("centre", [0.0, 5.0])
+	var centre := Vector3(float(centre_values[0]), 0.0, float(centre_values[1]))
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.albedo_color = Color(str(cfg.get("colour", "#ebe6ff")))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cfg.get("seed", 271))
+	var poses: Array[Transform3D] = []
+	var arcs := int(cfg.get("count", 4))
+	var base_r := float(column.get("sheath_radius_m", 2.4)) * float(cfg.get("radius_scale", 0.9))
+	var height := float(column.get("top_m", 149.5))
+	var segments := int(cfg.get("segments", 90))
+	for arc in arcs:
+		var phase := TAU * float(arc) / float(arcs)
+		var turns := rng.randf_range(5.0, 8.0) * (1.0 if arc % 2 == 0 else -1.0)
+		var previous := Vector3.ZERO
+		for step in segments + 1:
+			var t := float(step) / float(segments)
+			var a := phase + turns * TAU * t
+			var r := base_r + rng.randf_range(-0.5, 0.5)
+			var point := centre + Vector3(cos(a) * r, lerpf(1.0, height, t) + rng.randf_range(-0.6, 0.6), sin(a) * r)
+			if step > 0:
+				poses.append(_charge_pose(previous, point, float(cfg.get("width_m", 0.16))))
+			previous = point
+	var holder := Node3D.new()
+	holder.name = "CoreArcs"
+	root.add_child(holder)
+	_instances(holder, poses, material, _charge_mesh())
+	_core_arc_holder = holder
 
 
 ## Warm lantern clusters (three lanterns at staggered drops and one light)
@@ -1564,6 +1637,8 @@ func set_core_released(released: bool) -> void:
 		_column_sheath_material.set_shader_parameter("energy", _column_energy.y * cool)
 		for light: OmniLight3D in _column_lights:
 			light.visible = not released
+	if _core_arc_holder != null:
+		_core_arc_holder.visible = not released
 	if _core_material == null:
 		return
 	var settings: Dictionary = _presentation.core_finish
