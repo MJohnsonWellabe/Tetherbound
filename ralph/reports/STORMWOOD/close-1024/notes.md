@@ -2,6 +2,21 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 10:30Z **READY to land land8: `tb/stormwood-land8` 85140a22f4432d38dfe0968c05c9151735ece43d** (lane cdff6cff, which carries the merged main ac5e1426, plus one config commit). `git diff origin/main` on data: the only new ON flags are Ashfoot `storm_finish`, `window_pane` and `grade`, each with `_why_on` (GPU SW9 +0.70 Medium / +1.52 High). `core_column.enabled: true` is the explicit default under main's hero_interior (no change). Everything else is OFF: m29 heart_cleft, m31 ground/storm_light, m33 lantern_model, Fallen Giant hero, ground zones, depth/height fog, glass far read and the Lantern Pools hollow.
+  - **Rides along (ON, bug fixes):**
+    - sky text: Master sign words within 12 m, site words within 30 m;
+    - grey blocks: the Stormwood Master pad in moss-stone and the pole in storm bark;
+    - cottages: Rodline home becomes a ranger_station, and the Lantern Hollow and Rodline buildings get stone plaster, cool timber and grey tile;
+    - well colours;
+    - the Stormwood scatter re-bake those settlement edits require: manifest only, all 108 region files byte-identical.
+  - **Checks on the land8 tree:**
+    - 275 unit tests, 0 failed: cottage, interior, settlement, village, stormheart, stormwood_surge, stormwood_scatter, scatter_perf, master, lantern_pools, fallen_giant, debug_teleport, named_crown, texture_import_policy.
+    - smoke_stormwood_ashfoot_shelter 16/0 and smoke_stormwood_settlement_traversal 9/9.
+    - smoke_stormwood_crown_heartstone 12/0.
+    - smoke_village_services_redesign **failed once** in the batch: the F17 Hall walk did not reach Mira, distance 2.90. On one confirming rerun it passed with land8's flags ON, and it also passes on the flags-off head. Disclosed: no root cause found; the run came straight after a 275-test suite.
+- 26 Oct 10:30Z Next, per your SW9/SW10 order:
+  - Fallen Giant recolour: hook `fallen_giant.hero.bark` (cool moss multiplier and soft rim) is in da841198, OFF. CPU colour/no-loss check next.
+  - Then the Ashfoot path to 7.5 and the lattice figure.
 - 26 Oct 09:40Z **READY (GPU arm) `tb/stormwood-m33-on` 619dd7fdd07327f612eda14afdba349ac06ce45a**: lane head 9065dad7 (on the merged main) plus one config commit (6 lines in `stormwood_lantern_pools.json`). Lantern Pools finish: judge `glowmoss_hollows_the_lantern_pools` (all three views).
   - **Lantern posts:** the delivered Meshy `stormwood_lantern_post` (a24b25f7a) replaces the black-bar box posts. Lit panes glow (warm flame light only, `warm_pane_glow.gdshader`) with a warm lantern light.
   - **Black pools:** `deep_colour` #030607 and `water_specular` 0.12.
