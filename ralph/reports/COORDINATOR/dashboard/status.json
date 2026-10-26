@@ -1,10 +1,9 @@
 {
- "updated": "2026-10-26T02:25:00Z (9:25 PM CT Sun 25 Oct)",
+ "updated": "2026-10-26T23:15:00Z (6:15 PM CT Mon 26 Oct)",
  "headline": [
-  "Board 250 of 467 criteria met. No row closed this evening: Tanglevolt reached 7.66 on Medium but 7.30 on High, just under the 7.5 bar. The big-swing rule is working: every look change landed since this morning gained 0.5 to 1.9 on the GPU.",
-  "Merged since 9:45 AM CT: #749 (four Cloudreach pieces ON), #750 (Meadows arch facades), #751 (Stormwood Ashfoot interior), #752 (intermittent test leak fixed at its root), #753 (Meadows giant ironwood), #745 (Mosshock moss-green coat, 5.32 -> 6.62), #754 (Stormwood route pieces S3 feast and S5 homecoming, every seam matches), #755 (Tanglevolt dark navy coat with glowing arcs, 5.98 -> 7.66 / 6.20 -> 7.30). #756 (Stormheart interior +0.95/+0.67 and Crown heartstone +1.32) is in CI.",
-  "Waiting for GPU scoring, in order: Stormwood ground (CPU +0.53), Ashfoot interior r25 (CPU about +2.5), Fallen Giant (CPU +0.86); Meadows keep, courtyard daylight (+1.57) and relay yard stone (+1.87); creature hit-flash; Mirejaw retexture (+0.66) and the Terrapup dog (+0.5 over the badger); Tidewake pumps and jetty.",
-  "Terrapup: three dog plate fixes tied on CPU (retexture, mesh flatten, spine ridge); the GPU verdict on the current dog decides between a combined mesh-and-coat fix and a Meshy shoulder regeneration."
+  "Board 260 of 467 criteria met (+10 today on the GPU): Grandpa; Tanglevolt, Frostclaw and Craghorn hurt/faint; Galecrest (matte finish, 7.70/7.68) and its poses; Cloudfang (7.64) and its poses; Stormcapra as shipped (7.60/7.68) and its poses.",
+  "Merged today: #761 Meadows village path, #762 Stormwood Ashfoot, #763 Meadows Ridgeline Watch clearings, #764 Stormwood Crown Overlook vista, #766 Tidewake destination landmarks (+1.24), #767 Galecrest matte, Cloudfang flinch and the Ashfoot storm view (+1.13).",
+  "GPU next: SW13 (Stormwood ground pass 2, capturing), then SW19, the Stormwood storm sky (CPU +0.83, chapter-wide). Not landed: SW17 lantern posts, Mirejaw retexture and Terrapup dog3 (all scored at or below main). Coordinator replies to sessions are blocked; the GPU queue runs through ralph/reports/GPU-PASS/NOTE.md."
  ],
  "batches": [
   {

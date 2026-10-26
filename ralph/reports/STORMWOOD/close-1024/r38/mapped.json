@@ -1,0 +1,82 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.912,
+  "least_squares_slope": 1.4961,
+  "method": "linear",
+  "slope": 1.4961,
+  "intercept": -2.663,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.549,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C5A": {
+   "measured": 5.2,
+   "reference": 5.7,
+   "mapped": 5.117,
+   "residual": 0.583
+  },
+  "f36_0_gap:C5B": {
+   "measured": 6.633,
+   "reference": 6.93,
+   "mapped": 7.261,
+   "residual": -0.331
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.267,
+   "reference": 3.5,
+   "mapped": 3.72,
+   "residual": -0.22
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 5.8,
+   "reference": 6.73,
+   "mapped": 6.015,
+   "residual": 0.715
+  },
+  "craft:after": {
+   "measured": 6.6,
+   "reference": 7.35,
+   "mapped": 7.211,
+   "residual": 0.139
+  },
+  "craft:before": {
+   "measured": 5.6,
+   "reference": 4.83,
+   "mapped": 5.715,
+   "residual": -0.885
+  }
+ },
+ "candidates": {
+  "R38 ashfoot outside OFF": {
+   "measured_mean": 5.433,
+   "mapped_mean": 5.47,
+   "mapped_judges": [
+    5.57,
+    5.27,
+    5.57
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R38 ashfoot outside ON (backdrop grove + ranger dressing)": {
+   "measured_mean": 5.767,
+   "mapped_mean": 5.96,
+   "mapped_judges": [
+    6.01,
+    5.86,
+    6.01
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
