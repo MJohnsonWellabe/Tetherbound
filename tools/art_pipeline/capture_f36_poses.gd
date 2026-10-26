@@ -182,6 +182,13 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 			receipt.append({"role": role, "status": "not_a_carrier"})
 			continue
 		var clip := "f36_candidate/%s" % role if candidate else str(map.get(role, ""))
+		# A species in f36_pose_candidates.json `enabled_species` plays its recipe
+		# clips in the game (creature_body.gd `_install_animator` ->
+		# creature_pose_candidates.gd `install`), so a plain capture shows those
+		# too, not the installed clips the game replaces (GPU CO-1, 26 Oct).
+		if not candidate and player != null and bool(body.get_meta("f36_pose_candidate_installed", false)) \
+				and player.has_animation("f36_candidate/%s" % role):
+			clip = "f36_candidate/%s" % role
 		if not _scale_only and (clip.is_empty() or not player.has_animation(clip)) \
 				and role in RUNTIME_FALLBACK:
 			# The game plays a fallback for a traversal role the species has no
