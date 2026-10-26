@@ -88,6 +88,8 @@
       "yaw_deg": 0.0,
       "offset_m": [0.0, -0.05, 0.0],
       "albedo_gain": 1.45,
+      "door_cut_m": [[0.2, -1.0, 2.4], [1.8, 2.3, 5.0]],
+      "_why_door_cut_m": "The prefab's open doorway (door_x 1.0, 1.6 m wide, front wall at z about 2.7-3.1, porch beyond) cut through the closed Meshy shell, shelter-local metres, so players and the interior catalogue camera see in.",
       "_why_albedo_gain": "r42 first capture: the dark weathered timber read near-black under the storm light; lifted about half a stop."
     },
     "storm_view": {

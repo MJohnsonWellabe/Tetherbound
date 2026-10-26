@@ -26,6 +26,7 @@ const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 const STORM_PANE_SHADER := preload("res://scripts/world/cottage_storm_pane.gdshader")
 const STORM_VIEW_SHADER := preload("res://scripts/world/cottage_storm_view.gdshader")
 const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
+const SHELL_SHADER := preload("res://shaders/shell_door_cutout.gdshader")
 const CAMP_FLAME := "res://assets/props/generated_camp/camp_flame.glb"
 
 var _half_w := 1.69
@@ -481,19 +482,27 @@ func _swap_shell(cfg: Dictionary) -> void:
 	seat.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
 	seat.add_child(model)
 	add_child(seat)
-	# Meshy GLBs draw double-sided: from inside the lined room (and the
-	# catalogue camera at the door) the shell's walls covered the view. Back
-	# faces are culled so the shell shows only from outside, and the dark
-	# timber is lifted a little so it does not read black under the storm.
-	var gain := float(cfg.get("albedo_gain", 1.0))
+	# Meshy GLBs draw double-sided and closed: from inside the lined room and
+	# from the catalogue camera at the open door the shell's walls covered the
+	# view. SHELL_SHADER culls back faces and cuts the prefab's open doorway
+	# (`door_cut_m`, shelter-local min/max) through the shell; the dark timber
+	# is lifted a little so it does not read black under the storm.
+	var cut: Array = cfg.get("door_cut_m", [[0.2, -1.0, 2.4], [1.8, 2.3, 5.0]])
+	var frame_inv := global_transform.affine_inverse()
 	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
 		for surface in visual.mesh.get_surface_count():
 			var source := visual.get_active_material(surface) as BaseMaterial3D
 			if source == null:
 				continue
-			var outside := source.duplicate() as BaseMaterial3D
-			outside.cull_mode = BaseMaterial3D.CULL_BACK
-			outside.albedo_color = Color(source.albedo_color.r * gain, source.albedo_color.g * gain, source.albedo_color.b * gain, source.albedo_color.a)
+			var outside := ShaderMaterial.new()
+			outside.shader = SHELL_SHADER
+			outside.set_shader_parameter("albedo_tex", source.albedo_texture)
+			outside.set_shader_parameter("normal_tex", source.normal_texture)
+			outside.set_shader_parameter("orm_tex", source.roughness_texture)
+			outside.set_shader_parameter("albedo_gain", float(cfg.get("albedo_gain", 1.0)))
+			outside.set_shader_parameter("cut_frame_inv", Projection(frame_inv))
+			outside.set_shader_parameter("cut_min", Vector3(float(cut[0][0]), float(cut[0][1]), float(cut[0][2])))
+			outside.set_shader_parameter("cut_max", Vector3(float(cut[1][0]), float(cut[1][1]), float(cut[1][2])))
 			visual.set_surface_override_material(surface, outside)
 
 
