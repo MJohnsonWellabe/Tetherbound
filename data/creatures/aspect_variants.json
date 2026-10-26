@@ -74,7 +74,6 @@
     },
     "stormtrail": {
       "display_name": "Stormtrail",
-      "_why_close_out_1026": "GPU CO34 (tb/gpu-pass 5b52c695c, 7.35 / 6.86): a slate body on the slate stage with dim blue streaks; path to 7.5 is value separation and brighter streaks. The coat keeps its storm-grey identity but spreads its values (light areas x0.62, dark areas x0.45, slightly bluer), the spine bolt brightens (#a6d4ff, x1.6; saturation kept above the line glow's 0.3 floor) and both glows rise (line 1.1 -> 2.0, veins 0.8 -> 1.2).",
       "source_species": "trailpup",
       "source_model": "trailpup/candidate_nat1024",
       "_comment_source_model": "Close-1024: the base ships its naturalistic remake, so the variant repaints that mesh's own albedo (aspect variants reuse the base mesh, test_dual_type).",
@@ -91,9 +90,9 @@
             "sat_min": 0.05,
             "val_min": 0.4
           },
-          "set_hue": 212,
-          "set_sat": 0.13,
-          "val_scale": 0.62
+          "set_hue": 215,
+          "set_sat": 0.09,
+          "val_scale": 0.5
         },
         {
           "match": {
@@ -104,9 +103,9 @@
             "sat_min": 0.05,
             "val_max": 0.4
           },
-          "set_hue": 218,
-          "set_sat": 0.12,
-          "val_scale": 0.45
+          "set_hue": 215,
+          "set_sat": 0.07,
+          "val_scale": 0.55
         },
         {
           "_why": "Lighter muzzle and chest (coordinator 24 Oct): the pale patches stay a clear highlight against the storm grey.",
@@ -129,9 +128,9 @@
             "z_max": 0.85
           },
           "mode": "tint",
-          "color": "#a6d4ff",
+          "color": "#8fc1ff",
           "sat_floor": 0.5,
-          "val_scale": 1.6,
+          "val_scale": 1.2,
           "coverage": 0.85,
           "grain": 7.0,
           "clump_softness": 0.08,
@@ -161,7 +160,7 @@
           ],
           "sat_min": 0.3,
           "color": "#9cc8ff",
-          "intensity": 2.0,
+          "intensity": 1.1,
           "softness": 0.12
         },
         {
@@ -176,7 +175,7 @@
           "percentile": 14.0,
           "max_val": 0.24,
           "color": "#6d76ea",
-          "intensity": 1.2,
+          "intensity": 0.8,
           "softness": 0.1,
           "clump_grain": 5.0,
           "clump_coverage": 0.75,
