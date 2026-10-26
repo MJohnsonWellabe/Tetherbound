@@ -182,10 +182,15 @@ func _cladding(world: Node3D, cfg: Dictionary) -> void:
 			# The facade's front (+Z) faces out of the slope; its up runs up the face.
 			var up := (Vector3.UP - normal * normal.dot(Vector3.UP)).normalized()
 			var basis := Basis(up.cross(normal).normalized(), up, normal).rotated(normal, twist)
+			# The facade is 35% as deep as it is wide: laid on a slope at full
+			# depth a 20 m piece stood ~7 m proud as a shelf (cl1-cl3). Squash
+			# its depth and sink most of what is left, so only the relief shows.
 			var factor := width / bounds.size.x
-			var fit := Transform3D(Basis.from_scale(Vector3.ONE * factor),
-				-Vector3(bounds.get_center().x, bounds.get_center().y, bounds.position.z) * factor)
-			poses.append(Transform3D(basis, Vector3(at.x, y, at.y) - normal * sink) * fit)
+			var squash := float(cfg.get("depth_scale", 0.4))
+			var fit := Transform3D(Basis.from_scale(Vector3(factor, factor, factor * squash)),
+				-Vector3(bounds.get_center().x * factor, bounds.get_center().y * factor, bounds.position.z * factor * squash))
+			var proud := bounds.size.z * factor * squash
+			poses.append(Transform3D(basis, Vector3(at.x, y, at.y) - normal * (sink + proud * float(cfg.get("sink_fraction", 0.6)))) * fit)
 	if poses.is_empty():
 		template.free()
 		return
