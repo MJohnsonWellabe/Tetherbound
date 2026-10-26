@@ -783,9 +783,8 @@
       },
       "placeholder": {
         "colour": "#4a86b8",
-        "height": 2.55,
-        "_comment_height_close1026": "Was 2.1 m. CLOSE-OUT 26 Oct (GPU: stands about trainer height): grown 21%, radius by the same ratio (D12); grow only, never shrink.",
-        "radius": 0.877,
+        "height": 2.1,
+        "radius": 0.722,
         "_comment_footprint": "Low lean semi-aquatic mammal body with a tail, similar register to Trailpup's lean canine build rather than a broad tank stance.",
         "footprint_allowance": 8.6,
         "model": "res://assets/creatures/tetherbound/brooktail/models/creature_brooktail_lod0.glb",
@@ -2245,9 +2244,8 @@
       },
       "placeholder": {
         "colour": "#8899aa",
-        "height": 3.3,
-        "_comment_height_close1026": "Was 2.8 m. CLOSE-OUT 26 Oct (GPU: reads small beside the trainer): grown 18%, radius by the same ratio (D12); grow only, never shrink.",
-        "radius": 1.155,
+        "height": 2.8,
+        "radius": 0.98,
         "footprint_allowance": 3.0,
         "model": "res://assets/creatures/tetherbound/thundertunnel/models/creature_thundertunnel_lod0.glb",
         "model_scale": 1.0,
