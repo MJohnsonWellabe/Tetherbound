@@ -1,0 +1,15 @@
+{
+  "enabled": false,
+  "_candidate": "r39 Stormwood path posts (OFF until judged; coordinator item 2). The junction lamps where each pocket's spur leaves its road (Ash Road, Conductor Run, Deepwood) are a pale 6.6 m box post with a scaled kit wall lantern and a flame sphere; r30b-r32 judges at the Lantern Pools read the same box posts as 'flat black bars' and asked for real lanterns, and the Meshy post won there (r33 +0.75). Here the junction lamps take that Meshy Stormwood lantern post with its warm pane glow and one warm light; the post colliders are unchanged. Kept out of stormwood_pockets.json, which is a scatter-bake input.",
+  "scope": "client_presentation",
+  "model": "res://assets/props/meshy-1024/stormwood_lantern_post/stormwood_lantern_post.glb",
+  "height_m": 4.2,
+  "sink_m": 0.05,
+  "yaw_deg": 90.0,
+  "lantern_local": [-0.38, 0.17, 0.0],
+  "glow_colour": "#ffc77a",
+  "glow_energy": 2.4,
+  "light_colour": "#ffc77a",
+  "light_energy": 3.0,
+  "light_range_m": 14.0
+}

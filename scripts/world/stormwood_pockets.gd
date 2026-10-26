@@ -12,6 +12,8 @@ const WORLD_PATH := "res://data/config/stormwood_world.json"
 const SURFACE_PATH := "res://data/config/stormwood_road_surface.json"
 const TERRAIN_PATH := "res://data/config/terrain_stormwood.json"
 const FRAME := preload("res://scripts/world/stormwood_pocket_frame.gd")
+const PATH_POSTS_PATH := "res://data/config/stormwood_path_posts.json"
+const LANTERN_POOLS := preload("res://scripts/world/stormwood_lantern_pools.gd")
 const TRUNKS: Array[String] = [
 	"res://assets/environment/stylized_nature/DeadTree_1.gltf",
 	"res://assets/environment/stylized_nature/DeadTree_2.gltf",
@@ -329,6 +331,9 @@ func _mouth_lure(world: Node3D, body: StaticBody3D, pocket: Dictionary, cfg: Dic
 	var junctions := spur_posts(pocket, cfg, routes)
 	if not junctions.is_empty():
 		var style := junction_style(cfg, pocket)
+		var path_posts: Variant = JSON.parse_string(FileAccess.get_file_as_string(PATH_POSTS_PATH)) if FileAccess.file_exists(PATH_POSTS_PATH) else null
+		if path_posts is Dictionary and bool((path_posts as Dictionary).get("enabled", false)):
+			style["meshy_post"] = path_posts
 		var junction_materials := _lamp_materials(style) if show_models else {}
 		for index in junctions.size():
 			var suffix := "" if index == 0 else str(index + 1)
@@ -508,6 +513,19 @@ func _lamp_post(world: Node3D, body: StaticBody3D, at: Vector2, facing: Vector2,
 	# Local +Z (the lantern's arm) points along `facing`.
 	holder.rotation.y = yaw
 	body.add_child(holder)
+	# r39 (stormwood_path_posts.json): the junction lamps take the Meshy
+	# Stormwood lantern post with its warm pane glow, as at the Lantern Pools,
+	# in place of the pale box post, kit wall lantern and flame sphere. The
+	# post collider above is unchanged.
+	var meshy: Dictionary = lure.get("meshy_post", {})
+	if not meshy.is_empty() and LANTERN_POOLS._hero_lantern(holder, meshy, meshy):
+		_draw_range(holder, draw)
+		if not draw.is_empty():
+			for lamp: OmniLight3D in holder.find_children("*", "OmniLight3D", true, false):
+				lamp.distance_fade_enabled = true
+				lamp.distance_fade_begin = float(draw.lights_m) - float(draw.lights_fade_m)
+				lamp.distance_fade_length = float(draw.lights_fade_m)
+		return
 	var post := MeshInstance3D.new()
 	post.name = "Post"
 	# Round 4 (judge: the mouth lamps' pale posts read as planks nailed to the
