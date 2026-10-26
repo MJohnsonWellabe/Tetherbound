@@ -91,7 +91,8 @@
       "offset_m": [0.0, -0.05, 0.0]
     },
     "storm_view": {
-      "enabled": false,
+      "enabled": true,
+      "_why_on": "GPU SW16 (tb/gpu-pass fcf26c7f, ralph/reports/GPU-PASS/F41-0/SW16-ashfoot-m36b-0a633e222/VERDICT.md): m36b (seated + firelit + storm view) interior 5.83 -> 6.96 (+1.13) at Medium and High; storm-window defect PRESENT 3/3 -> PARTIAL 2 / FIXED 1, roof-apex clipping FIXED 3/3; outside level. One Medium device loss (TDR) before any Ashfoot frame; the re-run was clean 200/200.",
       "_candidate": "r36 Ashfoot storm view (OFF until judged; needs storm_finish and window_pane on). r35 judges x3: 'no sky, rain or lightning through the window, only a tint'. A storm card 3 m outside the east window, facing the room only (back faces culled): storm sky over a dark treeline, drifting cloud, rain, and the surge's own flash lighting the cloud; sky, cloud and rain per phase. The pane goes lighter so the view shows through.",
       "distance_m": 3.0,
       "size_m": [9.0, 6.0],
