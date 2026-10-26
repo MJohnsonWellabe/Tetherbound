@@ -1,5 +1,24 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (26 Oct, CLOSE-OUT)
+
+- **GPU READY (CLOSE-OUT) tb/creatures-land da816e0004132a75ca874f92a293e6b617f1ffaf: one shared rim + one faint settle rule.**
+  - **Rim:** `creatures_visual.json` field_rim_default 0.15. Every species without its own `placeholder.field_rim` now wears it: Ripplet, Stormtrail, Paddlenewt, Cindercub, Mudsnout, Trailpup and Duskhush; Tanglevolt drops its explicit 0.
+    - Rarity tiers add on top (cap 0.45), so common < uncommon < rare < alpha 0.65 still holds.
+    - `smoke_art`'s alpha and tier checks now take the shared rim as the baseline instead of zero. Same invariant, new baseline per your direction; the test is not weakened.
+  - **Faint settle:** after a combat faint clip ends, a posed whole body floating above the floor is lowered onto it. It moves the visual node only and is undone on revive, the next faint or a model swap. Bed rest is untouched.
+  - **Judge on GPU against main.** Species: Ripplet, Stormtrail, Paddlenewt, Cindercub, Mudsnout, Trailpup, Duskhush, Tanglevolt, plus a few already-passing controls (Galecrest, Stormursa) to catch over-rim.
+  - **No CPU batch:** llvmpipe draws no rim and the settle fires on none of the captured species; pixel diffs ≤ 0.30 everywhere (`close-1024/co1/VERDICT.md`).
+- **Your item 2 (faint collapse) is NOT solved by a shared rule.** I tried two and rejected both on CPU (sheet in co1):
+  - A roll-onto-side for faints taller than 0.6 of standing height rolled correct sideways faints belly-up: Riverdrake, Burrowback, Torrentoad, Brooktail, Stormursa. A box-height test cannot tell an upright faint from a sideways one with raised legs or a wide splayed body.
+  - Two-way grounding lifted sunk collapses (Mosshell, Burrowback, Mirejaw, Galecrest) into standing reads, so the settle is lower-only and is a guard against floating faints only.
+  - The listed faints stay per-species recipe work. QUESTION: may I take them as per-species f36 faint recipes next, in your list order (Torrentoad, Burrowback, Mosshell, Mirejaw, Brooktail, Riverdrake, Tanglevolt), each judged on CPU since poses do show there?
+- **GPU READY tb/creatures-land c6941e683023e9344709dfe1ef587c69fdc9a813 (= da816e00 + one commit): Tanglevolt arcs.**
+  - The painted arcs are already 1-2 px wide; a 1 px erosion would delete 83% of them. So instead: crisper mask edge (soften 1.0 -> 0.4), core mixed halfway to white-violet #EEE4FF, emission strength 3.0 (KHR_materials_emissive_strength; imports as emission_energy_multiplier 3.0) for a tight bloom on the lines only.
+  - Judge on GPU High, day and night, against da816e00 so the arcs are isolated from the rim.
+- **Staticub regression check:** nothing on main touched Staticub's model, texture or species entry after the 21 Oct regrade (a4ea89a7); later commits only slimmed unrelated files and restored references. I can't see the 8.10 batch from here. If it predates a4ea89a7 or the current stage/camera, the drop is a judging-setup difference, not a dimmed asset. Its arc emission (cecef9776) is only on tb/creatures-land, not main. Suggest the GPU puts the 8.10 frames and today's main frames side by side in one batch.
+- tb/creatures-land head 5db2963fe434b094a27fd7a6dc4950b84d574447 (co1 evidence on top of c6941e68).
+
 ## TO COORDINATOR (26 Oct, dog3 spine ridge judged)
 
 - **dog3 spine ridge (your yes): ties r1, reverted. No new READY.**
