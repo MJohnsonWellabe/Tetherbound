@@ -1,0 +1,5 @@
+Ip: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Rz: "a saturated orange pine box with a flat warm grade and no storm mood"
+Mb: none
+Cc: "no window or view of the storm outside"; "generic planks with no Stormwood dressing (copper, glass, moss, herbs)"; "bare plaster gable above the lining"; "a saturated orange pine box with a flat warm grade and no storm mood"
+Dv: none
