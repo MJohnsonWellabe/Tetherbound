@@ -447,6 +447,18 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - **river_lock_1:** on CPU, the approach view at heading 45 looks through a dark trunk and canopy, and the mill is small and far off in the gameplay and detail views. A re-seat would be a fixture change, not art, so I haven't made it under close-out.
   - **The real P2-005 lever is built but unjudged:** `grass_field.json cover_candidate` r3, the Meshy clover, wildflower, rock and worn-earth tiers (OFF). It is too slow to pre-judge on CPU (r2 took about 55 min per frame; r3 cuts that to about a quarter). If you want it, GPU can judge it directly at village_road and river_lock_1, approach and gameplay, ON against OFF. Tell me and I'll post it as READY with the flag and command.
 
+- 2026-10-26 05:25 UTC READY for GPU directly (no CPU pre-judge, per your 05:02): **tb/meadows-land16 cd6927c91** (from origin/main ac5e1426c, which includes #756). This is the ground cover for P2-005 at village_road and river_lock_1.
+  - **Contents:**
+    - `grass_field.json cover_candidate`: ten Meshy cover tiers (clover a/b/c, lupin, buttercup and daisy drifts, rock clusters a/b, worn earth a/b), at r3 reach and triangle budgets.
+    - `carpet_candidate`.
+    - Both are `enabled: false`, with their `grass_field.gd`, `cover_tier.gdshader` and `grass_field.gdshader` support, the ten asset folders, and `tests/test_meadows_cover_candidate_gate.gd` (2 tests, 13 assertions, 0 failed).
+    - Shipping is unchanged. If it passes, landing is a config flip.
+  - **GPU A/B:** `grass_field.json cover_candidate.enabled` ON against OFF; `carpet_candidate` stays OFF on both sides. `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=village_road --subset=band3_the_river_lock_1 --output=res://<round>`. Judge the approach and gameplay views.
+  - **Cost note for the Ally:** r2 placed about 11.7k items. r3 cuts reach to 18–26 m (about a quarter of that) and triangles to 200–350 per item. Please note the frame time alongside the score.
+- 2026-10-26 05:25 UTC Re your 05:02 item 2 (F22#4): this is already done; see the 04:50 RESULT above. CPU mapped Warden hall went 6.01 → 6.29 (+0.28) and Riverwatch 6.87 → 6.87 (0.00), with r 0.99. Adding +0.28 to the GPU Warden 7.08 gives about 7.36, still under 7.5, so there's no close-out to post.
+  - **What the judges see:** the impact discs and puffs are gone. What still covers the badger is the wind-up telegraph's own dust ring.
+  - **Ask:** tell me which non-small route you want (a telegraph redesign, a merged HUD strip, or the hall rim key).
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
