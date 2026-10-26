@@ -104,10 +104,8 @@ def _blend(rgb, colour, alpha):
     return rgb * (1.0 - a) + np.asarray(colour)[None, None, :] * a
 
 
-def plate_mask(rgb):
-    """The stone plates (blue-grey rims and their dark interiors) and the cool
-    texels, in UV space. Shared with flatten_plates.py, which flattens the mesh
-    under the same plates."""
+def grade(rgb):
+    rng = np.random.default_rng(SEED)
     h, s, v = T._hsv(rgb)
     cool = (h >= PLATE_HUE[0]) & (h < PLATE_HUE[1]) & (s >= PLATE_SAT_MIN) & (v <= PLATE_VAL_MAX)
     mean = nd.uniform_filter(v, 7)
@@ -122,13 +120,6 @@ def plate_mask(rgb):
     labels, count = nd.label(plate)
     sizes = nd.sum(plate, labels, range(1, count + 1))
     plate = np.isin(labels, 1 + np.nonzero(sizes >= PLATE_MIN_PX)[0])
-    return plate, cool
-
-
-def grade(rgb):
-    rng = np.random.default_rng(SEED)
-    h, s, v = T._hsv(rgb)
-    plate, cool = plate_mask(rgb)
     coat = (h < 50.0) & (s >= COAT_SAT_MIN) & ~plate
     out_h, out_s, out_v = h.copy(), s.copy(), v.copy()
     out_h[coat] = COAT_HUE + (h[coat] - 27.0) * COAT_HUE_SPREAD
