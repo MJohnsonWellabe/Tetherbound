@@ -8,12 +8,15 @@
     "heading_deg": 37.0,
     "half_m": [6.0, 5.5],
     "_why_half_m": "r41 by eye: at 6 x 6 m the catalogue camera (5.2 m behind the trainer) hung off the deck edge in the side views and the rails crossed the frame. 12 x 11 m keeps every catalogue camera over the deck.",
-    "height_m": 2.6,
-    "ramp_m": 7.0,
+    "height_m": 3.5,
+    "_why_height_r2": "r41 judges x3: no drop reads from a 2.6 m deck on flat ground. 3.5 m with braced posts (the F41 capture finds the deck floor only within 4 m of the ground).",
+    "ramp_m": 9.5,
     "ramp_width_m": 2.2,
     "rail_height_m": 1.05,
-    "wood_tint": "#a8a299",
-    "weathering": 0.8,
+    "wood_tint": "#8f8a80",
+    "weathering": 0.95,
+    "brace_m": 0.16,
+    "moss_colour": "#2f3d2a",
     "frame_colour": "#3f3226",
     "lantern_post": {"model": "res://assets/props/meshy-1024/stormwood_lantern_post/stormwood_lantern_post.glb", "at": [5.4, 0.0, 4.9], "turn_deg": 0.0, "height_m": 2.6, "sink_m": 0.0, "yaw_deg": 90.0, "lantern_local": [-0.38, 0.17, 0.0], "glow_colour": "#ffc77a", "glow_energy": 1.8, "light_colour": "#ffc77a", "light_energy": 1.6, "light_range_m": 8.0}
   },
@@ -27,6 +30,8 @@
     "width_m": 560.0,
     "yaw_deg": 0.0,
     "visible_from_m": 300.0,
+    "tint": "#7d7896",
+    "_why_tint": "r41 judges x3: bleached near-white, pasted on; a blue-violet storm multiplier sits it in the haze.",
     "fade_m": 40.0
   }
 }

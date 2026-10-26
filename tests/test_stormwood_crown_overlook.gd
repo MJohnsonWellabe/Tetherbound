@@ -44,9 +44,11 @@ func test_deck_clears_route_corridors_and_ramps_to_the_path() -> void:
 
 func test_colliders_build_on_a_simulation_shell() -> void:
 	var world := FixtureWorld.new()
-	var root := OVERLOOK.build_deck(world, _deck(), false)
+	var cfg := _deck()
+	var root := OVERLOOK.build_deck(world, cfg, false)
 	var body := root.find_child("CrownOverlookDeckBody", true, false) as StaticBody3D
 	assert_true(body != null and body.get_child_count() >= 6, "floor, ramp, rails and posts collide")
 	assert_eq(root.find_children("*", "MeshInstance3D", true, false).size(), 0, "nothing drawn on a simulation shell")
-	assert_true(absf(root.position.y - 50.6) < 0.01, "deck floor 2.6 m above the ground")
+	assert_true(absf(root.position.y - (48.0 + float(cfg.height_m))) < 0.01, "deck floor height_m above the ground")
+	assert_true(float(cfg.height_m) < 4.0, "the F41 capture finds the deck floor (it probes from 4 m above the ground)")
 	world.free()
