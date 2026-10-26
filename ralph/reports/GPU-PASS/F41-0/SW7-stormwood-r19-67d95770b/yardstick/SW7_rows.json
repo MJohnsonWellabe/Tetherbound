@@ -1,0 +1,494 @@
+[
+ {
+  "batch": 1,
+  "code": "Pt",
+  "label": "SW7 dynamo_the_stormheart_tree-calm High cand|ship",
+  "side": "SW7-dynamo_the_stormheart_tree-calm-ship-High",
+  "mapped": 3.9,
+  "judges": [
+   3.46,
+   4.24,
+   3.98
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Pt",
+  "label": "SW7 dynamo_the_stormheart_tree-calm High cand|ship",
+  "side": "SW7-dynamo_the_stormheart_tree-calm-cand-High",
+  "mapped": 4.97,
+  "judges": [
+   4.76,
+   5.02,
+   5.15
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Up",
+  "label": "SW7 dynamo_the_stormheart_tree-fading Medium cand|ship",
+  "side": "SW7-dynamo_the_stormheart_tree-fading-cand-Medium",
+  "mapped": 4.63,
+  "judges": [
+   4.5,
+   4.89,
+   4.5
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Up",
+  "label": "SW7 dynamo_the_stormheart_tree-fading Medium cand|ship",
+  "side": "SW7-dynamo_the_stormheart_tree-fading-ship-Medium",
+  "mapped": 3.98,
+  "judges": [
+   3.72,
+   4.5,
+   3.72
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Oj",
+  "label": "SW7 dynamo_the_stormheart_tree-fading High cand|ship",
+  "side": "SW7-dynamo_the_stormheart_tree-fading-cand-High",
+  "mapped": 4.41,
+  "judges": [
+   4.37,
+   4.63,
+   4.24
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Oj",
+  "label": "SW7 dynamo_the_stormheart_tree-fading High cand|ship",
+  "side": "SW7-dynamo_the_stormheart_tree-fading-ship-High",
+  "mapped": 4.15,
+  "judges": [
+   3.98,
+   4.76,
+   3.72
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Js",
+  "label": "SW7 hollow_crown_the_crown_heartstone High cand|ship",
+  "side": "SW7-hollow_crown_the_crown_heartstone-ship-High",
+  "mapped": 4.16,
+  "judges": [
+   4.44,
+   3.84,
+   4.2
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Js",
+  "label": "SW7 hollow_crown_the_crown_heartstone High cand|ship",
+  "side": "SW7-hollow_crown_the_crown_heartstone-cand-High",
+  "mapped": 5.48,
+  "judges": [
+   5.64,
+   5.4,
+   5.4
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Uh",
+  "label": "SW7 hollow_crown_the_crown_heartstone Medium cand|ship",
+  "side": "SW7-hollow_crown_the_crown_heartstone-ship-Medium",
+  "mapped": 4.16,
+  "judges": [
+   4.44,
+   3.84,
+   4.2
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Uh",
+  "label": "SW7 hollow_crown_the_crown_heartstone Medium cand|ship",
+  "side": "SW7-hollow_crown_the_crown_heartstone-cand-Medium",
+  "mapped": 5.48,
+  "judges": [
+   5.64,
+   5.4,
+   5.4
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Nd",
+  "label": "SW7 dynamo_the_stormheart_tree-calm Medium cand|ship",
+  "side": "SW7-dynamo_the_stormheart_tree-calm-cand-Medium",
+  "mapped": 5.44,
+  "judges": [
+   5.4,
+   5.64,
+   5.28
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Nd",
+  "label": "SW7 dynamo_the_stormheart_tree-calm Medium cand|ship",
+  "side": "SW7-dynamo_the_stormheart_tree-calm-ship-Medium",
+  "mapped": 4.2,
+  "judges": [
+   4.2,
+   4.2,
+   4.2
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+   }
+  ]
+ }
+]

@@ -1,0 +1,160 @@
+{
+ "sets": {
+  "Pc": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder with readable face, eyes and a natural green/brown palette carries it, although he is more Pixar-cartoon than the naturalistic creature bar and is only shown on a void."
+  },
+  "Pt": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The banners, lanterns and veined bark on B start to say Stormheart, but the flat grass-carpet floor, flat lighting with no storm mood and a free-standing white light tube sink both sides well below Palworld finish and Valheim-class atmosphere."
+  },
+  "Up": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's white-violet lightning strike is the one on-brief weather moment, but cotton-ball fog sprites at eye height and a flat purple wash eat the scene instead of building Valheim-class depth."
+  },
+  "Oj": {
+   "A": {
+    "bar_a": 4.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The lightning bolt in B v04 and the banner ring in A help, but blobby fog puffs, an untextured or barely textured tree interior and a carpet floor keep it from Palworld finish or Valheim-class storm atmosphere."
+  },
+  "Wc": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The shaggy white fleece, heavy curled horns and blue storm accents read at Palworld creature finish and match the style bar; only the faint poses weaken it (B's faint flips the body into the air above its shadow)."
+  },
+  "Bq": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, diagonal brace, plank cap and stone footing make it read as a built wall, but a single thin, flat-shaded panel standing alone in the field next to a faceted grey rock is still below Palworld base-building finish."
+  },
+  "Xj": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's panel has large, wrapped, legible recipes and gold ingredient counts in the right blue-grey style, but the action prompts are still small generic key icons rather than bold controller glyphs, and the murky dark scene behind it is far from Palworld's bright HUD-over-world read."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood arena floor and ring: replace the uniform grass carpet and plain plank walkway with authored soil, moss and root transitions, black pools, copper and glass accents, walkway supports, and storm-phase key lighting with rim light on the trainer",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormheart tree hero asset seen from the production cameras: a visible split trunk with carved, veined bark, branches and crown, and a lightning core built into the trunk instead of a free-standing white light tube on the ground",
+   "kind": "new_art"
+  },
+  {
+   "change": "Replace the eye-height cotton-ball fog sprites and full-frame purple wash with layered ground mist and distance haze, so the fading and building phases add depth instead of hiding the trainer and the landmark",
+   "kind": "scene"
+  }
+ ]
+}

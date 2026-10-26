@@ -1,0 +1,160 @@
+{
+ "sets": {
+  "Iy": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's panel type scale and hierarchy approach Palworld HUD clarity, but the flat, murky rainy field behind it has none of the Valheim-class light or atmosphere."
+  },
+  "Dz": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Lush grass and sky carry the Meadows mood, but a flat painted mountain card, a grey faceted placeholder boulder and an isolated wall panel with no settlement around it sink the finish."
+  },
+  "Js": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky and white lightning arcs give real weather mood, but an empty flat dark-green grass plain with a few lone trees has nowhere near Palworld density or depth."
+  },
+  "Vi": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear blue-and-orange finned silhouette with a readable head and spotted surface sits at Palworld creature finish, though it stands only about level with the trainer and is smoother than the owner's naturalistic bar."
+  },
+  "Dc": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, well-modelled elder villager with an expressive face, clean silhouette and an earthy green-brown palette that matches the key art's people."
+  },
+  "Uh": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Storm sky and lightning sell the weather, but the ground is one flat grass carpet with sparse lone trees and the landmark is absent from half the cameras."
+  },
+  "Nd": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's blue lightning banners and warm lantern ring echo the board's interior, but a dim, flat-lit dirt floor and a blank white slab where the crackling lightning core should be sink both sides."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Break the Stormwood ground carpet into authored groves, moss/soil/rock transitions, black pools and dense midground tree clusters so the hollow-crown plain and the Stormheart floor stop reading as one flat dark-green grass sheet (Js, Uh, Nd).",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the plain white light column in the Stormheart interior with a real lightning core (glowing crystal heart, branching white-violet bolts, carved, vein-lit bark), and keep A's blue banners and lantern ring (Nd).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Frame the crown heartstone in every production camera and seat it in a cratered, rooted base with a hero rim light, and retire the edge-of-frame foreground boulder the v01 camera sits against (Js, Uh).",
+   "kind": "scene"
+  }
+ ]
+}

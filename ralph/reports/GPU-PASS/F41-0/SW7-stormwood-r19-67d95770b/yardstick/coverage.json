@@ -1,0 +1,74 @@
+[
+    {
+        "stand":  "dynamo_the_stormheart_tree-calm",
+        "preset":  "Medium",
+        "judged":  [
+                       "dynamo_the_stormheart_tree_v01_calm",
+                       "dynamo_the_stormheart_tree_v02_calm",
+                       "dynamo_the_stormheart_tree_v03_calm",
+                       "dynamo_the_stormheart_tree_v04_calm",
+                       "dynamo_the_stormheart_tree_v05_calm",
+                       "dynamo_the_stormheart_tree_v06_calm"
+                   ]
+    },
+    {
+        "stand":  "dynamo_the_stormheart_tree-fading",
+        "preset":  "Medium",
+        "judged":  [
+                       "dynamo_the_stormheart_tree_v01_fading",
+                       "dynamo_the_stormheart_tree_v02_fading",
+                       "dynamo_the_stormheart_tree_v03_fading",
+                       "dynamo_the_stormheart_tree_v04_fading",
+                       "dynamo_the_stormheart_tree_v05_fading",
+                       "dynamo_the_stormheart_tree_v06_fading"
+                   ]
+    },
+    {
+        "stand":  "hollow_crown_the_crown_heartstone",
+        "preset":  "Medium",
+        "judged":  [
+                       "hollow_crown_the_crown_heartstone_v01_calm",
+                       "hollow_crown_the_crown_heartstone_v02_building",
+                       "hollow_crown_the_crown_heartstone_v03_break",
+                       "hollow_crown_the_crown_heartstone_v01_fading",
+                       "hollow_crown_the_crown_heartstone_v02_break",
+                       "hollow_crown_the_crown_heartstone_v03_calm"
+                   ]
+    },
+    {
+        "stand":  "dynamo_the_stormheart_tree-calm",
+        "preset":  "High",
+        "judged":  [
+                       "dynamo_the_stormheart_tree_v01_calm",
+                       "dynamo_the_stormheart_tree_v02_calm",
+                       "dynamo_the_stormheart_tree_v03_calm",
+                       "dynamo_the_stormheart_tree_v04_calm",
+                       "dynamo_the_stormheart_tree_v05_calm",
+                       "dynamo_the_stormheart_tree_v06_calm"
+                   ]
+    },
+    {
+        "stand":  "dynamo_the_stormheart_tree-fading",
+        "preset":  "High",
+        "judged":  [
+                       "dynamo_the_stormheart_tree_v01_fading",
+                       "dynamo_the_stormheart_tree_v02_fading",
+                       "dynamo_the_stormheart_tree_v03_fading",
+                       "dynamo_the_stormheart_tree_v04_fading",
+                       "dynamo_the_stormheart_tree_v05_fading",
+                       "dynamo_the_stormheart_tree_v06_fading"
+                   ]
+    },
+    {
+        "stand":  "hollow_crown_the_crown_heartstone",
+        "preset":  "High",
+        "judged":  [
+                       "hollow_crown_the_crown_heartstone_v01_calm",
+                       "hollow_crown_the_crown_heartstone_v02_building",
+                       "hollow_crown_the_crown_heartstone_v03_break",
+                       "hollow_crown_the_crown_heartstone_v01_fading",
+                       "hollow_crown_the_crown_heartstone_v02_break",
+                       "hollow_crown_the_crown_heartstone_v03_calm"
+                   ]
+    }
+]

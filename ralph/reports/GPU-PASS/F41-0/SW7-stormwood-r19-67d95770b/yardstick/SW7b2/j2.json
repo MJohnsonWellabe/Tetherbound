@@ -1,0 +1,160 @@
+{
+ "sets": {
+  "Iy": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger wrapped recipe rows read at a glance, but the grey selection, muted glyph-only hints with no teal accent and the murky, unlit world behind the panel sit well below Palworld's HUD finish."
+  },
+  "Dz": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's braced timber frame, plank cap and stone footing read as a built wall, but it is still a lone thin panel with flat cream infill beside a faceted grey rock, and B is a blank white card."
+  },
+  "Js": {
+   "A": {
+    "bar_a": 3.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky and white-violet lightning carry the mood, but an empty flat grass carpet to a bare horizon with a handful of trees sinks it against Palworld density and Valheim depth."
+  },
+  "Vi": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clear blue-and-fin silhouette that clears the ruler, but glossy toy-like surfaces with no naturalistic scale detail, a hit react identical to standing and faint-end poses that break the read (A crumples into a knot, B goes grey-beige) keep it below the owner bar."
+  },
+  "Dc": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable elder with expressive eyes, clean silhouette and a natural green-brown palette that matches the key art's settlement, at a finish that would sit beside Palworld NPCs."
+  },
+  "Uh": {
+   "A": {
+    "bar_a": 3.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "PARTIAL",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the crown heartstone is missing from view or reads as a plain primitive rather than a hero landmark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's glowing crystal monolith in a mossy rock base finally gives a landmark, but the uniform dark grass plain, flat horizon and fogless mid-tone light sink both sides."
+  },
+  "Nd": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's lantern-lit walkway ring and blue lightning banners echo the Stormheart board, but the core is a flat white glass column, every frame is the same calm phase and the floor is a flat grass-and-dirt carpet; B loses the banners, lanterns and core and goes murky brown."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Break the Stormwood ground carpet into authored groves, edges and clearings: soil and rock transitions, moss banks, black pools, root clusters and layered tree-line silhouettes with depth fog instead of an empty flat grass plain to a bare horizon (Js, Uh, Nd floor).",
+   "kind": "scene"
+  },
+  {
+   "change": "Ship hero landmark art: keep B's crystal heartstone in a rock-and-root base and frame it in every production camera, and replace the Stormheart's flat white glass column with a carved split-trunk core carrying real white-violet lightning, with banners and lanterns kept.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Grade Stormwood with storm-phase lighting: lightning-flash key light and rim light on landmarks and the trainer, violet fog layers for depth and darker values in the calm phase, so the frames stop reading as one murky mid-tone.",
+   "kind": "scene"
+  }
+ ]
+}

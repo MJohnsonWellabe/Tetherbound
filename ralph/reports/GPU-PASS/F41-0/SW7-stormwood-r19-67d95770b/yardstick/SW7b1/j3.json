@@ -1,0 +1,160 @@
+{
+ "sets": {
+  "Pc": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, appealing elder-villager face with readable eyes, silver hair and a green-and-leather outfit sits at Palworld's human finish, but the full body is small and flatly lit."
+  },
+  "Pt": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's textured bark ring, blue bolt banners and lanterns start to build the Stormheart, but the uniform grass carpet, smooth dirt path, rigid white light columns and murky dusk light read as a prototype, not Palworld or Valheim finish."
+  },
+  "Up": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fading storm reads only as a row of identical lilac billboard puffs and a flat white crack web on the ground (B v01). B v04's bolt is the one real weather moment."
+  },
+  "Oj": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "F41 gap 2: the Stormheart tree's bark, branches, crown and core read below the authored reference (smooth, sparse or primitive)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's flat white crack-web decals (v04/v05) and rigid light columns, plus B's smooth untextured walkway and camera-filling blurry puffs, sink both sides below a shipping game's weather and light."
+  },
+  "Wc": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra's naturalistic white fleece, dark ram horns and blue charge glands match the owner's style bar and clearly outsize the trainer, but B's faint poses float upside-down above their shadows."
+  },
+  "Bq": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber-framed, braced wall with a cap board and stone footing reads as built, but it stands alone beside a flat-grey faceted boulder on an even grass carpet, short of Palworld's base-building finish."
+  },
+  "Xj": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger blue-grey panel with wrapped recipe lines and gold ingredient counts is readable, but the plain pale Craft/Leave hints with tiny glyphs and the murky backdrop fall short of Palworld's HUD polish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood ground and storm FX: break the uniform grass carpet and smooth dirt path with moss, soil, root and rock blends and black pools; replace the rigid white light columns, flat white crack-web decals and lilac billboard puffs with real lightning strikes that hit something, plus volumetric purple storm fog and light shafts.",
+   "kind": "scene"
+  },
+  {
+   "change": "A Stormheart hero tree with authored bark, a visible branching crown and a glowing split core framed in the production cameras, applied consistently across every capture, not just the textured ring walkway and banners some captures show.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Make placed pieces and props belong: give walls textured infill and attach them to neighbouring pieces, replace the flat-grey faceted boulder, ground creature faint poses so they rest on the stage, and give craft-panel action hints a teal/cyan accent with controller glyphs.",
+   "kind": "scene"
+  }
+ ]
+}
