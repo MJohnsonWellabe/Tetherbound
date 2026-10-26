@@ -104,7 +104,7 @@
     "vein_colour": "#9fd0ff",
     "vein_energy": 1.1,
     "core_column": {
-      "enabled": true,
+      "enabled": false,
       "centre": [0.0, 5.0],
       "base_m": 0.0,
       "top_m": 149.5,
@@ -121,7 +121,7 @@
       "light_range_m": 30.0
     },
     "heart_cleft": {
-      "enabled": false,
+      "enabled": true,
       "_candidate": "SW8 bundle (OFF until GPU-judged). GPU SW7: all 12 Stormheart calls read the core column as a free-standing rigid white light tube through the walkway line; the off arm's v03 shows a white sky strip through the north split. The core moves into the trunk: root-wall bark closes the north split deep in the wall, a crystal heart sits at its foot and a jagged vein-lit seam climbs from it with tapering branching bolts across the cleft bark. With this ON, core_column.enabled is false. Natural glow; cools on release. Presentation only, outside the 44 m arena.",
       "angle_deg": 90.0,
       "back_radius_m": 54.0,
