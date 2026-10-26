@@ -119,7 +119,11 @@ func _build_lining() -> void:
 	# Back and side walls, full length.
 	_lining_panel("LiningBack", Vector3(0.0, y, -d), Vector2(w * 2.0, height), 0.0, wood, thick)
 	_lining_panel("LiningWest", Vector3(-w, y, 0.0), Vector2(d * 2.0, height), PI * 0.5, wood, thick)
-	_lining_panel("LiningEast", Vector3(w, y, 0.0), Vector2(d * 2.0, height), -PI * 0.5, wood, thick)
+	var storm: Dictionary = cfg.get("storm_finish", {})
+	if bool(storm.get("enabled", false)):
+		_storm_finish(storm, wood, w, d, thick)
+	else:
+		_lining_panel("LiningEast", Vector3(w, y, 0.0), Vector2(d * 2.0, height), -PI * 0.5, wood, thick)
 	# Front wall either side of the door, which stays open.
 	var door_left := _door_x - _door_w * 0.5
 	var door_right := _door_x + _door_w * 0.5
@@ -171,6 +175,154 @@ func _build_hearth(cfg: Dictionary) -> void:
 	fire.omni_range = float(cfg.get("fire_range_m", 5.5))
 	fire.shadow_enabled = true
 	add_child(fire)
+
+
+## GPU SW6 (25 Oct, Ashfoot 5.82): "no window or view of the storm, so the
+## four phases look the same; generic planks with no Stormwood copper, glass
+## or moss; the upper gable is still plaster". The lining rises to the wall
+## top with a timber-framed opening on the east window (the ranger station's
+## wide window, open shutters), so the real storm outside shows; the gable
+## triangles are lined; a cool storm fill at the window offsets the warm
+## hearth; copper pot, bucket and lantern, herb bundles under the ridge and
+## moss in the corners. Presentation only: the kit pieces keep no colliders
+## and stand clear of the floor lane.
+func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: float) -> void:
+	var top := float(cfg.get("wall_top_m", 3.0))
+	var win: Array = cfg.get("east_window", [-0.8, 0.8, 0.94, 2.52])
+	var z0 := float(win[0])
+	var z1 := float(win[1])
+	var y0 := float(win[2])
+	var y1 := float(win[3])
+	var east := -PI * 0.5
+	# East wall around the opening: two full-height side strips, sill and head.
+	_lining_panel("LiningEastBack", Vector3(w, (FLOOR_TOP + top) * 0.5, (-d + z0) * 0.5), Vector2(z0 + d, top - FLOOR_TOP), east, wood, thick)
+	_lining_panel("LiningEastFront", Vector3(w, (FLOOR_TOP + top) * 0.5, (z1 + d) * 0.5), Vector2(d - z1, top - FLOOR_TOP), east, wood, thick)
+	_lining_panel("LiningEastSill", Vector3(w, (FLOOR_TOP + y0) * 0.5, (z0 + z1) * 0.5), Vector2(z1 - z0, y0 - FLOOR_TOP), east, wood, thick)
+	_lining_panel("LiningEastHead", Vector3(w, (y1 + top) * 0.5, (z0 + z1) * 0.5), Vector2(z1 - z0, top - y1), east, wood, thick)
+	# Back and side upper bands from the old lining top to the wall top.
+	var old_top := FLOOR_TOP + float(cfg.get("old_lining_top_m", 2.45))
+	var band := top - old_top
+	if band > 0.01:
+		_lining_panel("LiningBackUpper", Vector3(0.0, old_top + band * 0.5, -d), Vector2(w * 2.0, band), 0.0, wood, thick)
+		_lining_panel("LiningWestUpper", Vector3(-w, old_top + band * 0.5, 0.0), Vector2(d * 2.0, band), PI * 0.5, wood, thick)
+		_lining_panel("LiningFrontUpper", Vector3(0.0, old_top + band * 0.5, d), Vector2(w * 2.0, band), PI, wood, thick)
+	# Window frame: dark timber jambs, head, sill board and a centre mullion.
+	var timber := StandardMaterial3D.new()
+	timber.albedo_color = Color(str(cfg.get("frame_colour", "#3f3226")))
+	timber.roughness = 0.85
+	var fx := w - 0.04
+	var t := 0.11
+	_visual_box("FrameHead", Vector3(t, t, z1 - z0 + t * 2.0), Vector3(fx, y1 + t * 0.5, (z0 + z1) * 0.5), timber)
+	_visual_box("FrameSill", Vector3(t * 1.8, t * 0.7, z1 - z0 + t * 2.4), Vector3(fx - 0.04, y0 - t * 0.35, (z0 + z1) * 0.5), timber)
+	_visual_box("FrameJambBack", Vector3(t, y1 - y0, t), Vector3(fx, (y0 + y1) * 0.5, z0 - t * 0.5), timber)
+	_visual_box("FrameJambFront", Vector3(t, y1 - y0, t), Vector3(fx, (y0 + y1) * 0.5, z1 + t * 0.5), timber)
+	_visual_box("FrameMullion", Vector3(t * 0.6, y1 - y0, t * 0.6), Vector3(fx, (y0 + y1) * 0.5, (z0 + z1) * 0.5), timber)
+	# Gables: lined triangles from the wall top to just under the ridge.
+	var apex := float(cfg.get("gable_apex_m", 5.1))
+	for side: float in [-1.0, 1.0]:
+		_gable_panel("Gable%s" % ("Back" if side < 0.0 else "Front"), side * (d - 0.02), w, top, apex, wood, side)
+	# Cool storm light at the window, a counterweight to the warm hearth.
+	var storm := OmniLight3D.new()
+	storm.name = "StormWindowLight"
+	storm.position = Vector3(w - 0.45, (y0 + y1) * 0.5, (z0 + z1) * 0.5)
+	storm.light_color = Color(str(cfg.get("storm_light_colour", "#8f8ad0")))
+	storm.light_energy = float(cfg.get("storm_light_energy", 0.9))
+	storm.omni_range = float(cfg.get("storm_light_range_m", 4.0))
+	storm.shadow_enabled = false
+	add_child(storm)
+	# Copper: a lantern beside the window, a pot and a bucket by the hearth.
+	var copper := Color(str(cfg.get("copper_tint", "#c08250")))
+	var lantern := _kit("CopperLantern", "Lantern_Wall", Vector3(w - 0.05, FLOOR_TOP + 1.7, z1 + 0.55), -90.0, 0.7)
+	_tint(lantern, copper)
+	var pot := _kit("CopperPot", "Pot_1", Vector3(-0.3, FLOOR_TOP, -d + 0.3), 15.0, 0.55)
+	_tint(pot, copper)
+	var bucket := _kit("CopperBucket", "Bucket_Metal", Vector3(w - 0.22, FLOOR_TOP, -d + 0.9), -20.0, 0.5)
+	_tint(bucket, copper)
+	# Herb bundles hung from a cord under the ridge, clear of head height.
+	var cord_y := float(cfg.get("herb_cord_m", 2.75))
+	var herb := StandardMaterial3D.new()
+	herb.albedo_color = Color(str(cfg.get("herb_colour", "#5d6b3a")))
+	herb.roughness = 0.95
+	var string := StandardMaterial3D.new()
+	string.albedo_color = Color("#6b5a44")
+	_visual_box("HerbCord", Vector3(0.02, 0.02, d * 1.6), Vector3(-0.2, cord_y, 0.0), string)
+	var bundles := int(cfg.get("herb_bundles", 5))
+	for index in bundles:
+		var z := lerpf(-d * 0.7, d * 0.7, (float(index) + 0.5) / float(bundles))
+		var drop := 0.12 + 0.06 * float(index % 2)
+		_visual_box("HerbTie%d" % index, Vector3(0.015, drop, 0.015), Vector3(-0.2, cord_y - drop * 0.5, z), string)
+		var bunch := MeshInstance3D.new()
+		bunch.name = "HerbBundle%d" % index
+		var cone := CylinderMesh.new()
+		cone.top_radius = 0.03
+		cone.bottom_radius = 0.11
+		cone.height = 0.42
+		cone.radial_segments = 8
+		bunch.mesh = cone
+		bunch.material_override = herb
+		bunch.position = Vector3(-0.2, cord_y - drop - 0.21, z)
+		add_child(bunch)
+	# Moss along the wall foot in the corners and under the window.
+	var moss := StandardMaterial3D.new()
+	moss.albedo_color = Color(str(cfg.get("moss_colour", "#3d5530")))
+	moss.roughness = 1.0
+	for spot: Vector3 in [Vector3(-w + 0.12, 0.0, -d + 0.12), Vector3(w - 0.14, 0.0, (z0 + z1) * 0.5), Vector3(w - 0.12, 0.0, -d + 0.15), Vector3(-w + 0.12, 0.0, d - 0.14)]:
+		var clump := MeshInstance3D.new()
+		var sphere := SphereMesh.new()
+		sphere.radius = 0.22
+		sphere.height = 0.14
+		sphere.radial_segments = 10
+		sphere.rings = 4
+		clump.mesh = sphere
+		clump.material_override = moss
+		clump.position = spot + Vector3(0.0, FLOOR_TOP + 0.02, 0.0)
+		clump.scale = Vector3(1.4, 1.0, 0.8)
+		add_child(clump)
+
+
+func _gable_panel(id: String, z: float, half_w: float, base: float, apex: float, material: Material, side: float) -> void:
+	var mesh := ArrayMesh.new()
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	var normal := Vector3(0.0, 0.0, -side)
+	arrays[Mesh.ARRAY_VERTEX] = PackedVector3Array([Vector3(-half_w, base, z), Vector3(half_w, base, z), Vector3(0.0, apex, z)])
+	arrays[Mesh.ARRAY_NORMAL] = PackedVector3Array([normal, normal, normal])
+	arrays[Mesh.ARRAY_TEX_UV] = PackedVector2Array([Vector2(0.0, 1.0), Vector2(1.0, 1.0), Vector2(0.5, 0.0)])
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	var panel := MeshInstance3D.new()
+	panel.name = id
+	panel.mesh = mesh
+	var lined := material.duplicate() as ShaderMaterial
+	lined.set_shader_parameter("uv_metres", Vector2(half_w * 2.0, apex - base))
+	panel.material_override = lined
+	panel.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_DOUBLE_SIDED
+	add_child(panel)
+
+
+func _visual_box(id: String, size: Vector3, at: Vector3, material: Material) -> void:
+	var box := MeshInstance3D.new()
+	box.name = id
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	box.mesh = mesh
+	box.material_override = material
+	box.position = at
+	add_child(box)
+
+
+func _tint(node: Node, tint: Color) -> void:
+	if node == null:
+		return
+	for visual: MeshInstance3D in node.find_children("*", "MeshInstance3D", true, false):
+		for surface in visual.mesh.get_surface_count():
+			var source := visual.get_active_material(surface) as BaseMaterial3D
+			if source == null:
+				continue
+			var tinted := source.duplicate() as BaseMaterial3D
+			tinted.albedo_color = source.albedo_color * tint
+			tinted.metallic = maxf(source.metallic, 0.45)
+			tinted.roughness = minf(source.roughness, 0.5)
+			visual.set_surface_override_material(surface, tinted)
 
 
 func _lining_panel(id: String, at: Vector3, size: Vector2, yaw: float, material: Material, thick: float) -> void:
@@ -250,16 +402,17 @@ func _box(size: Vector3, at: Vector3, colour: Color, solid := true) -> void:
 		add_child(body)
 
 
-func _kit(id: String, model: String, at: Vector3, yaw_deg: float, scale_factor: float) -> void:
+func _kit(id: String, model: String, at: Vector3, yaw_deg: float, scale_factor: float) -> Node3D:
 	var scene := load(KIT % model) as PackedScene
 	if scene == null:
-		return
+		return null
 	var prop := scene.instantiate() as Node3D
 	prop.name = id
 	prop.position = at
 	prop.rotation.y = deg_to_rad(yaw_deg)
 	prop.scale = Vector3.ONE * scale_factor
 	add_child(prop)
+	return prop
 
 
 func _solid(size: Vector3, at: Vector3) -> void:
