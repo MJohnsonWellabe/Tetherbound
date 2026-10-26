@@ -3,7 +3,7 @@
   "scope": "client_presentation",
   "_comment": "P2-039 final source repair: rounded moss, three wet curled-leaf shapes, terrain-conforming wet soil and roots anchored to existing baked trees. Living canopy positions define cover islands and open clearings. Shared field shaders, terrain/control data, harvest identity, collision and actor scale are unchanged. Native matched evidence and Claude judgment remain pending.",
   "ground_zones": {
-    "enabled": false,
+    "enabled": true,
     "scope": "client_presentation",
     "_candidate": "r20 authored ground (OFF until judged). GPU F41#0 gap 1 (25 Oct, PRESENT at every outdoor Stormwood stand): one grass/moss carpet. A world-space zone field (stormwood_ground_zones.gd) turns green terrain into bare dark loam where it runs low and deep moss where it runs high; the grass tufts read the same field (grass_field.gdshader zone_*), thinning out over loam and standing short and dark in moss. Paths, rock and the Glass Sink are untouched (green ground only). Presentation only.",
     "strength": 1.0,
