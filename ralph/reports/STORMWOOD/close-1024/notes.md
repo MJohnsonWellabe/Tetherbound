@@ -2,6 +2,19 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 05:20Z **READY (GPU arm) `tb/stormwood-m30-on` d9014a530de117ad9294ab86ea3f491c4db32fa1**: lane head 72efcf43 plus one config commit (3 lines). Lantern Pools hollow: judge `glowmoss_hollows_the_lantern_pools` (all three views).
+  - **Grove:** 66 storm-canopy trees, the Ash Road layer's own models and tints, 24-62 m round the pools.
+    - Trunk colliders are built on every shell.
+    - Every tree is clear of every route, seat, cluster centre, arch, camp, the shelter and the catalogue cameras (new `tests/test_stormwood_lantern_pools_grove.gd`).
+    - Scatter is baked and fingerprinted, so this is authored, not a dense stand.
+  - **Basins:** the Meshy root-rimmed pool basins, seated so only the slab sinks.
+  - **Glow fungi:** bioluminescent storm fungi on each rim.
+  - **CPU r30** (mapped): 4.40 -> 5.55 (+1.15), with an anchor RMSE caveat of 0.84. Open meadow: PRESENT -> FIXED 3/3. Judges still ask for bigger black pools, real lanterns and a broken floor.
+  - Checks: lantern_pools, stormwood_surge, ground_zones and grass_field, 81 tests, 0 failed.
+- 26 Oct 05:20Z SW8 bugs:
+  - **(3) Meadows houses fixed, ON in the lane (1b086d11).** Rodline home moves from `cottage_a` (plaster and timber) to the stone `ranger_station`, the same footprint per its recipe. The Lantern Hollow inn, home and workshops and the Rodline workshop take rock-trim stone plaster, cool timber and the shelters' grey tile. Settlement, village and interior tests: 126/0. The settlement traversal smoke is next.
+  - **(4) Reddish horizon blocks at the heartstone:** these are distant wild bears (brown fur, violet veins) on the Crown floor, not structures, so no oxblood. The nearby well is retinted (above).
+  - **(1)/(2) Capacitor sky text and horizon blocks:** CPU reproduction capture running. The likely source is the objective beacon's world-space "NEXT" label (owner wayfinding, OWNER-0912), so I am confirming before touching it.
 - 26 Oct 04:30Z **READY (GPU arm) `tb/stormwood-m29-on` 7d32103cebc970162866f6046a58c6eedcf9085e**: lane head a58cc0d9 plus one config commit (4 lines). This is your SW7 follow-up as one candidate. Capture it with the F41 catalogue as usual; judge the Stormheart calm and fading sets and the heartstone picks.
   1. **Core into the trunk** (`hero_interior.heart_cleft` ON, `core_column.enabled` false). Bark closes the north split deep in the wall (it was the v03 sky strip). A 15 m Meshy crystal heart sits at its foot, and a vein-lit seam climbs from it with tapering, branching bolts. Nothing stands in the hollow or crosses the walkway. The hollow's forked charge is no longer drawn: seen from the stand, one of its tilted links was the v03 break white bar. All of it cools on release.
   2. **Fading puffs** (`steam.rise_fade_m` [0.45, 1.3]): steam fades out between 0.45 m and 1.3 m above the ground, so it stays a low mist.
