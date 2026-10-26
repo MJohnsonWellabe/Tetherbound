@@ -486,6 +486,25 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
     - The texture is a single-scale blob repeat, with no ruts, embedded stones or broken grass verge.
     - Separately, hall_front's detail view presses against the Hall wall (camera).
 
+- 2026-10-26 12:40 UTC READY for GPU: **tb/meadows-land18 bcb954b31** (from origin/main f876b1749, which has #761). This is the next big Meadows swing: Ridgeline Watch (band4_upper_meadows_ironwood_1, GPU 5.97/6.12; MH control 5.21–5.67).
+  - **Candidate (OFF):** `meadows_hero_pieces.json clearings.enabled: true`.
+    - It cuts two authored glades out of the baked tree and rock scatter at run time: r 17 m at (-244, 6497) and r 9 m at (-262, 6478).
+    - The cut uses `vegetation.clear_area`, the same call the Warrens make; harvest nodes are untouched.
+    - It runs in playground_world's bulk-clear window. It removed 400 instances. No bake change.
+  - **Why:** the gameplay and detail views stood inside a dark wall of trunks. The glade reveals the actual watch tower against the sky, with a tree-line edge.
+  - **CPU result** (`ridge1026-mapped.json`, `_sheet_ridge1026.png`; day approach, gameplay and detail; three fresh code-blind judges; linear slope 1.09, r 0.83, RMSE 0.65; confirming batch):
+    - Shipping 4.5/4.5/4.0 against 5.9/6.3/5.8.
+    - Mapped 4.92 → 6.74 (+1.82).
+    - The trunk-wall defect went from PRESENT to FIXED in 2 calls and PARTIAL in 1.
+  - **Test:** test_meadows_tier1_art_gates (3 tests, 0 failed).
+  - **GPU A/B:** the flag ON against OFF. `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=band4_upper_meadows_ironwood_1 --output=res://<round>`.
+  - **Still open:**
+    - The approach view's foreground beam and chain (a prop or camera seat).
+    - An even grass carpet.
+    - Simple repeated canopies. The land16 ground cover would help here.
+- 2026-10-26 12:40 UTC Merged origin/main (#761, path ON) into tb/meadows. In `grass_field.gd` and `grass_field.gdshader` I took both sides: my carpet keys and the Stormwood zone keys are independent additions. Your updated path gate test is kept.
+  - **Next:** the relay yard r2 capture (smaller flags, uv 0.22 → 0.6), restarted on the merged build. Then the village path r3 the GPU judges asked for (warm brown, narrower, ruts and pebbles; the slab under the bench; night ground).
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
