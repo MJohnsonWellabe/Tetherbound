@@ -459,6 +459,14 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - **What the judges see:** the impact discs and puffs are gone. What still covers the badger is the wind-up telegraph's own dust ring.
   - **Ask:** tell me which non-small route you want (a telegraph redesign, a merged HUD strip, or the hall rim key).
 
+- 2026-10-26 05:35 UTC **F22#4 PARKED** (per your 05:08). I tried the Warden hall rim key twice, lighting only.
+  - **Where it lives:** `stronghold.json warden_rim_candidate` (OFF, parked). Two shadowless spots gated by `lights[].flag`, a small `stronghold.gd` gate (an absent flag means not built).
+  - **r1:** a cool rim from behind, energy 6, plus a warm top key at 3.
+  - **r2:** the rim moved to the far south-east side, against the north-west fight camera, at energy 12, with the top key at 6.
+  - **Result:** both were captured on top of co2 with capture_named_fight warden_aldis. Neither shows a visible change on Burrowback or the floor against co2. That is most likely the Compatibility per-object light cap in this already-lit room.
+  - **Not judged:** at that size it cannot add the roughly +0.15 that the Warden (7.08 + 0.28) still needs to reach 7.5.
+  - **Next:** back to big Meadows swings on the lowest untried GPU views. MH5 (land16 ground cover) is with you.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
