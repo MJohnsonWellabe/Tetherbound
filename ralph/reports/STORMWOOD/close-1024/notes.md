@@ -2,6 +2,17 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 13:30Z PARKED the Ashfoot exterior shell approach after two misses.
+  - **r42:** +0.47 alone.
+  - **r43:** shell gain 1.9 + grove behind-right + dressing, 5.88 -> 5.31 mapped (-0.57); 3/3 judges prefer the kit cottage (`r43/VERDICT.md`).
+  - **Why r43 lost:**
+    - The brightened shingles read as a "thatched Meadows cottage".
+    - The kit cottage's SW8 grey tile already reads as "sturdier stone".
+    - The new trees take the sky where the Break bolt lands.
+  - **What stays:** shell code and asset OFF, and the interior cutaway works.
+  - **New idea, if any:** keep r42's darker timber and give the roof a slate-dark material.
+  - **Ashfoot exterior next:** the ground carpet, which only ground pass 2 (m31b) addresses.
+
 - 26 Oct 13:05Z **Crown Overlook vista round 2** (committed OFF on the lane: storm tint #7d7896 on the Crown, a 3.5 m braced deck, weathered moss-edged planks). Not judged and not armed.
   - **What the CPU frames show:** the Crown sits in the haze and reads further away, as asked, but in Break it almost vanishes. The braces do not show from the deck views, and the moss is subtle. By eye that is no clear gain over r1.
   - **Decision:** **m41 (r1, +2.46) stays the vista candidate for SW18.**
