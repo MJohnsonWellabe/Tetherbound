@@ -74,10 +74,10 @@ uniform vec2 skyline_near_height = vec2(0.02, 0.045);
 // masses and rain curtains hanging from the masses near the horizon (nothing
 // bright in the band just above it). form 0 = off.
 uniform float form = 0.0;
-uniform float form_scale = 0.55;
-uniform float form_dark = 0.45;
+uniform float form_scale = 0.8;
+uniform float form_dark = 0.55;
 uniform float form_lit = 0.5;
-uniform float form_gap = 0.18;
+uniform float form_gap = 0.04;
 uniform float form_curtains = 0.5;
 uniform vec2 form_light = vec2(0.6, -0.8);
 varying vec3 dir;
@@ -144,15 +144,18 @@ void fragment() {
 		vec2 fuv = dir.xz / (up + 0.32) * form_scale + vec2(t * 0.6, t * 0.21);
 		vec2 w = vec2(fbm(fuv * 0.5 + vec2(2.1, 7.7)), fbm(fuv * 0.5 + vec2(6.3, 1.9)));
 		float bank = fbm(fuv + w * 1.5);
-		float mass = smoothstep(0.4, 0.62, bank);
+		float mass = smoothstep(0.36, 0.58, bank);
 		// Lit edge: the mass falls off toward the light (a lit rim on the
 		// side facing it), dark where it thickens away from it.
 		float lee = fbm(fuv + w * 1.5 + normalize(form_light) * 0.09);
 		float lit = clamp((bank - lee) * 9.0, 0.0, 1.0) * (1.0 - smoothstep(0.62, 0.8, bank));
 		float overhead = smoothstep(0.25, 0.9, dir.y);
-		vec3 gap_col = ceiling_colour * (1.0 + form_gap) + rim_colour * form_gap * 0.4;
-		vec3 base_col = ceiling_colour * (1.0 - form_dark * (0.55 + 0.45 * overhead));
-		vec3 shaped = mix(gap_col, base_col, mass);
+		// The masses darken the existing textured deck (body) rather than
+		// replacing it, so its fine cloud texture stays; r45 first try
+		// replaced it and the sky read paler and flatter.
+		vec3 deck = ceiling_colour * mix(1.0 - contrast, 1.0 + contrast * 0.6, body);
+		vec3 base_col = deck * (1.0 - form_dark * (0.55 + 0.45 * overhead));
+		vec3 shaped = mix(deck * (1.0 + form_gap), base_col, mass);
 		shaped += rim_colour * form_lit * lit * mass * aloft;
 		// Rain curtains: darker vertical streaked bands under the masses,
 		// low in the sky, toward the horizon.
@@ -160,7 +163,7 @@ void fragment() {
 		float sheet = fbm(vec2(az * 9.0 + t * 2.0, 0.5)) * (0.6 + 0.4 * noise(vec2(az * 140.0, dir.y * 6.0)));
 		float curtain = smoothstep(0.45, 0.7, sheet) * smoothstep(0.03, 0.08, dir.y) * (1.0 - smoothstep(0.1, 0.3, dir.y)) * smoothstep(0.35, 0.6, bank);
 		shaped = mix(shaped, ceiling_colour * (1.0 - form_dark * 0.8), curtain * form_curtains);
-		colour = mix(colour, shaped + (colour - ceiling_colour * mix(1.0 - contrast, 1.0 + contrast * 0.6, body)), form);
+		colour = mix(colour, shaped + (colour - deck), form);
 	}
 	float low = smoothstep(0.04, 0.14, dir.y) * (1.0 - smoothstep(0.2, 0.5, dir.y));
 	float warm = low * (0.4 + 0.6 * smoothstep(0.3, 0.75, body)) * (0.55 + 0.45 * fbm(uv * 0.2 + vec2(3.1, 7.3)));
