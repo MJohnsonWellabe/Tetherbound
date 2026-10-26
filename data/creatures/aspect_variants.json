@@ -90,9 +90,9 @@
             "sat_min": 0.05,
             "val_min": 0.4
           },
-          "set_hue": 215,
-          "set_sat": 0.09,
-          "val_scale": 0.5
+          "set_hue": 212,
+          "set_sat": 0.13,
+          "val_scale": 0.62
         },
         {
           "match": {
@@ -103,9 +103,9 @@
             "sat_min": 0.05,
             "val_max": 0.4
           },
-          "set_hue": 215,
-          "set_sat": 0.07,
-          "val_scale": 0.55
+          "set_hue": 218,
+          "set_sat": 0.12,
+          "val_scale": 0.45
         },
         {
           "_why": "Lighter muzzle and chest (coordinator 24 Oct): the pale patches stay a clear highlight against the storm grey.",
@@ -162,26 +162,39 @@
           "color": "#9cc8ff",
           "intensity": 1.1,
           "softness": 0.12
-        },
-        {
-          "id": "storm_veins",
-          "_why": "'occasional electricity moving over coat/tail'. Same darkest-seam trick as Nightburrow, coloured static blue -- the STILL glow; the moving arc is scripts/creatures/vfx/aspect_vfx.gd's job, not the texture's. T1-VARIANTS 2026-08-30: colour moved from a plain sky-cyan toward the board's own more indigo 'Static Blue' swatch, coverage/percentile raised across two render-checked passes since a sparse crack map is not the full-body self-lit copy `emission_scale` was tamed for -- see `scripts/creatures/creature_body.gd`'s own `ASPECT_EMISSION_BOOST`. `z_max: 0.85` measured directly off the anatomy map (this species' darkest 0.3% of source pixels -- eyes/nose -- sit at unit z p10-p90 = 0.84-0.99).",
-          "select": "feature",
-          "where": {
-            "y_min": 0.28,
-            "up_min": 0.05,
-            "z_max": 0.85
-          },
-          "percentile": 14.0,
-          "max_val": 0.24,
-          "color": "#6d76ea",
-          "intensity": 0.8,
-          "softness": 0.1,
-          "clump_grain": 5.0,
-          "clump_coverage": 0.75,
-          "clump_softness": 0.16
         }
-      ]
+      ],
+      "_why_close_out_1026_bolts": "Coordinator ruling (b), 26 Oct: all three b45 judges read the storm_veins glow (the darkest fur seams, lit) as glowing seams on fur, which the owner ruled out on 25 Oct. It is replaced by branching lightning drawn on the body in model space (`bolts`, tools/generate_aspect_variant_textures.py build_bolts): jagged, forked, tapering bolts from the spine down each flank, a pale core painted into the albedo and lit in the emissive. The storm_line_glow layer stays as it is (it selects nothing; reported, not chased).",
+      "bolts": {
+        "where": {
+          "y_min": 0.3,
+          "z_max": 0.8
+        },
+        "count_per_side": 2,
+        "start_y": [
+          0.62,
+          0.78
+        ],
+        "start_z": [
+          0.15,
+          0.75
+        ],
+        "steps": 13,
+        "forks": 2,
+        "step": 0.03,
+        "jag_deg": 45,
+        "width": 0.0065,
+        "tip_scale": 0.3,
+        "halo_scale": 3.0,
+        "core_color": "#e8f4ff",
+        "halo_color": "#7fb4ff",
+        "albedo_core": 0.75,
+        "albedo_halo": 0.2,
+        "core_intensity": 1.0,
+        "halo_intensity": 0.35,
+        "drift": 1.1
+      },
+      "_why_close_out_1026_value": "GPU CO34 (7.35 / 6.86): a slate body on the slate stage. The coat keeps its storm-grey identity but spreads its values (light areas x0.62, dark x0.45, slightly bluer), bundled with the bolts per the coordinator's (b) ruling."
     },
     "riftfrill": {
       "display_name": "Riftfrill",

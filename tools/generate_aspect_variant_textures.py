@@ -285,6 +285,137 @@ def build_glow_map(albedo_rgb, source_rgb, anatomy, glow_specs, size, seed_key="
     return np.clip(canvas, 0.0, 1.0), notes
 
 
+def _model_extent(glb_path):
+    """The model's own bind-pose box size (glTF POSITION min/max), the box the
+    anatomy map's `unit` coordinates are normalised by."""
+    with open(glb_path, "rb") as handle:
+        data = handle.read()
+    length = int.from_bytes(data[12:16], "little")
+    gltf = json.loads(data[20:20 + length])
+    lo = np.full(3, np.inf)
+    hi = np.full(3, -np.inf)
+    for mesh in gltf.get("meshes", []):
+        for primitive in mesh.get("primitives", []):
+            accessor = gltf["accessors"][primitive["attributes"]["POSITION"]]
+            lo = np.minimum(lo, np.asarray(accessor["min"], dtype=np.float64))
+            hi = np.maximum(hi, np.asarray(accessor["max"], dtype=np.float64))
+    return np.maximum(hi - lo, 1e-6)
+
+
+def build_bolts(anatomy, spec, extent, seed):
+    """Branching lightning drawn ON THE BODY in model space (CLOSE-OUT 26 Oct,
+    coordinator ruling on Stormtrail; owner 25 Oct: lightning arcs on storm
+    creatures, never glowing seams on fur).
+
+    Each bolt is a jagged random walk over the surface texels' own 3D
+    positions, from the spine down a flank, with forks; every texel is then
+    scored by its 3D distance to the bolt, so a bolt crosses UV seams without
+    breaking (painting in UV space was what made the old lightning network's
+    leg bands read as UV artefacts). The width tapers from root to tip.
+
+    Returns (core, halo): 0..1 maps for the bright core and its soft halo."""
+    from scipy.spatial import cKDTree
+
+    rng = np.random.default_rng(seed)
+    valid = anatomy["valid"]
+    unit = anatomy["unit"].astype(np.float64)
+    region = anatomy_mask(spec.get("where", {}), anatomy, 0.02) > 0.5
+    pick = valid & region
+    pts = unit[pick] * extent
+    if len(pts) < 100:
+        return None, None
+    height = extent[1]
+    tree = cKDTree(pts)
+    step = float(spec.get("step", 0.025)) * height
+    jag = np.deg2rad(float(spec.get("jag_deg", 38.0)))
+    centre_x = 0.5 * extent[0]
+
+    def walk(start, direction, n_steps, side):
+        path = [start]
+        pos = start
+        d = direction / np.linalg.norm(direction)
+        for _ in range(n_steps):
+            # Jagged: each segment turns by a random angle about the surface,
+            # then is pulled back toward the bolt's overall heading.
+            turn = rng.uniform(-jag, jag)
+            axis = np.array([1.0, 0.0, 0.0])
+            c, s_ = np.cos(turn), np.sin(turn)
+            d_step = d * c + np.cross(axis, d) * s_
+            target = pos + d_step * step * rng.uniform(0.6, 1.3)
+            _, idx = tree.query(target, k=8)
+            candidates = pts[idx]
+            same = (candidates[:, 0] - centre_x) * side > 0.0
+            if not same.any():
+                break
+            nxt = candidates[same][0]
+            if np.linalg.norm(nxt - pos) < step * 0.2:
+                break
+            path.append(nxt)
+            pos = nxt
+        return np.asarray(path)
+
+    samples = []
+    widths = []
+    root_w = float(spec.get("width", 0.012)) * height
+    tip_scale = float(spec.get("tip_scale", 0.3))
+    for side in (-1.0, 1.0):
+        count = int(spec.get("count_per_side", 3))
+        z_lo, z_hi = spec.get("start_z", [0.25, 0.75])
+        # Spread the roots along the body (one per equal slot, jittered inside
+        # it) so bolts never stack side by side like a stamped decal.
+        slots = [z_lo + (z_hi - z_lo) * (i + rng.uniform(0.2, 0.8)) / count for i in range(count)]
+        for z_frac in slots:
+            z = z_frac * extent[2]
+            y = rng.uniform(*spec.get("start_y", [0.8, 0.95])) * extent[1]
+            x = centre_x + side * 0.25 * extent[0]
+            _, idx = tree.query([x, y, z], k=16)
+            cand = pts[idx]
+            cand = cand[(cand[:, 0] - centre_x) * side > 0.0]
+            if len(cand) == 0:
+                continue
+            drift = float(spec.get("drift", 0.7))
+            heading = np.array([0.0, -1.0, rng.choice([-1.0, 1.0]) * rng.uniform(0.5 * drift, drift)])
+            main = walk(cand[0], heading, int(spec.get("steps", 14)), side)
+            bolts = [(main, root_w)]
+            for _ in range(int(spec.get("forks", 2))):
+                if len(main) < 4:
+                    break
+                at = rng.integers(1, len(main) - 2)
+                fork_dir = np.array([0.0, -0.6, rng.choice([-1.0, 1.0]) * rng.uniform(0.6, 1.0)])
+                frac = 1.0 - at / max(len(main) - 1, 1)
+                branch = walk(main[at], fork_dir, max(3, int(spec.get("steps", 14) * 0.45)), side)
+                bolts.append((branch, root_w * (tip_scale + (1.0 - tip_scale) * frac) * 0.7))
+            for path, w0 in bolts:
+                for i in range(len(path) - 1):
+                    a, b = path[i], path[i + 1]
+                    t0 = i / max(len(path) - 1, 1)
+                    for f in np.linspace(0.0, 1.0, 6, endpoint=False):
+                        samples.append(a + (b - a) * f)
+                        widths.append(w0 * (1.0 - (1.0 - tip_scale) * (t0 + f / max(len(path) - 1, 1))))
+    if not samples:
+        return None, None
+    samples = np.asarray(samples)
+    widths = np.asarray(widths)
+    bolt_tree = cKDTree(samples)
+    halo_scale = float(spec.get("halo_scale", 3.0))
+    all_pts = unit[valid] * extent
+    dist, idx = bolt_tree.query(all_pts, distance_upper_bound=float(widths.max() * halo_scale))
+    hit = np.isfinite(dist)
+    w = np.where(hit, widths[np.minimum(idx, len(widths) - 1)], 1.0)
+    def ramp(lo, hi, x):  # per-texel edges (the width tapers along the bolt)
+        u = np.clip((x - lo) / np.maximum(hi - lo, 1e-9), 0.0, 1.0)
+        return u * u * (3.0 - 2.0 * u)
+
+    dist = np.where(hit, dist, 0.0)
+    core_v = np.where(hit, 1.0 - ramp(0.55 * w, w, dist), 0.0)
+    halo_v = np.where(hit, 1.0 - ramp(w, w * halo_scale, dist), 0.0)
+    core = np.zeros(valid.shape)
+    halo = np.zeros(valid.shape)
+    core[valid] = core_v
+    halo[valid] = halo_v
+    return core, halo
+
+
 def main():
     spec = load_spec()
     wanted = sys.argv[1:] or sorted(spec.keys())
@@ -336,6 +467,27 @@ def main():
             seed_key=variant)
         for note in glow_notes:
             print("   glow: %s" % note)
+
+        bolts = entry.get("bolts")
+        if bolts:
+            glb_dir = os.path.join(ROOT, "assets", "creatures", "tetherbound", source, "models")
+            glb = os.path.join(glb_dir, sorted(f for f in os.listdir(glb_dir) if f.endswith(".glb"))[0])
+            core, halo = build_bolts(anatomy, bolts, _model_extent(glb), _stable_seed(variant, "bolts"))
+            if core is None:
+                print("   bolts: selected nothing")
+            else:
+                core_rgb = _hex_to_rgb(str(bolts.get("core_color", "#e8f4ff")))
+                halo_rgb = _hex_to_rgb(str(bolts.get("halo_color", "#7fb4ff")))
+                paint = core * float(bolts.get("albedo_core", 0.9))
+                tint = halo * float(bolts.get("albedo_halo", 0.25))
+                albedo_arr = albedo_arr * (1.0 - tint[..., None]) + halo_rgb[None, None, :] * tint[..., None]
+                albedo_arr = albedo_arr * (1.0 - paint[..., None]) + core_rgb[None, None, :] * paint[..., None]
+                Image.fromarray((np.clip(albedo_arr, 0, 1) * 255 + 0.5).astype(np.uint8), "RGB").save(albedo_dst, optimize=True)
+                glow_rgb = np.maximum(glow_rgb, np.maximum(
+                    (core * float(bolts.get("core_intensity", 1.0)))[..., None] * core_rgb[None, None, :],
+                    (halo * float(bolts.get("halo_intensity", 0.35)))[..., None] * halo_rgb[None, None, :]))
+                share = 100.0 * float((core > 0.5).sum()) / max(float(anatomy["valid"].sum()), 1.0)
+                print("   bolts: core %.2f%% of the surface" % share)
 
         emissive_dst = emissive_target
         alpha = np.full(glow_rgb.shape[:2] + (1,), 255, dtype=np.uint8)
