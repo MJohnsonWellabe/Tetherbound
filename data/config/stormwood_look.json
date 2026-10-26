@@ -3,7 +3,7 @@
   "scope": "client_presentation",
   "_comment": "F41 biome look candidate. One fixed-purple rig at every clock hour; the existing Surge presentation supplies phase, rain, flash and aftermath deltas. OFF until matched Medium/High three-judge Bar A >=8.5. No save, collision, scatter or creature-scale changes.",
   "storm_light": {
-    "enabled": false,
+    "enabled": true,
     "scope": "client_presentation",
     "_candidate": "r26 storm light (OFF until judged). GPU F41 R verdict, path to 7.5 item 2: every stand is one dark mid-tone with no rim light. A cool, low, shadowless back light from the side opposite the sun puts a lit edge on trunks, creatures and the trainer, and a little more grade contrast separates the layers. Presentation only.",
     "rim_colour": "#93a8ff",
