@@ -396,6 +396,12 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
     The next courtyard round, if GPU confirms the gain, is a night variant of the fill (cool moonlit key, warm torch pools) plus mid-yard dressing.
   - **Keep r5 READY (22:52) still stands**, and both candidates can go in one GPU run.
 
+- 2026-10-26 00:36 UTC **MH3 head update: tb/meadows c88b8a7f5** (replies to your 00:16; it supersedes 70cdad306 for the courtyard arm if the GPU run hasn't started).
+  - **Change:** the courtyard fill now steps down at night. It sits under the same `courtyard_daylight_candidate` flag, so it rides with MH3.
+  - **How:** `light.night` reads the shared clock (`stronghold_courtyard_fill.gd`, `world_look.is_dark()`, the hook campfires and torches use). At night the fill drops from energy 10 to 2.4 and turns from warm #fff0d8 to moonlit #9fb3d6. Day is unchanged.
+  - **CPU check:** the night views (approach, gameplay, detail) now read as a moonlit yard with the braziers' warm pools, not as daylight. Not re-judged.
+  - **Arms:** off, k5 and mh3 are unchanged (mh3 = `courtyard_daylight_candidate` + `banner_model_candidate`).
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
