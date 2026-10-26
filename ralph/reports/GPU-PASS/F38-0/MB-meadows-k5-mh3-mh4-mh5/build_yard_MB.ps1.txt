@@ -1,0 +1,49 @@
+# Meadows block (local): K5 / MH3 / MH4 on tb/meadows d35483f3c (flags via meadows_flags4.py; arm "off" = all flags off) and MH5 on
+# tb/meadows-land16 cd6927c91 (grass_field cover_candidate on vs off). capture_f38_matrix.gd, day + night, Medium and High.
+#   K5:  k5 vs off on band5_stronghold_approach_0 (does the keep dominate the skyline?).
+#   MH3: mh3 vs off on band5_stronghold_approach_1, day and night scored as separate sets.
+#   MH4: mh4 vs off on band3_the_river_lock_0 (relay yard stone flags), day and night views.
+#   MH5: cover on vs off on village_road and band3_the_river_lock_1, approach + gameplay views, day and night.
+$o = "D:\tb-gpu-runs\out"; $od = "D:\tb-gpu-runs\yard\MB\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out) {
+    $s = [ordered]@{ title = ""; cols = 3; thumb_w = 420; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_MB.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_MB.json" | Out-Null; return $out
+}
+$generic = @("Placeholder or untextured materials (flat grey, checker or faceted blocks)", "Floating bodies or props (a gap between an object and the ground under it)", "Clipping (geometry passing through geometry, or the camera inside geometry)")
+$p2003 = "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark"
+$flatban = "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth"
+$yard = "the relay yard's ground pad reads as a flat untextured slab rather than laid stone flags set into the ground"
+$cover = "P2-005 ground cover: the meadow ground reads as one uniform grass carpet with no clover, flower drifts, mossy rocks or worn earth"
+$stand6 = @("day__clear__approach", "day__clear__gameplay", "day__clear__reverse", "day__clear__detail", "night__clear__gameplay", "day__rain__gameplay")
+$day6 = @("day__clear__approach", "day__clear__gameplay", "day__clear__reverse", "day__clear__detail", "day__rain__approach", "day__rain__gameplay")
+$night6 = @("night__clear__approach", "night__clear__gameplay", "night__clear__reverse", "night__clear__detail", "night__rain__approach", "night__rain__gameplay")
+$yard6 = @("day__clear__approach", "day__clear__gameplay", "day__clear__detail", "night__clear__approach", "night__clear__gameplay", "night__clear__detail")
+$ag6 = @("day__clear__approach", "day__clear__gameplay", "day__rain__approach", "day__rain__gameplay", "night__clear__approach", "night__clear__gameplay")
+# item, label suffix, site, picks, cand dir prefix, base dir prefix, extra defects, place
+$plan = @(
+    @("K5", "", "band5_stronghold_approach_0", $stand6, "K5-k5", "K5-off", @($p2003), "the stronghold approach"),
+    @("MH3", "-day", "band5_stronghold_approach_1", $day6, "K5-mh3", "K5-off", @($p2003, $flatban), "the stronghold approach, near the gate, by day"),
+    @("MH3", "-night", "band5_stronghold_approach_1", $night6, "K5-mh3", "K5-off", @($p2003, $flatban), "the stronghold approach, near the gate, at night"),
+    @("MH4", "", "band3_the_river_lock_0", $yard6, "K5-mh4", "K5-off", @($yard), "the river lock relay yard"),
+    @("MH5", "-village", "village_road", $ag6, "MH5-on", "MH5-off", @($cover), "the village road"),
+    @("MH5", "-riverlock", "band3_the_river_lock_1", $ag6, "MH5-on", "MH5-off", @($cover), "the river lock"))
+$sets = @(); $covr = @()
+foreach ($pr in "Medium", "High") {
+    foreach ($g in $plan) {
+        $item, $sfx, $site, $picks, $ca, $cb, $extra, $place = $g
+        $ids = @($picks | ForEach-Object { "$($site)__$_" } | Where-Object { (Test-Path "$o\$ca-$pr\frames\$_.jpg") -and (Test-Path "$o\$cb-$pr\frames\$_.jpg") })
+        if ($ids.Count -eq 0) { "MISSING $item$sfx $pr"; continue }
+        $caps = @($ids | ForEach-Object { ($_ -replace '^[a-z0-9_]+?__', '') -replace '__', ' ' })
+        $sa = Side @($ids | ForEach-Object { "$o\$ca-$pr\frames\$_.jpg" }) $caps "$od\$item$sfx-$site-cand-$pr.png"
+        $sb = Side @($ids | ForEach-Object { "$o\$cb-$pr\frames\$_.jpg" }) $caps "$od\$item$sfx-$site-ship-$pr.png"
+        $brief = "Fixed production-camera views of $place in the Meadows, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Meadows: a coherent, lived-in place with readable landmarks, believable ground and light that belongs to the world."
+        $sets += [ordered]@{ label = "$item$sfx $site $pr cand|ship"; a = $sa; b = $sb; brief = $brief; defects = @($generic) + $extra }
+        $covr += [ordered]@{ item = "$item$sfx"; site = $site; preset = $pr; judged = $ids }
+    }
+}
+$rng = New-Object System.Random 2111; $sets = @($sets | Sort-Object { $rng.Next() })
+$nb = [math]::Ceiling($sets.Count / 6); $buckets = @(for ($k = 0; $k -lt $nb; $k++) { , @() })
+for ($i = 0; $i -lt $sets.Count; $i++) { $buckets[$i % $nb] += , $sets[$i] }
+for ($k = 0; $k -lt $nb; $k++) { New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\MB\b$($k+1)" | Out-Null; [IO.File]::WriteAllText("D:\tb-gpu-runs\yard\MB\b$($k+1)\candidates.json", (ConvertTo-Json -InputObject @($buckets[$k]) -Depth 5)) }
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\MB\coverage.json", (ConvertTo-Json -InputObject @($covr) -Depth 4))
+"MB sets: $($sets.Count) in $nb batches"; $covr | ForEach-Object { "$($_.item) $($_.preset) frames=$($_.judged.Count)" }

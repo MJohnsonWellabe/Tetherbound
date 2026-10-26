@@ -1,0 +1,40 @@
+"""Set the Meadows keep r5 / MH3 / MH4 flag groups in a checkout's data/config (local GPU-pass helper).
+
+    python meadows_flags4.py <checkout> off|k5|mh3|mh4
+
+off: all flags false. k5: only stronghold.hero_gatehouse. mh3: only stronghold.courtyard_daylight_candidate and
+stronghold.banner_model_candidate. mh4: only tether_relay.ground_pad.surface_candidate. Flips the first "enabled" value
+after each key path, keeps the file's text otherwise byte-identical, then re-parses and verifies every flag.
+"""
+import json
+import re
+import sys
+from pathlib import Path
+
+FLAGS = [("stronghold", ["hero_gatehouse"]), ("stronghold", ["courtyard_daylight_candidate"]), ("stronghold", ["banner_model_candidate"]),
+         ("tether_relay", ["ground_pad", "surface_candidate"])]
+GROUPS = {"off": set(), "k5": {"hero_gatehouse"}, "mh3": {"courtyard_daylight_candidate", "banner_model_candidate"}, "mh4": {"surface_candidate"}}
+
+
+def main(root, group):
+    on = GROUPS[group]
+    for name, keys in FLAGS:
+        want = keys[-1] in on
+        p = Path(root) / "data" / "config" / f"{name}.json"
+        raw = p.read_bytes().decode("utf-8")
+        pos = 0
+        for k in keys:
+            pos = raw.index(f'"{k}":', pos)
+        m = re.compile(r'"enabled":\s*(true|false)').search(raw, pos)
+        raw = raw[:m.start()] + f'"enabled": {"true" if want else "false"}' + raw[m.end():]
+        node = json.loads(raw)
+        for k in keys:
+            node = node[k]
+        if node["enabled"] is not want:
+            sys.exit(f"FLAG MISMATCH {name}.{'.'.join(keys)}={node['enabled']}")
+        p.write_bytes(raw.encode("utf-8"))
+        print(f"{name}.{'.'.join(keys)}.enabled = {node['enabled']}")
+
+
+if __name__ == "__main__":
+    main(sys.argv[1], sys.argv[2])

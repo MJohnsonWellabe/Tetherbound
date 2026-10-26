@@ -1,0 +1,208 @@
+{
+ "sets": {
+  "Ah": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-005 ground cover: the meadow ground reads as one uniform grass carpet with no clover, flower drifts, mossy rocks or worn earth": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-005 ground cover: the meadow ground reads as one uniform grass carpet with no clover, flower drifts, mossy rocks or worn earth": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The flat, faceted green canopy blobs and dark foreground trunk filling the approach frames read as a low-poly prototype next to Palworld's dense, lit foliage, though the warm path and cool blue distance are on palette."
+  },
+  "Ab": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormcapra's fleece, horns and value split are on the owner bar, but the flat stage light and B's contorted, hovering faint poses keep it short of Palworld's finished creature presentation."
+  },
+  "Fb": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, appealing elder with a readable face and on-palette greens and browns, but the rounded animated-film face sits apart from the naturalistic world and creature style, and nothing about its lighting is Valheim-class."
+  },
+  "Wk": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the relay yard's ground pad reads as a flat untextured slab rather than laid stone flags set into the ground": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the relay yard's ground pad reads as a flat untextured slab rather than laid stone flags set into the ground": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's warm-lit cobbled yard is a step toward a lived-in place, but the bald pale-grass approach field, sparse props and B's black void of a pad sink it beside Palworld's density."
+  },
+  "Vg": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A boxed-in courtyard of blotchy green-brown ground and flat banners with no sky-reaching keep or daylight shafts reads as a greybox, and B's dusky grade does not read as day."
+  },
+  "Ul": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber-braced wall with a stone footing and shingle cap would pass in a Palworld base, but the faceted grey boulder beside it and the thin meadow scatter keep the frame below that finish."
+  },
+  "Pb": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "These frames match Vg: an enclosed courtyard with no landmark, blotchy ground and flat heraldry, and B's warm dusk grade does not read as day."
+  },
+  "Sk": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the relay yard's ground pad reads as a flat untextured slab rather than laid stone flags set into the ground": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "the relay yard's ground pad reads as a flat untextured slab rather than laid stone flags set into the ground": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "These frames match Wk: A's cobbles help, but the empty approach field and B's flat black pad leave it well short of Palworld's lived-in density."
+  },
+  "Hf": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's patterned, scaled python with an open mouth and grounded coils comes close to the owner bar, but A's flat plastic yellow-black bands and faint poses hovering high above their own shadows sink the set."
+  },
+  "Hd": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The moon and warm brazier pools give a hint of the key-art night, but the walled-in courtyard with no lit keep or blue moonlit distance and the flat banners read as unfinished."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Build a tall, lit stronghold keep that rises over the courtyard walls, and replace the giant flat banners with draped war banners on poles. This lifts Vg, Pb and Hd.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Give the Meadows ground and canopy authored variety: replace the flat faceted green tree blobs with textured, rim-lit canopies, break the grass carpet with clover, flower drifts, worn earth and placed (not cloned) mossy rocks, and texture the relay yard pad as stone flags everywhere. This lifts Ah, Wk, Sk and Ul.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix the camera and prop hygiene in the fixed views: move cameras out of the foreground trunks and planks, ground the floating boards and banners, and give daytime courtyard frames a clear daylight grade with sun shafts and blue distance instead of the dusky brown-green mid-tone.",
+   "kind": "scene"
+  }
+ ]
+}

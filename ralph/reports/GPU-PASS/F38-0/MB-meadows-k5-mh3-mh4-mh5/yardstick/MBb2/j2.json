@@ -1,0 +1,204 @@
+{
+ "sets": {
+  "Aj": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A wall of smooth-trunked blob trees with flat flat-lit canopies and no haze or sun grade sinks it; the stronghold is either absent (A) or a small grey silhouette (B), so there is no landmark pull."
+  },
+  "Gd": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-005 ground cover: the meadow ground reads as one uniform grass carpet with no clover, flower drifts, mossy rocks or worn earth": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-005 ground cover: the meadow ground reads as one uniform grass carpet with no clover, flower drifts, mossy rocks or worn earth": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Timber houses with lit windows, blue friendly banners and a castle at the road end carry the cozy village read, but the flat sky, missing atmospheric depth and smeared road texture keep it short of Palworld finish."
+  },
+  "Ta": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-005 ground cover: the meadow ground reads as one uniform grass carpet with no clover, flower drifts, mossy rocks or worn earth": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-005 ground cover: the meadow ground reads as one uniform grass carpet with no clover, flower drifts, mossy rocks or worn earth": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same village as Gd: architecture and warm window light carry it, while the flat sky, no haze and the pale slab-and-plank prop in the gameplay frames sink the finish."
+  },
+  "Mu": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The fleece, big curled horns and blue crystal give a naturalistic Stormcapra-class read well above the trainer, though B's faint poses flip the body belly-up and leave it hanging above its shadow."
+  },
+  "Ca": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Badger creatures read clearly, but the uniform blob-tree forest, flat sky and a stronghold that is either a small grey silhouette (A) or missing (B) sink it."
+  },
+  "Wn": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, diagonal brace, cap and stone footing read as built, but the infill is still flat and thin, and it stands beside a flat-grey faceted rock/tent form; A is a blank white card."
+  },
+  "Au": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Smeared low-resolution ground textures, blocky flat-textured walls in row 1 and the same emblem rock reused as the aftermath prop in rows 3 and 5 sink it; A's removed banners and smoke help the aftermath read."
+  },
+  "Ki": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-005 ground cover: the meadow ground reads as one uniform grass carpet with no clover, flower drifts, mossy rocks or worn earth": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-005 ground cover: the meadow ground reads as one uniform grass carpet with no clover, flower drifts, mossy rocks or worn earth": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The river and lock barely read behind the trees, foreground canopies fill the frame, and B's boulders are near-identical grey domes evenly scattered across the foreground, which turn into blue blobs at night."
+  },
+  "Xd": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder with readable eyes and an olive/green/brown palette that fits the Meadows; the face style is a touch more cartoon than the naturalistic world."
+  },
+  "Pl": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm torch pools against a moonlit sky give some night mood, but the courtyard is a dark enclosed box with no tall lit keep, and B's huge flat red banners dominate every frame."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the blob-canopy, smooth-trunk forest at the stronghold approach and river lock with textured oak meshes arranged in groves, edges and clearings, so landmarks and distance can show through",
+   "kind": "new_art"
+  },
+  {
+   "change": "Give the stronghold a tall, lit keep or tower visible from the approach cameras by day and night (braziers, lit windows, war banners on poles)",
+   "kind": "new_art"
+  },
+  {
+   "change": "Author the ground and atmosphere: clustered mossy rocks of varied scale, clover and flower drifts, worn earth along paths in place of the uniform carpet and evenly scattered grey boulders, plus distance haze and a warm sun grade with a cool blue distance",
+   "kind": "scene"
+  }
+ ]
+}

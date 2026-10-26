@@ -1,0 +1,42 @@
+{
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "driver": "Windows",
+  "grass_field_enabled": "true",
+  "resolution": [
+    1920.0,
+    1200.0
+  ],
+  "seconds_per_site": 20.0,
+  "sites": {
+    "band1_open_eye": {
+      "draw_calls": 470.0,
+      "fps_1pct_low": 10.4,
+      "fps_avg": 23.7,
+      "frame_ms_avg": 42.13,
+      "frame_ms_max": 108.0,
+      "frame_ms_p95": 67.0,
+      "frames": 475,
+      "primitives": 908301.0
+    },
+    "village_high": {
+      "draw_calls": 621.0,
+      "fps_1pct_low": 10.1,
+      "fps_avg": 23.0,
+      "frame_ms_avg": 43.47,
+      "frame_ms_max": 107.0,
+      "frame_ms_p95": 71.0,
+      "frames": 461,
+      "primitives": 1008881.0
+    },
+    "village_square_eye": {
+      "draw_calls": 473.0,
+      "fps_1pct_low": 10.4,
+      "fps_avg": 27.1,
+      "frame_ms_avg": 36.87,
+      "frame_ms_max": 186.0,
+      "frame_ms_p95": 66.0,
+      "frames": 543,
+      "primitives": 947682.0
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+ "Aj": {
+  "anchor": false,
+  "label": "K5 band5_stronghold_approach_0 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MB\\sides\\K5-band5_stronghold_approach_0-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MB\\sides\\K5-band5_stronghold_approach_0-cand-Medium.png"
+ },
+ "Gd": {
+  "anchor": false,
+  "label": "MH5-village village_road Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH5-village-village_road-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH5-village-village_road-ship-Medium.png"
+ },
+ "Ta": {
+  "anchor": false,
+  "label": "MH5-village village_road High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH5-village-village_road-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH5-village-village_road-cand-High.png"
+ },
+ "Mu": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ },
+ "Ca": {
+  "anchor": false,
+  "label": "K5 band5_stronghold_approach_0 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MB\\sides\\K5-band5_stronghold_approach_0-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MB\\sides\\K5-band5_stronghold_approach_0-ship-High.png"
+ },
+ "Wn": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Au": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Ki": {
+  "anchor": false,
+  "label": "MH5-riverlock band3_the_river_lock_1 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH5-riverlock-band3_the_river_lock_1-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH5-riverlock-band3_the_river_lock_1-cand-Medium.png"
+ },
+ "Xd": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Pl": {
+  "anchor": false,
+  "label": "MH3-night band5_stronghold_approach_1 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH3-night-band5_stronghold_approach_1-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH3-night-band5_stronghold_approach_1-ship-High.png"
+ }
+}

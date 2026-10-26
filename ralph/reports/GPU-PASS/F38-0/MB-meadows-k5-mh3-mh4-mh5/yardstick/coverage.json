@@ -1,0 +1,158 @@
+[
+    {
+        "item":  "K5",
+        "site":  "band5_stronghold_approach_0",
+        "preset":  "Medium",
+        "judged":  [
+                       "band5_stronghold_approach_0__day__clear__approach",
+                       "band5_stronghold_approach_0__day__clear__gameplay",
+                       "band5_stronghold_approach_0__day__clear__reverse",
+                       "band5_stronghold_approach_0__day__clear__detail",
+                       "band5_stronghold_approach_0__night__clear__gameplay",
+                       "band5_stronghold_approach_0__day__rain__gameplay"
+                   ]
+    },
+    {
+        "item":  "MH3-day",
+        "site":  "band5_stronghold_approach_1",
+        "preset":  "Medium",
+        "judged":  [
+                       "band5_stronghold_approach_1__day__clear__approach",
+                       "band5_stronghold_approach_1__day__clear__gameplay",
+                       "band5_stronghold_approach_1__day__clear__reverse",
+                       "band5_stronghold_approach_1__day__clear__detail",
+                       "band5_stronghold_approach_1__day__rain__approach",
+                       "band5_stronghold_approach_1__day__rain__gameplay"
+                   ]
+    },
+    {
+        "item":  "MH3-night",
+        "site":  "band5_stronghold_approach_1",
+        "preset":  "Medium",
+        "judged":  [
+                       "band5_stronghold_approach_1__night__clear__approach",
+                       "band5_stronghold_approach_1__night__clear__gameplay",
+                       "band5_stronghold_approach_1__night__clear__reverse",
+                       "band5_stronghold_approach_1__night__clear__detail",
+                       "band5_stronghold_approach_1__night__rain__approach",
+                       "band5_stronghold_approach_1__night__rain__gameplay"
+                   ]
+    },
+    {
+        "item":  "MH4",
+        "site":  "band3_the_river_lock_0",
+        "preset":  "Medium",
+        "judged":  [
+                       "band3_the_river_lock_0__day__clear__approach",
+                       "band3_the_river_lock_0__day__clear__gameplay",
+                       "band3_the_river_lock_0__day__clear__detail",
+                       "band3_the_river_lock_0__night__clear__approach",
+                       "band3_the_river_lock_0__night__clear__gameplay",
+                       "band3_the_river_lock_0__night__clear__detail"
+                   ]
+    },
+    {
+        "item":  "MH5-village",
+        "site":  "village_road",
+        "preset":  "Medium",
+        "judged":  [
+                       "village_road__day__clear__approach",
+                       "village_road__day__clear__gameplay",
+                       "village_road__day__rain__approach",
+                       "village_road__day__rain__gameplay",
+                       "village_road__night__clear__approach",
+                       "village_road__night__clear__gameplay"
+                   ]
+    },
+    {
+        "item":  "MH5-riverlock",
+        "site":  "band3_the_river_lock_1",
+        "preset":  "Medium",
+        "judged":  [
+                       "band3_the_river_lock_1__day__clear__approach",
+                       "band3_the_river_lock_1__day__clear__gameplay",
+                       "band3_the_river_lock_1__day__rain__approach",
+                       "band3_the_river_lock_1__day__rain__gameplay",
+                       "band3_the_river_lock_1__night__clear__approach",
+                       "band3_the_river_lock_1__night__clear__gameplay"
+                   ]
+    },
+    {
+        "item":  "K5",
+        "site":  "band5_stronghold_approach_0",
+        "preset":  "High",
+        "judged":  [
+                       "band5_stronghold_approach_0__day__clear__approach",
+                       "band5_stronghold_approach_0__day__clear__gameplay",
+                       "band5_stronghold_approach_0__day__clear__reverse",
+                       "band5_stronghold_approach_0__day__clear__detail",
+                       "band5_stronghold_approach_0__night__clear__gameplay",
+                       "band5_stronghold_approach_0__day__rain__gameplay"
+                   ]
+    },
+    {
+        "item":  "MH3-day",
+        "site":  "band5_stronghold_approach_1",
+        "preset":  "High",
+        "judged":  [
+                       "band5_stronghold_approach_1__day__clear__approach",
+                       "band5_stronghold_approach_1__day__clear__gameplay",
+                       "band5_stronghold_approach_1__day__clear__reverse",
+                       "band5_stronghold_approach_1__day__clear__detail",
+                       "band5_stronghold_approach_1__day__rain__approach",
+                       "band5_stronghold_approach_1__day__rain__gameplay"
+                   ]
+    },
+    {
+        "item":  "MH3-night",
+        "site":  "band5_stronghold_approach_1",
+        "preset":  "High",
+        "judged":  [
+                       "band5_stronghold_approach_1__night__clear__approach",
+                       "band5_stronghold_approach_1__night__clear__gameplay",
+                       "band5_stronghold_approach_1__night__clear__reverse",
+                       "band5_stronghold_approach_1__night__clear__detail",
+                       "band5_stronghold_approach_1__night__rain__approach",
+                       "band5_stronghold_approach_1__night__rain__gameplay"
+                   ]
+    },
+    {
+        "item":  "MH4",
+        "site":  "band3_the_river_lock_0",
+        "preset":  "High",
+        "judged":  [
+                       "band3_the_river_lock_0__day__clear__approach",
+                       "band3_the_river_lock_0__day__clear__gameplay",
+                       "band3_the_river_lock_0__day__clear__detail",
+                       "band3_the_river_lock_0__night__clear__approach",
+                       "band3_the_river_lock_0__night__clear__gameplay",
+                       "band3_the_river_lock_0__night__clear__detail"
+                   ]
+    },
+    {
+        "item":  "MH5-village",
+        "site":  "village_road",
+        "preset":  "High",
+        "judged":  [
+                       "village_road__day__clear__approach",
+                       "village_road__day__clear__gameplay",
+                       "village_road__day__rain__approach",
+                       "village_road__day__rain__gameplay",
+                       "village_road__night__clear__approach",
+                       "village_road__night__clear__gameplay"
+                   ]
+    },
+    {
+        "item":  "MH5-riverlock",
+        "site":  "band3_the_river_lock_1",
+        "preset":  "High",
+        "judged":  [
+                       "band3_the_river_lock_1__day__clear__approach",
+                       "band3_the_river_lock_1__day__clear__gameplay",
+                       "band3_the_river_lock_1__day__rain__approach",
+                       "band3_the_river_lock_1__day__rain__gameplay",
+                       "band3_the_river_lock_1__night__clear__approach",
+                       "band3_the_river_lock_1__night__clear__gameplay"
+                   ]
+    }
+]

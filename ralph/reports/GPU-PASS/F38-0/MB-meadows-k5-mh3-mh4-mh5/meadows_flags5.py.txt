@@ -1,0 +1,33 @@
+"""Set the MH5 ground-cover flag in a checkout's data/config/grass_field.json (local GPU-pass helper).
+
+    python meadows_flags5.py <checkout> on|off
+
+Flips the first "enabled" value after "cover_candidate", keeps the file's text otherwise byte-identical, then re-parses and
+verifies cover_candidate.enabled is as asked and carpet_candidate.enabled stays false.
+"""
+import json
+import re
+import sys
+from pathlib import Path
+
+
+def main(root, arm):
+    want = arm == "on"
+    p = Path(root) / "data" / "config" / "grass_field.json"
+    raw = p.read_bytes().decode("utf-8")
+    pos = raw.index('"cover_candidate":')
+    m = re.compile(r'"enabled":\s*(true|false)').search(raw, pos)
+    raw = raw[:m.start()] + f'"enabled": {"true" if want else "false"}' + raw[m.end():]
+    node = json.loads(raw)
+    if node["cover_candidate"]["enabled"] is not want:
+        sys.exit(f"FLAG MISMATCH cover_candidate.enabled={node['cover_candidate']['enabled']}")
+    if node["carpet_candidate"]["enabled"] is not False:
+        sys.exit("FLAG MISMATCH carpet_candidate.enabled is not false")
+    p.write_bytes(raw.encode("utf-8"))
+    print(f"grass_field.cover_candidate.enabled = {want}; carpet_candidate.enabled = False")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3 or sys.argv[2] not in ("on", "off"):
+        sys.exit(__doc__)
+    main(sys.argv[1], sys.argv[2])

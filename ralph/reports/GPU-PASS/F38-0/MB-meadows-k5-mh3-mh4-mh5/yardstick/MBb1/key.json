@@ -1,0 +1,58 @@
+{
+ "Ah": {
+  "anchor": false,
+  "label": "MH5-riverlock band3_the_river_lock_1 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH5-riverlock-band3_the_river_lock_1-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH5-riverlock-band3_the_river_lock_1-ship-High.png"
+ },
+ "Ab": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ },
+ "Fb": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Wk": {
+  "anchor": false,
+  "label": "MH4 band3_the_river_lock_0 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH4-band3_the_river_lock_0-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH4-band3_the_river_lock_0-ship-High.png"
+ },
+ "Vg": {
+  "anchor": false,
+  "label": "MH3-day band5_stronghold_approach_1 High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH3-day-band5_stronghold_approach_1-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH3-day-band5_stronghold_approach_1-ship-High.png"
+ },
+ "Ul": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Pb": {
+  "anchor": false,
+  "label": "MH3-day band5_stronghold_approach_1 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH3-day-band5_stronghold_approach_1-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH3-day-band5_stronghold_approach_1-ship-Medium.png"
+ },
+ "Sk": {
+  "anchor": false,
+  "label": "MH4 band3_the_river_lock_0 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH4-band3_the_river_lock_0-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH4-band3_the_river_lock_0-ship-Medium.png"
+ },
+ "Hf": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Hd": {
+  "anchor": false,
+  "label": "MH3-night band5_stronghold_approach_1 Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH3-night-band5_stronghold_approach_1-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MB\\sides\\MH3-night-band5_stronghold_approach_1-ship-Medium.png"
+ }
+}
