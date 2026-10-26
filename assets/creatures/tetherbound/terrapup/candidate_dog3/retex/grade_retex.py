@@ -13,6 +13,14 @@ strapped on. This grades r1 toward the retexture spec
   sits under every plate, and broken moss clumps creep from the plates into
   the coat, so the plates read as grown out of the dog, not worn by it;
 - the cream muzzle, chest and paws, the eyes and the nose are kept.
+- spine ridge only (26 Oct, coordinator on the owner's 24 Oct "one or two
+  light touches... Terrapup is a large dog"): b40-b42 judges read the big
+  plate mass over both shoulder blades as a pack strapped on, whatever its
+  texture or the mesh under it. Plate texels off a short, low ridge along the
+  spine become coat: each texel's 3D position comes from rasterising the mesh
+  into UV space, and its colour is the inverse-distance average of the nearest
+  real coat texels in 3D, so the fill matches the surrounding fur. The head
+  (eyes, nose) is never touched.
 It writes the graded image into the model's embedded Image_0 and the
 extracted image beside it, so the mesh, rig, UVs and clips are untouched. The
 noise is seeded, so a re-run gives the same bytes. Needs numpy, Pillow and scipy.
@@ -58,6 +66,11 @@ PLATE_VAL = (0.16, 0.52)  # value range the plate texels are remapped into (#6E6
 FILL_HUE = 36.0  # the flat blue-grey fill wedges (underside) warm to a dull earth-brown
 FILL_SAT = 0.12
 FILL_VAL_SCALE = 0.9
+RIDGE_HALF_WIDTH_M = 0.13  # plate texels this close to the spine line stay stone
+RIDGE_Z_M = (-1.2, 1.0)  # haunch to withers; the shoulder-blade mass past it goes
+RIDGE_MIN_Y_M = 2.35  # only the top of the back
+HEAD_FROM_Z_M = 1.5  # never repaint the head
+FILL_NEIGHBOURS = 12
 LICHEN = (0x7E / 255.0, 0x84 / 255.0, 0x56 / 255.0)
 LICHEN_SHARE = 0.06
 FUR_RIM = (0x6A / 255.0, 0x44 / 255.0, 0x28 / 255.0)
@@ -104,6 +117,78 @@ def _blend(rgb, colour, alpha):
     return rgb * (1.0 - a) + np.asarray(colour)[None, None, :] * a
 
 
+def _accessor(gltf, views, index):
+    a = gltf["accessors"][index]
+    width = {"SCALAR": 1, "VEC2": 2, "VEC3": 3}[a["type"]]
+    dtype = {5126: np.float32, 5125: np.uint32, 5123: np.uint16}[a["componentType"]]
+    return np.frombuffer(views[a["bufferView"]], dtype=dtype, offset=a.get("byteOffset", 0),
+                         count=a["count"] * width).reshape(a["count"], width)
+
+
+def texel_positions(size):
+    """Bind-pose 3D position of every texel the mesh covers (NaN elsewhere)."""
+    gltf, views = T._read_glb(GLB)
+    prim = gltf["meshes"][0]["primitives"][0]
+    pos = _accessor(gltf, views, prim["attributes"]["POSITION"]).astype(np.float64)
+    uv = _accessor(gltf, views, prim["attributes"]["TEXCOORD_0"]).astype(np.float64) * size
+    tris = _accessor(gltf, views, prim["indices"]).reshape(-1, 3)
+    out = np.full((size, size, 3), np.nan, np.float32)
+    for tri in tris:
+        a, b, c = uv[tri]
+        x0, x1 = int(max(0, np.floor(min(a[0], b[0], c[0])))), int(min(size - 1, np.ceil(max(a[0], b[0], c[0]))))
+        y0, y1 = int(max(0, np.floor(min(a[1], b[1], c[1])))), int(min(size - 1, np.ceil(max(a[1], b[1], c[1]))))
+        d = (b[1] - c[1]) * (a[0] - c[0]) + (c[0] - b[0]) * (a[1] - c[1])
+        if x1 < x0 or y1 < y0 or abs(d) < 1e-12:
+            continue
+        xs, ys = np.meshgrid(np.arange(x0, x1 + 1) + 0.5, np.arange(y0, y1 + 1) + 0.5)
+        l1 = ((b[1] - c[1]) * (xs - c[0]) + (c[0] - b[0]) * (ys - c[1])) / d
+        l2 = ((c[1] - a[1]) * (xs - c[0]) + (a[0] - c[0]) * (ys - c[1])) / d
+        l3 = 1.0 - l1 - l2
+        m = (l1 >= -0.01) & (l2 >= -0.01) & (l3 >= -0.01)
+        if m.any():
+            out[ys[m].astype(int), xs[m].astype(int)] = (
+                l1[m, None] * pos[tri[0]] + l2[m, None] * pos[tri[1]] + l3[m, None] * pos[tri[2]])
+    return out
+
+
+def to_coat(rgb, plate, coat_src):
+    """Plate texels off the spine ridge take the colour of the nearest real coat
+    in 3D. Returns the new image and the plate mask that remains stone."""
+    from scipy.spatial import cKDTree
+    xyz = texel_positions(rgb.shape[0])
+    mapped = np.isfinite(xyz[..., 0])
+    x, y, z = xyz[..., 0], xyz[..., 1], xyz[..., 2]
+    ridge = ((np.abs(np.nan_to_num(x, nan=9.0)) <= RIDGE_HALF_WIDTH_M)
+             & (np.nan_to_num(z, nan=9.0) >= RIDGE_Z_M[0]) & (np.nan_to_num(z, nan=9.0) <= RIDGE_Z_M[1])
+             & (np.nan_to_num(y, nan=0.0) >= RIDGE_MIN_Y_M))
+    body = mapped & (np.nan_to_num(z, nan=9.0) < HEAD_FROM_Z_M)
+    remove = plate & body & ~ridge
+    source = coat_src & mapped & ~plate
+    tree = cKDTree(xyz[source])
+    colours = rgb[source]
+    dist, idx = tree.query(xyz[remove], k=FILL_NEIGHBOURS)
+    weight = 1.0 / np.maximum(dist, 1e-3)
+    out = rgb.copy()
+    out[remove] = (colours[idx] * weight[..., None]).sum(1) / weight.sum(1)[:, None]
+    # The coat right beside the plates is painted in their shadow; match the
+    # fill's brightness to the open coat on the back so no darker blanket shows.
+    back = source & (np.nan_to_num(y, nan=0.0) >= RIDGE_MIN_Y_M - 0.5)
+    gain = rgb[back].mean() / max(out[remove].mean(), 1e-6)
+    out[remove] = np.clip(out[remove] * gain, 0.0, 1.0)
+    # Unmapped padding next to a filled texel takes its nearest filled neighbour,
+    # so mip levels do not bleed the old stone back in.
+    keep = plate & ~remove
+    pad = plate & ~mapped
+    if pad.any():
+        near = nd.distance_transform_edt(pad, return_distances=False, return_indices=True)
+        filled_src = remove[near[0], near[1]]
+        out[pad & filled_src] = out[near[0], near[1]][pad & filled_src]
+        keep = keep & ~(pad & filled_src)
+    print("spine ridge: %.1f%% of plate texels stay stone, %.1f%% become coat" % (
+        100.0 * (keep & mapped).sum() / max((plate & mapped).sum(), 1), 100.0 * remove.sum() / max((plate & mapped).sum(), 1)))
+    return out, keep
+
+
 def grade(rgb):
     rng = np.random.default_rng(SEED)
     h, s, v = T._hsv(rgb)
@@ -120,6 +205,9 @@ def grade(rgb):
     labels, count = nd.label(plate)
     sizes = nd.sum(plate, labels, range(1, count + 1))
     plate = np.isin(labels, 1 + np.nonzero(sizes >= PLATE_MIN_PX)[0])
+    rgb, plate = to_coat(rgb, plate, (h < 50.0) & (s >= COAT_SAT_MIN) & ~cool)
+    h, s, v = T._hsv(rgb)
+    cool = (h >= PLATE_HUE[0]) & (h < PLATE_HUE[1]) & (s >= PLATE_SAT_MIN) & (v <= PLATE_VAL_MAX)
     coat = (h < 50.0) & (s >= COAT_SAT_MIN) & ~plate
     out_h, out_s, out_v = h.copy(), s.copy(), v.copy()
     out_h[coat] = COAT_HUE + (h[coat] - 27.0) * COAT_HUE_SPREAD
