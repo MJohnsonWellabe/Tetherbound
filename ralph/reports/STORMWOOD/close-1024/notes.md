@@ -2,6 +2,97 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 11:40Z **MESHY: `stormwood_hollow_crown_silhouette`** (Crown Overlook vista; the Crown massif reads at 900 m as "a flat grey slab / table shape", r40 and GPU SW8).
+  - **The asset:** a distant-only landmark silhouette of the Hollow Crown.
+    - A broad storm-weathered rock massif whose rim breaks into a ring of tall, jagged, slightly outward-leaning spires: the "crown". The centre is hollow, implied by the ring.
+    - Deep vertical lightning-scar clefts with pale-blue crystal glints.
+    - Moss and dark conifer fringes on the ledges.
+    - Cool grey-violet stone, no red.
+  - **Silhouette first:** at 900 m it must read as a crown shape against the storm sky. Make the spire heights clearly varied (tallest about 2x the shortest), with deep notches between them.
+  - **Scale:** the footprint fits the Hollow Crown region (about 520 x 520 m). The spires rise about 120-250 m above the plateau rim; the plateau sits about 65-360 m above sea level in world terms.
+  - **Use:** drawn only beyond about 300 m (visibility range), like the Stormheart v3 far swap, so play inside the Hollow Crown is untouched. No collision.
+  - **References:**
+    - owner Stormheart boards A/B (`docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a/b.png`) for the storm palette, crystal and scar language;
+    - `palworld-04-plateau-landmark.jpg` for a distant plateau landmark that reads.
+  - **Wiring:** this lane places it at the Hollow Crown (700, 2700), facing the overlook, flag-off until judged from the 37° Crown Overlook views.
+
+- 26 Oct 11:30Z PARKED r40 (your item 4, depth fog): 4.89 -> 4.66 mapped (-0.23; `r40/VERDICT.md`). The grey band stays PRESENT 3/3 on both arms; it is the Crown massif's flat terrain read at 900 m, not fog. The judges' ask is a shaped, rim-lit massif silhouette and a storm sky with cloud structure and lightning. That is new art or terrain work; a possible MESHY or sky-art item if you want it.
+
+- 26 Oct 08:05Z **MERGED MAIN 07e1b277 (#760 land9) into `tb/stormwood` 9b28ee9d.** Main's tree equals land9, so the lane only takes land9's config commit: Fallen Giant hero + bark ON.
+  - **The pending GPU arms are rebuilt on the merged head.** Each is the same config flip as before, on top of a lane that now has the Fallen Giant ON. **Please judge these and drop the old SHAs:**
+
+    | Arm | New SHA | Replaces | What it turns ON |
+    |---|---|---|---|
+    | `tb/stormwood-m29b-on` | 9517727f4ba8d0462e08c518a3b636e1bfac0703 | m29 e59d5de1 | Stormheart heart cleft |
+    | `tb/stormwood-m31b-on` | 946ded35a1dbc5830732fec4e4580f373a277b6b | m31 ccdeebfd | Ground pass 2 + storm light |
+    | `tb/stormwood-m33b-on` | c8c981b23ba7c6a391acc48f52c716f91d150ca5 | m33 619dd7fd | Lantern Pools finish |
+    | `tb/stormwood-m36b-on` | 0a633e222477f927e17391340cc74520c6079c3a | m36 6c9ba874 (and m34/m35) | Ashfoot seated + firelit + storm view |
+
+  - The off arm for all of them is the lane, 9b28ee9d.
+
+- 26 Oct 07:55Z **Finding (no candidate): Crown Overlook (GPU SW8 5.20 / 5.61).**
+  - Its catalogue views never face the Crown. The spot (160, 1980) has no `view_heading_deg`, so the views take their heading from the neighbouring spot and point at 133°, 223° and 313°. The Crown is at 37°, 900 m away.
+  - A CPU capture facing 37° shows only a thin flat grey slab on the horizon. The stand sits at ground level among trees, so turning the views alone would show nothing.
+  - **A real vista needs three things:** a raised overlook, a cleared sightline, and a Crown silhouette that reads at 900 m. Today's massif reads at that distance as the "flat grey band" every judge names.
+  - That is terrain or new-art work, so this lane does not start it. **QUESTION:** do you want an authored heading of 37° for this spot (a yardstick change) only once a vista exists, or never?
+
+- 26 Oct 07:45Z **MESHY: `stormwood_ranger_shelter`** (Ashfoot shelter exterior; F41 `ashfoot_shelter_outside` is GPU 5.54/5.58).
+  - **Why:** every judge in GPU SW9 and CPU r38 names "a small Meadows-style cottage, not a Stormwood shelter" as the top defect, and judges ask for "dark timber, copper fittings, storm-glass lantern, a raised deck or lightning rod". Scene dressing does not move it: r38's grove, lightning rod, lantern post and barrel came to +0.49 and are PARKED.
+  - **The asset:** an exterior shell that wraps the existing ranger_station footprint (4 x 6 m, 3 m walls, gable roof about 6.8 m). It has:
+    - dark weathered timber walls on a mossy stone plinth;
+    - a moss-edged shingle roof;
+    - a copper lightning rod on the ridge, grounded by a copper cable down one corner;
+    - a short covered porch on the door side with a hanging copper-and-glass storm lantern;
+    - storm shutters on the wide side window.
+    - No red anywhere.
+  - **Fit:** it must keep the prefab's door (front, +z, centred at x 1.0, 1.6 m wide) and the east window opening (+x wall, z -0.8..0.8, y 0.94..2.52). That way the lined interior, the storm pane and the r36 storm view stay seated.
+  - **References:** the owner Stormheart boards A/B (timber and walkway details, aged copper, lanterns), plus the lantern post asset already delivered (`stormwood_lantern_post`) for the lantern.
+  - **Scale:** check it against the 1.80 m trainer at the door.
+  - **Wiring:** this lane replaces the prefab's exterior modules for `ashfoot_shelter` only, flag-off until judged, and can re-run the r38 grove with the left sky kept open for the lightning.
+- 26 Oct 07:45Z PARKED r38 (Ashfoot exterior grove + dressing): 5.47 -> 5.96 mapped (+0.49, under the 0.5 rule; `r38/VERDICT.md`). Horizon PRESENT -> PARTIAL; cottage and carpet unchanged. The canopy hides the break lightning, and the leaf cards dither.
+
+- 26 Oct 07:25Z PARKED r37 (Ashfoot `planks`, narrower lining boards): 5.77 -> 5.37 mapped (-0.40, 3/3 judges prefer OFF; `r37/VERDICT.md`). The judges read the wide boards as finer. The "stretched planks" complaint is the coarse atlas grain at a close wide-angle stand, so board size will not fix it. m36 stands as the Ashfoot candidate. Next Ashfoot ideas: lightning that lights the room at the break, rain on the glass, cutting the window-frame bloom.
+
+- 26 Oct 07:05Z **READY (GPU arm) `tb/stormwood-m36-on` 6c9ba8743c7c5de442f82c9613159029e4f560cc**: the lane plus one config commit, with Ashfoot `storm_finish.seated` + `firelit` + `storm_view` ON. It supersedes m34 and m35 (both remain valid steps). Judge `ashfoot_shelter_inside` (four phases) against the lane; `ashfoot_shelter_outside` is the no-change check.
+  - **Storm view (r35 judges x3: "no sky, rain or lightning through the window, only a tint"):**
+    - A storm card 3 m outside the east window faces the room only (back faces culled). It shows a storm sky over a dark treeline, with per-phase sky, cloud and rain; the surge flash lights the cloud.
+    - The east window's kit glass (MI_WindowGlass) is made clear. That glass draws as an opaque pale sheet and was the "glowing panel" judges kept naming.
+    - From outside, that one window now shows the room through clear glass. Watch it in the outside check.
+  - **CPU chain** (each step against the one before; all mapped, three code-blind judges):
+    - r34 seated: +1.04;
+    - r35 firelit: +0.76;
+    - r36 storm view: 5.50 -> 6.21 (**+0.71**, r 0.86, RMSE 0.70). Glowing panel and no storm: PRESENT -> PARTIAL 3/3.
+  - **Checks with all three ON:** cottage/interior, 12 tests, 0 failed; smoke_stormwood_ashfoot_shelter 16/0.
+  - **Still asked:** lightning and rain that read through the glass and light the room at the break; less frame bloom; planks at real scale with moss and copper; a flame that reads past the trainer.
+
+- 26 Oct 06:55Z **READY (GPU arm) `tb/stormwood-m35-on` 16101403bd063bbe56e72a020d055fff1dec94d0**: the lane plus one config commit that turns ON both `storm_finish.seated` (m34) and `storm_finish.firelit`. Judge `ashfoot_shelter_inside` (four phases) against m34 if m34 is judged in the same pass, or against the lane otherwise.
+  - **Firelit (r34 judges x3: "a stone box with no visible fire", "huge flat stretched plank walls"):**
+    - The camp flame sculpt burns in the hearth firebox, with a flickering fire light and a warm floor pool.
+    - Dark timber posts, wall plates and a tie beam frame the lining as a ranger hut.
+    - The copper lantern by the window is lit.
+  - **CPU r35** (`r35/VERDICT.md`): over seated, 4.36 -> 5.12 mapped (**+0.76**, r 0.87, RMSE 0.49). The hearth goes PRESENT -> PARTIAL; the walls do not move.
+  - **Checks with both ON:** cottage/interior, 12 tests, 0 failed; smoke_stormwood_ashfoot_shelter 16/0.
+  - **Next:** the one ask all three judges still share is a visible storm through the glass (purple sky, rain, a lightning flash per phase). It will be a storm backdrop card seen only from inside, built as r36.
+
+- 26 Oct 06:40Z **READY (GPU arm) `tb/stormwood-m34-on` 4c6d0756690d242fa82d626fc3dd9f1ee8bbc8b1**: lane head d8758c70 (main #759 merged) plus one config line (`cottage_interior_finish.json storm_finish.seated` ON). Judge `ashfoot_shelter_inside` (four phases) against the lane, with `ashfoot_shelter_outside` as a no-change check.
+  - **Ashfoot path to 7.5 (SW9 asks):**
+    - The storm pane sits behind the lining inside the kit window's own frame, with a 2.5 cm flush trim.
+    - The window light's colour and energy change per phase (calm grey-violet, building darker, break white-violet, fading cool), and the pane tint changes with them.
+    - A stone chimney breast rises from the hearth to the ceiling pitch. The apex shard was the exterior Prop_Chimney's base hanging below the lined ceiling.
+    - The hearth fire is stronger (2.6, 6.5 m).
+  - **CPU r34** (`r34/VERDICT.md`): 4.77 -> 5.81 mapped (**+1.04**, r 0.96, RMSE 0.31). The apex shard is FIXED 3/3 and the phases go PRESENT -> PARTIAL 3/3. The window slab and hearth are still PRESENT 2/3 (PARTIAL 1/3).
+  - **Checks with seated ON:** cottage/interior, 12 tests, 0 failed; smoke_stormwood_ashfoot_shelter 16/0.
+  - **Next asks from all three judges:** a visible storm sky with rain and lightning through the glass; a visibly lit fire with a warm floor and wall pool; moss, copper and glass breaking up the big plank walls.
+
+- 26 Oct 06:45Z **READY to land land9: `tb/stormwood-land9` 5fe5d06375250a19982053e514879551cc4b3348.** It is the lane beea5f57, which merges origin/main 3a0f583b (#759), plus one config commit.
+  - **New ON flags vs main:** only `fallen_giant.hero` and `hero.bark`, each with `_why_on` (GPU SW10 +0.56 / +0.59; bark accepted on the CPU check).
+  - **Stays OFF:** rod line `stand_clear` and Ashfoot r34 `seated` (code only, inert when off).
+  - **Checks on the land9 tree:**
+    - `test_stormwood_rod_line` + `test_stormwood_fallen_giant_collider` + destination: 5 tests, 0 failed.
+    - cottage/interior: 12 tests, 0 failed.
+    - `smoke_stormwood_ashfoot_shelter` 16/0.
+  - **Merge note:** main's tree equals land8, which the lane already contains, so the lane tree was unchanged by the merge.
+
 - 26 Oct 06:25Z Coordinator ruling on m28c: the bark recolour is accepted, so the Fallen Giant lands with `hero` + `hero.bark` ON. Rod line `stand_clear` is rejected and stays OFF: it would change the world to suit the yardstick. **Do not judge or land m28c with stand_clear ON.** land9 waits for #759 (land8) to merge, then = origin/main + Fallen Giant hero and bark ON.
 
 - 26 Oct 06:15Z **READY (GPU arm) `tb/stormwood-m28c-on` 39af61624e6e586e48a8fd508f9a12591af34f30**: lane head a04467fc plus one config commit (3 lines). Judge `deepwood_the_fallen_giant` (six views, calm and fading). Supersedes m28b.

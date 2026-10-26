@@ -166,6 +166,8 @@ func _ready() -> void:
 	_build_landmark_masses()
 	await preload("res://scripts/world/stormwood_destination_dressing.gd").install(self, budget)
 	preload("res://scripts/world/stormwood_lantern_pools.gd").install(self)
+	preload("res://scripts/world/stormwood_ashfoot_exterior.gd").install(self)
+	preload("res://scripts/world/stormwood_crown_overlook.gd").install(self)
 	_build_glass_field_identity()
 	_build_return_gate()
 	_build_rootgate()
