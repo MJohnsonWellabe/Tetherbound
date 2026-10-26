@@ -256,6 +256,7 @@ var _flash_rng := RandomNumberGenerator.new()
 ## drives presentation `ramp`s such as Fading's easing steam and slant).
 var _rain_curtain: GPUParticles3D
 var _steam: GPUParticles3D
+var _steam_material: ShaderMaterial
 var _phase_progress := 0.0
 var _ramp_left := 0.0
 ## Decorative Break sky lightning (no telegraph, no damage): pending pulses
@@ -1161,6 +1162,8 @@ func _follow_player() -> void:
 		if _steam != null and subject != null:
 			# Steam rises from the ground around the framed subject.
 			_steam.global_position = anchor_position
+			if _steam_material != null:
+				_steam_material.set_shader_parameter("ground_y", anchor_position.y)
 	if _ceiling != null and camera != null:
 		_ceiling.global_position = camera.global_position
 
@@ -1324,6 +1327,10 @@ func _build_steam() -> void:
 	var lens: Array = cfg.get("lens_fade_m", [0.0, 0.0])
 	if lens.size() == 2:
 		material.set_shader_parameter("lens_fade_m", Vector2(float(lens[0]), float(lens[1])))
+	var rise: Array = cfg.get("rise_fade_m", [0.0, 0.0])
+	if rise.size() == 2:
+		material.set_shader_parameter("rise_fade_m", Vector2(float(rise[0]), float(rise[1])))
+	_steam_material = material
 	quad.material = material
 	_steam.draw_pass_1 = quad
 	var reach := process.emission_ring_radius + size + 1.0
@@ -1340,6 +1347,12 @@ uniform float intersection_fade_m = 1.0;
 // fog sprites on the lens. With lens_fade_m.y > 0 each puff fades out
 // inside that view distance (presentation.steam.lens_fade_m).
 uniform vec2 lens_fade_m = vec2(0.0, 0.0);
+// GPU SW7: puffs that rose to eye height read as cotton-ball fog sprites.
+// With rise_fade_m.y > 0 steam fades out between those heights above the
+// ground it rises from (ground_y), so it stays a low layered ground mist.
+uniform vec2 rise_fade_m = vec2(0.0, 0.0);
+uniform float ground_y = 0.0;
+varying float steam_height;
 void vertex() {
 	mat4 facing = mat4(INV_VIEW_MATRIX[0], INV_VIEW_MATRIX[1], INV_VIEW_MATRIX[2], MODEL_MATRIX[3]);
 	float angle = INSTANCE_CUSTOM.x;
@@ -1349,6 +1362,7 @@ void vertex() {
 		vec4(0.0, length(MODEL_MATRIX[1].xyz), 0.0, 0.0),
 		vec4(0.0, 0.0, length(MODEL_MATRIX[2].xyz), 0.0), vec4(0.0, 0.0, 0.0, 1.0));
 	MODELVIEW_MATRIX = VIEW_MATRIX * facing * spin * size;
+	steam_height = (facing * spin * size * vec4(VERTEX, 1.0)).y - ground_y;
 }
 void fragment() {
 	float raw_depth = texture(scene_depth, SCREEN_UV).r;
@@ -1366,7 +1380,8 @@ void fragment() {
 	}
 	ALBEDO = COLOR.rgb;
 	float lens_fade = lens_fade_m.y > lens_fade_m.x ? smoothstep(lens_fade_m.x, lens_fade_m.y, -VERTEX.z) : 1.0;
-	ALPHA = COLOR.a * texture(puff_texture, UV).a * soft_edge * lens_fade;
+	float rise_fade = rise_fade_m.y > rise_fade_m.x ? 1.0 - smoothstep(rise_fade_m.x, rise_fade_m.y, steam_height) : 1.0;
+	ALPHA = COLOR.a * texture(puff_texture, UV).a * soft_edge * lens_fade * rise_fade;
 }
 """
 

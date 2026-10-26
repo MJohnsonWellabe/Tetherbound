@@ -941,6 +941,7 @@ func _hero_interior(cfg: Dictionary) -> void:
 		_meshy_interior(walk)
 	_bark_wall_rows(root, cfg)
 	_core_column(root, cfg.get("core_column", {}))
+	_heart_cleft(root, cfg.get("heart_cleft", {}), str(cfg.get("wall_model", "")))
 	_lantern_clusters(root, cfg.get("lantern_clusters", {}))
 	_lip_banners(root, cfg.get("lip_banners", {}))
 	var second: Dictionary = cfg.get("round2", {})
@@ -992,22 +993,27 @@ func _bark_wall_rows(root: Node3D, cfg: Dictionary) -> void:
 				var sector := clampi(int(floor((angle + PI) / TAU * float(sectors))), 0, sectors - 1)
 				(poses[sector] as Array[Transform3D]).append(Transform3D(facing, at) * fit)
 			angle += step
+	_model_batches(root, "BarkWallRows", model, poses)
+	model.free()
+
+
+## One MultiMesh per mesh of `model` per pose group (each group culls alone).
+func _model_batches(root: Node3D, id: String, model: Node3D, groups: Array) -> void:
 	var batch := Node3D.new()
-	batch.name = "BarkWallRows"
+	batch.name = id
 	root.add_child(batch)
 	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
 		var mesh := visual.mesh.duplicate() as Mesh
 		for surface in mesh.get_surface_count():
 			mesh.surface_set_material(surface, visual.get_active_material(surface))
 		var local := _relative_pose(model, visual)
-		for sector: Array[Transform3D] in poses:
-			if sector.is_empty():
+		for group: Array[Transform3D] in groups:
+			if group.is_empty():
 				continue
 			var instanced: Array[Transform3D] = []
-			for pose in sector:
+			for pose in group:
 				instanced.append(pose * local)
 			_instances(batch, instanced, null, mesh)
-	model.free()
 
 
 func _relative_pose(model: Node3D, node: Node3D) -> Transform3D:
@@ -1082,6 +1088,150 @@ func _core_column(root: Node3D, cfg: Dictionary) -> void:
 		column.add_child(light)
 		_column_lights.append(light)
 	set_core_released(_core_released)
+
+
+## SW7 (GPU, 12/12 calls: "a free-standing rigid white light tube that
+## passes through the walkway line"): the lightning core lives in the trunk.
+## Deep in the north split, root-wall bark closes the cleft (no sky strip
+## through it); a crystal heart sits at its foot and a jagged vein-lit seam
+## climbs from it, throwing tapering bolts that branch across the cleft's
+## bark. Natural glow (the trunk's own lightning); it cools with the release
+## like the column (set_core_released). Presentation only, outside the 44 m
+## physical arena.
+func _heart_cleft(root: Node3D, cfg: Dictionary, wall_model: String) -> void:
+	if not bool(cfg.get("enabled", false)):
+		return
+	var holder := Node3D.new()
+	holder.name = "HeartCleft"
+	root.add_child(holder)
+	var facing_angle := deg_to_rad(float(cfg.get("angle_deg", 90.0)))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cfg.get("seed", 77))
+	# Back fill: panel rows across the split, facing in and (a step behind)
+	# facing out, from the ground to fill_top_m.
+	var model := HERO_PROP.load_model(str(cfg.get("wall_model", wall_model)))
+	if model != null:
+		HERO_PROP.glow(model, Color(str(cfg.get("vein_colour", "#9fd0ff"))), float(cfg.get("vein_energy", 1.4)))
+		var bounds := HERO_PROP.BOUNDS.measure(model)
+		var unit := 1.0 / maxf(0.01, bounds.size.y)
+		var back := float(cfg.get("back_radius_m", 54.0))
+		var half := float(cfg.get("fill_half_angle", 0.2))
+		var height := float(cfg.get("panel_height_m", 14.0))
+		var step_angle := height * bounds.size.x * unit * 0.7 / back
+		var inward: Array[Transform3D] = []
+		var outward: Array[Transform3D] = []
+		var base := 0.0
+		var row := 0
+		while base < float(cfg.get("fill_top_m", 182.0)):
+			var angle := facing_angle - half + step_angle * (0.5 if row % 2 else 0.0)
+			while angle <= facing_angle + half:
+				var size := height * rng.randf_range(0.9, 1.15)
+				var fit := Transform3D(Basis.from_scale(Vector3.ONE * size * unit),
+					Vector3(0.0, -bounds.position.y * size * unit, 0.0))
+				for side in 2:
+					var r := back + 2.0 * side
+					var at := Vector3(cos(angle) * r, base - (1.0 if row == 0 else 0.0), sin(angle) * r)
+					var yaw := atan2(-at.x, -at.z) + (PI if side == 1 else 0.0) + rng.randf_range(-0.12, 0.12)
+					(inward if side == 0 else outward).append(Transform3D(Basis(Vector3.UP, yaw), at) * fit)
+				angle += step_angle
+			base += height * 0.8
+			row += 1
+		_model_batches(holder, "CleftBark", model, [inward, outward])
+		model.free()
+	# The seam and its bolts share the column's body material, so they cool
+	# on release with it.
+	_column_core_material = ShaderMaterial.new()
+	_column_core_material.shader = CORE_COLUMN_BODY_SHADER
+	_column_core_material.set_shader_parameter("body_colour", Color(str(cfg.get("core_colour", "#5f8fd8"))))
+	_column_core_material.set_shader_parameter("glow_colour", Color(str(cfg.get("colour", "#e4e8ff"))))
+	_column_core_material.set_shader_parameter("energy", float(cfg.get("energy", 1.0)))
+	_column_energy = Vector2(float(cfg.get("energy", 1.0)), 0.0)
+	_column_cooled = float(cfg.get("cooled_scale", 0.12))
+	var poses := heart_cleft_seam_poses(cfg)
+	var radial := Vector3(cos(facing_angle), 0.0, sin(facing_angle))
+	var bolts := Node3D.new()
+	bolts.name = "CleftSeam"
+	holder.add_child(bolts)
+	_instances(bolts, poses, _column_core_material, _charge_mesh())
+	var crystal := HERO_PROP.load_model(str(cfg.get("crystal_model", "")))
+	if crystal != null:
+		crystal.name = "CrystalHeart"
+		HERO_PROP.fit_height(crystal, float(cfg.get("crystal_height_m", 9.0)), float(cfg.get("crystal_sink_m", 1.0)))
+		HERO_PROP.glow(crystal, Color(str(cfg.get("crystal_glow", "#a9ccff"))), float(cfg.get("crystal_glow_energy", 1.6)))
+		var seat := Node3D.new()
+		seat.position = radial * float(cfg.get("crystal_radius_m", 50.5))
+		seat.rotation.y = atan2(-seat.position.x, -seat.position.z)
+		holder.add_child(seat)
+		seat.add_child(crystal)
+	for y: Variant in cfg.get("light_heights_m", [4.0, 18.0, 40.0]):
+		var light := OmniLight3D.new()
+		light.name = "CleftLight"
+		light.position = radial * float(cfg.get("light_radius_m", 48.0)) + Vector3.UP * float(y)
+		light.light_color = Color(str(cfg.get("light_colour", "#a9c8ff")))
+		light.light_energy = float(cfg.get("light_energy", 2.4))
+		light.omni_range = float(cfg.get("light_range_m", 26.0))
+		light.shadow_enabled = false
+		holder.add_child(light)
+		_column_lights.append(light)
+	set_core_released(_core_released)
+
+
+## The cleft seam and its branching bolts (one round charge section each).
+func heart_cleft_seam_poses(cfg: Dictionary) -> Array[Transform3D]:
+	var facing_angle := deg_to_rad(float(cfg.get("angle_deg", 90.0)))
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cfg.get("seed", 77)) + 1
+	var seam_r := float(cfg.get("seam_radius_m", 52.0))
+	var radial := Vector3(cos(facing_angle), 0.0, sin(facing_angle))
+	var across := Vector3(-radial.z, 0.0, radial.x)
+	var widths: Array = cfg.get("seam_width_m", [1.0, 0.3])
+	var bolt_widths: Array = cfg.get("bolt_width_m", [0.3, 0.06])
+	var bolt_lengths: Array = cfg.get("bolt_length_m", [3.0, 9.0])
+	var seam_top := float(cfg.get("seam_top_m", 120.0))
+	var poses: Array[Transform3D] = []
+	var previous := radial * seam_r + Vector3.UP * float(cfg.get("seam_base_m", 2.0))
+	var next_bolt := previous.y + 1.5
+	var reach := float(cfg.get("half_width_m", 8.0))
+	while previous.y < seam_top:
+		var t := previous.y / seam_top
+		var point := radial * (seam_r + rng.randf_range(-0.6, 0.6)) + across * rng.randf_range(-1.4, 1.4) \
+			+ Vector3.UP * (previous.y + rng.randf_range(2.0, 4.5))
+		var width := lerpf(float(widths[0]), float(widths[1]), t)
+		poses.append(_charge_pose(previous, point, width))
+		if point.y >= next_bolt:
+			var side := -1.0 if rng.randf() < 0.5 else 1.0
+			_cleft_bolt(poses, rng, point, across * side, radial, seam_r, reach,
+				rng.randf_range(float(bolt_lengths[0]), float(bolt_lengths[1])) * lerpf(1.0, 0.6, t),
+				width * float(bolt_widths[0]) / float(widths[0]), float(bolt_widths[1]), 2)
+			next_bolt = point.y + float(cfg.get("bolt_every_m", 4.0)) * lerpf(1.0, 3.0, t)
+		previous = point
+	return poses
+
+
+## A jagged tapering bolt from `start` along `direction` over the cleft's
+## bark, kept within `reach` of the seam; it forks `depth` more times.
+func _cleft_bolt(poses: Array[Transform3D], rng: RandomNumberGenerator, start: Vector3, direction: Vector3,
+		radial: Vector3, seam_r: float, reach: float, length: float, width: float, tip_width: float,
+		depth: int) -> void:
+	var segments := 4
+	var at := start
+	for index in segments:
+		var t := float(index + 1) / float(segments)
+		var step := direction * (length / float(segments)) + Vector3.UP * rng.randf_range(-0.9, 1.3)
+		var next := at + step
+		var centre := radial * seam_r
+		var offset := next - centre - radial * (next - centre).dot(radial)
+		offset.y = 0.0
+		if offset.length() > reach:
+			break
+		next += radial * (rng.randf_range(0.6, 1.4) - (next - centre).dot(radial))
+		var w := lerpf(width, tip_width, t)
+		poses.append(_charge_pose(at, next, w))
+		if depth > 0 and index == 1 and rng.randf() < 0.75:
+			var fork := (direction + Vector3.UP * rng.randf_range(-0.8, 0.8)).normalized()
+			_cleft_bolt(poses, rng, next, fork * direction.length(), radial, seam_r, reach,
+				length * 0.5, w * 0.8, tip_width, depth - 1)
+		at = next
 
 
 ## r27 (r19 judges x3: "the floor is a dirt disc in a grass ring, an arena,
@@ -1635,7 +1785,8 @@ func set_core_released(released: bool) -> void:
 	if _column_core_material != null:
 		var cool := _column_cooled if released else 1.0
 		_column_core_material.set_shader_parameter("energy", _column_energy.x * cool)
-		_column_sheath_material.set_shader_parameter("energy", _column_energy.y * cool)
+		if _column_sheath_material != null:
+			_column_sheath_material.set_shader_parameter("energy", _column_energy.y * cool)
 		for light: OmniLight3D in _column_lights:
 			light.visible = not released
 	if _core_arc_holder != null:
