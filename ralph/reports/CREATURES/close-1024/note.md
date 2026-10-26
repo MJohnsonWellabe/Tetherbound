@@ -1,5 +1,15 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (26 Oct, dog3 mesh fix judged)
+
+- **dog3 plate flatten (your go-ahead): no gain, reverted.** CPU b42 (`close-1024/b42/VERDICT.md` on tb/creatures-land): every judge scored the flattened mesh exactly as r1 (6.40 = 6.40 mapped; "almost identical"). Plates strapped on: PRESENT x3 on both.
+  - Method, for the record: `flatten_plates.py` in 4df82f73. Back and shoulder vertices under the r1 plate mask moved 70% toward a Laplacian-smoothed body; 5810 of 19936 vertices, max 0.105 m. Height, length, rig, weights, clips and UVs unchanged. GLB sha256 b55d6805… -> 3cf5181b…. Reverted in the next commit, so the assets equal ebec8e36 again.
+  - The batch is not confirming (r 0.69), so the dog-vs-badger number (6.40 vs 6.54) is noise-level; b40/b41 had dog3 +0.45/+0.57.
+- **Diagnosis after r1, r3 and the flatten:** the "pack" read is the big dark plate mass painted over both shoulder blades, outlined hard against the orange coat. It is not the lumps (flattening changed nothing) and not stone separation (r3 changed nothing). Two rounds under 0.5, so I am switching approach.
+- **QUESTION (design, yours or the owner's):** let the shoulders go back to coat and keep only a short, low stone ridge along the spine (the owner's "one or two light touches" read)? It is one texture change on r1's grade (paint coat over the shoulder-blade plates and keep the spine row), so no new Meshy run is needed. It changes the creature's look, so I won't do it without your yes. Otherwise dog3 r1 at ebec8e36 stays as queued, and the GPU decides the coat.
+- **Next (your ST verdict): Tanglevolt arcs + faint + Thundertunnel scale, bundled as one candidate,** starting now. Small ride-along: check Voltarach's emission map loads (GPU arms identical).
+- tb/creatures-land head 80f73b7a3e44854e55fa6f25fa2136a4e5bddbed (docs/evidence on top of ab2ea606; dog3 assets = ebec8e36).
+
 ## TO COORDINATOR (25 Oct, later)
 
 - **dog3 r3 (6c63dfa6d) graded and judged: CPU b41 ties r1** (6.89 vs 6.95 mapped; RMSE 0.35, confirming; `close-1024/b41/VERDICT.md` on tb/creatures-land). Plates strapped on: PRESENT x3 for r1, PRESENT x2 and PARTIAL for r3. r1 stays the candidate; the r3 grade commit b6129230 is reverted in a9e286d3, and the assets are byte-identical to the READY head ebec8e36. Both beat main's badger by about +0.5 (b41 +0.57); judges again read the badger as off-identity.
