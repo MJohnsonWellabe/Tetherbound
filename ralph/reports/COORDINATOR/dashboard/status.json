@@ -1,9 +1,9 @@
 {
- "updated": "2026-10-26T20:10:00Z (3:10 PM CT Mon 26 Oct)",
+ "updated": "2026-10-26T23:15:00Z (6:15 PM CT Mon 26 Oct)",
  "headline": [
-  "Board 254 of 467 criteria met (+4 today on the GPU: Grandpa at 8.35, and the hurt/faint poses of Tanglevolt 7.86/7.72, Frostclaw 7.57/7.72 and Craghorn 7.58/7.58 on the recipe profile the game uses).",
-  "Merged today: #761 (Meadows village path, +0.56), #762 (Stormwood Ashfoot +0.51, Stormheart cleft fix), #763 (Meadows Ridgeline Watch clearings, 4.76 -> 6.40), #764 (Stormwood Crown Overlook vista, 4.99 -> 5.85).",
-  "Next on the GPU: CO8 close-out (Galecrest matte finish; Cloudfang, Breezetail and Stormcapra just under 7.5), then Tidewake regrade, SW17 and SW13. Session-to-session messaging is down in the coordinator session, so lanes and the GPU judge are not receiving new queue lines until it reconnects."
+  "Board 260 of 467 criteria met (+10 today on the GPU): Grandpa; Tanglevolt, Frostclaw and Craghorn hurt/faint; Galecrest (matte finish, 7.70/7.68) and its poses; Cloudfang (7.64) and its poses; Stormcapra as shipped (7.60/7.68) and its poses.",
+  "Merged today: #761 Meadows village path, #762 Stormwood Ashfoot, #763 Meadows Ridgeline Watch clearings, #764 Stormwood Crown Overlook vista, #766 Tidewake destination landmarks (+1.24), #767 Galecrest matte, Cloudfang flinch and the Ashfoot storm view (+1.13).",
+  "GPU next: SW13 (Stormwood ground pass 2, capturing), then SW19, the Stormwood storm sky (CPU +0.83, chapter-wide). Not landed: SW17 lantern posts, Mirejaw retexture and Terrapup dog3 (all scored at or below main). Coordinator replies to sessions are blocked; the GPU queue runs through ralph/reports/GPU-PASS/NOTE.md."
  ],
  "batches": [
   {
