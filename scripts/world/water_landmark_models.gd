@@ -124,6 +124,19 @@ func _cladding(world: Node3D, cfg: Dictionary) -> void:
 	var roll := deg_to_rad(float(cfg.get("roll_jitter_deg", 12.0)))
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(cfg.get("seed", 39))
+	# Seat on what is drawn and collides (coordinator, 26 Oct): the gully's
+	# faceted slabs are collision-bearing pieces over the heightfield, so a
+	# height-and-gradient seat left the cl1/cl2 pieces floating as shelves.
+	# Wait for the physics space to see every static body first.
+	var raycast := str(cfg.get("seat", "raycast")) == "raycast"
+	var space: PhysicsDirectSpaceState3D = null
+	if raycast:
+		for _frame in 3:
+			await get_tree().physics_frame
+		if not is_inside_tree():
+			template.free()
+			return
+		space = get_world_3d().direct_space_state
 	var poses: Array[Transform3D] = []
 	var steps := int(ceil(radius / cell))
 	for gx in range(-steps, steps + 1):
@@ -144,16 +157,27 @@ func _cladding(world: Node3D, cfg: Dictionary) -> void:
 			if blocked:
 				continue
 			var y := float(world.call("ground_height_at", at.x, at.y))
-			if not is_finite(y) or y < float(cfg.get("min_height_m", 4.0)):
+			if not is_finite(y):
 				continue
-			# The slope under the whole piece, not a 2 m sample: a local
-			# normal left wide pieces floating off the face (cl1 preview).
-			var d := maxf(2.0, width * float(cfg.get("normal_span", 0.35)))
-			var normal := Vector3(
-				float(world.call("ground_height_at", at.x - d, at.y)) - float(world.call("ground_height_at", at.x + d, at.y)),
-				2.0 * d,
-				float(world.call("ground_height_at", at.x, at.y - d)) - float(world.call("ground_height_at", at.x, at.y + d))).normalized()
-			if not normal.is_finite() or normal.y > max_up:
+			var normal := Vector3.UP
+			if space != null:
+				var query := PhysicsRayQueryParameters3D.create(Vector3(at.x, y + float(cfg.get("ray_above_m", 200.0)), at.y),
+					Vector3(at.x, y - 5.0, at.y))
+				query.collide_with_areas = false
+				var hit := space.intersect_ray(query)
+				if hit.is_empty():
+					continue
+				y = (hit.position as Vector3).y
+				normal = (hit.normal as Vector3).normalized()
+			else:
+				# The slope under the whole piece, not a 2 m sample: a local
+				# normal left wide pieces floating off the face (cl1 preview).
+				var d := maxf(2.0, width * float(cfg.get("normal_span", 0.35)))
+				normal = Vector3(
+					float(world.call("ground_height_at", at.x - d, at.y)) - float(world.call("ground_height_at", at.x + d, at.y)),
+					2.0 * d,
+					float(world.call("ground_height_at", at.x, at.y - d)) - float(world.call("ground_height_at", at.x, at.y + d))).normalized()
+			if y < float(cfg.get("min_height_m", 4.0)) or not normal.is_finite() or normal.y > max_up:
 				continue
 			# The facade's front (+Z) faces out of the slope; its up runs up the face.
 			var up := (Vector3.UP - normal * normal.dot(Vector3.UP)).normalized()
