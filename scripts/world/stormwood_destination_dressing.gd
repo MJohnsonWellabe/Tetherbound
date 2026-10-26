@@ -8,14 +8,24 @@ const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 
 
 static func install(world: Node3D, budget: RefCounted) -> void:
+	var cfg: Dictionary = _read(CONFIG).get("fallen_giant", {})
+	var hero: Dictionary = cfg.get("hero", {})
+	if bool(cfg.get("enabled", false)) and bool(hero.get("enabled", false)):
+		# The grove's trees inside the log's footprint are cleared on every
+		# shell (vegetation.gd clear_area, as the lantern pools do), so host
+		# and client agree; only the client draws the log.
+		var vegetation := world.get_node_or_null("Vegetation")
+		for raw: Variant in hero.get("clear_circles", []):
+			var circle: Array = raw
+			if vegetation != null and vegetation.has_method("clear_area"):
+				var y := float(world.call("ground_height_at", float(circle[0]), float(circle[1])))
+				vegetation.call("clear_area", Vector3(float(circle[0]), y, float(circle[1])), float(circle[2]))
+		if not bool(world.get("simulation_only")):
+			_install_hero(world, hero)
+		return
 	if bool(world.get("simulation_only")):
 		return
-	var cfg: Dictionary = _read(CONFIG).get("fallen_giant", {})
 	if not bool(cfg.get("enabled", false)):
-		return
-	var hero: Dictionary = cfg.get("hero", {})
-	if bool(hero.get("enabled", false)):
-		_install_hero(world, hero)
 		return
 	var terrain := world.get_node_or_null("Terrain")
 	var scene := load(str(cfg.asset)) as PackedScene
