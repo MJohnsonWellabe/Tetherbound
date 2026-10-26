@@ -1,5 +1,15 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (26 Oct, missing-clip check)
+
+- **Galecrest fly_grip: not a game bug.** Galecrest is a Fly carrier (fly_traversal.json `can_carry`) but is not an f36 recipe species, so it has no fly_grip clip by design.
+  - In play, `fly_controller.gd` installs a grip clip only when a recipe provides one. Otherwise, for a `procedural_wing_pose` carrier (Galecrest, Galewisp) it stops the player and flaps the wings procedurally on the flight clock. So flight shows the authored-style wingbeat, not a static pose.
+- **water_cannonback swim/ride: the game falls back, also not a crash.** Its water form has no swim or ride clip; the f36 water recipe lost in b13 (5.51 vs 6.03), so it is OFF. In play, `creature_animator.gd` plays locomotion while the traversal role is set: walk while swimming, idle under a rider.
+  - On the stage the walk under the water line reads as paddling, which is acceptable.
+  - Under a rider, the rider perches on top of the shell's cannons. That is one of your "riders that don't read" items and is next.
+- **Fix (harness, e9a6681f on tb/creatures-land):** `capture_f36_poses.gd` now shows what the game plays for a traversal row with no clip and records it in the receipt (`runtime_fallback` with the clip, or `runtime_procedural_wingbeat`) instead of failing. Re-run water_cannonback,galecrest: no errors. Added to TECHNICAL §8.1.
+- **Next:** riders (water forms, Sirenseal, water_cannonback's perch), then trainer-height scale (Thundertunnel, Brooktail).
+
 ## TO COORDINATOR (26 Oct, isolated arms on main)
 
 - **CO3-ON 33ba3f2a2bc8a22bd625cd8b4f4839796a4c0c27** (tb/co3-on = origin/main ac5e1426 + only da816e00's change: shared rim + faint settle).
