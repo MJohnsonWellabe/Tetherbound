@@ -1110,8 +1110,9 @@ func _hollow_roots(cfg: Dictionary) -> void:
 			var r := lerpf(start_r, end_r, t)
 			var at := Vector3(cos(a) * r, 0.0, sin(a) * r)
 			var thick := lerpf(float(thickness[0]), float(thickness[1]), pow(t, 0.7))
-			# Climbs the wall foot, then hugs the ground with a low hump.
-			at.y = _root_ground(at) + thick * 0.45 + (1.4 * (1.0 - t) * (1.0 - t)) + 0.35 * sin(t * PI)
+			# Climbs the wall foot, hugs the ground, and dives into it as it
+			# thins (r27 preview: raised thin tips read as tusks).
+			at.y = _root_ground(at) + thick * lerpf(0.45, -1.2, t) + 1.4 * (1.0 - t) * (1.0 - t) + 0.2 * sin(t * PI)
 			controls.append(at)
 			radii.append(thick)
 		_crown_limb("HollowRoot%02d" % index, controls, radii, float(cfg.get("bark_repeat_m", 4.0)))
