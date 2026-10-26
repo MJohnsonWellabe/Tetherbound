@@ -19,6 +19,9 @@ render_mode blend_mix, depth_draw_opaque, cull_disabled;
 uniform vec3 deep : source_color = vec3(0.03, 0.08, 0.09);
 uniform vec3 lip : source_color = vec3(0.35, 0.85, 0.65);
 uniform float lip_energy = 0.9;
+// r33 (judges x3: "grey puddles, not black pools"): the surface's specular,
+// so a darker pool mirrors less of the pale storm sky.
+uniform float water_specular = 0.3;
 uniform float radius = 3.0;
 varying vec2 local_xz;
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
@@ -39,7 +42,7 @@ void fragment() {
 	// Black still water: a low specular keeps it from mirroring the pale
 	// storm sky into a grey puddle.
 	ROUGHNESS = mix(0.12, 0.6, lip_band);
-	SPECULAR = 0.3;
+	SPECULAR = water_specular;
 	METALLIC = 0.0;
 	ALPHA = inside * mix(0.94, 0.75, lip_band);
 }
@@ -262,6 +265,7 @@ static func _build_pool(root: Node3D, shader: Shader, at: Vector3, radius: float
 	material.set_shader_parameter("deep", Color(str(cfg.get("deep_colour", "#081517"))))
 	material.set_shader_parameter("lip", Color(str(cfg.get("lip_colour", "#5ad8a6"))))
 	material.set_shader_parameter("lip_energy", float(cfg.get("lip_energy", 0.9)))
+	material.set_shader_parameter("water_specular", float(cfg.get("water_specular", 0.3)))
 	water.material_override = material
 	water.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	holder.add_child(water)
