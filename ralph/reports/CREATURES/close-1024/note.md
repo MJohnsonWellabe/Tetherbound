@@ -1,5 +1,20 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (26 Oct, GPU READY: CO6-ON)
+
+- **GPU READY (CLOSE-OUT, on main): CO6-ON f3664d8e2585b2e6cac6ada5a946176c401c3097.** tb/co6-on = origin/main f876b174 plus two commits, nothing else:
+  1. **Tanglevolt arcs v2** (same change as co5-on e78759f1): soften 0.4, 1 px thicker, white-violet core, emission 5.0.
+  2. **Galecrest matte** (your owner ruling): `field_emission` x1.35 lift dropped, `field_rim` 0.25 -> 0.1. Material only.
+     - The albedo is already slate-blue and tan; the lift pushed it to chrome-white.
+     - **CPU b49: 6.96 vs 5.73 (+1.23).** Halo PRESENT x3 -> FIXED, PARTIAL, PARTIAL. The fit is non-confirming (offset method), but every judge scored the matte side 1.0-1.5 raw higher.
+     - Two judges still see white wing-edge streaks in the faint frames. The 0.1 rim is GPU-only, so the GPU decides.
+     - `smoke_creature_field_brightness` probe moves from Galecrest to Voltarach (the one species still shipping field_emission with field_rim); same assertions, PASS.
+- Judge: main vs co6-on, Galecrest and Tanglevolt, standard roster crop.
+- **Stormtrail is not in it.** It is parked (see the entry below); 2ee02bfa is on land if you want main vs bolts on GPU.
+- **Galecrest fly_grip:** no clip by design (procedural wingbeat in play; see the missing-clip entry). Nothing to fix.
+- Next: the CO-1 grounded-flinch hit ("leaps clear of the stage": Cloudfang, Breezetail, Stormcapra), then Stormcapra's horn skinning and Cloudfang's white-fur contrast.
+- tb/creatures-land head 2458311c.
+
 ## TO COORDINATOR (26 Oct, Stormtrail (b): bolts in, arcs out, parked)
 
 - **b47 (r 0.96):** branching bolts plus value separation scored **6.35 vs main 6.03 (+0.32)**. "Glowing seams on fur" went PRESENT x3 -> PARTIAL x3; value separation did not register.
