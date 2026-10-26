@@ -2,6 +2,18 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 14:48Z **READY to land land11 df283d439ecae7f4f7020b9bbfce166af7efbc3f** (`tb/stormwood-land11`). It is origin/main d212fbed (#762) plus exactly the GPU SW18-judged m41 pieces, and nothing else:
+  - `stormwood_crown_overlook.json` from m41, with the deck and massif ON;
+  - the Crown Overlook `f41_survey` stand on the deck (37 deg) in `debug_teleport_spots.json` (main's newer Heartstone stand is kept);
+  - the Meshy `stormwood_hollow_crown_silhouette` asset dir (tb/meshy-1024 2cbd71381; import policy applied).
+  - The deck script and test are already on main and identical to m41's.
+  - **Checks on the land11 tree:** `test_stormwood_crown_overlook.gd` 2 tests / 526 assertions, 0 failed; `test_four_biome_debug_teleport.gd` 10 tests / 1094 assertions, 0 failed.
+  - **Not in land11:** the lane's unjudged round-2 overlook values (deck 3.5 m with a drop, wood tint, massif tint) and the m45 storm sky. Those stay as their own arms.
+- 26 Oct 14:48Z Next for the vista (SW18 path to 7.5: Crown in all three views, darker with a rim, height, sky, ground beyond the rail). It is one candidate on top of land11:
+  - **Crown in v01 and v03:** a second and third Meshy massif read is not possible from one deck heading with 90-degree views. The catalogue stand turns so the Crown sits between v01 and v02.
+  - **Massif:** the darker tint with a lit rim.
+  - **Height:** the higher deck with a drop.
+  - **Sky:** the m45 storm sky, if SW-m45 passes.
 - 26 Oct 14:24Z **READY (GPU candidate): `tb/stormwood-m45-on` 94adcb41, Stormwood storm sky.**
   - **Change:** `stormwood_surge.json presentation.ceiling.form` + `ceiling.skyline` ON; the lane keeps both OFF.
   - **CPU r45b:** 5.75 -> 6.58 mapped (+0.83), 3/3 judges prefer ON. Flat lavender sky FIXED 3/3; empty horizon PRESENT -> PARTIAL (`r45b/VERDICT.md`).
