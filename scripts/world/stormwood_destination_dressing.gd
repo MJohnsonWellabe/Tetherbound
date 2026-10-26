@@ -20,8 +20,7 @@ static func install(world: Node3D, budget: RefCounted) -> void:
 			if vegetation != null and vegetation.has_method("clear_area"):
 				var y := float(world.call("ground_height_at", float(circle[0]), float(circle[1])))
 				vegetation.call("clear_area", Vector3(float(circle[0]), y, float(circle[1])), float(circle[2]))
-		if not bool(world.get("simulation_only")):
-			_install_hero(world, hero)
+		_install_hero(world, hero, not bool(world.get("simulation_only")))
 		return
 	if bool(world.get("simulation_only")):
 		return
@@ -52,22 +51,18 @@ static func install(world: Node3D, budget: RefCounted) -> void:
 ## edd21e2f3, provenance beside the GLB) replaces the installed dead tree,
 ## lying along `yaw_deg` beside the road with its hollow root end toward the
 ## approach. Fitted along its long axis, seated on the lowest ground under its
-## footprint. Render-only (collision scope stays pending, as for the tree).
-static func _install_hero(world: Node3D, cfg: Dictionary) -> void:
-	var model := HERO_PROP.load_model(str(cfg.get("model", "")))
-	if model == null:
-		push_warning("Fallen Giant hero: model unavailable")
-		return
-	var bounds := HERO_PROP.BOUNDS.measure(model)
-	var factor := float(cfg.get("length_m", 55.0)) / maxf(0.01, bounds.size.z)
-	model.scale = Vector3.ONE * factor
-	model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
+## footprint. Its box collider (`collider_boxes`) is built on every shell;
+## only a drawing shell (`draw`) loads the model.
+static func _install_hero(world: Node3D, cfg: Dictionary, draw: bool) -> void:
 	var holder := Node3D.new()
 	holder.name = "FallenGiantHero"
 	var at: Array = cfg.get("at_xz", [-150.0, 4478.0])
 	var yaw := deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
 	holder.rotation.y = yaw
-	var half := Vector2(bounds.size.x, bounds.size.z) * factor * 0.5
+	# The footprint and collider come from config (measured once from the
+	# GLB), so every shell, a headless host included, seats and blocks alike.
+	var footprint: Array = cfg.get("footprint_half_m", [17.3, 27.5])
+	var half := Vector2(float(footprint[0]), float(footprint[1]))
 	var low := INF
 	for u: float in [-1.0, 0.0, 1.0]:
 		for v: float in [-1.0, 0.0, 1.0]:
@@ -76,8 +71,31 @@ static func _install_hero(world: Node3D, cfg: Dictionary) -> void:
 			if is_finite(y):
 				low = minf(low, y)
 	holder.position = Vector3(float(at[0]), (low if is_finite(low) else 0.0) - float(cfg.get("sink_m", 1.5)), float(at[1]))
-	holder.add_child(model)
-	holder.set_meta("collision_scope_pending", true)
+	var boxes: Array = cfg.get("collider_boxes", [])
+	if not boxes.is_empty():
+		var body := StaticBody3D.new()
+		body.name = "FallenGiantBody"
+		for raw: Variant in boxes:
+			var box: Array = raw
+			var shape := BoxShape3D.new()
+			shape.size = Vector3(float(box[3]), float(box[4]), float(box[5]))
+			var collider := CollisionShape3D.new()
+			collider.shape = shape
+			collider.position = Vector3(float(box[0]), float(box[1]), float(box[2]))
+			body.add_child(collider)
+		holder.add_child(body)
+	else:
+		holder.set_meta("collision_scope_pending", true)
+	if draw:
+		var model := HERO_PROP.load_model(str(cfg.get("model", "")))
+		if model == null:
+			push_warning("Fallen Giant hero: model unavailable")
+		else:
+			var bounds := HERO_PROP.BOUNDS.measure(model)
+			var factor := float(cfg.get("length_m", 55.0)) / maxf(0.01, bounds.size.z)
+			model.scale = Vector3.ONE * factor
+			model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
+			holder.add_child(model)
 	world.add_child(holder)
 
 
