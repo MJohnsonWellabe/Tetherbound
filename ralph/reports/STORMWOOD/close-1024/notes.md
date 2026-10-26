@@ -2,7 +2,7 @@
 
 ## Session 2 log (newest first)
 
-- 26 Oct 08:00Z **MESHY: `stormwood_ranger_shelter`** (Ashfoot shelter exterior; F41 `ashfoot_shelter_outside` is GPU 5.54/5.58).
+- 26 Oct 07:45Z **MESHY: `stormwood_ranger_shelter`** (Ashfoot shelter exterior; F41 `ashfoot_shelter_outside` is GPU 5.54/5.58).
   - **Why:** every judge in GPU SW9 and CPU r38 names "a small Meadows-style cottage, not a Stormwood shelter" as the top defect, and judges ask for "dark timber, copper fittings, storm-glass lantern, a raised deck or lightning rod". Scene dressing does not move it: r38's grove, lightning rod, lantern post and barrel came to +0.49 and are PARKED.
   - **The asset:** an exterior shell that wraps the existing ranger_station footprint (4 x 6 m, 3 m walls, gable roof about 6.8 m). It has:
     - dark weathered timber walls on a mossy stone plinth;
@@ -15,7 +15,7 @@
   - **References:** the owner Stormheart boards A/B (timber and walkway details, aged copper, lanterns), plus the lantern post asset already delivered (`stormwood_lantern_post`) for the lantern.
   - **Scale:** check it against the 1.80 m trainer at the door.
   - **Wiring:** this lane replaces the prefab's exterior modules for `ashfoot_shelter` only, flag-off until judged, and can re-run the r38 grove with the left sky kept open for the lightning.
-- 26 Oct 08:00Z PARKED r38 (Ashfoot exterior grove + dressing): 5.47 -> 5.96 mapped (+0.49, under the 0.5 rule; `r38/VERDICT.md`). Horizon PRESENT -> PARTIAL; cottage and carpet unchanged. The canopy hides the break lightning, and the leaf cards dither.
+- 26 Oct 07:45Z PARKED r38 (Ashfoot exterior grove + dressing): 5.47 -> 5.96 mapped (+0.49, under the 0.5 rule; `r38/VERDICT.md`). Horizon PRESENT -> PARTIAL; cottage and carpet unchanged. The canopy hides the break lightning, and the leaf cards dither.
 
 - 26 Oct 07:25Z PARKED r37 (Ashfoot `planks`, narrower lining boards): 5.77 -> 5.37 mapped (-0.40, 3/3 judges prefer OFF; `r37/VERDICT.md`). The judges read the wide boards as finer. The "stretched planks" complaint is the coarse atlas grain at a close wide-angle stand, so board size will not fix it. m36 stands as the Ashfoot candidate. Next Ashfoot ideas: lightning that lights the room at the break, rain on the glass, cutting the window-frame bloom.
 
