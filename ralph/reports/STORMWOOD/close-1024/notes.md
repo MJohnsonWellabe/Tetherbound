@@ -2,6 +2,21 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 13:20Z **MESHY: `stormwood_struck_sentinel`** (Cinder Verge opening landmark; GPU SW8 4.71 Medium / 5.79 High, the lowest untried stand).
+  - **Today:** the landmark is the kit DeadTree_1 scaled 4.4x with a thin procedural cyan line (`stormwood_struck_sentinel.gd`). On CPU it reads as a pale generic dead tree in one of three views.
+  - **The asset:** one ancient storm-forest giant split down its trunk by a lightning strike.
+    - The two halves lean apart; the inner wood is charred black.
+    - A jagged pale-blue crystal fulgurite seam runs down the split, with a natural faint glow in the crack only.
+    - One broken crown limb has fallen beside it.
+    - Exposed buttress roots grip scorched ground.
+    - Moss on the shaded side, a few surviving needle branches high up, no red.
+  - **Scale:** about 28-32 m tall and 6-8 m across the root plate, so it dominates the trainer at 15 m.
+  - **References:**
+    - the owner Stormheart boards A/B: crystal, scar and bark language;
+    - the existing `stormwood_glass_scar_crystals` asset: fulgurite style.
+  - **Wiring:** this lane replaces the kit tree in `stormwood_struck_sentinel.gd` (visual only; Ranger Pax, traversal and the arena unchanged). Flag-off until judged.
+- 26 Oct 13:20Z **Struck Sentinel data bug:** the F41 stand sits on Ranger Pax's trainer seat (-320, 240), so Pax fills the lens in all three views (CPU). This is the same bug the Capacitor Grove stand had. A capture-only `f41_survey` stand 23 m off the seat, facing the split tree, is on CPU now.
+
 - 26 Oct 13:15Z **MESHY: `stormheart_hollow_wall`** (Stormheart round 3; GPU B5 SW11 path item 1. Gap 2 is PRESENT 12/12: "smooth dark enclosing walls with a banner ring, no readable bark, branches, crown or core").
   - **The asset:** one tall curved section of the Stormheart's hollow trunk, seen from inside. About 30 m tall and 22 m along the curve, its inner face concave, and built to tile at 6-8 angles around the hollow with no visible repeat:
     - deep vertical bark ridges and buttress roots at its foot;
