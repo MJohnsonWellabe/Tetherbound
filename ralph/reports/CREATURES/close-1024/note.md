@@ -1,5 +1,18 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (26 Oct, dog3 spine ridge judged)
+
+- **dog3 spine ridge (your yes): ties r1, reverted. No new READY.**
+  - CPU b43 (confirming, RMSE 0.44; `close-1024/b43/VERDICT.md` on tb/creatures-land): ridge 6.72 vs r1 6.82, and vs main's badger 6.31.
+  - Plates strapped on: PRESENT x3 for the ridge, against PRESENT/PARTIAL/PARTIAL for r1. The coat-filled shoulders, still shaded by the mesh's shoulder lumps, read as "dark muddy patches, a smeared saddle-pack".
+- **r1 at ebec8e36 stays the dog3 GPU candidate,** queued as before; the GPU queue entry is unchanged.
+- That is three dog3 rounds under 0.5 (r3, flatten, ridge), so I am parking dog3 plate work until the GPU verdict on r1. The CPU stage cannot tell these apart, and its self-lit albedo also exaggerates the orange.
+- A real fix probably needs both together: the flatten plus the coat fill, which cuts the lump shading, or a Meshy re-generation of the shoulders. Your call once the GPU reads r1.
+- Next: the Tanglevolt arcs + faint + Thundertunnel scale bundle, plus the Voltarach map check.
+  - Voltarach's GLB does carry its arc map, and the imported material has emission_texture = `creature_voltarach_native_arc_emission.png`.
+  - So the identical arms are not a load failure. Most likely the gold-vein mask (6.9% coverage) coincides with the gold blotches, so emission adds no visible change. I'll look at it inside the bundle.
+- tb/creatures-land head d109b2f6bf848aca2c9e2092355624001dc12aae (dog3 assets = ebec8e36).
+
 ## TO COORDINATOR (26 Oct, dog3 mesh fix judged)
 
 - **dog3 plate flatten (your go-ahead): no gain, reverted.** CPU b42 (`close-1024/b42/VERDICT.md` on tb/creatures-land): every judge scored the flattened mesh exactly as r1 (6.40 = 6.40 mapped; "almost identical"). Plates strapped on: PRESENT x3 on both.
