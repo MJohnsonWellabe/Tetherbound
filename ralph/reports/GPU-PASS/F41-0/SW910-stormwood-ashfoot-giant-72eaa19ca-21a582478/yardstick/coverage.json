@@ -1,0 +1,98 @@
+[
+    {
+        "item":  "SW9",
+        "stand":  "ashfoot_shelter_inside",
+        "preset":  "Medium",
+        "judged":  [
+                       "ashfoot_shelter_inside_calm",
+                       "ashfoot_shelter_inside_building",
+                       "ashfoot_shelter_inside_break",
+                       "ashfoot_shelter_inside_fading"
+                   ]
+    },
+    {
+        "item":  "SW9",
+        "stand":  "ashfoot_shelter_outside",
+        "preset":  "Medium",
+        "judged":  [
+                       "ashfoot_shelter_outside_calm",
+                       "ashfoot_shelter_outside_building",
+                       "ashfoot_shelter_outside_break",
+                       "ashfoot_shelter_outside_fading"
+                   ]
+    },
+    {
+        "item":  "SW10",
+        "stand":  "deepwood_the_fallen_giant-calm",
+        "preset":  "Medium",
+        "judged":  [
+                       "deepwood_the_fallen_giant_v01_calm",
+                       "deepwood_the_fallen_giant_v02_calm",
+                       "deepwood_the_fallen_giant_v03_calm",
+                       "deepwood_the_fallen_giant_v04_calm",
+                       "deepwood_the_fallen_giant_v05_calm",
+                       "deepwood_the_fallen_giant_v06_calm"
+                   ]
+    },
+    {
+        "item":  "SW10",
+        "stand":  "deepwood_the_fallen_giant-fading",
+        "preset":  "Medium",
+        "judged":  [
+                       "deepwood_the_fallen_giant_v01_fading",
+                       "deepwood_the_fallen_giant_v02_fading",
+                       "deepwood_the_fallen_giant_v03_fading",
+                       "deepwood_the_fallen_giant_v04_fading",
+                       "deepwood_the_fallen_giant_v05_fading",
+                       "deepwood_the_fallen_giant_v06_fading"
+                   ]
+    },
+    {
+        "item":  "SW9",
+        "stand":  "ashfoot_shelter_inside",
+        "preset":  "High",
+        "judged":  [
+                       "ashfoot_shelter_inside_calm",
+                       "ashfoot_shelter_inside_building",
+                       "ashfoot_shelter_inside_break",
+                       "ashfoot_shelter_inside_fading"
+                   ]
+    },
+    {
+        "item":  "SW9",
+        "stand":  "ashfoot_shelter_outside",
+        "preset":  "High",
+        "judged":  [
+                       "ashfoot_shelter_outside_calm",
+                       "ashfoot_shelter_outside_building",
+                       "ashfoot_shelter_outside_break",
+                       "ashfoot_shelter_outside_fading"
+                   ]
+    },
+    {
+        "item":  "SW10",
+        "stand":  "deepwood_the_fallen_giant-calm",
+        "preset":  "High",
+        "judged":  [
+                       "deepwood_the_fallen_giant_v01_calm",
+                       "deepwood_the_fallen_giant_v02_calm",
+                       "deepwood_the_fallen_giant_v03_calm",
+                       "deepwood_the_fallen_giant_v04_calm",
+                       "deepwood_the_fallen_giant_v05_calm",
+                       "deepwood_the_fallen_giant_v06_calm"
+                   ]
+    },
+    {
+        "item":  "SW10",
+        "stand":  "deepwood_the_fallen_giant-fading",
+        "preset":  "High",
+        "judged":  [
+                       "deepwood_the_fallen_giant_v01_fading",
+                       "deepwood_the_fallen_giant_v02_fading",
+                       "deepwood_the_fallen_giant_v03_fading",
+                       "deepwood_the_fallen_giant_v04_fading",
+                       "deepwood_the_fallen_giant_v05_fading",
+                       "deepwood_the_fallen_giant_v06_fading"
+                   ]
+    }
+]
