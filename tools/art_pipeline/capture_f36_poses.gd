@@ -24,6 +24,7 @@ var _water: MeshInstance3D = null
 const TRAINER_MODEL := preload("res://scripts/player/trainer_model.gd")
 var _rider: Node3D = null
 const FLY_VIEW_TURN_DEG := 35.0
+const TRAINER_CLEARANCE_M := 1.4
 ## Close-1020 batch 4: the stage camera looks almost level (~1.6 deg), so a
 ## creature downed on its side reads as belly-up; fights are watched from
 ## combat.json's starting pitch. Opt-in so earlier rounds stay reproducible.
@@ -113,7 +114,7 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 	# F29#3 r6 (r5 judges: the ruler hid behind long bodies): with --context
 	# the trainer stands clear of the resting body, never overlapping it.
 	if _context:
-		_trainer.global_position = Vector3(minf(PAIR_TRAINER_POS.x, resting_bounds.position.x - 1.4),
+		_trainer.global_position = Vector3(minf(PAIR_TRAINER_POS.x, resting_bounds.position.x - TRAINER_CLEARANCE_M),
 			PAIR_TRAINER_POS.y, PAIR_TRAINER_POS.z)
 	if whole_body:
 		# One conservative standing-envelope camera per species, shared by both
@@ -209,6 +210,8 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 					body.call("settle_faint")
 			for frame in 3:
 				await process_frame
+			if _context:
+				await _clear_trainer_of_pose(body)
 			var path := "%s/%s-%s-%03d.png" % [out, id, role, int(phase * 100)]
 			var captured := await _capture(path)
 			receipt.append({"role": role, "phase": phase, "path": path, "captured": captured})
@@ -238,6 +241,25 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 	_trainer.global_position = PAIR_TRAINER_POS
 	body.queue_free()
 	await process_frame
+
+
+## CLOSE-OUT 26 Oct (GPU judges: Ripplet's tail "crowds the trainer"): the
+## resting box is the bind pose, so a clip that swings the tail or rears back
+## past it put the ruler inside the body. Keep the ruler TRAINER_CLEARANCE_M
+## clear of the pose on screen (creature_body.gd `_posed_body_box`).
+func _clear_trainer_of_pose(body: Node3D) -> void:
+	if not _trainer.visible or not body.has_method("_posed_body_box"):
+		return
+	var box: AABB = body.call("_posed_body_box")
+	if box.size == Vector3.ZERO:
+		return
+	var min_x := INF
+	for i in 8:
+		min_x = minf(min_x, (body.global_transform * box.get_endpoint(i)).x)
+	var clear_x := min_x - TRAINER_CLEARANCE_M
+	if clear_x < _trainer.global_position.x:
+		_trainer.global_position.x = clear_x
+		await process_frame
 
 
 func _stage_role(role: String, body: Node3D, height: float, resting: AABB) -> Dictionary:
