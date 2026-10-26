@@ -2,6 +2,20 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 13:15Z **MESHY: `stormheart_hollow_wall`** (Stormheart round 3; GPU B5 SW11 path item 1. Gap 2 is PRESENT 12/12: "smooth dark enclosing walls with a banner ring, no readable bark, branches, crown or core").
+  - **The asset:** one tall curved section of the Stormheart's hollow trunk, seen from inside. About 30 m tall and 22 m along the curve, its inner face concave, and built to tile at 6-8 angles around the hollow with no visible repeat:
+    - deep vertical bark ridges and buttress roots at its foot;
+    - burls, shelf fungi and moss on the ledges;
+    - one jagged lightning-scar seam with a faint natural blue glow in the crack only (no glowing hide);
+    - a few hanging root strands and a timber walkway bracket stub.
+  - **Palette:** dark storm bark with blue-green moss, no red.
+  - **References:**
+    - the owner Stormheart boards A/B (`docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png` and `-b.png`; the hollow interior, bark, scar and walkway details);
+    - the r16-r19 root-wall panel as the scale and form starting point, which read "as a tiled strip". This piece must be taller and individually varied.
+  - **Use:** this lane rings the hollow with it at varied yaw and scale, replacing the smooth drum walls in the catalogue's interior stands. Flag-off until judged.
+- 26 Oct 13:15Z Note on SW11 path item 3, "re-aim heartstone v01". The catalogue's three views sit 90° apart and each sees about 70°, so no heading puts the stone in both v01 and v02. The 8 m stand keeps it whole in v02 and v03. Not a lane change; your call whether the catalogue should use a narrower spread for that stand.
+- 26 Oct 13:15Z The "flat gold ground cracks" every Stormwood set names are the owner-directed road current (WO-F09-04, "make the path and roads electrified with yellow electricity"). This lane leaves them alone.
+
 - 26 Oct 13:10Z PARKED the Ashfoot exterior shell approach after two misses.
   - **r42:** +0.47 alone.
   - **r43:** shell gain 1.9 + grove behind-right + dressing, 5.88 -> 5.31 mapped (-0.57); 3/3 judges prefer the kit cottage (`r43/VERDICT.md`).
