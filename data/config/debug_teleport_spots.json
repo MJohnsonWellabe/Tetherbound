@@ -124,7 +124,7 @@
           "display_name": "Region 2 — Glowmoss Hollows",
           "spots": [
             { "display_name": "The Lantern Pools", "position": [-380.0, 1400.0] },
-            { "display_name": "Crown Overlook", "position": [160.0, 1980.0] }
+            { "display_name": "Crown Overlook", "position": [160.0, 1980.0], "view_heading_deg": 37.0, "_why_heading": "Coordinator, 26 Oct: an overlook whose purpose is the Crown view; without an authored heading its catalogue views took the neighbouring spot's direction (133/223/313 deg) and never faced the Crown (37 deg, 900 m). A data fix, not a yardstick change." }
           ]
         },
         {
