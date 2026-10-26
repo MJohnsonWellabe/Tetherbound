@@ -313,6 +313,10 @@ func _ready() -> void:
 	SYSTEM_OVERLAY.corner_scale(_enemy_panel, float(SYSTEM_OVERLAY.SCREEN.config().get("combat", {})
 		.get("panel_scale", 1.0)), Vector2(1.0, 0.0))
 	_ally_panel.add_theme_stylebox_override("panel", UITokens.panel_box())
+	# F22#4 close-out (`ally_panel_scale`, 1/absent = off): the party card keeps
+	# its bottom-left corner and gives the fight back some of the frame.
+	SYSTEM_OVERLAY.corner_scale(_ally_panel, float(SYSTEM_OVERLAY.SCREEN.config().get("combat", {})
+		.get("ally_panel_scale", 1.0)), Vector2(0.0, 1.0))
 	_grid_panel.add_theme_stylebox_override("panel", UITokens.panel_box())
 	# `slot_box()`, not `panel_box()`: this plate is 36px tall and `panel_box()`'s
 	# 16px content margin on every side would leave 4px for the text itself.

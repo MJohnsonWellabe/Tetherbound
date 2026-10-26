@@ -52,6 +52,9 @@ func _ready() -> void:
 	add_child(left)
 	_commands = COMMAND_METER.new()
 	left.add_child(_commands)
+	# F22#4 close-out (`command_scale`, 1/absent = off): GPU J judges read the
+	# bottom HUD as covering about a third of the Riverwatch frame.
+	corner_scale(left, float(cfg.get("command_scale", 1.0)), Vector2(0.5, 1.0))
 	_moves = VBoxContainer.new()
 	_moves.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
 	# Offsets from the bottom-right anchor. A `position` write is measured from
