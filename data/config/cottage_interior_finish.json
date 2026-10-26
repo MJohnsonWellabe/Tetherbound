@@ -14,7 +14,8 @@
   "rail_colour": "#4a3a2c",
   "rail_height_m": 0.95,
   "storm_finish": {
-    "enabled": false,
+    "enabled": true,
+    "_why_on": "GPU SW9 (tb/gpu-pass c75e355f5, ralph/reports/GPU-PASS/F41-0/SW910-stormwood-ashfoot-giant-72eaa19ca-21a582478): Ashfoot r25 (storm_finish + window_pane + grade) Medium 5.41 -> 6.11 (+0.70), High 4.71 -> 6.23 (+1.52); plaster box FIXED 6/6, outside no-change holds. ON.",
     "_candidate": "r23 Ashfoot to 7 (OFF until judged). GPU SW6 (25 Oct, 5.82): no window or view of the storm (the four phases look the same), generic planks without Stormwood copper, glass or moss, plaster gable. Lining to the 3 m wall top with a timber-framed opening on the ranger station's east window (open shutters, the real storm outside), lined gable triangles, a cool storm fill at the window against the warm hearth, copper lantern/pot/bucket (installed kit, tinted), herb bundles under the ridge and moss in the corners. Presentation only, no colliders.",
     "wall_top_m": 3.0,
     "old_lining_top_m": 2.45,
@@ -31,7 +32,8 @@
     "herb_bundles": 5,
     "moss_colour": "#2c3a26",
     "window_pane": {
-      "enabled": false,
+      "enabled": true,
+      "_why_on": "GPU SW9 (tb/gpu-pass c75e355f5, ralph/reports/GPU-PASS/F41-0/SW910-stormwood-ashfoot-giant-72eaa19ca-21a582478): Ashfoot r25 (storm_finish + window_pane + grade) Medium 5.41 -> 6.11 (+0.70), High 4.71 -> 6.23 (+1.52); plaster box FIXED 6/6, outside no-change holds. ON.",
       "_candidate": "r25 storm pane (OFF until judged; needs storm_finish on). r24 judges x3: the window shows warm bright light, no storm, and calm and break look alike. A pane in the opening tints the real exterior toward the storm purple, rain runs down it by surge phase, and the surge's own flash level lifts the pane and the cool window light in Break. Presentation only.",
       "tint": "#5c4f87",
       "tint_alpha": 0.5,
@@ -41,7 +43,8 @@
       "flash_light_gain": 3.0
     },
     "grade": {
-      "enabled": false,
+      "enabled": true,
+      "_why_on": "GPU SW9 (tb/gpu-pass c75e355f5, ralph/reports/GPU-PASS/F41-0/SW910-stormwood-ashfoot-giant-72eaa19ca-21a582478): Ashfoot r25 (storm_finish + window_pane + grade) Medium 5.41 -> 6.11 (+0.70), High 4.71 -> 6.23 (+1.52); plaster box FIXED 6/6, outside no-change holds. ON.",
       "_candidate": "r24 storm grade (OFF until judged; needs storm_finish on). r23 judges x3: the room is 'a saturated orange pine box' with a flat warm daylight grade and no storm mood. Cooler, more weathered timber and a dimmer, less orange room light, so the hearth pool and the cool window fill carry the room.",
       "lining_tint": "#a8a299",
       "lining_weathering": 0.9,
