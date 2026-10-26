@@ -111,8 +111,11 @@ func _build_lining() -> void:
 	var wood := ShaderMaterial.new()
 	wood.shader = CUT_WOOD_SHADER
 	wood.set_shader_parameter("wood_atlas", WOOD_ATLAS)
-	wood.set_shader_parameter("wood_tint", Color(str(cfg.get("lining_tint", "#b39a7c"))))
-	wood.set_shader_parameter("weathering", float(cfg.get("lining_weathering", 0.3)))
+	# r24 storm grade (r23 judges x3: "a saturated orange pine box"): cooler,
+	# more weathered timber when the storm finish's grade is on.
+	var grade := _storm_grade(cfg)
+	wood.set_shader_parameter("wood_tint", Color(str(grade.get("lining_tint", cfg.get("lining_tint", "#b39a7c")))))
+	wood.set_shader_parameter("weathering", float(grade.get("lining_weathering", cfg.get("lining_weathering", 0.3))))
 	var y := FLOOR_TOP + height * 0.5
 	var w := _half_w - inset
 	var d := _half_d - inset
@@ -284,6 +287,15 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
 		add_child(clump)
 
 
+## The storm finish's `grade` block when the finish and its grade are both on.
+func _storm_grade(cfg: Dictionary) -> Dictionary:
+	if not bool(cfg.get("enabled", false)):
+		return {}
+	var storm: Dictionary = cfg.get("storm_finish", {})
+	var grade: Dictionary = storm.get("grade", {})
+	return grade if bool(storm.get("enabled", false)) and bool(grade.get("enabled", false)) else {}
+
+
 func _gable_panel(id: String, z: float, half_w: float, base: float, apex: float, material: Material, side: float) -> void:
 	var mesh := ArrayMesh.new()
 	var arrays := []
@@ -389,6 +401,14 @@ func _build_light() -> void:
 	# shadowless box (GPU F41#0, 25 Oct).
 	light.light_color = Color(1.0, 0.82, 0.62)
 	light.light_energy = 1.35
+	var holder := get_parent() as Node3D
+	var role := str(holder.get_meta("village_role", "")) if holder != null else ""
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(FINISH_CONFIG)) if FileAccess.file_exists(FINISH_CONFIG) else null
+	if parsed is Dictionary and ((parsed as Dictionary).get("lined_roles", []) as Array).has(role):
+		var grade := _storm_grade(parsed)
+		if grade.has("room_light_colour"):
+			light.light_color = Color(str(grade.room_light_colour))
+		light.light_energy = float(grade.get("room_light_energy", light.light_energy))
 	light.omni_range = 6.5
 	light.shadow_enabled = true
 	add_child(light)

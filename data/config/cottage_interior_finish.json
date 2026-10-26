@@ -29,7 +29,15 @@
     "herb_cord_m": 2.75,
     "herb_colour": "#6b6a40",
     "herb_bundles": 5,
-    "moss_colour": "#2c3a26"
+    "moss_colour": "#2c3a26",
+    "grade": {
+      "enabled": false,
+      "_candidate": "r24 storm grade (OFF until judged; needs storm_finish on). r23 judges x3: the room is 'a saturated orange pine box' with a flat warm daylight grade and no storm mood. Cooler, more weathered timber and a dimmer, less orange room light, so the hearth pool and the cool window fill carry the room.",
+      "lining_tint": "#a8a299",
+      "lining_weathering": 0.9,
+      "room_light_colour": "#d9c6b0",
+      "room_light_energy": 0.75
+    }
   },
   "hearth": {
     "model": "res://assets/props/meshy-1024/ranger_hearth/ranger_hearth.glb",
