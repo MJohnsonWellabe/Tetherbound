@@ -2,6 +2,16 @@
 
 ## Session 2 log (newest first)
 
+- 26 Oct 07:40Z **MERGED MAIN ee4e46cf5d2bf83f185617a9d3f323b16c1a1641** (origin/main ac5e1426, #756 SW7, into `tb/stormwood`). The clone is shallow, so the merge was built against the previous main base 768fef00.
+  - The 279 main-only files take main's version.
+  - The six files both sides changed keep the lane's version, which already contains main's: main carried the r19 arm 67d95770b, and TECHNICAL already has main's exit-leak lines.
+  - Main's ON states are kept (hero_interior, heartstone hero, steam lens fade). Main touches no Stormwood scatter input, so the bake stays fresh.
+  - Checks on the merged head: stormheart*, stormwood_surge*, debug_teleport*, named_crown, stormwood_scatter, scatter_perf, lantern_pools, fallen_giant, master_sign and ground_zones, 104 tests, 0 failed. smoke_stormwood_crown_heartstone 12/0.
+  - **Arms rebuilt from the merged head**, one config commit each so landings are config-only. Judge these; they supersede every earlier SHA for these arms.
+    - `tb/stormwood-m28b-on` **5a3477e0e165dd602ee022a313161e32678d81c5**: Fallen Giant, collider, off the road.
+    - `tb/stormwood-m29-on` **e59d5de13280ec65a22477e11bcc60b8d3053c8f**: heart cleft, low Fading steam, heartstone stand at 8 m.
+    - `tb/stormwood-m30-on` **58d995cb5befd378ac3541e608f014081c2f35bb**: Lantern Pools hollow.
+    - `tb/stormwood-m31-on` **ccdeebfd0a96b421f5a8413b16276c4e73693f91**: ground pass 2 + storm light.
 - 26 Oct 07:10Z **CORRECTION: arms m29, m30 and m31 rebuilt; please judge these SHAs, not the earlier ones.** `stormwood_settlements.json` is a whole-file Stormwood scatter bake source, so my well retint (7a20b41d) and later building retints staled `data/scatter/stormwood`. Vegetation then failed closed and the baked forest was missing on every head from 7a20b41d up to and including 7d036c06. The only sign was `ERROR: Missing or stale stormwood scatter bake` in the log. Re-baked in b7811192: all 108 region files are byte-identical, only the manifest fingerprint changed, so placements and harvest ids are unchanged. Runbook (TECHNICAL §8.1) now says to grep every capture log for `stale`.
   - `tb/stormwood-m29-on` **d590c466a1cc5045b9655ddb947e694e5bff147b** (was 7d32103c): SW7 bundle.
   - `tb/stormwood-m30-on` **00c22453c3727ee716038c752752d092cbd68ae2** (was d9014a53): Lantern Pools hollow.
