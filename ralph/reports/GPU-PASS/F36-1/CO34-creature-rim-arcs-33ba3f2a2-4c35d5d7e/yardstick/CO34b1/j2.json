@@ -1,0 +1,176 @@
+{
+ "sets": {
+  "Ru": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's saturated blue body with orange-tipped spines has Palworld-class appeal, but A's washed-out pale material and grey faint-end body, plus the bare grey stage with no sky, fog or time-of-day grade, keep it short of the same finish."
+  },
+  "Ya": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, grounded teal newt-like creature, but its low, flat silhouette barely clears the trainer and its mid-tone teal on grey lacks the value punch of a Palworld creature."
+  },
+  "Th": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same low teal creature as Ya; it is grounded and clean, but its silhouette is low and its value range narrow, so it does not stand out the way Palworld's hero creatures do."
+  },
+  "Pv": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The brown-fur storm bear with violet arcs matches the owner's Stormursa bar and has a big, readable silhouette well above the trainer; what holds it back is the empty stage, not the creature."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bird reads as near-white chrome with hard bright feather edges instead of the blue-grey and tan Galecrest palette, so it looks like an untextured placeholder next to Palworld."
+  },
+  "Ow": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky, dark frames with no purple storm sky or lightning grade, a HUD covering roughly 40% of each frame and flat magenta ground-shape telegraphs sink it next to Palworld's bright, readable boss fight."
+  },
+  "Ot": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The woolly ram reads as Stormcapra in standing and hit react, but its faint poses (B especially, a legless white wool blob with splayed horn loops) and the empty stage keep it below a shipping finish."
+  },
+  "Ai": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL",
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL",
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing storm wolf matches the Tanglevolt bar, but in faint mid and faint end the body flips to a blown-out white and black blob and the arcs read soft."
+  },
+  "Eg": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "An appealing teal otter mount with a readable ridden pose at the right scale, but its flat single-hue fur with little rim separation reads a notch under Palworld's mount finish."
+  },
+  "Fi": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, expressive elder villager in an olive vest and green scarf that fits the key art's cozy village palette and matches Palworld's NPC finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Ow: shrink and translucent-ise the combat HUD so it clears the fighters, replace flat magenta ground shapes with real lightning/stone telegraphs with an impact, add the fixed purple storm sky and lightning grade, and pull the camera out of trunks and canopy (A i11, i13, i15).",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix faint-state materials and poses: stop the whole-body whitening on Ai faint mid/end and the greyed body on Ru A faint end, and keep Ot B's faint body from collapsing into a legless wool blob.",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-texture Uv's bird and give Ya/Th's low teal creature more value contrast and a taller silhouette, to match the Galecrest/Stormursa naturalistic bar (blue-grey/tan feathers, real fur/scale break-up, creature clearly taller than the trainer).",
+   "kind": "new_art"
+  }
+ ]
+}

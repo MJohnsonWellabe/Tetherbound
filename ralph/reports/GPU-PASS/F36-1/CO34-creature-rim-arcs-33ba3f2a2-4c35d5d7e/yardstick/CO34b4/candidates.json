@@ -1,0 +1,52 @@
+[
+    {
+        "label":  "CO3 stormursa High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-stormursa-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-stormursa-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow",
+                        "a hard bright rim or halo outline around the creature that does not belong to the stage light"
+                    ]
+    },
+    {
+        "label":  "CO3 stormtrail Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-stormtrail-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-stormtrail-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow",
+                        "a hard bright rim or halo outline around the creature that does not belong to the stage light"
+                    ]
+    },
+    {
+        "label":  "CO3 cindercub High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-cindercub-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-cindercub-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow",
+                        "a hard bright rim or halo outline around the creature that does not belong to the stage light"
+                    ]
+    },
+    {
+        "label":  "CO3 ripplet Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-ripplet-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-ripplet-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow",
+                        "a hard bright rim or halo outline around the creature that does not belong to the stage light"
+                    ]
+    },
+    {
+        "label":  "CO3 mudsnout High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-mudsnout-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-mudsnout-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the fainted body floats above the stage, with a gap between the body and its shadow",
+                        "a hard bright rim or halo outline around the creature that does not belong to the stage light"
+                    ]
+    }
+]

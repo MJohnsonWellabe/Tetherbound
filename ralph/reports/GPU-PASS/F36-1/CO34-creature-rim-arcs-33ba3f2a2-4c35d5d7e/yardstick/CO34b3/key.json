@@ -1,0 +1,52 @@
+{
+ "Bx": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Aj": {
+  "anchor": false,
+  "label": "CO3 duskhush High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-duskhush-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-duskhush-ship-High.png"
+ },
+ "Ul": {
+  "anchor": false,
+  "label": "CO3 mudsnout Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-mudsnout-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-mudsnout-cand-Medium.png"
+ },
+ "Jp": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ },
+ "Ja": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Me": {
+  "anchor": false,
+  "label": "CO3 duskhush Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-duskhush-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-duskhush-ship-Medium.png"
+ },
+ "Es": {
+  "anchor": false,
+  "label": "CO3 galecrest Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-galecrest-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-galecrest-ship-Medium.png"
+ },
+ "Tw": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Rp": {
+  "anchor": false,
+  "label": "CO3 tanglevolt Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-tanglevolt-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-tanglevolt-cand-Medium.png"
+ }
+}

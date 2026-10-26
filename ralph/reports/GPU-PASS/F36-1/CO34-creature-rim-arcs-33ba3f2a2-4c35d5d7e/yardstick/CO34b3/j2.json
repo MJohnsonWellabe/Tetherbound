@@ -1,0 +1,160 @@
+{
+ "sets": {
+  "Bx": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elderly villager in natural green/brown with a clean hair-and-beard silhouette that sits beside Palworld's NPCs at a similar finish; only the neutral backdrop keeps it from showing world light."
+  },
+  "Aj": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The near-black purple bird sinks into the dark backdrop, so its face and eyes are lost at small size and it lacks the high-contrast read of Palworld creatures."
+  },
+  "Ul": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A naturalistic boar with readable fur and tusks that matches the owner's style bar and would sit beside a Palworld field creature, though it only roughly matches the trainer's height."
+  },
+  "Jp": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra model matches the owner's bar (white fleece, dark curled horns, blue accent) and reads at Palworld finish; the faint poses are the weak point."
+  },
+  "Ja": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A bright blue water lizard with a clear silhouette, but the faint poses break (A twists up vertically, B's shadow sits detached below it) and the flat grey stage has no atmosphere."
+  },
+  "Me": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Identical in look to Aj: a near-black body against a dark stage, with no readable face or value separation at small size."
+  },
+  "Es": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bird renders as a near-monochrome, chrome-white burst of feather spikes instead of the owner bar's slate-and-tan Galecrest, so it reads as a material error rather than a finished creature."
+  },
+  "Tw": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's braced timber frame, plank cap and stone footing now read as built, but the lone flat-infill panel, untextured placeholder boulder and evenly spaced tree row keep the scene well short of Palworld's base-building finish and Valheim's light."
+  },
+  "Rp": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Tanglevolt matches the owner's bar (dark violet fur, lightning veining, pale muzzle) with a strong side silhouette, and its faint roll reads without a label."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Tw: give the homestead wall real thickness and a textured wattle or plank infill in the village kit's timber palette, then blend its stone footing into the grass; also replace or texture the flat grey placeholder boulder beside it.",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature materials and value: lift Duskhush's (Aj/Me) mid-values and give it a lit face and eyes so it separates from the dark stage, and regrade Galecrest (Es) from chrome-white to the owner bar's slate/tan feathers with lower specular and no bright edge rim.",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-author the faint clips that break the read: Ja A's vertical twist, Ja B's raised body with detached shadow, Jp's detached-looking horn (A) and mid-air roll (B), and Ul B's pale spike toward the trainer.",
+   "kind": "new_art"
+  }
+ ]
+}

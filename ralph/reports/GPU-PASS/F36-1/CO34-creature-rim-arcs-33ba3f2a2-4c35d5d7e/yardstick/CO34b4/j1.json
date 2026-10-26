@@ -1,0 +1,162 @@
+{
+ "sets": {
+  "Jl": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger wrapped recipe text and iconised Craft/Leave hints approach Palworld's HUD legibility, but the hints are still small muted grey with keyboard-style glyphs and the panel lacks teal interaction/gold progression accents, so it reads as a functional debug-adjacent panel rather than a finished game UI."
+  },
+  "Nu": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ram's fleece and horn read at style-bar quality, but on a flat grey stage with no atmosphere it cannot match Palworld finish, and B's faint frames twist the body into an unreadable, apparently lifted pose."
+  },
+  "Km": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's coral-spined blue model is closer to the naturalistic bar, but A's belly-up faint frames float well above their shadows and wash to grey-tan, and both sides only reach about the trainer's height."
+  },
+  "Wm": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean naturalistic storm wolf with grounded faint poses, but the near-black fur sits on a dark stage with little value separation, so the silhouette weakens at small size."
+  },
+  "Uw": {
+   "A": {
+    "bar_a": 7.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The grandfather villager has an expressive readable face, warm earthy green/brown costume and a clear full-body silhouette that fits the cozy Meadows settlement."
+  },
+  "Wf": {
+   "A": {
+    "bar_a": 7.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Stormursa's fur, violet lightning veins and grounded rear-up/sprawl poses carry it to the style bar; only the bare stage holds it back from Palworld finish."
+  },
+  "Bk": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A competent but generic dark-brown wolf with no elemental identity marks, low value against the stage, and its tail running through the trainer in the faint frames."
+  },
+  "Ca": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The boar reads as a plain real-world animal only about trainer height, missing the mossy Ground-type identity of the colour board and the 'taller than the trainer' rule."
+  },
+  "Gg": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The teal otter-like water mount has a clear silhouette and a working ridden pose, but its smooth flat-teal surface lacks the fur/scale breakup of the style bar and its tail overlaps the trainer in hit/faint frames."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give the low-identity creatures (boar Ca, brown wolf Bk, teal water mount Gg, blue lizard Km A) the style-bar material pass: type colour accents per the creature colour board (moss/stone for Ground, fin/scale detail for Water), richer fur/scale breakup and a lifted value so they separate from the ground; scale the boar up past the trainer.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Finish the craft panel per the UI direction: larger high-contrast controller-first action prompts (gamepad glyphs, teal highlight on Craft), gold accents for progression, and fill the recipe list so rows are not half empty.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix faint/hit poses that lift or twist off the stage (Nu B faint mid/end, Km A faint mid/end) and space the stage camera so creature tails do not run through the trainer ruler (Bk, Gg, Km).",
+   "kind": "scene"
+  }
+ ]
+}

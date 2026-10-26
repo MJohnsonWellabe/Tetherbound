@@ -1,0 +1,160 @@
+{
+ "sets": {
+  "Bx": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A warm, appealing elder in the key art's green/brown palette with a readable face, but shown only on a black void with no light, sky or grade, so nothing here carries Valheim-class atmosphere."
+  },
+  "Aj": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A near-black purple owl on a dark grey stage loses its value separation and face at small size, and the faint-end pile reads as a heap of feathers rather than a fallen creature."
+  },
+  "Ul": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A convincing naturalistic boar with real fur, but it stands only about the trainer's height and the neutral stage gives no light or atmosphere to put it beside Palworld."
+  },
+  "Jp": {
+   "A": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ram reads big and on-style in standing and hit react, but B's faint frames twist the body over and lift it off its shadow, and the stage has no atmosphere."
+  },
+  "Ja": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A vivid, readable water creature in clean cyan and white, let down by B's floating faint mid and a pale grey faint end, by the tail running through the trainer, and by a stage with no atmosphere."
+  },
+  "Me": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "These frames look identical to Aj (same dark owl), with the same weak value separation and the same faint-end feather heap."
+  },
+  "Es": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bird renders as a near-white, chrome-edged silhouette that glows against the stage instead of the slate and tan feathering of the style bar, and its faint mid hovers."
+  },
+  "Tw": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Meadows grass, path and painted mountain sky are pleasant, but the isolated, flat-infilled wall and the low-poly, flat-shaded grey boulder sit under a flat midday grade with no haze or shafts, below Palworld's base-building finish."
+  },
+  "Rp": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The wolf matches the owner's in-game Tanglevolt in standing, but the faint mid rolls it belly-up with the body lifted above its shadow, its rear overlaps the trainer, and the stage has no atmosphere."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Ground every faint pose: put the hips, flank and head in contact with the floor so the body meets its own shadow (Es faint mid, Rp faint mid, Jp B and Ja B faint frames), and stop the body twisting over in Jp B.",
+   "kind": "scene"
+  },
+  {
+   "change": "Rework creature materials toward the style bar: give Galecrest (Es) slate-blue and tan feathering with no bright chrome edge, and lift the dark owl (Aj/Me) with a cooler rim and a readable face and eyes so it separates from the ground.",
+   "kind": "scene"
+  },
+  {
+   "change": "Give the homestead wall depth and a lived-in material: a thick wattle, plaster or plank infill with texture and shading instead of a flat pale fill, a deeper post-and-cap profile, and a stone footing set into the ground, used in runs with neighbouring pieces.",
+   "kind": "new_art"
+  }
+ ]
+}

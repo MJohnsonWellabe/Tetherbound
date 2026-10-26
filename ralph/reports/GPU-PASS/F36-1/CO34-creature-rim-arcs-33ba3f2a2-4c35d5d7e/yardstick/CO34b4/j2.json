@@ -1,0 +1,162 @@
+{
+ "sets": {
+  "Jl": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 7.1,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's large gold ingredient lines and wrapped recipe cards approach Palworld HUD legibility, but A's tiny truncated list text and both sides' small grey keyboard-style glyphs with no teal interaction accent sink it."
+  },
+  "Nu": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The fleece-and-horn ram matches the owner's Stormcapra bar and A's faint reads as a downed ram, though B's faint mid/end roll the body into a contorted belly-up tangle that breaks the read."
+  },
+  "Km": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A bright blue spined drake reads clearly, but A's faint frames float over a detached shadow and turn a flat grey-brown, and B's faint end crumples into an odd upright knot."
+  },
+  "Wm": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Tanglevolt wolf matches the owner bar in fur and silhouette and lies grounded when fainted, held back only by dark-on-dark value against the stage."
+  },
+  "Uw": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, characterful elder in moss-green vest and leather that fits the Meadows village palette, slightly more toon-faced than the naturalistic creatures beside it."
+  },
+  "Wf": {
+   "A": {
+    "bar_a": 7.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Stormursa's fur and violet lightning veins match the owner bar, its scale against the trainer is heroic, and every pose including the sprawled faint end stays grounded."
+  },
+  "Bk": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A competent naturalistic dark canine, but it is a near-duplicate of the Tanglevolt wolf silhouette with no signature colour or feature, sinks dark-on-dark, and its fainted body runs through the trainer."
+  },
+  "Ca": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A convincing bristly naturalistic boar that sits on the ground well, held back by being barely taller than the trainer and having no elemental or signature feature to lift it past an ordinary animal."
+  },
+  "Gg": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The teal otter reads cleanly and its ridden pose works, but its smooth plush surface lacks the fur detail of the owner bar, and the fainted body overlaps the trainer."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stage creature hurt/faint poses so the body never passes through the trainer ruler (Bk, Ca B, Gg faint mid/end), and fix the broken faint states (Nu B belly-up contortion; Km A floating faint with detached shadow and grey material swap).",
+   "kind": "scene"
+  },
+  {
+   "change": "Lift dark creatures off the ground and backdrop with a cool rim light and a stronger signature accent (Bk, Wm): a value and colour key that separates them at 30% size and stops Bk reading as a Tanglevolt duplicate.",
+   "kind": "scene"
+  },
+  {
+   "change": "Craft panel: keep B's large wrapped recipe text and gold ingredient lines, but restore a denser recipe list, add a teal selection/interaction accent, and use larger controller-first button glyphs for Craft and Leave.",
+   "kind": "scene"
+  }
+ ]
+}

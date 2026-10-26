@@ -1,0 +1,176 @@
+{
+ "sets": {
+  "Ru": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A readable blue spined dragon with a clear face, but A's faint end drops to a flat grey-beige material and its faint mid hangs above a detached shadow blob, while B's faint end curls into an unreadable knot; neither is at Palworld finish."
+  },
+  "Ya": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean teal lizard with a cream frill, but it is low and long, barely clears the trainer's height, and its small, mid-tone silhouette lacks the finish of the owner bar creatures."
+  },
+  "Th": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The image matches Ya frame for frame (same teal frilled lizard) and has the same problem: it is low, small against the ruler, and has a flat mid-tone finish."
+  },
+  "Pv": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The bear carries it: real fur mass, violet storm veins, about twice the trainer's height and a grounded sprawl at faint end, which puts it on the owner bar."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The raptor reads as chrome-white with blown, bright feather edges instead of slate and tan plumage, it stands only about as tall as the trainer, and the hit react frame is a thin vertical sliver that loses the bird."
+  },
+  "Ow": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown-green forest floor with no purple storm sky or lightning, flat magenta telegraph rings and a HUD that covers about a third of every frame, plus (on A) the camera buried in canopy; it does not read as a Palworld-class boss fight."
+  },
+  "Ot": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing ram is on the owner bar, but the faint poses break it: on A the limbs splay and the body twists apart, and on B it collapses into a legless fleece pillow with oversized horn coils."
+  },
+  "Ai": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED",
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED",
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PRESENT"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The wolf's dark violet fur and long silhouette carry it to Palworld finish, held back by storm arcs that blur into a purple wash rather than reading as bright lines."
+  },
+  "Eg": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clear, rideable teal otter at good scale with a believable ridden pose, but the fur is a single mid-tone teal without the value breakup and material detail of the owner bar."
+  },
+  "Fi": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing grandfather in an earthy green and brown outfit that matches the key art palette; his rounded, cartoon face is the only part that sits apart from the naturalistic creature style."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Ow storm-forest fight: add camera collision or fade for trunks and canopy (A i11-i16), lift exposure and add the fixed purple storm sky and white-violet lightning, replace the flat magenta telegraph rings with real objects and impacts, and shrink the HUD panels so they stop covering the fight.",
+   "kind": "scene"
+  },
+  {
+   "change": "Faint poses and materials: keep limbs and the full material through faint (Ru A faint end goes grey; Ot faint becomes a legless blob or a twisted body; Ru B faint end knots up) and keep every faint grounded and readable.",
+   "kind": "scene"
+  },
+  {
+   "change": "Bring the outliers to the owner bar: replace the chrome-white raptor material in Uv with matte slate and tan feathers, sharpen the Ai storm arcs into thin bright lines, and scale Ya/Th/Ru/Uv so each clearly stands taller than the 1.80 m trainer.",
+   "kind": "scene"
+  }
+ ]
+}

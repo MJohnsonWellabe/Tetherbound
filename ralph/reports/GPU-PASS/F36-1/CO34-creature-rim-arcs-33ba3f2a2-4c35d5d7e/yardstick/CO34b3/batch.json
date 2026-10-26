@@ -1,0 +1,96 @@
+{
+ "anchors": {
+  "f36_0_npc:C1A": [
+   7.4,
+   7.0,
+   7.6
+  ],
+  "f36_0_npc:C1B": [
+   7.4,
+   7.0,
+   7.6
+  ],
+  "f36_1_gpu:stormcapra_candidate": [
+   7.1,
+   6.6,
+   7.6
+  ],
+  "f36_1_gpu:stormcapra_shipping": [
+   6.2,
+   6.4,
+   6.9
+  ],
+  "f36_0_gap:C2A": [
+   6.9,
+   5.8,
+   6.5
+  ],
+  "f36_0_gap:C2B": [
+   6.6,
+   6.3,
+   7.0
+  ],
+  "p2_094_r4:X_before": [
+   5.0,
+   3.5,
+   4.6
+  ],
+  "p2_094_r4:Y_after": [
+   6.3,
+   5.0,
+   6.5
+  ]
+ },
+ "candidates": {
+  "CO3 duskhush High cand|ship | CO3-duskhush-cand-High": [
+   6.3,
+   5.8,
+   6.4
+  ],
+  "CO3 duskhush High cand|ship | CO3-duskhush-ship-High": [
+   6.3,
+   5.8,
+   6.5
+  ],
+  "CO3 mudsnout Medium cand|ship | CO3-mudsnout-ship-Medium": [
+   6.8,
+   6.6,
+   7.5
+  ],
+  "CO3 mudsnout Medium cand|ship | CO3-mudsnout-cand-Medium": [
+   6.7,
+   6.2,
+   7.3
+  ],
+  "CO3 duskhush Medium cand|ship | CO3-duskhush-cand-Medium": [
+   6.3,
+   5.8,
+   6.4
+  ],
+  "CO3 duskhush Medium cand|ship | CO3-duskhush-ship-Medium": [
+   6.3,
+   5.8,
+   6.5
+  ],
+  "CO3 galecrest Medium cand|ship | CO3-galecrest-cand-Medium": [
+   5.8,
+   5.6,
+   6.4
+  ],
+  "CO3 galecrest Medium cand|ship | CO3-galecrest-ship-Medium": [
+   5.8,
+   5.6,
+   6.4
+  ],
+  "CO3 tanglevolt Medium cand|ship | CO3-tanglevolt-ship-Medium": [
+   7.0,
+   7.0,
+   7.2
+  ],
+  "CO3 tanglevolt Medium cand|ship | CO3-tanglevolt-cand-Medium": [
+   7.0,
+   7.0,
+   7.1
+  ]
+ }
+}

@@ -1,0 +1,106 @@
+{
+ "anchors": {
+  "f36_0_gap:C2B": [
+   6.2,
+   5.8,
+   6.3
+  ],
+  "f36_0_gap:C2A": [
+   6.8,
+   6.8,
+   6.8
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.2,
+   4.2,
+   4.2
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.8,
+   4.8,
+   5.0
+  ],
+  "f36_1_gpu:stormcapra_shipping": [
+   6.2,
+   6.4,
+   6.2
+  ],
+  "f36_1_gpu:stormcapra_candidate": [
+   6.4,
+   5.9,
+   5.7
+  ],
+  "f36_0_npc:C1A": [
+   7.0,
+   7.0,
+   7.0
+  ],
+  "f36_0_npc:C1B": [
+   7.0,
+   7.0,
+   7.0
+  ]
+ },
+ "candidates": {
+  "CO3 paddlenewt Medium cand|ship | CO3-paddlenewt-cand-Medium": [
+   6.3,
+   6.0,
+   5.9
+  ],
+  "CO3 paddlenewt Medium cand|ship | CO3-paddlenewt-ship-Medium": [
+   6.3,
+   6.0,
+   5.9
+  ],
+  "CO3 paddlenewt High cand|ship | CO3-paddlenewt-ship-High": [
+   6.3,
+   6.0,
+   5.9
+  ],
+  "CO3 paddlenewt High cand|ship | CO3-paddlenewt-cand-High": [
+   6.3,
+   6.0,
+   5.9
+  ],
+  "CO3 stormursa Medium cand|ship | CO3-stormursa-cand-Medium": [
+   7.4,
+   7.0,
+   7.4
+  ],
+  "CO3 stormursa Medium cand|ship | CO3-stormursa-ship-Medium": [
+   7.4,
+   7.0,
+   7.4
+  ],
+  "CO3 galecrest High cand|ship | CO3-galecrest-cand-High": [
+   5.8,
+   5.6,
+   6.1
+  ],
+  "CO3 galecrest High cand|ship | CO3-galecrest-ship-High": [
+   5.8,
+   5.6,
+   6.1
+  ],
+  "CO4 tanglevolt High cand|ship | CO4-tanglevolt-cand-High": [
+   7.0,
+   6.0,
+   6.7
+  ],
+  "CO4 tanglevolt High cand|ship | CO4-tanglevolt-ship-High": [
+   7.0,
+   6.0,
+   6.7
+  ],
+  "CO3 ripplet High cand|ship | CO3-ripplet-ship-High": [
+   6.8,
+   6.6,
+   6.5
+  ],
+  "CO3 ripplet High cand|ship | CO3-ripplet-cand-High": [
+   6.8,
+   6.6,
+   6.5
+  ]
+ }
+}

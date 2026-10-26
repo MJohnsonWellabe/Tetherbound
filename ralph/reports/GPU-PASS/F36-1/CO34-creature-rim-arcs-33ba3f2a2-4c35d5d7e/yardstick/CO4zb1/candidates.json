@@ -1,0 +1,12 @@
+[
+    {
+        "label":  "CO4z tanglevolt High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO4z\\sides\\CO4z-tanglevolt-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO4z\\sides\\CO4z-tanglevolt-ship-High.png",
+        "brief":  "Close crops of one creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour - and in particular whether its storm markings read as crisp, bright lightning. Judge poses only where they break the read.",
+        "defects":  [
+                        "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    }
+]

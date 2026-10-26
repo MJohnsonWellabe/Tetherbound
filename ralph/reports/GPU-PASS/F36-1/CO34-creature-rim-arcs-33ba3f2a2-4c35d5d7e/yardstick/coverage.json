@@ -1,0 +1,235 @@
+[
+    {
+        "item":  "CO3",
+        "species":  "ripplet",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "ridden"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "ripplet",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "ridden"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "stormtrail",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "stormtrail",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "paddlenewt",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "paddlenewt",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "cindercub",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "cindercub",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "mudsnout",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "mudsnout",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "trailpup",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "trailpup",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "duskhush",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "duskhush",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "tanglevolt",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "tanglevolt",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "galecrest",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "galecrest",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "stormursa",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO3",
+        "species":  "stormursa",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO4",
+        "species":  "tanglevolt",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    }
+]

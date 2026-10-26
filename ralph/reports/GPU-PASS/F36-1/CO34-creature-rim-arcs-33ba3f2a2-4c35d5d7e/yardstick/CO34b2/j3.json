@@ -1,0 +1,160 @@
+{
+ "sets": {
+  "Bn": {
+   "A": {
+    "bar_a": 6.7,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A competent naturalistic ember-wolf, but its dark muddy brown fur sits in one low mid-tone against the dark backdrop and lacks the value pop and rim light that carry Palworld creatures."
+  },
+  "Wn": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing violet storm-wolf is at bar, but in both faint frames it flips into an unreadable black-and-white lump that sits above its shadow, which sinks the finish."
+  },
+  "Nq": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Bright, saturated water-drake colour fits the creature board, but the glossy toy-like finish and broken faint-end poses (A crumples upright; B turns belly-up with a washed-out grey tail and a shadow set well below) fall short of shipping polish."
+  },
+  "Hb": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame with brace, cap and stone footing reads as built, but a lone tall narrow panel in an open field reads more like a door or outhouse, and the flat-shaded boulder and thin hazeless sky stay well under Valheim-class light."
+  },
+  "Jh": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The woolly storm-ram with heavy horns and a blue gem matches the owner bar and would sit next to Palworld creatures, though B's faint frames turn it into a tangled, legs-up dark-and-white mess."
+  },
+  "Dj": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A well-built, well-grounded naturalistic coyote, but it reads as a stock real-world animal with no Tetherbound markings or type accent, so it has less creature identity than Palworld's cast."
+  },
+  "Sj": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder villager in a meadow-green vest and scarf with clear eyes and a clean silhouette, at shipping stylised finish, though his animated-film face is more cartoon than the naturalistic creature line."
+  },
+  "Xh": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Looks pixel-identical to Dj: the same well-grounded stock coyote, sunk by its lack of Tetherbound identity rather than by any finish fault."
+  },
+  "Bd": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A grounded grey storm-wolf with blue glow lines, but its mid-grey coat nearly matches the grey stage in value and its blue accents are too small to carry it at a glance."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix faint animations so the creature keeps its colour and identity and stays on its shadow: Wn's flip to a black-and-white lump, Jh B's legs-up tangle, Nq A's upright crumple and Nq B's grey tail.",
+   "kind": "scene"
+  },
+  {
+   "change": "Give the stock-looking canids (Dj/Xh coyote, Bd grey wolf, Bn brown wolf) a Tetherbound identity, with type markings, accent colour and stronger value separation and rim light, as on the owner bar's storm-wolf and ram.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Ship Hb A's timber-frame wall (brace, cap, stone footing), give it visible thickness and a wider wall-section proportion, and replace the flat-shaded boulder beside it.",
+   "kind": "scene"
+  }
+ ]
+}

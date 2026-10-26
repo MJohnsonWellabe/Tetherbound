@@ -1,0 +1,40 @@
+# CO-3 + CO-4 (local, CLOSE-OUT). Isolated arms on main: control main ac5e1426c, CO-3 tb/co3-on 33ba3f2a2 (shared rim 0.15 + faint
+# settle), CO-4 tb/co4-on 4c35d5d7e (CO-3 + Tanglevolt arcs). Capture capture_f36_poses.gd --whole-body --context (stormursa --candidate).
+# CO-3: one set per species per preset, A = co3-on, B = main. CO-4: tanglevolt High, A = co4-on, B = co3-on.
+# Layout as the roster baseline: standing / hit react / faint mid / faint end + travel role where shot, same crop.
+$o = "D:\tb-gpu-runs\out"; $od = "D:\tb-gpu-runs\yard\CO34\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out) {
+    $s = [ordered]@{ title = ""; cols = 5; thumb_w = 300; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out; crop = @(560, 200, 1000, 640) }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_co34.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_co34.json" | Out-Null; return $out
+}
+$brief = "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read."
+$co3Defects = @(
+    "the fainted body floats above the stage, with a gap between the body and its shadow",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light")
+$co4Defects = @("the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow")
+function Pick($dir, $sp) {
+    $role = @("ride", "swim", "fly_grip") | Where-Object { Test-Path "$dir\$sp-$_-050.png" } | Select-Object -First 1
+    $p = @(@("hit-000", "standing"), @("hit-025", "hit react"), @("faint-050", "faint mid"), @("faint-100", "faint end"))
+    if ($role) { $p += , @("$role-050", @{ ride = "ridden"; swim = "swimming"; fly_grip = "carrying" }[$role]) }
+    $p = @($p | Where-Object { Test-Path "$dir\$sp-$($_[0]).png" })
+    return , @(@($p | ForEach-Object { "$dir\$sp-$($_[0]).png" }), @($p | ForEach-Object { $_[1] }))
+}
+$sets = @(); $cover = @()
+$plan = @()
+foreach ($sp in "ripplet,stormtrail,paddlenewt,cindercub,mudsnout,trailpup,duskhush,tanglevolt,galecrest".Split(",")) { foreach ($pr in "Medium", "High") { $plan += , @("CO3", $sp, $pr, "$o\CO3-cand-$pr\frames", "$o\CO3-ship-$pr\frames", $co3Defects) } }
+foreach ($pr in "Medium", "High") { $plan += , @("CO3", "stormursa", $pr, "$o\CO3-candrec-$pr\frames", "$o\CO3-shiprec-$pr\frames", $co3Defects) }
+$plan += , @("CO4", "tanglevolt", "High", "$o\CO4-cand-High\frames", "$o\CO3-cand-High\frames", ($co3Defects + $co4Defects))
+foreach ($p in $plan) {
+    $item, $sp, $pr, $ca, $cb, $def = $p
+    $a = Pick $ca $sp; $b = Pick $cb $sp
+    if ($a[0].Count -eq 0 -or $b[0].Count -eq 0 -or $a[0].Count -ne $b[0].Count) { "MISSING/UNEVEN $item $sp $pr cand=$($a[0].Count) ship=$($b[0].Count)"; continue }
+    $sa = Side $a[0] $a[1] "$od\$item-$sp-cand-$pr.png"; $sb = Side $b[0] $b[1] "$od\$item-$sp-ship-$pr.png"
+    $sets += [ordered]@{ label = "$item $sp $pr cand|ship"; a = $sa; b = $sb; brief = $brief; defects = $def }
+    $cover += [ordered]@{ item = $item; species = $sp; preset = $pr; poses = $a[1] }
+}
+$rng = New-Object System.Random 2071; $sets = @($sets | Sort-Object { $rng.Next() })
+$nb = [math]::Ceiling($sets.Count / 6); $buckets = @(for ($k = 0; $k -lt $nb; $k++) { , @() })
+for ($i = 0; $i -lt $sets.Count; $i++) { $buckets[$i % $nb] += , $sets[$i] }
+for ($k = 0; $k -lt $nb; $k++) { $n = $k + 1; New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\CO34\b$n" | Out-Null; [IO.File]::WriteAllText("D:\tb-gpu-runs\yard\CO34\b$n\candidates.json", (ConvertTo-Json -InputObject @($buckets[$k]) -Depth 5)) }
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\CO34\coverage.json", (ConvertTo-Json -InputObject @($cover) -Depth 4))
+"CO-3/CO-4 sets: $($sets.Count) in $nb batches"

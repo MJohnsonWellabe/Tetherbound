@@ -1,0 +1,176 @@
+{
+ "sets": {
+  "Ru": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spined blue lizard is a readable, appealing model close to the Skyrill board, but on a bare stage A's faint end loses its colour to a flat grey-tan material and B's faint end folds into an upright crumple cut off by the frame edge, so neither reaches Palworld-class finish."
+  },
+  "Ya": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The teal newt has a flat, low-detail surface, and its back sits at about the trainer's chest, so it does not clear the 1.80 m ruler; it reads as a small placeholder next to the style-bar creatures."
+  },
+  "Th": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This sheet looks identical to Ya, with the same teal newt and the same frames; it has the same flat material and the same under-ruler scale, so it is not at Palworld-class finish."
+  },
+  "Pv": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Stormursa's real fur, violet storm veins and big grounded mass match the owner's style bar and would sit beside Palworld creatures; only the twisted, doubled-looking hit-react silhouette holds it back."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The white-silver bird is very bright with hard white edges against the dark stage, so its feathers and face are hard to read; the hit react stretches it into a thin vertical spike, and the faint end splays it into a flat X."
+  },
+  "Ow": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fight is set in a dark, muddy brown forest with no purple storm sky or lightning mood; flat magenta ring and outline telegraphs, heavy HUD panels down the left and bottom, and a player creature that is barely visible keep it well short of the Palworld boss-fight shot."
+  },
+  "Ot": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Stormcapra's standing pose matches the style bar, but the faint poses break the read: in A the body twists into a scrambled black-and-white tangle, and in B the body collapses into a limbless fleece blob with the horns lying apart and is cut off by the frame edge."
+  },
+  "Ai": {
+   "A": {
+    "bar_a": 6.7,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL",
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL",
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing Tanglevolt is close to the style bar, but in faint mid and faint end the wolf turns mostly glaring white, and the violet arcs blend into the dark fur instead of reading as thin bright lines."
+  },
+  "Eg": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The teal otter has good scale, and the ridden pose with the trainer on its back works, but its smooth, single-tone material has none of the fur detail of the style bar."
+  },
+  "Fi": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The old villager has a clear face and eyes, appealing white hair and beard, and earthy green-brown clothing that fits the Meadows key art, though his rounder cartoon face sits a little apart from the naturalistic creatures."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rework the faint and hit-react poses so bodies stay whole, grounded and inside the frame: Ot's limbless fleece blob with loose horns, Ru B's upright crumple, Uv's thin vertical spike, Pv's twisted hit react.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Stormwood fight (Ow): keep the camera out of trunks and canopy, add the purple storm sky and brighter key light, and replace the flat magenta telegraphs with ground cracks or lightning that strike and leave an impact.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix the creature materials: stop the faint frames from changing material (Ru A turns grey, Ai turns white), calm Uv's glaring white, sharpen Ai's storm arcs, and add fur and scale detail to Ya/Th and Eg.",
+   "kind": "scene"
+  }
+ ]
+}

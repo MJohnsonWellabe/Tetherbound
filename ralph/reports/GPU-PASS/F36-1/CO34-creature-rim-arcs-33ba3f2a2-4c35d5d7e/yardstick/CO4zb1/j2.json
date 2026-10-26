@@ -1,0 +1,84 @@
+{
+ "sets": {
+  "Cq": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's dark gold-veined serpent approaches the Fulgocobra board, but A's flat cartoon yellow banding and fully airborne faint frames are not shipping-game finish."
+  },
+  "Eu": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "B's furred wolf with crisp white-violet arcs sits at Palworld creature finish; the rubbery, lifted faint poses are what still hold it back."
+  },
+  "Fl": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing ram reads well, but the wool is an unlit white blob and B's faint frames collapse into a smeared, flattened mesh."
+  },
+  "Rt": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired elder in moss-green vest and earth tones has clean, appealing stylised-character finish that fits the key-art settlement."
+  },
+  "Nd": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown floor with no purple storm sky, flat magenta ring and slab telegraphs, a near-invisible player creature and a HUD that covers much of each frame (plus foliage filling B's frames) sink it."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight (Nd): replace the flat magenta telegraph rings and slabs with white-violet lightning and ground-crack effects that have a real impact, keep the camera out of trunks and foliage, show the purple storm sky, rim-light both fighters, and shrink or fade the HUD side panels during combat",
+   "kind": "scene"
+  },
+  {
+   "change": "Ground every faint pose: snap the fainted body to the stage so it meets its shadow (Cq A faint mid/end, Eu A and B faint mid/end), and drop Cq side A's yellow-band material for B's dark gold-veined serpent look",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the faint animations and skin weights that break the read: Stormcapra side B faint mid/end, where the mesh flattens and smears, and Fulgocobra side A, where the faint becomes an upright S-curve in mid-air",
+   "kind": "new_art"
+  }
+ ]
+}

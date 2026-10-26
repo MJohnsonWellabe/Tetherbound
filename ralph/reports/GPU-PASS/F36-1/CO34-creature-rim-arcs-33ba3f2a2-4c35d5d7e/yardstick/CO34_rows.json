@@ -1,0 +1,1100 @@
+[
+ {
+  "batch": 1,
+  "code": "Ya",
+  "label": "CO3 paddlenewt Medium cand|ship",
+  "side": "CO3-paddlenewt-cand-Medium",
+  "mapped": 6.69,
+  "judges": [
+   6.91,
+   6.63,
+   6.54
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ya",
+  "label": "CO3 paddlenewt Medium cand|ship",
+  "side": "CO3-paddlenewt-ship-Medium",
+  "mapped": 6.69,
+  "judges": [
+   6.91,
+   6.63,
+   6.54
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Th",
+  "label": "CO3 paddlenewt High cand|ship",
+  "side": "CO3-paddlenewt-ship-High",
+  "mapped": 6.69,
+  "judges": [
+   6.91,
+   6.63,
+   6.54
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Th",
+  "label": "CO3 paddlenewt High cand|ship",
+  "side": "CO3-paddlenewt-cand-High",
+  "mapped": 6.69,
+  "judges": [
+   6.91,
+   6.63,
+   6.54
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Pv",
+  "label": "CO3 stormursa Medium cand|ship",
+  "side": "CO3-stormursa-cand-Medium",
+  "mapped": 7.8,
+  "judges": [
+   7.92,
+   7.55,
+   7.92
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Pv",
+  "label": "CO3 stormursa Medium cand|ship",
+  "side": "CO3-stormursa-ship-Medium",
+  "mapped": 7.8,
+  "judges": [
+   7.92,
+   7.55,
+   7.92
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Uv",
+  "label": "CO3 galecrest High cand|ship",
+  "side": "CO3-galecrest-cand-High",
+  "mapped": 6.48,
+  "judges": [
+   6.45,
+   6.27,
+   6.73
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PRESENT"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Uv",
+  "label": "CO3 galecrest High cand|ship",
+  "side": "CO3-galecrest-ship-High",
+  "mapped": 6.48,
+  "judges": [
+   6.45,
+   6.27,
+   6.73
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PRESENT"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ai",
+  "label": "CO4 tanglevolt High cand|ship",
+  "side": "CO4-tanglevolt-cand-High",
+  "mapped": 7.15,
+  "judges": [
+   7.55,
+   6.63,
+   7.28
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED",
+    "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PRESENT"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL",
+    "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL",
+    "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ai",
+  "label": "CO4 tanglevolt High cand|ship",
+  "side": "CO4-tanglevolt-ship-High",
+  "mapped": 7.15,
+  "judges": [
+   7.55,
+   6.63,
+   7.28
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED",
+    "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PRESENT"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL",
+    "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL",
+    "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Eg",
+  "label": "CO3 ripplet High cand|ship",
+  "side": "CO3-ripplet-ship-High",
+  "mapped": 7.22,
+  "judges": [
+   7.37,
+   7.19,
+   7.09
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Eg",
+  "label": "CO3 ripplet High cand|ship",
+  "side": "CO3-ripplet-cand-High",
+  "mapped": 7.22,
+  "judges": [
+   7.37,
+   7.19,
+   7.09
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Bn",
+  "label": "CO3 cindercub Medium cand|ship",
+  "side": "CO3-cindercub-cand-Medium",
+  "mapped": 6.86,
+  "judges": [
+   6.72,
+   7.0,
+   6.86
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Bn",
+  "label": "CO3 cindercub Medium cand|ship",
+  "side": "CO3-cindercub-ship-Medium",
+  "mapped": 6.86,
+  "judges": [
+   6.72,
+   7.0,
+   6.86
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Wn",
+  "label": "CO3 tanglevolt High cand|ship",
+  "side": "CO3-tanglevolt-cand-High",
+  "mapped": 7.04,
+  "judges": [
+   7.41,
+   7.68,
+   6.03
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Wn",
+  "label": "CO3 tanglevolt High cand|ship",
+  "side": "CO3-tanglevolt-ship-High",
+  "mapped": 7.04,
+  "judges": [
+   7.41,
+   7.68,
+   6.03
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Dj",
+  "label": "CO3 trailpup High cand|ship",
+  "side": "CO3-trailpup-cand-High",
+  "mapped": 6.86,
+  "judges": [
+   7.0,
+   6.58,
+   7.0
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Dj",
+  "label": "CO3 trailpup High cand|ship",
+  "side": "CO3-trailpup-ship-High",
+  "mapped": 6.86,
+  "judges": [
+   7.0,
+   6.58,
+   7.0
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Xh",
+  "label": "CO3 trailpup Medium cand|ship",
+  "side": "CO3-trailpup-ship-Medium",
+  "mapped": 6.86,
+  "judges": [
+   7.0,
+   6.58,
+   7.0
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Xh",
+  "label": "CO3 trailpup Medium cand|ship",
+  "side": "CO3-trailpup-cand-Medium",
+  "mapped": 6.86,
+  "judges": [
+   7.0,
+   6.58,
+   7.0
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Bd",
+  "label": "CO3 stormtrail High cand|ship",
+  "side": "CO3-stormtrail-cand-High",
+  "mapped": 6.86,
+  "judges": [
+   6.58,
+   7.41,
+   6.58
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Bd",
+  "label": "CO3 stormtrail High cand|ship",
+  "side": "CO3-stormtrail-ship-High",
+  "mapped": 6.86,
+  "judges": [
+   6.58,
+   7.41,
+   6.58
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Aj",
+  "label": "CO3 duskhush High cand|ship",
+  "side": "CO3-duskhush-cand-High",
+  "mapped": 6.25,
+  "judges": [
+   6.42,
+   5.76,
+   6.56
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Aj",
+  "label": "CO3 duskhush High cand|ship",
+  "side": "CO3-duskhush-ship-High",
+  "mapped": 6.29,
+  "judges": [
+   6.42,
+   5.76,
+   6.69
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Ul",
+  "label": "CO3 mudsnout Medium cand|ship",
+  "side": "CO3-mudsnout-ship-Medium",
+  "mapped": 7.31,
+  "judges": [
+   7.09,
+   6.82,
+   8.01
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Ul",
+  "label": "CO3 mudsnout Medium cand|ship",
+  "side": "CO3-mudsnout-cand-Medium",
+  "mapped": 7.0,
+  "judges": [
+   6.95,
+   6.29,
+   7.75
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Me",
+  "label": "CO3 duskhush Medium cand|ship",
+  "side": "CO3-duskhush-cand-Medium",
+  "mapped": 6.25,
+  "judges": [
+   6.42,
+   5.76,
+   6.56
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Me",
+  "label": "CO3 duskhush Medium cand|ship",
+  "side": "CO3-duskhush-ship-Medium",
+  "mapped": 6.29,
+  "judges": [
+   6.42,
+   5.76,
+   6.69
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Es",
+  "label": "CO3 galecrest Medium cand|ship",
+  "side": "CO3-galecrest-cand-Medium",
+  "mapped": 5.94,
+  "judges": [
+   5.76,
+   5.5,
+   6.56
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PRESENT"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Es",
+  "label": "CO3 galecrest Medium cand|ship",
+  "side": "CO3-galecrest-ship-Medium",
+  "mapped": 5.94,
+  "judges": [
+   5.76,
+   5.5,
+   6.56
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PRESENT"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Rp",
+  "label": "CO3 tanglevolt Medium cand|ship",
+  "side": "CO3-tanglevolt-ship-Medium",
+  "mapped": 7.44,
+  "judges": [
+   7.35,
+   7.35,
+   7.62
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Rp",
+  "label": "CO3 tanglevolt Medium cand|ship",
+  "side": "CO3-tanglevolt-cand-Medium",
+  "mapped": 7.4,
+  "judges": [
+   7.35,
+   7.35,
+   7.48
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Wm",
+  "label": "CO3 stormtrail Medium cand|ship",
+  "side": "CO3-stormtrail-cand-Medium",
+  "mapped": 7.35,
+  "judges": [
+   7.12,
+   7.46,
+   7.46
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Wm",
+  "label": "CO3 stormtrail Medium cand|ship",
+  "side": "CO3-stormtrail-ship-Medium",
+  "mapped": 7.35,
+  "judges": [
+   7.12,
+   7.46,
+   7.46
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Wf",
+  "label": "CO3 stormursa High cand|ship",
+  "side": "CO3-stormursa-ship-High",
+  "mapped": 7.63,
+  "judges": [
+   7.81,
+   7.81,
+   7.29
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Wf",
+  "label": "CO3 stormursa High cand|ship",
+  "side": "CO3-stormursa-cand-High",
+  "mapped": 7.63,
+  "judges": [
+   7.81,
+   7.81,
+   7.29
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Bk",
+  "label": "CO3 cindercub High cand|ship",
+  "side": "CO3-cindercub-ship-High",
+  "mapped": 6.84,
+  "judges": [
+   6.7,
+   6.87,
+   6.95
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Bk",
+  "label": "CO3 cindercub High cand|ship",
+  "side": "CO3-cindercub-cand-High",
+  "mapped": 6.84,
+  "judges": [
+   6.7,
+   6.87,
+   6.95
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Ca",
+  "label": "CO3 mudsnout High cand|ship",
+  "side": "CO3-mudsnout-ship-High",
+  "mapped": 6.67,
+  "judges": [
+   6.44,
+   7.12,
+   6.44
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Ca",
+  "label": "CO3 mudsnout High cand|ship",
+  "side": "CO3-mudsnout-cand-High",
+  "mapped": 6.61,
+  "judges": [
+   6.44,
+   6.95,
+   6.44
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Gg",
+  "label": "CO3 ripplet Medium cand|ship",
+  "side": "CO3-ripplet-cand-Medium",
+  "mapped": 6.95,
+  "judges": [
+   6.95,
+   6.95,
+   6.95
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Gg",
+  "label": "CO3 ripplet Medium cand|ship",
+  "side": "CO3-ripplet-ship-Medium",
+  "mapped": 6.89,
+  "judges": [
+   6.95,
+   6.95,
+   6.78
+  ],
+  "defects": [
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   },
+   {
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+    "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+   }
+  ]
+ }
+]

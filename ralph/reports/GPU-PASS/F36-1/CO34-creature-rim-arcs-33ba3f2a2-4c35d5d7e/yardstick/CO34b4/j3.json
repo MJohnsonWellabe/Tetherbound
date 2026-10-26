@@ -1,0 +1,162 @@
+{
+ "sets": {
+  "Jl": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The B panel's hierarchy and gold ingredient lines come close to a shipping HUD, but the murky, flat, dark rainy world behind it has none of the Palworld-class colour or Valheim-class light."
+  },
+  "Nu": {
+   "A": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormcapra fleece, horns and scale against the ruler hold up to the Palworld bar, but on a bare neutral stage there is no sky, fog or time-of-day grade to carry Valheim-class atmosphere."
+  },
+  "Km": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's blue-and-coral finned body reads well, but A loses its material in faint end and both sides have broken faint poses, and the neutral stage has no atmosphere."
+  },
+  "Wm": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Tanglevolt wolf matches the owner's style bar, but the frames are tiny and set on a neutral stage, so there is no light or weather to compare."
+  },
+  "Uw": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The warm, appealing elder with clear eyes and an earthy green-and-brown outfit would sit next to Palworld's NPCs, though the neutral backdrop gives no atmospheric context."
+  },
+  "Wf": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormursa fur and violet lightning veins are on-bar, but the twisting hit react reads as overlapping bodies and the stage has no atmosphere."
+  },
+  "Bk": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This is a naturalistic, well-proportioned wolf, but its near-black value sinks into the dark backdrop and the fainted body becomes a shapeless dark mass."
+  },
+  "Ca": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The boar's fur reads naturally, but it stands shorter than the 1.80 m trainer, so it reads as livestock rather than a Palworld-scale creature."
+  },
+  "Gg": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The teal otter and its ridden pose read clearly, but its uniform, slightly plastic surface and the lack of any atmosphere keep it short of shipping finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix the broken faint and hurt states: Km A faint end swaps to an untextured grey-brown material and its hit react matches standing; Km B faint end pitches nose-down with the tail up; Nu B faint mid/end reads as a body flipped inside out; Wf's hit react reads as overlapping torsos. Keep the materials, ground every faint pose, and make each hit react visibly different from standing.",
+   "kind": "scene"
+  },
+  {
+   "change": "Ship the Jl side-B craft panel layout, and make the Craft and Leave hints controller-glyph buttons with teal highlights at a larger size so they read on a 7-inch screen.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix creature scale and value against the ruler: scale the Ca boar up until it clearly stands above the 1.80 m trainer, and lift the dark Bk wolf off the dark backdrop with a rim or key light and a lighter fur value.",
+   "kind": "scene"
+  }
+ ]
+}

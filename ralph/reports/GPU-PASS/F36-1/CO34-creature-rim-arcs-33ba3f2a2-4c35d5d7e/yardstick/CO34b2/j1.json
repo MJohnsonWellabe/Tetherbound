@@ -1,0 +1,160 @@
+{
+ "sets": {
+  "Bn": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A credible naturalistic wolf model, but the near-black brown fur with dull ember cracks sinks into the dark stage, so at 30% it reads as a dark lump without the rim-lit, high-contrast pop of a Palworld creature."
+  },
+  "Wn": {
+   "A": {
+    "bar_a": 7.1,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.1,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The violet-and-white storm wolf matches the Tanglevolt quality bar and reads instantly; only the legs-up faint roll with a shadow blob sitting below the body holds it back."
+  },
+  "Nq": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A saturated cyan water drake with fin crests reads clearly at a glance as a Palworld-class creature, but A's faint end collapses into a knotted vertical tangle and B's faint frames wash pale and lift off their shadow."
+  },
+  "Hb": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, cross-brace, plank cap and stone footing read as a built thing, but it is still one isolated upright panel in a flat midday grade with no fog depth or light shafts, and B is a blank white card."
+  },
+  "Jh": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The fleece-and-horn ram matches the Stormcapra bar and reads instantly; A's faint turns into a featureless fleece pillow with horns and B's tumbling faint frames look less grounded."
+  },
+  "Dj": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A clean, grounded naturalistic coyote with good faint poses, but it has no creature-fantasy identity (no storm, element or signature feature) beside the Palworld roster or the owner's style bar."
+  },
+  "Sj": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable elder villager with clear eyes, a moss-green vest and an earthy palette that fits the key art settlement, finished like a Palworld NPC."
+  },
+  "Xh": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The same plain coyote as Dj: well grounded and well modelled, but generic wildlife rather than a Tetherbound creature with its own identity."
+  },
+  "Bd": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The grey storm wolf's faint blue streaks are too small and dim to carry identity, and the slate body merges with the slate stage, so it reads as a weaker, desaturated Tanglevolt."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Push creature value separation and signature colour: brighten and saturate the storm/ember markings and add a rim term on Bn, Bd (and the dark-on-dark wolves generally) so they read at 30% against the ground, as Wn already does.",
+   "kind": "scene"
+  },
+  {
+   "change": "Give the plain coyote (Dj/Xh) and the grey wolf (Bd) a signature creature-fantasy feature (elemental markings, crest, horn or plating) so each roster member has its own identity at the owner-bar level.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix the faint poses that break the read: Nq A's knotted collapse, the pale wash and lift in Nq B's faint frames, Jh A's legless fleece pillow and Wn's legs-up roll with a detached shadow; keep fainted bodies resting on their shadows.",
+   "kind": "scene"
+  }
+ ]
+}

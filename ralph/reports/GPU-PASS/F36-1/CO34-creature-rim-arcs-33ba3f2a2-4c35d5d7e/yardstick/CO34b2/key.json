@@ -1,0 +1,52 @@
+{
+ "Bn": {
+  "anchor": false,
+  "label": "CO3 cindercub Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-cindercub-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-cindercub-ship-Medium.png"
+ },
+ "Wn": {
+  "anchor": false,
+  "label": "CO3 tanglevolt High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-tanglevolt-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-tanglevolt-ship-High.png"
+ },
+ "Nq": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Hb": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Jh": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ },
+ "Dj": {
+  "anchor": false,
+  "label": "CO3 trailpup High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-trailpup-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-trailpup-ship-High.png"
+ },
+ "Sj": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Xh": {
+  "anchor": false,
+  "label": "CO3 trailpup Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-trailpup-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-trailpup-cand-Medium.png"
+ },
+ "Bd": {
+  "anchor": false,
+  "label": "CO3 stormtrail High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-stormtrail-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO34\\sides\\CO3-stormtrail-ship-High.png"
+ }
+}

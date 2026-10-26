@@ -1,0 +1,84 @@
+{
+ "sets": {
+  "Cq": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's mottled black-gold scales reach the naturalistic bar, but A's glossy cartoon banding and serpent hovering metres in the air during the faint sink the set as a whole."
+  },
+  "Eu": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PRESENT"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Standing Tanglevolt matches the owner style bar in fur and silhouette and B's crisp white-violet arcs carry it, though the hovering, belly-white faint poses hold it back."
+  },
+  "Fl": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A's dense fleece and heavy curled horns sit at the owner bar with a grounded faint, while B's inverted, patchy, floating faint frames would not pass."
+  },
+  "Rt": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager with readable eyes and an earthy green-brown palette that fits the key art's world, held back only by flat neutral-stage lighting."
+  },
+  "Nd": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Dark muddy brown floor with no purple storm sky or blue-green moss, flat magenta ring telegraphs, an unreadable player creature and a HUD covering a third of the frame sink it, with B also putting the camera inside foliage in i11-i15."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight: replace flat magenta ring/outline telegraphs with lit lightning/ground-crack effects and impact flashes, add camera collision so it never sits inside canopy or trunks, grade the arena to the board's purple storm sky with blue-green moss and rim light on both fighters, and shrink/compact the HUD panels",
+   "kind": "scene"
+  },
+  {
+   "change": "Ground every faint pose: snap the fainted body to the stage so it meets its shadow (Cq A serpent airborne, Eu both sides, Fl B inverted floating ram) and keep faint poses upright-readable rather than flipped belly-up",
+   "kind": "scene"
+  },
+  {
+   "change": "Fulgocobra material: keep B's naturalistic scale texture but lift values and sharpen the gold scale lines toward the Stormwood board so the coil reads at small size instead of as a dark tangle",
+   "kind": "scene"
+  }
+ ]
+}

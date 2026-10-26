@@ -1,0 +1,160 @@
+{
+ "sets": {
+  "Bx": {
+   "A": {
+    "bar_a": 7.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Warm, appealing elder villager with expressive eyes and a natural green/brown palette that sits beside Palworld's NPCs. A and B are near-identical; neither shows a defect."
+  },
+  "Aj": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The near-black purple owl merges into the dark stage, its face and eyes are lost at small size, and it stands barely taller than the trainer, so it lacks Palworld's instant creature read."
+  },
+  "Ul": {
+   "A": {
+    "bar_a": 7.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The naturalistic furred boar has a clear silhouette and warm brown values that separate from the stage, close to the owner bar. B's faint frames look washed-out and yellow-speckled."
+  },
+  "Jp": {
+   "A": {
+    "bar_a": 7.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra ram matches the owner bar, with fleece, horns and scale all strong. B's belly-up faint with dark legs in the air breaks the identity read, where A's tucked faint keeps it."
+  },
+  "Ja": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A bright, readable blue water lizard at Palworld-like finish, carried by B's cleaner material. A's faint end crumples into an unreadable knot, and the creature leans glossy-toy rather than the owner's naturalistic bar."
+  },
+  "Me": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same dark owl as Aj (the frames look identical): low value separation from the stage, no readable face or eyes, and marginal height over the trainer."
+  },
+  "Es": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The raptor reads as near-white chrome or ice blades with crisp blown highlights rather than real feathers, so it looks like an effect, not a creature at the Galecrest bar."
+  },
+  "Tw": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, brace, cap and stone footing read as built, but the infill is still flat tan, the wall stands alone like a cabinet, the boulder beside it is pale and flat-shaded, and the mountains read as a painted card."
+  },
+  "Rp": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 7.1,
+    "defects": {
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED",
+     "a hard bright rim or halo outline around the creature that does not belong to the stage light": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The standing Tanglevolt wolf matches the owner bar. The faint roll exposes a bright white underside with stub-like black legs that reads as a different, cow-patterned animal and crowds the trainer."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rework the faint-mid and faint-end poses so creatures fall onto their side or chest with the top coat, face and horns visible, not belly-up (Rp wolf, Jp side B ram, Ja side A lizard knot).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix creature materials and value separation: lift the dark owl (Aj/Me) with mid-value plumage, visible eyes and soft rim light against the dark stage; tone the Es raptor's chrome-white feathers down to the matte feather values of the Galecrest bar; remove the hard bright edge on faint frames.",
+   "kind": "scene"
+  },
+  {
+   "change": "Homestead wall: give the infill a textured wattle-and-daub or plank material with value variation and real thickness, and swap the pale flat-shaded boulder beside it for a textured rock.",
+   "kind": "scene"
+  }
+ ]
+}

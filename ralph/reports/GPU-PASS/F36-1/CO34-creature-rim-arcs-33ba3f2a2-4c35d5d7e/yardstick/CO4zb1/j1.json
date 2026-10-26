@@ -1,0 +1,84 @@
+{
+ "sets": {
+  "Cq": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Neither serpent reaches the Fulgocobra board (olive scales, gold lightning veins, cream belly, hood): A is a flat black-and-yellow banded krait that rises into the air in its faint frames, and B is grounded but a dark, noisy mottle with a muddy coiled silhouette."
+  },
+  "Eu": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {
+     "the storm arcs on the body read soft, smeared or dull rather than thin, bright white-violet lines with a tight glow": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The wolf's fur and sculpt are at Palworld-class creature finish, and B's thin white-violet arcs carry it, but the stiff legs-up faint that still sits off its shadow pulls it down."
+  },
+  "Fl": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Standing and hit react match the owner's Stormcapra bar, but the faint frames sink it: in A the head is lost into a fleece lump, and in B the body flips onto its back and appears to lift off its shadow, with the black and white patches breaking up."
+  },
+  "Rt": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder villager with clear eyes, a strong white-hair silhouette and a moss-green and olive palette that sits naturally in the Meadows key art; the two sides look essentially the same."
+  },
+  "Nd": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown-black grade with no purple storm sky, lightning or blue-green moss; flat magenta ring and slab telegraphs; a HUD covering about a third of each frame; a player creature that barely reads; and in B the camera inside foliage for several frames."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Nd: replace the flat magenta telegraph rings and slabs with real white-violet lightning and ground-crack effects that land with an impact; regrade Stormwood to its board (fixed purple storm sky, blue-green moss, rim light on both fighters); add camera collision or occlusion fade for trunks and canopy; and make the HUD side and bottom panels smaller and more translucent so the action and the player's creature read.",
+   "kind": "scene"
+  },
+  {
+   "change": "Ground every faint: keep the body on the stage with contact shadows (Cq A faint mid/end, Eu faint mid/end, Fl B faint mid), and author faint-end poses that keep the head and face readable (Fl A fleece lump, Eu stiff legs-up pose).",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the Fulgocobra skin and form to its board: olive-green scales, thin bright gold lightning veins, a cream belly and a clear hood and head silhouette, in place of the flat yellow bands (A) or the dark noisy mottle (B).",
+   "kind": "new_art"
+  }
+ ]
+}
