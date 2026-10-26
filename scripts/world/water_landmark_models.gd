@@ -182,6 +182,23 @@ func _cladding(world: Node3D, cfg: Dictionary) -> void:
 			# The facade's front (+Z) faces out of the slope; its up runs up the face.
 			var up := (Vector3.UP - normal * normal.dot(Vector3.UP)).normalized()
 			var basis := Basis(up.cross(normal).normalized(), up, normal).rotated(normal, twist)
+			# Only where the face is flat under the whole piece: at a crest a
+			# flat piece follows one facet and overhangs the other (cl4).
+			if space != null:
+				var centre3 := Vector3(at.x, y, at.y)
+				var half_w := width * 0.5
+				var half_h := width * bounds.size.y / bounds.size.x * 0.5
+				var flat := true
+				for corner: Vector2 in [Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, 1)]:
+					var p := centre3 + basis.x * corner.x * half_w + basis.y * corner.y * half_h
+					var probe := PhysicsRayQueryParameters3D.create(p + normal * 30.0, p - normal * 30.0)
+					probe.collide_with_areas = false
+					var touch := space.intersect_ray(probe)
+					if touch.is_empty() or absf(((touch.position as Vector3) - centre3).dot(normal)) > float(cfg.get("flat_tolerance_m", 1.5)):
+						flat = false
+						break
+				if not flat:
+					continue
 			# The facade is 35% as deep as it is wide: laid on a slope at full
 			# depth a 20 m piece stood ~7 m proud as a shelf (cl1-cl3). Squash
 			# its depth and sink most of what is left, so only the relief shows.
