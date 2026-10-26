@@ -78,6 +78,8 @@ uniform float form_scale = 0.8;
 uniform float form_dark = 0.55;
 uniform float form_lit = 0.5;
 uniform float form_gap = 0.04;
+uniform float form_edge = 0.11;
+uniform float form_deck = 1.0;
 uniform float form_curtains = 0.5;
 uniform vec2 form_light = vec2(0.6, -0.8);
 varying vec3 dir;
@@ -144,18 +146,19 @@ void fragment() {
 		vec2 fuv = dir.xz / (up + 0.32) * form_scale + vec2(t * 0.6, t * 0.21);
 		vec2 w = vec2(fbm(fuv * 0.5 + vec2(2.1, 7.7)), fbm(fuv * 0.5 + vec2(6.3, 1.9)));
 		float bank = fbm(fuv + w * 1.5);
-		float mass = smoothstep(0.36, 0.58, bank);
+		float mass = smoothstep(0.47 - form_edge, 0.47 + form_edge, bank);
 		// Lit edge: the mass falls off toward the light (a lit rim on the
 		// side facing it), dark where it thickens away from it.
 		float lee = fbm(fuv + w * 1.5 + normalize(form_light) * 0.09);
-		float lit = clamp((bank - lee) * 9.0, 0.0, 1.0) * (1.0 - smoothstep(0.62, 0.8, bank));
+		float lit = clamp((bank - lee) * 18.0, 0.0, 1.0) * (1.0 - smoothstep(0.47 + form_edge, 0.47 + form_edge + 0.14, bank));
 		float overhead = smoothstep(0.25, 0.9, dir.y);
 		// The masses darken the existing textured deck (body) rather than
 		// replacing it, so its fine cloud texture stays; r45 first try
 		// replaced it and the sky read paler and flatter.
 		vec3 deck = ceiling_colour * mix(1.0 - contrast, 1.0 + contrast * 0.6, body);
-		vec3 base_col = deck * (1.0 - form_dark * (0.55 + 0.45 * overhead));
-		vec3 shaped = mix(deck * (1.0 + form_gap), base_col, mass);
+		vec3 deck_shaded = deck * form_deck;
+		vec3 base_col = deck_shaded * (1.0 - form_dark * (0.55 + 0.45 * overhead));
+		vec3 shaped = mix(deck_shaded * (1.0 + form_gap), base_col, mass);
 		shaped += rim_colour * form_lit * lit * mass * aloft;
 		// Rain curtains: darker vertical streaked bands under the masses,
 		// low in the sky, toward the horizon.
@@ -1153,7 +1156,7 @@ func _build_ceiling() -> void:
 	var form: Dictionary = cfg.get("form", {})
 	if bool(form.get("enabled", false)):
 		_ceiling_material.set_shader_parameter("form", float(form.get("strength", 1.0)))
-		for key: String in ["scale", "dark", "lit", "gap", "curtains"]:
+		for key: String in ["scale", "dark", "lit", "gap", "curtains", "edge", "deck"]:
 			if form.has(key):
 				_ceiling_material.set_shader_parameter("form_" + key, float(form[key]))
 		var light: Array = form.get("light", [])
