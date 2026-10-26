@@ -2,6 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
+uid="uid://c4ef2bjmrcd00"
+path.s3tc="res://.godot/imported/dirt_path_trodden_r3_Color.png-f5574efdc13642bdf98852ce21eb1c17.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -10,6 +12,7 @@ metadata={
 [deps]
 
 source_file="res://assets/environment/terrain/stylised/derived/dirt_path_trodden_r3_Color.png"
+dest_files=["res://.godot/imported/dirt_path_trodden_r3_Color.png-f5574efdc13642bdf98852ce21eb1c17.s3tc.ctex"]
 
 [params]
 
