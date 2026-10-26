@@ -1,0 +1,188 @@
+{
+ "sets": {
+  "Wc": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The calm phase is a flat unlit lavender backdrop with no sky form, shafts or storm light, so even the deck side with the Hollow Crown reads as a fogged toon-shaded test scene beside Palworld/Valheim."
+  },
+  "Hr": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same calm-phase problem: a uniform lavender sky and flat ambient light give no storm mood or depth layering, and the ground side has no vista at all."
+  },
+  "Xk": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Meadows light and grass hold up, but a lone free-standing framed panel next to a faceted grey boulder does not read like Palworld's built, lived-in base pieces."
+  },
+  "Fr": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Clean readable silhouettes, but the flat toy-like cel materials fall short of the owner's naturalistic fur/scale bar and of Palworld's creature finish."
+  },
+  "Vv": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's panel is legible and on-palette, but the plain hint text with tiny glyphs and the lack of a teal/cyan action button keep it short of a shipping game's prompt hierarchy."
+  },
+  "Fq": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The violet clouded sky finally gives a storm grade, but the opaque cotton-ball mist sprites and flat toon foliage sink it against Valheim-class weather."
+  },
+  "Kh": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A well-finished, appealing elder with a clear face, earthy Meadows palette and solid silhouette that would sit comfortably beside Palworld's NPCs."
+  },
+  "Hi": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fading-phase violet sky helps, but opaque mist puffs cutting through railings and trunks, no lightning and flat ambient light on the ground keep it below Valheim-class atmosphere."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood overlook: frame the Hollow Crown in every production view (not only v02), give it value contrast against the sky with a storm-lit rim, and show a drop or tree-tops below the deck edge for height; drop or rework the ground-path cameras, which have no vista",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood storm grade: replace the flat lavender calm sky and opaque cotton-ball mist sprites with layered volumetric fog, directional storm light with cast shadows, visible white-violet lightning in the break phase, and cool blue-green moss/black pools to break the uniform dark grass carpet and the decal-like gold ground cracks",
+   "kind": "scene"
+  },
+  {
+   "change": "Creatures and build pieces: bring creature materials up to the owner's naturalistic fur/scale bar (Fr's flat cel skins, grey faint-end swap, crumpled faint pose) and replace the faceted placeholder boulder and flat beige wall infill with textured timber/wattle infill",
+   "kind": "new_art"
+  }
+ ]
+}

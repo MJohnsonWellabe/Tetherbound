@@ -1,0 +1,86 @@
+{
+ "anchors": {
+  "p2_094_r4:X_before": [
+   4.0,
+   3.4,
+   3.8
+  ],
+  "p2_094_r4:Y_after": [
+   6.0,
+   5.8,
+   5.6
+  ],
+  "f36_0_gap:C2A": [
+   5.6,
+   6.4,
+   5.3
+  ],
+  "f36_0_gap:C2B": [
+   6.4,
+   6.2,
+   5.0
+  ],
+  "craft:before": [
+   4.2,
+   4.4,
+   4.2
+  ],
+  "craft:after": [
+   6.6,
+   6.7,
+   6.5
+  ],
+  "f36_0_npc:C1A": [
+   7.0,
+   7.3,
+   7.0
+  ],
+  "f36_0_npc:C1B": [
+   7.0,
+   7.3,
+   7.0
+  ]
+ },
+ "candidates": {
+  "SW18 glowmoss_hollows_crown_overlook-calm Medium cand|ship | SW18-glowmoss_hollows_crown_overlook-calm-cand-Medium": [
+   5.6,
+   5.0,
+   5.0
+  ],
+  "SW18 glowmoss_hollows_crown_overlook-calm Medium cand|ship | SW18-glowmoss_hollows_crown_overlook-calm-ship-Medium": [
+   4.6,
+   4.4,
+   4.3
+  ],
+  "SW18 glowmoss_hollows_crown_overlook-calm High cand|ship | SW18-glowmoss_hollows_crown_overlook-calm-ship-High": [
+   4.6,
+   4.4,
+   4.3
+  ],
+  "SW18 glowmoss_hollows_crown_overlook-calm High cand|ship | SW18-glowmoss_hollows_crown_overlook-calm-cand-High": [
+   5.6,
+   5.0,
+   5.0
+  ],
+  "SW18 glowmoss_hollows_crown_overlook-fading High cand|ship | SW18-glowmoss_hollows_crown_overlook-fading-ship-High": [
+   4.8,
+   4.6,
+   4.5
+  ],
+  "SW18 glowmoss_hollows_crown_overlook-fading High cand|ship | SW18-glowmoss_hollows_crown_overlook-fading-cand-High": [
+   5.8,
+   5.2,
+   5.2
+  ],
+  "SW18 glowmoss_hollows_crown_overlook-fading Medium cand|ship | SW18-glowmoss_hollows_crown_overlook-fading-cand-Medium": [
+   5.8,
+   5.2,
+   5.2
+  ],
+  "SW18 glowmoss_hollows_crown_overlook-fading Medium cand|ship | SW18-glowmoss_hollows_crown_overlook-fading-ship-Medium": [
+   4.8,
+   4.6,
+   4.5
+  ]
+ }
+}

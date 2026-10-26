@@ -1,0 +1,46 @@
+{
+ "Wc": {
+  "anchor": false,
+  "label": "SW18 glowmoss_hollows_crown_overlook-calm Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW18-glowmoss_hollows_crown_overlook-calm-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW18-glowmoss_hollows_crown_overlook-calm-ship-Medium.png"
+ },
+ "Hr": {
+  "anchor": false,
+  "label": "SW18 glowmoss_hollows_crown_overlook-calm High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW18-glowmoss_hollows_crown_overlook-calm-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW18-glowmoss_hollows_crown_overlook-calm-cand-High.png"
+ },
+ "Xk": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Fr": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Vv": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Fq": {
+  "anchor": false,
+  "label": "SW18 glowmoss_hollows_crown_overlook-fading High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW18-glowmoss_hollows_crown_overlook-fading-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW18-glowmoss_hollows_crown_overlook-fading-cand-High.png"
+ },
+ "Kh": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Hi": {
+  "anchor": false,
+  "label": "SW18 glowmoss_hollows_crown_overlook-fading Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW18-glowmoss_hollows_crown_overlook-fading-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW1618\\sides\\SW18-glowmoss_hollows_crown_overlook-fading-ship-Medium.png"
+ }
+}

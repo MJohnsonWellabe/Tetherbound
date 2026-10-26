@@ -1,0 +1,330 @@
+[
+ {
+  "batch": 1,
+  "code": "Wc",
+  "label": "SW18 glowmoss_hollows_crown_overlook-calm Medium cand|ship",
+  "side": "SW18-glowmoss_hollows_crown_overlook-calm-cand-Medium",
+  "mapped": 5.74,
+  "judges": [
+   6.19,
+   5.51,
+   5.51
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Wc",
+  "label": "SW18 glowmoss_hollows_crown_overlook-calm Medium cand|ship",
+  "side": "SW18-glowmoss_hollows_crown_overlook-calm-ship-Medium",
+  "mapped": 4.87,
+  "judges": [
+   5.06,
+   4.83,
+   4.72
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Hr",
+  "label": "SW18 glowmoss_hollows_crown_overlook-calm High cand|ship",
+  "side": "SW18-glowmoss_hollows_crown_overlook-calm-ship-High",
+  "mapped": 4.87,
+  "judges": [
+   5.06,
+   4.83,
+   4.72
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Hr",
+  "label": "SW18 glowmoss_hollows_crown_overlook-calm High cand|ship",
+  "side": "SW18-glowmoss_hollows_crown_overlook-calm-cand-High",
+  "mapped": 5.74,
+  "judges": [
+   6.19,
+   5.51,
+   5.51
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Fq",
+  "label": "SW18 glowmoss_hollows_crown_overlook-fading High cand|ship",
+  "side": "SW18-glowmoss_hollows_crown_overlook-fading-ship-High",
+  "mapped": 5.1,
+  "judges": [
+   5.29,
+   5.06,
+   4.95
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Fq",
+  "label": "SW18 glowmoss_hollows_crown_overlook-fading High cand|ship",
+  "side": "SW18-glowmoss_hollows_crown_overlook-fading-cand-High",
+  "mapped": 5.96,
+  "judges": [
+   6.42,
+   5.74,
+   5.74
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Hi",
+  "label": "SW18 glowmoss_hollows_crown_overlook-fading Medium cand|ship",
+  "side": "SW18-glowmoss_hollows_crown_overlook-fading-cand-Medium",
+  "mapped": 5.96,
+  "judges": [
+   6.42,
+   5.74,
+   5.74
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Hi",
+  "label": "SW18 glowmoss_hollows_crown_overlook-fading Medium cand|ship",
+  "side": "SW18-glowmoss_hollows_crown_overlook-fading-ship-Medium",
+  "mapped": 5.1,
+  "judges": [
+   5.29,
+   5.06,
+   4.95
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the overlook has no readable vista or landmark: no Hollow Crown silhouette and no sense of height or distance": "PRESENT"
+   }
+  ]
+ }
+]
