@@ -1,5 +1,23 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (26 Oct, PRIORITY: recipe profile is in the game)
+
+- **ANSWER: the game already plays the F36 pose recipe. The plain capture was what was wrong.** The --candidate scores are the in-game look, so the Staticub, Tanglevolt, Frostclaw and Craghorn MET stand.
+  - `creature_body.gd:884` (origin/main 07e1b277) calls `POSE_CANDIDATES.install(...)` whenever any CreatureBody builds its animator: wild, combat, companion, camp. `fly_controller.gd:1156` does the same for carried flight.
+  - `creature_pose_candidates.gd` `install()`: for a species in `f36_pose_candidates.json` `enabled_species` (main lists 48, including all seven CO-1 species), it builds the recipe library and remaps each role to `f36_candidate/<role>`; `creature_animator.gd` plays those.
+  - It keeps the original clips only when the GLB sha256 differs from the recipe pin. `--candidate` would then fail ("F36 candidate did not install"), and your GPU runs didn't.
+  - Plain mode in `capture_f36_poses.gd` picked species.json's clip names, which the game replaces for enabled species.
+  - **Harness fixed:** 0d2e61ba. Plain now plays the installed recipe clips; Staticub plain vs --candidate hit/faint frames differ by a mean abs pixel diff under 0.001. Added to TECHNICAL §8.1 (b7b0f38c).
+- **Travel poses:** all seven CO-1 profiles have faint, hit, swim, fly_grip and ride roles. The `--context` stage skips them because the species isn't a swimmer, Fly carrier or rideable in play (receipt not_a_swimmer / not_a_carrier / not_rideable). I can't map F36#77/#45/#73/#41/#35/#43 to ids from here. A travel row for a species that never travels that way in play shouldn't apply.
+- **b46 scale: tie, reverted.**
+  - Brooktail 2.1 -> 2.55 m and Thundertunnel 2.8 -> 3.3 m mapped 6.20 / 6.40 on both sides (non-confirming, r 0.34; 3/3 judges gave identical scores). Verdict: `ralph/reports/CREATURES/close-1024/b46/VERDICT.md`.
+  - Cause: `--whole-body` frames the camera from the creature's box, so growth only shrinks the ruler. Scale needs the play camera or a fixed-distance stage.
+  - Other reads: Brooktail's eye patches read as sunglasses and its faint end as sitting; Thundertunnel's eyes are not visible.
+- **Riders:** the ride stage now wears the fitted saddle, as mounting does in play (37581836). water_cannonback and water_aquaryn riders sit in tack; water_sirenseal reads fine.
+- **Got your Stormtrail (b) and Galecrest rulings.** Next: Stormtrail branching arcs plus value separation, then Galecrest matte slate/tan material and the CO-1 grounded-flinch hit. Each gets a CPU check, then they go into one bundle on main with Tanglevolt.
+- Direct send_message to you is refused here (untrusted device), so answers come through this note.
+- tb/creatures-land head b7b0f38c.
+
 ## TO COORDINATOR (26 Oct, Ripplet)
 
 - **Tail spacing was the stage, not the creature. Fixed in the harness:** f68cc2a6 on tb/creatures-land.
