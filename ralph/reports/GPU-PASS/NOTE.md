@@ -126,6 +126,17 @@ Land on main only the files in `LANDABLE.txt`: verdict .md, key and score .json,
 3. Re-confirm F25#4 on main after tb/vfx-launch lands (`F25-4/f25_fix_queue.ps1.txt`, about 12 minutes).
 4. F08#3: judges ask for foreground dressing, a night lighting pass and varied islets (scene work for the Cloudreach lane).
 
+## GPU QUEUE UPDATE 4 (coordinator, 27 Oct 04:40 UTC): MH8 is superseded by r7b
+
+- **If MH8 (r6b) has not started capturing:** run r7b in its place.
+- **If MH8 has started:** finish it, then run r7b as MH9.
+- **Arms:** control tb/meadows 032b28f50 vs candidate tb/meadows-r7-on 0d8ef6dd2. The candidate is the control with three `stronghold.json` flags ON:
+  - the r5 lit keep plus the Meshy spire behind it, both with authored window-grid emission masks;
+  - MH3 courtyard daylight;
+  - MH3 war banners.
+- **CPU:** 6.00 -> 6.69 (+0.69). It beats r6b (+0.27 in the same batch).
+- **Capture and report:** as MH8 (`capture_f38_matrix.gd --subset=band5_stronghold_approach`, day and night, Medium and High). Report P2-003, whether the windows read at night, and any red outside the Tether banners.
+
 ## GPU QUEUE UPDATE 3 (coordinator, 27 Oct 01:30 UTC): three close-out arms, run in this order
 
 SW19 storm sky is received: no gain, OFF. Each arm below is its control plus one change. Use `--source-commit=<sha>` on every capture.
