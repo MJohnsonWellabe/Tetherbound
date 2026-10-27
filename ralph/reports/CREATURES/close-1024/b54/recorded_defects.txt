@@ -1,0 +1,4 @@
+Ok: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Sx: none
+Mg: none
+Xg: "The near-black cell fill makes the back one dark mass; at faint end the top-down back does not read"
