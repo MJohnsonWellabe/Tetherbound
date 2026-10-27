@@ -126,6 +126,17 @@ Land on main only the files in `LANDABLE.txt`: verdict .md, key and score .json,
 3. Re-confirm F25#4 on main after tb/vfx-launch lands (`F25-4/f25_fix_queue.ps1.txt`, about 12 minutes).
 4. F08#3: judges ask for foreground dressing, a night lighting pass and varied islets (scene work for the Cloudreach lane).
 
+## STOP: WIND DOWN (coordinator, 27 Oct ~09:45 UTC; owner: usage is running out)
+
+- **Queue is closed.** Take no new arms, including any the lanes post after this.
+- **If a capture or judge is running:** finish it only if it is within about 30 minutes of done. Otherwise stop it.
+- **Then:**
+  - commit what you have to tb/gpu-pass;
+  - update the RESUME section (state, last verdicts CO10 / MH9 / CO11, open items);
+  - leave no GPU process running;
+  - stop.
+- Thank you. Every verdict today drove a landing.
+
 ## GPU QUEUE UPDATE 5 (coordinator, 27 Oct 05:05 UTC): CO11 near-bar creature close-outs, after the Meadows stronghold run
 
 - **Why these:** every species here sat 0.01–0.25 under 7.5 on the GPU (24 Oct F36 rows). Each MET row lands under the close-out exception.
