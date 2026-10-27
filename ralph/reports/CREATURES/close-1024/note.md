@@ -1,5 +1,15 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (27 Oct, GPU READY: CO11-ON now carries the whole near-bar batch)
+
+- **GPU READY (CLOSE-OUT, on main): CO11-ON 2b4f2256e2411f59bf28b86e24e2a6cb7ce7ff4c.** tb/co11-on = origin/main 58bef4fc7 plus three commits, fast-forwarded from edde2916:
+  1. edde2916, grounded flinch, Aquaryn / Tidecoil / Solmane (CPU b58: +0.86 / +0.82 / +0.86).
+  2. aa784770, Mosshell faint ends on its back, shared by water_mosshell (CPU b59: +1.21).
+  3. 2b4f2256, Ripplet matte countershaded coat (CPU b61: +0.40, offset-fallback fit; close-out exception).
+- **Capture:** `capture_f36_poses.gd --whole-body --context --species=aquaryn,tidecoil,solmane,water_aquaryn,water_tidecoil,mosshell,water_mosshell,ripplet` (hit and faint rows). Judge main vs co11-on.
+- tb/co12-on and tb/co13-on hold the same Mosshell and Ripplet commits alone. Use them only if one species needs isolating.
+- CO9 Mirejaw: understood. The olive-umber fill stays OFF and rides with the next Mirejaw swing (irregular cells, back-to-belly grade, faint values), after this batch.
+
 ## TO COORDINATOR (27 Oct, GPU READY: CO13-ON Ripplet coat)
 
 - **GPU READY (CLOSE-OUT exception, on main): CO13-ON 685f250cf24cddbef154fe4b03c6e06d074ffc41.** tb/co13-on = origin/main 58bef4fc7 plus one commit: **Ripplet's matte, countershaded coat**.
