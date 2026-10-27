@@ -26,6 +26,7 @@ const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 const STORM_PANE_SHADER := preload("res://scripts/world/cottage_storm_pane.gdshader")
 const STORM_VIEW_SHADER := preload("res://scripts/world/cottage_storm_view.gdshader")
 const WINDOW_PATCH_SHADER := preload("res://scripts/world/cottage_window_patch.gdshader")
+const WOVEN_RUG_SHADER := preload("res://scripts/world/cottage_woven_rug.gdshader")
 const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
 const SHELL_SHADER := preload("res://shaders/shell_door_cutout.gdshader")
 const CAMP_FLAME := "res://assets/props/generated_camp/camp_flame.glb"
@@ -339,6 +340,10 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
 		_build_storm_room_light(room_cfg, w, z0, z1, y0, y1)
 	var dressing := _finish_block({"enabled": true, "storm_finish": cfg}, "stormwood_dressing")
 	if not dressing.is_empty():
+		# m51: the polish's upright rod replaces the dressing's leaning one.
+		if _finish_block({"enabled": true, "storm_finish": cfg}, "ashfoot_polish").has("rod"):
+			dressing = dressing.duplicate()
+			dressing["_rod_replaced"] = true
 		_stormwood_dressing(dressing, w, d, top, z0, z1, y0)
 	var pane_cfg: Dictionary = (cfg.get("window_pane", {}) as Dictionary).duplicate()
 	pane_cfg.merge(seated.get("pane", {}), true)
@@ -397,6 +402,12 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
 		bunch.position = Vector3(cord_x, cord_y - drop - 0.14, z)
 		add_child(bunch)
 	# Moss along the wall foot in the corners and under the window.
+	# m51 (SW20 judges: "flat green floor discs"): the polish drops them; the
+	# Stormwood dressing's moss on the timber carries the moss read.
+	var polish := _finish_block({"enabled": true, "storm_finish": cfg}, "ashfoot_polish")
+	if not polish.is_empty():
+		_ashfoot_polish(polish, w, d, top, z0, z1)
+		return
 	var moss := StandardMaterial3D.new()
 	moss.albedo_color = Color(str(cfg.get("moss_colour", "#3d5530")))
 	moss.roughness = 1.0
@@ -712,7 +723,7 @@ func _stormwood_dressing(cfg: Dictionary, w: float, d: float, top: float, z0: fl
 	copper.metallic = 0.75
 	copper.roughness = 0.35
 	var rod_cfg: Array = cfg.get("rod", [])
-	if rod_cfg.size() >= 4:
+	if rod_cfg.size() >= 4 and not bool(cfg.get("_rod_replaced", false)):
 		var rod := MeshInstance3D.new()
 		rod.name = "CopperLightningRod"
 		var cylinder := CylinderMesh.new()
@@ -730,6 +741,60 @@ func _stormwood_dressing(cfg: Dictionary, w: float, d: float, top: float, z0: fl
 	if coil_at.size() >= 2:
 		var coil := _kit("CopperChainCoil", "Chain_Coil", Vector3(float(coil_at[0]), FLOOR_TOP, float(coil_at[1])), 30.0, 0.6)
 		_tint(coil, Color(str(cfg.get("copper_colour", "#b8794a"))))
+
+
+## m51 Ashfoot polish (SW20 / SW20b judges, 0.74 short): copper post caps on
+## the frame posts, an upright copper lightning rod with a three-prong finial
+## and wall brackets (the leaning rod read as a broom), and heavier rain on the
+## window pane. The floor moss discs are dropped by the caller; the lamp and
+## rug are handled in _build_light / _build_rug. Presentation only.
+func _ashfoot_polish(cfg: Dictionary, w: float, d: float, top: float, z0: float, z1: float) -> void:
+	var copper := StandardMaterial3D.new()
+	copper.albedo_color = Color(str(cfg.get("copper_colour", "#c08a55")))
+	copper.metallic = 0.8
+	copper.roughness = 0.32
+	if bool(cfg.get("post_caps", true)):
+		for post: Node in find_children("WallPost*", "MeshInstance3D", false, false):
+			var visual := post as MeshInstance3D
+			var size := (visual.mesh as BoxMesh).size if visual.mesh is BoxMesh else Vector3(0.1, 2.0, 0.14)
+			for band_y: float in [0.25, size.y - 0.35]:
+				_visual_box(String(visual.name) + "Band%d" % int(band_y * 10.0), Vector3(size.x + 0.02, 0.05, size.z + 0.02), visual.position + Vector3(0.0, -size.y * 0.5 + band_y, 0.0), copper)
+	var rod: Array = cfg.get("rod", [])
+	if rod.size() >= 3:
+		var base := Vector3(float(rod[0]), FLOOR_TOP, float(rod[1]))
+		var height := float(rod[2])
+		var shaft := MeshInstance3D.new()
+		shaft.name = "CopperRodShaft"
+		var cylinder := CylinderMesh.new()
+		cylinder.top_radius = 0.028
+		cylinder.bottom_radius = 0.034
+		cylinder.height = height
+		cylinder.radial_segments = 10
+		shaft.mesh = cylinder
+		shaft.material_override = copper
+		shaft.position = base + Vector3(0.0, height * 0.5, 0.0)
+		add_child(shaft)
+		for prong in 3:
+			var tip := MeshInstance3D.new()
+			tip.name = "CopperRodProng%d" % prong
+			var cone := CylinderMesh.new()
+			cone.top_radius = 0.0
+			cone.bottom_radius = 0.022
+			cone.height = 0.26
+			cone.radial_segments = 6
+			tip.mesh = cone
+			tip.material_override = copper
+			var spread := (float(prong) - 1.0) * 0.07
+			tip.position = base + Vector3(spread, height + 0.12, 0.0)
+			tip.rotation.z = -spread * 2.2
+			add_child(tip)
+		for bracket_y: float in [height * 0.35, height * 0.75]:
+			_visual_box("CopperRodBracket%d" % int(bracket_y * 10.0), Vector3(0.09, 0.05, 0.16), base + Vector3(0.0, bracket_y, -0.06), copper)
+	var rain: Dictionary = cfg.get("pane_rain_by_phase", {})
+	if not rain.is_empty() and _pane != null:
+		_pane_cfg["rain_by_phase"] = rain
+		if cfg.has("pane_rain_speed"):
+			_pane.set_shader_parameter("rain_speed", float(cfg.pane_rain_speed))
 
 
 func _apply_view_phase(phase: String) -> void:
@@ -1032,7 +1097,32 @@ func _build_furniture() -> void:
 
 
 func _build_rug() -> void:
-	_box(Vector3(1.0, 0.02, 1.4), Vector3(_door_x - _door_w * 0.5 + 0.55, FLOOR_TOP + 0.01, 0.2), COL_RUG, false)
+	var at := Vector3(_door_x - _door_w * 0.5 + 0.55, FLOOR_TOP + 0.01, 0.2)
+	var holder := get_parent() as Node3D
+	var role := str(holder.get_meta("village_role", "")) if holder != null else ""
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(FINISH_CONFIG)) if FileAccess.file_exists(FINISH_CONFIG) else null
+	if parsed is Dictionary and ((parsed as Dictionary).get("lined_roles", []) as Array).has(role):
+		var polish := _finish_block(parsed, "ashfoot_polish")
+		if polish.has("rug"):
+			# m51 (SW20 judges: "a flat beige rug"): a woven storm-blue rug.
+			var rug_cfg: Dictionary = polish.rug
+			var size := Vector2(float((rug_cfg.get("size_m", [1.0, 1.4]) as Array)[0]), float((rug_cfg.get("size_m", [1.0, 1.4]) as Array)[1]))
+			var rug := MeshInstance3D.new()
+			rug.name = "WovenRug"
+			var plane := PlaneMesh.new()
+			plane.size = size
+			rug.mesh = plane
+			var material := ShaderMaterial.new()
+			material.shader = WOVEN_RUG_SHADER
+			material.set_shader_parameter("size_m", size)
+			for key: String in ["base_colour", "band_colour", "border_colour"]:
+				if rug_cfg.has(key):
+					material.set_shader_parameter(key, Color(str(rug_cfg[key])))
+			rug.material_override = material
+			rug.position = at + Vector3(0.0, 0.006, 0.0)
+			add_child(rug)
+			return
+	_box(Vector3(1.0, 0.02, 1.4), at, COL_RUG, false)
 
 
 func _build_light() -> void:
@@ -1051,6 +1141,14 @@ func _build_light() -> void:
 		if grade.has("room_light_colour"):
 			light.light_color = Color(str(grade.room_light_colour))
 		light.light_energy = float(grade.get("room_light_energy", light.light_energy))
+		# m51 (SW20 judges x3: the fire glare blows out the trainer's back):
+		# the warm lamp hangs over the hearth instead of over the room centre
+		# where the trainer stands, a little dimmer.
+		var polish := _finish_block(parsed, "ashfoot_polish")
+		if polish.has("room_light_at"):
+			var at: Array = polish.room_light_at
+			light.position = Vector3(float(at[0]) * _half_w, float(at[1]), float(at[2]) * _half_d)
+			light.light_energy *= float(polish.get("room_light_scale", 1.0))
 	light.omni_range = 6.5
 	light.shadow_enabled = true
 	add_child(light)

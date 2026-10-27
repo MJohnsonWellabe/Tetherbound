@@ -122,6 +122,18 @@
       "rod": [-1.25, -2.0, 8.0, 1.9],
       "chain_coil": [-0.5, 2.1]
     },
+    "ashfoot_polish": {
+      "enabled": false,
+      "_candidate": "m51 Ashfoot polish (OFF until judged; needs storm_finish, storm_room and stormwood_dressing on). GPU SW20/SW20b (6.76, 0.74 short), judges' path: (1) the fire glare blows out the trainer's back: the warm room lamp hangs over the hearth, not over the room centre where the trainer stands, and dimmer; (2) a rain-streaked window: heavier per-phase rain on the pane; (3) copper and a lightning-rod motif: copper bands on the frame posts and an upright copper rod with a three-prong finial and wall brackets (the leaning rod read as a broom); (4) a textured floor: the flat green floor moss discs go and the beige rug becomes a woven storm-blue rug. Presentation only.",
+      "room_light_at": [0.0, 2.2, -0.62],
+      "room_light_scale": 0.8,
+      "pane_rain_by_phase": {"calm": 0.55, "building": 0.8, "break": 1.0, "fading": 0.7},
+      "pane_rain_speed": 0.5,
+      "copper_colour": "#c08a55",
+      "post_caps": true,
+      "rod": [-1.3, -1.9, 2.1],
+      "rug": {"size_m": [1.0, 1.4], "base_colour": "#3a4658", "band_colour": "#9c8558", "border_colour": "#222833"}
+    },
     "storm_view": {
       "enabled": true,
       "_why_on": "GPU SW16 (tb/gpu-pass fcf26c7f, ralph/reports/GPU-PASS/F41-0/SW16-ashfoot-m36b-0a633e222/VERDICT.md): m36b (seated + firelit + storm view) interior 5.83 -> 6.96 (+1.13) at Medium and High; storm-window defect PRESENT 3/3 -> PARTIAL 2 / FIXED 1, roof-apex clipping FIXED 3/3; outside level. One Medium device loss (TDR) before any Ashfoot frame; the re-run was clean 200/200.",
