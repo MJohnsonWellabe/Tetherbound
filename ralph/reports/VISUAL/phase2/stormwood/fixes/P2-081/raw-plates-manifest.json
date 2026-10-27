@@ -1,0 +1,141 @@
+{
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"complete": true,
+	"failures": [],
+	"fixture": "Existing portrait stage and framing; unchanged world body configurations; no world interaction or panel acceptance proof.",
+	"plates": [
+		{
+			"clipped_white_fraction": 0.0,
+			"file": "res://.tmp/stormwood-phase2/trainer-plates-r3/phase2_stormwood_raw_grunt_c.png",
+			"profile": "grunt_c",
+			"size": [
+				256,
+				256
+			],
+			"top_or_head_side_touches_edge": false,
+			"trainer_ids": [
+				"lieutenant_dace_hollows_rod"
+			],
+			"world_config": {
+				"_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+				"animation_libraries": [],
+				"body_emission_enabled": false,
+				"clips": {
+					"idle": "idle",
+					"jump": "jump",
+					"sprint": "sprint",
+					"throw": "throw",
+					"walk": "walk"
+				},
+				"gait_reference_speeds": {
+					"sprint": 8.6,
+					"walk": 5.0
+				},
+				"height": 1.7,
+				"model": "res://assets/characters/grunt_c/grunt_c_lod0.glb",
+				"model_yaw": 0.0
+			}
+		},
+		{
+			"clipped_white_fraction": 0.0,
+			"file": "res://.tmp/stormwood-phase2/trainer-plates-r3/phase2_stormwood_raw_officer_a.png",
+			"profile": "officer_a",
+			"size": [
+				256,
+				256
+			],
+			"top_or_head_side_touches_edge": false,
+			"trainer_ids": [
+				"lieutenant_varga_rodline_bridge",
+				"officer_nysa_deepwood_rod"
+			],
+			"world_config": {
+				"_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+				"animation_libraries": [],
+				"body_emission_enabled": false,
+				"clips": {
+					"idle": "idle",
+					"jump": "jump",
+					"sprint": "sprint",
+					"throw": "throw",
+					"walk": "walk"
+				},
+				"gait_reference_speeds": {
+					"sprint": 8.6,
+					"walk": 5.0
+				},
+				"height": 1.8,
+				"model": "res://assets/characters/officer_a/officer_a_lod0.glb",
+				"model_yaw": 0.0
+			}
+		},
+		{
+			"clipped_white_fraction": 0.0,
+			"file": "res://.tmp/stormwood-phase2/trainer-plates-r3/phase2_stormwood_raw_officer_b.png",
+			"profile": "officer_b",
+			"size": [
+				256,
+				256
+			],
+			"top_or_head_side_touches_edge": false,
+			"trainer_ids": [
+				"officer_maren_verge_rod",
+				"outerworks_lieutenant_sera",
+				"officer_kestrel_outer_works"
+			],
+			"world_config": {
+				"_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+				"animation_libraries": [],
+				"body_emission_enabled": false,
+				"clips": {
+					"defeated": "defeated",
+					"idle": "idle",
+					"jump": "jump",
+					"sprint": "sprint",
+					"throw": "throw",
+					"walk": "walk"
+				},
+				"gait_reference_speeds": {
+					"sprint": 8.6,
+					"walk": 5.0
+				},
+				"height": 1.8,
+				"model": "res://assets/characters/officer_b/officer_b_lod0.glb",
+				"model_yaw": 0.0
+			}
+		},
+		{
+			"clipped_white_fraction": 0.0147928243383827,
+			"file": "res://.tmp/stormwood-phase2/trainer-plates-r3/phase2_stormwood_raw_captain_a.png",
+			"profile": "captain_a",
+			"size": [
+				256,
+				256
+			],
+			"top_or_head_side_touches_edge": false,
+			"trainer_ids": [
+				"captain_marrow_dynamo_core"
+			],
+			"world_config": {
+				"_comment": "T1-NPC-CAST, 2026-08-30. Generated from the owner's Meadows NPC Design Board, per owner directive after a render proved the reuse-only rank system gave no real silhouette difference between grunts/officers/captains (tools/_capture_rank_variety.gd, shots/rank_variety/). Pipeline: Meshy multi-image-to-3D refine -> meshy.py rig (Meshy auto-rig) -> animate_humanoid.py (local Blender bake, same clip set every other humanoid rig here uses). Full provenance: docs/specs/ASSET_LEDGER.md, ralph/reports/NPC_CAST_*.md.",
+				"animation_libraries": [],
+				"clips": {
+					"defeated": "defeated",
+					"idle": "idle",
+					"jump": "jump",
+					"sprint": "sprint",
+					"throw": "throw",
+					"walk": "walk"
+				},
+				"gait_reference_speeds": {
+					"sprint": 8.6,
+					"walk": 5.0
+				},
+				"height": 1.9,
+				"model": "res://assets/characters/captain_a/captain_a_lod0.glb",
+				"model_yaw": 0.0
+			}
+		}
+	],
+	"renderer": "gl_compatibility"
+}
