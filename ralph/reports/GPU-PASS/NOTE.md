@@ -157,6 +157,16 @@ Earlier on 26-27 Oct, all pushed (see each row's VERDICT.md):
 3. Re-confirm F25#4 on main after tb/vfx-launch lands (`F25-4/f25_fix_queue.ps1.txt`, about 12 minutes).
 4. F08#3: judges ask for foreground dressing, a night lighting pass and varied islets (scene work for the Cloudreach lane).
 
+## NEXT JOB WHEN THE OWNER RESUMES THIS LANE: per-item scores for every biome card (coordinator, 27 Oct, owner: "do whatever is needed to score each biome's cards")
+
+- **The job:** tb/item-scores, `ralph/reports/VISUAL/item-scores/job.json` with its README. It covers all 106 F38–F41 catalogue items, up to 3 original phase-2 sightings each, 250 unique frames, each with the exact repro command you used for phase 2 on this GTX 1060.
+- **CPU lanes are scoring it now (CPU-provisional).** Your run is the confirmation and the score of record.
+- **What to do:**
+  - Re-shoot on current main with each repro command. Change only `--output` (to `.../item-scores/<biome>/frames-gpu/<id>`) and add `--source-commit`.
+  - Judge every item one-sided with the standard yardstick: 3 judges, high anchors, mapped. Report a Bar A score and a PRESENT / PARTIAL / FIXED call on the catalogue defect.
+  - Write `ralph/reports/VISUAL/item-scores/<biome>/scores-gpu.json` in the README's format.
+- **Order:** Meadows, Stormwood, Tidewake, Cloudreach.
+
 ## STOP: WIND DOWN (coordinator, 27 Oct ~09:45 UTC; owner: usage is running out)
 
 - **Queue is closed.** Take no new arms, including any the lanes post after this.
