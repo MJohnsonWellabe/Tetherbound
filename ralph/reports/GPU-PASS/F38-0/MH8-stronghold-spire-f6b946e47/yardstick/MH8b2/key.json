@@ -1,0 +1,46 @@
+{
+ "Id": {
+  "anchor": false,
+  "label": "MH8 band5_stronghold_approach_1-night Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH8\\sides\\MH8-band5_stronghold_approach_1-night-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH8\\sides\\MH8-band5_stronghold_approach_1-night-ship-Medium.png"
+ },
+ "Xr": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Yd": {
+  "anchor": false,
+  "label": "MH8 band5_stronghold_approach_1-day High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH8\\sides\\MH8-band5_stronghold_approach_1-day-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH8\\sides\\MH8-band5_stronghold_approach_1-day-ship-High.png"
+ },
+ "Ow": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Iq": {
+  "anchor": false,
+  "label": "MH8 band5_stronghold_approach_0-night High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH8\\sides\\MH8-band5_stronghold_approach_0-night-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH8\\sides\\MH8-band5_stronghold_approach_0-night-ship-High.png"
+ },
+ "Il": {
+  "anchor": false,
+  "label": "MH8 band5_stronghold_approach_0-night Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH8\\sides\\MH8-band5_stronghold_approach_0-night-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH8\\sides\\MH8-band5_stronghold_approach_0-night-ship-Medium.png"
+ },
+ "Yf": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Sc": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_shipping",
+  "B": "f36_1_gpu:stormcapra_candidate"
+ }
+}

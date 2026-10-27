@@ -1,0 +1,172 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9536,
+  "least_squares_slope": 0.7477,
+  "method": "linear",
+  "slope": 0.7477,
+  "intercept": 2.4958,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.262,
+ "top_anchor_reference": 7.89,
+ "confirming_batch": true,
+ "anchors": {
+  "f04_6_r22:r22": {
+   "measured": 5.133,
+   "reference": 6.75,
+   "mapped": 6.334,
+   "residual": 0.416
+  },
+  "f04_6_r22:control": {
+   "measured": 4.4,
+   "reference": 5.83,
+   "mapped": 5.786,
+   "residual": 0.044
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.933,
+   "reference": 7.53,
+   "mapped": 7.68,
+   "residual": -0.15
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.867,
+   "reference": 7.47,
+   "mapped": 7.63,
+   "residual": -0.16
+  },
+  "f36_1_gpu:tanglevolt_candidate": {
+   "measured": 6.867,
+   "reference": 7.89,
+   "mapped": 7.63,
+   "residual": 0.26
+  },
+  "f36_1_gpu:tanglevolt_shipping": {
+   "measured": 4.433,
+   "reference": 6.04,
+   "mapped": 5.811,
+   "residual": 0.229
+  },
+  "f36_0_gap:C1A": {
+   "measured": 5.2,
+   "reference": 6.1,
+   "mapped": 6.384,
+   "residual": -0.284
+  },
+  "f36_0_gap:C1B": {
+   "measured": 4.267,
+   "reference": 5.33,
+   "mapped": 5.686,
+   "residual": -0.356
+  }
+ },
+ "candidates": {
+  "MH8 band5_stronghold_approach_0-day High cand|ship | MH8-band5_stronghold_approach_0-day-cand-High": {
+   "measured_mean": 4.2,
+   "mapped_mean": 5.64,
+   "mapped_judges": [
+    5.41,
+    5.64,
+    5.86
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH8 band5_stronghold_approach_0-day High cand|ship | MH8-band5_stronghold_approach_0-day-ship-High": {
+   "measured_mean": 4.433,
+   "mapped_mean": 5.81,
+   "mapped_judges": [
+    5.56,
+    5.79,
+    6.08
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH8 band5_stronghold_approach_1-day Medium cand|ship | MH8-band5_stronghold_approach_1-day-ship-Medium": {
+   "measured_mean": 3.8,
+   "mapped_mean": 5.34,
+   "mapped_judges": [
+    5.19,
+    5.19,
+    5.64
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH8 band5_stronghold_approach_1-day Medium cand|ship | MH8-band5_stronghold_approach_1-day-cand-Medium": {
+   "measured_mean": 4.733,
+   "mapped_mean": 6.03,
+   "mapped_judges": [
+    5.94,
+    5.94,
+    6.23
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH8 band5_stronghold_approach_1-night High cand|ship | MH8-band5_stronghold_approach_1-night-cand-High": {
+   "measured_mean": 4.233,
+   "mapped_mean": 5.66,
+   "mapped_judges": [
+    5.34,
+    5.71,
+    5.94
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH8 band5_stronghold_approach_1-night High cand|ship | MH8-band5_stronghold_approach_1-night-ship-High": {
+   "measured_mean": 3.833,
+   "mapped_mean": 5.36,
+   "mapped_judges": [
+    5.11,
+    5.34,
+    5.64
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH8 band5_stronghold_approach_0-day Medium cand|ship | MH8-band5_stronghold_approach_0-day-cand-Medium": {
+   "measured_mean": 4.367,
+   "mapped_mean": 5.76,
+   "mapped_judges": [
+    5.49,
+    5.79,
+    6.01
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "MH8 band5_stronghold_approach_0-day Medium cand|ship | MH8-band5_stronghold_approach_0-day-ship-Medium": {
+   "measured_mean": 4.4,
+   "mapped_mean": 5.79,
+   "mapped_judges": [
+    5.56,
+    5.79,
+    6.01
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

@@ -1,0 +1,27 @@
+# Queue 51: MH8 Meadows stronghold spire r6b + MH3 (coordinator NOTE.md item 4, 27 Oct). Control tb/meadows 4a6eeec96 vs candidate
+# tb/meadows-r6b-on f6b946e47 (stronghold.json hero_gatehouse + courtyard_daylight_candidate + banner_model_candidate ON). Each arm at its
+# own SHA with --source-commit; capture_f38_matrix.gd --seed=2042 --f38-baseline, day + night, subset band5_stronghold_approach.
+# Started after queue 50 finishes; out\MH8.done marks a finished run.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $main = "D:\tb-gpu-pass"; $crA = "D:\tb-gpu-wt-crA"; $tide = "D:\tb-gpu-wt-tide"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "45"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+function MoveOut($proj, $rel, $dest) { $abs = Join-Path $proj ($rel -replace '/', '\'); if (Test-Path $abs) { New-Item -ItemType Directory -Force "$dest\frames" | Out-Null; Move-Item "$abs\*" "$dest\frames\" -Force; cmd /c "rmdir /s /q `"$abs`""; "  moved $((Get-ChildItem "$dest\frames" -Recurse -Filter *.png).Count) png -> $dest" } else { "  NO OUTPUT at $rel" } }
+if (Test-Path "$out\MH8.done") { "MH8 already captured; skipping"; return }
+Gate "MH8"
+"== MH8: Meadows stronghold spire r6b + MH3, ctl 4a6eeec96 (off) vs cand f6b946e47 (hero_gatehouse + courtyard daylight + banner models on)"
+foreach ($arm in @(@("ctl", "4a6eeec96b4af7ed5103d73ffe9b79196ab6ddd7"), @("cand", "f6b946e47f945dbca996fb4fc50f443d578e06f9"))) {
+    $tag = $arm[0]; $sha = $arm[1]
+    CheckoutCrA $sha; Import $crA "crA-MH8-$tag"
+    foreach ($pr in "Medium", "High") {
+        Gate "MH8 $tag $pr"
+        CleanCrA $sha
+        $rel = "shots/gpu/mh8-$tag-$pr"; $a = Join-Path $crA ($rel -replace '/', '\'); if (Test-Path $a) { cmd /c "rmdir /s /q `"$a`"" }
+        if (Test-Path "$out\MH8-$tag-$pr") { Remove-Item "$out\MH8-$tag-$pr" -Recurse -Force }
+        & $run -Preset $pr -Script "res://tools/capture_f38_matrix.gd" -OutDir "$out\MH8-$tag-$pr" -Resolution "1920x1080" -ProjectPath $crA -UserArgs @("--seed=2042", "--f38-preset=$pr", "--f38-baseline", "--times=day,night", "--subset=band5_stronghold_approach", "--output=res://$rel", "--source-commit=$sha")
+        MoveOut $crA $rel "$out\MH8-$tag-$pr"
+    }
+}
+New-Item -ItemType File -Force "$out\MH8.done" | Out-Null
+"MH8 done"
+"queue51 done"
