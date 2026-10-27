@@ -14,7 +14,9 @@ class FixtureWorld extends Node3D:
 
 
 func _deck() -> Dictionary:
-	return ((JSON.parse_string(FileAccess.get_file_as_string(OVERLOOK.CONFIG)) as Dictionary).deck as Dictionary).duplicate(true)
+	# The effective deck: a flagged candidate (deck.rim) overrides the landed
+	# values only when its own `enabled` is true.
+	return OVERLOOK.with_candidate(((JSON.parse_string(FileAccess.get_file_as_string(OVERLOOK.CONFIG)) as Dictionary).deck as Dictionary).duplicate(true), "rim")
 
 
 func test_deck_clears_route_corridors_and_ramps_to_the_path() -> void:

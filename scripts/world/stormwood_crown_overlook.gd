@@ -19,12 +19,26 @@ const WOOD_ATLAS := preload("res://assets/buildings/quaternius_medieval/T_WoodTr
 static func install(world: Node3D) -> void:
 	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG)) if FileAccess.file_exists(CONFIG) else {}
 	var draw := not bool(world.get("simulation_only"))
-	var deck: Dictionary = cfg.get("deck", {})
+	var deck := with_candidate(cfg.get("deck", {}), "rim")
 	if bool(deck.get("enabled", false)):
 		build_deck(world, deck, draw)
-	var massif: Dictionary = cfg.get("massif", {})
+	var massif := with_candidate(cfg.get("massif", {}), "storm")
 	if draw and bool(massif.get("enabled", false)):
 		_massif(world, massif)
+
+
+## A landed block with a flagged candidate inside it: when the candidate's
+## own `enabled` is true its fields override the landed values (r49: the
+## rim deck and the storm-haze massif ride over the GPU-passed SW18 values).
+static func with_candidate(block: Dictionary, key: String) -> Dictionary:
+	var candidate: Dictionary = block.get(key, {})
+	if not bool(candidate.get("enabled", false)):
+		return block
+	var merged := block.duplicate(true)
+	for field: String in candidate:
+		if field != "enabled" and not field.begins_with("_"):
+			merged[field] = candidate[field]
+	return merged
 
 
 ## The deck's own frame: origin at the deck centre on its floor, +Z along
