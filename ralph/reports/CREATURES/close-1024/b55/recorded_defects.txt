@@ -1,0 +1,4 @@
+Jc: none
+Lx: "Stone plates read as a pad or pack strapped on rather than grown from the creature"; "The coat reads saturated orange rather than a natural brown"
+Vp: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Rm: none

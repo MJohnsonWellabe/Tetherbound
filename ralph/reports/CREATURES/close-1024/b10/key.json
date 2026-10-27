@@ -1,0 +1,23 @@
+{
+ "Qk": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Up": {
+  "anchor": false,
+  "label": "F36 bramblebun grass b10",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b10/sides/bramblebun-grass-c.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/678d8084-cb47-5602-88bf-0ce9b3961913/scratchpad/b10/sides/bramblebun-grass-base.png"
+ },
+ "Ef": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Hx": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ }
+}

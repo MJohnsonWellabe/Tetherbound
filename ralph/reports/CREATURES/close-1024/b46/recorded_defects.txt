@@ -1,0 +1,5 @@
+Zk: none
+Ub: none
+Ae: "Creature stands about the trainer's height: reads small beside the 1.80 m ruler"
+Rj: none
+Qk: "Creature stands about the trainer's height: reads small beside the 1.80 m ruler"

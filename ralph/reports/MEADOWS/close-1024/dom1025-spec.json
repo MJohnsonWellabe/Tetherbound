@@ -1,0 +1,47 @@
+[
+ {
+  "label": "keep r4",
+  "a": "/tmp/claude-0/cap/r5/keep_cand.png",
+  "b": "/tmp/claude-0/cap/r5/keep_ship.png",
+  "brief": "Meadows plain looking toward the enemy faction's stronghold on the far skyline: 4 real-time frames (approach and gameplay views; day, then night). The 1.80 m trainer stands in every frame. Judge whether the stronghold reads as a landmark fortress from here, day and night, and the scene as a whole. Frames are numbered in the top-left corner; name frames by number.",
+  "defects": [
+   "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"
+  ]
+ },
+ {
+  "label": "giant ironwood",
+  "a": "/tmp/claude-0/cap/r5/giant_ship.png",
+  "b": "/tmp/claude-0/cap/r5/giant_cand.png",
+  "brief": "Meadows Ironwood Grove with its great landmark tree: 3 real-time daytime frames (approach, gameplay, detail). The 1.80 m trainer stands in every frame. Judge the trees, the landmark tree's canopy and the grove as the game's real look. Frames are numbered in the top-left corner; name frames by number.",
+  "defects": [
+   "The grove trees have faceted, blobby canopies instead of real leaf-card canopies"
+  ]
+ },
+ {
+  "label": "lock paving r2",
+  "a": "/tmp/claude-0/cap/r5/paving_cand.png",
+  "b": "/tmp/claude-0/cap/r5/paving_ship.png",
+  "brief": "A Meadows river-lock yard held by the enemy faction (machinery, cages, banners): 3 real-time daytime frames (approach, gameplay, detail). The 1.80 m trainer stands in every frame. Judge the yard ground, the site and how it sits in the world. Frames are numbered in the top-left corner; name frames by number.",
+  "defects": [
+   "The yard ground is flat beige dirt with blockout slabs instead of a textured, worked surface"
+  ]
+ },
+ {
+  "label": "quarry blocks",
+  "a": "/tmp/claude-0/cap/r5/quarry_ship.png",
+  "b": "/tmp/claude-0/cap/r5/quarry_cand.png",
+  "brief": "The Meadows Old Quarry: 2 real-time daytime frames (approach and gameplay views). The 1.80 m trainer stands in every frame. Judge the quarry site, its stone and how it reads as a working quarry. Frames are numbered in the top-left corner; name frames by number.",
+  "defects": [
+   "The quarry shows pale untextured cut blocks instead of a worked quarry face"
+  ]
+ },
+ {
+  "label": "arches home+stormwood",
+  "a": "/tmp/claude-0/cap/r5/arches_cand.png",
+  "b": "/tmp/claude-0/cap/r5/arches_ship.png",
+  "brief": "Two Crossing Hall travel arches (the home doorway and a doorway to a storm-forest chapter): 2 real-time daytime frames, detail view. The 1.80 m trainer stands in front. Judge the arches and wall as the game's real look. Frames are numbered in the top-left corner; name frames by number.",
+  "defects": [
+   "The arch stands show plaster window-strip walls with blank arches and blown emissive rims instead of textured facades"
+  ]
+ }
+]

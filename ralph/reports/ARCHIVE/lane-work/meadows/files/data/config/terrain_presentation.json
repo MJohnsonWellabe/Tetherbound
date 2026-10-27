@@ -1,0 +1,76 @@
+{
+  "_comment": "MEADOWS-VISUAL-PASS round 5. Runtime-only terrain shader values for the Meadows ground, merged over terrain_playground.json's `shader` block by playground_world.gd::_apply_ground_shader. Separate because terrain_playground.json fingerprints the terrain and scatter bakes, and none of this moves a vertex or a placement.",
+  "shader": {
+    "_comment_macro": "The macro variation colours multiply the whole ground. At #b8b58c/#8ea369 they darkened and yellowed it into large olive and mustard blotches: measured on the survey's ground band at saturation 0.86-0.95 and value 0.34-0.45, against 0.52-0.66 and 0.49-0.60 across the Palworld references. Taking them most of the way to white (a render A/B through tools/survey.gd at 01, 02 and 04) brought the ground to saturation 0.62-0.70 and value 0.60-0.64 and kept a soft large-scale variation. TUNABLE. A second pass took a little red out of both (#dde3c8/#cfdfc6): at the first values the lit meadow rendered a yellow-lime (hue 62) and the paths orange. A third pass cooled both again (#d9e4cb/#cadec8): a blind round still read the ground as a yellow-olive cast against the key art's cooler greens.",
+    "macro_variation1": "#d9e4cb",
+    "macro_variation2": "#cadec8",
+    "_comment_aerial": "The terrain's own distance fade (terrain_ground.gdshader) desaturated the far plain by 0.55 on top of the fog, which read as a white wall from the overlook. Halved, so distance stays green under the haze. TUNABLE.",
+    "aerial_desaturate": 0.3,
+    "aerial_fade_strength": 0.18,
+    "_comment_blend": "terrain_ground.gdshader raises each control texel's weight to the power 8 + 56 * blend_sharpness; at terrain_playground.json's 0.5 that is 36, so every 2m texel boundary between two surfaces rendered as a hard polygon edge -- a blind round read the grass on The Rise's rocky crown as 'yellow-grass islands with hard polygonal edges, like camouflage'. 0.12 (exponent about 15) keeps the height-aware blend but feathers the boundary. TUNABLE.",
+    "blend_sharpness": 0.12,
+    "_comment_steep_rock": "Expose the installed rock material on steep rendered faces, including road-painted cuts. Runtime material only: no height, collision, control paint or bake changes. Ordinary ground above normal.y 0.55 retains its authored material.",
+    "steep_rock_strength": 1.0,
+    "steep_rock_texture_id": 2,
+    "steep_rock_start_y": 0.55,
+    "steep_rock_full_y": 0.25
+  },
+  "texture_candidates": {
+    "path": {"enabled": true, "_why_on": "GPU MH6 (tb/gpu-pass f0d91dcc0, ralph/reports/GPU-PASS/B5-mh6-sw11-sw14-sw15-staticub/VERDICT.md): mean of village_road, farm_to_hall and hall_front +0.56 Medium / +0.56 High; orange smear PRESENT -> PARTIAL 18/18. Not yet 7.5 (village_road 6.43 / 6.68).", "albedo": "res://assets/environment/terrain/stylised/derived/dirt_path_trodden_Color.png", "tint": "#efe9df", "_why_r2": "r2: the tint alone barely moved the frame (the orange is in dirt_path_Color itself), so r2 swaps the albedo for a derived trodden-earth copy (saturation x0.38, value x0.86, local contrast lifted so pebbles and ruts read; tools: PIL, same 1024 size for the Terrain3D array) with a near-white tint. Every path in Meadows takes it.", "_why_r2_cpu": "r2 CPU judged (26 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, 3 anchor pairs incl. craft, confirming batch; calibrate.py linear slope 1.90, r 0.97, RMSE 0.20; Low/Compatibility llvmpipe, day approach/gameplay/detail; ralph/reports/MEADOWS/close-1024/vilpath1026-mapped.json): village_road 5.95 -> 6.97, farm_to_hall 5.95 -> 6.97, hall_front 5.76 -> 6.65; orange-smear defect PRESENT -> FIXED 9/9. Open: a single-scale blob repeat, no ruts, stones or broken grass verge. CPU no longer closes a row: OFF until the GPU pass.", "_scope": "F38 village_road / band3_the_river_lock_1 close-out candidate (OFF until judged): the shipped path tint #d0b090 over dirt_path_Color reads as a flat orange road filling the village_road foreground (GPU 7.09 Medium / 6.73 High, P2-005 PARTIAL). A neutral trodden-earth tint lets the texture's own pebbles and wear read. Presentation only, no bake change."},
+    "path_r3": {"enabled": false, "_target": "path", "albedo": "res://assets/environment/terrain/stylised/derived/dirt_path_trodden_r3_Color.png", "tint": "#fff6ea", "_why": "village close-out r3 (OFF until judged). GPU MH6 put the r2 path ON (+0.56) but its judges read it olive/khaki, merging with the grass, and asked for warm brown trodden earth with ruts and pebbles (village_road 6.43/6.68). r3 is a warm-brown copy of dirt_path_Color (saturation x0.62, value x0.80, warm multiply #ffe2c4, fine and coarse local contrast for pebbles and ruts; same 1024 size for the Terrain3D array). Overrides `path` for the same surface when enabled (listed after it: the last enabled swap per surface wins).", "_parked": "PARKED (26 Oct; CPU, three fresh code-blind judges, 3 anchor pairs incl. craft, linear r 0.93, RMSE 0.31; ralph/reports/MEADOWS/close-1024/vilpath3-mapped.json; day and night approach/gameplay/detail): against the shipped r2 path, village_road 5.92 -> 6.34, farm_to_hall 6.03 -> 6.44, hall_front 6.08 -> 6.44 (+0.36..+0.42, under 0.5). The olive/khaki hue is FIXED 9/9, but the blob texture stays and the warm road goes near-black at night (worse than r2, 3/3). What would carry it: authored ruts, pebbles and broken grass edges (decal or Meshy ground pieces), not a recolour."},
+    "_comment": "Presentation-only terrain surface swaps, keyed by terrain_playground.json texture name. Kept out of terrain_playground.json because that file fingerprints the terrain and scatter bakes (a flag flip there invalidates the vegetation bake). Each applies only with its own enabled.",
+    "grass_v2": {
+      "enabled": true,
+      "_target": "grass",
+      "_scope": "F04#6 r27 / F38 (OFF): painted grass v2 (--flat) keeps blade strokes but drops the repeating dark blobs that read as smear at 1-5 m.",
+      "albedo": "res://assets/environment/terrain/stylised/meadow_grass_painted_v2_Color.png",
+      "normal": "res://assets/environment/terrain/stylised/meadow_grass_painted_v2_NormalGL.png",
+      "_why_on": "grass_v2 and soil ON (CPU-provisional improvement, not a closure): F04#6 r29 mapped 6.38 Bar A vs shipping 5.91 with three code-blind judges on the fixed F04-6 camera set (Low/Compatibility, llvmpipe; ralph/reports/LOOK/close-1022/F04-6.md). Parked by the gain rule; a GPU pass decides, and a GPU score below the bar reopens it."
+    },
+    "soil": {
+      "enabled": true,
+      "_scope": "F04#6 r27 / F38 (OFF): painted dry verge grass (--flat), the soil surface at Vance and Field.",
+      "albedo": "res://assets/environment/terrain/stylised/verge_grass_painted_v2_Color.png",
+      "normal": "res://assets/environment/terrain/stylised/verge_grass_painted_v2_NormalGL.png"
+    }
+  },
+  "shader_candidate": {
+    "enabled": false,
+    "_scope": "F04#6 r26 / F38 candidate (OFF until judged): every yardstick judge names the Meadows ground as smeared and blurry. The macro variation multiplies the ground by about 0.8-0.85 in soft noise blobs (the camouflage smear); lighter macro, a sharper terrain mip bias and stronger near-camera grain give the ground crisp texture instead.",
+    "macro_variation1": "#edf1e4",
+    "macro_variation2": "#e4eedd",
+    "mipmap_bias": 0.7,
+    "grain_strength": 0.32
+  },
+  "carpet_candidate": {
+    "enabled": false,
+    "_scope": "F38 L4 / P2-005 close-1024 candidate (OFF until judged): judges at every exterior Meadows site read a uniform grass carpet. Grass blade coverage cannot fix it (grass_field.json carpet_candidate, parked: the terrain under the blades is painted the same grass). The shipped macro octaves are ~83 m and ~33 m and near white, so the ground has no mid-scale variation. This moves the second octave to ~12 m patches (noise2_scale 0.08) in a cooler clover green, and keeps the first octave light so the large scale does not smear.",
+    "noise2_scale": 0.08,
+    "macro_variation2": "#b6cfa4",
+    "macro_variation1": "#e3ead6",
+    "_parked": "PARKED close-1024: CPU capture near-identical to shipping at farm_to_hall, band2_stone_and_root_1 and band5_0 (approach and gameplay). With grass coverage (grass_field.json carpet_candidate, parked after r1 and r2) that is three attempts on the carpet with no visible change. The near-field read is the grass blades plus the baked terrain colour map, which these shader knobs do not reach. P2-005 needs authored ground variation in the bake (worn earth, clover and moss patches, rock outcrops, grove edges) or new ground-cover art. Left OFF; not for GPU."
+  },
+  "colour_candidate": {
+    "enabled": false,
+    "_scope": "F38 L4 / P2-005 close-1024 candidate (OFF until judged), coordinator-approved colour-bake pass: colour only. tools/bake_meadows_colour_candidate.gd reads each shipped region's colour and height maps and writes a varied colour map per region to `dir`; meadows_colour_candidate.gd swaps them in after load while enabled. No heightfield, control, collision, vegetation placement or bake-fingerprint change. Variation: clover patches (~14 m, cool green), moss/value breaks (~22 m), a worn-earth halo along existing soil (paths, aprons), and grey darkening at outcrop bases (slope from the region's own heightmap). Grove-edge darkening is NOT included: it would need vegetation masks. The grass blades sample the same colour maps (ground_blend), so they follow. `dir` sits behind a .gdignore, so an export would not carry it; convert before enabling for a build.",
+    "dir": "res://data/terrain/playground_colour_candidate",
+    "seed": 2205,
+    "vertex_spacing": 2.0,
+    "clover_scale_m": 45.0,
+    "clover_tint": "#c4dbb0",
+    "clover_strength": 0.5,
+    "moss_scale_m": 70.0,
+    "moss_tint": "#a9bd8e",
+    "moss_strength": 0.35,
+    "soil_reference": "#d1b37e",
+    "worn_tint": "#d8c49a",
+    "worn_strength": 0.45,
+    "worn_reach_px": 2,
+    "rock_tint": "#b3b1a6",
+    "rock_strength": 0.45,
+    "rock_start_deg": 18.0,
+    "rock_full_deg": 32.0,
+    "_why_r2": "r1 at 14 m / 22 m with two octaves and tight thresholds wrote fine speckle (4-8 m) that reads as generator noise; r2 uses broader organic patches (45 m clover, 70 m moss, three octaves, softer thresholds).",
+    "_parked": "PARKED close-1024: the swap ran (64 region maps; log '[colour_candidate] swapped 64') and the CPU capture at farm_to_hall, band2_stone_and_root_1 and band5_0 is identical to shipping. That is the fourth carpet attempt with no visible change (grass drift r1 and r2, terrain macro shader, this colour bake). At play-camera distances the dense grass blades cover the ground completely, so terrain colour does not reach the frame. The PNGs are not committed (7.6 MB, no effect); re-run tools/bake_meadows_colour_candidate.gd to regenerate. The remaining lever is the blade layer itself (per-patch blade tint/species/height) or new ground-cover art."
+  }
+}

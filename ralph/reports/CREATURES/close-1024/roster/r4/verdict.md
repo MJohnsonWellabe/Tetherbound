@@ -1,4 +1,4 @@
-# r4 (25 Oct 2026, CPU): F36#1 whole-roster pose verdict, batch 4 of 7 (land head, shipping state)
+# r4 (24 Oct 2026, CPU): F36#1 whole-roster pose verdict, batch 4 of 7 (land head, shipping state)
 
 Same method as r1; swim now applies only to the water forms and swim mounts (base species in the water roster swim through their water_* form, judged in r6-r7). Anchors include the craft panel pair. Confirming batch; fit linear slope 1.218, intercept -0.866, RMSE 0.24, no warnings.
 

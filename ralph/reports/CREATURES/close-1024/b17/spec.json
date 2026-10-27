@@ -1,0 +1,44 @@
+[
+ {
+  "label": "F36 aquaryn b17",
+  "a": "scratch/b17/sides/aquaryn-base.png",
+  "b": "scratch/b17/sides/aquaryn-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ },
+ {
+  "label": "F36 tidecoil b17",
+  "a": "scratch/b17/sides/tidecoil-base.png",
+  "b": "scratch/b17/sides/tidecoil-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ },
+ {
+  "label": "F36 water_aquaryn b17",
+  "a": "scratch/b17/sides/water_aquaryn-base.png",
+  "b": "scratch/b17/sides/water_aquaryn-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Second row: swimming behind a water plane. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+  ]
+ },
+ {
+  "label": "F36 water_tidecoil b17",
+  "a": "scratch/b17/sides/water_tidecoil-base.png",
+  "b": "scratch/b17/sides/water_tidecoil-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Second row: swimming behind a water plane. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)",
+   "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+  ]
+ }
+]

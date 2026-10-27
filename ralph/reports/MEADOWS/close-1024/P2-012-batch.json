@@ -1,0 +1,4 @@
+{"anchors": {"f36_0_gap:C4A": [6.5, 6.2, 7.2], "f36_0_gap:C4B": [6.3, 7.0, 6.0],
+  "f36_0_npc:C9B": [6.9, 7.1, 6.5], "f36_0_npc:C9A": [6.9, 7.0, 6.5],
+  "craft:after": [6.5, 6.6, 6.8], "craft:before": [4.9, 5.2, 4.9]},
+ "candidates": {"ship burrow": [4.7, 4.8, 4.6], "hill_shell burrow": [5.9, 6.2, 5.8]}}

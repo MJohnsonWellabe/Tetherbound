@@ -1,0 +1,10 @@
+{"anchors": {
+  "f36_0_gap:C7A": [6.0, 6.5, 5.5],
+  "f36_0_gap:C7B": [6.4, 6.2, 6.3],
+  "craft:after": [6.6, 6.5, 6.2],
+  "craft:before": [5.6, 5.5, 5.0],
+  "p2_094_r4:Y_after": [6.2, 6.0, 6.0],
+  "p2_094_r4:X_before": [4.6, 4.4, 4.3]},
+ "candidates": {
+  "R41 Crown Overlook OFF (37 deg views, no deck or massif)": [5.0, 4.5, 4.6],
+  "R41 Crown Overlook vista ON (12 x 11 m deck + Hollow Crown silhouette)": [6.4, 6.0, 5.6]}}

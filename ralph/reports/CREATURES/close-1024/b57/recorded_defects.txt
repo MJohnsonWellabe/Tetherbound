@@ -1,0 +1,5 @@
+Ax: none
+Fq: "Stone plates read as a pad or pack strapped on rather than grown from the creature"; "The coat reads saturated orange rather than a natural brown"
+Tl: none
+Mm: none
+Du: "Stone plates read as a pad or pack strapped on rather than grown from the creature"; "The coat reads saturated orange rather than a natural brown"

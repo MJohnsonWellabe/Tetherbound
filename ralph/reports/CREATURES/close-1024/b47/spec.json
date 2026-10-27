@@ -1,0 +1,12 @@
+[
+ {
+  "label": "stormtrail bolts",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b47/sides/stormtrail-stbase.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b47/sides/stormtrail-stcand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "Glow reads as glowing seams on fur rather than lightning",
+   "Body value merges with the stage: a slate body on a slate ground"
+  ]
+ }
+]

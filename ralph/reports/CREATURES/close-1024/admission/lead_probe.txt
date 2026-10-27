@@ -1,4 +1,4 @@
-# Lead admission probe (25 Oct 2026, CPU): tests/smoke_arena_contain.gd copied with the party lead swapped (uncommitted probe), MARGIN = ring radius - farthest render corner - 0.6 m clearance, measured after each fight opened.
+# Lead admission probe (24 Oct 2026, CPU): tests/smoke_arena_contain.gd copied with the party lead swapped (uncommitted probe), MARGIN = ring radius - farthest render corner - 0.6 m clearance, measured after each fight opened.
 # check0 = Warrens mouth (6.0 m), check1 = Hall elite room (stronghold_elite, 7.0 m), check2 = later stronghold room. All four runs: arena containment OK.
 ## paddlenewt
 MARGIN check0 AllyCreature radius=6.00 reach=5.99 margin=-0.59

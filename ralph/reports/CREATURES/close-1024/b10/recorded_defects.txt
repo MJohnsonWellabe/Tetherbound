@@ -1,0 +1,4 @@
+Qk: none
+Up: "the creature blends into the grass (too little value or colour separation from the ground to read at a glance)"
+Ef: none
+Hx: none

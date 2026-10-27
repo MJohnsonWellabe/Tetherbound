@@ -1,4 +1,4 @@
-# r7 (25 Oct 2026, CPU): F36#1 whole-roster pose verdict, batch 7 of 7 (water forms, land head, shipping state)
+# r7 (24 Oct 2026, CPU): F36#1 whole-roster pose verdict, batch 7 of 7 (water forms, land head, shipping state)
 
 Same method as r4-r6. Anchors: Grandpa face (f36_0_npc:C1), craft and the Mudsnout gap pair. This is a confirming batch. Fit: linear, slope 1.363, intercept -1.950, RMSE 0.16. Warning: some candidates sit more than 0.5 outside the anchors' measured range (low end, extrapolated). The verdict holds regardless, because every low row also fails on a PRESENT pose.
 

@@ -1,0 +1,136 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": -0.8142,
+  "least_squares_slope": -1.7248,
+  "method": "offset",
+  "slope": 1.0,
+  "intercept": 0.1622,
+  "fallback_reason": "least-squares slope -1.725 outside 0.5-2.0"
+ },
+ "anchor_rmse": 0.74,
+ "top_anchor_reference": 7.17,
+ "confirming_batch": false,
+ "anchors": {
+  "f36_0_npc:C6A": {
+   "measured": 6.6,
+   "reference": 5.8,
+   "mapped": 6.762,
+   "residual": -0.962
+  },
+  "f36_0_npc:C6B": {
+   "measured": 6.6,
+   "reference": 5.93,
+   "mapped": 6.762,
+   "residual": -0.832
+  },
+  "f36_0_gap:C3A": {
+   "measured": 6.433,
+   "reference": 6.5,
+   "mapped": 6.596,
+   "residual": -0.096
+  },
+  "f36_0_gap:C3B": {
+   "measured": 5.933,
+   "reference": 7.07,
+   "mapped": 6.096,
+   "residual": 0.974
+  },
+  "f36_0_gap:C4A": {
+   "measured": 6.533,
+   "reference": 6.77,
+   "mapped": 6.696,
+   "residual": 0.074
+  },
+  "f36_0_gap:C4B": {
+   "measured": 6.167,
+   "reference": 7.17,
+   "mapped": 6.329,
+   "residual": 0.841
+  }
+ },
+ "candidates": {
+  "cloudfang flinch": {
+   "measured_mean": 6.533,
+   "mapped_mean": 6.7,
+   "mapped_judges": [
+    6.66,
+    6.76,
+    6.66
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "cloudfang main": {
+   "measured_mean": 5.767,
+   "mapped_mean": 5.93,
+   "mapped_judges": [
+    5.96,
+    6.06,
+    5.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "stormcapra flinch": {
+   "measured_mean": 7.033,
+   "mapped_mean": 7.2,
+   "mapped_judges": [
+    7.16,
+    7.16,
+    7.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": false
+  },
+  "stormcapra main": {
+   "measured_mean": 6.567,
+   "mapped_mean": 6.73,
+   "mapped_judges": [
+    6.76,
+    6.76,
+    6.66
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "breezetail flinch": {
+   "measured_mean": 6.733,
+   "mapped_mean": 6.9,
+   "mapped_judges": [
+    6.86,
+    6.86,
+    6.96
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "breezetail main": {
+   "measured_mean": 6.3,
+   "mapped_mean": 6.46,
+   "mapped_judges": [
+    6.36,
+    6.46,
+    6.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "offset fallback (least-squares slope -1.725 outside 0.5-2.0): the map is only a mean offset; these judges spread the anchors differently from the reference judges"
+ ]
+}

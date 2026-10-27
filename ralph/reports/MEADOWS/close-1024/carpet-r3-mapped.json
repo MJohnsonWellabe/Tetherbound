@@ -1,0 +1,82 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.6084,
+  "least_squares_slope": 0.8779,
+  "method": "linear",
+  "slope": 0.8779,
+  "intercept": 0.8368,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.659,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:before": {
+   "measured": 5.067,
+   "reference": 4.83,
+   "mapped": 5.285,
+   "residual": -0.455
+  },
+  "craft:after": {
+   "measured": 6.667,
+   "reference": 7.35,
+   "mapped": 6.69,
+   "residual": 0.66
+  },
+  "f36_0_gap:C7B": {
+   "measured": 5.7,
+   "reference": 6.3,
+   "mapped": 5.841,
+   "residual": 0.459
+  },
+  "f36_0_gap:C7A": {
+   "measured": 6.133,
+   "reference": 7.03,
+   "mapped": 6.221,
+   "residual": 0.809
+  },
+  "f36_0_npc:C6A": {
+   "measured": 6.567,
+   "reference": 5.8,
+   "mapped": 6.602,
+   "residual": -0.802
+  },
+  "f36_0_npc:C6B": {
+   "measured": 6.567,
+   "reference": 5.93,
+   "mapped": 6.602,
+   "residual": -0.672
+  }
+ },
+ "candidates": {
+  "P2-005 shipping": {
+   "measured_mean": 5.967,
+   "mapped_mean": 6.07,
+   "mapped_judges": [
+    6.1,
+    6.1,
+    6.02
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-005 blade r3 + colour bake": {
+   "measured_mean": 5.933,
+   "mapped_mean": 6.05,
+   "mapped_judges": [
+    6.1,
+    6.1,
+    5.93
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

@@ -1,0 +1,82 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9609,
+  "least_squares_slope": 1.3743,
+  "method": "linear",
+  "slope": 1.3743,
+  "intercept": -1.7142,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.32,
+ "top_anchor_reference": 6.93,
+ "confirming_batch": false,
+ "anchors": {
+  "f36_0_gap:C5A": {
+   "measured": 4.9,
+   "reference": 5.7,
+   "mapped": 5.02,
+   "residual": 0.68
+  },
+  "f36_0_gap:C5B": {
+   "measured": 6.4,
+   "reference": 6.93,
+   "mapped": 7.081,
+   "residual": -0.151
+  },
+  "f36_0_npc:C5B": {
+   "measured": 4.933,
+   "reference": 5.03,
+   "mapped": 5.066,
+   "residual": -0.036
+  },
+  "f36_0_npc:C5A": {
+   "measured": 5.033,
+   "reference": 5.07,
+   "mapped": 5.203,
+   "residual": -0.133
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 6.167,
+   "reference": 6.73,
+   "mapped": 6.761,
+   "residual": -0.031
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.033,
+   "reference": 3.5,
+   "mapped": 3.829,
+   "residual": -0.329
+  }
+ },
+ "candidates": {
+  "stormtrail base": {
+   "measured_mean": 5.633,
+   "mapped_mean": 6.03,
+   "mapped_judges": [
+    6.12,
+    6.12,
+    5.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "stormtrail bolts + value": {
+   "measured_mean": 5.867,
+   "mapped_mean": 6.35,
+   "mapped_judges": [
+    6.67,
+    5.98,
+    6.39
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

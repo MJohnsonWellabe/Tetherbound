@@ -1,0 +1,82 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8704,
+  "least_squares_slope": 1.1132,
+  "method": "linear",
+  "slope": 1.1132,
+  "intercept": -0.1841,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.588,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.2,
+   "reference": 6.53,
+   "mapped": 5.605,
+   "residual": 0.925
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.467,
+   "reference": 4.0,
+   "mapped": 4.788,
+   "residual": -0.788
+  },
+  "f36_0_gap:C7B": {
+   "measured": 6.2,
+   "reference": 6.3,
+   "mapped": 6.718,
+   "residual": -0.418
+  },
+  "f36_0_gap:C7A": {
+   "measured": 5.933,
+   "reference": 7.03,
+   "mapped": 6.421,
+   "residual": 0.609
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.067,
+   "reference": 7.53,
+   "mapped": 7.683,
+   "residual": -0.153
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.033,
+   "reference": 7.47,
+   "mapped": 7.646,
+   "residual": -0.176
+  }
+ },
+ "candidates": {
+  "mosshock live": {
+   "measured_mean": 5.833,
+   "mapped_mean": 6.31,
+   "mapped_judges": [
+    6.38,
+    5.83,
+    6.72
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "mosshock cand": {
+   "measured_mean": 6.4,
+   "mapped_mean": 6.94,
+   "mapped_judges": [
+    7.05,
+    6.38,
+    7.39
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

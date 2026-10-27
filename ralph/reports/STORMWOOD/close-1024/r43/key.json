@@ -1,0 +1,23 @@
+{
+ "Rd": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Pr": {
+  "anchor": false,
+  "label": "R43 ashfoot shelter exterior",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/7146d403-6938-5cfa-b9ab-a98a1b5053ac/scratchpad/sides/ash_r43_on.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/7146d403-6938-5cfa-b9ab-a98a1b5053ac/scratchpad/sides/ash_r43_off.jpg"
+ },
+ "Zw": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Mu": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

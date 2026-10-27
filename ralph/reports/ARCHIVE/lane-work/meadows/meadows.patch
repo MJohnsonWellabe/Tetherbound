@@ -1,0 +1,2227 @@
+diff --git a/data/config/building_prefabs.json b/data/config/building_prefabs.json
+index 70d9f5748..11d957a57 100644
+--- a/data/config/building_prefabs.json
++++ b/data/config/building_prefabs.json
+@@ -4,6 +4,7 @@
+   "_comment_colliders": "A prefab with no `colliders` gets one combined-AABB box from the placer, same as the old farm pack. The workshop authors its own so the open arch bay is genuinely enterable -- an open doorway with an invisible wall across it is the hologram village.gd's own header warns about, from the other side.",
+   "prefabs": {
+       "crossing_hall_shell": {
++        "module_swap_candidate": {"enabled": false, "swap": {"Wall_Plaster_Straight": "Wall_UnevenBrick_Straight", "Wall_Plaster_Window_Wide_Flat": "Wall_UnevenBrick_Window_Wide_Flat"}, "_why": "F38 arch stands close-1024 (OFF until judged): every GPU and CPU batch names the Hall's 'plaster window-strip walls' around the faced arches (GPU MH: still below 7.5 after arch_facades ON). The same 33 shell modules rebuilt as the installed kit's uneven-brick equivalents, matching the fieldstone wall judges praised; same transforms, colliders and doors."},
+         "_why_window_glass": "F17#6 r1 judge: the nave and shrine windows were raw holes showing the roof outside, and sun through them left hard white rectangles on the floor. Each window module now carries the installed family's matching Window_Wide_Flat1 insert at its own transform (the frontage tower's pattern), glass from this recipe's MI_WindowGlass retint. Presentation only.",
+         "modules": [
+           {
+diff --git a/data/config/capture_readout_visual.json b/data/config/capture_readout_visual.json
+index 1da881597..c67d9c4b2 100644
+--- a/data/config/capture_readout_visual.json
++++ b/data/config/capture_readout_visual.json
+@@ -1,5 +1,10 @@
+ {
+   "outline_enabled": true,
+   "outline_size": 6,
+-  "_comment": "P2-114 production capture-readout outline, default on under the owner's Phase 1 instruction. Uses UITokens.OUTLINE behind the percentage and caption and follows each text's alpha. Logical UI pixel tuning; no save, network, target, camera or catch-chance effect. Phase 2 visual acceptance remains required."
++  "_comment": "P2-114 production capture-readout outline, default on under the owner's Phase 1 instruction. Uses UITokens.OUTLINE behind the percentage and caption and follows each text's alpha. Logical UI pixel tuning; no save, network, target, camera or catch-chance effect. Phase 2 visual acceptance remains required.",
++  "plate_enabled": false,
++  "plate_pad_x": 18.0,
++  "plate_pad_y": 8.0,
++  "plate_opacity": 1.0,
++  "_why_plate": "F38 P2-058 close-1024 candidate (OFF until judged): pass-2 judges read the percentage and caption as small text straight on the creature and busy grass with no backing plate. The plate is UITokens.panel_box() behind both lines (pad and opacity here). Presentation only; no chance, target, camera, save or network effect. close-1024 r1 (CPU, three code-blind judges, standard prompt, anchors craft/f36_0_npc:C3/f36_0_gap:C6, linear r 0.86): mapped 6.78 vs shipping 5.43, defect PARTIAL x3 (plate overlaps the target's legs; magenta lane wedge is the fight telegraph). Below 7.5: stays OFF pending GPU."
+ }
+diff --git a/data/config/catch_kit.json b/data/config/catch_kit.json
+index f23ebb6cb..580b9ed18 100644
+--- a/data/config/catch_kit.json
++++ b/data/config/catch_kit.json
+@@ -1,5 +1,7 @@
+ {
+  "enabled": false,
++ "_why_close1024_r1": "Meadows close-1024 catch r1 (kit ON + Meshy orb + catching.json framed_camera ON): mapped Bar A 6.42 vs shipping 6.08 (+0.34; three code-blind judges, standard prompt, 3 anchor pairs, linear r 0.84 RMSE 0.74; CPU llvmpipe Low; ralph/reports/MEADOWS/close-1024/P2-059-060-catch.md). Below 6.7: stays OFF. Judges: magenta ring gone (PARTIAL: rest/shake/breakout frames identical), the camera still cuts to a tight downward view, verdict text buried under the HUD cards.",
++ 
+  "_comment": "P2-060 (effects-claude, 2026-10-12). Presentation only, shipping OFF until a code-blind PASS: scripts/vfx/catch_kit.gd gives the orb a lit, rim-lit body with a turning inner swirl, replaces the catch flashes' flat look with a soft edge-lit tether-hue (blue-violet, never red) ring, draws capture motes from the creature into the orb, and plays a clear success or breakout burst. Catch timing, chance, verdict and every catching.json value are untouched.",
+  "ring_colour": "#9d8cff",
+  "ring_core": "#ffffff",
+diff --git a/data/config/catching.json b/data/config/catching.json
+index e87e87452..5b942d609 100644
+--- a/data/config/catching.json
++++ b/data/config/catching.json
+@@ -117,7 +117,8 @@
+     "_comment": "P2-113 (visual-claude lane, 2026-10-12). The catalogue found the aim frame crowded the trainer between a cropped ally and the target, and that the strike and breakout close-up (resolve_camera: 3.4 m at fov 36, about 1.1 m of half-width at the orb) cropped bodies and was filled by the creature that pops out on a breakout. With this enabled, catch_math.gd::camera_profile merges these overrides onto `aim` and `resolve_camera`. The aim pulls back and widens so the trainer, ally and target separate. The resolve shot stands off so the orb and the full body around it share the frame (6.0 m x tan(22) = 2.4 m half-width). Glide speeds, pitch limits and aim sensitivity are unchanged. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
+     "enabled": false,
+     "aim": {"distance": 4.9, "height": 2.05, "fov": 58.0, "shoulder_offset": 1.25},
+-    "resolve_camera": {"distance": 6.0, "height": 0.85, "fov": 44.0, "pitch_start_deg": -30.0}
++    "resolve_camera": {"distance": 6.0, "height": 0.85, "fov": 44.0, "pitch_start_deg": -30.0, "trainer_share": 0.45, "trainer_margin_m": 3.5, "shoulder_offset": 1.0},
++    "_why_trainer_share": "P2-059 close-1024 r1 judges (6.42 vs 6.08): the resolve shot still cut to a tight downward view of grass with the trainer and companion out of frame. With trainer_share the pivot slides that share from the orb toward the trainer and the lens looks from behind the trainer along the throw, trainer_margin_m past them (combat_manager.gd _trainer_frame_offset). Inside this OFF block only. close-1024 r2 judged: mapped 5.28 vs shipping 5.39 (breakout lens inside the strike flash); P2-059/060 parked at r1 (P2-059-060-catch.md)."
+   },
+   "resolve_camera": {
+     "_comment": "camera_rig profile for the wobble: a close-up on the resting orb, entered with a slow glide (retarget_lag) the moment the orb strikes. The whole resolution plays through this shot — the orb is the only actor on stage and the camera says so. Handed back to the creature on a breakout and to the trainer when a catch ends the fight.",
+diff --git a/data/config/grass_field.json b/data/config/grass_field.json
+index 0a8603312..4d9de40f1 100644
+--- a/data/config/grass_field.json
++++ b/data/config/grass_field.json
+@@ -58,6 +58,22 @@
+   "density_gain": 0.92,
+   "clump_scale": 0.11,
+   "clump_contrast": 0.55,
++  "carpet_candidate": {
++    "_why": "F38 L4 / P2-005 close-1024 candidate (OFF until judged). Rounds 1-2 (broader/stronger drift: clump_scale 0.07 then 0.045, clump_contrast 0.8 then 1.0) read identical to shipping and were parked: the blade bodies take their colour from fixed tip tints and only the root samples the terrain colour map. Round 3, the coordinator's blade-layer route: per-patch tip tint drift (deep green to dry straw, ~40 m), per-patch height (grazed short patches and tall tufts, ~25 m), and blades thinned and shortened where the terrain colour map reads as soil, so paths, trampled yards and the colour bake's worn halos show ground (judge together with terrain_presentation.json colour_candidate). The species mix (clover/broadleaf blades) needs new blade meshes and is not in this round. When enabled these keys override the top-level ones at load (grass_field.gd config()).",
++    "_parked_r3": "PARKED close-1024 r3 (with terrain_presentation colour_candidate): three code-blind judges scored it level with shipping (mapped 6.05 vs 6.07; raw 6.0/6.0/5.8 vs 6.0/6.0/5.9; defect PRESENT or PARTIAL on both sides). The fifth carpet attempt with no measurable gain, so per coordinator direction the carpet goes to ground-cover art (MESHY/texture ask in the MEADOWS note). Left OFF.",
++    "enabled": false,
++    "patch_tint_strength": 0.85,
++    "patch_tint_scale": 0.025,
++    "patch_tip_deep": "#46612a",
++    "patch_tip_dry": "#b3a55f",
++    "patch_height_strength": 0.7,
++    "patch_height_scale": 0.04,
++    "patch_height_low": 0.45,
++    "patch_height_high": 1.35,
++    "soil_reference": "#d1b37e",
++    "soil_thin": 0.85,
++    "soil_shorten": 0.7
++  },
+   "_comment_colour": "Derived from measurement, not by eye. Sampled off-route on WORLD-GRASS's own frames, the meadow's ground reads #798732 (hue 68.3, value 0.529) against the owner reference's foreground grass at #7c8737 (hue 68.4, value 0.529) -- the palette was already right, so these sit around it rather than replacing it. `ground_blend` is the fix for the defect three blind rounds named: it mixes the terrain's OWN colour map into the base of every blade, so growth appears to come out of the ground instead of standing on a picture of it. `translucency` fakes the light through a blade; the Compatibility renderer has no subsurface scattering, so it lifts the tip rather than pretending to transmit.",
+   "_comment_lens_clear": "MEADOWS-VISUAL-PASS round 5: the over-the-shoulder aim camera sits low enough that blades a metre from the lens rendered as giant flat cards over most of the frame (blind judge, combat 07). Blades within lens_clear_m of a low eye shrink away over lens_clear_band metres (grass_field.gdshader). TUNABLE.",
+   "lens_clear_m": 1.1,
+@@ -111,6 +127,294 @@
+   "clearing_strength": 0.9,
+   "clearing_floor": 0.76,
+   "clearing_shorten": 0.5,
++  "cover_candidate": {
++    "_why_r3": "close-1024 r3 (OFF, unjudged): the r2 lattice places at least one item per cell inside each tier's reach (1176 per tier at 36 m, about 11.7k items), so CPU frames took about 55 min each and the GPU cost would not suit the ROG Ally. r3 cuts reach to 18-26 m (about a quarter of the instances), triangle budgets to 200-350, and gates the rocks to sparser patches (r2 frame: rocks read as an even scatter).",
++    "enabled": false,
++    "_why": "F38 L4 / P2-005 close-1024 candidate (OFF until judged): the coordinator's Meshy ground cover (tb/meshy-1024 a1471f36d; task ids in each provenance.jsonl): clover/broadleaf clumps, lupin/buttercup/daisy drifts, mossy rock clusters and worn-earth patches, after five tint/coverage attempts read level with shipping. Each tier instances its GLB (grass_field.gd authored_cover_mesh: re-based to unit width, scale_xyz squashes the domes and the slab, Godot LOD simplification to max_tris) through cover_tier.gdshader's use_albedo_texture branch. Sizes against the 1.80 m trainer: clover 0.8-0.9 m wide x ~0.2 m, flowers ~0.8-0.9 m x ~0.6 m, rocks 2.0-2.2 m x ~0.8 m, earth ~2.5 m x ~0.07 m. Draw cost is the open risk: counts and reach are kept low; the GPU lane should read frame time with it on.",
++    "tiers": [
++      {
++        "name": "meadows_cover_clover_a",
++        "mesh_path": "res://assets/props/meshy-1024/meadows_cover_clover_a/meadows_cover_clover_a.glb",
++        "scale_xyz": [
++          1,
++          1,
++          1
++        ],
++        "max_tris": 350,
++        "enabled": true,
++        "count": 80,
++        "placement_seed": 71001,
++        "centre_bias": 0.6,
++        "reach_m": 18.0,
++        "item_size": 0.8,
++        "size_jitter": 0.35,
++        "sink": 0.05,
++        "density_gain": 1.0,
++        "drift_scale": 0.05,
++        "drift_contrast": 0.9,
++        "patch_start": 0.5,
++        "patch_full": 0.7,
++        "ground_blend": 0.2,
++        "contact_darken": 0.25,
++        "normal_soften": 0.3,
++        "tint_jitter": 0.12,
++        "sway": 0.02
++      },
++      {
++        "name": "meadows_cover_clover_b",
++        "mesh_path": "res://assets/props/meshy-1024/meadows_cover_clover_b/meadows_cover_clover_b.glb",
++        "scale_xyz": [
++          1,
++          1,
++          1
++        ],
++        "max_tris": 350,
++        "enabled": true,
++        "count": 70,
++        "placement_seed": 71002,
++        "centre_bias": 0.6,
++        "reach_m": 18.0,
++        "item_size": 0.9,
++        "size_jitter": 0.35,
++        "sink": 0.05,
++        "density_gain": 1.0,
++        "drift_scale": 0.05,
++        "drift_contrast": 0.9,
++        "patch_start": 0.45,
++        "patch_full": 0.65,
++        "ground_blend": 0.2,
++        "contact_darken": 0.25,
++        "normal_soften": 0.3,
++        "tint_jitter": 0.12,
++        "sway": 0.02
++      },
++      {
++        "name": "meadows_cover_clover_c",
++        "mesh_path": "res://assets/props/meshy-1024/meadows_cover_clover_c/meadows_cover_clover_c.glb",
++        "scale_xyz": [
++          1,
++          1,
++          1
++        ],
++        "max_tris": 350,
++        "enabled": true,
++        "count": 70,
++        "placement_seed": 71003,
++        "centre_bias": 0.6,
++        "reach_m": 18.0,
++        "item_size": 0.85,
++        "size_jitter": 0.35,
++        "sink": 0.05,
++        "density_gain": 1.0,
++        "drift_scale": 0.05,
++        "drift_contrast": 0.9,
++        "patch_start": 0.55,
++        "patch_full": 0.75,
++        "ground_blend": 0.2,
++        "contact_darken": 0.25,
++        "normal_soften": 0.3,
++        "tint_jitter": 0.12,
++        "sway": 0.02
++      },
++      {
++        "name": "meadows_flowers_lupin",
++        "mesh_path": "res://assets/props/meshy-1024/meadows_flowers_lupin/meadows_flowers_lupin.glb",
++        "scale_xyz": [
++          1,
++          1,
++          1
++        ],
++        "max_tris": 350,
++        "enabled": true,
++        "count": 70,
++        "placement_seed": 71011,
++        "centre_bias": 0.6,
++        "reach_m": 20.0,
++        "item_size": 0.9,
++        "size_jitter": 0.35,
++        "sink": 0.05,
++        "density_gain": 1.0,
++        "drift_scale": 0.04,
++        "drift_contrast": 0.95,
++        "patch_start": 0.58,
++        "patch_full": 0.78,
++        "ground_blend": 0.2,
++        "contact_darken": 0.25,
++        "normal_soften": 0.3,
++        "tint_jitter": 0.12,
++        "sway": 0.05
++      },
++      {
++        "name": "meadows_flowers_buttercup",
++        "mesh_path": "res://assets/props/meshy-1024/meadows_flowers_buttercup/meadows_flowers_buttercup.glb",
++        "scale_xyz": [
++          1,
++          1,
++          1
++        ],
++        "max_tris": 300,
++        "enabled": true,
++        "count": 60,
++        "placement_seed": 71012,
++        "centre_bias": 0.6,
++        "reach_m": 18.0,
++        "item_size": 0.8,
++        "size_jitter": 0.35,
++        "sink": 0.05,
++        "density_gain": 1.0,
++        "drift_scale": 0.045,
++        "drift_contrast": 0.95,
++        "patch_start": 0.6,
++        "patch_full": 0.8,
++        "ground_blend": 0.2,
++        "contact_darken": 0.25,
++        "normal_soften": 0.3,
++        "tint_jitter": 0.12,
++        "sway": 0.05
++      },
++      {
++        "name": "meadows_flowers_daisy",
++        "mesh_path": "res://assets/props/meshy-1024/meadows_flowers_daisy/meadows_flowers_daisy.glb",
++        "scale_xyz": [
++          1,
++          1,
++          1
++        ],
++        "max_tris": 300,
++        "enabled": true,
++        "count": 60,
++        "placement_seed": 71013,
++        "centre_bias": 0.6,
++        "reach_m": 18.0,
++        "item_size": 0.9,
++        "size_jitter": 0.35,
++        "sink": 0.05,
++        "density_gain": 1.0,
++        "drift_scale": 0.05,
++        "drift_contrast": 0.95,
++        "patch_start": 0.62,
++        "patch_full": 0.82,
++        "ground_blend": 0.2,
++        "contact_darken": 0.25,
++        "normal_soften": 0.3,
++        "tint_jitter": 0.12,
++        "sway": 0.05
++      },
++      {
++        "name": "meadows_rock_cluster_a",
++        "mesh_path": "res://assets/props/meshy-1024/meadows_rock_cluster_a/meadows_rock_cluster_a.glb",
++        "scale_xyz": [
++          1,
++          0.7,
++          1
++        ],
++        "max_tris": 250,
++        "enabled": true,
++        "count": 12,
++        "placement_seed": 71021,
++        "centre_bias": 0.6,
++        "reach_m": 26.0,
++        "item_size": 2.0,
++        "size_jitter": 0.35,
++        "sink": 0.12,
++        "density_gain": 1.0,
++        "drift_scale": 0.03,
++        "drift_contrast": 0.9,
++        "patch_start": 0.78,
++        "patch_full": 0.9,
++        "ground_blend": 0.2,
++        "contact_darken": 0.25,
++        "normal_soften": 0.0,
++        "tint_jitter": 0.12,
++        "sway": 0.0
++      },
++      {
++        "name": "meadows_rock_cluster_b",
++        "mesh_path": "res://assets/props/meshy-1024/meadows_rock_cluster_b/meadows_rock_cluster_b.glb",
++        "scale_xyz": [
++          1,
++          1,
++          1
++        ],
++        "max_tris": 250,
++        "enabled": true,
++        "count": 12,
++        "placement_seed": 71022,
++        "centre_bias": 0.6,
++        "reach_m": 26.0,
++        "item_size": 2.2,
++        "size_jitter": 0.35,
++        "sink": 0.1,
++        "density_gain": 1.0,
++        "drift_scale": 0.035,
++        "drift_contrast": 0.9,
++        "patch_start": 0.8,
++        "patch_full": 0.92,
++        "ground_blend": 0.2,
++        "contact_darken": 0.25,
++        "normal_soften": 0.0,
++        "tint_jitter": 0.12,
++        "sway": 0.0
++      },
++      {
++        "name": "meadows_worn_earth_a",
++        "mesh_path": "res://assets/props/meshy-1024/meadows_worn_earth_a/meadows_worn_earth_a.glb",
++        "scale_xyz": [
++          1,
++          0.3,
++          1
++        ],
++        "max_tris": 200,
++        "enabled": true,
++        "count": 15,
++        "placement_seed": 71031,
++        "centre_bias": 0.6,
++        "reach_m": 22.0,
++        "item_size": 2.5,
++        "size_jitter": 0.35,
++        "sink": 0.3,
++        "density_gain": 1.0,
++        "drift_scale": 0.04,
++        "drift_contrast": 0.9,
++        "patch_start": 0.6,
++        "patch_full": 0.8,
++        "ground_blend": 0.2,
++        "contact_darken": 0.25,
++        "normal_soften": 0.6,
++        "tint_jitter": 0.12,
++        "sway": 0.0
++      },
++      {
++        "name": "meadows_worn_earth_b",
++        "mesh_path": "res://assets/props/meshy-1024/meadows_worn_earth_b/meadows_worn_earth_b.glb",
++        "scale_xyz": [
++          1,
++          0.3,
++          1
++        ],
++        "max_tris": 200,
++        "enabled": true,
++        "count": 15,
++        "placement_seed": 71032,
++        "centre_bias": 0.6,
++        "reach_m": 22.0,
++        "item_size": 2.8,
++        "size_jitter": 0.35,
++        "sink": 0.3,
++        "density_gain": 1.0,
++        "drift_scale": 0.04,
++        "drift_contrast": 0.9,
++        "patch_start": 0.62,
++        "patch_full": 0.82,
++        "ground_blend": 0.2,
++        "contact_darken": 0.25,
++        "normal_soften": 0.6,
++        "tint_jitter": 0.12,
++        "sway": 0.0
++      }
++    ],
++    "_why_r2": "r1 CPU capture: a clearly visible change (lupin drifts, rocks, clover) but far too heavy -- the lattice placed ~3x the nominal count (clover_a 1176 for 400) and the candidate arm rendered 1 frame in 50 min on llvmpipe; rocks read as many small even pebbles and one clover clump as a flat card. r2: counts cut ~5x and triangle budgets to 300-700."
++  },
+   "cover_tiers": [
+     {
+       "_why": "Small bushes. A blind pass found the world jumps from 50cm grass straight to 6m canopy with nothing between -- 'a forest you can see straight through at knee height' -- and counted two mid-height plants across twelve frames. This is that missing band. Sparse and heavily drifted on purpose: understorey gathers, it does not carpet, and the meadow's negative space is what GROUND-LAYERS measured as worth keeping.",
+diff --git a/data/config/hud.json b/data/config/hud.json
+index c11a066e5..9b1e0f556 100644
+--- a/data/config/hud.json
++++ b/data/config/hud.json
+@@ -1,7 +1,7 @@
+ {
+   "_why_fight_presentation_1025b": "Fights close-1025 ON (coordinator asks after r4/r5 + GPU G3): code-blind CPU r6, 3 fresh judges, mapped, shipped look -> r6: Venn 5.92 -> 6.56, Warden 6.19 -> 6.81, Riverwatch 6.43 -> 7.05, Stormwood 6.27 -> 6.38, Veyra 6.46 -> 6.54 (with the pilot ghost fix ef4591a18); r7 trainer fights (r6 + stagger label + flash drop + a steadier lens, the lens kept OFF): Warden 5.93 -> 6.32, grunt 6.08 -> 5.93. ralph/reports/FIGHTS/close-1024/NOTE.md Here: new_system_screens.combat.panel_scale 0.8.",
+   "catch_card": {
+-    "_why": "P2-061 (UI lane, 21 Oct 2026): catch breakout/success text competed with persistent creature cards, actions and same-species bodies. With this on, the verdict is one framed card in the upper third, clear of the creature: a large headline naming the individual over its traits (success, teal edge) or why it escaped (breakout, warning edge). On success the finished fight's cards and action grid step back while the card holds. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
++    "_why": "P2-061 (UI lane, 21 Oct 2026): catch breakout/success text competed with persistent creature cards, actions and same-species bodies. With this on, the verdict is one framed card in the upper third, clear of the creature: a large headline naming the individual over its traits (success, teal edge) or why it escaped (breakout, warning edge). On success the finished fight's cards and action grid step back while the card holds. PRESENTATION ONLY. Stays OFF until a code-blind PASS. close-1024 r1 (Meadows CPU, three code-blind judges, standard prompt, anchors craft/f36_0_npc:C3/f36_0_gap:C6): mapped 6.34 vs shipping 4.65, defect PARTIAL x3 (the verdict frame kept the target card for one frame, fixed in combat_hud._show_catch_card; the caught creature shows only as the orb). Below 7.5: OFF pending GPU.",
+     "enabled": false,
+     "headline_px": 40,
+     "plate_alpha": 0.94,
+diff --git a/data/config/meadows_hero_pieces.json b/data/config/meadows_hero_pieces.json
+index 5d6b80f58..181d9cef9 100644
+--- a/data/config/meadows_hero_pieces.json
++++ b/data/config/meadows_hero_pieces.json
+@@ -8,6 +8,21 @@
+       {"id": "ridgeline_glade_back", "at": [-262.0, 6478.0], "radius_m": 9.0}
+     ]
+   },
++  "stronghold_sightline": {
++    "enabled": false,
++    "_why": "F38 band5_stronghold_approach_0 close-1024 (OFF until judged; meadows_hero_pieces.gd::clear, the same run-time vegetation.clear_area cut as the Ridgeline glades). GPU MH9 passed r7b (keep + spire, lit window grids: +0.53 Medium, +0.71 High; P2-003 PRESENT -> PARTIAL 3/3) but every judge still reads 'a small castle' showing over a wall of blob canopies; the coordinator's next swing is to open the real approach sightline rather than move the camera. A corridor of glades along the approach road from the stand (0, 7250) toward the gate mouth (about z 7550), 16 m radius near the stand widening to 22 m, angled a few metres west toward the spire, cuts the baked tree and rock scatter so the keep and spire stand against the sky with grove edges either side. Visual and walkability only (fewer tree colliders); harvest nodes and the bake are untouched.",
++    "spots": [
++      {"id": "sightline_0", "at": [-0.6, 7280.0], "radius_m": 16.0},
++      {"id": "sightline_1", "at": [-1.3, 7310.0], "radius_m": 16.0},
++      {"id": "sightline_2", "at": [-1.9, 7340.0], "radius_m": 22.0},
++      {"id": "sightline_3", "at": [-2.6, 7370.0], "radius_m": 22.0},
++      {"id": "sightline_4", "at": [-3.2, 7400.0], "radius_m": 22.0},
++      {"id": "sightline_5", "at": [-3.9, 7430.0], "radius_m": 22.0},
++      {"id": "sightline_6", "at": [-4.5, 7460.0], "radius_m": 22.0},
++      {"id": "sightline_7", "at": [-5.1, 7490.0], "radius_m": 22.0},
++      {"id": "sightline_8", "at": [-5.8, 7520.0], "radius_m": 22.0}
++    ]
++  },
+   "_comment": "F38 tier-1 hero pieces (close-1024). Each group is OFF until judged on its stands; see meadows_hero_pieces.gd. World coordinates; y comes from the terrain minus sink_m.",
+   "cliffs": {
+     "_why_r1": "close-1024 r1: mapped Bar A 5.93 ON vs shipping 4.89 at band2_stone_and_root_1 (CPU, 25 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, anchors f36_0_npc:C1 / p2_094_r4 / craft, calibrate.py linear slope 1.64 r 0.98 RMSE 0.31, confirming batch; Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/art1024-mapped.json). +1.04, below 6.7; judges read the outcrop as real stratified rock but still flag the faceted Burrow hill flank and ramp slab.",
+@@ -59,5 +74,9 @@
+       {"id": "ridge_a", "path": "res://assets/props/meshy-1024/meadows_ironwood_a/meadows_ironwood_a.glb", "at": [-240.9, 6489.3], "width_m": 11.0, "sink_m": 0.3, "yaw_deg": 110.0},
+       {"id": "ridge_b", "path": "res://assets/props/meshy-1024/meadows_ironwood_b/meadows_ironwood_b.glb", "at": [-248.6, 6502.8], "width_m": 12.0, "sink_m": 0.3, "yaw_deg": 290.0}
+     ]
+-  }
++  },
++  "burrow": {"enabled": false, "_why_r2": "close-1024 r1 CPU frame: at 40 m the mound sat inside the existing, larger faceted hill and did not show. r2: 64 m wide (about 22 m tall), centre 32 m back along the 315-degree axis so its tunnel mouth stays on the real mouth and its front covers the faceted front and slab ramp.", "_why": "F38 band2_stone_and_root_1 close-1024 (OFF until judged): the dominant object is the faceted Burrow mound with its slab ramp (GPU 5.82, P2-014 PRESENT). Coordinator Meshy burrow mound (tb/meshy-1024 ae67083ec): 40 m wide (about 14 m tall, 8x the 1.80 m trainer), its tunnel mouth at the real Warrens mouth (-357, 2610), centred 15 m back along the cave's 315-degree axis and facing the stand (yaw 135). Visual only; the real mouth, collision and route are unchanged.", "pieces": [{"id": "mound", "path": "res://assets/props/meshy-1024/meadows_burrow_mound/meadows_burrow_mound.glb", "at": [-379.6, 2632.6], "width_m": 64.0, "sink_m": 2.0, "yaw_deg": 135.0}]},
++  "quarry": {"enabled": false, "_why": "F38 band2_stone_and_root_0 close-1024 (OFF until judged): the stand frames pale untextured cut blocks beside the trainer; those are harvestable rootstone deposits and stay. A coordinator Meshy quarry set piece (stacked cut granite and a half-cut 6 m face, tb/meshy-1024 ae67083ec) stands 10 m ahead and 4 m right of the stand's heading-45 view, 12 m wide, facing the stand. Visual only.", "pieces": [{"id": "face", "path": "res://assets/props/meshy-1024/meadows_quarry_blocks/meadows_quarry_blocks.glb", "at": [412.9, 1798.2], "width_m": 12.0, "sink_m": 0.3, "yaw_deg": 225.0}]},
++  "lock_paving": {"enabled": false, "_why_r2": "close-1024 r1 CPU frame: rigid 8 m tiles sat level on a sloped yard and read as floating stepped slabs with dark gaps. r2: a 6 x 6 grid of 4 m tiles (24 x 24 m around (350, 3760)), each tilted to the ground under it from four samples (conform), 0.22 m relief, sunk 0.1 m, yaw varied so the tile does not repeat in rows.", "_why": "F38 band3_the_river_lock_0 close-1024 (OFF until judged): the dominant object is the bare flat dirt yard filling the lower half of every frame (GPU 5.29, 'flat beige ground'). Coordinator Meshy flagstone tile (8 x 8 m, modelled upright, laid flat with pitch -90; tb/meshy-1024 ae67083ec), a 3 x 3 grid over the Tether Relay yard around (350, 3760), 0.05 m proud. Visual only; no collision, so props and the route stand on the terrain as before.", "pieces": [{"id": "tile_-3_-3", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [338.0, 3748.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 0.0}, {"id": "tile_-3_-2", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [338.0, 3752.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 90.0}, {"id": "tile_-3_-1", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [338.0, 3756.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 180.0}, {"id": "tile_-3_0", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [338.0, 3760.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 270.0}, {"id": "tile_-3_1", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [338.0, 3764.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 0.0}, {"id": "tile_-3_2", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [338.0, 3768.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 90.0}, {"id": "tile_-2_-3", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [342.0, 3748.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 270.0}, {"id": "tile_-2_-2", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [342.0, 3752.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 0.0}, {"id": "tile_-2_-1", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [342.0, 3756.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 90.0}, {"id": "tile_-2_0", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [342.0, 3760.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 180.0}, {"id": "tile_-2_1", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [342.0, 3764.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 270.0}, {"id": "tile_-2_2", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [342.0, 3768.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 0.0}, {"id": "tile_-1_-3", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [346.0, 3748.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 180.0}, {"id": "tile_-1_-2", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [346.0, 3752.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 270.0}, {"id": "tile_-1_-1", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [346.0, 3756.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 0.0}, {"id": "tile_-1_0", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [346.0, 3760.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 90.0}, {"id": "tile_-1_1", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [346.0, 3764.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 180.0}, {"id": "tile_-1_2", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [346.0, 3768.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 270.0}, {"id": "tile_0_-3", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [350.0, 3748.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 90.0}, {"id": "tile_0_-2", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [350.0, 3752.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 180.0}, {"id": "tile_0_-1", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [350.0, 3756.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 270.0}, {"id": "tile_0_0", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [350.0, 3760.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 0.0}, {"id": "tile_0_1", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [350.0, 3764.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 90.0}, {"id": "tile_0_2", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [350.0, 3768.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 180.0}, {"id": "tile_1_-3", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [354.0, 3748.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 0.0}, {"id": "tile_1_-2", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [354.0, 3752.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 90.0}, {"id": "tile_1_-1", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [354.0, 3756.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 180.0}, {"id": "tile_1_0", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [354.0, 3760.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 270.0}, {"id": "tile_1_1", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [354.0, 3764.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 0.0}, {"id": "tile_1_2", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [354.0, 3768.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 90.0}, {"id": "tile_2_-3", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [358.0, 3748.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 270.0}, {"id": "tile_2_-2", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [358.0, 3752.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 0.0}, {"id": "tile_2_-1", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [358.0, 3756.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 90.0}, {"id": "tile_2_0", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [358.0, 3760.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 180.0}, {"id": "tile_2_1", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [358.0, 3764.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 270.0}, {"id": "tile_2_2", "path": "res://assets/props/meshy-1024/meadows_lock_yard_paving/meadows_lock_yard_paving.glb", "at": [358.0, 3768.0], "width_m": 4.0, "pitch_deg": -90.0, "height_m": 0.22, "sink_m": 0.1, "conform": true, "yaw_deg": 0.0}]},
++  "grove_oaks": {"enabled": false, "_why": "F38 band4 close-1024 (OFF until judged): the coordinator's grove ask after the giant ironwood landed (GPU MH2): 'mixed sizes, clustered rather than evenly spaced'; the judges' complaints were evenly spaced same-size saplings. Eight Meshy grove oaks (tb/meshy-1024 fcdffda2e; 9, 11 and 13 m, crowns 7-10 m, 5-7x the 1.80 m trainer) in three clusters flanking the Grove stand's view to the giant (-330, 5160): west, east and at the giant's foot, each more than 8 m from the workyard (-330, 5090) and the harvest seats. Visual only.", "pieces": [{"id": "w1", "path": "res://assets/props/meshy-1024/meadows_grove_oak_b/meadows_grove_oak_b.glb", "at": [-362.0, 5110.0], "width_m": 8.5, "sink_m": 0.4, "yaw_deg": 20.0}, {"id": "w2", "path": "res://assets/props/meshy-1024/meadows_grove_oak_c/meadows_grove_oak_c.glb", "at": [-369.0, 5119.0], "width_m": 10.0, "sink_m": 0.4, "yaw_deg": 140.0}, {"id": "w3", "path": "res://assets/props/meshy-1024/meadows_grove_oak_a/meadows_grove_oak_a.glb", "at": [-356.0, 5123.0], "width_m": 7.0, "sink_m": 0.4, "yaw_deg": 260.0}, {"id": "e1", "path": "res://assets/props/meshy-1024/meadows_grove_oak_c/meadows_grove_oak_c.glb", "at": [-305.0, 5114.0], "width_m": 10.0, "sink_m": 0.4, "yaw_deg": 75.0}, {"id": "e2", "path": "res://assets/props/meshy-1024/meadows_grove_oak_a/meadows_grove_oak_a.glb", "at": [-297.0, 5124.0], "width_m": 7.0, "sink_m": 0.4, "yaw_deg": 190.0}, {"id": "e3", "path": "res://assets/props/meshy-1024/meadows_grove_oak_b/meadows_grove_oak_b.glb", "at": [-311.0, 5129.0], "width_m": 8.5, "sink_m": 0.4, "yaw_deg": 310.0}, {"id": "g1", "path": "res://assets/props/meshy-1024/meadows_grove_oak_c/meadows_grove_oak_c.glb", "at": [-353.0, 5149.0], "width_m": 10.0, "sink_m": 0.4, "yaw_deg": 35.0}, {"id": "g2", "path": "res://assets/props/meshy-1024/meadows_grove_oak_b/meadows_grove_oak_b.glb", "at": [-306.0, 5147.0], "width_m": 8.5, "sink_m": 0.4, "yaw_deg": 220.0}]}
+ }
+diff --git a/data/config/stronghold.json b/data/config/stronghold.json
+index 94c6c72a1..c5ed6c5d0 100644
+--- a/data/config/stronghold.json
++++ b/data/config/stronghold.json
+@@ -6,6 +6,8 @@
+   "_comment_value_drop_t1_hall_4": "T1-HALL-4, 2026-08-30, JUDGE-6 defect 1. The works' own exterior half of the value drop described in building_prefabs.json's `_why_value_drop_t1_hall_4` -- read that first, it carries the measurement and the reasoning. `stone_light` #9c9083 -> #5f5e58 and `stone_skirt` #8f8172 -> #575147 are the SAME factor the kit's LightRock/DarkRock take, applied here so the ladder HALL_DESIGN sec5 authored and `_comment_stone_light`/`_comment_stone_skirt` below both describe survives the drop intact: skirt < works walls < DarkRock < LightRock is unchanged in order, and the works-to-LightRock step stays 1.36x where it was 1.35x. What moves is the family's absolute value, because JUDGE-6 measured the fortress at five luminance points off its own background and the reference at a 32-point separation with the fortress dark. `stone` (#6a6157) is DELIBERATELY NOT DROPPED and that is not an oversight. `_wall_material` hands `stone_light` to outer walls and `stone` to inner ones, so `stone` is an interior tone, and `_ceiling_colour`'s own note records what happened the last time this building's interiors lost value: the warden arena went to 96.7% of pixels below luminance 40 and a blind critic's first finding was the value crush. The exterior is now slightly darker than the interior, which is both the intended read (a weathered outside, lit rooms within) and the only way to take the silhouette without paying for it in the five rooms the player fights in. ROUND 2, same lane, after rendering: #5f5e58 -> #66655e, giving back about 8% of the drop on the WORKS WALLS ONLY. The kit's LightRock/DarkRock keep their full drop, so the fortress mass that carries the silhouette at range is unchanged. The reason is JUDGE-6 defect 5: the west keep elevation is works wall, it is the frame's shaded face, and the full drop took it to mean L 19.8 with a high-pass texture sd of 2.67 against 28.8/4.10 on the judged frames -- i.e. the value drop bought the silhouette partly at the cost of the defect immediately below it on the same list. This is the smaller half of the correction (see art.json's ambient_sky_contribution round-2 note for the larger half); it is deliberately small so the ladder this file's round-1 note describes still holds -- works-to-LightRock is 1.26x where round 1 put it at 1.36x and the shipped build had 1.35x, so the two stones still read as one fortress.",
+   "_comment_stone_light": "T1-HALL-BUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §5's palette-proof step: `stone_light` (the works' own exterior wall / exterior-face-skin tone, `stronghold.gd::_stone_light`/`_exterior_face_material`) moves from the code default #786d5e to the design's #9c9083, so the works' true exterior wears the SAME value-ladder step as the castle kit's retuned walls -- 'one stone, one scale, one value ladder, both kits'. `stone`/`stone_dark`/`floor_colour` are interior tones this pass does not touch; nothing else in `site` changed.",
+   "_comment_stone_skirt": "T1-HALL-REBUILD (2026-08-30), HALL_DESIGN_2026-08-30.md §5's foundation tier -- the darkest step on the ladder (skirt < works walls < DarkRock < LightRock < coping), at the coarser 0.22 tile so the foundation reads as BIGGER blocks than the wall above it. It is worn by a facing skin (`stronghold.gd::_build_skirt_facing`), not by the skirt slab itself: each chamber's floor slab IS its skirt (one box 18m deep whose top face is the room's walkable floor), so retinting the slab would repaint five interiors. Before this the building's whole visible plinth rendered as yard cobble seen edge-on, at a smaller stone scale than the wall standing on it -- the exact scale collision §5 resolves with a stated ladder.",
++  "courtyard_daylight_candidate": {"enabled": false, "light_at": [0.0, 32.0], "light": {"energy": 10.0, "range": 36.0, "attenuation": 0.4, "colour": "#fff0d8", "y": 9.0, "night": {"energy": 2.4, "colour": "#9fb3d6"}}, "rubble_from": 19.0, "rubble": {"scale_min": 0.7, "scale_max": 1.1, "jitter": 0.3, "y": 0.02, "tint": "#4a443c"}, "pillar_x": 10.2, "_why": "F38 band5_stronghold_approach_1 close-1024 (OFF until judged; stronghold.gd::_courtyard_daylight). GPU MH2: the courtyard is the lowest Meadows stand (4.98 Medium, 3.73 High) -- 'near-black courtyard', 'clipped foreground plank and beam props', banners masked by the grade. The west curtain's sun shadow covers most of the yard and its only fill (`lights` at [0,32]: energy 1.7, attenuation 1.2) is steep and weak. On: that same light (count unchanged, 18-light exterior budget held) becomes a broad even sunlit bounce (energy 10, range 36, attenuation 0.4, #fff0d8, 9 m up); the courtyard rubble runs (from z 19) keep to the wall foot (scale_max 3.4 -> 1.6, jitter 1.15 -> 0.5); the two courtyard trim braces stand at x +-10.2, flush to their walls, out of the camera's foreground. Judge with `banner_model_candidate` on.", "_why_night": "r1 judges 3/3: night frames 5-6 read lit like day. `light.night` steps the same fill down while the shared clock is dark (stronghold_courtyard_fill.gd, world_look.is_dark(), as campfires and torches do): energy 10 -> 2.4, warm #fff0d8 -> moonlit #9fb3d6, so the braziers carry the night. Day unchanged.", "_why_r1_cpu": "r1 CPU judged (25 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, 3 anchor pairs incl. craft, confirming batch; calibrate.py offset fallback, r 0.92, RMSE 0.74; Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/court1025r1-mapped.json; approach/gameplay/detail day and night, with banner_model_candidate on): shipping 4.0/4.0/4.0 vs 5.5/5.6/5.6, mapped 4.35 -> 5.92 (+1.57); near-black, clipped props and flat banners PRESENT -> PARTIAL 3/3. Open: night frames 5-6 read lit like day, the night approach back wall stays near-black, a wall-foot brick still clips the gameplay corner, the yard floor is sparse. CPU no longer closes a row: OFF until the GPU pass."},
++  "warden_rim_candidate": {"enabled": false, "_why": "F22#4 close-out (OFF until judged; lighting only, shadowless spots, no gameplay change). GPU J and CPU co2 judges: the dark armoured Burrowback sinks into the dark hall floor with no rim. Two `lights` entries carry `flag: warden_rim_candidate`: a cool rim from behind the Warden's side of the ring and a warm top key over the fight floor, so both creatures lift off the floor. Roofed room, so not in the exterior omni budget.", "_parked": "PARKED (26 Oct; F22#4 parked per coordinator): two CPU attempts (r1 rim behind the camera side, r2 rim from the far south-east side at energy 12 plus top key 6), captured with capture_named_fight warden_aldis on top of co2, show no visible change on Burrowback or the floor against co2. Not judged. Likely the Compatibility per-object light cap in this lit room."},
+   "banner_model_candidate": {"enabled": false, "path": "res://assets/props/meshy-1024/meadows_tether_war_banner/meadows_tether_war_banner.glb", "height_share": 1.0, "yaw_deg": 90.0, "lift_m": 0.0, "_why": "F38 band5_stronghold_approach_1 close-1024 (OFF until judged): the GPU judge reads the courtyard heraldry as 'giant flat banners' (4.59). A coordinator Meshy war banner (pole, crossbar, draped cloth; oxblood correct here, Team Tether's own stronghold) replaces each _hang_banner bar and cloth at the same size. The camera occluder and the Warden take-down are unchanged. Path filled on delivery."},
+   "hero_gatehouse": {
+     "_why_r1": "close-1024 r1: mapped Bar A 5.44 ON = shipping 5.44 (CPU, 25 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, anchors f36_0_npc:C1 / p2_094_r4 / craft, calibrate.py linear slope 1.64 r 0.98 RMSE 0.31, confirming batch; Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/art1024-mapped.json): at 28 m the gatehouse is not visible as a change from band5_0 (550 m) and is out of frame at band5_1. No gain; resize round follows.",
+@@ -14,10 +16,15 @@
+     "_why_r3": "close-1024 r3 (OFF, unjudged; new art, not a third round of the parked gatehouse): the coordinator's Meshy lit keep (tb/meshy-1024 ae67083ec, about 70 m tall, central hall and two towers, warm windows and braziers, oxblood only on tower banners) replaces the gatehouse model in the same slot behind the stronghold: 56 m wide, about 66 m tall (37x the 1.80 m trainer), 130 m past the mouth.",
+     "_why_r4": "close-1024 r4 (OFF, unjudged): the CPU night frame at 56 m showed a pale 40 px silhouette with dark windows (GPU, MH: the gatehouse was invisible from both stands). The keep goes to 110 m wide (about 122 m tall, 68x the 1.80 m trainer) in the same slot 130 m past the mouth, and its windows and braziers light from meadows_lit_keep_windows_emission.png, a mask of the texture's warm window pixels (0.5% of the atlas), at emission energy 2.5.",
+     "_why_r4_cpu": "close-1024 r4 CPU A/B (dom1025-batch.json; three fresh code-blind judges, JUDGE_PROMPT verbatim, anchors f04_6_r22 / f36_0_npc:C9 / craft): band5_stronghold_approach_0 day+night raw Bar A 5.67 vs 4.97 (+0.70), mapped 5.87 vs 5.43 (+0.44; a weak fit, slope 0.63 r 0.52 RMSE 0.68, because the C9 pair scored identically). P2-003 PRESENT to PARTIAL on all three: the keep reads as a landmark day and night. All three judges call it bleached white, so it gets an albedo tint #8c8780 toward weathered grey stone (rides along). OFF until GPU.",
++    "_why_r5": "close-1024 r5 (OFF, unjudged): GPU MH2 read the 110 m keep as 'a small pale-grey block castle behind the pylons' (+0.22/+0.30; P2-003 PRESENT 12/12). r5 widens it to 150 m (about 167 m tall) in the same slot, and the band5_stronghold_approach_0 stand moves from 550 m to about 300 m out (capture-definition.json, rides along), so the keep reads several times larger in frame. Courtyard daylight is left for its own round: the stronghold carries an 18-light budget.",
++    "_why_r5_cpu": "r5 CPU judged (25 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, 3 anchor pairs incl. craft, calibrate.py slope 1.26 r 0.76 RMSE 0.54; Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/keep1025r5-mapped.json): shipping 5.3/5.3/5.1 vs keep 5.9/5.9/5.9, raw +0.67, mapped 5.01 -> 5.85 (+0.84); P2-003 PRESENT -> PARTIAL 3/3. Judges still ask for a darker, larger keep that shows in the gameplay views and Team Tether banners on it. CPU no longer closes a row: stays OFF until the GPU pass.",
++    "_why_r6": "close-1024 r6 (OFF, coordinator MESHY spire, tb/meshy-1024 299f3d7ab; task ids in provenance.jsonl): GPU MB judged the r5 keep +0.22 and P2-003 PRESENT 6/6 (a low pale block castle behind the pylons). r6 swaps in a slender tower about 3.1x taller than wide: width_m 27.4 scales it to about 120 m tall (about 65x the 1.80 m trainer) in the same slot. Its texture has no emissive windows, so meadows_stronghold_spire_windows_emission.png (the barred window slits and crown braziers thresholded from the albedo, dilated to read at range; 0.48% of the atlas, as the r5 mask) drives warm lit windows through the same emission path at energy 4. The stone is already dark and mossy, so albedo_tint is neutral. MH3 (courtyard_daylight_candidate + banner_model_candidate) rides in the same GPU arm.",
++    "_why_r7b": "r7b (27 Oct): the Meshy albedos carry almost no window texels, so the thresholded masks (0.5%) lit only specks. Authored warm window-grid masks on the stone-wall texels (keep 2.1%, spire 3.2%; the old masks unioned in), energy 7/12 -> 5/6. CPU judged against shipping in one batch with r7 and r6b (three fresh code-blind judges, JUDGE_PROMPT verbatim, 3 anchor pairs incl. craft; calibrate.py linear slope 1.38, r 0.99, RMSE 0.14; band5_stronghold_approach_0 day/night; ralph/reports/MEADOWS/close-1024/r7-1027-mapped.json): shipping 6.00 -> r6b 6.27, r7 6.50, r7b 6.69 (+0.69). Judges 3/3: the lit-window castle is the best night landmark of the three. Open: the windows tonemap white rather than warm and glow by day too; the keep floats over the canopy with no visible base; the night grade crushes the grove. CPU no longer closes a row: OFF until the GPU pass.", "_why_r7": "r7 (OFF; coordinator ask after the r6b CPU judges, 3/3: a lone tower, not fortress mass, and no windows reading at night): the r5 lit keep returns as the main piece for mass and warm windows (width_m 120, about 134 m tall; emission 2.5 -> 7), and the r6b spire stands 70 m behind it and 22 m to one side as a `companions` entry (stronghold_hero_gatehouse.gd second hero slot; about 200 m tall, emission 8 -> 12), so the skyline reads as one keep with a tower rising above it.", "_why_r6b_cpu": "r6b CPU judged (27 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, 3 anchor pairs incl. craft, linear slope 1.40, r 0.92, RMSE 0.31; band5_stronghold_approach_0 day/night approach and gameplay; ralph/reports/MEADOWS/close-1024/spire1027-mapped.json): shipping 5.5/4.8/5.3 vs 6.0/5.4/5.9, mapped 4.93 -> 5.72 (+0.79); P2-003 PRESENT -> PARTIAL 3/3 (the first landmark read from these woods). Open (3/3): a thin lone tower, not fortress mass (walls, keep body); no warm windows reading at night; out of the gameplay view. CPU no longer closes a row: OFF until the GPU pass.", "_why_r6b": "r6b: the first CPU frame at band5_stronghold_approach_0 (about 440 m out) showed the 120 m spire as a thin pale sliver behind the trees, and its windows did not read at night. width_m 27.4 -> 45.7 (about 200 m tall) and emission_energy 4 -> 8.",
+     "_why": "F38 P2-003 close-1024 candidate (OFF until judged): GPU judges read the stronghold as 'a small dark ruin behind dominant pylons' (band5_stronghold_approach_0 5.66) and band5_1 as near-black with giant flat banners (4.59). The coordinator's Meshy gatehouse (tb/meshy-1024 4eb886a11, key-art stronghold panel ref; oxblood only on its banners) stands in front of the gate mouth: 28 m wide, uniform scale (about 25 m tall, roughly 14x the 1.80 m trainer), visual only, no collision, so the gate, ramp and route are unchanged. stronghold_hero_gatehouse.gd.",
+     "enabled": false,
+     "path": "res://assets/props/meshy-1024/meadows_lit_keep/meadows_lit_keep.glb",
+-    "width_m": 110.0, "emission_texture": "res://assets/props/meshy-1024/meadows_lit_keep/meadows_lit_keep_windows_emission.png", "emission_energy": 2.5, "albedo_tint": "#8c8780",
++    "width_m": 120.0, "emission_texture": "res://assets/props/meshy-1024/meadows_lit_keep/meadows_lit_keep_windows_grid_emission.png", "emission_energy": 5.0, "albedo_tint": "#8c8780",
++    "companions": [{"id": "spire", "path": "res://assets/props/meshy-1024/meadows_stronghold_spire/meadows_stronghold_spire.glb", "width_m": 45.7, "emission_texture": "res://assets/props/meshy-1024/meadows_stronghold_spire/meadows_stronghold_spire_windows_grid_emission.png", "emission_energy": 6.0, "albedo_tint": "#ffffff", "offset": [-22.0, 0.0, 200.0], "yaw_deg": 180.0}],
+     "offset": [0.0, 0.0, 130.0],
+     "yaw_deg": 180.0
+   },
+@@ -469,6 +476,8 @@
+   ],
+   "_comment_lights_outer_works_ambient": "T1-HALL-REBUILD (2026-08-30). The outer_works yard's own weak ambient omni (was `at [0,0], y 6, energy 0.35, range 18`) is RETIRED, not moved: `hall_occupation.braziers` now stands a real fire in this yard beside the garrison camp, and two more on the causeway kerbs a few metres outside the mouth. A yard lit by a fire the player can see burning is the whole point of the occupation layer; a colourless 0.35 ambient over the top of it is the thing that flattens it. Retiring it is also what brings the site to exactly the design's 18-omni ceiling (§7) with the causeway fires included.",
+   "lights": [
++    {"flag": "warden_rim_candidate", "_comment": "F22#4 close-out rim: cool, from the far (south-east) side of the ring against the north-west fight camera, so it rims the creatures' silhouettes.", "type": "spot", "at": [9.5, 83.5], "y": 7.5, "aim": [-1.0, 92.0], "aim_y": 1.2, "angle": 50.0, "energy": 12.0, "range": 24.0, "attenuation": 0.8, "colour": "#c6d4ff"},
++    {"flag": "warden_rim_candidate", "_comment": "F22#4 close-out top key: warm, over the fight floor between the two marks.", "type": "spot", "at": [0.0, 88.0], "y": 10.2, "aim": [0.0, 90.0], "aim_y": 0.0, "angle": 70.0, "energy": 6.0, "range": 16.0, "attenuation": 0.9, "colour": "#ffdcae"},
+     {
+       "_comment": "T1-ARCH exterior fire 1/4, spread across the curtain's own width. VP-HALL-FIX (night): this is one of the two `gate_source` points with a real basket standing at it, so it is the pair that got the night-legibility budget -- y/range/energy up and `attenuation` added so the pool climbs the gate face and reaches the great tower's banner instead of stopping at the ground, without a new omni (same 18-light budget).",
+       "at": [-8.0, -13.0],
+diff --git a/data/config/terrain_presentation.json b/data/config/terrain_presentation.json
+index ceaa65f30..de1cf6d1b 100644
+--- a/data/config/terrain_presentation.json
++++ b/data/config/terrain_presentation.json
+@@ -17,6 +17,7 @@
+   },
+   "texture_candidates": {
+     "path": {"enabled": true, "_why_on": "GPU MH6 (tb/gpu-pass f0d91dcc0, ralph/reports/GPU-PASS/B5-mh6-sw11-sw14-sw15-staticub/VERDICT.md): mean of village_road, farm_to_hall and hall_front +0.56 Medium / +0.56 High; orange smear PRESENT -> PARTIAL 18/18. Not yet 7.5 (village_road 6.43 / 6.68).", "albedo": "res://assets/environment/terrain/stylised/derived/dirt_path_trodden_Color.png", "tint": "#efe9df", "_why_r2": "r2: the tint alone barely moved the frame (the orange is in dirt_path_Color itself), so r2 swaps the albedo for a derived trodden-earth copy (saturation x0.38, value x0.86, local contrast lifted so pebbles and ruts read; tools: PIL, same 1024 size for the Terrain3D array) with a near-white tint. Every path in Meadows takes it.", "_why_r2_cpu": "r2 CPU judged (26 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, 3 anchor pairs incl. craft, confirming batch; calibrate.py linear slope 1.90, r 0.97, RMSE 0.20; Low/Compatibility llvmpipe, day approach/gameplay/detail; ralph/reports/MEADOWS/close-1024/vilpath1026-mapped.json): village_road 5.95 -> 6.97, farm_to_hall 5.95 -> 6.97, hall_front 5.76 -> 6.65; orange-smear defect PRESENT -> FIXED 9/9. Open: a single-scale blob repeat, no ruts, stones or broken grass verge. CPU no longer closes a row: OFF until the GPU pass.", "_scope": "F38 village_road / band3_the_river_lock_1 close-out candidate (OFF until judged): the shipped path tint #d0b090 over dirt_path_Color reads as a flat orange road filling the village_road foreground (GPU 7.09 Medium / 6.73 High, P2-005 PARTIAL). A neutral trodden-earth tint lets the texture's own pebbles and wear read. Presentation only, no bake change."},
++    "path_r3": {"enabled": false, "_target": "path", "albedo": "res://assets/environment/terrain/stylised/derived/dirt_path_trodden_r3_Color.png", "tint": "#fff6ea", "_why": "village close-out r3 (OFF until judged). GPU MH6 put the r2 path ON (+0.56) but its judges read it olive/khaki, merging with the grass, and asked for warm brown trodden earth with ruts and pebbles (village_road 6.43/6.68). r3 is a warm-brown copy of dirt_path_Color (saturation x0.62, value x0.80, warm multiply #ffe2c4, fine and coarse local contrast for pebbles and ruts; same 1024 size for the Terrain3D array). Overrides `path` for the same surface when enabled (listed after it: the last enabled swap per surface wins).", "_parked": "PARKED (26 Oct; CPU, three fresh code-blind judges, 3 anchor pairs incl. craft, linear r 0.93, RMSE 0.31; ralph/reports/MEADOWS/close-1024/vilpath3-mapped.json; day and night approach/gameplay/detail): against the shipped r2 path, village_road 5.92 -> 6.34, farm_to_hall 6.03 -> 6.44, hall_front 6.08 -> 6.44 (+0.36..+0.42, under 0.5). The olive/khaki hue is FIXED 9/9, but the blob texture stays and the warm road goes near-black at night (worse than r2, 3/3). What would carry it: authored ruts, pebbles and broken grass edges (decal or Meshy ground pieces), not a recolour."},
+     "_comment": "Presentation-only terrain surface swaps, keyed by terrain_playground.json texture name. Kept out of terrain_playground.json because that file fingerprints the terrain and scatter bakes (a flag flip there invalidates the vegetation bake). Each applies only with its own enabled.",
+     "grass_v2": {
+       "enabled": true,
+@@ -40,5 +41,36 @@
+     "macro_variation2": "#e4eedd",
+     "mipmap_bias": 0.7,
+     "grain_strength": 0.32
++  },
++  "carpet_candidate": {
++    "enabled": false,
++    "_scope": "F38 L4 / P2-005 close-1024 candidate (OFF until judged): judges at every exterior Meadows site read a uniform grass carpet. Grass blade coverage cannot fix it (grass_field.json carpet_candidate, parked: the terrain under the blades is painted the same grass). The shipped macro octaves are ~83 m and ~33 m and near white, so the ground has no mid-scale variation. This moves the second octave to ~12 m patches (noise2_scale 0.08) in a cooler clover green, and keeps the first octave light so the large scale does not smear.",
++    "noise2_scale": 0.08,
++    "macro_variation2": "#b6cfa4",
++    "macro_variation1": "#e3ead6",
++    "_parked": "PARKED close-1024: CPU capture near-identical to shipping at farm_to_hall, band2_stone_and_root_1 and band5_0 (approach and gameplay). With grass coverage (grass_field.json carpet_candidate, parked after r1 and r2) that is three attempts on the carpet with no visible change. The near-field read is the grass blades plus the baked terrain colour map, which these shader knobs do not reach. P2-005 needs authored ground variation in the bake (worn earth, clover and moss patches, rock outcrops, grove edges) or new ground-cover art. Left OFF; not for GPU."
++  },
++  "colour_candidate": {
++    "enabled": false,
++    "_scope": "F38 L4 / P2-005 close-1024 candidate (OFF until judged), coordinator-approved colour-bake pass: colour only. tools/bake_meadows_colour_candidate.gd reads each shipped region's colour and height maps and writes a varied colour map per region to `dir`; meadows_colour_candidate.gd swaps them in after load while enabled. No heightfield, control, collision, vegetation placement or bake-fingerprint change. Variation: clover patches (~14 m, cool green), moss/value breaks (~22 m), a worn-earth halo along existing soil (paths, aprons), and grey darkening at outcrop bases (slope from the region's own heightmap). Grove-edge darkening is NOT included: it would need vegetation masks. The grass blades sample the same colour maps (ground_blend), so they follow. `dir` sits behind a .gdignore, so an export would not carry it; convert before enabling for a build.",
++    "dir": "res://data/terrain/playground_colour_candidate",
++    "seed": 2205,
++    "vertex_spacing": 2.0,
++    "clover_scale_m": 45.0,
++    "clover_tint": "#c4dbb0",
++    "clover_strength": 0.5,
++    "moss_scale_m": 70.0,
++    "moss_tint": "#a9bd8e",
++    "moss_strength": 0.35,
++    "soil_reference": "#d1b37e",
++    "worn_tint": "#d8c49a",
++    "worn_strength": 0.45,
++    "worn_reach_px": 2,
++    "rock_tint": "#b3b1a6",
++    "rock_strength": 0.45,
++    "rock_start_deg": 18.0,
++    "rock_full_deg": 32.0,
++    "_why_r2": "r1 at 14 m / 22 m with two octaves and tight thresholds wrote fine speckle (4-8 m) that reads as generator noise; r2 uses broader organic patches (45 m clover, 70 m moss, three octaves, softer thresholds).",
++    "_parked": "PARKED close-1024: the swap ran (64 region maps; log '[colour_candidate] swapped 64') and the CPU capture at farm_to_hall, band2_stone_and_root_1 and band5_0 is identical to shipping. That is the fourth carpet attempt with no visible change (grass drift r1 and r2, terrain macro shader, this colour bake). At play-camera distances the dense grass blades cover the ground completely, so terrain colour does not reach the frame. The PNGs are not committed (7.6 MB, no effect); re-run tools/bake_meadows_colour_candidate.gd to regenerate. The remaining lever is the blade layer itself (per-patch blade tint/species/height) or new ground-cover art."
+   }
+ }
+diff --git a/data/config/trainer_aftermath.json b/data/config/trainer_aftermath.json
+index cfc4cd6b7..0291753fc 100644
+--- a/data/config/trainer_aftermath.json
++++ b/data/config/trainer_aftermath.json
+@@ -862,6 +862,732 @@
+       "_why_r22": "r22 (clearly different approach after r19 6.60 / r21 6.47): declutter to one readable hero beat per site; unreadable wreckage, debris and second-beat props are removed. Vess: the Tether line is cut; the post stands with its severed rope."
+     }
+   },
++  "meshy_heroes_enabled": false,
++  "_meshy_heroes_scope": "F04#6 r31 candidate (OFF): when enabled, these whole sites replace visual_candidate_sites for the same trainers. The coordinator's Meshy aftermath heroes (tb/meshy-1024; task ids in each provenance.jsonl): Riverwatch's wrecked checkpoint hut in both states with the fallen banner after; Ridge's felled signal pylon; Field's collapsed tent; Dell's toppled banner and knocked-over crates. close-1024 CPU (three code-blind judges, standard prompt): r31 mapped 6.23 vs shipping 5.86 (r30 6.20 vs 5.99); see ralph/reports/MEADOWS/close-1024/F04-6.md. Below 7.5: OFF pending GPU. Presentation only; defeat flags, rewards and saves are untouched.",
++  "meshy_heroes": {
++    "relay_officer_dell": {
++      "_why": "WORLD River Lock: the relay picket. Dell's Tether pylon hums lit (live finish, cyan light) while he holds the post; beaten, it goes dark (the installed dead finish), lists, and its cable lies slack on the ground. r14 (r13 judge: read as the same failure as Vance's mast, and the vase shards read as debug): it topples onto its side among broken stone.",
++      "pieces": [
++        {
++          "model": "tether_pylon",
++          "dir": "res://assets/environment/team_tether",
++          "offset": [
++            -3.8,
++            0.6
++          ],
++          "scale": 1.6,
++          "sink_m": -1.6,
++          "finish": "pylon_live",
++          "after": {
++            "finish": "pylon_dead",
++            "finish_tint": "#4a4f55"
++          }
++        },
++        {
++          "model": "Crate_Wooden",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            -2.4,
++            0.2
++          ],
++          "scale": 1.3,
++          "yaw_deg": 12,
++          "after": {
++            "offset": [
++              -1.6,
++              1.2
++            ],
++            "roll_deg": 90.0,
++            "sink_m": -0.3
++          }
++        },
++        {
++          "model": "Crate_Wooden",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            -2.4,
++            0.2
++          ],
++          "scale": 1.1,
++          "yaw_deg": -20,
++          "sink_m": -1.2,
++          "after": {
++            "offset": [
++              -1.0,
++              0.0
++            ],
++            "pitch_deg": 75.0,
++            "yaw_deg": 30.0,
++            "sink_m": -0.25
++          }
++        },
++        {
++          "model": "toppled_tether_banner",
++          "dir": "res://assets/props/meshy-1020/toppled_tether_banner/model_toppled_tether_banner",
++          "scale": 1.6,
++          "pitch_deg": -90.0,
++          "sink_m": -0.18,
++          "state": "after",
++          "offset": [
++            -1.4,
++            2.0
++          ],
++          "yaw_deg": 20.0
++        }
++      ],
++      "lights": [
++        {
++          "offset": [
++            -3.8,
++            0.6
++          ],
++          "height": 2.4,
++          "colour": "#7fe8ff",
++          "energy": 6,
++          "range": 8,
++          "state": "before"
++        }
++      ],
++      "_why_r16": "r16 (CPU r15 frames: the toppled pylon floated ~1 m above the ground beside the arch; still one small change). The pylon now lies on the ground, a Tether supply stack stands at its foot before the win and lies spilled after, and a thin smoke rises from the dead pylon.",
++      "strike_standard": true,
++      "stand_down": {
++        "offset": [
++          -3.0,
++          -8.0
++        ],
++        "turn_deg": 180.0
++      },
++      "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
++      "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces).",
++      "_why_r19": "r19 (r18 CPU judges 6.44): Vance's broken cage at the original cage's footprint; Riverwatch's scattered crates removed (clutter, hovering); Halder's struck camp leaves no cot, the tipped brazier sits on the ground and the smoke is denser; Dell's spilled crates no longer interpenetrate.",
++      "_why_r20": "r20: the spilled supplies are wooden crates (the metal ones read black-faced) and the snapped pylon is larger so its cracked crystal reads.",
++      "_why_r22": "r22 (clearly different approach after r19 6.60 / r21 6.47): declutter to one readable hero beat per site; unreadable wreckage, debris and second-beat props are removed. Dell: the picket's crate barricade is gone from the arch and the pylon stands dark."
++    },
++    "captain_riverwatch": {
++      "_why": "Oreth (patience, the river path). r8 judge: the barrier lay beside the path, not across it. Before: two fence sections and a barrel stand across the road in front of him; after: the sections lie flat off the road and the barrel is rolled aside, the road open. r13 (r12 judge: the swung rail and barrel clipped the waystone): they lie clear of it, further off the road.",
++      "pieces": [
++        {
++          "model": "Prop_WoodenFence_Single",
++          "dir": "res://assets/buildings/quaternius_medieval",
++          "offset": [
++            -1.3,
++            2.2
++          ],
++          "scale": 1.4,
++          "after": {
++            "offset": [
++              -5.4,
++              -1.0
++            ],
++            "pitch_deg": -88.0,
++            "yaw_deg": 10.0,
++            "sink_m": -0.05
++          }
++        },
++        {
++          "model": "Prop_WoodenFence_Single",
++          "dir": "res://assets/buildings/quaternius_medieval",
++          "offset": [
++            1.4,
++            2.2
++          ],
++          "scale": 1.4,
++          "after": {
++            "offset": [
++              -5.6,
++              -1.6
++            ],
++            "pitch_deg": -88.0,
++            "yaw_deg": 16.0,
++            "sink_m": -0.15
++          }
++        },
++        {
++          "model": "Barrel",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            0.0,
++            2.0
++          ],
++          "scale": 1.2,
++          "after": {
++            "offset": [
++              -6.6,
++              0.6
++            ],
++            "roll_deg": 90.0,
++            "sink_m": -0.35
++          }
++        },
++        {
++          "model": "Crate_Wooden",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            -2.6,
++            2.4
++          ],
++          "scale": 1.4,
++          "yaw_deg": 5,
++          "state": "before"
++        },
++        {
++          "model": "Crate_Wooden",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            2.7,
++            2.3
++          ],
++          "scale": 1.4,
++          "yaw_deg": -8,
++          "state": "before"
++        },
++        {
++          "model": "Crate_Wooden",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            2.7,
++            2.3
++          ],
++          "scale": 1.2,
++          "yaw_deg": 20,
++          "sink_m": -1.25,
++          "state": "before"
++        },
++        {
++          "model": "Lantern_Wall",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            0.0,
++            2.0
++          ],
++          "scale": 1.3,
++          "sink_m": -1.7,
++          "state": "before"
++        },
++        {
++          "model": "meadows_riverwatch_hut",
++          "dir": "res://assets/props/meshy-1024/meadows_riverwatch_hut",
++          "offset": [
++            5.0,
++            0.4
++          ],
++          "scale": 2.22,
++          "yaw_deg": -30.0,
++          "sink_m": -1.65
++        },
++        {
++          "model": "toppled_tether_banner",
++          "dir": "res://assets/props/meshy-1020/toppled_tether_banner/model_toppled_tether_banner",
++          "scale": 1.6,
++          "pitch_deg": -90.0,
++          "sink_m": -0.18,
++          "state": "after",
++          "offset": [
++            3.0,
++            0.2
++          ],
++          "yaw_deg": -30.0
++        }
++      ],
++      "_why_r16": "r16 (Turn 19: Riverwatch read as a glowing disc amid grass, not a changed fortification). A fuller Tether road block: the fence pair, barrel and a crate stack with a lit lantern span the road before the win; after it the block is dragged off the road and the lantern is out. The sigil stone's disc is smaller and dimmer so the barricade carries the change.",
++      "lights": [
++        {
++          "offset": [
++            0.0,
++            2.0
++          ],
++          "height": 2.0,
++          "colour": "#ffcf7a",
++          "energy": 3.0,
++          "range": 5.0,
++          "state": "before"
++        }
++      ],
++      "sigil_stone": {
++        "sigil_scale": 1.2,
++        "light_energy": 2.0,
++        "light_range": 3.5
++      },
++      "strike_standard": true,
++      "stand_down": {
++        "offset": [
++          14.0,
++          0.0
++        ],
++        "turn_deg": 90.0
++      },
++      "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
++      "_why_r17b": "Riverwatch's own change: the road block is smashed open where it stood (crates tipped and spilled across the verge), not restacked elsewhere.",
++      "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces).",
++      "_why_r19": "r19 (r18 CPU judges 6.44): Vance's broken cage at the original cage's footprint; Riverwatch's scattered crates removed (clutter, hovering); Halder's struck camp leaves no cot, the tipped brazier sits on the ground and the smoke is denser; Dell's spilled crates no longer interpenetrate.",
++      "_why_r20": "r20: the smashed barricade lies off the verge so the opened road reads.",
++      "_why_r22": "r22 (clearly different approach after r19 6.60 / r21 6.47): declutter to one readable hero beat per site; unreadable wreckage, debris and second-beat props are removed. Oreth: the road block is simply gone off the road."
++    },
++    "captain_field": {
++      "_why": "Halder (range control, the field): a Tether watch-fire ringed by rocks with two signal torches. After: the same rock ring, charred logs, a thin grey smoke wisp from the doused fire, and the torches lying apart from the pit (r8 judge: they merged with the logs). r11 (r10 judge: a downed torch lay plate-up and read as a white card; the fallen pair read as grey blocks): the torches stand only before the win; after it the ring holds the charred logs and the smoke.",
++      "pieces": [
++        {
++          "model": "Rock_Medium_2",
++          "dir": "res://assets/environment/stylized_nature",
++          "offset": [
++            -3.0,
++            0.6
++          ],
++          "scale": 0.38,
++          "yaw_deg": 0.0,
++          "sink_m": 0.05,
++          "_why": "probe pa3: the kenney campfire-pit is too flat to read under Low; four installed rocks ring the fire and stay as the cold pit."
++        },
++        {
++          "model": "Rock_Medium_2",
++          "dir": "res://assets/environment/stylized_nature",
++          "offset": [
++            -4.6,
++            0.6
++          ],
++          "scale": 0.38,
++          "yaw_deg": 37.0,
++          "sink_m": 0.05
++        },
++        {
++          "model": "Rock_Medium_2",
++          "dir": "res://assets/environment/stylized_nature",
++          "offset": [
++            -3.8,
++            1.4
++          ],
++          "scale": 0.38,
++          "yaw_deg": 74.0,
++          "sink_m": 0.05
++        },
++        {
++          "model": "Rock_Medium_2",
++          "dir": "res://assets/environment/stylized_nature",
++          "offset": [
++            -3.8,
++            -0.2
++          ],
++          "scale": 0.38,
++          "yaw_deg": 111.0,
++          "sink_m": 0.05
++        },
++        {
++          "model": "tree-log-small",
++          "dir": "res://assets/props/kenney_survival",
++          "offset": [
++            -3.6,
++            0.5
++          ],
++          "scale": 3.4,
++          "yaw_deg": 35.0,
++          "bark": {
++            "albedo": "res://assets/environment/stylized_nature/Bark_DeadTree.png",
++            "normal": "res://assets/environment/stylized_nature/Bark_DeadTree_Normal.png",
++            "scale": 2.0
++          },
++          "state": "after"
++        },
++        {
++          "model": "tree-log-small",
++          "dir": "res://assets/props/kenney_survival",
++          "offset": [
++            -4.0,
++            0.8
++          ],
++          "scale": 3.4,
++          "yaw_deg": -40.0,
++          "bark": {
++            "albedo": "res://assets/environment/stylized_nature/Bark_DeadTree.png",
++            "normal": "res://assets/environment/stylized_nature/Bark_DeadTree_Normal.png",
++            "scale": 2.0
++          },
++          "state": "after"
++        },
++        {
++          "model": "Bonfire_Fire",
++          "dir": "res://assets/props/quaternius_survival",
++          "offset": [
++            -3.8,
++            0.6
++          ],
++          "scale": 0.8,
++          "glow": "campfire",
++          "glow_scale": 1.8,
++          "state": "before"
++        },
++        {
++          "smoke_wisp": {
++            "top_m": 6.0,
++            "alpha": 0.65,
++            "top_size_m": 2.6,
++            "colour": "#bdb7ad",
++            "base_size_m": 0.6,
++            "fade": 0.8
++          },
++          "offset": [
++            -3.8,
++            0.6
++          ],
++          "state": "after"
++        },
++        {
++          "model": "Torch_Metal",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            -2.6,
++            0.6
++          ],
++          "scale": 3.0,
++          "sink_m": -0.8,
++          "state": "before"
++        },
++        {
++          "model": "Torch_Metal",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            -5.0,
++            0.6
++          ],
++          "scale": 3.0,
++          "sink_m": -0.8,
++          "state": "before"
++        },
++        {
++          "model": "camp_tent",
++          "dir": "res://assets/props/generated_camp",
++          "offset": [
++            -7.2,
++            2.6
++          ],
++          "scale": 1.0,
++          "yaw_deg": 25,
++          "state": "before"
++        },
++        {
++          "model": "Crate_Wooden",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            -1.4,
++            1.8
++          ],
++          "scale": 1.2,
++          "yaw_deg": 10,
++          "after": {
++            "roll_deg": 90,
++            "offset": [
++              -1.0,
++              2.4
++            ],
++            "sink_m": -0.3
++          }
++        },
++        {
++          "model": "Crate_Wooden",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            -1.0,
++            2.6
++          ],
++          "scale": 1.0,
++          "yaw_deg": -25,
++          "after": {
++            "pitch_deg": 80,
++            "offset": [
++              -0.6,
++              3.2
++            ],
++            "sink_m": -0.2
++          }
++        },
++        {
++          "smoke_wisp": {
++            "top_m": 3.2,
++            "alpha": 0.5,
++            "top_size_m": 1.0,
++            "colour": "#7d7770",
++            "base_size_m": 0.4
++          },
++          "offset": [
++            2.6,
++            -0.8
++          ],
++          "state": "after"
++        },
++        {
++          "model": "tree-log-small",
++          "dir": "res://assets/props/kenney_survival",
++          "offset": [
++            2.6,
++            -0.6
++          ],
++          "scale": 2.6,
++          "yaw_deg": 70,
++          "bark": {
++            "albedo": "res://assets/environment/stylized_nature/Bark_DeadTree.png",
++            "normal": "res://assets/environment/stylized_nature/Bark_DeadTree_Normal.png",
++            "scale": 2.0
++          },
++          "state": "after"
++        },
++        {
++          "model": "scorched_ground_patch",
++          "dir": "res://assets/props/meshy-1020/scorched_ground_patch/model_scorched_ground_patch",
++          "offset": [
++            -3.8,
++            0.6
++          ],
++          "scale_xyz": [
++            2.2,
++            0.8,
++            2.2
++          ],
++          "state": "after",
++          "sink_m": 0.0,
++          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
++        },
++        {
++          "model": "meadows_field_tent",
++          "dir": "res://assets/props/meshy-1024/meadows_field_tent",
++          "offset": [
++            -6.2,
++            1.8
++          ],
++          "scale": 2.25,
++          "yaw_deg": 25.0,
++          "sink_m": -0.92,
++          "state": "after"
++        }
++      ],
++      "lights": [
++        {
++          "offset": [
++            -3.8,
++            0.6
++          ],
++          "height": 1.2,
++          "colour": "#ffb35c",
++          "energy": 3.0,
++          "range": 6.0,
++          "state": "before"
++        }
++      ],
++      "_why_r16": "r16 (Turn 19: the doused fire was small against empty terrain). A Tether watch post round the fire: a tent and two crates beside a bigger blaze before the win; after it the tent is struck and its bedroll lies packed, the crates are tipped, and a tall grey smoke column rises from the dead fire. Smaller, dimmer sigil disc.",
++      "sigil_stone": {
++        "sigil_scale": 1.2,
++        "light_energy": 2.0,
++        "light_range": 3.5
++      },
++      "strike_standard": true,
++      "stand_down": {
++        "offset": [
++          14.0,
++          0.0
++        ],
++        "turn_deg": 90.0
++      },
++      "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
++      "_why_r17b": "Halder's standard is burned, not dropped: a charred stump smoulders where it stood.",
++      "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces).",
++      "_why_r19": "r19 (r18 CPU judges 6.44): Vance's broken cage at the original cage's footprint; Riverwatch's scattered crates removed (clutter, hovering); Halder's struck camp leaves no cot, the tipped brazier sits on the ground and the smoke is denser; Dell's spilled crates no longer interpenetrate.",
++      "_why_r20": "r20: the smoke column fades out lower (r19 judges: hard top edge).",
++      "_why_r22": "r22 (clearly different approach after r19 6.60 / r21 6.47): declutter to one readable hero beat per site; unreadable wreckage, debris and second-beat props are removed."
++    },
++    "captain_ridge": {
++      "_why": "Vess (endurance, Ridgeline Watch). r8 judge: the coiled rope read as a wreath. Before: a Tether rope line strung horizontally between two posts (the installed rope loop stretched along the span) with a lit lantern on one post; after: the line lies cut on the ground, one post toppled, the lantern down away from the stone. r10 judge: the strung coil read as a floating wicker spiral. Each line is now the installed rope squashed flat across its coil (scale_xyz z 0.06) so it reads as a taut straight strand post to post; cut, the two strands lie slack and short on the ground. r13 (r12 judge: the flat cut strands vanished on the ground; the earlier coiled pile read as a cut rope): the cut line lies as a coiled pile.",
++      "pieces": [
++        {
++          "model": "Prop_WoodenFence_Single",
++          "dir": "res://assets/buildings/quaternius_medieval",
++          "offset": [
++            -2.8,
++            0.6
++          ],
++          "scale": 1.3,
++          "roll_deg": 90.0,
++          "sink_m": -0.1,
++          "state": "before"
++        },
++        {
++          "model": "Prop_WoodenFence_Single",
++          "dir": "res://assets/buildings/quaternius_medieval",
++          "offset": [
++            -5.6,
++            0.6
++          ],
++          "scale": 1.3,
++          "roll_deg": 90.0,
++          "sink_m": -0.1,
++          "after": {
++            "roll_deg": 4.0,
++            "offset": [
++              -5.4,
++              1.8
++            ],
++            "yaw_deg": 60.0
++          }
++        },
++        {
++          "model": "Rope_1",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            -4.2,
++            0.6
++          ],
++          "scale_xyz": [
++            6.0,
++            1.4,
++            0.06
++          ],
++          "pitch_deg": 0.0,
++          "sink_m": -1.9,
++          "after": {
++            "scale_xyz": [
++              2.2,
++              1.0,
++              2.2
++            ],
++            "pitch_deg": 0.0,
++            "sink_m": -0.02,
++            "offset": [
++              -4.6,
++              1.5
++            ],
++            "yaw_deg": 14.0
++          }
++        },
++        {
++          "model": "Rope_1",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            -4.2,
++            0.6
++          ],
++          "scale_xyz": [
++            6.0,
++            1.4,
++            0.06
++          ],
++          "pitch_deg": 0.0,
++          "sink_m": -1.2,
++          "after": {
++            "scale_xyz": [
++              2.2,
++              1.0,
++              2.2
++            ],
++            "pitch_deg": 0.0,
++            "sink_m": -0.02,
++            "offset": [
++              -3.4,
++              2.2
++            ],
++            "yaw_deg": -10.0
++          }
++        },
++        {
++          "model": "Lantern_Wall",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            -2.8,
++            0.9
++          ],
++          "scale": 1.2,
++          "sink_m": -1.2,
++          "state": "before"
++        },
++        {
++          "model": "Lantern_Wall",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            -5.6,
++            0.9
++          ],
++          "scale": 1.2,
++          "sink_m": -1.2,
++          "state": "before"
++        },
++        {
++          "model": "Crate_Metal",
++          "dir": "res://assets/props/quaternius_fantasy",
++          "offset": [
++            -4.2,
++            -0.6
++          ],
++          "scale": 1.2,
++          "yaw_deg": 15,
++          "state": "before"
++        },
++        {
++          "model": "cut_rope_barrier_post",
++          "dir": "res://assets/props/meshy-1020/cut_rope_barrier_post/model_cut_rope_barrier_post",
++          "offset": [
++            -2.8,
++            0.6
++          ],
++          "scale": 1.4,
++          "yaw_deg": 20.0,
++          "state": "after",
++          "sink_m": -1.38,
++          "_why_lift": "Meshy mesh origin is its centre: lifted by its half-height."
++        },
++        {
++          "model": "meadows_ridge_pylon",
++          "dir": "res://assets/props/meshy-1024/meadows_ridge_pylon",
++          "offset": [
++            3.2,
++            1.6
++          ],
++          "scale": 3.43,
++          "yaw_deg": 250.0,
++          "sink_m": -0.63,
++          "state": "after"
++        }
++      ],
++      "lights": [
++        {
++          "offset": [
++            -2.8,
++            0.9
++          ],
++          "height": 2.6,
++          "colour": "#ffcf7a",
++          "energy": 2.5,
++          "range": 5.0,
++          "state": "before"
++        },
++        {
++          "offset": [
++            -5.6,
++            0.9
++          ],
++          "height": 2.6,
++          "colour": "#ffcf7a",
++          "energy": 2.5,
++          "range": 5.0,
++          "state": "before"
++        }
++      ],
++      "_why_r16": "r16 (Turn 19: Ridge read as a glowing disc). The Tether line reads as a guarded watch line: a second lantern post and a Tether crate before the win; after it both posts are down, the line lies coiled and the lanterns are out. Smaller, dimmer sigil disc.",
++      "sigil_stone": {
++        "sigil_scale": 1.2,
++        "light_energy": 2.0,
++        "light_range": 3.5
++      },
++      "strike_standard": true,
++      "stand_down": {
++        "offset": [
++          14.0,
++          0.0
++        ],
++        "turn_deg": 90.0
++      },
++      "_why_r17": "r17 (r16b CPU judges 5.77: the oxblood standard stayed up at every site and the beaten rival lingered): after the win this site's standard comes down with its own fate and the rival walks off up the road.",
++      "_why_r18": "r18: Meshy aftermath props (flag-off candidates, tb/meshy-props provenance): the fallen standard is a snapped Tether banner pole lying on the ground; plus this site's own hero piece (see pieces).",
++      "_why_r19": "r19 (r18 CPU judges 6.44): Vance's broken cage at the original cage's footprint; Riverwatch's scattered crates removed (clutter, hovering); Halder's struck camp leaves no cot, the tipped brazier sits on the ground and the smoke is denser; Dell's spilled crates no longer interpenetrate.",
++      "_why_r20": "r20 (r19 CPU judges 6.60: Ridge and Riverwatch shared the lit-waystone + barrier-down beat): Vess's ridgeline watch-beacon is relit by the villagers once the Tether line is cut, a warm fire where the posts stood; the opposite of Halder's fire going out.",
++      "_why_r22": "r22 (clearly different approach after r19 6.60 / r21 6.47): declutter to one readable hero beat per site; unreadable wreckage, debris and second-beat props are removed. Vess: the Tether line is cut; the post stands with its severed rope."
++    }
++  },
+   "_scope_fight_dressing": "F22#4 Riverwatch fight-ground dressing candidate: a shallow river edge behind Oreth's stand with a timber landing, mooring posts and reeds, flood puddles on the fight floor, and his standard in river teal instead of the shared oxblood. Installed families plus flat water sheets; no collider, no gameplay change. Present in both aftermath states. ON: judged in-world with the r13 Riverwatch round (three judges, CPU-provisional 7.03 mapped; ralph/reports/FIGHTS/close-1022).",
+   "fight_dressing_enabled": true,
+   "fight_dressing": {
+diff --git a/data/config/vegetation_presentation.json b/data/config/vegetation_presentation.json
+index a24afe97c..f59b1a113 100644
+--- a/data/config/vegetation_presentation.json
++++ b/data/config/vegetation_presentation.json
+@@ -35,6 +35,7 @@
+     "Grass": "res://assets/environment/stylized_nature/derived/Grass_wheat_straw.png",
+     "Rocks": "res://assets/environment/stylized_nature/Rocks_Diffuse_meadows.png"
+   },
++  "model_alias_candidate": {"enabled": false, "_why": "F38 band4 close-1024 (OFF until judged): the judges' next object after the landmark tree is the grove trees' 'clumpy, blobby, cube-ish canopies' (dom1025, iw1024, GPU MH). The coordinator's Meshy grove oaks (tb/meshy-1024 fcdffda2e, the giant ironwood's family) render in place of the scattered CommonTree_1-3 and grove TwistedTree_2/4 (vegetation.gd _aliased_mesh): scaled to each original's width, decimated to 3000 triangles for the instanced layer. Render only: placements, the scatter fingerprint (vegetation.json untouched), collision and footprints keep the original models.", "models": {"res://assets/environment/stylized_nature/CommonTree_1.gltf": {"path": "res://assets/props/meshy-1024/meadows_grove_oak_a/meadows_grove_oak_a.glb", "max_tris": 3000}, "res://assets/environment/stylized_nature/CommonTree_2.gltf": {"path": "res://assets/props/meshy-1024/meadows_grove_oak_b/meadows_grove_oak_b.glb", "max_tris": 3000}, "res://assets/environment/stylized_nature/CommonTree_3.gltf": {"path": "res://assets/props/meshy-1024/meadows_grove_oak_c/meadows_grove_oak_c.glb", "max_tris": 3000}, "res://assets/environment/stylized_nature/TwistedTree_2.gltf": {"path": "res://assets/props/meshy-1024/meadows_grove_oak_b/meadows_grove_oak_b.glb", "max_tris": 3000}, "res://assets/environment/stylized_nature/TwistedTree_4.gltf": {"path": "res://assets/props/meshy-1024/meadows_grove_oak_c/meadows_grove_oak_c.glb", "max_tris": 3000}}},
+   "candidate": {
+     "enabled": true,
+     "_scope": "F38 P2-094/F04#6 candidate (OFF until judged): every judge names the big scatter boulders as 'waxy, translucent, untextured placeholders' and the brightest objects in frame. The overlay tints (#e6d8cc etc.) lift an already lifted texture to near-white; these keep the warm/cool/sandstone split at a real stone value.",
+diff --git a/docs/TECHNICAL.md b/docs/TECHNICAL.md
+index 4281491aa..f5eb1abec 100644
+--- a/docs/TECHNICAL.md
++++ b/docs/TECHNICAL.md
+@@ -168,6 +168,8 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
+ - **Import before any capture or smoke:** run `godot --headless --path . --import` after every checkout, merge or new asset. It takes about 45 min the first time and 8–25 min after that.
+   - Skipping it causes "FIGHT DID NOT START", placeholder creatures and size-admission refusals.
+ - **Meshy textures:** set each texture `.import` to `compress/mode=2` and `detect_3d/compress_to=0`, then import again. Commit the `.import` files and the extracted images.
++- **Disk-tight cloud containers:** a CPU capture rebuilds about 250 MB of Godot shader cache under `XDG_DATA_HOME`, plus a mesa cache under `~/.cache/mesa_shader_cache`. Point both at the RAM-backed `/dev/shm`: `export XDG_DATA_HOME=/dev/shm/xdg` and `ln -s /dev/shm/mesa_shader_cache ~/.cache/mesa_shader_cache`. Move finished capture folders out of `shots/` to `/dev/shm` as well. Also check that no capture `godot` is still running (`ps -eo pid,args | grep "[/]godot"`) before starting the next one.
++- **Derived or hand-made textures** (outside `meshy-*`): `texture_import_policy.py --apply` takes directories, so `--apply <file>` updates nothing. Set `compress/mode=2`, `mipmaps/generate=true` and `detect_3d/compress_to=0` in the new `.import` by hand, reimport, and run `--check` before landing. CI suite 3 (`test_texture_import_policy`) fails otherwise.
+ - **Disk:** the allowance is small and `.git` alone is about 18–21 GB.
+   - Fetch single branches, shallow where possible.
+   - Build land branches with `git merge-tree --write-tree` plus `commit-tree`, never `git worktree add` (about 3 GB).
+diff --git a/scripts/combat/combat_manager.gd b/scripts/combat/combat_manager.gd
+index 06b5ce1fa..2d8a7c99b 100644
+--- a/scripts/combat/combat_manager.gd
++++ b/scripts/combat/combat_manager.gd
+@@ -6434,7 +6434,33 @@ func _finish_catch() -> void:
+ func _watch_the_orb(orb: Node3D) -> void:
+ 	if orb == null or _camera_rig == null or not _camera_rig.has_method("set_target"):
+ 		return
+-	_camera_rig.call("set_target", orb, CATCH.camera_profile("resolve_camera"))
++	var profile := CATCH.camera_profile("resolve_camera")
++	var offset := _trainer_frame_offset(orb, profile)
++	_camera_rig.call("set_target", orb, profile)
++	if offset != Vector3.ZERO and _camera_rig.has_method("set_framing_pivot_offset"):
++		_camera_rig.call("set_framing_pivot_offset", offset)
++		var throw := -offset.normalized()
++		_camera_rig.set("yaw", atan2(-throw.x, -throw.z))
++
++
++## P2-059 (`resolve_camera.trainer_share`, only inside catching.json's
++## framed_camera block): the orb shot keeps the trainer in it. The pivot slides
++## that share of the way from the orb toward the trainer, the lens looks from
++## behind the trainer along the throw, and the arm reaches past the trainer
++## by `trainer_margin_m` (written into `profile.distance`). Returns the pivot
++## offset, or zero when the profile asks for nothing. Presentation only; the
++## orb, the dice and the verdict are unchanged.
++func _trainer_frame_offset(orb: Node3D, profile: Dictionary) -> Vector3:
++	if not profile.has("trainer_share") or _player == null or not is_instance_valid(_player):
++		return Vector3.ZERO
++	var span := _player.global_position - orb.global_position
++	span.y = 0.0
++	if span.length() < 0.5:
++		return Vector3.ZERO
++	var share := clampf(float(profile["trainer_share"]), 0.0, 1.0)
++	var fit := span.length() * share + float(profile.get("trainer_margin_m", 3.5))
++	profile["distance"] = maxf(float(profile.get("distance", 6.0)), fit)
++	return span * share
+ 
+ 
+ ## One of the catch's three flashes (catching.json `vfx`): strike, caught,
+diff --git a/scripts/ui/capture_reticle.gd b/scripts/ui/capture_reticle.gd
+index 8b9b0fed4..51836b344 100644
+--- a/scripts/ui/capture_reticle.gd
++++ b/scripts/ui/capture_reticle.gd
+@@ -268,6 +268,26 @@ func _draw_ring(center: Vector2, chance: float, scale_value: float, alpha: float
+ 	_draw_readout(center, radius, chance, tier_colour, alpha, locked)
+ 
+ 
++## P2-058 (F38): the percentage and caption sat straight on the target's body
++## and the busy grass. The plate is the HUD's own panel (deep blue-grey,
++## translucent, pale border) behind both lines, so the readout separates from
++## the scene without hiding the creature above it. `plate_enabled` gates it.
++func _draw_readout_plate(font: Font, pct_pos: Vector2, pct_dims: Vector2, pct_size: int,
++		caption_pos: Vector2, caption_dims: Vector2, alpha: float) -> void:
++	var pad := Vector2(float(_readout_visual.get("plate_pad_x", 18.0)),
++		float(_readout_visual.get("plate_pad_y", 8.0)))
++	var top := pct_pos.y - font.get_ascent(pct_size)
++	var bottom := caption_pos.y + font.get_descent(CAPTION_FONT_SIZE)
++	var half_width := maxf(pct_dims.x, caption_dims.x) * 0.5
++	var mid_x := pct_pos.x + pct_dims.x * 0.5
++	var rect := Rect2(Vector2(mid_x - half_width, top) - pad,
++		Vector2(half_width * 2.0, bottom - top) + pad * 2.0)
++	var box := UITokens.panel_box()
++	box.bg_color.a *= alpha * float(_readout_visual.get("plate_opacity", 1.0))
++	box.border_color.a *= alpha
++	draw_style_box(box, rect)
++
++
+ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: Color,
+ 		alpha: float, locked: bool = true) -> void:
+ 	var font := get_theme_default_font()
+@@ -291,6 +311,13 @@ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: C
+ 	var pct_pos := center + Vector2(-pct_dims.x * 0.5, radius + READOUT_GAP)
+ 	var outlined := bool(_readout_visual.get("outline_enabled", false))
+ 	var outline_size := maxi(0, int(_readout_visual.get("outline_size", UITokens.OUTLINE_SIZE)))
++	var caption_text := "CAPTURE CHANCE" if locked else "NOT ON TARGET"
++	var caption_dims: Vector2 = font.get_string_size(
++		caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, CAPTION_FONT_SIZE
++	)
++	var caption_pos := center + Vector2(-caption_dims.x * 0.5, radius + READOUT_GAP + CAPTION_GAP)
++	if bool(_readout_visual.get("plate_enabled", false)):
++		_draw_readout_plate(font, pct_pos, pct_dims, pct_size, caption_pos, caption_dims, alpha)
+ 	if outlined:
+ 		var pct_outline := UITokens.OUTLINE
+ 		pct_outline.a *= tier_colour.a
+@@ -298,13 +325,8 @@ func _draw_readout(center: Vector2, radius: float, chance: float, tier_colour: C
+ 			pct_size, outline_size, pct_outline)
+ 	draw_string(font, pct_pos, pct_text, HORIZONTAL_ALIGNMENT_LEFT, -1, pct_size, tier_colour)
+ 
+-	var caption_text := "CAPTURE CHANCE" if locked else "NOT ON TARGET"
+ 	var caption_colour := UITokens.TEXT_SECONDARY
+ 	caption_colour.a *= alpha
+-	var caption_dims: Vector2 = font.get_string_size(
+-		caption_text, HORIZONTAL_ALIGNMENT_LEFT, -1, CAPTION_FONT_SIZE
+-	)
+-	var caption_pos := center + Vector2(-caption_dims.x * 0.5, radius + READOUT_GAP + CAPTION_GAP)
+ 	if outlined:
+ 		var caption_outline := UITokens.OUTLINE
+ 		caption_outline.a *= caption_colour.a
+diff --git a/scripts/ui/combat_hud.gd b/scripts/ui/combat_hud.gd
+index a7e381bbc..410fe268d 100644
+--- a/scripts/ui/combat_hud.gd
++++ b/scripts/ui/combat_hud.gd
+@@ -313,6 +313,10 @@ func _ready() -> void:
+ 	SYSTEM_OVERLAY.corner_scale(_enemy_panel, float(SYSTEM_OVERLAY.SCREEN.config().get("combat", {})
+ 		.get("panel_scale", 1.0)), Vector2(1.0, 0.0))
+ 	_ally_panel.add_theme_stylebox_override("panel", UITokens.panel_box())
++	# F22#4 close-out (`ally_panel_scale`, 1/absent = off): the party card keeps
++	# its bottom-left corner and gives the fight back some of the frame.
++	SYSTEM_OVERLAY.corner_scale(_ally_panel, float(SYSTEM_OVERLAY.SCREEN.config().get("combat", {})
++		.get("ally_panel_scale", 1.0)), Vector2(0.0, 1.0))
+ 	_grid_panel.add_theme_stylebox_override("panel", UITokens.panel_box())
+ 	# `slot_box()`, not `panel_box()`: this plate is 36px tall and `panel_box()`'s
+ 	# 16px content margin on every side would leave 4px for the text itself.
+@@ -2014,6 +2018,13 @@ func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
+ 	if success:
+ 		_outcome_left = float(CATCH.config().get("resolve", {}).get("success_banner", 2.4))
+ 		_catch_focus_left = _outcome_left
++		# Step the finished fight's cards back on the verdict frame itself; the
++		# per-frame update would otherwise leave them up beside the card for
++		# one frame (close-1024 P2-061 judges, verdict frame 02).
++		for panel: Control in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel, _aim_row, _catch_row]:
++			panel.visible = false
++		if is_instance_valid(_system_overlay): _system_overlay.hide()
++		if _strip_fader != null: _strip_fader.visible = false
+ 	else:
+ 		_outcome_left = float(cfg.get("breakout_seconds", 1.8))
+ 
+diff --git a/scripts/ui/combat_system_overlay.gd b/scripts/ui/combat_system_overlay.gd
+index ffaf2fbf4..68cbaaf5d 100644
+--- a/scripts/ui/combat_system_overlay.gd
++++ b/scripts/ui/combat_system_overlay.gd
+@@ -52,6 +52,9 @@ func _ready() -> void:
+ 	add_child(left)
+ 	_commands = COMMAND_METER.new()
+ 	left.add_child(_commands)
++	# F22#4 close-out (`command_scale`, 1/absent = off): GPU J judges read the
++	# bottom HUD as covering about a third of the Riverwatch frame.
++	corner_scale(left, float(cfg.get("command_scale", 1.0)), Vector2(0.5, 1.0))
+ 	_moves = VBoxContainer.new()
+ 	_moves.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+ 	# Offsets from the bottom-right anchor. A `position` write is measured from
+diff --git a/scripts/world/building_prefabs.gd b/scripts/world/building_prefabs.gd
+index c9d6c7a46..1b634932a 100644
+--- a/scripts/world/building_prefabs.gd
++++ b/scripts/world/building_prefabs.gd
+@@ -249,11 +249,18 @@ func _build_template(prefab_name: String) -> Node3D:
+ 		return null
+ 	var root := Node3D.new()
+ 	root.name = prefab_name
++	# F38 close-1024 (OFF until judged): a recipe may carry
++	# `module_swap_candidate` {enabled, swap: {from: to}} to rebuild the same
++	# footprint from a sibling kit module (the Hall shell's plaster window-strip
++	# walls as uneven brick). Same transforms, colliders and doors.
++	var swap_cfg: Dictionary = recipe.get("module_swap_candidate", {})
++	var swaps: Dictionary = swap_cfg.get("swap", {}) if bool(swap_cfg.get("enabled", false)) else {}
+ 	for entry: Variant in recipe.get("modules", []):
+ 		if not entry is Dictionary:
+ 			continue
+ 		var spec := entry as Dictionary
+ 		var module := str(spec.get("module", ""))
++		module = str(swaps.get(module, module))
+ 		var dir := str(spec.get("dir", MODULES_DIR))
+ 		# OF4-rebuild: the castle kit (BG2) ships OBJ+MTL, not glTF -- the same
+ 		# format the Furniture/Survival props already use directly as a bare
+diff --git a/scripts/world/grass_field.gd b/scripts/world/grass_field.gd
+index efce32b16..942b1e16a 100644
+--- a/scripts/world/grass_field.gd
++++ b/scripts/world/grass_field.gd
+@@ -151,6 +151,12 @@ static func config() -> Dictionary:
+ 	file.close()
+ 	if parsed is Dictionary:
+ 		_config = parsed
++		# F38 L4 (P2-005): an OFF overlay of field keys, judged before it ships.
++		var carpet: Variant = _config.get("carpet_candidate", {})
++		if carpet is Dictionary and bool((carpet as Dictionary).get("enabled", false)):
++			for key: String in (carpet as Dictionary).keys():
++				if key != "enabled" and not key.begins_with("_"):
++					_config[key] = carpet[key]
+ 	return _config
+ 
+ 
+@@ -798,7 +804,12 @@ func _apply_grass_lod(cfg: Dictionary) -> void:
+ ## be generated this way, and why harvestable bushes are not on the list.
+ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
+ 	var names := _terrain_texture_names()
+-	for entry: Variant in cfg.get("cover_tiers", []):
++	var tiers: Array = (cfg.get("cover_tiers", []) as Array).duplicate()
++	# F38 L4 / P2-005: authored ground-cover tiers ride under one OFF flag.
++	var cover_candidate: Dictionary = cfg.get("cover_candidate", {})
++	if bool(cover_candidate.get("enabled", false)):
++		tiers.append_array(cover_candidate.get("tiers", []))
++	for entry: Variant in tiers:
+ 		var tier: Dictionary = entry
+ 		if not bool(tier.get("enabled", true)):
+ 			continue
+@@ -808,7 +819,16 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
+ 
+ 		var mm := MultiMesh.new()
+ 		mm.transform_format = MultiMesh.TRANSFORM_3D
+-		mm.mesh = _cover_mesh(str(tier.get("mesh", "bush")))
++		var albedo: Texture2D = null
++		if tier.has("mesh_path"):
++			var authored := authored_cover_mesh(str(tier["mesh_path"]), tier.get("scale_xyz", [1.0, 1.0, 1.0]), int(tier.get("max_tris", 3000)))
++			if authored.is_empty():
++				push_warning("cover tier '%s': mesh_path %s did not load; tier skipped" % [tier.get("name", "?"), tier["mesh_path"]])
++				continue
++			mm.mesh = authored.mesh
++			albedo = authored.get("albedo")
++		else:
++			mm.mesh = _cover_mesh(str(tier.get("mesh", "bush")))
+ 		# Its own lattice schedule, fitted to its own count and bias. The tiers
+ 		# no longer need separate RNG streams to stay independent of each
+ 		# other: nothing here is drawn from a stream at all, and where an item
+@@ -864,6 +884,9 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
+ 			if tier.has(key2):
+ 				mat.set_shader_parameter(key2, Color(str(tier[key2])))
+ 		mat.set_shader_parameter("placement_seed", maxi(0, int(tier.get("placement_seed", 0))))
++		if albedo != null:
++			mat.set_shader_parameter("use_albedo_texture", true)
++			mat.set_shader_parameter("albedo_texture", albedo)
+ 		var drift_offset: Array = tier.get("drift_offset", [0.0, 0.0])
+ 		mat.set_shader_parameter("drift_offset", Vector2(float(drift_offset[0]), float(drift_offset[1])))
+ 		if tier.has("wind_dir"):
+@@ -1144,6 +1167,68 @@ func _far_mesh(inner: float, outer: float, cell: float) -> ArrayMesh:
+ ## untouched by any of this. UV.y runs 0 at the base to 1 at the top in every
+ ## one of them, because that is the channel the shader's tint gradient and its
+ ## contact darken both read.
++## F38 L4 / P2-005: an authored ground-cover mesh (a Meshy GLB) for a cover
++## tier. The first MeshInstance3D's first surface is re-based so its footprint
++## is centred on the origin, its base sits at y=0 and its wider horizontal
++## extent is 1.0 -- the cover shader's `item_size` is then the item's width in
++## metres, as for the generated meshes -- and `scale_xyz` squashes or widens it
++## (the delivered clover domes and earth slab are too tall). Returns
++## {mesh, albedo} or {} if the scene has no usable mesh.
++static func authored_cover_mesh(path: String, scale_xyz: Variant = [1.0, 1.0, 1.0], max_tris: int = 3000) -> Dictionary:
++	var scene := load(path) as PackedScene
++	if scene == null:
++		return {}
++	var root := scene.instantiate()
++	var found: Array[Node] = root.find_children("*", "MeshInstance3D", true, false)
++	if root is MeshInstance3D:
++		found.push_front(root)
++	if found.is_empty() or (found[0] as MeshInstance3D).mesh == null:
++		root.free()
++		return {}
++	var instance := found[0] as MeshInstance3D
++	var source := instance.mesh
++	var arrays: Array = source.surface_get_arrays(0)
++	var material := instance.get_active_material(0)
++	root.free()
++	var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
++	if verts.is_empty():
++		return {}
++	var lo := verts[0]
++	var hi := verts[0]
++	for v: Vector3 in verts:
++		lo = lo.min(v)
++		hi = hi.max(v)
++	var width := maxf(hi.x - lo.x, hi.z - lo.z)
++	if width <= 0.0001:
++		return {}
++	var s: Array = scale_xyz if scale_xyz is Array and (scale_xyz as Array).size() == 3 else [1.0, 1.0, 1.0]
++	var factor := Vector3(float(s[0]), float(s[1]), float(s[2])) / width
++	var centre := Vector3((lo.x + hi.x) * 0.5, lo.y, (lo.z + hi.z) * 0.5)
++	for i in verts.size():
++		verts[i] = (verts[i] - centre) * factor
++	arrays[Mesh.ARRAY_VERTEX] = verts
++	# The delivered meshes run 11k-78k triangles; an instanced tier of
++	# hundreds needs a few thousand. Godot's own simplifier picks the first
++	# generated LOD under `max_tris`.
++	var indices: PackedInt32Array = arrays[Mesh.ARRAY_INDEX] if arrays[Mesh.ARRAY_INDEX] != null else PackedInt32Array()
++	if max_tris > 0 and indices.size() / 3 > max_tris:
++		var importer := ImporterMesh.new()
++		importer.add_surface(Mesh.PRIMITIVE_TRIANGLES, arrays)
++		importer.generate_lods(25.0, 60.0, [])
++		for lod in importer.get_surface_lod_count(0):
++			var lod_indices := importer.get_surface_lod_indices(0, lod)
++			if lod_indices.size() / 3 <= max_tris:
++				indices = lod_indices
++				break
++		arrays[Mesh.ARRAY_INDEX] = indices
++	var mesh := ArrayMesh.new()
++	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
++	var albedo: Texture2D = null
++	if material is BaseMaterial3D:
++		albedo = (material as BaseMaterial3D).albedo_texture
++	return {"mesh": mesh, "albedo": albedo}
++
++
+ func _cover_mesh(kind: String) -> ArrayMesh:
+ 	match kind:
+ 		"flower":
+@@ -1687,11 +1772,13 @@ func _apply_config(cfg: Dictionary) -> void:
+ 		"ground_blend", "translucency", "wind_strength", "wind_scale",
+ 		"gust", "gust_speed", "gust_length", "edge_shorten_floor", "edge_shorten_bias",
+ 		"lens_clear_m", "lens_clear_band",
++		"patch_tint_strength", "patch_tint_scale", "patch_height_strength", "patch_height_scale",
++		"patch_height_low", "patch_height_high", "soil_thin", "soil_shorten",
+ 		"zone_strength", "zone_scale", "zone_moss_shorten",
+ 	]:
+ 		if cfg.has(key):
+ 			_material.set_shader_parameter(key, float(cfg[key]))
+-	for key: String in ["tint_base", "tint_tip", "zone_moss_tint"]:
++	for key: String in ["tint_base", "tint_tip", "patch_tip_deep", "patch_tip_dry", "soil_reference", "zone_moss_tint"]:
+ 		if cfg.has(key):
+ 			_material.set_shader_parameter(key, Color(str(cfg[key])))
+ 	for key: String in ["zone_bare", "zone_moss"]:
+diff --git a/scripts/world/meadows_colour_candidate.gd b/scripts/world/meadows_colour_candidate.gd
+new file mode 100644
+index 000000000..9034c6af6
+--- /dev/null
++++ b/scripts/world/meadows_colour_candidate.gd
+@@ -0,0 +1,49 @@
++extends RefCounted
++
++## F38 L4 / P2-005 (close-1024): an OFF candidate colour map for the Meadows
++## terrain. `tools/bake_meadows_colour_candidate.gd` writes one varied copy of
++## each shipped region's colour map; while `terrain_presentation.json
++## colour_candidate.enabled`, this swaps them in after Terrain3D loads the
++## shipped data. Colour only: heights, control, collision and the bake files
++## on disk are untouched. The grass field samples the same colour maps, so the
++## blades follow the ground.
++
++const PRESENTATION := "res://data/config/terrain_presentation.json"
++const TYPE_COLOR := 2
++
++
++static func settings() -> Dictionary:
++	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(PRESENTATION))
++	return (parsed as Dictionary).get("colour_candidate", {}) if parsed is Dictionary else {}
++
++
++## Returns how many regions were swapped (0 when off or nothing to load).
++static func apply(terrain: Node) -> int:
++	var cfg := settings()
++	if not bool(cfg.get("enabled", false)) or terrain == null:
++		return 0
++	var data: Object = terrain.get("data")
++	if data == null:
++		return 0
++	var dir := str(cfg.get("dir", "res://data/terrain/playground_colour_candidate"))
++	var swapped := 0
++	for location: Vector2i in data.call("get_region_locations"):
++		var path := ProjectSettings.globalize_path(dir.path_join("colour_%d_%d.png" % [location.x, location.y]))
++		if not FileAccess.file_exists(path):
++			continue
++		var region: Object = data.call("get_region", location)
++		var image := Image.load_from_file(path)
++		if region == null or image == null:
++			continue
++		var shipped: Image = region.get("color_map")
++		if shipped != null and (image.get_size() != shipped.get_size()):
++			continue
++		if shipped != null and shipped.get_format() != image.get_format():
++			image.convert(shipped.get_format())
++		image.generate_mipmaps()
++		region.set("color_map", image)
++		swapped += 1
++	if swapped > 0:
++		data.call("update_maps", TYPE_COLOR, true, false)
++	print("[colour_candidate] swapped %d region colour maps from %s" % [swapped, dir])
++	return swapped
+diff --git a/scripts/world/meadows_colour_candidate.gd.uid b/scripts/world/meadows_colour_candidate.gd.uid
+new file mode 100644
+index 000000000..f854a8c77
+--- /dev/null
++++ b/scripts/world/meadows_colour_candidate.gd.uid
+@@ -0,0 +1 @@
++uid://brlew4ed6gibo
+diff --git a/scripts/world/meadows_hero_pieces.gd b/scripts/world/meadows_hero_pieces.gd
+index 6e6720d9a..26c26a05f 100644
+--- a/scripts/world/meadows_hero_pieces.gd
++++ b/scripts/world/meadows_hero_pieces.gd
+@@ -40,19 +40,25 @@ static func build(world: Node3D) -> int:
+ ## and rock scatter at run time through `vegetation.gd::clear_area`, the call
+ ## the Warrens use to clear their own ground. A stand framed by a wall of
+ ## trunks becomes a sunlit clearing with a grove edge. Runs inside the world's
+-## bulk-clear window, after the settlement has built.
++## bulk-clear window, after the settlement has built. Every block with `spots`
++## is a clearing group under its own flag (the Ridgeline glades, the stronghold
++## sightline), like the `pieces` groups above.
+ static func clear(world: Node3D) -> int:
+-	var block: Dictionary = settings().get("clearings", {})
+-	if not bool(block.get("enabled", false)):
+-		return 0
++	var cfg := settings()
+ 	var vegetation: Node = world.get_node_or_null(^"Vegetation")
+ 	if vegetation == null or not vegetation.has_method("clear_area"):
+ 		return 0
+ 	var removed := 0
+-	for spot: Dictionary in block.get("spots", []):
+-		var at: Array = spot.get("at", [0.0, 0.0])
+-		removed += int(vegetation.call("clear_area", Vector3(float(at[0]), 0.0, float(at[1])),
+-			float(spot.get("radius_m", 10.0))))
++	for group: String in cfg.keys():
++		if not (cfg[group] is Dictionary) or not (cfg[group] as Dictionary).has("spots"):
++			continue
++		var block: Dictionary = cfg[group]
++		if not bool(block.get("enabled", false)):
++			continue
++		for spot: Dictionary in block.get("spots", []):
++			var at: Array = spot.get("at", [0.0, 0.0])
++			removed += int(vegetation.call("clear_area", Vector3(float(at[0]), 0.0, float(at[1])),
++				float(spot.get("radius_m", 10.0))))
+ 	if removed > 0:
+ 		print("[hero_pieces] clearings removed %d scattered trees/rocks" % removed)
+ 	return removed
+@@ -67,18 +73,44 @@ static func _place(world: Node3D, row: Dictionary, group: String) -> bool:
+ 	var holder := Node3D.new()
+ 	holder.name = "HeroPiece_%s_%s" % [group, str(row.get("id", "piece"))]
+ 	world.add_child(holder)
+-	holder.add_child(model)
+-	var bounds := RENDER_BOUNDS.measure(model)
++	# `pitch_deg` lays a piece modelled upright (the paving tile) flat; the fit
++	# and the ground seat are measured after it, in the holder's frame.
++	var pivot := Node3D.new()
++	holder.add_child(pivot)
++	pivot.add_child(model)
++	pivot.rotation.x = deg_to_rad(float(row.get("pitch_deg", 0.0)))
++	var bounds := RENDER_BOUNDS.measure(holder)
+ 	if bounds.size.x <= 0.001:
+ 		holder.queue_free()
+ 		return false
+ 	var fit := float(row.get("width_m", 10.0)) / bounds.size.x
+-	model.scale = Vector3.ONE * fit
+-	model.position = Vector3(-bounds.get_center().x, -bounds.position.y, -bounds.get_center().z) * fit
++	pivot.scale = Vector3.ONE * fit
++	pivot.position = Vector3(-bounds.get_center().x, -bounds.position.y, -bounds.get_center().z) * fit
++	# `height_m` flattens a piece vertically (the paving tile is about a quarter
++	# as thick as it is wide); the holder only yaws, so its y stays world-up.
++	var flatten := 1.0
++	if row.has("height_m") and bounds.size.y > 0.001:
++		flatten = float(row["height_m"]) / (bounds.size.y * fit)
+ 	var at: Array = row.get("at", [0.0, 0.0])
+ 	var x := float(at[0])
+ 	var z := float(at[1])
+-	var ground := float(world.call("ground_height_at", x, z)) if world.has_method("ground_height_at") else 0.0
+-	holder.position = Vector3(x, ground - float(row.get("sink_m", 0.0)), z)
+-	holder.rotation.y = deg_to_rad(float(row.get("yaw_deg", 0.0)))
++	var ground := _ground(world, x, z)
++	var basis := Basis(Vector3.UP, deg_to_rad(float(row.get("yaw_deg", 0.0))))
++	# `conform` tilts a flat piece (a paving tile) to the ground under it, from
++	# four samples at its half-width, so tiles follow a sloped yard instead of
++	# stepping into floating slabs.
++	if bool(row.get("conform", false)):
++		var half := float(row.get("width_m", 10.0)) * 0.5
++		var dx := (_ground(world, x + half, z) - _ground(world, x - half, z)) / (2.0 * half)
++		var dz := (_ground(world, x, z + half) - _ground(world, x, z - half)) / (2.0 * half)
++		var normal := Vector3(-dx, 1.0, -dz).normalized()
++		basis = Basis(Quaternion(Vector3.UP, normal)) * basis
++		ground = (_ground(world, x + half, z) + _ground(world, x - half, z)
++			+ _ground(world, x, z + half) + _ground(world, x, z - half)) * 0.25
++	holder.transform = Transform3D(basis * Basis.from_scale(Vector3(1.0, flatten, 1.0)),
++		Vector3(x, ground - float(row.get("sink_m", 0.0)), z))
+ 	return true
++
++
++static func _ground(world: Node3D, x: float, z: float) -> float:
++	return float(world.call("ground_height_at", x, z)) if world.has_method("ground_height_at") else 0.0
+diff --git a/scripts/world/playground_world.gd b/scripts/world/playground_world.gd
+index 9af2d7fd4..8b1798cd6 100644
+--- a/scripts/world/playground_world.gd
++++ b/scripts/world/playground_world.gd
+@@ -17,6 +17,7 @@ extends Node3D
+ ## literal because from Wave 6 it is an authority answer -- the per-realm
+ ## spawners and synchronizer visibility filters key on it.
+ const REALM_ID := "meadows"
++const MEADOWS_COLOUR_CANDIDATE := preload("res://scripts/world/meadows_colour_candidate.gd")
+ const MEADOWS_HERO_PIECES := preload("res://scripts/world/meadows_hero_pieces.gd")
+ const DATA_DIR := "res://data/terrain/playground"
+ const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
+@@ -836,6 +837,8 @@ func _ready() -> void:
+ 	_terrain.set("data_directory", DATA_DIR)
+ 	await get_tree().process_frame
+ 	BOOT_LOG.phase("playground: terrain data_directory assigned")
++	# F38 L4 (OFF unless terrain_presentation.json colour_candidate.enabled).
++	MEADOWS_COLOUR_CANDIDATE.apply(_terrain)
+ 	# F38 tier-1 hero pieces (OFF unless meadows_hero_pieces.json enables a group).
+ 	MEADOWS_HERO_PIECES.build(self)
+ 	await _shell_build.call("step", "terrain_data")
+@@ -1308,11 +1311,13 @@ func _apply_ground_shader(material: Object) -> void:
+ 			cfg[key] = overrides[key]
+ 		# A judged look candidate rides beside the shipped overrides and applies
+ 		# only with its own `enabled` (F04#6/F38: "smeared, blurry ground").
+-		var candidate: Dictionary = (presentation as Dictionary).get("shader_candidate", {})
+-		if bool(candidate.get("enabled", false)):
+-			for key: String in candidate.keys():
+-				if key != "enabled" and not key.begins_with("_"):
+-					cfg[key] = candidate[key]
++		# F38 L4 (P2-005) carpet patches ride the same way under their own flag.
++		for block: String in ["shader_candidate", "carpet_candidate"]:
++			var candidate: Dictionary = (presentation as Dictionary).get(block, {})
++			if bool(candidate.get("enabled", false)):
++				for key: String in candidate.keys():
++					if key != "enabled" and not key.begins_with("_"):
++						cfg[key] = candidate[key]
+ 	if cfg.is_empty():
+ 		# FLAT rather than NOISE, matching the shader's own default, so a missing
+ 		# config is the old look rather than an unlit void.
+diff --git a/scripts/world/trainer_aftermath.gd b/scripts/world/trainer_aftermath.gd
+index 649361dd4..4b6476746 100644
+--- a/scripts/world/trainer_aftermath.gd
++++ b/scripts/world/trainer_aftermath.gd
+@@ -47,6 +47,10 @@ static func for_trainer(id: String) -> Dictionary:
+ 	# Presentation only: r14/r15 stay OFF until the fixed-camera judge passes.
+ 	# Override the site object alone; defeat flags and rewards are untouched.
+ 	var sites: Dictionary = cfg.get("visual_candidate_sites", {})
++	# F04#6 r31 (OFF until judged): the Meshy aftermath heroes replace whole sites.
++	if bool(cfg.get("meshy_heroes_enabled", false)) and cfg.get("meshy_heroes") is Dictionary:
++		sites = sites.duplicate()
++		sites.merge(cfg.meshy_heroes as Dictionary, true)
+ 	if bool(cfg.get("visual_candidate_enabled", false)) and not entry.is_empty() and sites.get(id) is Dictionary:
+ 		entry = entry.duplicate(true)
+ 		entry["site_object"] = (sites[id] as Dictionary).duplicate(true)
+diff --git a/scripts/world/vegetation.gd b/scripts/world/vegetation.gd
+index 2e953ae10..5a46e8b14 100644
+--- a/scripts/world/vegetation.gd
++++ b/scripts/world/vegetation.gd
+@@ -1312,6 +1312,7 @@ func _make_mesh_asset(model_path: String) -> Object:
+ 	if mesh == null:
+ 		push_error("scatter model %s could not be loaded; that layer will be missing" % model_path)
+ 		return null
++	mesh = _aliased_mesh(model_path, mesh)
+ 
+ 	var layer_cfg := _layer_for(model_path)
+ 	var policy := retint_policy(model_path, layer_cfg, _presentation_retint())
+@@ -2407,6 +2408,33 @@ func _layer_name_for(model_path: String) -> String:
+ ## first mesh found, baked with its local transform, is the whole prop. A model
+ ## with several parts would lose them here — which is why this reports rather
+ ## than guesses.
++## F38 band4 (close-1024, OFF until judged): `vegetation_presentation.json
++## model_alias_candidate` renders a scattered model with an authored Meshy mesh
++## instead, scaled to the original's width and decimated to `max_tris`. Render
++## only: placements, the bake fingerprint, collision and footprints all keep
++## the original model (they read `_mesh_for()` directly).
++func _aliased_mesh(model_path: String, mesh: Mesh) -> Mesh:
++	var cfg: Dictionary = _presentation_retint().get("model_alias_candidate", {})
++	if not bool(cfg.get("enabled", false)):
++		return mesh
++	var row: Variant = (cfg.get("models", {}) as Dictionary).get(model_path)
++	if not row is Dictionary:
++		return mesh
++	var original := mesh.get_aabb()
++	var width := maxf(original.size.x, original.size.z) * float((row as Dictionary).get("width_scale", 1.0))
++	var built: Dictionary = GRASS_FIELD.authored_cover_mesh(str((row as Dictionary).get("path", "")),
++		[width, width, width], int((row as Dictionary).get("max_tris", 4000)))
++	if built.is_empty():
++		push_warning("model alias for %s did not load; the original renders" % model_path.get_file())
++		return mesh
++	var aliased := built["mesh"] as ArrayMesh
++	var material := StandardMaterial3D.new()
++	material.resource_name = "MeshyAlias"
++	material.albedo_texture = built.get("albedo")
++	aliased.surface_set_material(0, material)
++	return aliased
++
++
+ func _mesh_for(path: String) -> Mesh:
+ 	if not ResourceLoader.exists(path):
+ 		return null
+diff --git a/shaders/cover_tier.gdshader b/shaders/cover_tier.gdshader
+index 07b49b669..6176f5ef3 100644
+--- a/shaders/cover_tier.gdshader
++++ b/shaders/cover_tier.gdshader
+@@ -173,6 +173,12 @@ uniform float gust_length = 26.0;
+ // flower, whose petals are already shaped by their own geometry and whose
+ // silhouette is settled.
+ uniform float leaf_cut : hint_range(0.0, 1.0) = 0.0;
++// F38 L4 / P2-005 (close-1024): an authored mesh with its own albedo texture
++// (Meshy ground cover, installed by `grass_field.gd` from a tier's `mesh_path`,
++// normalised to unit width with its base at y=0). Off by default; the
++// generated tiers above are untouched.
++uniform bool use_albedo_texture = false;
++uniform sampler2D albedo_texture : source_color, filter_linear_mipmap;
+ // How deep the edge notches bite. Enough to break the outline, not so much that
+ // the leaf becomes a comb.
+ uniform float leaf_serrate : hint_range(0.0, 0.6) = 0.22;
+@@ -515,7 +521,7 @@ void vertex() {
+ 		float size = local_size * (1.0 + (hash12(world_xz * 6.13) - 0.5) * 2.0 * local_jitter)
+ 				* item_presence * (1.0 + composition_scale_boost * composition_mass
+ 						* composition_influence);
+-		v_t = UV.y;
++		v_t = use_albedo_texture ? clamp(VERTEX.y, 0.0, 1.0) : UV.y;
+ 
+ 		vec3 local = VERTEX * size;
+ 
+@@ -551,6 +557,9 @@ void vertex() {
+ 
+ 		vec3 own = mix(tint_base, tint_tip, smoothstep(0.0, 0.85, v_t));
+ 		own = mix(own, tint_wood, v_wood);
++		if (use_albedo_texture) {
++			own = vec3(1.0);
++		}
+ 		own *= 1.0 + (hash12(world_xz * 2.29) - 0.5) * 2.0 * tint_jitter;
+ 		// The base takes the terrain's own colour so growth comes OUT of the
+ 		// ground. The colour map is a near-white MULTIPLIER, not a colour --
+@@ -600,7 +609,13 @@ void fragment() {
+ 		// to be cut narrow is not also always the dark one.
+ 		shade *= 1.0 + (fract(UV2.y * 7.31) - 0.5) * 2.0 * leaf_tint_jitter;
+ 	}
+-	ALBEDO = v_colour * shade;
++	if (use_albedo_texture) {
++		vec4 tex = texture(albedo_texture, UV);
++		ALPHA = tex.a;
++		ALBEDO = tex.rgb * v_colour * shade;
++	} else {
++		ALBEDO = v_colour * shade;
++	}
+ 	ROUGHNESS = 0.95;
+ 
+ 	meadows_surface(ALBEDO, ROUGHNESS, NORMAL, VERTEX, INV_VIEW_MATRIX);
+diff --git a/shaders/grass_field.gdshader b/shaders/grass_field.gdshader
+index 009a9ae48..34c4e1346 100644
+--- a/shaders/grass_field.gdshader
++++ b/shaders/grass_field.gdshader
+@@ -158,6 +158,24 @@ uniform vec3 tint_base : source_color = vec3(0.208, 0.267, 0.106);
+ uniform vec3 tint_tip : source_color = vec3(0.514, 0.588, 0.239);
+ uniform float ground_blend : hint_range(0.0, 1.0) = 0.65;
+ uniform float translucency : hint_range(0.0, 1.0) = 0.35;
++// F38 L4 / P2-005 (close-1024, OFF at these defaults): the field's own
++// per-patch variation. `patch_tint_strength` drifts each blade's tip tint
++// between a deep green and a dry straw by a broad world noise; the height
++// patch makes grazed short patches and tall tufts; `soil_thin` and
++// `soil_shorten` thin and shorten blades where the terrain colour map reads as
++// soil (paths, trampled yards, the colour bake's worn halos) so the ground
++// shows there. Zero strengths keep the original output exactly.
++uniform float patch_tint_strength : hint_range(0.0, 1.0) = 0.0;
++uniform float patch_tint_scale = 0.03;
++uniform vec3 patch_tip_deep : source_color = vec3(0.30, 0.42, 0.16);
++uniform vec3 patch_tip_dry : source_color = vec3(0.70, 0.66, 0.36);
++uniform float patch_height_strength : hint_range(0.0, 1.0) = 0.0;
++uniform float patch_height_scale = 0.05;
++uniform float patch_height_low = 0.45;
++uniform float patch_height_high = 1.35;
++uniform vec3 soil_reference : source_color = vec3(0.82, 0.70, 0.49);
++uniform float soil_thin : hint_range(0.0, 1.0) = 0.0;
++uniform float soil_shorten : hint_range(0.0, 1.0) = 0.0;
+ 
+ // Wind. Free here, and the reference frames are of moving grass.
+ uniform float wind_time = 0.0;
+@@ -229,6 +247,7 @@ varying float v_moss;
+ varying float v_fade;
+ varying float v_shade;
+ varying float v_leaf_straw;
++varying float v_patch;
+ 
+ // ---------------------------------------------------------------------------
+ // COPIED VERBATIM from Terrain3D 1.0.2's generated shader. Do not "clean up".
+@@ -589,6 +608,9 @@ void vertex() {
+ 		clearing = smoothstep(clearing_floor, 1.0, bush_drift) * clearing_strength;
+ 	}
+ 	float keep = drift * density_gain * (1.0 - clearing);
++	float soilness = 1.0 - smoothstep(0.06, 0.20, distance(v_ground_colour, soil_reference));
++	keep *= 1.0 - soil_thin * soilness;
++	v_patch = value_noise(world_xz * patch_tint_scale + vec2(41.7, 13.3));
+ 	float zone_moss_w = 0.0;
+ 	if (zone_strength > 0.001) {
+ 		float zone_n = value_noise(world_xz * zone_scale) * 0.7
+@@ -660,6 +682,11 @@ void vertex() {
+ 		// Shorter under a bush as well as sparser. Thinning alone leaves the
+ 		// survivors at full height, still standing through the leaves.
+ 		h *= 1.0 - clearing * clearing_shorten;
++		if (patch_height_strength > 0.0) {
++			float tall = smoothstep(0.25, 0.75, value_noise(world_xz * patch_height_scale + vec2(7.9, 63.1)));
++			h *= mix(1.0, mix(patch_height_low, patch_height_high, tall), patch_height_strength);
++		}
++		h *= 1.0 - soil_shorten * (1.0 - smoothstep(0.06, 0.20, distance(v_ground_colour, soil_reference)));
+ 		h *= 1.0 - zone_moss_w * zone_moss_shorten;
+ 		// And shorter at the ring's edge, for the same reason at a different
+ 		// scale -- see `edge_shorten_floor` above.
+@@ -752,7 +779,14 @@ void fragment() {
+ 	// shader does, and it picks up the ground's own variation without
+ 	// destroying the tint.
+ 	vec3 root = tint_base * mix(vec3(1.0), v_ground_colour, ground_blend);
+-	vec3 col = mix(root, tint_tip, smoothstep(0.0, 0.85, v_blade_t));
++	vec3 tip = tint_tip;
++	if (patch_tint_strength > 0.0) {
++		vec3 drifted = v_patch < 0.5
++			? mix(patch_tip_deep, tint_tip, smoothstep(0.2, 0.5, v_patch))
++			: mix(tint_tip, patch_tip_dry, smoothstep(0.5, 0.8, v_patch));
++		tip = mix(tint_tip, drifted, patch_tint_strength);
++	}
++	vec3 col = mix(root, tip, smoothstep(0.0, 0.85, v_blade_t));
+ 	if (dune_tussock) {
+ 		col = mix(root, tint_tip, smoothstep(0.12, 1.0, v_blade_t) * v_leaf_straw);
+ 	}
+diff --git a/tests/test_meadows_cover_candidate_gate.gd b/tests/test_meadows_cover_candidate_gate.gd
+new file mode 100644
+index 000000000..baafefdfe
+--- /dev/null
++++ b/tests/test_meadows_cover_candidate_gate.gd
+@@ -0,0 +1,26 @@
++extends "res://tests/test_case.gd"
++
++## F38 L4 / P2-005 (close-1024): the Meshy ground-cover tiers and the blade
++## carpet ship OFF until the GPU pass judges them, and every cover tier names a
++## mesh that is installed, so turning the flag on is config only.
++
++const CONFIG := "res://data/config/grass_field.json"
++
++
++func _config() -> Dictionary:
++	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
++	return parsed if parsed is Dictionary else {}
++
++
++func test_candidates_ship_off() -> void:
++	var cfg := _config()
++	assert_false(bool((cfg.get("cover_candidate", {}) as Dictionary).get("enabled", true)), "cover candidate OFF until judged")
++	assert_false(bool((cfg.get("carpet_candidate", {}) as Dictionary).get("enabled", true)), "carpet candidate OFF")
++
++
++func test_every_cover_tier_mesh_is_installed() -> void:
++	var tiers: Array = (_config().get("cover_candidate", {}) as Dictionary).get("tiers", [])
++	assert_true(tiers.size() >= 10, "ten Meshy cover tiers")
++	for tier: Variant in tiers:
++		var path := str((tier as Dictionary).get("mesh_path", ""))
++		assert_true(ResourceLoader.exists(path), "installed: " + path)
+diff --git a/tests/test_meadows_cover_candidate_gate.gd.uid b/tests/test_meadows_cover_candidate_gate.gd.uid
+new file mode 100644
+index 000000000..22137999d
+--- /dev/null
++++ b/tests/test_meadows_cover_candidate_gate.gd.uid
+@@ -0,0 +1 @@
++uid://dvghln7gjsrqf
+diff --git a/tests/test_meadows_tier1_art_gates.gd b/tests/test_meadows_tier1_art_gates.gd
+index eac601696..cc5b19174 100644
+--- a/tests/test_meadows_tier1_art_gates.gd
++++ b/tests/test_meadows_tier1_art_gates.gd
+@@ -2,8 +2,8 @@ extends "res://tests/test_case.gd"
+ 
+ ## F38 tier-1 new art (close-1024): the Hall arch facades ship ON (GPU +0.79
+ ## Medium, +1.11 High); the stronghold hero gatehouse and the Meadows hero
+-## pieces stay OFF and build nothing while off; on, a facade is fitted inside
+-## its arch slot.
++## pieces stay OFF until a GPU pass judges them, and build nothing while off;
++## on, a facade is fitted inside its arch slot.
+ 
+ const ARCH_FACADES := preload("res://scripts/world/crossing_hall_arch_facades.gd")
+ const GATEHOUSE := preload("res://scripts/world/stronghold_hero_gatehouse.gd")
+@@ -18,10 +18,12 @@ func _block(path: String, key: String) -> Dictionary:
+ func test_shipping_configs_gate_the_new_art() -> void:
+ 	assert_true(bool(_block("res://data/config/crossing_hall.json", "arch_facades").get("enabled", false)), "facades ON after the GPU pass")
+ 	assert_false(bool(_block("res://data/config/stronghold.json", "hero_gatehouse").get("enabled", true)))
++	assert_false(bool(_block("res://data/config/stronghold.json", "courtyard_daylight_candidate").get("enabled", true)), "courtyard daylight OFF until judged")
+ 	var pieces := HERO_PIECES.settings()
+ 	var clearings: Dictionary = pieces.get("clearings", {})
+ 	assert_true(bool(clearings.get("enabled", false)), "clearings ON after GPU MH7")
+ 	assert_true(str(clearings.get("_why_on", "")).contains("GPU MH7"), "ON carries its GPU verdict")
++	assert_false(bool((pieces.get("stronghold_sightline", {}) as Dictionary).get("enabled", true)), "stronghold sightline OFF until judged")
+ 	for group: String in pieces.keys():
+ 		if pieces[group] is Dictionary and (pieces[group] as Dictionary).has("pieces"):
+ 			assert_false(bool((pieces[group] as Dictionary).get("enabled", true)), group + " stays OFF")
+diff --git a/tests/test_trainer_aftermath_meshy_heroes.gd b/tests/test_trainer_aftermath_meshy_heroes.gd
+new file mode 100644
+index 000000000..e4cd3a2fc
+--- /dev/null
++++ b/tests/test_trainer_aftermath_meshy_heroes.gd
+@@ -0,0 +1,35 @@
++extends "res://tests/test_case.gd"
++
++## F04#6 r31: the Meshy aftermath heroes are an OFF overlay of whole sites.
++## Off, the judged visual_candidate_sites ship unchanged; on, each listed site
++## is replaced and every other site is untouched.
++
++const AFTERMATH := preload("res://scripts/world/trainer_aftermath.gd")
++
++
++func _models(entry: Dictionary) -> Array:
++	var out: Array = []
++	for piece: Dictionary in (entry.get("site_object", {}) as Dictionary).get("pieces", []):
++		out.append(piece.get("model"))
++	return out
++
++
++func test_shipping_config_keeps_the_heroes_off() -> void:
++	AFTERMATH._config = {}
++	var cfg := AFTERMATH.config()
++	assert_false(bool(cfg.get("meshy_heroes_enabled", true)), "r31 heroes stay OFF until judged")
++	assert_false(_models(AFTERMATH.for_trainer("captain_field")).has("meadows_field_tent"))
++
++
++func test_enabled_heroes_replace_only_their_sites() -> void:
++	AFTERMATH._config = {}
++	var cfg := AFTERMATH.config().duplicate(true)
++	cfg["meshy_heroes_enabled"] = true
++	AFTERMATH._config = cfg
++	assert_true(_models(AFTERMATH.for_trainer("captain_field")).has("meadows_field_tent"))
++	assert_true(_models(AFTERMATH.for_trainer("captain_ridge")).has("meadows_ridge_pylon"))
++	assert_true(_models(AFTERMATH.for_trainer("captain_riverwatch")).has("meadows_riverwatch_hut"))
++	# Vance's site is not in the overlay and keeps its judged pieces.
++	var vance := _models(AFTERMATH.for_trainer("relay_captain"))
++	assert_true(vance.has("broken_tether_cage"))
++	AFTERMATH._config = {}
+diff --git a/tests/test_trainer_aftermath_meshy_heroes.gd.uid b/tests/test_trainer_aftermath_meshy_heroes.gd.uid
+new file mode 100644
+index 000000000..26fd20d49
+--- /dev/null
++++ b/tests/test_trainer_aftermath_meshy_heroes.gd.uid
+@@ -0,0 +1 @@
++uid://c5jve5x763c5l
+diff --git a/tools/bake_meadows_colour_candidate.gd b/tools/bake_meadows_colour_candidate.gd
+new file mode 100644
+index 000000000..6f200ef54
+--- /dev/null
++++ b/tools/bake_meadows_colour_candidate.gd
+@@ -0,0 +1,137 @@
++extends SceneTree
++
++## F38 L4 / P2-005 (close-1024): writes the OFF candidate colour maps for the
++## Meadows terrain. Colour only: it reads each shipped region's own colour and
++## height maps and writes a varied copy of the colour map as a PNG beside
++## nothing else. Heights, control, collision, vegetation placement and the bake
++## fingerprints are untouched; `meadows_colour_candidate.gd` swaps these in at
++## runtime only while `terrain_presentation.json colour_candidate.enabled`.
++##
++## Usage: godot --headless --path . --script tools/bake_meadows_colour_candidate.gd
++
++const SOURCE_DIR := "res://data/terrain/playground"
++const PRESENTATION := "res://data/config/terrain_presentation.json"
++
++
++func _initialize() -> void:
++	var cfg: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(PRESENTATION)) as Dictionary).get("colour_candidate", {})
++	var out_dir := str(cfg.get("dir", "res://data/terrain/playground_colour_candidate"))
++	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out_dir))
++	var clover := _noise(int(cfg.get("seed", 2205)), 1.0 / float(cfg.get("clover_scale_m", 14.0)))
++	var moss := _noise(int(cfg.get("seed", 2205)) + 17, 1.0 / float(cfg.get("moss_scale_m", 22.0)))
++	var spacing := float(cfg.get("vertex_spacing", 2.0))
++	var written := 0
++	for file: String in DirAccess.get_files_at(SOURCE_DIR):
++		if not file.ends_with(".res"):
++			continue
++		var region: Resource = ResourceLoader.load(SOURCE_DIR.path_join(file), "", ResourceLoader.CACHE_MODE_IGNORE)
++		if region == null:
++			continue
++		var location := _location_from_name(file)
++		var colour: Image = (region.get("color_map") as Image).duplicate()
++		var height: Image = region.get("height_map")
++		if colour.is_compressed():
++			colour.decompress()
++		if colour.has_mipmaps():
++			colour.clear_mipmaps()
++		colour.convert(Image.FORMAT_RGBA8)
++		_vary(colour, height, location, spacing, clover, moss, cfg)
++		colour.save_png(ProjectSettings.globalize_path(out_dir.path_join("colour_%d_%d.png" % [location.x, location.y])))
++		written += 1
++	print("meadows colour candidate: %d region colour maps -> %s" % [written, out_dir])
++	quit(0 if written > 0 else 1)
++
++
++## Terrain3D names each region file `terrain3d` + x + z, each a sign character
++## (`-` negative, `_` positive) and two digits; the resource does not store it.
++static func _location_from_name(file: String) -> Vector2i:
++	var stem := file.get_basename().trim_prefix("terrain3d")
++	var x := int(stem.substr(1, 2)) * (-1 if stem[0] == "-" else 1)
++	var z := int(stem.substr(4, 2)) * (-1 if stem[3] == "-" else 1)
++	return Vector2i(x, z)
++
++
++static func _noise(seed: int, frequency: float) -> FastNoiseLite:
++	var noise := FastNoiseLite.new()
++	noise.seed = seed
++	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
++	noise.frequency = frequency
++	noise.fractal_octaves = 3
++	return noise
++
++
++## Per pixel, in the colour map's own multiplier space (near white):
++## clover patches lean cool green, moss/value breaks darken, existing soil
++## (paths, aprons) spreads a soft worn halo, and steep ground (outcrop bases)
++## greys and darkens. Alpha (Terrain3D's roughness channel) is preserved.
++static func _vary(colour: Image, height: Image, location: Vector2i, spacing: float,
++		clover: FastNoiseLite, moss: FastNoiseLite, cfg: Dictionary) -> void:
++	var size := colour.get_size()
++	var source := colour.duplicate() as Image
++	var soil := Color(str(cfg.get("soil_reference", "#d1b37e")))
++	var clover_tint := Color(str(cfg.get("clover_tint", "#c4dbb0")))
++	var moss_tint := Color(str(cfg.get("moss_tint", "#a9bd8e")))
++	var worn_tint := Color(str(cfg.get("worn_tint", "#d8c49a")))
++	var rock_tint := Color(str(cfg.get("rock_tint", "#b3b1a6")))
++	var clover_amount := float(cfg.get("clover_strength", 0.55))
++	var moss_amount := float(cfg.get("moss_strength", 0.4))
++	var worn_amount := float(cfg.get("worn_strength", 0.45))
++	var rock_amount := float(cfg.get("rock_strength", 0.45))
++	var worn_reach := int(cfg.get("worn_reach_px", 2))
++	var rock_start := deg_to_rad(float(cfg.get("rock_start_deg", 18.0)))
++	var rock_full := deg_to_rad(float(cfg.get("rock_full_deg", 32.0)))
++	# Soil mask once, then a separable max dilation for the worn halo.
++	var soil_mask := PackedFloat32Array()
++	soil_mask.resize(size.x * size.y)
++	for z in size.y:
++		for x in size.x:
++			soil_mask[z * size.x + x] = _soilness(source.get_pixel(x, z), soil)
++	var near := _dilate(_dilate(soil_mask, size, worn_reach, true), size, worn_reach, false)
++	for z in size.y:
++		for x in size.x:
++			var c := source.get_pixel(x, z)
++			var wx := (location.x * size.x + x) * spacing
++			var wz := (location.y * size.y + z) * spacing
++			var soil_here := soil_mask[z * size.x + x]
++			var out := c
++			if soil_here < 0.5:
++				var cl := smoothstep(-0.05, 0.4, clover.get_noise_2d(wx, wz))
++				var ms := smoothstep(0.0, 0.45, moss.get_noise_2d(wx, wz))
++				out = out.lerp(Color(c.r * clover_tint.r, c.g * clover_tint.g, c.b * clover_tint.b, c.a), cl * clover_amount)
++				out = out.lerp(Color(c.r * moss_tint.r, c.g * moss_tint.g, c.b * moss_tint.b, c.a), ms * moss_amount)
++				out = out.lerp(Color(worn_tint.r, worn_tint.g, worn_tint.b, c.a), near[z * size.x + x] * (1.0 - soil_here) * worn_amount)
++			var steep := smoothstep(rock_start, rock_full, _slope(height, x, z, spacing))
++			if steep > 0.0:
++				out = out.lerp(Color(c.r * rock_tint.r, c.g * rock_tint.g, c.b * rock_tint.b, c.a), steep * rock_amount)
++			out.a = c.a
++			colour.set_pixel(x, z, out)
++
++
++static func _dilate(values: PackedFloat32Array, size: Vector2i, reach: int, horizontal: bool) -> PackedFloat32Array:
++	var out := values.duplicate()
++	for z in size.y:
++		for x in size.x:
++			var best := 0.0
++			for d in range(-reach, reach + 1):
++				var sx := clampi(x + d, 0, size.x - 1) if horizontal else x
++				var sz := z if horizontal else clampi(z + d, 0, size.y - 1)
++				best = maxf(best, values[sz * size.x + sx])
++			out[z * size.x + x] = best
++	return out
++
++
++## 0 for ground far from the bake's soil tone, 1 at it.
++static func _soilness(c: Color, soil: Color) -> float:
++	var d := Vector3(c.r - soil.r, c.g - soil.g, c.b - soil.b).length()
++	return 1.0 - smoothstep(0.06, 0.18, d)
++
++
++static func _slope(height: Image, x: int, z: int, spacing: float) -> float:
++	var size := height.get_size()
++	var x0 := clampi(x - 1, 0, size.x - 1)
++	var x1 := clampi(x + 1, 0, size.x - 1)
++	var z0 := clampi(z - 1, 0, size.y - 1)
++	var z1 := clampi(z + 1, 0, size.y - 1)
++	var dx := (height.get_pixel(x1, z).r - height.get_pixel(x0, z).r) / (spacing * float(x1 - x0))
++	var dz := (height.get_pixel(x, z1).r - height.get_pixel(x, z0).r) / (spacing * float(z1 - z0))
++	return atan(sqrt(dx * dx + dz * dz))
+diff --git a/tools/bake_meadows_colour_candidate.gd.uid b/tools/bake_meadows_colour_candidate.gd.uid
+new file mode 100644
+index 000000000..e88de9518
+--- /dev/null
++++ b/tools/bake_meadows_colour_candidate.gd.uid
+@@ -0,0 +1 @@
++uid://dccjic8s0hjak

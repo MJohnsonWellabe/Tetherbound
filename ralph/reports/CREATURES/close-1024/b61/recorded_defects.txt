@@ -1,0 +1,4 @@
+Pl: "Flat, plastic-smooth cyan material"
+Lc: none
+Mo: none
+Kf: none

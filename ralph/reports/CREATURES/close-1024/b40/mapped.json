@@ -1,0 +1,108 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8732,
+  "least_squares_slope": 1.2193,
+  "method": "linear",
+  "slope": 1.2193,
+  "intercept": -0.8486,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.666,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "p2_094_r4:Y_after": {
+   "measured": 5.8,
+   "reference": 6.73,
+   "mapped": 6.223,
+   "residual": 0.507
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.167,
+   "reference": 3.5,
+   "mapped": 4.232,
+   "residual": -0.732
+  },
+  "f36_0_gap:C6B": {
+   "measured": 5.433,
+   "reference": 6.9,
+   "mapped": 5.776,
+   "residual": 1.124
+  },
+  "f36_0_gap:C6A": {
+   "measured": 6.633,
+   "reference": 6.47,
+   "mapped": 7.239,
+   "residual": -0.769
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.9,
+   "reference": 7.53,
+   "mapped": 7.565,
+   "residual": -0.035
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.9,
+   "reference": 7.47,
+   "mapped": 7.565,
+   "residual": -0.095
+  }
+ },
+ "candidates": {
+  "terrapup base (main, badger)": {
+   "measured_mean": 5.767,
+   "mapped_mean": 6.18,
+   "mapped_judges": [
+    6.71,
+    5.86,
+    5.98
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "terrapup dog3 retex b40": {
+   "measured_mean": 6.133,
+   "mapped_mean": 6.63,
+   "mapped_judges": [
+    6.59,
+    6.83,
+    6.47
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "mirejaw base (main)": {
+   "measured_mean": 5.367,
+   "mapped_mean": 5.69,
+   "mapped_judges": [
+    5.49,
+    5.98,
+    5.61
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "mirejaw retex r2 b40": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.35,
+   "mapped_judges": [
+    6.22,
+    6.47,
+    6.35
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

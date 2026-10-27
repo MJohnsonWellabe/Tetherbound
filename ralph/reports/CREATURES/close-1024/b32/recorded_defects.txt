@@ -1,0 +1,6 @@
+Fi: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Mm: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Bd: none
+Cc: none
+Tk: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Cq: none

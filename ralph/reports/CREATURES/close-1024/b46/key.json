@@ -1,0 +1,29 @@
+{
+ "Zk": {
+  "anchor": true,
+  "A": "f36_0_npc:C4A",
+  "B": "f36_0_npc:C4B"
+ },
+ "Ub": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Ae": {
+  "anchor": false,
+  "label": "thundertunnel scale",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b46/sides/thundertunnel-grow.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b46/sides/thundertunnel-base.png"
+ },
+ "Rj": {
+  "anchor": true,
+  "A": "f36_0_gap:C3B",
+  "B": "f36_0_gap:C3A"
+ },
+ "Qk": {
+  "anchor": false,
+  "label": "brooktail scale",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b46/sides/brooktail-grow.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b46/sides/brooktail-base.png"
+ }
+}

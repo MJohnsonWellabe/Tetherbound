@@ -1,0 +1,2223 @@
+extends CanvasLayer
+
+## Reads the fight and draws it. Owns no state of its own.
+##
+## It used to own a switch cursor and a tap/hold timer: D32 put mid-fight
+## switching on a tap of the d-pad and a HELD d-pad opened a five-row party
+## selector. CONTROLLER-MAP retired both. The owner directive of 2026-08-22
+## bans held-button chords outright, and it merges "cycle party member" and
+## "switch which creature you are piloting" into one `party_cycle` press on LB
+## — which is also what frees the d-pad to be the hotbar during a fight. The
+## selector had no other way in, and `PartyStrip` (already on screen, already
+## pinned while a switch is available) shows the same five rows, so it went
+## with the chord rather than being left unreachable.
+##
+## Everything else is pulled from CombatManager and the two creature instances each
+## frame rather than pushed in on signals. A HUD that keeps its own copy of the
+## health bar is a HUD that can disagree with the fight, and the first time that
+## happens it costs an afternoon.
+##
+## The exceptions are the outcome banner, the XP line and the "GO, <label>!"
+## line, which are driven by signals (`exited`, `catch_resolved`, `creature_switched`)
+## because each describes a moment rather than a value.
+##
+## Rebuilt to the owner's Palworld-inspired spec (§9) plus D32's mid-combat
+## switching UI. The old single-`RichTextLabel` verb row is gone; the four
+## verbs are now grid cells (`_draw_cells`), each independently ready/dimmed,
+## with a one-shot pulse on the frame a cell becomes usable rather than the
+## old plain colour swap.
+
+const PRESENTATION_HOLD := preload("res://scripts/ui/presentation_hold.gd")
+const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
+const CREATURE_PORTRAIT := preload("res://scripts/ui/creature_portrait.gd")
+const TRAIT_READOUT := preload("res://scripts/ui/creature_trait_readout.gd")
+## F10#6 device profile (code-blind 7-inch judge r6: the move buttons' pad
+## badges read at about 4 px on the 7-inch sheet). The badge art is padded
+## inside its box, so 34 drew "RT"/"LB" lettering near the glyph ladder's
+## 22 px "marginal" rung; 40 lands it at the ladder's comfortable size.
+const CELL_GLYPH_PX := 40
+## UX section 8 raster floor: essential text is at least 18 px at the 1280x720
+## stress raster, UITokens.FONT_READ (27) on this 1920x1080 canvas; the HUD's
+## glance labels (combat_hud.tscn) take the next token up, FONT_BUTTON (28).
+const GLANCE_FONT_PX := UITokens.FONT_BUTTON
+const CATCH := preload("res://scripts/combat/catch_math.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const SYSTEM_OVERLAY := preload("res://scripts/ui/combat_system_overlay.gd")
+var _system_overlay: Control
+var _system_overlay_ready := false
+
+## F42 narrow producer seam. Combat authority supplies the local, acknowledged
+## view; this HUD never reads a guest's untrusted resource or move proposal.
+func configure_new_system_view(reader: Callable, placeholder: Callable = Callable()) -> bool:
+	if not reader.is_valid(): return false
+	if not is_instance_valid(_system_overlay):
+		_system_overlay = SYSTEM_OVERLAY.new()
+		$Root.add_child(_system_overlay)
+	return _system_overlay.call("configure", reader, placeholder) == true
+## T3-COMBAT. Only for `combat.json`'s `effect_banner` block; this file resolves
+## no damage and reads no other part of that config.
+const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const FEED := preload("res://scripts/creatures/progression_feed.gd")
+const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
+const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
+const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
+const HIT_FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
+## F21 world-space damage numbers, oldest first. Read by
+## `presentation_observer.gd`, which identifies each receipt's new label here.
+var _damage_numbers: Array[Label] = []
+var _number_layer: Control = null
+var _world_presentation_mode := "exploration"
+
+## The orb cluster's fallback icon/id (spec §10.4), used only if the combat
+## manager cannot be reached. R4.9: the real icon and name are read per-frame
+## off whichever tier `combat_manager.gd::current_orb_id()` says a throw
+## would actually spend, through `data/items/items.json`'s own `Game.items`
+## lookup (same convention `playground_hud.gd`'s hotbar already uses) — so a
+## fuller satchel showing a stronger tier changes what this cluster prints,
+## and it never claims to be about to throw an orb that a throw would not.
+const ORB_ICON_PATH := "res://assets/ui/icons/items/orb_basic.png"
+const ORB_ITEM_ID := "orb_basic"
+
+## Verb glyph colour when a grid cell IS/IS NOT usable right now. Kept as
+## plain hex (not `UITokens.TEXT_PRIMARY`/`TEXT_MUTED`) because `input_glyph.icon`
+## wants a `Color`, not a token name, and these feed straight into it.
+const VERB_READY := Color("F2F5F2")
+const VERB_DIMMED := Color("bec3b8")
+
+## Non-usable grid cell: grey, not full transparency — the button is still
+## there, only its availability changed (`_verb`'s old header comment, ported
+## from the verb-row era: an unavailable action reads as disabled, not gone).
+## F10#6 device profile (code-blind 7-inch judges r2/r3): at 55% the dimmed
+## names and the VERB_DIMMED glyph lettering fell under 4.5:1 exactly when a
+## tell was on screen. 75% keeps the name >= 7:1 and the glyph >= 4.5:1
+## (test_combat_hud_handheld_floors.gd).
+const CELL_DIMMED := Color(0.75, 0.75, 0.75, 1.0)
+const CELL_READY := Color(1.0, 1.0, 1.0, 1.0)
+
+## Horizontal inset for `PartyStrip`, matching `AllyPanel`'s own left inset
+## (`combat_hud.tscn`'s `offset_left = 56.0`) so the two columns line up.
+const SWITCH_PANEL_X := 56.0
+
+## Clear space kept between the party strip's bottom row and `AllyPanel`'s
+## real top edge.
+##
+## Used to be a single hand-measured rest position, `Vector2(56.0, 380.0)`,
+## justified by a comment claiming "430px of clearance covers five rows at
+## up to ~80px each" against `AllyPanel`'s top (874px on a 1080-tall canvas).
+## Both numbers were already wrong the day they were written —
+## `PARTY_STRIP.ROW_SIZE.y` is 96, not ~80, and 380 to 874 is 494px, not
+## 430 — and `party_strip.gd`'s own row height grew again since (56 -> 96,
+## HUD-EMPHASIS) without anything here noticing: real `TOTAL_HEIGHT` is 540,
+## so the fixed 380 sat the strip's bottom row 46px INSIDE `AllyPanel`. That
+## is the exact defect a blind visual review caught (DEFECT 1b,
+## `shots/ui/10-combat-hud.png`: a half-hidden second panel between
+## Brooktail and Tuskroot, a cut-off "Ener…" label bleeding past the strip's
+## own right edge). `_party_strip_position()` below replaces the guess with
+## real numbers — `AllyPanel`'s actual anchored offset and the strip's own
+## actually-measured `size.y` — so the two can only agree from here on, not
+## merely agree on the day someone last did the arithmetic by hand.
+const SWITCH_PANEL_GAP := 24.0
+
+@export var manager_path: NodePath
+@export var director_path: NodePath
+
+var _manager: Node = null
+var _director: Node = null
+var _moves: RefCounted = null
+
+var _ally_health_fill: StyleBoxFlat = null
+var _enemy_health_fill: StyleBoxFlat = null
+var _energy_fill: StyleBoxFlat = null
+var _wind_fill: StyleBoxFlat = null
+
+var _outcome_left: float = 0.0
+var _xp_left: float = 0.0
+## PROGRESSION-VISIBLE: the feed `seq` when the current fight began.
+var _fight_feed_seq: int = 0
+var _fight_feed_epoch: int = -1
+var _go_left: float = 0.0
+var _miss_left: float = 0.0
+var _catch_verdict_message := false
+var _miss_text: String = ""
+
+## Grid cell ready-state on the PREVIOUS frame, so a cell pulses once on the
+## frame it flips false -> true and never again while it stays ready.
+var _prev_ready: Dictionary = {"quick": false, "charged": false, "throw": false, "switch": false}
+var _energy_was_full: bool = false
+var _pulse_tweens: Dictionary = {}
+
+## --- capture reticle / orb cluster (spec §10, D31) --------------------------
+var _orb_cluster: RichTextLabel = null
+var _was_resolving_catch: bool = false
+var _last_reticle_screen_pos: Vector2 = Vector2.ZERO
+
+## The always-on party strip (spec 9.4). Built in code, mounted at
+## `_party_strip_position()`.
+var _party_strip: Control = null
+var _tether_meter: Control
+## Full-rect holder the subject fade dims in place of the strip itself.
+var _strip_fader: Control = null
+## Per-panel subject-fade level, 1.0 = opaque (see `_update_subject_fade`).
+var _subject_fade := {}
+# Actual authored identity art in the current Chip footprint; no placeholder
+# creature render, scene-model scale or per-frame texture reload.
+var _ally_portrait: TextureRect = null
+var _ally_portrait_species := ""
+## OWNER-0902-HUD-TEAM-MENU: edge-detects the fight-just-ended frame for
+## `_show_fight(false)`'s `hide_now()` call below -- `_process()` calls
+## `_show_fight(false)` on EVERY frame nothing is fighting, not just the one
+## right after a fight ends (a bare-instantiated HUD with no `_manager` at
+## all runs this branch every frame, forever). `hide_now()` is a hard,
+## immediate cut, correct exactly once -- on the frame a real fight just
+## stopped -- but wrong to repeat on every idle frame after: it would fight
+## any other caller trying to hold the strip open outside the normal
+## `is_fighting()` reveal path (`smoke_combat_hud_left_column.gd` does
+## exactly this to measure the strip's geometry). This field is what lets
+## `_show_fight(false)` tell "just ended" from "already idle."
+var _was_fighting: bool = false
+
+## --- T3-TYPECHART: the per-hit type verdict ---------------------------------
+##
+## Its own transient widget rather than the `_miss_text` channel every other
+## short combat message uses, and the reason is a real defect that channel
+## would have introduced: `_draw_grid` sets `_grid_panel.visible = false`
+## whenever a message is up. That is correct for a miss or a refused throw --
+## rare, and the player should read the message rather than the buttons -- but
+## a type verdict fires on EVERY landed hit in a non-neutral matchup, which is
+## most hits of most fights once this chart exists. Routed through there it
+## would blink the action grid out of the fight almost continuously.
+##
+## Built in code and mounted on `$Root` rather than added to
+## `scenes/combat/combat_hud.tscn`, the same convention `_orb_cluster` and
+## `_party_strip` above already follow.
+var _effect_banner: Label = null
+## The stagger line is about the player's own creature (effect_banner.stagger_by_owner).
+var _effect_banner_mine := false
+var _effect_left: float = 0.0
+var _enemy_poise: ProgressBar = null
+var _ally_poise: ProgressBar = null
+var _ally_wind: ProgressBar = null
+
+## Clear space kept between the enemy plate's real bottom edge and the verdict
+## banner. Enough that the two read as separate elements rather than as one
+## overflowing panel.
+const EFFECT_BANNER_GAP := 16.0
+
+## How long the verdict stays up. Short: it is confirming a blow the player
+## already threw, not asking them to change what they are doing, and a fight
+## lands hits faster than a line of text can be read twice.
+##
+## Fallback only — `combat.json`'s `effect_banner` block owns the real value.
+const EFFECT_BANNER_SECONDS := 0.7
+
+## T3-COMBAT. The last verdict actually put on screen, as `"<side>:<tier>"`,
+## and the clock reading when it went up. Together these stop the banner
+## repeating a verdict the player is already looking at.
+##
+## MEASURED, not guessed. `tools/_probe_combat_matchup.gd` fought four real
+## non-mirror encounters and counted what this handler received:
+##
+##   ripplet into burrowback   11 hits, ALL of them `+1`, over a 10.2s fight
+##   galewisp into burrowback  16 hits at `-1` and 6 taken at `+1`, over 14.6s
+##
+## At 0.7s each that is 7.7 seconds of banner in a 10.2-second fight, and in
+## the second fight 22 banner events in 14.6 seconds — more banner-time than
+## fight-time, alternating between "WEAK — it shrugged that off" and "it hit
+## YOUR weakness". This file's own comment already said the rule: "a banner
+## that fires on every blow is a banner nobody reads". It was written for
+## neutral hits, and a non-neutral matchup makes EVERY hit fire it, so the rule
+## was true and unenforced.
+##
+## The verdict is a fact about the pairing, not about the swing: it cannot
+## change from one hit to the next unless the creature, the opponent or the
+## move changed. So it is said when it becomes true, said again if it changes
+## direction, and said again periodically in a long fight for a player who
+## looked away — and otherwise stays off the screen the player is trying to
+## fight in.
+var _effect_last_shown: Dictionary = {}
+var _effect_last_key: String = ""
+var _effect_clock: float = 0.0
+
+@onready var _root: Control = $Root
+@onready var _enemy_panel: PanelContainer = $Root/EnemyPanel
+@onready var _enemy_eyebrow: Label = $Root/EnemyPanel/EnemyVBox/Eyebrow
+@onready var _enemy_name: Label = $Root/EnemyPanel/EnemyVBox/Name
+@onready var _enemy_type_tag: Label = $Root/EnemyPanel/EnemyVBox/TypeTag
+@onready var _enemy_health: ProgressBar = $Root/EnemyPanel/EnemyVBox/Health
+@onready var _telegraph: Label = $Root/EnemyPanel/EnemyVBox/Telegraph
+
+@onready var _ally_panel: PanelContainer = $Root/AllyPanel
+@onready var _ally_chip: ColorRect = $Root/AllyPanel/AllyVBox/TopRow/Chip
+@onready var _ally_name: Label = $Root/AllyPanel/AllyVBox/TopRow/Info/Name
+@onready var _ally_level: Label = $Root/AllyPanel/AllyVBox/TopRow/Info/Level
+@onready var _ally_health: ProgressBar = $Root/AllyPanel/AllyVBox/Health
+@onready var _ally_energy: ProgressBar = $Root/AllyPanel/AllyVBox/EnergyRow/EnergyHost/Energy
+@onready var _energy_pulse: ColorRect = $Root/AllyPanel/AllyVBox/EnergyRow/EnergyHost/Pulse
+@onready var _ally_status: Label = $Root/AllyPanel/AllyVBox/Status
+
+@onready var _go_text: Label = $Root/GoText
+
+@onready var _orbs_panel: PanelContainer = $Root/OrbsPanel
+@onready var _orbs: Label = $Root/OrbsPanel/OrbsLabel
+var _ultimate_readout: RichTextLabel
+var _ultimate_meter: ProgressBar
+const COMBAT_INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+@onready var _grid_panel: PanelContainer = $Root/GridPanel
+
+@onready var _cell_quick: PanelContainer = $Root/GridPanel/Grid/CellQuick
+@onready var _cell_quick_hairline: ColorRect = $Root/GridPanel/Grid/CellQuick/Layout/Row/Hairline
+@onready var _cell_quick_content: RichTextLabel = $Root/GridPanel/Grid/CellQuick/Layout/Row/Content
+@onready var _cell_quick_pulse: ColorRect = $Root/GridPanel/Grid/CellQuick/Layout/Pulse
+
+@onready var _cell_charged: PanelContainer = $Root/GridPanel/Grid/CellCharged
+@onready var _cell_charged_hairline: ColorRect = $Root/GridPanel/Grid/CellCharged/Layout/Row/Hairline
+@onready var _cell_charged_content: RichTextLabel = $Root/GridPanel/Grid/CellCharged/Layout/Row/Content
+@onready var _cell_charged_pulse: ColorRect = $Root/GridPanel/Grid/CellCharged/Layout/Pulse
+
+@onready var _cell_throw: PanelContainer = $Root/GridPanel/Grid/CellThrow
+@onready var _cell_throw_content: RichTextLabel = $Root/GridPanel/Grid/CellThrow/Layout/Row/Content
+@onready var _cell_throw_pulse: ColorRect = $Root/GridPanel/Grid/CellThrow/Layout/Pulse
+
+@onready var _cell_switch: PanelContainer = $Root/GridPanel/Grid/CellSwitch
+@onready var _cell_switch_content: RichTextLabel = $Root/GridPanel/Grid/CellSwitch/Layout/Row/Content
+@onready var _cell_switch_pulse: ColorRect = $Root/GridPanel/Grid/CellSwitch/Layout/Pulse
+
+@onready var _prompt: RichTextLabel = $Root/Prompt
+@onready var _aim_row: RichTextLabel = $Root/AimRow
+@onready var _catch_row: RichTextLabel = $Root/CatchRow
+@onready var _capture_reticle: Control = $Root/CaptureReticle
+@onready var _outcome: Label = $Root/Outcome
+@onready var _xp_line: Label = $Root/XPLine
+
+
+func _ready() -> void:
+	add_to_group("combat_hud")
+	layer = UITokens.LAYER_COMBAT
+	_raise_message_rows()
+
+	_manager = get_node_or_null(manager_path)
+	_director = get_node_or_null(director_path)
+	_moves = MOVE_DB.load_default()
+
+	_ally_health_fill = UITokens.fill_box(UITokens.HP_GREEN)
+	_enemy_health_fill = UITokens.fill_box(UITokens.HP_GREEN)
+	_energy_fill = UITokens.fill_box(UITokens.TEAL)
+	_wind_fill = UITokens.fill_box(UITokens.TEAL_SOFT)
+	_dress(_ally_health, _ally_health_fill)
+	_dress(_enemy_health, _enemy_health_fill)
+	_dress(_ally_energy, _energy_fill)
+
+	_enemy_panel.add_theme_stylebox_override("panel", _quiet_panel_box())
+	SYSTEM_OVERLAY.corner_scale(_enemy_panel, float(SYSTEM_OVERLAY.SCREEN.config().get("combat", {})
+		.get("panel_scale", 1.0)), Vector2(1.0, 0.0))
+	_ally_panel.add_theme_stylebox_override("panel", UITokens.panel_box())
+	# F22#4 close-out (`ally_panel_scale`, 1/absent = off): the party card keeps
+	# its bottom-left corner and gives the fight back some of the frame.
+	SYSTEM_OVERLAY.corner_scale(_ally_panel, float(SYSTEM_OVERLAY.SCREEN.config().get("combat", {})
+		.get("ally_panel_scale", 1.0)), Vector2(0.0, 1.0))
+	_grid_panel.add_theme_stylebox_override("panel", UITokens.panel_box())
+	# `slot_box()`, not `panel_box()`: this plate is 36px tall and `panel_box()`'s
+	# 16px content margin on every side would leave 4px for the text itself.
+	# `slot_box()` carries no content margin, so the short "Orbs N" string just
+	# needs the box tall enough to hold it (already true here), not a smaller
+	# margin hand-tuned to fit.
+	_orbs_panel.add_theme_stylebox_override("panel", UITokens.slot_box(false))
+	for cell in [_cell_quick, _cell_charged, _cell_throw, _cell_switch]:
+		(cell as PanelContainer).add_theme_stylebox_override("panel", UITokens.slot_box(false))
+	_ultimate_readout = RichTextLabel.new()
+	_ultimate_readout.bbcode_enabled = true
+	_ultimate_readout.fit_content = true
+	_ultimate_readout.scroll_active = false
+	_ultimate_readout.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_ultimate_readout.add_theme_font_size_override("normal_font_size", 22)
+	$Root/AllyPanel/AllyVBox.add_child(_ultimate_readout)
+	_ultimate_meter = ProgressBar.new()
+	_ultimate_meter.custom_minimum_size.y = 8.0
+	_ultimate_meter.show_percentage = false
+	_ultimate_meter.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	$Root/AllyPanel/AllyVBox.add_child(_ultimate_meter)
+
+	_party_strip = PARTY_STRIP.new()
+	_party_strip.set("progression_feedback_enabled", false)
+	# F10#6 (UX §1.4): the strip drives its own `modulate` fades, so the
+	# subject fade (`_update_subject_fade`) dims this full-rect holder instead.
+	_strip_fader = Control.new()
+	_strip_fader.name = "StripFader"
+	_strip_fader.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_strip_fader.set_anchors_preset(Control.PRESET_FULL_RECT)
+	$Root.add_child(_strip_fader)
+	_strip_fader.add_child(_party_strip)
+	# F10#6: the fight roster is name + HP, opaque (party_strip.gd `compact`).
+	_party_strip.call("set_compact", true)
+	# `set_rest_position()`, not a plain `.position` write: the strip is not
+	# visible yet (`party_strip.gd::_ready()` leaves it hidden), so this both
+	# snaps `.position` now and records the real `_rest_position` the widget's
+	# own reveal/hide tweens target later — a bare `.position` write here would
+	# leave `_rest_position` at its `_ready()`-time default and every later
+	# reveal would animate back to the wrong spot.
+	_party_strip.call("set_rest_position", _party_strip_position())
+	if preload("res://scripts/combat/tether_commands.gd").enabled("ui_enabled"):
+		_tether_meter = preload("res://scripts/ui/tether_command_meter.gd").new()
+		$Root.add_child(_tether_meter)
+		# Bottom-centre, as tether_command_meter.gd's header says: the old spot
+		# above the party strip put the lane over the play space (F04#0
+		# code-blind judge). Grows upward from the bottom edge.
+		_tether_meter.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM, Control.PRESET_MODE_MINSIZE, 24)
+		_tether_meter.grow_horizontal = Control.GROW_DIRECTION_BOTH
+		_tether_meter.grow_vertical = Control.GROW_DIRECTION_BEGIN
+		if _manager != null:
+			_manager.connect("tether_command_refused", _tether_meter.refused)
+			if _manager.has_method("new_system_combat_snapshot"):
+				configure_new_system_view(Callable(_manager, "new_system_combat_snapshot"),
+					Callable(_manager, "new_system_combat_placeholder") if _manager.has_method("new_system_combat_placeholder") else Callable())
+
+	_build_orb_cluster()
+	_build_effect_banner()
+	_build_wind_bar()
+	_build_poise_pips()
+
+	UITokens.make_text_legible($Root)
+
+	if _manager != null:
+		_manager.connect("exited", _on_exited)
+		_manager.connect("attack_missed", _on_missed)
+		_manager.connect("hit_effectiveness", _on_hit_effectiveness)
+		# T3-COMBAT. `entered` fires once per fight, and a trainer battle opens a
+		# fresh one for every creature its trainer sends out — so each new
+		# opponent gets told about, and none of them inherits the previous
+		# round's verdict.
+		_manager.connect("entered", _forget_the_last_verdict)
+		_manager.connect("entered", _mark_feed_at_fight_start)
+		_manager.connect("catch_refused", _on_catch_refused)
+		_manager.connect("catch_resolved", _on_catch_resolved)
+		_manager.connect("creature_switched", _on_creature_switched)
+		_manager.connect("orb_shook", _on_orb_shook)
+		_manager.connect("staggered", _on_staggered)
+		if _manager.has_signal("impact_confirmed"):
+			_manager.connect("impact_confirmed", _on_impact_confirmed)
+	_show_fight(false)
+
+
+## The lower-right orb cluster (spec §10.4): icon, item name, count, and the
+## throw/cancel glyphs, all as one BBCode block rather than a fistful of
+## separate Controls — `RichTextLabel`'s `[img]` tag already draws the icon
+## inline, and this cluster only ever needs to change together (one
+## `_update_orb_cluster` call, one string). Built here rather than in the
+## .tscn per the task brief's own scope line for that file ("mount only");
+## `_party_strip` above is already built the same way.
+func _build_orb_cluster() -> void:
+	_orb_cluster = RichTextLabel.new()
+	_orb_cluster.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_orb_cluster.bbcode_enabled = true
+	_orb_cluster.fit_content = false
+	_orb_cluster.scroll_active = false
+	_orb_cluster.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_orb_cluster.add_theme_font_size_override("normal_font_size", UITokens.FONT_LABEL)
+	_orb_cluster.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	_orb_cluster.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	_orb_cluster.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	# Inset to UITokens.MARGIN_SAFE (48px), not the wider HUD_INSET (56px) the
+	# rest of this HUD uses — blind visual review flagged this cluster as
+	# flush against the screen edge; box size (244x238) is unchanged, only
+	# shifted to hang off the safe-margin edge instead.
+	_orb_cluster.offset_left = -300.0 + (UITokens.HUD_INSET - UITokens.MARGIN_SAFE)
+	_orb_cluster.offset_top = -294.0 + (UITokens.HUD_INSET - UITokens.MARGIN_SAFE)
+	_orb_cluster.offset_right = -float(UITokens.MARGIN_SAFE)
+	_orb_cluster.offset_bottom = -float(UITokens.MARGIN_SAFE)
+	_orb_cluster.visible = false
+	$Root.add_child(_orb_cluster)
+
+
+## T3-TYPECHART's per-hit verdict banner. See `_effect_banner`'s own comment for
+## why it is a separate widget from the `_miss_text` channel.
+##
+## Sited directly UNDER THE ENEMY PLATE, which is where the player is already
+## looking when a hit lands -- the foe's health bar is in the same glance. The
+## plate occupies y 32..224 (scenes/combat/combat_hud.tscn), so this sits just
+## below it and never overlaps the action grid at the bottom of the screen or
+## the ally plate.
+##
+## Anchored top-right like the plate it hangs from, so it stays put at every
+## handheld aspect ratio rather than drifting with the safe margin.
+func _build_effect_banner() -> void:
+	_effect_banner = Label.new()
+	_effect_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_effect_banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_effect_banner.add_theme_font_size_override("font_size", GLANCE_FONT_PX)
+	# F22#4 judge (13 Oct): the line sits on bare scenery with no plate and
+	# read as illegible orange on grass; a dark outline carries it anywhere.
+	_effect_banner.add_theme_color_override("font_outline_color", Color(0.04, 0.05, 0.06, 0.92))
+	_effect_banner.add_theme_constant_override("outline_size", 6)
+	# F10#6 (UX §1.4): the plate moved to the top-right corner, off the
+	# framed target; the banner stays under it.
+	_effect_banner.anchor_left = 1.0
+	_effect_banner.anchor_right = 1.0
+	_effect_banner.offset_left = -592.0
+	_effect_banner.offset_right = -32.0
+	_effect_banner.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	# F21#5 judge: the coloured caption alone read at low contrast over lit
+	# grass. A dark plate sized to its text (_position_effect_banner) backs it.
+	var plate := UITokens.panel_deep_box()
+	plate.content_margin_left = 14
+	plate.content_margin_right = 14
+	plate.content_margin_top = 4
+	plate.content_margin_bottom = 4
+	_effect_banner.add_theme_stylebox_override("normal", plate)
+	_effect_banner.visible = false
+	$Root.add_child(_effect_banner)
+	_position_effect_banner()
+
+
+func _build_poise_pips() -> void:
+	_enemy_poise = _poise_pip()
+	_ally_poise = _poise_pip()
+	var enemy_box := _enemy_health.get_parent()
+	var ally_box := _ally_health.get_parent()
+	enemy_box.add_child(_enemy_poise)
+	enemy_box.move_child(_enemy_poise, _enemy_health.get_index() + 1)
+	ally_box.add_child(_ally_poise)
+	ally_box.move_child(_ally_poise, _ally_wind.get_parent().get_index() + 1)
+
+
+## COMBAT-2's readable resource sits directly under HP. A short label is part
+## of the row so controller users do not have to discover a mouse tooltip to
+## learn that this second bar is Wind rather than another health decoration.
+func _build_wind_bar() -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	var label := Label.new()
+	label.text = "WIND"
+	label.custom_minimum_size.x = 72.0
+	label.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
+	label.add_theme_color_override("font_color", UITokens.TEAL_SOFT)
+	row.add_child(label)
+	_ally_wind = ProgressBar.new()
+	_ally_wind.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_ally_wind.custom_minimum_size.y = 10.0
+	_ally_wind.show_percentage = false
+	_ally_wind.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_ally_wind.tooltip_text = "Wind — attacks spend it; resting between attacks restores it"
+	_dress(_ally_wind, _wind_fill)
+	row.add_child(_ally_wind)
+	var ally_box := _ally_health.get_parent()
+	ally_box.add_child(row)
+	ally_box.move_child(row, _ally_health.get_index() + 1)
+
+
+func _poise_pip() -> ProgressBar:
+	var pip := ProgressBar.new()
+	pip.custom_minimum_size.y = 6.0
+	pip.show_percentage = false
+	pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var track := UITokens.fill_box(Color(0.03, 0.03, 0.03, 0.8))
+	var fill := UITokens.fill_box(UITokens.WARNING)
+	pip.add_theme_stylebox_override("background", track)
+	pip.add_theme_stylebox_override("fill", fill)
+	pip.tooltip_text = "Poise — emptying this staggers the creature"
+	return pip
+
+
+## Sit the banner under the enemy plate's REAL bottom edge, not the one
+## `combat_hud.tscn`'s offsets declare.
+##
+## Same trap `_party_strip_position()` below documents at length, hit again
+## here: `EnemyPanel` is a `PanelContainer`, so it grows to fit its content and
+## a Control forced past its minimum size does not write that growth back to
+## its offsets. The .tscn says the plate ends at 224; rendered, it ends around
+## 258 — and a banner placed at the authored 232 straddled the plate's bottom
+## edge, half on the panel and half on the world, which reads as a layout bug
+## rather than as a deliberate element. Caught by actually rendering the frame,
+## which is the entire argument for `docs/AGENT_WORKFLOW.md`'s render-before-done
+## rule.
+##
+## Falls back to the authored offset when called from `_ready()`, before the
+## panel has been laid out and while its rect is still degenerate — the same
+## fallback, for the same reason, that `_party_strip_position()` keeps.
+func _position_effect_banner() -> void:
+	if _effect_banner == null:
+		return
+	if _effect_banner_mine and _ally_panel != null and _ally_panel.size.y > 1.0:
+		# Beside the player's own panel, top-aligned with it (stagger_by_owner).
+		_effect_banner.anchor_left = 0.0
+		_effect_banner.anchor_right = 0.0
+		var at := _ally_panel.position + Vector2(_ally_panel.size.x + EFFECT_BANNER_GAP, 0.0)
+		_effect_banner.offset_top = at.y
+		_effect_banner.offset_bottom = at.y + 44.0
+		var label_font := _effect_banner.get_theme_font("font")
+		var span := 420.0
+		if label_font != null:
+			span = clampf(label_font.get_string_size(_effect_banner.text, HORIZONTAL_ALIGNMENT_LEFT, -1,
+				_effect_banner.get_theme_font_size("font_size")).x + 28.0 + 2.0 * UITokens.OUTLINE_SIZE, 120.0, 560.0)
+		_effect_banner.offset_left = at.x
+		_effect_banner.offset_right = at.x + span
+		return
+	if _effect_banner.anchor_left != 1.0:
+		_effect_banner.anchor_left = 1.0
+		_effect_banner.anchor_right = 1.0
+		_effect_banner.offset_right = -32.0
+	var top := 232.0
+	if _enemy_panel != null and _enemy_panel.size.y > 1.0:
+		top = _enemy_panel.position.y + _enemy_panel.size.y + EFFECT_BANNER_GAP
+	_effect_banner.offset_top = top
+	_effect_banner.offset_bottom = top + 44.0
+	# The plate spans only its text, right-aligned under the enemy plate.
+	var font := _effect_banner.get_theme_font("font")
+	var width := 560.0
+	if font != null and not _effect_banner.text.is_empty():
+		width = clampf(font.get_string_size(_effect_banner.text, HORIZONTAL_ALIGNMENT_LEFT, -1,
+			_effect_banner.get_theme_font_size("font_size")).x + 28.0 + 2.0 * UITokens.OUTLINE_SIZE, 120.0, 560.0)
+	_effect_banner.offset_left = _effect_banner.offset_right - width
+
+
+## Age the verdict banner out. Same shape as `_tick_go_text`/`_tick_outcome`
+## above it: a plain countdown rather than a Tween, because the thing it drives
+## is one boolean and a Tween that outlives the fight is how a HUD element gets
+## stuck on screen.
+func _tick_effect_banner(delta: float) -> void:
+	# T3-COMBAT. Advanced FIRST and unconditionally: the repeat window is
+	# measured in fight time, and a clock that only ran while the banner was up
+	# would never let a verdict be said a second time.
+	_effect_clock += delta
+	if _effect_left <= 0.0:
+		return
+	_effect_left = maxf(0.0, _effect_left - delta)
+	if _effect_left <= 0.0 and _effect_banner != null:
+		_effect_banner.visible = false
+
+
+## The health-bar track/fill treatment, shared by both bars. Split out of the
+## old per-bar `_style`/`_dress` pair now that `UITokens.fill_box` already
+## builds the fill half — this only still needs to own the track.
+func _dress(bar: ProgressBar, fill: StyleBoxFlat) -> void:
+	var track := UITokens.fill_box(UITokens.TRACK)
+	track.border_width_left = 2
+	track.border_width_right = 2
+	track.border_width_top = 2
+	track.border_width_bottom = 2
+	track.border_color = Color(0.02, 0.02, 0.02, 0.85)
+	bar.add_theme_stylebox_override("background", track)
+	bar.add_theme_stylebox_override("fill", fill)
+
+
+## The enemy plate's own quiet backing (spec §9): `BG_DEEP` at ~55% alpha, no
+## border. Every other panel in this HUD uses `UITokens.panel_box()` as-is;
+## this one deliberately does not, because the plate sits over open sky/hillside
+## for the whole fight and a bordered frame there reads as a window, not a
+## label floating over the world.
+func _quiet_panel_box() -> StyleBoxFlat:
+	var box := UITokens.panel_box(Color(UITokens.BG_DEEP.r, UITokens.BG_DEEP.g, UITokens.BG_DEEP.b, 0.55))
+	box.border_width_left = 0
+	box.border_width_right = 0
+	box.border_width_top = 0
+	box.border_width_bottom = 0
+	return box
+
+
+func _process(delta: float) -> void:
+	if _tether_meter != null and _manager != null:
+		_tether_meter.present(_manager.call("tether_command_snapshot"), INPUT_GLYPH.using_gamepad())
+	_sync_feed_epoch()
+	if _world_presentation_mode == "relays":
+		relinquish_result_presentation()
+		return
+	_tick_damage_numbers(delta)
+	_tick_outcome(delta)
+	_tick_xp(delta)
+	_tick_go_text(delta)
+	_tick_effect_banner(delta)
+	_miss_left = maxf(0.0, _miss_left - delta)
+	_draw_prompt()
+
+	var fighting: bool = _manager != null and bool(_manager.call("is_fighting"))
+	if not fighting and _manager != null and _manager.has_method("presenting_fight") \
+			and bool(_manager.call("presenting_fight")):
+		# F14 C3: a trainer's held send-out beat. The fight panels stay as the
+		# last round left them until the next creature is out; nothing redraws.
+		return
+	if not fighting:
+		if is_instance_valid(_system_overlay): _system_overlay.hide()
+		_system_overlay_ready = false
+		_show_fight(false, _was_fighting)
+		_was_fighting = false
+		return
+
+	_was_fighting = true
+	_show_fight(true, false)
+	_draw_enemy()
+	_draw_ally()
+	_draw_grid()
+	_ultimate_readout.show()
+	_ultimate_meter.show()
+	if is_instance_valid(_system_overlay):
+		var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
+		var shown: bool = active != null and _system_overlay.call("refresh", str(active.get("uid")), INPUT_GLYPH.using_gamepad()) == true
+		if shown: _system_overlay_ready = true
+		# One combat HUD in every fight state: once the F42 overlay has drawn
+		# this fight, a transient refresh miss (a telegraph, a pending command)
+		# keeps its last frame rather than dropping to the legacy grid. Aiming
+		# and a resolving catch keep their own aim view.
+		var aiming := bool(_manager.call("is_aiming")) or bool(_manager.call("is_resolving_catch"))
+		if not shown and _system_overlay_ready and not aiming:
+			_system_overlay.visible = true
+			shown = true
+		if shown:
+			_grid_panel.hide()
+			_ultimate_readout.hide()
+			_ultimate_meter.hide()
+			if _tether_meter != null: _tether_meter.hide()
+			_layout_system_hints()
+		else:
+			_system_overlay.hide()
+	_update_capture_reticle()
+	_handle_switch_input()
+	_update_party_strip()
+	_update_subject_fade(delta)
+	if _catch_focus_left > 0.0:
+		# P2-061: the caught result owns the screen until its card expires.
+		for panel: Control in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel, _aim_row, _catch_row]:
+			panel.visible = false
+		if is_instance_valid(_system_overlay): _system_overlay.hide()
+		if _strip_fader != null: _strip_fader.visible = false
+
+
+func _layout_system_hints() -> void:
+	# Aim/switch/flee stay above the command lane, clear of the ultimate and
+	# move diamond. The legacy anchored hint occupied that diamond's centre.
+	var commands: Rect2 = _system_overlay.call("command_rect")
+	_orbs.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_orbs_panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	_orbs_panel.size = Vector2(commands.size.x, 0)
+	var at := _root.get_global_transform().affine_inverse() * commands.position
+	_orbs_panel.position = at - Vector2(0, _orbs_panel.size.y + 12)
+
+
+## F10#6 device profile (UX §1.4: the HUD supports direction, team state and
+## danger "without covering the trainer, active creature, target or attack
+## geometry"; code-blind 7-inch judges r2-r4 found the trainer under the
+## move grid or the left column and the target under its plate). The fight
+## camera orbits while the trainer stands still, so no one placement keeps
+## them clear. Each frame the trainer, the active creature and the target are
+## projected; a fight panel over one of them eases down to `alpha`, and back
+## once it is clear. Presentation only. combat.json `hud_subject_fade`.
+func fight_occupied_controls() -> Array[Control]:
+	var controls: Array[Control] = []
+	for control: Control in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel,
+			_party_strip, _tether_meter, _aim_row, _catch_row, _orb_cluster]:
+		if is_instance_valid(control) and control.is_visible_in_tree():
+			controls.append(control)
+	if is_instance_valid(_system_overlay) and _system_overlay.is_visible_in_tree():
+		for control: Control in _system_overlay.call("occupied_controls"):
+			if is_instance_valid(control) and control.is_visible_in_tree(): controls.append(control)
+	return controls
+
+
+## Actual viewport-space rectangles, including canvas scaling and roster
+## animation. Camera framing reserves the visible foreground even when its
+## backing fades; alpha is never treated as permission to cover a creature.
+func occupied_viewport_rects() -> Array[Rect2]:
+	var rectangles: Array[Rect2] = []
+	for control: Control in fight_occupied_controls():
+		if not control.size.is_finite() or not control.size.x > 0 or not control.size.y > 0: continue
+		var pose := control.get_global_transform_with_canvas()
+		var lo := Vector2(INF, INF)
+		var hi := Vector2(-INF, -INF)
+		for corner: Vector2 in [Vector2.ZERO, Vector2(control.size.x, 0), control.size, Vector2(0, control.size.y)]:
+			var point := pose * corner
+			lo = lo.min(point)
+			hi = hi.max(point)
+		if lo.is_finite() and hi.is_finite(): rectangles.append(Rect2(lo, hi - lo))
+	return rectangles
+
+
+func _update_subject_fade(delta: float) -> void:
+	var cfg: Dictionary = COMBAT_MATH.config().get("hud_subject_fade", {}) as Dictionary
+	var enabled := bool(cfg.get("enabled", true))
+	var low := float(cfg.get("alpha", 0.3))
+	var rate := float(cfg.get("rate", 6.0))
+	var min_overlap := float(cfg.get("min_overlap", 0.1))
+	var raw_floor: Variant = cfg.get("foreground_alpha_floor",1.0)
+	var foreground_floor := 1.0
+	if (raw_floor is int or raw_floor is float) and is_finite(float(raw_floor)):
+		foreground_floor = clampf(float(raw_floor),0.0,1.0)
+	var subjects: Array[Rect2] = _subject_rects() if enabled else []
+	# Enemy plate and grid: their own draw code resets `modulate.a` every
+	# frame, so the fade multiplies. Ally panel, orbs plate and strip holder
+	# are not written elsewhere, so the fade is their alpha.
+	# [faded node, multiply?, node whose rect is tested]: the strip holder is
+	# full-rect by design, so the strip's own rect decides its fade.
+	# The target plate is not faded: it carries the tell line, and both the
+	# C3 footage judge and device judge r5 read a faded "incoming" as a miss.
+	# It sits top-right, off the framed target.
+	var panels: Array = [[_grid_panel, true, _grid_panel],
+			[_ally_panel, false, _ally_panel], [_orbs_panel, false, _orbs_panel],
+			[_strip_fader, false, _party_strip]]
+	# F22#4 judge (13 Oct): the Commands strip sat over the near edge of tells.
+	if is_instance_valid(_tether_meter) and bool(cfg.get("fade_commands_strip", false)):
+		panels.append([_tether_meter, false, _tether_meter])
+	if is_instance_valid(_system_overlay) and _system_overlay.visible:
+		for control: Control in _system_overlay.call("occupied_controls"):
+			panels.append([control, false, control, true])
+	for entry: Array in panels:
+		var panel := entry[0] as Control
+		var measured := entry[2] as Control
+		if panel == null or measured == null:
+			continue
+		var want := subject_fade_target(measured.get_global_rect(), subjects, min_overlap, low) \
+			if measured.is_visible_in_tree() else 1.0
+		var level := move_toward(float(_subject_fade.get(panel, 1.0)), want, delta * rate)
+		_subject_fade[panel] = level
+		if panel is PanelContainer:
+			# Preserve the SAME subject backing fade (including its easing),
+			# while retaining legible labels/bars/glyphs. self_modulate affects
+			# this panel's backing only; descendants retain the foreground floor.
+			# An intentional catch-state base alpha is still multiplied normally.
+			var foreground := maxf(level,foreground_floor)
+			var base_alpha := panel.modulate.a if bool(entry[1]) else 1.0
+			panel.modulate.a = base_alpha*foreground
+			panel.self_modulate.a = level/foreground if foreground>0.0 else 0.0
+		elif bool(entry[1]):
+			panel.modulate.a *= level
+		elif entry.size() > 3:
+			# F42 overlay text has no backing to fade: keep it at the readable
+			# foreground floor (F42#2 judge: the lane faded to ~25%).
+			panel.modulate.a = maxf(level, foreground_floor)
+		else:
+			# PartyStrip owns its internal draw/fade lifecycle; do not invent a
+			# second row-opacity controller in this no-draw parent holder.
+			panel.modulate.a = level
+
+
+## Pure form: `low` when `panel` covers at least `min_overlap` of any
+## subject's own screen area, else 1.0.
+static func subject_fade_target(panel: Rect2, subjects: Array[Rect2], min_overlap: float, low: float) -> float:
+	for subject: Rect2 in subjects:
+		var area := subject.get_area()
+		if area > 0.0 and panel.intersection(subject).get_area() >= area * min_overlap:
+			return low
+	return 1.0
+
+
+## Screen rects of the trainer, the active creature and the target through the
+## live camera; a body with any corner behind the lens is skipped.
+## World boxes of the opponent's live tell meshes: its pattern cue (a top-level
+## sibling that names this body) and its lunge lane (a child).
+func _tell_world_boxes(foe: Node3D) -> Array[AABB]:
+	var boxes: Array[AABB] = []
+	var cues: Array[Node] = []
+	if foe.get_parent() != null:
+		for node: Node in foe.get_parent().get_children():
+			if str(node.name).begins_with("EnemyPatternTelegraph") and node.get("_body") == foe:
+				cues.append(node)
+	var lane := foe.get_node_or_null(^"LungeLane")
+	if lane != null:
+		cues.append(lane)
+	for cue: Node in cues:
+		for child: Node in cue.get_children():
+			var visual := child as MeshInstance3D
+			if visual == null or not visual.visible:
+				continue
+			var local := visual.get_aabb()
+			if local.size.is_zero_approx():
+				continue
+			boxes.append(visual.global_transform * local)
+	return boxes
+
+
+func _subject_rects() -> Array[Rect2]:
+	var rects: Array[Rect2] = []
+	var camera := get_viewport().get_camera_3d()
+	if camera == null or _manager == null:
+		return rects
+	var boxes: Array[AABB] = []
+	# The trainer as a 1.8 m capsule's box: the player node's subtree also
+	# holds the camera rig, so its aggregate bounds would cover the screen.
+	var trainer: Variant = _manager.get("_player")
+	if trainer is Node3D and is_instance_valid(trainer):
+		boxes.append(AABB((trainer as Node3D).global_position + Vector3(-0.35, 0.0, -0.35),
+			Vector3(0.7, 1.8, 0.7)))
+	var creatures: Array[Node3D] = []
+	var ally: Variant = _manager.get("_ally_body")
+	if ally is Node3D and is_instance_valid(ally):
+		creatures.append(ally as Node3D)
+	if _manager.has_method("enemy_body"):
+		var foe: Variant = _manager.call("enemy_body")
+		if foe is Node3D and is_instance_valid(foe):
+			creatures.append(foe as Node3D)
+	for body: Node3D in creatures:
+		if _manager.has_method("_body_world_bounds"):
+			var measured := _manager.call("_body_world_bounds", body) as AABB
+			if not measured.size.is_zero_approx():
+				boxes.append(measured)
+	# F22#4 (Riverwatch judge 13 Oct: HUD panels clipped the tell edges): while
+	# the opponent winds up, its live ground shape is a subject too, so the
+	# strip and panels over it fade like they do over the fighters.
+	if bool(COMBAT_MATH.config().get("hud_subject_fade", {}).get("tells_are_subjects", false)) \
+			and _manager.has_method("enemy_is_winding_up") and bool(_manager.call("enemy_is_winding_up")) \
+			and creatures.size() > 1:
+		boxes.append_array(_tell_world_boxes(creatures[creatures.size() - 1]))
+	for box: AABB in boxes:
+		var forward := -camera.global_basis.z
+		var lo := Vector2(INF, INF)
+		var hi := Vector2(-INF, -INF)
+		var behind := false
+		for i in 8:
+			var corner := box.get_endpoint(i)
+			if (corner - camera.global_position).dot(forward) <= 0.05:
+				behind = true
+				break
+			var p := camera.unproject_position(corner)
+			lo = lo.min(p)
+			hi = hi.max(p)
+		if not behind:
+			rects.append(Rect2(lo, hi - lo))
+	return rects
+
+
+## `just_ended`: true only on the single frame `fighting` flips from true to
+## false (see `_was_fighting`'s own header) -- distinguishes "the fight just
+## stopped" from every idle frame after it, which keep calling this with
+## `visible_now=false` but must not repeat the hard cut below.
+func _show_fight(visible_now: bool, just_ended: bool = false) -> void:
+	if _party_strip != null:
+		_party_strip.set("progression_feedback_enabled", visible_now)
+	_enemy_panel.visible = visible_now
+	_ally_panel.visible = visible_now
+	_go_text.visible = visible_now
+	_orbs_panel.visible = visible_now
+	if not visible_now:
+		_grid_panel.visible = false
+		_aim_row.visible = false
+		_catch_row.visible = false
+		# The next fight opens with every panel opaque, not at the last one's
+		# subject-fade level (`_update_subject_fade`).
+		_subject_fade.clear()
+		for panel: Control in [_ally_panel, _orbs_panel, _strip_fader]:
+			if panel != null:
+				panel.modulate.a = 1.0
+				panel.self_modulate.a = 1.0
+		if _party_strip != null:
+			if just_ended:
+				# OWNER-0902-HUD-TEAM-MENU: `set_pinned(false)` merely starts
+				# this strip's own graceful fade (`T_PARTY_FADE`, 2.5s) -- the
+				# right call while still mid-fight (see that function's own
+				# header), but wrong here: the fight has fully ended,
+				# `playground_hud.gd`'s own exploration strip is about to
+				# reveal fresh in its place (leaving combat almost always
+				# changes `Party.active_index`/`revision`), and a lingering
+				# fade left both up together, in different screen positions,
+				# reading as the roster panel showing twice -- with this one,
+				# fed only the creatures still able to fight, showing fewer
+				# than the full team. `hide_now()` drops it instantly instead,
+				# so there is nothing left to collide with the exploration
+				# HUD's own reveal.
+				_party_strip.call("hide_now")
+			else:
+				_party_strip.call("set_pinned", false)
+		if _orb_cluster != null:
+			_orb_cluster.visible = false
+		# T3-TYPECHART. Cleared with the rest of the fight, not left to age out
+		# on its own timer -- a verdict about a fight that has ended would sit
+		# over the world for up to 0.7s after control came back.
+		if _effect_banner != null:
+			_effect_banner.visible = false
+		_effect_left = 0.0
+		if _capture_reticle != null:
+			_capture_reticle.call("update_target", Vector2.ZERO, 0.0, false)
+		_enemy_panel.modulate.a = 1.0
+		_grid_panel.modulate.a = 1.0
+
+
+## `EV9-double-prompt`: this row exists to keep showing "Engage X" before a
+## fight starts, not to repeat whatever unrelated line `PlaygroundHUD` is
+## currently showing (Grandpa, a starter, a harvest node) just because this
+## `CanvasLayer` never toggles fully invisible outside a fight. Once fighting,
+## the arbiter is disabled scene-wide and `prompt()` already reads "" from it,
+## so the fighting branch does not need its own ownership check.
+func _draw_prompt() -> void:
+	if _director == null:
+		return
+	var fighting: bool = _manager != null and bool(_manager.call("is_fighting"))
+	if not fighting and not bool(_director.call("owns_active_prompt")):
+		_prompt.text = ""
+		return
+	var line := str(_director.call("prompt"))
+	# F05 heal (X03): outside a fight, the director's recall teaching line
+	# ("Call out ..." / "... away") stands down while a story payoff holds the
+	# screen (`presentation_hold.gd`). "Engage X" and a fight's own lines are
+	# never held. Same recall test as `playground_hud.gd`.
+	if not fighting and PRESENTATION_HOLD.active(get_tree()) \
+			and (line.contains("Call out") or line.contains(" away")):
+		_prompt.text = ""
+		return
+	_prompt.text = line
+
+
+## T3-MATCHUPS: was a three-branch `match` whose default arm returned
+## GROUND_OCHRE, so every one of the five types the creature expansion added --
+## fire, electric, ice, psychic, dark -- drew as the GROUND colour. Harmless
+## while those types were mechanically inert; actively misleading now that they
+## have chart rows, because this tag is what the matchup arrow rides on and it
+## was naming the wrong type underneath a real verdict.
+##
+## GROUND_OCHRE stays the fallback rather than a neutral grey: an unknown type
+## here is a typo or a species built by a test, and the tag must stay legible
+## against the enemy plate. Losing the type is better than losing the word.
+func _type_color(type_id: String) -> Color:
+	return UITokens.type_colour(type_id, UITokens.GROUND_OCHRE)
+
+
+## T3-TYPECHART's readiness tell: the foe's type, plus how the creature the
+## player is currently piloting fares into it.
+##
+## THE ARROW RIDES THE TAG THAT WAS ALREADY THERE. This panel has drawn the
+## enemy's type in its type colour since the fight HUD was built; a matchup is
+## a fact about that type, so a second widget for it would be a second thing to
+## find on a 7-inch handheld mid-fight. Owner-direction section 10 asks for
+## readiness communicated without a hard lock, and section 9 for "enough
+## information that preparation feels intelligent rather than random" while not
+## naming the creature to use -- one arrow on the creature already out says the
+## matchup is favoured without ranking the other four.
+##
+## COLOUR CARRIES THE MATCHUP ONLY WHEN THERE IS ONE. At neutral -- the common
+## case, and every fight in the game before this landed -- the tag is exactly
+## what it always was: the type word in the type's own colour. When the matchup
+## is not neutral the colour switches to the verdict, because colour is the
+## fastest channel on screen and the thing that CHANGES deserves it more than
+## the thing that is also written in words right beside it. The type is never
+## lost: it is the word.
+##
+## Read at a glance rather than at leisure, which is the constraint a
+## real-time, directly-piloted fight puts on every HUD element here.
+## T3-MATCHUPS added the second half. `combat_manager` has resolved damage
+## through `multiplier_dual` since T3-CREATURES -- both call sites and
+## `active_matchup()` -- but this tag only ever wrote the PRIMARY type, so a
+## dual-typed foe read as a mono-typed one. That was invisible while the five
+## new types had no rows and every second half was worth 1.0. It stopped being
+## invisible with this lane: the game's first double weakness is a Water move
+## into Ashtusk at 1.5625, and a player who saw only "GROUND" had no way to
+## tell why that hit was harder here than against the Burrowback behind it.
+##
+## So the word becomes "GROUND/FIRE" when there is a second half. The slash
+## rather than a second widget, for the reason the arrow rides this tag rather
+## than getting its own: this is a real-time, directly-piloted fight on a
+## 7-inch handheld and the plate has room for one more word, not one more
+## element.
+func _draw_type_tag(foe_type: String, foe_secondary: String = "") -> void:
+	var matchup: int = int(_manager.call("active_matchup"))
+	var glyph := ""
+	var colour := _type_color(foe_type)
+	if matchup > 0:
+		glyph = "  ▲"
+		colour = UITokens.SUCCESS
+	elif matchup < 0:
+		glyph = "  ▼"
+		colour = UITokens.WARNING
+	var word := foe_type.to_upper()
+	var second := foe_secondary.strip_edges()
+	if not second.is_empty():
+		word += "/" + second.to_upper()
+	_enemy_type_tag.text = word + glyph
+	_enemy_type_tag.add_theme_color_override("font_color", colour)
+
+
+func _draw_enemy() -> void:
+	var foe: RefCounted = _manager.call("enemy")
+	if foe == null:
+		_enemy_eyebrow.text = ""
+		return
+	_enemy_eyebrow.text = enemy_identity_text(foe, _manager, _director)
+	# `label()`, not `display_name`: for every wild creature in the game those
+	# are the same string, because `label()` falls back to the species name
+	# whenever there is no nickname. The one creature that has one is the
+	# Burrow Warrens guardian (`burrow_warrens.gd::_dress_the_guardian`), which
+	# is named so the fight the region is built around does not open with a
+	# plate reading the same species word as the three animals in the corridor
+	# behind it. Reading `label()` here also means a CAUGHT creature the player
+	# has renamed is called what they called it when it is on the other side of
+	# a fight, which is the same rule the ally plate above already follows.
+	_enemy_name.text = str(foe.label())
+	_draw_type_tag(str(foe.creature_type), str(foe.get("secondary_type")))
+
+	var fraction: float = foe.hp_fraction()
+	_enemy_health.value = fraction * 100.0
+	_enemy_health_fill.bg_color = UITokens.DANGER.lerp(UITokens.HP_GREEN, fraction)
+	if _enemy_poise != null:
+		_enemy_poise.value = float(_manager.call("enemy_poise_fraction")) * 100.0
+
+	# The enemy's wind-up and its recovery, in words, because a placeholder
+	# capsule has no animation to show either with. Scaffolding for real
+	# animation, not a UI decision to keep.
+	#
+	# Silenced through the catch resolution and the fight's ending — the wild
+	# creature freezes mid-beat when it goes into the orb, so whatever it was doing
+	# otherwise stays on screen shouting stale advice over the wobble.
+	if bool(_manager.call("is_resolving_catch")) or str(_manager.call("outcome")) != "":
+		_telegraph.text = ""
+	elif bool(_manager.call("enemy_is_winding_up")):
+		# F04#0: a heavy (Earth Fist, an ACE's final-exam strike) reads apart
+		# from an ordinary one -- the judge saw both under one warning.
+		if _manager.has_method("enemy_windup_is_heavy") and bool(_manager.call("enemy_windup_is_heavy")):
+			var named := str(_manager.call("enemy_tell_text")) if _manager.has_method("enemy_tell_text") else ""
+			_telegraph.text = named if not named.is_empty() else "!!  HEAVY — get clear"
+			_telegraph.add_theme_color_override("font_color", UITokens.DANGER)
+		else:
+			_telegraph.text = _windup_text()
+			_telegraph.add_theme_color_override("font_color", UITokens.WARNING)
+	elif bool(_manager.call("enemy_is_rooted")) and not bool(_manager.call("player_is_staggered")):
+		# Not while your own creature is staggered: it cannot act on "hit it",
+		# and the red stagger banner beneath said the opposite at the same time.
+		_telegraph.text = "↯  it's open — hit it"
+		_telegraph.add_theme_color_override("font_color", UITokens.TEAL_SOFT)
+	else:
+		_telegraph.text = ""
+
+
+## The ordinary wind-up's words: a named CHARGER or DIVER says what to do about
+## it (combat.json telegraph.charge_text / dive_text), anything else the plain
+## warning.
+func _windup_text() -> String:
+	# A named fight's signature attack may name its own question (F22#4,
+	# BOSSES §4.3 Oreth's Overflow): the attack row's authored `tell_text`.
+	var named := str(_manager.call("enemy_tell_text")) if _manager.has_method("enemy_tell_text") else ""
+	if not named.is_empty():
+		return named
+	var shape := str(_manager.call("enemy_windup_shape")) if _manager.has_method("enemy_windup_shape") else ""
+	var tell := COMBAT_MATH.config().get("telegraph", {}) as Dictionary
+	if shape == "charge":
+		return str(tell.get("charge_text", "!  incoming — move"))
+	if shape == "dive":
+		return str(tell.get("dive_text", "!  incoming — move"))
+	return "!  incoming — move"
+
+
+func _draw_ally() -> void:
+	var creature: RefCounted = _manager.call("active_creature")
+	if creature == null:
+		return
+	_ally_name.text = creature.label()
+	_ally_level.text = ally_level_text(creature, _manager)
+	_draw_ally_portrait(str(creature.species_id))
+
+	var fraction: float = creature.hp_fraction()
+	_ally_health.value = fraction * 100.0
+	_ally_health_fill.bg_color = UITokens.DANGER.lerp(UITokens.HP_GREEN, fraction)
+	if _ally_poise != null:
+		_ally_poise.value = float(_manager.call("player_poise_fraction")) * 100.0
+	if _ally_wind != null:
+		var wind_fraction: float = float(_manager.call("wind_fraction"))
+		_ally_wind.value = wind_fraction * 100.0
+		_wind_fill.bg_color = UITokens.DANGER.lerp(UITokens.TEAL_SOFT, wind_fraction)
+
+	var energy: float = creature.energy_fraction()
+	_ally_energy.value = energy * 100.0
+	var ultimate: float = float(_manager.call("ultimate_fraction"))
+	_ultimate_meter.value = ultimate * 100.0
+	var signature := _move_name(str(creature.get("move_ultimate")), "Ultimate")
+	var arm := INPUT_GLYPH.icon("combat_ultimate_arm", 22, VERB_READY if ultimate >= 1.0 else VERB_DIMMED)
+	var instruction := "release → move" if ultimate >= 1.0 else "%d%%" % roundi(ultimate * 100.0)
+	if bool(_manager.call("ultimate_armed")): instruction = "tap a move"
+	_ultimate_readout.text = "%s %s · %s" % [arm, signature, instruction]
+
+	# Once, not constantly: a bar that pulses every frame it happens to be full
+	# stops meaning anything. Only the RISING edge (not-full -> full) fires it.
+	var now_full: bool = energy >= 0.999
+	if now_full and not _energy_was_full:
+		_pulse(_energy_pulse)
+	_energy_was_full = now_full
+
+
+## F33: a Harness raises maximum HP for the fight, so the raised HP is shown
+## beside the level; with no Harness the line is the level alone.
+static func ally_level_text(creature: RefCounted, manager: Node) -> String:
+	var text := "Lv %d" % int(creature.get("level"))
+	if manager == null or not manager.has_method("display_hp"): return text
+	var shown: Vector2 = manager.call("display_hp", creature)
+	if shown.y <= float(creature.get("max_hp")) + 0.001: return text
+	return "%s · HP %d/%d" % [text, roundi(shown.x), roundi(shown.y)]
+
+
+## The same species resolver used by the roster supplies real identity art.
+## Missing authored texture remains an honest swatch, not another species.
+func _draw_ally_portrait(species_id: String) -> void:
+	if species_id==_ally_portrait_species: return
+	_ally_portrait_species = species_id
+	if _ally_portrait==null:
+		_ally_portrait = TextureRect.new()
+		_ally_portrait.name = "AuthoredPortrait"
+		_ally_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_ally_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_ally_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		_ally_chip.add_child(_ally_portrait)
+		_ally_portrait.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var path := CREATURE_PORTRAIT.resolve(species_id)
+	var texture: Texture2D = load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
+	_ally_portrait.texture = texture
+	_ally_portrait.visible = texture!=null
+	_ally_chip.color = Color.TRANSPARENT if texture!=null else _species_colour(species_id)
+
+
+func _species_colour(species_id: String) -> Color:
+	var placeholder: Dictionary = SPECIES.placeholder(species_id)
+	return Color(str(placeholder.get("colour", "#888888")))
+
+
+## --- move grid (spec §9) ----------------------------------------------------
+
+## The fight's action hint. A trainer's creature is never catchable (catch only
+## during wild combat), so its fight shows no catch-aim prompt at all.
+static func action_hint(throw: String, orbs: int, switch: String, flee: String, catchable: bool) -> String:
+	if not catchable:
+		return "%s Switch   %s Flee" % [switch, flee]
+	return "%s Aim · %d orbs   %s Switch   %s Flee" % [throw, orbs, switch, flee]
+
+## Orbs, the grid itself, or whichever of the two mutually-exclusive
+## alternate rows (aiming / resolving-catch / a transient miss-or-refusal
+## message) currently owns the bottom-centre strip. Precedence mirrors the
+## pre-rebuild `_draw_actions`: a resolving catch always wins, a live miss or
+## switch-refusal message wins over aiming, and the grid only draws once none
+## of those are true.
+func _draw_grid() -> void:
+	var orbs: int = int(_manager.call("orbs_left"))
+	var owned: bool = _manager.has_method("enemy_owned") and bool(_manager.call("enemy_owned"))
+	_orbs.text = action_hint(_combat_binding_text("combat_throw"), orbs,
+		_combat_binding_text("party_cycle"), _combat_binding_text("combat_run"), not owned)
+
+	var resolving: bool = bool(_manager.call("is_resolving_catch"))
+	var aiming: bool = bool(_manager.call("is_aiming"))
+	if _catch_focus_left > 0.0:
+		# P2-061: the caught result owns the screen; the finished fight's
+		# cards and actions step back until the card expires.
+		for panel: Control in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel, _aim_row, _catch_row]:
+			panel.visible = false
+		return
+	# A fresh aim supersedes advice about the previous failed throw. Other
+	# action/refusal messages retain their existing lifetime and precedence.
+	if aiming and not resolving and _catch_verdict_message:
+		_miss_left = 0.0
+		_miss_text = ""
+		_catch_verdict_message = false
+	var has_message: bool = _miss_left > 0.0
+
+	# The orb cluster and the enemy plate/grid dim (spec §10.1/§10.4) only ever
+	# apply to the AIMING branch below; every other branch clears them, same
+	# discipline `_show_fight` already uses for the fully-not-fighting case.
+	if not aiming:
+		if _orb_cluster != null:
+			_orb_cluster.visible = false
+		_enemy_panel.visible = true
+		_enemy_panel.modulate.a = 1.0
+		_grid_panel.modulate.a = 1.0
+
+	_catch_row.visible = resolving
+	if resolving:
+		_grid_panel.visible = false
+		_aim_row.visible = false
+		_catch_row.text = "[center]%s[/center]" % (_miss_text if has_message else "")
+		return
+
+	if has_message:
+		# F10#6 device profile (code-blind judges r2/r3, C2f): hiding the move
+		# grid under "it missed you" emptied the panel in the exact punish
+		# window the tell line calls "it's open — hit it". The line sits
+		# bottom-centre, clear of the grid; both show.
+		_aim_row.visible = true
+		_aim_row.text = "[center]%s[/center]" % _miss_text
+		_grid_panel.visible = true
+		_draw_cells(orbs)
+		return
+
+	if aiming:
+		_grid_panel.visible = false
+		# Odds-free and empty: Throw/Cancel used to be worded out here AND in
+		# the lower-right orb cluster at the same time (blind visual review's
+		# "duplicate Throw/Cancel while aiming") — the orb cluster
+		# (`_draw_orb_cluster`) is the one home for those verbs now (spec
+		# §10.4); the percentage itself already lives on the capture reticle
+		# (D31). Nothing left for this row to say while aiming.
+		_aim_row.visible = false
+		_aim_row.text = ""
+		_orbs_panel.visible = false
+		_draw_orb_cluster(orbs)
+		# Hidden, not dimmed (blind visual review: a 35%-alpha plate over open
+		# sky read as "a broken grey ghost", not "temporarily de-emphasised").
+		# The move grid stays a plain alpha dim — it is still a legible panel
+		# at 35%, just quieter; the enemy plate at that alpha was not.
+		_enemy_panel.visible = false
+		_grid_panel.modulate.a = 0.35
+		return
+
+	_aim_row.visible = false
+	_grid_panel.visible = true
+	_draw_cells(orbs)
+
+
+func _combat_binding_text(action: String) -> String:
+	return INPUT_GLYPH.pad_button_name_for_action(action) if INPUT_GLYPH.using_gamepad() else INPUT_GLYPH.key_name_for_action(action)
+
+
+func _draw_cells(_orbs_count: int) -> void:
+	var creature: RefCounted = _manager.call("active_creature")
+	if creature == null:
+		return
+
+	var quick_ready: bool = bool(_manager.call("quick_ready"))
+	var charged_ready: bool = bool(_manager.call("charged_ready"))
+	_draw_quick_cell(creature, quick_ready)
+	_draw_charged_cell(creature, charged_ready)
+	var utility_id := str(creature.get("move_utility"))
+	var utility_ready: bool = bool(_manager.call("utility_ready"))
+	var utility_name := _move_name(utility_id, "No utility")
+	var cooldown: float = float(_manager.call("utility_cooldown"))
+	if cooldown > 0.0: utility_name += " %.1fs" % cooldown
+	elif not utility_id.is_empty() and not _manager.call("live_move_supported", "utility", utility_id): utility_name += " · unavailable"
+	_cell_throw_content.text = "[center]%s\n%s[/center]" % [INPUT_GLYPH.icon("combat_utility", CELL_GLYPH_PX), utility_name]
+	_cell_throw.modulate = CELL_READY if utility_ready else CELL_DIMMED
+	var burst_ready: bool = not bool(_manager.call("player_is_committed")) and float(_manager.call("wind_value")) >= float(_manager.call("wind_cost", "burst"))
+	_cell_switch_content.text = "[center]%s\nDodge[/center]" % INPUT_GLYPH.icon("jump", CELL_GLYPH_PX)
+	_cell_switch.modulate = CELL_READY if burst_ready else CELL_DIMMED
+
+
+func _move_name(move_id: String, fallback: String) -> String:
+	if move_id != "" and _moves.has(move_id):
+		return _moves.display_name(move_id)
+	return fallback
+
+
+func _move_type(move_id: String, fallback_type: String) -> String:
+	if move_id != "" and _moves.has(move_id):
+		return str(_moves.move(move_id).get("type", fallback_type))
+	return fallback_type
+
+
+func _draw_quick_cell(creature: RefCounted, ready: bool) -> void:
+	var name_text := _move_name(str(creature.move_quick), "Quick")
+	var glyph := INPUT_GLYPH.icon("quick", CELL_GLYPH_PX, VERB_READY if ready else VERB_DIMMED)
+	_cell_quick_content.text = "[center]%s\n%s[/center]" % [glyph, name_text]
+	_cell_quick_hairline.color = _type_color(_move_type(str(creature.move_quick), str(creature.creature_type)))
+	_cell_quick.modulate = CELL_READY if ready else CELL_DIMMED
+	_mark_ready("quick", ready, _cell_quick_pulse)
+
+
+func _draw_charged_cell(creature: RefCounted, ready: bool) -> void:
+	var move_id := str(creature.move_charged)
+	var name_text := _move_name(move_id, "Charged")
+	var glyph := INPUT_GLYPH.icon("charged", CELL_GLYPH_PX, VERB_READY if ready else VERB_DIMMED)
+	var text := "[center]%s\n%s[/center]" % [glyph, name_text]
+	if not ready:
+		var required: int = int(_moves.move(move_id).get("energy_cost", 100)) if move_id != "" else 100
+		# F10#6: the cost shares the name's line at the name's size rather
+		# than a FONT_TINY third line the 7-inch judge could not read.
+		text = "[center]%s\n%s  [color=#%s]%d[/color][/center]" % [
+			glyph, name_text, VERB_DIMMED.to_html(false), required
+		]
+	_cell_charged_content.text = text
+	_cell_charged_hairline.color = _type_color(_move_type(move_id, str(creature.creature_type)))
+	_cell_charged.modulate = CELL_READY if ready else CELL_DIMMED
+	_mark_ready("charged", ready, _cell_charged_pulse)
+
+
+func _draw_throw_cell(orbs: int, ready: bool) -> void:
+	var glyph := INPUT_GLYPH.icon("throw", CELL_GLYPH_PX, VERB_READY if ready else VERB_DIMMED)
+	var name_text := "Throw" if ready else "No orbs"
+	_cell_throw_content.text = "[center]%s\n%s[/center]" % [glyph, name_text]
+	_cell_throw.modulate = CELL_READY if ready else CELL_DIMMED
+	_mark_ready("throw", ready, _cell_throw_pulse)
+
+
+func _draw_switch_cell(ready: bool) -> void:
+	var glyph := INPUT_GLYPH.icon("party_cycle", CELL_GLYPH_PX, VERB_READY if ready else VERB_DIMMED)
+	_cell_switch_content.text = "[center]%s\nSwitch[/center]" % glyph
+	_cell_switch.modulate = CELL_READY if ready else CELL_DIMMED
+	_mark_ready("switch", ready, _cell_switch_pulse)
+
+
+## Fire the teal pulse exactly once, on the frame a cell's `ready` flips from
+## false to true — never on every frame it merely stays ready, which is what a
+## plain "if ready: pulse" would do.
+func _mark_ready(key: String, ready: bool, pulse_rect: ColorRect) -> void:
+	var was_ready: bool = bool(_prev_ready.get(key, ready))
+	if ready and not was_ready:
+		_pulse(pulse_rect)
+	_prev_ready[key] = ready
+
+
+## A brief teal flash over `rect` — `T_CAPTURE_PULSE` in, the same back out.
+## Used for a cell becoming ready and for the energy bar topping out. Kills
+## any tween already running on this exact rect so a rapid repeat retriggers
+## cleanly instead of stacking.
+func _pulse(rect: ColorRect) -> void:
+	var key: int = rect.get_instance_id()
+	if _pulse_tweens.has(key):
+		var old: Tween = _pulse_tweens[key]
+		if old != null and old.is_valid():
+			old.kill()
+	rect.color.a = 0.0
+	# Reduced motion (UX §8) drops this flash. The cell's ready tint still
+	# carries the state, so nothing the player needs goes with it.
+	if MOTION_PREFS.reduced_motion():
+		return
+	var tw := create_tween()
+	_pulse_tweens[key] = tw
+	tw.tween_property(rect, "color:a", 0.55, UITokens.T_CAPTURE_PULSE)
+	tw.tween_property(rect, "color:a", 0.0, UITokens.T_CAPTURE_PULSE)
+
+
+## Icon, item name, count and the throw/cancel glyphs, replacing the plain
+## "Orbs N" label for the length of the aim (spec §10.4). The item's display
+## name is read off `Game.items` rather than hard-coded, so a renamed item
+## cannot leave this cluster calling it something else than the satchel does.
+func _draw_orb_cluster(orbs: int) -> void:
+	if _orb_cluster == null:
+		return
+	_orb_cluster.visible = true
+	var orb_id := ORB_ITEM_ID
+	if _manager != null:
+		orb_id = str(_manager.call("current_orb_id"))
+	var item_name := "Tether Orb"
+	var icon_path := ORB_ICON_PATH
+	var game := get_node_or_null(^"/root/Game")
+	if game != null:
+		var db: RefCounted = game.get("items")
+		if db != null:
+			item_name = str(db.call("item_name", orb_id))
+			icon_path = str(db.call("definition", orb_id).get("icon", ORB_ICON_PATH))
+	_orb_cluster.text = "[right][img=24x24]%s[/img]  %s  x%d\n%s %s     %s %s[/right]" % [
+		icon_path, item_name, orbs,
+		INPUT_GLYPH.icon("combat_orb_release", 26, VERB_READY), "Throw",
+		INPUT_GLYPH.icon("cancel", 26, VERB_READY), "Cancel",
+	]
+
+
+## What the reticle needs this frame: the enemy's screen position and the
+## chance a clean hit would resolve at right now. The enemy BODY is reached
+## by reflection (`_manager.get("_wild")`) rather than a new accessor —
+## `combat_manager.gd` is out of scope for this task, and `_combat_party()`
+## below already reads a different underscore-prefixed field the identical
+## way, for the identical reason. `target_marker.gd`'s own `centre()`/
+## `body_radius()` calls on this same node are the precedent for treating it
+## as the enemy's world anchor.
+func _update_capture_reticle() -> void:
+	if _capture_reticle == null or _manager == null:
+		return
+
+	var resolving_now: bool = bool(_manager.call("is_resolving_catch"))
+	if resolving_now and not _was_resolving_catch:
+		# The RESOLVED chance, not the last one the aim advertised -- see
+		# `combat_manager.gd::last_catch_chance()`. The contract is the one beat
+		# in the whole sequence that can tell the player what their placement
+		# was worth, and it was showing them the aim's dead-centre figure.
+		_capture_reticle.call(
+			"play_contract", _last_reticle_screen_pos,
+			float(_manager.call("last_catch_chance"))
+		)
+	_was_resolving_catch = resolving_now
+
+	if not bool(_manager.call("is_aiming")):
+		_capture_reticle.call("update_target", Vector2.ZERO, 0.0, false)
+		return
+
+	var chance := float(_manager.call("catch_chance_now"))
+	var wild: Variant = _manager.get("_wild")
+	var camera: Camera3D = get_viewport().get_camera_3d()
+	if not (wild is Node3D) or not is_instance_valid(wild) or camera == null \
+			or not (wild as Node3D).has_method("centre"):
+		_capture_reticle.call("update_target", Vector2.ZERO, chance, false)
+		return
+
+	var world_pos: Vector3 = (wild as Node3D).call("centre")
+	var to_target: Vector3 = world_pos - camera.global_position
+	if to_target.dot(-camera.global_transform.basis.z) <= 0.0:
+		# Behind the camera — unproject_position() would return nonsense.
+		_capture_reticle.call("update_target", Vector2.ZERO, chance, false)
+		return
+
+	var screen_pos: Vector2 = camera.unproject_position(world_pos)
+	_last_reticle_screen_pos = screen_pos
+	# `locked` is the fourth argument and it is the point of this pass: the
+	# ring used to draw the same way, with the same percentage, whether the
+	# player was on the creature or pointing into the grass beside it. See
+	# `combat_manager.gd::catch_aim_is_locked()`.
+	_capture_reticle.call(
+		"update_target", screen_pos, chance, true,
+		bool(_manager.call("catch_aim_is_locked"))
+	)
+
+
+## --- switching input (D32 §9.4, remapped by CONTROLLER-MAP) -----------------
+##
+## One press of `party_cycle` (LB) steps to the next available creature. No
+## hold, no selector, no time-slow — the fight keeps running underneath, which
+## is why this re-checks `is_aiming` / `is_resolving_catch` every frame rather
+## than trusting whatever was true when the fight started.
+##
+## CONSUMPTION, and its limit: this reads `Input.is_action_just_pressed`
+## polling, the same mechanism `CombatManager._read_player_input` already uses
+## for every other combat verb. What it can NOT do is stop another poller from
+## seeing the same press. That used to matter a great deal — `hotbar_2`/
+## `hotbar_3` shared the physical d-pad with the old directional switch actions,
+## so a mid-fight switch also ate a satchel slot — and it is exactly the bug
+## CONTROLLER-MAP removes: LB is this verb and nothing else, and the d-pad is
+## the hotbar and nothing else, in every context including a fight.
+func _handle_switch_input() -> void:
+	if _manager == null or COMBAT_INPUT_OWNER.current(get_tree()) != null:
+		return
+
+	# Aiming and a resolving catch both already own player input elsewhere in
+	# the fight (`throw_aim.gd`, the frozen beat around the orb); a switch
+	# attempt here would be a second thing reading the same button.
+	if bool(_manager.call("is_aiming")) or bool(_manager.call("is_resolving_catch")):
+		return
+
+	if not Input.is_action_just_pressed(&"party_cycle"):
+		return
+	if not bool(_manager.call("can_switch")) or not bool(_manager.call("cycle_active", 1)):
+		_refuse_switch()
+
+
+func _refuse_switch() -> void:
+	_catch_verdict_message = false
+	_miss_text = "locked in — a moment"
+	_miss_left = 1.2
+
+
+## `AllyPanel`'s real top edge minus the strip's own real measured height
+## minus `SWITCH_PANEL_GAP`, in the CURRENT canvas's own coordinates —
+## `_root.size.y`, not an assumed 1080, the same "derive from the real
+## canvas size" fix `playground_hud.gd::_reflow_left_stack()` already applies
+## to this exact left-column-above-a-bottom-anchored-panel shape (its own
+## header has the derivation for why the Ally's stretched canvas is not
+## always 1080 tall). `_ally_panel.offset_top` is negative (bottom-anchored,
+## `combat_hud.tscn`), so adding it to the canvas height gives the panel's
+## real top in pixels.
+func _party_strip_position() -> Vector2:
+	# THE PANEL'S REAL TOP, not the one its offsets declare. `AllyPanel` is a
+	# bottom-anchored `PanelContainer` with `grow_vertical = 0`, so when its
+	# content needs more than the 150px `combat_hud.tscn` gives it, it grows
+	# UPWARD -- and a Control forced past its minimum size grows its cached
+	# rect without writing that growth back to its offsets (the distinction
+	# `smoke_prompt_hotbar_dock.gd`'s own header draws). Measured on the live
+	# scene: authored top 874 on a 1080-tall canvas, real top **833**. The
+	# roster was being placed against an edge 41px below where the plate
+	# actually is, which is the other half of `HIST-013` -- "the active-creature
+	# plate composites over the roster's fifth row" -- and no amount of
+	# correcting the arithmetic downstream could have found it, because the
+	# arithmetic was right about the wrong edge.
+	#
+	# The authored offset stays as the fallback for exactly one case: this is
+	# called from `_ready()` to seed the strip's rest position, before the
+	# panel has been laid out and while its rect is still degenerate. Every
+	# call after that is from `_update_party_strip()` with a real rect.
+	var ally_rect := _ally_panel.get_global_rect()
+	var ally_top: float = ally_rect.position.y if ally_rect.size.y > 0.0 \
+			else _root.size.y + _ally_panel.offset_top
+	if is_instance_valid(_system_overlay) and _system_overlay.visible:
+		var commands: Rect2 = _system_overlay.call("command_rect")
+		if commands.size.y > 0.0 and commands.position.x < SWITCH_PANEL_X + _party_strip.size.x \
+				and commands.end.x > SWITCH_PANEL_X:
+			ally_top = minf(ally_top, commands.position.y)
+	var strip_h: float = _party_strip.size.y if _party_strip != null else 0.0
+	return Vector2(SWITCH_PANEL_X, ally_top - strip_h - SWITCH_PANEL_GAP)
+
+
+## Refresh the always-on party strip, pinned while a switch is available.
+func _update_party_strip() -> void:
+	if _party_strip == null:
+		return
+	# Cheap every frame (one Vector2 subtraction) and safe to call while the
+	# strip is mid-reveal — `set_rest_position()` only snaps `.position` when
+	# the widget is not currently visible, so this can never yank it out from
+	# under its own tween (same contract `playground_hud.gd`'s identical call
+	# already relies on).
+	_party_strip.call("set_rest_position", _party_strip_position())
+	var combat_party := _combat_party()
+	var player_party := _player_party()
+	var source := party_order_for_display(combat_party, player_party)
+	var active_member: RefCounted = _manager.call("active_creature") if _manager != null else null
+	var combat_index: int = int(_manager.get("_active_index")) if _manager != null else 0
+	var active_index := active_index_for_display(source, active_member, combat_index)
+	var entries := _party_entries(source)
+	_party_strip.call("update_from_party", entries, active_index)
+
+	var switchable: Array = _manager.call("switchable_indices")
+	var available: bool = bool(_manager.call("can_switch")) and not switchable.is_empty()
+	_party_strip.call("set_pinned", available)
+
+
+## The combat party, as `{label, level, hp_fraction, tint, fainted}` entries
+## in the player's persistent party order — the exact shape
+## `PartyStrip.update_from_party` wants.
+##
+## Combat deliberately puts the deployed member at index zero in its temporary
+## `_party` array. That is combat traversal order, not the player's chosen Team
+## order. The HUD therefore uses `Game.party.members()` whenever it contains the
+## same combatants, and maps the active creature by identity so switching moves
+## only the highlight. A partial/test combat array that does not belong to the
+## local party remains self-contained instead of borrowing unrelated rows.
+static func party_order_for_display(combat_party: Array, player_party: Array) -> Array:
+	if player_party.is_empty():
+		return combat_party
+	if combat_party.is_empty():
+		return player_party
+	for member: Variant in combat_party:
+		if member != null and not player_party.has(member):
+			return combat_party
+	return player_party
+
+
+static func active_index_for_display(source: Array, active_member: RefCounted, fallback: int) -> int:
+	var index := source.find(active_member) if active_member != null else -1
+	return index if index >= 0 else clampi(fallback, 0, maxi(0, source.size() - 1))
+
+
+func _combat_party() -> Array:
+	var source: Array = []
+	if _manager != null:
+		var raw: Variant = _manager.get("_party")
+		if raw is Array:
+			source = raw as Array
+	return source
+
+
+func _player_party() -> Array:
+	var game: Node = get_node_or_null(^"/root/Game")
+	if game == null:
+		return []
+	var party_auto: Variant = game.get("party")
+	return party_auto.call("members") if party_auto != null else []
+
+
+func _party_entries(source: Array) -> Array:
+	var entries: Array = []
+	for member in source:
+		if member == null:
+			continue
+		var entry := {
+			"label": member.label(),
+			"level": int(member.level),
+			"hp_fraction": member.hp_fraction(),
+			"tint": _species_colour(str(member.species_id)),
+			# F10#6 (r6 judge: the compact column's pips were five colour
+			# swatches, Mudsnout and Terrapup the same brown): the roster knows
+			# each member by portrait, as the exploration strip already does.
+			"portrait": CREATURE_PORTRAIT.resolve(str(member.species_id)),
+			"fainted": bool(member.fainted),
+		}
+		# PROGRESSION-VISIBLE: the xp sliver, the bond pip and the creature id
+		# the strip's own feed polling matches ticks against.
+		entry.merge(BOND_MILESTONES.strip_fields(member, PROGRESSION.config()))
+		entries.append(entry)
+	return entries
+
+
+func _on_creature_switched(_index: int) -> void:
+	var creature: RefCounted = _manager.call("active_creature") if _manager != null else null
+	_go_text.text = "GO, %s!" % creature.label() if creature != null else ""
+	_go_left = 1.2
+	# T3-COMBAT. A switch is the player asking a different question of the same
+	# opponent, and the answer is the first thing they need back.
+	_forget_the_last_verdict()
+	if _party_strip != null:
+		_party_strip.call("show_strip")
+
+
+func _tick_go_text(delta: float) -> void:
+	if _go_left <= 0.0:
+		_go_text.text = ""
+		return
+	_go_left -= delta
+
+
+## --- F21 damage numbers (COMBAT §11, UX §18) ---------------------------------
+##
+## One label per confirmed receipt, born on the visible contact (the manager
+## emits `impact_confirmed` on arrival, never before), rising from the target's
+## rendered top and fading over `numbers.duration_seconds`. Styles come from
+## `hit_feedback.number_style`: crit gold and larger, super-effective larger
+## with the move's type-colour outline, resisted smaller and grey, own creature
+## 0.85x, peers 60% opacity at 0.8x. Hits on one target within
+## `numbers.merge_seconds` merge into one number. Presentation only.
+func _number_config() -> Dictionary:
+	return HIT_FEEDBACK.config().get("numbers", {})
+
+
+func _on_impact_confirmed(on_enemy: bool, receipt: Dictionary, where: Vector3) -> void:
+	var cfg := _number_config()
+	if not bool(cfg.get("enabled", true)) or not where.is_finite(): return
+	var mode := MOTION_PREFS.damage_numbers_mode()
+	if mode == "off" or (mode == "own" and not bool(receipt.get("own_hit", true))): return
+	var applied := float(receipt.get("applied_damage", receipt.get("damage", 0.0)))
+	var key := "%s|%s|%s" % [on_enemy, str(receipt.get("target_uid", "")), bool(receipt.get("own_hit", true))]
+	var now := Time.get_ticks_msec()
+	var merge_ms := int(round(maxf(0.0, float(cfg.get("merge_seconds", 0.15))) * 1000.0))
+	for label: Label in _damage_numbers:
+		if not is_instance_valid(label) or str(label.get_meta("merge_key", "")) != key \
+				or now - int(label.get_meta("born_ms", 0)) > merge_ms:
+			continue
+		var prior: Dictionary = label.get_meta("receipt", {})
+		var merged := receipt.duplicate()
+		merged["applied_damage"] = float(prior.get("applied_damage", 0.0)) + applied
+		# The stronger class wins a merge, so a crit inside a burst still reads.
+		if _number_class_rank(prior) > _number_class_rank(receipt):
+			merged["critical"] = prior.get("critical", false)
+			merged["type_mult"] = prior.get("type_mult", 1.0)
+			merged["move_id"] = prior.get("move_id", "")
+		_style_number(label, merged, on_enemy)
+		return
+	if _number_layer == null:
+		_number_layer = Control.new()
+		_number_layer.name = "DamageNumbers"
+		_number_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_number_layer.set_anchors_preset(Control.PRESET_FULL_RECT)
+		add_child(_number_layer)
+	while _damage_numbers.size() >= maxi(1, int(cfg.get("max_live", 12))):
+		var oldest: Label = _damage_numbers.pop_front()
+		if is_instance_valid(oldest): oldest.queue_free()
+	var number := Label.new()
+	number.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	number.set_meta("merge_key", key)
+	number.set_meta("born_ms", now)
+	number.set_meta("age", 0.0)
+	number.set_meta("world", where)
+	var first := receipt.duplicate()
+	first["applied_damage"] = applied
+	_style_number(number, first, on_enemy)
+	_number_layer.add_child(number)
+	_damage_numbers.append(number)
+	_place_number(number, 0.0, _number_camera(), cfg)
+
+
+func _number_camera() -> Camera3D:
+	var viewport := get_viewport()
+	return viewport.get_camera_3d() if viewport != null else null
+
+
+static func _number_class_rank(receipt: Dictionary) -> int:
+	return ["resisted", "ordinary", "effective", "critical"].find(HIT_FEEDBACK.style_key(receipt))
+
+
+func _style_number(label: Label, receipt: Dictionary, on_enemy: bool) -> void:
+	var cfg := _number_config()
+	var style := HIT_FEEDBACK.number_style(receipt, on_enemy)
+	label.set_meta("receipt", receipt)
+	label.set_meta("opacity", float(style.get("opacity", 1.0)))
+	label.text = str(style.get("text", ""))
+	label.add_theme_font_size_override("font_size", int(style.get("font_px", 22)))
+	label.add_theme_color_override("font_color", Color(str(style.get("colour", "#f2f0df"))))
+	var outline := Color(str(style.get("outline", "#151c23")))
+	var move_type := _move_type(str(receipt.get("move_id", "")), "") if _moves != null else ""
+	if HIT_FEEDBACK.style_key(receipt) == "effective" and not move_type.is_empty():
+		outline = _type_color(move_type)
+	label.add_theme_color_override("font_outline_color", outline)
+	label.add_theme_constant_override("outline_size", int(cfg.get("outline_px", 3)))
+	label.size = label.get_minimum_size()
+
+
+func _place_number(label: Label, t: float, camera: Camera3D, cfg: Dictionary) -> void:
+	var world: Vector3 = label.get_meta("world", Vector3.ZERO)
+	if camera == null or camera.is_position_behind(world):
+		label.visible = false
+		return
+	label.visible = true
+	var screen := camera.unproject_position(world)
+	label.position = screen - Vector2(label.size.x * 0.5, label.size.y + float(cfg.get("rise_px", 56)) * t)
+	var hold := clampf(float(cfg.get("hold_fraction", 0.4)), 0.0, 0.95)
+	var fade := 1.0 if t <= hold else 1.0 - (t - hold) / (1.0 - hold)
+	label.modulate.a = float(label.get_meta("opacity", 1.0)) * clampf(fade, 0.0, 1.0)
+
+
+func _tick_damage_numbers(delta: float) -> void:
+	if _damage_numbers.is_empty(): return
+	var cfg := _number_config()
+	var duration := maxf(0.05, float(cfg.get("duration_seconds", 0.8)))
+	var camera := _number_camera()
+	for i: int in range(_damage_numbers.size() - 1, -1, -1):
+		var label := _damage_numbers[i]
+		if not is_instance_valid(label):
+			_damage_numbers.remove_at(i)
+			continue
+		var age := float(label.get_meta("age", 0.0)) + delta
+		label.set_meta("age", age)
+		if age >= duration:
+			_damage_numbers.remove_at(i)
+			label.queue_free()
+			continue
+		_place_number(label, age / duration, camera, cfg)
+
+
+## --- moments (signal-driven) -------------------------------------------------
+
+## T3-TYPECHART's teaching signal: the hit that just landed was type-advantaged
+## or type-disadvantaged, and the player is told at the exact moment it
+## mattered.
+##
+## THIS IS HOW THE CHART IS LEARNED. Nothing anywhere teaches the triangle --
+## no tutorial, no matchup screen, and section 9 rules out naming the creature
+## to use. What a player gets instead is confirmation: they swung, and the game
+## said whether it was the right swing. A dozen fights of that is the chart,
+## learned the way a player actually learns one.
+##
+## Silent at neutral, which is most hits. A banner that fires on every blow is
+## a banner nobody reads.
+##
+## Rides the same transient message channel as `_on_missed` below rather than
+## opening a second one. A swing either lands or misses, never both, so the two
+## cannot contend for the same event; across swings, whichever spoke last is
+## the one still relevant. Deliberately SHORTER-lived than a miss (0.7s against
+## 0.9s): a miss is telling the player to change what they are doing, this is
+## confirming what they already did.
+##
+## Phrased from the player's side in both directions -- "you hit a weakness" /
+## "it shrugged that off" -- because "WEAK" alone is ambiguous about who is
+## weak, and an ambiguous tell in a fast fight is worse than no tell.
+func _on_hit_effectiveness(on_enemy: bool, effectiveness: int) -> void:
+	if effectiveness == 0 or _effect_banner == null:
+		return
+	# T3-COMBAT. Say it when it becomes true, not on every blow that keeps it
+	# true. See `_effect_last_shown` for the measurement that produced this.
+	var key := "%s:%d" % ["foe" if on_enemy else "you", effectiveness]
+	if key == _effect_last_key:
+		var since := _effect_clock - float(_effect_last_shown.get(key, -INF))
+		if since < _effect_banner_repeat_seconds():
+			return
+	_effect_last_key = key
+	_effect_last_shown[key] = _effect_clock
+
+	var text := ""
+	var colour := UITokens.SUCCESS
+	if on_enemy:
+		if effectiveness > 0:
+			text = "▲  STRONG — you hit a weakness"
+		else:
+			text = "▼  WEAK — it shrugged that off"
+			colour = UITokens.WARNING
+	else:
+		if effectiveness > 0:
+			text = "▼  it hit YOUR weakness"
+			colour = UITokens.DANGER
+		else:
+			text = "▲  your type held — that barely landed"
+	_effect_banner.text = text
+	# A type verdict is about the enemy plate's matchup: always under it, even
+	# right after the player's own stagger line sat by the player's panel.
+	_effect_banner_mine = false
+	_effect_banner.add_theme_color_override("font_color", colour)
+	# Re-measured every time it is shown rather than once at build: the plate
+	# above it is a PanelContainer whose height follows its content, and the
+	# telegraph line inside it appears and disappears during a fight.
+	_position_effect_banner()
+	_effect_banner.visible = true
+	_effect_left = _effect_banner_seconds()
+
+
+func _on_staggered(on_enemy: bool) -> void:
+	if _effect_banner == null:
+		return
+	var who := ""
+	var mine: RefCounted = _manager.call("active_creature") if _manager != null else null
+	if not on_enemy and mine != null:
+		who = "%s " % mine.label()
+	_effect_banner.text = "STAGGERED — punish now" if on_enemy else "%sSTAGGERED — recovering" % who
+	# Fights close-1025 (`effect_banner.stagger_by_owner`, ON since 25 Oct): GPU
+	# G3 judges read the stagger line under the enemy plate as ambiguous. With
+	# it on, each line names whose creature it is, and the player's own sits
+	# beside the player's panel instead of under the enemy's.
+	_effect_banner_mine = false
+	if COMBAT_MATH.config().get("effect_banner", {}).get("stagger_by_owner") == true:
+		if on_enemy:
+			var foe: RefCounted = _manager.call("enemy") if _manager != null else null
+			_effect_banner.text = ("%s staggered — punish now" % foe.label()) if foe != null else "STAGGERED — punish now"
+		else:
+			_effect_banner.text = "%sstaggered — recovering" % who
+			_effect_banner_mine = true
+	# Amber, not red, on your own creature: a blind round read the red line
+	# about a friendly body as the reserved villain colour leaking onto the
+	# player's side. Still a warning; no longer the enemy's colour.
+	_effect_banner.add_theme_color_override("font_color", UITokens.TEAL_SOFT if on_enemy else UITokens.WARNING)
+	_position_effect_banner()
+	_effect_banner.visible = true
+	_effect_left = maxf(_effect_banner_seconds(), 0.8)
+
+
+## `combat.json`'s `effect_banner` block, with this file's own constants as the
+## fallback. Tunable there rather than here because how often a fight is allowed
+## to repeat itself is exactly the kind of number a playtest moves.
+func _effect_banner_seconds() -> float:
+	return float(COMBAT_MATH.config().get("effect_banner", {}).get(
+		"seconds", EFFECT_BANNER_SECONDS))
+
+
+func _effect_banner_repeat_seconds() -> float:
+	return float(COMBAT_MATH.config().get("effect_banner", {}).get("repeat_seconds", 6.0))
+
+
+## A new fight, or a new creature piloting it, is a new pairing: whatever the
+## chart said about the last one is no longer what the player needs told.
+##
+## Driven off the manager's own signals rather than polled, for the reason this
+## file's header gives about the outcome banner and the XP line: these are
+## moments, not state.
+func _forget_the_last_verdict() -> void:
+	_effect_last_key = ""
+	_effect_last_shown.clear()
+
+
+## A miss has to be legible or it reads as the game dropping the input.
+func _on_missed(by_player: bool) -> void:
+	_catch_verdict_message = false
+	_miss_text = "missed — too far, or facing the wrong way" if by_player else "it missed you"
+	_miss_left = 0.9
+
+
+## A throw the game declined to make, and why.
+func _on_catch_refused(reason: String) -> void:
+	_catch_verdict_message = false
+	_miss_text = reason
+	_miss_left = 1.6
+
+
+## The pulse half of a shake — the number itself is unreadable text at this
+## distance, but a ring expanding at the exact moment the orb rocks is not.
+func _on_orb_shook(_index: int) -> void:
+	if _capture_reticle != null:
+		_capture_reticle.call("play_pulse")
+
+
+func _on_catch_resolved(success: bool, shakes: int) -> void:
+	_catch_verdict_message = not success
+	if _capture_reticle != null:
+		_capture_reticle.call("play_success" if success else "play_break")
+	var card_cfg := _catch_card_config()
+	if not card_cfg.is_empty():
+		_show_catch_card(card_cfg, success, shakes)
+		return
+	if success:
+		var foe: RefCounted = _manager.call("enemy")
+		_outcome.text = "Caught %s!" % (str(foe.display_name) if foe != null else "it")
+		# F30#1: the catch readout names the newcomer's rolled traits.
+		if foe != null: _outcome.text += "\n" + TRAIT_READOUT.summary(foe)
+		_outcome.add_theme_color_override("font_color", UITokens.TEAL)
+		# T3-INSTALL, K1: `resolve.success_banner` had no reader -- 2.4 was a
+		# duplicate hardcoded literal, not a fallback. Reading it here means a
+		# config edit actually changes how long the banner holds.
+		_outcome_left = float(CATCH.config().get("resolve", {}).get("success_banner", 2.4))
+		return
+	var most := int(CATCH.config().get("resolve", {}).get("max_shakes_on_failure", 3))
+	if shakes >= most:
+		_miss_text = "so close — it almost stayed in"
+	elif shakes >= 2:
+		_miss_text = "it broke out"
+	else:
+		_miss_text = "not even close — weaken it first"
+	_miss_left = 1.8
+
+
+func _on_exited(outcome: String) -> void:
+	_catch_verdict_message = false
+	# Ownership survives _finish(), unlike the director's cleared trainer spec.
+	# Trainer round wins are represented by the next opponent and shared feed;
+	# no wild verdict or centre-screen result may leak into a relay objective.
+	if _world_presentation_mode == "relays" or (outcome == "won" and _manager != null and bool(_manager.get("_enemy_owned"))):
+		relinquish_result_presentation()
+		return
+	match outcome:
+		"caught":
+			# Already announced by _on_catch_resolved, which knows the name.
+			return
+		"won":
+			_outcome.text = "The wild creature is beaten."
+			_outcome.add_theme_color_override("font_color", UITokens.TEAL)
+			_set_xp_line()
+		"lost":
+			_outcome.text = "Battle lost\nYour creature needs recovery."
+			_outcome.add_theme_color_override("font_color", UITokens.WARNING)
+		"fled":
+			_outcome.text = "You backed off."
+			_outcome.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+		_:
+			_outcome.text = ""
+	_outcome_left = 2.5
+	if outcome == "lost":
+		_apply_loss_card()
+
+
+## P2-061: hud.json `catch_card` (off unless enabled). The catch verdict is
+## one framed result card in the upper third, clear of the creature at the
+## screen centre: a large outcome headline over the named individual and its
+## rolled traits (success, teal edge) or the reason it escaped (breakout,
+## warning edge). On success the finished fight's cards and action grid step
+## back while the card holds; on a breakout they stay, since the fight goes
+## on. Presentation only; catch odds, timing and party rules are unchanged.
+var _catch_focus_left := 0.0
+
+
+## Fight HUD overlap (hud.json `catch_card.raise_message_rows`): the miss and
+## catch lines sat on top of the command bar; lift them clear of it.
+func _raise_message_rows() -> void:
+	var cfg := _catch_card_config()
+	if cfg.get("raise_message_rows") != true:
+		return
+	var top := float(cfg.get("message_row_top", -380.0))
+	for row: Control in [_aim_row, _catch_row]:
+		row.offset_top = top
+		row.offset_bottom = top + 56.0
+
+
+func _catch_card_config() -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
+	var cfg: Variant = parsed.get("catch_card", {}) if parsed is Dictionary else {}
+	return cfg if cfg is Dictionary and cfg.get("enabled") == true else {}
+
+
+func _show_catch_card(cfg: Dictionary, success: bool, shakes: int) -> void:
+	var foe: RefCounted = _manager.call("enemy") if _manager != null else null
+	var name := str(foe.display_name) if foe != null else "it"
+	var headline: String
+	var detail: String
+	if success:
+		headline = "Caught %s!" % name
+		detail = TRAIT_READOUT.summary(foe) if foe != null else ""
+		if detail.begins_with("No "):
+			detail = ""
+	else:
+		var most := int(CATCH.config().get("resolve", {}).get("max_shakes_on_failure", 3))
+		headline = "%s broke free" % name
+		detail = "So close: it almost stayed in." if shakes >= most \
+			else "Weaken it more, then throw again." if shakes < 2 else "Wear it down a little more."
+	_outcome.text = headline + ("\n" + detail if not detail.is_empty() else "")
+	var accent := UITokens.TEAL if success else UITokens.WARNING
+	_outcome.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+	_outcome.add_theme_font_size_override("font_size", int(cfg.get("headline_px", 40)))
+	_outcome.add_theme_constant_override("line_spacing", 4)
+	_outcome.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_outcome.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	var card := StyleBoxFlat.new()
+	card.bg_color = Color(UITokens.BG_DEEP, float(cfg.get("plate_alpha", 0.94)))
+	card.border_color = accent
+	card.set_border_width_all(2)
+	card.border_width_left = int(cfg.get("accent_px", 8))
+	card.set_corner_radius_all(12)
+	card.content_margin_left = 28.0
+	card.content_margin_right = 28.0
+	card.content_margin_top = 16.0
+	card.content_margin_bottom = 16.0
+	_outcome.add_theme_stylebox_override("normal", card)
+	if not _outcome.has_meta(&"band_offsets"):
+		_outcome.set_meta(&"band_offsets", Vector2(_outcome.offset_left, _outcome.offset_right))
+		_outcome.set_meta(&"band_vertical", Vector2(_outcome.offset_top, _outcome.offset_bottom))
+	var half := float(cfg.get("card_half_width", 380.0))
+	_outcome.offset_left = -half
+	_outcome.offset_right = half
+	var top := float(cfg.get("card_top", -380.0))
+	_outcome.offset_top = top
+	_outcome.offset_bottom = top + 80.0
+	_miss_text = ""
+	_miss_left = 0.0
+	_catch_verdict_message = false
+	if success:
+		_outcome_left = float(CATCH.config().get("resolve", {}).get("success_banner", 2.4))
+		_catch_focus_left = _outcome_left
+		# Step the finished fight's cards back on the verdict frame itself; the
+		# per-frame update would otherwise leave them up beside the card for
+		# one frame (close-1024 P2-061 judges, verdict frame 02).
+		for panel: Control in [_enemy_panel, _ally_panel, _orbs_panel, _grid_panel, _aim_row, _catch_row]:
+			panel.visible = false
+		if is_instance_valid(_system_overlay): _system_overlay.hide()
+		if _strip_fader != null: _strip_fader.visible = false
+	else:
+		_outcome_left = float(cfg.get("breakout_seconds", 1.8))
+
+
+## P2-110: hud.json `loss_card` (off unless enabled). The loss verdict draws as
+## a framed result card (warning border, opaque plate, more time on screen)
+## instead of loose text over the exploration HUD, so it reads as THE result
+## of the fight rather than one more HUD line. Presentation only; the outcome,
+## its timing in the fight and recovery rules are unchanged.
+func _apply_loss_card() -> void:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/hud.json"))
+	var cfg: Variant = parsed.get("loss_card", {}) if parsed is Dictionary else {}
+	if not cfg is Dictionary or cfg.get("enabled") != true:
+		return
+	var card := StyleBoxFlat.new()
+	card.bg_color = Color(UITokens.BG_DEEP, 0.95)
+	card.border_color = UITokens.WARNING
+	card.set_border_width_all(3)
+	card.set_corner_radius_all(10)
+	# Narrow side margins: at 960x540 a wider card clipped the party list.
+	card.content_margin_left = 16.0
+	card.content_margin_right = 16.0
+	card.content_margin_top = 18.0
+	card.content_margin_bottom = 18.0
+	_outcome.add_theme_stylebox_override("normal", card)
+	# The label's rect is a fixed 1040px band; the card fills it, so narrow
+	# the band itself while the card shows (it clipped the party list).
+	if not _outcome.has_meta(&"band_offsets"):
+		_outcome.set_meta(&"band_offsets", Vector2(_outcome.offset_left, _outcome.offset_right))
+	var half := float(cfg.get("card_half_width", 280.0))
+	_outcome.offset_left = -half
+	_outcome.offset_right = half
+	_outcome.text = str(cfg.get("text", _outcome.text))
+	_outcome_left = maxf(_outcome_left, float(cfg.get("seconds", 3.5)))
+
+
+## Optional world phase hook. Ordinary Meadows reads its manager as before.
+static func enemy_identity_text(foe: RefCounted, manager: Node, director: Node) -> String:
+	if foe == null: return ""
+	var level := "LEVEL %d" % int(foe.get("level")) if int(foe.get("level")) > 0 else ""
+	if manager == null or not bool(manager.get("_enemy_owned")): return level
+	var spec: Variant = director.get("_trainer_spec") if director != null else null
+	var owner_name := str(spec.get("name", "Trainer-owned")) if spec is Dictionary else "Trainer-owned"
+	return owner_name + (" · " + level if not level.is_empty() else "")
+
+
+func set_world_presentation_mode(mode: String) -> void:
+	_world_presentation_mode = mode if mode in ["combat", "relays", "exploration"] else "exploration"
+	if _world_presentation_mode == "relays" and is_node_ready():
+		relinquish_result_presentation()
+
+
+func relinquish_result_presentation() -> void:
+	_catch_verdict_message = false
+	_outcome_left = 0.0
+	_xp_left = 0.0
+	_go_left = 0.0
+	_miss_left = 0.0
+	if _outcome != null: _outcome.text = ""
+	if _xp_line != null: _xp_line.text = ""
+	if _go_text != null: _go_text.text = ""
+	if _prompt != null: _prompt.text = ""
+	if is_node_ready(): _show_fight(false, true)
+	_was_fighting = false
+
+
+## PROGRESSION-VISIBLE (prompt 73, D76): the fight's award, read off the
+## progression feed rather than the manager's `last_xp_award` dict. The feed
+## is the single source of every `xp_gained` / `level_up` (pushed inside
+## `creature_instance.gain_xp()`), so this line says exactly what the party
+## strip and the world HUD banner say, and a test can drive it by awarding a
+## real creature and reading the text back -- no source-grepping
+## (`tests/test_level_up_announcement.gd`). `_fight_feed_seq` is the feed
+## cursor taken when the fight began, so a previous fight's award is never
+## re-announced.
+func _set_xp_line() -> void:
+	_sync_feed_epoch()
+	if _manager == null:
+		return
+	var creature: RefCounted = _manager.call("active_creature")
+	if creature == null:
+		_xp_line.text = ""
+		return
+	var id := creature.get_instance_id()
+	var xp_event: Dictionary = {}
+	var level_event: Dictionary = {}
+	for raw: Variant in FEED.peek_since(_fight_feed_seq):
+		var event := raw as Dictionary
+		if int(event.get("creature_id", 0)) != id:
+			continue
+		match str(event.get("kind", "")):
+			"xp_gained":
+				xp_event = event
+			"level_up":
+				level_event = event
+	if xp_event.is_empty() and level_event.is_empty():
+		_xp_line.text = ""
+		return
+	var xp := int(xp_event.get("amount", 0))
+	if level_event.is_empty():
+		_xp_line.text = "+%d XP" % xp
+		_xp_left = 2.4
+		return
+	# OP11: "level-up must announce identity, level, unlock" -- and now WHAT
+	# CHANGED (prompt 73 §2.2's Moment: stat deltas, the second trait, the
+	# evolution gate), all from the event, all worded by
+	# `progression_feed.moment_text()` so no surface can disagree.
+	_celebrate_level_up()
+	var moment: Dictionary = FEED.moment_text(level_event)
+	var line := "+%d XP   ·   %s" % [xp, str(moment.get("title", ""))]
+	var detail := str(moment.get("detail", ""))
+	if not detail.is_empty():
+		line += "   ·   " + detail
+	_xp_line.text = line
+	_xp_left = 3.0
+
+
+## Feed cursor at the moment a fight opens (see `_set_xp_line`).
+func _mark_feed_at_fight_start() -> void:
+	_fight_feed_epoch = FEED.epoch()
+	_fight_feed_seq = FEED.latest_seq()
+
+
+func _sync_feed_epoch() -> void:
+	if _fight_feed_epoch == FEED.epoch():
+		return
+	_fight_feed_epoch = FEED.epoch()
+	_fight_feed_seq = 0
+	_xp_left = 0.0
+	if _xp_line != null:
+		_xp_line.text = ""
+
+
+## A brief scale pop plus a flash to the WARNING accent, back to whatever
+## colour `_xp_line` was actually authored with (read live rather than
+## hard-coded, so a future palette change here does not need a matching edit).
+## Guarded by `is_inside_tree()`: `create_tween()` requires the node be in a
+## SceneTree, and `test_level_up_announcement.gd` drives `_set_xp_line()` on a
+## bare, untethered `combat_hud.gd` instance to check the built STRING only --
+## it never adds the node to a tree, by design (GATE-E's own header explains
+## why that test exists at all). Same kill-before-restart pattern `_pulse()`
+## above uses, so a second level-up landing mid-animation retriggers cleanly
+## instead of stacking.
+func _celebrate_level_up() -> void:
+	if not is_inside_tree():
+		return
+	var key: int = _xp_line.get_instance_id()
+	if _pulse_tweens.has(key):
+		var old: Tween = _pulse_tweens[key]
+		if old != null and old.is_valid():
+			old.kill()
+	var base_color: Color = _xp_line.get("theme_override_colors/font_color")
+	_xp_line.pivot_offset = _xp_line.size / 2.0
+	_xp_line.scale = Vector2.ONE
+	var tw := create_tween()
+	_pulse_tweens[key] = tw
+	if MOTION_PREFS.reduced_motion():
+		# Reduced motion keeps the colour cue and drops the scale pop.
+		_xp_line.set("theme_override_colors/font_color", UITokens.WARNING)
+		tw.tween_property(_xp_line, "theme_override_colors/font_color", base_color, UITokens.T_TOOLTIP) \
+			.set_delay(UITokens.T_CAPTURE_PULSE)
+		return
+	tw.tween_property(_xp_line, "scale", Vector2(1.22, 1.22), UITokens.T_DAMAGE_FLASH) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(_xp_line, "theme_override_colors/font_color", UITokens.WARNING, UITokens.T_DAMAGE_FLASH)
+	tw.tween_property(_xp_line, "scale", Vector2.ONE, UITokens.T_CAPTURE_PULSE) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(_xp_line, "theme_override_colors/font_color", base_color, UITokens.T_TOOLTIP)
+
+
+func _tick_outcome(delta: float) -> void:
+	_catch_focus_left = maxf(0.0, _catch_focus_left - delta)
+	if _outcome_left <= 0.0:
+		_outcome.text = ""
+		_outcome.remove_theme_stylebox_override("normal")
+		_outcome.remove_theme_font_size_override("font_size")
+		_outcome.autowrap_mode = TextServer.AUTOWRAP_OFF
+		if _outcome.has_meta(&"band_vertical"):
+			var vertical: Vector2 = _outcome.get_meta(&"band_vertical")
+			_outcome.offset_top = vertical.x
+			_outcome.offset_bottom = vertical.y
+			_outcome.remove_meta(&"band_vertical")
+		if _outcome.has_meta(&"band_offsets"):
+			var band: Vector2 = _outcome.get_meta(&"band_offsets")
+			_outcome.offset_left = band.x
+			_outcome.offset_right = band.y
+			_outcome.remove_meta(&"band_offsets")
+		return
+	_outcome_left -= delta
+
+
+func _tick_xp(delta: float) -> void:
+	if _xp_left <= 0.0:
+		_xp_line.text = ""
+		return
+	_xp_left -= delta

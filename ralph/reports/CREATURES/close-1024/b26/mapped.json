@@ -1,0 +1,136 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8797,
+  "least_squares_slope": 1.1009,
+  "method": "linear",
+  "slope": 1.1009,
+  "intercept": 0.0218,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.574,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C4A": {
+   "measured": 6.133,
+   "reference": 6.77,
+   "mapped": 6.774,
+   "residual": -0.004
+  },
+  "f36_0_gap:C4B": {
+   "measured": 6.067,
+   "reference": 7.17,
+   "mapped": 6.701,
+   "residual": 0.469
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.4,
+   "reference": 4.0,
+   "mapped": 4.866,
+   "residual": -0.866
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.067,
+   "reference": 6.53,
+   "mapped": 5.6,
+   "residual": 0.93
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.0,
+   "reference": 7.47,
+   "mapped": 7.728,
+   "residual": -0.258
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.067,
+   "reference": 7.53,
+   "mapped": 7.802,
+   "residual": -0.272
+  }
+ },
+ "candidates": {
+  "mudsnout cand": {
+   "measured_mean": 6.467,
+   "mapped_mean": 7.14,
+   "mapped_judges": [
+    6.85,
+    6.96,
+    7.62
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "mudsnout live": {
+   "measured_mean": 7.0,
+   "mapped_mean": 7.73,
+   "mapped_judges": [
+    7.62,
+    7.51,
+    8.06
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "terrapup cand": {
+   "measured_mean": 6.267,
+   "mapped_mean": 6.92,
+   "mapped_judges": [
+    6.63,
+    6.63,
+    7.51
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "terrapup live": {
+   "measured_mean": 6.867,
+   "mapped_mean": 7.58,
+   "mapped_judges": [
+    7.51,
+    7.4,
+    7.84
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "trailpup cand": {
+   "measured_mean": 6.4,
+   "mapped_mean": 7.07,
+   "mapped_judges": [
+    6.63,
+    6.85,
+    7.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "trailpup live": {
+   "measured_mean": 7.0,
+   "mapped_mean": 7.73,
+   "mapped_judges": [
+    7.51,
+    7.62,
+    8.06
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  }
+ },
+ "warnings": [
+  "meets the bar only above the top anchor (7.53): mudsnout live, terrapup live, trailpup live; extrapolated, but this batch's anchors reach 7.35 or more, so it is the confirming batch"
+ ]
+}

@@ -1,0 +1,82 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.901,
+  "least_squares_slope": 1.2907,
+  "method": "linear",
+  "slope": 1.2907,
+  "intercept": -0.9047,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.542,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.6,
+   "reference": 7.35,
+   "mapped": 7.614,
+   "residual": -0.264
+  },
+  "craft:before": {
+   "measured": 4.8,
+   "reference": 4.83,
+   "mapped": 5.291,
+   "residual": -0.461
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.167,
+   "reference": 4.0,
+   "mapped": 4.473,
+   "residual": -0.473
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.9,
+   "reference": 6.53,
+   "mapped": 5.42,
+   "residual": 1.11
+  },
+  "f36_0_gap:C4A": {
+   "measured": 5.833,
+   "reference": 6.77,
+   "mapped": 6.625,
+   "residual": 0.145
+  },
+  "f36_0_gap:C4B": {
+   "measured": 6.3,
+   "reference": 7.17,
+   "mapped": 7.227,
+   "residual": -0.057
+  }
+ },
+ "candidates": {
+  "band3 relay yard (rescan)": {
+   "measured_mean": 5.233,
+   "mapped_mean": 5.85,
+   "mapped_judges": [
+    6.19,
+    5.55,
+    5.81
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "hall nave+shrine+arches (rescan)": {
+   "measured_mean": 5.633,
+   "mapped_mean": 6.37,
+   "mapped_judges": [
+    6.58,
+    6.32,
+    6.19
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

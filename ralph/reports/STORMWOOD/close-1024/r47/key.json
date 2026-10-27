@@ -1,0 +1,23 @@
+{
+ "Cc": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Kb": {
+  "anchor": false,
+  "label": "R47 ashfoot",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/7146d403-6938-5cfa-b9ab-a98a1b5053ac/scratchpad/sides/ash_r47_on.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/7146d403-6938-5cfa-b9ab-a98a1b5053ac/scratchpad/sides/ash_r47_off.jpg"
+ },
+ "Pu": {
+  "anchor": true,
+  "A": "f36_0_gap:C4A",
+  "B": "f36_0_gap:C4B"
+ },
+ "Gg": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ }
+}

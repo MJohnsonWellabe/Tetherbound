@@ -1,4 +1,4 @@
-# b13 (25 Oct 2026, CPU): F36#1 roster fixes, water-form recipes and the r13 topples
+# b13 (24 Oct 2026, CPU): F36#1 roster fixes, water-form recipes and the r13 topples
 
 What was compared:
 - Candidates:

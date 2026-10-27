@@ -1,0 +1,16 @@
+{
+ "anchors": {
+  "p2_094_r4:X_before": [3.6, 3.8, 4.4],
+  "p2_094_r4:Y_after": [5.1, 5.3, 5.8],
+  "f04_6_r22:control": [4.2, 4.5, 5.0],
+  "f04_6_r22:r22": [5.0, 5.4, 5.7],
+  "craft:after": [5.8, 5.6, 6.0],
+  "craft:before": [4.6, 4.0, 4.7]
+ },
+ "candidates": {
+  "stronghold shipping": [4.9, 4.9, 5.5],
+  "stronghold hero_gatehouse r2 (60 m keep behind)": [5.1, 5.0, 5.8],
+  "arches shipping": [4.5, 4.5, 4.9],
+  "arches arch_facades r2 (all seven arches faced)": [5.8, 6.0, 6.4]
+ }
+}

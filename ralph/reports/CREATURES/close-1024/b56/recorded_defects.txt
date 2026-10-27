@@ -1,0 +1,5 @@
+Ku: none
+Is: "Stone plates read as a pad or pack strapped on rather than grown from the creature"; "The coat reads saturated orange rather than a natural brown"
+Ga: "Stone plates read as a pad or pack strapped on rather than grown from the creature"; "The coat reads saturated orange rather than a natural brown"
+Ys: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Gb: none

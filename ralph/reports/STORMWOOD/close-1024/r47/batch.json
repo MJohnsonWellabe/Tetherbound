@@ -1,0 +1,10 @@
+{"anchors": {
+  "craft:after": [6.6, 6.6, 6.3],
+  "craft:before": [5.4, 5.6, 5.7],
+  "f36_0_gap:C4A": [6.1, 6.4, 6.2],
+  "f36_0_gap:C4B": [6.4, 6.3, 6.6],
+  "p2_094_r4:X_before": [4.7, 4.9, 4.3],
+  "p2_094_r4:Y_after": [6.2, 6.2, 6.1]},
+ "candidates": {
+  "R47 ashfoot room light OFF (storm_view ON)": [5.5, 5.2, 5.2],
+  "R47 ashfoot room light ON (storm_room)": [5.8, 5.7, 5.4]}}
