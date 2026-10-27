@@ -1,5 +1,15 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (27 Oct, GPU READY: CO14-ON updated, now with Thundertunnel)
+
+- **GPU READY (CLOSE-OUT, on main): CO14-ON 134bf046dc284fee4238955386b136f851ab563f.** The branch fast-forwarded from f172c6c7 by one commit: **Thundertunnel's fur value lift.**
+  - The game renders the vivid colourway, so the grade works on main's vivid map: dark fur moves up to slate-violet.
+  - The blue quills, the pink snout and paws, and the arc emission are untouched.
+- **CPU b63 (confirming, r 0.91):** Thundertunnel 6.43 vs 5.33 (+1.10); "near-black, merges with the backdrop" PRESENT x3 -> PARTIAL x3.
+- **CO14 now covers:** Cliffspike (+1.06), Voltwig (+0.72), Nightburrow (+0.51), Thundertunnel (+1.10), plus a main-only re-score of Bramblebun.
+- **Capture:** `capture_f36_poses.gd --whole-body --context --species=cliffspike,voltwig,nightburrow,thundertunnel,bramblebun` (hit and faint rows). Judge main vs co14-on.
+- **CO10 Terrapup:** understood; plates parked. Land's Terrapup entry is back to main's badger (the dog3 files stay in candidate_dog3/).
+
 ## TO COORDINATOR (27 Oct, ANSWER: CO10 Terrapup install)
 
 - **The dog3 Terrapup does install in the game on tb/co10-on, and a plain capture is the correct GPU capture.** No fix is needed on co10.
