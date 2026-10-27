@@ -214,11 +214,6 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 				player.play(clip)
 				player.seek(player.get_animation(clip).length * phase, true)
 				player.pause()
-				# The shipped game settles a finished combat faint (creature_body.gd
-				# `settle_faint`, CLOSE-OUT 26 Oct); show the end pose the same way.
-				if role == "faint" and phase >= 1.0 and body.has_method("settle_faint"):
-					await process_frame
-					body.call("settle_faint")
 			for frame in 3:
 				await process_frame
 			if _context:
@@ -228,8 +223,6 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 			receipt.append({"role": role, "phase": phase, "path": path, "captured": captured})
 			if not captured:
 				_pose_failures.append("%s: PNG capture failed" % path)
-		if role == "faint" and body.has_method("clear_faint_settle"):
-			body.call("clear_faint_settle")
 		if _context:
 			_unstage_role(staged, body)
 	var file := FileAccess.open("%s/%s-receipt.json" % [out, id], FileAccess.WRITE)

@@ -118,20 +118,3 @@ const DEFAULT_FIELD_BRIGHT_CEILING := 1.75
 
 static func field_bright_ceiling() -> float:
 	return float(config().get("field_bright_ceiling", DEFAULT_FIELD_BRIGHT_CEILING))
-
-
-## CLOSE-OUT (owner, 25 Oct): the subtle silhouette rim every creature wears
-## unless its species sets its own `placeholder.field_rim`. Tier and alpha rims
-## add on top of it (`creature_body.gd::_apply_field_separation`).
-static func field_rim_default() -> float:
-	return float(config().get("field_rim_default", 0.0))
-
-
-## CLOSE-OUT (owner, 25 Oct): the shared faint settle
-## (`creature_body.gd::settle_faint`).
-static func faint_settle() -> Dictionary:
-	return config().get("faint_settle", {}) as Dictionary
-
-
-static func faint_settle_enabled() -> bool:
-	return bool(faint_settle().get("enabled", false))
