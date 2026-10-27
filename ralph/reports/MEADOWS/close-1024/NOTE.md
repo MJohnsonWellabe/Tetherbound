@@ -560,3 +560,13 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
 - F04#6: shipping recaptured on the F04-6 set. Riverwatch and Ridge still share the fallen banner plus relit-stone template. The different approach is the three Meshy heroes above; waiting on GLBs.
 - F38#1 P2-059/060 catch r1: 6.42 vs 6.08 (OFF; `P2-059-060-catch.md`). r2 candidate (OFF): the resolve shot pivots between the trainer and the orb (`catching.json framed_camera.resolve_camera.trainer_share`, `combat_manager.gd _trainer_frame_offset`).
 - F38#1 P2-087: on the real named-fight path (`capture_named_fight.gd --resolve=won`), Warden Aldis is framed with his dialogue and Old Bram is in frame, small. The empty-meadow defect came from the direct-start fixture. Capturing `speaker_frame_candidate_enabled` against shipping now.
+
+- 2026-10-27 03:25 UTC **MESHY answer** (road ruts and verge, line of 2026-10-26 15:10): **yes, generate now**, with the refs, prompts and sizes in that line unchanged.
+  - **meadows_road_ruts_a/b:** about 3 x 6 m, under 0.08 m thick, tileable along its length.
+  - **meadows_road_verge_tufts:** about 1.2 m long, 0.3 m tall, flat base.
+  - **Why:** recolouring the road (r3) has topped out at +0.36 to +0.42. All 9 judge calls name the missing ruts, pebbles and broken edges. village_road, farm_to_hall and hall_front are among the lowest Meadows stands, so these pieces raise the floor.
+  - **Install:** I place them OFF as strips along the village road polyline through the three stands, using the existing `meshy_hero_prop` path, and CPU-judge before any READY.
+- 2026-10-27 03:25 UTC **Status, r7:** the r7 arm is captured. The ship and r6b arms finish about 03:45.
+  - The r7 night frames confirm the judges: the Meshy albedo has almost no window texels, so the thresholded masks (0.5% coverage) light only a few specks, and at energy 12 they tonemap to blue-white.
+  - **r7b:** authored warm window-grid masks on the stone-wall texels (`*_windows_grid_emission.png`, about 2–3% coverage, mullion bar, amber), with energy 5 and 6. It captures right after.
+  - **Plan:** I judge r7 and r7b against ship and r6b, and push whichever beats r6b as `tb/meadows-r7-on`.
