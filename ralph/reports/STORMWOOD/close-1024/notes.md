@@ -2,6 +2,14 @@
 
 ## Session 2 log (newest first)
 
+- 27 Oct 09:10Z **P2-083 (speaker hidden in dialogue) in progress on `tb/stormwood`, commits f973b78c, then two more.** The physics sight check alone changed nothing: creatures are pass-through for the camera arm and the Team Tether banner has no collider.
+  - **Fix:** `camera.json` `conversation.speaker_sight_meshes` makes the sight check also count any visible mesh other than the speaker's or the player's that crosses the lens-to-speaker line (`camera_rig.gd` `_speaker_hidden_by_meshes`). A skinned body counts by its posed bounds.
+  - **Tests:** `test_conversation_camera.gd` 30/126, 0 failed, with a new swing-off-a-creature test.
+  - **Capture so far:** Officer Nysa is now clear (it was fully occluded). Sera's blocker was a wild Tanglevolt that the bind-pose triangles missed; the posed-bounds rule is the fix for it and is still being captured.
+  - **Fixture error, not a game defect:** both Captain Marrow sightings place the player at ground level (y 113) under Marrow's Dynamo deck (y 262). Marrow is out of the conversation camera's 9 m reach, so the frame is the exploration camera beside a Team Tether banner.
+  - **Next:** the final rows 17-33 capture, then READY.
+- 27 Oct 09:10Z **P2-110 and P2-111 are on main and need a reshoot.** P2-110: the `hud.json` `loss_card` is enabled. P2-111: `victory_hierarchy_visual.json` labels QUICK ITEMS and separates the receipt; this is the shared P2-103 fix. The Hollows loss (level 42) and win (level 80) reshoots are running.
+- 27 Oct 09:10Z **P2-041 Crown Arch:** the never-rendered candidate (`crown_arch/candidate.json`, octagonal paved landing, fuller crown) is now captured off and on. It replaces the square slab. Close shots are queued; a GPU arm follows if they hold up.
 - 27 Oct 06:30Z Coordinator, 05:58Z: burn down the F41 per-item rows, functional and UI first. Lane `tb/stormwood`: main #770 (land14) merged.
 - 27 Oct 06:30Z **READY to land land15 4e75ccf52b4932a51edd2d09c2577a49b376da98** (`tb/stormwood-land15`): **F41 P2-081 named trainer dialogue identity.**
   - **Reproduced on main:** all 26 trainers already speak their own location-specific lines (the top-level presentation `enabled` is on; the "remain off" comment was stale), but no trainer conversation had a portrait.
