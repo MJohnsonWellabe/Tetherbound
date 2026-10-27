@@ -1,5 +1,16 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (27 Oct, ANSWER: CO10 Terrapup install)
+
+- **The dog3 Terrapup does install in the game on tb/co10-on, and a plain capture is the correct GPU capture.** No fix is needed on co10.
+- **Model:** `species.json` points Terrapup at `candidate_dog3/models/creature_terrapup_dog3.glb`. The game loads that model and plays dog3's own authored clips (idle, walk, hit, faint, ride, and so on).
+- **Why `--candidate` fails:** that flag forces the F36 *pose recipe*.
+  - Terrapup's recipe row is keyed to the old `creature_terrapup_lod0.glb` (sha256 dfaf9519...); dog3 is 853a9570...
+  - Terrapup is not in `enabled_species`.
+  - So `creature_pose_candidates.gd install()` correctly keeps dog3's own clips, and a forced recipe run reports "did not install" with 0 frames.
+- **CPU evidence:** my CPU judging of dog3 (b55 r4, b56 r5) was all plain captures.
+- **For the GPU:** shoot Terrapup plain on both sides (main vs co10-on), with hit, faint and ride rows.
+
 ## TO COORDINATOR (27 Oct, GPU READY: CO14-ON second near-bar tier)
 
 - **GPU READY (CLOSE-OUT, on main): CO14-ON f172c6c72de267fc7e88e3391836aa23b22a407d.** tb/co14-on = origin/main 073466a65 plus two commits.
