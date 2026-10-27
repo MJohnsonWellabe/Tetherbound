@@ -204,6 +204,8 @@ var _talk_excluded: Array[RID] = []
 ## space to put a real wall in, and a fallback that only ever ran indoors in a
 ## booted scene would be covered by nothing that runs on every push.
 var _occlusion_probe: Callable = Callable()
+## Test stand-in for the renderer query in `_speaker_hidden_by_meshes`.
+var _mesh_sight_probe: Callable = Callable()
 
 
 func _ready() -> void:
@@ -923,6 +925,13 @@ func set_occlusion_probe_for_tests(probe: Callable) -> void:
 	_occlusion_probe = probe
 
 
+## Replaces the renderer query in `_speaker_hidden_by_meshes` for tests, which
+## have no scenario to cast into. Called with (lens, end), answers true when a
+## mesh blocks that segment.
+func set_mesh_sight_probe_for_tests(probe: Callable) -> void:
+	_mesh_sight_probe = probe
+
+
 ## Drop the push-in immediately, with no blend, and put back everything it
 ## changed. Used when something with a better claim takes the camera.
 func _abandon_conversation() -> void:
@@ -1080,7 +1089,86 @@ func _speaker_in_sight(shot: Dictionary, speaker_anchor: Vector3) -> bool:
 	# Stops short of the speaker's own anchor: their body is excluded, but a
 	# prop they lean on at arm's length is not what this is asking about.
 	var look := reach - 0.3
-	return _free_distance_behind(lens, to_speaker / reach, look, false) >= look - 0.01
+	if _free_distance_behind(lens, to_speaker / reach, look, false) < look - 0.01:
+		return false
+	if bool(_talk_cfg.get("speaker_sight_meshes", false)):
+		return not _speaker_hidden_by_meshes(lens, lens + to_speaker / reach * look)
+	return true
+
+
+## F41 P2-083: the physics sweep above only sees what the arm itself stops
+## against. Creatures are pass-through for the arm and a Team Tether banner has
+## no collider at all, so in Stormwood a companion's flank or Marrow's banner
+## filled the lens while the sweep reported a clear line. This asks the
+## renderer instead: any visible mesh, other than the speaker's and the
+## player's own, whose triangles cross the segment from the lens to the
+## speaker's head (posed joints for a skinned body). Grass and rain are
+## MultiMesh/particles and are not counted.
+func _speaker_hidden_by_meshes(lens: Vector3, end: Vector3) -> bool:
+	if _mesh_sight_probe.is_valid():
+		return bool(_mesh_sight_probe.call(lens, end))
+	if not is_inside_tree():
+		return false
+	var world := get_world_3d()
+	if world == null:
+		return false
+	for id: int in RenderingServer.instances_cull_ray(lens, end, world.scenario):
+		var mesh_node := instance_from_id(id) as MeshInstance3D
+		if mesh_node == null or mesh_node.mesh == null or not mesh_node.is_visible_in_tree():
+			continue
+		# Shadow-only meshes are never drawn, and meshes that cast none are the
+		# sky and effect cards (the storm ceiling read as a wall on every
+		# swing that looked up at it).
+		if mesh_node.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY \
+				or mesh_node.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+			continue
+		if _is_part_of(mesh_node, _talk_speaker) or _is_part_of(mesh_node, _target):
+			continue
+		# A skinned body's triangles are its bind pose, which for a creature rig
+		# can sit metres from where it is drawn (Sera's wild Tanglevolt missed
+		# by triangles while it filled the frame); its posed bounds are far too
+		# loose (every swing read blocked). Its posed joints are tested instead.
+		if not mesh_node.skeleton.is_empty():
+			var skeleton := mesh_node.get_node_or_null(mesh_node.skeleton) as Skeleton3D
+			if skeleton != null and _joints_block(skeleton, lens, end):
+				return true
+			continue
+		var tris := mesh_node.mesh.generate_triangle_mesh()
+		if tris == null:
+			continue
+		var to_local := mesh_node.global_transform.affine_inverse()
+		if not tris.intersect_segment(to_local * lens, to_local * end).is_empty():
+			return true
+	return false
+
+
+## True when a posed joint of `skeleton` lies within a body radius of the
+## segment. The radius is a fraction of the posed joint spread, so a 3 m storm
+## wolf blocks with a thicker body than a 0.6 m sprite.
+static func _joints_block(skeleton: Skeleton3D, from: Vector3, to: Vector3) -> bool:
+	var count := skeleton.get_bone_count()
+	if count == 0:
+		return false
+	var joints: Array[Vector3] = []
+	var bounds := AABB()
+	for bone: int in count:
+		var at := skeleton.global_transform * skeleton.get_bone_global_pose(bone).origin
+		bounds = AABB(at, Vector3.ZERO) if joints.is_empty() else bounds.expand(at)
+		joints.append(at)
+	# Fur, mane and wings stand well off the joints: a fifth of the spread.
+	var radius := clampf(bounds.get_longest_axis_size() * 0.2, 0.15, 0.9)
+	var seg := to - from
+	var length_sq := maxf(seg.length_squared(), 0.0001)
+	for at: Vector3 in joints:
+		var t := clampf((at - from).dot(seg) / length_sq, 0.0, 1.0)
+		if (from + seg * t).distance_to(at) < radius:
+			return true
+	return false
+
+
+static func _is_part_of(node: Node, owner_node: Node) -> bool:
+	return owner_node != null and is_instance_valid(owner_node) \
+		and (node == owner_node or owner_node.is_ancestor_of(node))
 
 
 ## Optional aftermath candidate: line-of-sight alone is insufficient when a
