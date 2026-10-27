@@ -1102,7 +1102,7 @@ func _speaker_in_sight(shot: Dictionary, speaker_anchor: Vector3) -> bool:
 ## filled the lens while the sweep reported a clear line. This asks the
 ## renderer instead: any visible mesh, other than the speaker's and the
 ## player's own, whose triangles cross the segment from the lens to the
-## speaker's head (posed bounds for a skinned body). Grass and rain are
+## speaker's head (posed joints for a skinned body). Grass and rain are
 ## MultiMesh/particles and are not counted.
 func _speaker_hidden_by_meshes(lens: Vector3, end: Vector3) -> bool:
 	if _mesh_sight_probe.is_valid():
@@ -1122,15 +1122,41 @@ func _speaker_hidden_by_meshes(lens: Vector3, end: Vector3) -> bool:
 			continue
 		# A skinned body's triangles are its bind pose, which for a creature rig
 		# can sit metres from where it is drawn (Sera's wild Tanglevolt missed
-		# by triangles while it filled the frame). The renderer's own posed
-		# bounds already crossed the line, which is close enough for a body.
+		# by triangles while it filled the frame); its posed bounds are far too
+		# loose (every swing read blocked). Its posed joints are tested instead.
 		if not mesh_node.skeleton.is_empty():
-			return true
+			var skeleton := mesh_node.get_node_or_null(mesh_node.skeleton) as Skeleton3D
+			if skeleton != null and _joints_block(skeleton, lens, end):
+				return true
+			continue
 		var tris := mesh_node.mesh.generate_triangle_mesh()
 		if tris == null:
 			continue
 		var to_local := mesh_node.global_transform.affine_inverse()
 		if not tris.intersect_segment(to_local * lens, to_local * end).is_empty():
+			return true
+	return false
+
+
+## True when a posed joint of `skeleton` lies within a body radius of the
+## segment. The radius is a fraction of the posed joint spread, so a 3 m storm
+## wolf blocks with a thicker body than a 0.6 m sprite.
+static func _joints_block(skeleton: Skeleton3D, from: Vector3, to: Vector3) -> bool:
+	var count := skeleton.get_bone_count()
+	if count == 0:
+		return false
+	var joints: Array[Vector3] = []
+	var bounds := AABB()
+	for bone: int in count:
+		var at := skeleton.global_transform * skeleton.get_bone_global_pose(bone).origin
+		bounds = AABB(at, Vector3.ZERO) if joints.is_empty() else bounds.expand(at)
+		joints.append(at)
+	var radius := clampf(bounds.get_longest_axis_size() * 0.12, 0.12, 0.6)
+	var seg := to - from
+	var length_sq := maxf(seg.length_squared(), 0.0001)
+	for at: Vector3 in joints:
+		var t := clampf((at - from).dot(seg) / length_sq, 0.0, 1.0)
+		if (from + seg * t).distance_to(at) < radius:
 			return true
 	return false
 
