@@ -2,6 +2,14 @@
 
 ## Session 2 log (newest first)
 
+- 27 Oct 11:05Z **READY (GPU arm) `tb/stormwood-m52-on` 9821ef2fe9e4b0644c660911483767be16843c37: F41 P2-041 Crown Arch.** It is the lane plus one line, `assets/environment/stormwood/crown_arch/candidate.json` `enabled` true. This is the existing unrendered candidate: octagonal staggered paved landing in place of the square 9x9 slab, a crenellated crown at 5 m and a 5.75 m grass clear. The collider, footing, pairing and lit state are unchanged.
+  - **CPU off/on (Low, 1920x1080, calm):** `fixes/P2-041/_sheet_p2041_cpu.jpg`. The left column is OFF and the right is ON; the top row is front, the bottom is reverse. The square slab with grass at its edge becomes a chamfered landing, and the gate reads taller.
+  - **Stands, as `--custom` for `capture_stormwood_f10_matrix.gd`:**
+    - `ca_close@490.5,2702@485,2.2,2700@-8` (front, about 5 m);
+    - `ca_rev@479.5,2699@485,2.2,2700@-8` (reverse);
+    - `ca_diag@495,2711@485,2.2,2700@-6`;
+    - plus the catalog sighting `stormwood__landmark__crown_arch__day__close`.
+  - The flank stand (478.4,2731.3) is useless: a cliff hides the arch.
 - 27 Oct 09:10Z **P2-083 (speaker hidden in dialogue) in progress on `tb/stormwood`, commits f973b78c, then two more.** The physics sight check alone changed nothing: creatures are pass-through for the camera arm and the Team Tether banner has no collider.
   - **Fix:** `camera.json` `conversation.speaker_sight_meshes` makes the sight check also count any visible mesh other than the speaker's or the player's that crosses the lens-to-speaker line (`camera_rig.gd` `_speaker_hidden_by_meshes`). A skinned body counts by its posed bounds.
   - **Tests:** `test_conversation_camera.gd` 30/126, 0 failed, with a new swing-off-a-creature test.
