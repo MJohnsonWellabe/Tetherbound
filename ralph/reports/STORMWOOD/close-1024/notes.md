@@ -2,6 +2,12 @@
 
 ## Session 2 log (newest first)
 
+- 27 Oct 01:20Z r49 Crown Overlook rim lookout (`deck.rim` + `massif.storm`, flagged candidates over the landed SW18 values): **no gain**, mapped 5.58 -> 5.33 (-0.25) (`r49/VERDICT.md`). First miss for the rim approach; both stay OFF.
+  - **Why:** the level catalogue camera behind the trainer never sees the drop right under the deck; the far sink floor reads as a plain at deck level. The storm-haze Crown also lost contrast against the calm sky.
+  - **Kept:**
+    - `with_candidate`, a reusable flagged override of a landed block;
+    - the overlook test now checks the effective deck;
+    - the rim coordinates and the probe of baked rim trees, for any new height idea.
 - 27 Oct 00:24Z **READY (GPU candidate): `tb/stormwood-m48b-on` cc99525a534670ebcf1a41f33a578c09b7923b55, Ashfoot room** (supersedes m48 ebcae6ed: adds the golden `copper_tint` fix; the kit wall lantern read dark red, and red is Team Tether only).
   - **Change:** `cottage_interior_finish.json storm_finish.storm_room` + `stormwood_dressing` ON; the lane keeps both OFF. This is coordinator priority 1: SW16 left it at 6.96, 0.54 short.
   - **CPU r48:** 5.37 -> 6.31 mapped (+0.94), 3/3 judges prefer ON. Warm-room and no-Stormwood defects PRESENT -> PARTIAL 3/3 (`r48/VERDICT.md`).

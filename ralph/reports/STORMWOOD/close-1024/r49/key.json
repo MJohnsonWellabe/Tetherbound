@@ -1,0 +1,23 @@
+{
+ "Aa": {
+  "anchor": false,
+  "label": "R49 crown overlook",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/7146d403-6938-5cfa-b9ab-a98a1b5053ac/scratchpad/sides/co_r49_on.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/7146d403-6938-5cfa-b9ab-a98a1b5053ac/scratchpad/sides/co_r49_off.jpg"
+ },
+ "We": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Ev": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ },
+ "Ob": {
+  "anchor": true,
+  "A": "f36_0_npc:C7B",
+  "B": "f36_0_npc:C7A"
+ }
+}
