@@ -1116,7 +1116,11 @@ func _speaker_hidden_by_meshes(lens: Vector3, end: Vector3) -> bool:
 		var mesh_node := instance_from_id(id) as MeshInstance3D
 		if mesh_node == null or mesh_node.mesh == null or not mesh_node.is_visible_in_tree():
 			continue
-		if mesh_node.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY:
+		# Shadow-only meshes are never drawn, and meshes that cast none are the
+		# sky and effect cards (the storm ceiling read as a wall on every
+		# swing that looked up at it).
+		if mesh_node.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY \
+				or mesh_node.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
 			continue
 		if _is_part_of(mesh_node, _talk_speaker) or _is_part_of(mesh_node, _target):
 			continue
@@ -1151,7 +1155,8 @@ static func _joints_block(skeleton: Skeleton3D, from: Vector3, to: Vector3) -> b
 		var at := skeleton.global_transform * skeleton.get_bone_global_pose(bone).origin
 		bounds = AABB(at, Vector3.ZERO) if joints.is_empty() else bounds.expand(at)
 		joints.append(at)
-	var radius := clampf(bounds.get_longest_axis_size() * 0.12, 0.12, 0.6)
+	# Fur, mane and wings stand well off the joints: a fifth of the spread.
+	var radius := clampf(bounds.get_longest_axis_size() * 0.2, 0.15, 0.9)
 	var seg := to - from
 	var length_sq := maxf(seg.length_squared(), 0.0001)
 	for at: Vector3 in joints:
