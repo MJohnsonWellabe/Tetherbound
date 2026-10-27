@@ -1,9 +1,9 @@
 {
- "updated": "2026-10-26T23:15:00Z (6:15 PM CT Mon 26 Oct)",
+ "updated": "2026-10-27T15:00:00Z (10:00 AM CT Tue 27 Oct)",
  "headline": [
-  "Board 260 of 467 criteria met (+10 today on the GPU): Grandpa; Tanglevolt, Frostclaw and Craghorn hurt/faint; Galecrest (matte finish, 7.70/7.68) and its poses; Cloudfang (7.64) and its poses; Stormcapra as shipped (7.60/7.68) and its poses.",
-  "Merged today: #761 Meadows village path, #762 Stormwood Ashfoot, #763 Meadows Ridgeline Watch clearings, #764 Stormwood Crown Overlook vista, #766 Tidewake destination landmarks (+1.24), #767 Galecrest matte, Cloudfang flinch and the Ashfoot storm view (+1.13).",
-  "GPU next: SW13 (Stormwood ground pass 2, capturing), then SW19, the Stormwood storm sky (CPU +0.83, chapter-wide). Not landed: SW17 lantern posts, Mirejaw retexture and Terrapup dog3 (all scored at or below main). Coordinator replies to sessions are blocked; the GPU queue runs through ralph/reports/GPU-PASS/NOTE.md."
+  "WOUND DOWN 27 Oct (owner: usage). Board 260 of 467 criteria met. Every lane and the GPU judge are stopped; each wrote a handoff (lane notes and GPU-PASS/NOTE.md RESUME, all on main).",
+  "Landed since the 260 count (gains, none crossing 7.5): #769 Meadows relay yard flags (+1.43), #770 Stormwood Ashfoot storm room (+0.87; one-batch re-judge 6.76, 0.74 short), #771 Meadows stronghold keep + spire and courtyard (+0.53 / +0.71), #772 Terrapup ships as the large dog (owner decision; GPU 6.30 vs badger 7.22), Ripplet coat (+0.58 / +0.48), Mosshell faint, Solmane flinch, Stormwood P2-081 portraits and P2-083 conversation camera.",
+  "Nearest close-outs on restart: Ashfoot 6.76 (0.74), Ripplet 7.26 / 7.01, water_mosshell 7.10 / 7.67, Breezetail 6.77 / 6.89, Mirejaw (CO9 fill as a ride-along), Terrapup dog (path in CO10). Unjudged ready arm: tb/co12-on (Cliffspike, Voltwig, Nightburrow, Thundertunnel; CPU +0.5 to +1.1). Parked after two misses: Stormwood ground carpet, storm sky form, storm grade."
  ],
  "batches": [
   {

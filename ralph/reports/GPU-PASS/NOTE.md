@@ -2,6 +2,16 @@
 
 ## READY (24 Oct): newest first
 
+- **F38#0 / F26#3 Meadows matrix on main 779422f10.** The matrix evidence is DELIVERED (High 354/528 and Medium 355/528 frames, plus the fight at 84/85). **F26#3 (Meadows) is REOPENED.**
+  - **Scores:** no site reaches 7.5. Best: village_road 6.73 High / 7.09 Medium and river_lock_1 6.89 / 6.86. The arch stands score 3.5–5.3.
+  - **Fix first:**
+    1. Production cameras: clipping is PRESENT at 8 sites, with arch reverse views inside geometry.
+    2. Hall white shaft quads and orb chains, plus flat interior grades.
+    3. The P2-005 ground carpet, at every exterior site.
+    4. The P2-003 stronghold.
+    5. River lock 0 blockout.
+  - Per-site table and defect scan: `F38-0/main-1024/VERDICT.md`.
+
 - **11:17 CT, creature emission floor overlay (Forward+):**
   - **F22#4 with the overlay:** Medium maps to **7.26** (7.34 / 7.18), against 5.08 shipped and 6.53 for Low. The ghost is FIXED ×3. Medium now beats Low but is still below 7.5; the HUD and the hidden player creature remain.
   - **Day:** the wash was roster-wide (Cindercub, Ripplet, Terrapup, Paddlenewt, Bramblebun, Trailpup, Mudsnout all milky). ×0 restores their true colours.
@@ -102,7 +112,38 @@ Land on main only the files in `LANDABLE.txt`: verdict .md, key and score .json,
 
 ## RESUME
 
-**State at stop (22 Oct, evening):** every result above is pushed to tb/gpu-pass; tb/vfx-launch is pushed; no GPU process is running.
+**State at stop (27 Oct, 07:05 CDT, per the wind-down note):**
+- The queue is closed and empty. Every verdict is pushed to tb/gpu-pass. No GPU process or queue is running.
+- No capture or judge was in flight when the stop arrived.
+- Free space on D: is about 496 GB.
+
+**Last verdicts (27 Oct):**
+
+| Item | Commit | Result |
+|---|---|---|
+| CO10 Terrapup dog3 r5 | `F36-1/CO10-terrapup-dog3r5-fb6a2593b`, ce20e75c1 | 6.30 / 6.30 vs badger 7.22, not met. Shot plain: terrapup is not in f36 `enabled_species`. Plates still read strapped on (PRESENT 2 / PARTIAL 1); coat now PARTIAL. |
+| MH9 Meadows stronghold r7b | `F38-0/MH9-stronghold-r7b-0d8ef6dd2`, b7e1df9b0 | LAND, +0.53 / +0.71. P2-003 at the approach PRESENT 3/3 -> PARTIAL 3/3; night windows unlit PRESENT -> PARTIAL. Not met (best set 6.33). |
+| CO11 near-bar creatures | `F36-1/CO11-near-bar-creatures-2b4f2256e`, 2c3a43799 | Land the Ripplet matte coat (+0.58 / +0.48) and the Mosshell faint (water_mosshell 7.10 / 7.67). Keep the flinch for Solmane only; drop it for Aquaryn and Tidecoil (regress). Tidecoil is MET on main (7.88). No new species met. |
+
+Earlier on 26-27 Oct, all pushed (see each row's VERDICT.md):
+- TW1: land.
+- CO8: Galecrest and Cloudfang MET.
+- SW20: on; SW20b re-judge 6.76, not met.
+- No gain: SW13, SW17, SW19, MH8 (r6b, superseded by r7b).
+- MJ/TP: neither lands.
+- CO9: defect fix, +0.13 standard / +0.46 close crop.
+
+**Open items, if a GPU lane resumes:**
+1. **Driver crash.** 0xC0000094 in `nvoglv64.dll` +0xe93647 (driver 32.0.15.6094, no TDR) has hit three times, all at the Meadows stronghold on Medium (K5 off/mh3 on 26 Oct, MH9 cand on 27 Oct). Each time the re-run was clean. Updating the driver is the owner's call.
+2. **F36 `--candidate`** aborts for any species not in `f36_pose_candidates.json` `enabled_species`: terrapup, mosshell, water_mosshell and ripplet as of 27 Oct. Shoot those plain, one run per species.
+3. **Close-out candidates nearest 7.5:**
+   - water_mosshell Medium (7.10), with High already 7.67.
+   - Ripplet (7.26 / 7.01).
+   - SW20 Ashfoot room (6.76 in the one-batch re-judge).
+   - The paths to 7.5 are in each VERDICT.md.
+4. **Run note:** `run_tool.ps1` logs `frames=0` for tools that write `.jpg` (Tidewake, F41, F38); check the frames folder instead.
+
+**Earlier state (22 Oct, evening):** every result above is pushed to tb/gpu-pass; tb/vfx-launch is pushed; no GPU process is running.
 
 **Local layout:**
 - `D:\tb-gpu-pass`: the sparse working checkout on tb/gpu-pass.
@@ -115,6 +156,93 @@ Land on main only the files in `LANDABLE.txt`: verdict .md, key and score .json,
 2. Confirm the F22#4 renderer-aware boss aura once Fights ships it (the same Riverwatch capture at Medium, matched tell frames).
 3. Re-confirm F25#4 on main after tb/vfx-launch lands (`F25-4/f25_fix_queue.ps1.txt`, about 12 minutes).
 4. F08#3: judges ask for foreground dressing, a night lighting pass and varied islets (scene work for the Cloudreach lane).
+
+## STOP: WIND DOWN (coordinator, 27 Oct ~09:45 UTC; owner: usage is running out)
+
+- **Queue is closed.** Take no new arms, including any the lanes post after this.
+- **If a capture or judge is running:** finish it only if it is within about 30 minutes of done. Otherwise stop it.
+- **Then:**
+  - commit what you have to tb/gpu-pass;
+  - update the RESUME section (state, last verdicts CO10 / MH9 / CO11, open items);
+  - leave no GPU process running;
+  - stop.
+- Thank you. Every verdict today drove a landing.
+
+## GPU QUEUE UPDATE 5 (coordinator, 27 Oct 05:05 UTC): CO11 near-bar creature close-outs, after the Meadows stronghold run
+
+- **Why these:** every species here sat 0.01–0.25 under 7.5 on the GPU (24 Oct F36 rows). Each MET row lands under the close-out exception.
+- **Arms:** main 58bef4fc7 vs tb/co11-on 2b4f2256e, three commits on that main:
+  - a grounded hit flinch for Aquaryn, Tidecoil and Solmane;
+  - Mosshell's faint ends on its back (CPU b59 +1.21, water_mosshell too);
+  - Ripplet's matte countershaded coat (CPU b61 +0.40).
+- **Capture:** `capture_f36_poses.gd --candidate --whole-body --context --species=aquaryn,tidecoil,solmane,mosshell,ripplet`, plus their water forms where they have one (water_mosshell, Aquaryn, Tidecoil), with `--source-commit`. Standard roster crop.
+- **Report:** MET per species per preset, and any regression.
+
+## GPU QUEUE UPDATE 4 (coordinator, 27 Oct 04:40 UTC): MH8 is superseded by r7b
+
+- **If MH8 (r6b) has not started capturing:** run r7b in its place.
+- **If MH8 has started:** finish it, then run r7b as MH9.
+- **Arms:** control tb/meadows 032b28f50 vs candidate tb/meadows-r7-on 0d8ef6dd2. The candidate is the control with three `stronghold.json` flags ON:
+  - the r5 lit keep plus the Meshy spire behind it, both with authored window-grid emission masks;
+  - MH3 courtyard daylight;
+  - MH3 war banners.
+- **CPU:** 6.00 -> 6.69 (+0.69). It beats r6b (+0.27 in the same batch).
+- **Capture and report:** as MH8 (`capture_f38_matrix.gd --subset=band5_stronghold_approach`, day and night, Medium and High). Report P2-003, whether the windows read at night, and any red outside the Tether banners.
+
+## GPU QUEUE UPDATE 3 (coordinator, 27 Oct 01:30 UTC): three close-out arms, run in this order
+
+SW19 storm sky is received: no gain, OFF. Each arm below is its control plus one change. Use `--source-commit=<sha>` on every capture.
+
+1. **SW20, Stormwood Ashfoot room (close-out; Ashfoot is at 6.96 on main, 0.54 short).**
+   - **Arms:** control 255b363c7 (tb/stormwood) vs candidate tb/stormwood-m48b-on cc99525a5. The candidate turns ON `cottage_interior_finish.json storm_finish.storm_room` + `stormwood_dressing`, with the copper tint fixed to gold.
+   - **CPU r48:** +0.94.
+   - **Capture:** the F41 catalogue Ashfoot stands only. Inside: all four phases. Outside: a no-change check. Medium and High.
+   - **Report:** MET per preset, plus the warm-room and generic-cabin defects.
+2. **CO9, Mirejaw olive-umber fill (close-out; main is 6.53 on GPU, from MJ/TP).**
+   - **Arms:** main 16c32126f vs tb/co9-on 033a66f6a. Main's reticulated net is kept and the dark cell fill is warmed toward olive-umber. The arm regenerates its own texture from main's albedo.
+   - **CPU b54:** 6.56 vs 5.44 (+1.12).
+   - **Capture:** `capture_f36_poses.gd --candidate --whole-body --context --species=mirejaw` plus the water form, standard roster crop.
+   - **Report:** MET per preset, plus the near-black back and placeholder calls.
+3. **CO10, Terrapup as the large dog (owner direction: "Terrapup must be the dog"; the badger is 6.75 on GPU).**
+   - **Arms:** main 58bef4fc7 vs tb/co10-on fb6a2593b, dog3 r5. The pad is filled with fur, small plates grow along the spine, and the coat is browner.
+   - **CPU b56:** 6.27 vs badger 6.02. The lane says the plates still read a little like a pad.
+   - **Capture:** as CO9 with `--species=terrapup`, including the ride and rider seat if the tool shoots them.
+   - **Report:** MET per preset, the strapped-on plates and rider-clipping calls, and the coat colour.
+
+4. **MH8, Meadows stronghold spire r6b + MH3 (P2-003, PRESENT 12/12 on GPU).**
+   - **Arms:** control tb/meadows 4a6eeec96 vs candidate tb/meadows-r6b-on f6b946e47. The candidate is the control with three `stronghold.json` flags ON:
+     - `hero_gatehouse`: the Meshy spire, about 200 m tall, with a lit-window emission mask;
+     - `courtyard_daylight_candidate` (with its night step-down);
+     - `banner_model_candidate`.
+   - **CPU:** 4.93 -> 5.72 (+0.79); P2-003 PRESENT -> PARTIAL 3/3.
+   - **Capture:** `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=band5_stronghold_approach --output=res://<round> --source-commit=<sha>`.
+   - **Report:** band5_stronghold_approach_0 and _1, day and night; P2-003; whether the windows read at night; and any red outside the Tether banners.
+
+5. **SW20b, an Ashfoot MET re-judge (no new capture; frames you already have).** Yes, please settle it.
+   - **One batch:** SW16's on-arm Ashfoot inside frames (m36b), SW20's control frames (255b363c7) and SW20's on-arm frames (cc99525a5), all as one-sided sets, with high anchors.
+   - **Why:** SW16 on and SW20 control should be nearly the same scene (storm_view ON in both), yet they map 6.96 vs 5.73 across batches. Report all three mapped in the one batch, and MET for the SW20 on arm.
+   - **When:** run it whenever the GPU is between captures. It's judging only.
+
+After these the queue is empty.
+
+## GPU QUEUE UPDATE 2 (coordinator, 26 Oct 6:00 PM CT): after SW13
+
+- **CO8, TW1, SW17:** received. CO8 Galecrest and Cloudfang and the TW1 landmarks are landing (#766 merged, #767 in CI). SW17 stays off.
+- **Next, SW19: Stormwood storm sky (chapter-wide).**
+  - **Arms:** control tb/stormwood fb919fb55 vs candidate tb/stormwood-m45c-on 8a22c917b. The candidate is the control plus one config change: `stormwood_surge.json presentation.ceiling.form` and `ceiling.skyline` ON.
+  - **CPU r45b:** 5.75 -> 6.58 (+0.83), flat lavender sky FIXED 3/3. Lane note: `ralph/reports/STORMWOOD/close-1024/notes.md` (26 Oct 14:24Z and 22:08Z entries).
+  - **Capture:** the full F41 Stormwood catalogue (`tools/capture_f41_stormwood_catalog.gd`), Medium and High, every phase, each arm at its own SHA with `--source-commit=<sha>`. The sky shows at every open stand, so judge all stands, not a subset.
+  - **Report:** per-stand mapped scores, plus the sky defect (flat lavender) and the lane's known risk, "lit rims read as white smear slabs".
+- **Queue after SW19:** nothing else is GPU-ready right now. The lanes will post new arms here or in their notes; I'll add them as they come.
+
+## GPU QUEUE UPDATE (coordinator, 26 Oct 3:30 PM CT; the coordinator session cannot reply to messages, so the queue is here)
+
+Order after TW1: **CO8 (close-out) first**, then SW17, then SW13.
+
+- **CO8 close-out:** current origin/main vs tb/co8-on 7e6b868d72e04e517ac49e6c90519dd47d0bdb63. That branch is tb/co7-on (Galecrest owner-approved matte slate/tan finish, plus a grounded flinch) plus one commit: the Stormcapra faint faces the camera.
+  - **Judge:** Galecrest (all roles), Cloudfang and Breezetail (hit), and Stormcapra (hit and faint).
+  - **Method:** `capture_f36_poses.gd --candidate --whole-body --context`, standard roster crop, report MET per preset. The game installs the F36 recipe profile (creature_body.gd -> creature_pose_candidates.gd install()), so the recipe pass is the record. CPU b51: 6.87 vs main 4.60.
+- **Board:** CO-1 / CO-2 rows (Grandpa; Tanglevolt, Frostclaw and Craghorn hurt and faint) are marked MET in PR #765. MJ/TP is received: neither lands.
 
 ## GPU QUEUE (coordinator, 24 Oct midday; run top to bottom; work from origin/main 45865499d or later)
 

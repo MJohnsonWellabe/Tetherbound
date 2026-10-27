@@ -1,0 +1,699 @@
+# MEADOWS close-1024 (tb/meadows)
+
+## HANDOFF (2026-10-27 12:00 UTC, wind-down; read this first)
+
+### State
+
+- **Landing:** land20 is **PR #771** (in CI). It turns stronghold r7b ON per GPU MH9: the lit keep plus the spire with the window-grid emission masks, the courtyard daylight and the war banners. The judges' scores: +0.53 Medium, +0.71 High; P2-003 PRESENT → PARTIAL 3/3; night windows PRESENT → PARTIAL.
+- **Earlier landings, ON on main by GPU verdict:**
+  - arch facades;
+  - giant ironwood;
+  - village path r2 (+0.56);
+  - Ridgeline clearings (+1.64, MH7);
+  - relay-yard stone flags (+1.43, land19 / #769).
+- **On tb/meadows, OFF and unjudged on GPU:**
+  - **Salmon-plank fix** (`stronghold.json courtyard_daylight_candidate.rubble`: scale 0.7–1.1, #4a443c, y 0.02). It was held out of land20 because it changes a judged piece. CPU frames show the large planks gone from the courtyard gameplay and reverse cameras.
+  - **Stronghold sightline** (`meadows_hero_pieces.json stronghold_sightline`, nine `clear_area` glades on the band5 approach road). CPU flat at −0.21 mapped (r8-1027). The trees that block approach_0 are not the baked scatter. First failure on the item; one more try is allowed with a new idea.
+  - **Relay yard r2** (smaller flags, uv 0.6, #a39684). It is recorded only, because the merge took main's ON values. Not judged.
+  - **Parked:** village path r3 (+0.36 to +0.42), F22#4 warden rim (flat), ground-cover MH5 (borderline, with an fps cost).
+- **Lowest stands (GPU):**
+  - band5_stronghold_approach mean 5.33 / 5.96 after MH9;
+  - band3_the_river_lock_0 5.93;
+  - village_road, farm_to_hall and hall_front about 6.0–6.4 on CPU.
+
+### Path to 7.5 for the stronghold (MH9 judges)
+
+1. **Make the keep dominate approach_0.**
+   - Find the system that places the trees on the approach_0 sightline (band5 authored groves or road dressing, not the scatter that `clear_area` cuts) and open them. Or move the keep slot nearer.
+   - A bigger keep alone did nothing (r8).
+   - Also make the keep visible from inside the courtyard.
+2. **Courtyard edge:** the salmon slabs (fix on tb/meadows, OFF) and the foreground beam (clipping PRESENT at Medium).
+3. **Atmosphere:**
+   - groves, clearings and a worn path toward the keep;
+   - blue distance haze;
+   - night rain dark blue rather than grey;
+   - warmer, night-only windows (they tonemap white and glow by day).
+
+### Open MESHY line
+
+- **Road ruts and verge** (detail in the 2026-10-26 15:10 line; I answered yes at 03:25):
+  - `meadows_road_ruts_a/b`: about 3 x 6 m, under 0.08 m thick, tileable.
+  - `meadows_road_verge_tufts`: about 1.2 x 0.3 m.
+  - Refs: `docs/reference/tetherbound-meadows-keyart.png` and `docs/reference/palworld-02-open-field-path.jpg`.
+  - Install them OFF as strips along the village road through village_road, farm_to_hall and hall_front, using the `meshy_hero_prop` path.
+
+### What worked
+
+- New hero art plus authored emission masks (r7b +0.69 CPU, GPU pass).
+- Run-time `clear_area` glades where trunks wall a stand (Ridgeline +1.64).
+- Material swaps on flat ground (relay yard +1.43).
+
+### What didn't work
+
+- Recolours (path r3).
+- Scale alone (r5 keep, r8).
+- Light-only rims (F22#4).
+
+### Runbook (TECHNICAL §8.1 plus these)
+
+- **Captures:**
+  - Run `capture_f38_matrix.gd --seed=2042 --f38-preset=Low --f38-baseline --times=day,night --subset=<site>` with `XDG_DATA_HOME=/dev/shm/xdg`, and move the shots to /dev/shm.
+  - **Always** restrict views through the capture-definition overlay first. A stand with every view runs about 50 minutes instead of 15.
+  - Commit real edits before starting a capture chain, because the chain's restore wipes them.
+  - Kill processes by PID, never with a `pkill -f` pattern that matches your own shell.
+- **Judging:**
+  - Build one batch with `anchor_tiles.py --pairs 3 --include craft`.
+  - Fill the JUDGE_PROMPT text, put it as PROMPT.txt in the judge folder, and run three fresh agents.
+  - Run `calibrate.py`.
+  - Watch for wildlife standing in frame; it confounds A/B.
+- **Land branches:** build them from origin/main through a temporary GIT_INDEX_FILE (`read-tree`, `update-index --cacheinfo`, `write-tree`, `commit-tree`). Flip the tier-1 gate test with each flag.
+- **Disk:** the container's disk sits about 150 MB from full. Fetch only the branches you need.
+
+Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatibility, 1920x1080. A mapped Bar A of 6.7 counts as CPU-provisional; no GPU pass is running.
+
+## TO COORDINATOR
+
+(send_message to the coordinator was refused with elevated_session_untrusted_device, so lines go here.)
+
+- 2026-10-24 MESHY (F04#6 aftermath heroes, day-1 list). The judges' standing ask is that Riverwatch and Ridge share one fallen-banner/glowing-stone template and that Field's camp is "wiped rather than collapsed". The 22 Oct toll boom and brazier read worse ("a log on a post", "muddier silhouette"), so these use bigger, clearer silhouettes. Scale is against the 1.80 m trainer. Oxblood only on small Team Tether plates. Style: chunky, readable stylised realism. All stay flag-OFF until judged.
+  1. MESHY: docs/art/reference/13_Tether_Energy_Pylon.png + docs/reference/palworld-02-open-field-path.jpg | 3.6 m wide x 3.2 m deep x 3.4 m tall (1.9 trainers) | Riverwatch: a wrecked Team Tether river checkpoint hut. A timber guard shack with a collapsed half-roof sliding off one side, a split door hanging from one hinge, dark iron Tether plates and a bent cyan-lensed lamp bracket. Crates are spilled at its foot, and a snapped barrier rail sits on a stone footing.
+  2. MESHY: docs/art/reference/13_Tether_Energy_Pylon.png + docs/reference/palworld-03-field-boss-meadow.jpg | lying 6.5 m long x 1.8 m wide x 1.6 m tall; the standing stump is 2.2 m | Ridge: a felled Team Tether signal pylon. An iron lattice mast snapped at the base and lying across the turf, with its cracked cyan crystal head dark, torn cable coils, and the sheared stump bolted to a fieldstone plinth.
+  3. MESHY: docs/reference/owner-board-2026-08-23-camp-set.png + docs/reference/palworld-05-base-building.jpg | 4.2 m long x 3.0 m wide x 1.6 m tall (collapsed; 2.6 m standing) | Field: a collapsed Team Tether field tent. A grey-teal canvas A-frame caved in on one broken ridge pole, with slack guy ropes, a scorched corner, an overturned supply chest and a toppled cookpot tripod.
+  - Other Meadows rows reuse existing OFF Meshy assets first: the burrow shell, the horizon hero_model, the stronghold gate, the Hall great-hall set and the catch-kit orb. More requests follow only after a judged round names new_art. A GLB on any branch path is fine.
+
+- 2026-10-24 01:15 CT READY tb/meadows-land 6cb3e6c0b (from origin/main 5f1f388cc): **F17#6 r9, CPU-provisional met.** Mapped Bar A is 6.84 against shipping 5.82, from three fresh code-blind judges with the standard prompt and three anchor pairs. The batch is confirming (f36_0_npc:C1); calibration is linear, r 0.89, RMSE 0.55, with no warnings. Evidence: `F17-6.md`.
+  - Change (config only, `crossing_hall.json`): the nave posts move to x=±5.0 and the ties stretch to span 10 m; `hall_great_hall` and `hall_dressing` turn ON (its two plaster runners are dropped); the floor becomes a warm #c8b89c; four warm window shafts.
+  - Checks on the candidate tree:
+    - 8 focused unit files (crossing_hall, f17_companion_interior, village_*, inn_interior, f19_order_consumers): 52 tests, 0 failed.
+    - `smoke_crossing_hall_circuit`: PASS (all 8 arches and 8 pedestals reached on collision).
+    - net `homestead_station_craft`: ALL CHECKS PASSED (47).
+    - net `f48_coop_loop`: ALL CHECKS PASSED (507).
+  - A GPU pass must confirm 7.5.
+
+- 2026-10-24 06:30 CT STATUS (replies to your 00:54 and 01:41 messages; send_message from this lane is still refused):
+  - Review nits are done on tb/meadows (03a27a528).
+    - The `daylight_windows._scope` now names all four sources. The east sources sit at x=+6.75 in the wall bays between the east arches, below the upper window row visible in the r9 nave-arches-right frame. Aperture alignment is not measured.
+    - The `crossing_hall_great_hall.gd` header now says ON and that only `collider_radius_m` pieces (the shrine altar, r 1.3 at (12, 0.37, 5.6)) collide.
+    - `smoke_crossing_hall_circuit` covers the shrine: it reached the shrine doorway and all 8 pedestals with the altar collider live (PASS).
+  - Texture policy was applied to the three meadows Meshy heroes: PASS (837).
+  - F04#6 r30 (the three Meshy heroes, OFF) maps 6.20 against 5.99. Field +0.93 and Ridge +0.34; Riverwatch −0.26 ("a hut appears after the win"). r31 (hut in both states, banner down; Dell spilled crates and banner) is with the judges now.
+  - F38#1 P2-059/060 catch: r1 6.42 vs 6.08, r2 5.28 vs 5.39. Parked at r1, OFF.
+  - F38#1 P2-087: the speaker-frame candidate is a no-op on the real path (5.57 vs 5.41), OFF. Gauntlet `*_defeated` lines are talk-to lines, not auto-played.
+
+- 2026-10-24 07:05 CT STATUS F04#6 PARKED at r31: 6.23 mapped against shipping 5.86 (r30 +0.21, r31 +0.37; two rounds under +0.5 after the Meshy approach), below 6.7. All OFF. See `F04-6.md`.
+- 2026-10-24 07:05 CT QUESTION F04#6: r31 beats shipping by +0.37 but isn't passing. Lane rule: OFF. `visual_candidate_sites` has no per-piece flag, so landing it means turning it on. Do you want an ON land branch (as with r29 at wind-down) so the GPU pass judges it, or should it stay on tb/meadows only? I'll build whichever you say.
+
+- 2026-10-24 08:50 CT MESHY: assets/props/meshy-1020/burrow_hill_mound (its current model and concept, for identity) + docs/reference/tetherbound-meadows-keyart.png (rolling hills) | the same envelope; the code fits it to about 20 m wide x 9 m tall x 16 m deep over the burrow dungeon | F38 P2-012 r3: the same rounded, grass-capped burrow mound with the root-arched door opening. Continuous grass cover, with earth showing only as soft, broken, irregular patches near the base and the door. No straight-edged brown bands across the slopes. A few embedded fieldstones and root knuckles; small bushes clustered, not spaced like spheres. Judges: r2 maps to 6.10 (shipping 4.94); the remaining named defect is the mound's own hard-edged dirt bands. Also size the door opening to the real burrow mouth (about 4 m wide x 4 m tall, tunnel depth under 2 m), so no clip box is needed: r2's smaller clip lets the shell tunnel show inside the threshold.
+
+- 2026-10-24 03:40 UTC STATUS (reply to your 03:30 message): F38#0 is underway, following the F39#0 precedent.
+  - Matrix: `capture_f38_matrix.gd --seed=2042 --f38-preset=Low --f38-baseline --times=day,night` at SHA 592a6dea6 (tb/meadows, merged with main after #716), started 03:33 UTC, CPU llvmpipe. The earlier run gave 236 of 352 frames, so this takes hours.
+  - Supplementals queue straight after it, built from the catalog sightings' own repro commands in `phase2/meadows/manifest.csv` (153 sightings, 9 runs): creatures, catch, UI, fights, realm flight, dialogue, world inventory, defeated dialogue, build systems.
+  - Then three blind passes over all 46 Meadows rows, `row-scores.json`, and a blind completeness check.
+  - F38#5's defect pass uses the same matrix; F38#3 follows. F04#6 is parked at r31 6.23 (two rounds under +0.5 with the delivered heroes). The question on landing r31 ON for the GPU pass still stands.
+
+- 2026-10-24 13:40 UTC STATUS (reply to 13:06): F38 matrix done: 236 of 352 frames (≥200; the same 116 stands rejected as on 20 Oct). See `f38-0/README.md` and `f38-0/matrix.md`.
+  - F38#0: landscape rows rescored on the yardstick (6 rows, 5.34-5.81 mapped). The supplementals for the other 40 rows are capturing now (9 runs, from the catalog's own repro commands). READY follows when every row is scored or honestly marked no-evidence, as F39#0 did.
+  - F38#3 matrix Bar A by area: 2.09-6.33 mapped. Not met.
+  - F38#5: not clean.
+    - Most of the Hall and arch failures were a fixture fault, now fixed on tb/meadows (wall-arch stands faced out of the room, and the nave stand resolved onto the ceiling panels). The Hall sites are queued for recapture.
+    - Relay yard hex patches: a game fix (pad cells and lift), queued for recapture.
+    - Still open: the production camera against the relay gate walls and in village interiors, the waterfall column, and the washed-out cyan Hall views.
+
+- 2026-10-24 17:10 UTC FOR THE GPU MATRIX: `ralph/reports/R2-F38/capture-definition.json` and `tools/capture_f38_matrix.gd` on tb/meadows (head of this push) fix the matrix fixture.
+  - The old definition placed every Hall wall-arch stand outside the Hall (blue void, black frames). It also stood the trainer on the nave's ceiling panels.
+  - The fixed definition faces the arches into the room, keeps only their 3 m detail view (the 8 m stand's camera lands inside the opposite wall), and stands the nave and shrine on the floor.
+  - Please capture the High/Medium matrix from this definition, or the Hall rows will be void again. CPU recapture with it: 48 of the Hall frames are valid, with 0 void and 0 black.
+- 2026-10-24 17:10 UTC F17#6: the renderer-aware shafts and rims are in 4ad2d6d24 (test `test_crossing_hall_great_hall_renderer.gd`). READY follows once the test has run in the next capture gap.
+
+- 2026-10-24 17:35 UTC READY tb/meadows-land2 0a88dd931 (from origin/main): F17#6 GPU fix.
+  - Change: `crossing_hall_great_hall.gd renderer_scale()`, the F22#4 aura pattern. On Forward+/Mobile no daylight shafts are built (`forward_plus_shaft_scale` 0), and the arch rune rims, veils and spill run at `forward_plus_arch_rim_scale` 0.35. Compatibility is unchanged, so CPU output is identical.
+  - Also includes your review nits.
+  - Test: `tests/test_crossing_hall_great_hall_renderer.gd`. `--only=crossing_hall,great_hall_renderer`: 9 tests, 0 failed.
+  - GPU re-judge command: the F17-6 fixed set (`capture_camera_set.gd --set=res://tools/visual_judge/camera_sets/F17-6.json`) at Medium and High.
+
+- 2026-10-24 17:45 UTC STATUS F38#5: Hall and relay rescan, after the fixture correction and the relay-pad change. See `f38-0/matrix.md`, "F38#5 rescan".
+  - Mapped scores: Hall nave, shrine and arches 6.37 (was 4.25, 2.80 and 2.09). Relay yard 5.85 (was 5.19).
+  - Void, black and inside-geometry frames and the floor hex decals are gone.
+  - Still open:
+    - The relay gameplay stand frames the trainer through the gate arch, with a pier filling half the frame. That needs shared camera code, so I'm reporting it, not changing it.
+    - The arch rims read as neon on Compatibility. They wait on the F17#6 GPU verdict, because Low must stay identical.
+    - The Hall walls hug the frame edge in arch detail views.
+    - Shrine night is washed out.
+  - The "waterfall/steam column" is the owner-specified objective beacon (`objective_beacon.json`) pointing at the Warrens. It's wayfinding, so I'm leaving it alone.
+- 2026-10-24 17:45 UTC STATUS F38#0: the supplementals are capturing on CPU (creatures first, ~35 s a frame). The 40 remaining rows get one-sided sheets and three judges as each run lands. P2-015 terrapup faint now sits grounded in the fresh capture.
+
+- 2026-10-24 17:55 UTC READY tb/meadows-land3 4d204e402 (from origin/main; supersedes land2 0a88dd931). F17#6 GPU fix, per the owner verdict you relayed: "The white beams of light in the hall seem like an error but the rest looks mostly fine."
+  - Change: `crossing_hall_great_hall.gd renderer_scale()`. On Forward+/Mobile no daylight shafts are built (`forward_plus_shaft_scale` 0).
+  - The arch rims now keep full weight on Forward+ (`forward_plus_arch_rim_scale` 1.0, was 0.35 in land2), so nothing else in the Hall is re-dressed.
+  - Compatibility returns ONE, so CPU output is unchanged.
+  - Test: `tests/test_crossing_hall_great_hall_renderer.gd`. The land2 version passed 9 tests with 0 failed. Re-run at 20:09 UTC on the land3 content with the rims assertion: `--only=crossing_hall,great_hall_renderer`, 9 tests, 31 assertions, 0 failed.
+  - GPU capture command: `capture_camera_set.gd --set=res://tools/visual_judge/camera_sets/F17-6.json` at Medium and High.
+
+- 2026-10-24 19:05 UTC STATUS F38#0 pass 2 (`f38-0/README.md`): ten creature and catch rows rescored, 4.14–5.29 mapped. Catch candidates in impact order:
+  - P2-058 (impact 64): a new readout backing plate. `capture_readout_visual.json plate_enabled` is OFF.
+  - P2-061 (impact 27): the UI lane's unjudged `hud.json catch_card`.
+  - Both are queued for one ON catch capture after the supplementals, then judged per row.
+  - The flat magenta wedge in catch_low is the enemy lunge-lane telegraph, not catch UI, so it belongs to the P2-063 fight-tell row.
+  - P2-015/016/017 (creature pose and scale) live in `data/creatures/f36_pose_candidates.json`, which the creatures lane owns. Tell me if those are mine to change for Meadows species.
+
+- 2026-10-24 20:20 UTC STATUS F38 L1 (camera stands, the 174 rejected): reproduced on CPU. The causes, from a physics probe at each stand:
+  - Fixture: main's `capture-definition.json` still points the wall arches outward. The fix (arches in-room detail only, nave and shrine on the floor, `capture_f38_matrix.gd` honours `views` and `prefer_terrain_ground`) is on tb/meadows and lands with the stand fixes.
+  - Quarry `band2_stone_and_root_0`: every stand sits in quarry dressing. The capsule overlaps the work wagon (gameplay), a foundation is 0.3 m above the terrain (detail), rocks and bag (reverse), and a tree (approach).
+  - Ironwood 0/1: tree trunk colliders overlap the capsule (approach, detail), or a trunk behind pulls the camera in to 1.9–2.4 m (gameplay, approach).
+  - arch_home approach (-23.7, 14): no collider at all within the probe window.
+  - Village road, Hall front, shrine and farm approach: "no physical floor" (probe incomplete; search running).
+  - A heading search (8 headings per stand, the same production preflight and camera checks, nothing relaxed) is running on CPU now. Next: re-seat each site at a passing heading in `capture-definition.json`, recapture those stands on CPU, then READY with the stand list.
+- 2026-10-24 20:20 UTC NOTE F38 L2: the GPU "orb chains" in hall_nave are the same Forward+ shaft quads (they render as beaded white bars). land3 (shafts not built on Forward+) removes both.
+
+- 2026-10-24 21:35 UTC STATUS F38 L1 (the 174 rejected stands): a CPU heading search (8 headings at each view's own offset; the same production preflight and settled camera checks) found a passing stand for every rejected view of 10 sites. tb/meadows b9031cb6b seats them:
+  - `capture-definition.json` gains a per-site `view_headings` override.
+  - `capture_f38_matrix.gd` reads it as an absolute view heading.
+  - Seated sites: band2_stone_and_root_0, band3_the_river_lock_1, band4 ironwood 0/1, farm_to_hall, village_road, hall_front, hall_nave, shrine_room and arch_home.
+  - The wall arches keep the earlier fix: in-room detail view only.
+  - CPU verification recapture of those sites (day, clear and rain) is running. READY with the land SHA and stand list follows.
+  - Your Cloudreach fallback note: the Meadows causes are mixed (quarry props, tree trunks, no floor, camera pulled in), so I seated stands in data rather than adding a capture-side fallback. If the shared helper lands, the seats stay valid.
+- 2026-10-24 21:35 UTC RESULT catch candidates (close-1024 r1, CPU, three judges; `P2-058-061-catch1024.md`). Both are clear gains but below 7.5, so both stay OFF pending GPU:
+  - P2-058 readout plate: 6.78 vs shipping 5.43.
+  - P2-061 catch card: 6.34 vs shipping 4.65.
+  - Since judging, the verdict frame steps the cards back on the same frame.
+  - GPU capture command: `tools/phase2_capture_catch.gd --biome=meadows --seed=2042`, with `capture_readout_visual.json plate_enabled` and `hud.json catch_card.enabled` on for the candidate side.
+
+- 2026-10-24 22:15 UTC READY tb/meadows-land4 62e64e6bf (from origin/main): the F38 tier-1 camera fixture (L1). Fixture only, no game code.
+  - Changes in `capture-definition.json` and `capture_f38_matrix.gd`:
+    - The wall arches face into the Hall and keep only the in-room detail view.
+    - The nave and shrine stand on the Hall floor.
+    - Ten sites get per-view heading seats from the CPU search.
+    - The tool honours `views`, `prefer_terrain_ground` and `view_headings`.
+  - CPU evidence for the arch, nave and shrine part: 48 Hall frames, 0 void, 0 black; Hall area mapped 6.37 (was 2.09–4.25).
+  - The seated stands' CPU recapture is still running; I'll post the per-stand result here.
+  - Tier-1 stands for the GPU recapture: arch_biome5, arch_biome6, arch_biome7, arch_biome8, arch_cloudreach, arch_tidewake, arch_stormwood, arch_home, hall_nave, shrine_room, hall_front, farm_to_hall and band2_stone_and_root_0. village_road and band3_the_river_lock_1 are parked under the tier rule.
+  - Command: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=arch_ --subset=hall_nave --subset=shrine_room --subset=hall_front --subset=farm_to_hall --subset=band2_stone_and_root_0 --output=res://<round>`
+  - Land together with land3 (4d204e402, F17#6: Forward+ shafts off). The Hall stands judge both, and land3 is not on main yet.
+
+- 2026-10-24 22:30 UTC MESHY (P2-003 hero stronghold, tier 1: band5_stronghold_1 4.59, band5_0 5.66):
+  - Reference: the owner key art's "TEAM TETHER STRONGHOLD (MEADOWS HALL)" panel, `docs/reference/tetherbound-meadows-keyart.png` crop box (527, 632)–(1063, 905), upscaled 2x. The local copy is at `ralph/reports/MEADOWS/close-1024/meshy/stronghold_hero_ref.png`, which the repo ignores.
+  - Dimensions: gatehouse facade about 28 m wide x 20 m tall x 12 m deep. It is sized to the existing Hall gate (flanker towers at x ±10.6, about 16–19 m tall). Against the 1.80 m trainer, the gate arch is about 6 m tall and the towers about 10x trainer height.
+  - Prompt: "ruined weathered grey stone gatehouse fortress facade, two tall square flanking towers with broken crenellations, central round-arched wooden gate with iron bands, ivy and moss growing down the stone, narrow hanging dark-oxblood cloth banners with a pale circular emblem, timber scaffolds and iron machinery bolted to the towers, stylised realism, game asset, base at ground level."
+  - Purpose: replaces the read of "a small dark ruin behind dominant pylons" (P2-003) and the giant flat banners at band5_1.
+  - It will be installed flag-off on the `stronghold.json` prefab exterior, then judged on the band5 stands.
+
+- 2026-10-24 23:25 UTC RESULT land4 seats, CPU verification part 1 (`capture_f38_matrix.gd`, day, clear and rain, Low): 38 of 38 rows reached captured, with 0 rejected stands and 0 failures.
+  - Captured: band2_stone_and_root_0 (all 4 views; the GPU run had 0 frames here), band3_the_river_lock_1, band4 ironwood 0 and 1 (all 4 views each), and farm_to_hall.
+  - The run hit its 108-minute CPU limit before village_road, hall_front, hall_nave, shrine_room and arch_home. Those five are recapturing now as part 2.
+
+- 2026-10-25 01:10 UTC RESULT land4 seats, CPU verification part 2: 35 rows captured, 0 rejected stands, 0 failures.
+  - All 4 views captured at village_road, hall_front, hall_nave and shrine_room. arch_home captured approach, gameplay and reverse before the CPU time limit.
+  - Across both parts, 73 of 73 reached rows captured. Every stand that was rejected on the GPU, at the 10 seated sites, now yields a frame on CPU.
+  - Open: band3_the_river_lock_0. It passes the checks, but its gameplay and detail stands frame the trainer under the gate wall, beside a timber wall. A heading probe (90/135/225/270) is capturing now; the chosen seat follows as a separate READY.
+
+- 2026-10-25 01:40 UTC READY tb/meadows-land5 d9f675f3b (from origin/main; supersedes land4 62e64e6bf): the F38 tier-1 camera fixture (L1). Fixture only.
+  - Everything in land4, plus band3_the_river_lock_0: its gameplay view moves to heading 270 and its detail view to 135, off the gate wall onto the open yard (chosen from a CPU probe at 90/135/225/270).
+  - CPU verification: 73 of 73 seated rows captured, 0 rejected.
+  - GPU recapture stands (tier 1): arch_* (all 9), hall_nave, shrine_room, hall_front, farm_to_hall, band2_stone_and_root_0 and band3_the_river_lock_0.
+  - Command: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=arch_ --subset=hall_nave --subset=shrine_room --subset=hall_front --subset=farm_to_hall --subset=band2_stone_and_root_0 --subset=band3_the_river_lock_0 --output=res://<round>`
+  - Land with land3 (4d204e402, F17#6/L2: no shafts on Forward+). The owner's "white beams" and the GPU's "orb chains" are both those Forward+ shaft quads. On Compatibility the shafts stay as judged (CPU r9 6.84).
+- 2026-10-25 01:40 UTC READY (test pending) F04#6 r31 Meshy aftermath heroes, wired as an OFF candidate on tb/meadows 6549fbaee:
+  - `trainer_aftermath.json`: `meshy_heroes_enabled: false`, and `meshy_heroes` holds the whole r31 sites (Dell, Riverwatch, Field and Ridge).
+  - `trainer_aftermath.gd`: when the flag is on, those sites replace `visual_candidate_sites`.
+  - Test: `tests/test_trainer_aftermath_meshy_heroes.gd`, queued behind the CPU supplementals. I'll report the result here, then build a land branch.
+  - CPU pre-judge (already done, `F04-6.md`): r31 6.23 vs shipping 5.86, parked under the gain rule.
+  - GPU command: `tools/_probe_aftermath_sites.gd --cameras=res://tools/visual_judge/camera_sets/F04-6.json --candidate`, with `meshy_heroes_enabled` on for the candidate side.
+
+- 2026-10-25 01:55 UTC MESHY batch (F38 tier-1 and L6 new art).
+  - Sizes are against the 1.80 m trainer, measured from the close-1024 CPU Hall frames.
+  - Each asset installs flag-off and is judged on its own stands before going ON.
+  1. Travel-arch facades, three assets, one per destination. Each is an arch surround that frames the existing door opening (about 2.6 m wide x 3.8 m tall), overall about 4.4 m wide x 5.2 m tall x 0.7 m deep, open in the middle.
+     - (a) arch_tidewake. Ref: `docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png`. Prompt: "carved stone portal surround for a doorway, pale limestone weathered by sea spray, inlaid shells and wave scroll carving, a small cyan glass keystone, rope-and-driftwood trim, stylised realism, game asset, open centre".
+     - (b) arch_cloudreach. Ref: `docs/reference/boards-2026-09-06/cloudreach-sky-aviary-stronghold-board.png`. Prompt: "carved stone portal surround for a doorway, pale stratified sandstone in horizontal bands, feather and wing relief carving up both jambs, a bronze eagle keystone, stylised realism, game asset, open centre".
+     - (c) arch_biome5 (sealed, unbuilt chapter). Ref: owner key art, standing-stone panel, `docs/reference/tetherbound-meadows-keyart.png` crop (1027, 333)–(1535, 600). Prompt: "sealed ancient stone portal surround for a doorway, dark grey monolith blocks with a faint blue spiral rune carved in the keystone, moss in the joints, heavy and closed-looking, stylised realism, game asset, open centre".
+  2. Ironwood canopy trees (band4 ironwood stands). Ref: owner key art, oak-grove panel, crop (0, 333)–(540, 600). Two variants, about 14 m tall with a 10–12 m crown and a 1.2 m trunk. Prompt: "huge old broadleaf ironwood tree, thick gnarled dark trunk with exposed roots, dense layered leaf-card canopy in clustered clumps, warm green with lighter tips, stylised realism like Valheim and Palworld, game asset".
+  3. Sculpted stratified cliff faces for band2_stone_and_root_1, replacing the flat facets and dark slash shapes (P2-014). Ref: `docs/reference/boards-2026-09-06/cloudreach-cliffs-creature-roster-board.png` (stratified stone), with the key art's Meadows grey-stone palette. Two modular pieces, about 30 m wide x 15 m tall x 10 m deep, plus a 12 m corner piece. Prompt: "modular grassy hillside cliff face, layered grey sedimentary rock strata with rounded weathered edges, grass and moss spilling over the top lip, small ledges and boulders at the foot, stylised realism, game asset".
+  - Also outstanding: the stronghold hero gatehouse (posted 22:30 UTC above).
+
+- 2026-10-25 02:00 UTC READY tb/meadows-land6 3e06c8ddf (from origin/main): F04#6 r31 Meshy aftermath heroes as an OFF candidate.
+  - Contents: the three GLBs with textures, provenance and references (main had none of them), `trainer_aftermath.json meshy_heroes` with `meshy_heroes_enabled: false`, the `trainer_aftermath.gd` overlay, and the test.
+  - Test: `--only=trainer_aftermath`, 18 tests, 158 assertions, 0 failed.
+  - CPU: r31 6.23 vs 5.86.
+  - GPU: judge with `meshy_heroes_enabled` on as the candidate side; the command is in the line below.
+
+- 2026-10-25 03:15 UTC STATUS F38 L4 (P2-005 carpet): PARKED after three CPU attempts with no visible change.
+  - Attempts, on farm_to_hall, band2_stone_and_root_1 and band5_0, approach and gameplay, ship vs candidate: grass drift r1 (0.07/0.8), grass drift r2 (0.045/1.0 plus height jitter), and terrain macro patches at 12 m in clover green.
+  - Why it fails: the drift gaps lose blades, but the ground under them is the same painted grass, and the near-field read is the blades plus the baked terrain colour map, which the shader knobs don't reach.
+  - What it needs, as a bake/art change rather than tuning: authored ground variation in the terrain colour bake (worn earth, clover and moss patches, rock outcrops, grove edges) or new ground-cover art.
+  - Both candidates stay OFF with `_parked` notes and are not for the GPU.
+  - QUESTION: is a Meadows terrain colour-bake pass (it fingerprints the terrain and vegetation bakes) in scope for this lane, or does it go to a world/terrain owner?
+- 2026-10-25 03:15 UTC NOTE L3 (interior time-of-day grade): not started, deliberately. Per your relay of the owner's F17#6 verdict ("the rest looks mostly fine", don't re-dress the hall), the Hall interior stays as is apart from the shafts (land3). Tell me if L3 should override that.
+
+- 2026-10-25 03:55 UTC RESULT F38 L4 colour-bake pass (per your approval): built and tested, no visible effect, PARKED.
+  - The tool is `tools/bake_meadows_colour_candidate.gd` (colour only: clover, moss, worn-earth halo and outcrop-base variation from each region's own maps). `meadows_colour_candidate.gd` swaps the maps in at runtime behind `terrain_presentation.json colour_candidate.enabled` (OFF). No height, control, collision, vegetation or fingerprint change.
+  - The swap demonstrably ran (64 regions). The CPU capture at farm_to_hall, band2_stone_and_root_1 and band5_0 (approach and gameplay) is still identical to shipping.
+  - That makes four carpet attempts with no visible change. At play-camera distances the grass blade layer covers the ground completely, so neither terrain colour nor shader macro reaches the frame.
+  - PNGs not committed (7.6 MB for no effect); the tool regenerates them.
+  - The carpet lever is the blade layer itself (per-patch blade tint, species mix and height) or new ground-cover art. I'm not starting a fifth attempt on my own; say if you want the blade-tint route, or a MESHY/texture ask for ground cover.
+  - Next: L5 haze and L6 facades, per your order.
+
+- 2026-10-25 04:50 UTC RESULT F38 L4 blade-layer route r3 (per-patch tip tint, per-patch height, soil-driven thinning, with the colour-bake swap): three code-blind judges scored it level with shipping. Mapped 6.05 vs 6.07; raw 6.0/6.0/5.8 vs 6.0/6.0/5.9; defect PRESENT or PARTIAL on both sides. Files: `carpet-r3-*`. Parked, OFF.
+  - That is five carpet attempts, so I'm stopping here per your instruction.
+  - What the judges still ask for at every site: "clustered flower drifts of several species and sizes, worn dirt and bare patches, rock outcrops, taller grass edges".
+  - That is placed ground cover, not tinting.
+- 2026-10-25 04:50 UTC MESHY / texture ask (P2-005 ground-cover art). Sizes are against the 1.80 m trainer. Each item installs as a flag-off cover tier in `grass_field.json cover_tiers` (same instancing as the bushes and flowers), judged on the L4 views.
+  1. Clover and broadleaf ground-cover clumps, 3 variants, about 0.6–0.9 m across and 0.15–0.25 m tall. Ref: the owner key art's meadow foreground panels (`docs/reference/tetherbound-meadows-keyart.png`, crops (357, 8)–(1000, 325) and (546, 333)–(1022, 600)). Prompt: "low clump of clover and broadleaf meadow ground cover, round leaves in mixed greens with a few small white and pink blossoms, stylised realism, game asset, flat base".
+  2. Mixed wildflower drift clumps, 3 variants (purple lupin, gold buttercup, white daisy), about 0.8–1.2 m across and 0.3–0.6 m tall, several stems per clump. Same ref (the key art's purple and white drifts). Prompt: "dense clump of wild meadow flowers, many stems of one species with varied heights, stylised realism, game asset, flat base".
+  3. Worn-earth and stone-scatter decal-patch meshes, 2 variants, about 2–3 m across and near-flat (under 0.1 m), with pebbles and dry grass edges, to sit on paths and trampled yards. Ref: the key art's dirt path in the top-left panel. Prompt: "flat patch of worn trampled earth with small pebbles and dry grass tufts at the edge, stylised realism, game asset, very low profile".
+  4. Small rock-outcrop clusters, 2 variants, about 1.5–2.5 m across and 0.6–1.0 m tall, mossy grey, half-buried. Ref: the key art's river-bank stones (top-right panel). Prompt: "cluster of half-buried mossy grey rocks, rounded weathered stones of mixed sizes, stylised realism, game asset, flat base".
+
+- 2026-10-25 05:50 UTC READY tb/meadows-land7 1edc159ae (from origin/main; supersedes land5 d9f675f3b and land4): the F38 camera fixture plus the baseline-dressing fix.
+  - Contents: everything in land5, plus:
+    - farm_to_hall moves out of Grandpa's house onto the farm-to-Hall road. Its gameplay, reverse and detail now show the village road to the Hall. The approach at heading 135 is CPU-verified, day and night.
+    - `meadows_catalog_presentation.gd`: `--f38-baseline` stripped the shipped (ON) catalog dressing from every matrix frame. Without the Hall's two end banners, the shipped Hall waymark failed and the Hall build returned early. Baseline now withholds only OFF candidates.
+  - Test: `--only=catalog_presentation_gate,crossing_hall`, 11 tests, 0 failed.
+  - CPU check, hall_nave and farm_to_hall, day and night: the waymark applies and the layout error is gone. The end banners are back in the nave frames.
+  - Correction to my earlier guess: this does NOT change the Hall's day/night grade. Night still reads paler than day; that is Hall lighting (L3), left alone per the owner.
+  - Impact: every earlier matrix frame (CPU and GPU) lacked the shipped catalog dressing, so the whole matrix should be recaptured from this fixture.
+  - GPU command: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --output=res://<round>` (full matrix, or `--subset=` per tier-1 stand).
+  - Land with land3 (shafts off on Forward+) and land6 (F04#6 heroes OFF).
+
+- 2026-10-25 09:10 UTC STATUS (reply to 09:02): you were right, the 05:39 cover capture died. The cause was the disk allowance: only 1.3 GB was free.
+  - Freed ~1 GB of finished judge folders and capture copies in /tmp, not repo content.
+  - Restored the capture's temporary definition edit from git.
+  - Re-running the A/B as two separate runs, with a git-based restore on exit so a crash cannot strand edits: shipping vs ground-cover tiers plus blade layer, on band2_stone_and_root_1 and band5_stronghold_approach_0, approach and gameplay, clear and rain.
+  - Queued next: a heading probe for band5_stronghold_approach_1 (4.59). Its gameplay and detail cameras press into machinery and a pillar in the courtyard, the same L1 fix as river lock 0.
+  - Not delivered yet on tb/meshy-1024: the arch facades, the stronghold hero, the stone_and_root cliffs and the Ironwood canopies. Those tier-1 stands (arch_*, band5_0/1, stone_and_root_1) wait on them after L1 and L2.
+
+- 2026-10-25 11:20 UTC READY (GPU confirm) tier-1 new art r1, CPU A/B vs shipping (`art1024-batch.json`, `art1024-mapped.json`, `_sheet_art1024_r1.png`; key `art1024-key.json`). Three fresh code-blind judges; anchors f36_0_npc:C1, p2_094_r4, craft; calibrate slope 1.64, r 0.98, RMSE 0.31 (confirming batch).
+  - **Arch facades** (`crossing_hall.json arch_facades`): mapped **6.92 vs 5.50** (+1.42). Meets the 6.7 CPU-provisional bar. Judges still flag the violet rims on the unfaced arches (stormwood, biome6–8) next to the new surrounds; r2 below.
+  - **Cliffs** (`meadows_hero_pieces.json cliffs`): mapped **5.93 vs 4.89** (+1.04) at band2_stone_and_root_1. Clears tier 1 (≥5.2 CPU), below 6.7. Remaining: the faceted Burrow hill flank and the ramp slab (terrain, not this asset).
+  - **Gatehouse** (`stronghold.json hero_gatehouse`): **5.44 = 5.44**, no visible change. At 28 m wide it is a speck from band5_0 (550 m) and out of frame at band5_1. Resize round queued.
+  - All three stay OFF until GPU confirms. GPU command, each with its flag set `enabled: true` for the candidate side and `false` for shipping: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=arch_tidewake,arch_cloudreach,arch_biome5,band2_stone_and_root_1 --output=res://<round>`. Recommend turning arch_facades and cliffs ON if GPU agrees (both are clear gains with no judged regression).
+  - Next here: arches r2 (reuse the sealed biome5 surround on biome6–8 and a carved surround on stormwood so no neon rim sits beside a faced arch), gatehouse r2 (larger, until it reads from 550 m), then the cover r2 capture already queued.
+
+- 2026-10-25 11:24 UTC MESHY (F38 L6, arch r2 follow-up): arch_stormwood, one asset. Until it lands, r2 reuses the tidewake surround on the stormwood arch.
+  - Same envelope as the r1 surrounds: about 4.4 m wide x 5.2 m tall x 0.7 m deep, framing the existing ~2.6 x 3.8 m door, open centre; the 1.80 m trainer stands about a third of its height.
+  - Ref: `docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png`, with the key art's Meadows stone palette so it sits in the Hall.
+  - Prompt: "carved dark oak and grey stone portal surround for a doorway, twisted root and branch relief climbing both jambs, a small pale-blue lightning glass keystone, iron straps, stylised realism, game asset, open centre". No oxblood.
+
+- 2026-10-25 11:28 UTC READY (test pending) tb/meadows-land8 7472798460 (from origin/main): tier-1 new art wired OFF.
+  - Contents: Hall arch facades (`crossing_hall_arch_facades.gd`, `crossing_hall.json arch_facades`, now covering all seven chapter arches), the stronghold hero gatehouse (`stronghold_hero_gatehouse.gd`, `stronghold.json hero_gatehouse`, r2 placement), and the Meadows hero pieces (`meadows_hero_pieces.gd`, `meadows_hero_pieces.json`: cliffs and Ironwood). It also carries their ten `assets/props/meshy-1024/meadows_*` assets, imported with policy passed, and three one-line hooks.
+  - Every flag is false, so shipping is unchanged. Test: `tests/test_meadows_tier1_art_gates.gd`, queued behind the CPU captures; I'll post the result here.
+  - It lands alongside land3, land6 and land7 with no overlapping hunks (land3 touches other keys in `crossing_hall.json`).
+  - Use it for the GPU art pass in the 11:20 READY (flip each flag on for the candidate side).
+
+- 2026-10-25 12:52 UTC READY (GPU confirm) tier-1 art r2 (`art1024r2-*.json`, `_sheet_art1024_r2.png`). Three fresh code-blind judges; anchors p2_094_r4, f04_6_r22, craft; slope 1.96, r 0.97, RMSE 0.34; confirming batch.
+  - **Arch facades r2** (all seven chapter arches faced; stormwood borrows the tidewake surround, biome6–8 the sealed one): mapped **8.08 vs 5.28** shipping. r1 was 6.92 vs 5.50. CPU-provisional met in two batches, so `arch_facades.enabled` is now **ON** on tb/meadows (score in `_why_on_r2`).
+  - GPU command: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=arch_ --output=res://<round>` on tb/meadows-land9 (facades ON) against main (OFF). A GPU score below 7.5 reopens it.
+  - Remaining judge notes: the pale Cloudreach surround washes out by day and greys at night; the window-strip wall still shows behind.
+  - **Gatehouse r2** (a 60 m keep behind the stronghold): 6.58 vs 6.19 (+0.39). r1 gained 0.00, so that is two rounds under 0.5 and it is **PARKED**, OFF. All judges still read a speck that vanishes at night; MESHY line below.
+- 2026-10-25 12:52 UTC MESHY (P2-003, replaces the gatehouse approach): Meadows stronghold skyline landmark, a lit keep.
+  - Ref: owner key art, the stronghold/hall panel (`docs/reference/tetherbound-meadows-keyart.png`).
+  - Size: about 70 m tall overall with two towers, roughly 40x the 1.80 m trainer, so it reads from 550 m.
+  - Prompt: "tall fortified stone keep with two slender towers and a high central hall, warm lit windows, braziers on the battlements, oxblood banners only on the towers, weathered grey stone, stylised realism, game asset, readable silhouette from a distance".
+  - It must carry emissive window and brazier materials so it holds at night (all three judges named the night vanish).
+
+- 2026-10-25 12:55 UTC READY (test pending) tb/meadows-land9 18d660876f (from origin/main 1d5faebac; supersedes land8 7472798460): the same tier-1 art as land8, with `arch_facades` ON (judged passing) and the gatehouse parked OFF. Test `tests/test_meadows_tier1_art_gates.gd` (updated for facades ON) is queued behind the CPU captures.
+
+- 2026-10-25 13:04 UTC READY tb/meadows-land10 0133455e34 (from origin/main 1d5faebac; supersedes land7 1edc159ae): the F38 camera fixture plus the baseline-dressing fix, with two new probe-verified seats.
+  - band5_stronghold_approach_1: gameplay and detail views at heading 45 (probe `shots/f38_1024_shprobe` tried 45/90/135; 45 is clear of the courtyard pillar and the crates).
+  - hall_front: gameplay view at heading 45. At 135 the camera settled inside a house eave; of 0–315, only 45 and 270 pass, and 270 looks down the nave.
+  - GPU command: as in the land7 READY, adding `--subset=band5_stronghold_approach --subset=hall_front`.
+
+- 2026-10-25 13:06 UTC STATUS (reply to the 13:04 directive; send_message to the coordinator is refused: elevated_session_untrusted_device).
+  - All 9 heroes from tb/meshy-1024 4eb886a11 are wired and CPU-judged:
+    - arch facades: ON, 8.08 vs 5.28 (land9);
+    - cliffs: 5.93 vs 4.89, OFF pending GPU, recommend ON;
+    - gatehouse: parked after two rounds under 0.5;
+    - Ironwood: A/B capturing now.
+  - Ground cover is the new-art route already: 10 Meshy tiers. r2 rendered real variety but placed about 11.7k items (55 min per CPU frame). r3 cuts reach and triangles for cost; it is not a look tweak.
+  - Dominant object per GPU stand below 6, from the GPU verdict (tb/gpu-pass F38-0/main-1024) and current CPU frames:
+
+| Stand (GPU) | Dominant object | Covered by |
+|---|---|---|
+| arch_* (3.53–5.26) | blank arch / plaster wall; camera in rock | facades ON (land9), L1 seats (land10) |
+| arch_home 5.85 | shaft slabs over the pillars | L2 (land3); facade MESHY below |
+| hall_nave 4.77, hall_front 5.82, shrine_room 5.53 | white shaft quads and orb chains (Forward+) | L2 (land3); hall_front seat (land10) |
+| band5_stronghold_1 4.59 | giant flat oxblood banners filling the courtyard | scene: banner scale-down candidate, now |
+| band5_stronghold_0 5.66 | stronghold a speck behind the pylons | MESHY lit keep (12:52) |
+| band2_stone_and_root_1 5.82 | faceted Burrow mound with slab ramp | cliffs OFF/ready; MESHY 1 below |
+| band3_the_river_lock_0 5.29 | bare flat dirt yard filling the lower half | MESHY 2 below |
+| band2_stone_and_root_0 (no GPU frames) | pale untextured quarry blocks beside the trainer | MESHY 3 below |
+| farm_to_hall 5.60 | orange-washed house interior | L1: re-seated onto the road (land7/10) |
+
+- 2026-10-25 13:06 UTC MESHY (dominant objects, F38 tier 1). One change each. All install flag-OFF and are judged on their own stand. Sizes are against the 1.80 m trainer.
+  1. **meadows_burrow_mound** (band2_stone_and_root_1, the Warrens entrance at about (-357, 2610)).
+     - Size: about 40 m wide x 14 m tall x 30 m deep.
+     - Ref: owner key art, the burrow/hill panel (`docs/reference/tetherbound-meadows-keyart.png`), and `docs/reference/palworld-04-plateau-landmark.jpg` for the sculpted grassy rock.
+     - Prompt: "large grassy hill mound with a dug burrow entrance, rounded sculpted earth and layered grey rock outcrops, grass and moss draping over the top, a worn dirt path leading into a round tunnel mouth framed by roots and stones, stylised realism, game asset".
+     - Replaces the faceted planes and the slab ramp.
+  2. **meadows_lock_yard_paving** (band3_the_river_lock_0).
+     - Modules: 8 x 8 m and 8 x 4 m tiles plus a curb edge. Several tile the about 30 x 40 m lock yard.
+     - Ref: `docs/reference/boards-2026-09-06/water-veilfall-stronghold-board.png` (quay stone) with the key art's warm Meadows stone.
+     - Prompt: "worn flagstone yard paving module with irregular grey-tan stones, moss and grass in the joints, a few puddles and wheel ruts, flat with a low curb edge, stylised realism, game asset, tileable layout".
+  3. **meadows_quarry_blocks** (band2_stone_and_root_0, the stone quarry).
+     - Set: three cut-stone piles (1–2 m blocks, stacked 2–3 m high) and one half-cut quarry face, about 6 m tall.
+     - Ref: owner key art, grey stone palette; `docs/reference/palworld-05-base-building.jpg` for the stacked resources.
+     - Prompt: "stacked cut granite blocks in a working quarry, chisel marks, wooden wedges and a rope sling, moss on the lower stones, grey-tan stone, stylised realism, game asset".
+     - Replaces the pale untextured cubes.
+  4. **meadows_arch_home** (arch_home, the Hall's home doorway).
+     - Same envelope as the r1 surrounds (about 4.4 x 5.2 x 0.7 m, open centre).
+     - Ref: owner key art, Meadows Hall panel.
+     - Prompt: "warm carved oak and limestone portal surround for a great hall doorway, wheat and leaf relief on the jambs, a carved sun keystone, stylised realism, game asset, open centre".
+  5. **meadows_tether_war_banner** (band5_stronghold_approach_1, the courtyard heraldry; replaces the flat cloth quads, not the banner sizes).
+     - Size: about 2.4 m wide x 7 m drop, with a carved pole and crossbar (the board's 6–8 m banners). Oxblood is correct here: it is Team Tether's own stronghold.
+     - Ref: `docs/reference/owner-board-2026-08-15-systems-and-castle.png` (castle banners) and the key art's stronghold panel.
+     - Prompt: "heavy hanging war banner, deep oxblood wool with deep vertical folds and a tattered, frayed hem, a pale stitched circle-and-cross emblem, iron-capped wooden crossbar and pole, stylised realism, game asset".
+     - Why replacement rather than a rescale: earlier judges asked for the banners 3–4x larger (T1-HALL-4); the GPU judge now reads them as "giant flat banners". Flat cloth is the defect, and a rescale would oscillate.
+
+- 2026-10-25 14:10 UTC READY (GPU) **one combined hero candidate**: tb/meadows-land11 89c5b91f64 (from origin/main 818e5afe3; supersedes land8 and land9). Focused tests pass: `test_meadows_tier1_art_gates`, `test_trainer_aftermath_meshy_heroes` and `test_meadows_catalog_presentation_gate`, 7 tests, 23 assertions, 0 failed.
+  - **Correction:** land9 shipped `arch_facades` ON on a CPU score. Main's CLAUDE.md says GPU judging replaced the CPU-provisional rule on 24 Oct. land11 keeps every flag OFF; the scores live in each `_why`.
+  - Contents: all 9 heroes from 4eb886a11, each behind its own flag. CPU A/B vs shipping (three code-blind judges, mapped):
+    - `crossing_hall.json arch_facades` (all seven arches): 8.08 vs 5.28 (r1 6.92 vs 5.50).
+    - `meadows_hero_pieces.json cliffs` at band2_stone_and_root_1: 5.93 vs 4.89.
+    - `meadows_hero_pieces.json ironwood` at band4 ironwood 0/1: 5.86 vs 5.20 (`iw1024-*`, `_sheet_iw1024_r1.png`).
+    - `stronghold.json hero_gatehouse` at band5_0/1: parked (+0.00, then +0.39), included for completeness. The band5_1 courtyard seat (land10) rides along.
+  - GPU command: on land11 merged with land10 (fixture) and land3 (shafts), set all four flags `enabled: true`, then run `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=arch_ --subset=band2_stone_and_root_1 --subset=band4_upper_meadows_ironwood --subset=band5_stronghold_approach --output=res://<round>`. Compare against the same command with the flags off.
+  - Each flag goes ON only where GPU gains more than 0.5 on its own stands.
+- 2026-10-25 14:10 UTC MESHY (band4, dominant object after the Ironwood trees): **meadows_giant_ironwood**. All three judges name the existing giant ironwood behind the Grove stand: "flat, faceted low-poly canopy shards against the sky".
+  - Size: about 30 m tall with a 24 m crown and a 3 m trunk with buttress roots, matching the existing giant at the Grove stand (-345, 5060) looking +z.
+  - Ref: owner key art, oak-grove panel (crop (0, 333)–(540, 600)).
+  - Prompt: "ancient colossal ironwood tree, massive buttressed trunk with gnarled bark and moss, enormous layered canopy of dense leaf-card clusters with light breaking through, warm green with sunlit tips, stylised realism like Valheim and Palworld, game asset, single hero tree".
+  - It replaces the existing giant (one change); the r1 Ironwood trees stay as they are.
+
+- 2026-10-25 16:16 UTC STATUS (waiting): nothing in this lane is expected to gain more than 0.5 without new art or a GPU verdict, so no captures are running.
+  - **Board rows:**
+    - F17#6: READY tb/meadows-land3 4d204e402 (no shafts on Forward+; CPU r9 6.84).
+    - F04#6: READY tb/meadows-land6 3e06c8ddf (Meshy aftermath heroes OFF; CPU r31 6.23 vs 5.86).
+    - Both wait on the GPU pass.
+  - **Tier-1 heroes:** READY tb/meadows-land11 89c5b91f64 (all OFF) plus tb/meadows-land10 0133455e34 (camera seats). These are waiting on the GPU pass too.
+  - **MESHY:** none of the eight requested assets is on tb/meshy-1024 yet (checked 14:42, 15:14 and 16:16): burrow mound, lock-yard paving, quarry blocks, home arch, war banner, lit keep, Stormwood arch, giant ironwood. I wire each OFF on delivery and post a CPU A/B READY.
+  - tb/meadows has origin/main merged (0fe451688).
+
+- 2026-10-25 17:49 UTC READY tb/meadows-land12 a634da3791 (from origin/main 0fe451688): **use this in place of land10 for the queued GPU hero run.**
+  - land10 and land7 carried a leaked capture trim (committed in a3f1e8cfc). It limited band2_stone_and_root_1, band5_stronghold_approach_0 and farm_to_hall to the approach and gameplay views, so a GPU run on land10 would skip their reverse and detail views.
+  - land12 is land10 without that trim. The deliberate detail-only arch views stay.
+  - Hero run: land11 + land12 + land3, with the GPU command in the land11 READY.
+  - Coordinator's 17:46 note received: eight MESHY assets generating. I wire each OFF on delivery.
+
+- 2026-10-25 19:39 UTC READY **tb/meadows-land13 d9f0525d0b** (from origin/main ca8901ce0; replaces land3, land7, land8–land12 for landing). This is the coordinator's 19:11 ask.
+  - **arch_facades ON:** GPU MH (tb/gpu-pass bf099dd2f) measured +0.79 Medium and +1.11 High, with L6 going PRESENT→PARTIAL on 6 of 6. The gain is in `crossing_hall.json arch_facades._why_on_gpu`. Every other land11 flag ships OFF: cliffs +0.40, Ironwood trees negative, gatehouse invisible.
+  - **land12 fixture:** per-view seats, the baseline dressing gate, and no leaked view trim.
+  - **land3, F17#6:** no daylight-shaft quads on Forward+/Mobile; Compatibility is unchanged.
+  - **Hard-rule fix, oxblood tufts:** Grass_Wheat's UVs all sample the orange-red column of the shared `Grass.png` atlas, and the drygrass straw multiply turned it rust-red. `derived/Grass_wheat_straw.png` repaints only that column straw gold, swapped in through `vegetation_presentation.json retexture`. I left `vegetation.json` alone because its bytes are the scatter fingerprint, so the bake stays fresh. A CPU check at band5_stronghold_approach_0 shows every red tuft now straw gold, with the rest of the frame unchanged.
+  - **Tests on land13's own files:** `test_meadows_tier1_art_gates` (facades ON, the rest OFF), `test_crossing_hall_great_hall_renderer`, `test_meadows_catalog_presentation_gate` and `test_stronghold_banner_camera_occluder` give 9 tests, 32 assertions, 0 failed.
+  - land6 (F04#6 aftermath heroes OFF) stays a separate branch, unchanged.
+
+- 2026-10-25 20:06 UTC **FIXED feaf24a32** (PR #750, tb/meadows-land13). `Grass_wheat_straw.png.import` is now mode 2 (s3tc_bptc, mipmaps on, detect_3d 0) and reimported, and `texture_import_policy.py --check` passes for all 1019. I ran `test_texture_import_policy`, `test_meadows_tier1_art_gates`, `test_crossing_hall_great_hall_renderer`, `test_meadows_catalog_presentation_gate` and `test_stronghold_banner_camera_occluder` on land13's own files: 11 tests, 1253 assertions, 0 failed. My send_message was refused (untrusted device).
+  - Harness note for TECHNICAL §8.1: `texture_import_policy.py --apply <file>` updates 0 sidecars, because it takes directories. For a single new texture outside `meshy-*`, set `compress/mode=2`, `mipmaps/generate=true` and `detect_3d/compress_to=0` in its `.import`, then run `godot --headless --import`.
+
+- 2026-10-25 20:34 UTC READY (GPU) **tb/meadows-land14 47ea49dca2** (from origin/main c361f575e, which has land13). Hero bundle 2, with every flag OFF. It contains:
+  - **The lit keep** (`stronghold.json hero_gatehouse`, the Meshy meadows_lit_keep from ae67083ec): 110 m wide, about 122 m tall, 130 m past the mouth, with a window/brazier emission mask and an albedo tint toward weathered stone. CPU result (`dom1025-*`, `_sheet_dom1025.png`): band5_0 day+night raw 5.67 vs 4.97 (+0.70), mapped +0.44 on a weak fit (slope 0.63, r 0.52, because the C9 anchor pair scored identically). P2-003 went PRESENT→PARTIAL for all 3 judges, who agree it "reads as a landmark fortress day and night". Their critique ("bleached white") is answered by the tint, CPU-checked (`f38_keep_cand3`). Confound: the shipping frames predate the oxblood tuft fix.
+  - **War banners** (`stronghold.json banner_model_candidate`): the Meshy war banner at each courtyard banner slot. The camera occluder and the Warden take-down are unchanged.
+  - **Courtyard declutter (ships, rides along):** camp props 18–20 move off the band5_1 gameplay seat.
+  - **The giant ironwood** (`ironwood_grove_presentation.json hero_tree.model_candidate`, Meshy meadows_giant_ironwood): replaces the faceted landmark tree with a uniform fit to its height. CPU raw 6.37 vs 4.93 (+1.43), mapped +0.90. The defect went PRESENT→PARTIAL for all 3, read as "a believable broad oak".
+  - **Tests on land14's own files:** test_meadows_tier1_art_gates, test_texture_import_policy, test_stronghold_banner_camera_occluder and test_meadows_banner_capture_0912 give 13 tests, 1331 assertions, 0 failed.
+  - **GPU command:** for the candidate side, set `hero_gatehouse.enabled`, `banner_model_candidate.enabled` and `hero_tree.model_candidate.enabled` true. Then run `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=band5_stronghold_approach --subset=band4_upper_meadows_ironwood_0 --output=res://<round>`, and repeat with them false. The keep and banners judge on band5_0/1, the tree on ironwood_0.
+- 2026-10-25 20:34 UTC PARKED (CPU, same batch):
+  - lock paving r2 (raw +0.20; judges read decal-like pale patches on dark ground).
+  - quarry face (0.00).
+  - home and Stormwood surrounds (−0.10; the arch_home stand looks along the side wall with a post in frame).
+  - burrow mound (it never showed: the Warrens' own excavated hill hides it even at 64 m; the fix is a structural rebuild of that hill, or extending the cliffs across the bank face as the GPU note suggests).
+  - Judges' shared next asks: real leaf-card canopies for the small grove trees, and a worked ground material for yards and quarry floors.
+
+- 2026-10-25 20:35 UTC MESHY (band4 grove and meadow trees). The judges (dom1025, iw1024, GPU MH) name the small grove trees' "clumpy, blobby, cube-ish canopies" as the next object after the landmark tree.
+  - **meadows_grove_oak_a/b/c:** three variants, 9–13 m tall with 7–10 m crowns (5–7x the 1.80 m trainer).
+  - Ref: `assets/props/meshy-1024/meadows_giant_ironwood/reference/` (the judges' preferred oak, for family match) and the key art's oak-grove panel.
+  - Prompt: "broadleaf oak tree with a dense canopy of many layered leaf-card clusters (not blobs), gnarled trunk with bark and moss, natural asymmetric crown, warm green with sunlit yellow-green tips, stylised realism like Valheim and Palworld, game asset".
+  - These replace the scatter's grove-tree models at the Ironwood stands as one candidate.
+
+- 2026-10-25 21:21 UTC DROPPED (no judge round): the Hall shell plaster→brick swap (`building_prefabs.json crossing_hall_shell.module_swap_candidate`, OFF).
+  - The CPU A/B pixel diff (`f38_hall_ship` vs `f38_hall_cand`) is 0.0% at all four arch detail stands and both hall_nave views, and 0.5–1.9% at hall_front.
+  - The "window-strip plaster wall" the judges name is not in the shell prefab. The wall behind the faced arches is already fieldstone. The pale plaster panels in the arch frames are interior partitions from another source.
+  - Next for the arch stands (GPU: still below 7.5): find that interior plaster source (the arch_home/arch_stormwood detail frames show it on the left and right walls) and the flat Hall light (L3, which the owner has held).
+
+- 2026-10-25 22:01 UTC READY **tb/meadows-land15 d126bf64ee** (from origin/main 18c9ddc05, which has #751). This is the coordinator's 21:58 ask.
+  - **What it contains:** land14 with only `ironwood_grove_presentation.json hero_tree.model_candidate.enabled: true`. The GPU MH2 gain (+0.84 Medium, +0.88 High, 6.53) is recorded in `_why_on_gpu`. The keep and the war banners stay OFF; the courtyard camp-prop move ships with it.
+  - **Test update:** `test_ironwood_grove_identity` asserted the R13 colour-grade shader on the installed landmark. With the candidate ON, it now asserts the Meshy landmark installs with its own textured material. The R13 check still applies when OFF.
+  - **Tests on land15's own files:** test_ironwood_grove_identity, test_meadows_tier1_art_gates, test_texture_import_policy and test_stronghold_banner_camera_occluder: 12 tests, 1414 assertions, 0 failed.
+
+- 2026-10-25 22:17 UTC STATUS, grove (the coordinator's 21:58 item 2). Two routes tried on CPU, neither judged, because neither visibly changes the stands.
+  - **Render-only alias** (`vegetation_presentation.json model_alias_candidate`, OFF): this swaps the scatter's CommonTree_1–3 and TwistedTree_2/4 for the grove oaks. At ironwood_0/1 it changes only a few far background trees, which read pale and puffy.
+  - **Clustered oaks** (`meadows_hero_pieces.json grove_oaks`, OFF): eight oaks in three mixed-size clusters around the giant. They show only in the approach view, as small pale-lime clumps beside the giant. That is the same "lime broccoli" read GPU MH gave the r1 Ironwood trees. Gameplay and detail views are nearly unchanged.
+  - **The trees that dominate those frames** are the five harvestable ironwoods (band4 harvest nodes, `tree_footings`). Replacing their model is the real grove lever, but it is a gameplay-node presentation change: a model override per harvest type, with harvest prompts, yields and collision kept. I'm proposing it as the next grove candidate rather than shipping it blind.
+  - **Haze/light:** L5 haze has had four sub-0.5 rounds this week, and L3 (interior grade) is held by the owner. It rides along only inside a big change.
+  - **Next here:** the stronghold candidate from the 21:58 item 3. That means a keep several times larger in frame, the pylons out of that view, courtyard daylight and props cleared, and then a re-judge of the banners.
+
+- 2026-10-25 22:52 UTC READY for GPU judging: **stronghold keep r5 on tb/meadows fc0fd80c3** (merged with origin/main b21dd9734, which has land15). This is item 3 of the coordinator's 21:58 ask, keep part only.
+  - **Candidate (OFF):** `stronghold.json hero_gatehouse.enabled: true`. The keep is 150 m wide (about 167 m tall) with lit windows and a darker tint. The `band5_stronghold_approach_0` stand moves to about 300 m out (`capture-definition.json`, `at` [0, 7250]; rides along).
+  - **CPU result** (`keep1025r5-mapped.json`, `_sheet_keep1025r5.png`): shipping 5.3/5.3/5.1 against the keep at 5.9/5.9/5.9. That is raw +0.67, or mapped 5.01 → 5.85 (+0.84; slope 1.26, r 0.76). P2-003 went from PRESENT to PARTIAL for all three judges.
+  - **GPU A/B:** at band5_stronghold_approach_0 day and night, Medium and High, ON against OFF. Both sides use the new stand.
+  - **Judge critique still open:** the keep is still small and pale, it is hidden by trees in the gameplay views, it has no Team Tether banners on it, and the night is murky.
+  - **Not in this candidate:** courtyard daylight, the pylons and the clipped plank/beam props (band5_stronghold_approach_1). Courtyard daylight is its own candidate because the stronghold carries an 18-light budget. Working on it next; the banners get re-judged there.
+
+- 2026-10-25 23:35 UTC READY for GPU judging: **stronghold courtyard daylight r1 on tb/meadows** (this head; merged with origin/main 43c7fc696). This is the courtyard part of the coordinator's 21:58 item 3.
+  - **Candidate (OFF):** `stronghold.json courtyard_daylight_candidate.enabled: true` together with `banner_model_candidate.enabled: true`. The code is `stronghold.gd::_courtyard_daylight`.
+  - **What it changes:**
+    - The yard's own fill light (`lights` at [0,32]) becomes a broad, even sunlit bounce: energy 1.7 → 10, attenuation 1.2 → 0.4, range 36, #fff0d8. It is the same light, so the 18-light exterior budget is unchanged.
+    - The courtyard rubble keeps to the wall foot: scale_max 3.4 → 1.6, jitter 1.15 → 0.5.
+    - The two courtyard trim braces stand flush to their walls at x ±10.2, out of the camera's foreground.
+  - **CPU result** (`court1025r1-mapped.json`, `_sheet_court1025r1.png`; approach, gameplay and detail views, day and night): shipping 4.0/4.0/4.0 against the candidate at 5.5/5.6/5.6. Mapped, that is 4.35 → 5.92 (+1.57). The batch is confirming, but calibrate.py fell back to an offset-only map (least-squares slope 2.01, r 0.92). All three judges moved all three recorded defects from PRESENT to PARTIAL.
+  - **Checks with both flags ON:** `smoke_stronghold` passed, including the courtyard route and its doorways. With the flags OFF (as shipped): test_meadows_tier1_art_gates, test_stronghold_banner_camera_occluder, test_stronghold_camera_occluders and test_stronghold_approach_visual_identity ran 17 tests, 0 failed.
+  - **GPU A/B:** band5_stronghold_approach_1, all three views, day and night, Medium and High. Compare both flags ON against both OFF.
+  - **Still open (all three judges):**
+    - Night frames 5 and 6 are lit like day. The fill has no time-of-day hook.
+    - The back wall in the night approach frame stays near-black.
+    - A wall-foot brick still clips the corner of the gameplay frame.
+    - The yard floor is sparsely dressed.
+
+    The next courtyard round, if GPU confirms the gain, is a night variant of the fill (cool moonlit key, warm torch pools) plus mid-yard dressing.
+  - **Keep r5 READY (22:52) still stands**, and both candidates can go in one GPU run.
+
+- 2026-10-26 00:36 UTC **MH3 head update: tb/meadows c88b8a7f5** (replies to your 00:16; it supersedes 70cdad306 for the courtyard arm if the GPU run hasn't started).
+  - **Change:** the courtyard fill now steps down at night. It sits under the same `courtyard_daylight_candidate` flag, so it rides with MH3.
+  - **How:** `light.night` reads the shared clock (`stronghold_courtyard_fill.gd`, `world_look.is_dark()`, the hook campfires and torches use). At night the fill drops from energy 10 to 2.4 and turns from warm #fff0d8 to moonlit #9fb3d6. Day is unchanged.
+  - **CPU check:** the night views (approach, gameplay, detail) now read as a moonlit yard with the braziers' warm pools, not as daylight. Not re-judged.
+  - **Arms:** off, k5 and mh3 are unchanged (mh3 = `courtyard_daylight_candidate` + `banner_model_candidate`).
+
+- 2026-10-26 01:55 UTC READY for GPU judging: **relay yard stone flags r1 on tb/meadows** (this head; merged with current origin/main). This answers the coordinator's 00:16 item 2, the next big swing.
+  - **Why this stand:** among the lowest Meadows GPU views not yet tried, band3_the_river_lock_0 (5.29) was the lowest one I could act on. hall_nave (4.77) would mean re-dressing the Hall, which the owner's verdict holds.
+  - **What it changes:** the compound's yard pad (`tether_relay.json ground_pad`, the opaque Ground030 earth tinted #463c30) dominates its gameplay and detail views as flat, dark mud.
+    - `ground_pad.surface_candidate.enabled: true` swaps that whole pad material for the stronghold's own worn stone (T_UnevenBrick), at a mid warm grey #9c9284, uv 0.22.
+    - It keeps the same mesh, the same feathered edge and the same per-vertex wear band. The drained-ground skin and the scorch marks still draw on top.
+    - Code: `tether_relay.gd::_ground_pad_material`.
+  - **CPU result** (`lock1026r1-mapped.json`, `_sheet_lock1026r1.png`; day approach, gameplay and detail): shipping 5.1/5.0/5.6 against 6.3/6.2/6.5. Mapped, that is 4.90 → 6.77 (+1.87). The fit is linear (slope 1.70, r 0.98, RMSE 0.21) and the batch is confirming. All three judges moved the flat-ground defect from PRESENT to FIXED.
+  - **Check:** test_tether_relay_visual_identity passes with the flag OFF and ON (5 tests, 190 assertions, 0 failed each).
+  - **GPU A/B:** band3_the_river_lock_0, approach, gameplay and detail, day and night, Medium and High. Flag ON against OFF.
+  - **Still open (judges):**
+    - The stones read oversized and regular; the judges suggest about a third the size.
+    - A dark untextured slab sits at the right edge of the detail view.
+    - The yard is sparsely dressed.
+
+    The next round here, if GPU confirms: smaller flags, dirt and grass seams, and the slab.
+  - **MESHY:** none needed for this round.
+  - **Earlier READYs on this branch still stand:** keep r5 and courtyard MH3 (with the night step-down). One GPU run can take all three arms.
+
+- 2026-10-26 04:50 UTC RESULT, not a close-out: **F22#4 co2** (the coordinator's 02:47 item 1). It was CPU-judged and does not cross 7.5, so there is no READY.
+  - **Candidate** (config overlay `cand_co2`, not applied on the branch):
+    - `combat.json impact.enabled false`, which removes the gold contact disc and the ground-burst puffs;
+    - `kit_move_effects flash_scale 0`, which removes the white contact flash and its 1.6x bloom;
+    - `vfx.json hit_flash` strength 0.3/0.4 → 0.55/0.7, so the struck creature's own body flashes;
+    - the Fights lane's r9 tell dust: `dust_alpha` 0.9 → 0.6 and `dust_lane_alpha_max` 0.35;
+    - the new `hud.json combat.command_scale` and `ally_panel_scale` set to 0.8. The code is on tb/meadows 9a7310b46; both keys are absent, which means off.
+  - **Result** (`f22-4-co2-mapped.json`, `_sheet_f22-4-co2.png`; capture_named_fight, frames t01/t02-mid, 04 and 08; three fresh code-blind judges; anchors include f36_0_npc:C1; linear fit, r 0.99, RMSE 0.18, confirming batch):
+    - Warden hall: 6.01 → 6.29 (+0.28).
+    - Riverwatch: 6.87 → 6.87 (0.00).
+    - Added to the GPU baseline, Warden would be about 7.36 (7.08 + 0.28), still under 7.5.
+  - **Why it stalls:** the judges agree the impact discs are gone. What still covers Burrowback in frame 02 is the wind-up telegraph's own dust ring, which is the bodied tell (COMBAT §13), not an impact. On top of that come the four-panel HUD, the dark badger on the dark floor, and a translucent, plastic-looking Ripplet.
+  - **Checks:** the HUD and hit tests (combat_hud_handheld_floors, combat_system_overlay_layout, hud_presentation_lifecycle, hud_widgets, f21_hit_presentation, effect_banner_owner) pass both with the overlay OFF and with co2 applied (63 tests, 0 failed each).
+  - **What would cross 7.5 is not a small change:**
+    - a telegraph that doesn't wrap the attacker in dust (a ground-decal or a body-pose tell, which is a COMBAT design change);
+    - a merged one-strip fight HUD;
+    - a rim key in the Warden hall.
+
+    I'm not starting those under the close-out exception. Say if one of them should go ahead as a full candidate.
+  - **Harness fix:** the disk filled during the captures, so `XDG_DATA_HOME` and the mesa shader cache now go to /dev/shm (16 GB tmpfs), with finished frames moved there as well. Added to TECHNICAL §8.1.
+
+- 2026-10-26 05:05 UTC RESULT for the coordinator's 02:47 item 2 (village_road 7.09/6.73, river_lock_1 6.86/6.89): no small change that crosses 7.5. Nothing is READY.
+  - **Relay-yard carry-over:** none. The stone flags replace the relay compound's own pad material. village_road's foreground is the terrain "path" surface, which is the same texture as every wild trail.
+  - **Path retint** (`terrain_presentation.json texture_candidates.path`, OFF, parked): this retints the road from #d0b090 to #b9ad9c at run time, with no bake change. The CPU A/B at village_road is nearly identical. The road stays orange, because the colour sits in `dirt_path_Color` and the baked colour map. Not judged.
+  - **river_lock_1:** on CPU, the approach view at heading 45 looks through a dark trunk and canopy, and the mill is small and far off in the gameplay and detail views. A re-seat would be a fixture change, not art, so I haven't made it under close-out.
+  - **The real P2-005 lever is built but unjudged:** `grass_field.json cover_candidate` r3, the Meshy clover, wildflower, rock and worn-earth tiers (OFF). It is too slow to pre-judge on CPU (r2 took about 55 min per frame; r3 cuts that to about a quarter). If you want it, GPU can judge it directly at village_road and river_lock_1, approach and gameplay, ON against OFF. Tell me and I'll post it as READY with the flag and command.
+
+- 2026-10-26 05:25 UTC READY for GPU directly (no CPU pre-judge, per your 05:02): **tb/meadows-land16 cd6927c91** (from origin/main ac5e1426c, which includes #756). This is the ground cover for P2-005 at village_road and river_lock_1.
+  - **Contents:**
+    - `grass_field.json cover_candidate`: ten Meshy cover tiers (clover a/b/c, lupin, buttercup and daisy drifts, rock clusters a/b, worn earth a/b), at r3 reach and triangle budgets.
+    - `carpet_candidate`.
+    - Both are `enabled: false`, with their `grass_field.gd`, `cover_tier.gdshader` and `grass_field.gdshader` support, the ten asset folders, and `tests/test_meadows_cover_candidate_gate.gd` (2 tests, 13 assertions, 0 failed).
+    - Shipping is unchanged. If it passes, landing is a config flip.
+  - **GPU A/B:** `grass_field.json cover_candidate.enabled` ON against OFF; `carpet_candidate` stays OFF on both sides. `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=village_road --subset=band3_the_river_lock_1 --output=res://<round>`. Judge the approach and gameplay views.
+  - **Cost note for the Ally:** r2 placed about 11.7k items. r3 cuts reach to 18–26 m (about a quarter of that) and triangles to 200–350 per item. Please note the frame time alongside the score.
+- 2026-10-26 05:25 UTC Re your 05:02 item 2 (F22#4): this is already done; see the 04:50 RESULT above. CPU mapped Warden hall went 6.01 → 6.29 (+0.28) and Riverwatch 6.87 → 6.87 (0.00), with r 0.99. Adding +0.28 to the GPU Warden 7.08 gives about 7.36, still under 7.5, so there's no close-out to post.
+  - **What the judges see:** the impact discs and puffs are gone. What still covers the badger is the wind-up telegraph's own dust ring.
+  - **Ask:** tell me which non-small route you want (a telegraph redesign, a merged HUD strip, or the hall rim key).
+
+- 2026-10-26 05:35 UTC **F22#4 PARKED** (per your 05:08). I tried the Warden hall rim key twice, lighting only.
+  - **Where it lives:** `stronghold.json warden_rim_candidate` (OFF, parked). Two shadowless spots gated by `lights[].flag`, a small `stronghold.gd` gate (an absent flag means not built).
+  - **r1:** a cool rim from behind, energy 6, plus a warm top key at 3.
+  - **r2:** the rim moved to the far south-east side, against the north-west fight camera, at energy 12, with the top key at 6.
+  - **Result:** both were captured on top of co2 with capture_named_fight warden_aldis. Neither shows a visible change on Burrowback or the floor against co2. That is most likely the Compatibility per-object light cap in this already-lit room.
+  - **Not judged:** at that size it cannot add the roughly +0.15 that the Warden (7.08 + 0.28) still needs to reach 7.5.
+  - **Next:** back to big Meadows swings on the lowest untried GPU views. MH5 (land16 ground cover) is with you.
+
+- 2026-10-26 06:20 UTC READY for GPU: **tb/meadows-land17 436ef3761** (from origin/main ac5e1426c). This is the next big Meadows swing: the village road ground, covering three stands at once.
+  - **Candidate (OFF):** `terrain_presentation.json texture_candidates.path.enabled: true`.
+    - It swaps the path albedo at run time for `derived/dirt_path_trodden_Color.png`, a desaturated, contrast-lifted copy of dirt_path_Color: same 1024 size, mode-2 import, import policy PASS.
+    - The tint goes to near-white #efe9df. No terrain or scatter bake changes.
+    - Every Meadows path takes it, wild trails included.
+  - **Why:** village_road, farm_to_hall and hall_front all frame a flat, saturated orange road across the foreground. The r1 tint alone barely moved it, because the orange lives in the texture itself.
+  - **CPU result** (`vilpath1026-mapped.json`, `_sheet_vilpath1026.png`; day approach, gameplay and detail; three fresh code-blind judges; linear slope 1.90, r 0.97, RMSE 0.20; confirming batch):
+    - village_road 5.95 → 6.97 (+1.02).
+    - farm_to_hall 5.95 → 6.97 (+1.02).
+    - hall_front 5.76 → 6.65 (+0.89).
+    - The orange-smear defect went from PRESENT to FIXED in 9 of 9 calls.
+  - **Test:** `test_meadows_path_candidate_gate` (OFF, installed, 1024 size): 1 test, 0 failed.
+  - **GPU A/B:** the flag ON against OFF. `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=village_road --subset=farm_to_hall --subset=hall_front --output=res://<round>`.
+    - village_road is already at 7.09 Medium on GPU, so this may close it.
+    - Worth also glancing at band1/band3 views with wild trails, since they get the same texture.
+  - **Still open (judges):**
+    - The texture is a single-scale blob repeat, with no ruts, embedded stones or broken grass verge.
+    - Separately, hall_front's detail view presses against the Hall wall (camera).
+
+- 2026-10-26 12:40 UTC READY for GPU: **tb/meadows-land18 bcb954b31** (from origin/main f876b1749, which has #761). This is the next big Meadows swing: Ridgeline Watch (band4_upper_meadows_ironwood_1, GPU 5.97/6.12; MH control 5.21–5.67).
+  - **Candidate (OFF):** `meadows_hero_pieces.json clearings.enabled: true`.
+    - It cuts two authored glades out of the baked tree and rock scatter at run time: r 17 m at (-244, 6497) and r 9 m at (-262, 6478).
+    - The cut uses `vegetation.clear_area`, the same call the Warrens make; harvest nodes are untouched.
+    - It runs in playground_world's bulk-clear window. It removed 400 instances. No bake change.
+  - **Why:** the gameplay and detail views stood inside a dark wall of trunks. The glade reveals the actual watch tower against the sky, with a tree-line edge.
+  - **CPU result** (`ridge1026-mapped.json`, `_sheet_ridge1026.png`; day approach, gameplay and detail; three fresh code-blind judges; linear slope 1.09, r 0.83, RMSE 0.65; confirming batch):
+    - Shipping 4.5/4.5/4.0 against 5.9/6.3/5.8.
+    - Mapped 4.92 → 6.74 (+1.82).
+    - The trunk-wall defect went from PRESENT to FIXED in 2 calls and PARTIAL in 1.
+  - **Test:** test_meadows_tier1_art_gates (3 tests, 0 failed).
+  - **GPU A/B:** the flag ON against OFF. `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=band4_upper_meadows_ironwood_1 --output=res://<round>`.
+  - **Still open:**
+    - The approach view's foreground beam and chain (a prop or camera seat).
+    - An even grass carpet.
+    - Simple repeated canopies. The land16 ground cover would help here.
+- 2026-10-26 12:40 UTC Merged origin/main (#761, path ON) into tb/meadows. In `grass_field.gd` and `grass_field.gdshader` I took both sides: my carpet keys and the Stormwood zone keys are independent additions. Your updated path gate test is kept.
+  - **Next:** the relay yard r2 capture (smaller flags, uv 0.22 → 0.6), restarted on the merged build. Then the village path r3 the GPU judges asked for (warm brown, narrower, ruts and pebbles; the slab under the bench; night ground).
+
+- 2026-10-26 15:10 UTC RESULT, not READY:
+  - **Village path r3** (`terrain_presentation.json texture_candidates.path_r3`, OFF, parked): a warm-brown trodden-earth albedo over the shipped r2 path.
+    - CPU mapped: village_road 5.92 → 6.34, farm_to_hall 6.03 → 6.44, hall_front 6.08 → 6.44. That is +0.36 to +0.42, under 0.5. The fit is linear, r 0.93.
+    - The judges fixed the olive hue 9/9. They still see a uniform blob texture, and the warm road goes near-black at night, worse than r2.
+    - The road needs authored ruts, pebbles and broken grass edges (decals or Meshy ground pieces), not a recolour.
+  - **First r3 capture was void:** `path_r3` was listed before `path`, and the shipped swap won. It is reordered now; the per-surface rule is last enabled wins.
+  - **Relay yard r2** (on tb/meadows `tether_relay.json ground_pad.surface_candidate`, OFF): the r1 judges' size ask is folded in (uv 0.22 → 0.6, a warmer #a39684). I checked one CPU frame; there was no separate judge round. The GPU MH4 verdict on r1 still covers the swap.
+  - **MESHY** (village road ground; the judges' named fix for village_road, farm_to_hall and hall_front):
+    1. **meadows_road_ruts_a/b:** low-profile trodden-earth road strips, about 3 m wide x 6 m long and under 0.08 m thick, with twin wheel ruts, embedded pebbles, a damp darker centre and broken grass-tuft edges.
+       - Ref: the key art's village road (`docs/reference/tetherbound-meadows-keyart.png`) and `docs/reference/palworld-02-open-field-path.jpg`.
+       - Prompt: "flat dirt road segment with two worn wheel ruts, small embedded pebbles, slightly damp darker centre line, ragged grass tufts along both edges, warm brown earth, stylised realism, game asset, very low profile, tileable along its length".
+    2. **meadows_road_verge_tufts:** grass-edge clumps, about 1.2 m long and 0.3 m tall, to break the road/grass seam.
+       - Prompt: "ragged clump of meadow grass and small weeds growing along a dirt road edge, stylised realism, game asset, flat base".
+    - These install OFF as placed strips along the village road polyline at the three stands.
+
+- 2026-10-27 00:20 UTC **READY to land land19 42bf7bdee** (tb/meadows-land19, from origin/main 16c32126f, 2 files). Relay yard stone flags ON, per GPU MB/MH4.
+  - **Change:** `tether_relay.json ground_pad.surface_candidate` is enabled with the values the GPU judged on d35483f3c: T_UnevenBrick, #9c9284, uv 0.22. It also carries the `tether_relay.gd::_ground_pad_material` support.
+  - **`_why_on`:** records band3_the_river_lock_0 at 4.50 → 5.93 (+1.43, Medium and High).
+  - **Tests:** test_tether_relay_visual_identity and test_realm_look_overlay ran 20 tests, 399 assertions, 0 failed. No test gated the candidate OFF, so there was nothing to flip.
+  - **Red check:** the relay compound is Team Tether's (tether_relay; the gibbet banner is the faction's own retinted oxblood, #7a2430). Red is correct there, so nothing was recoloured.
+  - **Not in the land:** r2 (uv 0.6, smaller flags; the judges' "oversized stamped texture") is unjudged on tb/meadows. It is the next relay step.
+- 2026-10-27 00:20 UTC **MESHY** (P2-003, the next big swing; PRESENT 12/12): a tall, lit keep that dominates the band5_stronghold_approach_0 skyline. The r5 lit keep (150 m wide, low and blocky) gained only +0.22 on GPU; the judges read it as a "small pale-grey block castle behind the pylons".
+  - **meadows_stronghold_spire:** one hero silhouette, sized to read from 300–550 m. About 120 m tall overall, roughly 65 times the 1.80 m trainer, on a footprint of about 45 x 45 m.
+    - **Shape:** a tall, narrow central keep tower with a tapering, crenellated crown and two lower flanking towers. The height-to-width ratio is about 2.5:1, the opposite of the r5 keep's 1:1 block.
+    - **Light:** warm lit windows in vertical bands up the full height, and braziers glowing on the parapets.
+    - **Material:** dark weathered grey-brown stone with moss at the base.
+    - **Faction colour:** oxblood Team Tether banners only, hanging from the crown and the flanking towers. Team Tether iron conduit hardware is strapped up one face, with cyan lamps at intervals.
+  - **Refs:** the owner key art stronghold panel (`docs/reference/tetherbound-meadows-keyart.png`) and the r5 lit keep (`boards-2026-09-06/` has no Meadows stronghold board) for family match (`assets/props/meshy-1024/meadows_lit_keep/`).
+  - **Prompt:** "tall imposing dark stone fortress keep tower with tapering crenellated crown and two lower flanking towers, rows of warm glowing windows climbing the whole height, braziers burning on the battlements, oxblood war banners hanging from the top, iron conduit pipes with small cyan lamps strapped up one face, weathered mossy base, stylised realism like Valheim and Palworld, game asset, strong vertical silhouette readable from far away".
+  - **Install plan:** it replaces the r5 keep in `stronghold.json hero_gatehouse` (OFF), using the existing lit-window emission path. It is judged at band5_0 day and night, with MH3 (courtyard daylight with its night step-down, plus the war banners; GPU +0.48) folded into the same arm as one stronghold candidate.
+  - **Still open:** the road ruts and verge MESHY line (2026-10-26 15:10).
+
+- 2026-10-27 02:10 UTC READY for GPU: **stronghold spire r6b, with MH3 folded in, on tb/meadows** (this head). This is the P2-003 big swing.
+  - **Arm (both flags ON against OFF):**
+    - `stronghold.json hero_gatehouse.enabled`: the coordinator's Meshy spire, about 200 m tall (`width_m` 45.7), in the r5 keep's slot. A lit-window emission mask is thresholded from its albedo (0.48% of the atlas, energy 8).
+    - MH3: `courtyard_daylight_candidate.enabled` (with its night step-down) plus `banner_model_candidate.enabled`.
+  - **Stands:** band5_stronghold_approach_0 (spire) and band5_stronghold_approach_1 (MH3), day and night, Medium and High.
+    - Command: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=band5_stronghold_approach --output=res://<round>`.
+  - **CPU spire result** (`spire1027-mapped.json`, `_sheet_spire1027.png`; three fresh code-blind judges; linear slope 1.40, r 0.92, RMSE 0.31):
+    - Mapped 4.93 → 5.72 (+0.79).
+    - P2-003 went from PRESENT to PARTIAL in 3 of 3 calls. It is the first landmark that reads from these woods.
+    - At 120 m (r6) it was a thin sliver behind the trees on CPU, so r6b runs it at about 200 m.
+  - **Still open (3/3 judges):**
+    - It reads as a lone tower, not fortress mass: walls and a keep body are missing.
+    - The windows don't read at night.
+    - It is out of the gameplay view.
+  - **Next idea:** stand the spire behind the r5 lit keep, both in the same slot, so the keep gives the mass and lit windows and the spire gives the height. That needs a second hero slot in `stronghold_hero_gatehouse.gd`. I'll build it as r7 once GPU confirms the spire.
+
+## Work log
+
+- F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
+- F17#6 r9: 6.84 mapped vs 5.82 → CPU-provisional met; READY on tb/meadows-land (merged into the coordinator branch 80c9421d2).
+- F04#6: shipping recaptured on the F04-6 set. Riverwatch and Ridge still share the fallen banner plus relit-stone template. The different approach is the three Meshy heroes above; waiting on GLBs.
+- F38#1 P2-059/060 catch r1: 6.42 vs 6.08 (OFF; `P2-059-060-catch.md`). r2 candidate (OFF): the resolve shot pivots between the trainer and the orb (`catching.json framed_camera.resolve_camera.trainer_share`, `combat_manager.gd _trainer_frame_offset`).
+- F38#1 P2-087: on the real named-fight path (`capture_named_fight.gd --resolve=won`), Warden Aldis is framed with his dialogue and Old Bram is in frame, small. The empty-meadow defect came from the direct-start fixture. Capturing `speaker_frame_candidate_enabled` against shipping now.
+
+- 2026-10-27 03:25 UTC **MESHY answer** (road ruts and verge, line of 2026-10-26 15:10): **yes, generate now**, with the refs, prompts and sizes in that line unchanged.
+  - **meadows_road_ruts_a/b:** about 3 x 6 m, under 0.08 m thick, tileable along its length.
+  - **meadows_road_verge_tufts:** about 1.2 m long, 0.3 m tall, flat base.
+  - **Why:** recolouring the road (r3) has topped out at +0.36 to +0.42. All 9 judge calls name the missing ruts, pebbles and broken edges. village_road, farm_to_hall and hall_front are among the lowest Meadows stands, so these pieces raise the floor.
+  - **Install:** I place them OFF as strips along the village road polyline through the three stands, using the existing `meshy_hero_prop` path, and CPU-judge before any READY.
+- 2026-10-27 03:25 UTC **Status, r7:** the r7 arm is captured. The ship and r6b arms finish about 03:45.
+  - The r7 night frames confirm the judges: the Meshy albedo has almost no window texels, so the thresholded masks (0.5% coverage) light only a few specks, and at energy 12 they tonemap to blue-white.
+  - **r7b:** authored warm window-grid masks on the stone-wall texels (`*_windows_grid_emission.png`, about 2–3% coverage, mullion bar, amber), with energy 5 and 6. It captures right after.
+  - **Plan:** I judge r7 and r7b against ship and r6b, and push whichever beats r6b as `tb/meadows-r7-on`.
+
+- 2026-10-27 04:05 UTC **READY for GPU: `tb/meadows-r7-on` 0d8ef6dd2** (stronghold r7b plus MH3). This is the tb/meadows head 032b28f50 with three flags ON:
+  - `hero_gatehouse`: the lit keep plus the spire companion, with the r7b window-grid masks;
+  - `courtyard_daylight_candidate`;
+  - `banner_model_candidate`.
+  - It is a judging branch only. `test_meadows_tier1_art_gates` asserts the gatehouse OFF, so that test flips only when the gatehouse lands.
+  - **Stands:** band5_stronghold_approach_0 (the keep and spire) and band5_stronghold_approach_1 (MH3), day and night, Medium and High.
+  - **CPU result** (`r7-1027-mapped.json`, `_sheet_r7-1027.png`): one batch, the three arms each against shipping; three fresh code-blind judges, 3 anchor pairs including craft; linear slope 1.38, r 0.99, RMSE 0.14.
+
+    | Arm | Mapped | Change |
+    |---|---|---|
+    | Shipping | 6.00 | |
+    | r6b (spire only) | 6.27 | +0.27 |
+    | r7 (keep plus spire, thresholded masks) | 6.50 | +0.50 |
+    | **r7b** (keep plus spire, authored window grid) | **6.69** | **+0.69** |
+
+    - All 3 judges call the r7b castle with lit windows the best night landmark. The r6b lone spire reads as a "floating thin tower" that vanishes at night.
+    - In this batch r6b came in under its earlier +0.79 (spire1027); r7b beats it head to head.
+  - **Still open (3/3):**
+    - The windows tonemap white rather than warm, and they glow by day too.
+    - The keep floats over the canopy with no visible base.
+    - The night grade crushes the grove and the wildlife.
+    - The stand's shared base-scene faults also remain: carpet grass, a cyan horizon line, and card trees.
+  - **Next idea (r7c, after GPU):** deeper amber at a lower energy so the windows stay warm, and night-only emission through the `day_cycle` group.
+- 2026-10-27 04:05 UTC Merged origin/main (#769, relay flags ON) into tb/meadows. In `tether_relay.json` I took main's ON pad; the r2 values (uv 0.6, #a39684) stay recorded in the 26 Oct line.
+
+- 2026-10-27 06:30 UTC **READY to land land20 286ccebb4** (`tb/meadows-land20`, built from origin/main 073466a65, 5 files). It makes the MH3 courtyard live, per GPU MH8 (tb/gpu-pass 5ebdf26b8).
+  - **Change:**
+    - `stronghold.json`: `courtyard_daylight_candidate` and `banner_model_candidate` are ON, each with a `_why_on` naming MH8. On band5_stronghold_approach_1, day gained +0.69 / +1.16 and night +0.44 / +0.30, a mean of about +0.57 Medium and +0.73 High.
+    - It carries the courtyard support code: `stronghold.gd` (`_courtyard_daylight`, the pillar, light and rubble overrides, the night step-down hook) and `stronghold_courtyard_fill.gd`.
+    - `hero_gatehouse` (the spire and keep) stays OFF, and `warden_rim_candidate` is not included.
+  - **Salmon planks:**
+    - They are **on main, not from MH3.** They are the courtyard's wall-foot rubble bricks (`hall_occupation.reclaim.rubble`, the `from 19` bands, Prop_Brick at scale 1.5–3.4), lit warm at the camera edge. The GPU off arm shows them larger.
+    - The fix rides inside the courtyard candidate's rubble override: scale 0.7–1.1 (was 1.5–3.4, then 1.6 max), a darker #4a443c, and seated at y 0.02, against the wall.
+    - A CPU check at band5_stronghold_approach_1 (16 frames, `_sheet_land20.png`: day gameplay, day reverse, night gameplay, night rain gameplay) shows the large planks gone from the gameplay and reverse cameras. Only small wall-foot rubble remains at the frame edge.
+  - **Tests:** test_meadows_tier1_art_gates now asserts both flags ON and citing GPU MH8. It ran with the five stronghold unit tests (approach_visual_identity, banner_camera_occluder, camera_occluders, dialogue_budget, warden_arena): 27 tests, 405 assertions, 0 failed.
+  - **Still open from MH8, not in this land:**
+    - The night rain on this stand still grades grey rather than dark blue (visible in the sheet's fourth frame).
+    - The trainer reads as self-lit at night.
+    - The spire waits for MH9 (r7b).
+
+- 2026-10-27 08:55 UTC **READY to land land20 dbc0b33df** (`tb/meadows-land20`, rebuilt from origin/main 073466a65). This replaces the courtyard-only 286ccebb4 that was on the branch before.
+  - **Change:** stronghold r7b goes live per GPU MH9 (tb/gpu-pass b7e1df9b0): a mean of +0.53 Medium and +0.71 High. P2-003 moved PRESENT → PARTIAL 3/3 on all four approach_0 sets, and night windows moved PRESENT → PARTIAL.
+  - **Contents:** exactly the configuration judged on 0d8ef6dd2.
+    - `stronghold.json`: `hero_gatehouse` (the lit keep plus the spire companion, with the window-grid masks at energy 5 and 6), `courtyard_daylight_candidate` and `banner_model_candidate` are ON, each with a `_why_on` naming MH9.
+    - **Code:** `stronghold.gd` (the courtyard overrides), `stronghold_courtyard_fill.gd`, and `stronghold_hero_gatehouse.gd` (the companion slot).
+    - **Assets:** the `meadows_stronghold_spire` model with its provenance and references, and both `*_windows_grid_emission.png` masks with their policy-checked import files.
+    - `warden_rim_candidate` (parked) and its flagged lights are left out.
+  - **Salmon-plank fix: NOT included.** The bricks are main's geometry, but the fix lives in the judged `courtyard_daylight_candidate.rubble` override (scale_max 1.6 → 0.7–1.1, tint #4a443c, y 0.02), so it would change a judged piece. It stays on tb/meadows (CPU-checked: the large planks are gone from the gameplay and reverse cameras). It rides with the next swing, which also removes the edge beam.
+  - **Tests:** test_meadows_tier1_art_gates asserts all three flags ON and citing GPU MH9. The off-builder check now uses a copy of the block with `enabled` set to false. It ran with the five stronghold unit tests: 27 tests, 406 assertions, 0 failed.
+
+- 2026-10-27 10:25 UTC **RESULT, not READY: stronghold r8** (the approach sightline corridor plus a 150 m keep). It is flat, so it stays OFF.
+  - **What r8 is:** `meadows_hero_pieces.json stronghold_sightline` (OFF): nine `clear_area` glades along the approach road from (0, 7250) toward the gate mouth. `meadows_hero_pieces.gd::clear` now runs every enabled block that has `spots`, so the shipped Ridgeline clearings behave as before. The arm also widened the keep from 120 to 150 m, as a capture overlay only.
+  - **CPU result** (`r8-1027-mapped.json`, `_sheet_r8-1027.png`; three fresh code-blind judges, 3 anchor pairs including craft): r7b 6.81 vs r8 6.60, so −0.21 mapped. The fit is weak (r 0.79, RMSE 0.71). The judges call the two sides "near-identical".
+  - **Why it failed:** the approach frames still show the same trees in front of the keep. The log reports 2820 scatter items removed, so the trees that frame this camera are not that cleared scatter. The keep reads larger but is still "small, generic" to the judges.
+  - **Confound:** in the r7b arm a wolf happens to stand in the gameplay frame, and 2 of 3 judges credited it.
+  - **Next:** find which system places the trees on the approach_0 sightline (band5 authored groves, not the baked scatter) and open those, before any second sightline try. Scaling the keep alone does not move the judges.
+  - **Rule:** this is the first failure on this item, so one more try with that new idea is allowed before the approach is parked.
