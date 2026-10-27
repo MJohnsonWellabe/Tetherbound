@@ -146,7 +146,16 @@ SW19 storm sky is received: no gain, OFF. Each arm below is its control plus one
    - **Capture:** as CO9 with `--species=terrapup`, including the ride and rider seat if the tool shoots them.
    - **Report:** MET per preset, the strapped-on plates and rider-clipping calls, and the coat colour.
 
-After these the queue is empty. The Meadows stronghold spire (r6, Meshy) follows once the lane posts its arm.
+4. **MH8, Meadows stronghold spire r6b + MH3 (P2-003, PRESENT 12/12 on GPU).**
+   - **Arms:** control tb/meadows 4a6eeec96 vs candidate tb/meadows-r6b-on f6b946e47. The candidate is the control with three `stronghold.json` flags ON:
+     - `hero_gatehouse`: the Meshy spire, about 200 m tall, with a lit-window emission mask;
+     - `courtyard_daylight_candidate` (with its night step-down);
+     - `banner_model_candidate`.
+   - **CPU:** 4.93 -> 5.72 (+0.79); P2-003 PRESENT -> PARTIAL 3/3.
+   - **Capture:** `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=band5_stronghold_approach --output=res://<round> --source-commit=<sha>`.
+   - **Report:** band5_stronghold_approach_0 and _1, day and night; P2-003; whether the windows read at night; and any red outside the Tether banners.
+
+After these the queue is empty.
 
 ## GPU QUEUE UPDATE 2 (coordinator, 26 Oct 6:00 PM CT): after SW13
 
