@@ -623,42 +623,118 @@ def _score(ev):
     return None, ""
 
 
-_vis_groups = [("F36", "Creatures: models, poses and scale")] + [
-    (f, rows[f]["title"]) for f in ("F38", "F39", "F40", "F41") if f in rows] + [("OTHER", "Visual rows of other features")]
-_vk2 = {"all": 0, "met": 0, "gpu": 0, "near": 0}
+# Categories for the executive summary (owner 27 Oct: "buckets by biome or category
+# then score buckets so I can quickly tell where everything is at").
+_VCATS = [("models", "Creature models", "F36 (0)"), ("poses", "Creature poses", "F36 (1)"),
+          ("F38", "Meadows", "F38"), ("F39", "Tidewake", "F39"), ("F40", "Cloudreach", "F40"),
+          ("F41", "Stormwood", "F41"), ("other", "Earlier features", "F04-F26")]
+_BUCKETS = [("met", "Met", "closed"), ("b75", "At bar", "7.5+, open"), ("b70", "Close", "7.0–7.49"),
+            ("b60", "Mid", "6.0–6.99"), ("b50", "Low", "5.0–5.99"), ("b00", "Far", "< 5.0"),
+            ("none", "Unscored", "no own score")]
+
+
+def _vcat(fid, x):
+    if fid == "F36":
+        return "poses" if str(x.get("text", "")).startswith("F36 (1)") else "models"
+    return fid if fid in ("F38", "F39", "F40", "F41") else "other"
+
+
+def _bucket(st, sc):
+    if st == "met":
+        return "met"
+    if not sc:
+        return "none"
+    v = min(sc)
+    return "b75" if v >= 7.5 else "b70" if v >= 7.0 else "b60" if v >= 6.0 else "b50" if v >= 5.0 else "b00"
+
+
+def _short(sel, x):
+    t = str(x.get("text", ""))
+    m = _re.match(r"F36 \(1\) ([\w ]+?):", t)
+    if m:
+        return m.group(1).replace("_", " ").title() + " poses"
+    m = _re.match(r"F36 \(0\) priority asset #\d+: (.+?) (?:regenerated|confirmed)", t)
+    if m:
+        return _re.sub(r"\s*\(.*?\)", "", m.group(1)) + " model"
+    m = _re.match(r"F\d+ \(\d\) [^:]*?item (P2-\d+) ([^:]+):", t)
+    if m:
+        return f"{m.group(1)} {m.group(2).strip()}"
+    t = _re.sub(r"^F\d+(#\d+)? · ", "", t)
+    return (t[:80] + "…") if len(t) > 80 else t
+
+
+_vitems = []
+for _fid in ("F36", "F38", "F39", "F40", "F41"):
+    for _n, x in enumerate(rows.get(_fid, {}).get("criteria", [])):
+        _vitems.append((f"{_fid}#{_n}", _fid, x))
+for _sel in VISUAL_OTHER:
+    _f, _, _i = _sel.partition("#")
+    _c = rows.get(_f, {}).get("criteria", [])
+    if _i.isdigit() and int(_i) < len(_c):
+        _vitems.append((_sel, _f, _c[int(_i)]))
+_vrows = []
+for _sel, _fid, x in _vitems:
+    st = norm(x.get("status"))
+    sc, src = _score(x.get("evidence"))
+    _vrows.append({"sel": _sel, "cat": _vcat(_fid, x), "name": _short(_sel, x), "st": st, "sc": sc,
+                   "src": src, "bk": _bucket(st, sc), "text": str(x.get("text", ""))})
+_bk_order = [k for k, _l, _r in _BUCKETS]
+
+
+def _cnt(rs, k):
+    return sum(1 for r_ in rs if r_["bk"] == k)
+
+
+def _sc_txt(r_):
+    return " / ".join(f"{v:.2f}" for v in r_["sc"]) if r_["sc"] else "—"
+
+
+# 1. Matrix: category rows x score-bucket columns, a part-to-whole bar per row.
+_mx_head = "".join(f'<th class="num mxh"><span class="bk bk-{k}"></span>{E(l)}<span class="mxr">{E(r_)}</span></th>' for k, l, r_ in _BUCKETS)
+_mx_rows = []
+for _ck, _cl, _cid in _VCATS + [("all", "All visual", "")]:
+    rs = _vrows if _ck == "all" else [r_ for r_ in _vrows if r_["cat"] == _ck]
+    if not rs:
+        continue
+    n = len(rs)
+    segs = "".join(f'<span class="vseg bk-{k}" style="flex:{_cnt(rs, k)}" title="{E(l)}: {_cnt(rs, k)} of {n}"></span>'
+                   for k, l, _r in _BUCKETS if _cnt(rs, k))
+    cells = "".join(f'<td class="num{" zero" if not _cnt(rs, k) else ""}" title="{E(_cl)} · {E(l)}: {_cnt(rs, k)}">{_cnt(rs, k) or "·"}</td>' for k, l, _r in _BUCKETS)
+    _mx_rows.append(f'<tr class="{"mx-total" if _ck == "all" else ""}"><th scope="row">{E(_cl)}<span class="meta"> {E(_cid)}</span></th>'
+                    f'<td class="num">{n}</td>{cells}<td class="mxbar"><span class="vbar">{segs}</span></td></tr>')
+_matrix = ('<section class="panel"><h2>Where everything is</h2>'
+           '<p class="note">Every visual criterion, by area and by its latest score (the lower of Medium / High; GPU where judged, else CPU). '
+           '"At bar": scored 7.5 or above but its row is not closed yet. "Unscored": the GPU judged the whole place, not this item on its own.</p>'
+           '<div class="tbl"><table class="mx"><thead><tr><th>Area</th><th class="num">Items</th>' + _mx_head + '<th>Spread</th></tr></thead>'
+           f'<tbody>{"".join(_mx_rows)}</tbody></table></div></section>')
+
+# 2. Closest to the bar: open items with a score, highest first.
+_close = sorted([r_ for r_ in _vrows if r_["st"] != "met" and r_["sc"]], key=lambda r_: -min(r_["sc"]))[:15]
+_catname = {k: l for k, l, _c in _VCATS}
+_close_html = ('<section class="panel"><h2>Closest to the bar</h2><p class="note">The 15 open items with the highest scores: the next close-outs. "At bar" items already score 7.5 or above on what was judged; their row stays open until its remaining parts (a water form, a travel pose, the other preset) are judged.</p>'
+               '<div class="tbl"><table><thead><tr><th>Item</th><th>Area</th><th class="num">Score</th><th class="num">To 7.5</th><th>Judge</th></tr></thead><tbody>'
+               + "".join(f'<tr><td>{E(r_["name"])}</td><td>{E(_catname[r_["cat"]])}</td><td class="num">{E(_sc_txt(r_))}</td>'
+                         f'<td class="num">{"at bar" if min(r_["sc"]) >= 7.5 else f"{7.5 - min(r_["sc"]):.2f}"}</td><td>{E(r_["src"])}</td></tr>' for r_ in _close)
+               + '</tbody></table></div></section>')
+
+# 3. Detail per area, collapsed, sorted by score.
 _vtabs = []
-for _gid, _gtitle in _vis_groups:
-    if _gid == "OTHER":
-        _items = []
-        for _sel in VISUAL_OTHER:
-            _f, _, _i = _sel.partition("#")
-            _c = rows.get(_f, {}).get("criteria", [])
-            if _i.isdigit() and int(_i) < len(_c):
-                _items.append((_sel, _c[int(_i)]))
-    else:
-        _items = [(f"{_gid}#{_n}", x) for _n, x in enumerate(rows.get(_gid, {}).get("criteria", []))]
-    _trs = []
-    _gmet = 0
-    for _sel, x in _items:
-        st = norm(x.get("status"))
-        sc, src = _score(x.get("evidence"))
-        _vk2["all"] += 1
-        _gmet += st == "met"
-        _vk2["met"] += st == "met"
-        _vk2["gpu"] += src == "GPU"
-        if sc and st != "met" and 7.5 - min(sc) <= 0.5:
-            _vk2["near"] += 1
-        sc_txt = " / ".join(f"{v:.2f}" for v in sc) if sc else "No item score yet"
-        gap = "Met" if st == "met" else (f"{max(0.0, 7.5 - min(sc)):.2f}" if sc else "")
-        txt = str(x.get("text", ""))
-        _trs.append(f'<tr class="s-{st}"><td><code>{E(_sel)}</code></td><td>{E(txt[:170])}{"…" if len(txt) > 170 else ""}</td>'
-                    f'<td>{pill(st)}</td><td class="num">{E(sc_txt)}</td><td>{E(src)}</td><td class="num">{E(gap)}</td></tr>')
-    _p = round(100 * _gmet / max(1, len(_items)))
+for _ck, _cl, _cid in _VCATS:
+    rs = sorted([r_ for r_ in _vrows if r_["cat"] == _ck],
+                key=lambda r_: (r_["st"] != "met", -(min(r_["sc"]) if r_["sc"] else -1), r_["name"]))
+    if not rs:
+        continue
+    m = sum(1 for r_ in rs if r_["st"] == "met")
+    p_ = round(100 * m / len(rs))
+    trs = "".join(
+        f'<tr><td><span class="bk bk-{r_["bk"]}"></span>{E(r_["name"])}<div class="meta" title="{E(r_["text"])}"><code>{E(r_["sel"])}</code></div></td>'
+        f'<td class="num">{E(_sc_txt(r_))}</td><td>{E(r_["src"])}</td><td>{pill(r_["st"])}</td></tr>' for r_ in rs)
     _vtabs.append(
-        f'<details class="frow" open><summary><span class="fid">{E("V" if _gid == "OTHER" else _gid)}</span><span class="ftitle">{E(_gtitle)}</span>'
-        f'<span class="fnum">{_gmet}/{len(_items)} met</span>{bar(_p)}<span class="fpct">{_p}%</span>{stack([x for _s, x in _items])}</summary>'
-        '<div class="tbl vtbl"><table><thead><tr><th>Criterion</th><th>What it is</th><th>Status</th><th>Current score</th><th>Judge</th><th>Gap to 7.5</th></tr></thead>'
-        f'<tbody>{"".join(_trs)}</tbody></table></div></details>')
+        f'<details class="frow"><summary><span class="fid">{E(_cid.split(" ")[0])}</span><span class="ftitle">{E(_cl)}</span>'
+        f'<span class="fnum">{m}/{len(rs)} met</span>{bar(p_)}<span class="fpct">{p_}%</span>'
+        f'<span class="stack" aria-hidden="true">{"".join(f"<span class=\'vseg bk-{k}\' style=\'flex:{_cnt(rs, k)}\'></span>" for k in _bk_order if _cnt(rs, k))}</span></summary>'
+        '<div class="tbl vtbl"><table><thead><tr><th>Item</th><th class="num">Score</th><th>Judge</th><th>Status</th></tr></thead>'
+        f'<tbody>{trs}</tbody></table></div></details>')
 _STANDS = [
     ("F38 Meadows", "Relay yard, band3 river lock 0", "5.93 / 5.93", "GPU MH4 (+1.43), landed #769"),
     ("F38 Meadows", "Ridgeline Watch", "6.40 / 6.40", "GPU MH7 (+1.64), landed #763"),
@@ -674,20 +750,21 @@ _stand_html = ('<section class="panel"><h2>Latest GPU stand scores</h2><p class=
     '<div class="tbl"><table><thead><tr><th>Biome</th><th>Stand</th><th>Score</th><th>Source</th></tr></thead><tbody>'
     + "".join(f"<tr><td>{E(a)}</td><td>{E(b)}</td><td class=\"num\">{E(c_)}</td><td>{E(d)}</td></tr>" for a, b, c_, d in _STANDS)
     + '</tbody></table></div></section>')
+_n_met = sum(1 for r_ in _vrows if r_["st"] == "met")
+_n_close = sum(1 for r_ in _vrows if r_["bk"] == "b70")
+_n_bar = sum(1 for r_ in _vrows if r_["bk"] == "b75")
+_n_none = sum(1 for r_ in _vrows if r_["bk"] == "none")
 visual_tab_html = (
     '<div class="kpis">'
-    f'<div class="kpi"><b>{_vk2["met"]} / {_vk2["all"]}</b><span>Visual criteria met (mapped 7.5 or above)</span></div>'
-    f'<div class="kpi"><b>{_vk2["gpu"]}</b><span>Scored on the GPU judge (the record)</span></div>'
-    f'<div class="kpi"><b>{_vk2["near"]}</b><span>Open and within 0.5 of the bar (close-out candidates)</span></div>'
+    f'<div class="kpi"><b>{_n_met} / {len(_vrows)}</b><span>Visual items met (7.5 or above on the GPU)</span></div>'
+    f'<div class="kpi"><b>{_n_bar + _n_close}</b><span>Near: open and scoring 7.0 or above</span></div>'
+    f'<div class="kpi"><b>{len(_vrows) - _n_met - _n_bar - _n_close - _n_none}</b><span>Open and below 7.0</span></div>'
+    f'<div class="kpi"><b>{_n_none}</b><span>No score of their own yet</span></div>'
     '</div>'
-    '<section class="panel"><h2>How to read this tab</h2><p class="note">Every visual criterion, grouped by feature. '
-    '"Current score" is the latest figure recorded in the criterion\'s evidence: GPU when the GPU judge has scored it (the score of record), '
-    'otherwise the CPU pre-judge (provisional, usually about 0.8 lower than GPU). Two numbers are Medium / High. '
-    'Bar: a three-judge mapped mean of 7.5 or above on both presets. Defect detail and owners for each catalogue item are at the bottom.</p></section>'
-    + _stand_html
-    + "".join(_vtabs)
-    + '<section class="chapter ch-V"><header><h2>Catalogue detail: defects and owners</h2></header></section>'
-    + visual_html)
+    + _matrix + _close_html + _stand_html
+    + '<section class="chapter ch-V"><header><h2>Every item, by area</h2></header>' + "".join(_vtabs) + '</section>'
+    + '<details class="frow"><summary><span class="fid">P2</span><span class="ftitle">Catalogue defect detail and owners</span></summary>'
+      '<div class="vtbl">' + visual_html + '</div></details>')
 
 
 # A complete document (owner report, 2026-09-30): the board is also served raw by
@@ -741,7 +818,12 @@ h2{{font-size:20px;font-weight:700}} h3{{font-size:16px;font-weight:700}}
 .chapter header{{display:flex;align-items:baseline;gap:12px;border-bottom:3px solid var(--chc);padding-bottom:6px}}
 .chpct{{font:600 14px "JetBrains Mono",monospace;color:var(--chc)}}
 .ch-M{{--chc:var(--meadows)}} .ch-C{{--chc:var(--cloud)}} .ch-S{{--chc:var(--storm)}} .ch-T{{--chc:var(--tide)}} .ch-R{{--chc:var(--redesign)}} .ch-V{{--chc:var(--storm)}} .ch-B{{--chc:var(--block)}}
-.vtbl{{padding:0 14px 14px}} .vtbl td:nth-child(2){{min-width:260px}} .vtbl tr.s-met td{{color:var(--muted)}} .tabs{{flex-wrap:wrap}}
+.vtbl{{padding:0 14px 14px}} .vtbl td:first-child{{min-width:220px}} .vtbl .meta{{font-size:11.5px}}
+.bk-met{{--bk:var(--met)}} .bk-b75{{--bk:color-mix(in srgb,var(--met) 80%,var(--panel))}} .bk-b70{{--bk:color-mix(in srgb,var(--met) 45%,var(--panel))}} .bk-b60{{--bk:var(--partial)}} .bk-b50{{--bk:color-mix(in srgb,var(--fail) 70%,var(--panel))}} .bk-b00{{--bk:var(--fail)}} .bk-none{{--bk:var(--tint-none)}}
+span.bk{{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--bk);margin-right:6px;vertical-align:-1px;border:1px solid var(--line)}}
+.vseg{{background:var(--bk);display:block}} .vbar{{display:flex;gap:2px;height:12px;border-radius:4px;overflow:hidden;min-width:160px}}
+.mx th[scope=row]{{font:600 14px Figtree,sans-serif;color:var(--ink);text-transform:none;letter-spacing:0;white-space:nowrap}}
+.mx td.num{{font:600 15px "JetBrains Mono",monospace}} .mx td.zero{{color:var(--line)}} .mx tr.mx-total td,.mx tr.mx-total th{{border-top:2px solid var(--ink)}} .mxbar{{width:26%}} th.mxh{{white-space:nowrap}} .mxr{{display:block;font-weight:400;text-transform:none;letter-spacing:0;font-size:10.5px;margin-top:2px}} .tabs{{flex-wrap:wrap}}
 .frow{{background:var(--panel);border:1px solid var(--line);border-radius:10px}}
 .frow summary{{list-style:none;cursor:pointer;display:grid;grid-template-columns:44px minmax(0,1fr) auto 120px 44px;grid-template-areas:"id title num meter pct" "id stack stack stack stack";gap:6px 12px;align-items:center;padding:12px 14px}}
 .frow summary::-webkit-details-marker{{display:none}}
