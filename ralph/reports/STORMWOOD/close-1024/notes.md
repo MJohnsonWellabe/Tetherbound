@@ -2,6 +2,11 @@
 
 ## Session 2 log (newest first)
 
+- 27 Oct 04:26Z Coordinator, 03:56Z: the SW20b one-batch re-judge put the Ashfoot room at 6.76, not met (0.74 short). land14 is PR #770. The next Ashfoot arm is the top close-out.
+- 27 Oct 04:26Z **m51 Ashfoot polish: no gain (0.00 mapped)** (`m51/VERDICT.md`). No arm; `ashfoot_polish` stays OFF; first miss.
+  - **Worked:** the rug and floor-disc swap.
+  - **Didn't read:** the copper and rod pieces are too small at the lens; the pane rain doesn't show.
+  - **Glare:** not the room lamp, which only dimmed the room and flattened the phases. Next: find the real source of the light on the trainer's back, which is likely through the open door.
 - 27 Oct 03:24Z **READY to land land14 db6126dcdfb52ed5cafbc33715e4d6a8ae256609** (`tb/stormwood-land14`). It is origin/main 58bef4fc plus exactly the GPU SW20-judged m48b Ashfoot room (+0.87, warm-room FIXED 3/3):
   - **`cottage_interior.gd`:** main's file with only the room pieces grafted in: the `storm_room` light (window spot, per-phase hearth and room-lamp scale, window patch), `stormwood_dressing` (moss runs and tufts, storm-glass crystals, copper rod and chain coil) and their helpers. No shell or door-cutout code.
   - **`cottage_window_patch.gdshader`.**
