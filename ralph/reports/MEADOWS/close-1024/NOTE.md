@@ -595,3 +595,18 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
     - The stand's shared base-scene faults also remain: carpet grass, a cyan horizon line, and card trees.
   - **Next idea (r7c, after GPU):** deeper amber at a lower energy so the windows stay warm, and night-only emission through the `day_cycle` group.
 - 2026-10-27 04:05 UTC Merged origin/main (#769, relay flags ON) into tb/meadows. In `tether_relay.json` I took main's ON pad; the r2 values (uv 0.6, #a39684) stay recorded in the 26 Oct line.
+
+- 2026-10-27 06:30 UTC **READY to land land20 286ccebb4** (`tb/meadows-land20`, built from origin/main 073466a65, 5 files). It makes the MH3 courtyard live, per GPU MH8 (tb/gpu-pass 5ebdf26b8).
+  - **Change:**
+    - `stronghold.json`: `courtyard_daylight_candidate` and `banner_model_candidate` are ON, each with a `_why_on` naming MH8. On band5_stronghold_approach_1, day gained +0.69 / +1.16 and night +0.44 / +0.30, a mean of about +0.57 Medium and +0.73 High.
+    - It carries the courtyard support code: `stronghold.gd` (`_courtyard_daylight`, the pillar, light and rubble overrides, the night step-down hook) and `stronghold_courtyard_fill.gd`.
+    - `hero_gatehouse` (the spire and keep) stays OFF, and `warden_rim_candidate` is not included.
+  - **Salmon planks:**
+    - They are **on main, not from MH3.** They are the courtyard's wall-foot rubble bricks (`hall_occupation.reclaim.rubble`, the `from 19` bands, Prop_Brick at scale 1.5–3.4), lit warm at the camera edge. The GPU off arm shows them larger.
+    - The fix rides inside the courtyard candidate's rubble override: scale 0.7–1.1 (was 1.5–3.4, then 1.6 max), a darker #4a443c, and seated at y 0.02, against the wall.
+    - A CPU check at band5_stronghold_approach_1 (16 frames, `_sheet_land20.png`: day gameplay, day reverse, night gameplay, night rain gameplay) shows the large planks gone from the gameplay and reverse cameras. Only small wall-foot rubble remains at the frame edge.
+  - **Tests:** test_meadows_tier1_art_gates now asserts both flags ON and citing GPU MH8. It ran with the five stronghold unit tests (approach_visual_identity, banner_camera_occluder, camera_occluders, dialogue_budget, warden_arena): 27 tests, 405 assertions, 0 failed.
+  - **Still open from MH8, not in this land:**
+    - The night rain on this stand still grades grey rather than dark blue (visible in the sheet's fourth frame).
+    - The trainer reads as self-lit at night.
+    - The spire waits for MH9 (r7b).
