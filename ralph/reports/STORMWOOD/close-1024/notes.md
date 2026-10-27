@@ -2,6 +2,19 @@
 
 ## Session 2 log (newest first)
 
+- 27 Oct 03:24Z **READY to land land14 db6126dcdfb52ed5cafbc33715e4d6a8ae256609** (`tb/stormwood-land14`). It is origin/main 58bef4fc plus exactly the GPU SW20-judged m48b Ashfoot room (+0.87, warm-room FIXED 3/3):
+  - **`cottage_interior.gd`:** main's file with only the room pieces grafted in: the `storm_room` light (window spot, per-phase hearth and room-lamp scale, window patch), `stormwood_dressing` (moss runs and tufts, storm-glass crystals, copper rod and chain coil) and their helpers. No shell or door-cutout code.
+  - **`cottage_window_patch.gdshader`.**
+  - **`cottage_interior_finish.json`:** main's file plus `storm_room` and `stormwood_dressing` ON with `_why_on` (SW20), and the golden `copper_tint` (#c9a06a) with its `_why`.
+  - **Assets:** the glass-scar crystal GLB and the kit Chain_Coil are already on main.
+  - **Not carried:** sky form/skyline, ground zones, overlook candidates, the Meshy shell, `storm_grade`.
+  - **Checks on the land14 tree:** `test_village_main_street.gd` 11/293, 0 failed; `smoke_stormwood_ashfoot_shelter.gd` 16/0; `smoke_stormwood_settlement_traversal.gd` 9/9 approaches, openings, rooms and walls OK; no script errors.
+- 27 Oct 03:24Z Next Ashfoot arm (SW20 path, 0.9 short), after m50 or riding with it:
+  - tame the hearth backlight on the trainer's back;
+  - seat the window frame flush;
+  - more copper and a lightning-rod motif;
+  - seat the crystals;
+  - replace the flat green floor discs.
 - 27 Oct 01:49Z **Storm sky retry (soft rims): no gain on CPU**, mapped 6.03 -> 5.92 (-0.11) (`r45c/VERDICT.md`). Judges call the arms "nearly identical"; the frames do differ (mean pixel difference 24-54).
   - r45b's gain came from the bright rims that SW19 read as smear slabs. Soft rims leave the masses invisible.
   - **No SW19 retry arm is posted.** The sky-form approach is PARKED (SW19 + r45c); `form` and `skyline` stay OFF.
