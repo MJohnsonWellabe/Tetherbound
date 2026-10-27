@@ -528,14 +528,20 @@ func _ground_pad_material() -> StandardMaterial3D:
 	if _ground_pad_material_cache != null:
 		return _ground_pad_material_cache
 	var config: Dictionary = _config.get("ground_pad", {})
+	# F38 band3_the_river_lock_0 (close-1024, OFF until judged): GPU judges read
+	# the yard as flat featureless earth (5.29). `surface_candidate` swaps the
+	# whole pad, seamlessly and feathered as before, for worn stone flags.
+	var surface: Dictionary = config.get("surface_candidate", {})
+	if not bool(surface.get("enabled", false)):
+		surface = {}
 	var m := StandardMaterial3D.new()
-	m.albedo_texture = GROUND_PAD_ALBEDO
-	m.albedo_color = Color(str(config.get("tint", "#463c30")))
+	m.albedo_texture = load(str(surface["albedo"])) as Texture2D if surface.has("albedo") else GROUND_PAD_ALBEDO
+	m.albedo_color = Color(str(surface.get("tint", config.get("tint", "#463c30"))))
 	m.normal_enabled = true
-	m.normal_texture = GROUND_PAD_NORMAL
-	m.normal_scale = 1.6
+	m.normal_texture = load(str(surface["normal"])) as Texture2D if surface.has("normal") else GROUND_PAD_NORMAL
+	m.normal_scale = float(surface.get("normal_scale", 1.6))
 	m.uv1_triplanar = true
-	m.uv1_scale = Vector3.ONE * float(config.get("uv_scale", 0.32))
+	m.uv1_scale = Vector3.ONE * float(surface.get("uv_scale", config.get("uv_scale", 0.32)))
 	m.roughness = float(config.get("roughness", 0.97))
 	m.metallic = 0.0
 	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
