@@ -111,9 +111,9 @@
     "stormwood_dressing": {
       "enabled": false,
       "_candidate": "r48 Stormwood dressing (OFF until judged; needs storm_finish on). GPU SW16 and r47 judges x3: 'nothing in the room says Stormwood: no moss, copper or glass, no storm gear'. Blue-green moss on the wall plates, tie beam and sill with hanging strands; small storm-glass crystals (the Glass Field Meshy crystal, no glow) on the sill and the shelf; a copper lightning rod in the back corner; a copper chain coil by the door. Presentation only.",
-      "moss_colour": "#34503f",
+      "moss_colour": "#29392c",
       "tie_beam_z": [-0.4],
-      "strands": [[-0.9, -0.4, 0.45], [-0.3, -0.4, 0.3], [0.5, -0.4, 0.55], [-1.3, -0.4, 0.35]],
+      "strands": [[-0.9, -0.4, 0.28], [-0.3, -0.4, 0.18], [0.5, -0.4, 0.32], [-1.3, -0.4, 0.22]],
       "glass": {"model": "res://assets/props/meshy-1024/stormwood_glass_scar_crystals/stormwood_glass_scar_crystals.glb", "at": [["sill", 0.3, 0.26], ["sill", -0.35, 0.16], ["Shelf", 0.0, 0.22]]},
       "copper_colour": "#b8794a",
       "rod": [-1.25, -2.0, 8.0, 1.9],

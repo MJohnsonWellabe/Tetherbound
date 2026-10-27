@@ -619,6 +619,26 @@ func _build_storm_room_light(cfg: Dictionary, w: float, z0: float, z1: float, y0
 	add_child(patch)
 
 
+func _moss_run(moss: Material, rng: RandomNumberGenerator, from: Vector3, to: Vector3) -> void:
+	var length := from.distance_to(to)
+	var along := 0.0
+	while along < length:
+		var size := rng.randf_range(0.12, 0.34)
+		if rng.randf() < 0.75:
+			var clump := MeshInstance3D.new()
+			var sphere := SphereMesh.new()
+			sphere.radius = size * 0.5
+			sphere.height = size * rng.randf_range(0.25, 0.4)
+			sphere.radial_segments = 8
+			sphere.rings = 3
+			clump.mesh = sphere
+			clump.material_override = moss
+			clump.position = from.lerp(to, clampf((along + size * 0.5) / length, 0.0, 1.0)) + Vector3(0.0, 0.01, 0.0)
+			clump.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			add_child(clump)
+		along += size * rng.randf_range(0.8, 1.4)
+
+
 func _place_glass(model_path: String, index: int, at: Vector3, height: float) -> void:
 	var model := HERO_PROP.load_model(model_path)
 	if model == null:
@@ -654,15 +674,30 @@ func _stormwood_dressing(cfg: Dictionary, w: float, d: float, top: float, z0: fl
 	moss.albedo_color = Color(str(cfg.get("moss_colour", "#34503f")))
 	moss.roughness = 1.0
 	var post := 0.14
+	# r48 first look: continuous strips read as painted trim. Moss grows in
+	# broken, uneven clumps along the timber, so each run is a row of low
+	# flattened mounds of varying size with gaps (deterministic per run).
+	var rng := RandomNumberGenerator.new()
+	rng.seed = int(cfg.get("seed", 48))
 	for side: float in [-1.0, 1.0]:
-		_visual_box("MossPlate%s" % ("E" if side > 0.0 else "W"), Vector3(0.16, 0.05, d * 1.9), Vector3(side * (w - 0.1), top + 0.02, 0.0), moss)
+		_moss_run(moss, rng, Vector3(side * (w - 0.1), top + 0.01, -d * 0.95), Vector3(side * (w - 0.1), top + 0.01, d * 0.95))
 	for z: Variant in cfg.get("tie_beam_z", [-0.4]):
-		_visual_box("MossBeam%d" % int(float(z) * 10.0), Vector3(w * 1.7, 0.05, 0.17), Vector3(0.0, top + 0.01, float(z)), moss)
+		_moss_run(moss, rng, Vector3(-w * 0.85, top, float(z)), Vector3(w * 0.85, top, float(z)))
+	_moss_run(moss, rng, Vector3(w - 0.12, y0 + 0.01, z0 + 0.05), Vector3(w - 0.12, y0 + 0.01, z1 - 0.05))
 	var strands: Array = cfg.get("strands", [])
 	for index in strands.size():
 		var at: Array = strands[index]
-		_visual_box("MossStrand%d" % index, Vector3(0.05, float(at[2]), 0.04), Vector3(float(at[0]), top - post * 1.2 - float(at[2]) * 0.5, float(at[1])), moss)
-	_visual_box("MossSill", Vector3(0.14, 0.04, (z1 - z0) * 0.9), Vector3(w - 0.12, y0 + 0.02, (z0 + z1) * 0.5), moss)
+		var tuft := MeshInstance3D.new()
+		tuft.name = "MossStrand%d" % index
+		var cone := CylinderMesh.new()
+		cone.top_radius = 0.07
+		cone.bottom_radius = 0.01
+		cone.height = float(at[2])
+		cone.radial_segments = 6
+		tuft.mesh = cone
+		tuft.material_override = moss
+		tuft.position = Vector3(float(at[0]), top - post * 1.2 - float(at[2]) * 0.5, float(at[1]))
+		add_child(tuft)
 	# Storm glass: anchored to the window sill (known here) or to the kit
 	# shelf (placed by _build_furniture after the lining, so deferred).
 	var glass_cfg: Dictionary = cfg.get("glass", {})
