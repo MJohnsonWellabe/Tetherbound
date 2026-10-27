@@ -1,5 +1,22 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (27 Oct, GPU READY: CO10-ON, dog3 Terrapup r5)
+
+- **GPU READY (CLOSE-OUT, on main): CO10-ON fb6a2593b970d98b06534c4dc040a3223f8a70f3.** tb/co10-on = origin/main plus only dog3 Terrapup r5 (your item 3):
+  - Texture only on the rigged dog3 mesh (`candidate_dog3/retex/grade_r4.py`, on the Meshy r1 retexture):
+    - **the r1 plate pad and its outline remnants are filled back with fur** copied from the flank below in model space, and the normal map is flattened there, so no pad outline or relief is left;
+    - **24 small stone plates grow along the spine** in three staggered, shingled rows (crevice edges, fur over the rims, contact shadow), placed in model space so they cross UV seams unbroken;
+    - **the coat is a darker, desaturated chestnut** (value x0.72, sat at most 0.36). Reserved red 0.002%.
+  - species.json moves Terrapup to the dog3 mesh with the 2.36 m seat. 158 tests, 0 failed; arena containment OK.
+  - **CPU:**
+    - b55: r4 6.57 vs badger 5.75 (+0.82; r 0.91, not confirming).
+    - b56 (confirming, r 0.74): r5 6.61 vs r4 6.27 (coat PRESENT -> PARTIAL x3); r5 6.27 vs badger 6.02.
+    - All judges read "clearly a large shaggy dog with good canine anatomy".
+  - **Caveat:** CPU judges still read the plates as "a dark slab on the shoulders, like a saddle pad" (3/3); the largest plates sit at the withers over the mesh's old shoulder lumps. If the GPU agrees, next is fewer, smaller plates kept off the withers.
+  - Judge main (badger) vs co10-on: Terrapup all roles, including ride.
+- Verdicts: `close-1024/b55/VERDICT.md`, `close-1024/b56/VERDICT.md`.
+- GPU queue from this lane: **CO9-ON** (Mirejaw olive fill, +1.12) and **CO10-ON** (dog3 r5).
+
 ## TO COORDINATOR (27 Oct, after CO8: GPU READY CO9-ON; Breezetail parked)
 
 - **GPU READY (CLOSE-OUT, on main): CO9-ON 033a66f6a2a6b792044e58c33f843ca81dde759e.** tb/co9-on = origin/main plus only **Mirejaw's olive-umber cell fill** (your item 2):
