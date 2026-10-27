@@ -1,0 +1,152 @@
+{
+ "sets": {
+  "Ir": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A grounded, textured naturalistic newt with gold frills, but the dark grey-black reticulated back sinks into a mid-dark value block with no rim light, so it lacks Palworld's colour pop and readable values."
+  },
+  "Ve": {
+   "A": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing elder villager with expressive eyes, a strong white-hair silhouette and an earthy green-brown palette that matches the key art; it is shown only on a void, so the world fit is inferred."
+  },
+  "Bv": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The model is solid and grounded, but in faint end the belly-up back reads almost black with small tan cells and no warm olive, so it falls short of Palworld's saturated finish."
+  },
+  "So": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fight is murky and brown under a large HUD, with flat magenta outline telegraphs, no purple storm sky and no lightning; A also puts the camera in canopy in several frames, so it reads nothing like Palworld's bright, legible boss fights."
+  },
+  "Tj": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's panel fits the deep blue-grey, pale-border, gold-text direction and reads at a glance, but its glyphs are small and the dull, dark world behind it sinks the shot next to Palworld."
+  },
+  "Fl": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Stormcapra matches the owner style bar when standing (white fleece, brown curled horns, blue accents), but on A the faint poses float with an open grey underside, and the void stage gives no atmosphere."
+  },
+  "Ba": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The creature is well modelled and grounded, and the swim pose reads, but the sooty dark-grey back with no rim light keeps it below Palworld-level colour and value separation."
+  },
+  "Xn": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The silhouette and frills read, but the near-black faint-end back and the low-saturation grey-umber body sit far from Palworld's bright, rim-lit creatures."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-grade the newt/axolotl creature's albedo (Ir/Bv/Ba/Xn): a warm olive-umber back and flanks with lighter, larger markings, a lifted mid-value, and a rim/fresnel term so the body separates from the stage and stays readable belly-up in faint end.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight (So): replace the flat magenta outline telegraphs with real-object VFX (lightning strands, web or stone impacts), shrink and translucent-ise the left and bottom HUD blocks, add the fixed purple storm sky and white-violet lightning grade, and keep the camera out of trunks and canopy so the player's creature is visible.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormcapra faint (Fl A path): snap the faint-mid and faint-end poses to the stage so the shadow touches the body, and close or texture the grey open underside that shows when it rolls.",
+   "kind": "scene"
+  }
+ ]
+}

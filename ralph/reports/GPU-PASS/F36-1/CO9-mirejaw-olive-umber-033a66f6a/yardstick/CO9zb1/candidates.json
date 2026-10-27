@@ -1,0 +1,46 @@
+[
+    {
+        "label":  "CO9z mirejaw Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-mirejaw-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-mirejaw-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read. These are close crops of the creature.",
+        "defects":  [
+                        "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings",
+                        "Placeholder or untextured materials (flat colour, smeared or blurry texture)",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO9z water_mirejaw Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-water_mirejaw-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-water_mirejaw-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read. These are close crops of the creature.",
+        "defects":  [
+                        "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings",
+                        "Placeholder or untextured materials (flat colour, smeared or blurry texture)",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO9z water_mirejaw High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-water_mirejaw-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-water_mirejaw-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read. These are close crops of the creature.",
+        "defects":  [
+                        "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings",
+                        "Placeholder or untextured materials (flat colour, smeared or blurry texture)",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO9z mirejaw High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-mirejaw-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-mirejaw-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read. These are close crops of the creature.",
+        "defects":  [
+                        "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings",
+                        "Placeholder or untextured materials (flat colour, smeared or blurry texture)",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    }
+]

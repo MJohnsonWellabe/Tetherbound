@@ -1,0 +1,172 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8727,
+  "least_squares_slope": 0.9921,
+  "method": "linear",
+  "slope": 0.9921,
+  "intercept": 0.6085,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.634,
+ "top_anchor_reference": 7.89,
+ "confirming_batch": true,
+ "anchors": {
+  "p2_094_r4:Y_after": {
+   "measured": 6.267,
+   "reference": 6.73,
+   "mapped": 6.826,
+   "residual": -0.096
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.067,
+   "reference": 3.5,
+   "mapped": 4.643,
+   "residual": -1.143
+  },
+  "f36_1_gpu:tanglevolt_shipping": {
+   "measured": 4.533,
+   "reference": 6.04,
+   "mapped": 5.106,
+   "residual": 0.934
+  },
+  "f36_1_gpu:tanglevolt_candidate": {
+   "measured": 7.3,
+   "reference": 7.89,
+   "mapped": 7.851,
+   "residual": 0.039
+  },
+  "f36_0_gap:C7A": {
+   "measured": 5.533,
+   "reference": 7.03,
+   "mapped": 6.098,
+   "residual": 0.932
+  },
+  "f36_0_gap:C7B": {
+   "measured": 6.033,
+   "reference": 6.3,
+   "mapped": 6.594,
+   "residual": -0.294
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.133,
+   "reference": 7.53,
+   "mapped": 7.686,
+   "residual": -0.156
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.133,
+   "reference": 7.47,
+   "mapped": 7.686,
+   "residual": -0.216
+  }
+ },
+ "candidates": {
+  "CO9z water_mirejaw High cand|ship | CO9z-water_mirejaw-cand-High": {
+   "measured_mean": 6.233,
+   "mapped_mean": 6.79,
+   "mapped_judges": [
+    6.86,
+    6.76,
+    6.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO9z water_mirejaw High cand|ship | CO9z-water_mirejaw-ship-High": {
+   "measured_mean": 5.533,
+   "mapped_mean": 6.1,
+   "mapped_judges": [
+    6.16,
+    6.07,
+    6.07
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO9z mirejaw High cand|ship | CO9z-mirejaw-ship-High": {
+   "measured_mean": 6.1,
+   "mapped_mean": 6.66,
+   "mapped_judges": [
+    6.86,
+    6.46,
+    6.66
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO9z mirejaw High cand|ship | CO9z-mirejaw-cand-High": {
+   "measured_mean": 6.367,
+   "mapped_mean": 6.93,
+   "mapped_judges": [
+    7.26,
+    6.36,
+    7.16
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO9z mirejaw Medium cand|ship | CO9z-mirejaw-cand-Medium": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.46,
+   "mapped_judges": [
+    6.86,
+    6.46,
+    6.07
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO9z mirejaw Medium cand|ship | CO9z-mirejaw-ship-Medium": {
+   "measured_mean": 6.0,
+   "mapped_mean": 6.56,
+   "mapped_judges": [
+    6.16,
+    6.36,
+    7.16
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO9z water_mirejaw Medium cand|ship | CO9z-water_mirejaw-ship-Medium": {
+   "measured_mean": 5.5,
+   "mapped_mean": 6.07,
+   "mapped_judges": [
+    6.16,
+    6.07,
+    5.97
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO9z water_mirejaw Medium cand|ship | CO9z-water_mirejaw-cand-Medium": {
+   "measured_mean": 6.5,
+   "mapped_mean": 7.06,
+   "mapped_judges": [
+    7.26,
+    6.76,
+    7.16
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

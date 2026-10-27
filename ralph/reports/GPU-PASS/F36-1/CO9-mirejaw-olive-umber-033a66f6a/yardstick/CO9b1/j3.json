@@ -1,0 +1,152 @@
+{
+ "sets": {
+  "Ir": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A neutral-stage turnaround of a creature whose reticulated tan-and-black hide goes sooty in faint end and lacks the coral gill accents of its board shows nothing of Palworld-class world or Valheim-class light, and the model itself sits below the owner's creature bar."
+  },
+  "Ve": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Grandpa Elias reads instantly with a warm, appealing face, clear eyes and an earthy green-brown outfit that fits the Meadows palette, but he is more toon than the board's naturalistic portrait."
+  },
+  "Bv": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A readable, scaled salamander silhouette, but the faint-end body goes near-black, the hide pattern reads as an even net print rather than authored markings, and there is no world or light to compare."
+  },
+  "So": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown-black forest with no purple storm sky or lightning, flat magenta telegraph slabs, a tiny unreadable player creature and (A) the camera buried in canopy sank it far below Palworld's bright, readable boss fight."
+  },
+  "Tj": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's blue-grey translucent panel with large warm-gold ingredient text reads well, but keyboard glyphs instead of teal controller prompts and the dark, empty rainy world behind keep it short of a shipping game's HUD."
+  },
+  "Fl": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's Stormcapra matches the owner's style bar with real fleece, heavy horns and grounded faint poses, but A floats the faint body high off the stage, and a neutral stage cannot carry world or light parity."
+  },
+  "Ba": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The swim frame and the scale against the trainer are good, but the sooty faint-end flanks and generic net-print hide keep the creature below the owner's bar, and there is no world to judge."
+  },
+  "Xn": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The silhouette and scale read, but the dark flanks in faint end (darker on B) and the uniform reticulated hide without board accents sink it against the style bar."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight (So): fade or collide the camera against trunks and canopy, lift exposure, add the fixed purple storm sky with white-violet lightning, put a rim light on both fighters, and swap the flat magenta telegraph slabs for physical effects (lightning arcs, web, debris) that hit something",
+   "kind": "scene"
+  },
+  {
+   "change": "Salamander creature (Ir/Bv/Ba/Xn): rework the hide toward the board's warm olive-umber with lighter, irregular spots, a pale belly that does not go black in faint end, and coral/pink gill frills; break up the even net print",
+   "kind": "scene"
+  },
+  {
+   "change": "Ground every faint pose on the stage (Fl A), and finish the craft panel on B's layout with controller-first teal button glyphs in one bottom hint bar",
+   "kind": "scene"
+  }
+ ]
+}

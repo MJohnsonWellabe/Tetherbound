@@ -1,0 +1,150 @@
+{
+ "sets": {
+  "Et": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's braced timber frame, overhanging cap and stone plinth read as a built homestead wall, but the flat untextured cream infill, the pale low-poly blurry boulder beside it and the flat midday light with no haze or shafts keep it short of Palworld base-building finish and Valheim atmosphere; B's blown-out white card sinks it outright."
+  },
+  "Qk": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated amphibian's silhouette, golden gill fronds and scale against the trainer carry it, but the uniform tiled hex pattern and the back going near-black in faint end (and in all of B) read below the owner bar's real fur and plate detail."
+  },
+  "Ln": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "FIXED",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B holds a warm olive-umber back with visible markings across all four frames, but the even, generator-regular hex tiling still looks procedural next to Palworld's authored creature surfaces, and no travel-role frame is shown."
+  },
+  "Fa": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "B's indigo lightning-fur wolf matches the owner bar's Tanglevolt in every pose and holds its material grounded on the floor, whereas A's faint frames swap to a white body with black blotches and its hit react is indistinguishable from standing."
+  },
+  "Df": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured boar has strong bulk and scale against the trainer, but the faint frames collapse into a near-black smear, faint mid floats above a detached shadow, and A's glowing red seams push danger-red onto a friendly creature."
+  },
+  "Fp": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "FIXED",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's warm olive back with visible markings reads well, but the uniform tiled hex surface stays below the naturalistic plate and skin detail of the owner bar; A's sooty grey-black back sinks it further."
+  },
+  "Ap": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "FIXED",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B keeps the warm olive-umber body through faint end and swimming and the silhouette reads, but the evenly tiled hex pattern looks procedural rather than Palworld-finished; A reads sooty grey-black in every frame."
+  },
+  "Hd": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired elder's readable face and eyes, green scarf and olive-brown vest fit the Meadows palette and a cozy stylised NPC finish, held back only by a stiff, small full-body stance."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Lock the amphibian creature's body material to the warm olive-umber albedo with visible markings in every state (standing, faint end, swim), and replace the uniform tiled hex pattern with an authored scale/plate texture that varies in size over back, flank and belly",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix faint-state material and grounding: no material swap on faint (Fa side A turns white with black blotches), no near-black smear on Df faint, and drop fainted bodies onto the stage so they touch their shadows (Df faint mid floats)",
+   "kind": "scene"
+  },
+  {
+   "change": "Ship the braced timber homestead wall with cap and stone plinth (Et side A) and give its infill a textured daub or plank surface with depth instead of flat cream",
+   "kind": "scene"
+  }
+ ]
+}

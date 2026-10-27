@@ -1,0 +1,46 @@
+{
+ "Et": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Qk": {
+  "anchor": false,
+  "label": "CO9z water_mirejaw High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-water_mirejaw-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-water_mirejaw-ship-High.png"
+ },
+ "Ln": {
+  "anchor": false,
+  "label": "CO9z mirejaw High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-mirejaw-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-mirejaw-cand-High.png"
+ },
+ "Fa": {
+  "anchor": true,
+  "A": "f36_1_gpu:tanglevolt_shipping",
+  "B": "f36_1_gpu:tanglevolt_candidate"
+ },
+ "Df": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ },
+ "Fp": {
+  "anchor": false,
+  "label": "CO9z mirejaw Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-mirejaw-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-mirejaw-ship-Medium.png"
+ },
+ "Ap": {
+  "anchor": false,
+  "label": "CO9z water_mirejaw Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-water_mirejaw-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO9z\\sides\\CO9z-water_mirejaw-cand-Medium.png"
+ },
+ "Hd": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

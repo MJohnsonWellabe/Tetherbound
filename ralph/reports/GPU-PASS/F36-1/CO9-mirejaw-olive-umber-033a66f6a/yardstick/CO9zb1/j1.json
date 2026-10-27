@@ -1,0 +1,150 @@
+{
+ "sets": {
+  "Et": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Dense warm grass and a cool mountain distance carry the Meadows look, but a lone wall on flat noon light with no fog or shafts, next to a washed-out low-poly grey boulder, sinks it; side B's white blown-out card is the clearest failure."
+  },
+  "Qk": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The large frilled silhouette and orange gill accents read, but the uniform tiled hex print and the body going charcoal in faint end (and sooty grey throughout on B) fall short of the owner style bar's fur-and-scale finish."
+  },
+  "Ln": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "FIXED",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's warm olive body with visible markings in every frame lifts it close, but the evenly repeating hex cells read as a procedural print rather than authored scale, so it does not yet match the style bar finish."
+  },
+  "Fa": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "B's Tanglevolt matches the owner style bar with a clear silhouette, a white face and readable hurt and faint poses; A sinks badly because hit react is identical to standing and the faint frames switch to a flat black-and-white blotched placeholder material."
+  },
+  "Df": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The heavy boar silhouette reads larger than the trainer, but low-value brown-black plates, a faint end that goes near-black, and on A red emissive cracks (a red leak onto a friendly creature) with the tusks lost keep it below the bar."
+  },
+  "Fp": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The silhouette and frills read, but B's grey-charcoal cells with pale seams and A's dark faint end, on a uniform repeating hex texture, keep the material short of the style bar."
+  },
+  "Ap": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "FIXED",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's olive-umber body holds its markings even in faint end and the swim frame reads, but the tiled hex print and flat stage water keep it just below the style bar; A goes sooty and charcoal from hit react on."
+  },
+  "Hd": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable elder with expressive eyes, a white beard silhouette and an olive/cream/brown palette that fits the key art's trainer and village, at a finish comparable to Palworld's stylised humans; only fine cloth and hair detail is soft."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Keep the creature's base albedo, markings and lighting through hurt and faint states: no material swap (Fa A's black-white blotched faint mesh, A's hit react identical to standing) and no darkening to charcoal in faint end (Qk/Ln/Fp/Ap faint end, Df faint end); also seat faint poses on the stage so the contact shadow touches the body.",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-author the hex-scaled water creature's material (Qk/Ln/Fp/Ap): warm olive-umber back grading to a pale belly, irregular hand-varied scale cells and darker blotches in place of the uniform tiled reticulated print, with value kept above near-black; on the boar (Df) drop the red emissive cracks, keep pale tusks and raise plate values.",
+   "kind": "scene"
+  },
+  {
+   "change": "Make the homestead wall a built object (Et): start from side A's timber frame, cap and stone footing, give it real depth (about 0.2 m thick with a visible top and end-grain), use warm plaster infill with grime and lower exposure instead of side B's blown-out white card, and set it in footing dirt rather than bare grass.",
+   "kind": "new_art"
+  }
+ ]
+}

@@ -1,0 +1,150 @@
+{
+ "sets": {
+  "Et": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, diagonal brace, plank cap and stone footing read as a built wall, but it is still a lone thin panel with flat cream infill in front of a flat painted mountain backdrop and a pale low-poly boulder; B is a blown-out white board with no cap or footing, so neither reaches Palworld base-building finish."
+  },
+  "Qk": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's warm tan-olive body with pale belly and gold crests reads as a real creature in standing, hit react and swimming, but the shell is an even tiled cell network, the face does not read at size, and the faint-end back goes near-black in A and B, while B is dark and sooty in every frame."
+  },
+  "Ln": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The silhouette and scale over the trainer work, but A goes sooty-black on the faint-end back, B shifts to a desaturated grey rather than warm olive-umber, both shells are one uniform cell pattern, and there is no travel-role frame."
+  },
+  "Fa": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's blue-violet wolf holds the Tanglevolt bar through hit react and faint and would pass beside Palworld, but A swaps to a black-and-white blotched placeholder material in faint mid and faint end, and its hit react is identical to standing, which sinks the set."
+  },
+  "Df": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The boar has a strong heavy silhouette with rock-plated back and clearly outscales the trainer, but both sides go to an almost black mass in faint mid and faint end; A's glowing red-orange cracks add accent but make the tusks flesh-pink, and B is one murky dark-brown value with ivory tusks and no moss or ground-type colour."
+  },
+  "Fp": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The creature reads and is grounded, but the evenly tiled cell shell, a near-black faint-end back on both sides, B's greyed palette and the missing travel-role frame keep it below the owner's bar."
+  },
+  "Ap": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's warm olive body reads well in standing, hit react and swimming, but A is sooty dark throughout, and on both sides the shell is a uniform procedural cell network that goes near-black on the faint-end back."
+  },
+  "Hd": {
+   "A": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired elder has clear face and eyes, a clean silhouette and a warm green-olive-brown outfit with no oxblood, and he matches the stylised trainer of the key art at a shipping-NPC finish; A and B show no visible difference."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-author the crested shell creature's albedo (Qk/Ln/Fp/Ap): a warm olive-umber base with varied, hand-placed scute markings instead of one evenly tiled dark cell network, value lifted on the back and flanks, and that value kept in the faint poses so the body never goes near-black.",
+   "kind": "scene"
+  },
+  {
+   "change": "Keep one material through every animation state: no faint-state swap to a black-and-white placeholder (Fa A) and no darkening to a black mass in faint mid and faint end (Df A/B and the shell creature), plus a rim or fill light on the stage so dark backs separate from the stage.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build the homestead wall from A's timber frame, brace, plank cap and stone footing, as a thicker module with weathered plaster variation and joins to neighbouring pieces, so placed walls read as built structure rather than one standalone card.",
+   "kind": "new_art"
+  }
+ ]
+}

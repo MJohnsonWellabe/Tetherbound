@@ -1,0 +1,234 @@
+[
+ {
+  "batch": 1,
+  "code": "Qk",
+  "label": "CO9z water_mirejaw High cand|ship",
+  "side": "CO9z-water_mirejaw-cand-High",
+  "mapped": 6.79,
+  "judges": [
+   6.86,
+   6.76,
+   6.76
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Qk",
+  "label": "CO9z water_mirejaw High cand|ship",
+  "side": "CO9z-water_mirejaw-ship-High",
+  "mapped": 6.1,
+  "judges": [
+   6.16,
+   6.07,
+   6.07
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ln",
+  "label": "CO9z mirejaw High cand|ship",
+  "side": "CO9z-mirejaw-ship-High",
+  "mapped": 6.66,
+  "judges": [
+   6.86,
+   6.46,
+   6.66
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ln",
+  "label": "CO9z mirejaw High cand|ship",
+  "side": "CO9z-mirejaw-cand-High",
+  "mapped": 6.93,
+  "judges": [
+   7.26,
+   6.36,
+   7.16
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "FIXED",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "FIXED",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Fp",
+  "label": "CO9z mirejaw Medium cand|ship",
+  "side": "CO9z-mirejaw-cand-Medium",
+  "mapped": 6.46,
+  "judges": [
+   6.86,
+   6.46,
+   6.07
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Fp",
+  "label": "CO9z mirejaw Medium cand|ship",
+  "side": "CO9z-mirejaw-ship-Medium",
+  "mapped": 6.56,
+  "judges": [
+   6.16,
+   6.36,
+   7.16
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "FIXED",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ap",
+  "label": "CO9z water_mirejaw Medium cand|ship",
+  "side": "CO9z-water_mirejaw-ship-Medium",
+  "mapped": 6.07,
+  "judges": [
+   6.16,
+   6.07,
+   5.97
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PRESENT",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ap",
+  "label": "CO9z water_mirejaw Medium cand|ship",
+  "side": "CO9z-water_mirejaw-cand-Medium",
+  "mapped": 7.06,
+  "judges": [
+   7.26,
+   6.76,
+   7.16
+  ],
+  "defects": [
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "FIXED",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "FIXED",
+    "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ }
+]

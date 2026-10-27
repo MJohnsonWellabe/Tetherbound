@@ -1,0 +1,48 @@
+[
+    {
+        "item":  "CO9",
+        "species":  "mirejaw",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO9",
+        "species":  "water_mirejaw",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "swimming"
+                  ]
+    },
+    {
+        "item":  "CO9",
+        "species":  "mirejaw",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "item":  "CO9",
+        "species":  "water_mirejaw",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "swimming"
+                  ]
+    }
+]

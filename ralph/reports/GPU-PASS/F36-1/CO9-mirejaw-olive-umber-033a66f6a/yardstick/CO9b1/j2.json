@@ -1,0 +1,152 @@
+{
+ "sets": {
+  "Ir": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The long frilled newt has a clear silhouette and is taller than the trainer, but its uniform, procedural-looking net pattern and the near-black back in faint end (both sides; B is greyer and more sooty when standing) fall short of the owner's Stormursa/Stormcapra material finish."
+  },
+  "Ve": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The elder villager has a polished, appealing face with readable eyes and a moss-green and olive outfit that sits in the key-art palette; only the small, plain full-body view keeps him short of hero finish."
+  },
+  "Bv": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The silhouette and scale read, but the evenly tiled dark reticulated skin and the near-black faint-end body read as a generated texture, not authored naturalistic skin at the owner's bar."
+  },
+  "So": {
+   "A": {
+    "bar_a": 3.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A murky brown-black frame, no purple storm sky or lightning, flat magenta telegraph rings and slabs (A i06/i10, B i09/i10/tell2), a tiny unreadable player creature and a HUD covering about a third of each frame sink it; A also loses whole frames to canopy and trunks (i11, i13, i15)."
+  },
+  "Tj": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger, fully wrapped recipe text and its icon-labelled Craft/Leave hints read on the blue-grey panel, but the list shows only three recipes, the hints are keyboard glyphs rather than controller-first teal prompts, and the dim, muddy world behind is not Palworld-finish."
+  },
+  "Fl": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's shaded fleece and horns approach the owner's Stormcapra bar and stay grounded, but A's blown-out flat-white fleece and its faint mid/end body hovering well above its shadow sink it; in both sides the hit react is hard to tell apart from standing."
+  },
+  "Ba": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The orange frills and long body give a clear read, and it swims on a clean flat-blue water plane, but the uniform net-pattern skin and the sooty faint-end back keep the material below the owner's creature bar."
+  },
+  "Xn": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings": "PARTIAL",
+     "Placeholder or untextured materials (flat colour, smeared or blurry texture)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Scale and silhouette agree with the ruler, but the evenly scattered dark net pattern (cooler and greyer on B) and the near-black faint-end body read as procedural rather than as authored olive-umber skin."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Repaint the frilled newt (Ir/Bv/Ba/Xn): a hand-authored warm olive-umber albedo with irregular, readable markings in place of the evenly tiled dark net pattern, a lighter dorsal value so the faint-end back stops going near-black, and a rim light so it separates from the stage.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight (So): pull the camera clear of trunks and canopy, add the fixed purple storm sky with fill and rim light on both fighters, scale up or outline the player's creature, swap the flat magenta telegraph rings and slabs for a physical lightning or strike effect with an impact, and slim the HUD side panels.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormcapra (Fl): snap the faint mid/end body to the ground so it meets its shadow, and use B's shaded fleece material everywhere in place of the flat blown-out white.",
+   "kind": "scene"
+  }
+ ]
+}

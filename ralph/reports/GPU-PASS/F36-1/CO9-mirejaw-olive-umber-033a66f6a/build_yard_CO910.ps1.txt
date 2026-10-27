@@ -1,0 +1,38 @@
+# CO9 + CO10 CLOSE-OUT (local): CO9 Mirejaw olive-umber fill tb/co9-on 033a66f6a vs main 16c32126f (mirejaw + water_mirejaw);
+# CO10 Terrapup dog3 r5 tb/co10-on fb6a2593b vs main 58bef4fc7 (badger). Both arms --candidate, capture_f36_poses.gd --whole-body --context.
+# Standard roster layout and crop (as MJ/TP). Build only the items whose capture is complete: pass -Items CO9, CO10 or both.
+param([string[]] $Items = @("CO9", "CO10"))
+$o = "D:\tb-gpu-runs\out"; $od = "D:\tb-gpu-runs\yard\CO910\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out) {
+    $s = [ordered]@{ title = ""; cols = 5; thumb_w = 300; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out; crop = @(560, 200, 1000, 640) }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_co910.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_co910.json" | Out-Null; return $out
+}
+$brief = "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read."
+$float = "the fainted body floats above the stage, with a gap between the body and its shadow"
+$mjDefects = @("the back and flanks read near-black or sooty rather than a warm olive-umber with visible markings", "Placeholder or untextured materials (flat colour, smeared or blurry texture)", $float)
+$tpDefects = @("the coat reads orange-red rather than a natural chestnut brown", "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature", "Clipping (the rider or plates passing through the body)", $float)
+function Pick($dir, $sp) {
+    $role = @("ride", "swim", "fly_grip") | Where-Object { Test-Path "$dir\$sp-$_-050.png" } | Select-Object -First 1
+    $p = @(@("hit-000", "standing"), @("hit-025", "hit react"), @("faint-050", "faint mid"), @("faint-100", "faint end"))
+    if ($role) { $p += , @("$role-050", @{ ride = "ridden"; swim = "swimming"; fly_grip = "carrying" }[$role]) }
+    $p = @($p | Where-Object { Test-Path "$dir\$sp-$($_[0]).png" })
+    return , @(@($p | ForEach-Object { "$dir\$sp-$($_[0]).png" }), @($p | ForEach-Object { $_[1] }))
+}
+$sets = @(); $cover = @(); $plan = @()
+foreach ($pr in "Medium", "High") {
+    if ($Items -contains "CO9") { foreach ($sp in "mirejaw", "water_mirejaw") { $plan += , @("CO9", $sp, $pr, "$o\CO9-cand-$pr\frames", "$o\CO9-ship-$pr\frames", $mjDefects) } }
+    if ($Items -contains "CO10") { $plan += , @("CO10", "terrapup", $pr, "$o\CO10-cand-$pr\frames", "$o\CO10-ship-$pr\frames", $tpDefects) }
+}
+foreach ($p in $plan) {
+    $item, $sp, $pr, $ca, $cb, $def = $p
+    $a = Pick $ca $sp; $b = Pick $cb $sp
+    if ($a[0].Count -eq 0 -or $b[0].Count -eq 0 -or $a[0].Count -ne $b[0].Count) { "MISSING/UNEVEN $item $sp $pr cand=$($a[0].Count) ship=$($b[0].Count)"; continue }
+    $sa = Side $a[0] $a[1] "$od\$item-$sp-cand-$pr.png"; $sb = Side $b[0] $b[1] "$od\$item-$sp-ship-$pr.png"
+    $sets += [ordered]@{ label = "$item $sp $pr cand|ship"; a = $sa; b = $sb; brief = $brief; defects = $def }
+    $cover += [ordered]@{ item = $item; species = $sp; preset = $pr; poses = $a[1] }
+}
+$tag = ($Items -join "")
+$rng = New-Object System.Random 2201; $sets = @($sets | Sort-Object { $rng.Next() })
+New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\$tag\b1" | Out-Null; [IO.File]::WriteAllText("D:\tb-gpu-runs\yard\$tag\b1\candidates.json", (ConvertTo-Json -InputObject @($sets) -Depth 5))
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\$tag\coverage.json", (ConvertTo-Json -InputObject @($cover) -Depth 4))
+"$tag sets: $($sets.Count)"; $cover | ForEach-Object { "$($_.species) $($_.preset) $($_.poses -join ',')" }
