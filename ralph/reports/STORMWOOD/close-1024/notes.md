@@ -1,5 +1,37 @@
 # Stormwood lane, close-1024 (F41#1, #2, #3, #5; F10#2)
 
+## HANDOFF (27 Oct 12:05Z; lane wound down on coordinator order)
+
+**READY to land land16 444764e2a936ed466a385bad0eff7155930bac16** (`tb/stormwood-land16`). It is origin/main 073466a6 + land15 (P2-081) + P2-083, and it supersedes land15 4e75ccf5.
+- **P2-081 trainer dialogue identity:** see the land15 entry below.
+- **P2-083 dialogue speaker hidden:**
+  - `camera.json` `conversation.require_speaker_sight` + `speaker_sight_meshes`.
+  - `camera_rig.gd` `_speaker_hidden_by_meshes`: visible static meshes count by triangles; skinned bodies count by posed joints, radius a fifth of the joint spread; shadowless sky/effect meshes are skipped; the speaker's and player's own bodies are excluded.
+  - New test `test_a_conversation_shot_swings_off_a_creature_the_arm_passes_through`. Camera, dialogue and conversation suites: 200 tests, 6900 assertions, 0 failed on the lane, whose files are identical to land16.
+  - Evidence `fixes/P2-083/_sheet_p2083.jpg`, before left, after right: Nysa (fully occluded → clear), Sera (Tanglevolt in front → beside), Tamsin (covered → visible).
+  - The full rows 17-33 re-capture was stopped by the wind-down. Bram and Kestrel were checked in the debug runs.
+  - **Captain Marrow sightings are a fixture error:** the player is placed at y 113 under Marrow's y 262 deck, outside the conversation camera's 9 m reach.
+
+**GPU arms pending:** `tb/stormwood-m52-on` 9821ef2f (P2-041 Crown Arch candidate ON; stands below).
+
+**Per-item F41 status (Stormwood):**
+- **P2-081, P2-083:** in land16; GPU before/after still needed on the `__dialogue` sightings.
+- **P2-082, P2-084, P2-045, P2-093:** already fixed on main; GPU before/after only.
+- **P2-110 Hollows loss:** on main, `hud.json` `loss_card` enabled plus the `party_vitals_refresh_candidate`.
+- **P2-111 victory tiles:** on main, `victory_hierarchy_visual.json` enabled (the shared P2-103 fix).
+- **P2-110/P2-111 reshoot:** both need a native Hollows reshoot. On CPU this is too slow (about 55 min per 53 s of fight), so run it on the GPU rig: `tools/phase2_capture_stormwood_fights.gd --ids=hollows_alpha --seconds=120 --interval=5 --seed=2042 --party-level=42` (loss), then `--party-level=80` (win).
+- **P2-092 actor spacing:** open. Camera-v1/v2 and the `contact_spacing.named_overrides.hollows_alpha` override are WEAK. It needs a new idea (trainer and ally placement outside the boss silhouette).
+- **P2-041 Crown Arch:** GPU arm m52.
+- **P2-043, P2-070, P2-037, P2-040:** not started this session. Prior candidates are OFF (see catalog notes).
+- **Ashfoot room:** 6.76 after SW20b; open for a genuinely new idea only. m51 polish scored 0.00 (first miss).
+
+**Parked (two misses each):** storm sky form (SW19, r45c); storm ground (SW8, SW13); storm light grade (m50 +0.04, m50b −0.44). Crown rim r49 −0.25 is a first miss.
+
+**Runbook:** TECHNICAL §8.1.
+- Dialogue: `tools/phase2_capture_dialogue.gd -- --biome=stormwood --start=N --count=M`, about 2.5 min per row on CPU.
+- Landmarks: `capture_stormwood_f10_matrix.gd --custom=id@px,pz@fx,fy,fz@pitch`.
+- Arms and lands are built with a temp `GIT_INDEX_FILE` and commit-tree; under a temp index use `git ls-tree`, not `git ls-files`.
+
 ## Session 2 log (newest first)
 
 - 27 Oct 11:05Z **READY (GPU arm) `tb/stormwood-m52-on` 9821ef2fe9e4b0644c660911483767be16843c37: F41 P2-041 Crown Arch.** It is the lane plus one line, `assets/environment/stormwood/crown_arch/candidate.json` `enabled` true. This is the existing unrendered candidate: octagonal staggered paved landing in place of the square 9x9 slab, a crenellated crown at 5 m and a 5.75 m grass clear. The collider, footing, pairing and lit state are unchanged.
