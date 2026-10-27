@@ -1,0 +1,176 @@
+{
+ "sets": {
+  "Ti": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+     "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+     "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A dark, evenly lit tree wall and a uniform grass carpet with the stronghold either absent (A) or a tiny far silhouette (B) has none of Palworld's density/saturation or Valheim's moonlit fog and shafts."
+  },
+  "Mm": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+     "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+     "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Wildlife in B adds some life, but the murky low-value night, dense occluding trunks and missing or tiny landmark keep it well below Palworld finish and Valheim-class night atmosphere."
+  },
+  "Ud": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra model itself (white fleece, dark curled horns, blue accents, well above the 1.80 m ruler) matches the owner bar's naturalistic finish, though B's faint poses flip into an ungrounded tangle."
+  },
+  "Ux": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Flat magenta ground rings as telegraphs, a tiny barely visible player creature, heavy HUD panels and (in A) canopy/trunk occlusion sink it against Palworld's bright, legible boss fight."
+  },
+  "Yb": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's dark scales with gold veining read as the Fulgocobra board but the coil mass hides the ruler and face; B's toy-like yellow banding and floating, upward-rearing faint poses read as a different, ungrounded snake."
+  },
+  "Tz": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL",
+     "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PRESENT",
+     "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm torchlight on mossy stone gives A a believable night courtyard, but both sides are an enclosed box with no sky depth or fog, and B's giant flat clip-art banners read as placeholder rather than shipped finish."
+  },
+  "Zf": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's daylight reads but its neon-green ground and moss walls are one flat mid-tone with no sky or distance, and B's clear-day frames are graded like dusk/night under a red cast."
+  },
+  "Ah": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Grandpa Elias is a clean, appealing stylised elder (white hair and beard, olive vest, green scarf) whose finish matches Palworld's human characters, though his round cartoon face is softer than the board portrait."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Meadows stronghold approach (Ti/Mm): place/scale the keep and spire so a tall, warm-lit silhouette clears the treeline in every approach camera, open a sightline through the trunks, and add moonlit fog/rim light so the night has a value range instead of one dark mid-tone.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stronghold courtyard heraldry (Tz/Zf B especially): replace the giant flat banner slabs with smaller draped war banners hung from poles/crossbars, and keep red off the crates, planks and the overall light grade; fix B's day grade so clear day reads as day.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Stormwood fight (Ux): replace flat magenta telegraph rings with real lightning/ground-crack telegraphs and impacts, pull the camera clear of trunks and canopy, give the player's creature a rim light and shrink the side/bottom HUD panels.",
+   "kind": "scene"
+  }
+ ]
+}

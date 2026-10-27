@@ -1,0 +1,176 @@
+{
+ "sets": {
+  "Mb": {
+   "A": {
+    "bar_a": 4.7,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL",
+     "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PRESENT",
+     "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "An enclosed, uniformly dark-green courtyard lit only by ground braziers, with no moonlit blue grade, no lit keep and wall-sized flat banners, does not read as Valheim-class night or Palworld-level finish."
+  },
+  "Fr": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A large, full-furred white wolf that stands taller than the ruler and casts a grounded shadow carries it, though hit react is barely distinct from standing and B's faint-mid body visibly lifts off its shadow."
+  },
+  "Gi": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's site-specific aftermaths (cage opened, tent and banner torn down, smoke plume) help, but smeared, blurry ground textures, flat midday light and sparse, scattered props keep it below Palworld finish."
+  },
+  "He": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+     "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A walled box with saturated moss-green smears over the cobbles (A) or a dusk-dark grade under wall-sized banners (B), and no keep or sky depth, sinks it next to Palworld's landmark framing."
+  },
+  "Yj": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, diagonal brace, plank cap and stone footing start to read as built, but the flat pale infill, thin profile and isolated, wardrobe-like placement next to a faceted grey boulder keep it short of a Palworld base piece."
+  },
+  "Ui": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Dense grass and wildflowers carry the ground, but blobby toon-canopy trees in an even ring and an approach with no visible or only a tiny grey stronghold give it no landmark pull like Palworld's plateau shots."
+  },
+  "Rf": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+     "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+     "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Roaming wildlife makes it feel more lived-in than Ui, but the same toon-tree ring, flat midday grade and missing or tiny, unlit stronghold keep it from Palworld/Valheim finish."
+  },
+  "Vz": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, appealing stylised elder with readable eyes, earthy green-brown Meadows palette and a clean full-body silhouette carries it; the stiff clumped hair and plain bust lighting are the only weak points."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Build the Meadows Hall as a tall, warm-lit keep/spire hero landmark that dominates the approach cameras (Ui/Rf/He/Mb) above the tree line, with lit windows at night",
+   "kind": "new_art"
+  },
+  {
+   "change": "Stronghold dressing pass: replace wall-sized flat banners with human-scale pole-mounted draped war banners, remove the salmon/red slabs and planks near the cameras, move cameras out of edge geometry, and break the uniform green courtyard ground with worn paths, mud and props",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows grade and composition: warm sun with cool blue distance haze by day, blue moonlight with warm window pools by night, and groves/clearings instead of an even ring of same-scale toon trees; give the homestead wall textured plank/wattle infill and real thickness",
+   "kind": "scene"
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "Mb": {
+  "anchor": false,
+  "label": "MH9 band5_stronghold_approach_1-night Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_1-night-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_1-night-ship-Medium.png"
+ },
+ "Fr": {
+  "anchor": true,
+  "A": "f36_0_gap:C3A",
+  "B": "f36_0_gap:C3B"
+ },
+ "Gi": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "He": {
+  "anchor": false,
+  "label": "MH9 band5_stronghold_approach_1-day Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_1-day-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_1-day-ship-Medium.png"
+ },
+ "Yj": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Ui": {
+  "anchor": false,
+  "label": "MH9 band5_stronghold_approach_0-day Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_0-day-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_0-day-cand-Medium.png"
+ },
+ "Rf": {
+  "anchor": false,
+  "label": "MH9 band5_stronghold_approach_0-day High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_0-day-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_0-day-cand-High.png"
+ },
+ "Vz": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

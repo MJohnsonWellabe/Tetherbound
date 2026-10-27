@@ -1,0 +1,634 @@
+[
+ {
+  "batch": 1,
+  "code": "Ti",
+  "label": "MH9 band5_stronghold_approach_0-night Medium cand|ship",
+  "side": "MH9-band5_stronghold_approach_0-night-ship-Medium",
+  "mapped": 4.82,
+  "judges": [
+   4.53,
+   4.53,
+   5.39
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ti",
+  "label": "MH9 band5_stronghold_approach_0-night Medium cand|ship",
+  "side": "MH9-band5_stronghold_approach_0-night-cand-Medium",
+  "mapped": 5.43,
+  "judges": [
+   5.18,
+   5.07,
+   6.04
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Mm",
+  "label": "MH9 band5_stronghold_approach_0-night High cand|ship",
+  "side": "MH9-band5_stronghold_approach_0-night-cand-High",
+  "mapped": 5.43,
+  "judges": [
+   5.18,
+   5.07,
+   6.04
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Mm",
+  "label": "MH9 band5_stronghold_approach_0-night High cand|ship",
+  "side": "MH9-band5_stronghold_approach_0-night-ship-High",
+  "mapped": 5.0,
+  "judges": [
+   4.74,
+   4.64,
+   5.61
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Tz",
+  "label": "MH9 band5_stronghold_approach_1-night High cand|ship",
+  "side": "MH9-band5_stronghold_approach_1-night-cand-High",
+  "mapped": 6.04,
+  "judges": [
+   5.83,
+   5.83,
+   6.48
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Tz",
+  "label": "MH9 band5_stronghold_approach_1-night High cand|ship",
+  "side": "MH9-band5_stronghold_approach_1-night-ship-High",
+  "mapped": 5.32,
+  "judges": [
+   5.07,
+   5.29,
+   5.61
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PRESENT",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Zf",
+  "label": "MH9 band5_stronghold_approach_1-day High cand|ship",
+  "side": "MH9-band5_stronghold_approach_1-day-cand-High",
+  "mapped": 6.33,
+  "judges": [
+   6.15,
+   6.15,
+   6.69
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Zf",
+  "label": "MH9 band5_stronghold_approach_1-day High cand|ship",
+  "side": "MH9-band5_stronghold_approach_1-day-ship-High",
+  "mapped": 5.03,
+  "judges": [
+   4.96,
+   4.96,
+   5.18
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Mb",
+  "label": "MH9 band5_stronghold_approach_1-night Medium cand|ship",
+  "side": "MH9-band5_stronghold_approach_1-night-cand-Medium",
+  "mapped": 4.85,
+  "judges": [
+   5.01,
+   4.61,
+   4.91
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Mb",
+  "label": "MH9 band5_stronghold_approach_1-night Medium cand|ship",
+  "side": "MH9-band5_stronghold_approach_1-night-ship-Medium",
+  "mapped": 4.37,
+  "judges": [
+   4.51,
+   4.1,
+   4.51
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PRESENT",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL",
+    "at night the stronghold's windows do not read as lit: no warm window lights on the keep or spire": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "He",
+  "label": "MH9 band5_stronghold_approach_1-day Medium cand|ship",
+  "side": "MH9-band5_stronghold_approach_1-day-cand-Medium",
+  "mapped": 5.12,
+  "judges": [
+   5.32,
+   4.91,
+   5.12
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PARTIAL",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "He",
+  "label": "MH9 band5_stronghold_approach_1-day Medium cand|ship",
+  "side": "MH9-band5_stronghold_approach_1-day-ship-Medium",
+  "mapped": 4.54,
+  "judges": [
+   4.71,
+   4.31,
+   4.61
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PRESENT",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PRESENT"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "PARTIAL",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PRESENT",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "PRESENT",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ui",
+  "label": "MH9 band5_stronghold_approach_0-day Medium cand|ship",
+  "side": "MH9-band5_stronghold_approach_0-day-ship-Medium",
+  "mapped": 5.45,
+  "judges": [
+   5.32,
+   5.52,
+   5.52
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ui",
+  "label": "MH9 band5_stronghold_approach_0-day Medium cand|ship",
+  "side": "MH9-band5_stronghold_approach_0-day-cand-Medium",
+  "mapped": 5.93,
+  "judges": [
+   5.82,
+   6.03,
+   5.93
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Rf",
+  "label": "MH9 band5_stronghold_approach_0-day High cand|ship",
+  "side": "MH9-band5_stronghold_approach_0-day-ship-High",
+  "mapped": 5.62,
+  "judges": [
+   5.52,
+   5.62,
+   5.72
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PRESENT",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Rf",
+  "label": "MH9 band5_stronghold_approach_0-day High cand|ship",
+  "side": "MH9-band5_stronghold_approach_0-day-cand-High",
+  "mapped": 6.03,
+  "judges": [
+   5.93,
+   6.13,
+   6.03
+  ],
+  "defects": [
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+   },
+   {
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark": "PARTIAL",
+    "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth": "FIXED",
+    "red or oxblood appears on something other than the enemy faction's banners (Team Tether red is reserved for their own heraldry)": "FIXED"
+   }
+  ]
+ }
+]

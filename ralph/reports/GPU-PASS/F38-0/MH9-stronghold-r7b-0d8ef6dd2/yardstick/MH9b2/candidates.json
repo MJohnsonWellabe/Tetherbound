@@ -1,0 +1,59 @@
+[
+    {
+        "label":  "MH9 band5_stronghold_approach_1-day Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_1-day-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_1-day-ship-Medium.png",
+        "brief":  "Fixed production-camera views of the approach to the enemy faction\u0027s stronghold in the Meadows (day), with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent place with a readable, dominant landmark, believable ground and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark",
+                        "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth",
+                        "red or oxblood appears on something other than the enemy faction\u0027s banners (Team Tether red is reserved for their own heraldry)"
+                    ]
+    },
+    {
+        "label":  "MH9 band5_stronghold_approach_0-day Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_0-day-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_0-day-ship-Medium.png",
+        "brief":  "Fixed production-camera views of the approach to the enemy faction\u0027s stronghold in the Meadows (day), with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent place with a readable, dominant landmark, believable ground and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark",
+                        "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth",
+                        "red or oxblood appears on something other than the enemy faction\u0027s banners (Team Tether red is reserved for their own heraldry)"
+                    ]
+    },
+    {
+        "label":  "MH9 band5_stronghold_approach_1-night Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_1-night-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_1-night-ship-Medium.png",
+        "brief":  "Fixed production-camera views of the approach to the enemy faction\u0027s stronghold in the Meadows (night), with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent place with a readable, dominant landmark, believable ground and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark",
+                        "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth",
+                        "red or oxblood appears on something other than the enemy faction\u0027s banners (Team Tether red is reserved for their own heraldry)",
+                        "at night the stronghold\u0027s windows do not read as lit: no warm window lights on the keep or spire"
+                    ]
+    },
+    {
+        "label":  "MH9 band5_stronghold_approach_0-day High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_0-day-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\MH9\\sides\\MH9-band5_stronghold_approach_0-day-ship-High.png",
+        "brief":  "Fixed production-camera views of the approach to the enemy faction\u0027s stronghold in the Meadows (day), with the 1.80 m trainer as a ruler. Judge whether it reads as the key art\u0027s Meadows: a coherent place with a readable, dominant landmark, believable ground and light that belongs to the world.",
+        "defects":  [
+                        "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+                        "Floating bodies or props (a gap between an object and the ground under it)",
+                        "Clipping (geometry passing through geometry, or the camera inside geometry)",
+                        "P2-003: the stronghold reads as a small dark ruin behind dominant pylons, with no tall lit landmark",
+                        "the stronghold heraldry reads as giant flat banners rather than war banners on poles with draped cloth",
+                        "red or oxblood appears on something other than the enemy faction\u0027s banners (Team Tether red is reserved for their own heraldry)"
+                    ]
+    }
+]

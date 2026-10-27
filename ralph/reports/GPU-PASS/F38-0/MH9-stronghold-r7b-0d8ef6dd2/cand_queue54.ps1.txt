@@ -1,0 +1,22 @@
+# Queue 54: MH9 cand-Medium re-run. Queue 53's run exited -1073741676 (0xC0000094) after 11/32 frames, right after
+# band5_stronghold_approach_0__night__clear__reverse (K5 off/mh3 Medium hit the same code at the Meadows stronghold on 26 Oct and re-ran clean).
+# Keeps the crashed run as evidence in out\MH9-cand-Medium-crash1. Started after queue 53 (CO11); out\MH9M.done marks a finished run.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $main = "D:\tb-gpu-pass"; $crA = "D:\tb-gpu-wt-crA"; $tide = "D:\tb-gpu-wt-tide"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "45"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+function MoveOut($proj, $rel, $dest) { $abs = Join-Path $proj ($rel -replace '/', '\'); if (Test-Path $abs) { New-Item -ItemType Directory -Force "$dest\frames" | Out-Null; Move-Item "$abs\*" "$dest\frames\" -Force; cmd /c "rmdir /s /q `"$abs`""; "  moved $((Get-ChildItem "$dest\frames" -Recurse -File).Count) files -> $dest" } else { "  NO OUTPUT at $rel" } }
+if (Test-Path "$out\MH9M.done") { "MH9 cand-Medium re-run already done; skipping"; return }
+Gate "MH9M"
+$sha = "0d8ef6dd2571125244fc983e508f65ddc92cc2fc"
+"== MH9 cand-Medium re-run (0xC0000094 on the first run)"
+if ((Test-Path "$out\MH9-cand-Medium") -and -not (Test-Path "$out\MH9-cand-Medium-crash1")) { Move-Item "$out\MH9-cand-Medium" "$out\MH9-cand-Medium-crash1" }
+CheckoutCrA $sha; Import $crA "crA-MH9M-cand"
+CleanCrA $sha
+$rel = "shots/gpu/mh9-cand-Medium"; $a = Join-Path $crA ($rel -replace '/', '\'); if (Test-Path $a) { cmd /c "rmdir /s /q `"$a`"" }
+if (Test-Path "$out\MH9-cand-Medium") { Remove-Item "$out\MH9-cand-Medium" -Recurse -Force }
+& $run -Preset "Medium" -Script "res://tools/capture_f38_matrix.gd" -OutDir "$out\MH9-cand-Medium" -Resolution "1920x1080" -ProjectPath $crA -UserArgs @("--seed=2042", "--f38-preset=Medium", "--f38-baseline", "--times=day,night", "--subset=band5_stronghold_approach", "--output=res://$rel", "--source-commit=$sha")
+MoveOut $crA $rel "$out\MH9-cand-Medium"
+New-Item -ItemType File -Force "$out\MH9M.done" | Out-Null
+"MH9 cand-Medium re-run done"
+"queue54 done"

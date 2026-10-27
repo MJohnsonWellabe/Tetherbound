@@ -1,0 +1,106 @@
+[
+    {
+        "site":  "band5_stronghold_approach_0",
+        "time":  "day",
+        "preset":  "Medium",
+        "judged":  [
+                       "band5_stronghold_approach_0__day__clear__approach",
+                       "band5_stronghold_approach_0__day__clear__gameplay",
+                       "band5_stronghold_approach_0__day__clear__reverse",
+                       "band5_stronghold_approach_0__day__clear__detail",
+                       "band5_stronghold_approach_0__day__rain__approach",
+                       "band5_stronghold_approach_0__day__rain__gameplay"
+                   ]
+    },
+    {
+        "site":  "band5_stronghold_approach_0",
+        "time":  "night",
+        "preset":  "Medium",
+        "judged":  [
+                       "band5_stronghold_approach_0__night__clear__approach",
+                       "band5_stronghold_approach_0__night__clear__gameplay",
+                       "band5_stronghold_approach_0__night__clear__reverse",
+                       "band5_stronghold_approach_0__night__clear__detail",
+                       "band5_stronghold_approach_0__night__rain__approach",
+                       "band5_stronghold_approach_0__night__rain__gameplay"
+                   ]
+    },
+    {
+        "site":  "band5_stronghold_approach_1",
+        "time":  "day",
+        "preset":  "Medium",
+        "judged":  [
+                       "band5_stronghold_approach_1__day__clear__approach",
+                       "band5_stronghold_approach_1__day__clear__gameplay",
+                       "band5_stronghold_approach_1__day__clear__reverse",
+                       "band5_stronghold_approach_1__day__clear__detail",
+                       "band5_stronghold_approach_1__day__rain__approach",
+                       "band5_stronghold_approach_1__day__rain__gameplay"
+                   ]
+    },
+    {
+        "site":  "band5_stronghold_approach_1",
+        "time":  "night",
+        "preset":  "Medium",
+        "judged":  [
+                       "band5_stronghold_approach_1__night__clear__approach",
+                       "band5_stronghold_approach_1__night__clear__gameplay",
+                       "band5_stronghold_approach_1__night__clear__reverse",
+                       "band5_stronghold_approach_1__night__clear__detail",
+                       "band5_stronghold_approach_1__night__rain__approach",
+                       "band5_stronghold_approach_1__night__rain__gameplay"
+                   ]
+    },
+    {
+        "site":  "band5_stronghold_approach_0",
+        "time":  "day",
+        "preset":  "High",
+        "judged":  [
+                       "band5_stronghold_approach_0__day__clear__approach",
+                       "band5_stronghold_approach_0__day__clear__gameplay",
+                       "band5_stronghold_approach_0__day__clear__reverse",
+                       "band5_stronghold_approach_0__day__clear__detail",
+                       "band5_stronghold_approach_0__day__rain__approach",
+                       "band5_stronghold_approach_0__day__rain__gameplay"
+                   ]
+    },
+    {
+        "site":  "band5_stronghold_approach_0",
+        "time":  "night",
+        "preset":  "High",
+        "judged":  [
+                       "band5_stronghold_approach_0__night__clear__approach",
+                       "band5_stronghold_approach_0__night__clear__gameplay",
+                       "band5_stronghold_approach_0__night__clear__reverse",
+                       "band5_stronghold_approach_0__night__clear__detail",
+                       "band5_stronghold_approach_0__night__rain__approach",
+                       "band5_stronghold_approach_0__night__rain__gameplay"
+                   ]
+    },
+    {
+        "site":  "band5_stronghold_approach_1",
+        "time":  "day",
+        "preset":  "High",
+        "judged":  [
+                       "band5_stronghold_approach_1__day__clear__approach",
+                       "band5_stronghold_approach_1__day__clear__gameplay",
+                       "band5_stronghold_approach_1__day__clear__reverse",
+                       "band5_stronghold_approach_1__day__clear__detail",
+                       "band5_stronghold_approach_1__day__rain__approach",
+                       "band5_stronghold_approach_1__day__rain__gameplay"
+                   ]
+    },
+    {
+        "site":  "band5_stronghold_approach_1",
+        "time":  "night",
+        "preset":  "High",
+        "judged":  [
+                       "band5_stronghold_approach_1__night__clear__approach",
+                       "band5_stronghold_approach_1__night__clear__gameplay",
+                       "band5_stronghold_approach_1__night__clear__reverse",
+                       "band5_stronghold_approach_1__night__clear__detail",
+                       "band5_stronghold_approach_1__night__rain__approach",
+                       "band5_stronghold_approach_1__night__rain__gameplay"
+                   ]
+    }
+]

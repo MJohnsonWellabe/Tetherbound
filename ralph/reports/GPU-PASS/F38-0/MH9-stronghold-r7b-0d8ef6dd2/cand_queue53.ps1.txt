@@ -1,0 +1,48 @@
+# Queue 53 (coordinator NOTE.md updates 4 + 5, 27 Oct): MH9 Meadows r7b (supersedes MH8 r6b), then CO11 near-bar creature close-outs.
+# MH9: control tb/meadows 032b28f50 vs tb/meadows-r7-on 0d8ef6dd2 (stronghold.json: r5 lit keep + Meshy spire with window-grid emission, MH3 daylight,
+#   MH3 war banners). capture_f38_matrix.gd as MH8. out\MH9.done.
+# CO11: main 58bef4fc7 vs tb/co11-on 2b4f2256e (grounded flinch aquaryn/tidecoil/solmane, mosshell faint, ripplet matte coat).
+#   capture_f36_poses.gd --candidate --whole-body --context, ONE RUN PER SPECIES so a species whose recipe will not install cannot abort the rest.
+#   out\CO11.done. Started after queue 52 (CO10 plain).
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $main = "D:\tb-gpu-pass"; $crA = "D:\tb-gpu-wt-crA"; $tide = "D:\tb-gpu-wt-tide"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "45"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+function MoveOut($proj, $rel, $dest) { $abs = Join-Path $proj ($rel -replace '/', '\'); if (Test-Path $abs) { New-Item -ItemType Directory -Force "$dest\frames" | Out-Null; Move-Item "$abs\*" "$dest\frames\" -Force; cmd /c "rmdir /s /q `"$abs`""; "  moved $((Get-ChildItem "$dest\frames" -Recurse -File).Count) files -> $dest" } else { "  NO OUTPUT at $rel" } }
+
+if (-not (Test-Path "$out\MH9.done")) {
+    Gate "MH9"
+    "== MH9: Meadows stronghold r7b, ctl 032b28f50 (off) vs cand 0d8ef6dd2 (lit keep + spire + MH3 daylight + war banners on)"
+    foreach ($arm in @(@("ctl", "032b28f50ef534f35d53e48e45c89f6b91d719cf"), @("cand", "0d8ef6dd2571125244fc983e508f65ddc92cc2fc"))) {
+        $tag = $arm[0]; $sha = $arm[1]
+        CheckoutCrA $sha; Import $crA "crA-MH9-$tag"
+        foreach ($pr in "Medium", "High") {
+            Gate "MH9 $tag $pr"
+            CleanCrA $sha
+            $rel = "shots/gpu/mh9-$tag-$pr"; $a = Join-Path $crA ($rel -replace '/', '\'); if (Test-Path $a) { cmd /c "rmdir /s /q `"$a`"" }
+            if (Test-Path "$out\MH9-$tag-$pr") { Remove-Item "$out\MH9-$tag-$pr" -Recurse -Force }
+            & $run -Preset $pr -Script "res://tools/capture_f38_matrix.gd" -OutDir "$out\MH9-$tag-$pr" -Resolution "1920x1080" -ProjectPath $crA -UserArgs @("--seed=2042", "--f38-preset=$pr", "--f38-baseline", "--times=day,night", "--subset=band5_stronghold_approach", "--output=res://$rel", "--source-commit=$sha")
+            MoveOut $crA $rel "$out\MH9-$tag-$pr"
+        }
+    }
+    New-Item -ItemType File -Force "$out\MH9.done" | Out-Null
+    "MH9 done"
+}
+
+if (-not (Test-Path "$out\CO11.done")) {
+    Gate "CO11"
+    "== CO11 (CLOSE-OUT): aquaryn, tidecoil, solmane, mosshell, water_mosshell, ripplet; main 58bef4fc7 vs co11 2b4f2256e, --candidate, one run per species"
+    foreach ($arm in @(@("cand", "2b4f2256e2411f59bf28b86e24e2a6cb7ce7ff4c"), @("ship", "58bef4fc7ea9c53256272c8f72cc0f6132519ba4"))) {
+        CheckoutCrA $arm[1]; Import $crA "crA-CO11-$($arm[0])"
+        foreach ($pr in "Medium", "High") {
+            Gate "CO11 $($arm[0]) $pr"
+            CleanCrA $arm[1]
+            foreach ($sp in "aquaryn", "tidecoil", "solmane", "mosshell", "water_mosshell", "ripplet") {
+                Pose "CO11-$($arm[0])-$pr-$sp" $pr $sp @("--candidate") $arm[1]
+            }
+        }
+    }
+    New-Item -ItemType File -Force "$out\CO11.done" | Out-Null
+    "CO11 done"
+}
+"queue53 done"
