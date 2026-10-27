@@ -61,6 +61,7 @@ func _ready() -> void:
 		return
 	_build_detail_textures()
 	_add_storm_rim.call_deferred()
+	_add_storm_grade.call_deferred()
 
 
 ## r26 (GPU R verdict, path item 2: "lift the single dark mid-tone with
@@ -80,6 +81,18 @@ func _add_storm_rim() -> void:
 	var angle: Array = storm.get("rim_rotation_deg", [-14.0, 320.0])
 	rim.rotation_degrees = Vector3(float(angle[0]), float(angle[1]), 0.0)
 	get_parent().add_child(rim)
+
+
+## F41 storm light grade (`storm_grade`, OFF until judged): a phase-driven,
+## camera-relative rim and world grade (stormwood_storm_grade.gd).
+func _add_storm_grade() -> void:
+	var grade_cfg: Dictionary = config.get("storm_grade", {})
+	if not bool(grade_cfg.get("enabled", false)) or get_parent() == null:
+		return
+	var grade := preload("res://scripts/world/stormwood_storm_grade.gd").new()
+	grade.name = "StormGrade"
+	grade.config = grade_cfg
+	get_parent().add_child(grade)
 
 
 func begin_world_walk() -> void:
