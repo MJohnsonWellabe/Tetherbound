@@ -157,6 +157,17 @@ Earlier on 26-27 Oct, all pushed (see each row's VERDICT.md):
 3. Re-confirm F25#4 on main after tb/vfx-launch lands (`F25-4/f25_fix_queue.ps1.txt`, about 12 minutes).
 4. F08#3: judges ask for foreground dressing, a night lighting pass and varied islets (scene work for the Cloudreach lane).
 
+## GPU LANE: RESUMED FOR ITEM SCORES (27 Oct, ~18:50 CDT; owner said yes in the GPU session)
+
+- **Running:** the per-item biome card job (tb/item-scores job.json) on main b7a6e8bbe, in the order Meadows, Stormwood, Tidewake, Cloudreach.
+- **Capture:** 207 unique repro commands for 250 frames, each run once as stated (opengl3), with two changes:
+  - Add `--fullscreen`. The phase-2 tools require an exact 1920x1080 viewport, and the Windows title bar shrinks a windowed one; the tool's own error asks for it.
+  - Point `--output`/`--out` at `phase2/<biome>/itemscores-gpu/<cmd>`. The tools reject any output outside `VISUAL/phase2/<biome>/`. Frames are moved out and kept local.
+- **Other notes:**
+  - `--source-commit` is added only to phase2_capture_tidewake_fights.gd, the one tool that accepts it.
+  - The Cloudreach ride command has no output argument; it gets `--output=` (the tool accepts it).
+- **Judging:** one-sided sets, about 9 items per batch, three judges, high anchors. Each biome's `scores-gpu.json` is pushed as it finishes.
+
 ## NEXT JOB WHEN THE OWNER RESUMES THIS LANE: per-item scores for every biome card (coordinator, 27 Oct, owner: "do whatever is needed to score each biome's cards")
 
 - **The job:** tb/item-scores, `ralph/reports/VISUAL/item-scores/job.json` with its README. It covers all 106 F38–F41 catalogue items, up to 3 original phase-2 sightings each, 250 unique frames, each with the exact repro command you used for phase 2 on this GTX 1060.
