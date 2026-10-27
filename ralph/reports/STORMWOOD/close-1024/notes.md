@@ -1,6 +1,271 @@
 # Stormwood lane, close-1024 (F41#1, #2, #3, #5; F10#2)
 
+## HANDOFF (27 Oct 12:05Z; lane wound down on coordinator order)
+
+**READY to land land16 444764e2a936ed466a385bad0eff7155930bac16** (`tb/stormwood-land16`). It is origin/main 073466a6 + land15 (P2-081) + P2-083, and it supersedes land15 4e75ccf5.
+- **P2-081 trainer dialogue identity:** see the land15 entry below.
+- **P2-083 dialogue speaker hidden:**
+  - `camera.json` `conversation.require_speaker_sight` + `speaker_sight_meshes`.
+  - `camera_rig.gd` `_speaker_hidden_by_meshes`: visible static meshes count by triangles; skinned bodies count by posed joints, radius a fifth of the joint spread; shadowless sky/effect meshes are skipped; the speaker's and player's own bodies are excluded.
+  - New test `test_a_conversation_shot_swings_off_a_creature_the_arm_passes_through`. Camera, dialogue and conversation suites: 200 tests, 6900 assertions, 0 failed on the lane, whose files are identical to land16.
+  - Evidence `fixes/P2-083/_sheet_p2083.jpg`, before left, after right: Nysa (fully occluded → clear), Sera (Tanglevolt in front → beside), Tamsin (covered → visible).
+  - The full rows 17-33 re-capture was stopped by the wind-down. Bram and Kestrel were checked in the debug runs.
+  - **Captain Marrow sightings are a fixture error:** the player is placed at y 113 under Marrow's y 262 deck, outside the conversation camera's 9 m reach.
+
+**GPU arms pending:** `tb/stormwood-m52-on` 9821ef2f (P2-041 Crown Arch candidate ON; stands below).
+
+**Per-item F41 status (Stormwood):**
+- **P2-081, P2-083:** in land16; GPU before/after still needed on the `__dialogue` sightings.
+- **P2-082, P2-084, P2-045, P2-093:** already fixed on main; GPU before/after only.
+- **P2-110 Hollows loss:** on main, `hud.json` `loss_card` enabled plus the `party_vitals_refresh_candidate`.
+- **P2-111 victory tiles:** on main, `victory_hierarchy_visual.json` enabled (the shared P2-103 fix).
+- **P2-110/P2-111 reshoot:** both need a native Hollows reshoot. On CPU this is too slow (about 55 min per 53 s of fight), so run it on the GPU rig: `tools/phase2_capture_stormwood_fights.gd --ids=hollows_alpha --seconds=120 --interval=5 --seed=2042 --party-level=42` (loss), then `--party-level=80` (win).
+- **P2-092 actor spacing:** open. Camera-v1/v2 and the `contact_spacing.named_overrides.hollows_alpha` override are WEAK. It needs a new idea (trainer and ally placement outside the boss silhouette).
+- **P2-041 Crown Arch:** GPU arm m52.
+- **P2-043, P2-070, P2-037, P2-040:** not started this session. Prior candidates are OFF (see catalog notes).
+- **Ashfoot room:** 6.76 after SW20b; open for a genuinely new idea only. m51 polish scored 0.00 (first miss).
+
+**Parked (two misses each):** storm sky form (SW19, r45c); storm ground (SW8, SW13); storm light grade (m50 +0.04, m50b −0.44). Crown rim r49 −0.25 is a first miss.
+
+**Runbook:** TECHNICAL §8.1.
+- Dialogue: `tools/phase2_capture_dialogue.gd -- --biome=stormwood --start=N --count=M`, about 2.5 min per row on CPU.
+- Landmarks: `capture_stormwood_f10_matrix.gd --custom=id@px,pz@fx,fy,fz@pitch`.
+- Arms and lands are built with a temp `GIT_INDEX_FILE` and commit-tree; under a temp index use `git ls-tree`, not `git ls-files`.
+
 ## Session 2 log (newest first)
+
+- 27 Oct 11:05Z **READY (GPU arm) `tb/stormwood-m52-on` 9821ef2fe9e4b0644c660911483767be16843c37: F41 P2-041 Crown Arch.** It is the lane plus one line, `assets/environment/stormwood/crown_arch/candidate.json` `enabled` true. This is the existing unrendered candidate: octagonal staggered paved landing in place of the square 9x9 slab, a crenellated crown at 5 m and a 5.75 m grass clear. The collider, footing, pairing and lit state are unchanged.
+  - **CPU off/on (Low, 1920x1080, calm):** `fixes/P2-041/_sheet_p2041_cpu.jpg`. The left column is OFF and the right is ON; the top row is front, the bottom is reverse. The square slab with grass at its edge becomes a chamfered landing, and the gate reads taller.
+  - **Stands, as `--custom` for `capture_stormwood_f10_matrix.gd`:**
+    - `ca_close@490.5,2702@485,2.2,2700@-8` (front, about 5 m);
+    - `ca_rev@479.5,2699@485,2.2,2700@-8` (reverse);
+    - `ca_diag@495,2711@485,2.2,2700@-6`;
+    - plus the catalog sighting `stormwood__landmark__crown_arch__day__close`.
+  - The flank stand (478.4,2731.3) is useless: a cliff hides the arch.
+- 27 Oct 09:10Z **P2-083 (speaker hidden in dialogue) in progress on `tb/stormwood`, commits f973b78c, then two more.** The physics sight check alone changed nothing: creatures are pass-through for the camera arm and the Team Tether banner has no collider.
+  - **Fix:** `camera.json` `conversation.speaker_sight_meshes` makes the sight check also count any visible mesh other than the speaker's or the player's that crosses the lens-to-speaker line (`camera_rig.gd` `_speaker_hidden_by_meshes`). A skinned body counts by its posed bounds.
+  - **Tests:** `test_conversation_camera.gd` 30/126, 0 failed, with a new swing-off-a-creature test.
+  - **Capture so far:** Officer Nysa is now clear (it was fully occluded). Sera's blocker was a wild Tanglevolt that the bind-pose triangles missed; the posed-bounds rule is the fix for it and is still being captured.
+  - **Fixture error, not a game defect:** both Captain Marrow sightings place the player at ground level (y 113) under Marrow's Dynamo deck (y 262). Marrow is out of the conversation camera's 9 m reach, so the frame is the exploration camera beside a Team Tether banner.
+  - **Next:** the final rows 17-33 capture, then READY.
+- 27 Oct 09:10Z **P2-110 and P2-111 are on main and need a reshoot.** P2-110: the `hud.json` `loss_card` is enabled. P2-111: `victory_hierarchy_visual.json` labels QUICK ITEMS and separates the receipt; this is the shared P2-103 fix. The Hollows loss (level 42) and win (level 80) reshoots are running.
+- 27 Oct 09:10Z **P2-041 Crown Arch:** the never-rendered candidate (`crown_arch/candidate.json`, octagonal paved landing, fuller crown) is now captured off and on. It replaces the square slab. Close shots are queued; a GPU arm follows if they hold up.
+- 27 Oct 06:30Z Coordinator, 05:58Z: burn down the F41 per-item rows, functional and UI first. Lane `tb/stormwood`: main #770 (land14) merged.
+- 27 Oct 06:30Z **READY to land land15 4e75ccf52b4932a51edd2d09c2577a49b376da98** (`tb/stormwood-land15`): **F41 P2-081 named trainer dialogue identity.**
+  - **Reproduced on main:** all 26 trainers already speak their own location-specific lines (the top-level presentation `enabled` is on; the "remain off" comment was stale), but no trainer conversation had a portrait.
+  - **Fix:**
+    - 19 trainers get the exact existing plate for their unchanged world body (`fixes/P2-081/existing-plate-audit.json`);
+    - the 7 Team Tether trainers on four raw profiles get plates rendered from their unchanged world configs: `assets/ui/portraits/stormwood_raw_{grunt_c,officer_a,officer_b,captain_a}.png`, import settings identical to the shipping portraits, render manifest `fixes/P2-081/raw-plates-manifest.json`. captain_a renders at exposure 0.3 so its white hair meets the tool's 1.5% clip bar.
+  - **New test** `test_every_trainer_has_own_lines_and_a_portrait`: each catalogued trainer has its own opening line, defeated lines and a loadable portrait; a raw plate belongs only to trainers wearing that profile.
+  - **Checks on the land15 tree:**
+    - `test_stormwood_trainers_data.gd` 6/945, 0 failed;
+    - `test_dialogue_portraits.gd` 13/3362, 0 failed;
+    - `test_stormwood_npc_dialogue.gd` 3/271, 0 failed.
+  - **Capture:** `tools/phase2_capture_dialogue.gd --biome=stormwood --start=19 --count=4` shows Tamsin, Elin, Dace and Ivo panels, each with their own line and matching portrait (`fixes/P2-081/_sheet_p2081_dialogue.jpg`).
+  - **To close:** the GPU before/after on the catalog's 26 `__dialogue` sightings.
+- 27 Oct 06:30Z **F41 items already fixed on main, needing only their GPU before/after:**
+  - **P2-082 portrait identity:** `npc_portraits.enabled` true.
+  - **P2-084 dialogue reuse:** `npc_openings.enabled` true.
+  - **P2-045 candy tiers:** `candy_pickup_presentation.enabled` true.
+  - **P2-093 danger slab:** `lunge_lane.gd` `OPEN_FADE` clears a released lane within 0.08 s once the body is rooted.
+  - **P2-110 Hollows loss:** the `party_vitals_refresh_candidate` HUD refresh is true on main. The duplicate out-of-fight text and loss-result hierarchy still need a native replay; that is next on this lane.
+- 27 Oct 06:30Z **P2-083 reproduced** in the direct-start dialogue fixture: Tamsin's challenge frame has the camera inside dark overhead geometry with the trainer's back filling the lens and the speaker hidden. Next: check the normal interaction camera.
+- 27 Oct 05:16Z **m50b storm light grade: worse (-0.44 mapped)**, 3/3 prefer OFF (`m50b/VERDICT.md`). With m50 (+0.04) that is two misses, so **the storm-light grade is PARKED**; `storm_grade` stays OFF and no m50 arm is posted.
+  - **Why:** a brighter break erased the calm-to-break shift the judges credit, and one more directional light gives no visible edge.
+  - **New idea:** a material-level rim/fresnel on trunks, creatures and the trainer that flashes with bolts. It touches shared vegetation and character shaders: **QUESTION for the coordinator: is that in this lane's scope?**
+- 27 Oct 05:16Z Lane status. Parked: sky form (SW19 + r45c), ground (SW8 + SW13), storm grade (m50 + m50b), Ashfoot polish (m51, first miss), Crown rim (r49, first miss). Still open:
+  - **Ashfoot:** a second polish try, with a copper and rod motif large enough for the door lens and the rug swap (credited).
+  - **Crown Overlook height:** needs a stand that can see the drop.
+- 27 Oct 04:40Z **m50 storm light grade: no gain on CPU (+0.04)** (`m50/VERDICT.md`); first miss. The straight-back diffuse rim lights no visible edge, and break went darker.
+  - **Second try (m50b) is being built:** a three-quarter side rim, stronger; break graded brighter; the bolt ground exposure on.
+- 27 Oct 04:26Z Coordinator, 03:56Z: the SW20b one-batch re-judge put the Ashfoot room at 6.76, not met (0.74 short). land14 is PR #770. The next Ashfoot arm is the top close-out.
+- 27 Oct 04:26Z **m51 Ashfoot polish: no gain (0.00 mapped)** (`m51/VERDICT.md`). No arm; `ashfoot_polish` stays OFF; first miss.
+  - **Worked:** the rug and floor-disc swap.
+  - **Didn't read:** the copper and rod pieces are too small at the lens; the pane rain doesn't show.
+  - **Glare:** not the room lamp, which only dimmed the room and flattened the phases. Next: find the real source of the light on the trainer's back, which is likely through the open door.
+- 27 Oct 03:24Z **READY to land land14 db6126dcdfb52ed5cafbc33715e4d6a8ae256609** (`tb/stormwood-land14`). It is origin/main 58bef4fc plus exactly the GPU SW20-judged m48b Ashfoot room (+0.87, warm-room FIXED 3/3):
+  - **`cottage_interior.gd`:** main's file with only the room pieces grafted in: the `storm_room` light (window spot, per-phase hearth and room-lamp scale, window patch), `stormwood_dressing` (moss runs and tufts, storm-glass crystals, copper rod and chain coil) and their helpers. No shell or door-cutout code.
+  - **`cottage_window_patch.gdshader`.**
+  - **`cottage_interior_finish.json`:** main's file plus `storm_room` and `stormwood_dressing` ON with `_why_on` (SW20), and the golden `copper_tint` (#c9a06a) with its `_why`.
+  - **Assets:** the glass-scar crystal GLB and the kit Chain_Coil are already on main.
+  - **Not carried:** sky form/skyline, ground zones, overlook candidates, the Meshy shell, `storm_grade`.
+  - **Checks on the land14 tree:** `test_village_main_street.gd` 11/293, 0 failed; `smoke_stormwood_ashfoot_shelter.gd` 16/0; `smoke_stormwood_settlement_traversal.gd` 9/9 approaches, openings, rooms and walls OK; no script errors.
+- 27 Oct 03:24Z Next Ashfoot arm (SW20 path, 0.9 short), after m50 or riding with it:
+  - tame the hearth backlight on the trainer's back;
+  - seat the window frame flush;
+  - more copper and a lightning-rod motif;
+  - seat the crystals;
+  - replace the flat green floor discs.
+- 27 Oct 01:49Z **Storm sky retry (soft rims): no gain on CPU**, mapped 6.03 -> 5.92 (-0.11) (`r45c/VERDICT.md`). Judges call the arms "nearly identical"; the frames do differ (mean pixel difference 24-54).
+  - r45b's gain came from the bright rims that SW19 read as smear slabs. Soft rims leave the masses invisible.
+  - **No SW19 retry arm is posted.** The sky-form approach is PARKED (SW19 + r45c); `form` and `skyline` stay OFF.
+  - **Next idea for the open stands:** take the storm into the scene, as all GPU judges ask: a per-phase ground and foliage grade, plus a cool lightning rim light on trunks and figures.
+- 27 Oct 01:23Z Coordinator, 01:22Z:
+  - **SW19 storm sky (m45c): no gain** (Medium 5.74 -> 5.72, High 5.73 -> 5.74). The flat sky improved (PRESENT 9 -> 0 Medium, 11 -> 4 High), but the lit rims read as white smear slabs (16 -> 27 Medium, 19 -> 27 High).
+  - This is the sky's first GPU miss; one more arm is allowed. The lane now has softer rims (`form.lit` 0.8 -> 0.25, `form.edge` 0.04 -> 0.08), with dark bases, deck and skyline kept. CPU capture is running; it posts READY only if the smear is gone on CPU.
+  - **SW20 (m48b Ashfoot room) is first in the GPU queue.**
+  - The judges' next ask (15/15): carry the sky into the scene with a per-phase grade and a cool rim light on trunks and figures.
+- 27 Oct 01:20Z r49 Crown Overlook rim lookout (`deck.rim` + `massif.storm`, flagged candidates over the landed SW18 values): **no gain**, mapped 5.58 -> 5.33 (-0.25) (`r49/VERDICT.md`). First miss for the rim approach; both stay OFF.
+  - **Why:** the level catalogue camera behind the trainer never sees the drop right under the deck; the far sink floor reads as a plain at deck level. The storm-haze Crown also lost contrast against the calm sky.
+  - **Kept:**
+    - `with_candidate`, a reusable flagged override of a landed block;
+    - the overlook test now checks the effective deck;
+    - the rim coordinates and the probe of baked rim trees, for any new height idea.
+- 27 Oct 00:24Z **READY (GPU candidate): `tb/stormwood-m48b-on` cc99525a534670ebcf1a41f33a578c09b7923b55, Ashfoot room** (supersedes m48 ebcae6ed: adds the golden `copper_tint` fix; the kit wall lantern read dark red, and red is Team Tether only).
+  - **Change:** `cottage_interior_finish.json storm_finish.storm_room` + `stormwood_dressing` ON; the lane keeps both OFF. This is coordinator priority 1: SW16 left it at 6.96, 0.54 short.
+  - **CPU r48:** 5.37 -> 6.31 mapped (+0.94), 3/3 judges prefer ON. Warm-room and no-Stormwood defects PRESENT -> PARTIAL 3/3 (`r48/VERDICT.md`).
+  - **What to capture:** the F41 catalogue Ashfoot stands, inside (four phases) and outside (no-change check), at Medium and High against lane HEAD.
+  - **Checks:** `smoke_stormwood_ashfoot_shelter.gd` 16/0.
+  - **New GPU load:** one unshadowed SpotLight3D, one additive quad, about 60 small moss spheres and three small crystal models.
+- 27 Oct 00:24Z **SW13 pool-edge defect: no separate arm.** The pools exist only under `stormwood_ground_finish.json ground_zones`, which is OFF on main, and that approach is parked. With the flag OFF an arm shows nothing; with it ON it reintroduces the parked ground pass.
+  - **Lane fix (fa9b8aa4):** the satin pool finish (roughness 0.38 / specular 0.25, the white-cyan "glass slab" rims) is now matte by default (0.75 / 0.06), configurable as `ground_zones.pool_roughness` / `pool_specular`. Any new ground idea starts without the defect.
+- 26 Oct 23:58Z Coordinator, 23:52Z:
+  - Ashfoot `storm_view` is on main (#767). land13 is done; no PR.
+  - The m45c storm sky is queued as GPU **SW19**.
+  - **SW17 junction lamp posts: no gain (-0.03/-0.06). PARKED; not retried as built.** The judges' path, for any new idea: a taller, sturdier post with an arm and a stone/root footing off the trunk, a smaller halo, real light pooling instead of sprite discs, and a softer guide beam.
+  - Lane `tb/stormwood` 74d41412: main #768 merged.
+- 26 Oct 23:58Z In progress, **r48 Ashfoot** (coordinator priority 1; SW16 at 6.96, 0.54 short). One candidate:
+  - `storm_room` ON (r47's window wash and dimmed lamps);
+  - a new `window_patch`: the window's pane pattern on the west wall per phase, lifted by the flash;
+  - a new `stormwood_dressing`: blue-green moss runs and strands, small storm-glass crystals on the sill and shelf, a copper lightning rod and chain coil.
+  - CPU capture is running against r47's OFF frames.
+- 26 Oct 22:08Z **READY to land land13 de5e5f8508626f0d5b510ea32ac5ebeeca653987** (`tb/stormwood-land13`). It **supersedes land12**: main #766 already carries the SW18 Crown Overlook vista, so land13 is origin/main f0bd9f05 plus only **Ashfoot `storm_view` ON** with `_why_on` (GPU SW16 +1.13).
+  - **Checks:** main's cottage config is unchanged since land12 and land13 uses the same config file, so land12's checks carry over (`smoke_stormwood_ashfoot_shelter.gd` 16/0).
+- 26 Oct 22:08Z Lane `tb/stormwood` fb919fb5: main #766 merged.
+  - `stormwood_crown_overlook.json` now takes main's landed SW18 values ON. The lane's unjudged r46 round-3 values are kept as `r46/candidate_crown_overlook.json`.
+  - **Storm-sky arm rebuilt:** **`tb/stormwood-m45c-on` 8a22c917**. Use it for the GPU, replacing m45b 9e2642f9 and m45 94adcb41.
+- 26 Oct 20:20Z r47 Ashfoot storm-driven room light: **+0.33 mapped** (5.44 -> 5.77), 3/3 judges prefer ON (`r47/VERDICT.md`). Under the bar, so no arm; `storm_room` stays OFF to ride along.
+  - **Next Ashfoot swing (r48):** storm_room plus Stormwood dressing inside (moss on the sills and beams, copper fittings, glass floats or lantern, storm gear) and a window-shaped lightning flash on the walls.
+- 26 Oct 19:44Z **READY to land land12 8bf4dbd169e70bb8f9dbd6d806c92ba97a3e04bf** (`tb/stormwood-land12`). It **supersedes land11**. It is origin/main 9a1b26ba (#763) plus:
+  - **land11 unchanged** (GPU SW18 +0.86): the Crown Overlook deck + massif ON, the deck survey stand, and the Hollow Crown Meshy asset;
+  - **Ashfoot `storm_view` ON** with `_why_on`. GPU SW16 m36b: interior 5.83 -> 6.96 (+1.13) at both presets. Seated + firelit were already ON on main, and main's storm_view code and config match the judged arm apart from the flag.
+  - **Checks on the land12 tree:** `test_stormwood_crown_overlook.gd` 2/526, 0 failed; `test_four_biome_debug_teleport.gd` 10/1094, 0 failed; `smoke_stormwood_ashfoot_shelter.gd` 16 checks, 0 failed (roof and shelter correct inside, at 11 m and at 60 m with the storm card in place).
+- 26 Oct 19:44Z Lane `tb/stormwood` 0d3ca476: main #763 merged (four Meadows files the lane never touched); storm_view ON.
+  - **Storm-sky arm rebuilt** on the merged lane: **`tb/stormwood-m45b-on` 9e2642f9**. This replaces 94adcb41 for the GPU (same flags: `ceiling.form` + `ceiling.skyline` ON).
+- **Next for Ashfoot (SW16 path to 7.5, 0.54 short):** room light that follows the storm. The window casts the phase colour in, and at break a white-violet flash shows on the walls against the warm hearth. Building it as r47.
+- 26 Oct 16:58Z SW16: `GPU-PASS/CRASH-0xC0000094/README.md` (94982d62) says the 08:22 SW16 candidate run hit a real TDR (nvlddmkm 153 / Display 4101), not the driver divide-by-zero.
+  - My storm_view review (above) stands. Its only per-pixel work is one 4-octave fbm on one 9x6 m quad, which cannot take a GTX 1060 near the 2 s TDR limit by itself.
+  - If the queued re-run TDRs again on the Ashfoot stands, I'll take the m36b arm apart: storm_view OFF with seated/firelit ON (as SW15 m35, which ran clean) would isolate the flag. Lane ready to build that split arm on request.
+- 26 Oct 15:38Z r46 Crown Overlook round 3 on land11: **+0.31 mapped** (5.87 -> 6.18), 3/3 judges prefer ON (`r46/VERDICT.md`). Under the bar, so no arm.
+  - **Pale Crown:** PRESENT -> PARTIAL. A new massif `haze` block skips scene fog and carries its own storm haze.
+  - **No height:** still PRESENT 3/3 on both arms.
+  - The values stay OFF and ride along with the height change.
+  - **Height:** a deck on flat ground cannot show a drop. Next idea: a taller lookout over lower canopy, which needs the catalogue's deck-floor probe (terrain + 4 m) raised; or relocating the deck to a real slope edge.
+- 26 Oct 14:48Z **READY to land land11 df283d439ecae7f4f7020b9bbfce166af7efbc3f** (`tb/stormwood-land11`). It is origin/main d212fbed (#762) plus exactly the GPU SW18-judged m41 pieces, and nothing else:
+  - `stormwood_crown_overlook.json` from m41, with the deck and massif ON;
+  - the Crown Overlook `f41_survey` stand on the deck (37 deg) in `debug_teleport_spots.json` (main's newer Heartstone stand is kept);
+  - the Meshy `stormwood_hollow_crown_silhouette` asset dir (tb/meshy-1024 2cbd71381; import policy applied).
+  - The deck script and test are already on main and identical to m41's.
+  - **Checks on the land11 tree:** `test_stormwood_crown_overlook.gd` 2 tests / 526 assertions, 0 failed; `test_four_biome_debug_teleport.gd` 10 tests / 1094 assertions, 0 failed.
+  - **Not in land11:** the lane's unjudged round-2 overlook values (deck 3.5 m with a drop, wood tint, massif tint) and the m45 storm sky. Those stay as their own arms.
+- 26 Oct 14:48Z Next for the vista (SW18 path to 7.5: Crown in all three views, darker with a rim, height, sky, ground beyond the rail). It is one candidate on top of land11:
+  - **Crown in v01 and v03:** a second and third Meshy massif read is not possible from one deck heading with 90-degree views. The catalogue stand turns so the Crown sits between v01 and v02.
+  - **Massif:** the darker tint with a lit rim.
+  - **Height:** the higher deck with a drop.
+  - **Sky:** the m45 storm sky, if SW-m45 passes.
+- 26 Oct 14:24Z **READY (GPU candidate): `tb/stormwood-m45-on` 94adcb41, Stormwood storm sky.**
+  - **Change:** `stormwood_surge.json presentation.ceiling.form` + `ceiling.skyline` ON; the lane keeps both OFF.
+  - **CPU r45b:** 5.75 -> 6.58 mapped (+0.83), 3/3 judges prefer ON. Flat lavender sky FIXED 3/3; empty horizon PRESENT -> PARTIAL (`r45b/VERDICT.md`).
+  - **Why it is a chapter-wide swing:** the sky is in every open Stormwood stand in the catalogue, so judge it on the full F41 catalogue at Medium and High against lane HEAD.
+  - **Checks:** surge presentation 53/0 and surge 4/0.
+  - **Photosensitivity:** no new flash onsets; the form is a static shape on the deck.
+  - **Not a GPU risk:** no texture samples, and only bounded fbm. It is one more 5-octave fbm block and a few noise calls in the existing ceiling dome shader, with no new passes or geometry.
+- 26 Oct 14:24Z r45 (soft masses) was -0.06, a first miss (`r45/VERDICT.md`); r45b's hard edges are what moved it. Next sky refinement: tame the lit rims that two judges read as white smear slabs.
+- 26 Oct 13:45Z **SW16 device loss (m36b storm_view, Medium):** I reviewed everything the flag adds. Nothing plausibly hangs a GPU, so there is no new arm.
+  - **What the flag adds:** one 9x6 m `QuadMesh` card (`cottage_storm_view.gdshader`) and a duplicate of one kit glass material.
+    - The card's shader is `unshaded`, `cull_back`, `shadows_disabled` and `fog_disabled`. It has no texture samples and no division, its only loop is a bounded 4-octave fbm, and `flash` is clamped to 0-1.
+    - The glass copy is a plain `TRANSPARENCY_ALPHA` duplicate of `MI_WindowGlass` (roughness 0.1, no emission).
+  - **No new lights, probes, shadows or sky work:** the flag adds none of these. The shadowed hearth/lantern lights are the `seated`/`firelit` ones that SW15 m35 already ran clean at both presets.
+  - **Where it failed:** VkResult -4 with breadcrumbs SKY_PASS / BLIT_PASS points at the world sky's radiance pass, which storm_view never draws into. The card is not in the sky pass.
+  - **If the re-run fails again:** run the Medium control and candidate on just the Ashfoot stands, so a repeat can be tied to the flag or to the stand switch. I'll take any log lines you can share.
+- 26 Oct 13:40Z In progress, r45 **storm-cloud form** (`stormwood_surge.json presentation.ceiling.form`, OFF).
+  - **Why:** every Stormwood set in r41-r44 (all judges) names "a flat lavender sky with no cloud form".
+  - **What it draws:** large domain-warped cloud masses on the surge ceiling, with dark bases overhead, lit edges, a paler layer between the masses and rain curtains near the horizon. Nothing is bright just above the horizon.
+  - **CPU capture:** OFF/ON at Crown Overlook, Struck Sentinel, Glass Field and Rodline Post, calm + break.
+- 26 Oct 13:20Z r44 Struck Sentinel stand move (Ash Road (-314, 272), off Pax's seat): **no gain**, mapped 4.80 -> 4.90 (+0.10, offset-fallback map). No arm (`r44/VERDICT.md`).
+  - The landmark defect stays PRESENT/PARTIAL: a normal-height pale tree can't be a hero from any stand.
+  - All three judges name a cleaved giant several times tree height, which is the MESHY `stormwood_struck_sentinel` request below. The stand move waits to ride with that asset.
+- 26 Oct 13:20Z **MESHY: `stormwood_struck_sentinel`** (Cinder Verge opening landmark; GPU SW8 4.71 Medium / 5.79 High, the lowest untried stand).
+  - **Today:** the landmark is the kit DeadTree_1 scaled 4.4x with a thin procedural cyan line (`stormwood_struck_sentinel.gd`). On CPU it reads as a pale generic dead tree in one of three views.
+  - **The asset:** one ancient storm-forest giant split down its trunk by a lightning strike.
+    - The two halves lean apart; the inner wood is charred black.
+    - A jagged pale-blue crystal fulgurite seam runs down the split, with a natural faint glow in the crack only.
+    - One broken crown limb has fallen beside it.
+    - Exposed buttress roots grip scorched ground.
+    - Moss on the shaded side, a few surviving needle branches high up, no red.
+  - **Scale:** about 28-32 m tall and 6-8 m across the root plate, so it dominates the trainer at 15 m.
+  - **References:**
+    - the owner Stormheart boards A/B: crystal, scar and bark language;
+    - the existing `stormwood_glass_scar_crystals` asset: fulgurite style.
+  - **Wiring:** this lane replaces the kit tree in `stormwood_struck_sentinel.gd` (visual only; Ranger Pax, traversal and the arena unchanged). Flag-off until judged.
+- 26 Oct 13:20Z **Struck Sentinel data bug:** the F41 stand sits on Ranger Pax's trainer seat (-320, 240), so Pax fills the lens in all three views (CPU). This is the same bug the Capacitor Grove stand had. A capture-only `f41_survey` stand 23 m off the seat, facing the split tree, is on CPU now.
+
+- 26 Oct 13:15Z **MESHY: `stormheart_hollow_wall`** (Stormheart round 3; GPU B5 SW11 path item 1. Gap 2 is PRESENT 12/12: "smooth dark enclosing walls with a banner ring, no readable bark, branches, crown or core").
+  - **The asset:** one tall curved section of the Stormheart's hollow trunk, seen from inside. About 30 m tall and 22 m along the curve, its inner face concave, and built to tile at 6-8 angles around the hollow with no visible repeat:
+    - deep vertical bark ridges and buttress roots at its foot;
+    - burls, shelf fungi and moss on the ledges;
+    - one jagged lightning-scar seam with a faint natural blue glow in the crack only (no glowing hide);
+    - a few hanging root strands and a timber walkway bracket stub.
+  - **Palette:** dark storm bark with blue-green moss, no red.
+  - **References:**
+    - the owner Stormheart boards A/B (`docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png` and `-b.png`; the hollow interior, bark, scar and walkway details);
+    - the r16-r19 root-wall panel as the scale and form starting point, which read "as a tiled strip". This piece must be taller and individually varied.
+  - **Use:** this lane rings the hollow with it at varied yaw and scale, replacing the smooth drum walls in the catalogue's interior stands. Flag-off until judged.
+- 26 Oct 13:15Z Note on SW11 path item 3, "re-aim heartstone v01". The catalogue's three views sit 90° apart and each sees about 70°, so no heading puts the stone in both v01 and v02. The 8 m stand keeps it whole in v02 and v03. Not a lane change; your call whether the catalogue should use a narrower spread for that stand.
+- 26 Oct 13:15Z The "flat gold ground cracks" every Stormwood set names are the owner-directed road current (WO-F09-04, "make the path and roads electrified with yellow electricity"). This lane leaves them alone.
+
+- 26 Oct 13:10Z PARKED the Ashfoot exterior shell approach after two misses.
+  - **r42:** +0.47 alone.
+  - **r43:** shell gain 1.9 + grove behind-right + dressing, 5.88 -> 5.31 mapped (-0.57); 3/3 judges prefer the kit cottage (`r43/VERDICT.md`).
+  - **Why r43 lost:**
+    - The brightened shingles read as a "thatched Meadows cottage".
+    - The kit cottage's SW8 grey tile already reads as "sturdier stone".
+    - The new trees take the sky where the Break bolt lands.
+  - **What stays:** shell code and asset OFF, and the interior cutaway works.
+  - **New idea, if any:** keep r42's darker timber and give the roof a slate-dark material.
+  - **Ashfoot exterior next:** the ground carpet, which only ground pass 2 (m31b) addresses.
+
+- 26 Oct 13:05Z **Crown Overlook vista round 2** (committed OFF on the lane: storm tint #7d7896 on the Crown, a 3.5 m braced deck, weathered moss-edged planks). Not judged and not armed.
+  - **What the CPU frames show:** the Crown sits in the haze and reads further away, as asked, but in Break it almost vanishes. The braces do not show from the deck views, and the moss is subtle. By eye that is no clear gain over r1.
+  - **Decision:** **m41 (r1, +2.46) stays the vista candidate for SW18.**
+  - **Next for the vista, after SW18:** a lighter tint (between r1 and r2) that holds in Break, and a mid-distance ridge layer.
+- 26 Oct 13:05Z Ashfoot exterior:
+  - **r42** (Meshy shell alone, interior cutaway verified on CPU): +0.47 mapped, PARTIAL 3/3 on the cottage defect (`r42/VERDICT.md`).
+  - **r43** (shell + grove kept behind and right of the hut + brighter, larger shell) is capturing on CPU now.
+
+- 26 Oct 12:25Z **READY (GPU arm) `tb/stormwood-m41-on` aa74c99787bbdc2b065a28c971f8f8ef1272bc19** (Crown Overlook vista; your item 3 big swing). It is the lane plus one config commit:
+  - `stormwood_crown_overlook.json` `deck` + `massif` ON;
+  - a Crown Overlook `f41_survey` stand on the deck at (172, 1996), heading 37 (capture-only; the teleport arrival is unchanged).
+  - **Judge:** `glowmoss_hollows_crown_overlook` (its three views now face the Crown) against the lane.
+  - **Deck:** a 12 x 11 m raised timber lookout, 2.6 m up, beside the Crown Sightline path. Its ramp runs to the path, with rails and a lit Meshy lantern post. It collides on every shell; tests keep it clear of every route corridor.
+  - **Massif:** the Meshy Hollow Crown silhouette (2cbd71381), 560 m wide over a 30 m base. It draws only beyond 300 m and has no collision.
+  - **CPU r41** (`r41/VERDICT.md`): 3.94 -> 6.40 mapped (**+2.46**, r 0.95, RMSE 0.42). Not a lookout: FIXED 3/3. No vista: PRESENT -> FIXED 1 / PARTIAL 2.
+  - **Checks with the arm configs:** debug_teleport + crown_overlook, 12 tests, 0 failed.
+  - **Still asked, next round:**
+    - a darker, hazier Crown that reads as a ring (it renders bleached near-white);
+    - a visible drop at the deck edge;
+    - mid-distance ridges or fog layers;
+    - moss and weathering on the deck.
+
+- 26 Oct 11:55Z **READY (GPU arm) `tb/stormwood-m39-on` de3d78ffd2361c3922c3f72b74041b954e8d4803** (your item 2, path posts): the lane plus one line, `stormwood_path_posts.json` enabled.
+  - **What changes:** the spur-junction lamps on Ash Road, Conductor Run and Deepwood take the Meshy Stormwood lantern post at 6.6 m, with warm pane glow and the lamps' daylight halo. The colliders are unchanged. The flag lives outside `stormwood_pockets.json`, which is a scatter-bake input.
+  - **CPU r39b** (`r39/VERDICT.md`): 5.88 -> 6.43 mapped (**+0.55**; weak fit, r 0.64, RMSE 0.64), 3/3 judges prefer ON. Placeholder lanterns go PRESENT 2 / PARTIAL 1 -> PARTIAL 3/3.
+  - **These junctions are not F41 catalogue stands.** The GPU form is `capture_stormwood_f10_matrix.gd --custom="pv@-334.39,355.97@-323.30,3,370.70@3;pm@105.45,1754.49@89.90,3,1764.40@3;pd@-1016.56,3889.77@-1019.70,3,3871.60@3" --stands=pv,pm,pd --phases=calm --no-aftermath` (Forward+ 1920x1080, Medium/High), with the lane as the off arm.
+  - **Pocket tests:** 10 tests, 0 failed.
+
+- 26 Oct 11:50Z **READY to land land10: `tb/stormwood-land10` 75ed332ceaf6f65892d86e524fc6fff621cf4de0.** It is the lane head def25a26 (origin/main 07e1b277 #760 merged in) plus one config commit.
+  - **New ON flags vs main:**
+    - Ashfoot `storm_finish.seated` + `firelit`, each with `_why_on` (GPU B5 SW15 +0.51 mean).
+    - Stormheart `heart_cleft` ON with `core_column` OFF, exactly as judged in m29 (GPU B5 SW11): the Crown Heartstone survey stand at 8 m and the Fading steam `rise_fade_m` [0.45, 1.3]. Each has a `_why_on` or `_why_off`.
+  - **Stays OFF:**
+    - `storm_view` (until SW16) and `shell`;
+    - the Lantern Pools finish (SW14);
+    - path posts, Crown Overlook deck and massif, Ashfoot exterior grove, rod `stand_clear`, depth fog.
+  - **Checks on the land10 tree** (separate worktree):
+    - 103 unit tests, 0 failed (stormheart*, stormwood_surge*, cottage, interior, named_crown, debug_teleport);
+    - smoke_stormwood_ashfoot_shelter 16/0;
+    - smoke_stormheart_ascent PASS (core reached by continuous ramp walk).
+  - **Also carries, OFF:** this lane's later candidates and their assets: the Meshy ranger shelter, the Crown Overlook deck (the Hollow Crown silhouette asset came after def25a26 and is not in land10), path posts and the Ashfoot exterior. The Crown Overlook `view_heading_deg` 37 is ON as the data fix you asked for.
 
 - 26 Oct 11:40Z **MESHY: `stormwood_hollow_crown_silhouette`** (Crown Overlook vista; the Crown massif reads at 900 m as "a flat grey slab / table shape", r40 and GPU SW8).
   - **The asset:** a distant-only landmark silhouette of the Hollow Crown.

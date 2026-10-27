@@ -35,6 +35,24 @@ VISUAL_ROWS = ["F36", "F38", "F39", "F40", "F41"]
 VISUAL_OTHER = ["F04#6", "F08#3", "F10#2", "F13#5", "F17#6", "F22#4", "F26#3"]
 CHAPTERS = [(n, l, [i for i in ids if i not in VISUAL_ROWS]) for n, l, ids in CHAPTERS]
 CHAPTERS.append(("Visual · judged on the GPU", "V", ["VISUAL_OTHER"] + VISUAL_ROWS))
+# Owner 27 Oct ("move those out to the end and group based on whatever they're
+# blocked on"): the open criteria outside the visual work leave their home rows and
+# sit in one last section, one card per blocker, so every feature row above shows
+# only its own deliverable work.
+BLOCKED_GROUPS = [
+    ("Owner action", "Only the owner can do these: the ROG Ally handheld test, a human play "
+     "pass of the build, and the play-pass check of the 15-25 hour clear (the agent estimate "
+     "is 8.8-12.5 h, a lower bound).", ["F26#5", "F49#1", "F49#2", "F47#0"]),
+    ("The integrated four-biome run", "One save through all four chapters with every seam "
+     "earned, not generated. The pieces and most seams exist; the earned Master, Kitchen and "
+     "feast loop in every chapter and the last matched seams do not yet. Chapter exit cards "
+     "M2, M3, S2 and T2 wait on this run and on the visual bar.", ["F49#0", "F19#5"]),
+    ("Release after the run passes", "Publishes the rolling download from the commit where "
+     "the integrated run passes.", ["F49#3"]),
+]
+BLOCKED_SEL = {_s for _g in BLOCKED_GROUPS for _s in _g[2]}
+CHAPTERS.append(("Not done · grouped by what blocks them", "B",
+                 [f"BLOCKED_{_n}" for _n in range(len(BLOCKED_GROUPS))]))
 
 
 def norm(s):
@@ -116,12 +134,22 @@ for name, letter, ids in CHAPTERS:
                 if _i.isdigit() and int(_i) < len(_c):
                     _vo.append(dict(_c[int(_i)], text=f"{_sel} · " + str(_c[int(_i)].get("text", ""))))
             r = {"title": "Visual criteria from other features", "criteria": _vo}
+        elif fid.startswith("BLOCKED_"):
+            _gname, _gwhy, _gsel = BLOCKED_GROUPS[int(fid.split("_")[1])]
+            _bc = []
+            for _sel in _gsel:
+                _f, _, _i = _sel.partition("#")
+                _c = rows.get(_f, {}).get("criteria", [])
+                if _i.isdigit() and int(_i) < len(_c) and norm(_c[int(_i)].get("status")) != "met":
+                    _bc.append(dict(_c[int(_i)], text=f"{_sel} · " + str(_c[int(_i)].get("text", ""))))
+            r = {"title": _gname, "criteria": _bc, "why": _gwhy}
         else:
             r = rows.get(fid)
-            if r and any(s.startswith(fid + "#") for s in VISUAL_OTHER):
+            _moved = VISUAL_OTHER + sorted(BLOCKED_SEL)
+            if r and any(s.startswith(fid + "#") for s in _moved):
                 r = dict(r, criteria=[x for _n, x in enumerate(r.get("criteria", []))
-                                      if f"{fid}#{_n}" not in VISUAL_OTHER])
-        if not r or fid in VISUAL_FEATURES:
+                                      if f"{fid}#{_n}" not in _moved])
+        if not r or fid in VISUAL_FEATURES or not r.get("criteria"):
             continue
         _shown.extend(r.get("criteria", []))
         p = pct(r)
@@ -141,9 +169,12 @@ for name, letter, ids in CHAPTERS:
             _k = _par.split("#")[-1]
             _name = "roster pose subjects" if fid == "F36" and _k == "1" else _GROUP_NAMES.get(_k, "items")
             items += _subcard(f"{fid} ({_k}) {_name}", _g)
+        if r.get("why"):
+            items = f'<li class="crit"><p class="note">Why: {E(r["why"])}</p></li>' + items
+        _lbl = {"VISUAL_OTHER": "V"}.get(fid, f"B{int(fid.split('_')[1]) + 1}" if fid.startswith("BLOCKED_") else fid)
         cards.append(
             f'<details class="frow" id="{fid}"><summary>'
-            f'<span class="fid">{fid}</span><span class="ftitle">{E(r.get("title", ""))}</span>'
+            f'<span class="fid">{_lbl}</span><span class="ftitle">{E(r.get("title", ""))}</span>'
             f'<span class="fnum">{met}/{len(cs)} met</span>{bar(p)}<span class="fpct">{p}%</span>{stack(cs)}'
             f'</summary><ol class="crits">{items}</ol></details>')
     # Owner 25 Oct: the section figure is met / total over the criteria shown in it.
@@ -558,6 +589,107 @@ visual_html = (
     f'Defects from ralph/reports/VISUAL/phase2/catalog.csv; status from the board (GPU-judged, owner 24 Oct), so this tab and Acceptance agree.</p></section>'
     + "".join(_vsections) + vplan_html)
 
+# ---- visual catalogue tab (owner 27 Oct) -----------------------------------
+# "Give me the full visual catalogue with their current score in a tab": every
+# visual criterion (F36, F38-F41 and the visual rows of other features) with its
+# status and the latest score recorded in its evidence. The score is read from the
+# evidence text: the first GPU-judged figure when there is one, else the CPU figure;
+# "a -> b" reads as b, "m / h" as Medium / High. Rows with no figure say so.
+import re as _re
+_NUM = r"(\d\.\d{1,2})(?![\d.]|\s*(?:m\b|%|s\b|x\b))"
+_ARROW = _re.compile(_NUM + r"\s*(?:->|→|-&gt;)\s*\**" + _NUM + r"(?:\s*/\s*" + _NUM + r")?")
+_PAIR = _re.compile(_NUM + r"\s*/\s*" + _NUM)
+_ONE = _re.compile(_NUM)
+
+
+def _score(ev):
+    ev = str(ev or "")
+    for src, seg in (("GPU", ev[ev.find("GPU"):] if "GPU" in ev else ""), ("CPU", ev)):
+        if not seg:
+            continue
+        seg = seg[:420]
+        m = _ARROW.search(seg)
+        vals = [m.group(2), m.group(3)] if m else None
+        if not vals:
+            m = _PAIR.search(seg)
+            vals = [m.group(1), m.group(2)] if m else None
+        if not vals:
+            m = _ONE.search(seg)
+            vals = [m.group(1)] if m else None
+        if vals:
+            nums = [float(v) for v in vals if v and 3.0 <= float(v) <= 9.9]
+            if nums:
+                return nums, src
+    return None, ""
+
+
+_vis_groups = [("F36", "Creatures: models, poses and scale")] + [
+    (f, rows[f]["title"]) for f in ("F38", "F39", "F40", "F41") if f in rows] + [("OTHER", "Visual rows of other features")]
+_vk2 = {"all": 0, "met": 0, "gpu": 0, "near": 0}
+_vtabs = []
+for _gid, _gtitle in _vis_groups:
+    if _gid == "OTHER":
+        _items = []
+        for _sel in VISUAL_OTHER:
+            _f, _, _i = _sel.partition("#")
+            _c = rows.get(_f, {}).get("criteria", [])
+            if _i.isdigit() and int(_i) < len(_c):
+                _items.append((_sel, _c[int(_i)]))
+    else:
+        _items = [(f"{_gid}#{_n}", x) for _n, x in enumerate(rows.get(_gid, {}).get("criteria", []))]
+    _trs = []
+    _gmet = 0
+    for _sel, x in _items:
+        st = norm(x.get("status"))
+        sc, src = _score(x.get("evidence"))
+        _vk2["all"] += 1
+        _gmet += st == "met"
+        _vk2["met"] += st == "met"
+        _vk2["gpu"] += src == "GPU"
+        if sc and st != "met" and 7.5 - min(sc) <= 0.5:
+            _vk2["near"] += 1
+        sc_txt = " / ".join(f"{v:.2f}" for v in sc) if sc else "No item score yet"
+        gap = "Met" if st == "met" else (f"{max(0.0, 7.5 - min(sc)):.2f}" if sc else "")
+        txt = str(x.get("text", ""))
+        _trs.append(f'<tr class="s-{st}"><td><code>{E(_sel)}</code></td><td>{E(txt[:170])}{"…" if len(txt) > 170 else ""}</td>'
+                    f'<td>{pill(st)}</td><td class="num">{E(sc_txt)}</td><td>{E(src)}</td><td class="num">{E(gap)}</td></tr>')
+    _p = round(100 * _gmet / max(1, len(_items)))
+    _vtabs.append(
+        f'<details class="frow" open><summary><span class="fid">{E("V" if _gid == "OTHER" else _gid)}</span><span class="ftitle">{E(_gtitle)}</span>'
+        f'<span class="fnum">{_gmet}/{len(_items)} met</span>{bar(_p)}<span class="fpct">{_p}%</span>{stack([x for _s, x in _items])}</summary>'
+        '<div class="tbl vtbl"><table><thead><tr><th>Criterion</th><th>What it is</th><th>Status</th><th>Current score</th><th>Judge</th><th>Gap to 7.5</th></tr></thead>'
+        f'<tbody>{"".join(_trs)}</tbody></table></div></details>')
+_STANDS = [
+    ("F38 Meadows", "Relay yard, band3 river lock 0", "5.93 / 5.93", "GPU MH4 (+1.43), landed #769"),
+    ("F38 Meadows", "Ridgeline Watch", "6.40 / 6.40", "GPU MH7 (+1.64), landed #763"),
+    ("F38 Meadows", "Stronghold approach and courtyard (mean)", "5.33 / 5.96", "GPU MH9 (+0.53 / +0.71), landed #771"),
+    ("F39 Tidewake", "Sluice Isle pumps (shore)", "6.68 / 6.68", "GPU TW1 (+1.33), landed #766"),
+    ("F39 Tidewake", "Shellwatch rescue jetty", "6.56 / 6.56", "GPU TW1 (+1.15), landed #766"),
+    ("F41 Stormwood", "Ashfoot shelter, inside", "6.76 / 6.76", "GPU SW20b one-batch re-judge, landed #770"),
+    ("F41 Stormwood", "Crown Overlook", "5.85 / 5.85", "GPU SW18 (+0.86), landed #764"),
+    ("F41 Stormwood", "All 12 outdoor stands (mean)", "5.74 / 5.73", "GPU SW19 control"),
+]
+_stand_html = ('<section class="panel"><h2>Latest GPU stand scores</h2><p class="note">The GPU judges whole scenes (a stand: one place, several views and phases), '
+    'not single catalogue items, so many items above have no score of their own yet. These are the latest stand scores, Medium / High.</p>'
+    '<div class="tbl"><table><thead><tr><th>Biome</th><th>Stand</th><th>Score</th><th>Source</th></tr></thead><tbody>'
+    + "".join(f"<tr><td>{E(a)}</td><td>{E(b)}</td><td class=\"num\">{E(c_)}</td><td>{E(d)}</td></tr>" for a, b, c_, d in _STANDS)
+    + '</tbody></table></div></section>')
+visual_tab_html = (
+    '<div class="kpis">'
+    f'<div class="kpi"><b>{_vk2["met"]} / {_vk2["all"]}</b><span>Visual criteria met (mapped 7.5 or above)</span></div>'
+    f'<div class="kpi"><b>{_vk2["gpu"]}</b><span>Scored on the GPU judge (the record)</span></div>'
+    f'<div class="kpi"><b>{_vk2["near"]}</b><span>Open and within 0.5 of the bar (close-out candidates)</span></div>'
+    '</div>'
+    '<section class="panel"><h2>How to read this tab</h2><p class="note">Every visual criterion, grouped by feature. '
+    '"Current score" is the latest figure recorded in the criterion\'s evidence: GPU when the GPU judge has scored it (the score of record), '
+    'otherwise the CPU pre-judge (provisional, usually about 0.8 lower than GPU). Two numbers are Medium / High. '
+    'Bar: a three-judge mapped mean of 7.5 or above on both presets. Defect detail and owners for each catalogue item are at the bottom.</p></section>'
+    + _stand_html
+    + "".join(_vtabs)
+    + '<section class="chapter ch-V"><header><h2>Catalogue detail: defects and owners</h2></header></section>'
+    + visual_html)
+
+
 # A complete document (owner report, 2026-09-30): the board is also served raw by
 # hosts that add no wrapper, where a missing charset turns "·" into "Â·", a missing
 # viewport shrinks the page on phones, and a missing doctype falls into quirks mode.
@@ -608,7 +740,8 @@ h2{{font-size:20px;font-weight:700}} h3{{font-size:16px;font-weight:700}}
 .chapter{{display:grid;gap:8px}}
 .chapter header{{display:flex;align-items:baseline;gap:12px;border-bottom:3px solid var(--chc);padding-bottom:6px}}
 .chpct{{font:600 14px "JetBrains Mono",monospace;color:var(--chc)}}
-.ch-M{{--chc:var(--meadows)}} .ch-C{{--chc:var(--cloud)}} .ch-S{{--chc:var(--storm)}} .ch-T{{--chc:var(--tide)}} .ch-R{{--chc:var(--redesign)}} .ch-V{{--chc:var(--storm)}}
+.ch-M{{--chc:var(--meadows)}} .ch-C{{--chc:var(--cloud)}} .ch-S{{--chc:var(--storm)}} .ch-T{{--chc:var(--tide)}} .ch-R{{--chc:var(--redesign)}} .ch-V{{--chc:var(--storm)}} .ch-B{{--chc:var(--block)}}
+.vtbl{{padding:0 14px 14px}} .vtbl td:nth-child(2){{min-width:260px}} .vtbl tr.s-met td{{color:var(--muted)}} .tabs{{flex-wrap:wrap}}
 .frow{{background:var(--panel);border:1px solid var(--line);border-radius:10px}}
 .frow summary{{list-style:none;cursor:pointer;display:grid;grid-template-columns:44px minmax(0,1fr) auto 120px 44px;grid-template-areas:"id title num meter pct" "id stack stack stack stack";gap:6px 12px;align-items:center;padding:12px 14px}}
 .frow summary::-webkit-details-marker{{display:none}}
@@ -639,9 +772,9 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
 .tabs{{display:flex;gap:6px;border-bottom:1px solid var(--line)}}
 .tabs label{{font:600 14px Figtree,sans-serif;padding:8px 14px;border-radius:8px 8px 0 0;cursor:pointer;color:var(--muted);border:1px solid transparent;border-bottom:none}}
 .tabsel{{position:absolute;opacity:0;pointer-events:none}}
-#tab-acc:checked ~ .tabs label[for=tab-acc], #tab-plan:checked ~ .tabs label[for=tab-plan], #tab-lanes:checked ~ .tabs label[for=tab-lanes]{{color:var(--ink);background:var(--panel);border-color:var(--line)}}
-#tab-acc:focus-visible ~ .tabs label[for=tab-acc], #tab-plan:focus-visible ~ .tabs label[for=tab-plan], #tab-lanes:focus-visible ~ .tabs label[for=tab-lanes]{{outline:2px solid var(--accent)}}
-.pane{{display:none;gap:28px;grid-template-columns:minmax(0,1fr)}} .wrap,.panel{{grid-template-columns:minmax(0,1fr)}} #tab-acc:checked ~ .pane-acc, #tab-plan:checked ~ .pane-plan, #tab-lanes:checked ~ .pane-lanes{{display:grid}}
+#tab-vis:checked ~ .tabs label[for=tab-vis], #tab-acc:checked ~ .tabs label[for=tab-acc], #tab-plan:checked ~ .tabs label[for=tab-plan], #tab-lanes:checked ~ .tabs label[for=tab-lanes]{{color:var(--ink);background:var(--panel);border-color:var(--line)}}
+#tab-vis:focus-visible ~ .tabs label[for=tab-vis], #tab-acc:focus-visible ~ .tabs label[for=tab-acc], #tab-plan:focus-visible ~ .tabs label[for=tab-plan], #tab-lanes:focus-visible ~ .tabs label[for=tab-lanes]{{outline:2px solid var(--accent)}}
+.pane{{display:none;gap:28px;grid-template-columns:minmax(0,1fr)}} .wrap,.panel{{grid-template-columns:minmax(0,1fr)}} #tab-vis:checked ~ .pane-vis, #tab-acc:checked ~ .pane-acc, #tab-plan:checked ~ .pane-plan, #tab-lanes:checked ~ .pane-lanes{{display:grid}}
 .gscroll{{overflow-x:auto}} .gantt{{min-width:980px;display:grid;gap:6px}}
 .glane{{display:grid;grid-template-columns:190px minmax(0,1fr);gap:10px;align-items:center}}
 .gname{{font-weight:600;font-size:13px;display:grid}} .gname .meta{{font-weight:400;font-size:11.5px}}
@@ -675,14 +808,16 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
   <input type="radio" name="tab" id="tab-acc" class="tabsel" checked>
   <input type="radio" name="tab" id="tab-plan" class="tabsel">
   <input type="radio" name="tab" id="tab-lanes" class="tabsel">
+  <input type="radio" name="tab" id="tab-vis" class="tabsel">
   <div class="top">
     <span class="eyebrow">Project update · F01–{E(last_id)} acceptance</span>
     <h1>Tetherbound Acceptance Board</h1>
     <p class="meta">Updated {E(crit.get("generated_at") or status.get("updated", ""))} · main <code>{E(crit.get("main_sha", ""))}</code> · batch in flight <code>{E(crit.get("batch4_sha", ""))}</code> · rebuilt hourly by the coordinator</p>
   </div>
-  <nav class="tabs" aria-label="Board views"><label for="tab-acc">Acceptance</label><label for="tab-plan">Delivery plan</label><label for="tab-lanes">Active lanes</label></nav>
+  <nav class="tabs" aria-label="Board views"><label for="tab-acc">Acceptance</label><label for="tab-vis">Visual catalogue</label><label for="tab-plan">Delivery plan</label><label for="tab-lanes">Active lanes</label></nav>
   <div class="pane pane-plan">{plan_html}</div>
   <div class="pane pane-lanes">{active_lanes_html}</div>
+  <div class="pane pane-vis">{visual_tab_html}</div>
   <div class="pane pane-acc">
   <div class="kpis">
     <div class="kpi"><b>{accepted} / {len(crit["rows"])}</b><span>F rows accepted (every criterion met)</span></div>
