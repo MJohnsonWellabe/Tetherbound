@@ -1,0 +1,206 @@
+{
+ "sets": {
+  "Nq": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's storm-wolf is close to the owner's Tanglevolt bar with clear fur, purple lightning and a readable rear-up hit react, but side B's hit react barely differs from standing, and its faint mid and faint end turn into a white-and-black blob that loses the creature; on a neutral stage, neither side shows Valheim-class light."
+  },
+  "Aj": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The twisted teal root-trees, lit cottages and purple sky give the place an identity, but the smooth brown mud with glowing crack lines and the even grass strips sink it below Palworld ground density, and the light has no shafts or rim."
+  },
+  "Mx": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The glowing rune heartstone and the white-violet lightning in the break frames work, but the location reads as an empty flat grass plain with a handful of trees, not a dense storm forest, and the grass is a uniform carpet."
+  },
+  "Nj": {
+   "A": {
+    "bar_a": 4.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold-and-copper Voltarach reads in most frames, but the dark grade, the HUD panels filling the left, bottom and right edges, the tiny hard-to-find player creature and the flat magenta outline telegraphs are far from Palworld's bright, impact-heavy boss fights, and side A also loses the view to canopy in i11-i15."
+  },
+  "Bj": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This matches Aj: the root-trees and warm cottage windows carry the mood, but the flat brown mud floor, the strip-like grass and the lack of rim light or light shafts keep it short of shipping-game finish."
+  },
+  "Lo": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder villager is appealing and well modelled, with a clean silhouette, good face and eyes and an earthy green-brown palette that fits the key art, but he is shown only on a dark backdrop, and his rounder, cartoon face style sits a step away from the naturalistic creature bar."
+  },
+  "Ol": {
+   "A": {
+    "bar_a": 5.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The break-phase lightning against the purple sky is a real mood beat, but a small boxy brick shelter alone on a flat uniform grass field, with a dark faceted tower beside it, reads as sparse and unlived-in next to Palworld's dense, placed worlds."
+  },
+  "Lb": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured boar has a strong, grounded silhouette and a believable stone-plate and fur surface that approaches the style bar, but its hit react is indistinguishable from standing on both sides, side A's faint end goes almost pure black, and side B's red-orange glow and reddish tusks come close to the reserved danger red."
+  },
+  "Ei": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ring of lantern-lit walkways and blue lightning-bolt banners clearly echoes the Stormheart board, but the core is a smooth white cylinder instead of crackling lightning, and the arena floor is flat brown mud with grass patches, so it lacks the board's energy and finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild the Stormwood ground: swap the smooth brown mud and uniform grass strips for blended soil, moss, root and rock layers with black pools, and group vegetation into groves and edges (in Aj, Bj, Ei and Ol, and the empty plains of Mx).",
+   "kind": "scene"
+  },
+  {
+   "change": "Give each storm phase its own look: cool blue-violet rim light on trunks, the trainer and buildings, a stronger purple grade as the storm builds, lightning flashes that light the scene during the break, and light shafts and layered fog for depth.",
+   "kind": "scene"
+  },
+  {
+   "change": "Make fights readable: shrink and group the combat HUD panels, keep the camera out of canopy (Nj A i11-i15), add a rim or highlight to the player's creature, and replace the flat magenta outline telegraphs (and the Dynamo's smooth white core column) with physical lightning, cracked-ground and spark effects.",
+   "kind": "scene"
+  }
+ ]
+}

@@ -1,0 +1,52 @@
+{
+ "Ij": {
+  "anchor": false,
+  "label": "SW13 deepwood_the_fallen_giant Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-deepwood_the_fallen_giant-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-deepwood_the_fallen_giant-ship-Medium.png"
+ },
+ "Ud": {
+  "anchor": false,
+  "label": "SW13 cinder_verge_the_struck_sentinel High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-cinder_verge_the_struck_sentinel-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-cinder_verge_the_struck_sentinel-cand-High.png"
+ },
+ "Lo": {
+  "anchor": false,
+  "label": "SW13 hollow_crown_the_crown_heartstone High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-hollow_crown_the_crown_heartstone-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-hollow_crown_the_crown_heartstone-ship-High.png"
+ },
+ "Sw": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Jw": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ei": {
+  "anchor": false,
+  "label": "SW13 conductor_run_rodline_post High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-conductor_run_rodline_post-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-conductor_run_rodline_post-cand-High.png"
+ },
+ "Pn": {
+  "anchor": false,
+  "label": "SW13 dynamo_the_stormheart_tree High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-dynamo_the_stormheart_tree-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-dynamo_the_stormheart_tree-ship-High.png"
+ },
+ "Ne": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Xr": {
+  "anchor": true,
+  "A": "f36_1_gpu:tanglevolt_shipping",
+  "B": "f36_1_gpu:tanglevolt_candidate"
+ }
+}

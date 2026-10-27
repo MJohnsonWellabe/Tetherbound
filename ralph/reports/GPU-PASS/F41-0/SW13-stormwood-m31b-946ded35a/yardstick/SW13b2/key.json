@@ -1,0 +1,52 @@
+{
+ "Ti": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ },
+ "Wn": {
+  "anchor": false,
+  "label": "SW13 deepwood_the_fallen_giant High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-deepwood_the_fallen_giant-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-deepwood_the_fallen_giant-cand-High.png"
+ },
+ "Jk": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Xg": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Zy": {
+  "anchor": false,
+  "label": "SW13 cinder_verge_the_struck_sentinel Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-cinder_verge_the_struck_sentinel-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-cinder_verge_the_struck_sentinel-ship-Medium.png"
+ },
+ "Oy": {
+  "anchor": false,
+  "label": "SW13 dynamo_the_glass_field Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-dynamo_the_glass_field-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-dynamo_the_glass_field-ship-Medium.png"
+ },
+ "Eg": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Sy": {
+  "anchor": false,
+  "label": "SW13 ashfoot_shelter_outside High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-ashfoot_shelter_outside-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-ashfoot_shelter_outside-cand-High.png"
+ },
+ "Yg": {
+  "anchor": false,
+  "label": "SW13 dynamo_the_glass_field High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-dynamo_the_glass_field-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-dynamo_the_glass_field-cand-High.png"
+ }
+}

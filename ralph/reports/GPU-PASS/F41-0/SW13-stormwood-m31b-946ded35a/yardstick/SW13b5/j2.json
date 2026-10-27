@@ -1,0 +1,178 @@
+{
+ "sets": {
+  "Zn": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple sky and rain set the mood, but a flat painted-looking sky with no fog layering or shafts, a uniform dark grass carpet and cyan-rimmed pools sitting on the ground keep it well short of Palworld/Valheim finish."
+  },
+  "Wo": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The painted blue scale-and-fin dragon has a Palworld-class silhouette and colour on side B, though side A's floating faint-mid and washed-out flattened faint-end drag that side down."
+  },
+  "Ad": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same lantern-pools read as Zn: the storm sky and visible bolts carry some mood, but the carpet ground, flat-disc pools, billboard fog puffs and lack of atmospheric depth sink it against Palworld/Valheim."
+  },
+  "Xp": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Meadows palette and props fit, but blurry low-resolution ground, flat noon light and the same emblem stone reused as the aftermath marker across sites read below Palworld finish."
+  },
+  "Xk": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "An 'overlook' with no view or landmark: a flat brown path with glowing cracks, a uniform grass carpet and a backdrop-flat purple sky give no depth or weather mood at Palworld/Valheim level."
+  },
+  "Tw": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised elder with readable eyes and a warm Meadows green/brown outfit sits at Palworld character finish, held back only by a slightly softer, more toon face than the naturalistic creature bar."
+  },
+  "Le": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold-and-blue spider reads, but flat magenta ground rings as telegraphs, an invisible player creature, a HUD that covers about a third of every frame and (on B) foliage swallowing whole seconds of the fight are far from Palworld's boss-fight read."
+  },
+  "Ta": {
+   "A": {
+    "bar_a": 5.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The glowing blue mushroom clusters and lightning-lit break skies are the best Stormwood moments in the batch, but the uniform grass carpet, grey flat horizon and absent fog/rim light keep it below Palworld/Valheim finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood ground and light pass: break the uniform dark grass carpet into authored soil/moss/rock/root patches and clearings, seat the black lantern pools into the terrain (sunken banks, no bright cyan rim discs), and give each storm phase its own grade with cool rim light on trunks and figures, layered height fog and lightning-lit shafts instead of a flat purple backdrop sky (Zn, Ad, Xk, Ta).",
+   "kind": "scene"
+  },
+  {
+   "change": "Fight readability: replace flat magenta ground rings/chevrons with grounded lightning and impact VFX, add a combat camera that fades or avoids occluding foliage and trunks and keeps the player's creature in frame, and shrink/dim the left-side and bottom HUD panels (Le).",
+   "kind": "scene"
+  },
+  {
+   "change": "Per-site landmark and aftermath art: a real readable landmark for each Stormwood view (the crown overlook has none; Stormheart silhouette or a copper-and-glass capacitor hero in the distance), and site-specific aftermath props in the Meadows sites instead of one reused emblem stone (Xk, Ta, Xp).",
+   "kind": "new_art"
+  }
+ ]
+}

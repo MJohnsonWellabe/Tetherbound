@@ -1,0 +1,52 @@
+{
+ "Nq": {
+  "anchor": true,
+  "A": "f36_1_gpu:tanglevolt_candidate",
+  "B": "f36_1_gpu:tanglevolt_shipping"
+ },
+ "Aj": {
+  "anchor": false,
+  "label": "SW13 deepwood_lantern_hollow High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-deepwood_lantern_hollow-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-deepwood_lantern_hollow-ship-High.png"
+ },
+ "Mx": {
+  "anchor": false,
+  "label": "SW13 hollow_crown_the_crown_heartstone Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-hollow_crown_the_crown_heartstone-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-hollow_crown_the_crown_heartstone-cand-Medium.png"
+ },
+ "Nj": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Bj": {
+  "anchor": false,
+  "label": "SW13 deepwood_lantern_hollow Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-deepwood_lantern_hollow-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-deepwood_lantern_hollow-ship-Medium.png"
+ },
+ "Lo": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Ol": {
+  "anchor": false,
+  "label": "SW13 ashfoot_shelter_outside Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-ashfoot_shelter_outside-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-ashfoot_shelter_outside-ship-Medium.png"
+ },
+ "Lb": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "Ei": {
+  "anchor": false,
+  "label": "SW13 dynamo_the_stormheart_tree Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-dynamo_the_stormheart_tree-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW13\\sides\\SW13-dynamo_the_stormheart_tree-cand-Medium.png"
+ }
+}

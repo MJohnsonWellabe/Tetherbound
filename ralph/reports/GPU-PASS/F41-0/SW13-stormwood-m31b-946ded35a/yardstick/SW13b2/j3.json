@@ -1,0 +1,212 @@
+{
+ "sets": {
+  "Ti": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Both sides show a ram at the owner's Stormcapra bar (white fleece, dark coiled horns, blue charge, well above the 1.80 m ruler); A collapses grounded but its hit react reads the same as standing, and B's faint mid and faint end roll the body over and leave it floating clear above its own shadow, which sinks B's faint read."
+  },
+  "Wn": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Purple sky gaps, glowing blue mushrooms and (on B) black pools give it Stormwood identity, but the flat smooth brown path, dark mid-tone frames without rim light and the cotton-ball fog puffs in v04 sit well below Palworld's density and Valheim's atmospheric light."
+  },
+  "Jk": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's large wrapped recipe text and bold Craft/Leave hints read at a glance, but both panels are a muted grey-teal box with no cyan interaction or gold progression accents and keyboard-style glyphs, while B truncates its recipe lines ('3 St...') and shrinks hints to tiny grey 'Craft: A / Enter' text."
+  },
+  "Xg": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold-legged spider boss is readable but the player's creature is lost against the dark ground, telegraphs are flat magenta rings and chevrons (A i06-i10, i15-i17, tell2 a-c; B i10, i16-i17, tell2 a-c), the HUD covers much of the frame, and on B the camera sits inside canopy for i12-i15 so the fight disappears behind green."
+  },
+  "Zy": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky with white-violet lightning (v03 break) and the cyan-split sentinel tree carry the chapter look, but sparse faceted lollipop canopies, a flat empty horizon, a uniform green ground carpet and a rigid dark vertical slab in v03 calm read as a blockout field rather than a dense finished forest."
+  },
+  "Oy": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This is the strongest Stormwood read in the batch (purple lightning sky, gold copper veins in the path, dynamo pylon landmark, moss and mushrooms), but the noisy faceted pylon, A's hard white streak on the v03 pool, fog-puff sprites in v04 and dark unrimmed figures keep it short of shipping finish."
+  },
+  "Eg": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, clearly stylised elder with readable eyes, a white hair-and-beard silhouette and an earthy green vest and scarf palette that fits the key art's settlement folk; B's more worried brow is slightly less appealing, and both bodies are a little stiff and plain below the waist."
+  },
+  "Sy": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The lit cottage under a lightning-split purple sky is a cozy landmark, but it stands alone on a flat uniform grass carpet with no path, fence, yard props or soil transitions, the walls jump to teal in the building phase, and the v04 fog is blobby sprites rather than atmosphere."
+  },
+  "Yg": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same Glass Field strengths as Oy (lightning sky, copper veins, pylon landmark), but B's v05 break shows bright white contour-line strips lying flat on the ground and a hard white streak on the v03 pool, and both sides lack rim light and real fog depth."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Break up the uniform ground carpet in every Stormwood location (Wn, Zy, Sy, Oy, Yg): authored soil-to-moss-to-rock transitions, roots, fallen debris, black pools and grove edges, and paths with worn edges instead of flat smooth brown or green fill.",
+   "kind": "scene"
+  },
+  {
+   "change": "Give each storm phase its own grade and add a cool blue-violet rim light on trunks, the trainer and creatures; replace the cotton-ball fog sprites with layered height fog so distance reads and calm, building, break and fading are told apart by light, not only by lightning.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix the Xg fight read: replace the flat magenta telegraph rings and chevrons with grounded effects (cracking earth, stones, lightning with impact), keep the camera out of the canopy (B i12-i15), rim-light the player's creature and slim the HUD that covers the fight.",
+   "kind": "scene"
+  }
+ ]
+}

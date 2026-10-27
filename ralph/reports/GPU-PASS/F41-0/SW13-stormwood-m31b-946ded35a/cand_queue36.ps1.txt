@@ -1,0 +1,42 @@
+# Queue 36: SW13 Stormwood m31 ground pass 2 (moss + pools, no loam) + storm_light (coordinator 26 Oct, low priority). Verified checkouts in crA. Called from the end of queue 26 (after TW1).
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $main = "D:\tb-gpu-pass"; $crA = "D:\tb-gpu-wt-crA"; $tide = "D:\tb-gpu-wt-tide"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "45"
+function Import($proj, $tag) {
+    $env:APPDATA = "D:\tb-gpu-runs\appdata-Medium"
+    $p = Start-Process -FilePath $godot -ArgumentList "--headless --path $proj --import" -NoNewWindow -PassThru -RedirectStandardOutput "$out\import-$tag.log" -RedirectStandardError "$out\import-$tag.err.log"
+    $null = $p.Handle; if (-not $p.WaitForExit(5400000)) { Stop-Process -Id $p.Id -Force; "import $tag killed" }; "import $tag exit=$($p.ExitCode)"
+}
+function CheckoutCrA($sha) { for ($i = 0; $i -lt 3; $i++) { while (Get-Process Godot* -ErrorAction SilentlyContinue) { Start-Sleep 3 }; $e = git -C $crA checkout -q -f --detach $sha 2>&1; $h = (git -C $crA rev-parse HEAD 2>$null).Trim(); if ($h.StartsWith($sha)) { "crA at $($h.Substring(0,11))"; return }; "checkout $sha attempt $($i+1) failed: $e"; Start-Sleep 20 }; "CHECKOUT FAILED: crA wanted $sha, at $h; stopping queue"; exit }
+
+function Gate($step) { if (Test-Path "D:\tb-gpu-runs\STOP_QUEUE") { "queue stopped at gate before $step"; Remove-Item "D:\tb-gpu-runs\STOP_QUEUE"; exit } }
+# CO8 CLOSE-OUT (coordinator NOTE.md 26 Oct) runs before SW13; skips itself if out\CO8.done exists.
+& "D:\tb-gpu-runs\tools\cand_queue47.ps1"
+# SW17 re-run with --source-commit (queue 42 failed without it); skips itself if out\SW17b.done exists.
+& "D:\tb-gpu-runs\tools\cand_queue48.ps1"
+Gate "SW13"
+"== SW13: Stormwood m31b ground pass 2 + storm light, rebuilt on the merged lane. Control = 9b28ee9dd (off), candidate = tb/stormwood-m31b-on 946ded35a (on); F41 catalogue, clean tree at each arm's SHA"
+foreach ($arm in @(@("ctl", "9b28ee9ddc18266cbb19782333af5b874b5adddf"), @("cand", "946ded35a1dbc5830732fec4e4580f373a277b6b"))) {
+    $tag = $arm[0]; $sha = $arm[1]
+    CheckoutCrA $sha; Import $crA "crA-SW13-$tag"
+    $env:TB_RUN_TIMEOUT_MIN = "150"
+    foreach ($pr in "Medium", "High") {
+        Gate "SW13 $tag $pr"
+        # Same clean-tree routine as queue 27: re-checkout, then remove only this lane's Godot-generated untracked files.
+        CheckoutCrA $sha
+        foreach ($u in @(git -C $crA status --porcelain --untracked-files=all 2>$null | Where-Object { $_.StartsWith("?? ") } | ForEach-Object { $_.Substring(3) })) {
+            $src = $u -replace "\.uid$", ""
+            $gen = ($u -like "addons/terrain_3d/bin/~*.dll") -or (($u -like "*.uid") -and ((git -C $crA ls-files -- $src) -or -not (Test-Path (Join-Path $crA ($src -replace "/", "\")))))
+            if ($gen) { Remove-Item (Join-Path $crA ($u -replace "/", "\")) -Force; "  removed generated untracked: $u" } else { "  left untracked (not generated): $u" }
+        }
+        $left = @(git -C $crA status --porcelain --untracked-files=all 2>$null)
+        "  $tag $pr dirty before capture: $($left.Count)"
+        if ($left.Count -gt 0) { $left | Select-Object -First 5 }
+        if (Test-Path "$out\SW13-$tag-$pr") { Remove-Item "$out\SW13-$tag-$pr" -Recurse -Force }
+        & $run -Preset $pr -Script "res://tools/capture_f41_stormwood_catalog.gd" -OutDir "$out\SW13-$tag-$pr" -Resolution "1920x1080" -ProjectPath $crA -UserArgs @("--preset=$pr", "--source-commit=$sha", "--out={FRAMES}", "--label=f41-m31b-$tag-$pr", "--phases=calm,building,break,fading", "--no-aftermath")
+        "  F41 $tag $pr jpg=$((Get-ChildItem "$out\SW13-$tag-$pr\frames" -Filter *.jpg -ErrorAction SilentlyContinue).Count)"
+    }
+    $env:TB_RUN_TIMEOUT_MIN = "45"
+}
+"SW13 done"
+"queue36 done"

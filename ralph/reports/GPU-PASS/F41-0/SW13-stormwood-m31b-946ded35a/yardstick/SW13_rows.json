@@ -1,0 +1,1970 @@
+[
+ {
+  "batch": 1,
+  "code": "Aj",
+  "label": "SW13 deepwood_lantern_hollow High cand|ship",
+  "side": "SW13-deepwood_lantern_hollow-cand-High",
+  "mapped": 6.23,
+  "judges": [
+   6.26,
+   6.26,
+   6.16
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Aj",
+  "label": "SW13 deepwood_lantern_hollow High cand|ship",
+  "side": "SW13-deepwood_lantern_hollow-ship-High",
+  "mapped": 6.06,
+  "judges": [
+   5.95,
+   5.85,
+   6.37
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Mx",
+  "label": "SW13 hollow_crown_the_crown_heartstone Medium cand|ship",
+  "side": "SW13-hollow_crown_the_crown_heartstone-ship-Medium",
+  "mapped": 5.68,
+  "judges": [
+   6.06,
+   5.43,
+   5.54
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Mx",
+  "label": "SW13 hollow_crown_the_crown_heartstone Medium cand|ship",
+  "side": "SW13-hollow_crown_the_crown_heartstone-cand-Medium",
+  "mapped": 5.57,
+  "judges": [
+   5.64,
+   5.22,
+   5.85
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Bj",
+  "label": "SW13 deepwood_lantern_hollow Medium cand|ship",
+  "side": "SW13-deepwood_lantern_hollow-cand-Medium",
+  "mapped": 6.23,
+  "judges": [
+   6.26,
+   6.26,
+   6.16
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Bj",
+  "label": "SW13 deepwood_lantern_hollow Medium cand|ship",
+  "side": "SW13-deepwood_lantern_hollow-ship-Medium",
+  "mapped": 6.09,
+  "judges": [
+   5.95,
+   5.95,
+   6.37
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ol",
+  "label": "SW13 ashfoot_shelter_outside Medium cand|ship",
+  "side": "SW13-ashfoot_shelter_outside-cand-Medium",
+  "mapped": 5.85,
+  "judges": [
+   6.16,
+   5.64,
+   5.74
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ol",
+  "label": "SW13 ashfoot_shelter_outside Medium cand|ship",
+  "side": "SW13-ashfoot_shelter_outside-ship-Medium",
+  "mapped": 5.81,
+  "judges": [
+   6.06,
+   5.64,
+   5.74
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ei",
+  "label": "SW13 dynamo_the_stormheart_tree Medium cand|ship",
+  "side": "SW13-dynamo_the_stormheart_tree-ship-Medium",
+  "mapped": 6.51,
+  "judges": [
+   6.68,
+   6.37,
+   6.47
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ei",
+  "label": "SW13 dynamo_the_stormheart_tree Medium cand|ship",
+  "side": "SW13-dynamo_the_stormheart_tree-cand-Medium",
+  "mapped": 6.47,
+  "judges": [
+   6.58,
+   6.37,
+   6.47
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "PARTIAL",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Wn",
+  "label": "SW13 deepwood_the_fallen_giant High cand|ship",
+  "side": "SW13-deepwood_the_fallen_giant-ship-High",
+  "mapped": 5.94,
+  "judges": [
+   6.0,
+   5.57,
+   6.26
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Wn",
+  "label": "SW13 deepwood_the_fallen_giant High cand|ship",
+  "side": "SW13-deepwood_the_fallen_giant-cand-High",
+  "mapped": 6.0,
+  "judges": [
+   6.17,
+   5.4,
+   6.43
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Zy",
+  "label": "SW13 cinder_verge_the_struck_sentinel Medium cand|ship",
+  "side": "SW13-cinder_verge_the_struck_sentinel-cand-Medium",
+  "mapped": 5.8,
+  "judges": [
+   5.74,
+   5.57,
+   6.08
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Zy",
+  "label": "SW13 cinder_verge_the_struck_sentinel Medium cand|ship",
+  "side": "SW13-cinder_verge_the_struck_sentinel-ship-Medium",
+  "mapped": 5.94,
+  "judges": [
+   5.91,
+   5.57,
+   6.34
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Oy",
+  "label": "SW13 dynamo_the_glass_field Medium cand|ship",
+  "side": "SW13-dynamo_the_glass_field-cand-Medium",
+  "mapped": 6.14,
+  "judges": [
+   6.08,
+   5.83,
+   6.51
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Oy",
+  "label": "SW13 dynamo_the_glass_field Medium cand|ship",
+  "side": "SW13-dynamo_the_glass_field-ship-Medium",
+  "mapped": 6.23,
+  "judges": [
+   6.0,
+   6.0,
+   6.69
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Sy",
+  "label": "SW13 ashfoot_shelter_outside High cand|ship",
+  "side": "SW13-ashfoot_shelter_outside-ship-High",
+  "mapped": 6.17,
+  "judges": [
+   6.26,
+   5.91,
+   6.34
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Sy",
+  "label": "SW13 ashfoot_shelter_outside High cand|ship",
+  "side": "SW13-ashfoot_shelter_outside-cand-High",
+  "mapped": 6.14,
+  "judges": [
+   6.17,
+   5.91,
+   6.34
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Yg",
+  "label": "SW13 dynamo_the_glass_field High cand|ship",
+  "side": "SW13-dynamo_the_glass_field-ship-High",
+  "mapped": 6.2,
+  "judges": [
+   6.0,
+   6.0,
+   6.6
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Yg",
+  "label": "SW13 dynamo_the_glass_field High cand|ship",
+  "side": "SW13-dynamo_the_glass_field-cand-High",
+  "mapped": 5.74,
+  "judges": [
+   5.57,
+   5.57,
+   6.08
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Ub",
+  "label": "SW13 cinder_verge_verge_rod_station Medium cand|ship",
+  "side": "SW13-cinder_verge_verge_rod_station-ship-Medium",
+  "mapped": 5.65,
+  "judges": [
+   5.83,
+   5.93,
+   5.2
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Ub",
+  "label": "SW13 cinder_verge_verge_rod_station Medium cand|ship",
+  "side": "SW13-cinder_verge_verge_rod_station-cand-Medium",
+  "mapped": 5.48,
+  "judges": [
+   5.62,
+   5.72,
+   5.09
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Cz",
+  "label": "SW13 conductor_run_the_capacitor_grove High cand|ship",
+  "side": "SW13-conductor_run_the_capacitor_grove-ship-High",
+  "mapped": 5.69,
+  "judges": [
+   5.62,
+   6.14,
+   5.3
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Cz",
+  "label": "SW13 conductor_run_the_capacitor_grove High cand|ship",
+  "side": "SW13-conductor_run_the_capacitor_grove-cand-High",
+  "mapped": 5.65,
+  "judges": [
+   5.41,
+   5.93,
+   5.62
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PRESENT",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Gj",
+  "label": "SW13 conductor_run_rodline_post Medium cand|ship",
+  "side": "SW13-conductor_run_rodline_post-ship-Medium",
+  "mapped": 5.97,
+  "judges": [
+   6.04,
+   6.24,
+   5.62
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Gj",
+  "label": "SW13 conductor_run_rodline_post Medium cand|ship",
+  "side": "SW13-conductor_run_rodline_post-cand-Medium",
+  "mapped": 6.04,
+  "judges": [
+   6.04,
+   6.35,
+   5.72
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Pg",
+  "label": "SW13 cinder_verge_verge_rod_station High cand|ship",
+  "side": "SW13-cinder_verge_verge_rod_station-cand-High",
+  "mapped": 5.48,
+  "judges": [
+   5.62,
+   5.72,
+   5.09
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Pg",
+  "label": "SW13 cinder_verge_verge_rod_station High cand|ship",
+  "side": "SW13-cinder_verge_verge_rod_station-ship-High",
+  "mapped": 5.65,
+  "judges": [
+   5.83,
+   5.93,
+   5.2
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Tp",
+  "label": "SW13 glowmoss_hollows_crown_overlook Medium cand|ship",
+  "side": "SW13-glowmoss_hollows_crown_overlook-cand-Medium",
+  "mapped": 5.51,
+  "judges": [
+   5.41,
+   5.93,
+   5.2
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Tp",
+  "label": "SW13 glowmoss_hollows_crown_overlook Medium cand|ship",
+  "side": "SW13-glowmoss_hollows_crown_overlook-ship-Medium",
+  "mapped": 5.55,
+  "judges": [
+   5.41,
+   6.04,
+   5.2
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Ij",
+  "label": "SW13 deepwood_the_fallen_giant Medium cand|ship",
+  "side": "SW13-deepwood_the_fallen_giant-cand-Medium",
+  "mapped": 5.42,
+  "judges": [
+   5.35,
+   5.35,
+   5.56
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Ij",
+  "label": "SW13 deepwood_the_fallen_giant Medium cand|ship",
+  "side": "SW13-deepwood_the_fallen_giant-ship-Medium",
+  "mapped": 5.59,
+  "judges": [
+   5.56,
+   5.46,
+   5.76
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Ud",
+  "label": "SW13 cinder_verge_the_struck_sentinel High cand|ship",
+  "side": "SW13-cinder_verge_the_struck_sentinel-ship-High",
+  "mapped": 5.29,
+  "judges": [
+   5.56,
+   4.95,
+   5.35
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Ud",
+  "label": "SW13 cinder_verge_the_struck_sentinel High cand|ship",
+  "side": "SW13-cinder_verge_the_struck_sentinel-cand-High",
+  "mapped": 5.29,
+  "judges": [
+   5.46,
+   5.05,
+   5.35
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Lo",
+  "label": "SW13 hollow_crown_the_crown_heartstone High cand|ship",
+  "side": "SW13-hollow_crown_the_crown_heartstone-cand-High",
+  "mapped": 5.86,
+  "judges": [
+   6.17,
+   5.66,
+   5.76
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Lo",
+  "label": "SW13 hollow_crown_the_crown_heartstone High cand|ship",
+  "side": "SW13-hollow_crown_the_crown_heartstone-ship-High",
+  "mapped": 5.93,
+  "judges": [
+   6.17,
+   5.66,
+   5.96
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Ei",
+  "label": "SW13 conductor_run_rodline_post High cand|ship",
+  "side": "SW13-conductor_run_rodline_post-ship-High",
+  "mapped": 5.76,
+  "judges": [
+   5.96,
+   5.76,
+   5.56
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Ei",
+  "label": "SW13 conductor_run_rodline_post High cand|ship",
+  "side": "SW13-conductor_run_rodline_post-cand-High",
+  "mapped": 5.73,
+  "judges": [
+   5.86,
+   5.76,
+   5.56
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Pn",
+  "label": "SW13 dynamo_the_stormheart_tree High cand|ship",
+  "side": "SW13-dynamo_the_stormheart_tree-cand-High",
+  "mapped": 5.96,
+  "judges": [
+   6.17,
+   5.76,
+   5.96
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Pn",
+  "label": "SW13 dynamo_the_stormheart_tree High cand|ship",
+  "side": "SW13-dynamo_the_stormheart_tree-ship-High",
+  "mapped": 6.27,
+  "judges": [
+   6.47,
+   6.17,
+   6.17
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PRESENT"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PARTIAL",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Zn",
+  "label": "SW13 glowmoss_hollows_the_lantern_pools High cand|ship",
+  "side": "SW13-glowmoss_hollows_the_lantern_pools-cand-High",
+  "mapped": 6.0,
+  "judges": [
+   6.06,
+   5.98,
+   5.98
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Zn",
+  "label": "SW13 glowmoss_hollows_the_lantern_pools High cand|ship",
+  "side": "SW13-glowmoss_hollows_the_lantern_pools-ship-High",
+  "mapped": 6.03,
+  "judges": [
+   5.98,
+   6.06,
+   6.06
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Ad",
+  "label": "SW13 glowmoss_hollows_the_lantern_pools Medium cand|ship",
+  "side": "SW13-glowmoss_hollows_the_lantern_pools-ship-Medium",
+  "mapped": 5.98,
+  "judges": [
+   6.06,
+   5.98,
+   5.89
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Ad",
+  "label": "SW13 glowmoss_hollows_the_lantern_pools Medium cand|ship",
+  "side": "SW13-glowmoss_hollows_the_lantern_pools-cand-Medium",
+  "mapped": 6.17,
+  "judges": [
+   6.23,
+   6.14,
+   6.14
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Xk",
+  "label": "SW13 glowmoss_hollows_crown_overlook High cand|ship",
+  "side": "SW13-glowmoss_hollows_crown_overlook-cand-High",
+  "mapped": 5.89,
+  "judges": [
+   6.14,
+   5.81,
+   5.73
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Xk",
+  "label": "SW13 glowmoss_hollows_crown_overlook High cand|ship",
+  "side": "SW13-glowmoss_hollows_crown_overlook-ship-High",
+  "mapped": 5.92,
+  "judges": [
+   6.06,
+   5.89,
+   5.81
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Ta",
+  "label": "SW13 conductor_run_the_capacitor_grove Medium cand|ship",
+  "side": "SW13-conductor_run_the_capacitor_grove-cand-Medium",
+  "mapped": 5.92,
+  "judges": [
+   5.98,
+   5.89,
+   5.89
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PRESENT",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 5,
+  "code": "Ta",
+  "label": "SW13 conductor_run_the_capacitor_grove Medium cand|ship",
+  "side": "SW13-conductor_run_the_capacitor_grove-ship-Medium",
+  "mapped": 6.2,
+  "judges": [
+   6.23,
+   6.23,
+   6.14
+  ],
+  "defects": [
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   },
+   {
+    "Flat magenta slabs or rings on the ground": "FIXED",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+    "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+    "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL"
+   }
+  ]
+ }
+]

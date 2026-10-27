@@ -1,0 +1,198 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.934,
+  "least_squares_slope": 1.0133,
+  "method": "linear",
+  "slope": 1.0133,
+  "intercept": 0.2881,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.473,
+ "top_anchor_reference": 7.89,
+ "confirming_batch": true,
+ "anchors": {
+  "p2_094_r4:Y_after": {
+   "measured": 6.4,
+   "reference": 6.73,
+   "mapped": 6.774,
+   "residual": -0.044
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.067,
+   "reference": 3.5,
+   "mapped": 4.409,
+   "residual": -0.909
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.3,
+   "reference": 7.53,
+   "mapped": 7.686,
+   "residual": -0.156
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.3,
+   "reference": 7.47,
+   "mapped": 7.686,
+   "residual": -0.216
+  },
+  "f36_0_gap:C5A": {
+   "measured": 4.867,
+   "reference": 5.7,
+   "mapped": 5.22,
+   "residual": 0.48
+  },
+  "f36_0_gap:C5B": {
+   "measured": 6.667,
+   "reference": 6.93,
+   "mapped": 7.044,
+   "residual": -0.114
+  },
+  "f36_1_gpu:tanglevolt_shipping": {
+   "measured": 4.9,
+   "reference": 6.04,
+   "mapped": 5.254,
+   "residual": 0.786
+  },
+  "f36_1_gpu:tanglevolt_candidate": {
+   "measured": 7.333,
+   "reference": 7.89,
+   "mapped": 7.719,
+   "residual": 0.171
+  }
+ },
+ "candidates": {
+  "SW13 deepwood_the_fallen_giant Medium cand|ship | SW13-deepwood_the_fallen_giant-cand-Medium": {
+   "measured_mean": 5.067,
+   "mapped_mean": 5.42,
+   "mapped_judges": [
+    5.35,
+    5.35,
+    5.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW13 deepwood_the_fallen_giant Medium cand|ship | SW13-deepwood_the_fallen_giant-ship-Medium": {
+   "measured_mean": 5.233,
+   "mapped_mean": 5.59,
+   "mapped_judges": [
+    5.56,
+    5.46,
+    5.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW13 cinder_verge_the_struck_sentinel High cand|ship | SW13-cinder_verge_the_struck_sentinel-ship-High": {
+   "measured_mean": 4.933,
+   "mapped_mean": 5.29,
+   "mapped_judges": [
+    5.56,
+    4.95,
+    5.35
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW13 cinder_verge_the_struck_sentinel High cand|ship | SW13-cinder_verge_the_struck_sentinel-cand-High": {
+   "measured_mean": 4.933,
+   "mapped_mean": 5.29,
+   "mapped_judges": [
+    5.46,
+    5.05,
+    5.35
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW13 hollow_crown_the_crown_heartstone High cand|ship | SW13-hollow_crown_the_crown_heartstone-cand-High": {
+   "measured_mean": 5.5,
+   "mapped_mean": 5.86,
+   "mapped_judges": [
+    6.17,
+    5.66,
+    5.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW13 hollow_crown_the_crown_heartstone High cand|ship | SW13-hollow_crown_the_crown_heartstone-ship-High": {
+   "measured_mean": 5.567,
+   "mapped_mean": 5.93,
+   "mapped_judges": [
+    6.17,
+    5.66,
+    5.96
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW13 conductor_run_rodline_post High cand|ship | SW13-conductor_run_rodline_post-ship-High": {
+   "measured_mean": 5.4,
+   "mapped_mean": 5.76,
+   "mapped_judges": [
+    5.96,
+    5.76,
+    5.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW13 conductor_run_rodline_post High cand|ship | SW13-conductor_run_rodline_post-cand-High": {
+   "measured_mean": 5.367,
+   "mapped_mean": 5.73,
+   "mapped_judges": [
+    5.86,
+    5.76,
+    5.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW13 dynamo_the_stormheart_tree High cand|ship | SW13-dynamo_the_stormheart_tree-cand-High": {
+   "measured_mean": 5.6,
+   "mapped_mean": 5.96,
+   "mapped_judges": [
+    6.17,
+    5.76,
+    5.96
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW13 dynamo_the_stormheart_tree High cand|ship | SW13-dynamo_the_stormheart_tree-ship-High": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.27,
+   "mapped_judges": [
+    6.47,
+    6.17,
+    6.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
