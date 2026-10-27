@@ -2,6 +2,8 @@
 
 ## Session 2 log (newest first)
 
+- 27 Oct 04:40Z **m50 storm light grade: no gain on CPU (+0.04)** (`m50/VERDICT.md`); first miss. The straight-back diffuse rim lights no visible edge, and break went darker.
+  - **Second try (m50b) is being built:** a three-quarter side rim, stronger; break graded brighter; the bolt ground exposure on.
 - 27 Oct 04:26Z Coordinator, 03:56Z: the SW20b one-batch re-judge put the Ashfoot room at 6.76, not met (0.74 short). land14 is PR #770. The next Ashfoot arm is the top close-out.
 - 27 Oct 04:26Z **m51 Ashfoot polish: no gain (0.00 mapped)** (`m51/VERDICT.md`). No arm; `ashfoot_polish` stays OFF; first miss.
   - **Worked:** the rug and floor-disc swap.
