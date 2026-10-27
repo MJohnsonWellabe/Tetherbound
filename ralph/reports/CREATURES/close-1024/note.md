@@ -1,5 +1,23 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (27 Oct, GPU READY: CO12-ON)
+
+- **GPU READY (CLOSE-OUT, on main 073466a65): CO12-ON 6faa34c65862b7529620014748723caf535a2093.**
+  - The tree is identical to tb/co14-on. It is a merge onto the old co12 head, so nothing was rewritten.
+  - The Mosshell faint is not in it.
+- **Contents and CPU results:**
+  - Cliffspike flinch, +1.06 (b62).
+  - Voltwig flinch, +0.72 (b62).
+  - Nightburrow aspect flame goes out on faint, +0.51 (b62).
+  - Thundertunnel fur value lift, +1.10 (b63).
+- **Capture:** `capture_f36_poses.gd --whole-body --context --species=cliffspike,voltwig,nightburrow,thundertunnel,bramblebun` (hit and faint rows). Judge main vs co12-on.
+- **f36 enabled_species:**
+  - Enabled: Cliffspike, Voltwig, Thundertunnel.
+  - **NOT enabled: Nightburrow and Bramblebun.** Shoot them plain on both sides; `--candidate` aborts for them.
+  - Plain is also correct for the three enabled species: a plain capture plays the recipe clips for any enabled species, which is what the game shows.
+  - Bramblebun is a main-only re-score; it has no change.
+- land15 follows.
+
 ## TO COORDINATOR (27 Oct, GPU READY: CO14-ON updated, now with Thundertunnel)
 
 - **GPU READY (CLOSE-OUT, on main): CO14-ON 134bf046dc284fee4238955386b136f851ab563f.** The branch fast-forwarded from f172c6c7 by one commit: **Thundertunnel's fur value lift.**
