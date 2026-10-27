@@ -1,7 +1,7 @@
 {
- "generated_at": "6:30 PM CT Sat 24 Oct 2026",
- "main_sha": "24dfec7b9",
- "batch4_sha": "GPU judging live (owner 24 Oct); seven cloud lanes plus the GPU lane",
+ "generated_at": "10:45 AM CT Tue 27 Oct 2026",
+ "main_sha": "96988ab7e",
+ "batch4_sha": "wound down 27 Oct (owner: usage); no lanes running",
  "rows": [
   {
    "id": "F01",
@@ -2316,7 +2316,7 @@
     {
      "text": "F36 (0) priority asset #2: Ripplet regenerated or confirmed with drafted reference and provenance, and passing the bar.",
      "status": "in_progress",
-     "evidence": "Ledger close-1020 row 2: ON. Installed-rig retex r6 6.70 vs installed 6.13 (CPU-provisional); shiny kept via RETEX_LEGACY_MAPS. GPU 24 Oct on main: 7.26 (under 7.5).",
+     "evidence": "GPU CO11 27 Oct, judge of record (tb/gpu-pass 2c3a43799, F36-1/CO11-near-bar-creatures-2b4f2256e/VERDICT.md): 6.68 / 6.53 -> 7.26 / 7.01 with the matte countershaded coat, landed in #772; about 0.25-0.5 short (lighter belly, toward the Sirenseal board's grey-white). Ledger close-1020 row 2: ON. Installed-rig retex r6 6.70 vs installed 6.13 (CPU-provisional); shiny kept via RETEX_LEGACY_MAPS. GPU 24 Oct on main: 7.26 (under 7.5).",
      "gap": "GPU yardstick capture at Medium and High; mapped >= 7.5 closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#0",
@@ -2386,7 +2386,7 @@
     {
      "text": "F36 (0) priority asset #9: Mirejaw regenerated or confirmed with drafted reference and provenance, and passing the bar.",
      "status": "in_progress",
-     "evidence": "Ledger close-1020 row 9: ON (historical). Native model switched on 11 Oct (two-judge PASS), kept by the historical-acceptance rule (coordinator ruling 21 Oct). Later retex r6 5.73 judged OFF; live 5.2–6.0 on CPU panels.",
+     "evidence": "GPU CO9 27 Oct, judge of record (tb/gpu-pass bc548cac3, F36-1/CO9-mirejaw-olive-umber-033a66f6a/VERDICT.md): main 6.39 / 6.23 (standard crop); water_mirejaw 6.28 / 6.28; the olive-umber fill (+0.13) rides along with the next swing. Ledger close-1020 row 9: ON (historical). Native model switched on 11 Oct (two-judge PASS), kept by the historical-acceptance rule (coordinator ruling 21 Oct). Later retex r6 5.73 judged OFF; live 5.2–6.0 on CPU panels.",
      "gap": "GPU yardstick capture at Medium and High; mapped >= 7.5 closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#0",
@@ -2526,7 +2526,7 @@
     {
      "text": "F36 (0) priority asset #23: Solmane regenerated or confirmed with drafted reference and provenance, and passing the bar.",
      "status": "in_progress",
-     "evidence": "Ledger close-1020 row 23: OFF. Installed stays live. Wing-root v2 4.43 vs installed 5.67 (GPU Medium, 15 Oct).",
+     "evidence": "GPU CO11 27 Oct, judge of record (tb/gpu-pass 2c3a43799, F36-1/CO11-near-bar-creatures-2b4f2256e/VERDICT.md): 6.26 / 6.46 -> 6.55 / 6.68 with the grounded flinch, landed in #772; next: a faint that collapses rather than crouching wings-up. Ledger close-1020 row 23: OFF. Installed stays live. Wing-root v2 4.43 vs installed 5.67 (GPU Medium, 15 Oct).",
      "gap": "GPU yardstick capture at Medium and High; mapped >= 7.5 closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#0",
@@ -2626,7 +2626,7 @@
     {
      "text": "F36 (1) aquaryn: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "CPU whole-roster round r3: mapped 6.68 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU CO11 27 Oct, judge of record (tb/gpu-pass 2c3a43799, F36-1/CO11-near-bar-creatures-2b4f2256e/VERDICT.md): main 7.02 / 7.34 (the grounded flinch regressed it and was not landed); water_aquaryn 7.09 / 7.02. CPU whole-roster round r3: mapped 6.68 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2656,7 +2656,7 @@
     {
      "text": "F36 (1) breezetail: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "CPU whole-roster round r6: mapped 7.1 (ralph/reports/CREATURES/close-1024/roster/r6/; later b-rounds in roster/verdict.md). GPU 24 Oct: held-shove hit recipe confirmed 7.69 (F36-1/main-1024); the other applicable poses still need their GPU round.",
+     "evidence": "GPU CO8 26 Oct, judge of record (tb/gpu-pass 41b922661, F36-1/CO8-galecrest-flinch-stormcapra-7e6b868d7/VERDICT.md): 6.46 -> 6.77 / 6.89 with the grounded flinch (landed in #767); about 0.7 short (busy blue harness print). CPU whole-roster round r6: mapped 7.1 (ralph/reports/CREATURES/close-1024/roster/r6/; later b-rounds in roster/verdict.md). GPU 24 Oct: held-shove hit recipe confirmed 7.69 (F36-1/main-1024); the other applicable poses still need their GPU round.",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2826,7 +2826,7 @@
     {
      "text": "F36 (1) mirejaw: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): mirejaw mapped 6.52 (tier 6-7). CPU whole-roster round r3: mapped 6.31 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU CO9 27 Oct, judge of record (tb/gpu-pass bc548cac3, F36-1/CO9-mirejaw-olive-umber-033a66f6a/VERDICT.md): main 6.39 / 6.23 (standard crop); water_mirejaw 6.28 / 6.28; the olive-umber fill (+0.13) rides along with the next swing. GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): mirejaw mapped 6.52 (tier 6-7). CPU whole-roster round r3: mapped 6.31 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2836,7 +2836,7 @@
     {
      "text": "F36 (1) mosshell: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): mosshell mapped 6.9 (tier 6-7). CPU whole-roster round r2: mapped 7.56 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU CO11 27 Oct, judge of record (tb/gpu-pass 2c3a43799, F36-1/CO11-near-bar-creatures-2b4f2256e/VERDICT.md): 6.60 / 6.72 -> 6.66 / 7.17 with the on-its-back faint, landed in #772; water_mosshell 6.77 / 7.12 -> 7.10 / 7.67. GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): mosshell mapped 6.9 (tier 6-7). CPU whole-roster round r2: mapped 7.56 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2936,7 +2936,7 @@
     {
      "text": "F36 (1) ripplet: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): ripplet mapped 7.49 (tier 7-7.5). CPU whole-roster round r1: mapped 6.71 (ralph/reports/CREATURES/close-1024/roster/r1/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU CO11 27 Oct, judge of record (tb/gpu-pass 2c3a43799, F36-1/CO11-near-bar-creatures-2b4f2256e/VERDICT.md): 6.68 / 6.53 -> 7.26 / 7.01 with the matte countershaded coat, landed in #772; about 0.25-0.5 short (lighter belly, toward the Sirenseal board's grey-white). GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): ripplet mapped 7.49 (tier 7-7.5). CPU whole-roster round r1: mapped 6.71 (ralph/reports/CREATURES/close-1024/roster/r1/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2996,7 +2996,7 @@
     {
      "text": "F36 (1) solmane: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "CPU whole-roster round r6: mapped 5.81 (ralph/reports/CREATURES/close-1024/roster/r6/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU CO11 27 Oct, judge of record (tb/gpu-pass 2c3a43799, F36-1/CO11-near-bar-creatures-2b4f2256e/VERDICT.md): 6.26 / 6.46 -> 6.55 / 6.68 with the grounded flinch, landed in #772; next: a faint that collapses rather than crouching wings-up. CPU whole-roster round r6: mapped 5.81 (ralph/reports/CREATURES/close-1024/roster/r6/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -3116,7 +3116,7 @@
     {
      "text": "F36 (1) tidecoil: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "CPU whole-roster round r4: mapped 6.97 (ralph/reports/CREATURES/close-1024/roster/r4/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU CO11 27 Oct, judge of record (tb/gpu-pass 2c3a43799, F36-1/CO11-near-bar-creatures-2b4f2256e/VERDICT.md): main 7.88 / 7.88 (land form meets the bar; the flinch lowered it and was not landed); water_tidecoil 7.32 / 7.24 keeps the row open. CPU whole-roster round r4: mapped 6.97 (ralph/reports/CREATURES/close-1024/roster/r4/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
