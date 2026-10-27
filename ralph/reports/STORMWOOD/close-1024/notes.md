@@ -2,6 +2,10 @@
 
 ## Session 2 log (newest first)
 
+- 27 Oct 01:49Z **Storm sky retry (soft rims): no gain on CPU**, mapped 6.03 -> 5.92 (-0.11) (`r45c/VERDICT.md`). Judges call the arms "nearly identical"; the frames do differ (mean pixel difference 24-54).
+  - r45b's gain came from the bright rims that SW19 read as smear slabs. Soft rims leave the masses invisible.
+  - **No SW19 retry arm is posted.** The sky-form approach is PARKED (SW19 + r45c); `form` and `skyline` stay OFF.
+  - **Next idea for the open stands:** take the storm into the scene, as all GPU judges ask: a per-phase ground and foliage grade, plus a cool lightning rim light on trunks and figures.
 - 27 Oct 01:23Z Coordinator, 01:22Z:
   - **SW19 storm sky (m45c): no gain** (Medium 5.74 -> 5.72, High 5.73 -> 5.74). The flat sky improved (PRESENT 9 -> 0 Medium, 11 -> 4 High), but the lit rims read as white smear slabs (16 -> 27 Medium, 19 -> 27 High).
   - This is the sky's first GPU miss; one more arm is allowed. The lane now has softer rims (`form.lit` 0.8 -> 0.25, `form.edge` 0.04 -> 0.08), with dark bases, deck and skyline kept. CPU capture is running; it posts READY only if the smear is gone on CPU.
