@@ -1,0 +1,49 @@
+# Item SW20 (local, CLOSE-OUT): Stormwood Ashfoot room m48b, tb/stormwood-m48b-on cc99525a5 (cottage_interior_finish storm_room +
+# stormwood_dressing on, copper tint fixed to gold) vs control 255b363c7. F41 catalogue, clean tree at each arm's SHA.
+#   ashfoot_shelter_inside in all four phases; ashfoot_shelter_outside as a no-change check. Layout as SW16.
+$od = "D:\tb-gpu-runs\yard\SW20\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out, [int] $cols = 3, [int] $tw = 420) {
+    $s = [ordered]@{ title = ""; cols = $cols; thumb_w = $tw; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_SW20.json", ($s | ConvertTo-Json -Depth 5))
+    & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_SW20.json" | Out-Null
+    return $out
+}
+$generic = @(
+    "Flat magenta slabs or rings on the ground",
+    "Placeholder or untextured materials (flat grey, checker or faceted blocks)",
+    "Floating bodies or props (a gap between an object and the ground under it)",
+    "Clipping (geometry passing through geometry, or the camera inside geometry)")
+$world = @(
+    "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions",
+    "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain")
+$standExtra = @{
+    "ashfoot_shelter_inside" = @("the room light stays warm orange in every phase: no cool storm light through the window and no lightning flash on the walls at break",
+        "the interior reads as a generic cabin with nothing specific to the Stormwood (no copper, storm-glass, moss or lightning-rod dressing)",
+        "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase")
+}
+$brief = "Fixed production-camera views of one Stormwood location ({0}) through a storm's calm, building, break and fading phases, with the 1.80 m trainer as a ruler. Judge whether it reads as the key art's Stormwood: a storm-lit purple forest realm with readable landmarks, convincing ground and light and weather that belong to the world."
+function Frames($root, $pr) { $h = @{}; Get-ChildItem "$root-$pr\frames" -Filter *.jpg -ErrorAction SilentlyContinue | ForEach-Object { $h[$_.BaseName] = $_.FullName }; return $h }
+$plan = @(
+    @("SW20", "D:\tb-gpu-runs\out\SW20-cand", "D:\tb-gpu-runs\out\SW20-ctl", "ashfoot_shelter_inside"),
+    @("SW20", "D:\tb-gpu-runs\out\SW20-cand", "D:\tb-gpu-runs\out\SW20-ctl", "ashfoot_shelter_outside"))
+$order = @{ calm = 0; building = 1; break = 2; fading = 3 }
+$sets = @(); $cover = @()
+foreach ($pr in "Medium", "High") {
+    foreach ($p in $plan) {
+        $item, $candRoot, $baseRoot, $st = $p
+        $c = Frames $candRoot $pr; $b = Frames $baseRoot $pr
+        $pick = @($c.Keys | Where-Object { $b.ContainsKey($_) -and ($_ -replace '_(v\d+_)?(calm|building|break|fading)$', '') -eq $st } | Sort-Object { $ph = ($_ -split '_')[-1]; "$($order[$ph])-$($_ -replace '_[a-z]+$', '')" })
+        if ($pick.Count -eq 0) { "MISSING $item $st $pr"; continue }
+        $caps = @($pick | ForEach-Object { ($_ -replace "^$st" + "_", '') -replace '_', ' ' })
+        $sa = Side @($pick | ForEach-Object { $c[$_] }) $caps "$od\$item-$st-cand-$pr.png" 2
+        $sb = Side @($pick | ForEach-Object { $b[$_] }) $caps "$od\$item-$st-ship-$pr.png" 2
+        $def = @($generic) + $world; if ($standExtra.ContainsKey($st)) { $def += $standExtra[$st] }
+        $sets += [ordered]@{ label = "$item $st $pr cand|ship"; a = $sa; b = $sb; brief = ($brief -f ($st -replace '_', ' ')); defects = $def }
+        $cover += [ordered]@{ item = $item; stand = $st; preset = $pr; judged = $pick }
+    }
+}
+$rng = New-Object System.Random 2191; $sets = @($sets | Sort-Object { $rng.Next() })
+New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\SW20\b1" | Out-Null
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\SW20\b1\candidates.json", (ConvertTo-Json -InputObject @($sets) -Depth 5))
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\SW20\coverage.json", (ConvertTo-Json -InputObject $cover -Depth 5))
+"SW20 sets: $($sets.Count)"; $cover | ForEach-Object { "$($_.stand) $($_.preset) frames=$($_.judged.Count)" }

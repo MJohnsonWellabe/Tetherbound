@@ -1,0 +1,182 @@
+{
+ "sets": {
+  "Xw": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the room light stays warm orange in every phase: no cool storm light through the window and no lightning flash on the walls at break": "PRESENT",
+     "the interior reads as a generic cabin with nothing specific to the Stormwood (no copper, storm-glass, moss or lightning-rod dressing)": "PRESENT",
+     "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the room light stays warm orange in every phase: no cool storm light through the window and no lightning flash on the walls at break": "FIXED",
+     "the interior reads as a generic cabin with nothing specific to the Stormwood (no copper, storm-glass, moss or lightning-rod dressing)": "PARTIAL",
+     "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's cool violet window light and white wall flash at break give a real storm beat against the warm hearth, but the room is still a plain plank box with a blown-out backlit trainer and a window frame that stands proud of the wall, short of Valheim-class interior light."
+  },
+  "Wq": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple sky, rain and white-violet lightning at break carry the Stormwood mood, but a uniform dark-green grass carpet, a flat empty horizon, blobby dark tree canopies and flat white mist puffs in fading sink it beside Palworld's ground density and depth."
+  },
+  "Qd": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's furred boar is close to the naturalistic bar but no taller than the trainer and floats off the stage in faint mid, while B's smooth terracotta piggy-bank body with stuck-on green moss patches reads as a toy, not a Palworld-class creature."
+  },
+  "Sl": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the room light stays warm orange in every phase: no cool storm light through the window and no lightning flash on the walls at break": "FIXED",
+     "the interior reads as a generic cabin with nothing specific to the Stormwood (no copper, storm-glass, moss or lightning-rod dressing)": "PARTIAL",
+     "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "FIXED",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the room light stays warm orange in every phase: no cool storm light through the window and no lightning flash on the walls at break": "PRESENT",
+     "the interior reads as a generic cabin with nothing specific to the Stormwood (no copper, storm-glass, moss or lightning-rod dressing)": "PRESENT",
+     "the storm window reads as a glowing slab standing off the wall, and its light does not change with the storm phase": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's violet storm light raking the left wall in building and the white flash at break carry the phase change, but the bare plank room, the blown-out trainer back and the window frame sitting off the wall keep it below Valheim-class interior atmosphere."
+  },
+  "Oy": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Sky grade, rain and the break-phase lightning read as a storm, but the even dark grass carpet with no soil, rock or black-pool breakup, the empty flat distance and the lone lattice tower as the only landmark leave it far from Palworld's lived-in density."
+  },
+  "Le": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths are site-specific (banner torn down, cage opened with the freed villager, burned tent smoking), but smeared low-resolution ground, low-res tiled rock walls and uniform lollipop tree lines sink both sides beside Palworld's fields."
+  },
+  "Jg": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, appealing elder with readable eyes and brows, a strong white-hair-and-beard silhouette and a moss-green and leather palette that fits the Meadows world carries it, though the full-body view is small and plain."
+  },
+  "Uc": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra model itself (thick white fleece, dark curled horns, blue crystal accent, well above the trainer) carries it at the owner's bar, though B's faint poses twist the mesh upside down and lift it off the stage."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood exterior (Wq, Oy): break the uniform dark grass carpet with authored soil, moss, rock and black-pool patches, group trees into groves and edges, and add copper/storm-glass landmark dressing plus layered mid-distance forest so the flat empty horizon reads with depth",
+   "kind": "scene"
+  },
+  {
+   "change": "Ashfoot interior (Xw, Sl): keep the cool storm-window light and break flash, recess the window into the wall, add more copper, storm-glass and moss dressing, and tame the hot backlight that blows out the trainer's back in every frame",
+   "kind": "scene"
+  },
+  {
+   "change": "Creatures (Qd, Uc): rebuild the boar to the naturalistic furred style (no clay/terracotta body) and scale it clearly above the 1.80 m trainer, and fix the faint rigs so bodies stay grounded and upright (Qd A faint mid floats; Uc B faint mid and faint end twist and invert the mesh)",
+   "kind": "new_art"
+  }
+ ]
+}

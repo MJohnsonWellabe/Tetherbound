@@ -1,0 +1,172 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9498,
+  "least_squares_slope": 0.8422,
+  "method": "linear",
+  "slope": 0.8422,
+  "intercept": 1.5157,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.263,
+ "top_anchor_reference": 7.79,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C1A": {
+   "measured": 6.067,
+   "reference": 6.1,
+   "mapped": 6.625,
+   "residual": -0.525
+  },
+  "f36_0_gap:C1B": {
+   "measured": 4.6,
+   "reference": 5.33,
+   "mapped": 5.39,
+   "residual": -0.06
+  },
+  "f04_6_r22:control": {
+   "measured": 4.8,
+   "reference": 5.83,
+   "mapped": 5.558,
+   "residual": 0.272
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.9,
+   "reference": 6.75,
+   "mapped": 6.485,
+   "residual": 0.265
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.133,
+   "reference": 7.53,
+   "mapped": 7.524,
+   "residual": 0.006
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.133,
+   "reference": 7.47,
+   "mapped": 7.524,
+   "residual": -0.054
+  },
+  "f36_1_gpu:stormcapra_candidate": {
+   "measured": 7.1,
+   "reference": 7.79,
+   "mapped": 7.496,
+   "residual": 0.294
+  },
+  "f36_1_gpu:stormcapra_shipping": {
+   "measured": 5.833,
+   "reference": 6.23,
+   "mapped": 6.429,
+   "residual": -0.199
+  }
+ },
+ "candidates": {
+  "SW20 ashfoot_shelter_inside High cand|ship | SW20-ashfoot_shelter_inside-ship-High": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.73,
+   "mapped_judges": [
+    5.73,
+    5.73,
+    5.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW20 ashfoot_shelter_inside High cand|ship | SW20-ashfoot_shelter_inside-cand-High": {
+   "measured_mean": 6.033,
+   "mapped_mean": 6.6,
+   "mapped_judges": [
+    6.57,
+    6.74,
+    6.48
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW20 ashfoot_shelter_outside Medium cand|ship | SW20-ashfoot_shelter_outside-ship-Medium": {
+   "measured_mean": 5.067,
+   "mapped_mean": 5.78,
+   "mapped_judges": [
+    5.56,
+    6.06,
+    5.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW20 ashfoot_shelter_outside Medium cand|ship | SW20-ashfoot_shelter_outside-cand-Medium": {
+   "measured_mean": 5.067,
+   "mapped_mean": 5.78,
+   "mapped_judges": [
+    5.56,
+    6.06,
+    5.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW20 ashfoot_shelter_inside Medium cand|ship | SW20-ashfoot_shelter_inside-cand-Medium": {
+   "measured_mean": 6.033,
+   "mapped_mean": 6.6,
+   "mapped_judges": [
+    6.57,
+    6.74,
+    6.48
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW20 ashfoot_shelter_inside Medium cand|ship | SW20-ashfoot_shelter_inside-ship-Medium": {
+   "measured_mean": 5.0,
+   "mapped_mean": 5.73,
+   "mapped_judges": [
+    5.73,
+    5.73,
+    5.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW20 ashfoot_shelter_outside High cand|ship | SW20-ashfoot_shelter_outside-cand-High": {
+   "measured_mean": 5.067,
+   "mapped_mean": 5.78,
+   "mapped_judges": [
+    5.56,
+    6.06,
+    5.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW20 ashfoot_shelter_outside High cand|ship | SW20-ashfoot_shelter_outside-ship-High": {
+   "measured_mean": 5.067,
+   "mapped_mean": 5.78,
+   "mapped_judges": [
+    5.56,
+    6.06,
+    5.73
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

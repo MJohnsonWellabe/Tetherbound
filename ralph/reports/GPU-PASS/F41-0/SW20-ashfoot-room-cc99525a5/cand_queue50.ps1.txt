@@ -1,0 +1,48 @@
+# Queue 50 (coordinator NOTE.md update 3, 27 Oct 01:30 UTC): three CLOSE-OUT arms in order, each its control + one change, all with --source-commit.
+# SW20 Ashfoot room (255b363c7 vs m48b cc99525a5; full F41 catalogue, Ashfoot stands judged), CO9 Mirejaw olive-umber fill (main 16c32126f vs
+# co9 033a66f6a), CO10 Terrapup dog3 r5 (main 58bef4fc7 vs co10 fb6a2593b). Creature arms: capture_f36_poses.gd --candidate --whole-body --context.
+# Each item has its own done marker in out\ (SW20.done, CO9.done, CO10.done).
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $main = "D:\tb-gpu-pass"; $crA = "D:\tb-gpu-wt-crA"; $tide = "D:\tb-gpu-wt-tide"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "45"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+
+if (-not (Test-Path "$out\SW20.done")) {
+    Gate "SW20"
+    "== SW20 (CLOSE-OUT): Stormwood Ashfoot room m48b, ctl 255b363c7 (off) vs cand cc99525a5 (storm_room + stormwood_dressing on); F41 catalogue, all phases"
+    foreach ($arm in @(@("ctl", "255b363c75aa22f2847c38f139bfd973b0160499"), @("cand", "cc99525a534670ebcf1a41f33a578c09b7923b55"))) {
+        $tag = $arm[0]; $sha = $arm[1]
+        CheckoutCrA $sha; Import $crA "crA-SW20-$tag"
+        $env:TB_RUN_TIMEOUT_MIN = "150"
+        foreach ($pr in "Medium", "High") {
+            Gate "SW20 $tag $pr"
+            CleanCrA $sha
+            if (Test-Path "$out\SW20-$tag-$pr") { Remove-Item "$out\SW20-$tag-$pr" -Recurse -Force }
+            & $run -Preset $pr -Script "res://tools/capture_f41_stormwood_catalog.gd" -OutDir "$out\SW20-$tag-$pr" -Resolution "1920x1080" -ProjectPath $crA -UserArgs @("--preset=$pr", "--source-commit=$sha", "--out={FRAMES}", "--label=f41-m48b-$tag-$pr", "--phases=calm,building,break,fading", "--no-aftermath")
+            "  F41 $tag $pr jpg=$((Get-ChildItem "$out\SW20-$tag-$pr\frames" -Filter *.jpg -ErrorAction SilentlyContinue).Count)"
+        }
+        $env:TB_RUN_TIMEOUT_MIN = "45"
+    }
+    New-Item -ItemType File -Force "$out\SW20.done" | Out-Null
+    "SW20 done"
+}
+
+foreach ($item in @(
+        @("CO9", "mirejaw,water_mirejaw", "16c32126ffffe2427a38d381d7d84e2aa1f0f9ae", "033a66f6a2a6b792044e58c33f843ca81dde759e"),
+        @("CO10", "terrapup", "58bef4fc7ea9c53256272c8f72cc0f6132519ba4", "fb6a2593b970d98b06534c4dc040a3223f8a70f3"))) {
+    $name, $species, $ship, $cand = $item
+    if (Test-Path "$out\$name.done") { "$name already captured; skipping"; continue }
+    Gate $name
+    "== $name (CLOSE-OUT): $species, main $($ship.Substring(0,9)) vs cand $($cand.Substring(0,9)), --candidate"
+    foreach ($arm in @(@("cand", $cand), @("ship", $ship))) {
+        CheckoutCrA $arm[1]; Import $crA "crA-$name-$($arm[0])"
+        foreach ($pr in "Medium", "High") {
+            Gate "$name $($arm[0]) $pr"
+            CleanCrA $arm[1]
+            Pose "$name-$($arm[0])-$pr" $pr $species @("--candidate") $arm[1]
+        }
+    }
+    New-Item -ItemType File -Force "$out\$name.done" | Out-Null
+    "$name done"
+}
+"queue50 done"

@@ -1,0 +1,46 @@
+{
+ "Xw": {
+  "anchor": false,
+  "label": "SW20 ashfoot_shelter_inside High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW20\\sides\\SW20-ashfoot_shelter_inside-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW20\\sides\\SW20-ashfoot_shelter_inside-cand-High.png"
+ },
+ "Wq": {
+  "anchor": false,
+  "label": "SW20 ashfoot_shelter_outside Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW20\\sides\\SW20-ashfoot_shelter_outside-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW20\\sides\\SW20-ashfoot_shelter_outside-cand-Medium.png"
+ },
+ "Qd": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Sl": {
+  "anchor": false,
+  "label": "SW20 ashfoot_shelter_inside Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW20\\sides\\SW20-ashfoot_shelter_inside-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW20\\sides\\SW20-ashfoot_shelter_inside-ship-Medium.png"
+ },
+ "Oy": {
+  "anchor": false,
+  "label": "SW20 ashfoot_shelter_outside High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW20\\sides\\SW20-ashfoot_shelter_outside-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW20\\sides\\SW20-ashfoot_shelter_outside-ship-High.png"
+ },
+ "Le": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Jg": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Uc": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ }
+}

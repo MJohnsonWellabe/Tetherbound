@@ -1,0 +1,46 @@
+[
+    {
+        "item":  "SW20",
+        "stand":  "ashfoot_shelter_inside",
+        "preset":  "Medium",
+        "judged":  [
+                       "ashfoot_shelter_inside_calm",
+                       "ashfoot_shelter_inside_building",
+                       "ashfoot_shelter_inside_break",
+                       "ashfoot_shelter_inside_fading"
+                   ]
+    },
+    {
+        "item":  "SW20",
+        "stand":  "ashfoot_shelter_outside",
+        "preset":  "Medium",
+        "judged":  [
+                       "ashfoot_shelter_outside_calm",
+                       "ashfoot_shelter_outside_building",
+                       "ashfoot_shelter_outside_break",
+                       "ashfoot_shelter_outside_fading"
+                   ]
+    },
+    {
+        "item":  "SW20",
+        "stand":  "ashfoot_shelter_inside",
+        "preset":  "High",
+        "judged":  [
+                       "ashfoot_shelter_inside_calm",
+                       "ashfoot_shelter_inside_building",
+                       "ashfoot_shelter_inside_break",
+                       "ashfoot_shelter_inside_fading"
+                   ]
+    },
+    {
+        "item":  "SW20",
+        "stand":  "ashfoot_shelter_outside",
+        "preset":  "High",
+        "judged":  [
+                       "ashfoot_shelter_outside_calm",
+                       "ashfoot_shelter_outside_building",
+                       "ashfoot_shelter_outside_break",
+                       "ashfoot_shelter_outside_fading"
+                   ]
+    }
+]
