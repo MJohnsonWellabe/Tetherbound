@@ -49,8 +49,12 @@ func _process(delta: float) -> void:
 				_env = holder.environment
 	var phase := str(_surge.get("phase")) if _surge != null else "calm"
 	var flash := float(_surge.call("flash_level")) if _surge != null and _surge.has_method("flash_level") else 0.0
+	# m50b: a decorative sky bolt lifts the scene, not only the sky (m50
+	# judges: "break should brighten at the strike instead of going darker").
+	var bolt := float(_surge.call("bolt_level")) if _surge != null and _surge.has_method("bolt_level") else 0.0
 	if MOTION_PREFS.reduced_motion():
 		flash = 0.0
+		bolt = 0.0
 	var look_cfg := _look(phase)
 	var ease := clampf(delta * float(config.get("ease_per_s", 0.8)), 0.0, 1.0)
 	var target_rim := float(look_cfg.get("rim_energy", 0.6))
@@ -66,13 +70,18 @@ func _process(delta: float) -> void:
 			if forward.length() > 0.01:
 				forward = forward.normalized()
 				var elevation := deg_to_rad(float(config.get("rim_elevation_deg", 22.0)))
-				# Travel toward the camera from beyond the subject, slightly down.
-				var travel := (-forward * cos(elevation) + Vector3.DOWN * sin(elevation)).normalized()
+				# Travel toward the camera from beyond the subject, slightly
+				# down. m50b: turned rim_side_deg off the view axis (a
+				# three-quarter back light), so the lit side edges of trunks
+				# and figures face the camera; straight back lit no visible
+				# edge (m50 judges x3).
+				var toward := (-forward).rotated(Vector3.UP, deg_to_rad(float(config.get("rim_side_deg", 0.0))))
+				var travel := (toward * cos(elevation) + Vector3.DOWN * sin(elevation)).normalized()
 				_rim.global_transform = Transform3D(Basis.looking_at(travel, Vector3.UP), Vector3.ZERO)
 	if _env != null:
 		var grade: Array = look_cfg.get("grade", [1.0, 1.0, 1.0])
 		_grade = _grade.lerp(Vector3(float(grade[0]), float(grade[1]), float(grade[2])), ease)
 		_env.adjustment_enabled = true
-		_env.adjustment_brightness = _grade.x
+		_env.adjustment_brightness = _grade.x * (1.0 + bolt * float(config.get("bolt_brightness", 0.0)))
 		_env.adjustment_contrast = _grade.y
 		_env.adjustment_saturation = _grade.z
