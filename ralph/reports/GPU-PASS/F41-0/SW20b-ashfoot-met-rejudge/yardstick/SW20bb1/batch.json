@@ -1,0 +1,76 @@
+{
+ "anchors": {
+  "f36_1_gpu:tanglevolt_shipping": [
+   6.0,
+   5.0,
+   5.2
+  ],
+  "f36_1_gpu:tanglevolt_candidate": [
+   7.2,
+   6.3,
+   6.9
+  ],
+  "f36_0_gap:C1B": [
+   4.8,
+   4.0,
+   4.8
+  ],
+  "f36_0_gap:C1A": [
+   6.3,
+   5.8,
+   6.4
+  ],
+  "f36_0_npc:C1A": [
+   6.8,
+   6.5,
+   6.9
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   6.5,
+   6.9
+  ],
+  "craft:after": [
+   6.4,
+   5.8,
+   6.6
+  ],
+  "craft:before": [
+   4.6,
+   4.5,
+   4.6
+  ]
+ },
+ "candidates": {
+  "SW20b SW16on Medium one-sided | SW16-ashfoot_shelter_inside-cand-Medium": [
+   4.8,
+   5.0,
+   5.3
+  ],
+  "SW20b SW20on High one-sided | SW20-ashfoot_shelter_inside-cand-High": [
+   6.0,
+   6.0,
+   6.2
+  ],
+  "SW20b SW16on High one-sided | SW16-ashfoot_shelter_inside-cand-High": [
+   4.8,
+   5.0,
+   5.3
+  ],
+  "SW20b SW20on Medium one-sided | SW20-ashfoot_shelter_inside-cand-Medium": [
+   6.0,
+   6.0,
+   6.2
+  ],
+  "SW20b SW20ctl High one-sided | SW20-ashfoot_shelter_inside-ship-High": [
+   4.8,
+   5.0,
+   5.3
+  ],
+  "SW20b SW20ctl Medium one-sided | SW20-ashfoot_shelter_inside-ship-Medium": [
+   4.8,
+   5.0,
+   5.3
+  ]
+ }
+}
