@@ -1,0 +1,226 @@
+{
+ "sets": {
+  "Al": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing Stormcapra matches the owner style bar and is clearly taller than the trainer, but A's faint frames tear the black horn/leg mesh through the white fleece and B's faint collapses into a legless white loaf with detached horn tubes, so the hurt states fall below Palworld finish."
+  },
+  "Jv": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL",
+     "the sky is a flat lavender wash with no cloud form, depth or horizon treeline": "PARTIAL",
+     "lit cloud rims read as white smear slabs pasted on the sky rather than lit cloud edges": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "FIXED",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL",
+     "the sky is a flat lavender wash with no cloud form, depth or horizon treeline": "PARTIAL",
+     "lit cloud rims read as white smear slabs pasted on the sky rather than lit cloud edges": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The twisted root giants, warm-windowed cottages and lantern orbs give the strongest cozy-with-danger read of the batch, but the smooth brown mud carpet with pasted gold crack lines and the near-black low-contrast frames sink it against Palworld density and Valheim storm light."
+  },
+  "Hk": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL",
+     "the sky is a flat lavender wash with no cloud form, depth or horizon treeline": "PARTIAL",
+     "lit cloud rims read as white smear slabs pasted on the sky rather than lit cloud edges": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PRESENT",
+     "the sky is a flat lavender wash with no cloud form, depth or horizon treeline": "PARTIAL",
+     "lit cloud rims read as white smear slabs pasted on the sky rather than lit cloud edges": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Glowing blue mushrooms and big stylised trunks carry the Stormwood palette, but the uniform dark grass carpet, the white smear slabs in the break skies (v03, v05) and the soft fog cards in v04 read as unfinished next to Palworld."
+  },
+  "En": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL",
+     "the sky is a flat lavender wash with no cloud form, depth or horizon treeline": "PARTIAL",
+     "lit cloud rims read as white smear slabs pasted on the sky rather than lit cloud edges": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL",
+     "the sky is a flat lavender wash with no cloud form, depth or horizon treeline": "PRESENT",
+     "lit cloud rims read as white smear slabs pasted on the sky rather than lit cloud edges": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Half-timbered cottages, a lake horizon and white-violet lightning give it a place, but the flat grey lake band, the row of white fog puffs in v01 fading, the pasted yellow ground lines and the lavender-wash or smeared skies keep it short of shipping finish."
+  },
+  "Sk": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The white-haired elder in a green vest and neckerchief is a clean, appealing, readable villager with clear eyes and a palette that fits the key art, but the soft toy-like face and plain full-body materials sit below Palworld's character finish and slightly apart from the naturalistic creature style."
+  },
+  "Rd": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL",
+     "the sky is a flat lavender wash with no cloud form, depth or horizon treeline": "PARTIAL",
+     "lit cloud rims read as white smear slabs pasted on the sky rather than lit cloud edges": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "FIXED",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "FIXED",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL",
+     "the sky is a flat lavender wash with no cloud form, depth or horizon treeline": "PRESENT",
+     "lit cloud rims read as white smear slabs pasted on the sky rather than lit cloud edges": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cyan-seamed struck sentinel tree is a real landmark, but it stands in an open, evenly scattered field of identical green carpet under a lavender wash (B) or smeared cloud slabs (A), with a hard-edged dark vertical slab in v03, which reads generated rather than authored."
+  },
+  "Jz": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PARTIAL",
+     "the sky is a flat lavender wash with no cloud form, depth or horizon treeline": "PARTIAL",
+     "lit cloud rims read as white smear slabs pasted on the sky rather than lit cloud edges": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Flat magenta slabs or rings on the ground": "FIXED",
+     "Placeholder or untextured materials (flat grey, checker or faceted blocks)": "PARTIAL",
+     "Floating bodies or props (a gap between an object and the ground under it)": "FIXED",
+     "Clipping (geometry passing through geometry, or the camera inside geometry)": "PARTIAL",
+     "F41 gap 1: a repeated ground carpet with weak soil, moss and rock transitions": "PRESENT",
+     "F41 gap 3: rigid glass slabs or white strips and smooth cyan cones that do not sit in the terrain": "PARTIAL",
+     "the storm light is flat: no cool rim light on trunks and figures and no storm grade, so the phases read alike": "PRESENT",
+     "the sky is a flat lavender wash with no cloud form, depth or horizon treeline": "PARTIAL",
+     "lit cloud rims read as white smear slabs pasted on the sky rather than lit cloud edges": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same capacitor grove as Hk: the mushrooms and trunks carry the palette, but the even grass carpet, white smear cloud slabs in the break phases and pale fog cards in v04 fading sink the finish."
+  },
+  "Mt": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured boar is taller than the trainer and has a strong mass, but its back plates read as stacked cubes, the face and eyes are lost in one dark mid-tone, and the faint end goes almost black (A) or dark oxblood-brown (B), so it falls below the owner's Stormursa/Stormcapra bar."
+  },
+  "Pg": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold Voltarach spider stays readable, but the player's creature is barely findable, the telegraphs are flat magenta rings and chevrons (A i06-i10, i15-i17, tell2 a-c), the HUD covers about a third of each frame, and in B the camera sits inside foliage and trunks for i12-i15."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood sky and light pass: replace the lavender wash and white smear cloud slabs with a layered storm cloud dome and horizon treeline, add a cool rim/key light on trunks and figures, and give each storm phase its own grade (calm brighter, building darker teal, break high-contrast white-violet, fading desaturated).",
+   "kind": "scene"
+  },
+  {
+   "change": "Break up the uniform grass and mud carpet: soil, moss and rock transitions, black pools, copper and glass highlights clustered into groves, edges and clearings; drop the pasted yellow ground lines and the low white fog cards that cut the ground.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fight readability: replace the flat magenta telegraph rings and chevrons with real-object tells (ground cracks, lightning arcs, dust), stop the camera from entering trunks and foliage (fade or collide), raise the player creature's rim and value against the ground, and slim the HUD side panels.",
+   "kind": "scene"
+  }
+ ]
+}

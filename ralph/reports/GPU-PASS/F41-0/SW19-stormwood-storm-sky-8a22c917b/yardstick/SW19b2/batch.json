@@ -1,0 +1,96 @@
+{
+ "anchors": {
+  "f36_0_gap:C1A": [
+   6.2,
+   6.0,
+   5.4
+  ],
+  "f36_0_gap:C1B": [
+   5.0,
+   4.6,
+   4.4
+  ],
+  "f36_1_gpu:stormcapra_candidate": [
+   6.8,
+   6.2,
+   6.6
+  ],
+  "f36_1_gpu:stormcapra_shipping": [
+   6.0,
+   5.6,
+   5.0
+  ],
+  "f36_0_npc:C1B": [
+   7.0,
+   6.8,
+   6.8
+  ],
+  "f36_0_npc:C1A": [
+   6.9,
+   6.9,
+   6.7
+  ],
+  "f04_6_r22:r22": [
+   6.0,
+   5.6,
+   5.6
+  ],
+  "f04_6_r22:control": [
+   5.0,
+   4.8,
+   4.8
+  ]
+ },
+ "candidates": {
+  "SW19 deepwood_the_fallen_giant High cand|ship | SW19-deepwood_the_fallen_giant-cand-High": [
+   4.4,
+   4.4,
+   4.6
+  ],
+  "SW19 deepwood_the_fallen_giant High cand|ship | SW19-deepwood_the_fallen_giant-ship-High": [
+   4.4,
+   4.4,
+   4.6
+  ],
+  "SW19 glowmoss_hollows_the_lantern_pools High cand|ship | SW19-glowmoss_hollows_the_lantern_pools-ship-High": [
+   5.0,
+   4.8,
+   4.8
+  ],
+  "SW19 glowmoss_hollows_the_lantern_pools High cand|ship | SW19-glowmoss_hollows_the_lantern_pools-cand-High": [
+   5.2,
+   4.9,
+   5.0
+  ],
+  "SW19 glowmoss_hollows_the_lantern_pools Medium cand|ship | SW19-glowmoss_hollows_the_lantern_pools-ship-Medium": [
+   5.0,
+   4.8,
+   4.8
+  ],
+  "SW19 glowmoss_hollows_the_lantern_pools Medium cand|ship | SW19-glowmoss_hollows_the_lantern_pools-cand-Medium": [
+   5.2,
+   5.0,
+   5.0
+  ],
+  "SW19 hollow_crown_the_crown_heartstone Medium cand|ship | SW19-hollow_crown_the_crown_heartstone-cand-Medium": [
+   5.3,
+   4.6,
+   5.0
+  ],
+  "SW19 hollow_crown_the_crown_heartstone Medium cand|ship | SW19-hollow_crown_the_crown_heartstone-ship-Medium": [
+   5.6,
+   4.9,
+   4.9
+  ],
+  "SW19 glowmoss_hollows_crown_overlook High cand|ship | SW19-glowmoss_hollows_crown_overlook-ship-High": [
+   4.8,
+   4.9,
+   4.8
+  ],
+  "SW19 glowmoss_hollows_crown_overlook High cand|ship | SW19-glowmoss_hollows_crown_overlook-cand-High": [
+   5.0,
+   5.1,
+   5.0
+  ]
+ }
+}

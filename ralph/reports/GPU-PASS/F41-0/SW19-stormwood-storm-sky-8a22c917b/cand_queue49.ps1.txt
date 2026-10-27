@@ -1,0 +1,29 @@
+# Queue 49: SW19 Stormwood storm sky (coordinator NOTE.md update 2, 26 Oct 6:00 PM CT). Control tb/stormwood fb919fb55 vs candidate
+# tb/stormwood-m45c-on 8a22c917b (control + stormwood_surge.json presentation.ceiling.form and ceiling.skyline ON). Full F41 catalogue,
+# every phase, Medium and High, each arm at its own SHA with --source-commit, clean tree. out\SW19.done marks a finished run.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $main = "D:\tb-gpu-pass"; $crA = "D:\tb-gpu-wt-crA"; $tide = "D:\tb-gpu-wt-tide"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "45"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+if (Test-Path "$out\SW19.done") { "SW19 already captured; skipping"; return }
+Gate "SW19"
+"== SW19: Stormwood storm sky m45c, ctl fb919fb55 (off) vs cand 8a22c917b (ceiling.form + ceiling.skyline on); F41 catalogue, all phases"
+foreach ($arm in @(@("ctl", "fb919fb55524f35a8989c72512ebe40c80018a99"), @("cand", "8a22c917b3b1c09599be7b828fc6552721268072"))) {
+    $tag = $arm[0]; $sha = $arm[1]
+    CheckoutCrA $sha; Import $crA "crA-SW19-$tag"
+    $env:TB_RUN_TIMEOUT_MIN = "150"
+    foreach ($pr in "Medium", "High") {
+        Gate "SW19 $tag $pr"
+        CleanCrA $sha
+        $left = @(git -C $crA status --porcelain --untracked-files=all 2>$null)
+        "  $tag $pr dirty before capture: $($left.Count)"
+        if ($left.Count -gt 0) { $left | Select-Object -First 5 }
+        if (Test-Path "$out\SW19-$tag-$pr") { Remove-Item "$out\SW19-$tag-$pr" -Recurse -Force }
+        & $run -Preset $pr -Script "res://tools/capture_f41_stormwood_catalog.gd" -OutDir "$out\SW19-$tag-$pr" -Resolution "1920x1080" -ProjectPath $crA -UserArgs @("--preset=$pr", "--source-commit=$sha", "--out={FRAMES}", "--label=f41-m45c-$tag-$pr", "--phases=calm,building,break,fading", "--no-aftermath")
+        "  F41 $tag $pr jpg=$((Get-ChildItem "$out\SW19-$tag-$pr\frames" -Filter *.jpg -ErrorAction SilentlyContinue).Count)"
+    }
+    $env:TB_RUN_TIMEOUT_MIN = "45"
+}
+New-Item -ItemType File -Force "$out\SW19.done" | Out-Null
+"SW19 done"
+"queue49 done"

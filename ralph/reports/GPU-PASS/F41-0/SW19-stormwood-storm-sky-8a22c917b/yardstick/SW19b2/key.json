@@ -1,0 +1,52 @@
+{
+ "Ei": {
+  "anchor": false,
+  "label": "SW19 deepwood_the_fallen_giant High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-deepwood_the_fallen_giant-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-deepwood_the_fallen_giant-ship-High.png"
+ },
+ "Rb": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Zi": {
+  "anchor": false,
+  "label": "SW19 glowmoss_hollows_the_lantern_pools High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-glowmoss_hollows_the_lantern_pools-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-glowmoss_hollows_the_lantern_pools-cand-High.png"
+ },
+ "Dd": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ },
+ "Np": {
+  "anchor": false,
+  "label": "SW19 glowmoss_hollows_the_lantern_pools Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-glowmoss_hollows_the_lantern_pools-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-glowmoss_hollows_the_lantern_pools-cand-Medium.png"
+ },
+ "Do": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Hj": {
+  "anchor": false,
+  "label": "SW19 hollow_crown_the_crown_heartstone Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-hollow_crown_the_crown_heartstone-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-hollow_crown_the_crown_heartstone-ship-Medium.png"
+ },
+ "Dg": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Ir": {
+  "anchor": false,
+  "label": "SW19 glowmoss_hollows_crown_overlook High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-glowmoss_hollows_crown_overlook-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-glowmoss_hollows_crown_overlook-cand-High.png"
+ }
+}

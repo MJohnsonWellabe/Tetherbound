@@ -1,0 +1,198 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.8651,
+  "least_squares_slope": 0.9674,
+  "method": "linear",
+  "slope": 0.9674,
+  "intercept": 0.6081,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.567,
+ "top_anchor_reference": 7.79,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_1_gpu:stormcapra_shipping": {
+   "measured": 6.633,
+   "reference": 6.23,
+   "mapped": 7.025,
+   "residual": -0.795
+  },
+  "f36_1_gpu:stormcapra_candidate": {
+   "measured": 6.967,
+   "reference": 7.79,
+   "mapped": 7.348,
+   "residual": 0.442
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.133,
+   "reference": 7.53,
+   "mapped": 7.509,
+   "residual": 0.021
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.133,
+   "reference": 7.47,
+   "mapped": 7.509,
+   "residual": -0.039
+  },
+  "f36_0_gap:C7B": {
+   "measured": 6.067,
+   "reference": 6.3,
+   "mapped": 6.477,
+   "residual": -0.177
+  },
+  "f36_0_gap:C7A": {
+   "measured": 6.533,
+   "reference": 7.03,
+   "mapped": 6.928,
+   "residual": 0.102
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.967,
+   "reference": 6.53,
+   "mapped": 5.413,
+   "residual": 1.117
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.2,
+   "reference": 4.0,
+   "mapped": 4.671,
+   "residual": -0.671
+  }
+ },
+ "candidates": {
+  "SW19 deepwood_lantern_hollow Medium cand|ship | SW19-deepwood_lantern_hollow-cand-Medium": {
+   "measured_mean": 5.733,
+   "mapped_mean": 6.15,
+   "mapped_judges": [
+    6.61,
+    5.45,
+    6.41
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 deepwood_lantern_hollow Medium cand|ship | SW19-deepwood_lantern_hollow-ship-Medium": {
+   "measured_mean": 5.733,
+   "mapped_mean": 6.15,
+   "mapped_judges": [
+    6.51,
+    5.45,
+    6.51
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 conductor_run_the_capacitor_grove Medium cand|ship | SW19-conductor_run_the_capacitor_grove-ship-Medium": {
+   "measured_mean": 5.5,
+   "mapped_mean": 5.93,
+   "mapped_judges": [
+    6.12,
+    5.45,
+    6.22
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 conductor_run_the_capacitor_grove Medium cand|ship | SW19-conductor_run_the_capacitor_grove-cand-Medium": {
+   "measured_mean": 5.333,
+   "mapped_mean": 5.77,
+   "mapped_judges": [
+    6.03,
+    5.25,
+    6.03
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 conductor_run_rodline_post Medium cand|ship | SW19-conductor_run_rodline_post-cand-Medium": {
+   "measured_mean": 5.533,
+   "mapped_mean": 5.96,
+   "mapped_judges": [
+    6.03,
+    5.64,
+    6.22
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 conductor_run_rodline_post Medium cand|ship | SW19-conductor_run_rodline_post-ship-Medium": {
+   "measured_mean": 5.467,
+   "mapped_mean": 5.9,
+   "mapped_judges": [
+    5.83,
+    5.54,
+    6.32
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 cinder_verge_the_struck_sentinel High cand|ship | SW19-cinder_verge_the_struck_sentinel-cand-High": {
+   "measured_mean": 5.133,
+   "mapped_mean": 5.57,
+   "mapped_judges": [
+    5.64,
+    5.25,
+    5.83
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 cinder_verge_the_struck_sentinel High cand|ship | SW19-cinder_verge_the_struck_sentinel-ship-High": {
+   "measured_mean": 5.133,
+   "mapped_mean": 5.57,
+   "mapped_judges": [
+    5.45,
+    5.35,
+    5.93
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 conductor_run_the_capacitor_grove High cand|ship | SW19-conductor_run_the_capacitor_grove-cand-High": {
+   "measured_mean": 5.433,
+   "mapped_mean": 5.86,
+   "mapped_judges": [
+    6.12,
+    5.35,
+    6.12
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 conductor_run_the_capacitor_grove High cand|ship | SW19-conductor_run_the_capacitor_grove-ship-High": {
+   "measured_mean": 5.467,
+   "mapped_mean": 5.9,
+   "mapped_judges": [
+    6.03,
+    5.35,
+    6.32
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

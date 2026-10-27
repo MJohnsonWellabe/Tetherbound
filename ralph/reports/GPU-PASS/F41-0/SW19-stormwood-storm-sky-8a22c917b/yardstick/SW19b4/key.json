@@ -1,0 +1,52 @@
+{
+ "Qz": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "En": {
+  "anchor": false,
+  "label": "SW19 dynamo_the_glass_field Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-dynamo_the_glass_field-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-dynamo_the_glass_field-cand-Medium.png"
+ },
+ "Ka": {
+  "anchor": false,
+  "label": "SW19 cinder_verge_verge_rod_station Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-cinder_verge_verge_rod_station-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-cinder_verge_verge_rod_station-ship-Medium.png"
+ },
+ "Gx": {
+  "anchor": false,
+  "label": "SW19 deepwood_the_fallen_giant Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-deepwood_the_fallen_giant-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-deepwood_the_fallen_giant-cand-Medium.png"
+ },
+ "Go": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "We": {
+  "anchor": false,
+  "label": "SW19 dynamo_the_stormheart_tree Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-dynamo_the_stormheart_tree-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-dynamo_the_stormheart_tree-ship-Medium.png"
+ },
+ "Ys": {
+  "anchor": false,
+  "label": "SW19 ashfoot_shelter_outside High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-ashfoot_shelter_outside-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-ashfoot_shelter_outside-ship-High.png"
+ },
+ "Ze": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Gc": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ }
+}

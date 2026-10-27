@@ -1,0 +1,52 @@
+{
+ "Al": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_shipping",
+  "B": "f36_1_gpu:stormcapra_candidate"
+ },
+ "Jv": {
+  "anchor": false,
+  "label": "SW19 deepwood_lantern_hollow Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-deepwood_lantern_hollow-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-deepwood_lantern_hollow-ship-Medium.png"
+ },
+ "Hk": {
+  "anchor": false,
+  "label": "SW19 conductor_run_the_capacitor_grove Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-conductor_run_the_capacitor_grove-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-conductor_run_the_capacitor_grove-cand-Medium.png"
+ },
+ "En": {
+  "anchor": false,
+  "label": "SW19 conductor_run_rodline_post Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-conductor_run_rodline_post-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-conductor_run_rodline_post-ship-Medium.png"
+ },
+ "Sk": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Rd": {
+  "anchor": false,
+  "label": "SW19 cinder_verge_the_struck_sentinel High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-cinder_verge_the_struck_sentinel-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-cinder_verge_the_struck_sentinel-ship-High.png"
+ },
+ "Jz": {
+  "anchor": false,
+  "label": "SW19 conductor_run_the_capacitor_grove High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-conductor_run_the_capacitor_grove-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\SW19\\sides\\SW19-conductor_run_the_capacitor_grove-ship-High.png"
+ },
+ "Mt": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "Pg": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ }
+}

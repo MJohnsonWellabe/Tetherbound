@@ -1,0 +1,198 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9385,
+  "least_squares_slope": 1.0026,
+  "method": "linear",
+  "slope": 1.0026,
+  "intercept": 0.7509,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.29,
+ "top_anchor_reference": 7.79,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C1A": {
+   "measured": 5.867,
+   "reference": 6.1,
+   "mapped": 6.633,
+   "residual": -0.533
+  },
+  "f36_0_gap:C1B": {
+   "measured": 4.667,
+   "reference": 5.33,
+   "mapped": 5.43,
+   "residual": -0.1
+  },
+  "f36_1_gpu:stormcapra_candidate": {
+   "measured": 6.533,
+   "reference": 7.79,
+   "mapped": 7.301,
+   "residual": 0.489
+  },
+  "f36_1_gpu:stormcapra_shipping": {
+   "measured": 5.533,
+   "reference": 6.23,
+   "mapped": 6.299,
+   "residual": -0.069
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.867,
+   "reference": 7.47,
+   "mapped": 7.636,
+   "residual": -0.166
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.833,
+   "reference": 7.53,
+   "mapped": 7.602,
+   "residual": -0.072
+  },
+  "f04_6_r22:r22": {
+   "measured": 5.733,
+   "reference": 6.75,
+   "mapped": 6.499,
+   "residual": 0.251
+  },
+  "f04_6_r22:control": {
+   "measured": 4.867,
+   "reference": 5.83,
+   "mapped": 5.63,
+   "residual": 0.2
+  }
+ },
+ "candidates": {
+  "SW19 deepwood_the_fallen_giant High cand|ship | SW19-deepwood_the_fallen_giant-cand-High": {
+   "measured_mean": 4.467,
+   "mapped_mean": 5.23,
+   "mapped_judges": [
+    5.16,
+    5.16,
+    5.36
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 deepwood_the_fallen_giant High cand|ship | SW19-deepwood_the_fallen_giant-ship-High": {
+   "measured_mean": 4.467,
+   "mapped_mean": 5.23,
+   "mapped_judges": [
+    5.16,
+    5.16,
+    5.36
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 glowmoss_hollows_the_lantern_pools High cand|ship | SW19-glowmoss_hollows_the_lantern_pools-ship-High": {
+   "measured_mean": 4.867,
+   "mapped_mean": 5.63,
+   "mapped_judges": [
+    5.76,
+    5.56,
+    5.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 glowmoss_hollows_the_lantern_pools High cand|ship | SW19-glowmoss_hollows_the_lantern_pools-cand-High": {
+   "measured_mean": 5.033,
+   "mapped_mean": 5.8,
+   "mapped_judges": [
+    5.96,
+    5.66,
+    5.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 glowmoss_hollows_the_lantern_pools Medium cand|ship | SW19-glowmoss_hollows_the_lantern_pools-ship-Medium": {
+   "measured_mean": 4.867,
+   "mapped_mean": 5.63,
+   "mapped_judges": [
+    5.76,
+    5.56,
+    5.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 glowmoss_hollows_the_lantern_pools Medium cand|ship | SW19-glowmoss_hollows_the_lantern_pools-cand-Medium": {
+   "measured_mean": 5.067,
+   "mapped_mean": 5.83,
+   "mapped_judges": [
+    5.96,
+    5.76,
+    5.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 hollow_crown_the_crown_heartstone Medium cand|ship | SW19-hollow_crown_the_crown_heartstone-cand-Medium": {
+   "measured_mean": 4.967,
+   "mapped_mean": 5.73,
+   "mapped_judges": [
+    6.06,
+    5.36,
+    5.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 hollow_crown_the_crown_heartstone Medium cand|ship | SW19-hollow_crown_the_crown_heartstone-ship-Medium": {
+   "measured_mean": 5.133,
+   "mapped_mean": 5.9,
+   "mapped_judges": [
+    6.37,
+    5.66,
+    5.66
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 glowmoss_hollows_crown_overlook High cand|ship | SW19-glowmoss_hollows_crown_overlook-ship-High": {
+   "measured_mean": 4.833,
+   "mapped_mean": 5.6,
+   "mapped_judges": [
+    5.56,
+    5.66,
+    5.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "SW19 glowmoss_hollows_crown_overlook High cand|ship | SW19-glowmoss_hollows_crown_overlook-cand-High": {
+   "measured_mean": 5.033,
+   "mapped_mean": 5.8,
+   "mapped_judges": [
+    5.76,
+    5.86,
+    5.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}
