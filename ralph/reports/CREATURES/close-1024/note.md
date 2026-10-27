@@ -8,7 +8,7 @@
   - It targets the GPU defect "faint barely differs from standing" (Mosshell 7.36, water_mosshell 7.41).
   - **CPU b59 (r 0.96, not confirming, top anchor 7.07; 6/6 judge-set preferences):** Mosshell and water_mosshell 7.21 vs 6.00 (+1.21); faint defect PRESENT x3 -> FIXED, PARTIAL, FIXED.
   - **Risk:** GPU dropped Stormcapra's belly-up faint in CO8. For a turtle, upside down is the canonical knockout; one CPU judge called it "comic rather than grounded".
-  - **Capture:**  (hit and faint rows). Judge main vs co12-on.
+  - **Capture:** `capture_f36_poses.gd --whole-body --context --species=mosshell,water_mosshell` (hit and faint rows). Judge main vs co12-on.
 - Next: Ripplet's flat cyan material. CO11 (near-bar flinch) is still queued.
 
 ## TO COORDINATOR (27 Oct, GPU READY: CO11-ON near-bar close-out)
