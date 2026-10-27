@@ -610,3 +610,13 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
     - The night rain on this stand still grades grey rather than dark blue (visible in the sheet's fourth frame).
     - The trainer reads as self-lit at night.
     - The spire waits for MH9 (r7b).
+
+- 2026-10-27 08:55 UTC **READY to land land20 dbc0b33df** (`tb/meadows-land20`, rebuilt from origin/main 073466a65). This replaces the courtyard-only 286ccebb4 that was on the branch before.
+  - **Change:** stronghold r7b goes live per GPU MH9 (tb/gpu-pass b7e1df9b0): a mean of +0.53 Medium and +0.71 High. P2-003 moved PRESENT → PARTIAL 3/3 on all four approach_0 sets, and night windows moved PRESENT → PARTIAL.
+  - **Contents:** exactly the configuration judged on 0d8ef6dd2.
+    - `stronghold.json`: `hero_gatehouse` (the lit keep plus the spire companion, with the window-grid masks at energy 5 and 6), `courtyard_daylight_candidate` and `banner_model_candidate` are ON, each with a `_why_on` naming MH9.
+    - **Code:** `stronghold.gd` (the courtyard overrides), `stronghold_courtyard_fill.gd`, and `stronghold_hero_gatehouse.gd` (the companion slot).
+    - **Assets:** the `meadows_stronghold_spire` model with its provenance and references, and both `*_windows_grid_emission.png` masks with their policy-checked import files.
+    - `warden_rim_candidate` (parked) and its flagged lights are left out.
+  - **Salmon-plank fix: NOT included.** The bricks are main's geometry, but the fix lives in the judged `courtyard_daylight_candidate.rubble` override (scale_max 1.6 → 0.7–1.1, tint #4a443c, y 0.02), so it would change a judged piece. It stays on tb/meadows (CPU-checked: the large planks are gone from the gameplay and reverse cameras). It rides with the next swing, which also removes the edge beam.
+  - **Tests:** test_meadows_tier1_art_gates asserts all three flags ON and citing GPU MH9. The off-builder check now uses a copy of the block with `enabled` set to false. It ran with the five stronghold unit tests: 27 tests, 406 assertions, 0 failed.
