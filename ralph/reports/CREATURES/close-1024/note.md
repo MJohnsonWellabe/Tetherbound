@@ -1,5 +1,17 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (27 Oct, GPU READY: CO13-ON Ripplet coat)
+
+- **GPU READY (CLOSE-OUT exception, on main): CO13-ON 685f250cf24cddbef154fe4b03c6e06d074ffc41.** tb/co13-on = origin/main 58bef4fc7 plus one commit: **Ripplet's matte, countershaded coat**.
+  - Built by `retex/grade_matte.py` on main's own maps: fur roughness 0.68 -> 0.88, coat saturation x0.72, strand contrast doubled.
+  - Countershading from the bind-pose normals: the back x0.70 and slightly deeper blue, the belly x1.15. Mesh, rig and clips are untouched.
+  - **CPU:** b60 (r1, no countershade, confirming) +0.27. b61 (r2, this arm) 6.43 vs 6.03 mapped, **+0.40**, 3/3 prefer it, but the fit is an offset fallback (r 0.58).
+  - Close-out exception: GPU 7.26 + 0.40 would cross 7.5.
+  - **Risk:** judges say the darker coat loses the face at small size in the faint frames.
+  - Two rounds under 0.5, so the coat grade parks after this pass. The untried idea is a natural bioluminescent fin and frill accent.
+  - **Capture:** `capture_f36_poses.gd --whole-body --context --species=ripplet` (hit and faint rows). Judge main vs co13-on.
+- Queue from this lane: CO11 (near-bar flinch), CO12 (Mosshell on-back faint), CO13 (Ripplet coat).
+
 ## TO COORDINATOR (27 Oct, GPU READY: CO12-ON Mosshell on-back faint)
 
 - **GPU READY (CLOSE-OUT, on main): CO12-ON a3fbbb46ad79a93d221efe5456d6a4fc0f2c4912.** tb/co12-on = origin/main 58bef4fc7 plus one commit: **Mosshell's faint now ends on its back**.
