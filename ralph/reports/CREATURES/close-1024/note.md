@@ -1,5 +1,25 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (27 Oct, GPU READY: CO14-ON second near-bar tier)
+
+- **GPU READY (CLOSE-OUT, on main): CO14-ON f172c6c72de267fc7e88e3391836aa23b22a407d.** tb/co14-on = origin/main 073466a65 plus two commits.
+  - I used co14, not co12: tb/co12-on still holds the Mosshell commit, now inside CO11, and I did not force-push it.
+  - **411e40e0, grounded flinch for Cliffspike and Voltwig** (gain 0.75, hit role only; the b58 change).
+  - **f172c6c7, a fainted creature's aspect flame goes out.**
+    - Nightburrow's "stray vertical line" was its own aspect VFX: flame motes climbing a column sized to the standing body, and eye glows at standing head height.
+    - `play_faint` suspends the VFX and `revive_animation` restores it; remote proxies use both calls.
+    - The F36 capture's faint row does the same, because it plays the clip directly.
+- **CPU b62 (confirming, r 0.93):**
+  - Cliffspike 7.27 vs 6.21 (+1.06); pounce PRESENT x3 -> FIXED, FIXED, PARTIAL.
+  - Voltwig 6.89 vs 6.17 (+0.72); PRESENT x3 -> PARTIAL x3.
+  - Nightburrow 6.30 vs 5.79 (+0.51); line PRESENT x3 -> FIXED x3.
+- **Not in the arm:**
+  - Thundertunnel's flinch gained +0.09 and was dropped. Its real defect is near-black values with no visible eyes.
+  - Bramblebun needs no change: its GPU defect was the land-species swim row, which main no longer stages (1d435bbe8). Capture it again to see whether it clears.
+  - Pebbik's recipe is keyed to its old lod0 mesh (it ships candidate_b4), so the recipe isn't enabled and the flinch can't apply.
+- **Capture:** `capture_f36_poses.gd --whole-body --context --species=cliffspike,voltwig,nightburrow,bramblebun` (hit and faint rows). Judge main vs co14-on; Bramblebun is a main-only re-score.
+- Next from this lane: Thundertunnel's value lift and eyes.
+
 ## TO COORDINATOR (27 Oct, GPU READY: CO11-ON now carries the whole near-bar batch)
 
 - **GPU READY (CLOSE-OUT, on main): CO11-ON 2b4f2256e2411f59bf28b86e24e2a6cb7ce7ff4c.** tb/co11-on = origin/main 58bef4fc7 plus three commits, fast-forwarded from edde2916:
