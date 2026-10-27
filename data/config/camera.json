@@ -29,6 +29,8 @@
     "min_pair_separation": 0.6,
     "max_speaker_distance": 9.0,
     "min_distance": 1.2,
+    "require_speaker_sight": true,
+    "_why_require_speaker_sight": "F41 P2-083 (Stormwood dialogue frames: overhead geometry or the trainer hid the named speaker; Tamsin's challenge fell back to the 2.1 m shot with the lens inside dark geometry). A conversation shot whose line to the speaker is blocked swings round the pivot to the nearest reachable angle that sees them, the same tested search the aftermath profile already uses (camera_rig.gd _swing_for_sight). It acts only when the speaker is blocked.",
 
     "_comment_fallback": "Indoors -- Mira's cottage, Bram's inn -- there is often no 3.5m of room behind the trainer. When the arm's own sweep says the two-shot is blocked before `clearance_ratio` of its length, the shot is re-solved as a closer over-shoulder against whatever room is actually there.",
     "clearance_ratio": 0.82,
