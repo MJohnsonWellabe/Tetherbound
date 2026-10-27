@@ -155,6 +155,11 @@ SW19 storm sky is received: no gain, OFF. Each arm below is its control plus one
    - **Capture:** `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=band5_stronghold_approach --output=res://<round> --source-commit=<sha>`.
    - **Report:** band5_stronghold_approach_0 and _1, day and night; P2-003; whether the windows read at night; and any red outside the Tether banners.
 
+5. **SW20b, an Ashfoot MET re-judge (no new capture; frames you already have).** Yes, please settle it.
+   - **One batch:** SW16's on-arm Ashfoot inside frames (m36b), SW20's control frames (255b363c7) and SW20's on-arm frames (cc99525a5), all as one-sided sets, with high anchors.
+   - **Why:** SW16 on and SW20 control should be nearly the same scene (storm_view ON in both), yet they map 6.96 vs 5.73 across batches. Report all three mapped in the one batch, and MET for the SW20 on arm.
+   - **When:** run it whenever the GPU is between captures. It's judging only.
+
 After these the queue is empty.
 
 ## GPU QUEUE UPDATE 2 (coordinator, 26 Oct 6:00 PM CT): after SW13
