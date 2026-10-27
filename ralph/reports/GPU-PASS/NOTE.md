@@ -112,7 +112,38 @@ Land on main only the files in `LANDABLE.txt`: verdict .md, key and score .json,
 
 ## RESUME
 
-**State at stop (22 Oct, evening):** every result above is pushed to tb/gpu-pass; tb/vfx-launch is pushed; no GPU process is running.
+**State at stop (27 Oct, 07:05 CDT, per the wind-down note):**
+- The queue is closed and empty. Every verdict is pushed to tb/gpu-pass. No GPU process or queue is running.
+- No capture or judge was in flight when the stop arrived.
+- Free space on D: is about 496 GB.
+
+**Last verdicts (27 Oct):**
+
+| Item | Commit | Result |
+|---|---|---|
+| CO10 Terrapup dog3 r5 | `F36-1/CO10-terrapup-dog3r5-fb6a2593b`, ce20e75c1 | 6.30 / 6.30 vs badger 7.22, not met. Shot plain: terrapup is not in f36 `enabled_species`. Plates still read strapped on (PRESENT 2 / PARTIAL 1); coat now PARTIAL. |
+| MH9 Meadows stronghold r7b | `F38-0/MH9-stronghold-r7b-0d8ef6dd2`, b7e1df9b0 | LAND, +0.53 / +0.71. P2-003 at the approach PRESENT 3/3 -> PARTIAL 3/3; night windows unlit PRESENT -> PARTIAL. Not met (best set 6.33). |
+| CO11 near-bar creatures | `F36-1/CO11-near-bar-creatures-2b4f2256e`, 2c3a43799 | Land the Ripplet matte coat (+0.58 / +0.48) and the Mosshell faint (water_mosshell 7.10 / 7.67). Keep the flinch for Solmane only; drop it for Aquaryn and Tidecoil (regress). Tidecoil is MET on main (7.88). No new species met. |
+
+Earlier on 26-27 Oct, all pushed (see each row's VERDICT.md):
+- TW1: land.
+- CO8: Galecrest and Cloudfang MET.
+- SW20: on; SW20b re-judge 6.76, not met.
+- No gain: SW13, SW17, SW19, MH8 (r6b, superseded by r7b).
+- MJ/TP: neither lands.
+- CO9: defect fix, +0.13 standard / +0.46 close crop.
+
+**Open items, if a GPU lane resumes:**
+1. **Driver crash.** 0xC0000094 in `nvoglv64.dll` +0xe93647 (driver 32.0.15.6094, no TDR) has hit three times, all at the Meadows stronghold on Medium (K5 off/mh3 on 26 Oct, MH9 cand on 27 Oct). Each time the re-run was clean. Updating the driver is the owner's call.
+2. **F36 `--candidate`** aborts for any species not in `f36_pose_candidates.json` `enabled_species`: terrapup, mosshell, water_mosshell and ripplet as of 27 Oct. Shoot those plain, one run per species.
+3. **Close-out candidates nearest 7.5:**
+   - water_mosshell Medium (7.10), with High already 7.67.
+   - Ripplet (7.26 / 7.01).
+   - SW20 Ashfoot room (6.76 in the one-batch re-judge).
+   - The paths to 7.5 are in each VERDICT.md.
+4. **Run note:** `run_tool.ps1` logs `frames=0` for tools that write `.jpg` (Tidewake, F41, F38); check the frames folder instead.
+
+**Earlier state (22 Oct, evening):** every result above is pushed to tb/gpu-pass; tb/vfx-launch is pushed; no GPU process is running.
 
 **Local layout:**
 - `D:\tb-gpu-pass`: the sparse working checkout on tb/gpu-pass.
