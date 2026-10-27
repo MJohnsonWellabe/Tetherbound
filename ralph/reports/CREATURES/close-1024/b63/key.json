@@ -1,0 +1,23 @@
+{
+ "Mx": {
+  "anchor": true,
+  "A": "f36_0_npc:C2A",
+  "B": "f36_0_npc:C2B"
+ },
+ "Cc": {
+  "anchor": true,
+  "A": "f36_0_gap:C4A",
+  "B": "f36_0_gap:C4B"
+ },
+ "Vg": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Jc": {
+  "anchor": false,
+  "label": "thundertunnel value",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b63/sides/thundertunnel-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b63/sides/thundertunnel-cand.png"
+ }
+}
