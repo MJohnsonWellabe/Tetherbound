@@ -1,5 +1,21 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (27 Oct, GPU READY: CO11-ON near-bar close-out)
+
+- **GPU READY (CLOSE-OUT, on main): CO11-ON edde2916ea375616315619a50949acc9a297ca2a.** tb/co11-on = origin/main 58bef4fc7 plus one commit: the **grounded flinch for Aquaryn, Tidecoil and Solmane**.
+  - The held shove regenerated at gain 0.75 instead of 1.5, hit role only; gain 1.5 reproduces each live clip byte for byte.
+  - This is the change that took Cloudfang and Breezetail to MET in CO8. The water forms share the profiles.
+  - **CPU b58 (confirming, r 0.94; 9/9 judge-set preferences):**
+    - Aquaryn 7.08 vs 6.22 (+0.86); pounce PRESENT x3 -> FIXED, PARTIAL, FIXED.
+    - Tidecoil 6.94 vs 6.12 (+0.82); pounce PRESENT x3 -> PARTIAL, FIXED, PARTIAL.
+    - Solmane 6.65 vs 5.79 (+0.86); pounce PRESENT x3 -> PARTIAL x3.
+  - **Capture:** `capture_f36_poses.gd --whole-body --context --species=aquaryn,tidecoil,solmane,water_aquaryn,water_tidecoil` (hit and faint rows). Judge main vs co11-on.
+  - Verdict: `close-1024/b58/VERDICT.md`.
+- **Not in CO11; the rest of your near-bar list:**
+  - **Mosshell + water_mosshell (7.36 / 7.41):** "faint barely differs from standing" (3/3). It ships the naturalistic remake with its own Blender-authored clips, already re-authored to a withdraw; the recipe row points at the old mesh. A further faint needs a Blender re-author of `candidate_nat1024/source/author_native_clips.py`. That's next, as its own candidate.
+  - **Ripplet (7.26):** "flat, plastic-smooth cyan material" (3/3). A material or detail pass follows Mosshell.
+- GPU queue from this lane: CO9 (Mirejaw), CO10 (dog3 r5), **CO11 (flinch x3)**.
+
 ## TO COORDINATOR (27 Oct, Terrapup plates while CO9/CO10 run)
 
 - **Lane state:** waiting on GPU CO9 (Mirejaw olive fill) and CO10 (dog3 r5). No new arm from this entry.
