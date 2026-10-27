@@ -2,6 +2,11 @@
 
 ## Session 2 log (newest first)
 
+- 27 Oct 01:23Z Coordinator, 01:22Z:
+  - **SW19 storm sky (m45c): no gain** (Medium 5.74 -> 5.72, High 5.73 -> 5.74). The flat sky improved (PRESENT 9 -> 0 Medium, 11 -> 4 High), but the lit rims read as white smear slabs (16 -> 27 Medium, 19 -> 27 High).
+  - This is the sky's first GPU miss; one more arm is allowed. The lane now has softer rims (`form.lit` 0.8 -> 0.25, `form.edge` 0.04 -> 0.08), with dark bases, deck and skyline kept. CPU capture is running; it posts READY only if the smear is gone on CPU.
+  - **SW20 (m48b Ashfoot room) is first in the GPU queue.**
+  - The judges' next ask (15/15): carry the sky into the scene with a per-phase grade and a cool rim light on trunks and figures.
 - 27 Oct 01:20Z r49 Crown Overlook rim lookout (`deck.rim` + `massif.storm`, flagged candidates over the landed SW18 values): **no gain**, mapped 5.58 -> 5.33 (-0.25) (`r49/VERDICT.md`). First miss for the rim approach; both stay OFF.
   - **Why:** the level catalogue camera behind the trainer never sees the drop right under the deck; the far sink floor reads as a plain at deck level. The storm-haze Crown also lost contrast against the calm sky.
   - **Kept:**
