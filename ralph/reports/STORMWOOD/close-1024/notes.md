@@ -2,6 +2,26 @@
 
 ## Session 2 log (newest first)
 
+- 27 Oct 06:30Z Coordinator, 05:58Z: burn down the F41 per-item rows, functional and UI first. Lane `tb/stormwood`: main #770 (land14) merged.
+- 27 Oct 06:30Z **READY to land land15 4e75ccf52b4932a51edd2d09c2577a49b376da98** (`tb/stormwood-land15`): **F41 P2-081 named trainer dialogue identity.**
+  - **Reproduced on main:** all 26 trainers already speak their own location-specific lines (the top-level presentation `enabled` is on; the "remain off" comment was stale), but no trainer conversation had a portrait.
+  - **Fix:**
+    - 19 trainers get the exact existing plate for their unchanged world body (`fixes/P2-081/existing-plate-audit.json`);
+    - the 7 Team Tether trainers on four raw profiles get plates rendered from their unchanged world configs: `assets/ui/portraits/stormwood_raw_{grunt_c,officer_a,officer_b,captain_a}.png`, import settings identical to the shipping portraits, render manifest `fixes/P2-081/raw-plates-manifest.json`. captain_a renders at exposure 0.3 so its white hair meets the tool's 1.5% clip bar.
+  - **New test** `test_every_trainer_has_own_lines_and_a_portrait`: each catalogued trainer has its own opening line, defeated lines and a loadable portrait; a raw plate belongs only to trainers wearing that profile.
+  - **Checks on the land15 tree:**
+    - `test_stormwood_trainers_data.gd` 6/945, 0 failed;
+    - `test_dialogue_portraits.gd` 13/3362, 0 failed;
+    - `test_stormwood_npc_dialogue.gd` 3/271, 0 failed.
+  - **Capture:** `tools/phase2_capture_dialogue.gd --biome=stormwood --start=19 --count=4` shows Tamsin, Elin, Dace and Ivo panels, each with their own line and matching portrait (`fixes/P2-081/_sheet_p2081_dialogue.jpg`).
+  - **To close:** the GPU before/after on the catalog's 26 `__dialogue` sightings.
+- 27 Oct 06:30Z **F41 items already fixed on main, needing only their GPU before/after:**
+  - **P2-082 portrait identity:** `npc_portraits.enabled` true.
+  - **P2-084 dialogue reuse:** `npc_openings.enabled` true.
+  - **P2-045 candy tiers:** `candy_pickup_presentation.enabled` true.
+  - **P2-093 danger slab:** `lunge_lane.gd` `OPEN_FADE` clears a released lane within 0.08 s once the body is rooted.
+  - **P2-110 Hollows loss:** the `party_vitals_refresh_candidate` HUD refresh is true on main. The duplicate out-of-fight text and loss-result hierarchy still need a native replay; that is next on this lane.
+- 27 Oct 06:30Z **P2-083 reproduced** in the direct-start dialogue fixture: Tamsin's challenge frame has the camera inside dark overhead geometry with the trainer's back filling the lens and the speaker hidden. Next: check the normal interaction camera.
 - 27 Oct 05:16Z **m50b storm light grade: worse (-0.44 mapped)**, 3/3 prefer OFF (`m50b/VERDICT.md`). With m50 (+0.04) that is two misses, so **the storm-light grade is PARKED**; `storm_grade` stays OFF and no m50 arm is posted.
   - **Why:** a brighter break erased the calm-to-break shift the judges credit, and one more directional light gives no visible edge.
   - **New idea:** a material-level rim/fresnel on trunks, creatures and the trainer that flashes with bolts. It touches shared vegetation and character shaders: **QUESTION for the coordinator: is that in this lane's scope?**
