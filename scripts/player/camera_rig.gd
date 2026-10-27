@@ -1102,7 +1102,8 @@ func _speaker_in_sight(shot: Dictionary, speaker_anchor: Vector3) -> bool:
 ## filled the lens while the sweep reported a clear line. This asks the
 ## renderer instead: any visible mesh, other than the speaker's and the
 ## player's own, whose triangles cross the segment from the lens to the
-## speaker's head. Grass and rain are MultiMesh/particles and are not counted.
+## speaker's head (posed bounds for a skinned body). Grass and rain are
+## MultiMesh/particles and are not counted.
 func _speaker_hidden_by_meshes(lens: Vector3, end: Vector3) -> bool:
 	if _mesh_sight_probe.is_valid():
 		return bool(_mesh_sight_probe.call(lens, end))
@@ -1119,6 +1120,12 @@ func _speaker_hidden_by_meshes(lens: Vector3, end: Vector3) -> bool:
 			continue
 		if _is_part_of(mesh_node, _talk_speaker) or _is_part_of(mesh_node, _target):
 			continue
+		# A skinned body's triangles are its bind pose, which for a creature rig
+		# can sit metres from where it is drawn (Sera's wild Tanglevolt missed
+		# by triangles while it filled the frame). The renderer's own posed
+		# bounds already crossed the line, which is close enough for a body.
+		if not mesh_node.skeleton.is_empty():
+			return true
 		var tris := mesh_node.mesh.generate_triangle_mesh()
 		if tris == null:
 			continue
