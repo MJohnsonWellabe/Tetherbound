@@ -620,3 +620,11 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
     - `warden_rim_candidate` (parked) and its flagged lights are left out.
   - **Salmon-plank fix: NOT included.** The bricks are main's geometry, but the fix lives in the judged `courtyard_daylight_candidate.rubble` override (scale_max 1.6 → 0.7–1.1, tint #4a443c, y 0.02), so it would change a judged piece. It stays on tb/meadows (CPU-checked: the large planks are gone from the gameplay and reverse cameras). It rides with the next swing, which also removes the edge beam.
   - **Tests:** test_meadows_tier1_art_gates asserts all three flags ON and citing GPU MH9. The off-builder check now uses a copy of the block with `enabled` set to false. It ran with the five stronghold unit tests: 27 tests, 406 assertions, 0 failed.
+
+- 2026-10-27 10:25 UTC **RESULT, not READY: stronghold r8** (the approach sightline corridor plus a 150 m keep). It is flat, so it stays OFF.
+  - **What r8 is:** `meadows_hero_pieces.json stronghold_sightline` (OFF): nine `clear_area` glades along the approach road from (0, 7250) toward the gate mouth. `meadows_hero_pieces.gd::clear` now runs every enabled block that has `spots`, so the shipped Ridgeline clearings behave as before. The arm also widened the keep from 120 to 150 m, as a capture overlay only.
+  - **CPU result** (`r8-1027-mapped.json`, `_sheet_r8-1027.png`; three fresh code-blind judges, 3 anchor pairs including craft): r7b 6.81 vs r8 6.60, so −0.21 mapped. The fit is weak (r 0.79, RMSE 0.71). The judges call the two sides "near-identical".
+  - **Why it failed:** the approach frames still show the same trees in front of the keep. The log reports 2820 scatter items removed, so the trees that frame this camera are not that cleared scatter. The keep reads larger but is still "small, generic" to the judges.
+  - **Confound:** in the r7b arm a wolf happens to stand in the gameplay frame, and 2 of 3 judges credited it.
+  - **Next:** find which system places the trees on the approach_0 sightline (band5 authored groves, not the baked scatter) and open those, before any second sightline try. Scaling the keep alone does not move the judges.
+  - **Rule:** this is the first failure on this item, so one more try with that new idea is allowed before the approach is parked.
