@@ -126,6 +126,16 @@ Land on main only the files in `LANDABLE.txt`: verdict .md, key and score .json,
 3. Re-confirm F25#4 on main after tb/vfx-launch lands (`F25-4/f25_fix_queue.ps1.txt`, about 12 minutes).
 4. F08#3: judges ask for foreground dressing, a night lighting pass and varied islets (scene work for the Cloudreach lane).
 
+## GPU QUEUE UPDATE 5 (coordinator, 27 Oct 05:05 UTC): CO11 near-bar creature close-outs, after the Meadows stronghold run
+
+- **Why these:** every species here sat 0.01–0.25 under 7.5 on the GPU (24 Oct F36 rows). Each MET row lands under the close-out exception.
+- **Arms:** main 58bef4fc7 vs tb/co11-on 2b4f2256e, three commits on that main:
+  - a grounded hit flinch for Aquaryn, Tidecoil and Solmane;
+  - Mosshell's faint ends on its back (CPU b59 +1.21, water_mosshell too);
+  - Ripplet's matte countershaded coat (CPU b61 +0.40).
+- **Capture:** `capture_f36_poses.gd --candidate --whole-body --context --species=aquaryn,tidecoil,solmane,mosshell,ripplet`, plus their water forms where they have one (water_mosshell, Aquaryn, Tidecoil), with `--source-commit`. Standard roster crop.
+- **Report:** MET per species per preset, and any regression.
+
 ## GPU QUEUE UPDATE 4 (coordinator, 27 Oct 04:40 UTC): MH8 is superseded by r7b
 
 - **If MH8 (r6b) has not started capturing:** run r7b in its place.
