@@ -1,5 +1,72 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## HANDOFF (27 Oct, wind-down; lane stopped)
+
+**READY to land land15 + land16, one branch: tb/creatures-land15 99ec42eaeca54eca54ce48e4b0588a6db5598014** (origin/main 073466a65 plus two commits).
+- **land15, 55fca2b99**, exactly what CO11 passes:
+  - Ripplet matte countershaded coat;
+  - Mosshell faint on its back, land and water forms;
+  - Solmane grounded flinch only.
+  - No Aquaryn or Tidecoil flinch.
+  - Checks on 55fca2b99: 579 tests, 0 failed.
+- **land16, 99ec42eae**, owner decision 27 Oct "Ship the dog now": Terrapup becomes the dog3 large dog.
+  - Exactly co10 fb6a2593b: the candidate_dog3 assets, plus the species.json model, colourway source and seat `mount_offset` [0, 2.36, 0], plus `_why_on`.
+  - The owner's height is unchanged at 3.20 m.
+  - Checks on 99ec42eae: `run_tests --only=terrapup,starter,ride,riding,mount,saddle,species,creature_body,creature_scale,scale,colourway,shiny,texture_for,smoke_creature,f36_pose,party` ran 208 tests, 0 failed.
+  - No test asserted the badger model, so no test was changed.
+  - The real game path, via the F36 stage capture with the game's own seat: dog3 installs, stands 3.20 m against the trainer's measured 1.80 m, and the rider sits on the back between the shoulders.
+
+**State**
+- Branches:
+  - tb/creatures-land 3d354b785 is clean and pushed, and holds all lane work.
+  - Note: land still carries the Aquaryn and Tidecoil flinch that CO11 dropped, and the Cliffspike, Voltwig, Nightburrow and Thundertunnel work below.
+- Lane evidence: close-1024/b45-b63 on tb/creatures-land. Workflow: TECHNICAL §8.1 plus the recipe in b58-b63 VERDICT.md.
+
+**Open: CO12, not run on GPU** (tb/co12-on 6faa34c65, tree identical to tb/co14-on 134bf046d, on main 073466a65):
+
+| Species | Change | CPU result (mapped) |
+|---|---|---|
+| Cliffspike | flinch, gain 0.75 | b62: 6.21 -> 7.27 (+1.06) |
+| Voltwig | flinch, gain 0.75 | b62: 6.17 -> 6.89 (+0.72) |
+| Nightburrow | aspect VFX suspended on faint and restored on revive (creature_body.gd plus the capture's faint row); its "stray line" was its own flame motes | b62: 5.79 -> 6.30 (+0.51) |
+| Thundertunnel | vivid-map fur value lift (`retex/grade_value.py`) | b63: 5.33 -> 6.43 (+1.10) |
+
+- Capture: `--species=cliffspike,voltwig,nightburrow,thundertunnel,bramblebun`, plain.
+- Nightburrow and Bramblebun are not in enabled_species. Bramblebun is a main-only re-score, because the land-species swim row is gone.
+- Thundertunnel's next step is scale: its back is only about the trainer's height.
+- Pebbik is excluded: its recipe is keyed to lod0, but it ships candidate_b4.
+
+**Dog path to 7.5** (CO10 verdict). Plates are parked on CPU after r5 and r7 (r7, +0.10, is in candidate_dog3/source/flatten_plates.py on land). The path:
+1. A materially different plate build: plates grown out of the fur as a Meshy retexture or remesh of the back, not geometry added on top.
+2. A desaturated chestnut coat.
+3. A stronger dog read: muzzle, ears, tail.
+4. A rider seat shaped into the plates.
+
+**Mirejaw path** (CO9: +0.13 at the score of record; close-crop water_mirejaw +0.99/+0.69):
+- The olive-umber fill (`mirejaw/candidate/retex/grade_fill.py`, arm 033a66f6) stays OFF and rides with the next swing.
+- That swing: irregular authored scale cells instead of the even tiled net; an olive-umber back grading to a pale belly with faint-end values kept up; a rim or fill light so it reads at strip size.
+
+**Other follow-ups from CO11:**
+- Ripplet: a lighter belly, toward Sirenseal's grey-white.
+- water_mosshell Medium: faint-mid should settle straight onto the back.
+- Mosshell: taller than the trainer, with the board's island and tree crown.
+- Solmane: a faint that collapses, rather than a crouch with the wings up.
+- Ripplet: also a natural bioluminescent fin and frill accent (untried).
+
+**Parked:** Breezetail colourway (policy test conflict, b52/b53), Stormtrail bolts, Tanglevolt arcs, Terrapup plate geometry.
+
+**What worked**
+- The held-shove flinch at gain 0.75.
+- Faint redesigns that change the silhouette (turtle on its back).
+- Grades on the texture the game actually renders: check the vivid colourway versus the embedded albedo first.
+- Value or countershading lifts on dark or flat coats.
+- Bind-pose normals from `tools/creature_anatomy_maps.py` for anatomy-aware grades.
+
+**Runbook**
+- Capture: `xvfb-run godot --rendering-driver opengl3 --script capture_f36_poses.gd -- --species=X --whole-body --context --roles=hit,faint --out=res://<fresh dir>`.
+- Judge: `anchor_tiles.py` with 3 pairs; the b45 prompt with THE SETS and RECORDED DEFECTS swapped in; three judge agents; then `calibrate.py`.
+- Disk: the session allowance is small, so build arms and landings with git plumbing (`commit-tree`) instead of extra worktrees.
+
 ## TO COORDINATOR (27 Oct): READY to land land15 55fca2b992c879025d8422b0c10cf2795a067ef6
 
 - **READY to land land15 55fca2b992c879025d8422b0c10cf2795a067ef6** (tb/creatures-land15). It is one commit on origin/main 073466a65 with exactly what CO11 passes:
