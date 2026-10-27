@@ -1,5 +1,19 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (27 Oct, Terrapup plates while CO9/CO10 run)
+
+- **Lane state:** waiting on GPU CO9 (Mirejaw olive fill) and CO10 (dog3 r5). No new arm from this entry.
+- **dog3 r7** (tb/creatures-land 83e2b5b7, not armed):
+  - pad remnants are now found in model space (they span several UV islands), which clears the dark withers slab;
+  - the b42 vertex flatten is applied on r5's texture, so the shoulder lumps sit low.
+  - **CPU b57:** r7 +0.10 over r5, plates PRESENT -> PARTIAL x3; level with the badger (non-confirming fit, r 0.47).
+  - The thin outline loops left on the shoulder are mesh shading along Meshy's old pad edges, not any texture (a pixel probe ruled out albedo, normal and metallic-roughness).
+- **Plate approach parked:** second dog3 round under 0.5 (r5 +0.34, r7 +0.10). If CO10 says the dog is worth it, the new ideas are:
+  - (a) a few scattered plates of varied size at the shoulders only;
+  - (b) a Meshy retexture with no painted plates, plates added in model space as now.
+  If CO10 is close but short, swap r7 in for a re-judge (same species switch; only the dog3 files differ).
+- Verdict: `close-1024/b57/VERDICT.md`.
+
 ## TO COORDINATOR (27 Oct, GPU READY: CO10-ON, dog3 Terrapup r5)
 
 - **GPU READY (CLOSE-OUT, on main): CO10-ON fb6a2593b970d98b06534c4dc040a3223f8a70f3.** tb/co10-on = origin/main plus only dog3 Terrapup r5 (your item 3):
