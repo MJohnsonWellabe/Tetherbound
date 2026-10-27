@@ -57,6 +57,7 @@ extends Node3D
 
 const CONFIG_PATH := "res://data/config/stronghold.json"
 const STRONGHOLD_HERO_GATEHOUSE := preload("res://scripts/world/stronghold_hero_gatehouse.gd")
+const COURTYARD_FILL := preload("res://scripts/world/stronghold_courtyard_fill.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
 ## ROUND-5, FIX3. The same rigged-human builder `trainer_npc.gd`'s own bodies
@@ -1620,6 +1621,9 @@ func _build_trim() -> void:
 					_box(band, Vector3(at.x, _floor_y + y, at.z), material, false)
 			"pillar":
 				var offset := _local_of(spec.get("offset", [0.0, 0.0]))
+				var daylight := _courtyard_daylight()
+				if id == "courtyard" and daylight.has("pillar_x"):
+					offset.x = signf(offset.x) * float(daylight["pillar_x"])
 				_box(Vector3(0.7, height, 0.7),
 					Vector3(centre.x + offset.x, _floor_y + height * 0.5, centre.z + offset.z),
 					material, true)
@@ -4758,6 +4762,19 @@ func _build_warden_arena_dressing() -> void:
 			mat, false, "WardenArenaDoorConduit_%d" % int(s2))
 
 
+## F38 band5_stronghold_approach_1 (close-1024, OFF until judged): the
+## courtyard's own daylight. GPU MH2 read the yard as near-black (3.7-5.0):
+## the west curtain's sun shadow covers most of the floor and its one fill is a
+## steep, weak warm omni. When `courtyard_daylight_candidate` is on, that SAME
+## light (no new light, so the exterior budget is unchanged) becomes a broad,
+## even sunlit bounce; the courtyard rubble keeps to the wall foot instead of
+## 3 m slabs the camera clips; and the two courtyard trim braces stand flush
+## to their walls rather than in the camera's foreground.
+func _courtyard_daylight() -> Dictionary:
+	var cfg: Dictionary = _config.get("courtyard_daylight_candidate", {})
+	return cfg if bool(cfg.get("enabled", false)) else {}
+
+
 ## DIAGNOSTIC RESULT, ITEM 1 (2026-09-02). A single OmniLight3D dropped at the
 ## courtyard centre (energy 20, range 30, default attenuation 1.0) was rendered
 ## and the floor pixels sampled directly: they LIT UP (roughly RGB 128,121,80
@@ -4782,8 +4799,16 @@ func _build_lights() -> void:
 	# kept as its own config array (see `_comment_lights_flanks`) rather than
 	# spliced into `lights` by hand, so a future diff on either block stays
 	# readable.
+	var daylight := _courtyard_daylight()
 	for entry: Variant in _config.get("lights", []) + _config.get("lights_flanks", []):
 		var spec: Dictionary = entry as Dictionary
+		# A `flag` entry is a candidate light: built only while that config
+		# block is enabled (F22#4 close-out `warden_rim_candidate`).
+		if spec.has("flag") and not bool((_config.get(str(spec["flag"]), {}) as Dictionary).get("enabled", false)):
+			continue
+		if not daylight.is_empty() and spec.get("at", []) == daylight.get("light_at", []):
+			spec = spec.duplicate()
+			spec.merge(daylight.get("light", {}) as Dictionary, true)
 		var at := _local_of(spec.get("at", []))
 		var position := Vector3(at.x, _floor_y + float(spec.get("y", 5.0)), at.z)
 		var light: Light3D
@@ -4812,6 +4837,8 @@ func _build_lights() -> void:
 			light = spot
 		else:
 			var omni := OmniLight3D.new()
+			if spec.has("night"):
+				omni.set_script(COURTYARD_FILL)
 			omni.position = position
 			omni.omni_range = float(spec.get("range", 14.0))
 			# VP-HALL-FIX: same shape control `_build_hall_fire()`'s braziers
@@ -4828,6 +4855,8 @@ func _build_lights() -> void:
 		# Shadowless unless an entry asks (N05: `shadow: true`); every entry
 		# that does not ask is exactly the light it was.
 		light.shadow_enabled = bool(spec.get("shadow", false))
+		if light.has_method("configure"):
+			light.call("configure", spec, spec["night"] as Dictionary)
 		add_child(light)
 
 
@@ -5643,8 +5672,13 @@ func _build_ruin_reclaim() -> void:
 	add_child(holder)
 	for band: Variant in (cfg.get("ivy", []) as Array):
 		_reclaim_batch(holder, band as Dictionary, rng, true)
+	var daylight := _courtyard_daylight()
 	for band: Variant in (cfg.get("rubble", []) as Array):
-		_reclaim_batch(holder, band as Dictionary, rng, false)
+		var spec: Dictionary = band as Dictionary
+		if not daylight.is_empty() and float(spec.get("from", 0.0)) == float(daylight.get("rubble_from", INF)):
+			spec = spec.duplicate()
+			spec.merge(daylight.get("rubble", {}) as Dictionary, true)
+		_reclaim_batch(holder, spec, rng, false)
 
 
 ## One MultiMesh per band. A band is a wall run: an axis, a span along it, the

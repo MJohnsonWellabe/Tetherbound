@@ -1,7 +1,8 @@
 extends "res://tests/test_case.gd"
 
 ## F38 tier-1 new art (close-1024): the Hall arch facades ship ON (GPU +0.79
-## Medium, +1.11 High); the stronghold hero gatehouse and the Meadows hero
+## Medium, +1.11 High); the stronghold hero gatehouse (keep + spire r7b),
+## courtyard daylight and war banners ship ON after GPU MH9; the Meadows hero
 ## pieces stay OFF and build nothing while off; on, a facade is fitted inside
 ## its arch slot.
 
@@ -17,7 +18,10 @@ func _block(path: String, key: String) -> Dictionary:
 
 func test_shipping_configs_gate_the_new_art() -> void:
 	assert_true(bool(_block("res://data/config/crossing_hall.json", "arch_facades").get("enabled", false)), "facades ON after the GPU pass")
-	assert_false(bool(_block("res://data/config/stronghold.json", "hero_gatehouse").get("enabled", true)))
+	for key: String in ["hero_gatehouse", "courtyard_daylight_candidate", "banner_model_candidate"]:
+		var block := _block("res://data/config/stronghold.json", key)
+		assert_true(bool(block.get("enabled", false)), key + " ON after GPU MH9")
+		assert_true(str(block.get("_why_on", "")).contains("GPU MH9"), key + " carries its GPU verdict")
 	var pieces := HERO_PIECES.settings()
 	var clearings: Dictionary = pieces.get("clearings", {})
 	assert_true(bool(clearings.get("enabled", false)), "clearings ON after GPU MH7")
@@ -35,7 +39,9 @@ func test_off_builders_add_nothing() -> void:
 	cfg["enabled"] = false
 	assert_eq(ARCH_FACADES.build(root, cfg, {"tidewake": arch}), 0)
 	assert_eq(arch.get_child_count(), 0)
-	assert_eq(GATEHOUSE.build(root, _block("res://data/config/stronghold.json", "hero_gatehouse"), 0.0, 0.0), null)
+	var gatehouse := _block("res://data/config/stronghold.json", "hero_gatehouse").duplicate(true)
+	gatehouse["enabled"] = false
+	assert_eq(GATEHOUSE.build(root, gatehouse, 0.0, 0.0), null)
 	assert_eq(HERO_PIECES.build(root), 0)
 	assert_eq(HERO_PIECES.clear(root), 0, "no Vegetation node: clearings cut nothing")
 	assert_eq(root.get_child_count(), 1)

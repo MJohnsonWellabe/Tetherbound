@@ -13,6 +13,19 @@ const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 static func build(stronghold: Node3D, cfg: Dictionary, floor_y: float, mouth_z: float) -> Node3D:
 	if not bool(cfg.get("enabled", false)):
 		return null
+	var holder := _place(stronghold, cfg, floor_y, mouth_z, "HeroGatehouse")
+	# `companions` (r7): further hero pieces in the same frame, each with its own
+	# path, width_m, offset, yaw and lit-window emission -- the lit keep gives the
+	# skyline its mass and windows, a spire behind it gives the height.
+	var index := 0
+	for companion: Variant in cfg.get("companions", []):
+		if companion is Dictionary:
+			_place(stronghold, companion as Dictionary, floor_y, mouth_z, "HeroGatehouseCompanion%d" % index)
+		index += 1
+	return holder
+
+
+static func _place(stronghold: Node3D, cfg: Dictionary, floor_y: float, mouth_z: float, node_name: String) -> Node3D:
 	var scene := load(str(cfg.get("path", ""))) as PackedScene
 	if scene == null:
 		push_warning("stronghold hero gatehouse: %s did not load" % cfg.get("path", ""))
@@ -20,7 +33,7 @@ static func build(stronghold: Node3D, cfg: Dictionary, floor_y: float, mouth_z: 
 	var model := scene.instantiate() as Node3D
 	_light_windows(model, cfg)
 	var holder := Node3D.new()
-	holder.name = "HeroGatehouse"
+	holder.name = node_name
 	stronghold.add_child(holder)
 	holder.add_child(model)
 	var bounds := RENDER_BOUNDS.measure(model)
