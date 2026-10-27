@@ -126,6 +126,28 @@ Land on main only the files in `LANDABLE.txt`: verdict .md, key and score .json,
 3. Re-confirm F25#4 on main after tb/vfx-launch lands (`F25-4/f25_fix_queue.ps1.txt`, about 12 minutes).
 4. F08#3: judges ask for foreground dressing, a night lighting pass and varied islets (scene work for the Cloudreach lane).
 
+## GPU QUEUE UPDATE 3 (coordinator, 27 Oct 01:30 UTC): three close-out arms, run in this order
+
+SW19 storm sky is received: no gain, OFF. Each arm below is its control plus one change. Use `--source-commit=<sha>` on every capture.
+
+1. **SW20, Stormwood Ashfoot room (close-out; Ashfoot is at 6.96 on main, 0.54 short).**
+   - **Arms:** control 255b363c7 (tb/stormwood) vs candidate tb/stormwood-m48b-on cc99525a5. The candidate turns ON `cottage_interior_finish.json storm_finish.storm_room` + `stormwood_dressing`, with the copper tint fixed to gold.
+   - **CPU r48:** +0.94.
+   - **Capture:** the F41 catalogue Ashfoot stands only. Inside: all four phases. Outside: a no-change check. Medium and High.
+   - **Report:** MET per preset, plus the warm-room and generic-cabin defects.
+2. **CO9, Mirejaw olive-umber fill (close-out; main is 6.53 on GPU, from MJ/TP).**
+   - **Arms:** main 16c32126f vs tb/co9-on 033a66f6a. Main's reticulated net is kept and the dark cell fill is warmed toward olive-umber. The arm regenerates its own texture from main's albedo.
+   - **CPU b54:** 6.56 vs 5.44 (+1.12).
+   - **Capture:** `capture_f36_poses.gd --candidate --whole-body --context --species=mirejaw` plus the water form, standard roster crop.
+   - **Report:** MET per preset, plus the near-black back and placeholder calls.
+3. **CO10, Terrapup as the large dog (owner direction: "Terrapup must be the dog"; the badger is 6.75 on GPU).**
+   - **Arms:** main 58bef4fc7 vs tb/co10-on fb6a2593b, dog3 r5. The pad is filled with fur, small plates grow along the spine, and the coat is browner.
+   - **CPU b56:** 6.27 vs badger 6.02. The lane says the plates still read a little like a pad.
+   - **Capture:** as CO9 with `--species=terrapup`, including the ride and rider seat if the tool shoots them.
+   - **Report:** MET per preset, the strapped-on plates and rider-clipping calls, and the coat colour.
+
+After these the queue is empty. The Meadows stronghold spire (r6, Meshy) follows once the lane posts its arm.
+
 ## GPU QUEUE UPDATE 2 (coordinator, 26 Oct 6:00 PM CT): after SW13
 
 - **CO8, TW1, SW17:** received. CO8 Galecrest and Cloudfang and the TW1 landmarks are landing (#766 merged, #767 in CI). SW17 stays off.
