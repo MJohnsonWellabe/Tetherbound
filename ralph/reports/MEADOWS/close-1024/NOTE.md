@@ -570,3 +570,28 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - The r7 night frames confirm the judges: the Meshy albedo has almost no window texels, so the thresholded masks (0.5% coverage) light only a few specks, and at energy 12 they tonemap to blue-white.
   - **r7b:** authored warm window-grid masks on the stone-wall texels (`*_windows_grid_emission.png`, about 2–3% coverage, mullion bar, amber), with energy 5 and 6. It captures right after.
   - **Plan:** I judge r7 and r7b against ship and r6b, and push whichever beats r6b as `tb/meadows-r7-on`.
+
+- 2026-10-27 04:05 UTC **READY for GPU: `tb/meadows-r7-on` 0d8ef6dd2** (stronghold r7b plus MH3). This is the tb/meadows head 032b28f50 with three flags ON:
+  - `hero_gatehouse`: the lit keep plus the spire companion, with the r7b window-grid masks;
+  - `courtyard_daylight_candidate`;
+  - `banner_model_candidate`.
+  - It is a judging branch only. `test_meadows_tier1_art_gates` asserts the gatehouse OFF, so that test flips only when the gatehouse lands.
+  - **Stands:** band5_stronghold_approach_0 (the keep and spire) and band5_stronghold_approach_1 (MH3), day and night, Medium and High.
+  - **CPU result** (`r7-1027-mapped.json`, `_sheet_r7-1027.png`): one batch, the three arms each against shipping; three fresh code-blind judges, 3 anchor pairs including craft; linear slope 1.38, r 0.99, RMSE 0.14.
+
+    | Arm | Mapped | Change |
+    |---|---|---|
+    | Shipping | 6.00 | |
+    | r6b (spire only) | 6.27 | +0.27 |
+    | r7 (keep plus spire, thresholded masks) | 6.50 | +0.50 |
+    | **r7b** (keep plus spire, authored window grid) | **6.69** | **+0.69** |
+
+    - All 3 judges call the r7b castle with lit windows the best night landmark. The r6b lone spire reads as a "floating thin tower" that vanishes at night.
+    - In this batch r6b came in under its earlier +0.79 (spire1027); r7b beats it head to head.
+  - **Still open (3/3):**
+    - The windows tonemap white rather than warm, and they glow by day too.
+    - The keep floats over the canopy with no visible base.
+    - The night grade crushes the grove and the wildlife.
+    - The stand's shared base-scene faults also remain: carpet grass, a cyan horizon line, and card trees.
+  - **Next idea (r7c, after GPU):** deeper amber at a lower energy so the windows stay warm, and night-only emission through the `day_cycle` group.
+- 2026-10-27 04:05 UTC Merged origin/main (#769, relay flags ON) into tb/meadows. In `tether_relay.json` I took main's ON pad; the r2 values (uv 0.6, #a39684) stay recorded in the 26 Oct line.
