@@ -1,0 +1,23 @@
+{
+ "Bf": {
+  "anchor": true,
+  "A": "f36_0_npc:C9A",
+  "B": "f36_0_npc:C9B"
+ },
+ "Lx": {
+  "anchor": true,
+  "A": "f36_0_gap:C6B",
+  "B": "f36_0_gap:C6A"
+ },
+ "Ei": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Xb": {
+  "anchor": false,
+  "label": "breezetail cloth harness",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b53/sides/breezetail-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b53/sides/breezetail-cloth.png"
+ }
+}
