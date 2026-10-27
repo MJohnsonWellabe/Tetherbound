@@ -1178,6 +1178,21 @@ func _apply_aspect_vfx() -> void:
 	if aspect_variant == "" or not _has_model:
 		return
 	_aspect_vfx = ASPECT_VFX.attach(self, aspect_variant, _radius, _height)
+	if _aspect_vfx != null and _aspect_vfx_suspended:
+		_aspect_vfx.visible = false
+
+
+## GPU F36#0 (24 Oct, 3/3 judges): Nightburrow's flame motes climb a fixed
+## column sized to the STANDING body, so over a fainted body they stood up as
+## a stray vertical line, with the eye glows hanging in the air. A knocked-out
+## creature's aspect flame goes out; it comes back on revive.
+var _aspect_vfx_suspended := false
+
+
+func set_aspect_vfx_suspended(suspended: bool) -> void:
+	_aspect_vfx_suspended = suspended
+	if _aspect_vfx != null:
+		_aspect_vfx.visible = not suspended
 
 
 ## OWNER DIRECTIVE 2026-08-28 §2b: "creatures need to stand out in the grass.
@@ -2691,6 +2706,7 @@ func play_faint() -> void:
 	# A hit-recoil tween must not overwrite the collapse's grounded pivot.
 	_clear_combat_flinch()
 	_clear_hit_flash()
+	set_aspect_vfx_suspended(true)
 	if _animator != null:
 		_animator.call("play_faint")
 
@@ -3262,6 +3278,7 @@ func rest_pose_receipt() -> Dictionary:
 
 func revive_animation() -> void:
 	ensure_visual_resident()
+	set_aspect_vfx_suspended(false)
 	if _animator != null:
 		_animator.call("revive")
 
