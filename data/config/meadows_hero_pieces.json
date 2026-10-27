@@ -8,6 +8,21 @@
       {"id": "ridgeline_glade_back", "at": [-262.0, 6478.0], "radius_m": 9.0}
     ]
   },
+  "stronghold_sightline": {
+    "enabled": false,
+    "_why": "F38 band5_stronghold_approach_0 close-1024 (OFF until judged; meadows_hero_pieces.gd::clear, the same run-time vegetation.clear_area cut as the Ridgeline glades). GPU MH9 passed r7b (keep + spire, lit window grids: +0.53 Medium, +0.71 High; P2-003 PRESENT -> PARTIAL 3/3) but every judge still reads 'a small castle' showing over a wall of blob canopies; the coordinator's next swing is to open the real approach sightline rather than move the camera. A corridor of glades along the approach road from the stand (0, 7250) toward the gate mouth (about z 7550), 16 m radius near the stand widening to 22 m, angled a few metres west toward the spire, cuts the baked tree and rock scatter so the keep and spire stand against the sky with grove edges either side. Visual and walkability only (fewer tree colliders); harvest nodes and the bake are untouched.",
+    "spots": [
+      {"id": "sightline_0", "at": [-0.6, 7280.0], "radius_m": 16.0},
+      {"id": "sightline_1", "at": [-1.3, 7310.0], "radius_m": 16.0},
+      {"id": "sightline_2", "at": [-1.9, 7340.0], "radius_m": 22.0},
+      {"id": "sightline_3", "at": [-2.6, 7370.0], "radius_m": 22.0},
+      {"id": "sightline_4", "at": [-3.2, 7400.0], "radius_m": 22.0},
+      {"id": "sightline_5", "at": [-3.9, 7430.0], "radius_m": 22.0},
+      {"id": "sightline_6", "at": [-4.5, 7460.0], "radius_m": 22.0},
+      {"id": "sightline_7", "at": [-5.1, 7490.0], "radius_m": 22.0},
+      {"id": "sightline_8", "at": [-5.8, 7520.0], "radius_m": 22.0}
+    ]
+  },
   "_comment": "F38 tier-1 hero pieces (close-1024). Each group is OFF until judged on its stands; see meadows_hero_pieces.gd. World coordinates; y comes from the terrain minus sink_m.",
   "cliffs": {
     "_why_r1": "close-1024 r1: mapped Bar A 5.93 ON vs shipping 4.89 at band2_stone_and_root_1 (CPU, 25 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, anchors f36_0_npc:C1 / p2_094_r4 / craft, calibrate.py linear slope 1.64 r 0.98 RMSE 0.31, confirming batch; Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/art1024-mapped.json). +1.04, below 6.7; judges read the outcrop as real stratified rock but still flag the faceted Burrow hill flank and ramp slab.",

@@ -23,6 +23,7 @@ func test_shipping_configs_gate_the_new_art() -> void:
 	var clearings: Dictionary = pieces.get("clearings", {})
 	assert_true(bool(clearings.get("enabled", false)), "clearings ON after GPU MH7")
 	assert_true(str(clearings.get("_why_on", "")).contains("GPU MH7"), "ON carries its GPU verdict")
+	assert_false(bool((pieces.get("stronghold_sightline", {}) as Dictionary).get("enabled", true)), "stronghold sightline OFF until judged")
 	for group: String in pieces.keys():
 		if pieces[group] is Dictionary and (pieces[group] as Dictionary).has("pieces"):
 			assert_false(bool((pieces[group] as Dictionary).get("enabled", true)), group + " stays OFF")
