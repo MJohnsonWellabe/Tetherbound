@@ -2,6 +2,12 @@
 
 ## Session 2 log (newest first)
 
+- 27 Oct 05:16Z **m50b storm light grade: worse (-0.44 mapped)**, 3/3 prefer OFF (`m50b/VERDICT.md`). With m50 (+0.04) that is two misses, so **the storm-light grade is PARKED**; `storm_grade` stays OFF and no m50 arm is posted.
+  - **Why:** a brighter break erased the calm-to-break shift the judges credit, and one more directional light gives no visible edge.
+  - **New idea:** a material-level rim/fresnel on trunks, creatures and the trainer that flashes with bolts. It touches shared vegetation and character shaders: **QUESTION for the coordinator: is that in this lane's scope?**
+- 27 Oct 05:16Z Lane status. Parked: sky form (SW19 + r45c), ground (SW8 + SW13), storm grade (m50 + m50b), Ashfoot polish (m51, first miss), Crown rim (r49, first miss). Still open:
+  - **Ashfoot:** a second polish try, with a copper and rod motif large enough for the door lens and the rug swap (credited).
+  - **Crown Overlook height:** needs a stand that can see the drop.
 - 27 Oct 04:40Z **m50 storm light grade: no gain on CPU (+0.04)** (`m50/VERDICT.md`); first miss. The straight-back diffuse rim lights no visible edge, and break went darker.
   - **Second try (m50b) is being built:** a three-quarter side rim, stronger; break graded brighter; the bolt ground exposure on.
 - 27 Oct 04:26Z Coordinator, 03:56Z: the SW20b one-batch re-judge put the Ashfoot room at 6.76, not met (0.74 short). land14 is PR #770. The next Ashfoot arm is the top close-out.
