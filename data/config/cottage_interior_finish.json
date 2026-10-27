@@ -26,7 +26,8 @@
     "storm_light_colour": "#8f8ad0",
     "storm_light_energy": 0.9,
     "storm_light_range_m": 4.0,
-    "copper_tint": "#c08250",
+    "copper_tint": "#c9a06a",
+    "_why_copper_tint": "r48 judge (both arms): the kit wall lantern and bracket under #c08250 read as \"a small dark-red bracket\" in the warm hearth light; red is reserved for Team Tether. A golden copper keeps the lantern, pot and bucket copper without the red read.",
     "herb_cord_m": 2.75,
     "herb_colour": "#6b6a40",
     "herb_bundles": 5,
@@ -89,6 +90,33 @@
       "size_m": [4.3, 6.8, 6.3],
       "yaw_deg": 0.0,
       "offset_m": [0.0, -0.05, 0.0]
+    },
+    "storm_room": {
+      "enabled": true,
+      "_why_on": "GPU SW20 (tb/gpu-pass e59ac809c, ralph/reports/GPU-PASS/F41-0/SW20-ashfoot-room-cc99525a5/VERDICT.md): m48b (storm_room + window patch + stormwood_dressing + golden copper tint) ashfoot_shelter_inside 5.73 -> 6.60 (+0.87) at Medium and High; warm-room defect PRESENT -> FIXED 3/3, generic cabin and window slab PRESENT -> PARTIAL; outside level.",
+      "_candidate": "r47 storm-driven room light (OFF until judged; needs storm_finish and window_pane on). GPU SW16 judges x3: the room is 'warm orange in every phase, not purple storm light', with 'no lightning flash on the walls' at break. A wide spot from the east window washes the room in the phase's storm colour and the surge flash lifts it; the hearth dims a little in the storm phases. phases: [colour, energy, hearth scale].",
+      "range_m": 7.5,
+      "angle_deg": 62.0,
+      "pitch_deg": 18.0,
+      "attenuation": 0.8,
+      "flash_gain": 2.5,
+      "phases": {"calm": ["#a6a2c8", 1.6, 1.0, 0.9, 0.12], "building": ["#7a70c0", 4.0, 0.75, 0.55, 0.3], "break": ["#d8d2ff", 6.5, 0.6, 0.45, 0.6], "fading": ["#94b4d0", 2.6, 0.9, 0.75, 0.2]},
+      "window_patch": {"panes": [3, 2], "stretch": 1.25, "drop_m": 0.45, "inset_m": 0.03},
+      "patch_flash_gain": 1.2,
+      "_why_window_patch_r48": "r47 judges x3: no lightning shaped on the walls, only a whole-frame tint. The window's pane pattern lies on the west wall; level is the 5th value per phase.",
+      "_why_phases_r47b": "phases: [colour, spot energy, hearth scale, room-lamp scale]. r47 first CPU look: no visible change; the warm overhead RoomLight, not the hearth, kept the room orange, and the spot at 2.6 was swamped."
+    },
+    "stormwood_dressing": {
+      "enabled": true,
+      "_why_on": "GPU SW20 (tb/gpu-pass e59ac809c, ralph/reports/GPU-PASS/F41-0/SW20-ashfoot-room-cc99525a5/VERDICT.md): m48b (storm_room + window patch + stormwood_dressing + golden copper tint) ashfoot_shelter_inside 5.73 -> 6.60 (+0.87) at Medium and High; warm-room defect PRESENT -> FIXED 3/3, generic cabin and window slab PRESENT -> PARTIAL; outside level.",
+      "_candidate": "r48 Stormwood dressing (OFF until judged; needs storm_finish on). GPU SW16 and r47 judges x3: 'nothing in the room says Stormwood: no moss, copper or glass, no storm gear'. Blue-green moss on the wall plates, tie beam and sill with hanging strands; small storm-glass crystals (the Glass Field Meshy crystal, no glow) on the sill and the shelf; a copper lightning rod in the back corner; a copper chain coil by the door. Presentation only.",
+      "moss_colour": "#29392c",
+      "tie_beam_z": [-0.4],
+      "strands": [[-0.9, -0.4, 0.28], [-0.3, -0.4, 0.18], [0.5, -0.4, 0.32], [-1.3, -0.4, 0.22]],
+      "glass": {"model": "res://assets/props/meshy-1024/stormwood_glass_scar_crystals/stormwood_glass_scar_crystals.glb", "at": [["sill", 0.3, 0.26], ["sill", -0.35, 0.16], ["Shelf", 0.0, 0.22]]},
+      "copper_colour": "#b8794a",
+      "rod": [-1.25, -2.0, 8.0, 1.9],
+      "chain_coil": [-0.5, 2.1]
     },
     "storm_view": {
       "enabled": true,

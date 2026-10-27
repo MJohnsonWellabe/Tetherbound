@@ -62,10 +62,6 @@ def low(skip=(),q=0.0):
 TAIL=('tail_1','tail_2')
 # Faint side roll: negative turns the back to the stage camera, positive the belly.
 FAINT_ROLL=-60  # b6 judges: the -35 list still read as standing
-# CLOSE-OUT 27 Oct: the faint ends on the turtle's back (FAINT_ON_BACK=False
-# restores the withdraw faint judged on GPU F36-0 main-1024).
-FAINT_ON_BACK=True
-FAINT_BACK_ROLL=-170  # through the side lie (carapace to the stage camera) to the back
 for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('attack',24,False),('charged',42,False),('hit',12,False),('faint',36,False),('rest',36,False),('swim',40,True),('fly_grip',48,True),('ride',72,True)]:
  action=bpy.data.actions.new(role);rig.animation_data.action=action
  for f in sorted(set(range(0,frames+1,2))|{frames}):
@@ -114,23 +110,12 @@ for role,frames,loop in [('idle',72,True),('walk',40,True),('run',26,True),('att
    # rim, the legs fold in under it, and the shell settles on the ground with a
    # slight nose-down lean, so the standing legs-and-head silhouette is gone.
    phase=phase_of(t)
-   if FAINT_ON_BACK:
-    # GPU F36-0 main-1024 (3/3): the withdraw still "barely differs from
-    # standing" (a turtle's low stance is already a shell dome). Knocked out,
-    # a turtle ends on its back: the shell rolls over through a side lie,
-    # the legs hang limp and splayed, and the head lolls to the ground.
-    turn('root',[(FAINT_BACK_ROLL*phase,(0,1,0))])
-    rotate('neck',-NOD*35*phase);rotate('head',-NOD*20*phase)
-    for prefix in ['front','rear']:
-     for side in ['l','r']:
-      rotate(prefix+'_upper_'+side,-FOLD[prefix]*25*phase);rotate(prefix+'_lower_'+side,FOLD[prefix]*35*phase)
-   else:
-    turn('root',[(-REAR*8*phase,(1,0,0)),(-15*phase,(0,1,0))])
-    # (NOD's positive turn raises this neck, as in the dog script: lower with -NOD.)
-    rotate('neck',-NOD*55*phase);rotate('head',-NOD*30*phase)
-    for prefix in ['front','rear']:
-     for side in ['l','r']:
-      rotate(prefix+'_upper_'+side,FOLD[prefix]*85*phase);rotate(prefix+'_lower_'+side,-FOLD[prefix]*115*phase)
+   turn('root',[(-REAR*8*phase,(1,0,0)),(-15*phase,(0,1,0))])
+   # (NOD's positive turn raises this neck, as in the dog script: lower with -NOD.)
+   rotate('neck',-NOD*55*phase);rotate('head',-NOD*30*phase)
+   for prefix in ['front','rear']:
+    for side in ['l','r']:
+     rotate(prefix+'_upper_'+side,FOLD[prefix]*85*phase);rotate(prefix+'_lower_'+side,-FOLD[prefix]*115*phase)
   if role=='rest':
    # b4 judges: rolling belly-to-camera showed the unlit underside as a dark blob.
    # Roll the other way, so the back and markings face the stage camera (the
