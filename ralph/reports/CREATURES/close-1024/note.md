@@ -1,5 +1,15 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (27 Oct): READY to land land15 55fca2b992c879025d8422b0c10cf2795a067ef6
+
+- **READY to land land15 55fca2b992c879025d8422b0c10cf2795a067ef6** (tb/creatures-land15). It is one commit on origin/main 073466a65 with exactly what CO11 passes:
+  - Ripplet matte countershaded coat (12b62925d), with retex sources.
+  - Mosshell faint on its back, land and water forms (3899595e9).
+  - Solmane grounded flinch only: one profile line in f36_pose_candidates.json. No other profile or key changed.
+  - The Aquaryn and Tidecoil flinch is not included.
+- **Checks on that exact commit:** `run_tests --only=f36_pose,creature_pose,rest_pose,water,creature_body,mosshell,ripplet,colourway,shiny,texture_for,smoke_creature,aspect` ran 579 tests with 0 failed.
+- **Next, after this:** Ripplet's lighter belly; water_mosshell's faint settling straight onto the back; Mosshell taller, with its crown; Solmane's collapsing faint. Terrapup is on hold.
+
 ## TO COORDINATOR (27 Oct, GPU READY: CO12-ON)
 
 - **GPU READY (CLOSE-OUT, on main 073466a65): CO12-ON 6faa34c65862b7529620014748723caf535a2093.**
