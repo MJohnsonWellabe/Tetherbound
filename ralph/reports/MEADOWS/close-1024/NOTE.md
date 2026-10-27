@@ -1,5 +1,74 @@
 # MEADOWS close-1024 (tb/meadows)
 
+## HANDOFF (2026-10-27 12:00 UTC, wind-down; read this first)
+
+### State
+
+- **Landing:** land20 is **PR #771** (in CI). It turns stronghold r7b ON per GPU MH9: the lit keep plus the spire with the window-grid emission masks, the courtyard daylight and the war banners. The judges' scores: +0.53 Medium, +0.71 High; P2-003 PRESENT → PARTIAL 3/3; night windows PRESENT → PARTIAL.
+- **Earlier landings, ON on main by GPU verdict:**
+  - arch facades;
+  - giant ironwood;
+  - village path r2 (+0.56);
+  - Ridgeline clearings (+1.64, MH7);
+  - relay-yard stone flags (+1.43, land19 / #769).
+- **On tb/meadows, OFF and unjudged on GPU:**
+  - **Salmon-plank fix** (`stronghold.json courtyard_daylight_candidate.rubble`: scale 0.7–1.1, #4a443c, y 0.02). It was held out of land20 because it changes a judged piece. CPU frames show the large planks gone from the courtyard gameplay and reverse cameras.
+  - **Stronghold sightline** (`meadows_hero_pieces.json stronghold_sightline`, nine `clear_area` glades on the band5 approach road). CPU flat at −0.21 mapped (r8-1027). The trees that block approach_0 are not the baked scatter. First failure on the item; one more try is allowed with a new idea.
+  - **Relay yard r2** (smaller flags, uv 0.6, #a39684). It is recorded only, because the merge took main's ON values. Not judged.
+  - **Parked:** village path r3 (+0.36 to +0.42), F22#4 warden rim (flat), ground-cover MH5 (borderline, with an fps cost).
+- **Lowest stands (GPU):**
+  - band5_stronghold_approach mean 5.33 / 5.96 after MH9;
+  - band3_the_river_lock_0 5.93;
+  - village_road, farm_to_hall and hall_front about 6.0–6.4 on CPU.
+
+### Path to 7.5 for the stronghold (MH9 judges)
+
+1. **Make the keep dominate approach_0.**
+   - Find the system that places the trees on the approach_0 sightline (band5 authored groves or road dressing, not the scatter that `clear_area` cuts) and open them. Or move the keep slot nearer.
+   - A bigger keep alone did nothing (r8).
+   - Also make the keep visible from inside the courtyard.
+2. **Courtyard edge:** the salmon slabs (fix on tb/meadows, OFF) and the foreground beam (clipping PRESENT at Medium).
+3. **Atmosphere:**
+   - groves, clearings and a worn path toward the keep;
+   - blue distance haze;
+   - night rain dark blue rather than grey;
+   - warmer, night-only windows (they tonemap white and glow by day).
+
+### Open MESHY line
+
+- **Road ruts and verge** (detail in the 2026-10-26 15:10 line; I answered yes at 03:25):
+  - `meadows_road_ruts_a/b`: about 3 x 6 m, under 0.08 m thick, tileable.
+  - `meadows_road_verge_tufts`: about 1.2 x 0.3 m.
+  - Refs: `docs/reference/tetherbound-meadows-keyart.png` and `docs/reference/palworld-02-open-field-path.jpg`.
+  - Install them OFF as strips along the village road through village_road, farm_to_hall and hall_front, using the `meshy_hero_prop` path.
+
+### What worked
+
+- New hero art plus authored emission masks (r7b +0.69 CPU, GPU pass).
+- Run-time `clear_area` glades where trunks wall a stand (Ridgeline +1.64).
+- Material swaps on flat ground (relay yard +1.43).
+
+### What didn't work
+
+- Recolours (path r3).
+- Scale alone (r5 keep, r8).
+- Light-only rims (F22#4).
+
+### Runbook (TECHNICAL §8.1 plus these)
+
+- **Captures:**
+  - Run `capture_f38_matrix.gd --seed=2042 --f38-preset=Low --f38-baseline --times=day,night --subset=<site>` with `XDG_DATA_HOME=/dev/shm/xdg`, and move the shots to /dev/shm.
+  - **Always** restrict views through the capture-definition overlay first. A stand with every view runs about 50 minutes instead of 15.
+  - Commit real edits before starting a capture chain, because the chain's restore wipes them.
+  - Kill processes by PID, never with a `pkill -f` pattern that matches your own shell.
+- **Judging:**
+  - Build one batch with `anchor_tiles.py --pairs 3 --include craft`.
+  - Fill the JUDGE_PROMPT text, put it as PROMPT.txt in the judge folder, and run three fresh agents.
+  - Run `calibrate.py`.
+  - Watch for wildlife standing in frame; it confounds A/B.
+- **Land branches:** build them from origin/main through a temporary GIT_INDEX_FILE (`read-tree`, `update-index --cacheinfo`, `write-tree`, `commit-tree`). Flip the tier-1 gate test with each flag.
+- **Disk:** the container's disk sits about 150 MB from full. Fetch only the branches you need.
+
 Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatibility, 1920x1080. A mapped Bar A of 6.7 counts as CPU-provisional; no GPU pass is running.
 
 ## TO COORDINATOR
