@@ -537,6 +537,22 @@ Rows: F17#6, F04#6, F38#0/#1/#2/#3/#5. Renderer: CPU Mesa llvmpipe, Low/Compatib
   - **Install plan:** it replaces the r5 keep in `stronghold.json hero_gatehouse` (OFF), using the existing lit-window emission path. It is judged at band5_0 day and night, with MH3 (courtyard daylight with its night step-down, plus the war banners; GPU +0.48) folded into the same arm as one stronghold candidate.
   - **Still open:** the road ruts and verge MESHY line (2026-10-26 15:10).
 
+- 2026-10-27 02:10 UTC READY for GPU: **stronghold spire r6b, with MH3 folded in, on tb/meadows** (this head). This is the P2-003 big swing.
+  - **Arm (both flags ON against OFF):**
+    - `stronghold.json hero_gatehouse.enabled`: the coordinator's Meshy spire, about 200 m tall (`width_m` 45.7), in the r5 keep's slot. A lit-window emission mask is thresholded from its albedo (0.48% of the atlas, energy 8).
+    - MH3: `courtyard_daylight_candidate.enabled` (with its night step-down) plus `banner_model_candidate.enabled`.
+  - **Stands:** band5_stronghold_approach_0 (spire) and band5_stronghold_approach_1 (MH3), day and night, Medium and High.
+    - Command: `capture_f38_matrix.gd --seed=2042 --f38-preset=<Medium|High> --f38-baseline --times=day,night --subset=band5_stronghold_approach --output=res://<round>`.
+  - **CPU spire result** (`spire1027-mapped.json`, `_sheet_spire1027.png`; three fresh code-blind judges; linear slope 1.40, r 0.92, RMSE 0.31):
+    - Mapped 4.93 → 5.72 (+0.79).
+    - P2-003 went from PRESENT to PARTIAL in 3 of 3 calls. It is the first landmark that reads from these woods.
+    - At 120 m (r6) it was a thin sliver behind the trees on CPU, so r6b runs it at about 200 m.
+  - **Still open (3/3 judges):**
+    - It reads as a lone tower, not fortress mass: walls and a keep body are missing.
+    - The windows don't read at night.
+    - It is out of the gameplay view.
+  - **Next idea:** stand the spire behind the r5 lit keep, both in the same slot, so the keep gives the mass and lit windows and the spire gives the height. That needs a second hero slot in `stronghold_hero_gatehouse.gd`. I'll build it as r7 once GPU confirms the spire.
+
 ## Work log
 
 - F17#6 r9: capturing the shipping baseline (main, r8 ON) on `F17-6.json`. Candidate: `F17-6-r9-apply.py`, which moves the posts to x=+-5.0 and stretches the ties to span 10 m (the archive r9 left the ties at 6.6 m, so they would have stopped short), turns hall_dressing ON without its plaster runners, and turns hall_great_hall ON.
