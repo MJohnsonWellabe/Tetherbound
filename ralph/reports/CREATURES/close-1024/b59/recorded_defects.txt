@@ -1,0 +1,5 @@
+Pm: none
+Pz: "Faint barely differs from standing"
+Rj: "Faint barely differs from standing"
+Yf: none
+Xs: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
