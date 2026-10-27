@@ -186,3 +186,28 @@ func test_no_two_trainers_share_a_challenge_circle() -> void:
 			var gap := Vector2(float(a[0]), float(a[2])).distance_to(Vector2(float(b[0]), float(b[2])))
 			assert_true(gap >= MIN_TRAINER_SPACING_M, "%s and %s stand %.1f m apart" % [
 				str(rows[i].get("id", "")), str(rows[j].get("id", "")), gap])
+
+
+## F41 P2-081 ("every named trainer conversation repeats the same generic line
+## and shows no portrait"): every catalogued trainer has its own challenge
+## and defeated lines and a loadable portrait. A raw Team Tether plate
+## (stormwood_raw_<profile>) belongs only to trainers wearing that profile.
+func test_every_trainer_has_own_lines_and_a_portrait() -> void:
+	var presentation: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_dialogue_presentation.json"))
+	assert_true(bool(presentation.get("enabled", false)), "trainer presentation is enabled")
+	var identities: Dictionary = presentation.get("trainers", {})
+	var rows: Array = (JSON.parse_string(FileAccess.get_file_as_string(PATH)) as Dictionary).trainers
+	var challenges := {}
+	for row: Dictionary in rows:
+		var id := str(row.id)
+		var identity: Dictionary = identities.get(id, {})
+		assert_true(identity.get("challenge") is Array and not (identity.challenge as Array).is_empty(), "%s has challenge lines" % id)
+		assert_true(identity.get("defeated") is Array and not (identity.defeated as Array).is_empty(), "%s has defeated lines" % id)
+		var opening := str((identity.get("challenge", [""]) as Array)[0])
+		assert_false(challenges.has(opening), "%s does not reuse %s's opening line" % [id, challenges.get(opening, "")])
+		challenges[opening] = id
+		var portrait := str(identity.get("portrait", ""))
+		assert_true(not portrait.is_empty() and ResourceLoader.exists(portrait), "%s has a loadable portrait (%s)" % [id, portrait])
+		if portrait.get_file().begins_with("stormwood_raw_"):
+			var profile := portrait.get_file().trim_prefix("stormwood_raw_").get_basename()
+			assert_eq(str(row.get("humanoid_key", row.get("config_key", ""))), profile, "%s wears the %s profile its plate was rendered from" % [id, profile])
