@@ -95,7 +95,7 @@
       "_why_albedo_gain": "r42 judges x3: the hut reads small and near-black in calm and building; 1.9 lifts the weathered timber about a stop, and the shell is 5% larger than the prefab footprint so it reads at distance."
     },
     "storm_room": {
-      "enabled": false,
+      "enabled": true,
       "_candidate": "r47 storm-driven room light (OFF until judged; needs storm_finish and window_pane on). GPU SW16 judges x3: the room is 'warm orange in every phase, not purple storm light', with 'no lightning flash on the walls' at break. A wide spot from the east window washes the room in the phase's storm colour and the surge flash lifts it; the hearth dims a little in the storm phases. phases: [colour, energy, hearth scale].",
       "range_m": 7.5,
       "angle_deg": 62.0,
@@ -109,7 +109,7 @@
       "_why_phases_r47b": "phases: [colour, spot energy, hearth scale, room-lamp scale]. r47 first CPU look: no visible change; the warm overhead RoomLight, not the hearth, kept the room orange, and the spot at 2.6 was swamped."
     },
     "stormwood_dressing": {
-      "enabled": false,
+      "enabled": true,
       "_candidate": "r48 Stormwood dressing (OFF until judged; needs storm_finish on). GPU SW16 and r47 judges x3: 'nothing in the room says Stormwood: no moss, copper or glass, no storm gear'. Blue-green moss on the wall plates, tie beam and sill with hanging strands; small storm-glass crystals (the Glass Field Meshy crystal, no glow) on the sill and the shelf; a copper lightning rod in the back corner; a copper chain coil by the door. Presentation only.",
       "moss_colour": "#29392c",
       "tie_beam_z": [-0.4],
