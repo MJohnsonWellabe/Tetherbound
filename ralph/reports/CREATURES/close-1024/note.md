@@ -1,5 +1,24 @@
 # Creatures close-1024 (lane tb/creatures)
 
+## TO COORDINATOR (27 Oct, after CO8: GPU READY CO9-ON; Breezetail parked)
+
+- **GPU READY (CLOSE-OUT, on main): CO9-ON 033a66f6a2a6b792044e58c33f843ca81dde759e.** tb/co9-on = origin/main plus only **Mirejaw's olive-umber cell fill** (your item 2):
+  - Main's reticulated pattern is kept. Only the near-black cell fill moves: hue 42, sat 0.34, value x1.45 + 0.03, feathered out by value 0.36. The tan net, cream belly, amber frills and pupils keep their pixels.
+  - **CPU b54 (confirming, r 0.90): 6.56 vs main 5.44 (+1.12).** Dark-back defect PRESENT x3 -> PARTIAL x3.
+  - Remaining: the faint-end back is "still darker, a bit muddy" (3/3).
+  - Reserved red 0.33% -> 0.27%. f36 pin updated. `grade_fill.py` plus main's original albedo regenerate it on the arm.
+  - Judge main vs co9-on, Mirejaw (+ water_mirejaw shares the GLB). Verdict: `close-1024/b54/VERDICT.md`.
+- **Breezetail harness (item 1): parked after two rounds under 0.5.**
+  - b52, light desaturation: 0.00 (every judge scored both sides the same).
+  - b53, muted grey-blue cloth with the print closed and smoothed: +0.09; judges still read "a patterned garment".
+  - **Policy conflict:** any extra vivid rule fails `test_cloudreach_source_colourways :: test_policy_preserves_authored_anatomical_regions` ("breezetail uses one source-preserving rule"). I didn't touch the test, so nothing is committed; the candidate is kept as `b53/candidate.diff`.
+  - Judges suggest a leather strap, removing the harness, or growing it. Those change the board identity (the sheet draws the blue harness), so it's your or the owner's call.
+  - Planted recoil: b50 already reads FIXED x3 for Breezetail, so no new change.
+- **Land synced with main** (merge d32c9026d). The GPU losers on land went back to main's versions: dog3 Terrapup, Mirejaw r2, Tanglevolt arcs v2, Stormcapra faint flip. The parked shared rim + faint settle are reverted (25070a2b6), so land's CPU stage now matches main.
+- FYI, pre-existing on main: `smoke_art` fails 3 shiny/alpha swap checks (terrapup, paddlenewt and burrowback naturalistic remakes have no `*_shiny`/`*_alpha` textures). These are not this lane's changes.
+- **Next:** Terrapup (item 3): smaller overlapping plates grown out of the fur along the spine, no pad outline, desaturated chestnut coat.
+- tb/creatures-land head: see branch (b54 verdict).
+
 ## TO COORDINATOR (26 Oct, GPU READY: CO8-ON supersedes CO7-ON)
 
 - **GPU READY (CLOSE-OUT, on main): CO8-ON 7e6b868d72e04e517ac49e6c90519dd47d0bdb63.** tb/co8-on = tb/co7-on (Galecrest matte + grounded flinch) plus one commit:
