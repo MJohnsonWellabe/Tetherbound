@@ -677,3 +677,37 @@ func test_a_victory_shot_swings_off_a_post_between_lens_and_speaker() -> void:
 	assert_true(_room_with_a_post(swung_lens, to_head.normalized(), look) >= look - 0.01,
 		"the swung lens sees the speaker past the post")
 	assert_true(swung_lens.distance_to(lens) > 0.5, "the camera moved off the blocked line")
+
+
+## F41 P2-083 (Stormwood dialogue frames): a companion's flank and Marrow's
+## banner filled the lens because neither is something the camera arm collides
+## with. With `speaker_sight_meshes`, a mesh across the lens-to-speaker line
+## counts as blocked even when the physics sweep is clear.
+var _flank := Vector3.INF
+
+
+func _flank_blocks(from: Vector3, to: Vector3) -> bool:
+	var seg := to - from
+	var t := clampf((_flank - from).dot(seg) / seg.length_squared(), 0.0, 1.0)
+	return (from + seg * t).distance_to(_flank) < 0.5
+
+
+func test_a_conversation_shot_swings_off_a_creature_the_arm_passes_through() -> void:
+	var cfg := CONVERSATION.profile_config("conversation")
+	assert_true(bool(cfg.get("speaker_sight_meshes", false)), "the conversation checks meshes too")
+	_rig.set_occlusion_probe_for_tests(_clear_room)
+	assert_true(_rig.enter_conversation(_speaker, cfg))
+	_settle_until_blended(1.0)
+	var straight: Dictionary = _rig.conversation_shot()
+	_rig.exit_conversation()
+	var lens: Vector3 = straight["pivot"] + Vector3(straight["dir"]) * float(straight["distance"])
+	var head := CONVERSATION.speaker_anchor(_speaker, cfg)
+	_flank = lens.lerp(head, 0.4)
+	_rig.set_mesh_sight_probe_for_tests(_flank_blocks)
+	assert_true(_rig.enter_conversation(_speaker, cfg))
+	_settle_until_blended(1.0)
+	var swung: Dictionary = _rig.conversation_shot()
+	var swung_lens: Vector3 = swung["pivot"] + Vector3(swung["dir"]) * float(swung["distance"])
+	var look_end := swung_lens + (head - swung_lens).normalized() * ((head - swung_lens).length() - 0.3)
+	assert_false(_flank_blocks(swung_lens, look_end), "the swung lens sees the speaker past the creature")
+	assert_true(swung_lens.distance_to(lens) > 0.3, "the camera moved off the blocked line")

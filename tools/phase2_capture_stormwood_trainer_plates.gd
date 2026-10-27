@@ -6,6 +6,10 @@ extends "res://tools/_capture_portraits.gd"
 const TRAINER_CATALOGUE := preload("res://scripts/combat/stormwood_encounter_catalogue.gd")
 const TRAINER_BODY := preload("res://scripts/world/trainer_npc.gd")
 const RAW_PROFILES := ["grunt_c", "officer_a", "officer_b", "captain_a"]
+## Per-profile rig exposure, as the roster tool does for white-haired
+## characters (old_perrin 0.45): captain_a's white hair clipped 9.6% to white
+## at 1.0 and 6.8% at 0.6; 0.3 meets the 1.5% bar.
+const EXPOSURE := {"captain_a": 0.3}
 
 func _run() -> void:
 	var output := "res://.tmp/stormwood-phase2/trainer-plates-r1"
@@ -31,6 +35,8 @@ func _run() -> void:
 	var jobs := []
 	for profile: String in RAW_PROFILES:
 		var spec := {"file":"phase2_stormwood_raw_" + profile, "config_key":profile, "scratch_only":true}
+		if EXPOSURE.has(profile):
+			spec["exposure"] = EXPOSURE[profile]
 		var cfg := VILLAGE_NPCS.model_config(spec)
 		var speakers := []
 		for trainer: Dictionary in TRAINER_CATALOGUE.trainer_specs():
