@@ -1,0 +1,85 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.9879,
+  "least_squares_slope": 2.1401,
+  "method": "offset",
+  "slope": 1.0,
+  "intercept": 0.1361,
+  "fallback_reason": "least-squares slope 2.140 outside 0.5-2.0"
+ },
+ "anchor_rmse": 0.773,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.5,
+   "reference": 7.35,
+   "mapped": 6.636,
+   "residual": 0.714
+  },
+  "craft:before": {
+   "measured": 5.567,
+   "reference": 4.83,
+   "mapped": 5.703,
+   "residual": -0.873
+  },
+  "f36_0_gap:C4A": {
+   "measured": 6.233,
+   "reference": 6.77,
+   "mapped": 6.369,
+   "residual": 0.401
+  },
+  "f36_0_gap:C4B": {
+   "measured": 6.433,
+   "reference": 7.17,
+   "mapped": 6.569,
+   "residual": 0.601
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.633,
+   "reference": 3.5,
+   "mapped": 4.769,
+   "residual": -1.269
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 6.167,
+   "reference": 6.73,
+   "mapped": 6.303,
+   "residual": 0.427
+  }
+ },
+ "candidates": {
+  "R47 ashfoot room light OFF (storm_view ON)": {
+   "measured_mean": 5.3,
+   "mapped_mean": 5.44,
+   "mapped_judges": [
+    5.64,
+    5.34,
+    5.34
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R47 ashfoot room light ON (storm_room)": {
+   "measured_mean": 5.633,
+   "mapped_mean": 5.77,
+   "mapped_judges": [
+    5.94,
+    5.84,
+    5.54
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "offset fallback (least-squares slope 2.140 outside 0.5-2.0): the map is only a mean offset; these judges spread the anchors differently from the reference judges",
+  "anchor residual RMSE 0.77 > 0.75: these judges do not rank the anchors like the reference judges; report the mapped scores with this caveat"
+ ]
+}

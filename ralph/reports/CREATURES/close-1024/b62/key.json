@@ -1,0 +1,41 @@
+{
+ "Da": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Pp": {
+  "anchor": false,
+  "label": "cliffspike hit",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/cliffspike-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/cliffspike-cand.png"
+ },
+ "Qa": {
+  "anchor": false,
+  "label": "nightburrow faint",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/nightburrow-cand.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/nightburrow-base.png"
+ },
+ "Yk": {
+  "anchor": true,
+  "A": "f36_0_gap:C3B",
+  "B": "f36_0_gap:C3A"
+ },
+ "Su": {
+  "anchor": false,
+  "label": "voltwig hit",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/voltwig-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/voltwig-cand.png"
+ },
+ "Fw": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Gw": {
+  "anchor": false,
+  "label": "thundertunnel hit",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/thundertunnel-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/thundertunnel-cand.png"
+ }
+}

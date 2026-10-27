@@ -1,0 +1,10 @@
+{"anchors": {
+  "f36_0_gap:C3B": [6.3, 5.9, 6.2],
+  "f36_0_gap:C3A": [6.9, 6.6, 6.6],
+  "f36_0_npc:C3B": [5.5, 5.3, 4.9],
+  "f36_0_npc:C3A": [5.5, 5.4, 5.0],
+  "craft:after": [6.7, 6.5, 6.5],
+  "craft:before": [5.6, 5.2, 5.3]},
+ "candidates": {
+  "R45 storm sky OFF": [6.1, 6.2, 5.7],
+  "R45 storm sky ON (ceiling.form cloud masses)": [6.1, 6.2, 5.6]}}

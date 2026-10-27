@@ -1,0 +1,4 @@
+Xw: none
+Rq: "In the faint the horns stretch into a tube loop over the body and the head is lost"
+Uk: none
+Sv: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

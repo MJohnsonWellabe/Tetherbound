@@ -1,0 +1,816 @@
+diff --git a/data/config/cottage_interior_finish.json b/data/config/cottage_interior_finish.json
+index 302f0267d..7b97a5266 100644
+--- a/data/config/cottage_interior_finish.json
++++ b/data/config/cottage_interior_finish.json
+@@ -87,9 +87,13 @@
+       "enabled": false,
+       "_candidate": "r42 Ashfoot Stormwood shelter exterior (OFF until judged; needs storm_finish on). GPU SW9 and r38 judges x6: 'a small Meadows-style cottage, not a Stormwood shelter'. The Meshy stormwood_ranger_shelter (tb/meshy-1024 55f9dac55, provenance beside the GLB) replaces the kit exterior on the ashfoot shelter only; the kit pieces stay hidden for their colliders. Fitted to the prefab footprint (4.3 x 6.3 m, 6.8 m ridge) with the door gable on +z.",
+       "model": "res://assets/props/meshy-1024/stormwood_ranger_shelter/stormwood_ranger_shelter.glb",
+-      "size_m": [4.3, 6.8, 6.3],
++      "size_m": [4.5, 7.2, 6.5],
+       "yaw_deg": 0.0,
+-      "offset_m": [0.0, -0.05, 0.0]
++      "offset_m": [0.0, -0.05, 0.0],
++      "albedo_gain": 1.9,
++      "door_cut_m": [[0.2, -1.0, 2.4], [1.8, 2.3, 5.0]],
++      "_why_door_cut_m": "The prefab's open doorway (door_x 1.0, 1.6 m wide, front wall at z about 2.7-3.1, porch beyond) cut through the closed Meshy shell, shelter-local metres, so players and the interior catalogue camera see in.",
++      "_why_albedo_gain": "r42 judges x3: the hut reads small and near-black in calm and building; 1.9 lifts the weathered timber about a stop, and the shell is 5% larger than the prefab footprint so it reads at distance."
+     },
+     "storm_room": {
+       "enabled": true,
+@@ -118,6 +122,18 @@
+       "rod": [-1.25, -2.0, 8.0, 1.9],
+       "chain_coil": [-0.5, 2.1]
+     },
++    "ashfoot_polish": {
++      "enabled": false,
++      "_candidate": "m51 Ashfoot polish (OFF until judged; needs storm_finish, storm_room and stormwood_dressing on). GPU SW20/SW20b (6.76, 0.74 short), judges' path: (1) the fire glare blows out the trainer's back: the warm room lamp hangs over the hearth, not over the room centre where the trainer stands, and dimmer; (2) a rain-streaked window: heavier per-phase rain on the pane; (3) copper and a lightning-rod motif: copper bands on the frame posts and an upright copper rod with a three-prong finial and wall brackets (the leaning rod read as a broom); (4) a textured floor: the flat green floor moss discs go and the beige rug becomes a woven storm-blue rug. Presentation only.",
++      "room_light_at": [0.0, 2.2, -0.62],
++      "room_light_scale": 0.8,
++      "pane_rain_by_phase": {"calm": 0.55, "building": 0.8, "break": 1.0, "fading": 0.7},
++      "pane_rain_speed": 0.5,
++      "copper_colour": "#c08a55",
++      "post_caps": true,
++      "rod": [-1.3, -1.9, 2.1],
++      "rug": {"size_m": [1.0, 1.4], "base_colour": "#3a4658", "band_colour": "#9c8558", "border_colour": "#222833"}
++    },
+     "storm_view": {
+       "enabled": true,
+       "_why_on": "GPU SW16 (tb/gpu-pass fcf26c7f, ralph/reports/GPU-PASS/F41-0/SW16-ashfoot-m36b-0a633e222/VERDICT.md): m36b (seated + firelit + storm view) interior 5.83 -> 6.96 (+1.13) at Medium and High; storm-window defect PRESENT 3/3 -> PARTIAL 2 / FIXED 1, roof-apex clipping FIXED 3/3; outside level. One Medium device loss (TDR) before any Ashfoot frame; the re-run was clean 200/200.",
+diff --git a/data/config/stormwood_ashfoot_exterior.json b/data/config/stormwood_ashfoot_exterior.json
+index ca8353185..b9f674079 100644
+--- a/data/config/stormwood_ashfoot_exterior.json
++++ b/data/config/stormwood_ashfoot_exterior.json
+@@ -6,8 +6,8 @@
+     "enabled": true,
+     "layer": "storm_canopy",
+     "collider_height_m": 6.0,
+-    "_why_trees": "[x, z, scale, yaw_deg, model index]; 8.5 m jittered grid (seed 1027), 28-66 m from the shelter at headings -15 to 80 deg (the open horizon in the outside catalogue view), keeping 11 m from every route, 16 m from the shelter, cart, camp, creature bed, the Ashfoot Arch and both catalogue cameras, and 7 m from every seat, pickup, NPC and wild cluster centre.",
+-    "trees": [[-370.0, 508.7, 2.77, 101, 0], [-373.7, 516.6, 2.82, 156, 3], [-371.3, 522.3, 3.01, 301, 1], [-360.7, 517.0, 3.01, 285, 3], [-361.3, 525.2, 2.64, 138, 1], [-357.8, 516.8, 2.82, 98, 0], [-346.8, 483.1, 3.14, 238, 1], [-346.5, 516.3, 3.07, 250, 0], [-338.3, 478.1, 2.83, 17, 0], [-338.8, 513.8, 2.83, 24, 2], [-328.5, 490.6, 3.16, 7, 1], [-329.2, 500.8, 2.67, 321, 2], [-327.5, 508.8, 2.63, 340, 1], [-321.1, 492.4, 3.13, 220, 0], [-323.3, 495.3, 2.85, 264, 0], [-323.5, 503.8, 2.86, 25, 3], [-313.0, 488.0, 3.12, 19, 3], [-313.8, 496.8, 3.18, 189, 2], [-302.2, 474.3, 2.66, 357, 3], [-304.3, 482.5, 2.65, 270, 0]]
++    "_why_trees": "[x, z, scale, yaw_deg, model index]; 6.5 m jittered grid (seed 1043), 26-70 m from the shelter at headings 30 to 85 deg (r43: behind and right of the hut, so the left sky stays open for the Break lightning that r38 hid) (the open horizon in the outside catalogue view), keeping 11 m from every route, 16 m from the shelter, cart, camp, creature bed, the Ashfoot Arch and both catalogue cameras, and 7 m from every seat, pickup, NPC and wild cluster centre.",
++    "trees": [[-340.6, 478.0, 2.66, 353, 3], [-337.2, 480.4, 3.13, 38, 3], [-334.3, 485.7, 2.69, 276, 0], [-331.4, 483.9, 2.65, 18, 3], [-330.0, 492.9, 2.62, 32, 3], [-331.3, 499.7, 2.7, 218, 1], [-329.1, 505.2, 2.64, 316, 2], [-331.3, 510.2, 3.12, 8, 3], [-327.7, 517.0, 2.96, 109, 2], [-321.5, 491.1, 2.92, 189, 3], [-322.4, 498.7, 3.08, 88, 3], [-323.8, 504.5, 3.06, 359, 3], [-323.3, 509.7, 2.78, 3, 3], [-317.2, 493.0, 3.13, 238, 0], [-314.8, 496.3, 3.03, 117, 2], [-318.1, 505.6, 2.94, 193, 2], [-316.2, 510.0, 2.75, 343, 1], [-311.8, 483.8, 2.88, 263, 3], [-311.1, 493.3, 2.68, 136, 0], [-311.8, 499.4, 3.14, 49, 3], [-301.6, 473.4, 3.12, 266, 3], [-304.6, 478.1, 3.16, 243, 1], [-302.0, 483.7, 2.93, 307, 1], [-304.2, 490.6, 2.62, 225, 2], [-295.7, 466.6, 2.88, 284, 1], [-296.1, 470.4, 2.7, 226, 1]]
+   },
+   "dressing": {
+     "enabled": true,
+diff --git a/data/config/stormwood_crown_overlook.json b/data/config/stormwood_crown_overlook.json
+index 8de99a83a..dfefb414d 100644
+--- a/data/config/stormwood_crown_overlook.json
++++ b/data/config/stormwood_crown_overlook.json
+@@ -3,6 +3,7 @@
+   "scope": "deck: world geometry with colliders on every shell (presentation build only on drawing shells); massif: client presentation, no collision",
+   "deck": {
+     "enabled": true,
++    "rim": {"enabled": false, "_candidate": "r49 rim lookout (OFF until judged). GPU SW18 and r46 judges x3: 'no sense of height: nothing falls away below the deck'. The deck moves 190 m along the 37 deg Crown sightline to the Glass Sink rim (sink outer radius 720 m, floor -65): its back sits on the level rim (ground about 26.5 m) and its front overhangs the rim slope on long posts, so the view drops away to the sunken floor and the Crown island beyond. Weathered wood, braces and edge moss from r46. The teleport arrival is unchanged.", "at": [289.4, 2118.4], "heading_deg": 35.2, "height_m": 2.4, "_why_at_r49b": "r49 first CPU look: a baked TwistedTree on the rim (283, 2142) stood 14 m ahead on the Crown sightline. 20 m along the rim it is clear (probe: no trees within the view lane 120 m out); 712 m from the sink centre so the front overhangs the slope.", "wood_tint": "#8f8a80", "weathering": 0.95, "brace_m": 0.16, "moss_colour": "#2f3d2a"},
+     "_why_on": "GPU SW18 (26 Oct): Crown Overlook vista +0.86 (now 5.85); deck and massif judged together.",
+     "_candidate": "A raised timber lookout 15 m along the 37 deg Crown sightline from the Crown Overlook spot (on crown_sightline_loop), clear of the path corridor (route_half_width 7.5 + 1 m), its 7 m ramp running back down to the path. Weathered timber (the Ashfoot storm finish's wood), dark rails on three sides, the Meshy Stormwood lantern post lit on the front corner. The F41 survey stand moves onto the deck with this flag (debug_teleport_spots f41_survey).",
+     "at": [172.0, 1996.0],
+@@ -20,6 +21,7 @@
+   },
+   "massif": {
+     "enabled": true,
++    "storm": {"enabled": false, "_candidate": "r46 storm-haze massif (OFF until judged; CPU r46 +0.31 with the r46 deck, under the bar alone, rides with the rim deck). The massif skips scene fog and carries its own darker storm haze, a darker tint and a rim; its base sinks so the fog-free foot does not float.", "tint": "#8a86a0", "rim": 0.7, "rim_tint": 0.25, "haze": {"colour": "#686288", "amount": 0.6}, "base_y": 5.0},
+     "_why_on": "GPU SW18 (26 Oct): Crown Overlook vista +0.86 (now 5.85); deck and massif judged together.",
+     "_candidate": "Distant-only Hollow Crown silhouette (MESHY stormwood_hollow_crown_silhouette, requested 26 Oct): drawn beyond visible_from_m so play inside the Crown is untouched; no collision.",
+     "model": "res://assets/props/meshy-1024/stormwood_hollow_crown_silhouette/stormwood_hollow_crown_silhouette.glb",
+diff --git a/data/config/stormwood_look.json b/data/config/stormwood_look.json
+index ab3baa68e..bfce8f728 100644
+--- a/data/config/stormwood_look.json
++++ b/data/config/stormwood_look.json
+@@ -2,6 +2,8 @@
+   "enabled": true,
+   "scope": "client_presentation",
+   "_comment": "F41 biome look candidate. One fixed-purple rig at every clock hour; the existing Surge presentation supplies phase, rain, flash and aftermath deltas. OFF until matched Medium/High three-judge Bar A >=8.5. No save, collision, scatter or creature-scale changes.",
++  "storm_grade": {"enabled": false, "scope": "client_presentation", "_candidate": "m50 chapter-wide storm light grade (OFF until judged). GPU SW13 and SW19 judges (15/15): the scene does not carry the storm. A camera-relative rim (shadowless directional light from beyond the subject toward the camera, rim_elevation_deg above) puts a lit edge on trunks, creatures and the trainer in every view, its colour and energy per phase and lifted by the surge flash at Break; a per-phase world grade sets environment brightness, contrast and saturation, eased between phases. Nothing new in the ground or sky. Presentation only; reduced motion drops the flash pulse.", "rim_elevation_deg": 25.0, "rim_side_deg": 62.0, "bolt_brightness": 0.35, "_why_m50b": "m50 (+0.04, 3/3 near-identical): a straight-back diffuse rim lit no visible edge and the break grade darkened Break. m50b: a three-quarter rim 62 deg off the view axis, stronger rim energy, Break graded brighter, decorative bolts lift the scene brightness (no change under reduced motion).", "rim_specular": 0.0, "_why_rim_specular": "m50 first CPU look: a grazing back light with specular put a white hot spot on the wet ground under the trainer; diffuse only.", "flash_rim_gain": 2.0, "ease_per_s": 0.8,
++    "phases": {"calm": {"rim_colour": "#aab6e8", "rim_energy": 0.9, "grade": [1.03, 1.08, 0.98]}, "building": {"rim_colour": "#9aa6ff", "rim_energy": 1.3, "grade": [1.0, 1.12, 0.92]}, "break": {"rim_colour": "#d6d0ff", "rim_energy": 1.8, "grade": [1.06, 1.14, 0.9]}, "fading": {"rim_colour": "#a8c4dc", "rim_energy": 1.1, "grade": [1.02, 1.1, 0.95]}}},
+   "storm_light": {
+     "enabled": false,
+     "scope": "client_presentation",
+diff --git a/data/config/stormwood_surge.json b/data/config/stormwood_surge.json
+index b5c67c839..faa967950 100644
+--- a/data/config/stormwood_surge.json
++++ b/data/config/stormwood_surge.json
+@@ -23,6 +23,7 @@
+     "ceiling": {"radius_m": 2400.0, "time_wrap": 10000.0, "afterglow_colour": "#9e72c2", "rim_colour": "#a89ed6",
+       "_why_crawlers": "F10#3 round 6 (code-blind judge r5: Break had no signature cue a single still could catch; Calm and Fading could be swapped by name): each phase row's `crawlers` (Break 1.0, every other phase and the whole aftermath 0) draws steady branching white-violet crawler lightning along the cloud base. It is a held glow with a slow crawl, not a flash onset (UX 8 budget unchanged); reduced motion freezes the crawl. crawler_scale is the vein pattern's frequency, crawler_width the vein core's width in ridge space and crawler_cover the fraction of the deck that carries veins. Presentation only.",
+       "crawler_scale": 1.3, "crawler_width": 0.045, "crawler_cover": 0.8,
++      "form": {"enabled": false, "scope": "client_presentation", "_candidate": "r45 storm-cloud form (OFF until judged). Every Stormwood set in r41-r44, all judges: a flat lavender sky with no cloud form, lightning or depth. Large domain-warped cloud masses over the storm deck: dark bases overhead (dark), edges lit from light, a paler higher layer between masses (gap) and darker rain curtains hanging from the masses near the horizon (curtains). Nothing bright in the band just above the horizon. Presentation only; phase colours, flashes and crawlers are unchanged.", "strength": 1.0, "scale": 0.8, "dark": 0.7, "lit": 0.25, "gap": 0.08, "curtains": 0.7, "edge": 0.08, "deck": 0.85, "_why_soft_rims": "GPU SW19 (m45c): the flat sky improved (PRESENT 9 -> 0 Medium, 11 -> 4 High) but lit rims read as white smear slabs (PRESENT 16 -> 27 Medium, 19 -> 27 High), cancelling it. Rim light 0.8 -> 0.25 and edges 0.04 -> 0.08; dark bases, deck and skyline kept.", "_why_r45b": "r45 (soft masses, dark 0.55): -0.06 mapped, 3/3 judges saw no difference in calm; the masses were soft smears at the deck value. r45b: hard cumulus edges (edge), darker bases and deck, stronger lit rims.", "light": [0.6, -0.8]},
+       "skyline": {"enabled": false, "scope": "client_presentation", "_candidate": "r22 distant treeline (OFF until judged). Every r19-r21 code-blind judge named the flat grey horizon band as a top defect at the open Stormwood stands (the crown hollow's crater wall and fogged far terrain read as one pale slab). Two procedural storm-forest silhouette layers drawn in the ceiling dome just above the horizon: a hazy far ridge and a darker nearer treeline with crown tips. Terrain and trees in front still draw over them. Presentation only.", "strength": 1.0, "far_colour": "#5a5577", "near_colour": "#34344a", "far_height": [0.07, 0.05], "near_height": [0.035, 0.06]}},
+     "_comment_floors": "Review R2-2 / round-2 judge (a),(b): the storm horizon (and fog, which equals it) never falls below horizon_fraction of the native horizon luminance for the hour, and the ceiling never below ceiling_fraction of it, keeping each phase's authored hue. Round 3: horizon_fraction 0.55 (was 0.65; the pinned storm has no night) so Break's horizon can sit below Building's and Calm's in the monotonic ladder. Night Break stays violet-indigo instead of sinking to black; day Break's sky reads as a storm afternoon, not night. Ceilings are fully opaque (no sun/moon ghost through them); only Fading's breakup opens gaps, and only by day.",
+     "floors": {"horizon_fraction":0.55,"ceiling_fraction":0.3},
+diff --git a/scripts/world/cottage_interior.gd b/scripts/world/cottage_interior.gd
+index 3eff73f46..84b265090 100644
+--- a/scripts/world/cottage_interior.gd
++++ b/scripts/world/cottage_interior.gd
+@@ -26,7 +26,9 @@ const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
+ const STORM_PANE_SHADER := preload("res://scripts/world/cottage_storm_pane.gdshader")
+ const STORM_VIEW_SHADER := preload("res://scripts/world/cottage_storm_view.gdshader")
+ const WINDOW_PATCH_SHADER := preload("res://scripts/world/cottage_window_patch.gdshader")
++const WOVEN_RUG_SHADER := preload("res://scripts/world/cottage_woven_rug.gdshader")
+ const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
++const SHELL_SHADER := preload("res://shaders/shell_door_cutout.gdshader")
+ const CAMP_FLAME := "res://assets/props/generated_camp/camp_flame.glb"
+ 
+ var _half_w := 1.69
+@@ -39,6 +41,9 @@ var _storm_light: OmniLight3D
+ var _storm_light_base := 0.0
+ var _surge: Node
+ var _hearth_light: OmniLight3D
++var _shell: Node3D
++var _kit_exterior: Array[GeometryInstance3D] = []
++var _shell_inside := false
+ var _view: ShaderMaterial
+ var _view_cfg: Dictionary = {}
+ var _hearth_base := 0.0
+@@ -335,6 +340,10 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
+ 		_build_storm_room_light(room_cfg, w, z0, z1, y0, y1)
+ 	var dressing := _finish_block({"enabled": true, "storm_finish": cfg}, "stormwood_dressing")
+ 	if not dressing.is_empty():
++		# m51: the polish's upright rod replaces the dressing's leaning one.
++		if _finish_block({"enabled": true, "storm_finish": cfg}, "ashfoot_polish").has("rod"):
++			dressing = dressing.duplicate()
++			dressing["_rod_replaced"] = true
+ 		_stormwood_dressing(dressing, w, d, top, z0, z1, y0)
+ 	var pane_cfg: Dictionary = (cfg.get("window_pane", {}) as Dictionary).duplicate()
+ 	pane_cfg.merge(seated.get("pane", {}), true)
+@@ -393,6 +402,12 @@ func _storm_finish(cfg: Dictionary, wood: Material, w: float, d: float, thick: f
+ 		bunch.position = Vector3(cord_x, cord_y - drop - 0.14, z)
+ 		add_child(bunch)
+ 	# Moss along the wall foot in the corners and under the window.
++	# m51 (SW20 judges: "flat green floor discs"): the polish drops them; the
++	# Stormwood dressing's moss on the timber carries the moss read.
++	var polish := _finish_block({"enabled": true, "storm_finish": cfg}, "ashfoot_polish")
++	if not polish.is_empty():
++		_ashfoot_polish(polish, w, d, top, z0, z1)
++		return
+ 	var moss := StandardMaterial3D.new()
+ 	moss.albedo_color = Color(str(cfg.get("moss_colour", "#3d5530")))
+ 	moss.roughness = 1.0
+@@ -480,8 +495,9 @@ func _swap_shell(cfg: Dictionary) -> void:
+ 	if model == null:
+ 		return
+ 	for visual: GeometryInstance3D in holder.find_children("*", "GeometryInstance3D", true, false):
+-		if not is_ancestor_of(visual) and visual != self:
++		if not is_ancestor_of(visual) and visual != self and visual.visible:
+ 			visual.visible = false
++			_kit_exterior.append(visual)
+ 	var bounds := HERO_PROP.BOUNDS.measure(model)
+ 	var size: Array = cfg.get("size_m", [4.3, 6.8, 6.3])
+ 	var fit := Vector3(float(size[0]) / maxf(0.01, bounds.size.x), float(size[1]) / maxf(0.01, bounds.size.y), float(size[2]) / maxf(0.01, bounds.size.z))
+@@ -494,6 +510,55 @@ func _swap_shell(cfg: Dictionary) -> void:
+ 	seat.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
+ 	seat.add_child(model)
+ 	add_child(seat)
++	_shell = seat
++	set_process(true)
++	# Meshy GLBs draw double-sided and closed: from inside the lined room and
++	# from the catalogue camera at the open door the shell's walls covered the
++	# view. SHELL_SHADER culls back faces and cuts the prefab's open doorway
++	# (`door_cut_m`, shelter-local min/max) through the shell; the dark timber
++	# is lifted a little so it does not read black under the storm.
++	var cut: Array = cfg.get("door_cut_m", [[0.2, -1.0, 2.4], [1.8, 2.3, 5.0]])
++	var frame_inv := global_transform.affine_inverse()
++	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
++		for surface in visual.mesh.get_surface_count():
++			var source := visual.get_active_material(surface) as BaseMaterial3D
++			if source == null:
++				continue
++			var outside := ShaderMaterial.new()
++			outside.shader = SHELL_SHADER
++			outside.set_shader_parameter("albedo_tex", source.albedo_texture)
++			outside.set_shader_parameter("normal_tex", source.normal_texture)
++			outside.set_shader_parameter("orm_tex", source.roughness_texture)
++			outside.set_shader_parameter("albedo_gain", float(cfg.get("albedo_gain", 1.0)))
++			outside.set_shader_parameter("cut_frame_inv", Projection(frame_inv))
++			outside.set_shader_parameter("cut_min", Vector3(float(cut[0][0]), float(cut[0][1]), float(cut[0][2])))
++			outside.set_shader_parameter("cut_max", Vector3(float(cut[1][0]), float(cut[1][1]), float(cut[1][2])))
++			visual.set_surface_override_material(surface, outside)
++
++
++## Interior cutaway for the shell: while the local player stands inside the
++## room the kit exterior shows exactly as it did (its walls frame the lined
++## room for the camera at the door); outside, the Meshy shell shows. Only
++## visibility changes; the kit colliders never move.
++func _update_shell() -> void:
++	var game := get_node_or_null(^"/root/Game")
++	var player: Node3D = null
++	if game != null and game.has_method("local_player"):
++		player = game.call("local_player") as Node3D
++	if player == null:
++		player = get_tree().get_first_node_in_group(&"local_player") as Node3D
++	if player == null:
++		return
++	var local := to_local(player.global_position)
++	var margin := 0.4
++	var inside := absf(local.x) < _half_w + margin and absf(local.z) < _half_d + margin
++	if inside == _shell_inside:
++		return
++	_shell_inside = inside
++	_shell.visible = not inside
++	for visual in _kit_exterior:
++		if is_instance_valid(visual):
++			visual.visible = inside
+ 
+ 
+ func _clear_window_glass(w: float, z0: float, z1: float, alpha: float) -> void:
+@@ -658,7 +723,7 @@ func _stormwood_dressing(cfg: Dictionary, w: float, d: float, top: float, z0: fl
+ 	copper.metallic = 0.75
+ 	copper.roughness = 0.35
+ 	var rod_cfg: Array = cfg.get("rod", [])
+-	if rod_cfg.size() >= 4:
++	if rod_cfg.size() >= 4 and not bool(cfg.get("_rod_replaced", false)):
+ 		var rod := MeshInstance3D.new()
+ 		rod.name = "CopperLightningRod"
+ 		var cylinder := CylinderMesh.new()
+@@ -678,6 +743,60 @@ func _stormwood_dressing(cfg: Dictionary, w: float, d: float, top: float, z0: fl
+ 		_tint(coil, Color(str(cfg.get("copper_colour", "#b8794a"))))
+ 
+ 
++## m51 Ashfoot polish (SW20 / SW20b judges, 0.74 short): copper post caps on
++## the frame posts, an upright copper lightning rod with a three-prong finial
++## and wall brackets (the leaning rod read as a broom), and heavier rain on the
++## window pane. The floor moss discs are dropped by the caller; the lamp and
++## rug are handled in _build_light / _build_rug. Presentation only.
++func _ashfoot_polish(cfg: Dictionary, w: float, d: float, top: float, z0: float, z1: float) -> void:
++	var copper := StandardMaterial3D.new()
++	copper.albedo_color = Color(str(cfg.get("copper_colour", "#c08a55")))
++	copper.metallic = 0.8
++	copper.roughness = 0.32
++	if bool(cfg.get("post_caps", true)):
++		for post: Node in find_children("WallPost*", "MeshInstance3D", false, false):
++			var visual := post as MeshInstance3D
++			var size := (visual.mesh as BoxMesh).size if visual.mesh is BoxMesh else Vector3(0.1, 2.0, 0.14)
++			for band_y: float in [0.25, size.y - 0.35]:
++				_visual_box(String(visual.name) + "Band%d" % int(band_y * 10.0), Vector3(size.x + 0.02, 0.05, size.z + 0.02), visual.position + Vector3(0.0, -size.y * 0.5 + band_y, 0.0), copper)
++	var rod: Array = cfg.get("rod", [])
++	if rod.size() >= 3:
++		var base := Vector3(float(rod[0]), FLOOR_TOP, float(rod[1]))
++		var height := float(rod[2])
++		var shaft := MeshInstance3D.new()
++		shaft.name = "CopperRodShaft"
++		var cylinder := CylinderMesh.new()
++		cylinder.top_radius = 0.028
++		cylinder.bottom_radius = 0.034
++		cylinder.height = height
++		cylinder.radial_segments = 10
++		shaft.mesh = cylinder
++		shaft.material_override = copper
++		shaft.position = base + Vector3(0.0, height * 0.5, 0.0)
++		add_child(shaft)
++		for prong in 3:
++			var tip := MeshInstance3D.new()
++			tip.name = "CopperRodProng%d" % prong
++			var cone := CylinderMesh.new()
++			cone.top_radius = 0.0
++			cone.bottom_radius = 0.022
++			cone.height = 0.26
++			cone.radial_segments = 6
++			tip.mesh = cone
++			tip.material_override = copper
++			var spread := (float(prong) - 1.0) * 0.07
++			tip.position = base + Vector3(spread, height + 0.12, 0.0)
++			tip.rotation.z = -spread * 2.2
++			add_child(tip)
++		for bracket_y: float in [height * 0.35, height * 0.75]:
++			_visual_box("CopperRodBracket%d" % int(bracket_y * 10.0), Vector3(0.09, 0.05, 0.16), base + Vector3(0.0, bracket_y, -0.06), copper)
++	var rain: Dictionary = cfg.get("pane_rain_by_phase", {})
++	if not rain.is_empty() and _pane != null:
++		_pane_cfg["rain_by_phase"] = rain
++		if cfg.has("pane_rain_speed"):
++			_pane.set_shader_parameter("rain_speed", float(cfg.pane_rain_speed))
++
++
+ func _apply_view_phase(phase: String) -> void:
+ 	var look: Dictionary = (_view_cfg.get("phases", {}) as Dictionary).get(phase, {})
+ 	for key: String in ["sky_top", "sky_low", "tree_colour"]:
+@@ -689,12 +808,14 @@ func _apply_view_phase(phase: String) -> void:
+ 
+ 
+ func _process(delta: float) -> void:
++	if _shell != null:
++		_update_shell()
+ 	if _hearth_light != null and _flicker > 0.0:
+ 		_flicker_time += delta
+ 		var noise := sin(_flicker_time * 9.0) * 0.6 + sin(_flicker_time * 24.3 + 1.3) * 0.4
+ 		_hearth_light.light_energy = _hearth_base * _hearth_scale * (1.0 + noise * _flicker)
+ 	if _pane == null:
+-		if _hearth_light == null:
++		if _hearth_light == null and _shell == null:
+ 			set_process(false)
+ 		return
+ 	if _surge == null or not is_instance_valid(_surge):
+@@ -976,7 +1097,32 @@ func _build_furniture() -> void:
+ 
+ 
+ func _build_rug() -> void:
+-	_box(Vector3(1.0, 0.02, 1.4), Vector3(_door_x - _door_w * 0.5 + 0.55, FLOOR_TOP + 0.01, 0.2), COL_RUG, false)
++	var at := Vector3(_door_x - _door_w * 0.5 + 0.55, FLOOR_TOP + 0.01, 0.2)
++	var holder := get_parent() as Node3D
++	var role := str(holder.get_meta("village_role", "")) if holder != null else ""
++	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(FINISH_CONFIG)) if FileAccess.file_exists(FINISH_CONFIG) else null
++	if parsed is Dictionary and ((parsed as Dictionary).get("lined_roles", []) as Array).has(role):
++		var polish := _finish_block(parsed, "ashfoot_polish")
++		if polish.has("rug"):
++			# m51 (SW20 judges: "a flat beige rug"): a woven storm-blue rug.
++			var rug_cfg: Dictionary = polish.rug
++			var size := Vector2(float((rug_cfg.get("size_m", [1.0, 1.4]) as Array)[0]), float((rug_cfg.get("size_m", [1.0, 1.4]) as Array)[1]))
++			var rug := MeshInstance3D.new()
++			rug.name = "WovenRug"
++			var plane := PlaneMesh.new()
++			plane.size = size
++			rug.mesh = plane
++			var material := ShaderMaterial.new()
++			material.shader = WOVEN_RUG_SHADER
++			material.set_shader_parameter("size_m", size)
++			for key: String in ["base_colour", "band_colour", "border_colour"]:
++				if rug_cfg.has(key):
++					material.set_shader_parameter(key, Color(str(rug_cfg[key])))
++			rug.material_override = material
++			rug.position = at + Vector3(0.0, 0.006, 0.0)
++			add_child(rug)
++			return
++	_box(Vector3(1.0, 0.02, 1.4), at, COL_RUG, false)
+ 
+ 
+ func _build_light() -> void:
+@@ -995,6 +1141,14 @@ func _build_light() -> void:
+ 		if grade.has("room_light_colour"):
+ 			light.light_color = Color(str(grade.room_light_colour))
+ 		light.light_energy = float(grade.get("room_light_energy", light.light_energy))
++		# m51 (SW20 judges x3: the fire glare blows out the trainer's back):
++		# the warm lamp hangs over the hearth instead of over the room centre
++		# where the trainer stands, a little dimmer.
++		var polish := _finish_block(parsed, "ashfoot_polish")
++		if polish.has("room_light_at"):
++			var at: Array = polish.room_light_at
++			light.position = Vector3(float(at[0]) * _half_w, float(at[1]), float(at[2]) * _half_d)
++			light.light_energy *= float(polish.get("room_light_scale", 1.0))
+ 	light.omni_range = 6.5
+ 	light.shadow_enabled = true
+ 	add_child(light)
+diff --git a/scripts/world/cottage_window_patch.gdshader.uid b/scripts/world/cottage_window_patch.gdshader.uid
+new file mode 100644
+index 000000000..a8a67591c
+--- /dev/null
++++ b/scripts/world/cottage_window_patch.gdshader.uid
+@@ -0,0 +1 @@
++uid://n2uv5lbg2b4k
+diff --git a/scripts/world/cottage_woven_rug.gdshader b/scripts/world/cottage_woven_rug.gdshader
+new file mode 100644
+index 000000000..6823f11e0
+--- /dev/null
++++ b/scripts/world/cottage_woven_rug.gdshader
+@@ -0,0 +1,25 @@
++shader_type spatial;
++// Ashfoot m51: a woven storm-blue rug in place of the flat beige box. Warp and
++// weft bands, a darker border, and fibre noise; matte. UV spans the rug.
++render_mode cull_back;
++
++uniform vec4 base_colour : source_color = vec4(0.22, 0.27, 0.36, 1.0);
++uniform vec4 band_colour : source_color = vec4(0.62, 0.52, 0.34, 1.0);
++uniform vec4 border_colour : source_color = vec4(0.13, 0.15, 0.2, 1.0);
++uniform vec2 size_m = vec2(1.0, 1.4);
++uniform float bands = 5.0;
++
++float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
++
++void fragment() {
++	vec2 m = UV * size_m;
++	float border = step(min(min(m.x, size_m.x - m.x), min(m.y, size_m.y - m.y)), 0.09);
++	float band = smoothstep(0.42, 0.5, abs(fract(UV.y * bands) - 0.5));
++	float weave = 0.5 + 0.5 * sin(m.x * 220.0) * sin(m.y * 220.0);
++	float fibre = hash(floor(m * 160.0));
++	vec3 colour = mix(base_colour.rgb, band_colour.rgb, band * 0.85);
++	colour = mix(colour, border_colour.rgb, border);
++	colour *= 0.82 + 0.12 * weave + 0.1 * fibre;
++	ALBEDO = colour;
++	ROUGHNESS = 0.95;
++}
+diff --git a/scripts/world/cottage_woven_rug.gdshader.uid b/scripts/world/cottage_woven_rug.gdshader.uid
+new file mode 100644
+index 000000000..3cf902e3b
+--- /dev/null
++++ b/scripts/world/cottage_woven_rug.gdshader.uid
+@@ -0,0 +1 @@
++uid://rmo7wq2dcod
+diff --git a/scripts/world/stormwood_crown_overlook.gd b/scripts/world/stormwood_crown_overlook.gd
+index 3cc29468e..a3a3a2f64 100644
+--- a/scripts/world/stormwood_crown_overlook.gd
++++ b/scripts/world/stormwood_crown_overlook.gd
+@@ -19,14 +19,28 @@ const WOOD_ATLAS := preload("res://assets/buildings/quaternius_medieval/T_WoodTr
+ static func install(world: Node3D) -> void:
+ 	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG)) if FileAccess.file_exists(CONFIG) else {}
+ 	var draw := not bool(world.get("simulation_only"))
+-	var deck: Dictionary = cfg.get("deck", {})
++	var deck := with_candidate(cfg.get("deck", {}), "rim")
+ 	if bool(deck.get("enabled", false)):
+ 		build_deck(world, deck, draw)
+-	var massif: Dictionary = cfg.get("massif", {})
++	var massif := with_candidate(cfg.get("massif", {}), "storm")
+ 	if draw and bool(massif.get("enabled", false)):
+ 		_massif(world, massif)
+ 
+ 
++## A landed block with a flagged candidate inside it: when the candidate's
++## own `enabled` is true its fields override the landed values (r49: the
++## rim deck and the storm-haze massif ride over the GPU-passed SW18 values).
++static func with_candidate(block: Dictionary, key: String) -> Dictionary:
++	var candidate: Dictionary = block.get(key, {})
++	if not bool(candidate.get("enabled", false)):
++		return block
++	var merged := block.duplicate(true)
++	for field: String in candidate:
++		if field != "enabled" and not field.begins_with("_"):
++			merged[field] = candidate[field]
++	return merged
++
++
+ ## The deck's own frame: origin at the deck centre on its floor, +Z along
+ ## `heading_deg` (toward the view), so the ramp runs down -Z.
+ static func deck_frame(world: Node3D, cfg: Dictionary) -> Transform3D:
+@@ -91,8 +105,31 @@ static func build_deck(world: Node3D, cfg: Dictionary, draw: bool) -> Node3D:
+ 			var world_corner := frame * corner
+ 			var drop := frame.origin.y - float(world.call("ground_height_at", world_corner.x, world_corner.z)) + 0.3
+ 			_part(body, "Post", Vector3(0.24, drop + rail_h, 0.24), corner + Vector3(0.0, (rail_h - drop) * 0.5, 0.0), Basis(), dark, draw, true)
++	# r41 judges x3: "the deck sits on flat ground, no drop, no supports".
++	# Diagonal braces between the corner posts under the floor.
++	var brace := float(cfg.get("brace_m", 0.0))
++	if brace > 0.0:
++		for side: Array in [[Vector3(0.0, 0.0, hz - 0.1), hx * 2.0, 0.0], [Vector3(0.0, 0.0, -hz + 0.1), hx * 2.0, 0.0],
++				[Vector3(hx - 0.1, 0.0, 0.0), hz * 2.0, PI * 0.5], [Vector3(-hx + 0.1, 0.0, 0.0), hz * 2.0, PI * 0.5]]:
++			var span: float = side[1]
++			var drop := float(cfg.get("height_m", 2.6)) - 0.3
++			var length := sqrt(span * span * 0.25 + drop * drop)
++			var tilt := atan2(drop, span * 0.5)
++			for sign: float in [-1.0, 1.0]:
++				var basis := Basis(Vector3.UP, float(side[2])) * Basis(Vector3.FORWARD, sign * tilt)
++				var centre := (side[0] as Vector3) + Basis(Vector3.UP, float(side[2])) * Vector3(sign * span * 0.25, -drop * 0.5 - 0.2, 0.0)
++				_part(body, "Brace", Vector3(length, brace, brace), centre, basis, dark, draw, false)
+ 	if not draw:
+ 		return root
++	# Moss along the deck edges (weathering, r41 ask).
++	var moss_colour := str(cfg.get("moss_colour", ""))
++	if not moss_colour.is_empty():
++		var moss := StandardMaterial3D.new()
++		moss.albedo_color = Color(moss_colour)
++		moss.roughness = 1.0
++		for edge: Array in [[Vector3(hx * 2.0 - 0.4, 0.04, 0.35), Vector3(0.0, 0.02, hz - 0.3)],
++				[Vector3(0.35, 0.04, hz * 2.0 - 0.6), Vector3(-hx + 0.3, 0.02, 0.0)], [Vector3(0.35, 0.04, hz * 2.0 - 0.6), Vector3(hx - 0.3, 0.02, 0.0)]]:
++			_part(body, "DeckMoss", edge[0], edge[1], Basis(), moss, true, false)
+ 	# The Stormwood lantern post on the front corner, lit.
+ 	var lamp: Dictionary = cfg.get("lantern_post", {})
+ 	if not lamp.is_empty():
+@@ -152,4 +189,36 @@ static func _massif(world: Node3D, cfg: Dictionary) -> void:
+ 		visual.visibility_range_begin_margin = float(cfg.get("fade_m", 40.0))
+ 		visual.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
+ 		visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
++	# r41 judges x3: the Crown read "bleached near-white, pasted on". A storm
++	# multiplier darkens the stone toward blue-violet so it sits in the haze.
++	var tint := Color(str(cfg.get("tint", "#ffffff")))
++	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
++		for surface in visual.mesh.get_surface_count():
++			var source := visual.get_active_material(surface) as BaseMaterial3D
++			if source == null:
++				continue
++			var stormed := source.duplicate() as BaseMaterial3D
++			stormed.albedo_color = source.albedo_color * tint
++			stormed.roughness = 1.0
++			stormed.metallic_specular = 0.2
++			# GPU SW18: the Crown reads "pale, low-contrast against the sky".
++			# A rim lifts the spires' edges off the storm deck once the
++			# stone itself is darker.
++			if cfg.has("rim"):
++				stormed.rim_enabled = true
++				stormed.rim = float(cfg.get("rim", 0.0))
++				stormed.rim_tint = float(cfg.get("rim_tint", 0.3))
++			# r46: at 900 m the scene fog washed the stone to the pale horizon
++			# colour whatever its tint. With `haze` the massif skips scene fog
++			# and carries its own fixed storm haze: the lit stone is scaled
++			# down and the haze colour is added, so it sits darker in the storm.
++			var haze: Dictionary = cfg.get("haze", {})
++			if not haze.is_empty():
++				var amount := clampf(float(haze.get("amount", 0.4)), 0.0, 1.0)
++				stormed.disable_fog = true
++				stormed.albedo_color = stormed.albedo_color * (1.0 - amount)
++				stormed.emission_enabled = true
++				stormed.emission = Color(str(haze.get("colour", "#4e4868")))
++				stormed.emission_energy_multiplier = amount
++			visual.set_surface_override_material(surface, stormed)
+ 	world.add_child(holder)
+diff --git a/scripts/world/stormwood_ground_zones.gd b/scripts/world/stormwood_ground_zones.gd
+index 09cd81bed..04779a98e 100644
+--- a/scripts/world/stormwood_ground_zones.gd
++++ b/scripts/world/stormwood_ground_zones.gd
+@@ -24,6 +24,8 @@ uniform vec4 sz_soil_colour : source_color = vec4(0.17, 0.14, 0.11, 1.0);
+ uniform vec4 sz_moss_colour : source_color = vec4(0.14, 0.22, 0.12, 1.0);
+ uniform vec2 sz_pool = vec2(0.0, 0.0);
+ uniform vec4 sz_pool_colour : source_color = vec4(0.05, 0.06, 0.07, 1.0);
++uniform float sz_pool_roughness = 0.75;
++uniform float sz_pool_specular = 0.06;
+ 
+ float sz_hash12(vec2 p) {
+     vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+@@ -70,10 +72,12 @@ const TAIL := """
+             if (sz_pool.y > sz_pool.x) {
+                 float sz_pool_w = (1.0 - smoothstep(sz_pool.x, sz_pool.y, sz_n)) * sz_green * sz_strength;
+                 ALBEDO = mix(ALBEDO, sz_pool_colour.rgb, sz_pool_w);
+-                // Satin, not mirror: a glossy pool reflected the pale sky as
+-                // a silver puddle (r21 preview).
+-                ROUGHNESS = mix(ROUGHNESS, 0.38, sz_pool_w);
+-                SPECULAR = mix(SPECULAR, 0.25, sz_pool_w);
++                // Matte, not satin: a glossy pool reflected the pale sky as a
++                // silver puddle (r21 preview), and on GPU (SW13) the satin
++                // 0.38 / 0.25 caught the sky as hard white-cyan rims where the
++                // pool blends in ("glass slabs"). Low specular, rough water.
++                ROUGHNESS = mix(ROUGHNESS, sz_pool_roughness, sz_pool_w);
++                SPECULAR = mix(SPECULAR, sz_pool_specular, sz_pool_w);
+             }
+         }
+     }
+@@ -135,3 +139,6 @@ static func install(terrain: Object) -> void:
+ 	for key: String in ["soil_colour", "moss_colour", "pool_colour"]:
+ 		if zones.has(key):
+ 			material.call("set_shader_param", "sz_" + key, Color(str(zones[key])))
++	for key: String in ["pool_roughness", "pool_specular"]:
++		if zones.has(key):
++			material.call("set_shader_param", "sz_" + key, float(zones[key]))
+diff --git a/scripts/world/stormwood_look.gd b/scripts/world/stormwood_look.gd
+index 530ca9302..3d46ce012 100644
+--- a/scripts/world/stormwood_look.gd
++++ b/scripts/world/stormwood_look.gd
+@@ -61,6 +61,7 @@ func _ready() -> void:
+ 		return
+ 	_build_detail_textures()
+ 	_add_storm_rim.call_deferred()
++	_add_storm_grade.call_deferred()
+ 
+ 
+ ## r26 (GPU R verdict, path item 2: "lift the single dark mid-tone with
+@@ -82,6 +83,18 @@ func _add_storm_rim() -> void:
+ 	get_parent().add_child(rim)
+ 
+ 
++## F41 storm light grade (`storm_grade`, OFF until judged): a phase-driven,
++## camera-relative rim and world grade (stormwood_storm_grade.gd).
++func _add_storm_grade() -> void:
++	var grade_cfg: Dictionary = config.get("storm_grade", {})
++	if not bool(grade_cfg.get("enabled", false)) or get_parent() == null:
++		return
++	var grade := preload("res://scripts/world/stormwood_storm_grade.gd").new()
++	grade.name = "StormGrade"
++	grade.config = grade_cfg
++	get_parent().add_child(grade)
++
++
+ func begin_world_walk() -> void:
+ 	if not bool(config.get("enabled", false)):
+ 		return
+diff --git a/scripts/world/stormwood_storm_grade.gd b/scripts/world/stormwood_storm_grade.gd
+new file mode 100644
+index 000000000..6b3384435
+--- /dev/null
++++ b/scripts/world/stormwood_storm_grade.gd
+@@ -0,0 +1,87 @@
++extends Node
++
++## F41 chapter-wide storm light grade (stormwood_look.json `storm_grade`, OFF
++## until judged). GPU SW13 and SW19 judges (15/15): "the scene does not carry
++## the storm". Two parts, both following the surge phase every frame:
++## - a camera-relative rim: a shadowless directional light that always comes
++##   from beyond the subject toward the camera, a little above, so trunks,
++##   creatures and the trainer get a lit edge in every view (the r26 rim was
++##   world-fixed and lit edges in some views only), its colour and energy per
++##   phase and lifted by the surge flash at Break;
++## - a per-phase world grade: environment brightness, contrast and saturation,
++##   eased between phases.
++## Presentation only; reduced motion keeps the grade and drops the pulse.
++const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
++
++var config: Dictionary = {}
++var _rim: DirectionalLight3D
++var _surge: Node
++var _env: Environment
++var _grade := Vector3(1.0, 1.0, 1.0)
++var _rim_energy := 0.0
++var _rim_colour := Color.WHITE
++
++
++func _ready() -> void:
++	_rim = DirectionalLight3D.new()
++	_rim.name = "StormPhaseRim"
++	_rim.shadow_enabled = false
++	_rim.light_specular = float(config.get("rim_specular", 0.5))
++	_rim.light_energy = 0.0
++	get_parent().add_child.call_deferred(_rim)
++
++
++func _look(phase: String) -> Dictionary:
++	return (config.get("phases", {}) as Dictionary).get(phase, {})
++
++
++func _process(delta: float) -> void:
++	var world := get_parent()
++	if world == null:
++		return
++	if _surge == null or not is_instance_valid(_surge):
++		_surge = world.find_child("StormwoodSurge", true, false)
++	if _env == null:
++		var look := world.get_node_or_null("WorldLook")
++		if look != null:
++			var holder := look.get_node_or_null(look.get("environment_path")) as WorldEnvironment
++			if holder != null:
++				_env = holder.environment
++	var phase := str(_surge.get("phase")) if _surge != null else "calm"
++	var flash := float(_surge.call("flash_level")) if _surge != null and _surge.has_method("flash_level") else 0.0
++	# m50b: a decorative sky bolt lifts the scene, not only the sky (m50
++	# judges: "break should brighten at the strike instead of going darker").
++	var bolt := float(_surge.call("bolt_level")) if _surge != null and _surge.has_method("bolt_level") else 0.0
++	if MOTION_PREFS.reduced_motion():
++		flash = 0.0
++		bolt = 0.0
++	var look_cfg := _look(phase)
++	var ease := clampf(delta * float(config.get("ease_per_s", 0.8)), 0.0, 1.0)
++	var target_rim := float(look_cfg.get("rim_energy", 0.6))
++	_rim_energy = lerpf(_rim_energy, target_rim, ease)
++	_rim_colour = _rim_colour.lerp(Color(str(look_cfg.get("rim_colour", "#a9b8ff"))), ease)
++	if _rim != null and _rim.is_inside_tree():
++		_rim.light_color = _rim_colour
++		_rim.light_energy = _rim_energy * (1.0 + flash * float(config.get("flash_rim_gain", 2.0)))
++		var camera := get_viewport().get_camera_3d()
++		if camera != null:
++			var forward := -camera.global_transform.basis.z
++			forward.y = 0.0
++			if forward.length() > 0.01:
++				forward = forward.normalized()
++				var elevation := deg_to_rad(float(config.get("rim_elevation_deg", 22.0)))
++				# Travel toward the camera from beyond the subject, slightly
++				# down. m50b: turned rim_side_deg off the view axis (a
++				# three-quarter back light), so the lit side edges of trunks
++				# and figures face the camera; straight back lit no visible
++				# edge (m50 judges x3).
++				var toward := (-forward).rotated(Vector3.UP, deg_to_rad(float(config.get("rim_side_deg", 0.0))))
++				var travel := (toward * cos(elevation) + Vector3.DOWN * sin(elevation)).normalized()
++				_rim.global_transform = Transform3D(Basis.looking_at(travel, Vector3.UP), Vector3.ZERO)
++	if _env != null:
++		var grade: Array = look_cfg.get("grade", [1.0, 1.0, 1.0])
++		_grade = _grade.lerp(Vector3(float(grade[0]), float(grade[1]), float(grade[2])), ease)
++		_env.adjustment_enabled = true
++		_env.adjustment_brightness = _grade.x * (1.0 + bolt * float(config.get("bolt_brightness", 0.0)))
++		_env.adjustment_contrast = _grade.y
++		_env.adjustment_saturation = _grade.z
+diff --git a/scripts/world/stormwood_storm_grade.gd.uid b/scripts/world/stormwood_storm_grade.gd.uid
+new file mode 100644
+index 000000000..6f92fc521
+--- /dev/null
++++ b/scripts/world/stormwood_storm_grade.gd.uid
+@@ -0,0 +1 @@
++uid://brritqaelqky5
+diff --git a/scripts/world/stormwood_surge.gd b/scripts/world/stormwood_surge.gd
+index a66b7af57..674853759 100644
+--- a/scripts/world/stormwood_surge.gd
++++ b/scripts/world/stormwood_surge.gd
+@@ -68,6 +68,20 @@ uniform vec3 skyline_far_colour : source_color = vec3(0.36, 0.34, 0.47);
+ uniform vec3 skyline_near_colour : source_color = vec3(0.22, 0.22, 0.31);
+ uniform vec2 skyline_far_height = vec2(0.035, 0.03);
+ uniform vec2 skyline_near_height = vec2(0.02, 0.045);
++// F41 storm-cloud form (every Stormwood set, all judges: "flat lavender sky
++// with no cloud form"): large domain-warped cloud masses over the deck, dark
++// bases overhead, edges lit from form_light, a paler higher layer between the
++// masses and rain curtains hanging from the masses near the horizon (nothing
++// bright in the band just above it). form 0 = off.
++uniform float form = 0.0;
++uniform float form_scale = 0.8;
++uniform float form_dark = 0.55;
++uniform float form_lit = 0.5;
++uniform float form_gap = 0.04;
++uniform float form_edge = 0.11;
++uniform float form_deck = 1.0;
++uniform float form_curtains = 0.5;
++uniform vec2 form_light = vec2(0.6, -0.8);
+ varying vec3 dir;
+ float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+ float noise(vec2 p) {
+@@ -128,6 +142,32 @@ void fragment() {
+ 		float vein = clamp(core + twig * 0.8 + halo, 0.0, 1.4) * cover * breathe;
+ 		colour += flash_colour * crawlers * vein * smoothstep(0.1, 0.24, dir.y) * 1.3;
+ 	}
++	if (form > 0.0) {
++		vec2 fuv = dir.xz / (up + 0.32) * form_scale + vec2(t * 0.6, t * 0.21);
++		vec2 w = vec2(fbm(fuv * 0.5 + vec2(2.1, 7.7)), fbm(fuv * 0.5 + vec2(6.3, 1.9)));
++		float bank = fbm(fuv + w * 1.5);
++		float mass = smoothstep(0.47 - form_edge, 0.47 + form_edge, bank);
++		// Lit edge: the mass falls off toward the light (a lit rim on the
++		// side facing it), dark where it thickens away from it.
++		float lee = fbm(fuv + w * 1.5 + normalize(form_light) * 0.09);
++		float lit = clamp((bank - lee) * 18.0, 0.0, 1.0) * (1.0 - smoothstep(0.47 + form_edge, 0.47 + form_edge + 0.14, bank));
++		float overhead = smoothstep(0.25, 0.9, dir.y);
++		// The masses darken the existing textured deck (body) rather than
++		// replacing it, so its fine cloud texture stays; r45 first try
++		// replaced it and the sky read paler and flatter.
++		vec3 deck = ceiling_colour * mix(1.0 - contrast, 1.0 + contrast * 0.6, body);
++		vec3 deck_shaded = deck * form_deck;
++		vec3 base_col = deck_shaded * (1.0 - form_dark * (0.55 + 0.45 * overhead));
++		vec3 shaped = mix(deck_shaded * (1.0 + form_gap), base_col, mass);
++		shaped += rim_colour * form_lit * lit * mass * aloft;
++		// Rain curtains: darker vertical streaked bands under the masses,
++		// low in the sky, toward the horizon.
++		float az = atan(dir.x, dir.z);
++		float sheet = fbm(vec2(az * 9.0 + t * 2.0, 0.5)) * (0.6 + 0.4 * noise(vec2(az * 140.0, dir.y * 6.0)));
++		float curtain = smoothstep(0.45, 0.7, sheet) * smoothstep(0.03, 0.08, dir.y) * (1.0 - smoothstep(0.1, 0.3, dir.y)) * smoothstep(0.35, 0.6, bank);
++		shaped = mix(shaped, ceiling_colour * (1.0 - form_dark * 0.8), curtain * form_curtains);
++		colour = mix(colour, shaped + (colour - deck), form);
++	}
+ 	float low = smoothstep(0.04, 0.14, dir.y) * (1.0 - smoothstep(0.2, 0.5, dir.y));
+ 	float warm = low * (0.4 + 0.6 * smoothstep(0.3, 0.75, body)) * (0.55 + 0.45 * fbm(uv * 0.2 + vec2(3.1, 7.3)));
+ 	colour = mix(colour, afterglow_colour, clamp(afterglow * warm, 0.0, 0.75));
+@@ -1113,6 +1153,15 @@ func _build_ceiling() -> void:
+ 			var pair: Array = skyline.get(key, [])
+ 			if pair.size() == 2:
+ 				_ceiling_material.set_shader_parameter("skyline_" + key, Vector2(float(pair[0]), float(pair[1])))
++	var form: Dictionary = cfg.get("form", {})
++	if bool(form.get("enabled", false)):
++		_ceiling_material.set_shader_parameter("form", float(form.get("strength", 1.0)))
++		for key: String in ["scale", "dark", "lit", "gap", "curtains", "edge", "deck"]:
++			if form.has(key):
++				_ceiling_material.set_shader_parameter("form_" + key, float(form[key]))
++		var light: Array = form.get("light", [])
++		if light.size() == 2:
++			_ceiling_material.set_shader_parameter("form_light", Vector2(float(light[0]), float(light[1])))
+ 	var sky: Dictionary = _pres_cfg().get("sky_lightning", {})
+ 	_ceiling_material.set_shader_parameter("cloud_flash_size", float(sky.get("cloud_flash_size", 0.06)))
+ 	var radius := float(cfg.get("radius_m", 2400.0))
+diff --git a/shaders/shell_door_cutout.gdshader b/shaders/shell_door_cutout.gdshader
+new file mode 100644
+index 000000000..f0a5b5a8d
+--- /dev/null
++++ b/shaders/shell_door_cutout.gdshader
+@@ -0,0 +1,34 @@
++shader_type spatial;
++// Ashfoot r42: the Meshy ranger-shelter shell with an open doorway. The shell
++// is one closed mesh; the prefab's door stays open (players walk through it
++// and the interior catalogue camera looks in through it), so fragments inside
++// the doorway box (shelter-local metres, `cut_frame_inv` maps world to the
++// shelter frame) are discarded. Back faces are culled so from inside the
++// lined room the shell never shows.
++render_mode cull_back;
++
++uniform sampler2D albedo_tex : source_color, filter_linear_mipmap, repeat_enable;
++uniform sampler2D normal_tex : hint_normal, filter_linear_mipmap, repeat_enable;
++uniform sampler2D orm_tex : filter_linear_mipmap, repeat_enable;
++uniform float albedo_gain = 1.0;
++uniform mat4 cut_frame_inv;
++uniform vec3 cut_min = vec3(0.2, -1.0, 2.4);
++uniform vec3 cut_max = vec3(1.8, 2.3, 5.0);
++
++varying vec3 world_pos;
++
++void vertex() {
++	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
++}
++
++void fragment() {
++	vec3 local = (cut_frame_inv * vec4(world_pos, 1.0)).xyz;
++	if (all(greaterThan(local, cut_min)) && all(lessThan(local, cut_max))) {
++		discard;
++	}
++	ALBEDO = texture(albedo_tex, UV).rgb * albedo_gain;
++	NORMAL_MAP = texture(normal_tex, UV).rgb;
++	vec3 orm = texture(orm_tex, UV).rgb;
++	ROUGHNESS = orm.g;
++	METALLIC = orm.b;
++}
+diff --git a/shaders/shell_door_cutout.gdshader.uid b/shaders/shell_door_cutout.gdshader.uid
+new file mode 100644
+index 000000000..d5b6d2c2c
+--- /dev/null
++++ b/shaders/shell_door_cutout.gdshader.uid
+@@ -0,0 +1 @@
++uid://b5bsn24rt86hp
+diff --git a/tests/test_stormwood_crown_overlook.gd b/tests/test_stormwood_crown_overlook.gd
+index 0a80ac983..bdc33216d 100644
+--- a/tests/test_stormwood_crown_overlook.gd
++++ b/tests/test_stormwood_crown_overlook.gd
+@@ -14,7 +14,9 @@ class FixtureWorld extends Node3D:
+ 
+ 
+ func _deck() -> Dictionary:
+-	return ((JSON.parse_string(FileAccess.get_file_as_string(OVERLOOK.CONFIG)) as Dictionary).deck as Dictionary).duplicate(true)
++	# The effective deck: a flagged candidate (deck.rim) overrides the landed
++	# values only when its own `enabled` is true.
++	return OVERLOOK.with_candidate(((JSON.parse_string(FileAccess.get_file_as_string(OVERLOOK.CONFIG)) as Dictionary).deck as Dictionary).duplicate(true), "rim")
+ 
+ 
+ func test_deck_clears_route_corridors_and_ramps_to_the_path() -> void:
+@@ -44,9 +46,11 @@ func test_deck_clears_route_corridors_and_ramps_to_the_path() -> void:
+ 
+ func test_colliders_build_on_a_simulation_shell() -> void:
+ 	var world := FixtureWorld.new()
+-	var root := OVERLOOK.build_deck(world, _deck(), false)
++	var cfg := _deck()
++	var root := OVERLOOK.build_deck(world, cfg, false)
+ 	var body := root.find_child("CrownOverlookDeckBody", true, false) as StaticBody3D
+ 	assert_true(body != null and body.get_child_count() >= 6, "floor, ramp, rails and posts collide")
+ 	assert_eq(root.find_children("*", "MeshInstance3D", true, false).size(), 0, "nothing drawn on a simulation shell")
+-	assert_true(absf(root.position.y - 50.6) < 0.01, "deck floor 2.6 m above the ground")
++	assert_true(absf(root.position.y - (48.0 + float(cfg.height_m))) < 0.01, "deck floor height_m above the ground")
++	assert_true(float(cfg.height_m) < 4.0, "the F41 capture finds the deck floor (it probes from 4 m above the ground)")
+ 	world.free()

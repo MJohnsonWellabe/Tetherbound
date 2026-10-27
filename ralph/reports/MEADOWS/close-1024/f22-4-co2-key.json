@@ -1,0 +1,29 @@
+{
+ "Bb": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Ra": {
+  "anchor": false,
+  "label": "riverwatch co2",
+  "A": "/dev/shm/cap9/river_ship.png",
+  "B": "/dev/shm/cap9/river_co2.png"
+ },
+ "Xr": {
+  "anchor": true,
+  "A": "f36_0_gap:C3A",
+  "B": "f36_0_gap:C3B"
+ },
+ "Vj": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Tk": {
+  "anchor": false,
+  "label": "warden co2",
+  "A": "/dev/shm/cap9/warden_co2.png",
+  "B": "/dev/shm/cap9/warden_ship.png"
+ }
+}

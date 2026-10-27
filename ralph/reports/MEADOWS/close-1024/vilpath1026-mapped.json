@@ -1,0 +1,134 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.972,
+  "least_squares_slope": 1.8989,
+  "method": "linear",
+  "slope": 1.8989,
+  "intercept": -4.9972,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.202,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C4A": {
+   "measured": 6.033,
+   "reference": 6.77,
+   "mapped": 6.459,
+   "residual": 0.311
+  },
+  "f36_0_gap:C4B": {
+   "measured": 6.333,
+   "reference": 7.17,
+   "mapped": 7.029,
+   "residual": 0.141
+  },
+  "craft:before": {
+   "measured": 5.133,
+   "reference": 4.83,
+   "mapped": 4.75,
+   "residual": 0.08
+  },
+  "craft:after": {
+   "measured": 6.533,
+   "reference": 7.35,
+   "mapped": 7.409,
+   "residual": -0.059
+  },
+  "f36_0_npc:C7B": {
+   "measured": 5.867,
+   "reference": 5.97,
+   "mapped": 6.143,
+   "residual": -0.173
+  },
+  "f36_0_npc:C7A": {
+   "measured": 5.933,
+   "reference": 5.97,
+   "mapped": 6.269,
+   "residual": -0.299
+  }
+ },
+ "candidates": {
+  "farm_to_hall_ship": {
+   "measured_mean": 5.767,
+   "mapped_mean": 5.95,
+   "mapped_judges": [
+    5.64,
+    6.59,
+    5.64
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "farm_to_hall_cand": {
+   "measured_mean": 6.3,
+   "mapped_mean": 6.97,
+   "mapped_judges": [
+    6.59,
+    7.54,
+    6.78
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "hall_front_cand": {
+   "measured_mean": 6.133,
+   "mapped_mean": 6.65,
+   "mapped_judges": [
+    6.21,
+    6.97,
+    6.78
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "hall_front_ship": {
+   "measured_mean": 5.667,
+   "mapped_mean": 5.76,
+   "mapped_judges": [
+    5.26,
+    6.21,
+    5.83
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "village_road_ship": {
+   "measured_mean": 5.767,
+   "mapped_mean": 5.95,
+   "mapped_judges": [
+    5.64,
+    6.59,
+    5.64
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "village_road_cand": {
+   "measured_mean": 6.3,
+   "mapped_mean": 6.97,
+   "mapped_judges": [
+    6.59,
+    7.54,
+    6.78
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

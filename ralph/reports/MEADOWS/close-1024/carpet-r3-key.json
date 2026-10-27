@@ -1,0 +1,23 @@
+{
+ "Lt": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Yo": {
+  "anchor": false,
+  "label": "P2-005 carpet r3",
+  "A": "/tmp/claude-0/cap/carpet_blade.png",
+  "B": "/tmp/claude-0/cap/carpet_ship.png"
+ },
+ "Zz": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "Ss": {
+  "anchor": true,
+  "A": "f36_0_npc:C6A",
+  "B": "f36_0_npc:C6B"
+ }
+}

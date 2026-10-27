@@ -1,0 +1,4 @@
+Rq: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Kv: none
+Pp: none
+Et: "Body value merges with the stage: a slate body on a slate ground with dim streaks"

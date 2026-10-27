@@ -1,0 +1,23 @@
+{
+ "Un": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Rq": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Wd": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Zc": {
+  "anchor": false,
+  "label": "F36 terrapup b21",
+  "A": "scratch/b21/sides/terrapup-c.png",
+  "B": "scratch/b21/sides/terrapup-base.png"
+ }
+}

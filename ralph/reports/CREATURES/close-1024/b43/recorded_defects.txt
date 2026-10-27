@@ -1,0 +1,5 @@
+Cx: "Plates read as a pack or armour strapped on rather than grown from the body"; "Coat reads red or orange-red"
+Wm: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Bh: none
+Fc: none
+Az: "Plates read as a pack or armour strapped on rather than grown from the body"; "Coat reads red or orange-red"

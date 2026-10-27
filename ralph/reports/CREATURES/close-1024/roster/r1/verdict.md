@@ -1,4 +1,4 @@
-# r1 (25 Oct 2026, CPU): F36#1 whole-roster pose verdict, batch 1 of 7 (land head c74eb3908, shipping state)
+# r1 (24 Oct 2026, CPU): F36#1 whole-roster pose verdict, batch 1 of 7 (land head c74eb3908, shipping state)
 
 Shipping-state tiles, identical on both sides: row 1 standing, hit react, faint end; row 2 the roles each species uses in play (swim: water roster and swim mounts; fly-grip: Fly carriers; ride: rideable). Standard prompt verbatim, three fresh code-blind judges, anchors f36_0_gap:C4, f36_0_npc:C1, p2_094_r4 (confirming). Fit linear slope 1.162, intercept -0.187, RMSE 0.67. One judge ran a single Bash command on a set image inside the judge folder (size print, crops deleted unviewed); no other file opened.
 Pass rule: no judge marks an applicable pose PRESENT, and mapped >= 6.7 (CPU-provisional).

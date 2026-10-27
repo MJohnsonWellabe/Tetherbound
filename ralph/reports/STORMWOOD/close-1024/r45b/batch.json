@@ -1,0 +1,10 @@
+{"anchors": {
+  "f04_6_r22:r22": [5.8, 6.0, 5.7],
+  "f04_6_r22:control": [5.1, 5.2, 4.8],
+  "f36_0_gap:C1B": [5.0, 5.3, 5.2],
+  "f36_0_gap:C1A": [6.0, 6.4, 6.3],
+  "craft:after": [6.6, 6.5, 6.6],
+  "craft:before": [5.5, 5.4, 5.5]},
+ "candidates": {
+  "R45b storm sky OFF": [5.6, 5.5, 5.3],
+  "R45b storm sky ON (ceiling.form hard masses + skyline)": [6.3, 6.2, 6.1]}}

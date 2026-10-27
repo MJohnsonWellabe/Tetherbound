@@ -1,0 +1,10 @@
+{"anchors": {
+  "craft:before": [5.0, 5.0, 5.4],
+  "craft:after": [6.5, 6.6, 6.6],
+  "f36_0_gap:C7B": [6.2, 5.6, 6.4],
+  "f36_0_gap:C7A": [5.9, 5.8, 6.0],
+  "p2_094_r4:X_before": [4.2, 3.9, 4.3],
+  "p2_094_r4:Y_after": [6.0, 5.4, 5.6]},
+ "candidates": {
+  "M50b storm grade OFF": [5.6, 5.5, 5.8],
+  "M50b storm grade ON (3/4 rim, brighter break, bolt lift)": [5.3, 5.2, 5.6]}}

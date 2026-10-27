@@ -1,0 +1,13 @@
+Ed: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+Gc: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Ru: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Ql: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+Pj: none
+Ei: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+Nv: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Tq: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Aa: none
+Tg: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Swim does not read as swimming (standing or striding upright in the water, or floating above it)"
+Oo: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+El: none
+Ci: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Ride: the seated trainer does not sit on the back (floating above it, sunk into it, or off it)"

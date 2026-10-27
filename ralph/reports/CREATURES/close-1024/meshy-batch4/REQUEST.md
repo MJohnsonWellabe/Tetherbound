@@ -1,9 +1,9 @@
-# Meshy batch 4 (Creatures lane, 25 Oct 2026): identity-true naturalistic remakes for F36#0 / F36#1
+# Meshy batch 4 (Creatures lane, 24 Oct 2026): identity-true naturalistic remakes for F36#0 / F36#1
 
 Same route as batches 1-3 (image-to-image concept with the identity reference + `style_wolf.png` + `style_bear.png`, then multi-image-to-3D textured; deliver to `tb/meshy-1024` under `assets_raw/naturalistic-1024/<species>_b4/`).
 
 Why:
-- **Mosshock:** the batch-2 remake judged 7.15 with its new faint (b12), but it came out a toad; the shipped Mosshock is a lava salamander, so it stays OFF (owner 22 Oct identity rule; coordinator 25 Oct). Redraft as the salamander: long low lizard silhouette, the shipped palette minus any red or oxblood, sprawl-friendly limbs.
+- **Mosshock:** the batch-2 remake judged 7.15 with its new faint (b12), but it came out a toad; the shipped Mosshock is a lava salamander, so it stays OFF (owner 22 Oct identity rule; coordinator 24 Oct). Redraft as the salamander: long low lizard silhouette, the shipped palette minus any red or oxblood, sprawl-friendly limbs.
 - **Pebbik and Riptusk:** fail the F36#1 roster on material and style, not pose. Pebbik is a blotchy, noisy bake with near-maroon patches and reads only trainer-height (5.88 mapped, roster r5). Riptusk reads with a noisy plate surface and a tail that looks like a second head (6.50, r3).
 
 Admission and footprint: nose-to-tail at most 1.8x standing height (Mosshock at most 5.3 m, Pebbik 5.9 m, Riptusk 7.6 m), which keeps each inside its footprint allowance and the Warrens/Hall rings with margin. Taller than the 1.80 m trainer at the installed heights. No red or oxblood. Flag-off until judged.

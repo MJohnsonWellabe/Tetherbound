@@ -1,0 +1,59 @@
+{
+  "enabled": true,
+  "scope": "client_presentation",
+  "_comment": "F41 biome look candidate. One fixed-purple rig at every clock hour; the existing Surge presentation supplies phase, rain, flash and aftermath deltas. OFF until matched Medium/High three-judge Bar A >=8.5. No save, collision, scatter or creature-scale changes.",
+  "storm_grade": {"enabled": false, "scope": "client_presentation", "_candidate": "m50 chapter-wide storm light grade (OFF until judged). GPU SW13 and SW19 judges (15/15): the scene does not carry the storm. A camera-relative rim (shadowless directional light from beyond the subject toward the camera, rim_elevation_deg above) puts a lit edge on trunks, creatures and the trainer in every view, its colour and energy per phase and lifted by the surge flash at Break; a per-phase world grade sets environment brightness, contrast and saturation, eased between phases. Nothing new in the ground or sky. Presentation only; reduced motion drops the flash pulse.", "rim_elevation_deg": 25.0, "rim_side_deg": 62.0, "bolt_brightness": 0.35, "_why_m50b": "m50 (+0.04, 3/3 near-identical): a straight-back diffuse rim lit no visible edge and the break grade darkened Break. m50b: a three-quarter rim 62 deg off the view axis, stronger rim energy, Break graded brighter, decorative bolts lift the scene brightness (no change under reduced motion).", "rim_specular": 0.0, "_why_rim_specular": "m50 first CPU look: a grazing back light with specular put a white hot spot on the wet ground under the trainer; diffuse only.", "flash_rim_gain": 2.0, "ease_per_s": 0.8,
+    "phases": {"calm": {"rim_colour": "#aab6e8", "rim_energy": 0.9, "grade": [1.03, 1.08, 0.98]}, "building": {"rim_colour": "#9aa6ff", "rim_energy": 1.3, "grade": [1.0, 1.12, 0.92]}, "break": {"rim_colour": "#d6d0ff", "rim_energy": 1.8, "grade": [1.06, 1.14, 0.9]}, "fading": {"rim_colour": "#a8c4dc", "rim_energy": 1.1, "grade": [1.02, 1.1, 0.95]}}},
+  "storm_light": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "_candidate": "r26 storm light (OFF until judged). GPU F41 R verdict, path to 7.5 item 2: every stand is one dark mid-tone with no rim light. A cool, low, shadowless back light from the side opposite the sun puts a lit edge on trunks, creatures and the trainer, and a little more grade contrast separates the layers. Presentation only.",
+    "rim_colour": "#93a8ff",
+    "rim_energy": 0.6,
+    "rim_specular": 0.6,
+    "rim_rotation_deg": [-14.0, 320.0],
+    "environment": {"adjustment_contrast": 1.16, "adjustment_saturation": 1.14}
+  },
+  "rig": {
+    "sun": {"pitch_deg": -44.0, "yaw_deg": 140.0, "energy": 1.65, "colour": "#ddd9f3", "angular_distance": 2.5},
+    "sky": {"top_colour": "#51476f", "horizon_colour": "#6f7a9c", "ground_horizon_colour": "#696485", "ground_bottom_colour": "#303b3a", "energy": 1.0, "cloud_lit": "#b8b2cc", "cloud_shade": "#7e7896", "cloud_base": "#6c6686", "horizon_haze_colour": "#6f7a9c", "sun_colour": "#d8d0ec"},
+    "environment": {"ambient_colour": "#aab0bc", "ambient_energy": 1.65, "ambient_sky_contribution": 0.18, "exposure": 1.35, "fog_density": 0.00028, "fog_colour": "#6f7a9c", "fog_sky_affect": 0.0, "aerial_perspective": 0.35, "adjustment_enabled": true, "adjustment_brightness": 1.0, "adjustment_contrast": 1.06, "adjustment_saturation": 1.1, "player_character_rim_scale": 1.0}
+  },
+  "terrain": {
+    "grass": {"normal_depth": 0.38, "uv_scale": 0.5, "detiling_rotation": 0.35, "detiling_shift": 0.5},
+    "soil": {"normal_depth": 0.3, "uv_scale": 0.5, "detiling_rotation": 0.35, "detiling_shift": 0.5},
+    "rock": {"normal_depth": 0.5, "uv_scale": 0.24},
+    "path": {"normal_depth": 0.32, "uv_scale": 0.5},
+    "damp": {"normal_depth": 0.24, "uv_scale": 0.5},
+    "forest_floor": {"normal_depth": 0.36, "uv_scale": 0.5, "detiling_rotation": 0.35, "detiling_shift": 0.5}
+  },
+  "materials": {
+    "_comment": "Installed base textures, alpha masks, authored tint and emission remain authoritative. Metre-based relief and restrained broad variation unify opaque world surfaces; emissive effects and actor materials are excluded.",
+    "detail_size": 128,
+    "noise_seed": 41013,
+    "noise_frequency": 0.06,
+    "normal_bump_strength": 0.28,
+    "detail_uv_scale": 0.65,
+    "detail_low": "#e1e4e2",
+    "detail_high": "#ffffff",
+    "roughness_floor": 0.48,
+    "roughness_scale": 0.9,
+    "solid_specular": 0.28,
+    "foliage_specular": 0.16,
+    "shader_normal_strength": 0.12,
+    "shader_detail_strength": 0.075,
+    "shader_detail_frequency": 2.4,
+    "shader_roughness_scale": 0.92,
+    "shader_paths": [
+      "res://shaders/grass_field.gdshader",
+      "res://shaders/stone_field.gdshader",
+      "res://shaders/far_cover.gdshader",
+      "res://shaders/stormwood_ground_cover.gdshader",
+      "res://scripts/world/stormheart_canopy.gdshader",
+      "res://scripts/world/stormheart_cut_wood.gdshader",
+      "res://scripts/world/foliage_camera_visibility.gdshader"
+    ],
+    "world_roots": ["Vegetation", "StormwoodGroundCover", "StormheartTree", "Rootgate", "RodfolkSettlements", "StormwoodPockets", "StormwoodRodLine", "StormglassArches", "StormwoodRodStations", "GlassFieldPresentation", "StruckSentinelPresentation", "StormwoodHarvests", "StormwoodCamps"],
+    "world_groups": ["placed_building"]
+  }
+}

@@ -1,0 +1,77 @@
+{
+ "Ll": {
+  "anchor": false,
+  "label": "F38#0 P2-017",
+  "A": "/tmp/claude-0/cap/rows2/P2-017.png",
+  "B": "/tmp/claude-0/cap/rows2/P2-017.png"
+ },
+ "Cx": {
+  "anchor": false,
+  "label": "F38#0 P2-061",
+  "A": "/tmp/claude-0/cap/rows2/P2-061.png",
+  "B": "/tmp/claude-0/cap/rows2/P2-061.png"
+ },
+ "Kl": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Ea": {
+  "anchor": false,
+  "label": "F38#0 P2-060",
+  "A": "/tmp/claude-0/cap/rows2/P2-060.png",
+  "B": "/tmp/claude-0/cap/rows2/P2-060.png"
+ },
+ "Bv": {
+  "anchor": false,
+  "label": "F38#0 P2-058",
+  "A": "/tmp/claude-0/cap/rows2/P2-058.png",
+  "B": "/tmp/claude-0/cap/rows2/P2-058.png"
+ },
+ "Wi": {
+  "anchor": false,
+  "label": "F38#0 P2-016",
+  "A": "/tmp/claude-0/cap/rows2/P2-016.png",
+  "B": "/tmp/claude-0/cap/rows2/P2-016.png"
+ },
+ "Yk": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ },
+ "Rz": {
+  "anchor": false,
+  "label": "F38#0 P2-059",
+  "A": "/tmp/claude-0/cap/rows2/P2-059.png",
+  "B": "/tmp/claude-0/cap/rows2/P2-059.png"
+ },
+ "Up": {
+  "anchor": false,
+  "label": "F38#0 P2-018",
+  "A": "/tmp/claude-0/cap/rows2/P2-018.png",
+  "B": "/tmp/claude-0/cap/rows2/P2-018.png"
+ },
+ "Tr": {
+  "anchor": false,
+  "label": "F38#0 P2-019",
+  "A": "/tmp/claude-0/cap/rows2/P2-019.png",
+  "B": "/tmp/claude-0/cap/rows2/P2-019.png"
+ },
+ "Xz": {
+  "anchor": false,
+  "label": "F38#0 P2-020",
+  "A": "/tmp/claude-0/cap/rows2/P2-020.png",
+  "B": "/tmp/claude-0/cap/rows2/P2-020.png"
+ },
+ "Yy": {
+  "anchor": false,
+  "label": "F38#0 P2-015",
+  "A": "/tmp/claude-0/cap/rows2/P2-015.png",
+  "B": "/tmp/claude-0/cap/rows2/P2-015.png"
+ },
+ "Fm": {
+  "anchor": true,
+  "A": "f36_0_npc:C5A",
+  "B": "f36_0_npc:C5B"
+ }
+}

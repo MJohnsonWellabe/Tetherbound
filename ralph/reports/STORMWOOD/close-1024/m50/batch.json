@@ -1,0 +1,10 @@
+{"anchors": {
+  "craft:after": [6.5, 6.6, 6.3],
+  "craft:before": [5.4, 5.7, 5.2],
+  "f36_0_npc:C5A": [4.6, 4.7, 4.6],
+  "f36_0_npc:C5B": [4.6, 4.7, 4.5],
+  "f04_6_r22:r22": [5.8, 6.0, 5.6],
+  "f04_6_r22:control": [4.9, 5.2, 4.8]},
+ "candidates": {
+  "M50 storm grade OFF": [5.6, 5.7, 5.5],
+  "M50 storm grade ON (camera-relative rim, per-phase grade)": [5.6, 5.8, 5.5]}}

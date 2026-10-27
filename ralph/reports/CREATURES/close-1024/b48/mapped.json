@@ -1,0 +1,108 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.779,
+  "least_squares_slope": 0.9789,
+  "method": "linear",
+  "slope": 0.9789,
+  "intercept": 0.586,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.485,
+ "top_anchor_reference": 7.53,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C1A": {
+   "measured": 6.067,
+   "reference": 6.1,
+   "mapped": 6.525,
+   "residual": -0.425
+  },
+  "f36_0_gap:C1B": {
+   "measured": 5.2,
+   "reference": 5.33,
+   "mapped": 5.676,
+   "residual": -0.346
+  },
+  "f36_0_gap:C6A": {
+   "measured": 6.567,
+   "reference": 6.47,
+   "mapped": 7.014,
+   "residual": -0.544
+  },
+  "f36_0_gap:C6B": {
+   "measured": 5.6,
+   "reference": 6.9,
+   "mapped": 6.068,
+   "residual": 0.832
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.833,
+   "reference": 7.47,
+   "mapped": 7.275,
+   "residual": 0.195
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.8,
+   "reference": 7.53,
+   "mapped": 7.242,
+   "residual": 0.288
+  }
+ },
+ "candidates": {
+  "pu: stormtrail arcs": {
+   "measured_mean": 6.0,
+   "mapped_mean": 6.46,
+   "mapped_judges": [
+    6.56,
+    6.56,
+    6.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "pu: main": {
+   "measured_mean": 6.333,
+   "mapped_mean": 6.79,
+   "mapped_judges": [
+    6.66,
+    6.85,
+    6.85
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "rq: bolts (2ee02bfa)": {
+   "measured_mean": 6.0,
+   "mapped_mean": 6.46,
+   "mapped_judges": [
+    6.56,
+    6.56,
+    6.26
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "rq: arcs": {
+   "measured_mean": 5.8,
+   "mapped_mean": 6.26,
+   "mapped_judges": [
+    6.36,
+    6.36,
+    6.07
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

@@ -1,0 +1,619 @@
+diff --git a/data/config/water_roster.json b/data/config/water_roster.json
+index bf32aeca3..0681516c4 100644
+--- a/data/config/water_roster.json
++++ b/data/config/water_roster.json
+@@ -135,21 +135,14 @@
+       "placeholder": {
+         "source_species": "paddlenewt",
+         "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
+-        "model": "res://assets/creatures/tetherbound/aquaryn/models/creature_aquaryn_lod0.glb",
++        "model": "res://assets/creatures/tetherbound/aquaryn/candidate_b5/models/creature_aquaryn_b5.glb",
+         "source_height_m": 2.15,
+         "target_height_m": 5.0,
+         "model_scale": 1.0,
+         "model_yaw": 0.0,
+-        "animations": {
+-          "idle": "idle",
+-          "walk": "walk",
+-          "run": "run",
+-          "attack": "attack",
+-          "hit": "hit",
+-          "faint": "faint"
+-        },
++        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+         "presentation_intent": "White chest blue back turquoise fins orange crests",
+-        "replacement_model": "res://assets/creatures/tetherbound/aquaryn/models/creature_aquaryn_lod0.glb",
++        "replacement_model": "res://assets/creatures/tetherbound/aquaryn/candidate_b5/models/creature_aquaryn_b5.glb",
+         "replacement_binding": "res://data/creatures/species.json#species/aquaryn/placeholder/model",
+         "status": "installed_species_mesh",
+         "_comment": "Runtime presentation uses the installed species mesh and authored animation bindings. Visual acceptance remains separate."
+@@ -186,21 +179,14 @@
+       "placeholder": {
+         "source_species": "paddlenewt",
+         "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
+-        "model": "res://assets/creatures/tetherbound/tidecoil/models/creature_tidecoil_lod0.glb",
++        "model": "res://assets/creatures/tetherbound/tidecoil/candidate_b5/models/creature_tidecoil_b5.glb",
+         "source_height_m": 2.15,
+         "target_height_m": 5.5,
+         "model_scale": 1.0,
+         "model_yaw": 0.0,
+-        "animations": {
+-          "idle": "idle",
+-          "walk": "walk",
+-          "run": "run",
+-          "attack": "attack",
+-          "hit": "hit",
+-          "faint": "faint"
+-        },
++        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+         "presentation_intent": "Navy scales coral fin edges",
+-        "replacement_model": "res://assets/creatures/tetherbound/tidecoil/models/creature_tidecoil_lod0.glb",
++        "replacement_model": "res://assets/creatures/tetherbound/tidecoil/candidate_b5/models/creature_tidecoil_b5.glb",
+         "replacement_binding": "res://data/creatures/species.json#species/tidecoil/placeholder/model",
+         "status": "installed_species_mesh",
+         "_comment": "Runtime presentation uses the installed species mesh and authored animation bindings. Visual acceptance remains separate."
+@@ -382,7 +368,9 @@
+       "placeholder": {
+         "source_species": "paddlenewt",
+         "source_definition": "res://data/creatures/species.json#species/paddlenewt/placeholder",
+-        "model": "res://assets/creatures/tetherbound/riverdrake/models/creature_riverdrake_lod0.glb",
++        "model": "res://assets/creatures/tetherbound/riverdrake/candidate_nat1022/models/creature_riverdrake_nat1022.glb",
++        "colourway_source_species": "riverdrake_nat1022",
++        "_comment_model_nat1022": "Close-1024: the naturalistic pilot, as the land form, with its own clips (level swim, legs folded). b6 (CPU three-judge yardstick, confirming batch): water form mapped 7.00 vs installed 6.36 (CPU-provisional). Mount and saddle offsets unchanged: the pilot back measures about 2.49 m at the seat at 4.15 m, under the 2.739 m seat; production mounted-swimming smoke on water_riverdrake 19/19 checks.",
+         "source_height_m": 2.15,
+         "target_height_m": 4.15,
+         "model_scale": 1.0,
+@@ -392,11 +380,16 @@
+           "walk": "walk",
+           "run": "run",
+           "attack": "attack",
++          "charged": "charged",
+           "hit": "hit",
+-          "faint": "faint"
++          "faint": "faint",
++          "rest": "rest",
++          "swim": "swim",
++          "fly_grip": "fly_grip",
++          "ride": "ride"
+         },
+         "presentation_intent": "Blue back pale chest orange fin tips",
+-        "replacement_model": "res://assets/creatures/tetherbound/riverdrake/models/creature_riverdrake_lod0.glb",
++        "replacement_model": "res://assets/creatures/tetherbound/riverdrake/candidate_nat1022/models/creature_riverdrake_nat1022.glb",
+         "replacement_binding": "res://data/creatures/species.json#species/riverdrake/placeholder/model",
+         "status": "installed_species_mesh",
+         "_comment": "Runtime presentation uses the installed species mesh and authored animation bindings. Visual acceptance remains separate."
+diff --git a/data/creatures/aspect_variants.json b/data/creatures/aspect_variants.json
+index 34ecec392..c497aaa66 100644
+--- a/data/creatures/aspect_variants.json
++++ b/data/creatures/aspect_variants.json
+@@ -43,7 +43,8 @@
+           "set_hue": 270,
+           "set_sat": 0.05,
+           "val_scale": 0.6
+-        }
++        },
++        {"_why": "GPU batch 2 (6c12bf6f6): the mustard-yellow fill between the black back plates broke the silhouette into noise. Pull it to the same violet charcoal as the coat so the plates read as one armoured mass.", "match": {"hue": [40, 85], "sat_min": 0.25}, "set_hue": 266, "set_sat": 0.1, "val_scale": 0.55}
+       ],
+       "finish": {
+         "feature_percentile": 3.0,
+diff --git a/data/creatures/creature_touches.json b/data/creatures/creature_touches.json
+index c764627e9..f716858a5 100644
+--- a/data/creatures/creature_touches.json
++++ b/data/creatures/creature_touches.json
+@@ -31,7 +31,7 @@
+      "y_max": 0.7
+     },
+     "mode": "shade",
+-    "val_scale": 1.9,
++    "val_scale": 2.5,
+     "sat_scale": 0.3,
+     "coverage": 0.45,
+     "grain": 6.0,
+@@ -43,6 +43,60 @@
+   "_why_gpu_1024": "GPU A+C (24 Oct): invisible at stage distance and 'a plain real-world boar'. Bolder hardened hide and scar, plus amber earth-glow seams cracking the shoulder hide (glow); the tusks are the nat1024t build.",
+   "_why_close1024_b26": "b26 (CPU, three judges): the amber seam shell read as gold glitter or an artefact on fur (-0.6 mapped), so the glow is off; the bolder weathering stays for b27."
+  },
++ "terrapup": {
++  "source_model": "terrapup/candidate_dog3",
++  "_why": "b26 judges read dog3's coat as orange-red (red is Team Tether's). Pull the chestnut toward brown: less saturation, value unchanged.",
++  "overlays": [
++   {
++    "id": "chestnut_not_red",
++    "mode": "shade",
++    "sat_scale": 0.72,
++    "val_scale": 0.97,
++    "match": {
++     "hue": [
++      0,
++      40
++     ],
++     "sat_min": 0.3
++    },
++    "softness": 0.05
++   },
++   {
++    "id": "plates_into_fur",
++    "_why": "Tier 3 (coordinator queue): the green stone plates read as stuck-on stones over the coat. Desaturate and darken them toward a weathered, earth-grey stone, so they read as hardened plates grown into the fur. GPU 25 Oct (0aad259db): still a separate blanket; darker weathered value.",
++    "match": {
++     "hue": [
++      70,
++      175
++     ],
++     "sat_min": 0.1
++    },
++    "mode": "shade",
++    "sat_scale": 0.38,
++    "val_scale": 0.62,
++    "coverage": 0.95,
++    "grain": 3.0,
++    "clump_softness": 0.2,
++    "softness": 0.15
++   },
++   {
++    "id": "moss_at_plate_edges",
++    "_why": "GPU 25 Oct (0aad259db) path to 7.5: blend the plates into the fur. Clumps of moss creep from the plates onto the coat of the upper back, so plate and fur share an edge instead of a hard border.",
++    "where": {
++     "y_min": 0.7,
++     "up_min": 0.25
++    },
++    "mode": "grow",
++    "color": "#556232",
++    "shade": "#2d391b",
++    "coverage": 0.38,
++    "grain": 6.0,
++    "clump_softness": 0.16,
++    "softness": 0.15
++   }
++  ]
++ },
++ "_why_close1024_b27_trailpup": "b27 (CPU, three judges, confirming batch): Trailpup's bolder weathering mapped 7.51 against shipping 7.88. The pale scar lines read as a texture seam on the shoulder and foreleg. Trailpup stays on its shipping albedo; the b24 light touch was score-neutral and invisible at stage distance.",
+  "trailpup": {
+   "source_model": "trailpup/candidate_nat1024",
+   "overlays": [
+@@ -84,5 +138,26 @@
+     "softness": 0.12
+    }
+   ]
++ },
++ "mirejaw": {
++  "source_model": "mirejaw/candidate",
++  "_why": "GPU batch 2 (tb/gpu-pass 6c12bf6f6): the faint end's near-black back read as 'a dark smear' (2 of 3). A belly-to-camera roll lost on CPU (b34, belly-up read), so the pose stays and the back's darkest scales lift toward a mossy charcoal, keeping the gold scale net.",
++  "overlays": [
++   {
++    "id": "lift_dark_back",
++    "_why": "Lift only the near-black scale fill on the upper body so the back keeps a value structure instead of a black mass.",
++    "where": {
++     "up_min": 0.1
++    },
++    "match": {
++     "val_max": 0.22
++    },
++    "mode": "shade",
++    "val_scale": 2.5,
++    "sat_scale": 1.1,
++    "coverage": 1.0,
++    "softness": 0.12
++   }
++  ]
+  }
+-}
+\ No newline at end of file
++}
+diff --git a/data/creatures/f36_pose_candidates.json b/data/creatures/f36_pose_candidates.json
+index 2e7d3cec9..98c8f7fbf 100644
+--- a/data/creatures/f36_pose_candidates.json
++++ b/data/creatures/f36_pose_candidates.json
+@@ -1,6 +1,7 @@
+ {
+-  "enabled_species": ["brooktail","ashtusk","sparkit","shadelet","frostclaw","cannonback","riptusk","mirejaw","torrentoad","cragclaw","sirenseal","mangrove_monitor","voltwig","mosshock","staticub","stormbrush","thundertunnel","skyrill","cloudfang","cliffspike","water_cragclaw","water_torrentoad","water_riptusk","water_abyssal_guardian","water_aquaryn","water_mangrove_monitor","water_sirenseal","water_tidecoil","water_mirejaw","stormursa","tuskroot","abyssal_guardian","galewisp","tanglevolt","fulgocobra","stormcapra","voltarach","aquaryn","tidecoil","breezetail","craghorn","aeriex","solmane","glimmermoth","tempestwing","ribbonray","riverdrake","water_riverdrake"],
++  "enabled_species": ["brooktail","ashtusk","sparkit","shadelet","frostclaw","cannonback","riptusk","mirejaw","torrentoad","cragclaw","sirenseal","mangrove_monitor","voltwig","mosshock","staticub","stormbrush","thundertunnel","skyrill","cloudfang","cliffspike","water_cragclaw","water_torrentoad","water_riptusk","water_abyssal_guardian","water_mangrove_monitor","water_sirenseal","water_mirejaw","stormursa","tuskroot","abyssal_guardian","galewisp","tanglevolt","fulgocobra","stormcapra","voltarach","breezetail","craghorn","aeriex","solmane","glimmermoth","tempestwing","ribbonray","riverdrake","water_riverdrake"],
+   "_why_gpu_1024_f36_1": "GPU F36#1 on main (tb/gpu-pass e162526fe, Medium/High, three judges per batch): Galecrest's recipe 6.62 vs shipping 6.72 and Stormraven's 5.81 vs 6.09 mapped judged worse than shipping, so both leave enabled_species (judged-worse rule). GPU-confirmed at 7.5 or more: Tanglevolt 7.89, Frostclaw 7.88, Stormcapra 7.79, Cloudfang 7.73, Breezetail 7.69, Craghorn 7.66.",
++  "_why_close1024_b23": "Close-1024 b23: Aquaryn and Tidecoil (and their water forms, which share the land mesh) move to the coordinator Meshy b5 naturalistic remakes and play their own clips, so they leave enabled_species. Their recipes stay in the post-pass profiles.",
+   "_why_close1024_b15": "Close-1024 b15 (CPU, three judges, confirming batch): Riverdrake's land form plays its f36 recipe, 6.80 vs 6.20 mapped (hit FIXED x3, faint PARTIAL x3). Land only: the lane keeps its naturalistic pilot bound.",
+   "_why_close1024_b14": "Close-1024 b14 (CPU, three judges, confirming batch): the Pebbik batch-4 naturalistic remake (7.16 vs 5.69) plays its own clips, so it leaves enabled_species. Riptusk's remake (7.81 vs 6.88) is held OFF on the land: its water form must move to the same mesh (water presentations share the land mesh) and be judged, and the rest-pose tests that sample Riptusk must move to a species that still plays its recipe.",
+   "_why_close1024_b13": "Close-1024 b13 (CPU, three judges, confirming batch; base = the roster shipping tiles): water forms play their base species' recipe once their water_ id is enabled, which gives them a swim pose and replaces the base-rig fallback. Riptusk 7.46 vs 5.74, Abyssal Guardian 7.36 vs 5.36, Aquaryn 7.13 vs 5.46, Mangrove Monitor 6.94 vs 5.22, Sirenseal 6.94 vs 5.27 and Tidecoil 6.89 vs 5.27 mapped are ON. Mirejaw is ON below the bar (5.89 vs 4.31, faint not PRESENT). Cannonback's water form stays OFF (5.51 vs 6.03: belly-up faint). Tuskroot's topple (postpass) is 7.46 vs 6.17.",
+@@ -889,7 +890,7 @@
+     },
+     "mirejaw": {
+       "model": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native.glb",
+-      "source_sha256": "845f21cdb425203daf5799297a19f955db405ca48d57c7827d75b2485baa6778",
++      "source_sha256": "eefde0456f38fe7868251ea1e969c6d439211627379aa63301f7591b891eed0f",
+       "resource_uid": "uid://ndxneyofwy2e",
+       "rig_contract": {"root":{"parent":"","rest":[0.9999999999999994,-8.786949861316075e-16,-3.4228545331416165e-08,0,2.9289832837920164e-16,0.9999999999999999,-1.7114272665708096e-08,0,3.422854533141618e-08,1.7114272665708076e-08,0.9999999999999992,0,0,0,0,1]},"pelvis":{"parent":"root","rest":[0.999999999999998,6.012118124035199e-08,2.157146593638949e-08,0,-3.349433778259277e-08,0.20601029340416765,0.9785498500372121,0,5.4387626468578696e-08,-0.9785498500372107,0.2060102934041692,0,-1.9168000520153328e-09,1.399999737739563,0.05600005015730858,1]},"spine":{"parent":"pelvis","rest":[0.9999999999998507,4.182160015532379e-08,-5.449733968668043e-07,0,-4.227138208196542e-09,0.9976303222392418,0.06880218166827763,0,5.465593702642103e-07,-0.06880217756733546,0.9976302627756919,0,-1.1628220765837541e-14,1.0873231887817383,1.7881393432617188e-07,1]},"neck":{"parent":"spine","rest":[0.9999999999995556,3.465349832083006e-07,-8.768438029594538e-07,0,-1.3816215753465064e-07,0.9738258564666372,0.2272954034992241,0,9.326589215283461e-07,-0.22729538995114018,0.973825798421708,0,1.2457661855216906e-13,1.2156647443771362,-2.682209014892578e-07,1]},"head":{"parent":"neck","rest":[0.9999999999998034,5.738073103245275e-08,6.244431554946016e-07,0,-9.698911177302077e-08,0.9979744475307034,0.06361605178256365,0,-6.195279775243039e-07,-0.06361605178261169,0.9979744475305128,0,-1.2579789098431104e-13,0.6185400485992432,8.940696716308594e-08,1]},"front_upper_l":{"parent":"spine","rest":[0.683006113115861,-0.4547286798718661,0.5715980388869826,0,-0.3713732488848107,0.45766871672574205,0.8078498570063222,0,-0.6289550702631901,-0.7640426625947367,0.1437164722860411,0,-1.0886402130126953,1.644533634185791,0.3708256185054779,1]},"front_lower_l":{"parent":"front_upper_l","rest":[0.6830064386064679,-0.3713726213220434,-0.628955059981822,0,0.499313337602879,0.8658679714091623,0.030963368608614934,0,0.5330930636206498,-0.33519380759288264,0.7768246541390796,0,3.8743019104003906e-07,1.139986515045166,9.238719940185547e-07,1]},"front_upper_r":{"parent":"spine","rest":[0.6830069601634489,0.45472866333914963,-0.571597167237271,0,0.37137212069539843,0.45766898000036904,0.8078502757419642,0,0.6289548948121115,-0.764042521267454,0.14371753367827722,0,1.088639736175537,1.644533395767212,0.3708269000053406,1]},"front_lower_r":{"parent":"front_upper_r","rest":[0.6830065837359096,0.37137261529111765,0.62895503144099,0,-0.49931331398677314,0.8658679908912005,0.030963468786006008,0,-0.5330930199902959,-0.33519383285326393,0.7768247674271135,0,-5.066394805908203e-07,1.139986515045166,9.834766387939453e-07,1]},"tail_1":{"parent":"pelvis","rest":[0.9999999999999925,-4.6002281555896165e-09,1.227061326951705e-07,0,4.600189963914964e-09,-0.9971931299005665,-0.07487405620927978,0,1.227070849281824e-07,0.0748746363786778,-0.9972008567550554,0,-1.5682132925576298e-08,-0.8263082504272461,0.25524696707725525,1]},"tail_2":{"parent":"tail_1","rest":[1.0,5.124002043293395e-09,2.0550616323970736e-09,0,-5.281698547347091e-09,0.9962980837304387,0.08596585654017996,0,-1.6069646541659386e-09,-0.08596585141621563,0.9962980243464453,0,1.2946962126253025e-15,1.2711507081985474,-2.9802322387695312e-08,1]},"tail_3":{"parent":"tail_2","rest":[0.9999999999999987,8.195889803562155e-10,5.219931022784068e-08,0,-6.556366319865343e-09,0.9939319545853493,0.10999668388231489,0,-5.179241039996893e-08,-0.10999668388231508,0.993931954585348,0,-1.0957457068972755e-14,1.2053015232086182,1.7881393432617188e-07,1]},"rear_upper_l":{"parent":"pelvis","rest":[0.903735743352611,-0.4120921264528189,0.11593823812739108,0,-0.3793683089623736,-0.6454671015121098,0.6629118017314595,0,-0.19834642357755117,-0.643080422491076,-0.7396664281253962,0,-1.048319935798645,0.04470416158437729,-0.07643008977174759,1]},"rear_lower_l":{"parent":"rear_upper_l","rest":[0.9037357165646522,-0.37936832489370076,-0.19834675439438954,0,0.08379652814289429,0.6111332409762635,-0.7870796205714328,0,0.41980936481055053,0.6946911985299806,0.5840926836962907,0,7.450580596923828e-08,1.0746287107467651,1.1920928955078125e-07,1]},"rear_upper_r":{"parent":"pelvis","rest":[0.903735743352611,0.4120921264528189,-0.11593823812739108,0,0.3793683089623736,-0.6454671015121098,0.6629118017314595,0,0.19834642357755117,-0.643080422491076,-0.7396664281253962,0,1.048319935798645,0.04470415413379669,-0.07642996311187744,1]},"rear_lower_r":{"parent":"rear_upper_r","rest":[0.9037356574806048,0.379368352667463,0.19834668341356884,0,-0.08379658268424617,0.6111331751230065,-0.7870796795795147,0,-0.4198093464827828,0.6946912030423051,0.5840926091756449,0,-1.4901161193847656e-08,1.0746287107467651,2.9802322387695312e-08,1]}},
+       "bind_contract": {"root":[1.0,1.1715933145108092e-15,3.422854533141617e-08,-0.0,-1.1715933145108092e-15,1.0,3.422854533141617e-08,0.0,-3.422854533141617e-08,-4.010193344352739e-23,1.0,-0.0,-0.0,0.0,-0.0,1.0],"pelvis":[1.0,8.881784197001252e-16,6.143906006172983e-08,-0.0,6.012118092257879e-08,0.20601025223731995,-0.9785498380661011,0.0,-1.2657074499600185e-08,0.9785498380661011,0.20601022243499756,-0.0,-8.346084001686904e-08,-0.3432130813598633,1.3584328889846802,1.0],"spine":[1.0,7.105427357601002e-15,6.078528258512961e-07,-0.0,6.020204637025017e-07,0.1381957232952118,-0.9904049634933472,0.0,-8.400264306374083e-08,0.9904049038887024,0.1381956934928894,-0.0,-8.83597692791227e-07,-1.3336831331253052,1.453637719154358,1.0],"neck":[1.0,4.263256414560601e-14,1.524601771052403e-06,-0.0,1.518340468464885e-06,-0.09053592383861542,-0.9958932399749756,0.0,1.3803123977140785e-07,0.995893120765686,-0.09053592383861542,-0.0,-3.0416495064855553e-06,-2.1522157192230225,1.9950453042984009,1.0],"head":[1.0,5.684341886080802e-14,9.019856861414155e-07,-0.0,8.912667226468329e-07,-0.1537073403596878,-0.9881165027618408,0.0,1.3864176651168236e-07,0.9881163835525513,-0.1537073254585266,-0.0,-1.954844947249512e-06,-2.6382267475128174,2.167268753051758,1.0],"front_upper_l":[0.6830065846443176,-0.37137264013290405,-0.6289550065994263,-0.0,-0.6289547085762024,-0.7368506789207458,-0.24792543053627014,0.0,-0.37137317657470703,0.5649188756942749,-0.7368504405021667,-0.0,2.716761350631714,-0.8925789594650269,1.7463972568511963,1.0],"front_lower_l":[1.0000001192092896,7.499417620238091e-08,1.1510721975582783e-07,-0.0,3.4139681304168334e-08,-0.9597375392913818,-0.2808983027935028,0.0,1.7632339677220443e-07,0.28089824318885803,-0.9597376585006714,-0.0,1.511999487876892,-0.3493441641330719,3.486234664916992,1.0],"front_upper_r":[0.6830065250396729,0.3713725805282593,0.6289548873901367,-0.0,0.6289545297622681,-0.7368506193161011,-0.2479255050420761,0.0,0.37137314677238464,0.5649187564849854,-0.7368503212928772,-0.0,-2.7167608737945557,-0.8925784230232239,1.7463971376419067,1.0],"front_lower_r":[0.9999998807907104,2.0230986663705153e-08,3.697381956158097e-08,-0.0,-4.2990755844130035e-08,-0.9597374200820923,-0.28089824318885803,0.0,-8.057506306613504e-08,0.2808980941772461,-0.9597374200820923,-0.0,-1.511999249458313,-0.34934377670288086,3.4862334728240967,1.0],"tail_1":[1.0,-2.664514295034931e-15,6.143952191450808e-08,-0.0,-6.090009918580108e-08,-0.13216426968574524,0.9912201166152954,0.0,8.12000777727917e-09,-0.9912278056144714,-0.13216263055801392,-0.0,6.536609475915611e-08,-0.5643388628959656,-1.0639094114303589,1.0],"tail_2":[1.0,-2.220428579195776e-16,5.960511373359623e-08,-0.0,-5.954029091981283e-08,-0.046463921666145325,0.9989123344421387,0.0,2.7693518589444466e-09,-0.9989197850227356,-0.04646162688732147,-0.0,5.3774638075765324e-08,-1.9201545715332031,-0.9021814465522766,1.0],"tail_3":[1.0,-1.6098106802122682e-15,7.451014916171061e-09,-0.0,-7.435837723335226e-09,0.06369508057832718,0.9979617595672607,0.0,-4.746167348024244e-10,-0.9979689121246338,0.0636981800198555,-0.0,4.119798280299847e-09,-3.2057275772094727,-0.5529173016548157,1.0],"rear_upper_l":[0.903735876083374,-0.37936830520629883,-0.19834651052951813,-0.0,-0.1983465552330017,-0.7816652059555054,0.5913192629814148,0.0,-0.37936827540397644,-0.4950549006462097,-0.7816651463508606,-0.0,1.2736173868179321,0.8038761615753174,-1.019788384437561,1.0],"rear_lower_l":[1.0000001192092896,-1.0150361617888848e-07,1.8765972242817952e-07,-0.0,-4.3601311006113974e-08,-0.9597375988960266,-0.28089839220046997,0.0,2.223662534106552e-07,0.28089848160743713,-0.9597374796867371,-0.0,1.4560002088546753,0.7439135313034058,-0.24906399846076965,1.0],"rear_upper_r":[0.9037358164787292,0.3793683350086212,0.19834642112255096,-0.0,0.1983465999364853,-0.7816650867462158,0.5913193225860596,0.0,0.37936821579933167,-0.49505487084388733,-0.781665027141571,-0.0,-1.2736175060272217,0.8038759827613831,-1.019788384437561,1.0],"rear_lower_r":[1.0000001192092896,1.4440722395647754e-07,-1.7510257066533086e-07,-0.0,4.360130034797294e-08,-0.9597375392913818,-0.28089845180511475,0.0,-2.2236623919980048e-07,0.2808985114097595,-0.9597374200820923,-0.0,-1.4560003280639648,0.7439135909080505,-0.24906393885612488,1.0]},
+diff --git a/data/creatures/species.json b/data/creatures/species.json
+index 2597c6b98..06626d3b1 100644
+--- a/data/creatures/species.json
++++ b/data/creatures/species.json
+@@ -88,7 +88,7 @@
+         "requires_item": "saddle",
+         "_comment_shrink_owner_1024": "Owner 24 Oct: Just shrink it (exception to the never-shrink rule for this naturalistic pilot only). At 3.85 m the pilot is 6.84 m nose to tail and combat admission could not seat it in the Warrens mouth (6.0 m ring) or the Hall elite room (7.0 m) with the 0.6 m clearance, so the elite fight never formed. Uniform scale 3.85 -> 3.20 m (x0.8312): radius, seat and dismount distance scaled by the same ratio; still well above the 1.80 m trainer. Terrapup has no evolution line, so no ladder order changes.",
+         "_comment_mount_nat1022": "Close-1024: the naturalistic pilot's stone-plated back stands 3.71 m at the seat (measured on its ride clip; installed back about 3.10 m), so the seat rose 3.264 -> 3.80 m at 3.85 m; after the owner's 24 Oct shrink to 3.20 m the back measures 3.08 m and the seat is 3.16 m, inside the declared height (test_rideable_roster).",
+-        "mount_offset": [0.0, 3.16, -0.208696],
++        "mount_offset": [0.0, 2.36, 0.0],
+         "ride_speed_multiplier": 1.7,
+         "dismount_distance": 2.226087
+       },
+@@ -96,11 +96,13 @@
+         "colour": "#8a6138",
+         "_comment_height_2026_08_31": "Was 2.00m (D19). BACKLOG-VISUAL-STARTER-SCALE/BACKLOG-VISUAL-BADGER-LINE-SCALE (see `_comment_starter_scale_2026_08_31` above): 2.00m rendered taller than the 1.80m trainer AND taller than this line's own adult, Burrowback (1.70m, untouched by this pass) -- a starter should not loom over the player, and a cub should not outsize the adult it is thematically paired with in the census. Dropped to 1.62m, verified by direct re-render (creature_body._fit() at this height is comfortably below its footprint-volume clamp threshold for this model, so the render-measured height equals the declared 1.62m exactly -- checked, not assumed). `radius` dropped by the identical ratio (0.81x) per D12's 'radii scale with height' rule, so the hit cone and catch-accuracy bonus stay tuned relative to the creature's own new size rather than becoming proportionally larger. SUPERSEDED 2026-09-01, see `_comment_height_2026_09_01_correction` below -- kept verbatim as the historical record of what the 08-31 pass did and why, not amended.",
+         "_comment_height_2026_09_01_correction": "OD-0901-1 (`archive/owner/OWNER_DIRECTIVES_2026-09-01.md`): the owner directly overrode the 08-31 cut above -- 'I think almost all creatures should stand taller than the character. That's part of the allure of the game.' A starter looming over the player is the intended read, not the defect the census called it. Raised to 2.30m: past the pre-08-31 value of 2.00m (D19), not merely back to it, per the owner's explicit instruction not to just undo the cut. `radius` raised by the same ratio in reverse (radius/height held at Terrapup's own 0.3802 constant, per D12), giving 0.8746 -- so the hit cone and catch-accuracy bonus track the new size exactly as they tracked the old one. Verified by direct re-render with tools/_capture_creature_roster.gd: render-measured height equals the declared 2.30m (creature_body._fit()'s footprint-volume clamp does not engage at this height for this model). Burrowback (the 'badger line' pairing from defect 65) is deliberately left untouched -- see the ripplet entry's 2026-09-01 comment for the reasoning, which applies equally here.",
++        "_comment_species_dog3_1024": "Coordinator Meshy terrapup_dog3 c1 (tb/meshy-1024 42c192cbb: Bernese/Saint-Bernard redraft after GPU 7.09 read dog2 as an otter; provenance assets_raw/naturalistic-1024/terrapup_dog3/provenance.jsonl). Raw L/H 1.53 (dog2 1.66). Measured quadruped rig at 3.20 m (4.90 m long), dog2 clips with the +90 side-lying faint. Seat 2.58 m at z 0.0: lower and forward of dog2 (2.66 at -0.21), just under the back top (2.63-2.70 m there).",
++        "_comment_species_dog2_1024": "Owner 24 Oct: \"Terrapup is supposed to be a large dog, not a badger.\" Coordinator Meshy terrapup_dog2 c2 (mountain dog, brown coat, cream blaze/chest, teal eyes, mossy stone plates, amber seams; provenance candidate_dog2/source/meshy_provenance.jsonl), measured quadruped rig at 3.20 m, the nat1022 pilot clips. close-1024 b21 CPU sanity 7.46 vs the badger 7.65 (badger ruled wrong species); GPU to decide.",
+         "height": 3.2,
+         "radius": 1.216834,
+         "_comment_rest_roll": "OWNER-0912-TERRAPUP-LAY R41 keeps whole-body runtime roll disabled. The installed GLB now carries a dedicated authored rest clip: its skeletal root rolls around the rig's verified flank axis while the four legs, head, spine and tail fold as one animation. This replaces the R25-R38 attempt to rescue the crouching faint clip with runtime transforms.",
+         "rest_roll_deg": 0.0,
+-        "field_rim": 0.25,
++        "field_rim": 0.3,
+         "rest_use_body_pose": true,
+         "_comment_rest_pose": "R41 uses the dedicated baked rest clip and applies only a measured model translation after the clip completes. The final 90-degree flank pose uses mirrored local-Z limb tucks. The live-skin probe excludes CreatureBody's four-vertex ContactShadow helper from anatomical bounds: R40 grounded that helper while the visible creature hovered. The real unshifted skinned minimum is 1.1302m below the anchor plane, so +1.0302m targets 0.100m of bedding compression. The no-op root recipe preserves the authored final frame through the reversible rest lifecycle; no runtime skeletal distortion, mesh scaling or vertex deformation is used.",
+         "_comment_rest_nat1022": "Close-1024: the naturalistic pilot's own rest clip ends grounded (author_native_clips.py grounds every frame; Blender: lowest vertex 0.00 m, 3.05 m tall = 0.79 of standing), so the installed model's +1.0302 m translation is 0.",
+@@ -132,8 +134,8 @@
+         },
+         "_comment_footprint": "How long this body may be for its width, as a multiple of its collider diameter. A quadruped is genuinely several times longer than it is wide; a frog is not. Set too low and creature_body._fit() scales the model DOWN to fit the allowance and the creature renders shorter than its own collider claims \u2014 silently, until MA4.",
+         "_comment_model_nat1022": "F36#0 owner style direction 22 Oct: naturalistic pilot (coordinator Meshy, candidate_nat1022; measured quadruped rig, own clips; provenance in candidate_nat1022/source/meshy_provenance.jsonl, drafted reference reference/nat1022-concept.png). Close-1024 b1 (CPU, three judges, confirming batch): mapped 7.62 vs live 5.30 (CPU-provisional). Field rim 0.25, no albedo lift (it blew out the plates).",
+-        "model": "res://assets/creatures/tetherbound/terrapup/candidate_nat1022/models/creature_terrapup_nat1022.glb",
+-        "colourway_source_species": "terrapup_nat1022",
++        "model": "res://assets/creatures/tetherbound/terrapup/candidate_dog3/models/creature_terrapup_dog3.glb",
++        "colourway_source_species": "terrapup_dog2",
+         "model_scale": 1.0,
+         "model_yaw": 0.0,
+         "_comment_field_emission_0901": "OWNER DIRECTIVE 2026-09-01 ('some of the smaller creatures blend into the environment too well'), revisited 2026-09-25 under the owner's lane-session direction that Terrapup's shell is grey STONE (sheet 01) and should 'look good'. History: 1.4 was chosen on 09-01 when the shell was an olive/mint block, from a sweep that put 1.4 at 1.124/1.070 on that texture and that probe framing. Re-measured 2026-09-25 on the stone-plate texture with tools/_probe_grass_separation.gd --species=terrapup --extra-emission=0.6,0.8,1.0,1.2,1.4 and tools/_grass_separation_ratio.py, creature box (490,225)-(795,445) vs grass boxes (150,260,380,340) / (100,440,420,640): DAY 0.6->0.635/0.762, 0.8->0.685/0.822, 1.0->0.725/0.870, 1.2->0.753/0.907, 1.4->0.776/0.935; NIGHT 0.6->0.444/0.531, 1.0->0.510/0.611, 1.4->0.574/0.688. No value up to 1.4 reaches the old 1.06 luminance target in the current probe framing (the box is mostly shaded coat), so 1.4 no longer meets it either; the trend would need ~3.0, which renders the plates white and the moss lime (seen in the 2026-09-25 world A/B). 0.6 is kept because separation now comes from the pale grey plates against the dark coat and the green field (hue and in-body value contrast), which two code-blind judge rounds preferred to the 1.4 look ('grey-on-brown contrast lifts the silhouette day and night'). The 1.06 luminance bar is therefore NOT claimed as met at 0.6. TUNABLE.",
+@@ -356,6 +358,7 @@
+       },
+       "placeholder": {
+         "colour": "#6e492c",
++        "_comment_tusks_1024": "Owner 24 Oct (GPU F36#0 sheet): Mudsnout close, \"maybe needs a tusk\". candidate_nat1024t = the nat1024 remake plus two small ivory tusks at the snout (source/add_tusks.py, skinned to the head), same clips. close-1024 b20 CPU 7.46 vs 7.33; GPU to decide.",
+         "height": 2.0,
+         "radius": 0.8,
+         "_comment_footprint": "A low piglet is much longer than it is tall.",
+@@ -1067,6 +1070,7 @@
+       },
+       "placeholder": {
+         "colour": "#2a2430",
++        "_why_rim_1025": "GPU batch 2 (tb/gpu-pass 6c12bf6f6) path to 7.5: a dark body needs a rim light to separate from the ground; same opt-in strength as Terrapup.", "field_rim": 0.3,
+         "height": 3.5,
+         "radius": 1.268167,
+         "footprint_allowance": 3.2,
+@@ -1148,6 +1152,7 @@
+       },
+       "placeholder": {
+         "colour": "#1d6b8c",
++        "_why_rim_1025": "GPU batch 2 (tb/gpu-pass 6c12bf6f6) path to 7.5: a dark body needs a rim light to separate from the ground; same opt-in strength as Terrapup.", "field_rim": 0.3,
+         "height": 2.15,
+         "radius": 0.716043,
+         "footprint_allowance": 4.8,
+@@ -1258,6 +1263,8 @@
+     },
+     "cindercub": {
+       "display_name": "Cindercub",
++      "touch_vfx": "cindercub_embers",
++      "_comment_touch_vfx": "Owner touch pass, 24 Oct 2026: a few faint ember motes off the back (scripts/creatures/vfx/aspect_vfx.gd `cindercub_embers`). Not an Aspect variant, so the shiny/vivid ladder still applies.",
+       "type": "fire",
+       "type_secondary": "ground",
+       "_why": "Sheet 4, brief section 4. Fire/Ground, 'balanced' role and the most even statline of the new creatures on purpose -- the brief asks for 'personality rather than simply functioning as an enemy'. `aggressive` FALSE: 'curious; moderately territorial; not automatically hyper-aggressive... sometimes resting/sleeping near warm objects'. Its charged is Ground (`rootquake`) against a Fire quick so both halves of its typing are visible in play.",
+@@ -1524,17 +1531,13 @@
+         "height": 3.4,
+         "radius": 1.19,
+         "footprint_allowance": 3.0,
+-        "model": "res://assets/creatures/tetherbound/aquaryn/models/creature_aquaryn_lod0.glb",
++        "model": "res://assets/creatures/tetherbound/aquaryn/candidate_b5/models/creature_aquaryn_b5.glb",
++        "colourway_source_species": "aquaryn_b5",
++        "field_emission": 0.0,
++        "_comment_remake_b5": "Close-1024 coordinator Meshy b5 naturalistic remake (navy back, ivory belly, matte scales; provenance candidate_b5/source/meshy_provenance.jsonl), measured quadruped rig, own clips (Ripplet nat1024b script: recoil hit, -90 faint, sunk swim). b23 CPU pick 7.30 vs 7.30 (tie; judges split navy vs cyan); GPU to decide.",
+         "model_scale": 1.0,
+         "model_yaw": 0.0,
+-        "animations": {
+-          "idle": "idle",
+-          "walk": "walk",
+-          "run": "run",
+-          "attack": "attack",
+-          "hit": "hit",
+-          "faint": "faint"
+-        },
++        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+         "_comment_placeholder_stats": "T1-CREATURE-RIG-FIX-2026-09-07: the model itself succeeded after 2 redos (a crop bug fed the wrong section of the reference board, causing a floating leg then a multi-leg pileup before a correctly-cropped board fixed it), but rig_quadruped.py's bone-heat weighting then failed to converge on the corrected mesh (100% of vertices left unweighted). Fixed via strip_textures.py -> cleanup_mesh.py (voxel-remesh to one manifold donor) -> rig_quadruped.py on the clean donor (0 unweighted) -> skin_transfer.py (nearest-face weight transfer onto the real textured mesh, 0 unweighted after transfer) -> animate_quadruped.py, verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+       },
+       "learnset": "aquaryn"
+@@ -1643,7 +1646,9 @@
+         "height": 4.0,
+         "radius": 1.4,
+         "footprint_allowance": 3.2,
+-        "model": "res://assets/creatures/tetherbound/riverdrake/models/creature_riverdrake_lod0.glb",
++        "_comment_model_nat1022": "F36#0 owner style direction 22 Oct: naturalistic remake (coordinator Meshy, candidate_nat1022; measured quadruped rig, own clips; provenance candidate_nat1022/source/meshy_provenance.jsonl, drafted concept reference/nat1022-concept.png). close-1024 b1: mapped 7.29 vs live 4.78; water form b6 7.00 vs 6.36 (CPU three-judge yardstick, confirming batch; CPU-provisional).",
++        "model": "res://assets/creatures/tetherbound/riverdrake/candidate_nat1022/models/creature_riverdrake_nat1022.glb",
++        "colourway_source_species": "riverdrake_nat1022",
+         "model_scale": 1.0,
+         "model_yaw": 0.0,
+         "animations": {
+@@ -1651,8 +1656,13 @@
+           "walk": "walk",
+           "run": "run",
+           "attack": "attack",
++          "charged": "charged",
+           "hit": "hit",
+-          "faint": "faint"
++          "faint": "faint",
++          "rest": "rest",
++          "swim": "swim",
++          "fly_grip": "fly_grip",
++          "ride": "ride"
+         },
+         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+       },
+@@ -1760,17 +1770,13 @@
+         "height": 5.5,
+         "radius": 1.925,
+         "footprint_allowance": 3.0,
+-        "model": "res://assets/creatures/tetherbound/tidecoil/models/creature_tidecoil_lod0.glb",
++        "model": "res://assets/creatures/tetherbound/tidecoil/candidate_b5/models/creature_tidecoil_b5.glb",
++        "colourway_source_species": "tidecoil_b5",
++        "field_emission": 0.0,
++        "_comment_remake_b5": "Close-1024 coordinator Meshy b5 naturalistic remake (navy back, ivory belly, matte scales; provenance candidate_b5/source/meshy_provenance.jsonl), measured quadruped rig, own clips (Ripplet nat1024b script: recoil hit, -90 faint, sunk swim). b23 CPU pick 7.26 vs 6.39; GPU to decide.",
+         "model_scale": 1.0,
+         "model_yaw": 0.0,
+-        "animations": {
+-          "idle": "idle",
+-          "walk": "walk",
+-          "run": "run",
+-          "attack": "attack",
+-          "hit": "hit",
+-          "faint": "faint"
+-        },
++        "animations": {"idle": "idle", "walk": "walk", "run": "run", "attack": "attack", "charged": "charged", "hit": "hit", "faint": "faint", "rest": "rest", "swim": "swim", "fly_grip": "fly_grip", "ride": "ride"},
+         "_comment_placeholder_stats": "T1-CREATURE-RIG-2026-09-07: modelled (Meshy multi-image-to-3d, refine tier), rigged via rig_quadruped.py, animated via animate_quadruped.py -- same pipeline as sparkit/terrapup -- and verified against a rendered turntable before wiring in. moves/base stats reuse the existing per-type move pool rather than being individually balanced; this is a placeholder combat profile, not a tuned one. See docs/art/BIOME_2_3_4_CREATURE_ROSTER.md."
+       },
+       "learnset": "tidecoil"
+diff --git a/scripts/creatures/creature_body.gd b/scripts/creatures/creature_body.gd
+index 77cc77f4f..3f2ceca12 100644
+--- a/scripts/creatures/creature_body.gd
++++ b/scripts/creatures/creature_body.gd
+@@ -263,6 +263,8 @@ var _ordinary_colourway_species: String = ""
+ ## The aspect variant's own idle VFX (flame/arcs/motes/embers), rebuilt
+ ## whenever the body is re-dressed -- same lifecycle as `_aura` below.
+ var _aspect_vfx: Node3D = null
++## Owner touch pass: energy-seam shells over the skinned mesh (`touch_glow`).
++var _touch_glow_shells: Array[MeshInstance3D] = []
+ 
+ var _height: float = 1.0
+ var _radius: float = 0.4
+@@ -1009,6 +1011,8 @@ func _refresh_shiny_tint() -> void:
+ 	if _visual_suspended:
+ 		return  # flags remain current; restore dresses the new model before show
+ 	_refresh_base_colourway()
++	_apply_aspect_vfx()
++	_apply_touch_glow()
+ 	_apply_art_model_emission()
+ 	_apply_night_floor()
+ 	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny, _shiny_fallback)
+@@ -1054,7 +1058,6 @@ func _refresh_base_colourway() -> void:
+ 		var texture_species := _aspect_source_species if _aspect_source_species != "" else species_id
+ 		if _has_model:
+ 			_swap_colourway_textures(aspect_variant, texture_species)
+-		_apply_aspect_vfx()
+ 		_apply_alpha_presence()
+ 		return
+ 	# P2-030 candidates remain behind a local presentation gate. The old failed
+@@ -1165,13 +1168,62 @@ func _apply_alpha_presence() -> void:
+ ## flame effect is important. Without emissive/VFX treatment, this variant is
+ ## not successful." The other three boards ask for the same thing in their
+ ## own colour.
++## Owner touch pass (24 Oct 2026): "some energy ... Don't go overboard." A
++## species may name an energy-seam mask (`touch_glow`, an RGBA texture on its
++## own UVs, written by tools/art_pipeline/creature_touch.py). It is drawn as a
++## thin unshaded shell sharing the mesh and skin, so the seams glow at any light
++## without enabling emission on the body material (which would switch off the
++## night floor) and without touching the tracked colourway/flash materials.
++func _apply_touch_glow() -> void:
++	for shell in _touch_glow_shells:
++		if is_instance_valid(shell):
++			shell.queue_free()
++	_touch_glow_shells.clear()
++	if not _has_model:
++		return
++	var path := str(SPECIES.placeholder(species_id).get("touch_glow", ""))
++	if path == "" or not ResourceLoader.exists(path):
++		return
++	var material := StandardMaterial3D.new()
++	material.resource_name = "%s_touch_glow" % species_id
++	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
++	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
++	material.albedo_texture = load(path)
++	material.disable_receive_shadows = true
++	material.grow = true
++	material.grow_amount = 0.004
++	var sources: Array[MeshInstance3D] = []
++	var pending: Array[Node] = [_model]
++	while not pending.is_empty():
++		var node: Node = pending.pop_back()
++		pending.append_array(node.get_children())
++		if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
++			sources.append(node as MeshInstance3D)
++	for source in sources:
++		var shell := MeshInstance3D.new()
++		shell.name = "TouchGlow"
++		shell.mesh = source.mesh
++		shell.skin = source.skin
++		shell.material_override = material
++		shell.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
++		source.add_child(shell)
++		if not source.skeleton.is_empty():
++			shell.skeleton = shell.get_path_to(source.get_node(source.skeleton))
++		_touch_glow_shells.append(shell)
++
++
+ func _apply_aspect_vfx() -> void:
+ 	if _aspect_vfx != null:
+ 		_aspect_vfx.queue_free()
+ 		_aspect_vfx = null
+-	if aspect_variant == "" or not _has_model:
++	# Owner touch pass (24 Oct 2026): a species without a variant may name its
++	# own small elemental touch (`touch_vfx`, e.g. Cindercub's embers).
++	var vfx_id := aspect_variant
++	if vfx_id == "":
++		vfx_id = str(SPECIES.definition(species_id).get("touch_vfx", ""))
++	if vfx_id == "" or not _has_model:
+ 		return
+-	_aspect_vfx = ASPECT_VFX.attach(self, aspect_variant, _radius, _height)
++	_aspect_vfx = ASPECT_VFX.attach(self, vfx_id, _radius, _height)
+ 
+ 
+ ## OWNER DIRECTIVE 2026-08-28 §2b: "creatures need to stand out in the grass.
+diff --git a/scripts/creatures/vfx/aspect_vfx.gd b/scripts/creatures/vfx/aspect_vfx.gd
+index 7c2406fc4..0e3d8e609 100644
+--- a/scripts/creatures/vfx/aspect_vfx.gd
++++ b/scripts/creatures/vfx/aspect_vfx.gd
+@@ -113,6 +113,22 @@ const PRESETS := {
+ 		"eye_colour": Color(1.0, 0.6, 0.2),
+ 		"tusk_colour": Color(1.0, 0.62, 0.16),
+ 	},
++	## Owner touch pass (24 Oct 2026): "adding some energy, some elemental
++	## effects ... Don't go overboard." A species' own small elemental touch,
++	## named by its `touch_vfx` in species.json -- not an Aspect variant, so
++	## the shiny/vivid ladder still applies. A few faint embers off the back,
++	## no paw group and no eye glow: realistic first.
++	"cindercub_embers": {
++		"primary_colour": Color(1.0, 0.6, 0.2),
++		"primary_count": 6,
++		"rise_period": 2.8,
++		"orbit_period": 0.0,
++		"jitter": 0.0,
++		"height_bias": 1.25,
++		"radius_scale": 0.55,
++		"size_scale": 0.15,
++		"paw_count": 0,
++	},
+ }
+ 
+ var _preset: Dictionary = {}
+@@ -217,8 +233,12 @@ func _physics_process(delta: float) -> void:
+ 			if _rebuild_skip != 0:
+ 				return
+ 	var basis := camera.global_transform.basis
+-	var right: Vector3 = basis.x
+-	var up: Vector3 = basis.y
++	# The discs are built in this node's local space, so face them with the
++	# camera's axes taken into that space. Using the world axes directly drew
++	# them edge-on (thin slivers) on any creature turned side-on to the camera.
++	var to_local := global_transform.basis.inverse()
++	var right: Vector3 = (to_local * basis.x).normalized()
++	var up: Vector3 = (to_local * basis.y).normalized()
+ 
+ 	_mesh.clear_surfaces()
+ 	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+@@ -337,6 +357,8 @@ func _draw_paws(right: Vector3, up: Vector3) -> void:
+ ## now an optional per-species override in PRESETS (`DEFAULT_EYE_ANCHOR`
+ ## when absent) -- Nightburrow's own entry documents its retune.
+ func _draw_eyes(right: Vector3, up: Vector3) -> void:
++	if not _preset.has("eye_colour"):
++		return  # a species touch (`touch_vfx`) keeps its own eyes
+ 	var colour: Color = _preset.get("eye_colour", Color.WHITE)
+ 	var pulse: float = 0.85 + 0.15 * sin(_life * 3.0)
+ 	var size: float = _radius * 0.09
+diff --git a/tests/test_creature_touch_vfx.gd b/tests/test_creature_touch_vfx.gd
+new file mode 100644
+index 000000000..39686999e
+--- /dev/null
++++ b/tests/test_creature_touch_vfx.gd
+@@ -0,0 +1,93 @@
++extends "res://tests/test_case.gd"
++
++# Owner touch pass (24 Oct 2026): "adding some energy, some elemental effects
++# ... Don't go overboard." A species may name its own small elemental touch
++# (`touch_vfx` in species.json) without being an Aspect variant. It must attach
++# on the ordinary body, leave species without one bare, stay light (no eye glow,
++# no paw group) and never use Team Tether's red.
++
++const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
++const BODY_SCRIPT := preload("res://scripts/creatures/creature_body.gd")
++const ASPECT_VFX := preload("res://scripts/creatures/vfx/aspect_vfx.gd")
++const SPECIES := preload("res://scripts/creatures/creature_species.gd")
++const RUNS_IN_INITIALIZED_TREE := true
++
++var _root: Node3D = null
++
++
++func before_each() -> void:
++	super.before_each()
++	_root = Node3D.new()
++	(Engine.get_main_loop() as SceneTree).root.add_child(_root)
++
++
++func after_each() -> void:
++	if _root != null and is_instance_valid(_root):
++		_root.free()
++	_root = null
++	super.after_each()
++
++
++func test_every_touch_vfx_names_a_light_non_red_preset() -> void:
++	var named := 0
++	for id: String in SPECIES.table().keys():
++		var touch := str(SPECIES.definition(id).get("touch_vfx", ""))
++		if touch == "":
++			continue
++		named += 1
++		assert_true(ASPECT_VFX.PRESETS.has(touch), "%s touch_vfx '%s' has a preset" % [id, touch])
++		if not ASPECT_VFX.PRESETS.has(touch):
++			continue
++		var preset: Dictionary = ASPECT_VFX.PRESETS[touch]
++		assert_false(preset.has("eye_colour"), "%s touch keeps its own eyes" % id)
++		assert_eq(int(preset.get("paw_count", 0)), 0, "%s touch has no paw group" % id)
++		assert_true(int(preset.get("primary_count", 0)) <= 6, "%s touch stays a few motes" % id)
++		var colour: Color = preset.get("primary_colour", Color.WHITE)
++		var red := colour.h < 0.05 or colour.h > 0.93
++		assert_false(red and colour.s > 0.5, "%s touch is not Team Tether red" % id)
++	assert_true(named >= 1, "at least one species carries a touch_vfx")
++
++
++func test_touch_vfx_attaches_to_the_ordinary_body_only_where_named() -> void:
++	var touched := _body("cindercub")
++	await _frames(2)
++	assert_true(touched.get_node_or_null("AspectVfx_cindercub_embers") != null,
++		"Cindercub carries its ember touch")
++	var bare := _body("sparkit")
++	await _frames(2)
++	for child in bare.get_children():
++		assert_false(str(child.name).begins_with("AspectVfx_"), "Sparkit carries no touch")
++
++
++func test_touch_glow_masks_exist_and_shell_only_where_named() -> void:
++	var named := ""
++	for id: String in SPECIES.table().keys():
++		var path := str(SPECIES.placeholder(id).get("touch_glow", ""))
++		if path == "":
++			continue
++		assert_true(ResourceLoader.exists(path), "%s touch_glow mask %s exists" % [id, path])
++		if named == "" and ResourceLoader.exists(path):
++			named = id
++	if named == "":
++		return
++	var glowing := _body(named)
++	await _frames(2)
++	assert_true(glowing.find_children("TouchGlow", "MeshInstance3D", true, false).size() >= 1,
++		"%s carries its energy-seam shell" % named)
++	var bare := _body("sparkit")
++	await _frames(2)
++	assert_eq(bare.find_children("TouchGlow", "MeshInstance3D", true, false).size(), 0,
++		"Sparkit carries no seam shell")
++
++
++func _body(id: String) -> Node3D:
++	var body: Node3D = CREATURE_SCENE.instantiate()
++	body.set_script(BODY_SCRIPT)
++	body.set("species_id", id)
++	_root.add_child(body)
++	return body
++
++
++func _frames(count: int) -> void:
++	for _i in count:
++		await (Engine.get_main_loop() as SceneTree).process_frame
+diff --git a/tests/test_creature_touch_vfx.gd.uid b/tests/test_creature_touch_vfx.gd.uid
+new file mode 100644
+index 000000000..a76a0ebe4
+--- /dev/null
++++ b/tests/test_creature_touch_vfx.gd.uid
+@@ -0,0 +1 @@
++uid://e1t7uxukmq7k

@@ -1,0 +1,4 @@
+Mt: none
+Bz: "Glow reads as glowing seams on fur rather than lightning"; "Body value merges with the stage: a slate body on a slate ground"
+Nv: none
+Ad: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"

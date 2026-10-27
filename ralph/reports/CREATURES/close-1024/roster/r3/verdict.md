@@ -1,4 +1,4 @@
-# r3 (25 Oct 2026, CPU): F36#1 whole-roster pose verdict, batch 3 of 7 (land head, shipping state)
+# r3 (24 Oct 2026, CPU): F36#1 whole-roster pose verdict, batch 3 of 7 (land head, shipping state)
 
 Same method as r1. Confirming batch. Fit linear slope 1.381, intercept -1.972, RMSE 0.42, no warnings. Judges flag a stage fault (long tails pass through the ruler trainer: Frostclaw, Riftfrill, Mirejaw, Cindercub) that is capture staging, not the game.
 

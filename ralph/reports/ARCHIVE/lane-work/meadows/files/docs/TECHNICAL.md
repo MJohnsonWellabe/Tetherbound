@@ -1,0 +1,458 @@
+# Technical architecture and implementation map
+
+## 1. Baseline and status boundary
+
+The original audit used **b8eda885**; the current integration includes the subsequent implementation stack. STATE owns its exact main/PR receipt. Historical branch names below identify origin, not remaining merge work. `design/*.md` labels current foundations and proposed targets; STATE tracks acceptance. Do not turn a target formula into a claim about current runtime.
+
+The current implementation pass closes four biomes in the order Meadows → Tidewake → Cloudreach → Stormwood (owner, 2026-09-29, RD-10). Data and schemas reserve eight biome slots (RD-09), and slots 5–8 hold no content. The target normal clear is 15–25 hours with an optional grind loop (RD-01; supersedes "eight good hours"). **The owner redesign of 2026-09-29 (CODEX_START_HERE, RD-01..RD-35) is planned, not built.** §11 maps its planned files, schemas and tests; nothing in §11 exists in source until the owning F row lands. Production assumes coding plus existing assets and tools, including the existing Meshy access under ART_DIRECTION's subject/reference gate and its bounded overnight batch (RD-26, ART_DIRECTION §7.1). It assumes no new purchase, commission, paid composer or vendor dependency. Co-op now requires invitation joining without manual addresses/router setup. Current ENet LAN/direct-IP remains built; main contains an optional Steam lobby/invite/transport implementation (from the former `ralph/invite-coop` branch), while internet acceptance remains open. MULTIPLAYER owns its contract. The owner also authorizes agent-drafted art references and Meshy submissions for scoped improvements; keep reference/provenance and candidate validation, without requiring owner-originated images.
+
+**Optional Steam implementation:** main has the lobby/invitation coordinator and native peer integration (from the former `ralph/invite-coop` branch); the historical “not built” referred to the audit baseline. It remains unaccepted for internet play. Run `python tools/setup_steam_runtime.py` to install the pinned development runtime alongside stock Godot. It downloads GodotSteam4.20's `win64-g47-s164-gs420-editor.tar.xz` (SHA256 `b5bd13a3c1d6c2087b54607aad43865fa29d070d8992ef114ce17d955413149a`), source tag commit `e702a38efd8256ea2295f182f3fb3afecb096931`. The matching `godotsteam-g47-s164-gs420-templates.tar.xz` was downloaded to a separate local cache for dependency receipt; its archive and three Windows x86_64 members have local SHA256 pins, but no publisher checksum certification. Stock global Godot4.7 templates remain untouched, and the Windows preset `custom_template/debug` and `custom_template/release` overrides remain blank; no export or release acceptance is claimed. Local configuration is `TETHERBOUND_STEAM_APP_ID`, then `SteamAppId`, then the local project AppID setting; no shared AppID480 default. Keep partner/private configuration outside source. `project.godot::steam/multiplayer_peer/max_channels=4` preserves logical lanes1/2 under4.20's `channel >= max_channels-1` fallback rule. Snapshot transport uses192KiB chunks with a64MiB total cap, a60s handshake/snapshot deadline and boundary delta replay after baseline admission. The optional binary is still Godot4.7 Compatibility; this is not a renderer/engine-version upgrade. `tools/net/probe_steam_host.gd` checks native initialization/socket/private lobby in an empty temporary project. `tools/net/probe_steam_session.gd` exercises the real title→Meadows→Steam host→save/leave path under isolated APPDATA. Neither sends invitations or proves a remote connection. Export templates, licensed distribution packaging, internet relay behavior and Ally overlay remain separate acceptance gates.
+
+Godot4.7-stable, GDScript, Windows x86_64 primary, Linux x86_64 for CI/development. `project.godot` uses `GL Compatibility` / `gl_compatibility`,1920×1080 canvas-items UI. Terrain3D1.0.2 remains the installed terrain addon. Compatibility was selected after repeated owner Ally/Vulkan freezes. **Planned (owner, 2026-09-29, RD-25; F26):** a Forward+ path with Low (= Compatibility), Medium and High presets. The shipped default stays `gl_compatibility` until the owner's ROG Ally run on Medium passes (≥30 fps handheld, 40 preferred). §11.4 has the implementation plan. This supersedes "no renderer switch" only for that gated path.
+
+**Correction:** ordinary directional shadows exist: `world_look.gd` enables the sun shadow and two-split mode, and `project.godot` configures the2048shadow map. Compatibility lacks SDFGI, volumetric fog and SSR, and does not support the Forward+ directional PCSS feature. See [Godot renderer documentation](https://docs.godotengine.org/en/4.7/tutorials/rendering/renderers.html). ART_DIRECTION specifies the attainable lighting approach and the remaining asset ceiling.
+
+## 2. Runtime ownership and scenes
+
+**F23 bounded live move path:** `CombatManager` maps combat X/Y/B/A to quick/charged/utility/burst. Tap and release RB, then tap X/Y/B within 1.5 seconds for a full Ultimate; A disarms and bursts. LT opens orb aim, where X releases and B cancels; RT flees wild fights; LB switches. World X interact, Y Satchel, B item1, L3 sprint and RB recall retain their meanings. Until F24 owns item access, ordinary combat item1 uses L3 (keyboard1); d-pad and keys2–5 retain item slots2–5. This interim map does not enable Tether Commands. Snare is the first live utility family. Ground Current's host effect is implemented, but its ultimate presentation gate also fences host acceptance until rendered proof; unsupported or gated families refuse before spending. The actual host start freezes equipped owned move, mastery and breakthrough values into the retained action; its actual positive HP debit uses the existing durable mastery transaction. `actor_vitals` remains gated separately. Acceptance and proof status remain in STATE.
+
+One registered autoload: `Game="*res://autoload/game_state.gd"`. Keep one. Inventory, party, map and progression are composed modules behind Game, not new global singletons. `autoload/party.gd::MAX_CREATURES=5` is enforced at add/transaction boundaries; no reserve/box. `inventory.gd` stores24slots and a legacy6-hotbar field, while five exposed bindings are the target UX. Preserve empty slot positions.
+
+`scenes/ui/title_screen.tscn` starts the product. New Game enters Meadows; Continue restores the saved realm. Four world scenes are `meadows_playground.tscn`, `cloudreach_cliffs.tscn`, `stormwood.tscn`, `water_archipelago.tscn` (Tidewake). Today physical crossings join them in the old order. **Planned (F18, F19):** the Crossing Hall portals in the Meadows village become the only realm path, in the new order (§11.1). Interiors and headless multiplayer shells have distinct residency contracts; Water's Veilfall is player-local, never a whole-realm rebuild for all peers. The pinned tree had17scene files,433`test_*.gd`,265`smoke_*.gd`. On 2026-09-29 `tests/` held 664 `test_*.gd` and 380 `smoke_*.gd`. These are a census, not timeless constants.
+
+Meadows macro terrain is authored/baked, runtime scripts instantiate the world and its authored systems. Visibility ranges and collision residency are not general asynchronous content streaming. Cloudreach uses procedural stacked cliff meshes rather than Meadows Terrain3D. Stormwood and Water have actual world/finale consumers: do not recreate them from old “not built” notes.
+
+## 3. Where behavior lives
+
+| Concern | Current source/config/test anchors | New design work |
+|---|---|---|
+| Shared combat | `scripts/combat/combat_manager.gd`, `combat_ai.gd`, `combat_math.gd`, `combat_arena.gd`; `data/config/combat.json`, `type_chart.json`; `tests/test_combat_{math,ai,stagger,wind,burst}.gd` | Planned (RD-11..RD-13): quick/charged/utility slots plus an ultimate, learnsets and mastery, hit feedback, data-driven enemy patterns, Tether Commands (§11.1). Normalized poise, rendered spacing and per-creature resource persistence remain. COMBAT. |
+| Creature data/identity | `scripts/creatures/creature_instance.gd`, `progression.gd`, `bond_milestones.gd`, `evolution.gd`; `data/creatures/species.json`, `data/config/progression.json`, `bond_milestones.json` | Planned (RD-03..RD-08, RD-28, RD-30): essence leveling, level caps and breakthroughs, four breakthrough-triggered evolution lines (superseding Mudsnout's L15+bond evolution), traits and Trait Seeds, the storm bear (§11.1). Revised bond receipts; no earned-node loss. CREATURES, TRAINING. |
+| Catch/transactions | `scripts/combat/catch_math.gd`, `orb.gd`; `scripts/net/catch_arbiter.gd`, `scripts/save/water_capture_transaction.gd` | Integrate new states without bypassing capacity/host/Water codec. |
+| Dialogue gifts | `scripts/story/sequence_director.gd::_drain_effects`, `autoload/inventory.gd`; `tests/test_dialogue_gift_capacity.gd`; `tests/smoke_relay.gd -- --rescue-only` | The unit selector proves gift-batch capacity preflight with the real inventory rules (5 tests/21 assertions). The rescue-only runtime verifies refusal/disk/retry/relocation but fails the later relocated greeting and gate input; MEADOWS-PAYOFFS records the incomplete verdict. Existing effect order and flag authority are unchanged; durable/network transactions, new schemas/flags/effect language and retrospective grants are outside this fix. |
+| Inputs/UI | `scripts/ui/input_owner.gd`, `game_menu.gd`, `playground_hud.gd`, `tab_creatures.gd`, `tab_backpack.gd`; `data/config/menu.json`; `project.godot` | Planned combat mapping (RD-11, F23): X quick, Y charged (tap-start), B utility, RB+face ultimate, A dodge; Tether Commands on the d-pad or LB+face (F24); new screens join `input_owner` (F42). Y combat versus world Satchel; five-slot migration; strain/cooldown/readiness; tap climb. Tap revive in `downed_state.gd` uses host `net/revive_authority.gd` for timed/window-bound grants; local human damage cancellation, finalized death and full downed-player presentation remain separate authority/UX work. Steam protocol v3 rejects the previous revive wire shape; ENet requires matching builds without a version gate. |
+| Care/rest/build | `scripts/world/night_rest.gd`, `scripts/creatures/creature_condition.gd`, `scripts/ui/creature_bed_panel.gd`, `scripts/build/`, `scripts/ui/craft_panel.gd`; `data/items/buildables.json`, `data/recipes/` | Bounded injury, no potion bypass, exact refund/capacity/bed state, earned-day stock/rest receipts. SYSTEMS. |
+| Region content | `scripts/data/band_content.gd`; `data/config/bands/`, `chapter_curve.json`; `cloudreach_*`, `stormwood_*`, `water_*` configs | Useful detour/reward/route integration, not a duplicate quest engine. WORLD/PROGRESSION. |
+| Set pieces | `scripts/world/stronghold.gd`, `stronghold_climax.gd`, `tether_relay.gd`; later realm world/finale scripts | BOSSES target mechanics, actual-scale arena and aftermath proof. |
+| Traversal | `scripts/world/riding_controller.gd`, Fly and Water controllers/configs, `stormwood_arches.json` | Galewisp Fly; planned Ripplet surface swim and L30 Dive (RD-32, F37; Ripplet Teleport dropped); Home Key, portals and waystones (§11.1); no-hold climb; safe mounting/landing/gates. |
+| Time/weather/look | `scripts/world/day_cycle.gd`, `world_weather.gd`, `world_look.gd`; `data/config/art.json`, `weather.json`, `*_look.json`, `*_atmosphere.json` | Retain saved clock; no blanket survival penalties. Planned per-preset look and the per-biome look bar (F26, §11.4). |
+| Audio | `scripts/audio/audio_manager.gd`, `world_audio.gd`, `data/config/audio.json` | Owner-produced final cue assets from authorized existing/generated/recorded sources, chapter state routing/mix,22music deliverables; not a new manager. AUDIO. |
+| Network | `scripts/net/session.gd`, `peer_registry.gd`, `scripts/mp/join_driver.gd`, `encounter_host.gd`, `world_ledger.gd`, `realm_shells.gd`, `realm_transition.gd`, `realm_replication_scope.gd`, `ledger_rpc.gd` | Session constructs ENet peers; identity/capacity admission and readable refusal now precede snapshots on the Meadows payoff branch. One spare transport handshake slot is not a fifth admitted player. The optional Steam branch has lobby/invite/transport code and focused local evidence; remote relay, build/content compatibility and packaging remain unproved. Preserve stable characters, authority, save receipts and both logical traffic purposes; prove compatible Godot4.7 packaging. MULTIPLAYER. |
+| Persistence | `scripts/save/save_game.gd`, `world_save.gd`, `character_save.gd`, `atomic_save_file.gd`, `realm_reward_migration.gd` | `fabba89e9` has bounded world-instance/per-character reward receipts and authoritative split-locator refusal. Portable identity/migration work is checkpointed at `2768c632b`, with reconnect smoke/map-fixture correction `44a5680eb`; legacy receipt ambiguity and runtime existing-save cross-host proof remain open. |
+
+Rows for systems that do not exist yet are in §11.1. Exact source file expansions matter: brace notation in this table abbreviates existing siblings. Search before adding a class. Large world/HUD scripts are integration risks, not permission for a full rewrite. No duplicate camera, inventory, build, region-loading or audio system.
+
+Warrens guardian opts into named attacks with `burrow_warrens.json::guardian.combat.charged_every=2`, charged tell1.1/recovery1.2/face-lock0.5. `wild_creature.gd` freezes the selected move/profile from tell through recovery; ordinary bodies retain the legacy dynamic quick path. `combat_manager.gd` solo and host-participant damage resolve the selected move ID for multiplier/type/VFX; Stormwood authoritative combat inherits that helper. `test_enemy_named_attack.gd` and `smoke_warrens.gd -- --guardian-attacks` cover the bounded behavior. Water bespoke bosses are unchanged. Rendered mechanics pass; both first captures are obstructed and rejected. No animation, network-protocol, energy or global damage change is implied.
+
+## 4. Data contracts
+
+Tunables belong in data/config or existing species/move/encounter catalogues. Presentation settings belong to the domain's existing config. Do not scatter a target timing through several scripts. Menus are data-described tabs/actions, tested by `tests/test_menu_data.gd`.
+
+Meadows positional content lives per band: `data/config/bands/<band>/spawns.json`, trainers/harvest/pickups/props and per-band vegetation placements. `band_content.gd::BANDS` explicitly lists five IDs and merges by stable `order`, not filesystem enumeration. `order` seeds spawn scatter/level/IV/trait/shiny identity; preserve it across edits. Global vegetation rules are not positional rows. `tests/test_band_content.gd` checks merged baselines.
+
+Pinned catalogue:57base species,12Water runtime adapters,53base model paths,52moves,18TMs,89base items,31recipes in the base recipe files plus10separately structured Water rows,12buildables. Planned additions (§11.2) include one new species (the storm bear, flag-gated, RD-28) and new items: 8 essences, Tether Candy, portal keys, the Home Key, Tide Pearl, attuned ingredients, Trait Seeds and gear. Do not sum namespaced aliases as69unique visual concepts. Water encounter/roster/crafting schemas differ from Meadows; use their adapters rather than forcing all JSON through one assumed key shape.
+
+The planned redesign data files, the biome-order accessor and their loaders are specified in §11.1–§11.2. All story flags have declared world/personal/realm scope. A UI pin is derived state. NPC one-for-one creature trades differ from peer item trades; peer creature trading is out. No trainer-owned or alternate starter source is introduced through a new table.
+
+Map landmarks may declare `manual_discovery: true` to exclude proximity discovery; explicit discovery and existing personal-map save/load remain unchanged. Optional `spawn_order` resolves position through merged Meadows spawn data, failing closed for missing references. The herd's fixed grazing-ground marker uses order1005, not moving animal positions. Its first successful discovery credits existing party bond counters synchronously; the map ID is the once-only key. Orb completion remains an independent ledger claim. No schema version or shared-world flag is added.
+
+## 5. Save, migration and authority
+
+**Planned save reset (owner, 2026-09-29, RD-35; F16):** the next format refuses every v27-and-older save instead of migrating it. §11.3 holds the plan. The rest of this section describes the current (v27) behavior, which v28 keeps apart from the migration paths.
+
+Current working-tree formats are merged27/world2/character6. Character4 introduced `last_world_instance_id` for placement; character5 and merged26 protect the world-instance semantics of pending death-satchel transactions from older readers; merged27 adds durable creature UIDs and the ordered tournament selection, while character6 carries that selection in the portable character file. The v26→v27 migration preserves readiness and bracket flags but starts the new selection empty. Missing provenance is unknown, never proof of home ownership or permission to retry a transaction. Slot0autosave, four manual slots1–4. Loading missing/corrupt/newer data must fail without mutating live state. Auto-load on boot remains opt-in so shared smoke user directories do not cross-contaminate tests.
+
+Ordinary slot load resolves `split_locator` before applying state; older slots without that metadata require exactly one complete deterministic split pair. Physical canonical or `.previous` file presence establishes prior authority even if unreadable. Existing valid-backup fallback remains; unresolved, corrupt or ambiguous authority refuses instead of recreating stale state from the merged slot. `ec9671d4c` established this selection, but its locator-only placement comparison was insufficient: two hosts can both own `slot-0`.
+
+`world_identity.gd` reuses `WorldState.reward_delivery_namespace` as the world-instance identity:16random bytes minted once by the authority, retained through host saves and snapshots. `Game.reset_for_new_game`, host `Game.world_snapshot` and ordinary host split saves establish it; guest character saves and scratch writes do not mint one. Both character-save paths record the current instance. Exact pose/realm/pending entry survive home load only when the saved locator and nonempty instance agree with the selected world. Missing, malformed or different provenance clears placement and uses the slot's saved region and authored spawn, preserving party, inventory, equipment, escrow and maps. This deliberately replaces the earlier slot-equality assumption; legacy saves may receive one safe repositioning before their next save records provenance. It is placement metadata, not ownership authentication or a legacy character rename. Validation is recorded in the portable-identity report; main/release acceptance is separate.
+
+Portable character identity is carried by the character envelope and split
+locator, not by the local manual-slot label. `character_identity.gd` generates
+16random bytes for a new character; save writers preserve nonempty valid IDs.
+Multiple world slots reference that current portable character. Existing legacy
+IDs remain unchanged pending an ownership-preserving migration; authority-file
+discovery is a separate implemented correction. The two-existing-home reconnect
+witness passed on8379ab1a6 with live/file/registry identity, personal state and
+movement checks; teardown/negative-control diagnostics remain recorded. That
+character3 runtime is complemented by the character4 reconnect pass on92ec4bde0;
+neither run certifies the subsequent character5 escrow correction.
+
+Death-satchel creation/transfer stamps typed nonempty `world_instance_id` into
+both the portable escrow row and its request before moving inventory.
+`satchel_escrow.gd` checks world instance, locator and character; `world_ledger.gd`
+refuses foreign/missing instance before duplicate handling or mutation.
+`ledger_rpc.gd` preserves the requested identity and validates refusal/recovery
+provenance, so another world's refusal cannot refund a possibly committed drop.
+Legacy pending rows cannot be replayed or guessed refunded. An exact owned
+`death_<txn>` receipt or exact owned transfer transaction can resolve them;
+otherwise they remain preserved with an unresolved message. Already recorded
+personal grants/refunds may settle once wherever that character plays.
+This supersedes locator-only escrow eligibility. It does not authenticate
+legacy character IDs, recover unproven history or migrate foreign ownership.
+
+**Corrections to the old Technical:** clock state is persisted/restored; placed storage contents are synchronized into placed-building records before save. Neither is an unbuilt system. Preserve party identities/traits/bond/evolution/boosts, inventory empty positions/hotbar, progression, satiety, fog/map, multiple death satchels, placed buildings/storage/beds, felled vegetation/piles, farm state, player pose/world seed, realm state and reward journals.
+
+World files are host-owned; portable character files carry their stable character/team state. Realm-local position/buildings/bags are tagged by realm and world. Character import is a trust boundary: no stale snapshot may overwrite a committed host transaction or mint a claimed legendary. For `reward_grant` items/flags, the host atomically saves a stable delivery before publication, the addressed character atomically saves its escrow or settled inventory before ACK, and the host saves acceptance only after binding that ACK sender to the registry character. Reconnect replays pending world rows after snapshot admission; duplicate delivery is idempotent and a full bag remains pending without partial grant. Focused final proof covers merged version25, world2 and character3; legacy peer-ID receipt ambiguity and slot-based portable-ID renaming remain known limits.
+
+**Planned schema work, not implemented in this PR:** injury fraction and recovery state; per-creature landmark credit and migrated bond completion; L4 skill/equipped skill and relevant cooldown state; earned-rest/vendor receipt; no-loss sixth-hotbar-binding migration; Ripplet attuned anchor/cooldown; remaining Tidewake regional-ending state. Durable three-member tournament selection with ownership validation is implemented in merged27/character6. Three-bed preparation reuses existing player-scoped bed milestones and their shared camp grants; no new flag/schema is added. `home.required_pieces` retains its one-bed meaning; `home.preparation_creature_beds` expands only the recipe-derived gathering target. The journal retires this extra preparation after `tournament_entered`; earned placement/care and shared-player acceptance remain open. Homecoming/credits use player-scoped `homecoming_seen` and `regional_credits_seen` in the existing flag dictionary. Decide each future version increment at implementation based on then-current schema. **Redesign note (RD-35):** v28 is a fresh schema, so items above that were planned as migrations (injury, skill/cooldown, hotbar binding) become new-game fields in v28 if their feature still exists. Ripplet's attuned anchor/cooldown is dropped with Teleport (RD-32).
+
+Every new mutation declares authority, validation, idempotency key, commit order, failure rollback, persistence and reconnect behavior in its PR. Multiple participants receive personal authored rewards once; one physical wild/legendary remains one creature. Host-authoritative combat outcomes, local presentation and affected-actor hitstop use separate clocks. New scaling uses unscaled base values and unscaled catch stats, preventing four-player captures from owning inflated stats.
+
+## 6. Terrain, scatter and physical truth
+
+Meadows bake entrypoints remain `scripts/world/build_playground_terrain.gd` and `scripts/world/bake_playground_scatter.gd`; output `data/terrain/playground/` and `data/scatter/playground/`. Scatter rule/global/per-band vegetation edits require affected bake output in the same coherent change. CI freshness failures are real; stale output has caused multi-minute boot recomputation. Stormwood scatter clearances are baked around trainer, NPC, harvest and pickup seats: moving any of those seats stales `data/scatter/stormwood/`, and Stormwood vegetation then fails closed until `bake_stormwood_scatter.gd` is re-run in the same change.
+
+After asset/bake change re-import before capture; a script may otherwise render the cached previous asset. Change flats/path/apron height only with the terrain bake; a moved NPC or prop alone does not justify rebaking the world. Preserve output identity and avoid unrelated bulk bake churn.
+
+Ask `ground_height_at(x,z)` first for terrain height; raycast only for structures/surfaces terrain does not describe. Terrain3D downward-ray misses are a known failure class despite shape movement working. A paper route needs supported footprint, slope, actual body clearance, interact range, camera and ordinary traversal checks. No teleport witness closes an approach collision defect.
+
+Collision residency uses the union of active peer regions/cells, never their mean position. Current performance config:100m collision radius,0.5s update,32m cells;8ms shell build budget,100ms client crossing slices;8m interaction grid. `scatter_lod_ranges=false`, `structure_visibility_ranges=true` at baseline. These are tunables with historical measurements, not proof of current Ally speed.
+
+## 7. Inputs and lifecycle hazards
+
+Every new modal joins the `input_owner` group, blocks world readers beneath it, sets/restores focus and restores mouse mode on every exit. Menus never pause a multi-peer session; input ownership is required even when solo tree pause happens. `suppress_pause_reopen()` prevents a closing B edge from reopening a shell. The old build-menu/D-pad bleed consumed hotbar items underneath a non-pausing menu; keep that regression covered.
+
+`project.godot` holds defaults, never runtime user writes. Rebindings layer over boot defaults and prompts use current bindings/device. Combat owns Y/A and refuses world menus according to UX. Former B/Escape run/cancel clashes must be verified under the new context contract rather than immortalized as design. Required controls use taps, not hold/chord escape hatches.
+
+Preserve provider lifetime across freed/rebuilt HUD/world/realm nodes; cached stale interactables, aim-state residue, reward queues and finalized-death withdrawal have caused real failures. Add targeted regression at the originating state transition, not only the final symptom. Full/occupied inventory, current and migrated saves, separated peers and reclaimed beds are normal test cases.
+
+### Water dock persistence boundary
+
+`ledger_rpc.gd::_commit_here` includes `water_dock_action` in the existing
+durable world transaction path. Host-authenticated actor/location and authored
+prerequisites remain in `water_dock_rules.gd`; the host saves the world before
+applying player costs or publishing a delta. Failure restores world data,
+sequence/revision and ledger bookkeeping, leaves costs untouched, and refuses
+with `journal_failed`. Unnamed worlds cannot bypass the save. This needs no
+wire/schema change. Existing rules and RPC tests plus the production dock smoke
+cover refusal/retry. **Partial:** paid repair debits still lack a portable
+receipt/reconciliation protocol for a crash between the durable world commit
+and character settlement. This boundary does not claim distributed atomicity.
+Derived dock completion flags are reconstructible from saved physical actions.
+
+## 8. Build, tests and captures
+
+From repo root with Godot4.7 available:
+
+```text
+godot --headless --path . --import
+godot --headless --path . --script tests/run_tests.gd
+godot --headless --path . --script tests/run_tests.gd -- --only=test_combat_math.gd
+godot --headless --path . --script tests/run_tests.gd -- --shard=1/4
+```
+
+`tests/run_tests.gd` discovers test files and methods; `--only` filters before round-robin shard selection. A missing selector is an error, not a green empty suite. `tests/test_case.gd` is the harness; no GUT. Broader `smoke_*.gd` scene scripts use their own entrypoints; inspect each invocation and required fixture.
+
+Tests run headless without a renderer. Headless unit tests are unaffected by the renderer plan. **Never combine `--headless` with `--rendering-driver opengl3` for capture**; this invocation has hung silently. Windows capture uses an ordinary hidden/controlled Godot render window with `--path . --rendering-driver opengl3 --resolution 1280x800 --script tools/<capture>.gd`. Linux uses:
+
+```sh
+xvfb-run -a -s "-screen 0 1280x800x24" "$GODOT" --path . --rendering-driver opengl3 --resolution 1280x800 --script tools/<capture>.gd
+```
+
+**Planned Forward+ captures (F26, unproven):** Forward+ needs a RenderingDevice driver (`--rendering-method forward_plus --rendering-driver vulkan`, or `d3d12` on Windows). Linux xvfb captures would need a working Vulkan ICD, either a GPU or a software rasterizer such as lavapipe. Neither has been validated on this project's CI or containers. F26 must prove a capture path and record per-preset frame time at 1920×1080 (F26#4) before relying on it. Software-rasterized frame times are never device performance. One import/export/render writer per machine. Independent pure read-only tests can parallelize against an already-imported cache; full Terrain3D smokes serialize if memory would contend. `tools/capture_diag_minimal.gd` is a bounded invocation check; fix capture setup before blaming scene art. Inspect stale process cwd before worktree cleanup; do not kill unrelated user processes.
+
+### 8.1 Lane runbook: setup, captures, judging and route pieces
+
+Every lane reuses this runbook; do not rebuild a harness that is listed here. It is merged from the 25 Oct lane handoffs. Each lane's full runbook, with tool-specific frame names, is at the top of its NOTE:
+- `ralph/reports/TIDEWAKE/close-1024/NOTES.md` (scripts in `runbook/`)
+- `ralph/reports/CLOUDREACH/close-1024/NOTE.md`
+- `ralph/reports/FIGHTS/close-1024/NOTE.md` (helpers in `tools/*.txt`)
+- `ralph/reports/ROUTES/close-1024/NOTE.md`
+
+When a lane hits a new harness problem, it adds the problem, its cause and its fix to its NOTE runbook and to this list.
+
+**Container setup (cloud, CPU only)**
+- **Install Godot 4.7-stable** from the CI URL:
+  - `curl -sSL -o /tmp/godot.zip https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip`
+  - unzip it and install the binary as `/usr/local/bin/godot`.
+- **Import before any capture or smoke:** run `godot --headless --path . --import` after every checkout, merge or new asset. It takes about 45 min the first time and 8–25 min after that.
+  - Skipping it causes "FIGHT DID NOT START", placeholder creatures and size-admission refusals.
+- **Meshy textures:** set each texture `.import` to `compress/mode=2` and `detect_3d/compress_to=0`, then import again. Commit the `.import` files and the extracted images.
+- **Disk-tight cloud containers:** a CPU capture rebuilds about 250 MB of Godot shader cache under `XDG_DATA_HOME`, plus a mesa cache under `~/.cache/mesa_shader_cache`. Point both at the RAM-backed `/dev/shm`: `export XDG_DATA_HOME=/dev/shm/xdg` and `ln -s /dev/shm/mesa_shader_cache ~/.cache/mesa_shader_cache`. Move finished capture folders out of `shots/` to `/dev/shm` as well. Also check that no capture `godot` is still running (`ps -eo pid,args | grep "[/]godot"`) before starting the next one.
+- **Derived or hand-made textures** (outside `meshy-*`): `texture_import_policy.py --apply` takes directories, so `--apply <file>` updates nothing. Set `compress/mode=2`, `mipmaps/generate=true` and `detect_3d/compress_to=0` in the new `.import` by hand, reimport, and run `--check` before landing. CI suite 3 (`test_texture_import_policy`) fails otherwise.
+- **Disk:** the allowance is small and `.git` alone is about 18–21 GB.
+  - Fetch single branches, shallow where possible.
+  - Build land branches with `git merge-tree --write-tree` plus `commit-tree`, never `git worktree add` (about 3 GB).
+  - Delete old capture folders, `.godot/imported` and pushed GLBs before big runs.
+  - A capture that stalls for 30+ min usually means the disk is full.
+- **One Godot process at a time.** Serialize captures, imports and smokes with a queue that waits on `pgrep -x godot`.
+  - Kill by PID. `pkill -f <pattern>` from a shell whose own command line contains that pattern kills the shell (exit 144).
+  - To pause a smoke, `kill -STOP` the godot child, not the `timeout` wrapper; the wrapper's clock keeps running.
+- **Shell pitfalls:**
+  - Quote heredocs (`<<'EOF'`).
+  - `sed -i` does not reach a running bash script. Write a new queue file that waits for the old one.
+  - Run long jobs detached (`nohup setsid … & disown`) and wait with a Monitor or an `until grep` loop, not foreground `sleep`.
+- **Lane-to-coordinator messages** from a lane session can be refused (untrusted device). The lane NOTE is the channel; the coordinator reads it.
+- **Exit leak checks in child processes:** a one-shot sound still playing when a test child quits can leak "2 ObjectDB instances" and "1 resources still in use" (`AudioStreamPlaybackWAV` and its `.wav`). Freeing a playing player only flags it. The dummy audio thread's next mix removes it, and a loaded CI runner can skip that mix. Stop the players and wait two mixes before `quit` (`_native_drain_audio` in `tests/test_director_join_snapshot.gd`).
+  - To reproduce the leak every time, run the child with `--write-movie <png> --fixed-fps 30` under xvfb. In movie mode audio mixes only on frames, so a sound playing at quit always leaks.
+  - Never loosen the leak assertion. `ralph/reports/NETFIX/leak-1025/NOTE.md` has the details.
+
+**CPU captures (xvfb, Compatibility, Low)**
+- **Prefix:** `timeout <s> xvfb-run -a -s "-screen 0 1280x800x24" godot --path . --rendering-driver opengl3 --rendering-method gl_compatibility --resolution 1280x720 --script res://tools/<tool>.gd -- …`
+  - Never combine `--headless` with a capture.
+  - Set `XDG_DATA_HOME=<scratch>/xdg` so saves stay out of `$HOME`.
+- **Source SHA:** look-dev tools need the full 40-character pushed SHA (`--source-commit`/`--source-sha`, never `-dirty`) and a fresh, absent output dir.
+  - Low preset also needs `--low-resolution=1280x720`.
+  - Some tools (Cloudreach live fight, high perch) only write under `ralph/reports/VISUAL/phase2/<biome>/`. Move frames to `.artifacts/` afterwards and never commit them.
+- **Matrix and look tools:**
+  - `capture_f38_matrix.gd` (Meadows: `--seed=2042 --f38-preset=Low --f38-baseline --times=day --subset=<stand> --output=res://…`)
+  - `capture_cloudreach_f40_matrix.gd` (`--piece=N`, where N = stand×8 + time×2 + weather + 1)
+  - `capture_tidewake_f13_5.gd` (`--camera-set=res://tools/visual_judge/camera_sets/<set>.json --views=… --preset=Low`)
+  - `phase2_capture_locations.gd`
+  - `capture_view_fallback.gd` re-seats approach views that fail; a view with no valid seat fails closed.
+- **Fight tools:**
+  - `art_pipeline/capture_named_fight.gd`
+  - `capture_named_fights_f10_6.gd` (Stormwood; `--fixed-fps 20`)
+  - `phase2_capture_tidewake_fights.gd` ("frame_cap" exit 1 is normal)
+  - `phase2_capture_cloudreach_live_fight.gd` (about 45 min, often exits 124 after writing frames)
+  - `capture_f38_fight.gd` (the GPU G3/G5 set)
+- **Candidate overlays:**
+  - Never edit the config a running capture reads.
+  - Apply overlays only on a clean tree, and commit new default keys first, because restoring with `git checkout data/config/` wipes uncommitted keys.
+  - Never apply an overlay twice; it duplicates keys.
+  - Edit JSON with targeted line edits validated by `json.loads`, never a whole-file `json.dump`.
+- **Determinism:** random wild spawns differ between arms; note them in the verdict. Terrain bakes are not byte-deterministic, so keep only the regions you changed.
+- **Stand screening (Stormwood):** `capture_stormwood_f10_matrix.gd -- --custom="id@x,z@fx,fy_above_ground,fz@pitch;…" --stands=<ids> --phases=calm --no-aftermath` renders any number of ad-hoc stands in one boot (about 10 min boot on CPU). Use it to screen candidate survey stands before committing an `f41_survey` override; the custom ids must also be listed in `--stands`.
+- **Stale Stormwood scatter (check every capture log):** `data/config/stormwood_settlements.json` (and the other `stormwood_scatter.gd` SOURCES) are whole-file bake inputs, so even a retint edit stales `data/scatter/stormwood/`. Vegetation then fails closed and every capture renders without the baked forest. The only sign is `ERROR: Missing or stale stormwood scatter bake` in the Godot log. Re-run `godot --headless --path . --script res://scripts/world/bake_stormwood_scatter.gd` in the same change: when no clearance moved, only `manifest.json` changes. Grep each capture log for `stale` before judging.
+- **F41 Stormwood catalogue** refuses CPU (High/Medium presets only) and a dirty tree. A GPU A/B therefore needs one commit per arm: build the flags-on arm as its own branch with `commit-tree` (for example `tb/stormwood-land6-on`). A CPU subset check may bypass the gate only in an uncommitted, reverted edit.
+- **Meshy hero props** arrive unit-normalised (longest side about 1.9). Fit them to the prompt size with `scripts/world/meshy_hero_prop.gd` (`fit_height`), and give painted crystal or lightning veins natural glow with its `glow` next pass (`shaders/blue_vein_glow.gdshader`, blue-dominant texels only).
+- **GPU form for READY lines:** the same tool and arguments with `--rendering-method forward_plus --resolution 1920x1080 --preset=<Medium|High>`. The GPU session captures both arms itself.
+
+**CPU judging (the `visual-judge` yardstick)**
+1. **Contact sheets:** 2×2 per side at 640×360 per tile. Write a spec `[{label, a, b, brief, defects}]`.
+2. **Judge folder:** `python3 tools/visual_judge/anchor_tiles.py --out <judge dir> --key <outside>/key.json --candidates spec.json --pairs 3 --seed <new each batch> --include craft`. Then copy `docs/reference` into `<judge dir>/reference`; the tool does not.
+3. **Prompt:** take the text block of `tools/visual_judge/JUDGE_PROMPT.md` and fill in `[JUDGE FOLDER]`, `[SET LIST]` and `[RECORDED DEFECTS]`.
+4. **Judges:** give the filled prompt verbatim to three fresh agents in parallel, with only the folder path.
+5. **Batch file:** map A/B per set from `key.json`; sides are shuffled per set. Copy each score from the judges' JSON, never from memory. Write `batch.json` as `{"anchors": {id: [j1,j2,j3]}, "candidates": {label: [j1,j2,j3]}}`.
+6. **Calibrate:** `python3 tools/visual_judge/calibrate.py batch.json --out mapped.json`. Flag RMSE > 0.75.
+7. **Commit only** VERDICT.md, the batch/key/spec/mapped JSON and one `_sheet*` image under 1.5 MB.
+- **Reference crops:** `.gitignore` drops `ralph/reports/**/*.jpg` unless the file name starts with `_`. Name Meshy reference crops `_<name>.jpg` (or the coordinator never sees them) and check `git show --stat` after committing.
+- **What CPU scores are good for:** ranking candidates only. CPU mapped ≈ GPU − 0.8, and CPU wins have failed on GPU (P2-016 twice). A candidate goes to the GPU queue only when its expected gain is above 0.5 (owner, 25 Oct).
+
+**Route pieces (F49#0 and chapter cards)**
+- **Kit:** committed in `tools/earned_saves/routes_kit/`.
+  - `chain.sh` is the piece driver.
+  - `commit_piece.sh` commits each passing save immediately.
+  - `seam_receipts.py` and `seam_earned.py` check seams; a seam matches when the output has `matches: true` and `differences: []`.
+  - The whole-chain status is `ralph/reports/ROUTES/close-1024/LEDGER.md`.
+- **Start saves:** `godot --headless --fixed-fps 60 --path . --script tools/earned_saves/generate_boundary_save.gd -- --profile=<profile> --slot=0 --out=<absent dir>`. Profiles are in `tests/fixtures/earned_saves/generated_boundary_profiles.json`.
+- **Runners:**
+  - `earned_chain_runner.gd` (Meadows story pieces; every continuation needs `--generated-fixture`)
+  - `tidewake_piece_runner.gd` (homestead and training; prefer the split `training_tN_kitchen_<k>` pieces)
+  - `cloudreach_chain_runner.gd`
+- **Seams for `tidewake_piece_runner.gd`:** its receipts record no position. A seam there matches when every receipt field matches and the next piece loaded the previous piece's committed save byte-identical (sha256 of the save tree); record both in the seam JSON (`ralph/reports/STORMWOOD/close-1024/seams/s3_*.json`).
+- **Piece size (owner, 25 Oct):** a piece proves one seam and runs about 30 minutes, starting from a generated boundary save placed just before that seam.
+  - It replaces the 12 h per-piece timeout these runners used before.
+  - When a seam lacks a boundary save, add a generator profile; never lengthen a run to reach it.
+  - Never commit in a run checkout while a chain uses it; the consumer checks the exact source commit.
+
+## 9. CI and packaging
+
+`.github/workflows/ci.yml` is execution truth: import, targeted grouped/sharded tests, scatter freshness and Windows export gates. CI runs a fast tier on main pushes and the full suite every 8 hours on main, on dispatch, or on a `full-ci`-labelled PR (WORKFLOW §8). Check the `changes` job and actual job list for what a pull request really ran. **Landing (owner, 2026-10-10; WORKFLOW §8):** lanes push their branches and report the head SHA; the coordinator merges ready lanes into one consolidated PR (`tb/ev-coordinator`) with the `full-ci` label and auto-merge, after one full unit suite on the merged head (import, then 4 shards). `verify-suite` checks out sparsely (no `docs/`, `ralph/`, `shots/`, `assets_raw/`, `archive/`); fixtures a test reads from there are listed in ci.yml's materialize step. Use `full-ci` for net, harness, save or authority changes; every redesign PR touching §11.3 or §10 of MULTIPLAYER is one. `multiplayer-wide.yml` runs the wider peer matrix nightly and on dispatch. Never push main directly. Review actual job/log execution, not just green status or elapsed time. `.github/workflows/render.yml` is the on-demand render/smoke offload (dispatch from `main`, inputs validated, artifact of written files); `tools/cloud_setup.sh` prepares a cloud container.
+
+Markdown/docs/site/ralph paths may intentionally take the docs-only path. A green docs-only run is **not game validation**. Preserve unconditional change detection; do not add a markdown paths-ignore trigger that prevents workflow completion events. Branch comparison uses merge-base with main; otherwise a final docs commit could hide earlier code. Empty diff fails safe to build. `[skip ci]` is only a WIP checkpoint, not final verification.
+
+`release.yml` publication and export are distinct. Check the actual release asset timestamp/hash before telling the owner a landed change is playable. Test the downloaded package, not only editor startup. Exclude reference docs/source archives and preserve credits/provenance for shipped assets. No auto-publication is authorized by a documentation rewrite.
+
+## 10. Performance and technical acceptance
+
+Use `tools/perf_render_stats.gd` for structural draw/primitive observations, not handheld FPS claims. Correct stands: `hall_approach`≤4,000draws; provisional `band1_open`≤7,500draws/12Mprimitives. ≤4outdoor shadowed Omni/Spot lights overlap, normally0; Hall12interior lights separately composed. The archived total-light cap was unspecified; do not invent one. MultiMesh batches make draw count a poor proxy for vegetation GPU cost; no universal scatter-per-hectare ceiling.
+
+**Planned preset measurement (F26, F25):** per-preset frame time on a scripted route in each biome at 1920×1080 (F26#4). Each effect archetype has a particle budget, and the worst-case four-creature fight must hold frame rate on the Medium capture (F25#4). The owner's Ally Medium run (≥30 fps handheld, 40 preferred) gates the default switch (F26#5). ACCEPTANCE owns the newly proposed15W1080pAlly30fps percentile/memory/transition tests. They are unproven and may require evidence-based quality/performance work; do not quietly call a lower-resolution run equivalent. Host realm-shell load, GPU throughput, long-session memory and true device frame pacing require the device.
+
+Out of scope: engine migration (Godot 4.7 stays), switching the default renderer before the owner's Ally test, new global framework, general scene-streaming rewrite, dedicated server service, console port, replacement test harness or infrastructure work disconnected from a player-path defect.
+
+
+## 11. Redesign implementation plan (owner, 2026-09-29 — planned, not built)
+
+This section maps the owner redesign (CODEX_START_HERE §1, RD-01..RD-35) onto source. **Every path marked new here does not exist yet.** Each lands with its F row, and its criteria are in ACCEPTANCE §6.2. A lane edits only its own paths (CODEX_START_HERE §6 "Owns"). A shared file (`combat_manager.gd`, the HUD, `species.json`, `items.json`, `project.godot`) has one owning lane per wave. Other lanes request an edit through STATE's WIP list. Authority, scope and transaction rules for every new system are in MULTIPLAYER §10.
+
+### 11.1 Planned source map
+
+| Row | Lane | New scripts (planned) | Data (new or changed) | Proof anchors |
+|---|---|---|---|---|
+| F16 | `tb/foundations` | v28 refusal in `scripts/save/**`; schema-only change in `autoload/game_state.gd`; loaders and the biome-order accessor under `scripts/data/**` | new `data/config/biome_order.json`, new `data/schema/**`, `data/progression/flag_scopes.json` | `tests/test_save_*.gd`, `tests/test_schema_*.gd`, v27 fixture, two-peer save/reload round trip |
+| F17 | `tb/hub` | new `scripts/world/crossing_hall*.gd`; `village*.gd`, `grandpa_house.gd` | new `data/config/crossing_hall.json`; `village.json`, `village_npcs.json`, `village_boundary.json`, `building_prefabs.json`, `terrain_playground.json` (village pad only) | road-graph topology test, M1 chain, two-peer layout smoke |
+| F18 | `tb/hub` | new `scripts/world/portal_arch.gd`, `home_key.gd`, `waystone.gd`; retire `realm_gate.gd`, `rift_crossing.gd`, `stormwood_water_gate.gd`; `Game.enter_realm` call sites | new `data/config/portals.json`, `waystones.json`; key items in `data/items/items.json`; `data/dialogue/opening.json` | portals-are-the-only-realm-path test, refusal tests, ordinary-input loop witness |
+| F19 | `tb/reorder` | — | `chapter_curve.json`, `bands/**`, `cloudreach_*`, `stormwood_*`, `water_*` encounter/trainer configs, spawn tables, `realm_hearts.json`, `chapter_rewards.json`, `tests/fixtures/earned_saves/**` | curve test, gate-scan test, regenerated fixtures |
+| F20 | `tb/reorder` | `scripts/story/regional_homecoming.gd`, `scripts/ui/regional_credits.gd` | `homecoming.json`, `regional_credits.json`, `regional_ending_objectives.json` | solo and two-peer ending smokes |
+| F21 | `tb/combat` | new `scripts/combat/hit_feedback.gd`; `combat_manager.gd` (impact), `combat_math.gd`, `impact_flash.gd`, `combat_hud.gd` (damage numbers) | `combat.json` impact block, `camera.json` fight block | config and stagger-timing tests, judge frames |
+| F22 | `tb/combat` | `combat_ai.gd`, `encounter_director.gd` | `combat.json` AI/pattern block, BOSSES profiles | C2 over 12+ seeds per band |
+| F23 | `tb/combat` | new `scripts/creatures/move_mastery.gd`; `teaching.gd`; slot dispatch in `combat_manager.gd`; `combat_hud.gd`; input map | new `data/moves/learnsets.json`; `moves.json`, `tms.json`, `species.json` refs | dispatch, learnset and mastery tests; no-held-input mapping test |
+| F24 | `tb/combat` | new `scripts/combat/tether_commands.gd`; `catch_math.gd` (snare), `player_equipment.gd` (pouch) | new `data/config/tether_commands.json` | damage-attribution test, two-peer smoke |
+| F25 | `tb/vfx` | `move_projectile.gd`, new archetypes in `scripts/vfx/**` | `vfx.json`, `moves.json` vfx blocks, cue ids in `audio.json`, new `assets/vfx/**` | unmapped-move test, judge frames, four-creature frame time |
+| F26 | `tb/lookdev` | `project.godot` rendering, `scripts/ui/tab_settings.gd` presets, `shaders/**` | `art.json`, `*_look.json`, `*_atmosphere.json`, environment resources | per-preset captures (§11.4) |
+| F27 | `tb/training` | new `scripts/creatures/essence.gd`; `progression.gd` (auto-XP scale, spend); release in `tab_creatures.gd` | new `data/config/essence.json` (starting `auto_xp_scale` 0.35, per-level cost curve, release payout); essence and candy in `items.json` | two-peer duplication smoke, route ledger |
+| F28 | `tb/training` | new `scripts/creatures/breakthrough.gd`; Master scenes and placements | new `data/config/masters.json`, `data/recipes/feasts.json`; level caps `[10,20,30,40,50,60]` live and `[70,80,90,100]` reserved (F16 decides which file holds them) | Master win → feast → cap-lift witness; two-peer recipe receipts |
+| F29 | `tb/training` | `scripts/creatures/evolution.gd` (breakthrough-triggered lines) | new `data/config/evolution_lines.json`; `species.json` evolution fields; storm bear under `assets/creatures/tetherbound/<name>/` (flag-gated) | identity-preservation test |
+| F30 | `tb/training` | new `scripts/creatures/traits.gd`; spawn roll hooks | new `data/config/traits.json` | per-trait test, roll distribution |
+| F31 | `tb/homestead` | new `scripts/build/station_*.gd`; `craft_panel.gd`; shrine logic in the Crossing Hall | new `data/config/stations.json`; `buildables.json` | two-peer craft smoke, no-automation test |
+| F32 | `tb/homestead` | `farm_logic.gd`, `harvest_node.gd` | `harvest.json` and per-biome harvest configs, `farm.json`, `water_crafting.json` registration; material-tier table (F16 schema) | node census, no-butchery naming test |
+| F33 | `tb/homestead` | new `scripts/creatures/creature_gear.gd`; `player_equipment.gd`; creature accent shader hook | new `data/config/gear.json` | boss simulations per tier |
+| F34 | `tb/homestead` | new `scripts/build/forward_camp.gd`; `camp_tent.gd`, `campfire.gd` | `buildables.json` (kit) | placement smoke in each biome |
+| F35 | `tb/vfx` | `scripts/vfx/ultimates/**` | new `data/moves/ultimates.json`, `assets/vfx/ultimates/**` | shared-ultimate mapping test |
+| F36 | `tb/creature-art` | `creature_animator.gd`, `creature_body.gd` | `species.json` size/scale, `assets/creatures/**`, ART_DIRECTION §7 | pose matrix, scale checks, Meshy log |
+| F37 | `tb/training` | `scripts/player/riding*.gd`, human swim scripts, new dive logic | Tidewake dive placements | ordinary-input witness, two-peer rejoin |
+| F42 | `tb/hud` | new screens in `scripts/ui/**`; `ui_tokens.gd` | `hud.json`, `input_contexts.json` | `input_owner` tests, 1920×1080 and 1280×800 captures |
+| F43 | `tb/loop` | new `scripts/world/bounty_board.gd` | new `data/config/bounties.json` | reconnect smoke |
+| F44 | `tb/loop` | — | rematch and alpha-respawn config, BOSSES rematch profiles | one rematch witness per biome |
+| F45 | `tb/loop` | new `scripts/creatures/research_log.gd`; journal tab | new `data/config/research.json` | persistence test |
+| F46 | `tb/loop` | — | opening and village dialogue, objective beacons, tutorial prompts | agent-piloted next-goal run |
+| F47 | `tb/balance` | ledger scripts | balance configs (`combat.json`, `essence.json`, `gear.json`, `masters.json`, spawn tables) | ledger reports, C2 smokes |
+| F48 | `tb/coop` | fixes only in `scripts/net/**` | — | new `tests/smoke_net_*` for the new systems |
+| F49 | `tb/release` | — | `tests/smoke_four_biome_continuous.gd` (new order), release workflow | integrated run log |
+
+### 11.2 Planned data contracts and the biome-order accessor
+
+- **Schemas (F16#1).** `data/schema/**` gets a JSON schema, plus a loader under `scripts/data/**`, for: type essences and Tether Candy, material tiers, stations and attachments, gear tiers, traits, Masters and feasts, evolution lines, portals, keys and waystones, and level caps (10–100). **Loaders fail loudly on missing or unknown ids.** A schema test proves it.
+- **Eight slots (RD-09).** Every per-biome table (material tiers, attachments, gear tiers, portal arches, shrine pedestals) holds eight slots keyed by `biome_order.json` ids. Slots 5–8 are `reserved`: loaders accept them, gameplay never offers them, and the Hall shows them as sealed.
+- **Tunables** live in `data/config/*.json`, never as script literals. Values that CODEX_START_HERE does not fix are starting values, tuned in F47.
+- **Biome order (F16#2).** New `data/config/biome_order.json` holds `live: [meadows, tidewake, cloudreach, stormwood]` and `reserved: [biome5 … biome8]`, whose display name is "Sealed". One accessor under `scripts/data/` answers every realm-order question: `realm_hearts.json` ordering (today `meadows, cloudreach, stormwood, water`), map realm tabs, journal, credits, portal signs and bounty eligibility. A test fails if gameplay code hard-codes the old Meadows→Cloudreach→Stormwood→Water order. Today the Tidewake realm id is `water` (`water_archipelago.tscn`, `water_*` configs). The accessor maps `tidewake` onto it; renaming the realm id is optional and not required by any criterion.
+- **Retired crossings (F16 build 5).** The `realm_key_*` flag gates sit behind one `legacy_physical_crossings` flag, default off. They are retired, not deleted, and F18 replaces them.
+
+### 11.3 Save schema bump and v27 refusal (RD-35)
+
+- **Versions.** `SaveGame.VERSION` 27 → 28 and `CharacterSave.VERSION` 6 → 7. `WorldSave.VERSION` (2) bumps only if its fields change; F16 decides.
+- **Refusal.** Any v27-or-older merged, world or character file returns a typed `incompatible_old_version` result before any live state changes. The title shows "older version, start a new game" and offers New Game. The file on disk is never modified. Handling of newer, corrupt and missing files is unchanged (§5).
+- **Retired migration paths.** Migration from ≤27 is replaced by the refusal: the v22 split, locator-only provenance, legacy slot IDs, `realm_reward_migration.gd` and `water_recipe_migration.gd` paths. A test asserting an old migration becomes a refusal test in the same PR, with the reason stated. No test is skipped or quarantined (CODEX_START_HERE §7.2). Migration discipline resumes for every change after v28.
+- **New durable fields** follow MULTIPLAYER §10 scopes. Each is registered in `data/progression/flag_scopes.json` or the F16 schema declarations, with scope and transaction semantics. `tests/test_flag_scopes.gd` extends to them, and a two-peer save/reload round trip preserves them (F16#3).
+- **New game (F16#4).** From the title, a new game reaches Grandpa's opening on the v28 schema with an empty satchel apart from authored gifts.
+
+### 11.4 Renderer plan (RD-25; F26)
+
+- **Today.** `project.godot::renderer/rendering_method="gl_compatibility"`. The comments there point at `archive/docs/decisions/D01-godot-version-and-renderer.md`, whose renderer lock RD-25 supersedes for this gated path only.
+- **Startup choice.** Godot picks the rendering method at startup, so switching between Compatibility and Forward+ needs a restart. Candidate mechanisms are a launch argument (`--rendering-method`) or a user-writable project-settings override file. F26 chooses one and tests it. `project.godot` never receives runtime user writes (§7).
+- **Per-preset toggles.** Medium and High set volumetric fog, SSAO, SSIL, glow, shadow size and quality, and LOD or visibility distance through Environment, Viewport and rendering settings at runtime. Values live in `data/config/art.json` (per preset) and the biome look configs. The player's choice persists through `tab_settings.gd` (F26#1). Compatibility ignores the Forward+ features, so the Low look must be complete without them.
+- **Shaders.** Every custom shader in `shaders/**` must compile and read correctly on both renderers. Compatibility-specific settings, such as the per-mesh omni light cap in `project.godot`, are documented per preset.
+- **Drivers.** On Windows, Forward+ runs on Vulkan or Direct3D 12. The historical Ally freezes were on Vulkan, so the owner test checklist names the driver used. If a fallback from RenderingDevice to OpenGL is enabled, it must land on the Low look.
+- **Default switch.** The default stays Compatibility until F26#5 passes on the owner's Ally (Medium handheld ≥30 fps, 40 preferred). The test build exposes the preset choice. The capture path and its limits are in §8.
+
+### 11.5 VFX archetype implementation notes (F25, F35)
+
+- **Library.** Archetypes live in `scripts/vfx/**`, configured in `data/config/vfx.json`. Each move in `data/moves/moves.json` gets a vfx block: archetype, parameters (count, size, colour, arc, trail) and a sound cue id in `audio.json`. A test fails on an unmapped move (F25#1).
+- **Bodies.** A mesh or **`CPUParticles3D` is the default** body. **`GPUParticles3D` only where the archetype also defines a Compatibility fallback** (a CPU or mesh variant) that is proven in a Low capture. Existing GPU-particle users (`alpha_aura.gd`, `aspect_vfx.gd`, `impact_flash.gd`, `telegraph_glow.gd`, `move_projectile.gd` and some world scripts) already draw under Compatibility today. Re-check them on Low when F26 changes lighting.
+- **Timing.** Keep `move_projectile.gd`'s `arrived` signal contract. Damage resolves when the effect arrives; any exception is documented per archetype, and no damage number appears before the visible hit (F25#3).
+- **Budget.** Each archetype declares maximum particles, lifetime and trail segments in `vfx.json`. The worst-case four-creature fight holds frame rate on the Medium capture (F25#4).
+- **Mastery and ultimates.** Mastery tiers scale parameters (F25#5). Ultimates live in `data/moves/ultimates.json` and `scripts/vfx/ultimates/**`: 2–3 s, with no longer loss of control (F35#3).
+- **Co-op.** Effects are presentation only (MULTIPLAYER §2): host-sequenced results drive them, and they never decide a hit. Effects stay attached to the deployed body (ART_DIRECTION §5.1).
+
+### 11.6 Tests and CI expectations for the new systems
+
+- **Unit tests per rule.** Each F row names its proof. Run them through `tests/run_tests.gd`, with the 4-shard run on the merged head before landing (§8, §9).
+- **Guard tests that must exist:**
+  - Schema and unknown-id tests (F16#1); the old-order hard-code test (F16#2); flag-scope registry coverage (F16#3); the v27 fixture refusal (F16#0).
+  - Damage attribution, so no trainer damage (F24#1); no automation (F31#4); no butchery naming (F32#4); no held-button mapping (F23#0).
+  - Unmapped move (F25#1); shared-ultimate mapping (F35#0); one test per trait (F30#4).
+- **Transactions.** Every MULTIPLAYER §10 transaction gets a replay/duplicate unit test. The F48#1 reconnect matrix covers craft, release payout, essence spend, feast, key use and relic hang in `tests/smoke_net_*`. Label those PRs `full-ci`.
+- **Fixtures.** Earned saves regenerate for v28 and the new order with provenance (F19#5). Old ≤v27 fixtures become refusal fixtures.
+- **Ledgers.** Ledger scripts (F27#5, F28#5, F47) produce evidence reports in `ralph/reports/<LANE>/`, not pass/fail unit tests.
+- **Visual rows** need the capture path in §8 and a code-blind judge. A docs-only green CI run verifies none of this.
+
+## 12. Landed slice notes
+
+### Regional homecoming slice
+
+**Planned change (owner, 2026-09-29, RD-22; F20):** the homecoming and credits
+trigger moves from Tidewake's restoration to after the Stormwood finale, reached by
+the player using the Home Key. Tidewake's dock exchange stays as its chapter close.
+The text below describes current source.
+
+`sequence_director.gd` routes the existing Grandpa prompt to
+`regional_homecoming.gd` after the current world's `water_currents_restored`.
+The helper selects data/dialogue/homecoming.json by current local party size,
+substitutes each current nickname/display name separately, and owns the small
+personal acknowledgement/save/rollback transaction. The started character ID
+must still match at completion; Meadows/world eligibility is rechecked.
+`DialogueRunner.completed` and its Panel forwarding distinguish natural final
+advance or accepted terminal consent from programmatic close/decline;
+`finished` retains its existing close lifecycle. Scoped substitutions clear
+on close, and single-pass token replacement never interprets names as templates.
+No new autoload, shared flag, reward or save format. The subsequent local
+credits slice adds `regional_homecoming.gd::credits_pending/complete_credits`
+and player-scoped `regional_credits_seen` in the same flag dictionary.
+`sequence_director.gd` opens `ui/regional_credits.gd` only after saved normal
+homecoming completion, or a completed repeat greeting for an older save.
+The modal participates in input ownership and story lockout, never tree pause.
+Its content and timings live in `data/config/regional_credits.json`. Continue
+or Skip saves the character acknowledgement, rolling back on write failure;
+realm/session/identity changes close without a receipt. No version bump is
+needed because existing generic player flags already round-trip unknown keys.
+Full civilian aftermath, earned return and multi-peer/device ending acceptance
+remain open. UX§2.6 owns the display/input contract.
+
+`quest_log.gd::_active_main` selects the config-backed regional ending feed
+after current-world restoration. All main-story text/hint/id/entry/beacon
+readers use it; optional requests continue using their ordinary realm data.
+The two rows read existing personal homecoming/credits flags and write none.
+`objective_beacon.gd` now has an explicit owning realm and is mounted only in
+the real player-facing Water, Stormwood and Cloudreach worlds, as in Meadows.
+It retains the actual MapState reference and a transient per-instance metadata
+owner, so an exiting realm cannot clear another realm's marker or a newer
+presenter's marker. Realm/map changes refresh even without a flag revision.
+No new durable field, map serialization format, travel edge or party change.
+`regional_ending_objectives.json` owns the current physical return destinations;
+WORLD§6.5 retains the unaccepted long-return pacing and civilian departure gaps.
+
+### Shared wild opponent presentation
+
+`encounter_director.gd` admits a guest before starting its wild combat manager.
+`shared_opponent_proxy.gd` reuses the creature rig with a canonical decoded
+`water_capture_codec.gd` card, host body scale/alpha identity, no collision and
+no local AI. Pose packets use unreliable-ordered channel0 at10Hz; telegraph
+and attack cues use reliable ledger channel1. Encounter ID, realm, body
+generation and separate pose/cue counters bound their lifetime. First pose
+snaps; subsequent motion uses a configured0.05s half-life. Admission timeout
+is5s and sends disengage; finished/refused joins cannot revive from late packets.
+No durable schema or autoload changes. Steam protocolv4 requires the new wire
+contract; ENet compatibility remains an explicit matching-build dependency.
+`shared_wild_host_fight.gd` now gives each host-started ordinary wild its own
+simulation, keyed by encounter ID in the director. It reuses the Stormwood
+authority engine and production damage/RNG; an adapter treats the host player
+like every other damage recipient. The local manager owns input/HUD/camera and
+detaches opponent callbacks on exit. Per-fight bodies, catch claims and cue
+counters survive same-realm withdrawal and a different local fight. Existing
+trainer/boss strike handling remains separate. Terminal ecology commits once;
+the last withdrawal restores the same wounded wild. Catch completion uses the
+stored host decision and current claimant, membership and expiry checks.
+Runtime evidence and limits: `ralph/reports/INVITE-COOP/REPORT.md`.
+Realm-scene transfer, durable encounter recovery, trainer/boss presentation,
+ambient replication and guest-originated wild authority remain open. This
+adds no autoload, save format or wire fields; that lifetime change usesv4.
+
+### Ordinary catch confirmation
+
+`catch_arbiter.gd` identifies each accepted attempt; the director validates its
+exact claim, encounter, participant and expiry again at finish. The manager
+waits for host confirmation before resolving a catch and decodes the host's
+canonical creature card rather than owning its presentation copy. Successful
+finish replies are sent to the catcher as well as terminal notices to others.
+Session-local results are retained for30s, capped at64 entries, for exact retries
+after runtime retirement. `multiplayer.json::encounter.catch_finish_timeout_s`
+is5s; failure grants nothing. Steam protocolv5 gates the changed wire contract;
+ENet still requires matching builds. Water Alpha retains its separate existing
+confirmation/journal path. No new save field or autoload is introduced.
+Ordinary shared catch presentation uses monotonic elapsed time and carries
+phase overshoot, matching the host's6s claim lease. Its missing/rest-failing-orb
+fallback is the authored0.45s absorb, rather than the solo/Water extra2.5s:
+the latter made a three-shake fallback take7.2s before requesting confirmation.
+The shared sequence now fits its authored4.7s budget; a client stalled beyond
+the remaining lease still receives no grant.
+
+This is **not durable ordinary capture delivery**: host retirement and portable
+party persistence are still separate. A disconnect or save failure in between
+can lose a catch; full-party release uses the existing transient pending catch.
+The Water capture journal is the existing candidate for that later integration,
+but its realm-specific routing must be addressed before claiming recovery.
+Evidence: `ralph/reports/INVITE-COOP/REPORT.md`.
+
+### Remote companion replacement
+
+`encounter_director.gd` retains a retirement barrier keyed by peer and old node
+instance ID between `queue_free()` and deferred completion of `tree_exited`.
+All spawn/reconcile paths respect it. A replacement uses the latest deployment
+row after the old `AllyCreature_<peer>` releases its name; repeated changes
+coalesce, while recall/disconnect/session cleanup cannot resurrect a proxy.
+An already-detached old node uses a guarded deferred completion; callbacks never
+dereference freed nodes. Card-only updates preserve the existing body. This
+changes no save field, autoload, RPC fields or Steam protocol (v5). Actual
+replication evidence and limits belong in `ralph/reports/INVITE-COOP/REPORT.md`.

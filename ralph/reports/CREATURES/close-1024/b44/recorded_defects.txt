@@ -1,0 +1,6 @@
+Tt: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Xa: "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Zk: "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Xb: "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Tc: none
+Zh: none

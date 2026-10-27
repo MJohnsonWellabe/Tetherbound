@@ -1,0 +1,35 @@
+{
+ "El": {
+  "anchor": true,
+  "A": "f36_0_npc:C6A",
+  "B": "f36_0_npc:C6B"
+ },
+ "Dl": {
+  "anchor": false,
+  "label": "cloudfang flinch",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b50/sides/cloudfang-flinch.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b50/sides/cloudfang-base.png"
+ },
+ "Kh": {
+  "anchor": false,
+  "label": "stormcapra flinch",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b50/sides/stormcapra-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b50/sides/stormcapra-flinch.png"
+ },
+ "Gc": {
+  "anchor": true,
+  "A": "f36_0_gap:C3A",
+  "B": "f36_0_gap:C3B"
+ },
+ "Kt": {
+  "anchor": false,
+  "label": "breezetail flinch",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b50/sides/breezetail-base.png",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b50/sides/breezetail-flinch.png"
+ },
+ "Tn": {
+  "anchor": true,
+  "A": "f36_0_gap:C4A",
+  "B": "f36_0_gap:C4B"
+ }
+}

@@ -1,0 +1,163 @@
+{
+ "_comment": "Owner 24 Oct 2026 creature touches: 'adding some energy, some elemental effects, and some war torn appearance or hardened appearance to give the unique but still realistic look. Don't go overboard.' One or two light touches per species on the existing model, a small part of the body, realistic first; no red/oxblood. Baked into the remake's own albedo by tools/art_pipeline/creature_touch.py (overlays as in tools/creature_overlays.py, placed by the anatomy map: unit y = height, z = length with the head near 0.85-1.0, radial = distance from the body axis).",
+ "mudsnout": {
+  "source_model": "mudsnout/candidate_nat1024",
+  "also": [
+   "mudsnout/candidate_nat1024t"
+  ],
+  "overlays": [
+   {
+    "id": "hardened_shoulder_hide",
+    "_why": "Hardened: a darker, mud-crusted shield of hide over the shoulders, the way a wallowing boar's shoulders cake and toughen.",
+    "where": {
+     "z_min": 0.55,
+     "z_max": 0.8,
+     "y_min": 0.35
+    },
+    "mode": "shade",
+    "val_scale": 0.42,
+    "sat_scale": 0.65,
+    "coverage": 0.9,
+    "grain": 3.5,
+    "clump_softness": 0.16,
+    "softness": 0.14
+   },
+   {
+    "id": "snout_scar",
+    "_why": "War-torn: a pale scar line across the snout and cheek.",
+    "where": {
+     "z_min": 0.86,
+     "y_min": 0.3,
+     "y_max": 0.7
+    },
+    "mode": "shade",
+    "val_scale": 2.5,
+    "sat_scale": 0.3,
+    "coverage": 0.45,
+    "grain": 6.0,
+    "clump_softness": 0.04,
+    "softness": 0.05,
+    "ring": 3
+   }
+  ],
+  "_why_gpu_1024": "GPU A+C (24 Oct): invisible at stage distance and 'a plain real-world boar'. Bolder hardened hide and scar, plus amber earth-glow seams cracking the shoulder hide (glow); the tusks are the nat1024t build.",
+  "_why_close1024_b26": "b26 (CPU, three judges): the amber seam shell read as gold glitter or an artefact on fur (-0.6 mapped), so the glow is off; the bolder weathering stays for b27."
+ },
+ "terrapup": {
+  "source_model": "terrapup/candidate_dog3",
+  "_why": "b26 judges read dog3's coat as orange-red (red is Team Tether's). Pull the chestnut toward brown: less saturation, value unchanged.",
+  "overlays": [
+   {
+    "id": "chestnut_not_red",
+    "mode": "shade",
+    "sat_scale": 0.72,
+    "val_scale": 0.97,
+    "match": {
+     "hue": [
+      0,
+      40
+     ],
+     "sat_min": 0.3
+    },
+    "softness": 0.05
+   },
+   {
+    "id": "plates_into_fur",
+    "_why": "Tier 3 (coordinator queue): the green stone plates read as stuck-on stones over the coat. Desaturate and darken them toward a weathered, earth-grey stone, so they read as hardened plates grown into the fur. GPU 25 Oct (0aad259db): still a separate blanket; darker weathered value.",
+    "match": {
+     "hue": [
+      70,
+      175
+     ],
+     "sat_min": 0.1
+    },
+    "mode": "shade",
+    "sat_scale": 0.38,
+    "val_scale": 0.62,
+    "coverage": 0.95,
+    "grain": 3.0,
+    "clump_softness": 0.2,
+    "softness": 0.15
+   },
+   {
+    "id": "moss_at_plate_edges",
+    "_why": "GPU 25 Oct (0aad259db) path to 7.5: blend the plates into the fur. Clumps of moss creep from the plates onto the coat of the upper back, so plate and fur share an edge instead of a hard border.",
+    "where": {
+     "y_min": 0.7,
+     "up_min": 0.25
+    },
+    "mode": "grow",
+    "color": "#556232",
+    "shade": "#2d391b",
+    "coverage": 0.38,
+    "grain": 6.0,
+    "clump_softness": 0.16,
+    "softness": 0.15
+   }
+  ]
+ },
+ "_why_close1024_b27_trailpup": "b27 (CPU, three judges, confirming batch): Trailpup's bolder weathering mapped 7.51 against shipping 7.88. The pale scar lines read as a texture seam on the shoulder and foreleg. Trailpup stays on its shipping albedo; the b24 light touch was score-neutral and invisible at stage distance.",
+ "trailpup": {
+  "source_model": "trailpup/candidate_nat1024",
+  "overlays": [
+   {
+    "id": "trail_dusted_paws",
+    "_why": "Weathered (owner 25 Oct, one subtle unique touch): pale trail dust worked into the paws and lower legs of a coyote that lives on the roads. No scars: b26 judges read bolder scars as a seam. b31: at 1.22 the paws read bleached; softened to 1.1.",
+    "where": {
+     "y_max": 0.2
+    },
+    "mode": "shade",
+    "val_scale": 1.1,
+    "sat_scale": 0.8,
+    "coverage": 0.45,
+    "grain": 6.0,
+    "clump_softness": 0.16,
+    "softness": 0.1
+   }
+  ]
+ },
+ "cindercub": {
+  "source_model": "cindercub/candidate_nat1024b",
+  "_why": "Owner 25 Oct: Cindercub needs definition and features. The near-black coat read as one value and the face was lost. A pale ash-grey mask on the muzzle, cheeks and brow gives the face and eyes a read; the ember cracks stay (embers are natural to fire).",
+  "overlays": [
+   {
+    "id": "ash_mask",
+    "_why": "Definition: a pale ash-grey muzzle, cheeks and brow, so the face and eyes read.",
+    "where": {
+     "z_min": 0.86
+    },
+    "match": {
+     "val_max": 0.6
+    },
+    "mode": "shade",
+    "val_scale": 1.5,
+    "sat_scale": 0.55,
+    "coverage": 0.6,
+    "grain": 4.0,
+    "clump_softness": 0.2,
+    "softness": 0.12
+   }
+  ]
+ },
+ "mirejaw": {
+  "source_model": "mirejaw/candidate",
+  "_why": "GPU batch 2 (tb/gpu-pass 6c12bf6f6): the faint end's near-black back read as 'a dark smear' (2 of 3). A belly-to-camera roll lost on CPU (b34, belly-up read), so the pose stays and the back's darkest scales lift toward a mossy charcoal, keeping the gold scale net.",
+  "overlays": [
+   {
+    "id": "lift_dark_back",
+    "_why": "Lift only the near-black scale fill on the upper body so the back keeps a value structure instead of a black mass.",
+    "where": {
+     "up_min": 0.1
+    },
+    "match": {
+     "val_max": 0.22
+    },
+    "mode": "shade",
+    "val_scale": 2.5,
+    "sat_scale": 1.1,
+    "coverage": 1.0,
+    "softness": 0.12
+   }
+  ]
+ }
+}

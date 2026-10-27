@@ -1,0 +1,10 @@
+{"anchors": {
+  "f36_0_gap:C6B": [6.6, 6.4, 6.4],
+  "f36_0_gap:C6A": [7.1, 7.0, 7.0],
+  "f36_0_npc:C8B": [6.5, 6.2, 6.3],
+  "f36_0_npc:C8A": [6.6, 6.2, 6.3],
+  "craft:before": [5.8, 5.6, 5.8],
+  "craft:after": [7.1, 7.3, 7.0]},
+ "candidates": {
+  "M51 ashfoot OFF (storm_room + dressing ON)": [6.4, 5.3, 5.6],
+  "M51 ashfoot ON (ashfoot_polish)": [6.2, 5.6, 5.5]}}

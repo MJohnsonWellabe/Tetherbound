@@ -1,4 +1,4 @@
-# b12 (25 Oct 2026, CPU): F36#1 roster fixes vs the roster shipping tiles
+# b12 (24 Oct 2026, CPU): F36#1 roster fixes vs the roster shipping tiles
 
 Fixes (authored clips): recoil hit (head snaps up and away, chest back, feet planted) on Terrapup, Burrowback, Bramblebun; back-to-camera -90 roll faint on Terrapup and Burrowback; flat chin-down faint on Paddlenewt; sunk level swim (body median at the stage water line) on Ripplet; belly-flat sprawl faint on the Torrentoad, Mosshock and Cannonback remakes (vs the installed shipping models). Base tiles are the r1-r4 roster tiles (shipping, land head). Standard prompt verbatim, three fresh code-blind judges, anchors craft, f36_0_npc:C1 and one more pair (confirming). Fit linear slope 1.306, intercept -1.342, RMSE 0.26. Warning: Bramblebun (both sides) meets the bar only above the top anchor (7.53); this is the confirming batch.
 

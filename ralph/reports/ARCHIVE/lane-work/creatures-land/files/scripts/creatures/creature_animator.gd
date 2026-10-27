@@ -1,0 +1,401 @@
+extends RefCounted
+
+## Drives a creature's animation from what the creature is doing.
+##
+## Owned by creature_body, which already knows its own speed, and poked by combat for
+## the things speed cannot tell you — an attack, a hit taken, a faint.
+##
+## Clip names come from data, never from code. Every pack names its clips
+## differently: the shipped creatures use `Armature|Frog_Attack` and
+## `Armature|Triceratops_Run`, and the trainer's library uses `Idle_A` and
+## `Throw`. Hard-coding any of that would mean a new creature cannot be added
+## without editing this file, which is exactly what `species.json` exists to
+## avoid.
+##
+## One-shots beat the loop. An attack or a death has to finish; locomotion is
+## what plays when nothing more important is happening.
+
+## Roles the game asks for. A creature missing one falls back to something it
+## does have rather than freezing, because a pack with no `walk` is common and a
+## motionless creature is worse than a slightly wrong one.
+const IDLE := "idle"
+const WALK := "walk"
+const RUN := "run"
+const ATTACK := "attack"
+const HIT := "hit"
+const FAINT := "faint"
+
+## Below this, a creature is standing still.
+const STILL_SPEED := 0.35
+## Above this fraction of its top speed, it is running rather than walking.
+const RUN_FRACTION := 0.55
+## P2-016 (GPU G3, 25 Oct): a named impact window alone showed the wince for
+## about 0.19 s before the next movement cancelled the release, so it landed
+## in one 0.15 s fight frame in 32. Every such hit now holds its wince this
+## long, the same way a stagger does (`hold_wince`): with the clip's release it
+## spans the 0.8 s a damage number stays up (combat.json `duration_seconds`),
+## so any frame showing the number also shows the body reacting.
+const HIT_WINCE_HOLD_S := 0.55
+
+var _player: AnimationPlayer = null
+var _clips: Dictionary = {}
+var _current: String = ""
+## Seconds left of a one-shot that must not be interrupted by locomotion.
+var _hold: float = 0.0
+## Set once a creature has fainted, so nothing plays over its death.
+var _finished := false
+## The attack clip currently being stretched across a combat telegraph. Empty
+## for rigs whose data does not declare an authored contact phase.
+var _telegraph_attack_clip := ""
+var _telegraph_contact_position := 0.0
+var _hitstop_speed_before := 1.0
+var _hitstop_active := false
+var _traversal_role := ""
+var _candidate_pivot: Node3D = null
+var _candidate_pivot_before := Transform3D.IDENTITY
+var _candidate_skeleton: Skeleton3D = null
+var _candidate_bones_before: Array[Transform3D] = []
+var _candidate_pose_active := false
+## Seconds left on a stagger's held wince (see `hold_wince`).
+var _stagger_left := 0.0
+
+
+func _init(animation_player: AnimationPlayer, clips: Dictionary) -> void:
+	_player = animation_player
+	_clips = clips
+
+
+func is_ready() -> bool:
+	return _player != null
+
+
+## F26 presentation LOD may suspend only an ordinary looping pose. Keeping
+## this decision beside one-shot/traversal state avoids caller-side guessing.
+func far_lod_can_pause() -> bool:
+	if _player == null or (_player.active and not _player.is_playing()) \
+			or _finished or _hold > 0.0 or _hitstop_active \
+			or not _traversal_role.is_empty() or _candidate_pose_active:
+		return false
+	if _player.current_animation.is_empty() or not _player.has_animation(_player.current_animation):
+		return false
+	var animation := _player.get_animation(_player.current_animation)
+	return animation != null and animation.loop_mode != Animation.LOOP_NONE
+
+
+func animation_player() -> AnimationPlayer:
+	return _player
+
+
+## Locomotion, from the body's own speed. Called every frame; ignored while a
+## one-shot is holding.
+func tick(delta: float, speed: float, top_speed: float) -> void:
+	if _player == null or _finished:
+		return
+	_hold = maxf(0.0, _hold - delta)
+	if _stagger_left > 0.0:
+		_stagger_left = maxf(0.0, _stagger_left - delta)
+		if _stagger_left > 0.0:
+			return
+		# The stagger is over: the clip plays out its release from the held wince.
+		_player.speed_scale = 1.0
+		var clip := _resolve(HIT)
+		if clip != "" and _current == clip:
+			_hold = maxf(0.0, _player.get_animation(clip).length - _player.current_animation_position)
+	if _candidate_impact_pending():
+		return
+	if speed >= STILL_SPEED and (_candidate_pose_active or _has_impact_window()) and _current == _resolve(HIT):
+		# Remote bodies follow a transform rather than calling request_move.
+		# They need the same release into gait after the visible impact sample.
+		_hold = 0.0
+	if _hold > 0.0:
+		return
+	if _traversal_role != "" and _resolve(_traversal_role) != "":
+		# A rider at rest keeps the installed idle, avoiding a walk-in-place.
+		if _traversal_role != "ride" or speed >= STILL_SPEED:
+			_play(_traversal_role, true)
+			return
+
+	if speed < STILL_SPEED:
+		_play(IDLE, true)
+	elif top_speed > 0.0 and speed > top_speed * RUN_FRACTION:
+		_play(RUN, true)
+	else:
+		_play(WALK, true)
+
+
+## Play a one-shot and hold locomotion off until it finishes. A combat hit
+## also holds its wince (`HIT_WINCE_HOLD_S`); `hold_hit_wince` false plays the
+## hit clip straight through, for presentation that is not a combat hit.
+func play_once(role: String, hold_hit_wince: bool = true) -> void:
+	if _player == null or _finished:
+		return
+	if role == HIT and _stagger_left > 0.0:
+		return  # already holding the stagger's wince
+	var clip := _resolve(role)
+	if clip == "":
+		return
+	# Combat resolves the strike through the body's long-standing play_attack()
+	# call. If this exact clip already supplied the wind-up, continue from its
+	# authored contact pose instead of restarting at frame zero after damage.
+	if role == ATTACK and clip == _telegraph_attack_clip and clip == _current:
+		_player.seek(_telegraph_contact_position, true)
+		_player.speed_scale = 1.0
+		_hold = maxf(0.0, _player.get_animation(clip).length - _telegraph_contact_position)
+		_telegraph_attack_clip = ""
+		_telegraph_contact_position = 0.0
+		return
+	if role == HIT and hold_hit_wince and hold_wince(HIT_WINCE_HOLD_S):
+		# Damage can freeze animation immediately, then locomotion cancels the
+		# hold on the first resumed tick. Show the authored wince now and keep
+		# it long enough to read; the clip then plays out its release.
+		return
+	_clear_telegraph_attack()
+	_hold = _player.get_animation(clip).length
+	if clip.begins_with("f36_candidate/"):
+		_current = ""
+	_play(role, false)
+
+
+## Start an attack while its gameplay telegraph begins, but only for an
+## animation map that declares where THIS clip's authored contact occurs.
+## Unannotated rigs retain the old impact-time playback rather than borrowing a
+## timing guess from another skeleton family.
+func begin_attack_telegraph(seconds_to_impact: float) -> bool:
+	if _player == null or _finished or seconds_to_impact <= 0.0:
+		return false
+	var contact_phase := float(_clips.get("attack_contact_phase", 0.0))
+	if contact_phase <= 0.0 or contact_phase >= 1.0:
+		return false
+	var clip := _resolve(ATTACK)
+	if clip == "":
+		return false
+	var length := float(_player.get_animation(clip).length)
+	if length <= 0.0:
+		return false
+	_telegraph_attack_clip = clip
+	_telegraph_contact_position = length * contact_phase
+	var playback_speed := _telegraph_contact_position / seconds_to_impact
+	_hold = length / playback_speed
+	# A previous attack can still be `_current` during a very fast combat state
+	# change. A new telegraph is a new committed wind-up and starts at frame zero.
+	_current = ""
+	_play(ATTACK, false, playback_speed)
+	return true
+
+
+## P2-016 (GPU, 24 Oct): a stagger showed its label over an idle body once the
+## 0.25 s wince had run out. A stagger now holds the hit clip's wince, the middle
+## of its impact window, for the whole stagger, then lets the clip play out its
+## release. Only for a hit that names its window (an installed recipe, or a
+## remake's `hit_impact`); any other rig keeps its old behaviour. Returns whether
+## it is holding.
+func hold_wince(seconds: float) -> bool:
+	if _player == null or _finished or seconds <= 0.0 or not _has_impact_window():
+		return false
+	var clip := _resolve(HIT)
+	if clip == "":
+		return false
+	_clear_telegraph_attack()
+	_current = ""
+	_play(HIT, false)
+	var length := float(_player.get_animation(clip).length)
+	var start := clampf(float(_clips.get("hit_start_phase", 0.0)), 0.0, 1.0)
+	var release := clampf(float(_clips.get("hit_release_phase", start)), start, 1.0)
+	_player.seek(length * (start + release) * 0.5, true)
+	_player.speed_scale = 0.0
+	_stagger_left = seconds
+	_hold = seconds
+	return true
+
+
+## A faint is final: it plays once and nothing plays after it, so a creature
+## does not stand back up into its idle two seconds after being knocked out.
+func play_faint() -> void:
+	play_terminal(FAINT)
+
+
+## Play an authored terminal pose and keep locomotion from replacing its final
+## frame. Beds use this for species-specific rest clips; combat uses faint.
+func play_terminal(role: String) -> void:
+	if _player == null:
+		return
+	play_once(role)
+	_finished = true
+
+
+func revive() -> void:
+	if _player != null and _candidate_pose_active:
+		_player.stop()
+	_finished = false
+	_hold = 0.0
+	_current = ""
+	_clear_telegraph_attack()
+	_restore_candidate_pivot()
+
+
+func set_traversal_role(role: String) -> void:
+	_traversal_role = role if role in ["ride", "swim", "fly_grip"] else ""
+
+
+func owns_pose() -> bool:
+	return _finished or not _traversal_role.is_empty() \
+		or (_candidate_pose_active and _hold > 0.0)
+
+
+func bind_candidate_pivot(pivot: Node3D) -> void:
+	_candidate_pivot = pivot
+	_candidate_pivot_before = pivot.transform
+	var skeletons := pivot.find_children("*", "Skeleton3D", true, false)
+	if skeletons.size() == 1:
+		_candidate_skeleton = skeletons[0] as Skeleton3D
+		for bone in _candidate_skeleton.get_bone_count():
+			_candidate_bones_before.append(_candidate_skeleton.get_bone_pose(bone))
+
+
+func _restore_candidate_pivot() -> void:
+	if not _candidate_pose_active:
+		return
+	if is_instance_valid(_candidate_pivot):
+		_candidate_pivot.transform = _candidate_pivot_before
+	# Installed clips often key only moving limbs. Restore the candidate's
+	# neck, tail and folded wings too, or they persist into ordinary locomotion.
+	if is_instance_valid(_candidate_skeleton):
+		for bone in _candidate_bones_before.size():
+			var pose := _candidate_bones_before[bone]
+			_candidate_skeleton.set_bone_pose_position(bone, pose.origin)
+			_candidate_skeleton.set_bone_pose_rotation(bone, pose.basis.get_rotation_quaternion())
+			_candidate_skeleton.set_bone_pose_scale(bone, pose.basis.get_scale())
+	_candidate_pose_active = false
+
+
+## W12-COMPANION-0904. Play `role` once IF this rig has a clip for it (its own
+## or a fallback), and say whether it did. The companion-presence layer asks
+## for clips by role ("hit" as a flinch, "attack" as a roar) without knowing
+## the rig, and a role the pack lacks must cost nothing rather than freeze the
+## pose -- `play_once` already refuses an unknown role silently; this is the
+## same call with an answer, so a caller can substitute procedural motion.
+func play_if_exists(role: String) -> bool:
+	if _player == null or _finished:
+		return false
+	if _resolve(role) == "":
+		return false
+	# Companion Presence's out-of-combat reactions (a hurt flinch, a nod) are
+	# not combat hits: freezing the clip at its wince for the P2-016 hold would
+	# stop the idle and override Presence's own playback speed.
+	play_once(role, false)
+	return true
+
+
+## A one-shot hold is presentation for a moment nothing more important is
+## happening — but "nothing more important" stops being true the instant
+## something asks this creature to move under its own power again. Recorded
+## with a real fight (`tools/diag_combat_animation.gd`, R4.11): a wild
+## creature hit mid-chase keeps closing distance the very next physics frame
+## (its AI's CLOSE intent does not pause for being hit), so the body was
+## visibly sliding across the arena for the rest of the hit clip's length
+## while the pose stayed frozen on the hit reaction — 23.8% of sampled
+## frames in one fight. `request_move` calls this whenever it is given a real
+## direction, so a creature already back under way is never shown standing
+## still for a pose that finished being true.
+func cancel_hold() -> void:
+	if _stagger_left > 0.0 or _candidate_impact_pending():
+		return
+	_hold = 0.0
+	_clear_telegraph_attack()
+
+
+## Keep only the authored impact window, including a movement request issued
+## in the very same physics step as damage. After it, movement resumes gait.
+## Animation position also respects hitstop without adding a gameplay timer.
+func _candidate_impact_pending() -> bool:
+	if _player == null or not (_candidate_pose_active or _has_impact_window()) or _current != _resolve(HIT):
+		return false
+	var start_phase := clampf(float(_clips.get("hit_start_phase", 0.0)), 0.0, 1.0)
+	var release_phase := clampf(float(_clips.get("hit_release_phase", start_phase)), start_phase, 1.0)
+	return _player.current_animation_position < _player.get_animation(_current).length * release_phase
+
+
+## Freeze only this model's current frame. CombatManager owns the short clock
+## and calls this on both fighters, leaving the camera and world responsive.
+func set_hitstop(active: bool) -> void:
+	if _player == null or active == _hitstop_active:
+		return
+	_hitstop_active = active
+	if active:
+		_hitstop_speed_before = _player.speed_scale
+		_player.speed_scale = 0.0
+	else:
+		_player.speed_scale = 0.0 if _stagger_left > 0.0 else _hitstop_speed_before
+
+
+func _play(role: String, looping: bool, playback_speed: float = 1.0) -> void:
+	var clip := _resolve(role)
+	if clip == "" or clip == _current:
+		return
+	_current = clip
+	if role != HIT:
+		_stagger_left = 0.0
+	var leaving_candidate := _candidate_pose_active and not clip.begins_with("f36_candidate/")
+	if not clip.begins_with("f36_candidate/"):
+		_restore_candidate_pivot()
+	else:
+		_candidate_pose_active = true
+	var animation := _player.get_animation(clip)
+	if animation != null:
+		animation.loop_mode = Animation.LOOP_LINEAR if looping else Animation.LOOP_NONE
+	# Cross-faded. A creature that snaps between idle and run reads as broken
+	# even when the states are right.
+	# Use one speed mechanism. AnimationPlayer's custom play speed and
+	# `speed_scale` multiply; mixing them would leave the telegraph rate active
+	# after setting only `speed_scale` back to one at impact.
+	_player.speed_scale = playback_speed
+	# Blending the old candidate would reapply its unkeyed bones and pivot
+	# after restoration. The installed clip starts from the restored rig.
+	var impact_pose := role == HIT and (clip.begins_with("f36_candidate/") or _has_impact_window())
+	_player.play(clip, 0.0 if leaving_candidate or impact_pose else 0.15)
+
+
+## An installed recipe hit, or a remake's own held hit that names its window
+## (`hit_impact` in species.json): either starts at its impact sample and holds
+## it until the release phase, through hitstop and same-step movement.
+func _has_impact_window() -> bool:
+	return _clips.has("hit_start_phase")
+
+
+func _clear_telegraph_attack() -> void:
+	_telegraph_attack_clip = ""
+	_telegraph_contact_position = 0.0
+	if _player != null:
+		_player.speed_scale = 1.0
+
+
+## Find a clip for a role, falling back rather than failing.
+##
+## A pack with no walk cycle is ordinary — the shipped frog has only idle,
+## attack, death and jump. Falling back to idle keeps it animating; returning
+## nothing would freeze it mid-pose and look like a crash.
+func _resolve(role: String) -> String:
+	var wanted := str(_clips.get(role, ""))
+	if wanted != "" and _player.has_animation(wanted):
+		return wanted
+	for alternative in _fallbacks(role):
+		var clip := str(_clips.get(alternative, ""))
+		if clip != "" and _player.has_animation(clip):
+			return clip
+	return ""
+
+
+func _fallbacks(role: String) -> Array[String]:
+	match role:
+		RUN:
+			return [WALK, IDLE]
+		WALK:
+			return [RUN, IDLE]
+		HIT:
+			return [IDLE]
+		ATTACK:
+			return [IDLE]
+		FAINT:
+			return [IDLE]
+		_:
+			return []
