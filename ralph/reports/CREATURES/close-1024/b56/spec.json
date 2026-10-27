@@ -1,0 +1,22 @@
+[
+ {
+  "label": "terrapup dog r5 vs badger",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b56/sides/terrapup-badger.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b56/sides/terrapup-dog5.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint end, and ridden with the trainer seated on it. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "Stone plates read as a pad or pack strapped on rather than grown from the creature",
+   "The coat reads saturated orange rather than a natural brown"
+  ]
+ },
+ {
+  "label": "terrapup dog r5 vs r4",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b56/sides/terrapup-dog.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b56/sides/terrapup-dog5.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint end, and ridden with the trainer seated on it. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "Stone plates read as a pad or pack strapped on rather than grown from the creature",
+   "The coat reads saturated orange rather than a natural brown"
+  ]
+ }
+]
