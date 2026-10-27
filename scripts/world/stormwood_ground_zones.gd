@@ -24,6 +24,8 @@ uniform vec4 sz_soil_colour : source_color = vec4(0.17, 0.14, 0.11, 1.0);
 uniform vec4 sz_moss_colour : source_color = vec4(0.14, 0.22, 0.12, 1.0);
 uniform vec2 sz_pool = vec2(0.0, 0.0);
 uniform vec4 sz_pool_colour : source_color = vec4(0.05, 0.06, 0.07, 1.0);
+uniform float sz_pool_roughness = 0.75;
+uniform float sz_pool_specular = 0.06;
 
 float sz_hash12(vec2 p) {
     vec3 p3 = fract(vec3(p.xyx) * 0.1031);
@@ -70,10 +72,12 @@ const TAIL := """
             if (sz_pool.y > sz_pool.x) {
                 float sz_pool_w = (1.0 - smoothstep(sz_pool.x, sz_pool.y, sz_n)) * sz_green * sz_strength;
                 ALBEDO = mix(ALBEDO, sz_pool_colour.rgb, sz_pool_w);
-                // Satin, not mirror: a glossy pool reflected the pale sky as
-                // a silver puddle (r21 preview).
-                ROUGHNESS = mix(ROUGHNESS, 0.38, sz_pool_w);
-                SPECULAR = mix(SPECULAR, 0.25, sz_pool_w);
+                // Matte, not satin: a glossy pool reflected the pale sky as a
+                // silver puddle (r21 preview), and on GPU (SW13) the satin
+                // 0.38 / 0.25 caught the sky as hard white-cyan rims where the
+                // pool blends in ("glass slabs"). Low specular, rough water.
+                ROUGHNESS = mix(ROUGHNESS, sz_pool_roughness, sz_pool_w);
+                SPECULAR = mix(SPECULAR, sz_pool_specular, sz_pool_w);
             }
         }
     }
@@ -135,3 +139,6 @@ static func install(terrain: Object) -> void:
 	for key: String in ["soil_colour", "moss_colour", "pool_colour"]:
 		if zones.has(key):
 			material.call("set_shader_param", "sz_" + key, Color(str(zones[key])))
+	for key: String in ["pool_roughness", "pool_specular"]:
+		if zones.has(key):
+			material.call("set_shader_param", "sz_" + key, float(zones[key]))
