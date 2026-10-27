@@ -2,7 +2,7 @@
 
 ## Session 2 log (newest first)
 
-- 27 Oct 00:24Z **READY (GPU candidate): `tb/stormwood-m48-on` ebcae6ed, Ashfoot room.**
+- 27 Oct 00:24Z **READY (GPU candidate): `tb/stormwood-m48b-on` cc99525a534670ebcf1a41f33a578c09b7923b55, Ashfoot room** (supersedes m48 ebcae6ed: adds the golden `copper_tint` fix; the kit wall lantern read dark red, and red is Team Tether only).
   - **Change:** `cottage_interior_finish.json storm_finish.storm_room` + `stormwood_dressing` ON; the lane keeps both OFF. This is coordinator priority 1: SW16 left it at 6.96, 0.54 short.
   - **CPU r48:** 5.37 -> 6.31 mapped (+0.94), 3/3 judges prefer ON. Warm-room and no-Stormwood defects PRESENT -> PARTIAL 3/3 (`r48/VERDICT.md`).
   - **What to capture:** the F41 catalogue Ashfoot stands, inside (four phases) and outside (no-change check), at Medium and High against lane HEAD.

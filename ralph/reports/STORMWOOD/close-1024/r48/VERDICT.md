@@ -21,4 +21,4 @@
 
 **Checks on the arm config:** `smoke_stormwood_ashfoot_shelter.gd` 16 checks, 0 failed, no script errors (shelter roof and lightning shelter unchanged inside, at 11 m and at 60 m).
 
-**Arm:** `tb/stormwood-m48-on` ebcae6ed. It is lane HEAD with `storm_room` and `stormwood_dressing` ON.
+**Arm:** `tb/stormwood-m48b-on` cc99525a534670ebcf1a41f33a578c09b7923b55. It is lane HEAD with `storm_room` and `stormwood_dressing` ON, plus the golden `copper_tint` (#c9a06a) the red-bracket note led to. m48 ebcae6ed is the same without the tint.
