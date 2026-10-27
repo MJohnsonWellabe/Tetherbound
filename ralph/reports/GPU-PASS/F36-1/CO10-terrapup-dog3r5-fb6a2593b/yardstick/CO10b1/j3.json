@@ -1,0 +1,116 @@
+{
+ "sets": {
+  "Zq": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "PARTIAL",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "FIXED",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's badger-and-shell body has a Palworld-class silhouette, but A's tawny cat/wolf with a small plate cluster reads as a different, weaker creature, and the flat grey stage gives no Valheim-class light to carry either."
+  },
+  "Jp": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's smooth terracotta-clay boar reads as a toy off the owner's naturalistic bar, B's fur is closer but noisy with yellow blotches, and on both sides the boar is no taller than the 1.80 m trainer."
+  },
+  "Ji": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The warm, expressive elder face and the earthy green vest and scarf have a shipping-character finish that fits the key art's village, held back only by the empty dark backdrop."
+  },
+  "Bo": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's panel is readable and on-direction, but the murky, flat-lit rainy world behind it has none of Palworld's saturation or Valheim's storm atmosphere, and B's tiny grey hints would not pass a Palworld HUD."
+  },
+  "Pi": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-fleeced, dark-horned ram meets the owner's style bar and would sit beside Palworld creatures, though its faint poses (A's head lost under the body, B's spidery splayed legs) weaken the read."
+  },
+  "Ab": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "PARTIAL",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "FIXED",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's shelled badger reads as a believable Palworld-class mount, but A's warm cat/wolf with a small backpack of plates does not, and the neutral stage gives no time-of-day light or atmosphere."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Bring the weak creature models up to the owner's naturalistic style bar: the Jp boar needs real fur in place of clay, an end to the yellow blotch noise, and enough size to stand clearly taller than the 1.80 m trainer; Zq/Ab should standardise on B's integrated shell-backed body rather than A's cat/wolf with a plate pack.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Crafting panel: keep A's type size, ingredient lines and white action hints, add explicit controller button glyphs (A / B) and B's longer scrolling recipe list, and brighten the orange 'have 0' subtext.",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-author faint poses so the head and face stay visible and the body settles onto the stage: Pi A's head and horns are lost under the body, Pi B's legs splay like a spider, and Jp A's faint end tips the boar upright.",
+   "kind": "scene"
+  }
+ ]
+}

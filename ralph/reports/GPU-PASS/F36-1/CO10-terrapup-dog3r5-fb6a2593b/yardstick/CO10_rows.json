@@ -1,0 +1,130 @@
+[
+ {
+  "batch": 1,
+  "code": "Zq",
+  "label": "CO10 terrapup High cand|ship",
+  "side": "CO10-terrapup-cand-High",
+  "mapped": 6.3,
+  "judges": [
+   6.12,
+   6.67,
+   6.12
+  ],
+  "defects": [
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "PARTIAL",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+    "Clipping (the rider or plates passing through the body)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "PARTIAL",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Zq",
+  "label": "CO10 terrapup High cand|ship",
+  "side": "CO10-terrapup-ship-High",
+  "mapped": 7.22,
+  "judges": [
+   7.22,
+   7.22,
+   7.22
+  ],
+  "defects": [
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "FIXED",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ab",
+  "label": "CO10 terrapup Medium cand|ship",
+  "side": "CO10-terrapup-cand-Medium",
+  "mapped": 6.3,
+  "judges": [
+   6.12,
+   6.67,
+   6.12
+  ],
+  "defects": [
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "PARTIAL",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+    "Clipping (the rider or plates passing through the body)": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "PARTIAL",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ab",
+  "label": "CO10 terrapup Medium cand|ship",
+  "side": "CO10-terrapup-ship-Medium",
+  "mapped": 7.22,
+  "judges": [
+   7.22,
+   7.22,
+   7.22
+  ],
+  "defects": [
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+    "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "FIXED",
+    "Clipping (the rider or plates passing through the body)": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ }
+]

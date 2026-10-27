@@ -1,0 +1,21 @@
+# Queue 52: CO10 re-run PLAIN (queue 50's --candidate runs all exited 1: "terrapup: F36 candidate did not install"; terrapup has no F36 recipe,
+# which is why MJ/TP shot it plain). Terrapup dog3 r5 tb/co10-on fb6a2593b vs main 58bef4fc7, capture_f36_poses.gd --whole-body --context.
+# Started after queue 51 (MH8); out\CO10p.done marks a finished run.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $main = "D:\tb-gpu-pass"; $crA = "D:\tb-gpu-wt-crA"; $tide = "D:\tb-gpu-wt-tide"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "45"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+if (Test-Path "$out\CO10p.done") { "CO10 plain already captured; skipping"; return }
+Gate "CO10p"
+"== CO10 re-run (CLOSE-OUT, plain): terrapup, main 58bef4fc7 vs cand fb6a2593b"
+foreach ($arm in @(@("cand", "fb6a2593b970d98b06534c4dc040a3223f8a70f3"), @("ship", "58bef4fc7ea9c53256272c8f72cc0f6132519ba4"))) {
+    CheckoutCrA $arm[1]; Import $crA "crA-CO10p-$($arm[0])"
+    foreach ($pr in "Medium", "High") {
+        Gate "CO10p $($arm[0]) $pr"
+        CleanCrA $arm[1]
+        Pose "CO10-$($arm[0])-$pr" $pr "terrapup" @() $arm[1]
+    }
+}
+New-Item -ItemType File -Force "$out\CO10p.done" | Out-Null
+"CO10 plain done"
+"queue52 done"

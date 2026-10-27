@@ -1,0 +1,116 @@
+{
+ "sets": {
+  "Zq": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Grounded naturalistic fur and a readable badger face (B) carry it, but A's muddy plate ridge and marginal height over the trainer, and B's saturated plastic-green shell sitting on the fur with a hard seam, sit below the Palworld/owner-bar finish."
+  },
+  "Jp": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's boar is a glossy terracotta-clay toy with pasted moss and a faint end that tips onto its snout facing camera, and B's ochre leopard-spotted coat with gold blobs plus a faint mid that hangs above its shadow, so neither reaches the naturalistic owner bar."
+  },
+  "Ji": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder with clear eyes, white hair and beard and an olive/green earth palette that fits the key art's settlement, held back only by a cartoonier face than the naturalistic creature line."
+  },
+  "Bo": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's large blue-grey panel with big ingredient lines and white Craft/Leave hints reads at a glance, but B shrinks recipe lines to truncated 'have 0), 3 St...' text and grey 'Craft: A / Enter' hints, and the murky dark rainy backdrop is far from Palworld's clean HUD-over-world finish."
+  },
+  "Pi": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A matches the owner's Stormcapra bar (white fleece, dark curled horns, blue chest glow, tall over the trainer, grounded faint), while B's faint mid tumbles in the air above its shadow and its faint end splays on its back like a ragdoll."
+  },
+  "Ab": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same read as its twin set: naturalistic fur and B's white-striped face carry the silhouette, but A's indistinct mossy plate ridge and near-trainer height, and B's toy-green shell scutes sitting on the fur, keep it below the Palworld/owner-bar finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Ground every faint pose: snap fainted bodies to the stage with contact shadows and settle them on the side instead of mid-air tumbles or nose-down rotations (Pi B faint mid/end, Jp B faint mid, Jp A faint end).",
+   "kind": "scene"
+  },
+  {
+   "change": "Rework creature materials toward the owner's naturalistic bar: replace Jp's clay-orange (A) and ochre leopard-spot (B) boar coats with grey-brown fur and integrated moss per Mudsnout/Tuskroot, and desaturate Zq/Ab B's shell to mossy grey stone blended into the fur (A: blend the plate ridge into the coat).",
+   "kind": "scene"
+  },
+  {
+   "change": "Ship side A's craft panel scale at both resolutions, keeping B's longer recipe list in a scrolling column, and show controller-first A/B glyphs in teal for Craft/Leave.",
+   "kind": "scene"
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+[
+    {
+        "item":  "CO10",
+        "species":  "terrapup",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "ridden"
+                  ]
+    },
+    {
+        "item":  "CO10",
+        "species":  "terrapup",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "ridden"
+                  ]
+    }
+]

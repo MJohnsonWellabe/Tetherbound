@@ -1,0 +1,116 @@
+{
+ "sets": {
+  "Zq": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "PARTIAL",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+     "Clipping (the rider or plates passing through the body)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's dark-furred badger with a green shell carapace reads as a coherent naturalistic creature, but on a flat grey stage with no sky, fog or time-of-day grade nothing yet matches Palworld/Valheim finish."
+  },
+  "Jp": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's smooth clay-toy piglet with moss patches is off the naturalistic style bar, and side B's noisy gold-spotted boar floats in faint mid; both stand only about trainer height."
+  },
+  "Ji": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder villager has a warm, readable face, a clear silhouette and a green-brown palette that fits the key art, but the close-ups are lit flat on black with no rim light, so the presentation stops short of shipping finish."
+  },
+  "Bo": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's large gold ingredient lines and full recipe text read on a blue-grey panel, but the hints are plain keyboard glyphs with no teal accent, the world behind is a murky flat night, and side B truncates recipes and shrinks the hints to tiny grey text."
+  },
+  "Pi": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The white-fleeced, black-horned ram matches the owner's Stormcapra bar when standing, but side B's faint mid and faint end twist into a splayed, half-airborne ragdoll, and on both sides the standing frame has lost its label and stage framing."
+  },
+  "Ab": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "PARTIAL",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PRESENT",
+     "Clipping (the rider or plates passing through the body)": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the coat reads orange-red rather than a natural chestnut brown": "FIXED",
+     "the stone plates on the back read as a separate pack or saddle strapped on top of the body rather than as part of the creature": "PARTIAL",
+     "Clipping (the rider or plates passing through the body)": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This set looks the same as Zq. Side B's shelled badger carries the identity, while side A's tan canine with a strapped-on cluster of plates does not, and the neutral stage gives no atmosphere to match Palworld or Valheim."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Bring the off-bar creatures up to the owner's naturalistic style bar: replace the clay-toy piglet (Jp A) and the canine with strapped-on plates (Zq/Ab A) with naturalistic fur-and-plate meshes, and scale them so every creature clearly stands taller than the 1.80 m trainer.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix the faint poses so they stay grounded and intact: no airborne or splayed ragdoll (Pi B faint mid/end), no body lifted off its shadow (Jp B faint mid), and legs and horns kept visible (Pi A faint mid). Also restore the stage framing and label on the standing frame (Pi).",
+   "kind": "scene"
+  },
+  {
+   "change": "Build the craft panel on side A's type scale (untruncated recipe lines, gold ingredient counts), and make the Craft and Leave hints controller glyphs in teal/cyan at title weight.",
+   "kind": "scene"
+  }
+ ]
+}
