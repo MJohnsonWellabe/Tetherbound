@@ -1,0 +1,4 @@
+Vp: none
+Ki: none
+Vw: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Bg: "the lightning core reads as a bloomed light pillar, not lightning"; "the hollow floor reads as a dirt disc in a grass ring, not a living trunk"; "dark monochrome interior"

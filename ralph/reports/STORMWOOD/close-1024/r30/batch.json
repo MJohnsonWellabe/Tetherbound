@@ -1,0 +1,10 @@
+{"anchors": {
+  "craft:before": [5.3, 5.6, 5.4],
+  "craft:after": [6.4, 7.0, 6.6],
+  "f10_2_r3_capacitor:candidate_r3": [5.0, 4.6, 4.4],
+  "f10_2_r3_capacitor:control": [4.3, 4.1, 3.9],
+  "f36_0_gap:C6A": [6.7, 6.7, 6.6],
+  "f36_0_gap:C6B": [5.7, 6.1, 5.6]},
+ "candidates": {
+  "R30 lantern pools OFF (lane)": [3.8, 3.8, 3.6],
+  "R30 lantern pools ON (hollow: grove, raised basins, glow fungi)": [5.0, 5.3, 4.8]}}

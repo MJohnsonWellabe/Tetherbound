@@ -1,0 +1,10 @@
+{"anchors": {
+  "f36_0_gap:C6A": [6.6, 6.6, 6.6],
+  "f36_0_gap:C6B": [5.6, 5.8, 5.7],
+  "craft:before": [5.2, 5.0, 4.9],
+  "craft:after": [6.8, 6.9, 6.8],
+  "f10_2_r3_capacitor:candidate_r3": [5.0, 5.0, 5.0],
+  "f10_2_r3_capacitor:control": [4.3, 4.3, 4.4]},
+ "candidates": {
+  "R22 ground OFF (main)": [5.0, 5.0, 5.2],
+  "R22 ground ON (zones r22)": [5.4, 5.4, 5.9]}}

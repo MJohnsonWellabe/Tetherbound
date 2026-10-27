@@ -28,8 +28,8 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 			"veilfall_formation_relief_candidate", "veilfall_formation_relief_fill_candidate",
 				"shore_surf_candidate", "shore_surf_vary_candidate", "veilfall_falls_candidate", "rain_fog_candidate",
 				"rain_grade_candidate", "rain_veil_candidate", "swim_candidate", "dune_grass_candidate", "shore_water_candidate",
-				"veilfall_mountain_candidate", "destination_landmarks_candidate",
-				"waterline_declutter_candidate", "destination_landmarks_s3_candidate", "golden_sky_candidate", "current_bands_candidate", "lesson_clusters_candidate", "current_tint_candidate", "destination_landmarks_s4_candidate", "veilfall_buttress_candidate", "swim_stroke_candidate"]:
+				"veilfall_mountain_candidate",
+				"waterline_declutter_candidate", "golden_sky_candidate", "current_bands_candidate", "lesson_clusters_candidate", "current_tint_candidate", "veilfall_cladding_candidate", "veilfall_buttress_candidate", "swim_stroke_candidate"]:
 		assert_true(off.has(section), "%s is unjudged and must ship off" % section)
 		assert_true(raw.has(section), "%s ships in the file for capture" % section)
 	# close-1024 lt2: the time-of-day regrade cleared the CPU-provisional bar
@@ -41,6 +41,14 @@ func test_shipped_look_is_on_with_unjudged_sections_off() -> void:
 		"the regrade's mapped score is recorded in the config")
 	var regraded: Dictionary = PROFILE.settings().get("lighting_candidate", {})
 	assert_true(regraded.get("times", {}).has("golden"), "the regrade reaches play")
+	# GPU TW1: the destination landmark stack (base, s3, s4, s5) beat no
+	# sections by +1.24 mapped, so it ships ON with its GPU verdict beside it.
+	for section: String in ["destination_landmarks_candidate", "destination_landmarks_s3_candidate",
+			"destination_landmarks_s4_candidate", "destination_landmarks_s5_candidate"]:
+		assert_false(off.has(section), "%s ships on after GPU TW1" % section)
+		assert_false((PROFILE.settings().get(section, []) as Array).is_empty(), "%s reaches play" % section)
+	assert_true(str(raw.get("_why_destination_landmarks_candidate", "")).contains("GPU TW1"),
+		"the landmarks' GPU verdict is recorded in the config")
 	# close-1024 p1: the Meshy beach props beat main (mapped 5.59 vs 5.02), so
 	# they ship ON by the coordinator's beats-main rule, score recorded beside them.
 	assert_false(off.has("landmark_props_candidate"), "the judged beach props ship on")

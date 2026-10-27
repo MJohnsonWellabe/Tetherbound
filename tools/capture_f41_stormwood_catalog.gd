@@ -48,6 +48,12 @@ const ASHFOOT_CENTER := Vector2(-365.0, 460.0)
 ## the population, species and everything past the radius are unchanged.
 const SURVEY_CLEARANCE_M := 18.0
 const SURVEY_CLEARANCE_MARGIN_M := 3.0
+## View-cone clearance (GPU SW6, 25 Oct: a wild bear stood in front of the
+## crown heartstone in two frames). A wild body inside the camera's
+## horizontal view, nearer the lens than this, is set down just outside the
+## cone at its own distance. Disclosed per frame with the radius moves.
+const SURVEY_CONE_DEPTH_M := 45.0
+const SURVEY_CONE_MARGIN_DEG := 8.0
 
 var _requested_preset := ""
 var _source_commit := ""
@@ -242,7 +248,7 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 	var receipt: Dictionary = await _stormwood_support_receipt(frame_id)
 	if receipt.is_empty():
 		return
-	receipt["survey_clearance"] = {"radius_m": SURVEY_CLEARANCE_M, "moved": cleared}
+	receipt["survey_clearance"] = {"radius_m": SURVEY_CLEARANCE_M, "view_cone_depth_m": SURVEY_CONE_DEPTH_M, "moved": cleared}
 	await super._capture(frame_id, description, full_size,
 		extra.merged({"stormwood_support_receipt": receipt}, true))
 
@@ -259,13 +265,16 @@ func _clear_survey_lens() -> Array:
 		if body == null or not is_instance_valid(body) or not body.is_inside_tree():
 			continue
 		var at := Vector2(body.global_position.x, body.global_position.z)
-		if at.distance_to(trainer) >= SURVEY_CLEARANCE_M and at.distance_to(lens) >= SURVEY_CLEARANCE_M:
+		var to := at
+		if at.distance_to(trainer) < SURVEY_CLEARANCE_M or at.distance_to(lens) < SURVEY_CLEARANCE_M:
+			var bearing := (at - trainer).normalized() if at.distance_squared_to(trainer) > 0.01 else Vector2.RIGHT
+			to = trainer + bearing * (SURVEY_CLEARANCE_M + SURVEY_CLEARANCE_MARGIN_M)
+			# Leaving the trainer's side can still leave the body by the lens.
+			if to.distance_to(lens) < SURVEY_CLEARANCE_M:
+				to = lens + (to - lens).normalized() * (SURVEY_CLEARANCE_M + SURVEY_CLEARANCE_MARGIN_M)
+		to = _outside_view_cone(to, lens)
+		if to.is_equal_approx(at):
 			continue
-		var bearing := (at - trainer).normalized() if at.distance_squared_to(trainer) > 0.01 else Vector2.RIGHT
-		var to := trainer + bearing * (SURVEY_CLEARANCE_M + SURVEY_CLEARANCE_MARGIN_M)
-		# Leaving the trainer's side can still leave the body by the lens.
-		if to.distance_to(lens) < SURVEY_CLEARANCE_M:
-			to = lens + (to - lens).normalized() * (SURVEY_CLEARANCE_M + SURVEY_CLEARANCE_MARGIN_M)
 		var ground := float(_world.call("ground_height_at", to.x, to.y))
 		if not is_finite(ground):
 			continue
@@ -275,6 +284,24 @@ func _clear_survey_lens() -> Array:
 			(body as CharacterBody3D).velocity = Vector3.ZERO
 		moved.append({"node": str(body.name), "from": [from.x, from.y, from.z], "to": [to.x, ground + 0.1, to.y]})
 	return moved
+
+
+## Returns `at` unchanged unless it lies in the camera's horizontal view
+## within SURVEY_CONE_DEPTH_M; then the same distance from the lens, turned
+## to just past the nearer cone edge.
+func _outside_view_cone(at: Vector2, lens: Vector2) -> Vector2:
+	var offset := at - lens
+	var reach := offset.length()
+	if reach < 0.01 or reach > SURVEY_CONE_DEPTH_M:
+		return at
+	var forward3 := -_camera.global_transform.basis.z
+	var forward := Vector2(forward3.x, forward3.z).normalized()
+	var aspect := float(_camera.get_viewport().get_visible_rect().size.aspect()) if _camera.get_viewport() != null else 16.0 / 9.0
+	var half := atan(tan(deg_to_rad(_camera.fov) * 0.5) * aspect) + deg_to_rad(SURVEY_CONE_MARGIN_DEG)
+	var turn := forward.angle_to(offset)
+	if absf(turn) >= half:
+		return at
+	return lens + forward.rotated(half * (1.0 if turn >= 0.0 else -1.0)) * reach
 
 
 func _stormwood_support_receipt(frame_id: String) -> Dictionary:

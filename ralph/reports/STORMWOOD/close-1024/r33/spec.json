@@ -1,0 +1,12 @@
+[
+ {
+  "label": "R33 lantern pools finish",
+  "a": "<scratch>/sides/lp3_off.jpg",
+  "b": "<scratch>/sides/lp3_on.jpg",
+  "brief": "The Lantern Pools in Stormwood's Glowmoss Hollows, three fixed exploration views (top to bottom) in the calm storm phase, with the 1.80 m trainer as a ruler. Judge whether the pools read as the landmark of the place and the place reads as the key art's storm forest.",
+  "defects": [
+   "the pools read as grey puddles, not black pools",
+   "lantern posts read as flat black bars"
+  ]
+ }
+]

@@ -17,6 +17,7 @@ extends Node3D
 ## literal because from Wave 6 it is an authority answer -- the per-realm
 ## spawners and synchronizer visibility filters key on it.
 const REALM_ID := "meadows"
+const MEADOWS_HERO_PIECES := preload("res://scripts/world/meadows_hero_pieces.gd")
 const DATA_DIR := "res://data/terrain/playground"
 const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
 const LONG_WATER_VISUAL_CONFIG := "res://data/config/long_water_visual.json"
@@ -835,6 +836,8 @@ func _ready() -> void:
 	_terrain.set("data_directory", DATA_DIR)
 	await get_tree().process_frame
 	BOOT_LOG.phase("playground: terrain data_directory assigned")
+	# F38 tier-1 hero pieces (OFF unless meadows_hero_pieces.json enables a group).
+	MEADOWS_HERO_PIECES.build(self)
 	await _shell_build.call("step", "terrain_data")
 
 	_apply_dynamic_collision()
@@ -873,6 +876,8 @@ func _ready() -> void:
 	if bulk_vegetation != null and bulk_vegetation.has_method("begin_bulk_clear"):
 		bulk_vegetation.call("begin_bulk_clear")
 	await _build_settlement()
+	# F38 authored glades (OFF unless meadows_hero_pieces.json enables `clearings`).
+	MEADOWS_HERO_PIECES.clear(self)
 	if is_instance_valid(bulk_vegetation) and bulk_vegetation.has_method("end_bulk_clear"):
 		bulk_vegetation.call("end_bulk_clear")
 	BOOT_LOG.phase("playground: settlement (house, village, signpost, landmark, perimeter, harvest nodes) built")

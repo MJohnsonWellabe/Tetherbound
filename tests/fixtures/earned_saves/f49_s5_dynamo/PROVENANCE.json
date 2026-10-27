@@ -1,0 +1,12 @@
+{
+ "piece": "f49_s5_dynamo",
+ "runner": "storm",
+ "segment_or_profile": "dynamo",
+ "from": "tests/fixtures/earned_saves/f49_s5_gen",
+ "source_commit": "d337837083d447feb474811e861540a3f0762e51",
+ "wall_seconds": 10643,
+ "command": "godot --headless --fixed-fps 60 --path . --script tools/earned_saves/stormwood_chain_runner.gd -- --segment=dynamo --from=<rb>/f49_s5_gen --out=<rb>/f49_s5_dynamo",
+ "lane": "tb/stormwood-routes (Stormwood lane, S3/S5 for F49#0)",
+ "renderer": "Godot 4.7 headless, CPU container",
+ "result": "PASS"
+}

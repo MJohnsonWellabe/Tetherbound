@@ -134,3 +134,26 @@ func test_no_ascent_brace_seats_across_an_open_trunk_split() -> void:
 			assert_false(TREE.in_trunk_split(atan2(pose.origin.z, pose.origin.x), 0.0),
 				"no deck brace stands in a split at tier %.0f" % tier.x)
 	tree.free()
+
+
+func test_heart_cleft_stays_in_the_trunk_wall_and_cools_on_release() -> void:
+	var tree := TREE.new()
+	tree.simulation_only = true
+	var cfg: Dictionary = (tree._read_presentation().get("hero_interior", {}) as Dictionary).get("heart_cleft", {}).duplicate()
+	cfg.enabled = true
+	var root := Node3D.new()
+	tree.add_child(root)
+	tree._heart_cleft(root, cfg, "")
+	var seam := root.get_node("HeartCleft/CleftSeam").get_child(0) as MultiMeshInstance3D
+	var poses: Array[Transform3D] = tree.heart_cleft_seam_poses(cfg)
+	assert_eq(seam.multimesh.instance_count, poses.size(), "the seam and its bolts are built")
+	assert_true(poses.size() > 20)
+	for pose in poses:
+		var at := pose.origin
+		assert_true(Vector2(at.x, at.z).length() >= 46.0, "every bolt stays in the wall, off the walkway and arena")
+		assert_true(TREE.in_trunk_split(atan2(at.z, at.x), 0.08), "every bolt stays in the north cleft")
+	tree.set_core_released(true)
+	for light: OmniLight3D in tree._column_lights:
+		assert_false(light.visible, "release extinguishes the cleft lights")
+	tree.set_core_released(false)
+	tree.free()

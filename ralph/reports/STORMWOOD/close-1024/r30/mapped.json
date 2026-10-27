@@ -1,0 +1,84 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.7087,
+  "least_squares_slope": 0.8849,
+  "method": "linear",
+  "slope": 0.8849,
+  "intercept": 1.097,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.84,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:before": {
+   "measured": 5.433,
+   "reference": 4.83,
+   "mapped": 5.905,
+   "residual": -1.075
+  },
+  "craft:after": {
+   "measured": 6.667,
+   "reference": 7.35,
+   "mapped": 6.997,
+   "residual": 0.353
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 4.667,
+   "reference": 6.53,
+   "mapped": 5.227,
+   "residual": 1.303
+  },
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.1,
+   "reference": 4.0,
+   "mapped": 4.725,
+   "residual": -0.725
+  },
+  "f36_0_gap:C6A": {
+   "measured": 6.667,
+   "reference": 6.47,
+   "mapped": 6.997,
+   "residual": -0.527
+  },
+  "f36_0_gap:C6B": {
+   "measured": 5.8,
+   "reference": 6.9,
+   "mapped": 6.23,
+   "residual": 0.67
+  }
+ },
+ "candidates": {
+  "R30 lantern pools OFF (lane)": {
+   "measured_mean": 3.733,
+   "mapped_mean": 4.4,
+   "mapped_judges": [
+    4.46,
+    4.46,
+    4.28
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "R30 lantern pools ON (hollow: grove, raised basins, glow fungi)": {
+   "measured_mean": 5.033,
+   "mapped_mean": 5.55,
+   "mapped_judges": [
+    5.52,
+    5.79,
+    5.34
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": [
+  "anchor residual RMSE 0.84 > 0.75: these judges do not rank the anchors like the reference judges; report the mapped scores with this caveat"
+ ]
+}

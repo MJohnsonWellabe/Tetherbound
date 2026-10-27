@@ -195,6 +195,17 @@ uniform float clearing_strength : hint_range(0.0, 1.0) = 0.0;
 uniform float clearing_floor : hint_range(0.0, 1.0) = 0.78;
 uniform float clearing_shorten : hint_range(0.0, 1.0) = 0.45;
 
+// GROUND ZONES (Stormwood, F41 gap 1). The terrain's own zone field
+// (`stormwood_ground_zones.gd`, same hash, rotation and octaves): tufts give
+// way where it runs low (bare loam) and stand short and dark where it runs
+// high (deep moss). `zone_strength` 0 skips it, which every other biome ships.
+uniform float zone_strength : hint_range(0.0, 1.0) = 0.0;
+uniform float zone_scale = 0.028;
+uniform vec2 zone_bare = vec2(0.26, 0.36);
+uniform vec2 zone_moss = vec2(0.64, 0.74);
+uniform float zone_moss_shorten : hint_range(0.0, 1.0) = 0.6;
+uniform vec3 zone_moss_tint : source_color = vec3(0.7, 0.8, 0.65);
+
 // VP2 MESH LOD. Tiles that can only be seen from `lod_far_m` and beyond carry a
 // tuft with its last blades missing (`grass_field.gd::_grass_lod`). A cell
 // walking in from a far tile to a nearer one gains those blades, so they are
@@ -214,6 +225,7 @@ uniform int forbidden_base_mask = 12;
 
 varying float v_blade_t;
 varying vec3 v_ground_colour;
+varying float v_moss;
 varying float v_fade;
 varying float v_shade;
 varying float v_leaf_straw;
@@ -577,6 +589,14 @@ void vertex() {
 		clearing = smoothstep(clearing_floor, 1.0, bush_drift) * clearing_strength;
 	}
 	float keep = drift * density_gain * (1.0 - clearing);
+	float zone_moss_w = 0.0;
+	if (zone_strength > 0.001) {
+		float zone_n = value_noise(world_xz * zone_scale) * 0.7
+			+ value_noise(world_xz * zone_scale * 2.7 + vec2(17.3, 5.1)) * 0.3;
+		keep *= 1.0 - (1.0 - smoothstep(zone_bare.x, zone_bare.y, zone_n)) * zone_strength;
+		zone_moss_w = smoothstep(zone_moss.x, zone_moss.y, zone_n) * zone_strength;
+	}
+	v_moss = zone_moss_w;
 	if (dune_shape_active) {
 		vec2 warp = vec2(
 			value_noise(world_xz * dune_gap_warp_scale + dune_gap_offset),
@@ -640,6 +660,7 @@ void vertex() {
 		// Shorter under a bush as well as sparser. Thinning alone leaves the
 		// survivors at full height, still standing through the leaves.
 		h *= 1.0 - clearing * clearing_shorten;
+		h *= 1.0 - zone_moss_w * zone_moss_shorten;
 		// And shorter at the ring's edge, for the same reason at a different
 		// scale -- see `edge_shorten_floor` above.
 		h *= mix(edge_shorten_floor, 1.0, pow(v_fade, edge_shorten_bias));
@@ -736,6 +757,7 @@ void fragment() {
 		col = mix(root, tint_tip, smoothstep(0.12, 1.0, v_blade_t) * v_leaf_straw);
 	}
 	col = mix(col, drain_tint * mix(0.75, 1.1, v_blade_t), v_drain);
+	col = mix(col, col * zone_moss_tint, v_moss);
 	ALBEDO = col * v_shade;
 	ROUGHNESS = 0.95;
 	// Cheap stand-in for the light that passes through a blade. Compatibility

@@ -224,7 +224,7 @@
     },
     "daylight_windows": {
       "enabled": true,
-      "_scope": "Two lights inside existing west nave window apertures. Parent hall_waymark.enabled gates construction; both lights turn OFF at night through the existing clock response.",
+      "_scope": "Four lights at the upper nave window row: two west (x=-6.75, z 0 and 12) and, from F17#6 r9, two east (x=+6.75, z -6 and 6, in the wall bays between the east arches, below the upper window row seen in the r9 nave-arches-right frame). Parent hall_waymark.enabled gates construction; all four turn OFF at night through the existing clock response.",
       "_why_r9": "F17#6 r9: warm window shafts on both sides for the judges' daylight and trainer-exposure ask (with the warm limestone floor, was #a4afb3). F17#6 r9 (24 Oct, CPU-provisional): mapped Bar A 6.84 vs shipping 5.82 (three fresh code-blind judges, JUDGE_PROMPT v1, 3 anchor pairs incl. f36_0_npc:C1 (confirming batch), calibrate.py linear slope 1.11 r 0.89 RMSE 0.55; F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/F17-6.md). Meets the 6.7 CPU-provisional bar; a GPU pass must confirm 7.5.",
       "colour": "#ffe6c0",
       "energy": 2.6,
@@ -943,9 +943,92 @@
       "glow_radius_m": 0.08
     }
   },
+  "arch_facades": {
+    "_why_on_gpu": "ON by GPU (tb/gpu-pass bf099dd2f, ralph/reports/GPU-PASS/F38-0/MH-meadows-heroes-ace3dd7e20): arch_facades ON vs OFF on its own arch stands, +0.79 Medium and +1.11 High; L6 defect PRESENT to PARTIAL on 6/6. Still below 7.5: the judges name the window-strip plaster wall, the dark mossy surrounds and the flat Hall light.",
+    "_why_r1": "close-1024 r1: mapped Bar A 6.92 ON vs shipping 5.50 on the arch detail views (CPU, 25 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, anchors f36_0_npc:C1 / p2_094_r4 / craft, calibrate.py linear slope 1.64 r 0.98 RMSE 0.31, confirming batch; Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/art1024-mapped.json). Meets the 6.7 CPU-provisional bar; judges still flag the unfaced arches' violet rims beside the new surrounds. OFF pending the GPU pass in NOTE.md.",
+     "_why_r2": "close-1024 r2 (OFF, unjudged): every r1 judge flagged the violet neon rims left on the unfaced arches beside the new surrounds. The sealed future arches biome6-8 reuse the sealed biome5 surround; stormwood reuses the carved tidewake surround until its own asset (MESHY line in NOTE.md). Home keeps its existing frame.",
+     "_why_r2_score": "close-1024 r2 (OFF until GPU): mapped Bar A 8.08 vs shipping 5.28 on the arch detail views (CPU, 25 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, anchors p2_094_r4 / f04_6_r22 / craft, calibrate.py linear slope 1.96 r 0.97 RMSE 0.34, confirming batch; Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/art1024r2-mapped.json); r1 6.92 vs 5.50. GPU judging replaced the CPU-provisional rule on 24 Oct (CLAUDE.md), so it stays OFF until a GPU pass scores it. Judges still note the pale Cloudreach (eagle) surround washing out and the window-strip wall behind.",
+    "enabled": true,
+    "_why": "F38 L6 close-1024 candidate (OFF until judged): GPU F38 judges read the arch stands as plaster window-strip walls with blank arches (arch_cloudreach 4.29, arch_tidewake 4.62, arch_biome5 4.15). Coordinator Meshy portal surrounds (tb/meshy-1024 4eb886a11; task ids in each provenance.jsonl), fitted by crossing_hall_arch_facades.gd to 4.4 x 5.2 m around each arch slot (door opening ~2.6 x 3.8 m; the 1.80 m trainer for scale), back face 0.1 m proud of the wall, threshold slab sunk 0.12 m. Presentation only; no collision, portal, route or save change.",
+    "pieces": {
+      "tidewake": {
+        "path": "res://assets/props/meshy-1024/meadows_arch_tidewake/meadows_arch_tidewake.glb",
+        "size_m": [
+          4.4,
+          5.2
+        ],
+        "yaw_deg": 0.0,
+        "z_m": 0.1,
+        "sink_m": 0.12
+      },
+      "cloudreach": {
+        "path": "res://assets/props/meshy-1024/meadows_arch_cloudreach/meadows_arch_cloudreach.glb",
+        "size_m": [
+          4.4,
+          5.2
+        ],
+        "yaw_deg": 0.0,
+        "z_m": 0.1,
+        "sink_m": 0.12
+      },
+      "biome5": {
+        "path": "res://assets/props/meshy-1024/meadows_arch_biome5/meadows_arch_biome5.glb",
+        "size_m": [
+          4.4,
+          5.2
+        ],
+        "yaw_deg": 0.0,
+        "z_m": 0.1,
+        "sink_m": 0.12
+      },
+      "stormwood": {
+       "path": "res://assets/props/meshy-1024/meadows_arch_tidewake/meadows_arch_tidewake.glb",
+       "size_m": [
+        4.4,
+        5.2
+       ],
+       "yaw_deg": 0.0,
+       "z_m": 0.1,
+       "sink_m": 0.12
+      },
+      "biome6": {
+       "path": "res://assets/props/meshy-1024/meadows_arch_biome5/meadows_arch_biome5.glb",
+       "size_m": [
+        4.4,
+        5.2
+       ],
+       "yaw_deg": 0.0,
+       "z_m": 0.1,
+       "sink_m": 0.12
+      },
+      "biome7": {
+       "path": "res://assets/props/meshy-1024/meadows_arch_biome5/meadows_arch_biome5.glb",
+       "size_m": [
+        4.4,
+        5.2
+       ],
+       "yaw_deg": 0.0,
+       "z_m": 0.1,
+       "sink_m": 0.12
+      },
+      "biome8": {
+       "path": "res://assets/props/meshy-1024/meadows_arch_biome5/meadows_arch_biome5.glb",
+       "size_m": [
+        4.4,
+        5.2
+       ],
+       "yaw_deg": 0.0,
+       "z_m": 0.1,
+       "sink_m": 0.12
+      }
+    }
+  },
   "hall_great_hall": {
     "_why_on_r9": "F17#6 r9 (24 Oct, CPU-provisional): mapped Bar A 6.84 vs shipping 5.82 (three fresh code-blind judges, JUDGE_PROMPT v1, 3 anchor pairs incl. f36_0_npc:C1 (confirming batch), calibrate.py linear slope 1.11 r 0.89 RMSE 0.55; F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/F17-6.md). Meets the 6.7 CPU-provisional bar; a GPU pass must confirm 7.5.",
     "enabled": true,
+    "forward_plus_shaft_scale": 0.0,
+    "forward_plus_arch_rim_scale": 1.0,
+    "_why_forward_plus": "F17#6 GPU pass (tb/gpu-pass d4ded67f4, GPU-PASS/F17-6/VERDICT.md): r9 mapped 5.83 vs 4.98 at Medium/High because the additive daylight shafts drew as hard white bars in 6 of 10 day views and the arch rune rims as neon; on Compatibility they are soft (r9 CPU 6.84). Forward+/Mobile: shafts not built (scale 0) (crossing_hall_great_hall.gd renderer_scale). Owner, 24 Oct, on the GPU r9 sheet: \"The white beams of light in the hall seem like an error but the rest looks mostly fine.\" So the arch rims keep full weight on Forward+ (1.0) and only the shafts go. Compatibility unchanged.",
     "_scope": "Device-local Hall presentation only; ON since F17#6 r9 (CPU-provisional 6.84 mapped, close-1024). Only the shrine altar collides (radius 1.3); no route, portal state, save or network change.",
     "_why": "F17#6 close-1020 r2 (r1 judges, all three: the nave reads as an outdoor courtyard between house fronts; night pools have no visible source; no tether landmark or blue accent). One batched interior dressing: woven runner, clerestory hangings over alternate windows, oak wall plates, iron candle rings with their own light and night pools, Shrine Room rune inlay with a hanging tether crystal. TUNABLE.",
     "runner": {

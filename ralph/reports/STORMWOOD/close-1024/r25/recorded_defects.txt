@@ -1,0 +1,4 @@
+Kc: none
+Lf: "no view of the storm outside the window"; "calm and break look the same"; "no copper, glass or moss accents"
+Hn: none
+Ka: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

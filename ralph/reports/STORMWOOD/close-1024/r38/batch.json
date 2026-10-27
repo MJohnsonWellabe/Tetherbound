@@ -1,0 +1,10 @@
+{"anchors": {
+  "f36_0_gap:C5A": [5.0, 5.6, 5.0],
+  "f36_0_gap:C5B": [6.4, 6.6, 6.9],
+  "p2_094_r4:X_before": [4.3, 4.2, 4.3],
+  "p2_094_r4:Y_after": [5.6, 5.6, 6.2],
+  "craft:after": [6.6, 6.4, 6.8],
+  "craft:before": [5.6, 5.6, 5.6]},
+ "candidates": {
+  "R38 ashfoot outside OFF": [5.5, 5.3, 5.5],
+  "R38 ashfoot outside ON (backdrop grove + ranger dressing)": [5.8, 5.7, 5.8]}}

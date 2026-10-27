@@ -1,0 +1,46 @@
+[
+ {
+  "label": "R17 pools",
+  "a": "<scratch>/sides/r17_pools.png",
+  "b": "<scratch>/sides/r16_pools.png",
+  "brief": "Stormwood glowmoss hollow beside a forest camp, two fixed exploration views (top and bottom) in the calm storm phase, with the 1.80 m trainer and a companion as rulers. Judge whether the place reads as a named destination (a pool hollow with lanterns) in the key art's storm forest.",
+  "defects": [
+   "no pools read; one repeated ground carpet",
+   "billboard fog puffs instead of depth fog",
+   "no landmark framed in the heading"
+  ]
+ },
+ {
+  "label": "R17 heartstone",
+  "a": "<scratch>/sides/r17_heartstone.png",
+  "b": "<scratch>/sides/r16_heartstone.png",
+  "brief": "Stormwood crown hollow around a sacred heartstone, two fixed exploration views (top and bottom) in the calm storm phase, with the 1.80 m trainer as a ruler. Judge whether the heartstone reads as the landmark of the place and the hollow reads as the key art's storm forest.",
+  "defects": [
+   "the heartstone is not framed or has no presence",
+   "flat grey horizon",
+   "wild creatures crowd the survey view"
+  ]
+ },
+ {
+  "label": "R17 stormheart",
+  "a": "<scratch>/sides/r17_stormheart.png",
+  "b": "<scratch>/sides/r16_stormheart.png",
+  "brief": "Inside the hollow base of the giant Stormheart tree, two fixed exploration views (top and bottom) in the calm storm phase, timber decks spiralling up the trunk walls, with the 1.80 m trainer as a ruler.",
+  "defects": [
+   "smooth bare trunk walls",
+   "decks read as plain bands with no structure or supports",
+   "dark monochrome interior"
+  ]
+ },
+ {
+  "label": "R17 ashfoot",
+  "a": "<scratch>/sides/r17_ashfoot.png",
+  "b": "<scratch>/sides/r16_ashfoot.png",
+  "brief": "Inside a ranger shelter in the Stormwood settlement, one fixed view, with the 1.80 m trainer as a ruler. Judge whether the room reads as a lived-in shelter that belongs to the key art's world.",
+  "defects": [
+   "bare plaster box",
+   "blown-out window",
+   "terrain or grass showing through the floor"
+  ]
+ }
+]

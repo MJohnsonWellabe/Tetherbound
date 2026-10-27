@@ -1,0 +1,23 @@
+{
+ "Wg": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Yg": {
+  "anchor": true,
+  "A": "f36_0_gap:C7A",
+  "B": "f36_0_gap:C7B"
+ },
+ "Tl": {
+  "anchor": false,
+  "label": "R30b lantern pools (forest present)",
+  "A": "<scratch>/sides/lp2_on.jpg",
+  "B": "<scratch>/sides/lp2_off.jpg"
+ },
+ "Ky": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ }
+}

@@ -1,0 +1,12 @@
+{
+ "piece": "f49_s5b_home_credits",
+ "runner": "storm",
+ "segment_or_profile": "home_credits",
+ "from": "tests/fixtures/earned_saves/f49_s5b_home_relic",
+ "source_commit": "76aefce6a999c0bf0f33f0811fe672caa66e7a3d",
+ "wall_seconds": 780,
+ "command": "godot --headless --fixed-fps 60 --path . --script tools/earned_saves/stormwood_chain_runner.gd -- --segment=home_credits --from=<rb>/f49_s5b_home_relic --out=<rb>/f49_s5b_home_credits",
+ "lane": "tb/stormwood-routes (Stormwood lane, S3/S5 for F49#0)",
+ "renderer": "Godot 4.7 headless, CPU container",
+ "result": "PASS"
+}

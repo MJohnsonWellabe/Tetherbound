@@ -1,0 +1,118 @@
+{
+  "enabled": true,
+  "_why_on": "GPU SW6 (tb/gpu-pass 329b98a41, ralph/reports/GPU-PASS/F41-0/SW6-stormwood-land6-1680e579f): Ashfoot interior +0.99 Medium / +1.71 High (4.1-4.8 -> 5.82), bare plaster box PRESENT -> PARTIAL 6/6. Landed ON.",
+  "_candidate": "r18 candidate (OFF until judged; coordinator big-swing order 25 Oct): the timber lining plus the Meshy ranger hearth, one candidate for the Ashfoot shelter.",
+  "scope": "client_presentation",
+  "_why": "GPU F41#0 + r16 judges (Ashfoot inside: a bare plaster box with a blown-out window). Structural rebuild: a timber lining over the plaster interior walls, full height, door left open, windows behind it as closed shutters, with a dark rail at chair height. Only the buildings named here by village role (village.gd sets `village_role` from the settlement id). Presentation only, no collider.",
+  "lined_roles": [
+    "ashfoot_shelter"
+  ],
+  "lining_height_m": 2.45,
+  "lining_inset_m": 0.03,
+  "lining_tint": "#c4b5a2",
+  "lining_weathering": 0.6,
+  "rail_colour": "#4a3a2c",
+  "rail_height_m": 0.95,
+  "storm_finish": {
+    "enabled": true,
+    "_why_on": "GPU SW9 (tb/gpu-pass c75e355f5, ralph/reports/GPU-PASS/F41-0/SW910-stormwood-ashfoot-giant-72eaa19ca-21a582478): Ashfoot r25 (storm_finish + window_pane + grade) Medium 5.41 -> 6.11 (+0.70), High 4.71 -> 6.23 (+1.52); plaster box FIXED 6/6, outside no-change holds. ON.",
+    "_candidate": "r23 Ashfoot to 7 (OFF until judged). GPU SW6 (25 Oct, 5.82): no window or view of the storm (the four phases look the same), generic planks without Stormwood copper, glass or moss, plaster gable. Lining to the 3 m wall top with a timber-framed opening on the ranger station's east window (open shutters, the real storm outside), lined gable triangles, a cool storm fill at the window against the warm hearth, copper lantern/pot/bucket (installed kit, tinted), herb bundles under the ridge and moss in the corners. Presentation only, no colliders.",
+    "wall_top_m": 3.0,
+    "old_lining_top_m": 2.45,
+    "east_window": [-0.8, 0.8, 0.94, 2.52],
+    "_why_window": "Window_Wide_Flat1 bounds x -0.8..0.8, y 0.94..2.52, set at (2, 0, 0) yaw 90 in the ranger_station prefab: building-local z -0.8..0.8.",
+    "gable_apex_m": 5.1,
+    "frame_colour": "#3f3226",
+    "storm_light_colour": "#8f8ad0",
+    "storm_light_energy": 0.9,
+    "storm_light_range_m": 4.0,
+    "copper_tint": "#c08250",
+    "herb_cord_m": 2.75,
+    "herb_colour": "#6b6a40",
+    "herb_bundles": 5,
+    "moss_colour": "#2c3a26",
+    "window_pane": {
+      "enabled": true,
+      "_why_on": "GPU SW9 (tb/gpu-pass c75e355f5, ralph/reports/GPU-PASS/F41-0/SW910-stormwood-ashfoot-giant-72eaa19ca-21a582478): Ashfoot r25 (storm_finish + window_pane + grade) Medium 5.41 -> 6.11 (+0.70), High 4.71 -> 6.23 (+1.52); plaster box FIXED 6/6, outside no-change holds. ON.",
+      "_candidate": "r25 storm pane (OFF until judged; needs storm_finish on). r24 judges x3: the window shows warm bright light, no storm, and calm and break look alike. A pane in the opening tints the real exterior toward the storm purple, rain runs down it by surge phase, and the surge's own flash level lifts the pane and the cool window light in Break. Presentation only.",
+      "tint": "#5c4f87",
+      "tint_alpha": 0.5,
+      "inset_m": 0.08,
+      "rain_by_phase": {"calm": 0.25, "building": 0.55, "break": 0.95, "fading": 0.45},
+      "alpha_by_phase": {"calm": 0.4, "building": 0.5, "break": 0.66, "fading": 0.48},
+      "flash_light_gain": 3.0
+    },
+    "grade": {
+      "enabled": true,
+      "_why_on": "GPU SW9 (tb/gpu-pass c75e355f5, ralph/reports/GPU-PASS/F41-0/SW910-stormwood-ashfoot-giant-72eaa19ca-21a582478): Ashfoot r25 (storm_finish + window_pane + grade) Medium 5.41 -> 6.11 (+0.70), High 4.71 -> 6.23 (+1.52); plaster box FIXED 6/6, outside no-change holds. ON.",
+      "_candidate": "r24 storm grade (OFF until judged; needs storm_finish on). r23 judges x3: the room is 'a saturated orange pine box' with a flat warm daylight grade and no storm mood. Cooler, more weathered timber and a dimmer, less orange room light, so the hearth pool and the cool window fill carry the room.",
+      "lining_tint": "#a8a299",
+      "lining_weathering": 0.9,
+      "room_light_colour": "#d9c6b0",
+      "room_light_energy": 0.75
+    },
+    "seated": {
+      "enabled": true,
+      "_why_on": "GPU B5 (tb/gpu-pass f0d91dcc0, ralph/reports/GPU-PASS/B5-mh6-sw11-sw14-sw15-staticub/VERDICT.md) SW15: m35 (seated + firelit) interior Medium 6.57 -> 6.98, High 6.12 -> 6.73 (+0.51 mean); roof-apex seam FIXED 3/3. ON.",
+      "_candidate": "r34 Ashfoot to 7.5 (OFF until judged; needs storm_finish and window_pane on). GPU SW9 judges: the storm window is 'a rigid glowing slab that stands out from the wall' (5/6), the phases barely differ through it, a pale shard pokes through the roof apex, and the hearth hides behind the trainer. The pane sits behind the lining plane inside the kit window's own frame and smaller; a flush 2.5 cm trim; the window light itself changes by phase; a stone chimney breast rises from the hearth stack to the ceiling (hides the exterior chimney's base, which drops below the lined ceiling); a stronger, wider hearth fire for a two-tone room.",
+      "trim_depth_m": 0.025,
+      "pane": {
+        "recess_m": 0.06,
+        "margin_m": 0.03,
+        "tint_by_phase": {"calm": "#6f7088", "building": "#463f66", "break": "#8a80c8", "fading": "#5f7890"},
+        "light_by_phase": {"calm": ["#9a9cb8", 0.7], "building": ["#6c66a0", 0.45], "break": ["#d6d0ff", 1.3], "fading": ["#8fb2cc", 0.75]}
+      },
+      "chimney_breast": {"x": [0.05, 1.15], "front_z": -1.2, "base_m": 2.0, "ceiling_clear_m": 0.05, "tint": "#8c8a84", "uv_scale": 0.6},
+      "hearth": {"fire_energy": 2.6, "fire_range_m": 6.5}
+    },
+    "firelit": {
+      "enabled": true,
+      "_why_on": "GPU B5 (tb/gpu-pass f0d91dcc0, ralph/reports/GPU-PASS/B5-mh6-sw11-sw14-sw15-staticub/VERDICT.md) SW15: m35 (seated + firelit) interior Medium 6.57 -> 6.98, High 6.12 -> 6.73 (+0.51 mean); roof-apex seam FIXED 3/3. ON.",
+      "_candidate": "r35 Ashfoot firelit hut (OFF until judged; needs storm_finish on). r34 judges x3: the hearth is 'a stone box with a dark mouth and no visible fire', and the walls are 'huge flat stretched plank walls' with no lived-in warmth. The camp flame sculpt burns in the firebox with a flickering fire light and a soft warm pool on the floor; dark timber posts at stud spacing, wall plates and a tie beam frame the lining as a ranger hut; the copper lantern by the window is lit.",
+      "hearth": {"flame": {"offset": [0.0, 0.12, 0.25], "scale": 0.35, "energy": 3.5, "pool_m": [1.8, 1.4], "pool_colour": "#ff9a4a", "pool_alpha": 0.35, "flicker": 0.18}},
+      "post_width_m": 0.14,
+      "post_depth_m": 0.06,
+      "post_spacing_m": 1.35,
+      "tie_beam_z": [-0.4],
+      "lantern_light": ["#ffb066", 0.55, 2.6]
+    },
+    "planks": {
+      "enabled": false,
+      "_candidate": "r37 Ashfoot hut-scale planks (OFF until judged; needs storm_finish on). r34-r36 judges x3: 'huge flat stretched plank walls'. The lining's boards go from 0.36 x 3.2 m to 0.18 x 1.5 m with stronger board-to-board tone, on the walls, gables, ceiling and floor lining.",
+      "board_m": [0.18, 1.5],
+      "variation": 0.16
+    },
+    "shell": {
+      "enabled": false,
+      "_candidate": "r42 Ashfoot Stormwood shelter exterior (OFF until judged; needs storm_finish on). GPU SW9 and r38 judges x6: 'a small Meadows-style cottage, not a Stormwood shelter'. The Meshy stormwood_ranger_shelter (tb/meshy-1024 55f9dac55, provenance beside the GLB) replaces the kit exterior on the ashfoot shelter only; the kit pieces stay hidden for their colliders. Fitted to the prefab footprint (4.3 x 6.3 m, 6.8 m ridge) with the door gable on +z.",
+      "model": "res://assets/props/meshy-1024/stormwood_ranger_shelter/stormwood_ranger_shelter.glb",
+      "size_m": [4.3, 6.8, 6.3],
+      "yaw_deg": 0.0,
+      "offset_m": [0.0, -0.05, 0.0]
+    },
+    "storm_view": {
+      "enabled": true,
+      "_why_on": "GPU SW16 (tb/gpu-pass fcf26c7f, ralph/reports/GPU-PASS/F41-0/SW16-ashfoot-m36b-0a633e222/VERDICT.md): m36b (seated + firelit + storm view) interior 5.83 -> 6.96 (+1.13) at Medium and High; storm-window defect PRESENT 3/3 -> PARTIAL 2 / FIXED 1, roof-apex clipping FIXED 3/3; outside level. One Medium device loss (TDR) before any Ashfoot frame; the re-run was clean 200/200.",
+      "_candidate": "r36 Ashfoot storm view (OFF until judged; needs storm_finish and window_pane on). r35 judges x3: 'no sky, rain or lightning through the window, only a tint'. A storm card 3 m outside the east window, facing the room only (back faces culled): storm sky over a dark treeline, drifting cloud, rain, and the surge's own flash lighting the cloud; sky, cloud and rain per phase. The pane goes lighter so the view shows through.",
+      "distance_m": 3.0,
+      "size_m": [9.0, 6.0],
+      "lift_m": 0.6,
+      "glass_alpha": 0.1,
+      "pane": {"alpha_by_phase": {"calm": 0.18, "building": 0.22, "break": 0.3, "fading": 0.2}},
+      "phases": {
+        "calm": {"sky_top": "#3a3f5c", "sky_low": "#8a8fa6", "cloud": 0.45, "rain": 0.25},
+        "building": {"sky_top": "#221c3a", "sky_low": "#4f4870", "cloud": 0.8, "rain": 0.55},
+        "break": {"sky_top": "#2a1f4a", "sky_low": "#6e62a8", "cloud": 0.9, "rain": 0.95},
+        "fading": {"sky_top": "#2e3b52", "sky_low": "#7d93a8", "cloud": 0.6, "rain": 0.4}
+      }
+    }
+  },
+  "hearth": {
+    "model": "res://assets/props/meshy-1024/ranger_hearth/ranger_hearth.glb",
+    "height_m": 2.0,
+    "x_offset_m": -0.28,
+    "fire_colour": "#ffb066",
+    "fire_energy": 1.8,
+    "fire_range_m": 5.5
+  }
+}

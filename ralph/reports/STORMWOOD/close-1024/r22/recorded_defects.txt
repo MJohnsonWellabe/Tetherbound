@@ -1,0 +1,4 @@
+Kn: "the ground is one repeating grass carpet with no soil, moss or rock zones"; "flat grey horizon"
+Ib: none
+Wu: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Wg: none

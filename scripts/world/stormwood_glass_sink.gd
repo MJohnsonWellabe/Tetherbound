@@ -20,6 +20,13 @@ uniform float gs_fracture_scale = 0.085;
 uniform float gs_seam_width = 0.022;
 uniform float gs_roughness = 0.31;
 uniform float gs_metallic = 0.18;
+// r34 (every stand's "flat grey band": seen from beyond far_fade_m.x the
+// satin glass mirrored the pale storm sky into one flat slab). Between the two
+// distances specular and metallic ease to the far values, so far glass shows
+// its own dark body. (0, 0) leaves it unchanged.
+uniform vec2 gs_far_fade_m = vec2(0.0, 0.0);
+uniform float gs_far_specular = 0.12;
+uniform float gs_far_roughness = 0.75;
 
 vec2 gs_fracture_point(vec2 cell) {
     return fract(sin(vec2(dot(cell, vec2(127.1, 311.7)),
@@ -68,8 +75,11 @@ const TAIL := """
             ALBEDO = mix(ALBEDO, mix(gs_body, gs_seam_colour.rgb, gs_line * 0.48), gs_weight);
             ROUGHNESS = mix(ROUGHNESS,
                 clamp(gs_roughness + gs_grain.y * 0.18 + gs_line * 0.22, 0.1, 0.9), gs_weight);
-            METALLIC = mix(METALLIC, gs_metallic, gs_weight);
-            SPECULAR = mix(SPECULAR, 0.55, gs_weight);
+            float gs_far = gs_far_fade_m.y > gs_far_fade_m.x
+                ? smoothstep(gs_far_fade_m.x, gs_far_fade_m.y, length(v_vertex.xz - _camera_pos.xz)) : 0.0;
+            ROUGHNESS = mix(ROUGHNESS, gs_far_roughness, gs_far * gs_weight);
+            METALLIC = mix(METALLIC, mix(gs_metallic, 0.0, gs_far), gs_weight);
+            SPECULAR = mix(SPECULAR, mix(0.55, gs_far_specular, gs_far), gs_weight);
             NORMAL_MAP_DEPTH *= 1.0 - gs_weight * 0.8;
         }
     }
@@ -102,3 +112,9 @@ static func install(terrain: Object, sink: Dictionary) -> void:
 		material.call("set_shader_param", "gs_" + key, Color(str(config[key])))
 	for key: String in ["edge_feather_m", "fracture_scale", "seam_width", "roughness", "metallic"]:
 		material.call("set_shader_param", "gs_" + key, float(config[key]))
+	var far: Array = config.get("far_fade_m", [0.0, 0.0])
+	if far.size() == 2:
+		material.call("set_shader_param", "gs_far_fade_m", Vector2(float(far[0]), float(far[1])))
+	for key: String in ["far_specular", "far_roughness"]:
+		if config.has(key):
+			material.call("set_shader_param", "gs_" + key, float(config[key]))

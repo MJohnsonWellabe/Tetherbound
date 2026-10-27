@@ -175,11 +175,18 @@ func _clear_column(nominal: float, z0: float, z1: float) -> float:
 func _has_cottage_furnishings(interior: Node) -> bool:
 	var bed := false
 	var storage := false
+	# Furniture is either an authored box or an installed kit model standing
+	# on its own solid box footprint; both are physical pieces of this size.
+	var sizes: Array[Vector3] = []
 	for raw: Node in interior.find_children("*", "MeshInstance3D", true, false):
 		var mesh := raw as MeshInstance3D
-		if not mesh.mesh is BoxMesh:
-			continue
-		var size: Vector3 = (mesh.mesh as BoxMesh).size
+		if mesh.mesh is BoxMesh:
+			sizes.append((mesh.mesh as BoxMesh).size)
+	for raw: Node in interior.find_children("*", "CollisionShape3D", true, false):
+		var shape := raw as CollisionShape3D
+		if shape.shape is BoxShape3D:
+			sizes.append((shape.shape as BoxShape3D).size)
+	for size: Vector3 in sizes:
 		if size.x >= 1.2 and size.z >= .7 and size.y >= .3 and size.y <= .8:
 			bed = true
 		if size.x >= .4 and size.x < 1.0 and size.z >= .35 and size.z < 1.0 \

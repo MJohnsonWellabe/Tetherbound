@@ -4,12 +4,26 @@ extends RefCounted
 ## The feature stays OFF until its separate collision and native proofs close.
 const CONFIG := "res://data/config/stormwood_destination_dressing.json"
 const TERRAIN_HEIGHT := preload("res://scripts/world/terrain_height.gd")
+const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 
 
 static func install(world: Node3D, budget: RefCounted) -> void:
+	var cfg: Dictionary = _read(CONFIG).get("fallen_giant", {})
+	var hero: Dictionary = cfg.get("hero", {})
+	if bool(cfg.get("enabled", false)) and bool(hero.get("enabled", false)):
+		# The grove's trees inside the log's footprint are cleared on every
+		# shell (vegetation.gd clear_area, as the lantern pools do), so host
+		# and client agree; only the client draws the log.
+		var vegetation := world.get_node_or_null("Vegetation")
+		for raw: Variant in hero.get("clear_circles", []):
+			var circle: Array = raw
+			if vegetation != null and vegetation.has_method("clear_area"):
+				var y := float(world.call("ground_height_at", float(circle[0]), float(circle[1])))
+				vegetation.call("clear_area", Vector3(float(circle[0]), y, float(circle[1])), float(circle[2]))
+		_install_hero(world, hero, not bool(world.get("simulation_only")))
+		return
 	if bool(world.get("simulation_only")):
 		return
-	var cfg: Dictionary = _read(CONFIG).get("fallen_giant", {})
 	if not bool(cfg.get("enabled", false)):
 		return
 	var terrain := world.get_node_or_null("Terrain")
@@ -30,6 +44,82 @@ static func install(world: Node3D, budget: RefCounted) -> void:
 	tree.set_meta("terrain_fit", fit)
 	tree.set_meta("collision_scope_pending", true)
 	world.add_child(tree)
+
+
+## r28 (GPU R verdict: the Fallen Giant stand is 4.6-4.7 with "no change";
+## path item 3, a hero landmark): the Meshy fallen giant (tb/meshy-1024
+## edd21e2f3, provenance beside the GLB) replaces the installed dead tree,
+## lying along `yaw_deg` beside the road with its hollow root end toward the
+## approach. Fitted along its long axis, seated on the lowest ground under its
+## footprint. Its box collider (`collider_boxes`) is built on every shell;
+## only a drawing shell (`draw`) loads the model.
+static func _install_hero(world: Node3D, cfg: Dictionary, draw: bool) -> void:
+	var holder := Node3D.new()
+	holder.name = "FallenGiantHero"
+	var at: Array = cfg.get("at_xz", [-150.0, 4478.0])
+	var yaw := deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
+	holder.rotation.y = yaw
+	# The footprint and collider come from config (measured once from the
+	# GLB), so every shell, a headless host included, seats and blocks alike.
+	var footprint: Array = cfg.get("footprint_half_m", [17.3, 27.5])
+	var half := Vector2(float(footprint[0]), float(footprint[1]))
+	var low := INF
+	for u: float in [-1.0, 0.0, 1.0]:
+		for v: float in [-1.0, 0.0, 1.0]:
+			var offset := Vector3(half.x * u, 0.0, half.y * v).rotated(Vector3.UP, yaw)
+			var y := float(world.call("ground_height_at", float(at[0]) + offset.x, float(at[1]) + offset.z))
+			if is_finite(y):
+				low = minf(low, y)
+	holder.position = Vector3(float(at[0]), (low if is_finite(low) else 0.0) - float(cfg.get("sink_m", 1.5)), float(at[1]))
+	var boxes: Array = cfg.get("collider_boxes", [])
+	if not boxes.is_empty():
+		var body := StaticBody3D.new()
+		body.name = "FallenGiantBody"
+		for raw: Variant in boxes:
+			var box: Array = raw
+			var shape := BoxShape3D.new()
+			shape.size = Vector3(float(box[3]), float(box[4]), float(box[5]))
+			var collider := CollisionShape3D.new()
+			collider.shape = shape
+			collider.position = Vector3(float(box[0]), float(box[1]), float(box[2]))
+			body.add_child(collider)
+		holder.add_child(body)
+	else:
+		holder.set_meta("collision_scope_pending", true)
+	if draw:
+		var model := HERO_PROP.load_model(str(cfg.get("model", "")))
+		if model == null:
+			push_warning("Fallen Giant hero: model unavailable")
+		else:
+			var bounds := HERO_PROP.BOUNDS.measure(model)
+			var factor := float(cfg.get("length_m", 55.0)) / maxf(0.01, bounds.size.z)
+			model.scale = Vector3.ONE * factor
+			model.position = -Vector3(bounds.get_center().x, bounds.position.y, bounds.get_center().z) * factor
+			_finish_bark(model, cfg.get("bark", {}))
+			holder.add_child(model)
+	world.add_child(holder)
+
+
+## GPU SW10 (5 of 6 judges: the bark reads close to Team Tether's oxblood;
+## red is reserved for them): a cool moss multiplier pulls the red-brown out of
+## the GLB's bark, and a soft material rim lifts the log off the trunks behind
+## it (r28/SW10 asks). Empty or disabled leaves the model as imported.
+static func _finish_bark(model: Node3D, bark: Dictionary) -> void:
+	if not bool(bark.get("enabled", false)):
+		return
+	for visual: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+		for surface in visual.mesh.get_surface_count():
+			var source := visual.get_active_material(surface) as BaseMaterial3D
+			if source == null:
+				continue
+			var finished := source.duplicate() as BaseMaterial3D
+			finished.albedo_color = Color(str(bark.get("tint", "#b4cbbd")))
+			var rim := float(bark.get("rim", 0.0))
+			if rim > 0.0:
+				finished.rim_enabled = true
+				finished.rim = rim
+				finished.rim_tint = float(bark.get("rim_tint", 0.4))
+			visual.set_surface_override_material(surface, finished)
 
 
 static func _read(path: String) -> Dictionary:

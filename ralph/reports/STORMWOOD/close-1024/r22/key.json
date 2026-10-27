@@ -1,0 +1,23 @@
+{
+ "Kn": {
+  "anchor": false,
+  "label": "R22 ground",
+  "A": "<scratch>/sides/gr_on8.jpg",
+  "B": "<scratch>/sides/gr_off.jpg"
+ },
+ "Ib": {
+  "anchor": true,
+  "A": "f36_0_gap:C6A",
+  "B": "f36_0_gap:C6B"
+ },
+ "Wu": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Wg": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ }
+}

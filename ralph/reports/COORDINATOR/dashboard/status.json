@@ -1,12 +1,65 @@
 {
- "updated": "2026-10-24T19:55:00Z (2:55 PM CT Sat 24 Oct)",
+ "updated": "2026-10-26T23:15:00Z (6:15 PM CT Mon 26 Oct)",
  "headline": [
-  "Board 236 of 526 since the owner's 24 Oct split: big visual rows now count each creature, pose and catalog item, and the GPU (owner's GTX 1060, Medium and High, mapped Bar A 7.5) is the only judge that closes a visual row.",
-  "Merged today: #722-#730 (fights, routes, Tidewake props and rock family, creature growth, Forward+ emission floor, board split).",
-  "GPU Meadows matrix (F38#0/F26#3): no site at 7.5; best village road 7.09 Medium. The main score sink is camera stands inside rock or walls at the arch, hall and river-lock sites, plus 174 stands the tool could not place.",
-  "Owner calls 24 Oct: Terrapup is a large dog (Meshy redraft rigged, GPU next); creatures keep their meshes and gain light energy, elemental and war-worn touches; Cloudreach moved from CPU capture to scene fixes."
+  "Board 260 of 467 criteria met (+10 today on the GPU): Grandpa; Tanglevolt, Frostclaw and Craghorn hurt/faint; Galecrest (matte finish, 7.70/7.68) and its poses; Cloudfang (7.64) and its poses; Stormcapra as shipped (7.60/7.68) and its poses.",
+  "Merged today: #761 Meadows village path, #762 Stormwood Ashfoot, #763 Meadows Ridgeline Watch clearings, #764 Stormwood Crown Overlook vista, #766 Tidewake destination landmarks (+1.24), #767 Galecrest matte, Cloudfang flinch and the Ashfoot storm view (+1.13).",
+  "GPU next: SW13 (Stormwood ground pass 2, capturing), then SW19, the Stormwood storm sky (CPU +0.83, chapter-wide). Not landed: SW17 lantern posts, Mirejaw retexture and Terrapup dog3 (all scored at or below main). Coordinator replies to sessions are blocked; the GPU queue runs through ralph/reports/GPU-PASS/NOTE.md."
  ],
  "batches": [
+  {
+   "name": "Stormheart interior and Crown heartstone (PR #756)",
+   "sha": "6a61d98c8",
+   "state": "In full CI (one multiplayer shard timed out; one confirming re-run pending)",
+   "contents": "GPU SW7: Stormheart hero interior +0.95 Medium / +0.67 High, Crown heartstone 7 m hero +1.32. Lane code for later candidates lands OFF."
+  },
+  {
+   "name": "Tanglevolt storm-bar look (PR #755)",
+   "sha": "900484faa",
+   "state": "Merged 7:29 PM CT Sun 25 Oct 2026; full CI green",
+   "contents": "Dark navy coat restored (field lift removed); painted lightning arcs glow from their own emissive mask. GPU 5.98 -> 7.66 / 6.20 -> 7.30."
+  },
+  {
+   "name": "Stormwood route pieces S3 and S5 (PR #754)",
+   "sha": "166c90a38",
+   "state": "Merged 6:54 PM CT Sun 25 Oct 2026; full CI green",
+   "contents": "F49#0 pieces: T5 feast (Kitchen, feed, return) and homecoming credits; 10 seams MATCH; one disclosed profile correction (Cloudreach answer)."
+  },
+  {
+   "name": "Mosshock retexture (PR #745)",
+   "sha": "3a2bb800d",
+   "state": "Merged 6:28 PM CT Sun 25 Oct 2026; full CI green",
+   "contents": "Moss-green coat, no camo, no red. GPU 5.32 -> 6.62."
+  },
+  {
+   "name": "Test leak fix (PR #752)",
+   "sha": "eb74f4722",
+   "state": "Merged 6:01 PM CT Sun 25 Oct 2026; full CI green",
+   "contents": "director_join_snapshot child leak: playing audio one-shots drained before quit; 20/20 clean runs; assertion unchanged."
+  },
+  {
+   "name": "Look landings (PRs #749, #750, #751, #753)",
+   "sha": "various",
+   "state": "Merged Sun 25 Oct 2026; full CI green",
+   "contents": "Cloudreach compass, tidy, beacon spire and settlement r18 ON (+0.4 to +1.0); Meadows arch facades (+0.79/+1.11) and giant ironwood (6.53); Stormwood Ashfoot interior (+0.99/+1.71)."
+  },
+  {
+   "name": "Paused lanes landing (PR #747)",
+   "sha": "ca19eb11a",
+   "state": "Merged 9:28 AM CT Sun 25 Oct 2026; full CI green (15/15 shards, 4/4 suites, export)",
+   "contents": "Fights pilot-fade fix with test, Routes piece kit and Tidewake start fixes plus earned saves, Cloudreach capture-view fallback and flag-off candidates, Tidewake's whole close-1024 branch (candidates OFF; Veilfall crag relief ON, disclosed)."
+  },
+  {
+   "name": "Lane runbook and owner directions (PR #746)",
+   "sha": "625d218df",
+   "state": "Merged 8:43 AM CT Sun 25 Oct 2026; docs-only checks green",
+   "contents": "TECHNICAL §8.1 runbook merged from four lane handoffs; CLAUDE/AGENTS owner direction (30-minute route pieces, >0.5 gains, handoff before archive); visual-judge skill points at it."
+  },
+  {
+   "name": "Co-op and creatures landings (PRs #738-#744)",
+   "sha": "1d5faebac",
+   "state": "Merged Sat 24 to Sun 25 Oct 2026; each with full CI green",
+   "contents": "Creatures batch 2 (red check fixed 12/12, Mosshock grown to 3.6 m, Grandpa eyes 7.20), Stormwood lightning, owner-passive first-pose wedge fix, shared-boss staging fixes, glow-only-where-natural rule, plan rebaselined to about 7 Nov."
+  },
   {
    "name": "Creatures landing 4 (PR #699)",
    "sha": "38bde27fe",
@@ -607,28 +660,6 @@
  ],
  "lanes": [
   {
-   "lane": "Routes · cloud session · tb/routes",
-   "now": "Training stall fixed (392c8f3c2); Meadows prefix regenerating; F47#0 proposal sent.",
-   "next": "F49#0 + F19#5 → F49#3 → F47#0 proposal",
-   "thread_id": "session_01MuJ6sVEuHMzWnq7hGSVGwD",
-   "checkout": "cloud container",
-   "sha": "13a8fdda6+",
-   "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
-   "doing": "F49#0",
-   "state": "Running"
-  },
-  {
-   "lane": "Fights · cloud session · tb/fights",
-   "now": "F22#4 batched candidate refinements (boss aura, river sheets, timber); Meshy captain's Brooktail and dock generating.",
-   "next": "F22#4 → F10#2 → F04#6 (F21#5 frame time needs a GPU)",
-   "thread_id": "session_01G5HaKaSVturrvVFUDnEJ6C",
-   "checkout": "cloud container",
-   "sha": "13a8fdda6+",
-   "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
-   "doing": "F22#4",
-   "state": "Running"
-  },
-  {
    "lane": "Creatures · cloud session · tb/creatures",
    "now": "F29#3 READY → PR #694; field-tint fix; Staticub 6.30; F36#1 batch 1 best 6.63.",
    "next": "F29#3 → F36#0 → F36#1 (F25#4 needs a GPU)",
@@ -651,28 +682,6 @@
    "state": "Running"
   },
   {
-   "lane": "Tidewake · cloud session · tb/tidewake",
-   "now": "OFF-gated installed props replacing dock boxes; Meshy batch (17 models, 3 textures) ready.",
-   "next": "F13#5 → F39 #0 #1 #2 #3 #5",
-   "thread_id": "session_01CBgTvvgGppoobhmwt5nKHN",
-   "checkout": "cloud container",
-   "sha": "13a8fdda6+",
-   "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
-   "doing": "F13#5",
-   "state": "Running"
-  },
-  {
-   "lane": "Cloudreach · cloud session · tb/cloudreach",
-   "now": "F08#3 settlement-life candidate; Meshy batch (13 assets) ready.",
-   "next": "F08#3 → F40 #0 #1 #2 #3 #5",
-   "thread_id": "session_01QJ4AmCs3m6rK1UUcu2oFhE",
-   "checkout": "cloud container",
-   "sha": "13a8fdda6+",
-   "hourly_check": "10:06 PM CT Tue 20 Oct 2026",
-   "doing": "F08#3",
-   "state": "Running"
-  },
-  {
    "lane": "Stormwood · cloud session · tb/stormwood",
    "now": "Baseline capture; Meshy batch (Stormheart cand3 + 10 assets) ready.",
    "next": "F41 #1 #2 #3 #5 (F26#3 needs a GPU)",
@@ -685,6 +694,13 @@
   }
  ],
  "decisions": [
+  "8:30 PM CT Sun 25 Oct 2026 (coordinator): the Fallen Giant hero may be judged now but lands only after it gets a collider; players must not walk through a 45 m log.",
+  "7:40 PM CT Sun 25 Oct 2026 (coordinator): Veilfall's judging camera is not reframed away from the faceted gully (players still see it). Cladding retried with raycast seating; terrain reshape allowed with a route walk check. Ashfoot camp safe-zone rule kept (WORLD §5.2).",
+  "7:35 PM CT Sun 25 Oct 2026 (coordinator, under the owner's 24 Oct 'light touches' ruling): Terrapup's shoulder plates may go back to coat with a low spine ridge. The ridge tied on CPU, so the current dog stays the GPU candidate.",
+  "9:45 AM CT Sun 25 Oct 2026 (owner): Terrapup must be the dog; the shipped badger (GPU 7.61-7.64) is the wrong creature. Dog3 (7.33-7.4) gets one bundled candidate to 7.5 and then replaces it.",
+  "9:40 AM CT Sun 25 Oct 2026 (owner): storm creatures keep their natural lightning glow. Stormursa's glow map is untouched; Tanglevolt's veins are painted only, so they get a real glow layer.",
+  "8:50 AM CT Sun 25 Oct 2026 (owner): no long route runs. A route piece proves one seam in about 30 minutes from a generated boundary save. The 4-hour sigils run was stopped.",
+  "8:30 AM CT Sun 25 Oct 2026 (owner): only changes expected to gain more than 0.5; small fixes ride along. Lanes cut from 7 to 3 to reduce usage. Paused lanes write a handoff and runbook, then are archived; the runbooks merge into TECHNICAL §8.1.",
   "10:06 PM CT Tue 20 Oct 2026: F29#3 verified (note r8, sheet, key) and landing in PR #694 with full CI. Red-tint shader bug (field degreen pushing red) assigned to Creatures as a hard-rule game fix with a test.",
   "9:05 PM CT Tue 20 Oct 2026: owner kickoff without the GPU remote. CPU-rendered visual judging counts at 6.7 (CPU-provisional) per the owner's 17 Oct instruction to lower the threshold for the CPU difference and run a GPU pass later. Seven lanes started; Meshy stays in the coordinator session.",
   "8:37 AM CT Sat 17 Oct 2026: F36#1 fly-grip is judged only for Fly-capable species (SYSTEMS §8: Galecrest, Galewisp, mentor loaner); swim and ride only where a species swims or is ridden in play. Non-applicable roles show as 'not a game state', never as a pass; the 7.5 bar is unchanged. F22#4 is not parked on CPU-only evidence. Owner provided the Meshy key; coordinator runs Meshy work on tb/creature-art.",
@@ -753,7 +769,7 @@
  ],
  "four_chapter_run": null,
  "wip": [],
- "last_lane_refresh": "2:55 PM CT Sat 24 Oct 2026",
+ "last_lane_refresh": "9:25 PM CT Sun 25 Oct 2026",
  "lane_activity": [],
  "active_work": [],
  "preserved_work": [
@@ -822,55 +838,31 @@
    "sandbox_mode": "danger-full-access"
   }
  ],
- "active_lanes_note": "Owner 24 Oct: the GPU lane judges; cloud lanes iterate on CPU and send READY candidates with capture commands. Meshy art comes from the coordinator on tb/meshy-1024.",
+ "active_lanes_note": "Owner 25 Oct: three cloud lanes plus the GPU judge. Only candidates expected to gain more than 0.5 go to the GPU; small fixes ride inside them. Paused lanes (Tidewake, Cloudreach, Fights, Routes) are archived with handoffs at the top of their NOTE files; their work is on main via #747.",
  "active_lanes": [
   {
    "lane": "GPU judge · owner desktop (GTX 1060) · tb/gpu-pass",
-   "doing": "Meadows matrix judged; next the Terrapup dog with five creatures, then the Cloudreach matrix",
+   "doing": "Stormwood run: ground, Ashfoot interior r25, Fallen Giant",
    "criteria": "Every visual row (judge of record)",
-   "next": "Queue: Grandpa face, Tidewake (Forward+ fixes, declutter, gully terrain), creature touches and repaints, Aquaryn and Tidecoil"
+   "next": "Meadows keep + courtyard + relay yard, creature hit-flash, Mirejaw + Terrapup dog, Tidewake pumps and jetty"
   },
   {
-   "lane": "Creatures · cloud session · tb/creatures",
-   "doing": "Owner touch pass (scars, weathering, ember motes); rigging the Terrapup dog, Aquaryn and Tidecoil",
+   "lane": "Creatures · cloud session · tb/creatures-land",
+   "doing": "Tanglevolt arcs (thinner, brighter) and faint pose, plus Thundertunnel scale-up, as one candidate",
    "criteria": "F36 (0) per asset, F36 (1) per pose subject",
-   "next": "Energy seams and elemental effects on Bramblebun, Nightburrow and the ledger"
+   "next": "Terrapup next step after the GPU dog verdict; Voltarach gold blotches"
   },
   {
    "lane": "Meadows · cloud session · tb/meadows",
-   "doing": "Camera stands at the arch, hall and river-lock sites; the 174 rejected stands",
+   "doing": "Relay yard round 2 (smaller flags, dirt and grass seams) while keep, courtyard and relay yard wait for GPU",
    "criteria": "F38 per catalog item, F17#6, F04#6",
-   "next": "Hall shafts and orb chains, interior time-of-day grade, ground cover, stronghold"
+   "next": "Next lowest Meadows view with a big-swing fix"
   },
   {
-   "lane": "Tidewake · cloud session · tb/tidewake",
-   "doing": "Veilfall gully terrain reshape (F39#4) and the shore declutter, both queued on GPU",
-   "criteria": "F39 per catalog item, F13#5",
-   "next": "The water (owner note)"
-  },
-  {
-   "lane": "Cloudreach · cloud session · tb/cloudreach",
-   "doing": "Scene fixes from the catalog (owner 24 Oct); placing the Meshy heartstone and island shell",
-   "criteria": "F40 per catalog item, F08#3",
-   "next": "Settlement foreground dressing, night lighting, varied islets"
-  },
-  {
-   "lane": "Fights · cloud session · tb/fights",
-   "doing": "F22#4 24-seed pattern table; fight HUD and ally crowding fixes for every named fight",
-   "criteria": "F22#4",
-   "next": "Hand F10#2 to Stormwood, then stop"
-  },
-  {
-   "lane": "Routes · cloud session · tb/routes",
-   "doing": "Cloudreach kitchen/feast route piece",
-   "criteria": "F49#0, F19#5",
-   "next": "Takes Stormwood's remaining route pieces (homecoming credits)"
-  },
-  {
-   "lane": "Stormwood · cloud session · tb/stormwood-routes",
-   "doing": "Finishing the Stormwood feast route piece",
-   "criteria": "F49#0 pieces, then F41",
-   "next": "Back to Stormwood visuals (F41, F10#2)"
+   "lane": "Stormwood · cloud session · tb/stormwood",
+   "doing": "Stormheart round 2 (core column into a split vein-lit trunk), heartstone v01 framing, red-post check, Fallen Giant collider",
+   "criteria": "F41 per catalog item, F10#2",
+   "next": "Veilfall terrain (Tidewake F39#4) with a route walk check"
   }
  ]
 }

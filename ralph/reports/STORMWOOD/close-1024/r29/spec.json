@@ -1,0 +1,24 @@
+[
+ {
+  "label": "SW8 stormheart calm",
+  "a": "<scratch>/sides/sw8_calm_off.jpg",
+  "b": "<scratch>/sides/sw8_calm_on.jpg",
+  "brief": "Inside the hollow base of the giant Stormheart tree, four fixed exploration views (2x2 grid) in the calm storm phase, timber decks ringing the trunk walls, with the 1.80 m trainer as a ruler. Judge whether it reads as the inside of a colossal living storm tree from the key art.",
+  "defects": [
+   "the lightning core reads as a free-standing rigid white light tube, not part of the tree",
+   "white sky strip through the trunk",
+   "eye-height fog puffs or flat white decals on the ground"
+  ]
+ },
+ {
+  "label": "SW8 stormheart fading",
+  "a": "<scratch>/sides/sw8_fading_off.jpg",
+  "b": "<scratch>/sides/sw8_fading_on.jpg",
+  "brief": "Inside the hollow base of the giant Stormheart tree, four fixed exploration views (2x2 grid) in the fading (after the storm breaks, steam rising) storm phase, timber decks ringing the trunk walls, with the 1.80 m trainer as a ruler. Judge whether it reads as the inside of a colossal living storm tree from the key art.",
+  "defects": [
+   "the lightning core reads as a free-standing rigid white light tube, not part of the tree",
+   "white sky strip through the trunk",
+   "eye-height fog puffs or flat white decals on the ground"
+  ]
+ }
+]

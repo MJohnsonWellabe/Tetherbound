@@ -1,0 +1,4 @@
+Kp: none
+Vb: "no hero landmark: the Fallen Giant is not visible or reads as an ordinary dead tree"; "dark monochrome forest with a flat road"
+Js: none
+Bp: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"

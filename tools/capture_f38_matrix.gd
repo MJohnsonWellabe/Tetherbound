@@ -43,7 +43,16 @@ func _load_plan() -> bool:
 		for time_name: String in _times:
 			for weather_name: String in parsed.weather:
 				for view: Dictionary in parsed.views:
+					# A wall arch has no stand outside the Hall: a site may list the
+					# views that stay inside the playable room (F38#5 close-1024).
+					if site.has("views") and not (site.views as Array).has(view.id):
+						continue
 					var heading := float(site.heading_deg) + float(view.heading_offset_deg)
+					# A site may re-seat a single view whose fixed stand fails the
+					# production preflight (F38 L1 close-1024): an absolute heading.
+					var seats: Dictionary = site.get("view_headings", {})
+					if seats.has(view.id):
+						heading = float(seats[view.id])
 					_planned.append({
 						"frame_id": "%s__%s__%s__%s" % [site.id, time_name, weather_name, view.id],
 						"identity": site.id, "biome_id": "meadows", "biome_display_name": "Meadows",
@@ -52,6 +61,7 @@ func _load_plan() -> bool:
 						"destination_display_name": site.id, "position_xz": site.at,
 						"view_heading_deg": heading, "time": time_name, "view": view.id,
 						"weather": weather_name, "stand_offsets_m": [float(view.offset_m)],
+						"prefer_terrain_ground": bool(site.get("prefer_terrain_ground", false)),
 						"stand_laterals_m": [0.0], "preset": _f38_preset,
 					})
 	return not _planned.is_empty()

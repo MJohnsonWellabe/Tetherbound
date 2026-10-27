@@ -1,0 +1,63 @@
+{
+  "clearings": {
+    "enabled": true, "_why_on": "GPU MH7 (tb/gpu-pass, ralph/reports/GPU-PASS/F38-0/MH7-ridgeline-clearings-bcb954b31/VERDICT.md): Ridgeline Watch 4.76 -> 6.40 (+1.64) at both presets; dark trunk wall FIXED 3/3. Not yet 7.5.",
+    "_why_r1_cpu": "r1 CPU judged (26 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, 3 anchor pairs incl. craft, confirming batch; calibrate.py linear slope 1.09, r 0.83, RMSE 0.65; Low/Compatibility llvmpipe, day approach/gameplay/detail; ralph/reports/MEADOWS/close-1024/ridge1026-mapped.json): shipping 4.5/4.5/4.0 vs 5.9/6.3/5.8, mapped 4.92 -> 6.74 (+1.82); dark trunk wall PRESENT -> FIXED 2 / PARTIAL 1, the clearing reveals the watch tower against sky. Open: the approach view's foreground beam-and-chain, an even grass carpet, simple repeated canopies. CPU no longer closes a row: OFF until the GPU pass.",
+    "_why": "F38 band4_upper_meadows_ironwood_1 (Ridgeline Watch) close-1024 (OFF until judged; meadows_hero_pieces.gd::clear, called in playground_world's bulk-clear window). GPU main-1024 5.97/6.12 and MH control 5.21-5.67: the gameplay and detail views stand inside a dark wall of trunks, so the watch reads as no place at all. Two authored glades cut out of the baked tree and rock scatter at run time (vegetation.clear_area, the Warrens' own call; harvest nodes untouched) turn it into a sunlit clearing with a grove edge. Visual and walkability only (fewer tree colliders); no bake change.",
+    "spots": [
+      {"id": "ridgeline_glade", "at": [-244.0, 6497.0], "radius_m": 17.0},
+      {"id": "ridgeline_glade_back", "at": [-262.0, 6478.0], "radius_m": 9.0}
+    ]
+  },
+  "_comment": "F38 tier-1 hero pieces (close-1024). Each group is OFF until judged on its stands; see meadows_hero_pieces.gd. World coordinates; y comes from the terrain minus sink_m.",
+  "cliffs": {
+    "_why_r1": "close-1024 r1: mapped Bar A 5.93 ON vs shipping 4.89 at band2_stone_and_root_1 (CPU, 25 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, anchors f36_0_npc:C1 / p2_094_r4 / craft, calibrate.py linear slope 1.64 r 0.98 RMSE 0.31, confirming batch; Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/art1024-mapped.json). +1.04, below 6.7; judges read the outcrop as real stratified rock but still flag the faceted Burrow hill flank and ramp slab.",
+    "enabled": false,
+    "_why": "P2-014 at band2_stone_and_root_1 (GPU 5.82): 'replace the faceted cliff planes with dark slashes with sculpted, stratified rock'. The coordinator's Meshy cliff modules (tb/meshy-1024 4eb886a11, Veilfall/Aviary stratified cliff refs) flank the Burrow mouth (-357, 2610) along the bank face that the band2_stone_and_root_1 stands look at from the south-east: 30 m modules (about 15 m tall, roughly 8x the 1.80 m trainer) buried 3 m, the 12 m corner beyond. Yaw 135 faces the stands; placement verified by CPU capture before judging.",
+    "pieces": [
+      {
+        "id": "cliff_a",
+        "path": "res://assets/props/meshy-1024/meadows_cliff_a/meadows_cliff_a.glb",
+        "at": [
+          -382.5,
+          2593.0
+        ],
+        "width_m": 30.0,
+        "sink_m": 3.0,
+        "yaw_deg": 135.0
+      },
+      {
+        "id": "cliff_b",
+        "path": "res://assets/props/meshy-1024/meadows_cliff_b/meadows_cliff_b.glb",
+        "at": [
+          -340.0,
+          2635.5
+        ],
+        "width_m": 30.0,
+        "sink_m": 3.0,
+        "yaw_deg": 135.0
+      },
+      {
+        "id": "cliff_corner",
+        "path": "res://assets/props/meshy-1024/meadows_cliff_corner/meadows_cliff_corner.glb",
+        "at": [
+          -321.6,
+          2648.2
+        ],
+        "width_m": 12.0,
+        "sink_m": 2.0,
+        "yaw_deg": 100.0
+      }
+    ]
+  },
+  "ironwood": {
+    "_why_r1": "close-1024 r1: mapped Bar A 5.86 ON vs shipping 5.20 (+0.66) on band4 ironwood 0/1, day approach/gameplay/detail and night gameplay (CPU, 25 Oct; three fresh code-blind judges, JUDGE_PROMPT verbatim, anchors f36_0_npc:C2 / f36_0_gap:C1 / craft, calibrate.py linear slope 1.16 r 0.92 RMSE 0.34; Low/Compatibility llvmpipe; ralph/reports/MEADOWS/close-1024/iw1024-mapped.json). Defect PARTIAL on all three (PRESENT on shipping): the new trees read as foliage, but the existing giant ironwood behind keeps its faceted canopy (MESHY line in NOTE.md). Below 6.7; OFF pending GPU, recommend ON.",
+    "enabled": false,
+    "_why": "band4 ironwood (GPU 6.29/6.12, not tier 1): 'replace the faceted, blobby canopies with real leaf-card canopies'. Two coordinator Meshy hero trees (about 14 m) beside the band4 ironwood stands. Placed (r1, unjudged) framing each stand's subject: the Ironwood Grove stand (gameplay and detail look +z) gets one either side 8-12 m past the player; the Ridgeline Watch stand (heading 45) one right and one left-behind the site. Crowns 11-12 m wide, so about 14 m tall, roughly 8x the 1.80 m trainer.",
+    "pieces": [
+      {"id": "grove_a", "path": "res://assets/props/meshy-1024/meadows_ironwood_a/meadows_ironwood_a.glb", "at": [-336.0, 5068.0], "width_m": 11.0, "sink_m": 0.3, "yaw_deg": 20.0},
+      {"id": "grove_b", "path": "res://assets/props/meshy-1024/meadows_ironwood_b/meadows_ironwood_b.glb", "at": [-356.0, 5072.0], "width_m": 12.0, "sink_m": 0.3, "yaw_deg": 200.0},
+      {"id": "ridge_a", "path": "res://assets/props/meshy-1024/meadows_ironwood_a/meadows_ironwood_a.glb", "at": [-240.9, 6489.3], "width_m": 11.0, "sink_m": 0.3, "yaw_deg": 110.0},
+      {"id": "ridge_b", "path": "res://assets/props/meshy-1024/meadows_ironwood_b/meadows_ironwood_b.glb", "at": [-248.6, 6502.8], "width_m": 12.0, "sink_m": 0.3, "yaw_deg": 290.0}
+    ]
+  }
+}
