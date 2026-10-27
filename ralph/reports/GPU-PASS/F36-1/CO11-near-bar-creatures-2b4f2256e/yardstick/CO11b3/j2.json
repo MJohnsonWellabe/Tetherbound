@@ -1,0 +1,144 @@
+{
+ "sets": {
+  "Kb": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The mossy shell and green skin are on-style, but the turtle stands no taller than the 1.80 m trainer and the faint reads (A: tipped edge-on in faint mid; B: a slightly lowered standing pose) fall short of Palworld-class readability."
+  },
+  "Tv": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.1,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The tall coiled serpent silhouette with its cyan body and pink fin frills reads instantly and has Palworld-class appeal; the coil hiding the trainer in the standing frame is the main blemish."
+  },
+  "Rs": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The otter silhouette and the ridden pose work, but the coat (flat, uniform cyan on B, only a small pale throat patch on A) lacks the fur depth and value break of the style-bar wolf and bear."
+  },
+  "Lz": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.1,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The serpent's tall readable S-silhouette and saturated cyan/pink colouring carry it; the trainer half-hidden behind the coil in standing is the only read problem."
+  },
+  "Qp": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's furry boar is close to the naturalistic bar but is trainer-height, has blobby yellow back spots and floats in faint mid; B's smooth terracotta clay body with moss decals reads as a toy, not a Palworld-class creature."
+  },
+  "Ek": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired elder has clear eyes, a warm readable face and a green and brown villager palette that fits the Meadows key art; its smoother, more cartoon face is the only step away from the naturalistic creature bar."
+  },
+  "Uw": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's violet storm wolf reaches the owner style bar with a strong rearing hit react, but B's faint frames break into a white body with black blotches and its hit react barely differs from standing, which sinks the set."
+  },
+  "Ur": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger, fully wrapped recipe text reads at a glance, but the action prompts are still small grey-white glyphs with no teal emphasis, and the murky night-rain world behind the panel has no Valheim-class light."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix the Uw side-B faint material (white body with black blotches) and its flat hit react. Make every creature's faint pose readable and grounded: Kb turtle resting cleanly on its back, Qp boar on its side with its shadow in contact.",
+   "kind": "scene"
+  },
+  {
+   "change": "Scale every creature above the 1.80 m trainer (Kb turtle, Qp boar, Rs otter are at or near trainer height). Give coats a matte, darker-back and lighter-belly value break with rim light (Rs B, Qp A).",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the Qp side-B clay/terracotta boar with a naturalistic fur-and-tusk model at the owner style-bar level.",
+   "kind": "new_art"
+  }
+ ]
+}

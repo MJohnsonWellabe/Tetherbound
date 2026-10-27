@@ -1,0 +1,144 @@
+{
+ "sets": {
+  "Ez": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-and-orange finned dragon has a clear silhouette, stands well above the ruler and is strongly coloured, but it reads as one glossy plastic material, and in the ridden frame on both sides no rider can be seen, so the travel role does not read; A's hit react rears up with the forequarters lifted, and B's barely differs from standing."
+  },
+  "Fk": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's panel is the right deep blue-grey with a pale border, its recipe lines wrap in full and the ingredients are large and warm gold, but the Craft and Leave hints are plain white text with tiny keyboard glyphs rather than controller-first teal buttons, A's recipe lines are cut off ('3 St...') with grey micro-text hints, and the world behind is a flat, muddy, unlit dusk."
+  },
+  "Bs": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The winged tan lion is large and has a recognisable silhouette, but in A's hit react the whole body leaps into the air, B's hit react is nearly the standing pose, and on both sides the faint mid and faint end frames are a crouch with the wings still raised, so the faint does not read as a faint."
+  },
+  "Gt": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's sleek blue-white lizard with gold fins has an appealing silhouette and lies readably on its back at faint end, but A's stockier version has a hit react identical to standing and a faint end that twists up into a vertical knot, and on both sides the head barely clears the 1.80 m ruler."
+  },
+  "Ds": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold-legged Voltarach matches its board and reads at small size, but the telegraphs are flat magenta rings and chevron slabs on the ground (A i06-i07, i10, i15-i17, tell2 a-c; B i09-i10, i16-i17), the player's creature cannot be found in any frame, the HUD covers the left third and bottom strip, the frames are a muddy brown with no purple storm sky or lightning, and in B the camera goes into foliage or a trunk at i12-i15."
+  },
+  "Uw": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired elder in a moss-green vest and scarf has readable eyes, warm appeal and a Meadows palette that matches the key art's villagers; the only shortfalls are a full-body view too small to judge silhouette and clumpy, helmet-like hair."
+  },
+  "Tn": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The naturalistic mossy turtle is on-style and well textured, but its shell top only reaches the trainer's head height, the dark olive values blur together, A's faint mid is a shell tipped on edge before the on-its-back faint end, and B's faint frames are a belly-down slump that reads as resting rather than fainted."
+  },
+  "Fb": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The coiled blue sea serpent with a pink crest has a bold Palworld-like silhouette and saturated colour, and B's hit react is a clear grounded rear-up, but the swimming frame sits on a flat blue plane with no waves, wake or foam, and the scales read glossy and plastic."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Ds: replace the flat magenta ring and slab telegraphs with real-object effects (white-violet lightning arcs, web strands, ground cracks and an impact flash); add camera collision with foliage fade so frames like B i12-i15 never go into trunks or leaves; shrink the HUD and rim-light both fighters so the player's creature can be found against the brown ground, under a visible purple storm sky.",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature reaction library (Bs, Ez, Gt, Tn, Fb): a grounded hit flinch with a clear pose change that keeps the feet planted; faint frames that end on the side or back without twisting or tipping (Bs crouch with wings up, Gt-A vertical knot, Tn tipped or slumped shell); a visible rider in the Ez ridden frame; and a wake and foam on the Fb swimming water.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fk: keep B's wrapping recipe layout, make Craft and Leave controller-first teal buttons with large glyphs, and keep recipe sub-text at a 7-inch-legible size at 1280x720.",
+   "kind": "scene"
+  }
+ ]
+}

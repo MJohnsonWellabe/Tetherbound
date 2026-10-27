@@ -1,0 +1,144 @@
+{
+ "sets": {
+  "Ez": {
+   "A": {
+    "bar_a": 6.7,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "An appealing, readable blue water drake well over the ruler's height, but the glossy toy-like finish sits under the owner's naturalistic bar, A's hit react rears so high that foot contact is doubtful and B's barely flinches, and in the 'ridden' frame on both sides no rider can be seen, so the travel role doesn't read."
+  },
+  "Fk": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger, wrapped recipe text, gold ingredient lines and blue-grey translucent panel fit the UI direction, but the Craft/Leave hints use tiny keyboard glyphs instead of controller-first prompts and the list shows only three recipes, while A's clipped micro-text ('3 St...') and faint 'Craft: A / Enter' footer sink it."
+  },
+  "Bs": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The golden winged lion has a strong, naturalistic silhouette and dwarfs the ruler, but A's hit react launches the whole body into the air, B's barely flinches, and on both sides the faint frames are a crouch with wings raised rather than a knocked-down body, so hurt and faint don't read without a label."
+  },
+  "Gt": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's brighter blue body and gold crest read better than A, but on both sides the hit react is identical to standing, A's faint end collapses into a twisted ball, and B's faint frames turn a pale grey belly-up with a large shadow ellipse below that suggests the body floats."
+  },
+  "Ds": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A dark, muddy brown-green mid-tone with no purple storm sky or white-violet lightning, flat magenta ring and slab telegraphs (A i06-i10 and tell2 a-c; B i10, i16-i17), the player's smaller creature not readable in any frame, a HUD that covers about a third of every frame, and in B the camera inside trunks or foliage (i12, i13, i15) sink it well below Palworld's boss-fight read."
+  },
+  "Uw": {
+   "A": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired, bearded villager in an olive vest and scarf has clear eyes, a warm natural palette and a clean silhouette at Palworld-NPC finish (B's furrowed brow reads slightly more worried than A's neutral face), though the neutral stage gives no Valheim-class light to judge."
+  },
+  "Tn": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The mossy, naturalistic turtle material is on-style, but its shell top only reaches about the trainer's head (not clearly taller than 1.80 m), A's faint mid tips onto its rim before ending on its back, and B's faint is a belly-down hunker that reads as resting rather than knocked out."
+  },
+  "Fb": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cyan-and-pink sea serpent has a clear coiled silhouette and B's tall recoil reads, but the glossy, stylised finish sits under the naturalistic bar, and in 'swimming' it rests on a flat opaque blue plane with no surface break, wake or depth, so it doesn't read as water."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Animation and pose pass for the creature stage: a distinct hit flinch that keeps the feet planted (Bs A, Gt, Fb A, Ez B), and faints that end clearly on the side or back with contact shadows (Bs both sides, Gt A twisted ball, Gt B floating, Tn A tipped mid, Tn B hunker), plus a visible rider in Ez 'ridden' and a real water surface for Fb 'swimming'",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight: replace the flat magenta telegraph rings and slabs with object-based white-violet lightning and ground cracks; keep the camera clear of trunks and foliage (Ds B i12-i15); lift exposure with a purple storm sky and rim light so both fighters separate from the ground; shrink the HUD",
+   "kind": "scene"
+  },
+  {
+   "change": "Ship side B's crafting panel layout, with large controller button glyphs on the Craft and Leave hints and more recipe rows visible at 1280x720",
+   "kind": "scene"
+  }
+ ]
+}

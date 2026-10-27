@@ -1,0 +1,172 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9308,
+  "least_squares_slope": 0.8988,
+  "method": "linear",
+  "slope": 0.8988,
+  "intercept": 1.2906,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.391,
+ "top_anchor_reference": 7.89,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_gap:C1A": {
+   "measured": 5.533,
+   "reference": 6.1,
+   "mapped": 6.264,
+   "residual": -0.164
+  },
+  "f36_0_gap:C1B": {
+   "measured": 4.767,
+   "reference": 5.33,
+   "mapped": 5.575,
+   "residual": -0.245
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.867,
+   "reference": 7.53,
+   "mapped": 7.463,
+   "residual": 0.067
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.867,
+   "reference": 7.47,
+   "mapped": 7.463,
+   "residual": 0.007
+  },
+  "f36_1_gpu:tanglevolt_candidate": {
+   "measured": 7.233,
+   "reference": 7.89,
+   "mapped": 7.792,
+   "residual": 0.098
+  },
+  "f36_1_gpu:tanglevolt_shipping": {
+   "measured": 4.333,
+   "reference": 6.04,
+   "mapped": 5.186,
+   "residual": 0.854
+  },
+  "craft:before": {
+   "measured": 4.633,
+   "reference": 4.83,
+   "mapped": 5.455,
+   "residual": -0.625
+  },
+  "craft:after": {
+   "measured": 6.733,
+   "reference": 7.35,
+   "mapped": 7.343,
+   "residual": 0.007
+  }
+ },
+ "candidates": {
+  "CO11 water_mosshell Medium cand|ship | CO11-water_mosshell-cand-Medium": {
+   "measured_mean": 6.467,
+   "mapped_mean": 7.1,
+   "mapped_judges": [
+    7.04,
+    6.95,
+    7.31
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO11 water_mosshell Medium cand|ship | CO11-water_mosshell-ship-Medium": {
+   "measured_mean": 6.1,
+   "mapped_mean": 6.77,
+   "mapped_judges": [
+    6.77,
+    6.59,
+    6.95
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO11 tidecoil Medium cand|ship | CO11-tidecoil-cand-Medium": {
+   "measured_mean": 7.067,
+   "mapped_mean": 7.64,
+   "mapped_judges": [
+    7.58,
+    7.4,
+    7.94
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "CO11 tidecoil Medium cand|ship | CO11-tidecoil-ship-Medium": {
+   "measured_mean": 7.333,
+   "mapped_mean": 7.88,
+   "mapped_judges": [
+    7.85,
+    7.67,
+    8.12
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "CO11 ripplet High cand|ship | CO11-ripplet-cand-High": {
+   "measured_mean": 6.367,
+   "mapped_mean": 7.01,
+   "mapped_judges": [
+    6.95,
+    6.86,
+    7.22
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO11 ripplet High cand|ship | CO11-ripplet-ship-High": {
+   "measured_mean": 5.833,
+   "mapped_mean": 6.53,
+   "mapped_judges": [
+    6.5,
+    6.23,
+    6.86
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO11 tidecoil High cand|ship | CO11-tidecoil-cand-High": {
+   "measured_mean": 7.067,
+   "mapped_mean": 7.64,
+   "mapped_judges": [
+    7.58,
+    7.4,
+    7.94
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "CO11 tidecoil High cand|ship | CO11-tidecoil-ship-High": {
+   "measured_mean": 7.333,
+   "mapped_mean": 7.88,
+   "mapped_judges": [
+    7.85,
+    7.67,
+    8.12
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  }
+ },
+ "warnings": []
+}

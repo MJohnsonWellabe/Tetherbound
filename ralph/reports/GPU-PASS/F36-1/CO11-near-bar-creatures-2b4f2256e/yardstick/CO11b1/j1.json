@@ -1,0 +1,138 @@
+{
+ "sets": {
+  "Tb": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's smooth clay/plasticine boar with pasted moss patches reads as a toy, far from the naturalistic owner bar, and its faint end tips the boar upright onto its rump facing camera; side B's furry boar is closer to the bar but its spotted leopard-like gold coat is off the brown Mudsnout palette, its faint mid floats above its shadow, and on both sides the boar barely reaches the 1.80 m trainer's head."
+  },
+  "Tu": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blurry smeared ground textures, flat midday light with no atmosphere and a tiled low-res stone wall (row 1) sink both sides; B's after frames do read as site-specific aftermath (banner torn down, cage opened with freed captive, smoke column, fallen banner), while A leaves the Team Tether banners standing in rows 1, 3 and 5 after the win, so the site still reads as enemy-held, and row 5's after frame has a prop poking into the bottom-right corner of the frame."
+  },
+  "Sv": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, appealing old villager with readable eyes, strong white-hair silhouette and a Meadows green/brown palette that sits at the finish of a stylised shipping game; the two sides are effectively identical, and only the empty dark backdrop keeps it from showing world fit."
+  },
+  "Uq": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-and-amber finned water dragon has a strong, tall silhouette well above the trainer and a Palworld-class palette, but the neutral stage gives no light or atmosphere, the faint poses collapse into a flat, hard-to-read spiky heap, and the ridden frame shows no readable rider at small size."
+  },
+  "Ny": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A naturalistic mossy turtle on-style with the owner bar, but at or below the 1.80 m trainer's height it breaks the taller-than-trainer rule; in A the faint frames are just a lowered standing turtle that doesn't read as fainted, and only B's faint end on its back reads without a label."
+  },
+  "Ql": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "This is the Stormcapra style-bar ram: strong white fleece and dark-horn silhouette and grounded naturalistic anatomy; B's collapsed faint with horns resting reads cleanly, while A's faint mid and faint end twist into a contorted rolled shape with legs bunched that breaks the read (both sides also crop the standing panel and drop its label)."
+  },
+  "Jz": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same appealing finned water-dragon model, readable and taller than the trainer, but A's hit react is nearly identical to standing and B's big rear reads as a flinch with doubtful hind-foot contact; the flat faint heaps and the neutral unlit stage keep it short of Palworld/Valheim finish."
+  },
+  "Zt": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue sea serpent with pink fins has the clearest silhouette in the batch and a hit react that reads (B's high recoil most strongly), but the swimming frame is a flat opaque blue slab with no surface, foam or wake and the trainer stands on top of it, which sinks the travel role."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Tu aftermath sites: replace the smeared, blurry grass/dirt ground material and tiled wall texture with sharp, stylised Meadows ground plus grove-edge density, add Valheim-class light (sun direction, warm grade, distance haze), and always remove or topple the Team Tether banners in after frames, as side B does.",
+   "kind": "scene"
+  },
+  {
+   "change": "Creature stage poses and scale: scale the boar (Tb) and turtle (Ny) so they stand clearly taller than the 1.80 m trainer, make every faint end a grounded on-back or on-side rest (Ny B, Ql B), and give each hit react a clear flinch with the feet still planted (Jz A, Uq B are near-static).",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild the Tb boar in the naturalistic owner-bar style (real coarse brown fur with moss accents per the Mudsnout board) to replace side A's clay toy look and side B's leopard-spotted coat, and give Zt's swimming frame a real water surface with foam and wake.",
+   "kind": "new_art"
+  }
+ ]
+}

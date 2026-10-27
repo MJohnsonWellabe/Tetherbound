@@ -1,0 +1,142 @@
+{
+ "sets": {
+  "Ej": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The otter-like rider silhouette and ruler scale read well, but the coat is a smooth single teal (flat, toy-like cyan on B) without the fur breakup and back-to-belly value range of the owner bar, and the grey stage gives no Valheim-class light."
+  },
+  "Kt": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The blue-and-copper fin crest gives a striking, high-contrast silhouette taller than the trainer that would sit beside Palworld creatures, though the faint-end frames collapse into a flat, tipped tangle of fins."
+  },
+  "Gj": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable elder with large expressive eyes, a soft white beard and an olive and leather costume that fits the Meadows palette carried it; the face leans slightly more animated-film than the key art's stylised realism."
+  },
+  "Rc": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The naturalistic plated shell and mossy skin are on-style and the ride reads, but the shell is a dark low-value olive that barely separates from the stage and A's faint is just the standing pose lowered."
+  },
+  "Hv": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's violet, shard-furred wolf is close to the Tanglevolt bar, but B's faint mid and faint end lose the material entirely and show a white body with black blobs, which sinks the set."
+  },
+  "Zx": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm grass and blue mountains give the Meadows note, but the wall stands alone as a single panel beside an untextured white boulder under flat noon light, with none of the lived-in density, shafts or atmosphere of the references."
+  },
+  "Mn": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The golden winged lion has an appealing, naturalistic mane and a big silhouette, but both faint frames are an upright crouch with wings still raised that does not read as fainted, and B's hit react rears up into a pounce."
+  },
+  "Ey": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured boar has a solid grounded silhouette (B's glowing lava seams add identity), but the hit react is identical to the standing pose, the faint mid tips up with the body lifted clear of its shadow, and A's faint end goes almost pure black."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix the creature hurt and faint poses: give a distinct grounded flinch (Kt A, Ey both, Mn), a faint that settles onto the side or back with the body touching its contact shadow (Mn upright crouch, Ey faint mid lifted, Rc A just lowered, Kt tangle of fins) and no rear-up pounce for a hit react (Mn B, Kt B).",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix materials that break in pose and lighting: Hv B faint frames lose the coat and show white with black blobs, Ey A faint end crushes to black, and Ej B and Rc need a matte coat with a real back-to-belly value range and rim light so they separate from the stage.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build the homestead wall as a timber frame with weathered, textured plaster or wattle infill, a roofed cap and a stone footing (Zx A direction, not B's blank pale panel), and replace the untextured white boulder beside it with a world-family rock.",
+   "kind": "new_art"
+  }
+ ]
+}

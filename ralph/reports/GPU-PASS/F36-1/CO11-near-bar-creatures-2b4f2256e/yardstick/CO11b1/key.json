@@ -1,0 +1,46 @@
+{
+ "Tb": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Tu": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Sv": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Uq": {
+  "anchor": false,
+  "label": "CO11 water_aquaryn High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-water_aquaryn-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-water_aquaryn-cand-High.png"
+ },
+ "Ny": {
+  "anchor": false,
+  "label": "CO11 mosshell High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-mosshell-ship-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-mosshell-cand-High.png"
+ },
+ "Ql": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_shipping",
+  "B": "f36_1_gpu:stormcapra_candidate"
+ },
+ "Jz": {
+  "anchor": false,
+  "label": "CO11 aquaryn Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-aquaryn-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-aquaryn-ship-Medium.png"
+ },
+ "Zt": {
+  "anchor": false,
+  "label": "CO11 water_tidecoil Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-water_tidecoil-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-water_tidecoil-ship-Medium.png"
+ }
+}

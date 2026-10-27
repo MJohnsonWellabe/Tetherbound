@@ -1,0 +1,144 @@
+{
+ "sets": {
+  "Kb": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The mossy-shell turtle material is close to the Mosshell board, but it barely tops the 1.80 m trainer, and neither side's faint reads clearly (A tumbles through a tipped roll, B just squats on its belly), so it falls short of Palworld finish."
+  },
+  "Tv": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The cyan-and-coral serpent matches the Tidecoil board and towers over the trainer with a clear coiled silhouette, which is Palworld-class creature appeal."
+  },
+  "Rs": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The otter-like water creature has a likeable silhouette, but its coat reads as one flat teal value (worst on B), and the faint end collapses into a featureless capsule."
+  },
+  "Lz": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Same as Tv (the frames look identical): a saturated, readable serpent that matches Tidecoil, with a strong rearing silhouette at Palworld finish."
+  },
+  "Qp": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Neither boar reaches the style bar: A wears an off-board gold leopard-spot coat and floats in faint mid, while B looks like a glossy terracotta piggy bank, and both stand no taller than the trainer."
+  },
+  "Ek": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A polished, warm elder villager whose olive, moss and leather palette fits the Meadows key art; the big-eyed animated-film face is a little rounder than the naturalistic creatures but reads well at a glance."
+  },
+  "Uw": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's wolf is close to the Tanglevolt style bar and would carry it, but B's faint frames switch to a white-and-black default-looking material that breaks the creature's identity outright."
+  },
+  "Ur": {
+   "A": {
+    "bar_a": 4.7,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's blue-grey translucent panel is on direction, but the world behind it is a murky, low-value rainy night with a flat purple sky that has none of Palworld's brightness or Valheim's light shafts."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix the creature faint states: stop Uw side B swapping to a white/black default material in faint mid/end, ground Qp side A's faint mid (the body hovers above a detached shadow), and give the Kb turtle and Rs otter faint ends a clear on-back or on-side resting read.",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-material the off-style coats to the naturalistic style bar: Qp boar as matte brown bristle fur with moss (Mudsnout/Tuskroot board) instead of A's gold leopard spots and B's glossy clay look, and Rs as a matte coat with a darker back and lighter belly instead of flat uniform teal.",
+   "kind": "scene"
+  },
+  {
+   "change": "Scale the Qp boar and Kb turtle up so they clearly stand taller than the 1.80 m trainer, as the Tidecoil and Tanglevolt models already do.",
+   "kind": "scene"
+  }
+ ]
+}

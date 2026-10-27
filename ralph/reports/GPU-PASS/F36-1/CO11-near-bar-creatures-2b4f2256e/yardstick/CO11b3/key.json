@@ -1,0 +1,46 @@
+{
+ "Kb": {
+  "anchor": false,
+  "label": "CO11 water_mosshell Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-water_mosshell-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-water_mosshell-ship-Medium.png"
+ },
+ "Tv": {
+  "anchor": false,
+  "label": "CO11 tidecoil Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-tidecoil-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-tidecoil-ship-Medium.png"
+ },
+ "Rs": {
+  "anchor": false,
+  "label": "CO11 ripplet High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-ripplet-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-ripplet-ship-High.png"
+ },
+ "Lz": {
+  "anchor": false,
+  "label": "CO11 tidecoil High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-tidecoil-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-tidecoil-ship-High.png"
+ },
+ "Qp": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Ek": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Uw": {
+  "anchor": true,
+  "A": "f36_1_gpu:tanglevolt_candidate",
+  "B": "f36_1_gpu:tanglevolt_shipping"
+ },
+ "Ur": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}

@@ -1,0 +1,834 @@
+[
+ {
+  "batch": 1,
+  "code": "Uq",
+  "label": "CO11 water_aquaryn High cand|ship",
+  "side": "CO11-water_aquaryn-ship-High",
+  "mapped": 7.02,
+  "judges": [
+   7.2,
+   6.97,
+   6.89
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Uq",
+  "label": "CO11 water_aquaryn High cand|ship",
+  "side": "CO11-water_aquaryn-cand-High",
+  "mapped": 6.92,
+  "judges": [
+   7.2,
+   6.89,
+   6.67
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ny",
+  "label": "CO11 mosshell High cand|ship",
+  "side": "CO11-mosshell-ship-High",
+  "mapped": 6.72,
+  "judges": [
+   6.44,
+   6.82,
+   6.89
+  ],
+  "defects": [
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ny",
+  "label": "CO11 mosshell High cand|ship",
+  "side": "CO11-mosshell-cand-High",
+  "mapped": 7.17,
+  "judges": [
+   7.05,
+   7.2,
+   7.27
+  ],
+  "defects": [
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Jz",
+  "label": "CO11 aquaryn Medium cand|ship",
+  "side": "CO11-aquaryn-cand-Medium",
+  "mapped": 6.84,
+  "judges": [
+   7.05,
+   6.82,
+   6.67
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Jz",
+  "label": "CO11 aquaryn Medium cand|ship",
+  "side": "CO11-aquaryn-ship-Medium",
+  "mapped": 7.02,
+  "judges": [
+   7.27,
+   6.97,
+   6.82
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Zt",
+  "label": "CO11 water_tidecoil Medium cand|ship",
+  "side": "CO11-water_tidecoil-cand-Medium",
+  "mapped": 7.25,
+  "judges": [
+   7.35,
+   7.2,
+   7.2
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Zt",
+  "label": "CO11 water_tidecoil Medium cand|ship",
+  "side": "CO11-water_tidecoil-ship-Medium",
+  "mapped": 7.32,
+  "judges": [
+   7.5,
+   7.35,
+   7.12
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ej",
+  "label": "CO11 ripplet Medium cand|ship",
+  "side": "CO11-ripplet-cand-Medium",
+  "mapped": 7.26,
+  "judges": [
+   7.56,
+   7.01,
+   7.23
+  ],
+  "defects": [
+   {
+    "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Ej",
+  "label": "CO11 ripplet Medium cand|ship",
+  "side": "CO11-ripplet-ship-Medium",
+  "mapped": 6.68,
+  "judges": [
+   6.9,
+   6.57,
+   6.57
+  ],
+  "defects": [
+   {
+    "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Kt",
+  "label": "CO11 aquaryn High cand|ship",
+  "side": "CO11-aquaryn-cand-High",
+  "mapped": 7.12,
+  "judges": [
+   6.9,
+   7.23,
+   7.23
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Kt",
+  "label": "CO11 aquaryn High cand|ship",
+  "side": "CO11-aquaryn-ship-High",
+  "mapped": 7.34,
+  "judges": [
+   7.23,
+   7.34,
+   7.45
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Rc",
+  "label": "CO11 water_mosshell High cand|ship",
+  "side": "CO11-water_mosshell-ship-High",
+  "mapped": 7.12,
+  "judges": [
+   7.67,
+   6.9,
+   6.79
+  ],
+  "defects": [
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Rc",
+  "label": "CO11 water_mosshell High cand|ship",
+  "side": "CO11-water_mosshell-cand-High",
+  "mapped": 7.67,
+  "judges": [
+   8.11,
+   7.34,
+   7.56
+  ],
+  "defects": [
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Mn",
+  "label": "CO11 solmane High cand|ship",
+  "side": "CO11-solmane-cand-High",
+  "mapped": 6.68,
+  "judges": [
+   6.46,
+   6.57,
+   7.01
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 2,
+  "code": "Mn",
+  "label": "CO11 solmane High cand|ship",
+  "side": "CO11-solmane-ship-High",
+  "mapped": 6.46,
+  "judges": [
+   6.01,
+   6.57,
+   6.79
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Kb",
+  "label": "CO11 water_mosshell Medium cand|ship",
+  "side": "CO11-water_mosshell-cand-Medium",
+  "mapped": 7.1,
+  "judges": [
+   7.04,
+   6.95,
+   7.31
+  ],
+  "defects": [
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Kb",
+  "label": "CO11 water_mosshell Medium cand|ship",
+  "side": "CO11-water_mosshell-ship-Medium",
+  "mapped": 6.77,
+  "judges": [
+   6.77,
+   6.59,
+   6.95
+  ],
+  "defects": [
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Tv",
+  "label": "CO11 tidecoil Medium cand|ship",
+  "side": "CO11-tidecoil-cand-Medium",
+  "mapped": 7.64,
+  "judges": [
+   7.58,
+   7.4,
+   7.94
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Tv",
+  "label": "CO11 tidecoil Medium cand|ship",
+  "side": "CO11-tidecoil-ship-Medium",
+  "mapped": 7.88,
+  "judges": [
+   7.85,
+   7.67,
+   8.12
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Rs",
+  "label": "CO11 ripplet High cand|ship",
+  "side": "CO11-ripplet-cand-High",
+  "mapped": 7.01,
+  "judges": [
+   6.95,
+   6.86,
+   7.22
+  ],
+  "defects": [
+   {
+    "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Rs",
+  "label": "CO11 ripplet High cand|ship",
+  "side": "CO11-ripplet-ship-High",
+  "mapped": 6.53,
+  "judges": [
+   6.5,
+   6.23,
+   6.86
+  ],
+  "defects": [
+   {
+    "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Lz",
+  "label": "CO11 tidecoil High cand|ship",
+  "side": "CO11-tidecoil-cand-High",
+  "mapped": 7.64,
+  "judges": [
+   7.58,
+   7.4,
+   7.94
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 3,
+  "code": "Lz",
+  "label": "CO11 tidecoil High cand|ship",
+  "side": "CO11-tidecoil-ship-High",
+  "mapped": 7.88,
+  "judges": [
+   7.85,
+   7.67,
+   8.12
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Ez",
+  "label": "CO11 water_aquaryn Medium cand|ship",
+  "side": "CO11-water_aquaryn-ship-Medium",
+  "mapped": 7.09,
+  "judges": [
+   7.32,
+   7.06,
+   6.89
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Ez",
+  "label": "CO11 water_aquaryn Medium cand|ship",
+  "side": "CO11-water_aquaryn-cand-Medium",
+  "mapped": 7.09,
+  "judges": [
+   7.41,
+   6.8,
+   7.06
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Bs",
+  "label": "CO11 solmane Medium cand|ship",
+  "side": "CO11-solmane-ship-Medium",
+  "mapped": 6.26,
+  "judges": [
+   6.29,
+   6.2,
+   6.29
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Bs",
+  "label": "CO11 solmane Medium cand|ship",
+  "side": "CO11-solmane-cand-Medium",
+  "mapped": 6.55,
+  "judges": [
+   6.55,
+   6.46,
+   6.63
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Tn",
+  "label": "CO11 mosshell Medium cand|ship",
+  "side": "CO11-mosshell-cand-Medium",
+  "mapped": 6.66,
+  "judges": [
+   6.63,
+   6.63,
+   6.72
+  ],
+  "defects": [
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Tn",
+  "label": "CO11 mosshell Medium cand|ship",
+  "side": "CO11-mosshell-ship-Medium",
+  "mapped": 6.6,
+  "judges": [
+   6.89,
+   6.46,
+   6.46
+  ],
+  "defects": [
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Fb",
+  "label": "CO11 water_tidecoil High cand|ship",
+  "side": "CO11-water_tidecoil-cand-High",
+  "mapped": 6.95,
+  "judges": [
+   6.89,
+   6.89,
+   7.06
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 4,
+  "code": "Fb",
+  "label": "CO11 water_tidecoil High cand|ship",
+  "side": "CO11-water_tidecoil-ship-High",
+  "mapped": 7.24,
+  "judges": [
+   7.15,
+   7.24,
+   7.32
+  ],
+  "defects": [
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   },
+   {
+    "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+    "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+   }
+  ]
+ }
+]

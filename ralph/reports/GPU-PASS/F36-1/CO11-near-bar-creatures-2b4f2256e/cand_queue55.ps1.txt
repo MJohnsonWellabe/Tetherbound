@@ -1,0 +1,23 @@
+# Queue 55: CO11 completion. Queue 53's --candidate runs for mosshell, water_mosshell and ripplet exited 1 ("F36 candidate did not install"):
+# they are not in f36_pose_candidates.json enabled_species, so the game shows them without the recipe and they are shot PLAIN here.
+# Also adds the water forms the coordinator named that ARE enabled: water_aquaryn and water_tidecoil (--candidate).
+# main 58bef4fc7 vs tb/co11-on 2b4f2256e. One run per species. Started after queue 54; out\CO11b.done marks a finished run.
+$run = "D:\tb-gpu-runs\tools\run_tool.ps1"; $out = "D:\tb-gpu-runs\out"; $main = "D:\tb-gpu-pass"; $crA = "D:\tb-gpu-wt-crA"; $tide = "D:\tb-gpu-wt-tide"
+$godot = "C:\Users\mattj\.cache\tetherbound-tools\godot-4.7\Godot_v4.7-stable_win64_console.exe"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "45"
+. "D:\tb-gpu-runs\tools\co_lib.ps1"
+if (Test-Path "$out\CO11b.done") { "CO11 completion already captured; skipping"; return }
+Gate "CO11b"
+"== CO11 completion: plain mosshell, water_mosshell, ripplet; --candidate water_aquaryn, water_tidecoil"
+$plan = @(@("mosshell", @()), @("water_mosshell", @()), @("ripplet", @()), @("water_aquaryn", @("--candidate")), @("water_tidecoil", @("--candidate")))
+foreach ($arm in @(@("cand", "2b4f2256e2411f59bf28b86e24e2a6cb7ce7ff4c"), @("ship", "58bef4fc7ea9c53256272c8f72cc0f6132519ba4"))) {
+    CheckoutCrA $arm[1]; Import $crA "crA-CO11b-$($arm[0])"
+    foreach ($pr in "Medium", "High") {
+        Gate "CO11b $($arm[0]) $pr"
+        CleanCrA $arm[1]
+        foreach ($p in $plan) { Pose "CO11-$($arm[0])-$pr-$($p[0])" $pr $p[0] $p[1] $arm[1] }
+    }
+}
+New-Item -ItemType File -Force "$out\CO11b.done" | Out-Null
+"CO11 completion done"
+"queue55 done"

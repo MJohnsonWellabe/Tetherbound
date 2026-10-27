@@ -1,0 +1,144 @@
+{
+ "sets": {
+  "Kb": {
+   "A": {
+    "bar_a": 6.7,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The mossy shell and ridden scale hold up, but the turtle has lost the Mosshell island/tree crown that carries its identity, the limbs read plain and dark, and the faints are either a mid-roll tipped ball (A) or a slump barely different from standing (B)."
+  },
+  "Tv": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Tidecoil serpent's cyan body with coral fins matches its board and towers over the trainer with a clear head and open jaw, a pal-class silhouette; only the flat neutral stage keeps it from proving Valheim-class light."
+  },
+  "Rs": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The otter-seal silhouette and ridden pose read, but the single saturated teal coat with only a white chin (flat cyan on B) drifts from the pale grey-white Sirenseal board and lacks back-to-belly value structure."
+  },
+  "Lz": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Same serpent and frames as Tv: a board-accurate cyan/coral Tidecoil with a readable head and strong scale over the trainer carries it; the neutral stage gives no atmosphere to judge."
+  },
+  "Qp": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Neither boar reaches the owner style bar: A is furry but a yellow leopard-spotted palette with a faint-mid body hovering over its shadow, B is a smooth orange clay toy with green moss decals, and both are no taller than the trainer."
+  },
+  "Ek": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired villager has a readable face and eyes and an olive, moss and leather palette that sits in the Meadows world; the smooth animated-film face is a step more cartoon than the naturalistic creatures but at a shipping finish."
+  },
+  "Uw": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A matches the in-game Tanglevolt on the style bar (dark violet fur, white muzzle, strong rearing flinch), but B's faint frames lose the fur texture and turn into a white body with black blotches, and its hit react barely moves, which sinks the set."
+  },
+  "Ur": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger blue-grey panel with wrapped recipes and gold ingredient counts reads well, but the action hints use small keyboard glyphs with no teal emphasis and the murky rainy night behind the panel has none of Palworld's HUD clarity or vibrancy."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix creature state materials and poses: keep the full fur material through Uw B's faint frames, give Uw B a real flinch, put the Kb turtle cleanly on its back for the faint (no tipped mid-roll ball), and ground the Qp A faint-mid body on its shadow.",
+   "kind": "scene"
+  },
+  {
+   "change": "Re-material Rs to the Sirenseal palette as a matte coat with a darker back and lighter belly, and finish the Ur B craft panel with controller-first A/B button glyphs in teal at the action hints and a visible scroll cue on the recipe list.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the Qp boar with a naturalistic, furred Mudsnout-style model at the owner style bar (brown-grey coat, moss accents, taller than the trainer), and give the Kb turtle its Mosshell island/tree crown.",
+   "kind": "new_art"
+  }
+ ]
+}

@@ -1,0 +1,142 @@
+{
+ "sets": {
+  "Ej": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The otter silhouette and ridden pose read, but the single-hue teal coat (very saturated and uniform on B) lacks the fur breakup and back/belly value split of the owner's Tanglevolt/Stormursa bar."
+  },
+  "Kt": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-and-copper sea-dragon is striking and taller than the trainer, but its finned outline turns into a busy, noisy tangle at small size and in the faint frames, short of Palworld's clean silhouettes."
+  },
+  "Gj": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable elder villager whose earthy olive/cream/brown palette fits the Meadows key art, though the big-eyed animated-film face leans more cartoon than the stylised-realism target."
+  },
+  "Rc": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The naturalistic mossy shell-plate turtle sits at the owner's style bar and rides well, but A's faint never leaves a squat, while B ends on its back (mid frame still a tipped, upright shell)."
+  },
+  "Hv": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side A is the owner's Tanglevolt at bar quality with a clear rear-up flinch; side B's faint frames lose the fur material and turn into a flat white-and-black untextured body, which sinks that side."
+  },
+  "Zx": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, diagonal brace, cap board and separate stone footing begin to read as built, but it is still a lone thin panel with flat beige infill in a world of flat-lit grass and a pale faceted rock, while B is a blown-out white card."
+  },
+  "Mn": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The golden winged-lion model has a strong naturalistic read, but the faint frames stay a crouch rather than a collapse and the flinch either barely moves (A) or leaps clear of the floor (B)."
+  },
+  "Ey": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated boar's bulk and tusks read, but the hit react is the standing pose, both fainted bodies hover well above their shadows, A's faint end turns nearly solid black, and B's red tusks and red-brown faint tint drift toward the enemy faction's oxblood."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rework hit-react and faint poses so the flinch is clearly different but keeps feet planted, and the faint ends as a grounded collapse on the side or back (Kt, Mn, Rc A, Ey) with the body touching its contact shadow",
+   "kind": "scene"
+  },
+  {
+   "change": "Keep creature materials consistent through every state and push coats to a matte, value-split finish: no untextured or blacked-out faint frames (Hv B, Ey A), darker back and lighter belly on single-hue coats (Ej)",
+   "kind": "scene"
+  },
+  {
+   "change": "Build the homestead wall as a thick timber-framed section with a stone footing, a cap and textured wattle or plaster infill that ties into the village architecture family, not a standalone thin panel",
+   "kind": "new_art"
+  }
+ ]
+}

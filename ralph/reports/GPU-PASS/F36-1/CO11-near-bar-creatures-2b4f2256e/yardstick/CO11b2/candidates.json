@@ -1,0 +1,42 @@
+[
+    {
+        "label":  "CO11 solmane High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-solmane-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-solmane-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO11 aquaryn High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-aquaryn-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-aquaryn-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO11 water_mosshell High cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-water_mosshell-cand-High.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-water_mosshell-ship-High.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the faint frames read as a twisted or tipped shape rather than the creature resting on its back",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    },
+    {
+        "label":  "CO11 ripplet Medium cand|ship",
+        "a":  "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-ripplet-cand-Medium.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-ripplet-ship-Medium.png",
+        "brief":  "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature\u0027s model and material as the game\u0027s real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+        "defects":  [
+                        "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly",
+                        "the fainted body floats above the stage, with a gap between the body and its shadow"
+                    ]
+    }
+]

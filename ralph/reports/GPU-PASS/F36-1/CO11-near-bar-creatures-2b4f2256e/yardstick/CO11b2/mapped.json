@@ -1,0 +1,172 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9003,
+  "least_squares_slope": 1.1032,
+  "method": "linear",
+  "slope": 1.1032,
+  "intercept": -0.0537,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.565,
+ "top_anchor_reference": 7.89,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_0_npc:C1B": {
+   "measured": 7.0,
+   "reference": 7.47,
+   "mapped": 7.669,
+   "residual": -0.199
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.967,
+   "reference": 7.53,
+   "mapped": 7.632,
+   "residual": -0.102
+  },
+  "f36_1_gpu:tanglevolt_candidate": {
+   "measured": 7.233,
+   "reference": 7.89,
+   "mapped": 7.927,
+   "residual": -0.037
+  },
+  "f36_1_gpu:tanglevolt_shipping": {
+   "measured": 4.533,
+   "reference": 6.04,
+   "mapped": 4.948,
+   "residual": 1.092
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 6.1,
+   "reference": 6.73,
+   "mapped": 6.676,
+   "residual": 0.054
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.167,
+   "reference": 3.5,
+   "mapped": 4.543,
+   "residual": -1.043
+  },
+  "f36_0_gap:C7B": {
+   "measured": 5.933,
+   "reference": 6.3,
+   "mapped": 6.492,
+   "residual": -0.192
+  },
+  "f36_0_gap:C7A": {
+   "measured": 6.033,
+   "reference": 7.03,
+   "mapped": 6.603,
+   "residual": 0.427
+  }
+ },
+ "candidates": {
+  "CO11 ripplet Medium cand|ship | CO11-ripplet-cand-Medium": {
+   "measured_mean": 6.633,
+   "mapped_mean": 7.26,
+   "mapped_judges": [
+    7.56,
+    7.01,
+    7.23
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO11 ripplet Medium cand|ship | CO11-ripplet-ship-Medium": {
+   "measured_mean": 6.1,
+   "mapped_mean": 6.68,
+   "mapped_judges": [
+    6.9,
+    6.57,
+    6.57
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO11 aquaryn High cand|ship | CO11-aquaryn-cand-High": {
+   "measured_mean": 6.5,
+   "mapped_mean": 7.12,
+   "mapped_judges": [
+    6.9,
+    7.23,
+    7.23
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO11 aquaryn High cand|ship | CO11-aquaryn-ship-High": {
+   "measured_mean": 6.7,
+   "mapped_mean": 7.34,
+   "mapped_judges": [
+    7.23,
+    7.34,
+    7.45
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO11 water_mosshell High cand|ship | CO11-water_mosshell-ship-High": {
+   "measured_mean": 6.5,
+   "mapped_mean": 7.12,
+   "mapped_judges": [
+    7.67,
+    6.9,
+    6.79
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO11 water_mosshell High cand|ship | CO11-water_mosshell-cand-High": {
+   "measured_mean": 7.0,
+   "mapped_mean": 7.67,
+   "mapped_judges": [
+    8.11,
+    7.34,
+    7.56
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "CO11 solmane High cand|ship | CO11-solmane-cand-High": {
+   "measured_mean": 6.1,
+   "mapped_mean": 6.68,
+   "mapped_judges": [
+    6.46,
+    6.57,
+    7.01
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "CO11 solmane High cand|ship | CO11-solmane-ship-High": {
+   "measured_mean": 5.9,
+   "mapped_mean": 6.46,
+   "mapped_judges": [
+    6.01,
+    6.57,
+    6.79
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

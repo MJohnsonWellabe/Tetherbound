@@ -1,0 +1,46 @@
+{
+ "Ez": {
+  "anchor": false,
+  "label": "CO11 water_aquaryn Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-water_aquaryn-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-water_aquaryn-cand-Medium.png"
+ },
+ "Fk": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Bs": {
+  "anchor": false,
+  "label": "CO11 solmane Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-solmane-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-solmane-cand-Medium.png"
+ },
+ "Gt": {
+  "anchor": true,
+  "A": "f36_0_gap:C2A",
+  "B": "f36_0_gap:C2B"
+ },
+ "Ds": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Uw": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Tn": {
+  "anchor": false,
+  "label": "CO11 mosshell Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-mosshell-cand-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-mosshell-ship-Medium.png"
+ },
+ "Fb": {
+  "anchor": false,
+  "label": "CO11 water_tidecoil High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-water_tidecoil-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\CO11\\sides\\CO11-water_tidecoil-ship-High.png"
+ }
+}

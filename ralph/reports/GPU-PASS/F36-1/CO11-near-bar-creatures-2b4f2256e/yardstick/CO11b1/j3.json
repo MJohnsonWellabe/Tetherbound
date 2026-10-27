@@ -1,0 +1,138 @@
+{
+ "sets": {
+  "Tb": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's smooth terracotta clay body with stuck-on moss decals reads as a toy, and B's fur is closer to the style bar but is broken up by flat yellow coin-like blotches; both boars stand below trainer head height, and A's faint end tips nose-down onto its face."
+  },
+  "Tu": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's after frames do read site-specific (banner torn down, cage opened with captive freed, tent gone and smoke rising, banner fallen in the grass), but A leaves the oxblood banners standing after the win in rows 1, 3 and 5, and both sides share smeared, low-detail ground, a flat untextured cliff wall in row 1, sparse even-scatter trees and no time-of-day grade or atmosphere."
+  },
+  "Sv": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elderly villager has a clear, appealing face, readable eyes and a warm green-brown palette with no oxblood, but the shiny, rounded animated-film face is a step more cartoon than the naturalistic creatures it stands beside, and the full-body view is small and stiff."
+  },
+  "Uq": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-and-orange water drake has a strong, tall silhouette that clears the trainer, but its glossy, uniform finish sits below the fur-and-feather bar, its faint mid body hovers over its shadow, and the 'ridden' frame shows no rider at all, so the travel role does not read."
+  },
+  "Ny": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The mossy, naturalistic turtle reads well and B's faint end lands cleanly on its shell with its legs up, but A's faint is only a belly slump (not twisted, but not on its back either), the shell sits no higher than the trainer's shoulder, and a dark, low-contrast material keeps it from being the brightest subject."
+  },
+  "Ql": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing ram matches the Stormcapra style bar, but A's hit react barely moves and its faint frames turn into a twisted, legs-splayed knot, while B's faint mid and faint end lose the head and legs, leaving a white fleece blob with a stretched black horn tube."
+  },
+  "Jz": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "This is the same water drake as Uq, with the same tall, readable silhouette; A's hit react is only a slight crouch and B's rear-up reads more as a hop than a flinch, and in both sides the faint bodies sit loosely over their shadows on the bare stage."
+  },
+  "Zt": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The coiled blue-and-pink sea serpent towers over the trainer and its faint lies flat and grounded, but B's hit react lifts the coils clear of the stage, and the swimming frame is a flat, opaque blue slab with the trainer standing on the surface, with no wake, foam or depth, which sinks the travel read."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-author the hit react and faint poses on every creature rig (Uq, Jz, Zt, Ql, Ny, Tb): a clear backward flinch with the feet planted, and a faint that settles onto its side or back with full body-to-shadow contact, keeping the head and legs intact (Ql B, Tb A).",
+   "kind": "scene"
+  },
+  {
+   "change": "Bring the Tb boar (and the glossy water drake of Uq/Jz) up to the fur/scale material bar of Stormcapra/Stormursa, replace the clay body and yellow blotches with real fur, and scale the boar and turtle above the 1.80 m trainer.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Trainer-defeat aftermath (Tu): always remove or topple the oxblood banners, add per-site props (freed captive, broken cage, smoke, scattered crates), and give the sites a ground material with real detail, clustered vegetation and a time-of-day light grade instead of smeared flat terrain.",
+   "kind": "scene"
+  }
+ ]
+}

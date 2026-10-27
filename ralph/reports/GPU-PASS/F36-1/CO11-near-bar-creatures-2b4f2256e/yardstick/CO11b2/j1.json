@@ -1,0 +1,142 @@
+{
+ "sets": {
+  "Ej": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {
+     "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's deeper teal back over a pale chest gives the otter form and a readable silhouette, but the neutral grey stage carries no Valheim-class light or atmosphere, and B's uniform saturated cyan reads as plastic."
+  },
+  "Kt": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-and-copper finned serpent has a strong colour identity, but its spiky, busy silhouette turns into a blue scribble at small size, and the bare stage gives it no world light."
+  },
+  "Gj": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The warm earth-and-moss costume fits the Meadows palette, but the big-eyed animated-film face belongs to a different style family from the naturalistic creatures and trainer."
+  },
+  "Rc": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The mossy plated shell and grounded anatomy are close to the style bar, but on a neutral stage nothing shows Palworld-class world finish or Valheim-class light."
+  },
+  "Hv": {
+   "A": {
+    "bar_a": 7.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A matches the owner's Tanglevolt bar (indigo fur, white muzzle, readable rear and faint), but B's faint frames break into a black-and-white patchwork material, and the stage has no atmosphere either way."
+  },
+  "Zx": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Meadows sky, warm grass and blue mountain distance carry some mood, but the wall stands alone as a single panel next to a faceted pale boulder, and the flat grade and sparse lighting are not Valheim-class."
+  },
+  "Mn": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The tan winged lion reads as a stock statue-like asset that matches no board, stands at an outsized scale against the tiny trainer, and has faint frames that stay half-upright, so it never reads as Tetherbound."
+  },
+  "Ey": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured boar has a strong, heavy silhouette, but the faint frames go near-black and float above a detached shadow, B's red lava seams and red tusks drift toward the reserved danger red, and the stage carries no world light."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix the creature faint and hit-react materials, lighting and grounding: Hv B's faint frames swap to a black/white patchwork material; Ey's faint frames turn near-black and lift off a detached shadow; Kt A's and Mn B's hit reacts need a grounded flinch; Mn and Rc A need faint-end poses that lie down.",
+   "kind": "scene"
+  },
+  {
+   "change": "Ship Zx side A's homestead wall language everywhere (timber frame, diagonal brace, top cap, separate stone footing), and give it real thickness, a warmer and less bright infill, and neighbouring wall segments so it reads as part of a built homestead.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the off-roster winged lion (Mn) with a roster creature at a sensible scale, and bring the villager face (Gj) into line with the naturalistic creature and trainer style.",
+   "kind": "new_art"
+  }
+ ]
+}

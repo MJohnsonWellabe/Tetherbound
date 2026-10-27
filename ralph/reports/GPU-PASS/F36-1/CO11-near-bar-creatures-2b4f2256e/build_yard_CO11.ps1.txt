@@ -1,0 +1,40 @@
+# CO11 CLOSE-OUT (local): main 58bef4fc7 vs tb/co11-on 2b4f2256e (grounded hit flinch aquaryn/tidecoil/solmane; mosshell faint on its back;
+# ripplet matte countershaded coat). capture_f36_poses.gd --candidate --whole-body --context, one run per species (out\CO11-<arm>-<preset>-<species>).
+# Standard roster layout and crop; one set per species per preset.
+$o = "D:\tb-gpu-runs\out"; $od = "D:\tb-gpu-runs\yard\CO11\sides"; New-Item -ItemType Directory -Force $od | Out-Null
+function Side([string[]] $files, [string[]] $caps, [string] $out) {
+    $s = [ordered]@{ title = ""; cols = 5; thumb_w = 300; label_w = 4; rows = @([ordered]@{ label = ""; files = $files; captions = $caps }); out = $out; crop = @(560, 200, 1000, 640) }
+    [IO.File]::WriteAllText("D:\tb-gpu-runs\_spec_yard_co11.json", ($s | ConvertTo-Json -Depth 5)); & D:\tb-gpu-runs\tools\make_sheet.ps1 -SpecPath "D:\tb-gpu-runs\_spec_yard_co11.json" | Out-Null; return $out
+}
+$brief = "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end, and the creature in its travel role (ridden, swimming or carrying) where it has one. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read."
+$float = "the fainted body floats above the stage, with a gap between the body and its shadow"
+$flinch = "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground"
+$def = @{
+    aquaryn = @($flinch, $float); tidecoil = @($flinch, $float); solmane = @($flinch, $float)
+    water_aquaryn = @($flinch, $float); water_tidecoil = @($flinch, $float)
+    mosshell = @("the faint frames read as a twisted or tipped shape rather than the creature resting on its back", $float)
+    water_mosshell = @("the faint frames read as a twisted or tipped shape rather than the creature resting on its back", $float)
+    ripplet = @("the coat reads glossy, plastic or flat-lit rather than a matte coat with darker back and lighter belly", $float) }
+function Pick($dir, $sp) {
+    $role = @("ride", "swim", "fly_grip") | Where-Object { Test-Path "$dir\$sp-$_-050.png" } | Select-Object -First 1
+    $p = @(@("hit-000", "standing"), @("hit-025", "hit react"), @("faint-050", "faint mid"), @("faint-100", "faint end"))
+    if ($role) { $p += , @("$role-050", @{ ride = "ridden"; swim = "swimming"; fly_grip = "carrying" }[$role]) }
+    $p = @($p | Where-Object { Test-Path "$dir\$sp-$($_[0]).png" })
+    return , @(@($p | ForEach-Object { "$dir\$sp-$($_[0]).png" }), @($p | ForEach-Object { $_[1] }))
+}
+$sets = @(); $cover = @()
+foreach ($pr in "Medium", "High") {
+    foreach ($sp in "aquaryn", "water_aquaryn", "tidecoil", "water_tidecoil", "solmane", "mosshell", "water_mosshell", "ripplet") {
+        $a = Pick "$o\CO11-cand-$pr-$sp\frames" $sp; $b = Pick "$o\CO11-ship-$pr-$sp\frames" $sp
+        if ($a[0].Count -eq 0 -or $a[0].Count -ne $b[0].Count) { "MISSING/UNEVEN $sp $pr cand=$($a[0].Count) ship=$($b[0].Count)"; continue }
+        $sa = Side $a[0] $a[1] "$od\CO11-$sp-cand-$pr.png"; $sb = Side $b[0] $b[1] "$od\CO11-$sp-ship-$pr.png"
+        $sets += [ordered]@{ label = "CO11 $sp $pr cand|ship"; a = $sa; b = $sb; brief = $brief; defects = $def[$sp] }
+        $cover += [ordered]@{ species = $sp; preset = $pr; poses = $a[1] }
+    }
+}
+$rng = New-Object System.Random 2251; $sets = @($sets | Sort-Object { $rng.Next() })
+$nb = [math]::Max(1, [math]::Ceiling($sets.Count / 4)); $buckets = @(for ($k = 0; $k -lt $nb; $k++) { , @() })
+for ($i = 0; $i -lt $sets.Count; $i++) { $buckets[$i % $nb] += , $sets[$i] }
+for ($k = 0; $k -lt $nb; $k++) { New-Item -ItemType Directory -Force "D:\tb-gpu-runs\yard\CO11\b$($k+1)" | Out-Null; [IO.File]::WriteAllText("D:\tb-gpu-runs\yard\CO11\b$($k+1)\candidates.json", (ConvertTo-Json -InputObject @($buckets[$k]) -Depth 5)) }
+[IO.File]::WriteAllText("D:\tb-gpu-runs\yard\CO11\coverage.json", (ConvertTo-Json -InputObject @($cover) -Depth 4))
+"CO11 sets: $($sets.Count) in $nb batches"; $cover | ForEach-Object { "$($_.species) $($_.preset) $($_.poses -join ',')" }

@@ -1,0 +1,138 @@
+{
+ "sets": {
+  "Tb": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's smooth clay boar with stuck-on moss patches reads as a toy, not the naturalistic fur-and-bristle bar of the style board; side B's fur gets closer but its mustard-and-gold leopard palette and floating faint-mid body on a flat grey stage keep both short of Palworld finish."
+  },
+  "Tu": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths tell site-specific stories (banner torn down, cage opened with a freed captive, smoking ruined camp), but both sides sit on blurry low-res ground, flat empty fields and a flat grey-blue sky with no Valheim-class light, haze or grove structure."
+  },
+  "Sv": {
+   "A": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-bearded elder with green vest and scarf has a clear, warm face and eyes and a palette that fits the Meadows key art, at a finish a shipping stylised game would accept, held back only by slightly glassy oversized eyes and a small, stiff full-body pose."
+  },
+  "Uq": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-and-orange finned water dragon has a strong silhouette and naturalistic scale detail near the style bar, but the ridden frame barely reads as ridden and the flat grey stage gives no rim light or atmosphere to carry it."
+  },
+  "Ny": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "the faint frames read as a twisted or tipped shape rather than the creature resting on its back": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The mossy-shelled turtle is convincingly naturalistic and B's on-its-back faint reads without a label, but the olive shell and grey-green skin sit in one mid-tone against the stage, with no rim light, and it barely clears the trainer in height."
+  },
+  "Ql": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fleece-and-curled-horn ram matches the Stormcapra bar when standing, but B's faint frames break the mesh (horns stretched into long black tubes, legs swallowed into a white blob), A's faint end is a tangled upside-down knot, and the flat stage has no light to sell it."
+  },
+  "Jz": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The finned water dragon is a readable, appealing design taller than the trainer, but A's hit react is nearly a copy of standing, B's flinch rears off the front feet, there is no travel-role frame, and the flat grey stage gives no light or atmosphere."
+  },
+  "Zt": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue sea serpent with pink fin crests has the strongest silhouette and scale in the batch, but the swimming frame is a flat, untextured blue plane with no foam, wake or refraction, and the trainer stands on top of it."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild the Meadows aftermath sites' surroundings to key-art standard: replace blurry low-res ground and wall textures, break the empty flat fields into groves, edges and wildflower clearings, and add warm sun, rim light and cool blue distance haze (Tu both sides); B's aftermath storytelling (banners down, cage opened, smoking camp) should be the baseline at every site.",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix creature damage and faint states: repair the skinning in Ql B's faint frames (stretched horns, vanished legs), give Ql A and Ny A clean on-back faint ends, make every hit react a distinct grounded flinch (Jz A, Uq B), check the shadow under Tb B's faint mid, and stage a real ride and swim (a visible rider, and water with foam and wake for Zt).",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the smooth clay Mudsnout boar (Tb A) with a naturalistic bristled-fur model at the owner style bar, in the board's earthy brown-and-moss palette rather than B's mustard leopard spots.",
+   "kind": "new_art"
+  }
+ ]
+}

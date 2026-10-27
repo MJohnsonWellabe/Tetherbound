@@ -1,0 +1,170 @@
+[
+    {
+        "species":  "aquaryn",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "species":  "water_aquaryn",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "ridden"
+                  ]
+    },
+    {
+        "species":  "tidecoil",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "species":  "water_tidecoil",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "swimming"
+                  ]
+    },
+    {
+        "species":  "solmane",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "species":  "mosshell",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "species":  "water_mosshell",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "ridden"
+                  ]
+    },
+    {
+        "species":  "ripplet",
+        "preset":  "Medium",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "ridden"
+                  ]
+    },
+    {
+        "species":  "aquaryn",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "species":  "water_aquaryn",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "ridden"
+                  ]
+    },
+    {
+        "species":  "tidecoil",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "species":  "water_tidecoil",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "swimming"
+                  ]
+    },
+    {
+        "species":  "solmane",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "species":  "mosshell",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end"
+                  ]
+    },
+    {
+        "species":  "water_mosshell",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "ridden"
+                  ]
+    },
+    {
+        "species":  "ripplet",
+        "preset":  "High",
+        "poses":  [
+                      "standing",
+                      "hit react",
+                      "faint mid",
+                      "faint end",
+                      "ridden"
+                  ]
+    }
+]
