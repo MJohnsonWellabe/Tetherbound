@@ -55,6 +55,9 @@ SEED = 1027
 EXTENT = np.array([1.221, 3.2, 4.896])  # the GLB's bind-pose box (metres)
 PAD_GROW_PX = 16
 PAD_REMNANT_PX = 44  # cool-hued rim remnants this close to the pad are filled too
+PAD_REMNANT_M = 0.35  # r6: dark texels this close to the pad on the body are remnants
+PAD_REMNANT_VAL = 0.38
+EYE_Z_MIN = 0.74  # the head (eyes, nose, mouth line) starts here along the body; never filled
 PAD_DROP_M = 0.55  # fur is copied from this far down the flank
 COAT_HUE = (24.0, 29.0)
 COAT_SAT_MAX = 0.36  # r5 (b55: still read orange-tan 3/3): browner by value and chroma
@@ -117,6 +120,19 @@ def grade(rgb):
         ImageFilter.MaxFilter(2 * PAD_REMNANT_PX + 1))) > 127
     remnant = near_pad & (((h >= 150.0) & (h < 330.0)) | (v < 0.3) | ((s < 0.22) & (v < 0.55)))
     pad_grown = pad_grown | (np.asarray(Image.fromarray((remnant * 255).astype(np.uint8)).filter(
+        ImageFilter.MaxFilter(5))) > 127)
+    # r6 (b56: the pad's dark outlines and the withers slab still read as a
+    # strapped-on pad): the pad spans several UV islands, so its remnants are
+    # also found on the body itself -- any dark texel within PAD_REMNANT_M of
+    # the pad in model space, whatever island it sits on.
+    pad_tree = cKDTree(pos[valid & pad])
+    near3d = np.zeros(valid.shape, dtype=bool)
+    vi = np.nonzero(valid)
+    dist, _ = pad_tree.query(pos[vi], distance_upper_bound=PAD_REMNANT_M)
+    near3d[vi] = np.isfinite(dist)
+    line_like = (v < PAD_REMNANT_VAL) | ((h >= 150.0) & (h < 330.0)) | ((s < 0.25) & (v < 0.6))
+    remnant3d = near3d & line_like & (pos[..., 2] < EYE_Z_MIN * EXTENT[2])
+    pad_grown = pad_grown | (np.asarray(Image.fromarray((remnant3d * 255).astype(np.uint8)).filter(
         ImageFilter.MaxFilter(5))) > 127)
     coat = valid & (h < 50.0) & (s >= R1.COAT_SAT_MIN) & ~pad_grown
     # 1. pad -> fur from the flank below
