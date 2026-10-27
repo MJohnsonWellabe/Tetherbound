@@ -2,6 +2,14 @@
 
 ## Session 2 log (newest first)
 
+- 27 Oct 00:24Z **READY (GPU candidate): `tb/stormwood-m48-on` ebcae6ed, Ashfoot room.**
+  - **Change:** `cottage_interior_finish.json storm_finish.storm_room` + `stormwood_dressing` ON; the lane keeps both OFF. This is coordinator priority 1: SW16 left it at 6.96, 0.54 short.
+  - **CPU r48:** 5.37 -> 6.31 mapped (+0.94), 3/3 judges prefer ON. Warm-room and no-Stormwood defects PRESENT -> PARTIAL 3/3 (`r48/VERDICT.md`).
+  - **What to capture:** the F41 catalogue Ashfoot stands, inside (four phases) and outside (no-change check), at Medium and High against lane HEAD.
+  - **Checks:** `smoke_stormwood_ashfoot_shelter.gd` 16/0.
+  - **New GPU load:** one unshadowed SpotLight3D, one additive quad, about 60 small moss spheres and three small crystal models.
+- 27 Oct 00:24Z **SW13 pool-edge defect: no separate arm.** The pools exist only under `stormwood_ground_finish.json ground_zones`, which is OFF on main, and that approach is parked. With the flag OFF an arm shows nothing; with it ON it reintroduces the parked ground pass.
+  - **Lane fix (fa9b8aa4):** the satin pool finish (roughness 0.38 / specular 0.25, the white-cyan "glass slab" rims) is now matte by default (0.75 / 0.06), configurable as `ground_zones.pool_roughness` / `pool_specular`. Any new ground idea starts without the defect.
 - 26 Oct 23:58Z Coordinator, 23:52Z:
   - Ashfoot `storm_view` is on main (#767). land13 is done; no PR.
   - The m45c storm sky is queued as GPU **SW19**.
