@@ -1,0 +1,194 @@
+{
+ "sets": {
+  "Ji": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's after frames strip the crimson banners and leave site-specific debris, smoke and an opened cage, but both sides are sunk by flat, unshadowed noon light, smeared ground textures and sparse placeholder props; B also leaves the enemy banner hanging in the after frames of rows 1, 3 and 5, so the win does not read."
+  },
+  "Vv": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The strips are gone and the cloud sea and pale cliffs read as Cloudreach, but the left frame is a third blocked by a dark near-camera rock wall and the grass plain is flat and empty, well short of Palworld density."
+  },
+  "Da": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-grey and teal HUD is on-style and the stale message is gone, but the capture reticle sits on the trainer while the small Sparkit target floats unreadable in a murky dark-green cave scene with almost no value range."
+  },
+  "Xi": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The dialogue panel and portraits are clean, but in all three frames the trainer fills the centre foreground and Sora and Rusk are not identifiable in the world behind him, with a wooden post cutting the Rusk frame."
+  },
+  "Of": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "The discovered Cloudreach Gate / Lower Cliffs label is cut after LOWER without a wrap or ellipsis": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "The discovered Cloudreach Gate / Lower Cliffs label is cut after LOWER without a wrap or ellipsis": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The panel styling matches the interface direction and no label is truncated, but the map body is a blurry cloud-noise texture with one marker and no drawn region, so it reads as a debug view rather than a finished map."
+  },
+  "Lh": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The named NPCs are tiny figures in tall grass or half-hidden by tree trunks and the trainer, with no posts, props or poses marking their role, so nothing tells you who stands there."
+  },
+  "Ly": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The golden-legged spider reads at the centre, but the player's creature is nearly invisible, the telegraphs are flat magenta rings and wedges, large HUD panels cover a third of every frame, there is no purple storm sky, and in A canopy fills i13 and i15 with black-green."
+  },
+  "Vd": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The white fur wolf is taller than the ruler, with a convincing fluffy coat, but A's faint end collapses into a shapeless fluff ball facing the camera, and B's flat blue gradient looks painted on, with its faint-mid body lifted off the stage above its shadow."
+  },
+  "Xb": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Speed (pale cap over a blue glow) and Wild (broad orange caps) now separate at distance, but both are small generic pickups on flat, evenly lit grass with blocky low-detail rocks behind."
+  },
+  "Eb": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Galecrest on the tower wall and the cloud backdrop help, but the glowing yellow cluster still sits cropped in the bottom-right corner with no ground visible under it, and the night frames sink to near-black with no moonlight shaping the rim."
+  },
+  "Xx": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The pale stratified cliffs and bright sky are on-board, but the Windscar Beacon is a lone thin tower behind a bare wooden arch with two banners, standing on an empty grass field, nowhere near the dense stone-and-banner architecture of the Sky Aviary board."
+  },
+  "Av": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "This is a warm, appealing elder with expressive eyes, a clear silhouette and an earthy green-brown palette that fits the key art's villagers; only the slightly toy-like full-body proportions hold it back."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Frame dialogue and NPC posts with an over-the-shoulder camera that keeps the speaker unoccluded and large, and give each named NPC a post prop and an idle pose (Xi, Lh)",
+   "kind": "scene"
+  },
+  {
+   "change": "Make Stormwood fights read: swap the flat magenta telegraph rings for physical ground-crack and lightning effects with impacts, thin canopy occluders near the fight camera, shrink the combat HUD, and rim-light the player's creature (Ly)",
+   "kind": "scene"
+  },
+  {
+   "change": "Build Cloudreach hero architecture in the Sky Aviary family (pale stone towers with blue roofs, arched bridges, banners, dressed bases) for the destination landmarks (Xx)",
+   "kind": "new_art"
+  }
+ ]
+}

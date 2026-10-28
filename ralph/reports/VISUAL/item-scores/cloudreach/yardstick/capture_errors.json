@@ -1,0 +1,6 @@
+{
+ "c026": "phase2_capture_catch.gd reported FAIL 'could not enter combat; nothing captured' on both tries (seed 2042): at the arrival gate road the wild creature road_visibility_arrival_gate_road_01_0 is 1.12 m from a 'Take Good Candy' pickup, and the pickup wins the interact offer, so the engage never fires",
+ "c034": "same as c026 (the same phase2_capture_catch.gd command, seed 2042): FAIL 'could not enter combat; nothing captured' on both tries; the 'Take Good Candy' pickup beside road_visibility_arrival_gate_road_01_0 wins the interact offer",
+ "c007": "phase2_capture_locations.gd reported CATALOGUE SURVEY FAILED 0/1 on both tries: the broken_skyroad_arch day approach found 'no supported production-camera stand among 15 candidates' on main",
+ "c008": "phase2_capture_locations.gd reported CATALOGUE SURVEY FAILED 0/1 on both tries: the old_wind_observatory day approach found 'no supported production-camera stand among 15 candidates' on main"
+}

@@ -1,6 +1,6 @@
 {
- "generated_at": "10:45 AM CT Tue 27 Oct 2026",
- "main_sha": "96988ab7e",
+ "generated_at": "1:25 AM CT Wed 28 Oct 2026",
+ "main_sha": "433df7aa4",
  "batch4_sha": "wound down 27 Oct (owner: usage); no lanes running",
  "rows": [
   {
@@ -5484,7 +5484,23 @@
      "audit_index": 1,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 5.29,
+       "judges": [
+        5.63,
+        5.16,
+        5.07
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (1) top-20 item P2-022 summit aviary: The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silho \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5497,7 +5513,23 @@
      "audit_index": 1,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 5.81,
+       "judges": [
+        5.81,
+        5.63,
+        5.99
+       ],
+       "defect": [
+        "PARTIAL",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (1) top-20 item P2-024 architectural landmark read: Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5510,7 +5542,23 @@
      "audit_index": 1,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 6.14,
+       "judges": [
+        6.02,
+        6.3,
+        6.11
+       ],
+       "defect": [
+        "PRESENT",
+        "PARTIAL",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (1) top-20 item P2-023 exposed landform edges: Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5523,7 +5571,23 @@
      "audit_index": 1,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 5.41,
+       "judges": [
+        5.63,
+        5.26,
+        5.35
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (1) top-20 item P2-112 captain fight camera orientation: During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and e \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5536,7 +5600,23 @@
      "audit_index": 1,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 6.39,
+       "judges": [
+        6.55,
+        6.09,
+        6.55
+       ],
+       "defect": [
+        "PARTIAL",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (1) top-20 item P2-105 mounted terrace edge and cloud crossing: The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently uns \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5549,7 +5629,23 @@
      "audit_index": 1,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 4.92,
+       "judges": [
+        5.16,
+        4.7,
+        4.89
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (2) impact>12 item P2-025 grass and stone finish: Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across site \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5562,7 +5658,23 @@
      "audit_index": 2,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 5.87,
+       "judges": [
+        6.36,
+        5.44,
+        5.81
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (2) impact>12 item P2-053 bright Cloudreach route markers: Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5575,7 +5687,23 @@
      "audit_index": 2,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 5.72,
+       "judges": [
+        6.09,
+        5.44,
+        5.63
+       ],
+       "defect": [
+        "PARTIAL",
+        "PRESENT",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (2) impact>12 item P2-068 named NPC post readability: Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or co \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5588,7 +5716,23 @@
      "audit_index": 2,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 5.5,
+       "judges": [
+        5.75,
+        5.2,
+        5.57
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (2) impact>12 item P2-077 dialogue foreground composition: The foreground player or nearby posts hide much of the named speaker in several conversation frames \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5601,7 +5745,23 @@
      "audit_index": 2,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 5.6,
+       "judges": [
+        5.75,
+        5.29,
+        5.75
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (2) impact>12 item P2-106 terrace edge clouds: Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5614,7 +5774,23 @@
      "audit_index": 2,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 5.16,
+       "judges": [
+        5.44,
+        4.89,
+        5.16
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (2) impact>12 item P2-076 dialogue speaker visibility: Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5627,7 +5803,23 @@
      "audit_index": 2,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 5.01,
+       "judges": [
+        4.7,
+        5.07,
+        5.26
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (2) impact>12 item P2-117 catch chance feedback timing: A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5640,7 +5832,23 @@
      "audit_index": 2,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 6.69,
+       "judges": [
+        6.94,
+        6.66,
+        6.48
+       ],
+       "defect": [
+        "FIXED",
+        "FIXED",
+        "FIXED"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (2) impact>12 item P2-048 Cloudreach map region label: The discovered Cloudreach Gate / Lower Cliffs label is cut after LOWER without a wrap or ellipsis \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5653,7 +5861,23 @@
      "audit_index": 2,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 5.87,
+       "judges": [
+        6.11,
+        5.29,
+        6.2
+       ],
+       "defect": [
+        "FIXED",
+        "FIXED",
+        "FIXED"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (2) impact>12 item P2-049 floating dark strips: Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5666,7 +5890,23 @@
      "audit_index": 2,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 6.36,
+       "judges": [
+        6.66,
+        6.2,
+        6.2
+       ],
+       "defect": [
+        "FIXED",
+        "FIXED",
+        "FIXED"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (2) impact>12 item P2-054 mushroom pickup variants: Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5679,7 +5919,23 @@
      "audit_index": 2,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 6.48,
+       "judges": [
+        6.66,
+        6.48,
+        6.3
+       ],
+       "defect": [
+        "FIXED",
+        "FIXED",
+        "FIXED"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (2) impact>12 item P2-102 High Perches rim mushroom: A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5692,7 +5948,23 @@
      "audit_index": 2,
      "biomes": [
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "cloudreach": {
+       "mapped": 5.9,
+       "judges": [
+        6.39,
+        5.57,
+        5.75
+       ],
+       "defect": [
+        "FIXED",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass 06aef9c04 ralph/reports/VISUAL/item-scores/cloudreach/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F40 (2) impact>12 item P2-118 full-party catch choice legibility: The full-party caught-creature choice panel leaves the earlier battle HUD visible through its transparent background and puts dim choice ins \u2014 fixed on main with a GPU before/after pass at the bar.",

@@ -1,0 +1,210 @@
+{
+ "sets": {
+  "Iv": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The naturalistic ram reads well standing and is taller than the trainer, but the B faint frames collapse into a legless white fleece pillow with outsized detached-looking horns and A's faint end rolls the body awkwardly, so it falls short of the owner bar finish."
+  },
+  "Vy": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Only the trainer stands in view while Kelm and Captain Veyra speak from portraits, in front of a flat beige wall with pasted wooden doors, which sinks the staging."
+  },
+  "Cz": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Murky brown frames with no purple storm sky, flat magenta ground rings and chevrons as telegraphs, a barely visible player creature, and in B i12-i15 the camera buried in canopy or trunk."
+  },
+  "Lx": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Hard-edged white puff meshes hanging off the cliff, a black stretched shadow wedge on the cliff face in frame 3 and a flat milky cloud floor read as placeholder, not Valheim-class atmosphere."
+  },
+  "Lw": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A flat uniform grass carpet with isolated blocky crags and almost no trees or ledges reads empty beside Palworld's dense plateau."
+  },
+  "Ui": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Both fighters and the bird are now in frame with good creature appeal, but the large pale captain creature is cropped at the frame edge in live-2430 and live-3870 and heavy HUD panels plus a flat sand arena keep it below Palworld finish."
+  },
+  "Yk": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Grass blades still poke through the cobbles at heartstone close, and the high perches tower is a smeared low-detail cylinder over flat green ground, so close-range materials do not reach the finish."
+  },
+  "Vt": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The domed rotunda now has a solid blue dome and pale walls and stays readable at night, but it is still a small single building on a flat grass path, nowhere near the board's layered cliff sanctuary."
+  },
+  "Nk": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blocky straight-sided shelves and crags, a camera jammed against a blobby rock in heartstone approach and flat grass plains read as greybox terrain."
+  },
+  "Eu": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, readable elder villager with clear eyes, earthy greens and browns and a clean full-body silhouette carries it, though the face leans more toon than the naturalistic world."
+  },
+  "Fy": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The golden and night grades help, but a flat saturated cyan post is still the loudest object at the three bells bridge and the bridge itself is lost behind a foreground trunk."
+  },
+  "Gh": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The upright rider standing on clouds below the terrace in terrace_01 to 03, with a black shadow wedge on the cliff, reads as broken traversal, not a crossing."
+  },
+  "Hl": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "B's mottled gold-black scales, open fanged head and grounded coils reach the owner bar; A's flat yellow-black bands and faint poses floating in mid-air above a detached shadow would sink it alone."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild Cloudreach ground as layered pale stratified stone terraces, ledges and groves instead of flat grass carpets, with softened, non-extruded shelf edges and shaped island undersides (Lw, Nk, Yk, Vt surroundings)",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the polygonal white puff clouds and flat cloud floor with soft volumetric cloud banks and keep mounted traversal on supported terrain at terrace edges (Lx, Gh)",
+   "kind": "scene"
+  },
+  {
+   "change": "Build the summit aviary as a layered cliff-top stone sanctuary with glass dome, towers and bridges per the Sky Aviary board, and stage named speakers in view during dialogue (Vt, Vy)",
+   "kind": "new_art"
+  }
+ ]
+}

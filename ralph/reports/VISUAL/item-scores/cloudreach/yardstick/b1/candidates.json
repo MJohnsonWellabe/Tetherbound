@@ -1,0 +1,83 @@
+[
+    {
+        "label":  "IS cloudreach P2-112 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-112.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-112.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: captain fight camera orientation. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read"
+                    ]
+    },
+    {
+        "label":  "IS cloudreach P2-106 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-106.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-106.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: terrace edge clouds. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor"
+                    ]
+    },
+    {
+        "label":  "IS cloudreach P2-023 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-023.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-023.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: exposed landform edges. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges"
+                    ]
+    },
+    {
+        "label":  "IS cloudreach P2-022 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-022.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-022.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: summit aviary. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark"
+                    ]
+    },
+    {
+        "label":  "IS cloudreach P2-105 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-105.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-105.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: mounted terrace edge and cloud crossing. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor"
+                    ]
+    },
+    {
+        "label":  "IS cloudreach P2-076 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-076.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-076.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen"
+                    ]
+    },
+    {
+        "label":  "IS cloudreach P2-053 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-053.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-053.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: bright Cloudreach route markers. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer"
+                    ]
+    },
+    {
+        "label":  "IS cloudreach P2-021 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-021.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-021.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: open terrain. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route"
+                    ]
+    },
+    {
+        "label":  "IS cloudreach P2-025 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-025.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-025.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: grass and stone finish. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites"
+                    ]
+    }
+]

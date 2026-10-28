@@ -1,0 +1,194 @@
+{
+ "sets": {
+  "Ji": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's after frames read as distinct aftermaths (banner and crates gone, cage opened with the freed creature, tent replaced by a smoke plume, fallen banner on the ground), but side B keeps the oxblood enemy banners standing in the row 1, 3 and 5 after frames and row 2 just loses its cage, and on both sides the smeared low-res grass, flat noon light and empty plains are well below Palworld density and Valheim atmosphere."
+  },
+  "Vv": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The strips are gone and the cloud-sea edge and aerie path are clean, but the large flat-shaded dark rock wall in the summit frame and the flat dusk grade with no aerial perspective keep it short of the boards' finish."
+  },
+  "Da": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The aim reticle and blue-grey/teal panels are clean and on-direction with no stale message, but the murky dark-green cave backdrop, brown dust smear on the ground and tiny target creature make it read flatter than Palworld's capture moments."
+  },
+  "Xi": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The player fills the centre foreground in all three frames: Tavi only peeks over the player's shoulder, Sora is not readable in the Sora frame, and Rusk is hidden behind the player and the wooden post, so the speaker staging sinks it."
+  },
+  "Of": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The discovered Cloudreach Gate / Lower Cliffs label is cut after LOWER without a wrap or ellipsis": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The discovered Cloudreach Gate / Lower Cliffs label is cut after LOWER without a wrap or ellipsis": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "No truncated label is visible, but no region label appears at all: the map is an almost entirely fogged blue cloud field with one revealed square, so the subject cannot be confirmed as correct, and the panel reads as functional rather than finished."
+  },
+  "Lh": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The named NPCs are tiny mid-ground figures beside the trainer, half lost in tall grass (Tavi frame), shadow (Sora frame) and the tree trunks (keeper frame), with no post props or poses to say who they are."
+  },
+  "Ly": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The dark murky forest grade, dense HUD panels and flat magenta ring and slab telegraphs (i07-i11, i15-i17, tell1/tell2 a-c on both sides) sink it, and side A also loses the fight behind canopy and trunks in i11, i13 and i15, where side B keeps the large spider in view."
+  },
+  "Vd": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side B's white wolf, with blue-dipped legs and tail and black ear tips, gives a crisp naturalistic silhouette near the owner's style bar and its faint end lies grounded on its side; side A's paler, low-contrast fur loses identity and its faint end pose collapses into an unreadable curled blob facing the camera."
+  },
+  "Xb": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The two pickups now separate (pale yellow cap on a blue-glow base versus a broad orange cap), but both are small, weakly grounded props on flat grass beside blocky untextured-looking rock slabs."
+  },
+  "Eb": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {
+     "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "No mushroom hangs beyond the rim now, but the night frame crushes the tower and rim to near black, and the griffin's wing presses into the tower wall, so the frames lack the boards' bright stratified-stone sky look."
+  },
+  "Xx": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Windscar beacon is a lone plain wooden arch with two banners in front of a slim white tower, standing on an empty grass carpet, nowhere near the dense stone, glass and waterfall landmark language of the Sky Aviary board."
+  },
+  "Av": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The elderly villager has an appealing, clearly read face with good eyes, olive and moss palette on the key art's natural ramp, and a clean full-body silhouette; it is slightly more cartoon than the stylised-realism target but sits at a shipping-quality finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-grade Cloudreach and Meadows lighting: warmer directional key with readable cast shadows, aerial-perspective haze toward the cloud sea, sky-tinted fill and a usable night exposure (Eb night, Ly forest), replacing the flat noon look and smeared ground textures.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stage dialogue and NPC posts with an over-the-shoulder camera that keeps the named speaker unobstructed and larger than the player, add a role prop or post dressing at each NPC, and clear posts and trunks from the shot (Xi, Lh).",
+   "kind": "scene"
+  },
+  {
+   "change": "Build hero landmark meshes for the Cloudreach destinations (Windscar beacon and others) in the Sky Aviary's pale stone, gold and blue-banner language, and replace Ly's flat magenta ring and slab telegraphs with grounded rock and lightning tells.",
+   "kind": "new_art"
+  }
+ ]
+}
