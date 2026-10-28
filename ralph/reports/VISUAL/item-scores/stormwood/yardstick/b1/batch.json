@@ -1,0 +1,81 @@
+{
+ "anchors": {
+  "f36_1_gpu:stormcapra_shipping": [
+   6.2,
+   6.8,
+   6.8
+  ],
+  "f36_1_gpu:stormcapra_candidate": [
+   5.9,
+   6.4,
+   6.4
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   4.4,
+   4.6,
+   5.4
+  ],
+  "f10_2_r3_capacitor:control": [
+   3.8,
+   4.0,
+   4.4
+  ],
+  "f36_0_npc:C1A": [
+   6.8,
+   6.6,
+   7.2
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   6.6,
+   7.2
+  ],
+  "f04_6_r22:control": [
+   4.6,
+   4.6,
+   5.2
+  ],
+  "f04_6_r22:r22": [
+   6.0,
+   6.3,
+   6.2
+  ]
+ },
+ "candidates": {
+  "IS stormwood P2-037 one-sided | P2-037": [
+   3.3,
+   3.8,
+   3.4
+  ],
+  "IS stormwood P2-084 one-sided | P2-084": [
+   5.0,
+   5.2,
+   5.8
+  ],
+  "IS stormwood P2-110 one-sided | P2-110": [
+   3.8,
+   4.4,
+   4.4
+  ],
+  "IS stormwood P2-039 one-sided | P2-039": [
+   4.2,
+   4.4,
+   4.6
+  ],
+  "IS stormwood P2-046 one-sided | P2-046": [
+   3.8,
+   4.2,
+   4.4
+  ],
+  "IS stormwood P2-042 one-sided | P2-042": [
+   4.8,
+   5.0,
+   4.9
+  ],
+  "IS stormwood P2-093 one-sided | P2-093": [
+   5.8,
+   6.2,
+   6.2
+  ]
+ }
+}

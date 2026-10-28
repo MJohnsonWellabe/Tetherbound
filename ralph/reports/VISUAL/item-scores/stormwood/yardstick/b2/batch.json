@@ -1,0 +1,81 @@
+{
+ "anchors": {
+  "f36_1_gpu:stormcapra_candidate": [
+   7.2,
+   6.7,
+   7.2
+  ],
+  "f36_1_gpu:stormcapra_shipping": [
+   6.0,
+   6.8,
+   5.8
+  ],
+  "f36_0_gap:C7B": [
+   5.6,
+   6.3,
+   6.2
+  ],
+  "f36_0_gap:C7A": [
+   6.2,
+   6.6,
+   6.8
+  ],
+  "f36_0_npc:C1A": [
+   7.3,
+   7.3,
+   7.0
+  ],
+  "f36_0_npc:C1B": [
+   7.3,
+   7.3,
+   7.0
+  ],
+  "p2_094_r4:Y_after": [
+   6.4,
+   6.7,
+   6.1
+  ],
+  "p2_094_r4:X_before": [
+   3.5,
+   4.8,
+   3.4
+  ]
+ },
+ "candidates": {
+  "IS stormwood P2-055 one-sided | P2-055": [
+   4.0,
+   4.9,
+   4.0
+  ],
+  "IS stormwood P2-044 one-sided | P2-044": [
+   4.5,
+   5.3,
+   4.3
+  ],
+  "IS stormwood P2-070 one-sided | P2-070": [
+   3.5,
+   4.6,
+   2.8
+  ],
+  "IS stormwood P2-056 one-sided | P2-056": [
+   3.8,
+   5.0,
+   3.8
+  ],
+  "IS stormwood P2-038 one-sided | P2-038": [
+   4.5,
+   5.4,
+   4.2
+  ],
+  "IS stormwood P2-083 one-sided | P2-083": [
+   2.7,
+   4.6,
+   3.6
+  ],
+  "IS stormwood P2-111 one-sided | P2-111": [
+   4.8,
+   5.6,
+   4.6
+  ]
+ }
+}

@@ -1,0 +1,184 @@
+{
+ "sets": {
+  "Oz": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Voltarach model has board-faithful gold-and-blue plating, but in i01 and tell1-a/e Sparkit sits inside the spider's leg span as a small blur, and the scene is dim and flat under a crowded HUD, so the fight lacks Palworld's clear actor spacing and impact."
+  },
+  "Md": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger wrapped recipe text and gold ingredient lines read, but the panel is a plain dark slab: Craft and Leave are small pale glyphs with no teal interaction accent, and the list shows only three oversized cells, so it does not reach Palworld's HUD finish."
+  },
+  "Gi": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Each trainer now has a distinct line and a matching portrait, but the Captain Marrow frame is filled by a blue lightning banner with the speaker out of shot, and the Senn frame is a flat grey block wall, so the staging sinks it."
+  },
+  "Th": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Tanglevolt wolf matches the owner's style bar when standing, but A's faint-mid and faint-end float above their shadows with smeared black-white surfaces, and B's faint-end pitches nose-down into the floor under oversaturated veins, so the hurt poses do not hold the bar."
+  },
+  "Na": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The tiers now differ in colour (pale green, blue-white, gold glow), but each pickup is still a speck a few pixels wide on a uniform leafy carpet, and the rare-candy glow is lost against the large creature beside it."
+  },
+  "Fm": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The portraits of Rook, Lio and Elder Maud now match the in-world speakers, but the player's back fills a third of every frame and the lighting is flat purple-grey, which keeps it short of Palworld/Valheim finish."
+  },
+  "Xk": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The elder villager has an appealing readable face with clear eyes, soft white hair and an olive-and-brown outfit that sits in the key-art palette, at a finish a shipping stylised game would accept."
+  },
+  "No": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spider is visible in most frames, but the player's creature is barely findable, telegraphs are flat magenta rings and slabs (A i06-i10, i15-i17, tell2 a-c; B i10, i16-i17), and B's i12-i16 lose the fight entirely to the camera inside dark foliage."
+  },
+  "Vr": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The 'arch' is a small dark block with a few blue lights, roughly the trainer's height, on a bare grey square slab laid over the moss, with no arch silhouette or landmark scale against the flat tiled purple backdrop."
+  },
+  "Eh": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The base is now a shaped violet rock with cyan glass shards and no white bar, but the glass lies flat instead of rising as spikes, and the mushrooms and tree trunk crowd the subject in a dim frame."
+  },
+  "Nd": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The thick stripes are gone, leaving thin, sparse gold crack lines that no longer dominate, but the road now reads as plain flat mud with little charge or glow, set in a uniform leafy ground carpet."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Make Stormwood fights readable: fade or collide the camera against trunks and canopy (No B i12-i16), keep the player's creature out of the boss's leg span (Oz), and replace the flat magenta telegraph rings and slabs with ground-crack and lightning effects that land with a visible impact",
+   "kind": "scene"
+  },
+  {
+   "change": "Build a real Crown Arch hero landmark: a tall arched stone and copper-glass form, set into the terrain without the bare square slab, at a scale that dwarfs the trainer",
+   "kind": "new_art"
+  },
+  {
+   "change": "Break the uniform leafy ground carpet into groves, clearings and paths with real value range and rim light, so small subjects (candy tiers, the charged road, glass spikes) separate from the ground; enlarge the candy tiers and give each its own silhouette",
+   "kind": "scene"
+  }
+ ]
+}

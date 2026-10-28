@@ -5335,7 +5335,23 @@
      "audit_index": 1,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 4.41,
+       "judges": [
+        4.23,
+        4.69,
+        4.32
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (1) top-20 item P2-042 Surge phase presentation: Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5348,7 +5364,23 @@
      "audit_index": 1,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 5.69,
+       "judges": [
+        5.6,
+        5.78,
+        5.69
+       ],
+       "defect": [
+        "PARTIAL",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (1) top-20 item P2-092 named wild fight actor spacing: Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5361,7 +5393,23 @@
      "audit_index": 1,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 5.98,
+       "judges": [
+        5.76,
+        6.05,
+        6.14
+       ],
+       "defect": [
+        "PARTIAL",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (1) top-20 item P2-038 named destination identities: Several named destinations read as similar grass and trees without a distinct subject in the captured close views \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5374,7 +5422,23 @@
      "audit_index": 1,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 4.54,
+       "judges": [
+        4.29,
+        5.42,
+        3.91
+       ],
+       "defect": [
+        "PARTIAL",
+        "PARTIAL",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (1) top-20 item P2-039 forest ground and distance layers: Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5387,7 +5451,23 @@
      "audit_index": 1,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 5.24,
+       "judges": [
+        5.05,
+        5.24,
+        5.42
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (1) top-20 item P2-093 named wild danger and opening cues: The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish sign \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5400,7 +5480,23 @@
      "audit_index": 1,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 6.76,
+       "judges": [
+        6.52,
+        6.88,
+        6.88
+       ],
+       "defect": [
+        "FIXED",
+        "FIXED",
+        "FIXED"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (1) top-20 item P2-081 named trainer dialogue identity: Every captured named trainer conversation repeats the same generic line and shows no portrait \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5413,7 +5509,23 @@
      "audit_index": 1,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 6.43,
+       "judges": [
+        6.24,
+        6.72,
+        6.34
+       ],
+       "defect": [
+        "FIXED",
+        "FIXED",
+        "FIXED"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (1) top-20 item P2-055 named character silhouettes: Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5428,7 +5540,23 @@
       "meadows",
       "tidewake",
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 4.03,
+       "judges": [
+        3.66,
+        4.79,
+        3.66
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (1) top-20 item P2-046 harvest resource identity: Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5441,7 +5569,23 @@
      "audit_index": 1,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 4.99,
+       "judges": [
+        4.69,
+        5.05,
+        5.24
+       ],
+       "defect": [
+        "PARTIAL",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (2) impact>12 item P2-070 Glass Sink landmark: The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do n \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5454,7 +5598,23 @@
      "audit_index": 2,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 3.19,
+       "judges": [
+        3.03,
+        4.41,
+        2.14
+       ],
+       "defect": [
+        "PARTIAL",
+        "PARTIAL",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (2) impact>12 item P2-082 named character portrait identity: Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5467,7 +5627,23 @@
      "audit_index": 2,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 6.98,
+       "judges": [
+        7.01,
+        7.01,
+        6.91
+       ],
+       "defect": [
+        "FIXED",
+        "FIXED",
+        "FIXED"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (2) impact>12 item P2-040 charged road surface: Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5480,7 +5656,23 @@
      "audit_index": 2,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 5.63,
+       "judges": [
+        5.76,
+        5.76,
+        5.38
+       ],
+       "defect": [
+        "FIXED",
+        "FIXED",
+        "FIXED"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (2) impact>12 item P2-044 electric creature finish: Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5493,7 +5685,23 @@
      "audit_index": 2,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 4.54,
+       "judges": [
+        4.29,
+        5.3,
+        4.03
+       ],
+       "defect": [
+        "PARTIAL",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (2) impact>12 item P2-045 candy pickup tiers: Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5507,7 +5715,23 @@
      "biomes": [
       "tidewake",
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 5.63,
+       "judges": [
+        5.76,
+        5.57,
+        5.57
+       ],
+       "defect": [
+        "PARTIAL",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (2) impact>12 item P2-083 dialogue foreground obstruction: Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5520,7 +5744,23 @@
      "audit_index": 2,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 3.19,
+       "judges": [
+        2.02,
+        4.41,
+        3.15
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (2) impact>12 item P2-110 Hollows fight loss result clarity: After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready  \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5533,7 +5773,23 @@
      "audit_index": 2,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 5.05,
+       "judges": [
+        4.69,
+        5.24,
+        5.24
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (2) impact>12 item P2-041 Crown Arch: The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5546,7 +5802,23 @@
      "audit_index": 2,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 3.97,
+       "judges": [
+        3.84,
+        4.23,
+        3.84
+       ],
+       "defect": [
+        "PRESENT",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (2) impact>12 item P2-056 uniformed character readability: Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distanc \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5559,7 +5831,23 @@
      "audit_index": 2,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 3.91,
+       "judges": [
+        3.4,
+        4.92,
+        3.4
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (2) impact>12 item P2-043 Glass Field spike bases: Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5572,7 +5860,23 @@
      "audit_index": 2,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 5.15,
+       "judges": [
+        5.09,
+        5.76,
+        4.61
+       ],
+       "defect": [
+        "PARTIAL",
+        "FIXED",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (2) impact>12 item P2-084 named character dialogue reuse: Distinct named Stormwood characters use identical dialogue lines \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5585,7 +5889,23 @@
      "audit_index": 2,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 6.09,
+       "judges": [
+        5.78,
+        5.97,
+        6.52
+       ],
+       "defect": [
+        "FIXED",
+        "FIXED",
+        "FIXED"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F41 (2) impact>12 item P2-111 Hollows victory reward tiles: The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mista \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -5598,7 +5918,23 @@
      "audit_index": 2,
      "biomes": [
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "stormwood": {
+       "mapped": 4.92,
+       "judges": [
+        4.67,
+        5.67,
+        4.41
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass 228496164 ralph/reports/VISUAL/item-scores/stormwood/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "The biome frame matrix (approach, gameplay camera, reverse, detail, day/night, weather, a real fight) passes the new bar on High and Medium.",

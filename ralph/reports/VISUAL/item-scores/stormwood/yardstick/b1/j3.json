@@ -1,0 +1,178 @@
+{
+ "sets": {
+  "Vd": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "All three frames on both sides show the trainer inside a dark brown curved wall hung with blue banners and a thin lightning streak; there is no trunk, bark, crown or glowing core, so the board's colossal tree never appears."
+  },
+  "Ug": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Oswin and Elder Maud are staged well under the purple storm sky, but the Fenn frame is a black void with no world or speaker in it, and Fenn's portrait looks like Oswin's hooded, bearded one, which sinks the finish."
+  },
+  "Qc": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The 'after' frame shows the full exploration HUD with TEAM 5/5, full green bars and a reward-style 'yields the glowmoss lanes' line over a dim, murky forest, so no loss state reads."
+  },
+  "Hw": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The standing Stormcapra matches the owner bar's naturalistic fleece-and-horn model and stands taller than the ruler, but the faint poses break the read: A's faint mid twists the legs into a knot, and in B's faint mid and end the body flattens into a white fleece slab with the head lost behind the horns."
+  },
+  "Pv": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky is on-board, but a single repeated teal moss carpet runs over flat land to a bare horizon, with sparse isolated trees and no fog layering, groves or black pools, so the land reads as a field and not a deep ancient forest."
+  },
+  "Xs": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold armoured Voltarach is a strong, readable silhouette, but the player's creature is tiny and hard to find, telegraphs are flat magenta rings and chevrons (A i06-i10, tell2 a-c; B i10, i16), and in B the camera sits inside dark foliage for i12-i16, which blacks out the fight."
+  },
+  "Tj": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The elder's clean sculpt, readable eyes and brows, warm moss-green vest-and-scarf palette and clear full-body silhouette sit at a shipping stylised finish, though the face leans a touch more cartoon than the naturalistic creatures."
+  },
+  "Oh": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Stormglass gets some pale-blue crystal cue, but stormglass_crown is a beige boulder with tan shards and glowmoss is a flat green lump with no glow, all low-poly and floating on a uniform moss carpet."
+  },
+  "Bi": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Meadows light and grass are pleasant, but the textures are soft and smeared and the walls are blocky; B's aftermaths carry the set with a downed banner, opened cage, freed captive, collapsed tent and smoke, while A leaves Team Tether's red banners standing after the win (rows 1, 3, 5) with only small debris changes."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Break now shows white-violet lightning bolts in the sky, which is on-board, but Calm and Building are near-identical stills of the same flat moss field, with no change to fog, cloud motion, light shafts or ground wetness."
+  },
+  "He": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Voltarach reads big and well lit among the trunks, and no magenta slab is visible at strike or impact, but the HUD stack crowds both lower corners and the player's Sparkit is a tiny figure under the boss, which keeps it short of Palworld fight clarity."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Build the Stormheart as a real hero tree, with a split trunk, bark, a branching leafy crown, wrapped walkways and a glowing core visible from the approach, to replace the dark ring wall (Vd).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Break the uniform Stormwood moss carpet into groves, root mounds, black pools, height variation and layered fog with distant tree silhouettes; tie storm phases to fog density, cloud speed and ground wetness, not just rain (Pv, Uv, Oh, Ug).",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the flat magenta telegraph rings and chevrons with grounded lightning/arc effects that land with an impact, fade or cull occluding foliage between camera and fighters, and scale up or rim-light the player's creature (Xs, He).",
+   "kind": "scene"
+  }
+ ]
+}

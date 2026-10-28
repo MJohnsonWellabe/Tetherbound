@@ -1,0 +1,81 @@
+{
+ "anchors": {
+  "craft:before": [
+   4.0,
+   4.4,
+   4.6
+  ],
+  "craft:after": [
+   6.8,
+   6.3,
+   6.6
+  ],
+  "f36_0_gap:C4B": [
+   5.2,
+   6.2,
+   6.1
+  ],
+  "f36_0_gap:C4A": [
+   6.3,
+   6.6,
+   6.3
+  ],
+  "f36_0_npc:C1B": [
+   6.8,
+   7.3,
+   7.0
+  ],
+  "f36_0_npc:C1A": [
+   6.8,
+   7.3,
+   7.0
+  ],
+  "f10_2_r3_capacitor:candidate_r3": [
+   5.0,
+   4.8,
+   4.4
+  ],
+  "f10_2_r3_capacitor:control": [
+   4.0,
+   4.0,
+   3.6
+  ]
+ },
+ "candidates": {
+  "IS stormwood P2-092 one-sided | P2-092": [
+   5.0,
+   5.3,
+   5.4
+  ],
+  "IS stormwood P2-081 one-sided | P2-081": [
+   5.5,
+   6.0,
+   5.6
+  ],
+  "IS stormwood P2-045 one-sided | P2-045": [
+   5.0,
+   4.8,
+   4.8
+  ],
+  "IS stormwood P2-082 one-sided | P2-082": [
+   6.3,
+   6.3,
+   6.2
+  ],
+  "IS stormwood P2-041 one-sided | P2-041": [
+   3.0,
+   3.4,
+   3.0
+  ],
+  "IS stormwood P2-043 one-sided | P2-043": [
+   4.3,
+   5.0,
+   3.8
+  ],
+  "IS stormwood P2-040 one-sided | P2-040": [
+   5.0,
+   5.0,
+   4.6
+  ]
+ }
+}

@@ -1,0 +1,65 @@
+[
+    {
+        "label":  "IS stormwood P2-082 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-082.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-082.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: named character portrait identity. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations"
+                    ]
+    },
+    {
+        "label":  "IS stormwood P2-092 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-092.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-092.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: named wild fight actor spacing. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer"
+                    ]
+    },
+    {
+        "label":  "IS stormwood P2-041 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-041.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-041.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: Crown Arch. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it"
+                    ]
+    },
+    {
+        "label":  "IS stormwood P2-040 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-040.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-040.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: charged road surface. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern"
+                    ]
+    },
+    {
+        "label":  "IS stormwood P2-045 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-045.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-045.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: candy pickup tiers. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance"
+                    ]
+    },
+    {
+        "label":  "IS stormwood P2-043 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-043.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-043.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: Glass Field spike bases. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster"
+                    ]
+    },
+    {
+        "label":  "IS stormwood P2-081 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-081.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-081.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: named trainer dialogue identity. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Every captured named trainer conversation repeats the same generic line and shows no portrait"
+                    ]
+    }
+]
