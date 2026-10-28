@@ -1,0 +1,74 @@
+[
+    {
+        "label":  "IS meadows P2-007 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-007.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-007.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: secondary menu panels. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-050 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-050.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-050.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: human post poses. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Many named villagers and trainers hold the same straight neutral stance with arms down despite different roles"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-096 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-096.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-096.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: craft action hint contrast. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Craft and leave button hints are faint gray on the dark translucent craft panel"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-006 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-006.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-006.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: mill and settlements. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-001 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-001.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-001.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: menu shell. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-003 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-003.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-003.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: Team Tether stronghold. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-014 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-014.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-014.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: distant mountains. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-012 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-012.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-012.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: Burrow Warrens hillside. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+                    ]
+    }
+]

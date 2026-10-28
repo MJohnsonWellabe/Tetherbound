@@ -1,4 +1,4 @@
-# b14 (25 Oct 2026, CPU): Meshy batch 4 remakes, Pebbik and Riptusk (F36#0 / F36#1)
+# b14 (24 Oct 2026, CPU): Meshy batch 4 remakes, Pebbik and Riptusk (F36#0 / F36#1)
 
 What was compared:
 - Candidates: naturalistic remakes from Meshy batch 4 (coordinator-generated at `tb/meshy-1024` 23267cffd).

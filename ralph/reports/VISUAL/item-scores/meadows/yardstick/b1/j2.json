@@ -1,0 +1,198 @@
+{
+ "sets": {
+  "Cp": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The HUD is compact, but its near-black boxes, outlined text and a dim, flat-lit orange interior fall well short of Palworld's clean, light interface and Valheim-class interior light."
+  },
+  "Ut": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fleece-and-horn ram reads close to the owner's Stormcapra bar, but on a neutral stage it shows no world light or atmosphere, and B's faint frames twist into an unreadable upturned, floating heap."
+  },
+  "Oc": {
+   "A": {
+    "bar_a": 5.1,
+    "defects": {
+     "Several reward harvest nodes read as generic crates or vegetation without a clear visible connection to their named item": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.1,
+    "defects": {
+     "Several reward harvest nodes read as generic crates or vegetation without a clear visible connection to their named item": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The meadow has warm grass and blue distance, but the reward nodes are tiny, generic blobs and crates lost in a uniform grass carpet with flat midday light."
+  },
+  "Vh": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's per-site aftermaths (banners down, cage opened, crates smashed, smoke) carry the story, but smeared low-resolution terrain and flat light sink both sides against Palworld."
+  },
+  "Nh": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's braced timber frame with cap and stone footing starts to read as a built wall, but it is still one thin isolated panel, and B is a blown-out white card."
+  },
+  "Ty": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The oak grove and path framing are pleasant, but the pickups are small, low-contrast blobs with no readable item identity and no grounding light."
+  },
+  "Ky": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The glowing capture orb is a nice beat, but the tight top-down frames are filled with a blurry, cropped foreground companion and flat green grass, with no horizon."
+  },
+  "Mq": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The grandpa reads warmly, with a clean silhouette and an earthy green-brown palette, but the large-eyed cartoon face leans further toward toy-like than the stylised realism of Palworld and the key art."
+  },
+  "Qb": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A bright sky, a lake and a cottage set the scene, but the creatures are small mid-ground figures whose hurt and moving poses barely differ, and an oversized dark foreground grass mass takes up much of the frame."
+  },
+  "Tp": {
+   "A": {
+    "bar_a": 4.7,
+    "defects": {
+     "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Brookfail, Pipwing and Bramblebun all stand at or below the trainer's height and read as small props, unlike Palworld's large, readable creature silhouettes."
+  },
+  "Yq": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Creatures sit in grass tufts that soften their feet, and the dark, oversized foreground grass blocks dominate the lower half of the frame instead of framing the subject."
+  },
+  "Ne": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Mira, Tam and Oskar now match their portraits in front of a charming timber-and-stone village, but the chibi characters and flat midday light stop short of Palworld and Valheim finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Scale every Meadows creature clearly above the 1.80 m trainer and give it higher-contrast rim light, so creatures become the largest, most readable subjects in the Qb, Tp, Yq and Ky frames",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace generic crates, orbs and glow plants with distinct, larger item-shaped pickup and harvest meshes (candy, potion, tonic, pack), each with its own silhouette and colour (Oc, Ty)",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix the low-resolution, smeared terrain texture and the dark, oversized foreground grass blocks, and reframe the catch camera so the player, companion and target stay in one readable shot (Vh, Qb, Tp, Yq, Ky)",
+   "kind": "scene"
+  }
+ ]
+}

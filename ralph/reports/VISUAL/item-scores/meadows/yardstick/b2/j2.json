@@ -1,0 +1,194 @@
+{
+ "sets": {
+  "Wy": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Both sides show one even yellow-green grass carpet with the same scattered white flowers in all three frames (stronghold approach, burrow warrens, old mill), and no groves, edges, rock clusters or colour patches like the key art's, so it reads thinner and flatter than Palworld's ground cover."
+  },
+  "Eh": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The wall now reads as timber framing with cross-braces and posts, but it is a lone flat panel on a thin plank base with flat cream infill and soft contact with the grass, so it looks like a build-mode placeholder rather than Palworld-finish base building."
+  },
+  "Ta": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The caught-verdict and caught-banner frames are a blown-out yellow-white orb with blurry bokeh blobs, and the Terrapup card, action bar and Bramblebun panel stay full strength, so there is no clear payoff moment."
+  },
+  "Mr": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fight takes place on a dark muddy brown floor with no visible purple storm sky or lightning, the telegraphs are flat magenta ground outlines, the dense HUD fills most of each small frame, and on B the camera ends up inside canopy at i12, i13 and i15."
+  },
+  "Uc": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visible change between rest and shake frames": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visible change between rest and shake frames": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The magenta ring is gone and a warm gold sphere with rays replaces it, but the orb is still a flat, overexposed disc with no real-object impact, and the large blurred Terrapup in the foreground covers the bottom third of the frame."
+  },
+  "Df": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Several alpha variants read mainly as a modest size increase without a distinct staged presence beside the trainer": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Several alpha variants read mainly as a modest size increase without a distinct staged presence beside the trainer": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Trailpup and Brooktail alphas stand about trainer height in mid-distance, with no aura, scale jump, rim light or posture that marks them as alphas, so they lack the presence of Palworld's field bosses."
+  },
+  "Qg": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "This is the style-bar Stormcapra (white fleece, dark curled horns, blue accents, clearly taller than the trainer). A's rear-up hit and grounded side-lying faint read well, but B's faint mid twists and lifts off the floor and its faint end lies inverted, which breaks the read."
+  },
+  "Kf": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The yard is now clean cobble and reads as trafficked, but the cobbles are oversized and uniform against the 1.80 m trainer, the dusk frame is a muddy orange-brown with no blue distance, and the crimson banners need checking against the rule that red is reserved for Team Tether if this relay is not an enemy site."
+  },
+  "Ve": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.9,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's mottled gold-on-black scale material and grounded coils are close to the naturalistic style bar but very dark against the stage, while A's flat plastic yellow-black bands and faint mid and faint end poses floating well above their own shadows sink it."
+  },
+  "Bt": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "In camp_tent and camp_bed, crates, barrels, the bed and fire sit half-buried in grass among a wolf and a rabbit with no cleared ground or framing, and in bonfire_fire the bonfire is small and distant behind a large grey rock prop."
+  },
+  "Mc": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The small capture-chance label sits on the creature over high-frequency grass, and in catch_high a beige dust cloud washes over the target, so only the cyan sky beam reads at a glance."
+  },
+  "Yl": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The old villager has a clear, appealing face and eyes, a white beard silhouette and a moss-green and brown palette that fits the meadows settlement, though the smooth toy-like skin is a little softer than the naturalistic creature bar."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Break the uniform meadow grass carpet into authored groves, edges and clearings: cluster flowers in colour patches, add rock and shrub breaks, and clear ground under camps, props and catch targets so subjects separate from the grass (Wy, Bt, Mc, Df, Ta).",
+   "kind": "scene"
+  },
+  {
+   "change": "Rebuild catch and combat effects and their HUD focus: replace overexposed orb discs and flat magenta ground telegraphs with real-object effects that have impacts, dim persistent cards and action bars during breakout, success and telegraph moments, and keep the camera out of canopy in fights (Ta, Uc, Mc, Mr).",
+   "kind": "scene"
+  },
+  {
+   "change": "Give alphas a distinct staged presence (larger scale jump, rim light, aura or mane detail) and fix creature faint poses that float or invert, so they stay grounded (Df, Ve A, Qg B).",
+   "kind": "new_art"
+  }
+ ]
+}

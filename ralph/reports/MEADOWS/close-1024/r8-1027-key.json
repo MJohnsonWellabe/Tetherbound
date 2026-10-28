@@ -1,0 +1,23 @@
+{
+ "Wl": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Hd": {
+  "anchor": false,
+  "label": "stronghold r8",
+  "A": "/dev/shm/cap15/sp_r8.png",
+  "B": "/dev/shm/cap15/sp_r7b.png"
+ },
+ "Ko": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Im": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ }
+}

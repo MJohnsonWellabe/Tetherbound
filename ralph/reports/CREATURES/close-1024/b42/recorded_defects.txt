@@ -1,0 +1,5 @@
+Pu: "Plates read as a pack or armour strapped on rather than grown from the body"; "Coat reads red or orange-red"
+Mo: none
+Ay: none
+Po: "Plates read as a pack or armour strapped on rather than grown from the body"; "Coat reads red or orange-red"
+Hq: none

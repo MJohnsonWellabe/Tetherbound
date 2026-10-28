@@ -1,0 +1,56 @@
+[
+ {
+  "label": "F38#0 P2-003",
+  "a": "/tmp/claude-0/cap/rows/P2-003.png",
+  "b": "/tmp/claude-0/cap/rows/P2-003.png",
+  "brief": "Meadows recapture, Team Tether stronghold: up to twelve real-time frames from fixed stands (approach, gameplay, reverse and detail views; day, night and rain). The 1.80 m trainer stands in most frames.",
+  "defects": [
+   "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"
+  ]
+ },
+ {
+  "label": "F38#0 P2-013",
+  "a": "/tmp/claude-0/cap/rows/P2-013.png",
+  "b": "/tmp/claude-0/cap/rows/P2-013.png",
+  "brief": "Meadows recapture, Tether Relay yard: up to twelve real-time frames from fixed stands (approach, gameplay, reverse and detail views; day, night and rain). The 1.80 m trainer stands in most frames.",
+  "defects": [
+   "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp"
+  ]
+ },
+ {
+  "label": "F38#0 P2-014",
+  "a": "/tmp/claude-0/cap/rows/P2-014.png",
+  "b": "/tmp/claude-0/cap/rows/P2-014.png",
+  "brief": "Meadows recapture, distant mountains: up to twelve real-time frames from fixed stands (approach, gameplay, reverse and detail views; day, night and rain). The 1.80 m trainer stands in most frames.",
+  "defects": [
+   "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes"
+  ]
+ },
+ {
+  "label": "F38#0 P2-005",
+  "a": "/tmp/claude-0/cap/rows/P2-005.png",
+  "b": "/tmp/claude-0/cap/rows/P2-005.png",
+  "brief": "Meadows recapture, ground cover: up to twelve real-time frames from fixed stands (approach, gameplay, reverse and detail views; day, night and rain). The 1.80 m trainer stands in most frames.",
+  "defects": [
+   "Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks"
+  ]
+ },
+ {
+  "label": "F38#0 P2-006",
+  "a": "/tmp/claude-0/cap/rows/P2-006.png",
+  "b": "/tmp/claude-0/cap/rows/P2-006.png",
+  "brief": "Meadows recapture, mill and settlements: up to twelve real-time frames from fixed stands (approach, gameplay, reverse and detail views; day, night and rain). The 1.80 m trainer stands in most frames.",
+  "defects": [
+   "The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity"
+  ]
+ },
+ {
+  "label": "F38#0 P2-012",
+  "a": "/tmp/claude-0/cap/rows/P2-012.png",
+  "b": "/tmp/claude-0/cap/rows/P2-012.png",
+  "brief": "Meadows recapture, Burrow Warrens hillside: up to twelve real-time frames from fixed stands (approach, gameplay, reverse and detail views; day, night and rain). The 1.80 m trainer stands in most frames.",
+  "defects": [
+   "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+  ]
+ }
+]

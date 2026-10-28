@@ -1,0 +1,6 @@
+Ik: none
+Or: none
+Lg: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Nd: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"; "Ride: the seated trainer does not sit on the back (floating above it, sunk into it, or off it)"
+Ye: none
+Va: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"

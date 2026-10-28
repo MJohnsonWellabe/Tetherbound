@@ -1,0 +1,74 @@
+[
+    {
+        "label":  "IS meadows P2-017 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-017.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-017.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: normal creature scale. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-086 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-086.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-086.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: tournament dialogue subject identity. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-016 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-016.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-016.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: creature hurt and movement poses. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-033 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-033.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-033.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: ground pickup identity. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-034 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-034.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-034.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: harvest reward identity. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several reward harvest nodes read as generic crates or vegetation without a clear visible connection to their named item"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-020 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-020.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-020.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: creature ground contact. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-004 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-004.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-004.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: exploration HUD. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-059 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-059.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-059.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: catch sequence camera framing. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link"
+                    ]
+    }
+]

@@ -1,0 +1,72 @@
+[
+ {
+  "label": "F36 trailpup b16",
+  "a": "scratch/b16/sides/trailpup-base.png",
+  "b": "scratch/b16/sides/trailpup-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ },
+ {
+  "label": "F36 stormtrail b16",
+  "a": "scratch/b16/sides/stormtrail-base.png",
+  "b": "scratch/b16/sides/stormtrail-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ },
+ {
+  "label": "F36 mudsnout b16",
+  "a": "scratch/b16/sides/mudsnout-base.png",
+  "b": "scratch/b16/sides/mudsnout-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ },
+ {
+  "label": "F36 cindercub b16",
+  "a": "scratch/b16/sides/cindercub-base.png",
+  "b": "scratch/b16/sides/cindercub-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ },
+ {
+  "label": "F36 paddlenewt b16",
+  "a": "scratch/b16/sides/paddlenewt-base.png",
+  "b": "scratch/b16/sides/paddlenewt-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ },
+ {
+  "label": "F36 riftfrill b16",
+  "a": "scratch/b16/sides/riftfrill-base.png",
+  "b": "scratch/b16/sides/riftfrill-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ },
+ {
+  "label": "F36 mosshell b16",
+  "a": "scratch/b16/sides/mosshell-base.png",
+  "b": "scratch/b16/sides/mosshell-c.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler. First row: standing, hit react, faint end. Judge the creature as the game's real look and whether every pose reads correctly without a label - the hit as a hit, the faint as down, and each further pose as what it is - grounded or seated, with nothing clipping or floating.",
+  "defects": [
+   "Hit react reads as idle or standing",
+   "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+  ]
+ }
+]

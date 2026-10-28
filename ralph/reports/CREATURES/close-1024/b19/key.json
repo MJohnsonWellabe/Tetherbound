@@ -1,0 +1,35 @@
+{
+ "Ku": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Mh": {
+  "anchor": true,
+  "A": "f36_0_gap:C1A",
+  "B": "f36_0_gap:C1B"
+ },
+ "Bk": {
+  "anchor": false,
+  "label": "F36 stormtrail b19",
+  "A": "scratch/b19/sides/stormtrail-base.png",
+  "B": "scratch/b19/sides/stormtrail-c.png"
+ },
+ "Md": {
+  "anchor": false,
+  "label": "F36 riftfrill b19",
+  "A": "scratch/b19/sides/riftfrill-c.png",
+  "B": "scratch/b19/sides/riftfrill-base.png"
+ },
+ "Mw": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Ui": {
+  "anchor": false,
+  "label": "F36 cindercub b19",
+  "A": "scratch/b19/sides/cindercub-c.png",
+  "B": "scratch/b19/sides/cindercub-base.png"
+ }
+}

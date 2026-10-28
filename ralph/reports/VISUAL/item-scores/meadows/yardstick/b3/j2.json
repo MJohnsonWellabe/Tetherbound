@@ -1,0 +1,194 @@
+{
+ "sets": {
+  "Wo": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "Craft and leave button hints are faint gray on the dark translucent craft panel": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "Craft and leave button hints are faint gray on the dark translucent craft panel": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Blue-grey panel, gold ingredient lines and teal Leave read well, but the craft action is still a grey 'Missing materials' slab with a faint grey glyph, so the primary action lacks the confident prompt hierarchy of Palworld's HUD."
+  },
+  "Hp": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The painted header strip helps, but Players and Quests are a few small text lines and greyed 'open seat' rows floating in a large empty charcoal field, which reads as a debug panel next to Palworld's dense, iconised menus."
+  },
+  "Dj": {
+   "A": {
+    "bar_a": 5.7,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A painted meadows banner in the header and the lit Terrapup model on the Creatures tab connect it to the world, but the body is still uniform charcoal cells with tiny type and thin teal lines and weak hierarchy at handheld size."
+  },
+  "El": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The grass and flowers in the foreground are fine, but in walk_02 and walk_03 a flat, straight-edged brown slab fills half the frame with a dark undercut overhang, which reads as untextured blockout and not as a hillside."
+  },
+  "Gd": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The golden spider boss has a readable silhouette, but the frames are murky brown-black with no purple storm sky or lightning, the player's creature is barely findable, telegraphs are flat magenta rings and chevron slabs (A i06-i10, tell2), and in B i12-i16 dark foliage blocks the camera."
+  },
+  "Vd": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "On the stronghold approach the only mountain is one faint pale peak with no ranged layers or cool-blue aerial perspective, and in the Burrow frames the 'distance' is blocky brown cliff faces, so the key art's layered snowy ranges are not there."
+  },
+  "Uu": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Many named villagers and trainers hold the same straight neutral stance with arms down despite different roles": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Many named villagers and trainers hold the same straight neutral stance with arms down despite different roles": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The village backdrops are pleasant, but Oskar, Halda and Lark all stand rigidly with arms down, small and unposed, with no props or role gestures, so the people do not read as lived-in residents."
+  },
+  "Ro": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Tether banners use the reserved oxblood correctly, but on the day approach the hall is a tiny grey outline on the horizon, and up close the courtyard is a near-black floor with banners on bare walls and none of the key art's mossy, scaffolded mass."
+  },
+  "Hu": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's sleek blue water drake with gold-flame fins and a clean belly-up faint has a strong silhouette and colour, though its faint-end tail goes dull grey-brown; A's coral-red fins drift toward the reserved red and its faint end collapses into an unreadable twisted knot."
+  },
+  "Zf": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The mill tower and green groves read as meadows, but the water is only a thin flat blue sliver, the village frame is an empty path with one signpost, and the Trail Camp is a dark sign with no people or fires, so nothing looks lived-in."
+  },
+  "Jl": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder's white hair and beard, readable eyes and green-and-brown outfit fit the meadows palette with appeal, but the face is glossy toy-like Pixar styling, more cartoon than the key art's stylised realism, and the full body is plain and stiff."
+  },
+  "Ok": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths are site-specific (row 1 banner down with debris, row 2 cage opened with captive freed, row 3 banner and crates gone, row 4 a toppled tent and smoke column, row 5 banner fallen), while A mostly leaves the banners up and changes little; both sit on smeared low-detail ground textures."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Replace the straight-edged brown terrain slabs and faceted backdrop at the Burrow hillside and in the distance with sculpted, grass-capped rock and layered cool-blue mountain ranges (El, Vd, Ro approach).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Stormwood fight framing: pull the camera out of the foliage and clear trunks from the arena, add the purple storm sky and rim light so both fighters separate, and swap the flat magenta ring and slab telegraphs for grounded lightning and stone effects with impacts (Gd).",
+   "kind": "scene"
+  },
+  {
+   "change": "Fill the menus and settlements: give secondary panels icons, art and a strong primary action button, and pose and stage villagers with role props, activity clusters and lit interiors at the stronghold, mill and camp (Hp, Dj, Wo, Uu, Zf, Ro).",
+   "kind": "scene"
+  }
+ ]
+}

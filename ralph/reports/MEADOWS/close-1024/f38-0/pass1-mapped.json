@@ -1,0 +1,134 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.6076,
+  "least_squares_slope": 0.7073,
+  "method": "linear",
+  "slope": 0.7073,
+  "intercept": 1.9005,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.631,
+ "top_anchor_reference": 7.35,
+ "confirming_batch": true,
+ "anchors": {
+  "craft:after": {
+   "measured": 6.4,
+   "reference": 7.35,
+   "mapped": 6.427,
+   "residual": 0.923
+  },
+  "craft:before": {
+   "measured": 4.833,
+   "reference": 4.83,
+   "mapped": 5.319,
+   "residual": -0.489
+  },
+  "f04_6_r22:control": {
+   "measured": 5.133,
+   "reference": 5.83,
+   "mapped": 5.532,
+   "residual": 0.298
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.033,
+   "reference": 6.75,
+   "mapped": 6.168,
+   "residual": 0.582
+  },
+  "f36_0_npc:C6A": {
+   "measured": 6.533,
+   "reference": 5.8,
+   "mapped": 6.522,
+   "residual": -0.722
+  },
+  "f36_0_npc:C6B": {
+   "measured": 6.533,
+   "reference": 5.93,
+   "mapped": 6.522,
+   "residual": -0.592
+  }
+ },
+ "candidates": {
+  "P2-003": {
+   "measured_mean": 5.067,
+   "mapped_mean": 5.48,
+   "mapped_judges": [
+    5.44,
+    5.65,
+    5.37
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-006": {
+   "measured_mean": 5.5,
+   "mapped_mean": 5.79,
+   "mapped_judges": [
+    5.86,
+    5.79,
+    5.72
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-014": {
+   "measured_mean": 5.533,
+   "mapped_mean": 5.81,
+   "mapped_judges": [
+    5.72,
+    6.0,
+    5.72
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-013": {
+   "measured_mean": 4.867,
+   "mapped_mean": 5.34,
+   "mapped_judges": [
+    5.15,
+    5.58,
+    5.3
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-005": {
+   "measured_mean": 5.433,
+   "mapped_mean": 5.74,
+   "mapped_judges": [
+    5.65,
+    5.93,
+    5.65
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "P2-012": {
+   "measured_mean": 5.033,
+   "mapped_mean": 5.46,
+   "mapped_judges": [
+    5.22,
+    5.72,
+    5.44
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

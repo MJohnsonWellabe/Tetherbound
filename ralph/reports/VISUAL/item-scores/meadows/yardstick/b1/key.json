@@ -1,0 +1,70 @@
+{
+ "Cp": {
+  "anchor": false,
+  "label": "IS meadows P2-004 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-004.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-004.png"
+ },
+ "Ut": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ },
+ "Oc": {
+  "anchor": false,
+  "label": "IS meadows P2-034 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-034.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-034.png"
+ },
+ "Vh": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Nh": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Ty": {
+  "anchor": false,
+  "label": "IS meadows P2-033 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-033.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-033.png"
+ },
+ "Ky": {
+  "anchor": false,
+  "label": "IS meadows P2-059 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-059.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-059.png"
+ },
+ "Mq": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Qb": {
+  "anchor": false,
+  "label": "IS meadows P2-016 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-016.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-016.png"
+ },
+ "Tp": {
+  "anchor": false,
+  "label": "IS meadows P2-017 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-017.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-017.png"
+ },
+ "Yq": {
+  "anchor": false,
+  "label": "IS meadows P2-020 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-020.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-020.png"
+ },
+ "Ne": {
+  "anchor": false,
+  "label": "IS meadows P2-086 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-086.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-086.png"
+ }
+}

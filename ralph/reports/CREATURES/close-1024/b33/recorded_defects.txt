@@ -1,0 +1,4 @@
+Fs: none
+Ax: none
+Ed: "Hit react reads as idle or standing"; "Faint end does not read as down (kneeling, sitting up, upright or a belly-up flip)"
+Ni: none

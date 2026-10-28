@@ -1,0 +1,5 @@
+Rc: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Jw: "Back reads near-black: a dark smear without form"
+Nq: none
+Pb: "Plates read as a pack or armour strapped on rather than grown from the body"; "Coat reads red or orange-red"
+Mt: none

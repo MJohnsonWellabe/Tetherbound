@@ -1,0 +1,1053 @@
+{
+ "main_sha": "b7a6e8bbe1dbfa54c83e580626e8d7184d24bb10",
+ "renderer": "GPU NVIDIA GeForce GTX 1060 3GB, OpenGL 3.3 Compatibility (repro commands as stated, --fullscreen)",
+ "fit": {
+  "r": 0.84,
+  "rmse": 0.507,
+  "batches": [
+   {
+    "batch": 1,
+    "r": 0.9615,
+    "rmse": 0.354,
+    "confirming": true
+   },
+   {
+    "batch": 2,
+    "r": 0.8991,
+    "rmse": 0.509,
+    "confirming": true
+   },
+   {
+    "batch": 3,
+    "r": 0.8795,
+    "rmse": 0.506,
+    "confirming": true
+   },
+   {
+    "batch": 4,
+    "r": 0.9447,
+    "rmse": 0.445,
+    "confirming": true
+   },
+   {
+    "batch": 5,
+    "r": 0.5142,
+    "rmse": 0.72,
+    "confirming": true
+   }
+  ]
+ },
+ "items": {
+  "P2-001": {
+   "board_row": "F38#9",
+   "mapped": 6.58,
+   "mapped_judges": [
+    6.4,
+    6.79,
+    6.55
+   ],
+   "raw": [
+    5.2,
+    5.7,
+    5.4
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "meadows__menu_backpack",
+    "meadows__menu_build",
+    "meadows__menu_creatures"
+   ],
+   "note": "The painted Meadows banner header and the creature portrait card add some scenic tie and hierarchy, but the body is still a charcoal box with thin teal rules and small grey text (Satchel frame especially), short of shipping-game menu finish.",
+   "batch": 3,
+   "code": "Dj"
+  },
+  "P2-002": {
+   "board_row": "F38#4",
+   "mapped": 6.06,
+   "mapped_judges": [
+    6.78,
+    5.99,
+    5.43
+   ],
+   "raw": [
+    6.2,
+    5.5,
+    5.0
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "meadows__menu_map"
+   ],
+   "note": "The panel styling fits the UI direction and roads now lead out of Grandpa's Village, but the surveyed area is a flat green disc with no terrain, rivers or groves and the rest is a grey cloud fog, so it reads as a placeholder rather than a lived-in map.",
+   "batch": 4,
+   "code": "Lg"
+  },
+  "P2-003": {
+   "board_row": "F38#20",
+   "mapped": 5.67,
+   "mapped_judges": [
+    5.46,
+    6.08,
+    5.46
+   ],
+   "raw": [
+    4.0,
+    4.8,
+    4.0
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach",
+    "meadows__band5_stronghold_approach__09__stronghold_approach__night__approach",
+    "meadows__landmark__stronghold__day__approach"
+   ],
+   "note": "On approach (day and night) the stronghold is a small pale tower cluster on the horizon with pylons as large as it, and up close it is a near-black empty floor in front of oxblood banners and a doorway, nothing like the key art's overgrown fortified hall.",
+   "batch": 3,
+   "code": "Ro"
+  },
+  "P2-004": {
+   "board_row": "F38#19",
+   "mapped": 5.56,
+   "mapped_judges": [
+    6.54,
+    4.94,
+    5.21
+   ],
+   "raw": [
+    6.2,
+    5.0,
+    5.2
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "meadows__exploration_hud"
+   ],
+   "note": "The HUD hierarchy (blue-grey panels, teal bars, gold quest text, centre kept clear) is Palworld-like, but five separate dark boxes ring a dim, flat-lit interior with a maroon bed blanket close to the reserved oxblood, so it does not read at the same finish.",
+   "batch": 1,
+   "code": "Cp"
+  },
+  "P2-005": {
+   "board_row": "F38#21",
+   "mapped": 6.06,
+   "mapped_judges": [
+    5.47,
+    6.36,
+    6.36
+   ],
+   "raw": [
+    4.6,
+    5.6,
+    5.6
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach",
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__day__approach",
+    "meadows__band3_the_river_lock__06__old_mill_crossing__day__close"
+   ],
+   "note": "All three frames on both sides are one even yellow-green grass carpet with evenly sprinkled white flowers and almost no rock, colour clusters or edge-of-grove breaks, which sinks it beside Palworld's clumped, varied meadow ground.",
+   "batch": 2,
+   "code": "Wy"
+  },
+  "P2-006": {
+   "board_row": "F38#22",
+   "mapped": 5.98,
+   "mapped_judges": [
+    5.46,
+    6.55,
+    5.93
+   ],
+   "raw": [
+    4.0,
+    5.4,
+    4.6
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__band3_the_river_lock__06__old_mill_crossing__day__close",
+    "meadows__landmark__village__day__close",
+    "meadows__landmark__band1_trail_camp__day__close"
+   ],
+   "note": "The mill frame hides most of the water behind a grass rise so the flat surface is barely seen, but the village frame is a few distant houses with no visible activity and the trail-camp frame is a dark close-up of an oversized sign with a malformed first letter, so the settlements do not read as live",
+   "batch": 3,
+   "code": "Zf"
+  },
+  "P2-007": {
+   "board_row": "F38#10",
+   "mapped": 6.4,
+   "mapped_judges": [
+    6.24,
+    6.55,
+    6.4
+   ],
+   "raw": [
+    5.0,
+    5.4,
+    5.2
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PRESENT",
+    "PARTIAL"
+   ],
+   "frames": [
+    "meadows__menu_build",
+    "meadows__menu_players",
+    "meadows__menu_quest_log"
+   ],
+   "note": "Build now fills its area with three illustrated cards, but the Players and Quest log panels (frames 2 and 3, both sides) are still mostly empty dark field around a few greyed text lines, which sinks it against Palworld's dense, iconised menus.",
+   "batch": 3,
+   "code": "Hp"
+  },
+  "P2-012": {
+   "board_row": "F38#30",
+   "mapped": 5.1,
+   "mapped_judges": [
+    4.68,
+    5.62,
+    4.99
+   ],
+   "raw": [
+    3.0,
+    4.2,
+    3.4
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day"
+   ],
+   "note": "walk_02 shows a flat-topped brown box on the skyline and a straight-edged overhang with a black underside, and walk_03 fills half the frame with an untextured-looking brown vertical wall, so the hillside reads as blockout geometry, not landform.",
+   "batch": 3,
+   "code": "El"
+  },
+  "P2-013": {
+   "board_row": "F38#23",
+   "mapped": 6.59,
+   "mapped_judges": [
+    6.18,
+    6.89,
+    6.71
+   ],
+   "raw": [
+    5.4,
+    6.2,
+    6.0
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "meadows__band3_the_river_lock__05__the_tether_relay__route_day",
+    "meadows__band3_the_river_lock__05__the_tether_relay__vista_dusk"
+   ],
+   "note": "The yard is now clean cobble with a gate arch, cage, crates and Tether banners, but the oversized uniform cobble texture, a dark featureless timber mass blocking the right third and small scattered props make it read as sparse rather than a busy lived-in faction outpost.",
+   "batch": 2,
+   "code": "Kf"
+  },
+  "P2-014": {
+   "board_row": "F38#24",
+   "mapped": 5.67,
+   "mapped_judges": [
+    5.3,
+    5.93,
+    5.77
+   ],
+   "raw": [
+    3.8,
+    4.6,
+    4.4
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day",
+    "meadows__band5_stronghold_approach__09__stronghold_approach__route_day"
+   ],
+   "note": "The stronghold-approach frame shows one pale hazy snow peak that reads as distance, but it is a lone isolated cone with no range behind it, and the two Burrow frames put hard brown slab shapes with dark cuts on the skyline instead of the key art's layered blue mountains.",
+   "batch": 3,
+   "code": "Vd"
+  },
+  "P2-015": {
+   "board_row": "F38#1",
+   "mapped": 5.93,
+   "mapped_judges": [
+    5.91,
+    6.02,
+    5.86
+   ],
+   "raw": [
+    4.6,
+    4.8,
+    4.5
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "meadows__terrapup__fainted",
+    "meadows__terrapup__resting",
+    "meadows__veridian__fainted"
+   ],
+   "note": "Bright meadow light and sky are pleasant, but the fainted terrapup is a tiny pale smear indistinguishable from its resting pose and the verdian still reads upright near the trees, so the subject does not read at all.",
+   "batch": 5,
+   "code": "Pe"
+  },
+  "P2-016": {
+   "board_row": "F38#2",
+   "mapped": 5.52,
+   "mapped_judges": [
+    6.27,
+    4.81,
+    5.47
+   ],
+   "raw": [
+    6.0,
+    4.9,
+    5.4
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PRESENT",
+    "PARTIAL"
+   ],
+   "frames": [
+    "meadows__terrapup__hurt",
+    "meadows__nightburrow__hurt",
+    "meadows__nightburrow__moving"
+   ],
+   "note": "Terrapup's hurt frame shows a real recoil, but Nightburrow's hurt and moving frames are hard to tell apart at gameplay size, and the low camera spends half the frame on blown-up foreground grass blades.",
+   "batch": 1,
+   "code": "Qb"
+  },
+  "P2-017": {
+   "board_row": "F38#5",
+   "mapped": 5.16,
+   "mapped_judges": [
+    6.01,
+    4.54,
+    4.94
+   ],
+   "raw": [
+    5.8,
+    4.7,
+    5.0
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__brooktail__idle",
+    "meadows__pipwing__idle",
+    "meadows__bramblebun__idle"
+   ],
+   "note": "Brookfail, Pipwing and Bramblebun all stand at or below the trainer's shoulder, and the small, low-contrast creatures are lost against the house and trees, so the scale and creature-first read the art direction asks for are missing.",
+   "batch": 1,
+   "code": "Tp"
+  },
+  "P2-018": {
+   "board_row": "F38#25",
+   "mapped": 6.06,
+   "mapped_judges": [
+    6.1,
+    6.1,
+    5.99
+   ],
+   "raw": [
+    5.6,
+    5.6,
+    5.5
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "meadows__nightburrow__shiny_idle",
+    "meadows__nightburrow__idle",
+    "meadows__stormtrail__shiny_idle"
+   ],
+   "note": "Shiny Nightburrow's icy pale blue reads clearly against the dark normal form, but the shiny Stormtrail is a small washed-out cream figure with no normal to compare against, and a third of each frame is a near-camera grass carpet that eats the subject.",
+   "batch": 4,
+   "code": "Sl"
+  },
+  "P2-019": {
+   "board_row": "F38#31",
+   "mapped": 5.65,
+   "mapped_judges": [
+    5.11,
+    6.0,
+    5.82
+   ],
+   "raw": [
+    4.2,
+    5.2,
+    5.0
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__trailpup__alpha_idle",
+    "meadows__trailpup__idle",
+    "meadows__brooktail__alpha_idle"
+   ],
+   "note": "The Trailpup and Brooktail alphas stand at roughly trainer height in mid-ground with no aura, scale jump, posture or staging that marks them as alphas, and the Brooktail alpha even reads at or below the 1.80 m trainer, so nothing carries an alpha encounter.",
+   "batch": 2,
+   "code": "Df"
+  },
+  "P2-020": {
+   "board_row": "F38#26",
+   "mapped": 5.43,
+   "mapped_judges": [
+    6.27,
+    4.94,
+    5.07
+   ],
+   "raw": [
+    6.0,
+    5.0,
+    5.1
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__bramblebun__idle",
+    "meadows__pipwing__idle",
+    "meadows__mosshell__fainted"
+   ],
+   "note": "The creatures cast shadows and sit on the ground, but midground tufts still hide Bramblebun's and Pipwing's feet, and the oversized foreground blades and flat midday grade keep the frame from Palworld-level clarity.",
+   "batch": 1,
+   "code": "Yq"
+  },
+  "P2-031": {
+   "board_row": "F38#27",
+   "mapped": 6.32,
+   "mapped_judges": [
+    6.12,
+    6.44,
+    6.39
+   ],
+   "raw": [
+    5.0,
+    5.6,
+    5.5
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__settings_controls",
+    "meadows__quick_bindings"
+   ],
+   "note": "Panel palette (navy, teal tab, gold headers) is on brief, but tiny grey body text, '[Q] Previous tab [Tab] Next tab' literal key labels and a clipped 'Fighting' section are far from a shipping 7-inch-readable menu.",
+   "batch": 5,
+   "code": "Rx"
+  },
+  "P2-033": {
+   "board_row": "F38#6",
+   "mapped": 5.52,
+   "mapped_judges": [
+    5.74,
+    4.94,
+    5.87
+   ],
+   "raw": [
+    5.6,
+    5.0,
+    5.7
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PARTIAL"
+   ],
+   "frames": [
+    "meadows__inventory__pickup__good_candy",
+    "meadows__inventory__pickup__rare_candy",
+    "meadows__inventory__pickup__potion_small"
+   ],
+   "note": "Groves, path and water give a pleasant meadow, but good_candy, rare_candy and potion_small are a small yellow-green blob, a bread-like pile beside a purple plant and a pink orb, unreadable at gameplay distance with no pickup highlight.",
+   "batch": 1,
+   "code": "Ty"
+  },
+  "P2-034": {
+   "board_row": "F38#12",
+   "mapped": 5.47,
+   "mapped_judges": [
+    5.74,
+    5.07,
+    5.61
+   ],
+   "raw": [
+    5.6,
+    5.1,
+    5.5
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__inventory__harvest__orb_basic",
+    "meadows__inventory__harvest__travel_pack",
+    "meadows__inventory__harvest__attack_tonic"
+   ],
+   "note": "The warm meadow grass and blue distance carry the world, but the harvest nodes (white lump, small red-brown crate, glowing yellow plant) are tiny generic props with no item identity, and the light is flat midday with no atmosphere.",
+   "batch": 1,
+   "code": "Oc"
+  },
+  "P2-035": {
+   "board_row": "F38#32",
+   "mapped": 5.85,
+   "mapped_judges": [
+    5.2,
+    6.36,
+    6.0
+   ],
+   "raw": [
+    4.3,
+    5.6,
+    5.2
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__inventory__prop__camp_tent",
+    "meadows__inventory__prop__camp_bed",
+    "meadows__inventory__prop__bonfire_fire"
+   ],
+   "note": "In camp_tent and camp_bed the crates, barrels, chest and bed sit among grass, a wolf, a rabbit and other tools with no cleared footprint, and in bonfire_fire the fire is a small orange speck behind a large rock creature, so the camp never reads like Palworld's legible base.",
+   "batch": 2,
+   "code": "Bt"
+  },
+  "P2-050": {
+   "board_row": "F38#35",
+   "mapped": 5.88,
+   "mapped_judges": [
+    5.62,
+    6.24,
+    5.77
+   ],
+   "raw": [
+    4.2,
+    5.0,
+    4.4
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__inventory__character__oskar",
+    "meadows__inventory__character__halda",
+    "meadows__inventory__character__lark"
+   ],
+   "note": "Oskar, Halda and Lark all stand in the same arms-down idle on bare dirt with no role prop or gesture, small in frame, so the posts read as placeholder NPC spawns rather than lived-in village roles despite a pleasant sunny village backdrop.",
+   "batch": 3,
+   "code": "Uu"
+  },
+  "P2-058": {
+   "board_row": "F38#7",
+   "mapped": 5.82,
+   "mapped_judges": [
+    5.38,
+    6.09,
+    6.0
+   ],
+   "raw": [
+    4.5,
+    5.3,
+    5.2
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__catching__01-aiming-full-health",
+    "meadows__catching__catch_low",
+    "meadows__catching__catch_high"
+   ],
+   "note": "The meadow and cottages read warmly, but the catch-chance label is small pale text over the creature's body against bright grass, and in catch_high brown dust clouds cover the target, so the aim state never pops the way Palworld's catch percentage does.",
+   "batch": 2,
+   "code": "Mc"
+  },
+  "P2-059": {
+   "board_row": "F38#13",
+   "mapped": 5.21,
+   "mapped_judges": [
+    6.01,
+    4.67,
+    4.94
+   ],
+   "raw": [
+    5.8,
+    4.8,
+    5.0
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__catching__03-strike",
+    "meadows__catching__03-absorbing",
+    "meadows__catching__04-orb-resting"
+   ],
+   "note": "The Bramblebun is a good naturalistic rabbit and the golden capture orb has impact, but in the strike and absorbing frames a blurred, cropped companion back fills the lower third, so the shot loses its player-to-target link.",
+   "batch": 1,
+   "code": "Ky"
+  },
+  "P2-060": {
+   "board_row": "F38#14",
+   "mapped": 6.06,
+   "mapped_judges": [
+    5.65,
+    6.53,
+    6.0
+   ],
+   "raw": [
+    4.8,
+    5.8,
+    5.2
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "meadows__catching__02-orb-in-flight",
+    "meadows__catching__03-strike",
+    "meadows__catching__03-absorbing"
+   ],
+   "note": "The magenta ground ring is gone and the orb has a rim and light shafts, but the effect is still a flat translucent yellow bubble and over-bright white orb that change little from strike to absorbing, half-hidden behind the player creature's back filling the lower frame.",
+   "batch": 2,
+   "code": "Uc"
+  },
+  "P2-061": {
+   "board_row": "F38#33",
+   "mapped": 5.76,
+   "mapped_judges": [
+    5.29,
+    6.18,
+    5.82
+   ],
+   "raw": [
+    4.4,
+    5.4,
+    5.0
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__catching__06-breakout",
+    "meadows__catching__08-caught-verdict",
+    "meadows__catching__09-caught-banner"
+   ],
+   "note": "No extra same-species bodies crowd the verdict and banner frames any more, but the party card, action list, target card and bottom bar all stay up while the outcome is a tiny label over a soft glowing orb with blurry gold blobs, so the result moment has no clear headline.",
+   "batch": 2,
+   "code": "Ta"
+  },
+  "P2-062": {
+   "board_row": "F38#3",
+   "mapped": 6.26,
+   "mapped_judges": [
+    6.44,
+    6.33,
+    6.02
+   ],
+   "raw": [
+    5.6,
+    5.4,
+    4.8
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__fights__south_bridge_grunt-01",
+    "meadows__fights__south_bridge_grunt-02",
+    "meadows__fights__south_bridge_grunt-03"
+   ],
+   "note": "Creatures now tower over the trainers and the dust puffs are real effects, but the ally dog takes a third of the frame and the player overlaps its front legs in grunt-02/03, with flat noon light and no atmosphere.",
+   "batch": 5,
+   "code": "Gy"
+  },
+  "P2-063": {
+   "board_row": "F38#11",
+   "mapped": 6.59,
+   "mapped_judges": [
+    6.89,
+    6.55,
+    6.33
+   ],
+   "raw": [
+    6.3,
+    6.0,
+    5.8
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "meadows__fights__south_bridge_grunt-02",
+    "meadows__fights__south_bridge_grunt-03",
+    "meadows__fights__south_bridge_grunt-05"
+   ],
+   "note": "The naturalistic boar and spined tan hound read clearly against the grass with dust-puff impacts and no magenta slabs, close to Palworld's field fights, though tells still live in the small top-right text and the creatures barely change pose between frames.",
+   "batch": 4,
+   "code": "Ry"
+  },
+  "P2-064": {
+   "board_row": "F38#28",
+   "mapped": 6.09,
+   "mapped_judges": [
+    6.23,
+    6.12,
+    5.91
+   ],
+   "raw": [
+    5.2,
+    5.0,
+    4.6
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__fights__warden_aldis-03",
+    "meadows__fights__warden_aldis-05",
+    "meadows__fights__warden_aldis-08"
+   ],
+   "note": "Torch-lit hall and oxblood banner give mood, but turquoise guide rails cut across the floor and creatures, the ally glows blown-out orange, and warden_aldis-03 is half blocked by a pillar in front of the camera.",
+   "batch": 5,
+   "code": "Mq"
+  },
+  "P2-065": {
+   "board_row": "F38#29",
+   "mapped": 6.12,
+   "mapped_judges": [
+    6.23,
+    6.28,
+    5.86
+   ],
+   "raw": [
+    5.2,
+    5.3,
+    4.5
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__fights__south_bridge_grunt-00-before",
+    "meadows__fights__south_bridge_grunt-a01",
+    "meadows__fights__south_bridge_grunt-99-after"
+   ],
+   "note": "The warm sunlit hillside and cast shadows carry the light, but the grunt stands in the same neutral pose before and after while the 'Tether Grunt defeated' banner does all the work.",
+   "batch": 5,
+   "code": "El"
+  },
+  "P2-069": {
+   "board_row": "F38#15",
+   "mapped": 5.88,
+   "mapped_judges": [
+    6.1,
+    5.77,
+    5.77
+   ],
+   "raw": [
+    5.6,
+    5.4,
+    5.3
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__flying__glide",
+    "meadows__flying__landed"
+   ],
+   "note": "The landed frame has decent sun, path and hill depth, but the glide frame is a pale grey bird over a featureless washed green plain, and the bird lands still wings-up in its flight silhouette, so the moment reads as a cut rather than a Palworld-grade landing.",
+   "batch": 4,
+   "code": "Hx"
+  },
+  "P2-078": {
+   "board_row": "F38#36",
+   "mapped": 5.2,
+   "mapped_judges": [
+    5.65,
+    5.09,
+    4.87
+   ],
+   "raw": [
+    5.2,
+    4.7,
+    4.5
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__inventory__character__kell__dialogue",
+    "meadows__inventory__character__corin__dialogue",
+    "meadows__inventory__trainer__captain_field__dialogue"
+   ],
+   "note": "The Kell frame has key-art meadow depth (village, hills, sky), but in the Corin frame a large feathered creature fills the left half of the shot and in the Captain Halder frame the speaker is seen from behind past a grey foreground mass under a dark-red banner, so the staging reads unauthored.",
+   "batch": 4,
+   "code": "Kx"
+  },
+  "P2-079": {
+   "board_row": "F38#37",
+   "mapped": 4.64,
+   "mapped_judges": [
+    4.64,
+    4.98,
+    4.3
+   ],
+   "raw": [
+    4.3,
+    4.6,
+    4.0
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PARTIAL",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__inventory__character__quarry_foreman__dialogue",
+    "meadows__inventory__character__garrick__dialogue"
+   ],
+   "note": "The quarry-foreman frame is a dim brown rock box with a second character cut off at the left edge, and in the Garrick frame a black rock face fills the right third while the camera sits behind the player's head with Garrick not visible at all.",
+   "batch": 4,
+   "code": "Uv"
+  },
+  "P2-086": {
+   "board_row": "F38#16",
+   "mapped": 6.94,
+   "mapped_judges": [
+    7.34,
+    6.54,
+    6.94
+   ],
+   "raw": [
+    6.8,
+    6.2,
+    6.5
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "meadows__inventory__trainer__tournament_quarter_mira__dialogue",
+    "meadows__inventory__trainer__tournament_semi_tam__dialogue",
+    "meadows__inventory__trainer__tournament_final_oskar__dialogue"
+   ],
+   "note": "Mira, Tam and Oskar are now distinct world characters that match their portraits in a key-art-faithful timber village, but the rigid identical stance and flat shadowless light hold it below the reference finish.",
+   "batch": 1,
+   "code": "Ne"
+  },
+  "P2-087": {
+   "board_row": "F38#17",
+   "mapped": 5.84,
+   "mapped_judges": [
+    5.91,
+    6.02,
+    5.6
+   ],
+   "raw": [
+    4.6,
+    4.8,
+    4.0
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__inventory__trainer__old_champion_bram__dialogue",
+    "meadows__inventory__trainer__stronghold_courtyard__dialogue",
+    "meadows__inventory__trainer__stronghold_elite__dialogue"
+   ],
+   "note": "Only the Old Bram frame frames a speaker; the Warder Solene and Keeper Hald views show the player's back on flat terrain and, in the stronghold_elite frame, a blurred brown mass with the camera inside it, so the dialogue staging sinks it.",
+   "batch": 5,
+   "code": "Ly"
+  },
+  "P2-094": {
+   "board_row": "F38#34",
+   "mapped": 6.65,
+   "mapped_judges": [
+    6.18,
+    7.07,
+    6.71
+   ],
+   "raw": [
+    5.4,
+    6.4,
+    6.0
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "meadows__system__building"
+   ],
+   "note": "The wall now reads as a half-timbered panel with posts, braces and a plank sill, but it is a clean flat freestanding slab with no weathering, ground contact or footing, so it looks like a build-mode placeholder rather than Palworld-finish base building.",
+   "batch": 2,
+   "code": "Eh"
+  },
+  "P2-095": {
+   "board_row": "F38#18",
+   "mapped": 7.53,
+   "mapped_judges": [
+    7.68,
+    7.23,
+    7.68
+   ],
+   "raw": [
+    7.0,
+    6.6,
+    7.0
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "meadows__system__crafting"
+   ],
+   "note": "The deep blue-grey translucent panel with teal selection, full material lines ('4 Rootstone \u00b7 3 Wood \u00b7 3 Fiber') and warm amber 'need N more' counts sits at Palworld's UI finish; only the small orange subtext in the list and the tall half-cut Greater Orb row hold it back.",
+   "batch": 4,
+   "code": "Rw"
+  },
+  "P2-096": {
+   "board_row": "F38#38",
+   "mapped": 6.86,
+   "mapped_judges": [
+    6.71,
+    7.18,
+    6.71
+   ],
+   "raw": [
+    5.6,
+    6.2,
+    5.6
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "meadows__system__crafting"
+   ],
+   "note": "The deep blue-grey translucent panel, teal selection and orange missing-count text are on spec and the Leave hint is now teal, but the craft action itself is still a dim grey 'Missing materials' slab with no controller glyph, so the panel reads as functional tooling rather than Palworld-finish UI.",
+   "batch": 3,
+   "code": "Wo"
+  },
+  "P2-119": {
+   "board_row": "F38#8",
+   "mapped": 6.12,
+   "mapped_judges": [
+    6.12,
+    6.23,
+    6.02
+   ],
+   "raw": [
+    5.0,
+    5.2,
+    4.8
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "meadows__flying__launch",
+    "meadows__flying__glide"
+   ],
+   "note": "The sky and Galecrest's silhouette are good, but the rigid ladder-hang pose and the blurred, featureless terrain far below sink it.",
+   "batch": 5,
+   "code": "Yr"
+  }
+ },
+ "capture_failures": []
+}

@@ -1,0 +1,29 @@
+{
+ "Zm": {
+  "anchor": true,
+  "A": "f36_0_npc:C3A",
+  "B": "f36_0_npc:C3B"
+ },
+ "Dn": {
+  "anchor": false,
+  "label": "P2-061 catch card",
+  "A": "/tmp/claude-0/cap/p2061_ship.png",
+  "B": "/tmp/claude-0/cap/p2061_cand.png"
+ },
+ "En": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Po": {
+  "anchor": false,
+  "label": "P2-058 readout plate",
+  "A": "/tmp/claude-0/cap/p2058_ship.png",
+  "B": "/tmp/claude-0/cap/p2058_cand.png"
+ },
+ "Xq": {
+  "anchor": true,
+  "A": "f36_0_gap:C6B",
+  "B": "f36_0_gap:C6A"
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "Aj": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Uz": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Pc": {
+  "anchor": false,
+  "label": "art stronghold r2",
+  "A": "/tmp/claude-0/cap/r2/stronghold_ship.png",
+  "B": "/tmp/claude-0/cap/r2/stronghold_r2.png"
+ },
+ "Zl": {
+  "anchor": false,
+  "label": "art arches r2",
+  "A": "/tmp/claude-0/cap/r2/arches_ship.png",
+  "B": "/tmp/claude-0/cap/r2/arches_r2.png"
+ },
+ "Ak": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ }
+}

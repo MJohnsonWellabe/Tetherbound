@@ -1,0 +1,166 @@
+{
+  "_comment": "Catching and orbs. ALL of it is TUNABLE. M3 exists to answer one question: does landing a good throw feel satisfying? The expected feedback is 'catching is too hard', 'aiming is fiddly', 'I never know if I was close' — every one of those has to be answerable by editing this file.",
+  "_comment_model": "Throwing hands camera and control to the trainer for a real-time over-the-shoulder aim (docs/decisions/D08). Your creature is undefended while you aim and the opponent does not stop attacking it. That cost is the whole design: it is what makes throwing a decision rather than something you spam between attacks.",
+
+  "chance": {
+    "_comment": "catch_chance = species_rate * hp_factor * orb_multiplier * accuracy_bonus, clamped. Nothing is ever certain and nothing that is legal is ever impossible; a throw that cannot succeed should be REFUSED with a reason, not rolled at zero.",
+
+    "_comment_hp": "GAME_DESIGN.md 15: full-health throws are allowed, and powerful/full-health creatures should be extremely difficult to catch. So this curve is steep. At full health you are multiplying the species rate by 0.10; at a sliver you are multiplying by 1.0.",
+    "hp_factor_full": 0.10,
+    "hp_factor_empty": 1.0,
+    "_comment_curve": "Exponent on the (1 - hp_fraction) term. Above 1 the reward is back-loaded, so chipping a creature down to half does much less for you than taking it to a sliver — which is what keeps 'damage it first' a real risk against 'over-damage it and lose the catch'. TUNABLE, retuned 1.6 -> 1.2 for OF19: the endpoints (hp_factor_full/empty) are untouched by this exponent, so full-health throws stay exactly as hard as before — only the middle of the curve moves, so a realistic 'brought it to about half, didn't risk a faint' throw stops being punished almost as hard as a full-health one.",
+    "hp_curve": 1.2,
+
+    "_comment_accuracy": "How much a good throw is worth. `centre_bonus` applies to a dead-centre hit, `edge_bonus` to one that barely clipped. This is the ONLY reason the aiming skill exists; if these are equal, aiming is decoration and the milestone has no subject. TUNABLE, edge_bonus nudged 0.75 -> 0.80 for OF19: a clipped-but-landed hit (the realistic outcome on a handheld when the throw itself is hard to read) was being penalised almost as hard as a whiff, on top of orb.gd's own miss case for throws that never reach the body at all. centre_bonus stays put so a dead-centre throw is still clearly worth more (1.45 vs 0.80) — aiming still matters.",
+    "centre_bonus": 1.45,
+    "edge_bonus": 0.80,
+
+    "_comment_accuracy_span_0830": "OWNER PLAYTEST 2026-08-30, OP-0830-5: 'catching is way too hard.' The cause was measured, not guessed, and it was NOT that the odds were low -- it was that `accuracy_bonus` was pinned at `edge_bonus` on nearly every throw the game can produce. It divided by `body_radius`, which is 0.325m on a Bramblebun; `tools/_probe_catch_rate.gd` drove 47 landed throws in real fights, every one with the launch assist committed and aiming at the predicted body centre, and measured a MEDIAN placement of 0.375m -- already off the end of the scale -- with 77% of throws saturating the clamp and a mean multiplier of 0.845 against the 1.45 this block calls 'the ONLY reason the aiming skill exists'. The residual is the target moving during the orb's flight, which the launch prediction leads but cannot cancel; it is not player error and no amount of aiming removes it.\n\nSo placement is now judged over the envelope that DEFINES a hit -- `body_radius + throw.radius * accuracy_span`, the same distance `orb.gd::_check_target()` tests against. `accuracy_span` is the tunable: 1.0 means 'the whole collision sphere grades', below 1.0 tightens the scale back toward the body, above 1.0 would be more forgiving than the hit test itself and is not meaningful. This raises NOTHING at the top -- a dead-centre throw is worth exactly 1.45 as before, and a throw at the very edge of the sphere is worth exactly 0.80 as before. It only stops four throws in five being scored as the worst one possible.",
+    "accuracy_span": 1.0,
+
+    "min": 0.02,
+    "max": 0.95
+  },
+
+  "orbs": {
+    "_comment": "Orb types. GAME_DESIGN.md 15: basic orbs should be affordable enough that players are encouraged to try, and never so scarce that they are afraid to experiment; better orbs are meaningful crafting/progression rewards. Every key here IS the real satchel item id (data/items/items.json) -- catch_math.gd's best_orb()/orb_ids() read this table directly rather than translating between a tier name and an item id, so adding a tier is one entry in one file.",
+    "orb_basic": {
+      "display_name": "Tether Orb",
+      "multiplier": 1.0
+    },
+    "_comment_greater": "R4.9: the tier ladder's first rung. MEADOWS_PROGRESSION_SPEC.md Band 2 names 'improved Orb tier' as the first thing Rootstone (SD18) buys -- R4.9 built the mechanic and the item; SD18 (data/recipes/recipes_rootstone.json's `orb_greater` recipe) closed the remainder by adding the recipe that actually lets a player craft one, from Rootstone plus wood and fiber. Multiplier is TUNABLE, not load-bearing: comfortably better without being 'just throw this and it's basically a catch' -- that would make the basic tier feel like a mistake to ever use, which is its own kind of failure per GAME_DESIGN.md 15's affordability rule.",
+    "orb_greater": {
+      "display_name": "Greater Tether Orb",
+      "multiplier": 1.6
+    },
+    "_comment_prime": "SF31: the ladder's LAST rung, and the Ironwood tier's answer to Band 2's Rootstone rung above. This block's own header says adding a tier is one entry in one file, and that is all this is -- catch_math.gd's best_orb()/orb_ids() read the table, `orb_prime` is a real items.json id, and data/recipes/recipes_ironwood.json is the only way to get one. Multiplier is TUNABLE and deliberately NOT a big jump over greater (1.6 -> 2.0): the same rule the greater orb's own comment sets out applies harder at the top of a ladder, since an orb that reads as 'basically a catch' would retire both tiers under it and the catch minigame with them. There is no fourth tier; the Meadows has exactly two progression materials (spec §10) and this spends the second.",
+    "orb_prime": {
+      "display_name": "Prime Tether Orb",
+      "multiplier": 2.0
+    },
+    "_comment_stock": "RETIRED as a live value: orbs are satchel items now (data/items/items.json), spent by throw_aim.gd from the real inventory, and Grandpa's opening gift is the starting supply (data/dialogue/opening.json give: effects). Kept only so catch_math.starting_stock() keeps answering for anything historical; nothing refills from it.",
+    "starting_stock": 15
+  },
+
+  "throw": {
+    "_comment": "The projectile. A real arc, not a hitscan — GAME_DESIGN.md 15 forbids throwing without player aim, and an instant hit gives nothing to aim.",
+    "speed": 17.0,
+    "gravity": 14.0,
+    "_comment_radius": "Collision radius of the orb in metres. The FIRST lever to reach for if aiming feels fiddly on the handheld: widen this before touching anything else, because it forgives the input without removing the skill. TUNABLE, widened 0.42 -> 0.60 for OF19 (owner report: 'too hard to know where the ball is going to go') — orb.gd's own hit test is body_radius + this radius, so this is pure forgiveness on the miss/no-miss line and does not touch accuracy_bonus's centre/edge scoring at all.",
+    "radius": 0.60,
+    "spawn_height": 1.5,
+    "spawn_forward": 0.6,
+    "max_flight_time": 4.0,
+
+    "_comment_windup": "Seconds between committing to the throw and the orb leaving the trainer's hand. Short — the commitment already happened when you entered aim mode.",
+    "release_windup": 0.18,
+    "_comment_launch_assist": "A reticle genuinely inside the visible target's inner body earns a bounded launch-time lead over the wind-up and physical flight. This is not homing: the direction is fixed when the orb launches, and a wide/blocked reticle gets no lead. Bounds keep fast or pathological body velocity from snapping a throw across the arena.",
+    "_comment_assist_strength_0828": "OWNER DIRECTIVE 2026-08-28 §2a.3: 'aim assist needs to be stronger'. `launch_assist_reticle_fraction` 1.0 -> 1.7. It multiplies `body_radius` to give the radius the reticle must sit inside to earn the assist, so at 1.0 the player had to put the screen-centre ray inside the creature's OWN collider -- 0.312m for a Bramblebun at ~7.5m, which is about 2.4 degrees of arc, with `aim.sensitivity_scale` already slowing the stick to 0.55. That is a rifle shot with a thumbstick. Measured in a real fight (`smoke_catching.gd`'s launch log), four consecutive commits missed that window: reticle offsets 0.415, 0.517, 0.305 and 0.442 against the 0.312 radius. Three of the four are inside 1.7x. Deliberately NOT larger: this fraction is also what `catch_aim_is_locked()` reports to the HUD, so widening it past the creature's visible silhouette would start telling the player they are on target when they can see they are not -- which is the defect this lane just finished fixing one layer up. TUNABLE.",
+    "launch_assist_reticle_fraction": 1.7,
+    "launch_assist_max_seconds": 0.85,
+    "launch_assist_max_target_speed": 4.5,
+    "launch_assist_max_distance": 2.6,
+    "_why_launch_assist_clearance": "THROW-AIM-SLOPE (ralph/reports/MEADOWS-PAYOFFS/throw-aim-slope/). The assist used to solve the low arc to the creature in empty space; the aim camera rides higher than the hand, so on rising ground (world seed 1376461701's tutorial catch) the eye saw the creature over a crest the low arc flew into, and three assisted orbs in a row ended `reason=ground`. throw_aim.gd now flies the candidate arc against real collision and, only when the default arc meets something first, steps the pitch up by `step_deg` (same speed and heading) to the lowest arc whose flight enters `hit_fraction` x (body_radius + radius) of the target first. `hit_fraction` below 1 keeps the chosen arc off the envelope's edge, which is exactly where the seed's misses sat (1.27 against 1.27); flat-ground throws already pass through the centre, so they never trigger the search and launch exactly as before. `max_pitch_deg` 45 is the max-range angle: past it the throw is a lob whose flight time outruns the bounded lead, so no arc is chosen and the preview keeps showing the blocked throw. TUNABLE.",
+    "launch_assist_clearance_step_deg": 1.0,
+    "launch_assist_clearance_max_pitch_deg": 45.0,
+    "launch_assist_clearance_hit_fraction": 0.8,
+    "_why_aim_surface_min_ahead": "THROW-AIM-SLOPE. The reticle's aim point is now the first collision on the camera's centre ray instead of a fixed 12 m down it (which ended inside any slope the ray crossed). A hit closer than this many metres in front of the trainer's hand -- the ray catching the ground at the trainer's feet or behind them with the camera pitched steeply down -- keeps the old fixed reach, so a steep look can never turn the throw backwards. TUNABLE.",
+    "aim_surface_min_ahead": 1.0,
+    "_comment_lockout": "Seconds after a throw resolves before another can be started. Stops a failed catch from being instantly re-thrown while the wobble is still on screen.",
+    "cooldown": 0.9
+  },
+
+  "aim": {
+    "_comment": "The over-the-shoulder aim camera, expressed as a camera_rig profile. Reuses scripts/player/camera_rig.gd's set_target(target, profile) rather than adding a third camera — the same reasoning that deleted combat_camera.gd in M2.",
+    "_comment_distance": "Far enough back that the trainer does not fill the frame. At 2.4m their body covered the whole view and the reticle sat on their shoulder — you were aiming at your own trainer.",
+    "distance": 3.4,
+    "height": 1.78,
+    "fov": 52.0,
+    "_comment_shoulder": "Wide, because in aim mode the trainer is close to the lens and would otherwise sit on top of the reticle. The orb is thrown at whatever the reticle is over rather than parallel to the camera, so this offset does not put the throw somewhere other than where you aimed.",
+    "shoulder_offset": 1.45,
+    "retarget_lag": 14.0,
+    "pitch_min_deg": -35.0,
+    "pitch_max_deg": 20.0,
+    "_comment_sensitivity": "Aiming wants a slower stick than looking around does. This scales the rig's normal gamepad sensitivity while aim mode is active. (It was written on day one and read by nothing until the throw-feel pass — the aim ran at full exploration turn rate, which was most of 'aiming is fiddly'.)",
+    "sensitivity_scale": 0.55,
+    "_comment_response": "Exponent on stick deflection while aiming. Above 1 gives a slow, precise centre without costing full-deflection speed. Tunable.",
+    "response_exponent": 2.0,
+    "_comment_near": "Extra sensitivity scale while the reticle is over the creature, so the last degrees of a line-up do not overshoot. Tunable.",
+    "near_target_scale": 0.6,
+    "_comment_guard": "Seconds of input ignored on entering aim mode, so the press that opens the aim is not also read as the release.",
+    "_comment_target_slowdown": "OWNER PLAYTEST 2026-09-02 finding #6: 'aiming at the creature is too hard... they should move a little less or in slow motion once you go into catch mode.' Read by wild_creature.gd, not this file's own camera code — while the player is aiming (throw_aim.gd's AIMING state, wired through combat_manager.gd::_tick_active), the TARGET's own combat movement speed is multiplied by this. Scoped to the one creature being aimed at, not a global time dilation, so the throw/camera/rest of the fight keep their normal pace. 1.0 would be no change; lower is slower. TUNABLE.",
+    "target_slowdown_scale": 0.35,
+    "_comment_companion_aside": "P2-113: while the trainer aims, the abandoned companion walks to this spot beside the trainer, on the side away from the shoulder camera, so it leaves the aim frame instead of filling a third of it. Metres in the aim's own frame: lateral to the trainer's left, back toward the lens. The companion still takes hits there; it only stops crowding the shot.",
+    "companion_aside": {"lateral_m": 3.2, "back_m": 0.0, "arrive_m": 0.35, "hop_seconds": 0.3}
+  },
+
+  "resolve": {
+    "_comment": "The wobble. The outcome is DECIDED ONCE when the orb lands and the shakes are derived from it — they never re-roll. Tension built on a lie is what makes catch animations feel cheap, and a wobble that can contradict the result already computed is exactly that lie. ALL timing here is TUNABLE; the sequence is: strike flash -> absorb -> the orb drops and settles -> first_shake_delay of stillness -> shakes at shake_interval -> settle_pause of held breath -> verdict.",
+    "shakes_on_success": 3,
+    "_comment_failure": "A near miss shakes more times before breaking out than a hopeless one, so the wobble count is honest information about how close the throw was.",
+    "max_shakes_on_failure": 3,
+    "near_miss_threshold": 0.75,
+    "_comment_absorb": "Seconds the creature takes to be drawn into the orb after the strike. The orb hangs at the strike point for exactly this long before dropping, so the creature always shrinks toward a stationary orb.",
+    "absorb_seconds": 0.45,
+    "_comment_first_shake": "Seconds of dead stillness between the orb coming to rest and the first shake. This is the dread beat — cutting it to zero makes the wobble start before the eye has settled on the orb.",
+    "first_shake_delay": 0.9,
+    "_comment_interval": "Seconds from the start of one shake to the start of the next. Was 0.55, which read as a metronome; the orb's own rock animation is ~0.45s, so anything under ~0.7 leaves no stillness between shakes and stillness is where the tension lives.",
+    "shake_interval": 0.85,
+    "_comment_settle": "Seconds of held breath between the last shake and the verdict. (This key existed before and was silently ignored — the verdict landed on the same frame as the final shake, which is exactly the beat a catch sequence cannot skip.)",
+    "settle_pause": 0.8,
+    "_comment_breakout": "Seconds the creature takes to pop back out of a failed catch, scaling up with an overshoot.",
+    "breakout_pop_seconds": 0.35,
+    "success_banner": 2.4
+  },
+
+  "framed_camera": {
+    "_comment": "P2-113 (visual-claude lane, 2026-10-12). The catalogue found the aim frame crowded the trainer between a cropped ally and the target, and that the strike and breakout close-up (resolve_camera: 3.4 m at fov 36, about 1.1 m of half-width at the orb) cropped bodies and was filled by the creature that pops out on a breakout. With this enabled, catch_math.gd::camera_profile merges these overrides onto `aim` and `resolve_camera`. The aim pulls back and widens so the trainer, ally and target separate. The resolve shot stands off so the orb and the full body around it share the frame (6.0 m x tan(22) = 2.4 m half-width). Glide speeds, pitch limits and aim sensitivity are unchanged. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
+    "enabled": false,
+    "aim": {"distance": 4.9, "height": 2.05, "fov": 58.0, "shoulder_offset": 1.25},
+    "resolve_camera": {"distance": 6.0, "height": 0.85, "fov": 44.0, "pitch_start_deg": -30.0, "trainer_share": 0.45, "trainer_margin_m": 3.5, "shoulder_offset": 1.0},
+    "_why_trainer_share": "P2-059 close-1024 r1 judges (6.42 vs 6.08): the resolve shot still cut to a tight downward view of grass with the trainer and companion out of frame. With trainer_share the pivot slides that share from the orb toward the trainer and the lens looks from behind the trainer along the throw, trainer_margin_m past them (combat_manager.gd _trainer_frame_offset). Inside this OFF block only. close-1024 r2 judged: mapped 5.28 vs shipping 5.39 (breakout lens inside the strike flash); P2-059/060 parked at r1 (P2-059-060-catch.md)."
+  },
+  "resolve_camera": {
+    "_comment": "camera_rig profile for the wobble: a close-up on the resting orb, entered with a slow glide (retarget_lag) the moment the orb strikes. The whole resolution plays through this shot — the orb is the only actor on stage and the camera says so. Handed back to the creature on a breakout and to the trainer when a catch ends the fight.",
+    "_comment_framing": "First capture at distance 3.2 / height 1.1 / pitch -16 was not a close-up at all: the orb huddled small at the bottom of the frame with dead grass in the centre. Height near the orb itself and a steeper look-down centre it.",
+  "_why_framing_n14": "N14-ROUTED-FOLLOWUPS, 2026-09-05, on N07-VFX-POLISH's routed finding, quoting W09's judge: the resolve camera 'still parks inside the ally', and the result is 'indistinguishable from a bug'.\n\nWHAT `height` ACTUALLY IS, because the first attempt at this got it wrong and rendered the mistake. It is not the camera's elevation: `camera_rig.gd:380` computes the pivot as `target.global_position + Vector3.UP * height`, so it is how far ABOVE the orb the frame is centred. Raising it 0.55 -> 1.35 to clear a creature put the frame's centre 1.35 m above an orb in a shot whose half-height is 1.10 m -- and the rendered seal came back with the orb sliced by the bottom edge of frame. Reverted to 0.55; the orb is the subject and the subject is what the frame centres on.\n\nThe lens is lifted with the PITCH instead, which moves the camera without moving the frame. Elevation above the pivot is `distance * sin(pitch)`: 2.4 * sin(22) = 0.90 m before, so the lens sat about 1.45 m over the ground -- chest height on a deployed creature standing at the seal, which is exactly how it ends up inside one. 3.4 * sin(40) = 2.19 m now, about 2.74 m over the ground and clear of a creature's back, with 3.4 * cos(40) = 2.60 m of horizontal standoff so it is outside the body as well as above it.\n\nAnd the close-up survives, because the distance is bought back with the lens rather than paid for in subject size. The `_comment_framing` above records distance 3.2 / height 1.1 / fov 50 as tried and rejected for leaving 'the orb huddled small at the bottom of the frame'; half the frame width at the subject is `distance * tan(fov/2)`, which is 1.49 m for that rejected attempt against the 1.12 m that was accepted. Here it is 3.4 * tan(18) = 1.10 m -- within 2% of the accepted framing, so the orb is the same size on screen as the pass that settled it. `retarget_lag` is untouched: the glide is what W09 and N07 both liked.",
+    "distance": 3.4,
+    "height": 0.55,
+    "fov": 36.0,
+    "retarget_lag": 5.0,
+    "pitch_start_deg": -40.0
+  },
+
+  "vfx": {
+    "_comment": "The three flashes of a catch, all impact_flash.gd bursts (primitives, both renderers, physics clock). Strike says 'you hit it'; caught is the warm gold seal; breakout is a sharper, whiter burst so failure never reads as the success flash with different text.",
+    "_comment_sizes": "Sized against the resolve close-up, not the combat camera: at radius 1.5+ under strength 1.3+ the verdict bursts filled half the frame and washed the creature and orb out of their own moment.",
+    "strike": { "colour": "#ffd27a", "radius": 1.1, "duration": 0.3, "strength": 1.0 },
+    "caught": {
+      "_why_0905": "N07-VFX-POLISH (D87). At radius 1.2 x strength 1.15 this ring expanded to 1.38 m -- a 2.76 m disc in front of a resolve camera 2.4 m from the orb with 2.24 m of frame height (fov 50), so it covered the frame edge to edge and, at saturation 0.34 mixed over grass, was the 'flat khaki disc with hard white spikes' W09-VFX's blind judge described. Sized to the orb it plays on now: a 1.0 m bloom (45% of the frame height) around a 0.42 m orb, in the same gold family as vfx.json's catch_burst sparkle that W09 layered on top (#ffc94a, sat 0.71, reads gold rather than khaki over green), and a fifth of a second shorter, 0.55 -> 0.45 s. A 0.75 s cut was tried in a second blind round so the ring would still frame the orb once the sparkle's motes had flown clear; that judge ranked the orb's own legibility above the ring's persistence and read the lingering camera-facing ring over the orb as 'a ghost ... glassware', while the round-1 judge had called the 0.45 s cut's sixteen-tick orb 'the best orb in either sheet'. impact_flash.gd's ring is drawn without a depth test in front of whatever it plays on, so every extra tenth of a second is a tenth of a second the orb is veiled: short wins. impact_flash.gd's nine radial spikes are geometry that script shares with every attack and are not softened here; at this radius they reach 0.68 m instead of 1.86 m. `strike` and `breakout` are sized for their own moments and untouched.",
+      "_why_spike_softness_n14": "N14-ROUTED-FOLLOWUPS, on N07-VFX-POLISH's routed finding, which is the sentence directly above this one: `impact_flash.gd`'s nine radial spikes are hard-edged with no softness key, and N07 could not soften them because that script is shared by every attack in the game. It is a PARAMETER now -- `impact_flash.gd::_spike_softness`, default 0.0, which is the flat spike every attack has always drawn -- and this is the one place in the project that opts in. 0.75 keeps each spike's base at full strength and takes its tip to a quarter, so the seal ends in nine points of light rather than nine cut-out triangles. `combat.json`'s own `impact.quick`/`impact.charged` accept the same key and deliberately do not set it, so this change reaches the catch seal and nothing else in the game.",
+      "colour": "#ffc94a", "radius": 0.5, "duration": 0.45, "strength": 1.0, "spike_softness": 0.75
+    },
+    "breakout": { "colour": "#fff3e0", "radius": 1.35, "duration": 0.4, "strength": 1.1 }
+  },
+
+  "faint": {
+    "_comment": "GAME_DESIGN.md 15: over-damaging a creature and causing a faint ends the capture opportunity, and fainted wild creatures remain visible temporarily but cannot be captured. The lingering body is not decoration — it is what makes the lost chance legible instead of the creature simply vanishing.",
+    "linger_seconds": 4.0,
+    "slump_degrees": 72.0
+  },
+
+  "aggression": {
+    "_comment": "Aggressive wild creatures, per GAME_DESIGN.md pillar 3 and 14 ('Aggressive creature initiates'). The 'not simple proximity' rule in 14 is scoped to PEACEFUL creatures; these are the other kind. Deliberately thin: notice, close, initiate. No stalking, no growl phase, no standing your ground — those are a behaviour system and this is a flag and a chase.",
+    "notice_range": 14.0,
+    "_comment_engage": "Metres at which it forces the fight. Under the peaceful engage_range so you cannot be ambushed from further away than you could have chosen to fight from.",
+    "engage_range": 3.2,
+    "_comment_chase_speed": "W23-DIFFICULTY (D77): 3.4 -> 5.6. movement.json walks the trainer at 5.0 and sprints at 8.6, so at 3.4 an aggressive creature could never reach a player who simply kept walking -- the ambush was scenery. 5.6 is faster than a walk and well under a sprint: escaping an aggressor now costs stamina, which is the danger the flag exists to be, and it is still always escapable.",
+    "chase_speed": 5.6,
+    "_comment_giveup": "Metres from its home beyond which it loses interest and walks back. Without this an aggressive creature follows you across the whole meadow and the only escape is a fight.",
+    "give_up_distance": 26.0,
+    "_comment_grace": "Seconds after a fight ends before it will come at you again. Being re-engaged the instant you win is not danger, it is a soft lock.",
+    "grace_after_combat": 8.0,
+    "_comment_deferred_retry": "Seconds before an aggressive creature asks again after the director deferred it because the player was in a conversation or a trainer battle (open, between rounds or being admitted).",
+    "deferred_retry_seconds": 0.5
+  }
+}

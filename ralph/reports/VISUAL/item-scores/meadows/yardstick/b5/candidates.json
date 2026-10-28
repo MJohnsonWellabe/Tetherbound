@@ -1,0 +1,65 @@
+[
+    {
+        "label":  "IS meadows P2-065 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-065.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-065.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: trainer defeated presentation. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The bridge grunt and Warden remain upright in similar neutral postures after victory while banner and dialogue carry most of the state change"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-062 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-062.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-062.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: fight camera and creature scale. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-087 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-087.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-087.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: named trainer dialogue subject visibility. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several named trainer dialogue views show only the player and terrain with no speaker visible"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-064 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-064.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-064.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: Warden arena boundary. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-119 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-119.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-119.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: Fly carrier grip pose. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands rather than carrying a person"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-031 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-031.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-031.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: settings and binding instructions. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-015 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-015.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-015.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: creature collapse and rest. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground"
+                    ]
+    }
+]

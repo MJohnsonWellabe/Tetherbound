@@ -1,0 +1,38 @@
+[
+ {
+  "label": "cliffspike hit",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/cliffspike-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/cliffspike-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, then the hit react at three moments (the blow landing, held, recovering). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler - and whether the hit reads as a grounded flinch from a blow.",
+  "defects": [
+   "Hit react rears up or leaps clear of the stage: a pounce, not a flinch"
+  ]
+ },
+ {
+  "label": "thundertunnel hit",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/thundertunnel-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/thundertunnel-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, then the hit react at three moments (the blow landing, held, recovering). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler - and whether the hit reads as a grounded flinch from a blow.",
+  "defects": [
+   "Hit react rears up or leaps clear of the stage: a pounce, not a flinch"
+  ]
+ },
+ {
+  "label": "voltwig hit",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/voltwig-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/voltwig-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, then the hit react at three moments (the blow landing, held, recovering). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler - and whether the hit reads as a grounded flinch from a blow.",
+  "defects": [
+   "Hit react rears up or leaps clear of the stage: a pounce, not a flinch"
+  ]
+ },
+ {
+  "label": "nightburrow faint",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/nightburrow-base.png",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/c4aad6cf-d015-5de5-925e-e08e06985296/scratchpad/b62/sides/nightburrow-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, then the faint at three moments (going down, mid, the end pose). Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler - and whether the faint reads clearly as knocked out and clean.",
+  "defects": [
+   "A stray vertical line stands above the back in the faint frames"
+  ]
+ }
+]

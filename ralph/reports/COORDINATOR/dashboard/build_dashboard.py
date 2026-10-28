@@ -676,6 +676,13 @@ _vrows = []
 for _sel, _fid, x in _vitems:
     st = norm(x.get("status"))
     sc, src = _score(x.get("evidence"))
+    _isc = x.get("item_scores") or {}
+    if _isc:
+        # Per-item GPU scores (tb/item-scores job): the row closes only when every biome it
+        # touches passes, so it buckets on its lowest biome score.
+        sc = [min(v["mapped"] for v in _isc.values())]
+        src = "GPU item: " + ", ".join(f'{b.title()} {v["mapped"]:.2f}{"*" if v.get("low_confidence") else ""}'
+                                       for b, v in _isc.items())
     _vrows.append({"sel": _sel, "cat": _vcat(_fid, x), "name": _short(_sel, x), "st": st, "sc": sc,
                    "src": src, "bk": _bucket(st, sc), "text": str(x.get("text", ""))})
 _bk_order = [k for k, _l, _r in _BUCKETS]
@@ -704,7 +711,7 @@ for _ck, _cl, _cid in _VCATS + [("all", "All visual", "")]:
                     f'<td class="num">{n}</td>{cells}<td class="mxbar"><span class="vbar">{segs}</span></td></tr>')
 _matrix = ('<section class="panel"><h2>Where everything is</h2>'
            '<p class="note">Every visual criterion, by area and by its latest score (the lower of Medium / High; GPU where judged, else CPU). '
-           '"At bar": scored 7.5 or above but its row is not closed yet. "Unscored": the GPU judged the whole place, not this item on its own.</p>'
+           '"At bar": scored 7.5 or above but its row is not closed yet. "Unscored": no score of its own yet. "GPU item": the per-item GPU job, one-sided, lowest biome counts; * marks a low-confidence batch.</p>'
            '<div class="tbl"><table class="mx"><thead><tr><th>Area</th><th class="num">Items</th>' + _mx_head + '<th>Spread</th></tr></thead>'
            f'<tbody>{"".join(_mx_rows)}</tbody></table></div></section>')
 

@@ -1,0 +1,188 @@
+{
+ "sets": {
+  "Fc": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's panel is legible and on-direction (blue-grey, gold ingredients), but the dark, murky purple-rain world behind it has none of Palworld's saturated daylight or Valheim's atmospheric grade."
+  },
+  "Up": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean, appealing stylised villager with clear face, eyes and earthy meadow palette carries it to Palworld NPC finish, though the neutral stage shows nothing of world light."
+  },
+  "Pr": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A lone thin panel beside a flat-shaded low-poly boulder under flat noon light sinks it next to Palworld's dense, lived-in bases."
+  },
+  "Fl": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's scaled, naturalistic blue lizard nears the owner bar, but neither side shows the rim-lit material finish and A's flat cartoon shading, floating faint-mid and grey flipped belly sink it."
+  },
+  "Kx": {
+   "A": {
+    "bar_a": 4.7,
+    "defects": {
+     "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bright meadow light is decent, but speakers are tiny in the distance (Kell) or walled off by giant creature bodies (Corin, Captain Halder), so staging sinks it."
+  },
+  "Rw": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clear, on-direction blue-grey panel with gold/orange need counts and teal selection reads at shipping-game UI finish, held back only by small list sub-text."
+  },
+  "Hx": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The naturalistic Galecrest is good, but the glide frame is a flat featureless green plain under haze and the landed bird keeps its raised-wing glide pose."
+  },
+  "Sl": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Some shiny variants have no reliably readable colour-block difference from their normal form at the device view": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Some shiny variants have no reliably readable colour-block difference from their normal form at the device view": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The village-and-lake backdrop is pleasant, but the low camera buries the lower half in dark close grass and the creatures are small, so subjects lack Palworld's readable hero presence."
+  },
+  "Lg": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The menu frame is on-direction, but the map itself is a flat green disc with road lines over grey fog, without the painted terrain a shipping game's map carries."
+  },
+  "Ry": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-response silhouettes": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-response silhouettes": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Naturalistic fur-and-bristle creatures in warm sunlit grass with real dust impacts read close to Palworld fights, though the tell still lives in HUD text."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Large rock faces fill the camera and hide the named speaker during dialogue": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Large rock faces fill the camera and hide the named speaker during dialogue": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A dark brown rock wall fills the Foreman frame and a black slab plus the player's back hide Garrick entirely, so neither frame stages the speaker in readable meadow light."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Dialogue camera framing: place the camera so the named speaker is mid-frame and lit, with collision pull-in/fade for rocks and large creatures (Kx, Uv) and a closer shot for distant speakers.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build the homestead wall as a thick timber frame with a cap, a distinct stone footing and a mid-value textured wattle/plaster infill (keep A's direction, not B's blown-out panel), and replace the flat-shaded boulder next to it.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Add a perch/folded-wing landed pose and a banked glide pose for flyers, and give the creature faint poses grounded contact (no floating faint-mid, no untextured flipped underside).",
+   "kind": "new_art"
+  }
+ ]
+}

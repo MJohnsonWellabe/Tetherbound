@@ -1,0 +1,172 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9615,
+  "least_squares_slope": 1.3342,
+  "method": "linear",
+  "slope": 1.3342,
+  "intercept": -1.7323,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.354,
+ "top_anchor_reference": 7.79,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_1_gpu:stormcapra_candidate": {
+   "measured": 7.167,
+   "reference": 7.79,
+   "mapped": 7.83,
+   "residual": -0.04
+  },
+  "f36_1_gpu:stormcapra_shipping": {
+   "measured": 6.4,
+   "reference": 6.23,
+   "mapped": 6.807,
+   "residual": -0.577
+  },
+  "f04_6_r22:control": {
+   "measured": 5.2,
+   "reference": 5.83,
+   "mapped": 5.206,
+   "residual": 0.624
+  },
+  "f04_6_r22:r22": {
+   "measured": 6.233,
+   "reference": 6.75,
+   "mapped": 6.584,
+   "residual": 0.166
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 6.133,
+   "reference": 6.73,
+   "mapped": 6.451,
+   "residual": 0.279
+  },
+  "p2_094_r4:X_before": {
+   "measured": 4.233,
+   "reference": 3.5,
+   "mapped": 3.916,
+   "residual": -0.416
+  },
+  "f36_0_npc:C1A": {
+   "measured": 6.933,
+   "reference": 7.53,
+   "mapped": 7.518,
+   "residual": 0.012
+  },
+  "f36_0_npc:C1B": {
+   "measured": 6.933,
+   "reference": 7.47,
+   "mapped": 7.518,
+   "residual": -0.048
+  }
+ },
+ "candidates": {
+  "IS meadows P2-004 one-sided | P2-004": {
+   "measured_mean": 5.467,
+   "mapped_mean": 5.56,
+   "mapped_judges": [
+    6.54,
+    4.94,
+    5.21
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS meadows P2-034 one-sided | P2-034": {
+   "measured_mean": 5.4,
+   "mapped_mean": 5.47,
+   "mapped_judges": [
+    5.74,
+    5.07,
+    5.61
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS meadows P2-033 one-sided | P2-033": {
+   "measured_mean": 5.433,
+   "mapped_mean": 5.52,
+   "mapped_judges": [
+    5.74,
+    4.94,
+    5.87
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS meadows P2-059 one-sided | P2-059": {
+   "measured_mean": 5.2,
+   "mapped_mean": 5.21,
+   "mapped_judges": [
+    6.01,
+    4.67,
+    4.94
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS meadows P2-016 one-sided | P2-016": {
+   "measured_mean": 5.433,
+   "mapped_mean": 5.52,
+   "mapped_judges": [
+    6.27,
+    4.81,
+    5.47
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS meadows P2-017 one-sided | P2-017": {
+   "measured_mean": 5.167,
+   "mapped_mean": 5.16,
+   "mapped_judges": [
+    6.01,
+    4.54,
+    4.94
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS meadows P2-020 one-sided | P2-020": {
+   "measured_mean": 5.367,
+   "mapped_mean": 5.43,
+   "mapped_judges": [
+    6.27,
+    4.94,
+    5.07
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS meadows P2-086 one-sided | P2-086": {
+   "measured_mean": 6.5,
+   "mapped_mean": 6.94,
+   "mapped_judges": [
+    7.34,
+    6.54,
+    6.94
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

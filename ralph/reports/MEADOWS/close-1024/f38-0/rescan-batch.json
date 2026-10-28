@@ -1,0 +1,4 @@
+{"anchors": {"craft:after": [6.6, 6.6, 6.6], "craft:before": [4.9, 4.5, 5.0],
+  "f10_2_r3_capacitor:control": [4.4, 4.2, 3.9], "f10_2_r3_capacitor:candidate_r3": [5.1, 5.0, 4.6],
+  "f36_0_gap:C4A": [5.6, 5.5, 6.4], "f36_0_gap:C4B": [6.4, 6.4, 6.1]},
+ "candidates": {"band3 relay yard (rescan)": [5.5, 5.0, 5.2], "hall nave+shrine+arches (rescan)": [5.8, 5.6, 5.5]}}

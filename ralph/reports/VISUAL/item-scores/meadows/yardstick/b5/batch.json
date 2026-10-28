@@ -1,0 +1,81 @@
+{
+ "anchors": {
+  "f36_0_gap:C1A": [
+   6.2,
+   6.0,
+   6.0
+  ],
+  "f36_0_gap:C1B": [
+   4.6,
+   4.9,
+   4.8
+  ],
+  "f36_1_gpu:stormcapra_shipping": [
+   7.0,
+   7.0,
+   6.3
+  ],
+  "f36_1_gpu:stormcapra_candidate": [
+   5.4,
+   5.9,
+   4.5
+  ],
+  "f36_0_npc:C1B": [
+   7.3,
+   7.2,
+   6.2
+  ],
+  "f36_0_npc:C1A": [
+   7.3,
+   7.2,
+   6.2
+  ],
+  "f04_6_r22:r22": [
+   6.5,
+   6.3,
+   5.5
+  ],
+  "f04_6_r22:control": [
+   5.0,
+   5.2,
+   4.6
+  ]
+ },
+ "candidates": {
+  "IS meadows P2-087 one-sided | P2-087": [
+   4.6,
+   4.8,
+   4.0
+  ],
+  "IS meadows P2-065 one-sided | P2-065": [
+   5.2,
+   5.3,
+   4.5
+  ],
+  "IS meadows P2-015 one-sided | P2-015": [
+   4.6,
+   4.8,
+   4.5
+  ],
+  "IS meadows P2-031 one-sided | P2-031": [
+   5.0,
+   5.6,
+   5.5
+  ],
+  "IS meadows P2-062 one-sided | P2-062": [
+   5.6,
+   5.4,
+   4.8
+  ],
+  "IS meadows P2-119 one-sided | P2-119": [
+   5.0,
+   5.2,
+   4.8
+  ],
+  "IS meadows P2-064 one-sided | P2-064": [
+   5.2,
+   5.0,
+   4.6
+  ]
+ }
+}

@@ -1,0 +1,59 @@
+{
+ "P2-062": [
+  "meadows__fights__south_bridge_grunt-01",
+  "meadows__fights__south_bridge_grunt-02",
+  "meadows__fights__south_bridge_grunt-03",
+  "meadows__fights__south_bridge_grunt-05",
+  "meadows__fights__south_bridge_grunt-r05",
+  "meadows__fights__warden_aldis-01",
+  "meadows__fights__warden_aldis-02",
+  "meadows__fights__warden_aldis-r15"
+ ],
+ "P2-002": [
+  "meadows__menu_map"
+ ],
+ "P2-001": [
+  "meadows__menu_backpack",
+  "meadows__menu_build",
+  "meadows__menu_creatures",
+  "meadows__menu_players",
+  "meadows__menu_quest_log",
+  "meadows__menu_save",
+  "meadows__menu_settings"
+ ],
+ "P2-007": [
+  "meadows__menu_build",
+  "meadows__menu_players",
+  "meadows__menu_quest_log",
+  "meadows__menu_skills"
+ ],
+ "P2-063": [
+  "meadows__fights__south_bridge_grunt-02",
+  "meadows__fights__south_bridge_grunt-03",
+  "meadows__fights__south_bridge_grunt-05",
+  "meadows__fights__warden_aldis-02",
+  "meadows__fights__warden_aldis-03",
+  "meadows__fights__warden_aldis-04",
+  "meadows__fights__warden_aldis-06"
+ ],
+ "P2-004": [
+  "meadows__exploration_hud"
+ ],
+ "P2-031": [
+  "meadows__settings_controls",
+  "meadows__quick_bindings"
+ ],
+ "P2-064": [
+  "meadows__fights__warden_aldis-03",
+  "meadows__fights__warden_aldis-05",
+  "meadows__fights__warden_aldis-08",
+  "meadows__fights__warden_aldis-r12"
+ ],
+ "P2-065": [
+  "meadows__fights__south_bridge_grunt-00-before",
+  "meadows__fights__south_bridge_grunt-a01",
+  "meadows__fights__south_bridge_grunt-99-after",
+  "meadows__fights__warden_aldis-a03",
+  "meadows__fights__warden_aldis-99-after"
+ ]
+}

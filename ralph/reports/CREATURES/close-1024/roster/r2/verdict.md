@@ -1,4 +1,4 @@
-# r2 (25 Oct 2026, CPU): F36#1 whole-roster pose verdict, batch 2 of 7 (land head, shipping state)
+# r2 (24 Oct 2026, CPU): F36#1 whole-roster pose verdict, batch 2 of 7 (land head, shipping state)
 
 Same method as r1. Anchors f36_0_npc:C1, p2_094_r4, a third gap pair (confirming). Fit linear slope 1.089, intercept -0.025, RMSE 0.59.
 

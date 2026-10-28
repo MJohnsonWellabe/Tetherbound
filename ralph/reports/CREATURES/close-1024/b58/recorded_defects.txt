@@ -1,0 +1,6 @@
+Zt: none
+Nj: "Hit react rears up or leaps clear of the stage: a pounce, not a flinch"
+Sd: none
+Ap: "Hit react rears up or leaps clear of the stage: a pounce, not a flinch"
+Gp: "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world"
+Yc: "Hit react rears up or leaps clear of the stage: a pounce, not a flinch"

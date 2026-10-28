@@ -1,0 +1,198 @@
+{
+ "sets": {
+  "Cp": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The HUD hierarchy (blue-grey panels, teal bars, gold quest text, centre kept clear) is Palworld-like, but five separate dark boxes ring a dim, flat-lit interior with a maroon bed blanket close to the reserved oxblood, so it does not read at the same finish."
+  },
+  "Ut": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra model matches the owner's style bar (white fleece, dark curled horns, blue accents, clearly taller than the trainer); on B the hit react barely differs from standing and the faint frames turn into a twisted, stretched sideways silhouette, and on A the legs vanish under the fleece in the faint frames."
+  },
+  "Oc": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Several reward harvest nodes read as generic crates or vegetation without a clear visible connection to their named item": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Several reward harvest nodes read as generic crates or vegetation without a clear visible connection to their named item": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The warm meadow grass and blue distance carry the world, but the harvest nodes (white lump, small red-brown crate, glowing yellow plant) are tiny generic props with no item identity, and the light is flat midday with no atmosphere."
+  },
+  "Vh": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths are distinct per site (a freed villager at the opened cage, fallen banners, smoke column, wrecked crates); A leaves the red enemy banners standing after the win, so its aftermaths are barely distinct, and on both sides blurry smeared ground and a low-res stockade wall sink the finish."
+  },
+  "Nh": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame with diagonal brace, plank cap and stone footing starts to read as built, though it is still a thin single panel; B is a blown-out white card in a thin frame with no cap or footing, and the flat-shaded pale boulder beside it reads as placeholder on both sides."
+  },
+  "Ty": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Groves, path and water give a pleasant meadow, but good_candy, rare_candy and potion_small are a small yellow-green blob, a bread-like pile beside a purple plant and a pink orb, unreadable at gameplay distance with no pickup highlight."
+  },
+  "Ky": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Bramblebun is a good naturalistic rabbit and the golden capture orb has impact, but in the strike and absorbing frames a blurred, cropped companion back fills the lower third, so the shot loses its player-to-target link."
+  },
+  "Mq": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Grandpa is a well-finished, appealing elder with readable eyes and a green-brown palette that fits the village, though the soft toon face sits a step more cartoon than the naturalistic creature bar."
+  },
+  "Qb": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Terrapup's hurt frame shows a real recoil, but Nightburrow's hurt and moving frames are hard to tell apart at gameplay size, and the low camera spends half the frame on blown-up foreground grass blades."
+  },
+  "Tp": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Brookfail, Pipwing and Bramblebun all stand at or below the trainer's shoulder, and the small, low-contrast creatures are lost against the house and trees, so the scale and creature-first read the art direction asks for are missing."
+  },
+  "Yq": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The creatures cast shadows and sit on the ground, but midground tufts still hide Bramblebun's and Pipwing's feet, and the oversized foreground blades and flat midday grade keep the frame from Palworld-level clarity."
+  },
+  "Ne": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {
+     "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Mira, Tam and Oskar are now distinct world characters that match their portraits in a key-art-faithful timber village, but the rigid identical stance and flat shadowless light hold it below the reference finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Give every catalogue item (harvest nodes and ground pickups) its own readable hero mesh at gameplay size, with a soft teal pickup rim or glow, instead of shared crates, orbs and glowing plants (Oc, Ty)",
+   "kind": "new_art"
+  },
+  {
+   "change": "Re-frame the gameplay and capture cameras: lift the camera out of the foreground grass, thin the near tufts around creatures' feet, and keep the companion and target both in frame through the catch sequence (Qb, Tp, Yq, Ky)",
+   "kind": "scene"
+  },
+  {
+   "change": "Rescale normal creatures so every one stands taller than the 1.80 m trainer, and finish the homestead wall as a thick timber-and-wattle piece with a cap and stone footing, as on Nh side A, never the blank white card (Tp, Nh)",
+   "kind": "scene"
+  }
+ ]
+}

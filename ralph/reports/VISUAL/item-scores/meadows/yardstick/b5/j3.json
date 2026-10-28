@@ -1,0 +1,178 @@
+{
+ "sets": {
+  "Ly": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Several named trainer dialogue views show only the player and terrain with no speaker visible": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Several named trainer dialogue views show only the player and terrain with no speaker visible": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Only the Old Bram frame stages a speaker; Warder Solene shows the player alone in an empty courtyard and Keeper Hald's view is a third blocked by a blurred brown occluder, so the dialogue moments never read as authored scenes."
+  },
+  "El": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "The bridge grunt and Warden remain upright in similar neutral postures after victory while banner and dialogue carry most of the state change": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "The bridge grunt and Warden remain upright in similar neutral postures after victory while banner and dialogue carry most of the state change": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm slope light and blue distance help, but the defeated grunt stands idle next to the player in the after frame and only the toast says he lost."
+  },
+  "Ap": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's bristled spotted-fur boar is near the naturalistic bar but barely clears the 1.80 m ruler and its gold rosettes are noisy; B's smooth terracotta-and-moss pig reads as a vinyl toy, is shorter than the trainer and its faint end tips onto its snout."
+  },
+  "Pe": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Terrapup lies flat but is a small low-contrast tan blob, the Verdian faint still reads upright among foliage, and foreground grass covers the bottom half of every frame."
+  },
+  "Rx": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-grey panel, teal tab and gold headers are on-brief, but tiny grey rows, '(or F10)' and '[Q]/[Tab]' literals and a cut-off Fighting paragraph are PC-menu dense, not readable at a glance."
+  },
+  "Gy": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The washed, semi-translucent tan ally fills the right half of all three frames and stands over the tiny trainers, so the fight has no readable staging next to Palworld's clear player/target framing."
+  },
+  "Mg": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Standing Stormcapra matches the owner bar in fleece, horns and scale; A's faint end is crumpled but still reads as lying, while B's faint mid and faint end flatten the body into a fleece mat with horns stretched into detached black tubes."
+  },
+  "Xc": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder has an appealing, clearly lit face, earthy green-brown palette and clean silhouette, but the big-eyed animated-film face is more cartoon than the naturalistic creatures and world around him."
+  },
+  "Ue": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's afters change the sites (banner torn down, cage opened with the captive standing, tent burnt to a smoke column), but the same emblem marker stone repeats at sites 3 and 5, and ground and wall textures are blurry; B often leaves the oxblood banner up, just deletes the cage at site 2, and has a hand or prop poking into the bottom-right of site 5."
+  },
+  "Yr": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands rather than carrying a person": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands rather than carrying a person": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The aerial haze, cloud deck and blue horizon are close to Valheim-class distance, but the stiff straight-armed hang makes the carry read as a placeholder pose."
+  },
+  "Mq": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The torchlit hall has a warm interior mood, but thick turquoise floor rails cut through the creatures, a blurred pillar blocks the warden_aldis-03 frame and the glowing orange ally looks unlit."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix fight and dialogue camera framing: add collision pull-in so walls and pillars never fill a third of the frame (Ly Keeper Hald, Mq warden_aldis-03), cap the ally's share of the screen, and frame the speaker or opponent alongside the player (Ly, Gy, Mq).",
+   "kind": "scene"
+  },
+  {
+   "change": "Author grounded state poses: defeated-trainer kneel or slump (El), faint and rest poses that settle on the ground with intact horn skinning (Pe, Mg B), and a carried-by-the-shoulders flying grip (Yr).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Replace the turquoise arena rails with diegetic boundary dressing (rune stones, worn floor inlay) at low contrast, and give the settings screen larger high-contrast text with controller glyphs instead of literal key labels (Mq, Rx).",
+   "kind": "scene"
+  }
+ ]
+}

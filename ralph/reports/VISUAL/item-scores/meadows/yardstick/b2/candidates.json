@@ -1,0 +1,74 @@
+[
+    {
+        "label":  "IS meadows P2-035 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-035.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-035.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: camp and workshop prop legibility. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-013 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-013.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-013.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: Tether Relay yard. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-005 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-005.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-005.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: ground cover. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-061 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-061.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-061.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: catch result hierarchy. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-094 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-094.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-094.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: placed wall visual. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-060 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-060.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-060.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: catch effect finish. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visible change between rest and shake frames"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-019 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-019.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-019.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: alpha rarity read. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several alpha variants read mainly as a modest size increase without a distinct staged presence beside the trainer"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-058 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-058.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-058.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: catch aim readability. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc"
+                    ]
+    }
+]

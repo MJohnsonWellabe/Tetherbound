@@ -1,0 +1,188 @@
+{
+ "sets": {
+  "Fc": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger wrapped recipe text and iconised Craft/Leave hints approach Palworld's panel readability, but A's tiny clipped lines ('4 Wood (have 0), 3 St...') and 'Craft: A / Enter' footnote hints, over a murky purple night-rain backdrop with no light shafts or grade, sink the finish."
+  },
+  "Up": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder villager is appealing with clear eyes, a warm olive/brown palette and a readable full-body silhouette, but the soft rubbery big-eyed cartoon finish leans further from stylised realism than the key art's settlers and is shown only on a black void, so it cannot carry world finish."
+  },
+  "Pr": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame with diagonal brace, shingled cap and separate stone footing reads as a built wall, but its infill is still a flat pale beige card, and B is a blown-out white sheet with a thin frame and no cap; both stand alone on a uniform grass carpet under flat noon light."
+  },
+  "Fl": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's blue drake with white spots and orange-tipped fins has a naturalistic scaled read and a grounded curled faint, while A's flatter toy-like finish, hovering faint-mid body above its shadow and grey-brown desaturated faint-end mesh break the read; neither creature clearly stands taller than the 1.80 m ruler."
+  },
+  "Kx": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Kell frame has key-art meadow depth (village, hills, sky), but in the Corin frame a large feathered creature fills the left half of the shot and in the Captain Halder frame the speaker is seen from behind past a grey foreground mass under a dark-red banner, so the staging reads unauthored."
+  },
+  "Rw": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The deep blue-grey translucent panel with teal selection, full material lines ('4 Rootstone \u00b7 3 Wood \u00b7 3 Fiber') and warm amber 'need N more' counts sits at Palworld's UI finish; only the small orange subtext in the list and the tall half-cut Greater Orb row hold it back."
+  },
+  "Hx": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The landed frame has decent sun, path and hill depth, but the glide frame is a pale grey bird over a featureless washed green plain, and the bird lands still wings-up in its flight silhouette, so the moment reads as a cut rather than a Palworld-grade landing."
+  },
+  "Sl": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Some shiny variants have no reliably readable colour-block difference from their normal form at the device view": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Some shiny variants have no reliably readable colour-block difference from their normal form at the device view": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Shiny Nightburrow's icy pale blue reads clearly against the dark normal form, but the shiny Stormtrail is a small washed-out cream figure with no normal to compare against, and a third of each frame is a near-camera grass carpet that eats the subject."
+  },
+  "Lg": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The panel styling fits the UI direction and roads now lead out of Grandpa's Village, but the surveyed area is a flat green disc with no terrain, rivers or groves and the rest is a grey cloud fog, so it reads as a placeholder rather than a lived-in map."
+  },
+  "Ry": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-response silhouettes": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-response silhouettes": "PARTIAL"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The naturalistic boar and spined tan hound read clearly against the grass with dust-puff impacts and no magenta slabs, close to Palworld's field fights, though tells still live in the small top-right text and the creatures barely change pose between frames."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "Large rock faces fill the camera and hide the named speaker during dialogue": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Large rock faces fill the camera and hide the named speaker during dialogue": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The quarry-foreman frame is a dim brown rock box with a second character cut off at the left edge, and in the Garrick frame a black rock face fills the right third while the camera sits behind the player's head with Garrick not visible at all."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Dialogue camera framing pass: pull the dialogue camera to a two-shot that keeps the named speaker's face in frame, fading or ignoring rocks and large creatures between camera and speaker (Uv quarry_foreman/garrick, Kx corin/captain_field).",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows light and composition grade: warmer low sun with longer shadows, aerial-perspective fog on the distance, and grass broken into groves, paths and clearings instead of a uniform near-camera carpet (Pr, Hx glide, Sl).",
+   "kind": "scene"
+  },
+  {
+   "change": "Hero builds and poses: a homestead wall with textured wattle/plaster infill, cap and distinct stone footing (keep Pr side A's structure, never B's white sheet), plus a folded-wing perch/landing pose for the flying mount (Hx).",
+   "kind": "new_art"
+  }
+ ]
+}

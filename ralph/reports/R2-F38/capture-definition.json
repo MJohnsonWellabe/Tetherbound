@@ -143,9 +143,10 @@
       "region": "band5_stronghold_approach",
       "at": [
         0.0,
-        7000.0
+        7250.0
       ],
       "heading_deg": 0,
+      "_why_close1024_at": "F38 band5 close-1024 (with the lit keep r5): the stand moves from z 7000 (about 550 m from the stronghold mouth) to z 7250 (about 300 m) on the same approach road, so the stronghold is a landmark in frame rather than a speck behind the pylons; heading and views unchanged.",
       "source": "debug_teleport_spots.json:Stronghold Approach"
     },
     {

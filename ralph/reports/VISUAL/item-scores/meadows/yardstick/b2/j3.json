@@ -1,0 +1,194 @@
+{
+ "sets": {
+  "Wy": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Warm grass and cool sky distance carry the meadow grade, but the foreground is one even yellow-green blade carpet with the same white flowers dotted at regular spacing and almost no rock, colour clumps or path wear, so it reads generated beside Palworld's broken-up fields."
+  },
+  "Eh": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The wall now reads as a half-timbered plaster panel with posts, top beam and X braces on a plank sill, but it is a clean, unweathered flat card with no ground contact grime or grass break at its base, so it still looks placeholder-tidy against Valheim-grade materials."
+  },
+  "Ta": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The verdict and banner frames are a blown-out white orb under blurry gold bokeh, with tiny result text and the Terrapup card, action list and command bar all still at full weight, so the outcome has no hierarchy where Palworld gives a single clear capture banner."
+  },
+  "Mr": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold Voltarach silhouette reads in most frames, but the player's creature is near invisible on the dark mud, telegraphs are flat magenta ground rings and arrows rather than physical tells, and in B i12-i15 the camera sits behind dark canopy/trunks that black out the fight."
+  },
+  "Uc": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visible change between rest and shake frames": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visible change between rest and shake frames": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The magenta ring is gone in favour of a warm gold dome, but the orb is still a flat glowing disc whose bloom swallows the Bramblebun, and the oversized out-of-focus Terrapup back fills the lower third of every frame."
+  },
+  "Df": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Several alpha variants read mainly as a modest size increase without a distinct staged presence beside the trainer": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Several alpha variants read mainly as a modest size increase without a distinct staged presence beside the trainer": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The alpha Trailpup and Brooktail stand roughly trainer height in mid-ground, small and pale against trees and the cottage with no aura, marking, rim light or framing, so nothing says alpha the way Palworld's field-boss staging does."
+  },
+  "Qg": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A's Stormcapra matches the owner bar (white fleece, dark curled horns, blue storm accents, well over trainer height) and its faint lies grounded on its side; B's faint mid and end flip the body into a twisted, partly airborne heap that breaks the read."
+  },
+  "Kf": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The yard is now clean cobbles under a stone gate with cages, crates and banners, but the cobble texture is large and repetitive, a dark wooden mass fills the right third of both frames, and the dusk frame is a muddy brown-orange with little sky or fog depth."
+  },
+  "Ve": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's mottled black-gold serpent with open fanged mouth sits close to the Fulgocobra board and stays grounded, while A's flat yellow-and-black bands go off-board and its faint mid/end float the coiled body high above its own shadow."
+  },
+  "Bt": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Barrels, crates, chest, bedroll and bonfire share one decent prop family, but they sit in tall grass overlapped by the wolf, rabbit and trainer with no cleared ground or framing, and the bonfire frame is half lost in dark tree shade."
+  },
+  "Mc": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cottage-and-hedge meadow backdrop is attractive, but the tiny capture-chance label is printed over the creature's body in busy grass with no backing panel, and catch_high adds brown dust puffs that further muddy the target."
+  },
+  "Yl": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired elder has a warm, clearly read face and eyes, a natural moss-green and leather palette that matches the key art's settlement, and a clean full-body silhouette; only the slightly toy-like proportions keep it under the top tier."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood fight readability: fade or cull trunks and canopy between camera and fighters (B i12-i15), add a rim light or outline to the player's creature on the dark mud, and replace the flat magenta telegraph rings/arrows with physical tells (crackling ground lightning, cracking earth, dust).",
+   "kind": "scene"
+  },
+  {
+   "change": "Catch flow hierarchy across Ta, Uc and Mc: dim or hide the persistent creature card, action list and command bar during aim and result, put capture chance and the result banner on a blue-grey backed panel offset from the target, and give the orb a real material (shell, seam, rim) with visible shake motion instead of a blown-out disc.",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadow composition: break the uniform grass carpet into clumps, clearings and worn paths with clustered flower colour and rock breaks, clear the ground around camp props, and stage alphas with a distinct aura, marking or rim light at clearly larger-than-trainer scale.",
+   "kind": "scene"
+  }
+ ]
+}

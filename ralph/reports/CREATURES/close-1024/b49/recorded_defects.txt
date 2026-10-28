@@ -1,0 +1,4 @@
+Vb: none
+Yx: none
+Ie: "Plumage reads chrome-white with bright edges (a halo) rather than matte feathers"
+Ox: none

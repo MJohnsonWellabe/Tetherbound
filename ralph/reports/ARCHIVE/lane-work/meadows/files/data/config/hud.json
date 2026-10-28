@@ -1,0 +1,116 @@
+{
+  "_why_fight_presentation_1025b": "Fights close-1025 ON (coordinator asks after r4/r5 + GPU G3): code-blind CPU r6, 3 fresh judges, mapped, shipped look -> r6: Venn 5.92 -> 6.56, Warden 6.19 -> 6.81, Riverwatch 6.43 -> 7.05, Stormwood 6.27 -> 6.38, Veyra 6.46 -> 6.54 (with the pilot ghost fix ef4591a18); r7 trainer fights (r6 + stagger label + flash drop + a steadier lens, the lens kept OFF): Warden 5.93 -> 6.32, grunt 6.08 -> 5.93. ralph/reports/FIGHTS/close-1024/NOTE.md Here: new_system_screens.combat.panel_scale 0.8.",
+  "catch_card": {
+    "_why": "P2-061 (UI lane, 21 Oct 2026): catch breakout/success text competed with persistent creature cards, actions and same-species bodies. With this on, the verdict is one framed card in the upper third, clear of the creature: a large headline naming the individual over its traits (success, teal edge) or why it escaped (breakout, warning edge). On success the finished fight's cards and action grid step back while the card holds. PRESENTATION ONLY. Stays OFF until a code-blind PASS. close-1024 r1 (Meadows CPU, three code-blind judges, standard prompt, anchors craft/f36_0_npc:C3/f36_0_gap:C6): mapped 6.34 vs shipping 4.65, defect PARTIAL x3 (the verdict frame kept the target card for one frame, fixed in combat_hud._show_catch_card; the caught creature shows only as the orb). Below 7.5: OFF pending GPU.",
+    "enabled": false,
+    "headline_px": 40,
+    "plate_alpha": 0.94,
+    "accent_px": 8,
+    "card_half_width": 380.0,
+    "card_top": -380.0,
+    "breakout_seconds": 1.8
+  },
+  "hud_lean": {
+    "_why": "P2-004 round 7 (UI lane, 21 Oct 2026): fewer boxes, not smaller text. Quick bar and action legend lose their backing panels (slots keep their frames, text keeps its outline), the day/time line drops its plate, and assigned quick slots show a larger item icon with key chip and count on one line, so counts are never cut. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
+    "enabled": false,
+    "item_icon_px": 52,
+    "count_px": 30,
+    "assigned_slot_height": 108,
+    "legend_plate_alpha": 0.45,
+    "_why_r2": "Round 1 yardstick judges (22 Oct): legend text vanished over pale sand without its box; counts were tiny beside the pad glyph. A soft borderless legend plate and larger, spaced counts.",
+    "objective_width": 460,
+    "objective_eyebrow_row": 46,
+    "_why_r3": "Round 2 judges: the MAIN STORY eyebrow collided with the wrapped quest line; a wider card (460) with a gold left-aligned eyebrow on its own 46 px row.",
+    "_why_off": "Yardstick round 2: mapped 6.41 vs shipping 6.71 (does not beat shipping); stays OFF."
+  },
+  "minimap_realm_terrain": {
+    "_why": "UI lane 22 Oct: the minimap always used the Meadows terrain bake, so outside the Meadows it drew Meadows ground stretched over another realm (judges: a flat green square in Tidewake). With this on, Cloudreach/Stormwood use their own map_terrain_texture() and Tidewake the map tab's painted chart. PRESENTATION ONLY. OFF until judged.",
+    "enabled": false,
+    "_why_off": "Unjudged in a scored batch; stays OFF (fixes the minimap drawing the Meadows bake outside the Meadows)."
+  },
+  "loss_card": {
+    "_why": "P2-110 (visual-claude lane, 2026-10-12): after a lost wild fight, 'Battle lost' appeared as loose text over the exploration HUD while the roster still looked ready, with no distinct loss result. With this enabled, combat_hud.gd draws the verdict as a framed card (amber warning border, opaque plate) held for `seconds`. Presentation only. Stays OFF until a code-blind PASS.",
+    "enabled": true,
+    "_why_enabled": "Coordinator 2:43 PM CT Mon 12 Oct: code-blind PASS on before-after-loss-result-r2.jpg (2faa7359; ralph/reports/EVIDENCE/F38-F41/JUDGE.md).",
+    "seconds": 3.5,
+    "text": "BATTLE LOST\nYour creature is down.\nIt needs recovery."
+  },
+  "clarity_pass": {
+    "_why": "P2-004 (visual-claude lane, 2026-10-12; coordinator code-blind re-score of the Meadows 1080 HUD). The quick-slot binding badges were about a 20px box with a 7px digit (glyph_px), and the QUICK ITEMS caption spent a row (hide_quick_items_heading). Empty slots competed with filled ones (empty_slot_alpha). The dark chip behind the HP and Food numbers covered half the fill (meter_value_chip false: the number keeps its outline and sits on the bar). Day/time floated unbacked at about 2.5:1 (daytime_plate). PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
+    "enabled": true,
+    "_why_enabled": "Coordinator 2:31 PM CT Mon 12 Oct: shipped as a net improvement (code-blind WEAK, better 4 / same 8 / worse 0; ralph/reports/EVIDENCE/F38-F41/JUDGE.md). key_text_badges stays false.",
+    "glyph_px": 52,
+    "key_text_badges": true,
+    "_why_key_text_badges": "T2 7-inch device judge (13 Oct): hotbar numbers and the M/I/B legend keys read ~1 mm and illegible; live key text on an opaque chip, empty slots not faded. Keyboard only; a gamepad keeps its button icons.",
+    "key_text_px": 30,
+    "hide_quick_items_heading": true,
+    "empty_slot_alpha": 0.45,
+    "meter_value_chip": false,
+    "daytime_plate": true,
+    "objective_beside_minimap": true,
+    "daytime_shadow": true,
+    "merge_vitals": true,
+    "daytime_plate_alpha": 0.55,
+    "slot_frame_alpha": 0.7,
+    "value_outline_px": 10,
+    "_why_t2_r5": "CARD:T2 r5 (coordinator 13 Oct): the smallest HUD text (FOOD, MAIN STORY, legend, key chips) +15%; the Food value sits beside its bar on the dark plate, not white on gold; a gap after FOOD; a one-letter keycap padded so \"I\" reads as a key.",
+    "min_text_scale": 1.15,
+    "satiety_value_beside_bar": true,
+    "food_gap_px": 10,
+    "keycap_single_pad": 1,
+    "_why_legend_size": "Key-text chips are wider than the image keycaps: the full five-action legend measures 1177 px content + 64 px chrome at the r5 sizes (smoke_exploration_legend), so the clarity row is 1250 wide; height unchanged.",
+    "legend_size": [
+      1250,
+      76
+    ]
+  },
+  "_comment": "Presentation-only tuning for scripts/ui/playground_hud.gd. Nothing here is read by authority, reward, inventory or progression code. A missing or invalid value falls back to the constant named in playground_hud.gd.",
+  "party_vitals_refresh_candidate": true,
+  "exploration_roster": {
+    "scope": "device_local_presentation",
+    "show_empty_slots": false,
+    "_comment": "The temporary exploration reveal lists owned companions; TEAM n/5 still states the capacity. The combat roster keeps its own presentation. No timer, order or party state changes."
+  },
+  "exploration_vitals": {
+    "scope": "device_local_presentation",
+    "_comment": "Healthy idle vitals remain readable over outdoor scenery. Relevant health, hunger and sprint states retain full opacity.",
+    "idle_alpha": 0.85
+  },
+  "exploration_hotbar": {
+    "scope": "device_local_presentation",
+    "panel_alpha": 0.55,
+    "slot_alpha": 0.22,
+    "_comment": "P2-004 candidate: let scenery show through the persistent Quick items fills. All five bindings, slot dimensions, icons, counts, text outlines and input remain unchanged. Objective and relevant-state backings retain their own contrast treatment. No durable state or authority changes."
+  },
+  "toasts": {
+    "_comment": "Hold durations in GAME seconds: the HUD advances its own clock by its process delta, so a slow frame (software GL at a fixed capture fps, a hitch) never eats the hold. Fallbacks: HOTBAR_MESSAGE_SECONDS 2.2, REGION_BANNER_SECONDS 3.2.",
+    "hotbar_message_seconds": 2.2,
+    "region_banner_seconds": 3.2
+  },
+  "drowning_cue": {
+    "_comment": "UX 8 / F12: shown only while the local human swimmer's swim_state.drowning is true. State word plus recovery action plus a caution shape, amber (UITokens.WARNING), never red. Font sizes are authored at the 1920x1080 canvas; x0.667 at 1280x720 gives 24 px (critical) and 20 px (body). pulse_* drive the amber frame around the health bar and are ignored under reduced motion.",
+    "title": "Drowning",
+    "action": "Reach shore",
+    "title_font_size": 36,
+    "action_font_size": 30,
+    "pulse_speed": 4.0,
+    "pulse_depth": 0.45
+  },
+  "new_system_screens": {
+    "_comment": "Production controller screens for Altar, stations, gear, research and bounties. Services own rewards and durable state; readability and device acceptance are tracked separately.",
+    "enabled": true,
+    "safe_margin": 48,
+    "row_height": 66,
+    "combat": {
+      "inset": 56,
+      "command_inset_bottom": 56,
+      "command_width": 840,
+      "move_width": 420,
+      "move_row_height": 68,
+      "move_bottom": 380,
+      "_why_panel_scale": "Fights close-1025 (ON since 25 Oct, r6/r7): scales the right-hand move cluster (bottom-right corner fixed) and the enemy card (top-right corner fixed); judges r4/r5: the right panels still cover the fight. combat_system_overlay.gd corner_scale.",
+      "panel_scale": 0.8
+    },
+    "scope": "device_local_presentation"
+  }
+}

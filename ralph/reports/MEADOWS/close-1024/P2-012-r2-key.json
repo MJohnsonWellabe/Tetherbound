@@ -1,0 +1,23 @@
+{
+ "Dj": {
+  "anchor": true,
+  "A": "f36_0_npc:C9B",
+  "B": "f36_0_npc:C9A"
+ },
+ "Ow": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Hr": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ },
+ "Mm": {
+  "anchor": false,
+  "label": "P2-012 r2 burrow hill",
+  "A": "/tmp/claude-0/cap/side_p2012_r2.png",
+  "B": "/tmp/claude-0/cap/side_p2012_ship.png"
+ }
+}

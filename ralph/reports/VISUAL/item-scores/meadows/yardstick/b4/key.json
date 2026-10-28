@@ -1,0 +1,64 @@
+{
+ "Fc": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Up": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Pr": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ },
+ "Fl": {
+  "anchor": true,
+  "A": "f36_0_gap:C2B",
+  "B": "f36_0_gap:C2A"
+ },
+ "Kx": {
+  "anchor": false,
+  "label": "IS meadows P2-078 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-078.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-078.png"
+ },
+ "Rw": {
+  "anchor": false,
+  "label": "IS meadows P2-095 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-095.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-095.png"
+ },
+ "Hx": {
+  "anchor": false,
+  "label": "IS meadows P2-069 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-069.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-069.png"
+ },
+ "Sl": {
+  "anchor": false,
+  "label": "IS meadows P2-018 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-018.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-018.png"
+ },
+ "Lg": {
+  "anchor": false,
+  "label": "IS meadows P2-002 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-002.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-002.png"
+ },
+ "Ry": {
+  "anchor": false,
+  "label": "IS meadows P2-063 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-063.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-063.png"
+ },
+ "Uv": {
+  "anchor": false,
+  "label": "IS meadows P2-079 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-079.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-079.png"
+ }
+}

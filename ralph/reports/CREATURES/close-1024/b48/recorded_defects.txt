@@ -1,0 +1,5 @@
+Pu: "Glow reads as glowing seams on fur rather than lightning"; "Lightning sits on the fur as painted lines rather than arcing off the body"
+Hg: none
+Yq: none
+Rq: "Glow reads as glowing seams on fur rather than lightning"; "Lightning sits on the fur as painted lines rather than arcing off the body"
+Ep: none

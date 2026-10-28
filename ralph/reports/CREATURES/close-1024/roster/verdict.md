@@ -1,4 +1,4 @@
-# F36#1 whole-roster pose verdict (25 Oct 2026, CPU, land head 2a5300916 shipping state)
+# F36#1 whole-roster pose verdict (24 Oct 2026, CPU, land head 2a5300916 shipping state)
 
 The roster has 70 subjects: every species and aspect variant, plus each water_* form that has its own recipe or swim role. They were judged in seven batches (r1-r7). Each batch used JUDGE_PROMPT.md verbatim, three fresh code-blind judges, at least 3 anchor pairs and calibrate.py mapping, and every batch was confirming. Each subject was shown as a shipping-state tile (A = B):
 - First row: standing, hit and faint.
@@ -28,7 +28,7 @@ Pass rule: no judge marks an applicable pose PRESENT, and the mapped mean is at 
 **Fail on score only (materials/style, F36#0 remakes), 15 subjects:** Galewisp, Stormtrail, Duskhush, Reedwing, Ashtusk, Riptusk, Sparkit, Mirejaw, Voltwig, Abyssal Guardian, Mosshock, Stormbrush, Voltarach, Ribbonray, Tempestwing (stilt leg).
 
 **Next:**
-- b13: Mangrove Monitor -90 topple, Tuskroot topple (`--candidate-r13`).
+- Done in b13: Tuskroot topples (ON, 7.46); the Mangrove Monitor -90 roll lost (5.84 vs 7.03) and stays OFF behind `--candidate-r13`.
 - b14: enable the water_* recipes and author swim clips.
 - Recoil hits on the remaining rear-up recipes.
 - Meshy batch 4 for the material fails.
