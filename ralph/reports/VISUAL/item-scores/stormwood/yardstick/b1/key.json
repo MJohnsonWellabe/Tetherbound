@@ -1,0 +1,64 @@
+{
+ "Vd": {
+  "anchor": false,
+  "label": "IS stormwood P2-037 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-037.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-037.png"
+ },
+ "Ug": {
+  "anchor": false,
+  "label": "IS stormwood P2-084 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-084.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-084.png"
+ },
+ "Qc": {
+  "anchor": false,
+  "label": "IS stormwood P2-110 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-110.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-110.png"
+ },
+ "Hw": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_shipping",
+  "B": "f36_1_gpu:stormcapra_candidate"
+ },
+ "Pv": {
+  "anchor": false,
+  "label": "IS stormwood P2-039 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-039.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-039.png"
+ },
+ "Xs": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Tj": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Oh": {
+  "anchor": false,
+  "label": "IS stormwood P2-046 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-046.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-046.png"
+ },
+ "Bi": {
+  "anchor": true,
+  "A": "f04_6_r22:control",
+  "B": "f04_6_r22:r22"
+ },
+ "Uv": {
+  "anchor": false,
+  "label": "IS stormwood P2-042 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-042.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-042.png"
+ },
+ "He": {
+  "anchor": false,
+  "label": "IS stormwood P2-093 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-093.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-093.png"
+ }
+}

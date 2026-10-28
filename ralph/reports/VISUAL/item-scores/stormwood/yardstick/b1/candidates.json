@@ -1,0 +1,65 @@
+[
+    {
+        "label":  "IS stormwood P2-039 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-039.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-039.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: forest ground and distance layers. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers"
+                    ]
+    },
+    {
+        "label":  "IS stormwood P2-110 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-110.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-110.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: Hollows fight loss result clarity. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown"
+                    ]
+    },
+    {
+        "label":  "IS stormwood P2-042 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-042.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-042.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: Surge phase presentation. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain"
+                    ]
+    },
+    {
+        "label":  "IS stormwood P2-093 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-093.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-093.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: named wild danger and opening cues. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals"
+                    ]
+    },
+    {
+        "label":  "IS stormwood P2-046 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-046.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-046.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: harvest resource identity. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material"
+                    ]
+    },
+    {
+        "label":  "IS stormwood P2-084 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-084.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-084.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: named character dialogue reuse. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Distinct named Stormwood characters use identical dialogue lines"
+                    ]
+    },
+    {
+        "label":  "IS stormwood P2-037 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-037.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-037.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the stormwood biome: Stormheart finale. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core"
+                    ]
+    }
+]

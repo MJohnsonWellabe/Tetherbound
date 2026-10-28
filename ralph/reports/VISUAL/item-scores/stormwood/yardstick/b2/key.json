@@ -1,0 +1,64 @@
+{
+ "Uh": {
+  "anchor": false,
+  "label": "IS stormwood P2-055 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-055.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-055.png"
+ },
+ "Dx": {
+  "anchor": false,
+  "label": "IS stormwood P2-044 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-044.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-044.png"
+ },
+ "Zq": {
+  "anchor": false,
+  "label": "IS stormwood P2-070 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-070.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-070.png"
+ },
+ "Tl": {
+  "anchor": false,
+  "label": "IS stormwood P2-056 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-056.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-056.png"
+ },
+ "Yk": {
+  "anchor": false,
+  "label": "IS stormwood P2-038 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-038.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-038.png"
+ },
+ "Gs": {
+  "anchor": false,
+  "label": "IS stormwood P2-083 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-083.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-083.png"
+ },
+ "Wx": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ },
+ "Yg": {
+  "anchor": true,
+  "A": "f36_0_gap:C7B",
+  "B": "f36_0_gap:C7A"
+ },
+ "Xc": {
+  "anchor": false,
+  "label": "IS stormwood P2-111 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-111.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-stormwood\\sides\\P2-111.png"
+ },
+ "Hk": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Iv": {
+  "anchor": true,
+  "A": "p2_094_r4:Y_after",
+  "B": "p2_094_r4:X_before"
+ }
+}
