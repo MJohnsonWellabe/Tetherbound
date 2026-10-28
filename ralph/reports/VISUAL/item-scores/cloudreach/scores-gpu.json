@@ -1,0 +1,503 @@
+{
+ "main_sha": "b7a6e8bbe1dbfa54c83e580626e8d7184d24bb10",
+ "renderer": "GPU NVIDIA GeForce GTX 1060 3GB, OpenGL 3.3 Compatibility (repro commands as stated, --fullscreen)",
+ "fit": {
+  "r": 0.854,
+  "rmse": 0.58,
+  "batches": [
+   {
+    "batch": 1,
+    "r": 0.8386,
+    "rmse": 0.633,
+    "confirming": true
+   },
+   {
+    "batch": 2,
+    "r": 0.8687,
+    "rmse": 0.527,
+    "confirming": true
+   }
+  ]
+ },
+ "items": {
+  "P2-021": {
+   "board_row": "F40#1",
+   "mapped": 5.29,
+   "mapped_judges": [
+    5.63,
+    5.16,
+    5.07
+   ],
+   "raw": [
+    5.0,
+    4.5,
+    4.4
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close",
+    "cloudreach__landmark__realm_gate_crag__day__approach",
+    "cloudreach__landmark__sky_shrine_heartstone__day__approach"
+   ],
+   "note": "Bright sky helps, but a flat uniform lawn with isolated block mesas lacks the stratified stone and density of the Palworld plateau shot.",
+   "batch": 1,
+   "code": "Lw"
+  },
+  "P2-022": {
+   "board_row": "F40#2",
+   "mapped": 5.81,
+   "mapped_judges": [
+    5.81,
+    5.63,
+    5.99
+   ],
+   "raw": [
+    5.2,
+    5.0,
+    5.4
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach",
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__day__close",
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach"
+   ],
+   "note": "The dome now reads as solid, but a small rotunda on a meadow with no cliffs, towers or night glow falls well short of the Sky Aviary board.",
+   "batch": 1,
+   "code": "Vt"
+  },
+  "P2-023": {
+   "board_row": "F40#4",
+   "mapped": 5.41,
+   "mapped_judges": [
+    5.63,
+    5.26,
+    5.35
+   ],
+   "raw": [
+    5.0,
+    4.6,
+    4.7
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PARTIAL"
+   ],
+   "frames": [
+    "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach",
+    "cloudreach__landmark__sky_shrine_heartstone__day__approach",
+    "cloudreach__landmark__three_bells_bridge__day__approach"
+   ],
+   "note": "Flat-topped mesas with straight extruded walls and a camera jammed against rock read as blockout, not crafted landform.",
+   "batch": 1,
+   "code": "Nk"
+  },
+  "P2-024": {
+   "board_row": "F40#3",
+   "mapped": 6.14,
+   "mapped_judges": [
+    6.02,
+    6.3,
+    6.11
+   ],
+   "raw": [
+    5.3,
+    5.6,
+    5.4
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PARTIAL",
+    "PRESENT"
+   ],
+   "frames": [
+    "cloudreach__windscar_ravine__05__windscar_beacon__day__approach"
+   ],
+   "note": "The Windscar beacon is a lone plain wooden arch with two banners in front of a slim white tower, standing on an empty grass carpet, nowhere near the dense stone, glass and waterfall landmark language of the Sky Aviary board.",
+   "batch": 2,
+   "code": "Xx"
+  },
+  "P2-025": {
+   "board_row": "F40#7",
+   "mapped": 5.87,
+   "mapped_judges": [
+    6.36,
+    5.44,
+    5.81
+   ],
+   "raw": [
+    5.8,
+    4.8,
+    5.2
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "cloudreach__landmark__sky_shrine_heartstone__day__close",
+    "cloudreach__high_roost_sky_shrine__08__the_high_perches__day__approach"
+   ],
+   "note": "Decent cobble and pillar textures with good sun shadows, but grass through the paving and a flat repeated lawn read unfinished.",
+   "batch": 1,
+   "code": "Yk"
+  },
+  "P2-048": {
+   "board_row": "F40#14",
+   "mapped": 5.87,
+   "mapped_judges": [
+    6.11,
+    5.29,
+    6.2
+   ],
+   "raw": [
+    5.4,
+    4.5,
+    5.5
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "cloudreach__menu_map"
+   ],
+   "note": "No truncated label is visible, but no region label appears at all: the map is an almost entirely fogged blue cloud field with one revealed square, so the subject cannot be confirmed as correct, and the panel reads as functional rather than finished.",
+   "batch": 2,
+   "code": "Of"
+  },
+  "P2-049": {
+   "board_row": "F40#15",
+   "mapped": 6.36,
+   "mapped_judges": [
+    6.66,
+    6.2,
+    6.2
+   ],
+   "raw": [
+    6.0,
+    5.5,
+    5.5
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day",
+    "cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk"
+   ],
+   "note": "The strips are gone and the cloud-sea edge and aerie path are clean, but the large flat-shaded dark rock wall in the summit frame and the flat dusk grade with no aerial perspective keep it short of the boards' finish.",
+   "batch": 2,
+   "code": "Vv"
+  },
+  "P2-053": {
+   "board_row": "F40#8",
+   "mapped": 5.72,
+   "mapped_judges": [
+    6.09,
+    5.44,
+    5.63
+   ],
+   "raw": [
+    5.5,
+    4.8,
+    5.0
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PRESENT",
+    "PARTIAL"
+   ],
+   "frames": [
+    "cloudreach__broken_causeways__03__three_bells_bridge__day__close",
+    "cloudreach__broken_causeways__03__three_bells_bridge__golden__close",
+    "cloudreach__broken_causeways__03__three_bells_bridge__night__close"
+   ],
+   "note": "Day/golden/night grading reads well, but the saturated cyan post still pulls the eye from the bridge and looks like a debug marker.",
+   "batch": 1,
+   "code": "Fy"
+  },
+  "P2-054": {
+   "board_row": "F40#16",
+   "mapped": 6.48,
+   "mapped_judges": [
+    6.66,
+    6.48,
+    6.3
+   ],
+   "raw": [
+    6.0,
+    5.8,
+    5.6
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "cloudreach__inventory__pickup__speed_mushroom",
+    "cloudreach__inventory__pickup__wild_mushroom"
+   ],
+   "note": "The two pickups now separate (pale yellow cap on a blue-glow base versus a broad orange cap), but both are small, weakly grounded props on flat grass beside blocky untextured-looking rock slabs.",
+   "batch": 2,
+   "code": "Xb"
+  },
+  "P2-068": {
+   "board_row": "F40#9",
+   "mapped": 5.5,
+   "mapped_judges": [
+    5.75,
+    5.2,
+    5.57
+   ],
+   "raw": [
+    5.0,
+    4.45,
+    4.8
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "cloudreach__inventory__character__young_trainer_tavi",
+    "cloudreach__inventory__character__naturalist_sora",
+    "cloudreach__inventory__character__keeper_maela"
+   ],
+   "note": "The named NPCs are tiny mid-ground figures beside the trainer, half lost in tall grass (Tavi frame), shadow (Sora frame) and the tree trunks (keeper frame), with no post props or poses to say who they are.",
+   "batch": 2,
+   "code": "Lh"
+  },
+  "P2-076": {
+   "board_row": "F40#12",
+   "mapped": 5.01,
+   "mapped_judges": [
+    4.7,
+    5.07,
+    5.26
+   ],
+   "raw": [
+    4.0,
+    4.4,
+    4.6
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "cloudreach__inventory__character__trader_kelm__dialogue",
+    "cloudreach__inventory__character__captain_veyra__dialogue",
+    "cloudreach__inventory__character__captain_veyra__defeated__dialogue"
+   ],
+   "note": "Only the player stands in view while the speaker is missing, staged against a blank wall with pasted-on doors and flat lawn.",
+   "batch": 1,
+   "code": "Vy"
+  },
+  "P2-077": {
+   "board_row": "F40#10",
+   "mapped": 5.6,
+   "mapped_judges": [
+    5.75,
+    5.29,
+    5.75
+   ],
+   "raw": [
+    5.0,
+    4.5,
+    5.0
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "cloudreach__inventory__character__young_trainer_tavi__dialogue",
+    "cloudreach__inventory__character__naturalist_sora__dialogue",
+    "cloudreach__inventory__character__defector_rusk__dialogue"
+   ],
+   "note": "The player fills the centre foreground in all three frames: Tavi only peeks over the player's shoulder, Sora is not readable in the Sora frame, and Rusk is hidden behind the player and the wooden post, so the speaker staging sinks it.",
+   "batch": 2,
+   "code": "Xi"
+  },
+  "P2-102": {
+   "board_row": "F40#17",
+   "mapped": 5.9,
+   "mapped_judges": [
+    6.39,
+    5.57,
+    5.75
+   ],
+   "raw": [
+    5.7,
+    4.8,
+    5.0
+   ],
+   "defect_call": [
+    "FIXED",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "cloudreach__flying__high-perches-crown-rim-out-day",
+    "cloudreach__flying__high-perches-crown-rim-out-night"
+   ],
+   "note": "No mushroom hangs beyond the rim now, but the night frame crushes the tower and rim to near black, and the griffin's wing presses into the tower wall, so the frames lack the boards' bright stratified-stone sky look.",
+   "batch": 2,
+   "code": "Eb"
+  },
+  "P2-105": {
+   "board_row": "F40#6",
+   "mapped": 4.92,
+   "mapped_judges": [
+    5.16,
+    4.7,
+    4.89
+   ],
+   "raw": [
+    4.5,
+    4.0,
+    4.2
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "cloudreach__riding__phase2_17_terrace_01.0s",
+    "cloudreach__riding__phase2_18_terrace_02.0s",
+    "cloudreach__riding__phase2_19_terrace_03.0s"
+   ],
+   "note": "The rider walking upright on the cloud floor beside flat cloud puffs and a black geometry sliver breaks the world's believability.",
+   "batch": 1,
+   "code": "Gh"
+  },
+  "P2-106": {
+   "board_row": "F40#11",
+   "mapped": 5.16,
+   "mapped_judges": [
+    5.44,
+    4.89,
+    5.16
+   ],
+   "raw": [
+    4.8,
+    4.2,
+    4.5
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "cloudreach__riding__phase2_16_terrace_mounted_at_edge",
+    "cloudreach__riding__phase2_17_terrace_01.0s",
+    "cloudreach__riding__phase2_18_terrace_02.0s"
+   ],
+   "note": "Hard-edged white polygon puffs and a black sliver over the cliff read as placeholder rather than Valheim-class cloud atmosphere.",
+   "batch": 1,
+   "code": "Lx"
+  },
+  "P2-112": {
+   "board_row": "F40#5",
+   "mapped": 6.39,
+   "mapped_judges": [
+    6.55,
+    6.09,
+    6.55
+   ],
+   "raw": [
+    6.0,
+    5.5,
+    6.0
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "cloudreach__fight__veyra_live__live-2430",
+    "cloudreach__fight__veyra_live__live-3510",
+    "cloudreach__fight__veyra_live__live-3870"
+   ],
+   "note": "Appealing feathered creatures and a sunny arena carry it partway, but edge-cropped creatures, a bare dirt ring and heavy HUD panels keep it short of Palworld's boss-fight finish.",
+   "batch": 1,
+   "code": "Ui"
+  },
+  "P2-117": {
+   "board_row": "F40#13",
+   "mapped": 6.69,
+   "mapped_judges": [
+    6.94,
+    6.66,
+    6.48
+   ],
+   "raw": [
+    6.3,
+    6.0,
+    5.8
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "cloudreach__catching__07-aiming-weakened"
+   ],
+   "note": "The aim reticle and blue-grey/teal panels are clean and on-direction with no stale message, but the murky dark-green cave backdrop, brown dust smear on the ground and tiny target creature make it read flatter than Palworld's capture moments.",
+   "batch": 2,
+   "code": "Da"
+  }
+ },
+ "capture_failures": [
+  {
+   "frame": "cloudreach__landmark__broken_skyroad_arch__day__approach",
+   "item": "P2-024",
+   "error": "phase2_capture_locations.gd reported CATALOGUE SURVEY FAILED 0/1 on both tries: the broken_skyroad_arch day approach found 'no supported production-camera stand among 15 candidates' on main"
+  },
+  {
+   "frame": "cloudreach__upper_cloudreach__10__old_wind_observatory__day__approach",
+   "item": "P2-024",
+   "error": "phase2_capture_locations.gd reported CATALOGUE SURVEY FAILED 0/1 on both tries: the old_wind_observatory day approach found 'no supported production-camera stand among 15 candidates' on main"
+  },
+  {
+   "frame": "cloudreach__landmark__broken_skyroad_arch__day__approach",
+   "item": "P2-025",
+   "error": "phase2_capture_locations.gd reported CATALOGUE SURVEY FAILED 0/1 on both tries: the broken_skyroad_arch day approach found 'no supported production-camera stand among 15 candidates' on main"
+  },
+  {
+   "frame": "cloudreach__catching__06-breakout",
+   "item": "P2-117",
+   "error": "phase2_capture_catch.gd reported FAIL 'could not enter combat; nothing captured' on both tries (seed 2042): at the arrival gate road the wild creature road_visibility_arrival_gate_road_01_0 is 1.12 m from a 'Take Good Candy' pickup, and the pickup wins the interact offer, so the engage never fires"
+  },
+  {
+   "frame": "cloudreach__catching__09-caught-banner",
+   "item": "P2-118",
+   "error": "same as c026 (the same phase2_capture_catch.gd command, seed 2042): FAIL 'could not enter combat; nothing captured' on both tries; the 'Take Good Candy' pickup beside road_visibility_arrival_gate_road_01_0 wins the interact offer"
+  }
+ ],
+ "unscored_items": [
+  "P2-118"
+ ]
+}

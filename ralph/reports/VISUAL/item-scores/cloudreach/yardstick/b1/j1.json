@@ -1,0 +1,211 @@
+{
+ "findings": "DEFECTS FIRST. Iv (Stormcapra): A hit react is indistinguishable from standing (no read); A faint mid/end read as a fall and stay grounded. B hit react rears clearly, but B faint mid and faint end deform the horns into long black arcs/bars that detach from the head silhouette (skinning stretch), breaking the faint read. Standing model on both sides matches the owner style bar (white fleece, dark plates, blue crystal) and stands taller than the 1.80 m ruler. Vy: both sides identical; in all three frames (Kelm, Captain Veyra x2) the only figure in the world view is the player trainer (blue/white top), not the hooded Kelm or bearded dark-coated Veyra shown in the portrait - speaker absent, PRESENT on A and B. Veyra frames also stage against a blank stone wall with flat wooden doors pasted on it and flat lawn. Cz (Voltarach, Stormwood): A - spider readable in most frames, but telegraphs are flat magenta rings/chevrons (i06-i10, i15-i17, tell2 a-c), an art-direction defect; the player's smaller creature is barely legible against dark brown ground; HUD side panels take a large share of every frame. B - same magenta telegraphs plus camera inside canopy/foliage at i12-i16 (i13 and i15 fully green, fighters lost). Lx: both sides identical; frame 1-2 flat white polygonal puffs sit over the rider and terrace edge as loose foreground shapes; frame 3 a black triangular sliver cuts across the cliff face - PRESENT A and B. Lw: identical; broad level lawn with uniform grass and isolated flat-topped mesa blocks dominate all three frames, frame 2 shows a hard dark disc edge under the lawn, frame 3 camera crowded against a rock - PRESENT A and B. Ui: identical; Aeriex and the ally (Mudsnout/Bramblebun) are both in frame and facing each other in all three frames, but a large cream winged creature is cropped at the right edge (frames 1-2) and left edge (frame 3), and the HUD panels cover the lower-left arena - PARTIAL A and B. Yk: identical; grass tufts push through the shrine cobbles (frame 1) and the high-perches court is flat repeated lawn around a plain stone cylinder (frame 2); cobble and pillar materials themselves are decent - PRESENT A and B. Vt: identical; the summit eyrie reads as a solid blue-domed rotunda (no longer skeletal) but it is small, sitting on open grass at the end of a dirt path rather than a layered stone sanctuary on cliffs; night frame keeps the dome readable but unlit, no warm window glow as on the board's night view - PARTIAL A and B. Nk: identical; flat-topped mesas with straight vertical extruded walls in frames 1 and 3, frame 2 camera jammed against a rock face with the trainer half hidden; undersides not clearly shown - PRESENT A and B. Eu: identical elder villager, white hair and beard, green scarf/vest, warm clean shading, appealing face and eyes, fits the natural palette; slightly more cartoon than the naturalistic creature bar. Fy: identical; the tall saturated cyan T-post at the three-bells bridge still competes with the bridge in day, golden and night frames; rings/rails and the yellow pointer are not visible in these frames - PARTIAL A and B. Gh: identical; mounted deer and upright seated trainer descend below the cliff (frame 2) and stand on the cloud floor unsupported (frame 3), black sliver artefact across the cliff in frame 2 - PRESENT A and B. Hl (Fulgocobra): A uses a flat black/yellow banded look; hit react = standing; faint mid and faint end lift the whole snake into the air with a detached shadow and the body bleaches to pale yellow - floating, ungrounded, off-model. B has the dark body with gold marbling closer to the Stormwood board, stays coiled and grounded through hit/faint, head ends on the floor; hit react is subtle. PATH TO 7.5: Iv - author a distinct hit-react (A) and fix horn skinning on faint (B), +1.0. Vy - spawn/position the named speaker in camera view and replace the blank wall/doors backdrop with dressed Cloudreach architecture, +3.5. Cz - replace magenta rings with grounded stone/lightning telegraphs, add canopy fade/camera collision against foliage, raise the player's creature value/rim light, +2.5. Lx/Gh - replace flat polygon puffs with soft volumetric/billboard cloud banks, add a ground/cloud-floor collision or dismount for the mount, remove the black sliver, +2.5-3. Lw/Nk - break the level lawn into stratified pale stone terraces and ledges, bevel/erode mesa edges, add groves and edge vegetation, +2.5. Ui - frame the camera on the opponent-ally axis and keep reserve creatures out of edge crop, shrink HUD, +1.5. Yk - mask grass out of paving, add moss/lichen and stone variation, +1.7. Vt - build the aviary up into a stone sanctuary on a cliff stack with towers and bridges and add night window/lantern glow, +2.3. Fy - desaturate the post toward the stone/gold prop family, +2.0. Hl - adopt B's material and keep faint grounded, add a readable hit recoil, +0.7 for B, +2.9 for A. Eu - small: slightly more naturalistic skin/cloth texture, +0.1.",
+ "sets": {
+  "Iv": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The standing Stormcapra matches the owner's in-game quality bar with real fleece and plate detail, though B's stretched faint horns and A's static hit react pull it down."
+  },
+  "Vy": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Only the player stands in view while the speaker is missing, staged against a blank wall with pasted-on doors and flat lawn."
+  },
+  "Cz": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Flat magenta telegraph rings, a murky low-value forest floor and a barely visible player creature sink it, and B also loses the fight inside canopy for several frames."
+  },
+  "Lx": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Hard-edged white polygon puffs and a black sliver over the cliff read as placeholder rather than Valheim-class cloud atmosphere."
+  },
+  "Lw": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Bright sky helps, but a flat uniform lawn with isolated block mesas lacks the stratified stone and density of the Palworld plateau shot."
+  },
+  "Ui": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Appealing feathered creatures and a sunny arena carry it partway, but edge-cropped creatures, a bare dirt ring and heavy HUD panels keep it short of Palworld's boss-fight finish."
+  },
+  "Yk": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Decent cobble and pillar textures with good sun shadows, but grass through the paving and a flat repeated lawn read unfinished."
+  },
+  "Vt": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The dome now reads as solid, but a small rotunda on a meadow with no cliffs, towers or night glow falls well short of the Sky Aviary board."
+  },
+  "Nk": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Flat-topped mesas with straight extruded walls and a camera jammed against rock read as blockout, not crafted landform."
+  },
+  "Eu": {
+   "A": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder with readable face and eyes and a natural green/brown palette that sits comfortably beside Palworld's characters."
+  },
+  "Fy": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Day/golden/night grading reads well, but the saturated cyan post still pulls the eye from the bridge and looks like a debug marker."
+  },
+  "Gh": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The rider walking upright on the cloud floor beside flat cloud puffs and a black geometry sliver breaks the world's believability."
+  },
+  "Hl": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's gold-marbled, grounded serpent comes close to the board, but A's floating, bleached faint poses and both sides' near-static hit react keep it from Palworld creature finish."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild Cloudreach terrain and edges as stratified pale stone terraces with bevelled, eroded ledges and layered cliffs, breaking the flat lawn into groves and edge vegetation, and replace flat polygon cloud puffs with soft volumetric cloud banks (Lw, Nk, Lx, Gh, Yk, Vt).",
+   "kind": "scene"
+  },
+  {
+   "change": "Fix camera and staging rules: place the named dialogue speaker in view, keep fight cameras on the opponent-ally axis with foliage fade/collision, and stop the mount travelling unsupported over the cloud floor (Vy, Ui, Cz, Gh).",
+   "kind": "scene"
+  },
+  {
+   "change": "Build the summit aviary into a layered stone sanctuary on a cliff stack with towers, bridges and warm night glow, as on the Sky Aviary board (Vt).",
+   "kind": "new_art"
+  }
+ ]
+}

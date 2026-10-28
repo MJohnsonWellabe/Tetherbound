@@ -1,0 +1,76 @@
+{
+ "Iv": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_shipping",
+  "B": "f36_1_gpu:stormcapra_candidate"
+ },
+ "Vy": {
+  "anchor": false,
+  "label": "IS cloudreach P2-076 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-076.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-076.png"
+ },
+ "Cz": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:candidate_r3",
+  "B": "f10_2_r3_capacitor:control"
+ },
+ "Lx": {
+  "anchor": false,
+  "label": "IS cloudreach P2-106 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-106.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-106.png"
+ },
+ "Lw": {
+  "anchor": false,
+  "label": "IS cloudreach P2-021 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-021.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-021.png"
+ },
+ "Ui": {
+  "anchor": false,
+  "label": "IS cloudreach P2-112 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-112.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-112.png"
+ },
+ "Yk": {
+  "anchor": false,
+  "label": "IS cloudreach P2-025 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-025.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-025.png"
+ },
+ "Vt": {
+  "anchor": false,
+  "label": "IS cloudreach P2-022 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-022.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-022.png"
+ },
+ "Nk": {
+  "anchor": false,
+  "label": "IS cloudreach P2-023 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-023.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-023.png"
+ },
+ "Eu": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ },
+ "Fy": {
+  "anchor": false,
+  "label": "IS cloudreach P2-053 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-053.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-053.png"
+ },
+ "Gh": {
+  "anchor": false,
+  "label": "IS cloudreach P2-105 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-105.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-105.png"
+ },
+ "Hl": {
+  "anchor": true,
+  "A": "f36_0_gap:C5A",
+  "B": "f36_0_gap:C5B"
+ }
+}

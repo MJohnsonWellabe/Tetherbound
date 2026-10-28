@@ -1,0 +1,179 @@
+[
+    {
+        "item":  "P2-021",
+        "board_row":  "F40#1",
+        "subject":  "open terrain",
+        "defect":  "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route",
+        "frames":  [
+                       "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__close",
+                       "cloudreach__landmark__realm_gate_crag__day__approach",
+                       "cloudreach__landmark__sky_shrine_heartstone__day__approach"
+                   ]
+    },
+    {
+        "item":  "P2-022",
+        "board_row":  "F40#2",
+        "subject":  "summit aviary",
+        "defect":  "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark",
+        "frames":  [
+                       "cloudreach__summit_final_stronghold__11__summit_eyrie__day__approach",
+                       "cloudreach__summit_final_stronghold__11__summit_eyrie__day__close",
+                       "cloudreach__summit_final_stronghold__11__summit_eyrie__night__approach"
+                   ]
+    },
+    {
+        "item":  "P2-024",
+        "board_row":  "F40#3",
+        "subject":  "architectural landmark read",
+        "defect":  "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail",
+        "frames":  [
+                       "cloudreach__windscar_ravine__05__windscar_beacon__day__approach"
+                   ]
+    },
+    {
+        "item":  "P2-023",
+        "board_row":  "F40#4",
+        "subject":  "exposed landform edges",
+        "defect":  "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges",
+        "frames":  [
+                       "cloudreach__high_roost_sky_shrine__07__sky_shrine__day__approach",
+                       "cloudreach__landmark__sky_shrine_heartstone__day__approach",
+                       "cloudreach__landmark__three_bells_bridge__day__approach"
+                   ]
+    },
+    {
+        "item":  "P2-112",
+        "board_row":  "F40#5",
+        "subject":  "captain fight camera orientation",
+        "defect":  "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read",
+        "frames":  [
+                       "cloudreach__fight__veyra_live__live-2430",
+                       "cloudreach__fight__veyra_live__live-3510",
+                       "cloudreach__fight__veyra_live__live-3870"
+                   ]
+    },
+    {
+        "item":  "P2-105",
+        "board_row":  "F40#6",
+        "subject":  "mounted terrace edge and cloud crossing",
+        "defect":  "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor",
+        "frames":  [
+                       "cloudreach__riding__phase2_17_terrace_01.0s",
+                       "cloudreach__riding__phase2_18_terrace_02.0s",
+                       "cloudreach__riding__phase2_19_terrace_03.0s"
+                   ]
+    },
+    {
+        "item":  "P2-025",
+        "board_row":  "F40#7",
+        "subject":  "grass and stone finish",
+        "defect":  "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites",
+        "frames":  [
+                       "cloudreach__landmark__sky_shrine_heartstone__day__close",
+                       "cloudreach__high_roost_sky_shrine__08__the_high_perches__day__approach"
+                   ]
+    },
+    {
+        "item":  "P2-053",
+        "board_row":  "F40#8",
+        "subject":  "bright Cloudreach route markers",
+        "defect":  "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer",
+        "frames":  [
+                       "cloudreach__broken_causeways__03__three_bells_bridge__day__close",
+                       "cloudreach__broken_causeways__03__three_bells_bridge__golden__close",
+                       "cloudreach__broken_causeways__03__three_bells_bridge__night__close"
+                   ]
+    },
+    {
+        "item":  "P2-068",
+        "board_row":  "F40#9",
+        "subject":  "named NPC post readability",
+        "defect":  "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role",
+        "frames":  [
+                       "cloudreach__inventory__character__young_trainer_tavi",
+                       "cloudreach__inventory__character__naturalist_sora",
+                       "cloudreach__inventory__character__keeper_maela"
+                   ]
+    },
+    {
+        "item":  "P2-077",
+        "board_row":  "F40#10",
+        "subject":  "dialogue foreground composition",
+        "defect":  "The foreground player or nearby posts hide much of the named speaker in several conversation frames",
+        "frames":  [
+                       "cloudreach__inventory__character__young_trainer_tavi__dialogue",
+                       "cloudreach__inventory__character__naturalist_sora__dialogue",
+                       "cloudreach__inventory__character__defector_rusk__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-106",
+        "board_row":  "F40#11",
+        "subject":  "terrace edge clouds",
+        "defect":  "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor",
+        "frames":  [
+                       "cloudreach__riding__phase2_16_terrace_mounted_at_edge",
+                       "cloudreach__riding__phase2_17_terrace_01.0s",
+                       "cloudreach__riding__phase2_18_terrace_02.0s"
+                   ]
+    },
+    {
+        "item":  "P2-076",
+        "board_row":  "F40#12",
+        "subject":  "dialogue speaker visibility",
+        "defect":  "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen",
+        "frames":  [
+                       "cloudreach__inventory__character__trader_kelm__dialogue",
+                       "cloudreach__inventory__character__captain_veyra__dialogue",
+                       "cloudreach__inventory__character__captain_veyra__defeated__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-117",
+        "board_row":  "F40#13",
+        "subject":  "catch chance feedback timing",
+        "defect":  "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar",
+        "frames":  [
+                       "cloudreach__catching__07-aiming-weakened"
+                   ]
+    },
+    {
+        "item":  "P2-048",
+        "board_row":  "F40#14",
+        "subject":  "Cloudreach map region label",
+        "defect":  "The discovered Cloudreach Gate / Lower Cliffs label is cut after LOWER without a wrap or ellipsis",
+        "frames":  [
+                       "cloudreach__menu_map"
+                   ]
+    },
+    {
+        "item":  "P2-049",
+        "board_row":  "F40#15",
+        "subject":  "floating dark strips",
+        "defect":  "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void",
+        "frames":  [
+                       "cloudreach__summit_final_stronghold__12__stormward_overlook__walk_03_day",
+                       "cloudreach__windscar_ravine__06__windscar_flight_aerie__vista_dusk"
+                   ]
+    },
+    {
+        "item":  "P2-054",
+        "board_row":  "F40#16",
+        "subject":  "mushroom pickup variants",
+        "defect":  "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance",
+        "frames":  [
+                       "cloudreach__inventory__pickup__speed_mushroom",
+                       "cloudreach__inventory__pickup__wild_mushroom"
+                   ]
+    },
+    {
+        "item":  "P2-102",
+        "board_row":  "F40#17",
+        "subject":  "High Perches rim mushroom",
+        "defect":  "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem",
+        "frames":  [
+                       "cloudreach__flying__high-perches-crown-rim-out-day",
+                       "cloudreach__flying__high-perches-crown-rim-out-night"
+                   ]
+    }
+]
