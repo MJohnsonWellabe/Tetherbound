@@ -157,9 +157,25 @@ Earlier on 26-27 Oct, all pushed (see each row's VERDICT.md):
 3. Re-confirm F25#4 on main after tb/vfx-launch lands (`F25-4/f25_fix_queue.ps1.txt`, about 12 minutes).
 4. F08#3: judges ask for foreground dressing, a night lighting pass and varied islets (scene work for the Cloudreach lane).
 
-## GPU LANE: RESUMED FOR ITEM SCORES (27 Oct, ~18:50 CDT; owner said yes in the GPU session)
+## GPU LANE: ITEM SCORES DONE (28 Oct, ~01:40 CDT). The lane is idle; no GPU process is running.
 
-- **Running:** the per-item biome card job (tb/item-scores job.json) on main b7a6e8bbe, in the order Meadows, Stormwood, Tidewake, Cloudreach.
+All four biomes are scored on main b7a6e8bbe and pushed here as `ralph/reports/VISUAL/item-scores/<biome>/{scores-gpu.json, VERDICT-gpu.md, _sheet_<biome>-gpu.jpg, yardstick/}`. None of the 103 scored items reaches 7.5 except Meadows P2-095 at 7.53.
+
+| Biome | Commit | Scored | Fit r | Top | Unscored / capture failures on main |
+|---|---|---|---|---|---|
+| Meadows | 768447c1d | 38 / 38 | 0.84 (b5 0.51, flagged) | P2-095 7.53 | none |
+| Stormwood | 228496164 | 21 / 21 | 0.90 | P2-082 6.98 | 1 frame: hollows_alpha-i13 (the fight ends at i11) |
+| Tidewake | faf61b655 | 27 / 29 | 0.96 | P2-032 6.36 | P2-101, P2-103 unscored: the late and win fight frames never happen (pilot `neutral_worst_frac` error, fixed on tb/item-scores) |
+| Cloudreach | 06aef9c04 | 17 / 18 | 0.85 | P2-117 6.69 | P2-118 unscored. c007/c008 "no supported production-camera stand"; c026/c034 catch never engages (a candy pickup wins the interact offer) |
+
+- **Failure details:** in each biome's `VERDICT-gpu.md` and `yardstick/capture_errors.json`.
+- **Frame-name matching:** the tools' file names differ from the catalogue frame ids (prefixes are dropped; fight times use `.` where the ids use `_`; fight timings jitter). Five fight frames, all disclosed per verdict, matched the same event at the nearest time:
+  - two Tidewake tell-starts;
+  - three Cloudreach Veyra live frames.
+
+### How the run went (27 Oct, ~18:50 CDT; owner said yes in the GPU session)
+
+- **Ran:** the per-item biome card job (tb/item-scores job.json) on main b7a6e8bbe, in the order Meadows, Stormwood, Tidewake, Cloudreach.
 - **Capture:** 207 unique repro commands for 250 frames, each run once as stated (opengl3), with two changes:
   - Add `--fullscreen`. The phase-2 tools require an exact 1920x1080 viewport, and the Windows title bar shrinks a windowed one; the tool's own error asks for it.
   - Point `--output`/`--out` at `phase2/<biome>/itemscores-gpu/<cmd>`. The tools reject any output outside `VISUAL/phase2/<biome>/`. Frames are moved out and kept local.
