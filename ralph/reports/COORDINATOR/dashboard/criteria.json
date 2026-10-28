@@ -4617,7 +4617,23 @@
      "audit_index": 1,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.56,
+       "judges": [
+        5.72,
+        5.48,
+        5.48
+       ],
+       "defect": [
+        "PARTIAL",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (1) top-20 item P2-010 Veilfall silhouette: The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4630,7 +4646,23 @@
      "audit_index": 1,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.78,
+       "judges": [
+        5.78,
+        5.05,
+        6.52
+       ],
+       "defect": [
+        "FIXED",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (1) top-20 item P2-011 named destination read: Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4643,7 +4675,23 @@
      "audit_index": 1,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 4.85,
+       "judges": [
+        4.89,
+        4.65,
+        5.01
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (1) top-20 item P2-030 shiny creature finish: Several shiny variants become near-uniform hot magenta and lose their ordinary species material and pattern identity \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4658,7 +4706,23 @@
       "tidewake",
       "cloudreach",
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.9,
+       "judges": [
+        6.35,
+        5.49,
+        5.86
+       ],
+       "defect": [
+        "FIXED",
+        "FIXED",
+        "FIXED"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (1) top-20 item P2-071 surface swimming trainer pose: During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4671,7 +4735,23 @@
      "audit_index": 1,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.2,
+       "judges": [
+        5.24,
+        4.89,
+        5.48
+       ],
+       "defect": [
+        "PARTIAL",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (1) top-20 item P2-028 creature faint state: Several fainted aquatic creatures keep raised alert heads or upright crouches instead of reading as defeated \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4684,7 +4764,23 @@
      "audit_index": 1,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.61,
+       "judges": [
+        5.86,
+        5.12,
+        5.86
+       ],
+       "defect": [
+        "PARTIAL",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (1) top-20 item P2-089 fight actor composition: Close-range fight staging lets allies, enemies and sometimes the trainer intersect, so heads and limbs cover one another in several Venn opp \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4697,7 +4793,23 @@
      "audit_index": 1,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.65,
+       "judges": [
+        5.86,
+        5.49,
+        5.61
+       ],
+       "defect": [
+        "PRESENT",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (1) top-20 item P2-108 Aquaryn mounted-water pose: The seated Aquaryn rider traverses turquoise water while the mount stays tall and nearly static above the surface with no visible stroke bob \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4710,7 +4822,23 @@
      "audit_index": 1,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 4.97,
+       "judges": [
+        4.8,
+        4.31,
+        5.78
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (1) top-20 item P2-113 catch camera distance: Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the or \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4725,7 +4853,23 @@
       "tidewake",
       "cloudreach",
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.13,
+       "judges": [
+        4.65,
+        5.24,
+        5.48
+       ],
+       "defect": [
+        "PRESENT",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (1) top-20 item P2-009 water and island depth: Broad offshore water reads as uniform light cyan with little depth variation across several island routes \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4738,7 +4882,23 @@
      "audit_index": 1,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 6.19,
+       "judges": [
+        6.03,
+        5.78,
+        6.76
+       ],
+       "defect": [
+        "FIXED",
+        "FIXED",
+        "FIXED"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-101 Riverdrake fight ground contact: Riverdrake crouch and recoil sink its belly and feet into sand or leave the body hovering above a separate shadow \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4764,7 +4924,23 @@
      "audit_index": 2,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 4.59,
+       "judges": [
+        4.75,
+        4.14,
+        4.88
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-116 authored camp workbench identity: The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidd \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4777,7 +4953,23 @@
      "audit_index": 2,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 4.71,
+       "judges": [
+        4.88,
+        4.39,
+        4.88
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-072 swimmer water contact: The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4790,7 +4982,23 @@
      "audit_index": 2,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.78,
+       "judges": [
+        6.03,
+        5.29,
+        6.03
+       ],
+       "defect": [
+        "PARTIAL",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-026 Veilfall approach shallows: A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather t \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4803,7 +5011,23 @@
      "audit_index": 2,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 4.85,
+       "judges": [
+        4.77,
+        4.89,
+        4.89
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-066 live current streaks: Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4816,7 +5040,23 @@
      "audit_index": 2,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 4.48,
+       "judges": [
+        4.31,
+        3.82,
+        5.29
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-067 current restoration environment: The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4829,7 +5069,23 @@
      "audit_index": 2,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.09,
+       "judges": [
+        5.24,
+        5.24,
+        4.77
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-073 dialogue camera framing: At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speak \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4842,7 +5098,23 @@
      "audit_index": 2,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.17,
+       "judges": [
+        5.05,
+        4.68,
+        5.78
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-088 fight team roster contrast: The left team roster fades to pale low-contrast text against terrain during active combat \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4857,7 +5129,23 @@
       "tidewake",
       "cloudreach",
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.78,
+       "judges": [
+        6.22,
+        5.49,
+        5.61
+       ],
+       "defect": [
+        "FIXED",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-090 fight background creature ground contact: A small blue creature-like figure remains partly buried in sand behind Ripplett through the Venn fight \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4870,7 +5158,23 @@
      "audit_index": 2,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.7,
+       "judges": [
+        5.78,
+        4.8,
+        6.52
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-103 named fight victory hierarchy: Named fight victory reward panels sit over the full exploration HUD team roster hotbar and active-creature prompt so the payoff has little v \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4896,7 +5200,23 @@
      "audit_index": 2,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.62,
+       "judges": [
+        5.54,
+        5.29,
+        6.03
+       ],
+       "defect": [
+        "FIXED",
+        "FIXED",
+        "FIXED"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-114 catch chance HUD contrast: The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan w \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4910,7 +5230,23 @@
      "biomes": [
       "tidewake",
       "cloudreach"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.37,
+       "judges": [
+        5.61,
+        5.12,
+        5.37
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-029 creature rest poses: Riptusk and Torrentoad resting poses roll onto their backs with limbs raised and read as distressed rather than settled \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4923,7 +5259,23 @@
      "audit_index": 2,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.32,
+       "judges": [
+        5.01,
+        5.24,
+        5.72
+       ],
+       "defect": [
+        "PARTIAL",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-032 map active region: The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4938,7 +5290,23 @@
       "tidewake",
       "cloudreach",
       "stormwood"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 6.36,
+       "judges": [
+        6.52,
+        5.54,
+        7.01
+       ],
+       "defect": [
+        "FIXED",
+        "FIXED",
+        "FIXED"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-075 dialogue foreground obstruction: The player head and back overlap the named speaker in several conversation frames \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4951,7 +5319,23 @@
      "audit_index": 2,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 6.06,
+       "judges": [
+        6.35,
+        5.73,
+        6.1
+       ],
+       "defect": [
+        "PARTIAL",
+        "PARTIAL",
+        "PARTIAL"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-057 grass around named characters: Dense pale grass reaches knee to waist height around Tidewake characters and hides much of their costume silhouette in normal-camera post vi \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4964,7 +5348,23 @@
      "audit_index": 2,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 5.48,
+       "judges": [
+        5.48,
+        5.48,
+        5.48
+       ],
+       "defect": [
+        "FIXED",
+        "FIXED",
+        "FIXED"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-091 fight boss title overlay: The upper-center boss title card overlaps part of Cannonback\u2019s shell and head in the opening and tell views \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4977,7 +5377,23 @@
      "audit_index": 2,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 6.02,
+       "judges": [
+        6.35,
+        5.86,
+        5.86
+       ],
+       "defect": [
+        "FIXED",
+        "FIXED",
+        "FIXED"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "F39 (2) impact>12 item P2-074 dialogue speaker visibility: Several named conversations show no identifiable speaker near the dialogue panel \u2014 fixed on main with a GPU before/after pass at the bar.",
@@ -4990,7 +5406,23 @@
      "audit_index": 2,
      "biomes": [
       "tidewake"
-     ]
+     ],
+     "item_scores": {
+      "tidewake": {
+       "mapped": 3.54,
+       "judges": [
+        3.11,
+        3.7,
+        3.82
+       ],
+       "defect": [
+        "PRESENT",
+        "PRESENT",
+        "PRESENT"
+       ],
+       "src": "tb/gpu-pass faf61b655 ralph/reports/VISUAL/item-scores/tidewake/scores-gpu.json; main b7a6e8bbe, GTX 1060 Compatibility, one-sided yardstick, 28 Oct"
+      }
+     }
     },
     {
      "text": "The biome frame matrix (approach, gameplay camera, reverse, detail, day/night, weather, a real fight) passes the new bar on High and Medium.",

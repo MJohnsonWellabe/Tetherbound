@@ -1,0 +1,5 @@
+{
+ "c020": "the Venn full fight ended at 188 s on main (fight active=false at 189.2 s), so no frame exists at 180.08 (tell-ended), 208 or 216 s; every enemy hit also logs SCRIPT ERROR 'neutral_worst_frac' at tests/helpers/combat_depth_pilot.gd:199 (cause: tests/capture_tidewake_named_fights.gd:368 resets the pilot _tally without the neutral_worst_frac key that tests/helpers/combat_depth_pilot.gd:199 reads)",
+ "c036": "the Venn resolve fight stopped at 98.4 s on main (fight active=false) with no win or aftermath frame; every enemy hit logs SCRIPT ERROR 'neutral_worst_frac' at tests/helpers/combat_depth_pilot.gd:199 (cause: tests/capture_tidewake_named_fights.gd:368 resets the pilot _tally without the neutral_worst_frac key that tests/helpers/combat_depth_pilot.gd:199 reads)",
+ "c037": "the Nerissa resolve run reported 1 failure: SCRIPT ERROR 'previously freed instance' in _pose (phase2_capture_tidewake_fights.gd) and _record (tests/capture_tidewake_named_fights.gd:423) after 40 s, before the win frame"
+}

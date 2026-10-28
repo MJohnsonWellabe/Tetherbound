@@ -1,0 +1,220 @@
+{
+ "sets": {
+  "Wk": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "Close-range fight staging lets allies, enemies and sometimes the trainer intersect, so heads and limbs cover one another in several Venn opponent phases": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Close-range fight staging lets allies, enemies and sometimes the trainer intersect, so heads and limbs cover one another in several Venn opponent phases": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Cannonback and Ripplet read as solid creatures, but the frame-filling pale sand with no value range, flat noon light and HUD panels covering a third of the view sink it beside Palworld's saturated, layered fights; in t-024 Cannonback still crowds the pale ally behind it on both sides."
+  },
+  "Yh": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's oak frame, diagonal brace, plank cap and dressed-stone footing read as a built timber wall, but the infill is still a flat pale panel and the wall is card-thin; B is a blown-out white board with no cap or footing, and neither has Palworld-grade material depth."
+  },
+  "Np": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The creatures are readable against the sky, but the thin white CAPTURE CHANCE text still sits over the creature feet and pale sand with no backing plate in catch_low and catch_high on both sides, and the bare tilted dune with scattered black stones reads as placeholder."
+  },
+  "Hd": {
+   "A": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Stormcapra's woolly fleece, dark legs, big ringed horns and blue crystal reach the owner bar and tower over the trainer; A's faint mid and faint end lift the body off the floor upside-down above a detached shadow, while B's faints stay grounded and curled."
+  },
+  "Rb": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "The left team roster fades to pale low-contrast text against terrain during active combat": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "The left team roster fades to pale low-contrast text against terrain during active combat": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The roster now sits on a darker translucent panel with green bars, but its row text is still small and thin against the bright sand in t-000/tell-start, and the washed-out beach with no light grade keeps it short of Palworld's finish."
+  },
+  "Vz": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The camp reads as a tent, fire and a small low bench lost on an empty pale dune; in first_shore and brine_steps the trainer stands over the bench, and nothing marks it as a workbench with tools."
+  },
+  "Qi": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The upper-center boss title card overlaps part of Cannonback\u2019s shell and head in the opening and tell views": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "The upper-center boss title card overlaps part of Cannonback\u2019s shell and head in the opening and tell views": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The title card now sits top-right, clear of Cannonback in the opening and tell views, and the Nerissa crystal arena has strong blue mood, but the beach frames are flat and pale and the HUD stack still dominates."
+  },
+  "Pd": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's large ingredient lines and icon-led Craft/Leave prompts read at a glance at both resolutions, but only 2.5 recipes fit and Hoe is cut at the list bottom; B truncates recipe lines ('3 St...') in tiny type and hides 'Craft: A / Enter' and 'Leave: B / Esc' as small grey text."
+  },
+  "Op": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bed is still a flat oval stone ring on the sand in first_shore and a thin edge-on ring in brine_steps and salt_crown, with no straw mound or bedding volume, set in a sparse, flat-lit camp."
+  },
+  "Zn": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "Several shiny variants become near-uniform hot magenta and lose their ordinary species material and pattern identity": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Several shiny variants become near-uniform hot magenta and lose their ordinary species material and pattern identity": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Shiny Aquaryn, Cannonback and Riptusk keep their species forms in pale green, grey-green and teal-violet tints with no hot-magenta wash, but they stand small and distant on a bright, empty beach, so the finish barely reads as special."
+  },
+  "Lk": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "The player head and back overlap the named speaker in several conversation frames": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Adair stands clear in water_adair, but in water_iona and water_rowan the player's head and backpack still press against the speaker (most in B's Iona frame); the dialogue box and portraits are tidy, while the empty sand and flat light stay below Palworld's lived-in scenes."
+  },
+  "Fc": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Several fainted aquatic creatures keep raised alert heads or upright crouches instead of reading as defeated": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Several fainted aquatic creatures keep raised alert heads or upright crouches instead of reading as defeated": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Ripplet and Aquaryn now lie flat on their sides, but Riptusk still holds an upright hunched body with its head raised, and all three sit small and distant on a pale, flat-lit beach."
+  },
+  "Ge": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-haired villager with his olive vest, green scarf and leather boots has a warm, readable face and a clean silhouette that fit the cozy settlement palette, though his stylised large-eyed face sits slightly more cartoon than the naturalistic creature line."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-grade the Tidewake beach: darker wet-sand and dune shading, warm/cool time-of-day light with stronger shadows, more vegetation clusters and props, so creatures and camp props separate from the frame-filling pale mid-tone sand",
+   "kind": "scene"
+  },
+  {
+   "change": "Give every HUD overlay (capture chance, team roster, craft hints) a deep blue-grey backing plate with larger text and keep overlays out of the action area; adopt Pd side A's type scale and fix its list height so no recipe is clipped",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the camp workbench and creature bed with hero props: a sturdy bench with tools, vice and work-surface clutter, and a raised straw or driftwood nest bed with visible bedding volume",
+   "kind": "new_art"
+  }
+ ]
+}

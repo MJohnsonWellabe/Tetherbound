@@ -1,0 +1,792 @@
+{
+ "main_sha": "b7a6e8bbe1dbfa54c83e580626e8d7184d24bb10",
+ "renderer": "GPU NVIDIA GeForce GTX 1060 3GB, OpenGL 3.3 Compatibility (repro commands as stated, --fullscreen)",
+ "fit": {
+  "r": 0.958,
+  "rmse": 0.362,
+  "batches": [
+   {
+    "batch": 1,
+    "r": 0.9463,
+    "rmse": 0.346,
+    "confirming": true
+   },
+   {
+    "batch": 2,
+    "r": 0.9712,
+    "rmse": 0.344,
+    "confirming": true
+   },
+   {
+    "batch": 3,
+    "r": 0.9556,
+    "rmse": 0.397,
+    "confirming": true
+   }
+  ]
+ },
+ "items": {
+  "P2-008": {
+   "board_row": "F39#1",
+   "mapped": 5.56,
+   "mapped_judges": [
+    5.72,
+    5.48,
+    5.48
+   ],
+   "raw": [
+    5.2,
+    5.0,
+    5.0
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "tidewake__brine_steps__06__brine_steps_east_beach__walk_03_day",
+    "tidewake__first_shore__01__first_shore_welcome_beacon__day__close",
+    "tidewake__first_shore__02__first_shore_horizon_stones__route_day"
+   ],
+   "note": "The dock, barrels and boat in frame 1 add life, but repeated smooth sand domes, a hard grass-blade carpet edge in frame 3 and a floating white slab in the water in frame 1 keep the shore from reading layered.",
+   "batch": 1,
+   "code": "Hv"
+  },
+  "P2-009": {
+   "board_row": "F39#10",
+   "mapped": 6.19,
+   "mapped_judges": [
+    6.03,
+    5.78,
+    6.76
+   ],
+   "raw": [
+    5.6,
+    5.4,
+    6.2
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "tidewake__drowned_garden__21__drowned_garden_terraces__route_day",
+    "tidewake__first_shore__02__first_shore_horizon_stones__route_day",
+    "tidewake__landmark__lastlight__day__close"
+   ],
+   "note": "Offshore water now goes deep navy with cyan shallows, but the depth steps are hard concentric bands around bare dune islands and the lastlight frame shows only a tent and sand, short of the board's lush archipelago.",
+   "batch": 2,
+   "code": "Fh"
+  },
+  "P2-010": {
+   "board_row": "F39#2",
+   "mapped": 5.78,
+   "mapped_judges": [
+    5.78,
+    5.05,
+    6.52
+   ],
+   "raw": [
+    5.4,
+    4.8,
+    6.0
+   ],
+   "defect_call": [
+    "FIXED",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "tidewake__drowned_garden__21__drowned_garden_terraces__route_day",
+    "tidewake__first_shore__02__first_shore_horizon_stones__route_day",
+    "tidewake__landmark__sluice_channel_bridge__day__close"
+   ],
+   "note": "Veilfall is now a pale craggy spire with one broad white fall in frames 1-2, but it is a small bare monolith with no tiers, greenery, arches or mist, far from the board's towering waterfall mountain, and it is absent from frame 3.",
+   "batch": 2,
+   "code": "Ms"
+  },
+  "P2-011": {
+   "board_row": "F39#3",
+   "mapped": 4.85,
+   "mapped_judges": [
+    4.89,
+    4.65,
+    5.01
+   ],
+   "raw": [
+    4.5,
+    4.3,
+    4.6
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "tidewake__drowned_garden__21__drowned_garden_terraces__route_day",
+    "tidewake__gull_rest__19__gull_rest_signal_spire__route_day",
+    "tidewake__lantern_cove__17__lantern_cove_drift_arch__route_day"
+   ],
+   "note": "The 'signal spire' is a small brown box on a grass hill, the 'drift arch' is a tiny distant hoop and the 'terraces' are the flat disc chain, so no destination reads as a landmark the way the Veilfall board's arches and bridges do.",
+   "batch": 1,
+   "code": "Jo"
+  },
+  "P2-026": {
+   "board_row": "F39#15",
+   "mapped": 4.85,
+   "mapped_judges": [
+    4.77,
+    4.89,
+    4.89
+   ],
+   "raw": [
+    4.4,
+    4.5,
+    4.5
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "tidewake__drowned_garden__21__drowned_garden_terraces__route_day",
+    "tidewake__drowned_garden__21__drowned_garden_terraces__walk_01_day",
+    "tidewake__sluice_isle__14__sluice_channel_bridge__route_day"
+   ],
+   "note": "Water colour and the distant falls are on-board, but the evenly spaced disc chain with a translucent strip, the white/green box props on the beach in frames 1-2 and the empty flat sand foreground read as placeholder layout.",
+   "batch": 1,
+   "code": "Tp"
+  },
+  "P2-028": {
+   "board_row": "F39#6",
+   "mapped": 5.61,
+   "mapped_judges": [
+    5.86,
+    5.12,
+    5.86
+   ],
+   "raw": [
+    5.6,
+    5.0,
+    5.6
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "tidewake__ripplet__fainted",
+    "tidewake__riptusk__fainted",
+    "tidewake__aquaryn__fainted"
+   ],
+   "note": "Ripplet and Aquaryn lie flat and read as down, but Riptusk still sits in an upright crouch with its head raised, and all three are small, low-contrast shapes on the shoreline far from the camera.",
+   "batch": 3,
+   "code": "Fc"
+  },
+  "P2-029": {
+   "board_row": "F39#24",
+   "mapped": 5.32,
+   "mapped_judges": [
+    5.01,
+    5.24,
+    5.72
+   ],
+   "raw": [
+    4.6,
+    4.8,
+    5.2
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "tidewake__riptusk__resting",
+    "tidewake__torrentoad__resting"
+   ],
+   "note": "Torrentoad now sits upright on its haunches, but Riptusk is still twisted with pale belly up and legs raised at the waterline, reading as a fallen creature rather than a rest pose.",
+   "batch": 1,
+   "code": "Ac"
+  },
+  "P2-030": {
+   "board_row": "F39#4",
+   "mapped": 5.9,
+   "mapped_judges": [
+    6.35,
+    5.49,
+    5.86
+   ],
+   "raw": [
+    6.0,
+    5.3,
+    5.6
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "tidewake__aquaryn__shiny_idle",
+    "tidewake__cannonback__shiny_idle",
+    "tidewake__riptusk__shiny_idle"
+   ],
+   "note": "The shinies now keep species form with mint, slate and teal-violet finishes instead of magenta, but they stand small and pale against bright sand and water with no rim light or shiny sparkle cue.",
+   "batch": 3,
+   "code": "Zn"
+  },
+  "P2-032": {
+   "board_row": "F39#25",
+   "mapped": 6.36,
+   "mapped_judges": [
+    6.52,
+    5.54,
+    7.01
+   ],
+   "raw": [
+    6.0,
+    5.2,
+    6.4
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "tidewake__menu_map"
+   ],
+   "note": "The Tidewake tab is now the highlighted teal tab under the TIDEWAKE heading and the blue-grey panel fits the UI direction, but the map itself is a blurry blue field with one blob island, and the hint row mixes keyboard keys with controller buttons.",
+   "batch": 2,
+   "code": "Nk"
+  },
+  "P2-057": {
+   "board_row": "F39#27",
+   "mapped": 5.48,
+   "mapped_judges": [
+    5.48,
+    5.48,
+    5.48
+   ],
+   "raw": [
+    5.0,
+    5.0,
+    5.0
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "tidewake__inventory__character__water_adair",
+    "tidewake__inventory__character__water_bren",
+    "tidewake__inventory__character__water_corin"
+   ],
+   "note": "Grass is now sparse ankle tufts so silhouettes are clear, but the characters read as backlit near-black figures on bare sand dunes with no grove/edge structure, far from Palworld's lived-in density.",
+   "batch": 1,
+   "code": "Pq"
+  },
+  "P2-066": {
+   "board_row": "F39#16",
+   "mapped": 4.48,
+   "mapped_judges": [
+    4.31,
+    3.82,
+    5.29
+   ],
+   "raw": [
+    4.2,
+    3.8,
+    5.0
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "tidewake__current_states__S1_live_t0",
+    "tidewake__current_states__S1_live_t1",
+    "tidewake__current_states__S2_live_t0"
+   ],
+   "note": "Sank by dashed white lane markings and chevrons painted across the water in all three frames on both sides, which read as road paint rather than moving current.",
+   "batch": 2,
+   "code": "Ic"
+  },
+  "P2-067": {
+   "board_row": "F39#17",
+   "mapped": 5.09,
+   "mapped_judges": [
+    5.24,
+    5.24,
+    4.77
+   ],
+   "raw": [
+    4.8,
+    4.8,
+    4.4
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "tidewake__current_states__S1_live_t0",
+    "tidewake__current_states__S1_restored_t0",
+    "tidewake__current_states__S2_live_t0"
+   ],
+   "note": "The cyan/navy water and white Veilfall stack are on-palette, but the live current is flat white dashed strokes like road markings and the restored frame differs only by their removal, so the restoration has no visual payoff.",
+   "batch": 1,
+   "code": "Gv"
+  },
+  "P2-071": {
+   "board_row": "F39#5",
+   "mapped": 5.2,
+   "mapped_judges": [
+    5.24,
+    4.89,
+    5.48
+   ],
+   "raw": [
+    4.8,
+    4.5,
+    5.0
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "tidewake__swimming__entry",
+    "tidewake__swimming__surface_west",
+    "tidewake__swimming__surface_mid"
+   ],
+   "note": "The turquoise shallows, palms and boat are attractive, but the trainer is still vertical with both arms thrown up and legs visible below the surface in all three frames, reading as wading or flailing rather than swimming.",
+   "batch": 1,
+   "code": "Sh"
+  },
+  "P2-072": {
+   "board_row": "F39#14",
+   "mapped": 5.78,
+   "mapped_judges": [
+    6.03,
+    5.29,
+    6.03
+   ],
+   "raw": [
+    5.6,
+    5.0,
+    5.6
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "tidewake__swimming__entry",
+    "tidewake__swimming__surface_west",
+    "tidewake__swimming__surface_mid"
+   ],
+   "note": "The hard shadow is gone and a small white foam ring surrounds the swimmer, but there is no trailing wake and both arms are held stiffly overhead in every frame, so it does not read as swimming.",
+   "batch": 2,
+   "code": "Nf"
+  },
+  "P2-073": {
+   "board_row": "F39#18",
+   "mapped": 5.17,
+   "mapped_judges": [
+    5.05,
+    4.68,
+    5.78
+   ],
+   "raw": [
+    4.8,
+    4.5,
+    5.4
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "tidewake__inventory__trainer__water_trainer_daro__dialogue",
+    "tidewake__inventory__trainer__water_trainer_bex__dialogue",
+    "tidewake__inventory__trainer__water_trainer_irva__dialogue"
+   ],
+   "note": "Sank by the camera: Daro, Bex and Irva are tiny backs-to-camera figures mid-frame in all three frames on both sides while the portrait panel floats at the bottom, so there is no staged two-shot and the flat noon dunes add no Valheim-class light to carry it.",
+   "batch": 2,
+   "code": "Kh"
+  },
+  "P2-074": {
+   "board_row": "F39#29",
+   "mapped": 3.54,
+   "mapped_judges": [
+    3.11,
+    3.7,
+    3.82
+   ],
+   "raw": [
+    3.0,
+    3.5,
+    3.6
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "tidewake__inventory__character__water_nalia__dialogue",
+    "tidewake__inventory__character__water_nerissa__dialogue",
+    "tidewake__inventory__trainer__water_trainer_nerissa__dialogue"
+   ],
+   "note": "Portraits name the speaker, but frames 2-3 (Captain Nerissa) have the camera buried in a noisy grey rock face and frame 1 shows only the trainer's back on a bare slope, so no speaker is ever on screen.",
+   "batch": 1,
+   "code": "Fv"
+  },
+  "P2-075": {
+   "board_row": "F39#26",
+   "mapped": 6.06,
+   "mapped_judges": [
+    6.35,
+    5.73,
+    6.1
+   ],
+   "raw": [
+    6.0,
+    5.55,
+    5.8
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "tidewake__inventory__character__water_adair__dialogue",
+    "tidewake__inventory__character__water_iona__dialogue",
+    "tidewake__inventory__character__water_rowan__dialogue"
+   ],
+   "note": "Adair is clear, but the player's head still crowds and touches Iona and Rowan, the dialogue box hides the speakers' lower bodies, and in the Iona frame a flat dark cliff slab fills the right third.",
+   "batch": 3,
+   "code": "Lk"
+  },
+  "P2-088": {
+   "board_row": "F39#19",
+   "mapped": 5.78,
+   "mapped_judges": [
+    6.22,
+    5.49,
+    5.61
+   ],
+   "raw": [
+    5.9,
+    5.3,
+    5.4
+   ],
+   "defect_call": [
+    "FIXED",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "tidewake__fight__venn__t-000_00",
+    "tidewake__fight__venn__tell-start-000_48",
+    "tidewake__fight__venn__t-003_02"
+   ],
+   "note": "The roster now sits on a dark backing panel that holds over sand and water, but the rows are tiny, and the flat, hazeless beach with crowded creatures does not match Palworld finish.",
+   "batch": 3,
+   "code": "Rb"
+  },
+  "P2-089": {
+   "board_row": "F39#7",
+   "mapped": 5.65,
+   "mapped_judges": [
+    5.86,
+    5.49,
+    5.61
+   ],
+   "raw": [
+    5.6,
+    5.3,
+    5.4
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "tidewake__fight__venn__t-023_02",
+    "tidewake__fight__venn__t-024_02",
+    "tidewake__fight__venn__t-025_02"
+   ],
+   "note": "Cannonback and Ripplet still stack into one mass in t-024 and touch in t-023/t-025 on a flat, evenly lit pale beach with no haze, rim light or time-of-day grade, so it sits well below Palworld's staged, atmospheric combat.",
+   "batch": 3,
+   "code": "Wk"
+  },
+  "P2-090": {
+   "board_row": "F39#20",
+   "mapped": 5.7,
+   "mapped_judges": [
+    5.78,
+    4.8,
+    6.52
+   ],
+   "raw": [
+    5.4,
+    4.6,
+    6.0
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "tidewake__fight__venn__t-000_00",
+    "tidewake__fight__venn__tell-start-001_65",
+    "tidewake__fight__venn__t-016_00"
+   ],
+   "note": "Cannonback reads well, but the pale grey Ripplett barely separates from the pale sand, a small blue-white blob still sits in the sand beside it in frames 1-2, and HUD panels crowd every frame.",
+   "batch": 2,
+   "code": "Fv"
+  },
+  "P2-091": {
+   "board_row": "F39#28",
+   "mapped": 6.02,
+   "mapped_judges": [
+    6.35,
+    5.86,
+    5.86
+   ],
+   "raw": [
+    6.0,
+    5.6,
+    5.6
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "tidewake__fight__venn__t-000_00",
+    "tidewake__fight__venn__tell-start-000_48",
+    "tidewake__fight__nerissa__t-000_00"
+   ],
+   "note": "The boss card now sits top-right clear of Cannonback, but the Nerissa frame is dominated by a giant translucent blue crystal slab that hides half the arena, and the beach frames stay flat and evenly lit.",
+   "batch": 3,
+   "code": "Qi"
+  },
+  "P2-108": {
+   "board_row": "F39#8",
+   "mapped": 4.97,
+   "mapped_judges": [
+    4.8,
+    4.31,
+    5.78
+   ],
+   "raw": [
+    4.6,
+    4.2,
+    5.4
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "tidewake__system__mounted-swim-03-mounted",
+    "tidewake__system__mounted-swim-04-mounted",
+    "tidewake__system__mounted-swim-05-mounted"
+   ],
+   "note": "Sank by Aquaryn standing upright on the water surface in an identical pose across frames 03-05 with no splash or wake and a long hard shadow cast onto the water, so it reads as walking on glass.",
+   "batch": 2,
+   "code": "Do"
+  },
+  "P2-109": {
+   "board_row": "F39#22",
+   "mapped": 5.62,
+   "mapped_judges": [
+    5.54,
+    5.29,
+    6.03
+   ],
+   "raw": [
+    5.2,
+    5.0,
+    5.6
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "tidewake__system__mounted-swim-11-land",
+    "tidewake__system__mounted-swim-12-land",
+    "tidewake__system__mounted-swim-13-land"
+   ],
+   "note": "The trainer and shore are now clear in frames 11-13, but a ghostly translucent mount mesh hovers around the trainer and a large detached dark shadow fills the foreground over flat, featureless sand.",
+   "batch": 2,
+   "code": "Ed"
+  },
+  "P2-113": {
+   "board_row": "F39#9",
+   "mapped": 5.13,
+   "mapped_judges": [
+    4.65,
+    5.24,
+    5.48
+   ],
+   "raw": [
+    4.3,
+    4.8,
+    5.0
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "tidewake__catching__02-orb-in-flight",
+    "tidewake__catching__03-strike",
+    "tidewake__catching__03-absorbing"
+   ],
+   "note": "A near-top-down orb-in-flight frame that crops Terrapup at the bottom-left, then strike/absorbing frames pulled so far out that trainer, creatures and orb are specks on a flat featureless sand plane, sank it on both sides.",
+   "batch": 1,
+   "code": "Wr"
+  },
+  "P2-114": {
+   "board_row": "F39#23",
+   "mapped": 5.37,
+   "mapped_judges": [
+    5.61,
+    5.12,
+    5.37
+   ],
+   "raw": [
+    5.4,
+    5.0,
+    5.2
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "tidewake__catching__catch_low",
+    "tidewake__catching__catch_high",
+    "tidewake__catching__01-aiming-full-health"
+   ],
+   "note": "The creatures read well against the sky, but the capture-chance text is dark, unbacked and lost against pale sand and the creatures, and the empty sand slope with scattered black pebbles lacks Palworld's density and depth.",
+   "batch": 3,
+   "code": "Np"
+  },
+  "P2-115": {
+   "board_row": "F39#12",
+   "mapped": 4.59,
+   "mapped_judges": [
+    4.75,
+    4.14,
+    4.88
+   ],
+   "raw": [
+    4.7,
+    4.2,
+    4.8
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PARTIAL"
+   ],
+   "frames": [
+    "tidewake__bed__water_camp_first_shore__bed",
+    "tidewake__bed__water_camp_brine_steps__bed",
+    "tidewake__bed__water_camp_salt_crown__bed"
+   ],
+   "note": "The bed is still a flat sand-filled oval curb in first_shore that turns into a thin pale ring beside the tent in salt_crown and has no bedding, straw or raised nest form, and a brown furry creature blocks the left of first_shore.",
+   "batch": 3,
+   "code": "Op"
+  },
+  "P2-116": {
+   "board_row": "F39#13",
+   "mapped": 4.71,
+   "mapped_judges": [
+    4.88,
+    4.39,
+    4.88
+   ],
+   "raw": [
+    4.8,
+    4.4,
+    4.8
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "tidewake__crafting__water_camp_first_shore__crafting",
+    "tidewake__crafting__water_camp_brine_steps__crafting",
+    "tidewake__crafting__water_camp_salt_crown__crafting"
+   ],
+   "note": "The workbench is a small, unreadable prop behind the trainer in first_shore and brine_steps and a tiny table by the tent in salt_crown, in a sparse camp of a tent and campfire on bare sand, far from Palworld's legible base stations.",
+   "batch": 3,
+   "code": "Vz"
+  }
+ },
+ "capture_failures": [
+  {
+   "frame": "tidewake__fight__venn_full__tell-ended-180_08",
+   "item": "P2-101",
+   "error": "the Venn full fight ended at 188 s on main (fight active=false at 189.2 s), so no frame exists at 180.08 (tell-ended), 208 or 216 s; every enemy hit also logs SCRIPT ERROR 'neutral_worst_frac' at tests/helpers/combat_depth_pilot.gd:199 (cause: tests/capture_tidewake_named_fights.gd:368 resets the pilot _tally without the neutral_worst_frac key that tests/helpers/combat_depth_pilot.gd:199 reads)"
+  },
+  {
+   "frame": "tidewake__fight__venn_full__t-208_00",
+   "item": "P2-101",
+   "error": "the Venn full fight ended at 188 s on main (fight active=false at 189.2 s), so no frame exists at 180.08 (tell-ended), 208 or 216 s; every enemy hit also logs SCRIPT ERROR 'neutral_worst_frac' at tests/helpers/combat_depth_pilot.gd:199 (cause: tests/capture_tidewake_named_fights.gd:368 resets the pilot _tally without the neutral_worst_frac key that tests/helpers/combat_depth_pilot.gd:199 reads)"
+  },
+  {
+   "frame": "tidewake__fight__venn_full__t-216_00",
+   "item": "P2-101",
+   "error": "the Venn full fight ended at 188 s on main (fight active=false at 189.2 s), so no frame exists at 180.08 (tell-ended), 208 or 216 s; every enemy hit also logs SCRIPT ERROR 'neutral_worst_frac' at tests/helpers/combat_depth_pilot.gd:199 (cause: tests/capture_tidewake_named_fights.gd:368 resets the pilot _tally without the neutral_worst_frac key that tests/helpers/combat_depth_pilot.gd:199 reads)"
+  },
+  {
+   "frame": "tidewake__fight__venn_resolve__win-141_53",
+   "item": "P2-103",
+   "error": "the Venn resolve fight stopped at 98.4 s on main (fight active=false) with no win or aftermath frame; every enemy hit logs SCRIPT ERROR 'neutral_worst_frac' at tests/helpers/combat_depth_pilot.gd:199 (cause: tests/capture_tidewake_named_fights.gd:368 resets the pilot _tally without the neutral_worst_frac key that tests/helpers/combat_depth_pilot.gd:199 reads)"
+  },
+  {
+   "frame": "tidewake__fight__venn_resolve__aftermath-142_53",
+   "item": "P2-103",
+   "error": "the Venn resolve fight stopped at 98.4 s on main (fight active=false) with no win or aftermath frame; every enemy hit logs SCRIPT ERROR 'neutral_worst_frac' at tests/helpers/combat_depth_pilot.gd:199 (cause: tests/capture_tidewake_named_fights.gd:368 resets the pilot _tally without the neutral_worst_frac key that tests/helpers/combat_depth_pilot.gd:199 reads)"
+  },
+  {
+   "frame": "tidewake__fight__nerissa_resolve__win-207_25",
+   "item": "P2-103",
+   "error": "the Nerissa resolve run reported 1 failure: SCRIPT ERROR 'previously freed instance' in _pose (phase2_capture_tidewake_fights.gd) and _record (tests/capture_tidewake_named_fights.gd:423) after 40 s, before the win frame"
+  }
+ ],
+ "unscored_items": [
+  "P2-101",
+  "P2-103"
+ ]
+}

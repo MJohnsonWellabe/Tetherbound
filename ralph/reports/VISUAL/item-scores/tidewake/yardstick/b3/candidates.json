@@ -1,0 +1,83 @@
+[
+    {
+        "label":  "IS tidewake P2-115 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-115.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-115.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: authored camp creature bed silhouette. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-030 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-030.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-030.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: shiny creature finish. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several shiny variants become near-uniform hot magenta and lose their ordinary species material and pattern identity"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-114 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-114.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-114.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: catch chance HUD contrast. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-028 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-028.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-028.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: creature faint state. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several fainted aquatic creatures keep raised alert heads or upright crouches instead of reading as defeated"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-116 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-116.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-116.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: authored camp workbench identity. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-091 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-091.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-091.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: fight boss title overlay. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The upper-center boss title card overlaps part of Cannonback’s shell and head in the opening and tell views"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-088 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-088.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-088.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: fight team roster contrast. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The left team roster fades to pale low-contrast text against terrain during active combat"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-075 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-075.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-075.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue foreground obstruction. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The player head and back overlap the named speaker in several conversation frames"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-089 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-089.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-089.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: fight actor composition. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Close-range fight staging lets allies, enemies and sometimes the trainer intersect, so heads and limbs cover one another in several Venn opponent phases"
+                    ]
+    }
+]

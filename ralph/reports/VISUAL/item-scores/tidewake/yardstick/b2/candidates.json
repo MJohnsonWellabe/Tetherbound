@@ -1,0 +1,83 @@
+[
+    {
+        "label":  "IS tidewake P2-009 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-009.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-009.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: water and island depth. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Broad offshore water reads as uniform light cyan with little depth variation across several island routes"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-032 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-032.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-032.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: map active region. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-010 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-010.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-010.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: Veilfall silhouette. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-073 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-073.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-073.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue camera framing. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-066 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-066.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-066.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: live current streaks. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-108 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-108.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-108.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: Aquaryn mounted-water pose. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The seated Aquaryn rider traverses turquoise water while the mount stays tall and nearly static above the surface with no visible stroke bobbing wake splash or current response"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-109 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-109.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-109.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: Aquaryn dismount camera obstruction. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-090 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-090.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-090.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: fight background creature ground contact. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "A small blue creature-like figure remains partly buried in sand behind Ripplett through the Venn fight"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-072 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-072.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-072.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: swimmer water contact. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body"
+                    ]
+    }
+]

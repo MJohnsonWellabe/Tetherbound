@@ -1,0 +1,76 @@
+{
+ "Wr": {
+  "anchor": false,
+  "label": "IS tidewake P2-113 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-113.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-113.png"
+ },
+ "Nu": {
+  "anchor": true,
+  "A": "craft:after",
+  "B": "craft:before"
+ },
+ "Gv": {
+  "anchor": false,
+  "label": "IS tidewake P2-067 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-067.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-067.png"
+ },
+ "Bu": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Tp": {
+  "anchor": false,
+  "label": "IS tidewake P2-026 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-026.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-026.png"
+ },
+ "Ev": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Pq": {
+  "anchor": false,
+  "label": "IS tidewake P2-057 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-057.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-057.png"
+ },
+ "Uv": {
+  "anchor": true,
+  "A": "f36_1_gpu:tanglevolt_shipping",
+  "B": "f36_1_gpu:tanglevolt_candidate"
+ },
+ "Hv": {
+  "anchor": false,
+  "label": "IS tidewake P2-008 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-008.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-008.png"
+ },
+ "Ac": {
+  "anchor": false,
+  "label": "IS tidewake P2-029 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-029.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-029.png"
+ },
+ "Fv": {
+  "anchor": false,
+  "label": "IS tidewake P2-074 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-074.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-074.png"
+ },
+ "Sh": {
+  "anchor": false,
+  "label": "IS tidewake P2-071 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-071.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-071.png"
+ },
+ "Jo": {
+  "anchor": false,
+  "label": "IS tidewake P2-011 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-011.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-011.png"
+ }
+}

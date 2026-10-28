@@ -1,0 +1,216 @@
+{
+ "sets": {
+  "Wr": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A near top-down view onto flat, evenly speckled sand with a tiny trainer, a foreground Terrapup cropped at the frame edge in orb-in-flight, and a barely visible orb in absorbing has none of Palworld's over-shoulder drama or Valheim-class light."
+  },
+  "Nu": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PARTIAL",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's large titles, ingredient icons and labelled Craft/Leave glyphs read at a glance, but the small orange recipe sub-lines and the lack of teal interaction or gold accents (and B's truncated '3 St...' lines and tiny grey 'Craft: A / Enter' hint) keep it short of a shipped UI."
+  },
+  "Gv": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Cyan-to-navy water and pale dunes match the Tidewake board, but the current is drawn as white road-marking dashes and chevrons, and S1_restored is otherwise the same as S1_live, so the restoration has no visible payoff."
+  },
+  "Bu": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's furred boar with gold patches is close to the naturalistic owner bar, but it, and A's clay-toy boar with flat green moss decals, stand no taller than the 1.80 m trainer, and A's faint end tips onto its rump face-up."
+  },
+  "Tp": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Veilfall rock and the white falls give a landmark, but the line of repeated rimmed sand discs, the flat empty beach and the glass-panel props read as a blockout, not Palworld density."
+  },
+  "Ev": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The appealing old villager has clear eyes, a full white beard and an olive vest and scarf that suit the key art's cozy palette, though the large-eyed cartoon face sits a little toward animated film next to the naturalistic creatures."
+  },
+  "Pq": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Dense pale grass reaches knee to waist height around Tidewake characters and hides much of their costume silhouette in normal-camera post views": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Dense pale grass reaches knee to waist height around Tidewake characters and hides much of their costume silhouette in normal-camera post views": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The grass no longer hides the characters, but they stand on bare, featureless dunes as small near-black silhouettes with no readable costume or face, and the sparse tufts are evenly scattered rather than forming edges."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The wolf matches the Tanglevolt style bar and towers over the trainer; B's rearing hit and low grounded faint hold the read, while A's faint mid and faint end flip it into a white belly-up form with black blotches that loses the wolf."
+  },
+  "Hv": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "No gray rock skirts are visible and the dock, barrels and boat in brine_steps add life, but the first_shore dunes are smooth sand mounds and the grass blades stop hard against the sand, with no rocks, driftwood or shrub bands to layer the shore."
+  },
+  "Ac": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "Riptusk and Torrentoad resting poses roll onto their backs with limbs raised and read as distressed rather than settled": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "Riptusk and Torrentoad resting poses roll onto their backs with limbs raised and read as distressed rather than settled": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Torrentoad now sits upright and reads as resting, but Riptusk is still a tangled, belly-up shape with a pale underside and raised limbs at the waterline, and the empty beach carries no lived-in staging."
+  },
+  "Fv": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "Several named conversations show no identifiable speaker near the dialogue panel": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "Several named conversations show no identifiable speaker near the dialogue panel": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Both Nerissa dialogue frames point the camera into a noisy, smeared dark rock wall with no speaker in view, and the Nalia frame shows only a back-turned dark figure on a grass slope, so only the portrait card identifies anyone."
+  },
+  "Sh": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The turquoise shallows and beach match the Tidewake board, but in all three frames the trainer is still a vertical figure with both arms raised overhead and legs visible under the water, which reads as standing or waving, not swimming."
+  },
+  "Jo": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The drowned garden terraces are the same row of discs, the gull rest signal spire is a small dark box on a grassy slope, and the lantern cove drift arch is a tiny distant hoop, so none of them reads as a destination the way Palworld's plateau landmark does."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Dress the Tidewake shores and shallows: break the disc chains and dash markers into irregular sandbars, foam ribbons and rock clusters; add grass-to-sand transition bands, driftwood, shells and shrub groves; and give dune values and contact shadows more range so the dunes stop reading as flat beige.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build real named-destination hero assets (terraced drowned garden, signal spire, lantern-cove arch, hall entrances) in the Veilfall board's stone, banner and torch language, so route endpoints read from a distance.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Fix the staging cameras and poses: frame the dialogue speaker beside the panel; use one stable over-shoulder catch distance that keeps the trainer, the creature and the orb arc in frame; and replace the upright swim and belly-up rest/faint poses with prone swim strokes and grounded curled rests.",
+   "kind": "scene"
+  }
+ ]
+}

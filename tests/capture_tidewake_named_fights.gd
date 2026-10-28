@@ -365,7 +365,7 @@ func _record(world: Node3D, game: Node, dir: String, label: String, active: Call
 	if _policy != "QUICK":
 		_reader = SMOKE.WorldPilot.new()
 		_reader.rig = world.get_node("CameraRig")
-		_reader._tally = {"hits": 0, "incoming_hits": 0, "misses": 0, "max_hit_frac": 0.0, "events": [],
+		_reader._tally = {"hits": 0, "incoming_hits": 0, "misses": 0, "max_hit_frac": 0.0, "neutral_worst_frac": 0.0, "events": [],
 			"player_windup_cancellations": 0, "charged_interrupts": 0, "stagger_events": 0,
 			"burst_uses": 0, "charged_uses": 0, "quick_uses": 0}
 		for index in game.local.party.size():
