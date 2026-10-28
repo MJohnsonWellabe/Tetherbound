@@ -1,0 +1,65 @@
+[
+    {
+        "label":  "IS meadows P2-063 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-063.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-063.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: shared fight tell and hit effects. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-response silhouettes"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-002 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-002.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-002.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: map. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-018 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-018.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-018.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: shiny palette distinction. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Some shiny variants have no reliably readable colour-block difference from their normal form at the device view"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-069 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-069.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-069.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: flight and landing pose read. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-078 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-078.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-078.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: dialogue speaker occlusion. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-095 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-095.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-095.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: craft recipe text. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Long recipe names and material preview lines are clipped in the crafting list"
+                    ]
+    },
+    {
+        "label":  "IS meadows P2-079 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-079.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-meadows\\sides\\P2-079.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the meadows biome: Meadows dialogue rock obstruction. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Large rock faces fill the camera and hide the named speaker during dialogue"
+                    ]
+    }
+]

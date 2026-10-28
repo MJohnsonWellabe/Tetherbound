@@ -1,0 +1,178 @@
+{
+ "sets": {
+  "Ly": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Several named trainer dialogue views show only the player and terrain with no speaker visible": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Several named trainer dialogue views show only the player and terrain with no speaker visible": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Only the Old Bram frame frames a speaker; the Warder Solene and Keeper Hald views show the player's back on flat terrain and, in the stronghold_elite frame, a blurred brown mass with the camera inside it, so the dialogue staging sinks it."
+  },
+  "El": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "The bridge grunt and Warden remain upright in similar neutral postures after victory while banner and dialogue carry most of the state change": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "The bridge grunt and Warden remain upright in similar neutral postures after victory while banner and dialogue carry most of the state change": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The warm sunlit hillside and cast shadows carry the light, but the grunt stands in the same neutral pose before and after while the 'Tether Grunt defeated' banner does all the work."
+  },
+  "Ap": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's furred boar is on the owner's naturalistic bar but stands below the 1.80 m ruler and floats in faint mid; B's smooth terracotta-and-moss pig reads as a ceramic toy and nose-dives in faint end."
+  },
+  "Pe": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Bright meadow light and sky are pleasant, but the fainted terrapup is a tiny pale smear indistinguishable from its resting pose and the verdian still reads upright near the trees, so the subject does not read at all."
+  },
+  "Rx": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Panel palette (navy, teal tab, gold headers) is on brief, but tiny grey body text, '[Q] Previous tab [Tab] Next tab' literal key labels and a clipped 'Fighting' section are far from a shipping 7-inch-readable menu."
+  },
+  "Gy": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Creatures now tower over the trainers and the dust puffs are real effects, but the ally dog takes a third of the frame and the player overlaps its front legs in grunt-02/03, with flat noon light and no atmosphere."
+  },
+  "Mg": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's Stormcapra matches the owner's style bar with readable faint poses but a near-identical hit react; B's hit-react rear reads well, yet its faint mid/end melt the body into a white blob with horns stretched into long black tubes."
+  },
+  "Xc": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The old villager's appealing face, soft white hair and beard, and earthy green vest and scarf would sit comfortably beside Palworld's humans."
+  },
+  "Ue": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's aftermaths differ per site (fallen banners, freed captive from the opened cage, smoke column from the struck tent, revealed emblem stones), but both sides sit on smeared low-detail ground; B keeps the oxblood banners standing after the win in rows 1, 2, 3 and 5 and its row 2 cage simply vanishes."
+  },
+  "Yr": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands rather than carrying a person": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands rather than carrying a person": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The sky and Galecrest's silhouette are good, but the rigid ladder-hang pose and the blurred, featureless terrain far below sink it."
+  },
+  "Mq": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Torch-lit hall and oxblood banner give mood, but turquoise guide rails cut across the floor and creatures, the ally glows blown-out orange, and warden_aldis-03 is half blocked by a pillar in front of the camera."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Fix staging cameras: frame the speaker in dialogue shots, pull fight cameras back and offset so trainers never overlap the ally, and keep cameras out of pillars and character geometry (Ly, Gy, Mq).",
+   "kind": "scene"
+  },
+  {
+   "change": "Author grounded defeat/faint/carry poses: defeated trainers kneel or slump, fainted creatures settle onto the ground without floating or mesh-stretching, and the Fly carry uses a harness-style grip with bent legs (El, Pe, Yr, Mg B, Ap A).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Replace the turquoise boundary rails with a diegetic arena edge (stones, rune glow on the floor), and enlarge/raise contrast of settings text with controller glyphs instead of literal key labels (Mq, Rx).",
+   "kind": "scene"
+  }
+ ]
+}
