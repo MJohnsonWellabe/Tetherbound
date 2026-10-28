@@ -1,0 +1,220 @@
+{
+ "sets": {
+  "Kh": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Daro, Bex and Irva stay tiny mid-frame figures on flat bright sand behind a plain grey-black dialogue box, so there is no character staging or Valheim-class light to carry it."
+  },
+  "Tv": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's indigo crystal-fur wolf holds the owner Tanglevolt bar through all four poses, but B's faint mid/end frames drop to a white body with black blobs and the neutral stage gives no world light to judge against Palworld."
+  },
+  "Yi": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A warm, readable elder villager with good eyes and a fitting green-brown outfit, but the soft toy-like face sits more cartoon than the naturalistic finish and is shown only on a black stage."
+  },
+  "Ed": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The trainer is now clear, but Aquaryn is gone or a faint translucent ghost, a huge off-screen shadow blots the foreground, and the bare flat dune gives nothing Palworld-class."
+  },
+  "Gz": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's large readable deep-blue-grey panel fits the UI direction, but it shows only three recipes with no scroll cue and no teal/gold accents, and the dark rainy backdrop gives no world appeal."
+  },
+  "Ic": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The navy and cyan water and the distant falls are on palette, but the evenly dashed white lanes and chevrons read like road markings painted on the sea."
+  },
+  "Lz": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's timber frame, diagonal brace, plank cap and stone footing read as built, but it still stands alone as a thin panel, and B's blown-white slab looks like a placeholder card in a lush meadow."
+  },
+  "Fv": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "A small blue creature-like figure remains partly buried in sand behind Ripplett through the Venn fight": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "A small blue creature-like figure remains partly buried in sand behind Ripplett through the Venn fight": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Cannonback's armoured shell is strong, but the pale low-detail Ripplett, the small blue object still sitting in the sand beside it, and the dense HUD stacked over washed-out sand sink it."
+  },
+  "Nf": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The turquoise shallows and beach suit Tidewake, but the swimmer has only a small white foam ring and no trailing wake, so it still floats on a flat surface rather than swimming in water."
+  },
+  "Do": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The seated Aquaryn rider traverses turquoise water while the mount stays tall and nearly static above the surface with no visible stroke bobbing wake splash or current response": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The seated Aquaryn rider traverses turquoise water while the mount stays tall and nearly static above the surface with no visible stroke bobbing wake splash or current response": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Aquaryn's fins match the board, but it stands upright in the same pose above the water across all three frames, with a hard dark shadow on the surface and no splash or wake."
+  },
+  "Fh": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "Broad offshore water reads as uniform light cyan with little depth variation across several island routes": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "Broad offshore water reads as uniform light cyan with little depth variation across several island routes": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Deep navy offshore now separates from cyan shallows, but the shallows sit in hard-edged bands, the islands are bare sand mounds, and the even flat light has no haze or depth atmosphere."
+  },
+  "Nk": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Tidewake tab is now clearly the active one and the panel fits the blue-grey/teal UI direction, but the map itself is a blurry blob with orange route lines and a long plain-text hint row."
+  },
+  "Ms": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Veilfall now reads as a craggy pale rock with one white fall rather than a cone, but it is a small, lone grey spire without the board's tiers, greenery, mist or multiple falls."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Do a water-interaction pass for Tidewake: sink mounts and swimmers to the waterline with a stroke bob, add trailing wakes, splash and displaced-water rings, soften or drop hard shadows on the water, and replace the dashed white current lanes with flow-mapped foam and ripple streaks of varied width and spacing (Do, Nf, Ed, Ic).",
+   "kind": "scene"
+  },
+  {
+   "change": "Reframe the dialogue camera as a close over-the-shoulder or two-shot on the named speaker so the face fills about a third of the frame next to the dialogue panel (Kh).",
+   "kind": "scene"
+  },
+  {
+   "change": "Build a hero Veilfall mountain mesh that matches the board, with tiered cliffs, green ledges, several wide white falls and mist at the base, so the chapter landmark carries the horizon in Ms, Fh and Ic.",
+   "kind": "new_art"
+  }
+ ]
+}

@@ -1,0 +1,220 @@
+{
+ "sets": {
+  "Kh": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Sank by the camera: Daro, Bex and Irva are tiny backs-to-camera figures mid-frame in all three frames on both sides while the portrait panel floats at the bottom, so there is no staged two-shot and the flat noon dunes add no Valheim-class light to carry it."
+  },
+  "Tv": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's indigo crystal-fur wolf is close to the Tanglevolt bar and its hit react and faint read, but side B's hit react is indistinguishable from standing and its faint mid/end frames turn the coat into white-and-black blotches that destroy the creature's identity."
+  },
+  "Yi": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Carried by a clean, appealing grey-bearded villager with a natural moss-green and leather palette and readable full-body silhouette, comparable to Palworld NPC finish, though the soft doll-like face is a touch more cartoon than the naturalistic creature bar."
+  },
+  "Ed": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The trainer and shore are now clear in frames 11-13, but a ghostly translucent mount mesh hovers around the trainer and a large detached dark shadow fills the foreground over flat, featureless sand."
+  },
+  "Gz": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's large blue-grey panel with bold ingredient lines and iconed Craft/Leave hints fits the UI direction, but side B's recipe sub-lines are truncated ('4 Wood (have 0), 3 St...') and its 'Craft: A / Enter' and 'Leave: B / Esc' hints are tiny grey text at both resolutions."
+  },
+  "Ic": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Sank by dashed white lane markings and chevrons painted across the water in all three frames on both sides, which read as road paint rather than moving current."
+  },
+  "Lz": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's timber frame with diagonal brace, plank cap and stone footing reads as a built wall though it stands alone as a single thin bay with flat cream infill, while side B is a pale blown-out card with no cap or footing."
+  },
+  "Fv": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "A small blue creature-like figure remains partly buried in sand behind Ripplett through the Venn fight": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "A small blue creature-like figure remains partly buried in sand behind Ripplett through the Venn fight": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Cannonback reads well, but the pale grey Ripplett barely separates from the pale sand, a small blue-white blob still sits in the sand beside it in frames 1-2, and HUD panels crowd every frame."
+  },
+  "Nf": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The hard shadow is gone and a small white foam ring surrounds the swimmer, but there is no trailing wake and both arms are held stiffly overhead in every frame, so it does not read as swimming."
+  },
+  "Do": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "The seated Aquaryn rider traverses turquoise water while the mount stays tall and nearly static above the surface with no visible stroke bobbing wake splash or current response": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "The seated Aquaryn rider traverses turquoise water while the mount stays tall and nearly static above the surface with no visible stroke bobbing wake splash or current response": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Sank by Aquaryn standing upright on the water surface in an identical pose across frames 03-05 with no splash or wake and a long hard shadow cast onto the water, so it reads as walking on glass."
+  },
+  "Fh": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Broad offshore water reads as uniform light cyan with little depth variation across several island routes": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Broad offshore water reads as uniform light cyan with little depth variation across several island routes": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Offshore water now goes deep navy with cyan shallows, but the depth steps are hard concentric bands around bare dune islands and the lastlight frame shows only a tent and sand, short of the board's lush archipelago."
+  },
+  "Nk": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Tidewake tab is now the highlighted teal tab under the TIDEWAKE heading and the blue-grey panel fits the UI direction, but the map itself is a blurry blue field with one blob island, and the hint row mixes keyboard keys with controller buttons."
+  },
+  "Ms": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Veilfall is now a pale craggy spire with one broad white fall in frames 1-2, but it is a small bare monolith with no tiers, greenery, arches or mist, far from the board's towering waterfall mountain, and it is absent from frame 3."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild water interaction: replace the dashed white current lanes with flow-mapped foam and ripple bands, and give the Aquaryn mount and swimmer submersion, bobbing, a bow wake and splash, with the shadow softened onto the water surface (Ic, Do, Nf).",
+   "kind": "scene"
+  },
+  {
+   "change": "Frame named dialogue as an over-the-shoulder two-shot with the speaker large and facing the camera beside the portrait panel (Kh).",
+   "kind": "scene"
+  },
+  {
+   "change": "Build Veilfall as a tiered hero landmark with green ledges, multiple wide falls, mist and stone arches per the water stronghold board, and dress the dune islands with palms, rocks and reef so the archipelago reads lush (Ms, Fh).",
+   "kind": "new_art"
+  }
+ ]
+}

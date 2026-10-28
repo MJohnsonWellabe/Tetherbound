@@ -1,0 +1,296 @@
+[
+    {
+        "item":  "P2-008",
+        "board_row":  "F39#1",
+        "subject":  "shore landforms",
+        "defect":  "Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions",
+        "frames":  [
+                       "tidewake__brine_steps__06__brine_steps_east_beach__walk_03_day",
+                       "tidewake__first_shore__01__first_shore_welcome_beacon__day__close",
+                       "tidewake__first_shore__02__first_shore_horizon_stones__route_day"
+                   ]
+    },
+    {
+        "item":  "P2-010",
+        "board_row":  "F39#2",
+        "subject":  "Veilfall silhouette",
+        "defect":  "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks",
+        "frames":  [
+                       "tidewake__drowned_garden__21__drowned_garden_terraces__route_day",
+                       "tidewake__first_shore__02__first_shore_horizon_stones__route_day",
+                       "tidewake__landmark__sluice_channel_bridge__day__close"
+                   ]
+    },
+    {
+        "item":  "P2-011",
+        "board_row":  "F39#3",
+        "subject":  "named destination read",
+        "defect":  "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces",
+        "frames":  [
+                       "tidewake__drowned_garden__21__drowned_garden_terraces__route_day",
+                       "tidewake__gull_rest__19__gull_rest_signal_spire__route_day",
+                       "tidewake__lantern_cove__17__lantern_cove_drift_arch__route_day"
+                   ]
+    },
+    {
+        "item":  "P2-030",
+        "board_row":  "F39#4",
+        "subject":  "shiny creature finish",
+        "defect":  "Several shiny variants become near-uniform hot magenta and lose their ordinary species material and pattern identity",
+        "frames":  [
+                       "tidewake__aquaryn__shiny_idle",
+                       "tidewake__cannonback__shiny_idle",
+                       "tidewake__riptusk__shiny_idle"
+                   ]
+    },
+    {
+        "item":  "P2-071",
+        "board_row":  "F39#5",
+        "subject":  "surface swimming trainer pose",
+        "defect":  "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming",
+        "frames":  [
+                       "tidewake__swimming__entry",
+                       "tidewake__swimming__surface_west",
+                       "tidewake__swimming__surface_mid"
+                   ]
+    },
+    {
+        "item":  "P2-028",
+        "board_row":  "F39#6",
+        "subject":  "creature faint state",
+        "defect":  "Several fainted aquatic creatures keep raised alert heads or upright crouches instead of reading as defeated",
+        "frames":  [
+                       "tidewake__ripplet__fainted",
+                       "tidewake__riptusk__fainted",
+                       "tidewake__aquaryn__fainted"
+                   ]
+    },
+    {
+        "item":  "P2-089",
+        "board_row":  "F39#7",
+        "subject":  "fight actor composition",
+        "defect":  "Close-range fight staging lets allies, enemies and sometimes the trainer intersect, so heads and limbs cover one another in several Venn opponent phases",
+        "frames":  [
+                       "tidewake__fight__venn__t-023_02",
+                       "tidewake__fight__venn__t-024_02",
+                       "tidewake__fight__venn__t-025_02"
+                   ]
+    },
+    {
+        "item":  "P2-108",
+        "board_row":  "F39#8",
+        "subject":  "Aquaryn mounted-water pose",
+        "defect":  "The seated Aquaryn rider traverses turquoise water while the mount stays tall and nearly static above the surface with no visible stroke bobbing wake splash or current response",
+        "frames":  [
+                       "tidewake__system__mounted-swim-03-mounted",
+                       "tidewake__system__mounted-swim-04-mounted",
+                       "tidewake__system__mounted-swim-05-mounted"
+                   ]
+    },
+    {
+        "item":  "P2-113",
+        "board_row":  "F39#9",
+        "subject":  "catch camera distance",
+        "defect":  "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path",
+        "frames":  [
+                       "tidewake__catching__02-orb-in-flight",
+                       "tidewake__catching__03-strike",
+                       "tidewake__catching__03-absorbing"
+                   ]
+    },
+    {
+        "item":  "P2-009",
+        "board_row":  "F39#10",
+        "subject":  "water and island depth",
+        "defect":  "Broad offshore water reads as uniform light cyan with little depth variation across several island routes",
+        "frames":  [
+                       "tidewake__drowned_garden__21__drowned_garden_terraces__route_day",
+                       "tidewake__first_shore__02__first_shore_horizon_stones__route_day",
+                       "tidewake__landmark__lastlight__day__close"
+                   ]
+    },
+    {
+        "item":  "P2-115",
+        "board_row":  "F39#12",
+        "subject":  "authored camp creature bed silhouette",
+        "defect":  "The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape to identify it as a resting place",
+        "frames":  [
+                       "tidewake__bed__water_camp_first_shore__bed",
+                       "tidewake__bed__water_camp_brine_steps__bed",
+                       "tidewake__bed__water_camp_salt_crown__bed"
+                   ]
+    },
+    {
+        "item":  "P2-116",
+        "board_row":  "F39#13",
+        "subject":  "authored camp workbench identity",
+        "defect":  "The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidden by the trainer",
+        "frames":  [
+                       "tidewake__crafting__water_camp_first_shore__crafting",
+                       "tidewake__crafting__water_camp_brine_steps__crafting",
+                       "tidewake__crafting__water_camp_salt_crown__crafting"
+                   ]
+    },
+    {
+        "item":  "P2-072",
+        "board_row":  "F39#14",
+        "subject":  "swimmer water contact",
+        "defect":  "The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body",
+        "frames":  [
+                       "tidewake__swimming__entry",
+                       "tidewake__swimming__surface_west",
+                       "tidewake__swimming__surface_mid"
+                   ]
+    },
+    {
+        "item":  "P2-026",
+        "board_row":  "F39#15",
+        "subject":  "Veilfall approach shallows",
+        "defect":  "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows",
+        "frames":  [
+                       "tidewake__drowned_garden__21__drowned_garden_terraces__route_day",
+                       "tidewake__drowned_garden__21__drowned_garden_terraces__walk_01_day",
+                       "tidewake__sluice_isle__14__sluice_channel_bridge__route_day"
+                   ]
+    },
+    {
+        "item":  "P2-066",
+        "board_row":  "F39#16",
+        "subject":  "live current streaks",
+        "defect":  "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface",
+        "frames":  [
+                       "tidewake__current_states__S1_live_t0",
+                       "tidewake__current_states__S1_live_t1",
+                       "tidewake__current_states__S2_live_t0"
+                   ]
+    },
+    {
+        "item":  "P2-067",
+        "board_row":  "F39#17",
+        "subject":  "current restoration environment",
+        "defect":  "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged",
+        "frames":  [
+                       "tidewake__current_states__S1_live_t0",
+                       "tidewake__current_states__S1_restored_t0",
+                       "tidewake__current_states__S2_live_t0"
+                   ]
+    },
+    {
+        "item":  "P2-073",
+        "board_row":  "F39#18",
+        "subject":  "dialogue camera framing",
+        "defect":  "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker",
+        "frames":  [
+                       "tidewake__inventory__trainer__water_trainer_daro__dialogue",
+                       "tidewake__inventory__trainer__water_trainer_bex__dialogue",
+                       "tidewake__inventory__trainer__water_trainer_irva__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-088",
+        "board_row":  "F39#19",
+        "subject":  "fight team roster contrast",
+        "defect":  "The left team roster fades to pale low-contrast text against terrain during active combat",
+        "frames":  [
+                       "tidewake__fight__venn__t-000_00",
+                       "tidewake__fight__venn__tell-start-000_48",
+                       "tidewake__fight__venn__t-003_02"
+                   ]
+    },
+    {
+        "item":  "P2-090",
+        "board_row":  "F39#20",
+        "subject":  "fight background creature ground contact",
+        "defect":  "A small blue creature-like figure remains partly buried in sand behind Ripplett through the Venn fight",
+        "frames":  [
+                       "tidewake__fight__venn__t-000_00",
+                       "tidewake__fight__venn__tell-start-001_65",
+                       "tidewake__fight__venn__t-016_00"
+                   ]
+    },
+    {
+        "item":  "P2-109",
+        "board_row":  "F39#22",
+        "subject":  "Aquaryn dismount camera obstruction",
+        "defect":  "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action",
+        "frames":  [
+                       "tidewake__system__mounted-swim-11-land",
+                       "tidewake__system__mounted-swim-12-land",
+                       "tidewake__system__mounted-swim-13-land"
+                   ]
+    },
+    {
+        "item":  "P2-114",
+        "board_row":  "F39#23",
+        "subject":  "catch chance HUD contrast",
+        "defect":  "The capture chance label and percentage sit over the trainer and pale grass with weak contrast, making the changing odds difficult to scan while aiming",
+        "frames":  [
+                       "tidewake__catching__catch_low",
+                       "tidewake__catching__catch_high",
+                       "tidewake__catching__01-aiming-full-health"
+                   ]
+    },
+    {
+        "item":  "P2-029",
+        "board_row":  "F39#24",
+        "subject":  "creature rest poses",
+        "defect":  "Riptusk and Torrentoad resting poses roll onto their backs with limbs raised and read as distressed rather than settled",
+        "frames":  [
+                       "tidewake__riptusk__resting",
+                       "tidewake__torrentoad__resting"
+                   ]
+    },
+    {
+        "item":  "P2-032",
+        "board_row":  "F39#25",
+        "subject":  "map active region",
+        "defect":  "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab",
+        "frames":  [
+                       "tidewake__menu_map"
+                   ]
+    },
+    {
+        "item":  "P2-075",
+        "board_row":  "F39#26",
+        "subject":  "dialogue foreground obstruction",
+        "defect":  "The player head and back overlap the named speaker in several conversation frames",
+        "frames":  [
+                       "tidewake__inventory__character__water_adair__dialogue",
+                       "tidewake__inventory__character__water_iona__dialogue",
+                       "tidewake__inventory__character__water_rowan__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-057",
+        "board_row":  "F39#27",
+        "subject":  "grass around named characters",
+        "defect":  "Dense pale grass reaches knee to waist height around Tidewake characters and hides much of their costume silhouette in normal-camera post views",
+        "frames":  [
+                       "tidewake__inventory__character__water_adair",
+                       "tidewake__inventory__character__water_bren",
+                       "tidewake__inventory__character__water_corin"
+                   ]
+    },
+    {
+        "item":  "P2-091",
+        "board_row":  "F39#28",
+        "subject":  "fight boss title overlay",
+        "defect":  "The upper-center boss title card overlaps part of Cannonback’s shell and head in the opening and tell views",
+        "frames":  [
+                       "tidewake__fight__venn__t-000_00",
+                       "tidewake__fight__venn__tell-start-000_48",
+                       "tidewake__fight__nerissa__t-000_00"
+                   ]
+    },
+    {
+        "item":  "P2-074",
+        "board_row":  "F39#29",
+        "subject":  "dialogue speaker visibility",
+        "defect":  "Several named conversations show no identifiable speaker near the dialogue panel",
+        "frames":  [
+                       "tidewake__inventory__character__water_nalia__dialogue",
+                       "tidewake__inventory__character__water_nerissa__dialogue",
+                       "tidewake__inventory__trainer__water_trainer_nerissa__dialogue"
+                   ]
+    }
+]
