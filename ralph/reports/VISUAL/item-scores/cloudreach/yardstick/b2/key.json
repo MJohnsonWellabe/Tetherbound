@@ -1,0 +1,70 @@
+{
+ "Ji": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Vv": {
+  "anchor": false,
+  "label": "IS cloudreach P2-049 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-049.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-049.png"
+ },
+ "Da": {
+  "anchor": false,
+  "label": "IS cloudreach P2-117 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-117.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-117.png"
+ },
+ "Xi": {
+  "anchor": false,
+  "label": "IS cloudreach P2-077 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-077.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-077.png"
+ },
+ "Of": {
+  "anchor": false,
+  "label": "IS cloudreach P2-048 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-048.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-048.png"
+ },
+ "Lh": {
+  "anchor": false,
+  "label": "IS cloudreach P2-068 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-068.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-068.png"
+ },
+ "Ly": {
+  "anchor": true,
+  "A": "f10_2_r3_capacitor:control",
+  "B": "f10_2_r3_capacitor:candidate_r3"
+ },
+ "Vd": {
+  "anchor": true,
+  "A": "f36_0_gap:C3A",
+  "B": "f36_0_gap:C3B"
+ },
+ "Xb": {
+  "anchor": false,
+  "label": "IS cloudreach P2-054 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-054.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-054.png"
+ },
+ "Eb": {
+  "anchor": false,
+  "label": "IS cloudreach P2-102 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-102.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-102.png"
+ },
+ "Xx": {
+  "anchor": false,
+  "label": "IS cloudreach P2-024 one-sided",
+  "A": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-024.png",
+  "B": "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-024.png"
+ },
+ "Av": {
+  "anchor": true,
+  "A": "f36_0_npc:C1A",
+  "B": "f36_0_npc:C1B"
+ }
+}

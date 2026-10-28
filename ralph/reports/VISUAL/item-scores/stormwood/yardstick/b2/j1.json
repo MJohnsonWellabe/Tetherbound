@@ -1,0 +1,182 @@
+{
+ "sets": {
+  "Uh": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Rodkeeper Hesk, Elder Maud and Warden-elect Bryn are tiny, near-identical pale-haired figures beside the trainer under a flat lilac sky with no shafts or storm grade, so nothing carries them to Palworld finish."
+  },
+  "Dx": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Fulgocobra's gold veining reads somewhat, but the Stormraven is a flat blue-violet blob with no visible lightning, both are unlit by rim or storm light, and the lit cottage and flat sky sink the frames."
+  },
+  "Zq": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The checker void is gone, but the trainer still stands on a bare tiled-moss ridge between pale lavender sheets that read as fog walls rather than a glass basin, with no rim marker, copper or black pool to sell the landmark."
+  },
+  "Tl": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Grunt Lieutenant Dace, Lieutenant Varga and Defector Sable are small dark figures lost against dark green-teal grass, with no rim light or uniform accent to pick them out."
+  },
+  "Yk": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Crown Overlook spire and the Fallen Giant root mass give two frames a subject, but the Lantern Pools frame is still a dirt path through grass with no pool or lantern, and the flat sky and low-contrast grade keep it below Palworld density."
+  },
+  "Gs": {
+   "A": {
+    "bar_a": 3.0,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 2.7,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "In both Captain Marrow frames a giant blue lightning-bolt banner fills the screen and the speaker is never seen; only Officer Nysa's frame stages the speaker, and in B the banner edge also crowds that frame."
+  },
+  "Wx": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra's white fleece, dark curled horns and blue chest glow match the owner's style bar and stand well above the ruler, but in B the faint mid and faint end poses flip the body belly-up and lift it off the floor, which breaks the grounded read."
+  },
+  "Yg": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated boar has a strong heavy silhouette, but in A it is one murky dark-brown mid-tone that goes almost fully black by faint end, and in both sides the faint mid and faint end bodies float above their shadows; B's ember-red seams give it identity but sit close to the reserved oxblood."
+  },
+  "Xc": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "In the win frame the five-slot quickbar still sits directly above the 'Hollows Alpha yields the glowmoss lanes' line and reads as its reward row (it only moves bottom-right in aftermath), with the team list and objective panels crowding a dim forest."
+  },
+  "Hk": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder with readable eyes, a clear silhouette and a natural moss-green and leather palette that fits the key art's settlement folk at Palworld-class finish."
+  },
+  "Iv": {
+   "A": {
+    "bar_a": 6.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, diagonal brace, plank cap and stone footing make it read as a built wall, though the infill is still flat cream and the panel stands alone and thin; B is a blown-out white card with no cap or footing."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Restage named-NPC, officer and dialogue cameras: frame the speaker at mid-shot with no banners or foreground geometry in front, and add a rim or key light plus a bright uniform or rank accent so dark-clad characters separate from the dark grass (Gs, Tl, Uh)",
+   "kind": "scene"
+  },
+  {
+   "change": "Give the Stormwood grade storm-phase light: directional key with shafts, white-violet lightning flashes, a darker graded sky in place of the flat lilac, and emissive charge veins on Stormraven and Fulgocobra bright enough to read at creature-view distance (Dx, Uh, Yk, Tl)",
+   "kind": "scene"
+  },
+  {
+   "change": "Build authored hero set-pieces for the Glass Sink (a visible glass-walled basin with a black pool and copper rim markers) and Lantern Pools (pools plus lanterns), and give each named NPC a distinct face, hair and outfit silhouette",
+   "kind": "new_art"
+  }
+ ]
+}

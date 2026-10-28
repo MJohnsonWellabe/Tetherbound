@@ -1,0 +1,74 @@
+[
+    {
+        "label":  "IS cloudreach P2-077 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-077.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-077.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: dialogue foreground composition. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The foreground player or nearby posts hide much of the named speaker in several conversation frames"
+                    ]
+    },
+    {
+        "label":  "IS cloudreach P2-054 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-054.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-054.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: mushroom pickup variants. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance"
+                    ]
+    },
+    {
+        "label":  "IS cloudreach P2-024 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-024.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-024.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: architectural landmark read. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail"
+                    ]
+    },
+    {
+        "label":  "IS cloudreach P2-102 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-102.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-102.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: High Perches rim mushroom. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem"
+                    ]
+    },
+    {
+        "label":  "IS cloudreach P2-049 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-049.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-049.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: floating dark strips. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void"
+                    ]
+    },
+    {
+        "label":  "IS cloudreach P2-068 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-068.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-068.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: named NPC post readability. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role"
+                    ]
+    },
+    {
+        "label":  "IS cloudreach P2-048 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-048.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-048.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: Cloudreach map region label. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The discovered Cloudreach Gate / Lower Cliffs label is cut after LOWER without a wrap or ellipsis"
+                    ]
+    },
+    {
+        "label":  "IS cloudreach P2-117 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-117.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-cloudreach\\sides\\P2-117.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the cloudreach biome: catch chance feedback timing. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar"
+                    ]
+    }
+]

@@ -1,0 +1,83 @@
+[
+    {
+        "label":  "IS tidewake P2-071 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-071.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-071.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: surface swimming trainer pose. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "During the swim crossing the submerged trainer remains upright with relaxed arms and visible boots so the action reads as wading rather than surface swimming"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-067 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-067.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-067.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: current restoration environment. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "The restored current removes the white flow streaks while shoreline sandbars water color and surrounding geometry remain visually unchanged"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-011 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-011.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-011.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: named destination read. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several named route destinations read as unmarked grassy slopes or small generic structures instead of distinct halls arches or terraces"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-057 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-057.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-057.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: grass around named characters. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Dense pale grass reaches knee to waist height around Tidewake characters and hides much of their costume silhouette in normal-camera post views"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-029 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-029.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-029.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: creature rest poses. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Riptusk and Torrentoad resting poses roll onto their backs with limbs raised and read as distressed rather than settled"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-113 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-113.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-113.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: catch camera distance. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-026 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-026.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-026.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: Veilfall approach shallows. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "A ruler-straight chain of nearly identical tan discs with white rims makes the Veilfall approach read as mechanical stepping stones rather than natural current shallows"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-074 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-074.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-074.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: dialogue speaker visibility. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Several named conversations show no identifiable speaker near the dialogue panel"
+                    ]
+    },
+    {
+        "label":  "IS tidewake P2-008 one-sided",
+        "a":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-008.png",
+        "b":  "D:\\tb-gpu-runs\\yard\\IS-tidewake\\sides\\P2-008.png",
+        "brief":  "Fixed captures from the game of one catalogue subject in the tidewake biome: shore landforms. Judge how this subject looks in the game - whether it reads as the key art\u0027s world, with believable form, material, light and staging. Score the subject, not the rest of the frame.",
+        "defects":  [
+                        "Repeated grassy domes with steep smooth gray rock skirts lack layered shore ecology and clear grass-to-sand transitions"
+                    ]
+    }
+]

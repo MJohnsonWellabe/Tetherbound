@@ -1,0 +1,220 @@
+{
+ "sets": {
+  "Kh": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Bright clean beach light is pleasant, but every frame is a wide gameplay camera with tiny speakers and a flat panel, with none of the framed two-shot staging or atmosphere a shipping game uses for dialogue."
+  },
+  "Tv": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The violet-crystal wolf silhouette is close to the owner's Tanglevolt bar and towers over the ruler, but side B's faint poses flip to a white body with black blotches that breaks the creature's identity."
+  },
+  "Yi": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elder with a clear face, eyes and earthy green/brown kit sits comfortably at Palworld character finish, held back only by the plain dark stage and soft, slightly toy-like shading."
+  },
+  "Ed": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "After dismount the camera sits close behind Aquaryn so its back and fins fill much of the view and obscure the trainer and shore-return action": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The trainer is now clear, but Aquaryn has become a near-invisible ghost outline with a large hard shadow on bare, flat sand, so the subject and the beach both read unfinished."
+  },
+  "Gz": {
+   "A": {
+    "bar_a": 6.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's large blue-grey panel with readable gold costs fits the UI direction, but the Craft/Leave actions are small glyph-plus-text lines with no button treatment, and side B shrinks everything into clipped grey microtext."
+  },
+  "Ic": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Live currents use long bright evenly spaced parallel white streaks that read like guide lanes on the water surface": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cyan/navy water itself is on-palette, but the currents are dashed white road markings with chevrons painted on the surface, which reads as a debug overlay rather than moving water."
+  },
+  "Lz": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's timber frame, diagonal brace, plank cap and stone footing finally read as a built wall, but it is still a thin freestanding card with flat cream infill; side B is a blown-out white sheet in a thin frame."
+  },
+  "Fv": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "A small blue creature-like figure remains partly buried in sand behind Ripplett through the Venn fight": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "A small blue creature-like figure remains partly buried in sand behind Ripplett through the Venn fight": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The armoured Cannonback has good form, but the pale grey Ripplett nearly disappears into pale sand, a small blue object still sits half-buried behind it, and dense HUD boxes crowd the fight."
+  },
+  "Nf": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The moving trainer leaves little localized wake splash foam or displaced-water ring while a hard dark shadow sits beside the body": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The turquoise shallows and beach are on-brief, but the swimmer floats upright with both arms raised inside a small white foam ring, with no trailing wake, so it does not read as swimming."
+  },
+  "Do": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "The seated Aquaryn rider traverses turquoise water while the mount stays tall and nearly static above the surface with no visible stroke bobbing wake splash or current response": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "The seated Aquaryn rider traverses turquoise water while the mount stays tall and nearly static above the surface with no visible stroke bobbing wake splash or current response": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Aquaryn stands upright on its legs on top of the water, with the same pose in all three frames and a big hard shadow on the surface but no wake or splash, so the mount looks pasted onto the water."
+  },
+  "Fh": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "Broad offshore water reads as uniform light cyan with little depth variation across several island routes": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "Broad offshore water reads as uniform light cyan with little depth variation across several island routes": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Navy offshore now separates from cyan shallows, but the shelf bands are hard-edged and the islands are bare sand mounds with sparse props and no haze, nothing like the board's lush, layered archipelago."
+  },
+  "Nk": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The tab state is now correct and the frame follows the UI direction, but the map itself is a blurred navy field with one yellow-green blob and orange lines, with no landmarks or island shapes to make it a world map."
+  },
+  "Ms": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "The distant Veilfall mountain reads as a near-geometric dark cone with narrow broken waterfall streaks": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Veilfall is now a pale, craggy spire rather than a dark cone, but it is a small bare rock with one thin fall, far from the board's towering green-terraced mountain with many white falls and mist."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild Tidewake water dressing: replace the dashed-line current overlay with flowing foam and normal-map streaks, add wake, splash and ring effects for swimmer and mount, sink Aquaryn into the water with a stroke/bob cycle, and swap the hard surface shadows for soft contact shading.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build the Veilfall hero landmark to the stronghold board: a tall tiered mountain with green terraces, several broad white falls and base mist, readable from across the archipelago; and dress the bare sand islands with vegetation and rock clusters.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Camera and staging pass: frame named dialogue as a close over-the-shoulder two-shot on the speaker, keep the dismounted Aquaryn visible but out of the way instead of a ghost outline, and remove the half-buried leftover figure from the Venn fight.",
+   "kind": "scene"
+  }
+ ]
+}

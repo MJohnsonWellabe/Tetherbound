@@ -1,0 +1,178 @@
+{
+ "sets": {
+  "Vd": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "All three frames on both sides show a dark brown walled arena ring with banners and a thin lightning column instead of the board's colossal split tree with a crown, bark, walkways and warm lantern light, so the landmark sinks it. Gap to 7.5: model the Stormheart as a trunk with a branching canopy silhouette above the arena, show the core as a lit split in the bark, and add warm lanterns against the purple storm sky."
+  },
+  "Ug": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Distinct named Stormwood characters use identical dialogue lines": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Fenn, Oswin and Elder Maud now have distinct lines and appealing portraits, but the Fenn frame is a black void with no speaker or scene behind the box and the other two are flat midday frames with a plain dialogue panel, so the finish falls short. Gap to 7.5: render Fenn's scene and stage him in frame, frame speakers with a closer over-shoulder camera and rim light, and theme the dialogue panel with the pale border and gold name plate."
+  },
+  "Qc": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The 'after' frame is still a full exploration HUD (TEAM 5/5, all-green bars, Main Story card, action row) with a plain line of text across the middle and a tiny 'creature is beaten' tag, so no result moment reads. Gap to 7.5: add a dedicated result panel (loss vs win banner, fainted party members greyed, rewards or penalties listed), dim or hide the exploration HUD during it, and frame the camera on the outcome."
+  },
+  "Hw": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Stormcapra keeps the owner-bar fleece, curled horns and blue gem and stands taller than the trainer, but the neutral stage has no Valheim-class light or atmosphere. A's hit react is the same as standing and its faint end has legs splayed up; B's faint mid/end collapses into a legless fleece lump with horns stretched into flat black tubes. Gap to 7.5: give a visible flinch for the hit react, keep the legs folded under the body in faint, and stop the horns deforming."
+  },
+  "Pv": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Every frame on both sides is one flat teal leaf carpet to a bare horizon, with a few thin scattered trees and a flat lilac sky, so no ancient-forest depth or fog layering reads. Gap to 7.5: mass trunks into groves and dark tree walls in the midground, break the ground with roots, black pools and moss mounds, and layer blue-violet fog bands toward the horizon."
+  },
+  "Xs": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold Voltarach reads, but the player's creature is barely findable in either side. A shows flat magenta ground rings and chevron slabs as the telegraphs (i06-i10, i15-i16, tell2 a-c). B has fewer slabs but the camera goes into dark trunk/foliage on i12-i15 and the fight disappears. Both are dim brown, so the fight is unreadable. Gap to 7.5: replace the magenta decals with real lightning/stone tells, push trunks out of the camera path or fade occluders, and give the player creature a rim light."
+  },
+  "Tj": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The elder has a clear face and eyes, a strong white-hair silhouette and an earthy green/brown palette that fit the key art's trainer, but he is a soft toy-like render on a black backdrop with no environment light. Gap to 7.5: show him lit in a Stormwood scene with a cool rim light, add surface detail to cloth and leather, and add a defining prop or accessory for his identity."
+  },
+  "Oh": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Stormglass now shows pale blue crystal shards on a boulder. Stormglass_crown reads as a boulder with beige wooden-looking spikes, and glowmoss is a flat lime blob with no glow, all set on a bare flat leaf carpet. Gap to 7.5: make the crown shards glassy and lightning-lit, give glowmoss emissive cyan-green tufts on a mound, and nest the nodes in authored spots (roots, pools)."
+  },
+  "Bi": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths are distinct per site: banners torn down and dropped (rows 1, 3, 5), the cage opened with a freed villager (row 2), and a smoke plume where the tent stood (row 4). A mostly leaves the Team Tether banners up (rows 1, 3, 5) and only drops small emblem stones or debris, so the win barely reads. Both have smeared, low-detail grass and a flat sky. Gap to 7.5: carry B's site-specific changes plus warmer post-win light, and sharpen the ground textures."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Break now shows white-violet lightning bolts and a darker grade, but Calm and Building are near-identical lilac frames (Fading is not shown). The sky is a flat purple wash with no cloud structure. Gap to 7.5: give each phase its own sky (clear lilac / rolling cloud wall / bolt-lit / clearing), its own fog density and its own colour grade, and add wind on the foliage for Building."
+  },
+  "He": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold-and-blue Voltarach is a strong board-faithful hero and no magenta slab shows at strike or impact while 'staggered - punish now' appears. But the player's creature is a tiny white spark under the spider, and the dense HUD covers about a third of the frame. Gap to 7.5: add a real lightning/impact effect at the hit, rim-light the player creature, and trim or fade the side HUD panels in combat."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Break up the flat leaf carpet in every Stormwood frame: groves and tree walls, roots, black pools, moss mounds, layered blue-violet fog and a structured storm sky (Pv, Oh, Uv, Vd, Ug).",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the dark ring arena with a colossal Stormheart tree mesh that has a branching crown, split glowing core, walkways and warm lanterns (Vd).",
+   "kind": "new_art"
+  },
+  {
+   "change": "Combat readability: replace the magenta decal telegraphs with real lightning/stone tells, fade trunks between the camera and the fight, rim-light the player creature, and give results a dedicated panel instead of exploration HUD text (Xs, He, Qc).",
+   "kind": "scene"
+  }
+ ]
+}

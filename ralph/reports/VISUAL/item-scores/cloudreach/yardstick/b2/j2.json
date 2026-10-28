@@ -1,0 +1,194 @@
+{
+ "sets": {
+  "Ji": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's aftermaths (enemy banners and crates removed, an opened cage, a smoking tent site) read as particular to each site, but on both sides the soft, smeared ground textures and flat noon light are well short of Palworld density, and side B keeps oxblood enemy banners standing in the after frames of rows 1, 3 and 5."
+  },
+  "Vv": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Disconnected black rail-like strips cross grass and extend into open air above the Cloudreach void": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The strips are gone and the cloud sea reads, but the flat dark rock wall filling a third of the summit frame and the bare grass plane in the ravine frame look unfinished, not Palworld-class."
+  },
+  "Da": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "A stale failed-catch message remains along the bottom while the new aim state shows 100% CAPTURE CHANCE and a nearly empty target bar": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The blue-grey translucent HUD and teal ring are on-spec and no stale message shows, but the target creature is a tiny pale shape beside the reticle in a dark, murky cave-mouth scene, so the catch moment has little punch."
+  },
+  "Xi": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "The foreground player or nearby posts hide much of the named speaker in several conversation frames": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The dialogue panels and portraits are clean, but in all three frames the player's back fills the centre and the speaker (Tavi behind the player's shoulder, Sora and Rusk not visible past the player and the wooden post) is not staged, so these do not read as conversations."
+  },
+  "Of": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "The discovered Cloudreach Gate / Lower Cliffs label is cut after LOWER without a wrap or ellipsis": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "The discovered Cloudreach Gate / Lower Cliffs label is cut after LOWER without a wrap or ellipsis": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cut label no longer appears, but neither does any region label: the map is a blurry blue cloud-noise field with one marker and a stray tan line, and the control legend wraps awkwardly ('[Comma]/ [Period]'), so the map shows no Cloudreach geography."
+  },
+  "Lh": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Several named Cloudreach NPCs look small or partly hidden behind the foreground trainer and nearby buildings, with little visible pose or costume detail to communicate their role": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cliffs and sky in the background are pleasant, but the named NPCs are tiny figures in tall grass (young trainer Tavi), next to the trainer (Sora) or squeezed between tree trunks (keeper, worst on side B), so no post reads as a place where someone stands with a role."
+  },
+  "Ly": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The spider boss reads as a silhouette, but the frames are dark and murky, side A loses the view entirely to canopy or trunk occlusion in i11, i13 and i15, the player's creature barely registers on either side, the telegraphs are flat magenta outline rings and slabs with no real impact object, and HUD panels cover both flanks."
+  },
+  "Vd": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's shaggy white fur is close to the naturalistic Tanglevolt bar, but its faint-end pose reads as an upright curled sit, not a faint; side B has a cleaner silhouette with a blue-gradient tail and dark ear tips, but its fur is smoother and toy-like and its faint-mid frame floats clear of its shadow; both are only about trainer height at the shoulder-head."
+  },
+  "Xb": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The two pickups now separate (a pale cap on a blue glowing base versus a flat orange cap), but both are small plasticky blobs sitting on flat grass with no ground contact or clustering, and the boxy rocks behind look like placeholders."
+  },
+  "Eb": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "A yellow mushroom cluster appears suspended beyond the grassy rim with no ground beneath its stem": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The cliff-top perch with its griffin has some Cloudreach character, but the rim mushroom is only a glowing yellow-white blob cut by the bottom-right frame edge with no readable stem or ground contact, and the night frames crush to near-black."
+  },
+  "Xx": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "Several Cloudreach destinations present sparse plain or disconnected structures with weak landmark-specific detail": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The pale tower with a blue cone roof, the banners and the stratified cliffs in the distance echo the Sky Aviary board, but the beacon is a lone tower behind a plain rectangular wooden frame on an empty grass plane, far from the board's layered stone architecture."
+  },
+  "Av": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The appealing old villager has a clear face and eyes, an earthy green-brown outfit and a readable full-body silhouette at Palworld-class character finish, though his Pixar-like face is a touch rounder than the naturalistic world."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stage camera and actor framing for subjects: dialogue and NPC-post cameras that frame the named speaker in a clear three-quarter view with the player off to the side, and fight cameras that pull clear of trunks and canopy (Xi, Lh, Ly, Eb).",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace flat magenta outline telegraphs with grounded effect objects (dust and debris arcs, cracked-ground decals, impact bursts), and lift the exposure of dark forest and night scenes so both fighters separate from the ground (Ly, Eb, Da).",
+   "kind": "scene"
+  },
+  {
+   "change": "Build Cloudreach landmark and map art to the Sky Aviary board: layered pale stone gate and tower kits with arches and banners in place of plain wooden frames, and a painted region map with labelled areas (Xx, Of, Vv).",
+   "kind": "new_art"
+  }
+ ]
+}

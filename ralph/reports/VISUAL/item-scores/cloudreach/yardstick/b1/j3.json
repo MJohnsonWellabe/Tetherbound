@@ -1,0 +1,210 @@
+{
+ "sets": {
+  "Iv": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The fleece-and-horn ram matches the owner's Stormcapra bar and towers over the 1.80 m ruler; side A's hit react is indistinguishable from standing and its faint end tips into a stiff sideways slab, while side B rears and settles into a grounded faint."
+  },
+  "Vy": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "In the Captain Veyra frames the only figure in view is the trainer in front of a blank plaster wall with flat yellow shutters on a uniform lawn, so neither the speaker nor a lived-in place carries the scene."
+  },
+  "Cz": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Dark brown one-value forest floor with no purple storm sky or lightning, a hard-to-find player creature and flat magenta ring/arrow telegraphs (A i06, i07, i10; B i10, i16) sink it, and in side B foliage fills the screen at i13 and i15."
+  },
+  "Lx": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "Flat white polygonal cloud puffs cover the terrace cliff edge and read as loose foreground shapes against the continuous cloud floor": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Hard-edged white puffs sit over the rider and cliff lip (frame 2) and a black wedge shadow slices the cliff (frame 3), so the clouds read as placeholder cut-outs rather than Valheim-class atmosphere."
+  },
+  "Lw": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Broad level grass fields and sparse ordinary trees dominate Cloudreach views where layered elevated land and ledge detail should lead the route": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Flat uniform lawn with a few loose boulders, a visible cut terrain-disc edge (frame 2) and a camera pressed into a rock face (frame 3) read as a test map, not a stratified sky-cliff world."
+  },
+  "Ui": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "During incoming warnings the camera repeatedly faces an empty part of the arena or crops the opponent and ally so the attack direction and exchange are difficult to read": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Aeriex and the ally sit mid-frame in all three captures so the exchange reads, but a large white winged creature is cropped at the frame edge (frames 1 and 3), the sand arena is flat and evenly lit, and the HUD stacks cover the lower third."
+  },
+  "Yk": {
+   "A": {
+    "bar_a": 5.2,
+    "defects": {
+     "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {
+     "Tall grass intrudes through shrine paving while repeated grass and simple stone surfaces reduce close-range material distinction across sites": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Grass blades still poke through the shrine cobbles (frame 1) and the same mossy stone and uniform lawn repeat in frame 2, so close range lacks pale stratified stone finish."
+  },
+  "Vt": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "The summit landmark reads as a small skeletal dome on grass beside a separate court instead of a layered stone sanctuary and its night silhouette stays dark": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The dome now reads as a solid blue-glass rotunda with a pale facade, but it is still a small single building on open grass with no terraces, towers or waterfalls, and the night frame has no warm window light."
+  },
+  "Nk": {
+   "A": {
+    "bar_a": 4.7,
+    "defects": {
+     "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.7,
+    "defects": {
+     "Floating island undersides form blunt dark slabs and several cliffs and grassy shelves have conspicuous straight extruded edges": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "No blunt underside is in view, but the long straight-topped shelf in frame 1, the camera buried in a rock face in frame 2 and the boxy gate post in frame 3 keep the landforms reading as extruded blocks."
+  },
+  "Eu": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, appealing elderly villager with clear eyes, readable face and an earthy green and brown outfit that fits the key art's cozy settlement palette."
+  },
+  "Fy": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Saturated cyan posts rings and rails at the bridge and flight aerie compete with the built landmarks while the launch platform adds a bright flat yellow pointer": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A saturated cyan T-post is still the brightest thing in all three frames while the bridge sits small and murky behind a foreground trunk, and the golden and night grades are flat colour shifts."
+  },
+  "Gh": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "The mounted deer and seated trainer retain their upright riding silhouette while travelling below the cliff and then continue apparently unsupported across the cloud floor": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The upright deer and rider hang beside the cliff face over the cloud floor with no surface under them (frames 2 and 3), alongside flat puffs and a black shadow wedge."
+  },
+  "Hl": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's flat black-and-yellow banded snake turns pale and floats far above its shadow in faint mid and faint end; side B's mottled scale texture and grounded faint are much closer to the bar, but its raised head barely clears the 1.80 m trainer."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Rebuild Cloudreach terrain dressing so the route is led by layered pale stratified stone shelves, ledges and rounded island undersides instead of flat lawn and straight extruded slabs (Lw, Nk, Yk, Vt), and keep the camera out of rock faces.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the flat white polygon cloud puffs with soft volumetric or feathered cloud cards and keep mounts snapped to supported ground at the terrace edge (Lx, Gh).",
+   "kind": "scene"
+  },
+  {
+   "change": "Build the summit aviary as the board's layered stone sanctuary (terraced base, towers, glass dome, lit windows at night) instead of a single rotunda on grass.",
+   "kind": "new_art"
+  }
+ ]
+}

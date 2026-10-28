@@ -1,0 +1,404 @@
+[
+    {
+        "item":  "P2-015",
+        "board_row":  "F38#1",
+        "subject":  "creature collapse and rest",
+        "defect":  "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground",
+        "frames":  [
+                       "meadows__terrapup__fainted",
+                       "meadows__terrapup__resting",
+                       "meadows__veridian__fainted"
+                   ]
+    },
+    {
+        "item":  "P2-016",
+        "board_row":  "F38#2",
+        "subject":  "creature hurt and movement poses",
+        "defect":  "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename",
+        "frames":  [
+                       "meadows__terrapup__hurt",
+                       "meadows__nightburrow__hurt",
+                       "meadows__nightburrow__moving"
+                   ]
+    },
+    {
+        "item":  "P2-062",
+        "board_row":  "F38#3",
+        "subject":  "fight camera and creature scale",
+        "defect":  "The oversized ally often fills half the combat view and hides the trainer opponent or player while some frames clip into creature geometry",
+        "frames":  [
+                       "meadows__fights__south_bridge_grunt-01",
+                       "meadows__fights__south_bridge_grunt-02",
+                       "meadows__fights__south_bridge_grunt-03"
+                   ]
+    },
+    {
+        "item":  "P2-002",
+        "board_row":  "F38#4",
+        "subject":  "map",
+        "defect":  "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations",
+        "frames":  [
+                       "meadows__menu_map"
+                   ]
+    },
+    {
+        "item":  "P2-017",
+        "board_row":  "F38#5",
+        "subject":  "normal creature scale",
+        "defect":  "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view",
+        "frames":  [
+                       "meadows__brooktail__idle",
+                       "meadows__pipwing__idle",
+                       "meadows__bramblebun__idle"
+                   ]
+    },
+    {
+        "item":  "P2-033",
+        "board_row":  "F38#6",
+        "subject":  "ground pickup identity",
+        "defect":  "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance",
+        "frames":  [
+                       "meadows__inventory__pickup__good_candy",
+                       "meadows__inventory__pickup__rare_candy",
+                       "meadows__inventory__pickup__potion_small"
+                   ]
+    },
+    {
+        "item":  "P2-058",
+        "board_row":  "F38#7",
+        "subject":  "catch aim readability",
+        "defect":  "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc",
+        "frames":  [
+                       "meadows__catching__01-aiming-full-health",
+                       "meadows__catching__catch_low",
+                       "meadows__catching__catch_high"
+                   ]
+    },
+    {
+        "item":  "P2-119",
+        "board_row":  "F38#8",
+        "subject":  "Fly carrier grip pose",
+        "defect":  "The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands rather than carrying a person",
+        "frames":  [
+                       "meadows__flying__launch",
+                       "meadows__flying__glide"
+                   ]
+    },
+    {
+        "item":  "P2-001",
+        "board_row":  "F38#9",
+        "subject":  "menu shell",
+        "defect":  "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world",
+        "frames":  [
+                       "meadows__menu_backpack",
+                       "meadows__menu_build",
+                       "meadows__menu_creatures"
+                   ]
+    },
+    {
+        "item":  "P2-007",
+        "board_row":  "F38#10",
+        "subject":  "secondary menu panels",
+        "defect":  "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button",
+        "frames":  [
+                       "meadows__menu_build",
+                       "meadows__menu_players",
+                       "meadows__menu_quest_log"
+                   ]
+    },
+    {
+        "item":  "P2-063",
+        "board_row":  "F38#11",
+        "subject":  "shared fight tell and hit effects",
+        "defect":  "Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-response silhouettes",
+        "frames":  [
+                       "meadows__fights__south_bridge_grunt-02",
+                       "meadows__fights__south_bridge_grunt-03",
+                       "meadows__fights__south_bridge_grunt-05"
+                   ]
+    },
+    {
+        "item":  "P2-034",
+        "board_row":  "F38#12",
+        "subject":  "harvest reward identity",
+        "defect":  "Several reward harvest nodes read as generic crates or vegetation without a clear visible connection to their named item",
+        "frames":  [
+                       "meadows__inventory__harvest__orb_basic",
+                       "meadows__inventory__harvest__travel_pack",
+                       "meadows__inventory__harvest__attack_tonic"
+                   ]
+    },
+    {
+        "item":  "P2-059",
+        "board_row":  "F38#13",
+        "subject":  "catch sequence camera framing",
+        "defect":  "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link",
+        "frames":  [
+                       "meadows__catching__03-strike",
+                       "meadows__catching__03-absorbing",
+                       "meadows__catching__04-orb-resting"
+                   ]
+    },
+    {
+        "item":  "P2-060",
+        "board_row":  "F38#14",
+        "subject":  "catch effect finish",
+        "defect":  "The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visible change between rest and shake frames",
+        "frames":  [
+                       "meadows__catching__02-orb-in-flight",
+                       "meadows__catching__03-strike",
+                       "meadows__catching__03-absorbing"
+                   ]
+    },
+    {
+        "item":  "P2-069",
+        "board_row":  "F38#15",
+        "subject":  "flight and landing pose read",
+        "defect":  "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut",
+        "frames":  [
+                       "meadows__flying__glide",
+                       "meadows__flying__landed"
+                   ]
+    },
+    {
+        "item":  "P2-086",
+        "board_row":  "F38#16",
+        "subject":  "tournament dialogue subject identity",
+        "defect":  "Three differently named tournament conversations show the same grey-haired world character at the same stand despite different portraits",
+        "frames":  [
+                       "meadows__inventory__trainer__tournament_quarter_mira__dialogue",
+                       "meadows__inventory__trainer__tournament_semi_tam__dialogue",
+                       "meadows__inventory__trainer__tournament_final_oskar__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-087",
+        "board_row":  "F38#17",
+        "subject":  "named trainer dialogue subject visibility",
+        "defect":  "Several named trainer dialogue views show only the player and terrain with no speaker visible",
+        "frames":  [
+                       "meadows__inventory__trainer__old_champion_bram__dialogue",
+                       "meadows__inventory__trainer__stronghold_courtyard__dialogue",
+                       "meadows__inventory__trainer__stronghold_elite__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-095",
+        "board_row":  "F38#18",
+        "subject":  "craft recipe text",
+        "defect":  "Long recipe names and material preview lines are clipped in the crafting list",
+        "frames":  [
+                       "meadows__system__crafting"
+                   ]
+    },
+    {
+        "item":  "P2-004",
+        "board_row":  "F38#19",
+        "subject":  "exploration HUD",
+        "defect":  "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view",
+        "frames":  [
+                       "meadows__exploration_hud"
+                   ]
+    },
+    {
+        "item":  "P2-003",
+        "board_row":  "F38#20",
+        "subject":  "Team Tether stronghold",
+        "defect":  "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close",
+        "frames":  [
+                       "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach",
+                       "meadows__band5_stronghold_approach__09__stronghold_approach__night__approach",
+                       "meadows__landmark__stronghold__day__approach"
+                   ]
+    },
+    {
+        "item":  "P2-005",
+        "board_row":  "F38#21",
+        "subject":  "ground cover",
+        "defect":  "Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks",
+        "frames":  [
+                       "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach",
+                       "meadows__band2_stone_and_root__04__the_burrow_warrens__day__approach",
+                       "meadows__band3_the_river_lock__06__old_mill_crossing__day__close"
+                   ]
+    },
+    {
+        "item":  "P2-006",
+        "board_row":  "F38#22",
+        "subject":  "mill and settlements",
+        "defect":  "The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity",
+        "frames":  [
+                       "meadows__band3_the_river_lock__06__old_mill_crossing__day__close",
+                       "meadows__landmark__village__day__close",
+                       "meadows__landmark__band1_trail_camp__day__close"
+                   ]
+    },
+    {
+        "item":  "P2-013",
+        "board_row":  "F38#23",
+        "subject":  "Tether Relay yard",
+        "defect":  "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp",
+        "frames":  [
+                       "meadows__band3_the_river_lock__05__the_tether_relay__route_day",
+                       "meadows__band3_the_river_lock__05__the_tether_relay__vista_dusk"
+                   ]
+    },
+    {
+        "item":  "P2-014",
+        "board_row":  "F38#24",
+        "subject":  "distant mountains",
+        "defect":  "The mountain backdrop has hard isolated facets and dark slash shapes instead of continuous landform silhouettes",
+        "frames":  [
+                       "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+                       "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day",
+                       "meadows__band5_stronghold_approach__09__stronghold_approach__route_day"
+                   ]
+    },
+    {
+        "item":  "P2-018",
+        "board_row":  "F38#25",
+        "subject":  "shiny palette distinction",
+        "defect":  "Some shiny variants have no reliably readable colour-block difference from their normal form at the device view",
+        "frames":  [
+                       "meadows__nightburrow__shiny_idle",
+                       "meadows__nightburrow__idle",
+                       "meadows__stormtrail__shiny_idle"
+                   ]
+    },
+    {
+        "item":  "P2-020",
+        "board_row":  "F38#26",
+        "subject":  "creature ground contact",
+        "defect":  "Dense foreground grass obscures several creatures feet and lower outlines in the normal camera view",
+        "frames":  [
+                       "meadows__bramblebun__idle",
+                       "meadows__pipwing__idle",
+                       "meadows__mosshell__fainted"
+                   ]
+    },
+    {
+        "item":  "P2-031",
+        "board_row":  "F38#27",
+        "subject":  "settings and binding instructions",
+        "defect":  "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan",
+        "frames":  [
+                       "meadows__settings_controls",
+                       "meadows__quick_bindings"
+                   ]
+    },
+    {
+        "item":  "P2-064",
+        "board_row":  "F38#28",
+        "subject":  "Warden arena boundary",
+        "defect":  "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry",
+        "frames":  [
+                       "meadows__fights__warden_aldis-03",
+                       "meadows__fights__warden_aldis-05",
+                       "meadows__fights__warden_aldis-08"
+                   ]
+    },
+    {
+        "item":  "P2-065",
+        "board_row":  "F38#29",
+        "subject":  "trainer defeated presentation",
+        "defect":  "The bridge grunt and Warden remain upright in similar neutral postures after victory while banner and dialogue carry most of the state change",
+        "frames":  [
+                       "meadows__fights__south_bridge_grunt-00-before",
+                       "meadows__fights__south_bridge_grunt-a01",
+                       "meadows__fights__south_bridge_grunt-99-after"
+                   ]
+    },
+    {
+        "item":  "P2-012",
+        "board_row":  "F38#30",
+        "subject":  "Burrow Warrens hillside",
+        "defect":  "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut",
+        "frames":  [
+                       "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_02_day",
+                       "meadows__band2_stone_and_root__04__the_burrow_warrens__walk_03_day"
+                   ]
+    },
+    {
+        "item":  "P2-019",
+        "board_row":  "F38#31",
+        "subject":  "alpha rarity read",
+        "defect":  "Several alpha variants read mainly as a modest size increase without a distinct staged presence beside the trainer",
+        "frames":  [
+                       "meadows__trailpup__alpha_idle",
+                       "meadows__trailpup__idle",
+                       "meadows__brooktail__alpha_idle"
+                   ]
+    },
+    {
+        "item":  "P2-035",
+        "board_row":  "F38#32",
+        "subject":  "camp and workshop prop legibility",
+        "defect":  "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out",
+        "frames":  [
+                       "meadows__inventory__prop__camp_tent",
+                       "meadows__inventory__prop__camp_bed",
+                       "meadows__inventory__prop__bonfire_fire"
+                   ]
+    },
+    {
+        "item":  "P2-061",
+        "board_row":  "F38#33",
+        "subject":  "catch result hierarchy",
+        "defect":  "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish",
+        "frames":  [
+                       "meadows__catching__06-breakout",
+                       "meadows__catching__08-caught-verdict",
+                       "meadows__catching__09-caught-banner"
+                   ]
+    },
+    {
+        "item":  "P2-094",
+        "board_row":  "F38#34",
+        "subject":  "placed wall visual",
+        "defect":  "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top",
+        "frames":  [
+                       "meadows__system__building"
+                   ]
+    },
+    {
+        "item":  "P2-050",
+        "board_row":  "F38#35",
+        "subject":  "human post poses",
+        "defect":  "Many named villagers and trainers hold the same straight neutral stance with arms down despite different roles",
+        "frames":  [
+                       "meadows__inventory__character__oskar",
+                       "meadows__inventory__character__halda",
+                       "meadows__inventory__character__lark"
+                   ]
+    },
+    {
+        "item":  "P2-078",
+        "board_row":  "F38#36",
+        "subject":  "dialogue speaker occlusion",
+        "defect":  "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker",
+        "frames":  [
+                       "meadows__inventory__character__kell__dialogue",
+                       "meadows__inventory__character__corin__dialogue",
+                       "meadows__inventory__trainer__captain_field__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-079",
+        "board_row":  "F38#37",
+        "subject":  "Meadows dialogue rock obstruction",
+        "defect":  "Large rock faces fill the camera and hide the named speaker during dialogue",
+        "frames":  [
+                       "meadows__inventory__character__quarry_foreman__dialogue",
+                       "meadows__inventory__character__garrick__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-096",
+        "board_row":  "F38#38",
+        "subject":  "craft action hint contrast",
+        "defect":  "Craft and leave button hints are faint gray on the dark translucent craft panel",
+        "frames":  [
+                       "meadows__system__crafting"
+                   ]
+    }
+]

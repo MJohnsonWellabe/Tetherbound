@@ -1,0 +1,225 @@
+[
+    {
+        "item":  "P2-037",
+        "board_row":  "F41#1",
+        "subject":  "Stormheart finale",
+        "defect":  "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core",
+        "frames":  [
+                       "stormwood__dynamo__12__the_stormheart_tree__day__approach",
+                       "stormwood__dynamo__12__the_stormheart_tree__day__close",
+                       "stormwood__landmark__dynamo_core__day__close"
+                   ]
+    },
+    {
+        "item":  "P2-042",
+        "board_row":  "F41#2",
+        "subject":  "Surge phase presentation",
+        "defect":  "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain",
+        "frames":  [
+                       "stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm",
+                       "stormwood__cinder_verge__01__the_struck_sentinel__day__close__building",
+                       "stormwood__cinder_verge__01__the_struck_sentinel__day__close__break"
+                   ]
+    },
+    {
+        "item":  "P2-092",
+        "board_row":  "F41#3",
+        "subject":  "named wild fight actor spacing",
+        "defect":  "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer",
+        "frames":  [
+                       "stormwood__fight__capacitor_alpha-i01",
+                       "stormwood__fight__capacitor_alpha-tell1-a-start",
+                       "stormwood__fight__capacitor_alpha-tell1-e-impact"
+                   ]
+    },
+    {
+        "item":  "P2-038",
+        "board_row":  "F41#4",
+        "subject":  "named destination identities",
+        "defect":  "Several named destinations read as similar grass and trees without a distinct subject in the captured close views",
+        "frames":  [
+                       "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close",
+                       "stormwood__glowmoss_hollows__04__crown_overlook__day__close",
+                       "stormwood__deepwood__10__the_fallen_giant__day__close"
+                   ]
+    },
+    {
+        "item":  "P2-039",
+        "board_row":  "F41#5",
+        "subject":  "forest ground and distance layers",
+        "defect":  "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers",
+        "frames":  [
+                       "stormwood__cinder_verge__01__the_struck_sentinel__day__approach",
+                       "stormwood__glowmoss_hollows__04__crown_overlook__day__close",
+                       "stormwood__landmark__crown_heartstone__day__close"
+                   ]
+    },
+    {
+        "item":  "P2-093",
+        "board_row":  "F41#6",
+        "subject":  "named wild danger and opening cues",
+        "defect":  "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals",
+        "frames":  [
+                       "stormwood__fight__capacitor_alpha-tell1-d-strike",
+                       "stormwood__fight__capacitor_alpha-tell1-e-impact",
+                       "stormwood__fight__hollows_alpha-tell1-e-impact"
+                   ]
+    },
+    {
+        "item":  "P2-081",
+        "board_row":  "F41#7",
+        "subject":  "named trainer dialogue identity",
+        "defect":  "Every captured named trainer conversation repeats the same generic line and shows no portrait",
+        "frames":  [
+                       "stormwood__inventory__trainer__archivist_wen_crown_trial__dialogue",
+                       "stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue",
+                       "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-055",
+        "board_row":  "F41#8",
+        "subject":  "named character silhouettes",
+        "defect":  "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes",
+        "frames":  [
+                       "stormwood__inventory__character__rodkeeper_hesk",
+                       "stormwood__inventory__character__elder_maud",
+                       "stormwood__inventory__character__warden_elect_bryn"
+                   ]
+    },
+    {
+        "item":  "P2-046",
+        "board_row":  "F41#9",
+        "subject":  "harvest resource identity",
+        "defect":  "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material",
+        "frames":  [
+                       "stormwood__inventory__harvest__stormglass",
+                       "stormwood__inventory__harvest__stormglass_crown",
+                       "stormwood__inventory__harvest__glowmoss"
+                   ]
+    },
+    {
+        "item":  "P2-070",
+        "board_row":  "F41#10",
+        "subject":  "Glass Sink landmark",
+        "defect":  "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints",
+        "frames":  [
+                       "stormwood__landmark__glass_sink__day__approach",
+                       "stormwood__landmark__glass_sink__day__close",
+                       "stormwood__landmark__glass_sink__golden__approach"
+                   ]
+    },
+    {
+        "item":  "P2-082",
+        "board_row":  "F41#11",
+        "subject":  "named character portrait identity",
+        "defect":  "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations",
+        "frames":  [
+                       "stormwood__inventory__character__ace_trainer_rook__dialogue",
+                       "stormwood__inventory__character__caretaker_lio__dialogue",
+                       "stormwood__inventory__character__elder_maud__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-040",
+        "board_row":  "F41#12",
+        "subject":  "charged road surface",
+        "defect":  "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern",
+        "frames":  [
+                       "stormwood__deepwood__09__lantern_hollow__day__close",
+                       "stormwood__landmark__glass_field__day__close",
+                       "stormwood__landmark__lantern_hollow__night__close"
+                   ]
+    },
+    {
+        "item":  "P2-044",
+        "board_row":  "F41#13",
+        "subject":  "electric creature finish",
+        "defect":  "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance",
+        "frames":  [
+                       "stormwood__fulgocobra__idle",
+                       "stormwood__stormraven__idle"
+                   ]
+    },
+    {
+        "item":  "P2-045",
+        "board_row":  "F41#14",
+        "subject":  "candy pickup tiers",
+        "defect":  "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance",
+        "frames":  [
+                       "stormwood__inventory__pickup__good_candy",
+                       "stormwood__inventory__pickup__great_candy",
+                       "stormwood__inventory__pickup__rare_candy"
+                   ]
+    },
+    {
+        "item":  "P2-083",
+        "board_row":  "F41#15",
+        "subject":  "dialogue foreground obstruction",
+        "defect":  "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames",
+        "frames":  [
+                       "stormwood__inventory__character__captain_marrow__dialogue",
+                       "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+                       "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-110",
+        "board_row":  "F41#16",
+        "subject":  "Hollows fight loss result clarity",
+        "defect":  "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown",
+        "frames":  [
+                       "stormwood__fight__hollows_long__hollows_alpha-99-after"
+                   ]
+    },
+    {
+        "item":  "P2-041",
+        "board_row":  "F41#17",
+        "subject":  "Crown Arch",
+        "defect":  "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it",
+        "frames":  [
+                       "stormwood__landmark__crown_arch__day__close"
+                   ]
+    },
+    {
+        "item":  "P2-056",
+        "board_row":  "F41#18",
+        "subject":  "uniformed character readability",
+        "defect":  "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance",
+        "frames":  [
+                       "stormwood__inventory__character__grunt_lieutenant_dace",
+                       "stormwood__inventory__character__tether_lieutenant_varga",
+                       "stormwood__inventory__character__defector_sable"
+                   ]
+    },
+    {
+        "item":  "P2-043",
+        "board_row":  "F41#19",
+        "subject":  "Glass Field spike bases",
+        "defect":  "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster",
+        "frames":  [
+                       "stormwood__dynamo__11__the_glass_field__walk_03_day"
+                   ]
+    },
+    {
+        "item":  "P2-084",
+        "board_row":  "F41#20",
+        "subject":  "named character dialogue reuse",
+        "defect":  "Distinct named Stormwood characters use identical dialogue lines",
+        "frames":  [
+                       "stormwood__inventory__character__trader_fenn__dialogue",
+                       "stormwood__inventory__character__trader_oswin__dialogue",
+                       "stormwood__inventory__character__elder_maud__dialogue"
+                   ]
+    },
+    {
+        "item":  "P2-111",
+        "board_row":  "F41#21",
+        "subject":  "Hollows victory reward tiles",
+        "defect":  "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards",
+        "frames":  [
+                       "stormwood__fight__hollows_win__hollows_alpha-99-after",
+                       "stormwood__fight__hollows_aftermath__hollows_alpha-100-aftermath"
+                   ]
+    }
+]

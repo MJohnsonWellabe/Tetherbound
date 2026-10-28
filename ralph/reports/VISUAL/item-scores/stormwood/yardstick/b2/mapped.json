@@ -1,0 +1,159 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9903,
+  "least_squares_slope": 1.2609,
+  "method": "linear",
+  "slope": 1.2609,
+  "intercept": -1.3871,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.178,
+ "top_anchor_reference": 7.79,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_1_gpu:stormcapra_candidate": {
+   "measured": 7.033,
+   "reference": 7.79,
+   "mapped": 7.481,
+   "residual": 0.309
+  },
+  "f36_1_gpu:stormcapra_shipping": {
+   "measured": 6.2,
+   "reference": 6.23,
+   "mapped": 6.431,
+   "residual": -0.201
+  },
+  "f36_0_gap:C7B": {
+   "measured": 6.033,
+   "reference": 6.3,
+   "mapped": 6.22,
+   "residual": 0.08
+  },
+  "f36_0_gap:C7A": {
+   "measured": 6.533,
+   "reference": 7.03,
+   "mapped": 6.851,
+   "residual": 0.179
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.2,
+   "reference": 7.53,
+   "mapped": 7.692,
+   "residual": -0.162
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.2,
+   "reference": 7.47,
+   "mapped": 7.692,
+   "residual": -0.222
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 6.4,
+   "reference": 6.73,
+   "mapped": 6.683,
+   "residual": 0.047
+  },
+  "p2_094_r4:X_before": {
+   "measured": 3.9,
+   "reference": 3.5,
+   "mapped": 3.53,
+   "residual": -0.03
+  }
+ },
+ "candidates": {
+  "IS stormwood P2-055 one-sided | P2-055": {
+   "measured_mean": 4.3,
+   "mapped_mean": 4.03,
+   "mapped_judges": [
+    3.66,
+    4.79,
+    3.66
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS stormwood P2-044 one-sided | P2-044": {
+   "measured_mean": 4.7,
+   "mapped_mean": 4.54,
+   "mapped_judges": [
+    4.29,
+    5.3,
+    4.03
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS stormwood P2-070 one-sided | P2-070": {
+   "measured_mean": 3.633,
+   "mapped_mean": 3.19,
+   "mapped_judges": [
+    3.03,
+    4.41,
+    2.14
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS stormwood P2-056 one-sided | P2-056": {
+   "measured_mean": 4.2,
+   "mapped_mean": 3.91,
+   "mapped_judges": [
+    3.4,
+    4.92,
+    3.4
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS stormwood P2-038 one-sided | P2-038": {
+   "measured_mean": 4.7,
+   "mapped_mean": 4.54,
+   "mapped_judges": [
+    4.29,
+    5.42,
+    3.91
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS stormwood P2-083 one-sided | P2-083": {
+   "measured_mean": 3.633,
+   "mapped_mean": 3.19,
+   "mapped_judges": [
+    2.02,
+    4.41,
+    3.15
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS stormwood P2-111 one-sided | P2-111": {
+   "measured_mean": 5.0,
+   "mapped_mean": 4.92,
+   "mapped_judges": [
+    4.67,
+    5.67,
+    4.41
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

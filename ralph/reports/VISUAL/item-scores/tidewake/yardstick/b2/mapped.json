@@ -1,0 +1,185 @@
+{
+ "bar": 7.5,
+ "fit": {
+  "n_points": 8,
+  "pearson_r": 0.9712,
+  "least_squares_slope": 1.2262,
+  "method": "linear",
+  "slope": 1.2262,
+  "intercept": -0.8375,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.344,
+ "top_anchor_reference": 7.89,
+ "confirming_batch": true,
+ "anchors": {
+  "f36_1_gpu:tanglevolt_candidate": {
+   "measured": 6.833,
+   "reference": 7.89,
+   "mapped": 7.542,
+   "residual": 0.348
+  },
+  "f36_1_gpu:tanglevolt_shipping": {
+   "measured": 5.133,
+   "reference": 6.04,
+   "mapped": 5.457,
+   "residual": 0.583
+  },
+  "f36_0_npc:C1B": {
+   "measured": 7.067,
+   "reference": 7.47,
+   "mapped": 7.828,
+   "residual": -0.358
+  },
+  "f36_0_npc:C1A": {
+   "measured": 7.067,
+   "reference": 7.53,
+   "mapped": 7.828,
+   "residual": -0.298
+  },
+  "craft:after": {
+   "measured": 6.567,
+   "reference": 7.35,
+   "mapped": 7.215,
+   "residual": 0.135
+  },
+  "craft:before": {
+   "measured": 4.533,
+   "reference": 4.83,
+   "mapped": 4.721,
+   "residual": 0.109
+  },
+  "p2_094_r4:Y_after": {
+   "measured": 6.2,
+   "reference": 6.73,
+   "mapped": 6.765,
+   "residual": -0.035
+  },
+  "p2_094_r4:X_before": {
+   "measured": 3.933,
+   "reference": 3.5,
+   "mapped": 3.986,
+   "residual": -0.486
+  }
+ },
+ "candidates": {
+  "IS tidewake P2-073 one-sided | P2-073": {
+   "measured_mean": 4.9,
+   "mapped_mean": 5.17,
+   "mapped_judges": [
+    5.05,
+    4.68,
+    5.78
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS tidewake P2-109 one-sided | P2-109": {
+   "measured_mean": 5.267,
+   "mapped_mean": 5.62,
+   "mapped_judges": [
+    5.54,
+    5.29,
+    6.03
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS tidewake P2-066 one-sided | P2-066": {
+   "measured_mean": 4.333,
+   "mapped_mean": 4.48,
+   "mapped_judges": [
+    4.31,
+    3.82,
+    5.29
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS tidewake P2-090 one-sided | P2-090": {
+   "measured_mean": 5.333,
+   "mapped_mean": 5.7,
+   "mapped_judges": [
+    5.78,
+    4.8,
+    6.52
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS tidewake P2-072 one-sided | P2-072": {
+   "measured_mean": 5.4,
+   "mapped_mean": 5.78,
+   "mapped_judges": [
+    6.03,
+    5.29,
+    6.03
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS tidewake P2-108 one-sided | P2-108": {
+   "measured_mean": 4.733,
+   "mapped_mean": 4.97,
+   "mapped_judges": [
+    4.8,
+    4.31,
+    5.78
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS tidewake P2-009 one-sided | P2-009": {
+   "measured_mean": 5.733,
+   "mapped_mean": 6.19,
+   "mapped_judges": [
+    6.03,
+    5.78,
+    6.76
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS tidewake P2-032 one-sided | P2-032": {
+   "measured_mean": 5.867,
+   "mapped_mean": 6.36,
+   "mapped_judges": [
+    6.52,
+    5.54,
+    7.01
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "IS tidewake P2-010 one-sided | P2-010": {
+   "measured_mean": 5.4,
+   "mapped_mean": 5.78,
+   "mapped_judges": [
+    5.78,
+    5.05,
+    6.52
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  }
+ },
+ "warnings": []
+}

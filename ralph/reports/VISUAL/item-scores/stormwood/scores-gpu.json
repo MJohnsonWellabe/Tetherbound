@@ -1,0 +1,596 @@
+{
+ "main_sha": "b7a6e8bbe1dbfa54c83e580626e8d7184d24bb10",
+ "renderer": "GPU NVIDIA GeForce GTX 1060 3GB, OpenGL 3.3 Compatibility (repro commands as stated, --fullscreen)",
+ "fit": {
+  "r": 0.903,
+  "rmse": 0.457,
+  "batches": [
+   {
+    "batch": 1,
+    "r": 0.8107,
+    "rmse": 0.671,
+    "confirming": true
+   },
+   {
+    "batch": 2,
+    "r": 0.9903,
+    "rmse": 0.178,
+    "confirming": true
+   },
+   {
+    "batch": 3,
+    "r": 0.9072,
+    "rmse": 0.521,
+    "confirming": true
+   }
+  ]
+ },
+ "items": {
+  "P2-037": {
+   "board_row": "F41#1",
+   "mapped": 4.41,
+   "mapped_judges": [
+    4.23,
+    4.69,
+    4.32
+   ],
+   "raw": [
+    3.3,
+    3.8,
+    3.4
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "stormwood__dynamo__12__the_stormheart_tree__day__approach",
+    "stormwood__dynamo__12__the_stormheart_tree__day__close",
+    "stormwood__landmark__dynamo_core__day__close"
+   ],
+   "note": "All three frames on both sides show a dark plank-ring wall with a row of identical blue banners and a uniform dark-green ground carpet, with no trunk, crown, warm lanterns or glowing core like board-a, so it sinks.",
+   "batch": 1,
+   "code": "Vd"
+  },
+  "P2-038": {
+   "board_row": "F41#4",
+   "mapped": 4.54,
+   "mapped_judges": [
+    4.29,
+    5.42,
+    3.91
+   ],
+   "raw": [
+    4.5,
+    5.4,
+    4.2
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PRESENT"
+   ],
+   "frames": [
+    "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close",
+    "stormwood__glowmoss_hollows__04__crown_overlook__day__close",
+    "stormwood__deepwood__10__the_fallen_giant__day__close"
+   ],
+   "note": "The Crown Overlook spire and the Fallen Giant root mass give two frames a subject, but the Lantern Pools frame is still a dirt path through grass with no pool or lantern, and the flat sky and low-contrast grade keep it below Palworld density.",
+   "batch": 2,
+   "code": "Yk"
+  },
+  "P2-039": {
+   "board_row": "F41#5",
+   "mapped": 5.24,
+   "mapped_judges": [
+    5.05,
+    5.24,
+    5.42
+   ],
+   "raw": [
+    4.2,
+    4.4,
+    4.6
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "stormwood__cinder_verge__01__the_struck_sentinel__day__approach",
+    "stormwood__glowmoss_hollows__04__crown_overlook__day__close",
+    "stormwood__landmark__crown_heartstone__day__close"
+   ],
+   "note": "In all frames one even dark-green leaf carpet runs to a flat horizon, with sparse isolated trunks and a pale stone tower in frame 2 against flat lilac haze, so it has no forest walls, groves or layered distance.",
+   "batch": 1,
+   "code": "Pv"
+  },
+  "P2-040": {
+   "board_row": "F41#12",
+   "mapped": 5.63,
+   "mapped_judges": [
+    5.76,
+    5.76,
+    5.38
+   ],
+   "raw": [
+    5.0,
+    5.0,
+    4.6
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "stormwood__deepwood__09__lantern_hollow__day__close",
+    "stormwood__landmark__glass_field__day__close",
+    "stormwood__landmark__lantern_hollow__night__close"
+   ],
+   "note": "The thick stripes are gone, leaving one thin wandering gold line on a flat brown path, but the 'charge' is still a gold decal rather than white-violet lightning or wet glints, and the road has no edge wear, puddles or form under a flat grey-violet sky.",
+   "batch": 3,
+   "code": "Nd"
+  },
+  "P2-041": {
+   "board_row": "F41#17",
+   "mapped": 3.97,
+   "mapped_judges": [
+    3.84,
+    4.23,
+    3.84
+   ],
+   "raw": [
+    3.0,
+    3.4,
+    3.0
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "stormwood__landmark__crown_arch__day__close"
+   ],
+   "note": "The landmark is a dark boxy pillar with a few blue lights, barely taller than the trainer, on a bare grey square slab dropped onto the leaf carpet, so it reads as blockout rather than a crown arch.",
+   "batch": 3,
+   "code": "Vr"
+  },
+  "P2-042": {
+   "board_row": "F41#2",
+   "mapped": 5.69,
+   "mapped_judges": [
+    5.6,
+    5.78,
+    5.69
+   ],
+   "raw": [
+    4.8,
+    5.0,
+    4.9
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "stormwood__cinder_verge__01__the_struck_sentinel__day__close__calm",
+    "stormwood__cinder_verge__01__the_struck_sentinel__day__close__building",
+    "stormwood__cinder_verge__01__the_struck_sentinel__day__close__break"
+   ],
+   "note": "Break now has visible white-violet lightning bolts in the sky, but Calm and Building are near-identical frames (only slightly denser rain), so the storm phase does not read and it sinks.",
+   "batch": 1,
+   "code": "Uv"
+  },
+  "P2-043": {
+   "board_row": "F41#19",
+   "mapped": 5.15,
+   "mapped_judges": [
+    5.09,
+    5.76,
+    4.61
+   ],
+   "raw": [
+    4.3,
+    5.0,
+    3.8
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "FIXED",
+    "PARTIAL"
+   ],
+   "frames": [
+    "stormwood__dynamo__11__the_glass_field__walk_03_day"
+   ],
+   "note": "The rigid white segment is no longer visible, but the 'glass field' is a flat purple sheet with a few low blue shards on a dark rock plate, the camera sits behind a huge trunk and fern and the trainer hides behind mushrooms, so there is no glass landmark silhouette or storm light on it.",
+   "batch": 3,
+   "code": "Eh"
+  },
+  "P2-044": {
+   "board_row": "F41#13",
+   "mapped": 4.54,
+   "mapped_judges": [
+    4.29,
+    5.3,
+    4.03
+   ],
+   "raw": [
+    4.5,
+    5.3,
+    4.3
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "stormwood__fulgocobra__idle",
+    "stormwood__stormraven__idle"
+   ],
+   "note": "The Fulgocobra's gold veining reads somewhat, but the Stormraven is a flat blue-violet blob with no visible lightning, both are unlit by rim or storm light, and the lit cottage and flat sky sink the frames.",
+   "batch": 2,
+   "code": "Dx"
+  },
+  "P2-045": {
+   "board_row": "F41#14",
+   "mapped": 5.63,
+   "mapped_judges": [
+    5.76,
+    5.57,
+    5.57
+   ],
+   "raw": [
+    5.0,
+    4.8,
+    4.8
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "stormwood__inventory__pickup__good_candy",
+    "stormwood__inventory__pickup__great_candy",
+    "stormwood__inventory__pickup__rare_candy"
+   ],
+   "note": "The tiers now separate by colour (green, blue, gold glow), but all three are still pinhead-sized on a flat mud path in a uniform leaf carpet under a grey-violet sky, without the readable pickup scale or lit atmosphere of the references.",
+   "batch": 3,
+   "code": "Na"
+  },
+  "P2-046": {
+   "board_row": "F41#9",
+   "mapped": 4.99,
+   "mapped_judges": [
+    4.69,
+    5.05,
+    5.24
+   ],
+   "raw": [
+    3.8,
+    4.2,
+    4.4
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PARTIAL"
+   ],
+   "frames": [
+    "stormwood__inventory__harvest__stormglass",
+    "stormwood__inventory__harvest__stormglass_crown",
+    "stormwood__inventory__harvest__glowmoss"
+   ],
+   "note": "The stormglass node has pale blue crystal cues, but stormglass_crown reads as a pink boulder with tan wooden-looking shards and glowmoss is a flat, unlit pale-green blob on the uniform carpet, so it sinks.",
+   "batch": 1,
+   "code": "Oh"
+  },
+  "P2-055": {
+   "board_row": "F41#8",
+   "mapped": 4.03,
+   "mapped_judges": [
+    3.66,
+    4.79,
+    3.66
+   ],
+   "raw": [
+    4.0,
+    4.9,
+    4.0
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "stormwood__inventory__character__rodkeeper_hesk",
+    "stormwood__inventory__character__elder_maud",
+    "stormwood__inventory__character__warden_elect_bryn"
+   ],
+   "note": "Rodkeeper Hesk, Elder Maud and Warden-elect Bryn are tiny, near-identical pale-haired figures beside the trainer under a flat lilac sky with no shafts or storm grade, so nothing carries them to Palworld finish.",
+   "batch": 2,
+   "code": "Uh"
+  },
+  "P2-056": {
+   "board_row": "F41#18",
+   "mapped": 3.91,
+   "mapped_judges": [
+    3.4,
+    4.92,
+    3.4
+   ],
+   "raw": [
+    3.8,
+    5.0,
+    3.8
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "stormwood__inventory__character__grunt_lieutenant_dace",
+    "stormwood__inventory__character__tether_lieutenant_varga",
+    "stormwood__inventory__character__defector_sable"
+   ],
+   "note": "Grunt Lieutenant Dace, Lieutenant Varga and Defector Sable are small dark figures lost against dark green-teal grass, with no rim light or uniform accent to pick them out.",
+   "batch": 2,
+   "code": "Tl"
+  },
+  "P2-070": {
+   "board_row": "F41#10",
+   "mapped": 3.19,
+   "mapped_judges": [
+    3.03,
+    4.41,
+    2.14
+   ],
+   "raw": [
+    3.5,
+    4.6,
+    2.8
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PARTIAL",
+    "PRESENT"
+   ],
+   "frames": [
+    "stormwood__landmark__glass_sink__day__approach",
+    "stormwood__landmark__glass_sink__day__close",
+    "stormwood__landmark__glass_sink__golden__approach"
+   ],
+   "note": "The checker void is gone, but the trainer still stands on a bare tiled-moss ridge between pale lavender sheets that read as fog walls rather than a glass basin, with no rim marker, copper or black pool to sell the landmark.",
+   "batch": 2,
+   "code": "Zq"
+  },
+  "P2-081": {
+   "board_row": "F41#7",
+   "mapped": 6.43,
+   "mapped_judges": [
+    6.24,
+    6.72,
+    6.34
+   ],
+   "raw": [
+    5.5,
+    6.0,
+    5.6
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "stormwood__inventory__trainer__archivist_wen_crown_trial__dialogue",
+    "stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue",
+    "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue"
+   ],
+   "note": "Each trainer now has a distinct line and portrait, but the Captain Marrow frame is filled by a flat blue banner with a gold bolt hiding the speaker and the Senn frame is pressed against a grey block wall, so the staging is not shipping-game finish.",
+   "batch": 3,
+   "code": "Gi"
+  },
+  "P2-082": {
+   "board_row": "F41#11",
+   "mapped": 6.98,
+   "mapped_judges": [
+    7.01,
+    7.01,
+    6.91
+   ],
+   "raw": [
+    6.3,
+    6.3,
+    6.2
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "stormwood__inventory__character__ace_trainer_rook__dialogue",
+    "stormwood__inventory__character__caretaker_lio__dialogue",
+    "stormwood__inventory__character__elder_maud__dialogue"
+   ],
+   "note": "The Rook, Lio and Elder Maud portraits match their world models and the characters are appealing, but the speakers stand small and front-lit in a flat purple-grey forest with no shafts or depth grade.",
+   "batch": 3,
+   "code": "Fm"
+  },
+  "P2-083": {
+   "board_row": "F41#15",
+   "mapped": 3.19,
+   "mapped_judges": [
+    2.02,
+    4.41,
+    3.15
+   ],
+   "raw": [
+    2.85,
+    4.6,
+    3.6
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "stormwood__inventory__character__captain_marrow__dialogue",
+    "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+    "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+   ],
+   "note": "In both Captain Marrow frames a giant blue lightning-bolt banner fills the screen and the speaker is never seen; only Officer Nysa's frame stages the speaker, and in B the banner edge also crowds that frame.",
+   "batch": 2,
+   "code": "Gs"
+  },
+  "P2-084": {
+   "board_row": "F41#20",
+   "mapped": 6.09,
+   "mapped_judges": [
+    5.78,
+    5.97,
+    6.52
+   ],
+   "raw": [
+    5.0,
+    5.2,
+    5.8
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "stormwood__inventory__character__trader_fenn__dialogue",
+    "stormwood__inventory__character__trader_oswin__dialogue",
+    "stormwood__inventory__character__elder_maud__dialogue"
+   ],
+   "note": "Fenn, Oswin and Elder Maud now each have their own line, but Fenn's frame is a black void (Fenn not on screen), Fenn's and Oswin's portraits look alike (bearded, hooded), and the scene is a flat carpet under a grey-violet sky, so it sinks.",
+   "batch": 1,
+   "code": "Ug"
+  },
+  "P2-092": {
+   "board_row": "F41#3",
+   "mapped": 5.98,
+   "mapped_judges": [
+    5.76,
+    6.05,
+    6.14
+   ],
+   "raw": [
+    5.0,
+    5.3,
+    5.4
+   ],
+   "defect_call": [
+    "PARTIAL",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "stormwood__fight__capacitor_alpha-i01",
+    "stormwood__fight__capacitor_alpha-tell1-a-start",
+    "stormwood__fight__capacitor_alpha-tell1-e-impact"
+   ],
+   "note": "The gold-and-blue Voltarach reads well, but in tell1-a-start and tell1-e-impact Sparkit still sits in the boss's leg space under a grey-purple flat sky with a dense left-side HUD, so the scene lacks Palworld's clear fighter separation and Valheim-class storm light.",
+   "batch": 3,
+   "code": "Oz"
+  },
+  "P2-093": {
+   "board_row": "F41#6",
+   "mapped": 6.76,
+   "mapped_judges": [
+    6.52,
+    6.88,
+    6.88
+   ],
+   "raw": [
+    5.8,
+    6.2,
+    6.2
+   ],
+   "defect_call": [
+    "FIXED",
+    "FIXED",
+    "FIXED"
+   ],
+   "frames": [
+    "stormwood__fight__capacitor_alpha-tell1-d-strike",
+    "stormwood__fight__capacitor_alpha-tell1-e-impact",
+    "stormwood__fight__hollows_alpha-tell1-e-impact"
+   ],
+   "note": "The gold-plated Voltarach with blue eyes matches the roster board and the 'staggered - punish now' cue appears with no magenta slab, but heavy HUD columns cover a third of each frame, the player's Sparkit is tiny, and the impact has little real-object effect, so it sinks.",
+   "batch": 1,
+   "code": "He"
+  },
+  "P2-110": {
+   "board_row": "F41#16",
+   "mapped": 5.05,
+   "mapped_judges": [
+    4.69,
+    5.24,
+    5.24
+   ],
+   "raw": [
+    3.8,
+    4.4,
+    4.4
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "stormwood__fight__hollows_long__hollows_alpha-99-after"
+   ],
+   "note": "The 'after' frame is the normal exploration HUD (TEAM 5/5, all bars green, the Calm tag) with a reward-style 'yields the glowmoss lanes / Great Candy' line, and there is no loss screen or loss state, so it sinks.",
+   "batch": 1,
+   "code": "Qc"
+  },
+  "P2-111": {
+   "board_row": "F41#21",
+   "mapped": 4.92,
+   "mapped_judges": [
+    4.67,
+    5.67,
+    4.41
+   ],
+   "raw": [
+    4.8,
+    5.6,
+    4.6
+   ],
+   "defect_call": [
+    "PRESENT",
+    "PRESENT",
+    "PRESENT"
+   ],
+   "frames": [
+    "stormwood__fight__hollows_win__hollows_alpha-99-after",
+    "stormwood__fight__hollows_aftermath__hollows_alpha-100-aftermath"
+   ],
+   "note": "In the win frame the five-slot quickbar still sits directly above the 'Hollows Alpha yields the glowmoss lanes' line and reads as its reward row (it only moves bottom-right in aftermath), with the team list and objective panels crowding a dim forest.",
+   "batch": 2,
+   "code": "Xc"
+  }
+ },
+ "capture_failures": [
+  {
+   "frame": "stormwood__fight__hollows_long__hollows_alpha-i13",
+   "item": "P2-110",
+   "error": "no image produced (see capture log)"
+  }
+ ]
+}

@@ -1,0 +1,182 @@
+{
+ "sets": {
+  "Uh": {
+   "A": {
+    "bar_a": 4.9,
+    "defects": {
+     "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.9,
+    "defects": {
+     "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Rodkeeper Hesk, Elder Maud and Warden-elect Bryn are tiny pale-haired figures with the same build and outfit value standing beside the player under a flat lilac sky with no shafts or storm drama, so neither the identities nor the light reach Palworld/Valheim finish."
+  },
+  "Dx": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Fulgocobra reads as a brown-and-gold mottled coil with no glowing seams and the Stormraven is a flat blue-violet blob with no lightning veins or rim light, set against a flat purple sky and carpet-like moss, so the electric finish never lands."
+  },
+  "Zq": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "All three frames show the player on a narrow mottled-green ridge between pale lavender translucent walls; the checker void is gone, but there is no basin shape, glass highlight, black pool or framing, and the light is the same at day and golden, so no landmark reads."
+  },
+  "Tl": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Grunt Lieutenant Dace, Tether Lieutenant Varga and Defector Sable are small dark figures that sink into dark moss and trunks with no rim light, insignia or colour accent, and the flat grey-lilac sky adds no storm mood."
+  },
+  "Yk": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Fallen Giant root mass and the pale Crown Overlook cliff give two frames a subject, but The Lantern Pools is just a dirt path and trees with no lanterns or pools, under the same flat sky in every frame."
+  },
+  "Gs": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "In both Captain Marrow frames a huge blue banner with a gold bolt fills the screen and Marrow is not visible; only Officer Nysa's frame shows the speaker, and the player's head still cuts into its left edge, which sinks the staging despite the clean dialogue panel."
+  },
+  "Wx": {
+   "A": {
+    "bar_a": 6.7,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The Stormcapra standing model matches the owner style bar with a white fleece body, dark curled horns, a blue chest accent and good scale over the ruler; A's faint frames turn it into a headless fleece loaf with horns that look detached, and B's hit react barely differs from standing, but the read survives."
+  },
+  "Yg": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The tusked plated boar has a solid bulky silhouette and good scale, but its plates read as lumpy rock tiles and its faint-end frames crush to near-black (worst on A); B's orange-red ember seams add identity but sit close to the reserved red, so it falls short of the style bar's finish."
+  },
+  "Xc": {
+   "A": {
+    "bar_a": 5.6,
+    "defects": {
+     "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "In both sides the centred quickbar (one sphere x1 tile and four empty plus glyphs) sits directly above the Hollows Alpha victory line in frame 1 and in the same place in frame 2, so it still reads as the reward row; the HUD panels follow the art direction but the moment has no light change or celebration."
+  },
+  "Hk": {
+   "A": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The elder villager has an appealing, readable stylised face with clear eyes, a white beard and hair, and a warm olive-and-brown outfit that fits the Meadows palette and Palworld-class character finish; only the small, slightly stiff full-body pose holds it back."
+  },
+  "Iv": {
+   "A": {
+    "bar_a": 6.7,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, diagonal brace, plank cap and separate stone footing make it read as a built half-timbered wall, though it is still a thin, lone, upright slab; B is a blown-out white board in a thin frame with no cap and no footing, and it looks pasted into the meadow."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Frame dialogue and named-character captures on the speaker: cull or fade foreground banners, creatures and the player's head between camera and speaker, and give each named NPC or officer a rim light plus a distinct colour accent or insignia (rank sash, hat, emblem) so they separate from the dark moss.",
+   "kind": "scene"
+  },
+  {
+   "change": "Build hero dressing for Stormwood named places: a readable Glass Sink basin with glass rim highlights and a black pool, plus lanterns and pools at The Lantern Pools, so each destination has a subject from its rim or approach view.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Add an emissive charged-material pass to electric creatures (white-violet lightning veins on the Stormraven, glowing gold seams on the Fulgocobra), add storm-sky lighting variation (shafts, lightning flashes), keep faint poses from crushing to black, and move the victory reward away from the persistent quickbar.",
+   "kind": "scene"
+  }
+ ]
+}

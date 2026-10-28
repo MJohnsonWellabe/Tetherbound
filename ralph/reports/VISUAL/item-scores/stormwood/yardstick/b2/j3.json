@@ -1,0 +1,182 @@
+{
+ "sets": {
+  "Uh": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Rodkeeper Hesk, Elder Maud and Warden-elect Bryn are tiny pale-haired figures with one shared silhouette on a flat lavender sky over a uniform teal carpet, so neither identity nor Valheim-class storm light carries."
+  },
+  "Dx": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Fulgocobra's yellow markings read only as a pattern with no glow or rim, and the Stormraven is an unlit navy blob no taller than the trainer, with no eye, feathers or lightning veins, under a flat purple sky."
+  },
+  "Zq": {
+   "A": {
+    "bar_a": 2.8,
+    "defects": {
+     "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 2.8,
+    "defects": {
+     "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "All three frames (day approach, day close, golden approach) show a narrow mossy ridge falling to a featureless pale lavender plane, with no basin shape, glass, rim marker or golden-hour change, so it reads as an unfinished map edge rather than a landmark."
+  },
+  "Tl": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {
+     "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.8,
+    "defects": {
+     "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Grunt Lieutenant Dace, Tether Lieutenant Varga and Defector Sable are small dark figures that sink into dark trunks and moss with no rim light, insignia or colour accent, while the player's orange stays the only readable figure."
+  },
+  "Yk": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Several named destinations read as similar grass and trees without a distinct subject in the captured close views": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Lantern Pools frame has no pools or lanterns, only a dirt path between trunks; Crown Overlook relies on a distant washed-out pale tower; only The Fallen Giant has a near subject (twisted trunk and blue mushrooms). Overall the frames sank on sameness and flat sky."
+  },
+  "Gs": {
+   "A": {
+    "bar_a": 3.6,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.6,
+    "defects": {
+     "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "In both Captain Marrow frames a giant blue banner with a gold bolt fills the screen and hides the speaker entirely, and in the Officer Nysa frame the player's head and a banner edge crowd the left third. Only Nysa's armoured figure and the clean dialogue portraits come close to the finish."
+  },
+  "Wx": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's Stormcapra matches the owner bar (white fleece, dark curled horns, blue accent, about 1.5x the ruler) with a grounded hit react and faint, but the flat grey stage gives no Valheim-class light, and on side B the faint mid and faint end hang the body upside down in mid-air above a detached shadow while the hit react barely differs from standing."
+  },
+  "Yg": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The plated boar has a solid silhouette with tusks and taller-than-ruler scale. Side B's ember seams give it identity and value contrast, while side A's dark plates merge into the dark fur and its faint end turns nearly pure black; on both sides the faint mid lifts the body off its shadow."
+  },
+  "Xc": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "In the hollows_win frame the reward line sits directly under the centred quickbar (one x1 tile plus four empty plus glyphs), with no reward panel, gold framing or candy icon, and the team list and objective panels crowd a dim scene."
+  },
+  "Hk": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The old villager reads well (white hair and beard, olive vest, green scarf, clean full-body silhouette), but the glossy oversized cartoon eyes push him past the key art's stylised realism, and the black void staging gives no world light."
+  },
+  "Iv": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A reads as a built timber-frame wall with a diagonal brace, plank cap and separate stone footing, but it is still a lone thin panel with a plain cream infill. Side B is a blown-out white card in a thin frame with no cap or footing that looks pasted onto the Meadows."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Stormwood light and material pass: replace the flat lavender sky and void with a graded storm sky, distance fog and white-violet lightning; break up the uniform teal moss carpet into groves and clearings; add rim and key light so characters and creatures separate from the dark ground (Uh, Tl, Yk, Dx).",
+   "kind": "scene"
+  },
+  {
+   "change": "Staging and UI framing: fade occluders and frame the named speaker in dialogue (Gs), give victory rewards their own gold-framed panel apart from the quickbar (Xc), and add emissive charge veins and rim light to the electric creatures (Dx).",
+   "kind": "scene"
+  },
+  {
+   "change": "Hero art for named content: a real Glass Sink basin with glass material and a rim marker (Zq), distinct per-role outfits and faction insignia for named characters and officers (Uh, Tl), and a hero subject at each named destination such as the lantern pools (Yk).",
+   "kind": "new_art"
+  }
+ ]
+}

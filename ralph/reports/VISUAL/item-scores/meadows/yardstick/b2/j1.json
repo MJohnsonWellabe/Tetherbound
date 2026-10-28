@@ -1,0 +1,194 @@
+{
+ "sets": {
+  "Wy": {
+   "A": {
+    "bar_a": 4.6,
+    "defects": {
+     "Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.6,
+    "defects": {
+     "Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "All three frames on both sides are one even yellow-green grass carpet with evenly sprinkled white flowers and almost no rock, colour clusters or edge-of-grove breaks, which sinks it beside Palworld's clumped, varied meadow ground."
+  },
+  "Eh": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The wall now reads as a half-timbered panel with posts, braces and a plank sill, but it is a clean flat freestanding slab with no weathering, ground contact or footing, so it looks like a build-mode placeholder rather than Palworld-finish base building."
+  },
+  "Ta": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {
+     "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.4,
+    "defects": {
+     "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "No extra same-species bodies crowd the verdict and banner frames any more, but the party card, action list, target card and bottom bar all stay up while the outcome is a tiny label over a soft glowing orb with blurry gold blobs, so the result moment has no clear headline."
+  },
+  "Mr": {
+   "A": {
+    "bar_a": 3.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 3.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The fight is a small brown-gold spider on muddy brown ground under heavy HUD with flat magenta ring and slab telegraphs (A i06-i10, i15-i17, tell2 a-c), no purple storm sky or lightning grade, and side B i12-i15 are largely blacked out by foreground trunk and foliage, so neither reads as a Palworld-class boss fight."
+  },
+  "Uc": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visible change between rest and shake frames": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 4.8,
+    "defects": {
+     "The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visible change between rest and shake frames": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The magenta ground ring is gone and the orb has a rim and light shafts, but the effect is still a flat translucent yellow bubble and over-bright white orb that change little from strike to absorbing, half-hidden behind the player creature's back filling the lower frame."
+  },
+  "Df": {
+   "A": {
+    "bar_a": 4.2,
+    "defects": {
+     "Several alpha variants read mainly as a modest size increase without a distinct staged presence beside the trainer": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.2,
+    "defects": {
+     "Several alpha variants read mainly as a modest size increase without a distinct staged presence beside the trainer": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Trailpup and Brooktail alphas stand at roughly trainer height in mid-ground with no aura, scale jump, posture or staging that marks them as alphas, and the Brooktail alpha even reads at or below the 1.80 m trainer, so nothing carries an alpha encounter."
+  },
+  "Qg": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The ram matches the owner's Stormcapra bar in identity, horn silhouette and scale over the trainer, but the wool is a bright, evenly lit white mass with little strand or value break, and side B's faint mid and faint end twist the body legs-up into an unreadable flipped shape."
+  },
+  "Kf": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "Tall flowers and grass grow densely through the flat trafficked relay yard around guards crates and ramp": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The yard is now clean cobble with a gate arch, cage, crates and Tether banners, but the oversized uniform cobble texture, a dark featureless timber mass blocking the right third and small scattered props make it read as sparse rather than a busy lived-in faction outpost."
+  },
+  "Ve": {
+   "A": {
+    "bar_a": 4.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's glossy black-and-yellow banded snake has no visible face at size and in faint mid and faint end hangs in the air above its own shadow, while side B's mottled gold scaled snake with open fanged mouth stays grounded and naturalistic but its dark speckle pattern muddies the silhouette."
+  },
+  "Bt": {
+   "A": {
+    "bar_a": 4.3,
+    "defects": {
+     "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.3,
+    "defects": {
+     "Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "In camp_tent and camp_bed the crates, barrels, chest and bed sit among grass, a wolf, a rabbit and other tools with no cleared footprint, and in bonfire_fire the fire is a small orange speck behind a large rock creature, so the camp never reads like Palworld's legible base."
+  },
+  "Mc": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "The capture chance and aim reticle sit on the target and busy grass with little separation from flowers and the throw arc": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The meadow and cottages read warmly, but the catch-chance label is small pale text over the creature's body against bright grass, and in catch_high brown dust clouds cover the target, so the aim state never pops the way Palworld's catch percentage does."
+  },
+  "Yl": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The old villager has a clear face and eyes, appealing white hair and beard and a green-brown palette that fits the meadows, at about Palworld NPC finish, although his rounded cartoon face sits softer than the naturalistic creatures."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Re-stage the catch flow (Ta, Uc, Mc): hide the persistent party, action and target cards during throw and verdict; give the catch chance and outcome a large contrasted panel offset from the target; replace the yellow bubble and white orb with a physical orb that shakes visibly, sparks and casts light on the creature.",
+   "kind": "scene"
+  },
+  {
+   "change": "Break the meadow carpet (Wy, Bt, Df): cluster flowers by colour, vary grass height and hue, add rocks and clearings, cut grass around paths, camps and props, and stage alphas with an aura, scale jump and a cleared arena.",
+   "kind": "scene"
+  },
+  {
+   "change": "Stormwood fight readability (Mr): fade or cull trunks and foliage between camera and fighters, raise the fight with rim light and the purple storm sky grade, and replace the flat magenta telegraph rings and slabs with ground cracks or lightning telegraphs.",
+   "kind": "scene"
+  }
+ ]
+}

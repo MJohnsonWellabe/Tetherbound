@@ -1,0 +1,188 @@
+{
+ "sets": {
+  "Fc": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger wrapped text and icon prompts fit the blue-grey translucent UI direction, but the dark rainy night behind it is murky and flat, nothing like Palworld's bright readable HUD-over-world finish."
+  },
+  "Up": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "The old villager has a clear, appealing face, eyes and earthy meadow palette at a shipping-stylised finish, but on a bare dark stage there is no light or atmosphere to carry the Valheim half."
+  },
+  "Pr": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's timber frame, diagonal brace, cap and stone footing read as a built wall, but the flat beige infill and lone free-standing panel, and B's blown-out white card, sit below Palworld's base-building finish."
+  },
+  "Fl": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's glossy blue scaled body with coral spines is a readable, appealing naturalistic creature, but A's faint-end frame drops to a grey-beige untextured-looking body and A's faint-mid floats above its shadow, and the neutral stage gives no world light."
+  },
+  "Kx": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {
+     "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.5,
+    "defects": {
+     "Large foreground creatures intrude on the dialogue view and sometimes hide the named speaker": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The meadow light and sky are pleasant, but a giant feathered wing fills half the Corin frame, a grey mass blocks the Halder frame and Kell is not identifiable, so the staging sinks it."
+  },
+  "Rw": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {
+     "Long recipe names and material preview lines are clipped in the crafting list": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A clean translucent blue-grey panel with teal selection, readable full recipe lines and clear orange need-counts over a daylit meadow reads like a shipping crafting UI, though the orange 'Missing' tags are small."
+  },
+  "Hx": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.3,
+    "defects": {
+     "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The landed frame has good meadow grass, path and sky, but the glide frame looks down on a featureless blurred green plane and the landed bird keeps its full spread-wing glide pose instead of perching."
+  },
+  "Sl": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "Some shiny variants have no reliably readable colour-block difference from their normal form at the device view": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "Some shiny variants have no reliably readable colour-block difference from their normal form at the device view": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The icy-blue Nightburrow shiny separates clearly from its dark striped normal, but the pale Stormtrail shiny is tiny and low-contrast against the sunlit grass and the creatures are small behind a dominating foreground grass carpet."
+  },
+  "Lg": {
+   "A": {
+    "bar_a": 5.0,
+    "defects": {
+     "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {
+     "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Roads and a village outline now show, but the surveyed area is a flat green disc in a blue-grey cloud fog with no hills, water, groves or landmarks, far from a painted world map."
+  },
+  "Ry": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-response silhouettes": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-response silhouettes": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "No magenta floor marks and the furred boar and hound are naturalistic and readable, but the hit effects are pale dust puffs that half-hide the boar in grunt-02, the tell still lives in small HUD text and the boar has no strong hit-react pose."
+  },
+  "Uv": {
+   "A": {
+    "bar_a": 4.0,
+    "defects": {
+     "Large rock faces fill the camera and hide the named speaker during dialogue": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 4.0,
+    "defects": {
+     "Large rock faces fill the camera and hide the named speaker during dialogue": "PRESENT"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "A dark grey rock slab fills the right third of the Garrick frame with Garrick not visible behind the player's head, and the quarry-foreman frame is wedged against a brown rock wall with a cropped character in the corner."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Dialogue camera: collision-aware framing that pulls in or orbits to keep the named speaker unobstructed and centred, culling or fading foreground creatures and rock faces (Kx, Uv)",
+   "kind": "scene"
+  },
+  {
+   "change": "Ship the A-side homestead wall (timber frame, cap, stone footing) and give the infill a textured, value-broken wattle/plaster material instead of flat beige or white (Pr); keep the B-side Fl material for the creature including faint states",
+   "kind": "scene"
+  },
+  {
+   "change": "Flyer perch/landing animation with folded wings, plus a painted terrain layer for the map (hills, water, groves, landmarks) under the roads and markers (Hx, Lg)",
+   "kind": "new_art"
+  }
+ ]
+}

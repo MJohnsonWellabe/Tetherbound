@@ -1,0 +1,86 @@
+{
+ "anchors": {
+  "f10_2_r3_capacitor:candidate_r3": [
+   3.4,
+   4.4,
+   3.9
+  ],
+  "f10_2_r3_capacitor:control": [
+   2.8,
+   3.6,
+   3.1
+  ],
+  "f36_0_gap:C2A": [
+   5.3,
+   5.8,
+   6.0
+  ],
+  "f36_0_gap:C2B": [
+   5.8,
+   6.8,
+   5.4
+  ],
+  "f36_0_npc:C1A": [
+   6.4,
+   6.8,
+   6.6
+  ],
+  "f36_0_npc:C1B": [
+   6.4,
+   6.8,
+   6.6
+  ],
+  "f04_6_r22:control": [
+   4.0,
+   5.0,
+   4.7
+  ],
+  "f04_6_r22:r22": [
+   5.4,
+   6.6,
+   5.8
+  ]
+ },
+ "candidates": {
+  "IS meadows P2-096 one-sided | P2-096": [
+   5.6,
+   6.2,
+   5.6
+  ],
+  "IS meadows P2-007 one-sided | P2-007": [
+   5.0,
+   5.4,
+   5.2
+  ],
+  "IS meadows P2-001 one-sided | P2-001": [
+   5.2,
+   5.7,
+   5.4
+  ],
+  "IS meadows P2-012 one-sided | P2-012": [
+   3.0,
+   4.2,
+   3.4
+  ],
+  "IS meadows P2-014 one-sided | P2-014": [
+   3.8,
+   4.6,
+   4.4
+  ],
+  "IS meadows P2-050 one-sided | P2-050": [
+   4.2,
+   5.0,
+   4.4
+  ],
+  "IS meadows P2-003 one-sided | P2-003": [
+   4.0,
+   4.8,
+   4.0
+  ],
+  "IS meadows P2-006 one-sided | P2-006": [
+   4.0,
+   5.4,
+   4.6
+  ]
+ }
+}
