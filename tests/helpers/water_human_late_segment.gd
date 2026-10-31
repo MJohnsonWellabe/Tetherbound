@@ -103,7 +103,11 @@ func run_human(selected: String = "all") -> bool:
 	# Reader-pace trainer fights (Calder median 214-329 s in C2) and the swum
 	# sheltered crossings need more than the mounted segment's bounds.
 	fight_bound_ms = 600000
-	watchdog_ms = 30 * 60 * 1000
+	# Wall clock (Time.get_ticks_msec). On the CPU cloud host 07c_venn (crossing,
+	# camp, the authored Veilfall exterior spine, Venn, recovery) passes in
+	# ~44 min wall with every waypoint reached (F49#0 routes, 31 Oct); 30 min
+	# fired mid-fight. Route and fight assertions are unchanged.
+	watchdog_ms = 60 * 60 * 1000
 	if piece in SHORT_SEGMENTS.values(): watchdog_ms = SHORT_WATCHDOG_MS
 	_swimmer = _game.local.party.active() if _game != null else null
 	_abort = func(_reason: String) -> void: pass
