@@ -1,0 +1,102 @@
+[
+    {
+        "species":  "aquaryn",
+        "medium":  null,
+        "high":  4
+    },
+    {
+        "species":  "brooktail",
+        "medium":  null,
+        "high":  4
+    },
+    {
+        "species":  "riverdrake",
+        "medium":  null,
+        "high":  4
+    },
+    {
+        "species":  "sirenseal",
+        "medium":  null,
+        "high":  4
+    },
+    {
+        "species":  "tanglevolt",
+        "medium":  null,
+        "high":  4
+    },
+    {
+        "species":  "torrentoad",
+        "medium":  null,
+        "high":  4
+    },
+    {
+        "species":  "ashtusk",
+        "medium":  null,
+        "high":  4
+    },
+    {
+        "species":  "water_aquaryn",
+        "medium":  null,
+        "high":  5
+    },
+    {
+        "species":  "water_riptusk",
+        "medium":  null,
+        "high":  5
+    },
+    {
+        "species":  "water_riverdrake",
+        "medium":  null,
+        "high":  5
+    },
+    {
+        "species":  "water_sirenseal",
+        "medium":  null,
+        "high":  5
+    },
+    {
+        "species":  "water_tidecoil",
+        "medium":  null,
+        "high":  5
+    },
+    {
+        "species":  "bramblebun",
+        "medium":  null,
+        "high":  4
+    },
+    {
+        "species":  "burrowback",
+        "medium":  null,
+        "high":  5
+    },
+    {
+        "species":  "cindercub",
+        "medium":  null,
+        "high":  4
+    },
+    {
+        "species":  "duskhush",
+        "medium":  null,
+        "high":  4
+    },
+    {
+        "species":  "ripplet",
+        "medium":  null,
+        "high":  5
+    },
+    {
+        "species":  "trailpup",
+        "medium":  null,
+        "high":  4
+    },
+    {
+        "species":  "water_cannonback",
+        "medium":  null,
+        "high":  4
+    },
+    {
+        "species":  "terrapup",
+        "medium":  null,
+        "high":  5
+    }
+]
