@@ -49,3 +49,16 @@ Lane: tb/world-dressing (coordinator start, 31 Oct 2026). Scene dressing from in
 ## Scope changes
 - 31 Oct, coordinator (owner feedback): P2-011 Tidewake named destinations moved to a new Tidewake lane (declutter plus a Meshy beach focal piece). Dropped here: `tidewake_destination_read.json` stays OFF and is not for landing; no further Tidewake location dressing from this lane. CPU r1 notes for that lane: the 8.5 m drift arch read much stronger; the shallow-water terrace walls showed a blank back face. The Tidewake camp bed and workbench (P2-115/P2-116) stay here.
 - P2-102 parked without an arm: the night frame's crushed tower is the Cloudreach night grade (chapter lighting) and the griffin wing in the tower is a creature pose (other lanes); installed-asset dressing reaches neither for a >0.5 gain.
+
+## State at the owner stop (31 Oct, about 23:00 UTC)
+- Waiting on the GPU: WD2 (`tb/world-2-on` 1bfc5d09, job 17). P2-041's CPU numbers in b1/b2 compared mismatched stands (see the NOTE correction); capture it with the single-subset job command.
+- Flag-off candidates on this branch, captured on CPU but not yet judged (batch 3 not run):
+  - P2-041 r3 `crown_arch_hero.json skirt` (moss skirt and edge dressing; matched-stand frames exist).
+  - P2-045 r3 darker Stormwood find-stone (`pickup_grounding.json` value change).
+  - P2-012 `burrow_warrens.json bank.hill_shell` plus `meadows_hero_pieces.json cliffs_wd` (the old `cliffs` group puts cliff_b across the walking route: camera and player inside rock at walk_03; do not enable `cliffs`).
+  - P2-006 `meadows_hero_pieces.json clearings_wd` (trail-camp sightline: the camera leaves the foliage) and band1 `wd_village_market` (awnings retinted tan; the kit cloth is red).
+  - P2-013 `tether_relay.json ground_pad.surface_candidate.r2` and band3 `wd_relay_yard_stock`.
+  - P2-003 band5 `wd_stronghold_courtyard` r2 (braziers at the front corners; r1 sat too deep to light the floor).
+- Parked: P2-070 `dark_glass` (two attempts, no visible change on CPU: the pale tiles are grazing-angle sky specular).
+- Not started: HERO-1 Stormheart (coordinator handoff arrived at the stop; candidates on tb/hero-landmarks-r2, brief in tb/gpu-pass NOTE item 9).
+- Resume: run the Meadows round-2 capture (`cand8`: flags hill_shell, cliffs_wd, clearings_wd, village_market, relay_r2, relay_stock, courtyard; same subset lists as the `base_me_*` baselines), judge batch 3 with the r3 Stormwood frames, then build the second arm.
