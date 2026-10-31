@@ -37,3 +37,7 @@ Lane: tb/world-dressing (coordinator start, 31 Oct 2026). Scene dressing from in
 - P2-038 r1 showed no new pools (flatness limit): per-pool relief 1.2 m.
 - P2-115/P2-116: bed reads; bench hidden behind the trainer, turned -39 deg and 2.6 m.
 - Arm-1 items get r2 follow-ups judged separately: glowmoss larger fungi; six spikes per scar; Glass Sink approach marker; darker crown slab moss.
+
+## Scope changes
+- 31 Oct, coordinator (owner feedback): P2-011 Tidewake named destinations moved to a new Tidewake lane (declutter plus a Meshy beach focal piece). Dropped here: `tidewake_destination_read.json` stays OFF and is not for landing; no further Tidewake location dressing from this lane. CPU r1 notes for that lane: the 8.5 m drift arch read much stronger; the shallow-water terrace walls showed a blank back face. The Tidewake camp bed and workbench (P2-115/P2-116) stay here.
+- P2-102 parked without an arm: the night frame's crushed tower is the Cloudreach night grade (chapter lighting) and the griffin wing in the tower is a creature pose (other lanes); installed-asset dressing reaches neither for a >0.5 gain.
