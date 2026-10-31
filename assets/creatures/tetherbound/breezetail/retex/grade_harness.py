@@ -30,9 +30,9 @@ SOURCE = os.path.join(HERE, "main_vivid.png")
 VIVID = os.path.join(HERE, "..", "models", "breezetail_extracted_base_color_vivid.png")
 BLUE_HUE = (190.0, 240.0)
 BLUE_SAT = (0.08, 0.18)  # feathered: grey-brown fur stays out
-BLUR = 8.0  # texels, at 1024
-FLATTEN = 0.9  # share of the blurred (calm) value/saturation taken
-VAL_SCALE = 0.9
+BLUR = 12.0  # texels, at 1024
+FLATTEN = 1.0  # share of the blurred (calm) value/saturation taken
+VAL_SCALE = 0.85
 SAT_SCALE = 0.8
 
 
