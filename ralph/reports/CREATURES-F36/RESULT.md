@@ -30,6 +30,11 @@ Lane branch `tb/creatures-f36`. CPU capture on Mesa llvmpipe (Compatibility, 128
 - **Nightburrow:** plays its own remake clips (not a recipe species), so the recipe roll cannot touch its faint. Its crouch faint needs the remake's clip re-authored, which needs Blender (not in this container).
 - **Stop-rule count, round 1 under 0.5:** Ripplet, Aquaryn, Breezetail, Cliffspike faint, Thundertunnel faint. Not parked yet; the next try needs a silhouette-level change.
 
+## Process (coordinator, 31 Oct)
+
+- From the next arm on, every change ships as data or config JSON flags over flag-off code. A new texture or mesh ships with a flag that selects it.
+- GPU arm requests say "High first".
+
 ## Lessons
 
 - At the standard roster crop only silhouette changes score: faint shape, and pose contact with the ground.

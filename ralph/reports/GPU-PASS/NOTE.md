@@ -14,6 +14,8 @@
 - **Capture,** each arm at its own SHA on a clean tree, Medium and High, standard roster crop:
   `godot --path . --rendering-method forward_plus --resolution 1920x1080 --script res://tools/art_pipeline/capture_f36_poses.gd -- --candidate --whole-body --context --species=cragclaw,water_cragclaw,skyrill --out=<fresh dir> --source-commit=<arm sha>`
   - All three are in `enabled_species`, so `--candidate` installs.
+- **High first;** add Medium only if High reaches 7.5.
+- **No re-import needed:** the arm changes only `data/creatures/f36_pose_candidates.json` (two recipe lines plus a provenance key). It can be judged on any imported main tree by checking out that one file at e5667aecd.
 - **Report:**
   - MET per form per preset.
   - The faint defect calls.
