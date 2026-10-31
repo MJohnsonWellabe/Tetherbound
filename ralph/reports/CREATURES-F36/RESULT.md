@@ -7,6 +7,7 @@ Lane branch `tb/creatures-f36`. CPU capture on Mesa llvmpipe (Compatibility, 128
 | Arm | Branch / SHA | Control | Species | CPU mapped main -> arm | Status |
 |---|---|---|---|---|---|
 | CO-F36-1 | `tb/co-f36-1-on` e5667aecd | main 3a0e1fa0d | Cragclaw, water_cragclaw, Skyrill (side-lie faint) | 5.71 -> 6.24, 5.71 -> 6.24, 6.00 -> 6.53 (+0.53 each) | GPU READY (`r2/VERDICT.md`) |
+| CO-F36-2 | `tb/co-f36-2-on` 505bc2e5f | main a41e1b30 | Sirenseal grounded hit (flag `creatures_f36_sirenseal_grounded_hit`, off by default) | 5.90 -> 7.14 (+1.24) | GPU READY (`r4/VERDICT.md`) |
 
 ## Rounds
 
@@ -20,6 +21,9 @@ Lane branch `tb/creatures-f36`. CPU capture on Mesa llvmpipe (Compatibility, 128
   - Cliffspike faint roll −70°: 6.92 -> 6.58.
   - Thundertunnel faint roll +70°: 6.64 -> 6.20.
   - On domed or quilled bodies the whole-body roll lifts them off the stage.
+- **r4** (`r4/VERDICT.md`), ROSTER-1 targets:
+  - Sirenseal grounded hit 5.90 -> 7.14: CO-F36-2.
+  - Torrentoad flinch and slump 6.95 -> 6.86: dropped.
 
 ## Species parked or needing the coordinator
 
@@ -28,7 +32,8 @@ Lane branch `tb/creatures-f36`. CPU capture on Mesa llvmpipe (Compatibility, 128
 - **Glimmermoth and Tempestwing:** a side-lie stands their wings vertical. They need wing bones (Tempestwing's rig has none) or authored clips.
 - **Cliffspike, Thundertunnel (faint):** the pivot roll regresses. A grounded collapse needs authored leg and flank bones or clips. Their next swing is a value and face lift, not a pose change.
 - **Nightburrow:** plays its own remake clips (not a recipe species), so the recipe roll cannot touch its faint. Its crouch faint needs the remake's clip re-authored, which needs Blender (not in this container).
-- **Stop-rule count, round 1 under 0.5:** Ripplet, Aquaryn, Breezetail, Cliffspike faint, Thundertunnel faint. Not parked yet; the next try needs a silhouette-level change.
+- **Bramblebun, Cindercub, Trailpup (ROSTER-1 hit PARTIAL):** they play their remake GLB clips; no recipe matches their models. A grounded hit means re-authoring the clips with each remake's `author_native_clips.py`. `bpy` 5.2 installs here (pip, Python 3.13), but a re-export risks changing materials, so it is not attempted yet.
+- **Stop-rule count, round 1 under 0.5:** Ripplet, Aquaryn, Breezetail, Cliffspike faint, Thundertunnel faint, Torrentoad flinch and faint. Not parked yet; the next try needs a silhouette-level change.
 
 ## Process (coordinator, 31 Oct)
 

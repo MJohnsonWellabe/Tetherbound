@@ -1,0 +1,5 @@
+Gp: "The hit react lifts the whole body off the floor"
+Eq: "recipe text in the craft panel is clipped or too small to read at a glance"; "the craft action hints are low-contrast and hard to find"
+Xy: none
+So: none
+It: "The hit react barely differs from standing"; "The faint is the same upright crouch as standing"

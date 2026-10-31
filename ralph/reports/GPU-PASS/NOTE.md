@@ -1,5 +1,25 @@
 # GPU-PASS lane note (owner's Windows desktop, GTX 1060 3GB; 21–22 Oct 2026)
 
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-2, Sirenseal grounded hit (flag, High first)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-2-on` 505bc2e5ffad9bde51fa9919c2db7f8879af5fa1.
+  - The candidate is main plus the flag-off `candidate_role_flags` hook in `scripts/creatures/creature_pose_candidates.gd` and one flag in `data/creatures/f36_pose_candidates.json`.
+  - With the flag `false` it renders exactly as main.
+- **To judge:** on the candidate tree, set `candidate_role_flags.creatures_f36_sirenseal_grounded_hit.enabled` to `true`.
+  - No re-import is needed; the change is code plus JSON only.
+- **Why:** ROSTER-1 High has sirenseal at 6.81, with the hit react PARTIAL 3/3 and the whole body leaving the floor.
+  - Enabled, land Sirenseal's hit keeps 15% of its pivot rotation and 70% of its body recoil.
+  - water_sirenseal (7.27) is untouched.
+- **CPU r4** (three judges, confirming, r 0.95): 5.90 -> 7.14 (+1.24), airborne hit FIXED x3.
+- **Verdict:** `ralph/reports/CREATURES-F36/r4/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:**
+  `godot --path . --rendering-method forward_plus --resolution 1920x1080 --script res://tools/art_pipeline/capture_f36_poses.gd -- --candidate --whole-body --context --species=sirenseal,water_sirenseal --out=<fresh dir> --source-commit=<arm sha>`
+  - water_sirenseal is a no-change check.
+- **Report:**
+  - MET at High.
+  - The hit defect call.
+  - Whether water_sirenseal is unchanged.
+
 ## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-1, side-lie faints for Cragclaw and Skyrill
 
 - **Arms:** control main 3a0e1fa0d8446c5dffa3359a3c3543fa6ded18ca vs candidate `tb/co-f36-1-on` e5667aecd6e8cdcf66c9a33e9a69df049229b12e.
