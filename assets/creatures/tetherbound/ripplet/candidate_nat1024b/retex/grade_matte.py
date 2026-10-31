@@ -20,13 +20,7 @@ no darker back or lighter belly. r2 adds countershading, as a real otter has:
   fur (normal y above 0.35) through 1.0 on the flanks to BELLY_VAL facing down,
   and the back shifts BACK_HUE degrees toward a deeper blue. Gutter texels take
   their nearest covered texel's scale.
-GPU CO11 (27 Oct): r2 maps 7.26 / 7.01; the judges still ask for a lighter
-belly, toward the Sirenseal board's grey-white. r3 (CREATURES-F36 arm 1) lifts
-the underside further (BELLY_VAL), starts it higher up the flank (BELLY_NY),
-and drains its teal toward grey-white (BELLY_SAT) so the otter reads as a dark
-back over a pale belly at roster distance.
-The cream belly patch keeps its value and eases its yellow toward the same
-grey-white (CREAM_SAT); eyes, nose and dark paws keep their exact pixels. Mesh, rig,
+The cream belly, eyes, nose and dark paws keep their exact pixels. Mesh, rig,
 UVs and clips are untouched. Deterministic.
 
     python3 assets/creatures/tetherbound/ripplet/candidate_nat1024b/retex/grade_matte.py [--preview out.png]
@@ -61,14 +55,10 @@ STRAND_RADIUS = 3.0
 STRAND_GAIN = 1.0  # added share of the high-pass (1.0 doubles strand contrast)
 ANATOMY_KEY = "ripplet/candidate_nat1024b"
 BACK_VAL = 0.70
-BELLY_VAL = 1.40
+BELLY_VAL = 1.15
 BACK_NY = (0.0, 0.35)  # full back scale above the second
-BELLY_NY = (-0.45, 0.1)  # full belly scale below the first
+BELLY_NY = (-0.6, -0.1)  # full belly scale below the first
 BACK_HUE = 6.0
-BELLY_SAT = 0.45
-CREAM_HUE = (30.0, 75.0)
-CREAM_SAT = 0.55  # cream belly saturation scale
-CREAM_MIN_VAL = (0.45, 0.6)  # belly saturation scale: teal toward grey-white
 
 
 def _ramp(lo, hi, x):
@@ -83,22 +73,19 @@ def _countershade(size):
     ny = ny[iy, ix]
     back = _ramp(*BACK_NY, ny)
     belly = 1.0 - _ramp(*BELLY_NY, ny)
-    return 1.0 + (BACK_VAL - 1.0) * back + (BELLY_VAL - 1.0) * belly, back, belly
+    return 1.0 + (BACK_VAL - 1.0) * back + (BELLY_VAL - 1.0) * belly, back
 
 
 def grade(rgb):
     h, s, v = T._hsv(rgb)
-    scale, back, belly = _countershade(rgb.shape[0])
+    scale, back = _countershade(rgb.shape[0])
     hue_w = _ramp(COAT_HUE[0] - 8, COAT_HUE[0], h) * (1.0 - _ramp(COAT_HUE[1], COAT_HUE[1] + 8, h))
     w = hue_w * _ramp(*COAT_SAT_MIN, s)
     blur = np.asarray(Image.fromarray((v * 255 + 0.5).astype(np.uint8)).filter(
         ImageFilter.GaussianBlur(STRAND_RADIUS))).astype(np.float64) / 255.0
     out_v = (v + (v - blur) * STRAND_GAIN * w) * (1.0 + (scale - 1.0) * w)
     h = h + BACK_HUE * back * w
-    out_s = s * (1.0 - (1.0 - SAT_SCALE) * w) * (1.0 - (1.0 - BELLY_SAT) * belly * w)
-    cream = _ramp(CREAM_HUE[0] - 8, CREAM_HUE[0], h) * (1.0 - _ramp(CREAM_HUE[1], CREAM_HUE[1] + 8, h)) \
-        * _ramp(*CREAM_MIN_VAL, v) * (1.0 - w)
-    out_s = out_s * (1.0 - (1.0 - CREAM_SAT) * cream)
+    out_s = s * (1.0 - (1.0 - SAT_SCALE) * w)
     print("coat share (w > 0.5): %.1f%%" % ((w > 0.5).mean() * 100))
     return np.clip(T._rgb(h, np.clip(out_s, 0, 1), np.clip(out_v, 0, 1)), 0, 1)
 
