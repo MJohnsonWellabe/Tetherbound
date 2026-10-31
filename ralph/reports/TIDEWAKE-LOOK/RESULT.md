@@ -32,7 +32,7 @@ Rows served: F39#30, F39#32, P2-008, P2-011, P2-009, P2-026, P2-057; F13#5 (inha
   - Shellwatch: -0.16, +0.35. The dock pump station fills the close view, and it is a dock action station.
 
   New idea needed. The likely one is to keep main's cottages there and trim only the prop litter; it was not run, because its expected gain is under 0.5.
-- Veilfall is untouched (HERO-3, GPU lane).
+- **Not started (stopped by owner usage cut, 31 Oct):** HERO-3, the Veilfall mountain, was moved to this lane by the coordinator, to be folded with the round-2 beach work into the lane's second GPU arm (cap: two arms waiting). Candidates: `tb/hero-landmarks-r2` `assets/props/meshy-1031/hero_veilfall/` (a/b; delete the .gdignore). Use it for the distance and approach silhouette; the entrance and buttresses stay; flag OFF. Judge on P2-010's job.json frames and the F39#31 Veilfall stands. The coordinator lists TW-LOOK-1 as GPU job 18.
 
 **What worked**
 - Focal pieces about 6 m past the spot, beside the route line.
