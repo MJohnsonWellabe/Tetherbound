@@ -1,0 +1,27 @@
+{
+ "asset": "P2-116 authored camp workbench (Tidewake 4.71; every forward camp)",
+ "status": "CANDIDATE_FLAG_OFF: not wired (.gdignore here)",
+ "date": "2026-10-31",
+ "license": "Existing Meshy account (owner Standing direction 1, 15 Oct 2026); no purchase",
+ "reference": {
+  "file": "reference.jpg",
+  "drafted_by": "coordinator via Meshy text-to-image (agent-drafted reference, owner-authorized)",
+  "t2i_task_id": "01a192ad-cde6-74d7-8d06-91a4fefe5244",
+  "prompt": "a sturdy wooden crafting workbench for a wilderness camp: thick plank top on splayed log legs, an iron bench vice, a hand saw, hammer, chisels and a coil of rope on top, a shelf underneath with a small crate and stacked planks, a lantern hanging from a post, painterly fantasy game concept art in the style of a Palworld and Valheim art board, single isolated object, three-quarter view from slightly above, centered, whole object visible, plain light grey background, soft even daylight, no text, no people, no creatures",
+  "inspected_before_submission": true
+ },
+ "model": {
+  "endpoint": "/openapi/v1/image-to-3d",
+  "task_id": "01a192af-2f05-7682-9836-2dc5dca75da8",
+  "settings": {
+   "should_remesh": true,
+   "should_texture": true,
+   "enable_pbr": true,
+   "topology": "triangle",
+   "target_polycount": 20000,
+   "symmetry_mode": "auto"
+  },
+  "file": "camp_workbench.glb",
+  "sha256": "03fce0b0973b5b060e6afe26cce1ad7547520d0f526c5a288768e7fd20b5d11c"
+ }
+}
