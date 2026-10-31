@@ -157,6 +157,34 @@ Earlier on 26-27 Oct, all pushed (see each row's VERDICT.md):
 3. Re-confirm F25#4 on main after tb/vfx-launch lands (`F25-4/f25_fix_queue.ps1.txt`, about 12 minutes).
 4. F08#3: judges ask for foreground dressing, a night lighting pass and varied islets (scene work for the Cloudreach lane).
 
+## GPU QUEUE (coordinator, 31 Oct; owner: "Continue all this work. I'll start the remote session soon"). Run top to bottom.
+
+The per-item scores showed shared causes. The plan, in order: dialogue and catch cameras, the near-bar UI items, creature ground contact, Meshy hero art for the worst landmarks, then a bigger atmosphere change per biome. These jobs feed it. Work from origin/main d4d5b262f or later, and add `--source-commit=<sha>` to every capture.
+
+1. **SW-P2-041, Crown Arch (Stormwood 3.97).**
+   - **Arms:** control main d4d5b262f vs candidate `tb/sw-crownarch-on` 1cd5038b2. The candidate is main plus one flag: `assets/environment/stormwood/crown_arch/candidate.json` `enabled: true` (the octagonal landing and fuller crown; never judged).
+   - **Capture:** P2-041's frames from `ralph/reports/VISUAL/item-scores/job.json`, Medium and High.
+   - **Report:** the mapped score per preset, the before/after gain, and the P2-041 defect call.
+2. **CO12 on main, four near-bar creatures.**
+   - **Arms:** control main vs `tb/co12-main-on` e5fcc1c47. It rebuilds the archived tb/co12-on commits on main:
+     - a grounded flinch for Cliffspike and Voltwig;
+     - Nightburrow's aspect flame goes out when it faints;
+     - Thundertunnel's fur value lift.
+   - **Capture:** `capture_f36_poses.gd --candidate --whole-body --context --species=cliffspike,voltwig,nightburrow,thundertunnel`, standard roster crop, Medium and High.
+   - **Report:** MET per species per preset, and any regression.
+3. **P2-095 close-out (Meadows craft recipe text, 7.53 on the default renderer).**
+   - **Capture:** P2-095's job.json frames on main at Medium and High.
+   - **Report:** the one-sided yardstick score per preset. 7.5 or above on both closes F38#18.
+4. **DIAG-DLG: dialogue camera diagnosis. No judging; JSON only.**
+   - **Capture:** re-run `tools/phase2_capture_dialogue.gd` on main for the dialogue frames of P2-083, P2-074, P2-073, P2-075, P2-079, P2-078, P2-087, P2-086, P2-076, P2-077, P2-081 and P2-084 (repro commands in job.json).
+   - **Push:** each run's `manifest.json` to tb/gpu-pass under `ralph/reports/VISUAL/item-scores/diag-dialogue/<biome>/`, plus one contact sheet.
+   - **Why:** each record carries `conversation_camera_active`, `conversation_camera_fallback`, `conversation_camera_blend`, `conversation_camera_shot` and `camera_player_distance_m`. They separate two failures:
+     - the push-in never fired: the camera stays behind the player's back with no speaker in view;
+     - the push-in fired but was blocked: the camera is inside rock, or a creature or the player fills the frame.
+   - **If you can:** add a local, uncommitted print of the node `conversation_camera.gd::current_speaker()` returns and of the arbiter's `winning_provider()` at `begin()`, and paste those lines into a `speakers.txt` beside each manifest.
+   - The camera fix is written from this data, then comes back to you as an arm.
+5. **CR-BUG: Cloudreach arrival-gate candy (gameplay bug, for the fix arm later).** No capture now. When the fix arm arrives, re-run the c026 and c034 catch commands; P2-117 and P2-118 get their frames back.
+
 ## GPU LANE: ITEM SCORES DONE (28 Oct, ~01:40 CDT). The lane is idle; no GPU process is running.
 
 All four biomes are scored on main b7a6e8bbe and pushed here as `ralph/reports/VISUAL/item-scores/<biome>/{scores-gpu.json, VERDICT-gpu.md, _sheet_<biome>-gpu.jpg, yardstick/}`. None of the 103 scored items reaches 7.5 except Meadows P2-095 at 7.53.
