@@ -211,6 +211,16 @@ The per-item scores showed shared causes. The plan, in order: dialogue and catch
    - **Where:** the faint and rest poses are per species in `data/creatures/f36_pose_candidates.json` (Mosshell's on-its-back faint in CO11 is the model); mounted swim is `scripts/world/water_mounted_swim.gd` with `water_mounts.json`.
    - **Report:** each item's before/after per preset, and push the branch for the coordinator to land.
 
+9. **HERO-1: Stormheart tree, round 2 (P2-037, Stormwood 4.41). Hands-on.**
+   - **Candidates:** two Meshy models on `tb/stormheart-r2` 22bba04a0, under `assets/environment/stormwood/stormheart_hero/candidates_r2/`. That folder is .gdignore'd, so copy the chosen one out to import it. They are built from the owner board's front and side views; `provenance.json` holds the task ids. Unlike round 1's torn-sheet crown, the canopy is solid rounded clusters with a split twin trunk and platforms.
+   - **Do:**
+     - Pick a or b from a quick render.
+     - Trim the baked base clutter: a has pines at its base, b a rock mound.
+     - Place it as exterior presentation only: the distance silhouette and outer shell. The hollow interior ascent, decks, rails, collision and entrance split stay exactly as they are.
+     - Reuse `stormheart_hero.tscn`/`.gd` and the bark and leaf shaders. Put it behind a flag in `stormheart_presentation.json`, OFF by default.
+   - **Judge:** P2-037's job.json frames, main vs flag ON, Medium and High, with code-blind judges.
+   - **Push:** the branch, and report the result.
+
 ## GPU LANE: ITEM SCORES DONE (28 Oct, ~01:40 CDT). The lane is idle; no GPU process is running.
 
 All four biomes are scored on main b7a6e8bbe and pushed here as `ralph/reports/VISUAL/item-scores/<biome>/{scores-gpu.json, VERDICT-gpu.md, _sheet_<biome>-gpu.jpg, yardstick/}`. None of the 103 scored items reaches 7.5 except Meadows P2-095 at 7.53.
