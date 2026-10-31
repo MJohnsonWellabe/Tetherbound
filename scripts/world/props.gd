@@ -305,6 +305,10 @@ func place(into: Node3D, spec: Dictionary) -> void:
 	var x := float(at[0])
 	var z := float(at[1])
 	var ground := _ground_height(x, z)
+	# `y_world` (optional): a prop standing on built geometry (a courtyard
+	# floor above the terrain) states its floor height instead of sampling.
+	if spec.has("y_world"):
+		ground = float(spec.get("y_world", ground))
 	if is_nan(ground):
 		push_error("no ground under prop '%s' at %.0f, %.0f" % [model, x, z])
 		return
