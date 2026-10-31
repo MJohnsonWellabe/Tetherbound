@@ -221,6 +221,15 @@ The per-item scores showed shared causes. The plan, in order: dialogue and catch
    - **Judge:** P2-037's job.json frames, main vs flag ON, Medium and High, with code-blind judges.
    - **Push:** the branch, and report the result.
 
+10. **HERO-2: Cloudreach Sky Aviary (P2-022, 5.81). Hands-on.**
+    - **Candidates:** `tb/hero-landmarks-r2` 4ed83159e (that branch also carries HERO-1's Stormheart), `assets/props/meshy-1031/hero_aviary/`. They are built from the board's front gate, side and rear views, and show a glass-and-gold dome sanctuary with towers.
+    - **Do:** delete the folder's .gdignore on your branch to import it. Pick a or b. Place it at the summit aviary as the landmark's main silhouette; the existing courtyard and walkable layout stay. Put it behind a flag, OFF by default.
+    - **Judge:** P2-022's and P2-024's job.json frames, main vs ON.
+11. **HERO-3: Tidewake Veilfall (P2-010, 5.78; F39#31; F13#5's Veilfall read). Hands-on.**
+    - **Candidates:** the same branch, `assets/props/meshy-1031/hero_veilfall/`. They are built from the board's exterior and approach views: a cliff massif with waterfall channels and a carved gateway.
+    - **Do:** use it for the distance and approach silhouette. The playable entrance and the existing veilfall_terraced_buttress pieces stay. The baked waterfall geometry can take the existing water and foam shader. Put it behind a flag, OFF by default.
+    - **Judge:** P2-010's job.json frames and the F39#31 Veilfall views, main vs ON.
+
 ## GPU LANE: ITEM SCORES DONE (28 Oct, ~01:40 CDT). The lane is idle; no GPU process is running.
 
 All four biomes are scored on main b7a6e8bbe and pushed here as `ralph/reports/VISUAL/item-scores/<biome>/{scores-gpu.json, VERDICT-gpu.md, _sheet_<biome>-gpu.jpg, yardstick/}`. None of the 103 scored items reaches 7.5 except Meadows P2-095 at 7.53.
