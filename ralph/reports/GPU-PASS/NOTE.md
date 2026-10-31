@@ -1,5 +1,17 @@
 # GPU-PASS lane note (owner's Windows desktop, GTX 1060 3GB; 21–22 Oct 2026)
 
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-9, Mudsnout, Paddlenewt and Riftfrill taller (flag, High first); this tree supersedes CO-F36-8's
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-9-on` e8da58fe1cc82fd919ed02cf564318748fc214b4.
+  - The candidate is CO-F36-8's all-flags tree plus one scale flag, so use this tree for every CREATURES-F36 flag arm (table in the CO-F36-8 request below).
+  - With every flag `false` it renders as main.
+- **To judge:** set `flags.creatures_f36_taller_than_trainer_3.enabled` to `true` in `data/config/creature_scale_flags.json`.
+  - mudsnout grows x1.5 (2.0 -> 3.0 m); paddlenewt and riftfrill x1.8 (2.15 -> 3.87 m).
+- **CPU r10** (three judges, confirming, r 0.92): mudsnout 6.22 -> 7.02, paddlenewt 6.18 -> 6.94, riftfrill 6.13 -> 6.90. The height defect goes from PRESENT x3 to FIXED x3 on all three.
+- **Verdict:** `ralph/reports/CREATURES-F36/r10/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:** `capture_f36_poses.gd --whole-body --context --species=mudsnout,paddlenewt,riftfrill --out=<fresh dir> --source-commit=e8da58fe1cc82fd919ed02cf564318748fc214b4`, plain.
+- **Report:** MET at High and the height defect call.
+
 ## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-8, Pipwing and Sparkit taller, plus ONE TREE FOR EVERY CREATURES-F36 FLAG ARM (High first)
 
 - **One tree for all the flag arms:** check out `tb/co-f36-8-on` 4c13f7560ef4b01d88895b0cfdd592c2f42e9435 and import once (seven new coat textures).

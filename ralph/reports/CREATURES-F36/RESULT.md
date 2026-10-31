@@ -14,6 +14,7 @@ Lane branch `tb/creatures-f36`. CPU capture on Mesa llvmpipe (Compatibility, 128
 | CO-F36-6 | `tb/co-f36-6-on` 66dc86a09 (on CO-F36-5) | main a41e1b30 | Stronger grounded hit react on own clips: Cindercub, Trailpup (flag `creatures_f36_grounded_hit_remakes`, off by default) | 6.69 -> 7.04, 6.69 -> 7.00 (near-bar close-out exception) | GPU READY (`r8/VERDICT.md`) |
 | CO-F36-7 | `tb/co-f36-7-on` d2fa6f63c (on CO-F36-6) | main a41e1b30 | Matte finish: Skyrill, Voltarach, Sparkit, Reedwing; Cragclaw softer sheen (flag `creatures_f36_matte_finish`, off by default) | not judgeable on CPU (no environment reflections in Compatibility) | GPU-ONLY CANDIDATE |
 | CO-F36-8 | `tb/co-f36-8-on` 4c13f7560 (on CO-F36-7; holds every flag arm) | main a41e1b30 | Pipwing x1.6, Sparkit x1.6 (flag `creatures_f36_taller_than_trainer_2`, off by default) | 5.67 -> 6.78, 5.62 -> 6.39 | GPU READY (`r9/VERDICT.md`) |
+| CO-F36-9 | `tb/co-f36-9-on` e8da58fe1 (on CO-F36-8; holds every flag arm) | main a41e1b30 | Mudsnout x1.5, Paddlenewt x1.8, Riftfrill x1.8 (flag `creatures_f36_taller_than_trainer_3`, off by default) | 6.22 -> 7.02, 6.18 -> 6.94, 6.13 -> 6.90 | GPU READY (`r10/VERDICT.md`) |
 
 ## Rounds
 
@@ -47,6 +48,9 @@ Lane branch `tb/creatures-f36`. CPU capture on Mesa llvmpipe (Compatibility, 128
 - **r9** (`r9/VERDICT.md`), height batch 2: CO-F36-8.
   - Pipwing +1.11 and Sparkit +0.77.
   - Paddlenewt +0.25, Riftfrill +0.14, Glimmermoth +0.15: their body line still reads low.
+- **r10** (`r10/VERDICT.md`), height batch 3: CO-F36-9.
+  - Mudsnout x1.5 +0.80.
+  - Paddlenewt and Riftfrill x1.8: +0.76 and +0.77.
 
 ## Species parked or needing the coordinator
 
