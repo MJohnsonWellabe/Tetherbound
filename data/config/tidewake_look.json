@@ -1472,8 +1472,8 @@
       "id": "beach_salt_crown_11_0",
       "_where": "salt_crown__11__salt_crown_tide_shrine",
       "position_xz_m": [
-        208.0,
-        2324.78
+        207.17,
+        2326.67
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
       "height_m": 5.6,
@@ -1804,6 +1804,24 @@
       "yaw_deg": -144.0,
       "sink_m": 0.25,
       "grass_clear_m": 5.0,
+      "collider_fraction": [
+        0.55,
+        1.0,
+        0.55
+      ]
+    },
+    {
+      "id": "beach_drowned_garden_22_1",
+      "_where": "drowned_garden__22__drowned_garden_beach",
+      "position_xz_m": [
+        1046.87,
+        2263.9
+      ],
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 5.04,
+      "yaw_deg": -144.0,
+      "sink_m": 0.25,
+      "grass_clear_m": 4.5,
       "collider_fraction": [
         0.55,
         1.0,
@@ -2538,8 +2556,8 @@
       "id": "beach_salt_crown_11_1",
       "_where": "salt_crown__11__salt_crown_tide_shrine",
       "position_xz_m": [
-        206.54,
-        2316.06
+        205.71,
+        2317.94
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
       "height_m": 4.76,
@@ -2556,8 +2574,8 @@
       "id": "beach_salt_crown_11_2",
       "_where": "salt_crown__11__salt_crown_tide_shrine",
       "position_xz_m": [
-        199.92,
-        2317.25
+        199.09,
+        2319.13
       ],
       "model": "res://assets/props/meshy-1031/tidewake/market_stall/market_stall.glb",
       "height_m": 3.06,
@@ -2568,42 +2586,6 @@
         0.8,
         0.6,
         0.5
-      ]
-    },
-    {
-      "id": "beach_salt_crown_12_1",
-      "_where": "salt_crown__12__salt_crown_return_bell",
-      "position_xz_m": [
-        291.87,
-        2246.13
-      ],
-      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
-      "height_m": 4.76,
-      "yaw_deg": -126.1,
-      "sink_m": 0.25,
-      "grass_clear_m": 4.25,
-      "collider_fraction": [
-        0.55,
-        1.0,
-        0.55
-      ]
-    },
-    {
-      "id": "beach_salt_crown_12_2",
-      "_where": "salt_crown__12__salt_crown_return_bell",
-      "position_xz_m": [
-        285.16,
-        2245.66
-      ],
-      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
-      "height_m": 5.04,
-      "yaw_deg": -91.1,
-      "sink_m": 0.25,
-      "grass_clear_m": 4.5,
-      "collider_fraction": [
-        0.55,
-        1.0,
-        0.55
       ]
     },
     {
@@ -2859,7 +2841,7 @@
       ]
     },
     {
-      "id": "beach_drowned_garden_22_1",
+      "id": "beach_drowned_garden_22_2",
       "_where": "drowned_garden__22__drowned_garden_beach",
       "position_xz_m": [
         1048.83,
@@ -2877,7 +2859,7 @@
       ]
     },
     {
-      "id": "beach_drowned_garden_22_2",
+      "id": "beach_drowned_garden_22_3",
       "_where": "drowned_garden__22__drowned_garden_beach",
       "position_xz_m": [
         1043.46,
