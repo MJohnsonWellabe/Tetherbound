@@ -1122,7 +1122,24 @@ func _build_center_zone() -> Control:
 	_center_icon.custom_minimum_size = Vector2(CENTER_ICON_PX, CENTER_ICON_PX)
 	_center_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_center_icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	side.add_child(_center_icon)
+	if _readable_r3:
+		# GPU CRAFT-R3 (31 Oct): the centre column read empty around a small
+		# flat glyph. The focused item's preview fills it, on its own plate.
+		var px := float(_presentation.get("center_preview_px", 200))
+		_center_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_center_icon.custom_minimum_size = Vector2(px, px)
+		var plate := PanelContainer.new()
+		var box := UITokens.fill_box(Color(UITokens.BG_PANEL_ALT, 0.9))
+		box.set_corner_radius_all(UITokens.RADIUS)
+		box.set_border_width_all(2)
+		box.border_color = UITokens.BORDER
+		box.set_content_margin_all(18)
+		plate.add_theme_stylebox_override("panel", box)
+		plate.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		plate.add_child(_center_icon)
+		side.add_child(plate)
+	else:
+		side.add_child(_center_icon)
 
 	_center_name = Label.new()
 	_center_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
