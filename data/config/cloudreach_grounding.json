@@ -6,7 +6,8 @@
   "min_bottom_radius_m": 0.25,
   "max_tilt_deg": 12.0,
   "rim_samples": 16,
-  "probe_start_above_m": 0.04,
+  "probe_start_inside_m": 1.0,
+  "min_thickness_m": 0.3,
   "max_probe_m": 14.0,
   "gap_tolerance_m": 0.08,
   "max_seat_gap_m": 6.0,
@@ -22,5 +23,5 @@
   "rocks_max": 14,
   "rock_scale": [0.55, 1.1],
   "rock_embed": 0.55,
-  "exclude_name_tokens": ["rope", "cable", "chain", "flame", "coals", "clapper", "lantern", "light", "ledgecap", "rigging", "brace", "wick", "glow", "orb", "disc_collision"]
+  "exclude_name_tokens": ["rope", "cable", "chain", "flame", "coals", "clapper", "lantern", "light", "ledgecap", "rigging", "brace", "wick", "glow", "orb", "disc_collision", "collar", "summitarenapresentation"]
 }

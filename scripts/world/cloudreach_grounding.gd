@@ -104,12 +104,13 @@ func _measure(mesh_instance: MeshInstance3D) -> Dictionary:
 	var height := cylinder.height * scale_y
 	if radius < float(_cfg.get("min_radius_m", 0.8)) and height < float(_cfg.get("min_height_m", 6.0)):
 		return {}
+	if height < float(_cfg.get("min_thickness_m", 0.3)):
+		return {} # floor decals and swept circles are paint, not drums
 	if bottom_radius < float(_cfg.get("min_bottom_radius_m", 0.25)):
 		return {} # cones and spikes have no footprint to seat
 	var base := xform * Vector3(0.0, -cylinder.height * 0.5, 0.0)
 	var samples := int(_cfg.get("rim_samples", 16))
 	var max_probe := float(_cfg.get("max_probe_m", 14.0))
-	var start_above := float(_cfg.get("probe_start_above_m", 0.04))
 	var max_gap := -INF
 	var min_gap := INF
 	var lowest := INF
@@ -118,8 +119,12 @@ func _measure(mesh_instance: MeshInstance3D) -> Dictionary:
 	for i in samples:
 		var angle := TAU * float(i) / float(samples)
 		points.append(base + Vector3(cos(angle), 0.0, sin(angle)) * bottom_radius * 0.97)
+	# Probe from inside the piece's own body (a ray never hits the convex
+	# collider it starts in), so ground that rises above the base reads as a
+	# sunk foot rather than as void under it.
+	var start_up := minf(height * 0.5, float(_cfg.get("probe_start_inside_m", 1.0)))
 	for point: Vector3 in points:
-		var query := PhysicsRayQueryParameters3D.create(point - Vector3.UP * start_above,
+		var query := PhysicsRayQueryParameters3D.create(point + Vector3.UP * start_up,
 			point - Vector3.UP * max_probe)
 		var hit := _space.intersect_ray(query)
 		if hit.is_empty():
