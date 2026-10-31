@@ -277,6 +277,13 @@ The per-item scores showed shared causes. The plan, in order: dialogue and catch
     - **Where:** `data/config/crossing_hall.json`, `scripts/world/crossing_hall_great_hall.gd`, `crossing_hall_arch_facades.gd`. Everything new goes behind flag-off keys.
     - **Judge:** the F17-6 camera set (`tools/visual_judge/camera_sets/F17-6.json`), main vs candidate, Medium and High. 7.5 closes F17#6.
 
+13. **CRAFT-R3: P2-095 close-out, round 2 (7.43, 0.07 short). A flag flip.**
+    - **Code:** `tb/craft-r3` 86a1c9825 is main plus `craft_panel.gd` with flag `readable_r3` OFF.
+    - **Do:** merge it into your one imported tree. Capture control, then flip `data/config/craft_presentation.json` `readable_r3: true` and capture the candidate.
+    - **What it does:** the compact sub-lines and Missing tags go up a step, and the greyed Missing materials button gets a TEXT_PRIMARY label and a 3 px border, which are the judges' asks.
+    - **Capture:** High first, P2-095's frames from job.json. If High reaches 7.5, add Medium. 7.5 on both closes F38#18.
+    - **When:** it can ride the DLG-1 / UI-1 flag-flip session.
+
 ## GPU LANE: ITEM SCORES DONE (28 Oct, ~01:40 CDT). The lane is idle; no GPU process is running.
 
 All four biomes are scored on main b7a6e8bbe and pushed here as `ralph/reports/VISUAL/item-scores/<biome>/{scores-gpu.json, VERDICT-gpu.md, _sheet_<biome>-gpu.jpg, yardstick/}`. None of the 103 scored items reaches 7.5 except Meadows P2-095 at 7.53.
