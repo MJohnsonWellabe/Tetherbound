@@ -302,3 +302,34 @@ Skip F39#4 (reopened 24 Oct: the Veilfall close-up needs new art first). F21#5 c
 - Never modify or delete the old D: checkouts.
 - One GPU process at a time.
 - Keep at least 5 GiB (target 10 GB) free on D:.
+
+## ARM REQUEST TW-look-1 (Tidewake look lane, tb/tidewake-look, 31 Oct 2026 ~4:50 PM CT)
+
+Owner 31 Oct: Tidewake locations "too cluttered ... beach huts ... the focus". **Judge High first**, then Medium only if High maps to 7.5 or above.
+
+- **Arms:**
+  - Main: current origin/main (a41e1b30 or later).
+  - On: `tb/tidewake-1-on` at 29ca0d23b45159a09ffb4ffa9e82716f9c61112b. This is the judged s2 state with `beach_scene_candidate` and `beach_declutter_candidate` removed from `sections_off`.
+  - Same tree, flags only: on any tree carrying the sections, `--tidewake-look-sections=beach_scene_candidate,beach_declutter_candidate` gives the same arm.
+- **Import first:** the new Meshy 1031 set is under `assets/props/meshy-1031/tidewake/`. Its texture `.import` files are on `compress/mode=2`.
+- **Stands:** 12 location stands, day approach and close (24 frames per arm):
+  ```
+  godot --path . --rendering-method forward_plus --resolution 1920x1080 --script res://tools/phase2_capture_locations.gd -- --biome=water --preset=High --source-commit=<sha> --times=day --views=approach,close --seed=2042 --output=res://<fresh dir> --subset=water__gull_rest__19 --subset=water__gull_rest__20 --subset=water__salt_crown__11 --subset=water__salt_crown__12 --subset=water__tidal_cradle__09 --subset=water__tidal_cradle__10 --subset=water__drowned_garden__21 --subset=water__drowned_garden__22 --subset=water__lantern_cove__17 --subset=water__lantern_cove__18 --subset=water__first_shore__01 --subset=water__first_shore__02
+  ```
+- **Judge:**
+  - One set per island: a 2x2 of its two sites, approach | close.
+  - Recorded defects: "Cluttered scenes: scattered props, pebbles and grass tufts compete for attention"; "Named location reads as a generic slope with no clear focal building or landmark".
+- **CPU result** (`ralph/reports/TIDEWAKE-LOOK/r1/VERDICT.md`, mapped, confirming batch, slope 0.98, RMSE 0.51), these six islands:
+
+  | Island | Main | Arm |
+  |---|---|---|
+  | gull_rest | 5.29 | 6.17 |
+  | salt_crown | 5.03 | 5.78 |
+  | tidal_cradle | 5.16 | 5.81 |
+  | drowned_garden | 5.55 | 6.11 |
+  | lantern_cove | 5.49 | 6.01 |
+  | first_shore | 5.59 | 6.08 |
+  | **Mean** | **5.35** | **5.99 (+0.64)** |
+
+  All 11 islands: 5.59 → 6.03.
+- **Rows:** F39#30 / F39#32 Tidewake location frames, P2-011 named destinations, P2-008 shore; F13#5 inhabited docks (declutter section).
