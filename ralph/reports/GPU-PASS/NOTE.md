@@ -157,6 +157,8 @@ Earlier on 26-27 Oct, all pushed (see each row's VERDICT.md):
 3. Re-confirm F25#4 on main after tb/vfx-launch lands (`F25-4/f25_fix_queue.ps1.txt`, about 12 minutes).
 4. F08#3: judges ask for foreground dressing, a night lighting pass and varied islets (scene work for the Cloudreach lane).
 
+## Other lanes (31 Oct): the creatures lane (tb/creatures-f36, CPU) prepares F36 close-out arms and appends requests for them; the route lane (tb/routes-f49) needs no GPU.
+
 ## GPU QUEUE (coordinator, 31 Oct; owner: "Continue all this work. I'll start the remote session soon"). Run top to bottom.
 
 The per-item scores showed shared causes. The plan, in order: dialogue and catch cameras, the near-bar UI items, creature ground contact, Meshy hero art for the worst landmarks, then a bigger atmosphere change per biome. These jobs feed it. Work from origin/main d4d5b262f or later, and add `--source-commit=<sha>` to every capture.
@@ -229,6 +231,17 @@ The per-item scores showed shared causes. The plan, in order: dialogue and catch
     - **Candidates:** the same branch, `assets/props/meshy-1031/hero_veilfall/`. They are built from the board's exterior and approach views: a cliff massif with waterfall channels and a carved gateway.
     - **Do:** use it for the distance and approach silhouette. The playable entrance and the existing veilfall_terraced_buttress pieces stay. The baked waterfall geometry can take the existing water and foam shader. Put it behind a flag, OFF by default.
     - **Judge:** P2-010's job.json frames and the F39#31 Veilfall views, main vs ON.
+
+12. **HALL-1: F17#6, the Crossing Hall (GPU 5.83 on 24 Oct; needs +1.7). Hands-on, one big swing, after HERO-3.**
+    - **Fix the renderer split your own F17-6 verdict found:**
+      - The four `hall_great_hall.shafts` DaylightShaft quads draw as blown-out white bead bars on Forward+. Make them renderer-aware like the F22#4 aura: a soft volumetric falloff and much lower energy on Forward+, or drop them on Forward+ and let window light carry it.
+      - The sealed-arch rim strips read as neon UI. Warm them to stone and gold, or dim them at night and in rain.
+    - **Fix what the judges call an empty corridor:**
+      - Furnish the nave from installed families: long tables and benches, a hearth, banners, crates and sacks, plus the shrine's own pedestals.
+      - Light the shrine warm (lantern gold), not cool white-blue.
+      - Thin the near-field posts in the approach views.
+    - **Where:** `data/config/crossing_hall.json`, `scripts/world/crossing_hall_great_hall.gd`, `crossing_hall_arch_facades.gd`. Everything new goes behind flag-off keys.
+    - **Judge:** the F17-6 camera set (`tools/visual_judge/camera_sets/F17-6.json`), main vs candidate, Medium and High. 7.5 closes F17#6.
 
 ## GPU LANE: ITEM SCORES DONE (28 Oct, ~01:40 CDT). The lane is idle; no GPU process is running.
 
