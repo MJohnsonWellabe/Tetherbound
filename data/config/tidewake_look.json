@@ -5,7 +5,8 @@
   "_why_sections_off": "Shipped in this file but OFF in play (settings() drops them; --tidewake-look-candidate restores them for captures): current_flow and current_flow_visual (b4 foam ribbons, unjudged; b3 ribbons 4.96 vs control 4.86), night_creature_floor (white-ghost night creature fix, verified on CPU, never judged at night).",
   "_why_destination_landmarks_candidate": "ON (GPU TW1, 26 Oct 2026; tb/gpu-pass 0290aa105, ralph/reports/GPU-PASS/TIDEWAKE/TW1-destinations-a9f7ee5a1/VERDICT.md): the whole destination landmark stack (base, s3, s4, s5; later layer wins by landmark_id) against no sections, three code-blind judges, mapped: pumps-shore 5.35 -> 6.68 (+1.33), jetty 5.41 -> 6.56 (+1.15), the same on Medium and High; P2-011 PRESENT 3/3 -> PARTIAL. Not met (about 0.9 short): dress each landmark, scale the jetty derrick, remove the mid-water band, cliff-and-falls far islands.",
   "sections_off": ["current_flow", "current_flow_visual", "night_creature_floor", "dock_village_candidate", "dock_dressing_candidate", "surfaces_candidate", "stones_candidate", "veilfall_hero_candidate", "veilfall_facade_candidate", "forward_plus_candidate", "veilfall_rock_detail_candidate", "first_shore_declutter_candidate", "veilfall_formation_relief_candidate", "veilfall_formation_relief_fill_candidate", "shore_surf_candidate", "shore_surf_vary_candidate", "veilfall_falls_candidate", "rain_fog_candidate", "rain_grade_candidate", "rain_veil_candidate", "swim_candidate", "dune_grass_candidate", "shore_water_candidate", "veilfall_mountain_candidate", "waterline_declutter_candidate", "golden_sky_candidate", "current_bands_candidate", "lesson_clusters_candidate", "current_tint_candidate", "veilfall_cladding_candidate", "veilfall_buttress_candidate", "swim_stroke_candidate",
-    "beach_scene_candidate"
+    "beach_scene_candidate",
+    "beach_declutter_candidate"
   ],
   "_why_stones_candidate": "close-1024 (p1/p2 judges, all six: pebbles sprinkled evenly across the whole beach rather than grouped at the tide line or around rocks). Tidewake beach stones: a finer clump noise with a patch threshold cuts bare gaps between groups, and a tide band gathers stone 0.2-1.4 m above the sea. Same count, sizes and tint. Unjudged; OFF in play.",
   "stones_candidate": {"clump_scale": 0.09, "clump_contrast": 1.0, "clump_patch_start": 0.52, "clump_patch_full": 0.7, "density_gain": 0.2, "tide_band_low_y": 0.2, "tide_band_high_y": 1.4, "tide_band_gain": 0.5},
@@ -1278,42 +1279,6 @@
       "grass_clear_m": 7
     },
     {
-      "id": "beach_brine_steps_06_0",
-      "_where": "brine_steps__06__brine_steps_east_beach",
-      "position_xz_m": [
-        370.2,
-        833.75
-      ],
-      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
-      "height_m": 5.6,
-      "yaw_deg": 171.8,
-      "sink_m": 0.25,
-      "collider_fraction": [
-        0.55,
-        1.0,
-        0.55
-      ],
-      "grass_clear_m": 5.0
-    },
-    {
-      "id": "beach_brine_steps_06_1",
-      "_where": "brine_steps__06__brine_steps_east_beach",
-      "position_xz_m": [
-        361.61,
-        834.1
-      ],
-      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
-      "height_m": 5.04,
-      "yaw_deg": 171.8,
-      "sink_m": 0.25,
-      "collider_fraction": [
-        0.55,
-        1.0,
-        0.55
-      ],
-      "grass_clear_m": 4.5
-    },
-    {
       "id": "beach_brine_steps_06_plaza",
       "_where": "brine_steps__06__brine_steps_east_beach (clearing only)",
       "position_xz_m": [
@@ -1348,42 +1313,6 @@
         1007.98
       ],
       "grass_clear_m": 8
-    },
-    {
-      "id": "beach_shellwatch_08_0",
-      "_where": "shellwatch__08__shellwatch_cradle_beach",
-      "position_xz_m": [
-        451.22,
-        1247.99
-      ],
-      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
-      "height_m": 5.6,
-      "yaw_deg": -156.0,
-      "sink_m": 0.25,
-      "collider_fraction": [
-        0.55,
-        1.0,
-        0.55
-      ],
-      "grass_clear_m": 5.0
-    },
-    {
-      "id": "beach_shellwatch_08_1",
-      "_where": "shellwatch__08__shellwatch_cradle_beach",
-      "position_xz_m": [
-        459.59,
-        1245.99
-      ],
-      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
-      "height_m": 5.04,
-      "yaw_deg": -156.0,
-      "sink_m": 0.25,
-      "collider_fraction": [
-        0.55,
-        1.0,
-        0.55
-      ],
-      "grass_clear_m": 4.5
     },
     {
       "id": "beach_shellwatch_08_plaza",
@@ -1826,5 +1755,348 @@
       ],
       "grass_clear_m": 6
     }
-  ]
+  ],
+  "_why_beach_declutter_candidate": "OFF in play (Tidewake look lane, owner 31 Oct 2026: 'too cluttered'). The inhabited-dock hamlets (Brine Steps east, Shellwatch cradle and the other mandatory landings) keep two Meshy 1031 beach huts on the hamlet's own spots instead of the mixed cottage and fisher-hut set, and only the dock shelter, net rack, one lamp torch and the lobster pots of their prop scatter (the pebbles, rocks, grass clumps, buckets, ropes, crates, benches and banners go). The pier deck keeps its bollards, one fish-crate stack and the lantern post. Dock residents, actions, barriers and colliders are untouched; huts keep a box collider. drop_landmark_props names landmark props to drop by id.",
+  "beach_declutter_candidate": {
+    "dock_village": {
+      "layouts": [
+        {
+          "houses": [
+            {
+              "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+              "height_m": 5.6,
+              "half_extent_m": [
+                2.4,
+                2.4
+              ],
+              "yaw_deg": 0.0,
+              "spots": [
+                [
+                  8.5,
+                  13.0
+                ],
+                [
+                  11.5,
+                  4.0
+                ],
+                [
+                  12.5,
+                  7.5
+                ],
+                [
+                  10.5,
+                  10.0
+                ],
+                [
+                  14.0,
+                  2.0
+                ]
+              ]
+            },
+            {
+              "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+              "height_m": 5.0,
+              "half_extent_m": [
+                2.4,
+                2.4
+              ],
+              "yaw_deg": 25.0,
+              "spots": [
+                [
+                  -8.5,
+                  12.0
+                ],
+                [
+                  -10.5,
+                  5.0
+                ],
+                [
+                  -11.5,
+                  8.5
+                ],
+                [
+                  -13.0,
+                  3.0
+                ]
+              ]
+            }
+          ],
+          "props": [
+            {
+              "model": "res://assets/props/meshy-1020/tidewake_dock_shelter/tidewake_dock_shelter.glb",
+              "height_m": 3.0,
+              "at": [
+                7.4,
+                2.6
+              ],
+              "yaw_deg": 180.0
+            },
+            {
+              "model": "res://assets/props/meshy-1020/tidewake_net_drying_rack/tidewake_net_drying_rack.glb",
+              "height_m": 2.2,
+              "at": [
+                9.6,
+                4.6
+              ],
+              "yaw_deg": 200.0
+            },
+            {
+              "model": "res://assets/props/built/torch_prop.tscn",
+              "height_m": 1.8,
+              "at": [
+                -5.5,
+                0.5
+              ],
+              "yaw_deg": 0.0,
+              "lamp": true
+            },
+            {
+              "model": "res://assets/props/meshy-1020/tidewake_lobster_pots_buoys/tidewake_lobster_pots_buoys.glb",
+              "height_m": 0.8,
+              "at": [
+                -6.0,
+                2.0
+              ],
+              "yaw_deg": 40.0
+            }
+          ]
+        },
+        {
+          "houses": [
+            {
+              "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+              "height_m": 5.6,
+              "half_extent_m": [
+                2.4,
+                2.4
+              ],
+              "yaw_deg": -20.0,
+              "spots": [
+                [
+                  8.5,
+                  13.0
+                ],
+                [
+                  11.0,
+                  5.0
+                ],
+                [
+                  12.5,
+                  8.5
+                ],
+                [
+                  14.0,
+                  3.0
+                ]
+              ]
+            },
+            {
+              "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+              "height_m": 5.0,
+              "half_extent_m": [
+                2.4,
+                2.4
+              ],
+              "yaw_deg": 10.0,
+              "spots": [
+                [
+                  -8.5,
+                  12.0
+                ],
+                [
+                  -11.5,
+                  6.0
+                ],
+                [
+                  -12.0,
+                  9.5
+                ],
+                [
+                  -14.0,
+                  3.5
+                ]
+              ]
+            }
+          ],
+          "props": [
+            {
+              "model": "res://assets/props/meshy-1020/tidewake_dock_shelter/tidewake_dock_shelter.glb",
+              "height_m": 3.0,
+              "at": [
+                7.8,
+                3.0
+              ],
+              "yaw_deg": 160.0
+            },
+            {
+              "model": "res://assets/props/meshy-1020/tidewake_net_drying_rack/tidewake_net_drying_rack.glb",
+              "height_m": 2.2,
+              "at": [
+                -6.0,
+                4.0
+              ],
+              "yaw_deg": 160.0
+            },
+            {
+              "model": "res://assets/props/built/torch_prop.tscn",
+              "height_m": 1.8,
+              "at": [
+                5.4,
+                -0.6
+              ],
+              "yaw_deg": 0.0,
+              "lamp": true
+            },
+            {
+              "model": "res://assets/props/meshy-1020/tidewake_lobster_pots_buoys/tidewake_lobster_pots_buoys.glb",
+              "height_m": 0.8,
+              "at": [
+                -6.0,
+                2.0
+              ],
+              "yaw_deg": 40.0
+            }
+          ]
+        },
+        {
+          "houses": [
+            {
+              "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+              "height_m": 5.6,
+              "half_extent_m": [
+                2.4,
+                2.4
+              ],
+              "yaw_deg": -12.0,
+              "spots": [
+                [
+                  8.5,
+                  13.0
+                ],
+                [
+                  12.0,
+                  5.5
+                ],
+                [
+                  11.0,
+                  9.0
+                ],
+                [
+                  15.0,
+                  3.0
+                ]
+              ]
+            },
+            {
+              "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+              "height_m": 5.0,
+              "half_extent_m": [
+                2.4,
+                2.4
+              ],
+              "yaw_deg": 0.0,
+              "spots": [
+                [
+                  -8.5,
+                  12.0
+                ],
+                [
+                  -11.0,
+                  5.0
+                ],
+                [
+                  -12.5,
+                  8.5
+                ],
+                [
+                  21.0,
+                  4.0
+                ]
+              ]
+            }
+          ],
+          "props": [
+            {
+              "model": "res://assets/props/meshy-1020/tidewake_dock_shelter/tidewake_dock_shelter.glb",
+              "height_m": 3.0,
+              "at": [
+                -7.6,
+                3.0
+              ],
+              "yaw_deg": 180.0
+            },
+            {
+              "model": "res://assets/props/built/torch_prop.tscn",
+              "height_m": 1.8,
+              "at": [
+                -5.4,
+                0.2
+              ],
+              "yaw_deg": 0.0,
+              "lamp": true
+            },
+            {
+              "model": "res://assets/props/meshy-1020/tidewake_net_drying_rack/tidewake_net_drying_rack.glb",
+              "height_m": 2.2,
+              "at": [
+                8.4,
+                6.2
+              ],
+              "yaw_deg": 180.0
+            },
+            {
+              "model": "res://assets/props/meshy-1020/tidewake_lobster_pots_buoys/tidewake_lobster_pots_buoys.glb",
+              "height_m": 0.8,
+              "at": [
+                -6.0,
+                2.0
+              ],
+              "yaw_deg": 40.0
+            }
+          ]
+        }
+      ]
+    },
+    "dock_dressing": {
+      "deck_cargo": [
+        {
+          "model": "res://assets/props/meshy-1020/tidewake_mooring_bollard_set/tidewake_mooring_bollard_set.glb",
+          "height_m": 1.0,
+          "at": [
+            1.2,
+            0.6
+          ],
+          "yaw_deg": 0.0
+        },
+        {
+          "model": "res://assets/props/meshy-1020/tidewake_mooring_bollard_set/tidewake_mooring_bollard_set.glb",
+          "height_m": 1.0,
+          "at": [
+            -1.2,
+            0.6
+          ],
+          "yaw_deg": 180.0
+        },
+        {
+          "model": "res://assets/props/meshy-1020/tidewake_fish_crate_stack/tidewake_fish_crate_stack.glb",
+          "height_m": 1.1,
+          "at": [
+            -0.8,
+            3.0
+          ],
+          "yaw_deg": 20.0
+        },
+        {
+          "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb",
+          "height_m": 3.2,
+          "at": [
+            -1.3,
+            18.5
+          ],
+          "yaw_deg": 0.0
+        }
+      ]
+    },
+    "drop_landmark_props": []
+  }
 }
