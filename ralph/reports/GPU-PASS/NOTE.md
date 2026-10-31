@@ -320,3 +320,17 @@ Skip F39#4 (reopened 24 Oct: the Veilfall close-up needs new art first). F21#5 c
   - P2-043: `stormwood__dynamo__11__the_glass_field__walk_03_day`
   - P2-033: `meadows__inventory__pickup__good_candy`, `__rare_candy`, `__potion_small`
 - **CPU result (b1, 3 judges, anchors, mapped):** P2-041 3.52 -> 5.27 (+1.75); P2-070 3.36 -> 4.91 (+1.55); P2-046 4.47 -> 5.87 (+1.40); P2-045 5.07 -> 5.98 (+0.91); P2-043 4.83 -> 5.39 (+0.56); P2-033 6.02 -> 6.58 (+0.56). Verdict: `ralph/reports/WORLD-DRESSING/b1/VERDICT.md` on tb/world-dressing.
+
+## ARM REQUEST WD2 (world dressing lane, 31 Oct; supersedes WD1 if both are queued)
+
+- **Arms:** control origin/main a41e1b30eb729ecf92d5fb944ad6872a7551eacb vs candidate tb/world-2-on 1bfc5d0951d13ce796a9f5325fa8870b98631805 (main merged with tb/world-dressing 5b179d12 + flags). JSON flags ON (flip only these to judge on one imported tree):
+  - WD1's five: `crown_arch_hero.json enabled`, `stormwood_glass_sink.json meshy_rim.enabled`, `stormwood_harvests.json material_cues.{stormglass,glowmoss,stormglass_crown}.hero.enabled`, `pickup_grounding.json enabled`, `stormwood_glass_field.json meshy_spikes.enabled` (now at round-2 values; grounding now dresses only the families each realm lists)
+  - `data/config/bands/band1_lower_meadows/props.json` trail_camp `camp_floor.enabled` (P2-035)
+  - `data/config/meshy_camp_props.json` `bed.enabled`, `workbench.enabled` (P2-115, P2-116; Meshy camp_bed and camp_workbench from tb/props-r2 31592e46)
+- **Imports:** `assets/props/meshy-1031/*` (as WD1). Run `--import` once.
+- **Capture (job.json frames, High first):** WD1's list, plus
+  - P2-035: `meadows__inventory__prop__camp_tent`, `__camp_bed`, `__bonfire_fire`
+  - P2-115: `tidewake__bed__water_camp_{first_shore,brine_steps,salt_crown}__bed`
+  - P2-116: `tidewake__crafting__water_camp_{first_shore,brine_steps,salt_crown}__crafting`
+  - P2-054: `cloudreach__inventory__pickup__speed_mushroom`, `__wild_mushroom`
+- **CPU result (b2, mapped):** P2-046 3.86 -> 6.31; P2-041 3.15 -> 5.33; P2-070 2.71 -> 4.89; P2-115 4.95 -> 6.25; P2-043 4.95 -> 6.20; P2-116 5.22 -> 6.04; P2-035 6.20 -> 6.96; P2-054 5.71 -> 6.36. Verdict: `ralph/reports/WORLD-DRESSING/b2/VERDICT.md`.
