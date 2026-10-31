@@ -1,5 +1,5 @@
 {
-  "enabled": false,
+  "enabled": true,
   "scope": "e_crown_client_presentation_only",
   "disposition": "Unverified Crown-only geometry candidate; root native and code-blind review required.",
   "paving_tone_multipliers": [
