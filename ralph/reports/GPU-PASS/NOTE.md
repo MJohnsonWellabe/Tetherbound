@@ -1,5 +1,26 @@
 # GPU-PASS lane note (owner's Windows desktop, GTX 1060 3GB; 21–22 Oct 2026)
 
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-6, stronger grounded hit react for Cindercub and Trailpup (flag, High first)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-6-on` 66dc86a09e0d957c421cfa62a27a2da6c508a3b2.
+  - The candidate is built on CO-F36-5 (which contains CO-F36-4) and adds the flag-off clip hook plus `data/config/creature_clip_flags.json`.
+  - With every flag `false` it renders exactly as main.
+- **One tree for four arms:** after one import for the coat textures, this tree judges CO-F36-4, -5 and -6 by flipping one flag each:
+  - `creatures_f36_coat_lift` (CO-F36-4)
+  - `creatures_f36_coat_lift_2` (CO-F36-5)
+  - `creatures_f36_grounded_hit_remakes` (CO-F36-6)
+  - Flags can be combined. Cindercub has both a coat lift and this hit change.
+- **Why:** ROSTER-1 High has cindercub at 7.13 and trailpup at 7.00, both with the hit react PARTIAL 3/3 ("barely differs from standing"). They play their own clips.
+  - Enabled, the hit clip's rotation is scaled x1.6 and its root position x0.5.
+- **CPU r8** (three judges, confirming): 6.69 -> 7.04 and 6.69 -> 7.00. That is under 0.5, sent under the near-bar close-out exception; the hit defect is FIXED for 2 of 3 judges.
+- **Verdict:** `ralph/reports/CREATURES-F36/r8/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:**
+  `capture_f36_poses.gd --whole-body --context --species=cindercub,trailpup --out=<fresh dir> --source-commit=<arm sha>`
+  - Plain run, no `--candidate`.
+- **Report:**
+  - MET at High: per flag, and for cindercub with both its flags on.
+  - The hit defect call.
+
 ## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-5, coat value lift batch 2 (flag, High first)
 
 - **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-5-on` c2b5851b4bcb1cfd45d891eb9a98842e3ea82ffc.
