@@ -1,0 +1,15 @@
+{
+ "_comment": "Candidate creature coats, OFF by default (scripts/creatures/creature_body.gd _apply_coat_flags). An enabled flag maps an ordinary coat's live albedo path to a graded file; an emission slot carrying the same image follows it; shiny bodies are untouched. The GPU judges an arm by flipping enabled; the graded files need an import like any new texture.",
+ "flags": {
+  "creatures_f36_coat_lift": {
+   "_why": "CREATURES-F36 (31 Oct). GPU ROSTER-1 High (coordinator): cindercub 7.13, duskhush 6.77 and ashtusk 6.68 want a value lift and rim; GPU CO12 (31 Oct): thundertunnel 6.49 / 6.50 is still 'a dark mound with no readable face' after its first lift. Grades from tools/art_pipeline/grade_coat_value.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/duskhush/models/creature_duskhush_lod0_base_color_vivid.png": "res://assets/creatures/tetherbound/duskhush/models/creature_duskhush_lod0_base_color_vivid_coat_lift.png",
+    "res://assets/creatures/tetherbound/cindercub/candidate_nat1024b/models/creature_cindercub_nat1024b_Image_0.jpg": "res://assets/creatures/tetherbound/cindercub/candidate_nat1024b/models/creature_cindercub_nat1024b_Image_0_coat_lift.png",
+    "res://assets/creatures/tetherbound/ashtusk_native/models/ashtusk_native_extracted_base_color_ashtusk.png": "res://assets/creatures/tetherbound/ashtusk_native/models/ashtusk_native_extracted_base_color_ashtusk_coat_lift.png",
+    "res://assets/creatures/tetherbound/thundertunnel/models/thundertunnel_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/thundertunnel/models/thundertunnel_extracted_base_color_vivid_coat_lift.png"
+   }
+  }
+ }
+}

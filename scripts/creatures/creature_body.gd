@@ -1009,6 +1009,7 @@ func _refresh_shiny_tint() -> void:
 	if _visual_suspended:
 		return  # flags remain current; restore dresses the new model before show
 	_refresh_base_colourway()
+	_apply_coat_flags()
 	_apply_art_model_emission()
 	_apply_night_floor()
 	preload("res://scripts/creatures/creature_surface_finish.gd").apply(_model, species_id, shiny, _shiny_fallback)
@@ -1039,6 +1040,69 @@ func _apply_art_model_emission() -> void:
 					lit.emission_energy_multiplier = art_model_emission_scale
 					instance.set_surface_override_material(surface, lit)
 		pending.append_array(node.get_children())
+
+
+## GPU arms (owner, 31 Oct): a candidate coat ships as a graded texture plus a
+## named flag in data/config/creature_coat_flags.json, OFF by default, so the
+## GPU judges it by flipping `enabled`. An enabled flag maps an ordinary coat's
+## albedo path to its graded file; an emission slot that carried the same
+## painted image follows it. Shiny bodies keep their own colourway.
+const COAT_FLAGS_PATH := "res://data/config/creature_coat_flags.json"
+static var _coat_map: Dictionary = {}
+static var _coat_map_loaded := false
+static var _coat_materials: Dictionary = {}
+
+
+static func _coat_flag_map() -> Dictionary:
+	if _coat_map_loaded:
+		return _coat_map
+	_coat_map_loaded = true
+	if not FileAccess.file_exists(COAT_FLAGS_PATH):
+		return _coat_map
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(COAT_FLAGS_PATH))
+	if not parsed is Dictionary:
+		push_error("creature_coat_flags.json is not an object")
+		return _coat_map
+	var flags: Dictionary = (parsed as Dictionary).get("flags", {})
+	for flag: String in flags:
+		var entry: Variant = flags[flag]
+		if not entry is Dictionary or not bool(entry.get("enabled", false)):
+			continue
+		var coats: Dictionary = entry.get("coats", {})
+		for from_path: String in coats:
+			var to_path := str(coats[from_path])
+			if ResourceLoader.exists(to_path):
+				_coat_map[from_path] = to_path
+			else:
+				push_error("coat flag %s: %s is missing" % [flag, to_path])
+	return _coat_map
+
+
+func _apply_coat_flags() -> void:
+	if not _has_model or shiny or _model == null:
+		return
+	var coats := _coat_flag_map()
+	if coats.is_empty():
+		return
+	for instance: MeshInstance3D in _model.find_children("*", "MeshInstance3D", true, false):
+		if instance.mesh == null:
+			continue
+		for surface in instance.mesh.get_surface_count():
+			var source := instance.get_active_material(surface) as BaseMaterial3D
+			if source == null or source.albedo_texture == null:
+				continue
+			var from_path := source.albedo_texture.resource_path
+			if not coats.has(from_path):
+				continue
+			var key := source.get_instance_id()
+			if not _coat_materials.has(key):
+				var copy := source.duplicate() as BaseMaterial3D
+				var graded := load(str(coats[from_path])) as Texture2D
+				copy.albedo_texture = graded
+				if copy.emission_texture != null and copy.emission_texture.resource_path == from_path:
+					copy.emission_texture = graded
+				_coat_materials[key] = copy
+			instance.set_surface_override_material(surface, _coat_materials[key])
 
 
 func _refresh_base_colourway() -> void:
