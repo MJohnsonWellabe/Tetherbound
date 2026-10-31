@@ -89,6 +89,14 @@ const TAIL := """
 ## the existing Veilfall regional material. No geometry, physics or state.
 static func install(terrain: Object, sink: Dictionary) -> void:
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	# World dressing P2-070 r3 (`dark_glass`, OFF until judged): every b1/b2
+	# judge read the sink floor as "a pale tiled checker void". Darker glass
+	# body and facets, and the r34 far fade on, so it reads as dark glass.
+	var dark: Dictionary = config.get("dark_glass", {}) as Dictionary
+	if bool(dark.get("enabled", false)):
+		for key: String in dark:
+			if key != "enabled" and not key.begins_with("_"):
+				config[key] = dark[key]
 	var material: Object = terrain.get("material")
 	var current: Shader = material.call("get_shader_override")
 	if not bool(material.call("is_shader_override_enabled")) or current == null:

@@ -135,7 +135,7 @@ func _build(spec: Dictionary) -> void:
 		if candidate_applied:
 			GRASS_FIELD.clearings_dirty = true
 		# World dressing P2-041 (crown_arch_hero.json, OFF until GPU judged).
-		if CROWN_HERO.apply(arch, piece, slab, clearance):
+		if CROWN_HERO.apply(arch, piece, slab, clearance, Callable(world, "ground_height_at")):
 			GRASS_FIELD.clearings_dirty = true
 	row["piece"] = piece
 	var prompt := INTERACTABLE.new()
