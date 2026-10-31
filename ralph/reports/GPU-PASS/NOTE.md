@@ -187,6 +187,19 @@ The per-item scores showed shared causes. The plan, in order: dialogue and catch
    - **Push:** each capture's `manifest.json` (both arms) to `ralph/reports/VISUAL/item-scores/diag-dialogue/<biome>/{control,candidate}/`. Their `conversation_camera_*` fields separate "push-in never fired" from "push-in fired but blocked"; frames that stay bad on the candidate are diagnosed from them.
    - **If you can:** a local, uncommitted print at `conversation_camera.gd::begin()` of the speaker node and the arbiter's `winning_provider()`, saved as `speakers.txt` beside each manifest.
 5. **CR-CANDY (capture only, no arm).** The c026/c034 catch commands stand nearer the candy than the wild pair, so the pickup wins the offer. In play the candy is one press, then the fight. If you re-run Cloudreach catch frames, start them after taking that candy.
+6. **UI-1: capture readout backing (P2-114, Tidewake 5.37; the same widget is in P2-058, P2-059 and P2-061).**
+   - **Arms:** control `tb/ui-near-bar` e07666f35 (flag OFF, renders as main) vs candidate `tb/ui-near-bar-on` e0f51545d. The candidate turns ON `capture_readout_visual.json` `backing_enabled`: one rounded panel plate behind the catch percentage and caption.
+   - **Capture:** the catching frames of P2-114, P2-058, P2-059 and P2-061 from job.json, Medium and High.
+   - **Report:** the mapped score per item, the P2-114 defect call, and whether the plate draws at all (it was built here without a renderer).
+7. **UI-PAD: the menus as the ROG Ally shows them (controller glyphs), on main. No arm.**
+   - **Why:** the earlier frames were shot with no pad, so the hint rows used keyboard keys:
+     - P2-031: "[Q] Previous tab [Tab] Next tab", in brackets because there is no Tab keycap art;
+     - P2-032: keys mixed with buttons;
+     - P2-096: the craft button's confirm glyph.
+
+     The game is controller-first, and on the Ally a pad is connected from the first frame.
+   - **Capture:** P2-031, P2-032, P2-096, P2-001, P2-007 and P2-004 from job.json with `--gamepad` added; every phase-2 UI tool takes it.
+   - **Report:** the one-sided yardstick score with the pad, beside the keyboard score already on the board. The keyboard path's bracket labels stay a known keyboard defect; this does not replace that score.
 
 ## GPU LANE: ITEM SCORES DONE (28 Oct, ~01:40 CDT). The lane is idle; no GPU process is running.
 
