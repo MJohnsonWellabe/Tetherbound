@@ -302,3 +302,21 @@ Skip F39#4 (reopened 24 Oct: the Veilfall close-up needs new art first). F21#5 c
 - Never modify or delete the old D: checkouts.
 - One GPU process at a time.
 - Keep at least 5 GiB (target 10 GB) free on D:.
+
+## ARM REQUEST WD1 (world dressing lane, tb/world-dressing, 31 Oct)
+
+- **Arms:** control origin/main a41e1b30eb729ecf92d5fb944ad6872a7551eacb vs candidate tb/world-1-on 0d7458fe7081d7f8ea4035263394af397e5964ec. The candidate is main merged with tb/world-dressing 43c73100 (all new code flag-off) plus these JSON flags ON, so the arms can also be judged on one imported tree by flipping only these lines:
+  - `data/config/crown_arch_hero.json` `enabled` (P2-041; Meshy crown_arch from tb/props-r2 a2f81b50)
+  - `data/config/stormwood_glass_sink.json` `meshy_rim.enabled` (P2-070; Meshy glass_sink)
+  - `data/config/stormwood_harvests.json` `material_cues.{stormglass,glowmoss,stormglass_crown}.hero.enabled` (P2-046)
+  - `data/config/pickup_grounding.json` `enabled` (P2-045, P2-033; also touches P2-034 and P2-054, not claimed here)
+  - `data/config/stormwood_glass_field.json` `meshy_spikes.enabled` (P2-043; Meshy glass_spikes)
+- **New imports on the candidate:** `assets/props/meshy-1031/*` (gdignore removed, .import files committed). Run `--import` once.
+- **Capture (job.json frames, High first):**
+  - P2-041: `stormwood__landmark__crown_arch__day__close`
+  - P2-070: `stormwood__landmark__glass_sink__day__approach`, `__day__close`, `__golden__approach`
+  - P2-046: `stormwood__inventory__harvest__stormglass`, `__stormglass_crown`, `__glowmoss`
+  - P2-045: `stormwood__inventory__pickup__good_candy`, `__great_candy`, `__rare_candy`
+  - P2-043: `stormwood__dynamo__11__the_glass_field__walk_03_day`
+  - P2-033: `meadows__inventory__pickup__good_candy`, `__rare_candy`, `__potion_small`
+- **CPU result (b1, 3 judges, anchors, mapped):** P2-041 3.52 -> 5.27 (+1.75); P2-070 3.36 -> 4.91 (+1.55); P2-046 4.47 -> 5.87 (+1.40); P2-045 5.07 -> 5.98 (+0.91); P2-043 4.83 -> 5.39 (+0.56); P2-033 6.02 -> 6.58 (+0.56). Verdict: `ralph/reports/WORLD-DRESSING/b1/VERDICT.md` on tb/world-dressing.

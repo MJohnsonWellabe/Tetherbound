@@ -26,6 +26,7 @@ func build(water_world: Node3D) -> void:
 		+ (look.get("veilfall_hero_candidate", []) as Array) + (look.get("veilfall_facade_candidate", []) as Array) \
 		+ (look.get("veilfall_mountain_candidate", []) as Array) + (look.get("veilfall_buttress_candidate", []) as Array) \
 		+ _destinations(look) + (look.get("lesson_clusters_candidate", []) as Array)
+	specs = _destination_read(specs)
 	_cladding(water_world, look.get("veilfall_cladding_candidate", {}))
 	# `first_shore_declutter_candidate` (OFF in play) drops named props by id.
 	var dropped: Array = (look.get("first_shore_declutter_candidate", {}) as Dictionary).get("drop_landmark_props", [])
@@ -89,6 +90,30 @@ func build(water_world: Node3D) -> void:
 		# flyer or glider can reach (close-1024: the generated Veilfall crown).
 		if bool(spec.get("trimesh_collider", false)):
 			add_trimesh_collision(model)
+
+
+## World dressing P2-011 (tidewake_destination_read.json, OFF until GPU
+## judged): GPU 4.85, "the signal spire is a small brown box on a grass hill,
+## the drift arch a tiny distant hoop and the terraces the flat disc chain".
+## Adds installed-Meshy specs and raises matched specs' height. Same fitting,
+## grounding and collider rules as every landmark model.
+static func _destination_read(specs: Array) -> Array:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/tidewake_destination_read.json"))
+	if not parsed is Dictionary or not bool((parsed as Dictionary).get("enabled", false)):
+		return specs
+	var cfg := parsed as Dictionary
+	var out: Array = []
+	for raw: Variant in specs:
+		var spec := (raw as Dictionary)
+		for rule: Dictionary in cfg.get("height_overrides", []):
+			if str(spec.get("landmark_id", "")) == str(rule.get("landmark_id", "")) \
+					and str(spec.get("model", "")).ends_with(str(rule.get("model_suffix", "~"))) \
+					and (not rule.has("offset_xz_m") or spec.get("offset_xz_m", []) == rule.offset_xz_m):
+				spec = spec.duplicate(true)
+				spec["height_m"] = float(rule.height_m)
+		out.append(spec)
+	out.append_array(cfg.get("add", []) as Array)
+	return out
 
 
 ## `veilfall_cladding_candidate` (OFF in play; Stormwood lane 26 Oct, after the
