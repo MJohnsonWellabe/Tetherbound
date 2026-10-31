@@ -1,0 +1,162 @@
+{
+ "sets": {
+  "Pw": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.3,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "Side B's dark-violet crystalline wolf sits close to the owner's Tanglevolt bar with clear scale over the ruler and grounded hurt/faint poses, while side A sank on a faint-mid/faint-end material swap to a white body with black blobs and a hit react identical to standing."
+  },
+  "Fw": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side B's aftermaths are site-specific (torn banners on the ground, opened cage with freed captive, smoking embers where the tent stood) but both sides sink on smeared, stretched ground textures, flat terrain and sparse lollipop trees far below Palworld density and Valheim light; side A also leaves the enemy oxblood banners hanging after the win at rows 1, 3 and 5."
+  },
+  "Jl": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "Side A's furred boar is on the naturalistic style but its hit react equals standing and faint mid floats above its detached shadow; side B reads as a smooth terracotta clay toy with moss decals, off the owner's naturalistic bar, and both barely clear the 1.80 m trainer."
+  },
+  "Qb": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "Craft and leave button hints are faint gray on the dark translucent craft panel": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "Craft and leave button hints are faint gray on the dark translucent craft panel": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Leave hint is now teal and ingredient shortfalls are bold orange, but the craft action stays a small gray-on-charcoal 'Missing materials' pill and the panel floats over a blurred, dimmed world with little warmth or hierarchy."
+  },
+  "Ci": {
+   "A": {
+    "bar_a": 6.1,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.1,
+    "defects": {
+     "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The painted Meadows header strip, wood-room backdrop and gold chapter text add scenic connection, but the body is still dense small text in charcoal boxes with thin teal outlines that does not read at a glance on a 7-inch screen."
+  },
+  "Zv": {
+   "A": {
+    "bar_a": 5.4,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.4,
+    "defects": {
+     "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Gamepad glyph columns and section headings in gold help, but the long single-line instructions are tiny pale text on navy, keyboard keys remain literal letters, and the tables leave large empty gutters with no clear focus."
+  },
+  "Ns": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The Tidewake tab is now the outlined active one matching the heading, but the map itself is a blurry blue noise field with a lone yellow-green blob and thin orange lines, nothing like an authored Tidewake chart of dunes, falls and water."
+  },
+  "Eb": {
+   "A": {
+    "bar_a": 5.5,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 5.5,
+    "defects": {
+     "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Build now fills its area with three illustrated cards, but Players (menu_players) and Quest Log (menu_quest_log) are still a handful of small text rows and grayed placeholder lines over a mostly empty charcoal panel."
+  },
+  "Zb": {
+   "A": {
+    "bar_a": 6.0,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PARTIAL"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The HUD is more compact (corner team chip, quest card with minimap, small vitals), but the five-slot quick bar plus action-hint row sit mid-right over the play view and the boxed panels still stack around the frame, unlike Palworld's lighter edge-hugging HUD."
+  },
+  "Qt": {
+   "A": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.2,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The grandpa elder has a clear, appealing face with readable eyes, a strong white-hair-and-beard silhouette and an olive/brown palette that fits the Meadows key art, though the smooth cartoon finish leans more toy-like than the stylised-realism creatures."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Interface pass across the menu shell: fill sparse Players/Quest panels with illustrated content or collapse them, raise text size and contrast to pale-on-blue-grey, make the primary action a bright teal/gold button, and move the exploration quick bar and hint row to a screen edge.",
+   "kind": "scene"
+  },
+  {
+   "change": "Meadows battle sites: replace the smeared stretched ground texture with layered grass/wildflower cover and real groves and edges, add warm key light and cool blue distance haze, and always remove the oxblood banner on the win so every aftermath reads site-specific.",
+   "kind": "scene"
+  },
+  {
+   "change": "Creatures: rebuild the Jl boar to the owner's naturalistic fur bar at a size clearly above the 1.80 m trainer, and fix the Pw faint-pose material swap and the missing hit reacts so every hurt/faint pose stays grounded on its own material.",
+   "kind": "new_art"
+  }
+ ]
+}
