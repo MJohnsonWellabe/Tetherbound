@@ -23,6 +23,26 @@ Owner direction, 14 October 2026. Binding for every future Tetherbound lane; sup
 
 9. Owner, 15 Oct 2026: new art comes from Meshy with no generation cap (it is first-line, not a fallback), and integrated criteria are proven in independent pieces from disclosed generated boundary saves, never full runs. See the Standing owner directions at the top of CLAUDE.md.
 
+## Lane progress rules (owner, 31 Oct 2026)
+
+Owner: "If lanes are working without making actual progress on the game then you need to redirect them. You should create some rules around this." These rules bind every lane and the coordinator.
+
+1. **What counts as progress.** A change landed on main, or a criterion closed. For a route lane, a seam matched with receipts. A CPU score, a pushed arm, a queued request, a report or a review is not progress.
+2. **Queue limit.** A visual lane may have at most two arms waiting on the GPU (pushed, not yet judged). At the limit it starts no new arm. It may:
+   - fold further changes into a queued arm the GPU has not started;
+   - make an objective defect fix that an existing test or probe proves (floating or clipping geometry, a wrong scale, a real bug), for the coordinator to land without a GPU verdict;
+   - pause until a slot frees. Idle is better than work that only waits.
+3. **Calibration.** If two of a lane's arms keep less than half their CPU gain on the GPU, the lane stops preparing that kind of change on CPU and asks the coordinator for another approach.
+4. **Stall.** If a lane's last three GPU verdicts, or its last 8 hours, produced nothing landed and no GPU-passed arm, the coordinator redirects it to another item or pauses it.
+5. **The GPU judges.** The owner's GPU machine captures and judges. It does hands-on work only when the change cannot be seen on CPU, such as Forward+-only lighting. Placement, composition, poses and dressing are CPU-lane work.
+6. **Capacity.** Keep the GPU queue under about 12 hours of work. Above that, the coordinator pauses the lowest-yield visual lane until the queue drains.
+7. **Coordinator, every hour:**
+   - merge arm requests into the GPU queue;
+   - land GPU-passing arms within the hour;
+   - check each lane against rules 1–6 and redirect or pause it;
+   - report closures, landings and parked work separately, with zero stated plainly.
+8. **Route lanes.** Never re-run a proven piece. A seam blocked twice is reported, not retried. Where new work changes a proven piece's input, write a reviewed cross-cut manifest instead of re-running it.
+
 ## Preserve and reuse
 
 - Coordinator branch: `tb/ev-coordinator`. All eight lane branches landed on main in PR #687 (14 Oct 2026) and their GitHub branches were then deleted; every recorded head SHA stays reachable from main. New focused lanes use new `tb/` branches cut from main. Archiving conversations does not delete local checkouts.
