@@ -10,6 +10,15 @@
     "res://assets/creatures/tetherbound/ashtusk_native/models/ashtusk_native_extracted_base_color_ashtusk.png": "res://assets/creatures/tetherbound/ashtusk_native/models/ashtusk_native_extracted_base_color_ashtusk_coat_lift.png",
     "res://assets/creatures/tetherbound/thundertunnel/models/thundertunnel_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/thundertunnel/models/thundertunnel_extracted_base_color_vivid_coat_lift.png"
    }
+  },
+  "creatures_f36_coat_lift_2": {
+   "_why": "CREATURES-F36 batch 2 (31 Oct). GPU roster 24 Oct: shadelet 6.29 'near-black, no rim light; silhouette dissolves', stormtrail 5.98 'flat black placeholder dog'; CO12 31 Oct: nightburrow 6.67 'coat noisy and speckled'. Same grade as creatures_f36_coat_lift (tools/art_pipeline/grade_coat_value.py), gentler on the night and storm variants.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/shadelet/models/creature_shadelet_lod0_base_color.jpg": "res://assets/creatures/tetherbound/shadelet/models/creature_shadelet_lod0_base_color_coat_lift.png",
+    "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_stormtrail.png": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_stormtrail_coat_lift.png",
+    "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow.png": "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow_coat_lift.png"
+   }
   }
  }
 }

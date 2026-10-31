@@ -34,7 +34,15 @@ SPECIES = {
     "cindercub": (C + "cindercub/candidate_nat1024b/models/creature_cindercub_nat1024b_Image_0.jpg", (0.30, 0.42), (0.55, 0.70), 1.45, 0.02, 1.0),
     "ashtusk": (C + "ashtusk_native/models/ashtusk_native_extracted_base_color_ashtusk.png", (0.30, 0.42), (0.55, 0.70), 1.5, 0.03, 1.0),
     "thundertunnel": (C + "thundertunnel/models/thundertunnel_extracted_base_color_vivid.png", (0.38, 0.50), (0.45, 0.58), 1.25, 0.02, 0.9),
+    # Batch 2 (flag creatures_f36_coat_lift_2). GPU roster 24 Oct: shadelet
+    # "near-black, no rim light; silhouette dissolves", stormtrail "flat black
+    # placeholder dog", nightburrow (CO12 31 Oct) "coat noisy". The night and
+    # storm variants keep a darker coat than their bases (gentler lift).
+    "shadelet": (C + "shadelet/models/creature_shadelet_lod0_base_color.jpg", (0.30, 0.42), (0.55, 0.70), 1.5, 0.03, 1.0),
+    "stormtrail": (C + "trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_stormtrail.png", (0.34, 0.46), (0.40, 0.55), 1.35, 0.03, 1.0),
+    "nightburrow": (C + "burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow.png", (0.32, 0.45), (0.40, 0.55), 1.4, 0.03, 1.0),
 }
+BATCH_2 = ("shadelet", "stormtrail", "nightburrow")
 KEEP_DARKEST = (0.03, 0.06)
 
 
