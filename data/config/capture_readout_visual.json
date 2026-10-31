@@ -1,5 +1,9 @@
 {
   "outline_enabled": true,
   "outline_size": 6,
-  "_comment": "P2-114 production capture-readout outline, default on under the owner's Phase 1 instruction. Uses UITokens.OUTLINE behind the percentage and caption and follows each text's alpha. Logical UI pixel tuning; no save, network, target, camera or catch-chance effect. Phase 2 visual acceptance remains required."
+  "backing_enabled": false,
+  "backing_opacity": 0.85,
+  "backing_padding": 12.0,
+  "_comment": "P2-114 production capture-readout outline, default on under the owner's Phase 1 instruction. Uses UITokens.OUTLINE behind the percentage and caption and follows each text's alpha. Logical UI pixel tuning; no save, network, target, camera or catch-chance effect. Phase 2 visual acceptance remains required.",
+  "_why_backing": "P2-114 GPU item score 5.37 (28 Oct): with the outline on, the capture-chance readout still read dark, unbacked and lost against pale sand and the creatures. When on, one rounded BG_PANEL plate (UITokens.RADIUS corners) sits behind the percentage and caption, following the readout's alpha (capture_reticle.gd `_draw_readout_backing`). Candidate: OFF until the GPU UI arm passes."
 }
