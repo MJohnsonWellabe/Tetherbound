@@ -1,0 +1,34 @@
+{
+  "_comment": "World dressing (P2-033 Meadows ground pickups, P2-045 Stormwood candy tiers, P2-054 Cloudreach mushrooms; tb/world-dressing). OFF until a GPU pass judges it. GPU item notes (31 Oct): finds are 'pinhead-sized', 'small, weakly grounded props on flat grass', 'unreadable at gameplay distance'. Per realm and family: a size step, a soft contact shadow, a half-sunk flat find-stone from the installed rock-path family (set-down finds only, never mushrooms) and a few installed pebbles. Visual children of the pickup only (scripts/world/pickup_grounding.gd): no collider, claim, glow, flag or save change.",
+  "enabled": false,
+  "families": {
+    "candy": {
+      "items": ["good_candy", "great_candy", "rare_candy"],
+      "scale": 1.35,
+      "shadow_m": 1.3,
+      "shadow_alpha": 0.5,
+      "stone": {"models": ["res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf", "res://assets/environment/stylized_nature/RockPath_Round_Thin.gltf"], "across_m": 1.15, "height_m": 0.2, "exposed_m": 0.08, "tint": "#d8d2c6"},
+      "pebbles": {"models": ["res://assets/environment/stylized_nature/Pebble_Round_1.gltf", "res://assets/environment/stylized_nature/Pebble_Round_2.gltf", "res://assets/environment/stylized_nature/Pebble_Round_3.gltf"], "count": 4, "ring_m": 0.78, "size_m": 0.16}
+    },
+    "set_down": {
+      "items": ["potion_small", "orb_basic", "attack_tonic", "travel_pack"],
+      "scale": 1.25,
+      "shadow_m": 1.1,
+      "shadow_alpha": 0.5,
+      "stone": {"models": ["res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf"], "across_m": 1.0, "height_m": 0.18, "exposed_m": 0.07, "tint": "#d8d2c6"},
+      "pebbles": {"models": ["res://assets/environment/stylized_nature/Pebble_Round_1.gltf", "res://assets/environment/stylized_nature/Pebble_Round_3.gltf"], "count": 3, "ring_m": 0.7, "size_m": 0.15}
+    },
+    "mushroom": {
+      "items": ["speed_mushroom", "wild_mushroom", "stamina_mushroom"],
+      "scale": 1.45,
+      "shadow_m": 1.2,
+      "shadow_alpha": 0.55,
+      "pebbles": {"models": ["res://assets/environment/stylized_nature/Pebble_Round_2.gltf", "res://assets/environment/stylized_nature/Pebble_Round_3.gltf", "res://assets/environment/stylized_nature/Clover_1.gltf"], "count": 5, "ring_m": 0.6, "size_m": 0.2}
+    }
+  },
+  "realms": {
+    "meadows": {"candy": {"scale": 1.0}, "set_down": {"scale": 1.0}},
+    "stormwood": {"candy": {"scale": 1.6, "stone": {"models": ["res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf"], "across_m": 1.2, "height_m": 0.22, "exposed_m": 0.1, "tint": "#b9c4c4"}}},
+    "cloudreach": {"mushroom": {}}
+  }
+}
