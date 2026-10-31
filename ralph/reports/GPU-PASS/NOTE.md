@@ -159,6 +159,12 @@ Earlier on 26-27 Oct, all pushed (see each row's VERDICT.md):
 
 ## Other lanes (31 Oct): the creatures lane (tb/creatures-f36, CPU) prepares F36 close-out arms and appends requests for them; the route lane (tb/routes-f49) needs no GPU.
 
+## OWNER DIRECTION (31 Oct 2026): "Yes, judge High first and leave the GPU on overnight". Applies to every job from now on.
+
+- **High first.** Capture and judge each arm at High only. Capture and judge Medium only for an arm whose High mapped score is 7.5 or above. A row still closes only at 7.5 or above on both Medium and High; the bar is unchanged.
+- **Overnight.** The owner leaves this machine on, so keep the queue running unattended through the night. Pick up the next job as each one ends, and push each verdict as it lands.
+- **Flag flips on one import.** When several arms differ only by data/config JSON, check out one tree that holds all their code (flags off), import it once, and flip one flag per capture. Record the flip in each verdict.
+
 ## PRIORITY (coordinator, 31 Oct 17:15 UTC): ROSTER-1 runs next, right after queue 56 (CO12, P2-095, UI-PAD) and before DLG-1. It is the fastest way to close rows.
 
 **ROSTER-1: re-judge the near-bar F36 roster on current main. No arm, a plain verdict.**
