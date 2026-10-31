@@ -55,6 +55,11 @@ func build() -> void:
 		if not cluster is Dictionary:
 			continue
 		var cluster_name := str((cluster as Dictionary).get("name", "cluster"))
+		# World dressing: a cluster carrying `candidate` builds only while
+		# `candidate.enabled` is set (OFF until judged).
+		var candidate_flag: Variant = (cluster as Dictionary).get("candidate", null)
+		if candidate_flag is Dictionary and not bool((candidate_flag as Dictionary).get("enabled", false)):
+			continue
 		var group := Node3D.new()
 		group.name = cluster_name
 		add_child(group)
