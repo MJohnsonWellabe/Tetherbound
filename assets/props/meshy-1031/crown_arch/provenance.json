@@ -1,0 +1,28 @@
+{
+ "asset": "P2-041 Crown Arch hero (Stormwood; GPU 4.23 main, 4.56 with the octagonal landing; judges asked for new_art)",
+ "status": "CANDIDATE_FLAG_OFF: not wired (.gdignore here)",
+ "date": "2026-10-31",
+ "license": "Existing Meshy account (owner Standing direction 1, 15 Oct 2026); no purchase",
+ "reference": {
+  "file": "reference.jpg",
+  "drafted_by": "coordinator via Meshy text-to-image (agent-drafted reference, owner-authorized)",
+  "t2i_task_id": "01a192d4-8480-72b0-9f9e-0e9e4abb2453",
+  "prompt": "a tall ancient stone archway gate in an electric forest, about three times the height of a person, a wide rounded walk-through opening, weathered grey-blue stone blocks bound with copper bands, the top of the arch swelling into a carved stone crown with spires and a large glowing pale-blue crystal keystone, small blue crystal inlays down both pillars, thick tree roots and moss wrapping the base of both pillars, no platform or slab under it, painterly fantasy game concept art in the style of a Palworld and Valheim art board, single isolated object, three-quarter front view, centered, whole object visible, plain light grey background, soft even daylight, no text, no people, no creatures",
+  "inspected_before_submission": true
+ },
+ "model": {
+  "endpoint": "/openapi/v1/image-to-3d",
+  "task_id": "01a192d4-d4f9-76d2-986d-56ca275be4b9",
+  "settings": {
+   "should_remesh": true,
+   "should_texture": true,
+   "enable_pbr": true,
+   "topology": "triangle",
+   "target_polycount": 40000,
+   "symmetry_mode": "auto"
+  },
+  "file": "crown_arch.glb",
+  "sha256": "3c36bf4dbd0046adb3f0ecaf2a02245f385450ad3fa4540529bfe04a4a28655c"
+ },
+ "contract": "Keep the declared 2.2 x 2.5 m passage, runtime trigger, travel axis and terrain placement (crown_arch/reference/brief.md). About 5-6 m tall against the 1.80 m trainer. Roots into the moss; no slab."
+}

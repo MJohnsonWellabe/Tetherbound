@@ -4618,6 +4618,7 @@
   "material_cues": {
     "_comment": "P2-046 presentation only: a visual-only cue on each harvest node so its named material reads. Child of the node, so it hides with the node when harvested. No collider, stock, reward or placement change. Only items whose model is not a fight-ring occluder get a cue: the cue is a sibling of the model and would float while a fight hides it.",
     "stormglass": {
+      "hero": {"enabled": true, "_candidate": "World dressing (OFF until GPU judged; tb/world-dressing). GPU 4.99: stormglass reads as plain rock with primitive shards. The installed Meshy glass-scar crystal cluster (meshy-1024, provenance there) replaces rock and shards; ice-blue crystal texels get the blue-vein glow.", "replace_model": true, "models": [{"model": "res://assets/props/meshy-1024/stormwood_glass_scar_crystals/stormwood_glass_scar_crystals.glb", "height_m": [1.5, 1.5], "sink_m": 0.06, "glow_colour": "#9fdcff", "glow_energy": 1.1}]},
       "kind": "shards",
       "count": 6,
       "radius_m": 0.55,
@@ -4630,6 +4631,7 @@
       "width_m": 0.3
     },
     "glowmoss": {
+      "hero": {"enabled": true, "_candidate": "World dressing (OFF until GPU judged). GPU: glowmoss is a flat, unlit pale-green blob. Glowmoss Hollows bioluminescence: the cushion takes a teal glow and installed Meshy storm fungi (meshy-1020) cluster on it.", "overrides": {"colour": "#4f9a6a", "emission": 0.55, "radius_m": 0.75}, "models": [{"model": "res://assets/props/meshy-1020/storm_fungi/v1/storm_fungi_v1.glb", "count": 4, "ring_m": 0.45, "height_m": [0.45, 0.85], "sink_m": 0.04, "glow_colour": "#5ad8a6", "glow_energy": 1.3, "shadow": false}]},
       "kind": "moss",
       "replace_model": true,
       "radius_m": 0.55,
@@ -4648,6 +4650,7 @@
       "width_m": 0.035, "colour": "#87cfe1", "emission": 0.18
     },
     "stormglass_crown": {
+      "hero": {"enabled": true, "_candidate": "World dressing (OFF until GPU judged). GPU: the crown node reads as a pink boulder with tan wooden shards. The crown grade is the larger, brighter glass-scar cluster with a ring of smaller satellites.", "replace_model": true, "models": [{"model": "res://assets/props/meshy-1024/stormwood_glass_scar_crystals/stormwood_glass_scar_crystals.glb", "height_m": [2.4, 2.4], "sink_m": 0.08, "glow_colour": "#b9e6ff", "glow_energy": 1.5}, {"model": "res://assets/props/meshy-1024/stormwood_glass_scar_crystals/stormwood_glass_scar_crystals.glb", "count": 2, "ring_m": 1.6, "height_m": [0.8, 1.1], "sink_m": 0.05, "glow_colour": "#b9e6ff", "glow_energy": 1.2}]},
       "kind": "shards",
       "count": 5,
       "radius_m": 0.7,

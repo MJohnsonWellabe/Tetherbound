@@ -34,6 +34,7 @@ const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 ## craft. See `rest_point.gd`'s own header for what that offers and for the
 ## audit finding it closes; this file's only job is to notice the key.
 const REST_POINT := preload("res://scripts/world/rest_point.gd")
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const TRAIL_CAMP_ROADSIDE_THRESHOLD := preload("res://scripts/world/trail_camp_roadside_threshold.gd")
 const TERRACE_ALBEDO := preload("res://assets/environment/terrain/stylised/dirt_path_Color.png")
 const TERRACE_NORMAL := preload("res://assets/environment/terrain/stylised/dirt_path_NormalGL.png")
@@ -60,14 +61,29 @@ func build() -> void:
 		var cluster_props: Array = (cluster as Dictionary).get("props", [])
 		if cluster_name == "the_rise_cairn_trail":
 			_walkable_joint_heights.clear()
+		# P2-035 world dressing rides the camp_floor flag: per-model scale
+		# overrides (the bonfire read as a speck) apply only while it is on.
+		var floor_overrides: Dictionary = {}
+		var floor_flag: Variant = (cluster as Dictionary).get("camp_floor", {})
+		if floor_flag is Dictionary and bool((floor_flag as Dictionary).get("enabled", false)):
+			floor_overrides = (floor_flag as Dictionary).get("prop_scale", {}) as Dictionary
 		for entry: Variant in cluster_props:
 			if entry is Dictionary:
-				place(group, entry as Dictionary)
+				var prop_spec := entry as Dictionary
+				if floor_overrides.has(str(prop_spec.get("model", ""))):
+					prop_spec = prop_spec.duplicate(true)
+					prop_spec["scale"] = float(floor_overrides[str(prop_spec.get("model", ""))])
+				place(group, prop_spec)
 		# The individual terrace boxes remain the proven collision substrate, but
 		# their visible end faces read as overlapping blockout slabs in production.
 		# The Rise gets one continuous, softly feathered tread over those colliders.
 		if cluster_name == "the_rise_cairn_trail":
 			_build_walkable_ribbon(group, cluster_props)
+		# World dressing (P2-035, OFF until GPU judged): a trodden-earth camp
+		# floor with the grass cleared, so the camp reads as one cleared site.
+		var floor_cfg: Variant = (cluster as Dictionary).get("camp_floor", {})
+		if floor_cfg is Dictionary and bool((floor_cfg as Dictionary).get("enabled", false)):
+			_build_camp_floor(group, floor_cfg as Dictionary)
 		# After the props, not before: the rest point samples ground the same
 		# way they do, and building it last keeps the camp's own meshes ahead
 		# of it in the tree so a probe or a remote tree reads the site in the
@@ -118,6 +134,81 @@ func build() -> void:
 	catalog.name = "MeadowsCatalogPresentation"
 	add_child(catalog)
 	catalog.build("landscape", Callable(self, "_ground_height"))
+
+
+## World dressing (P2-035): GPU judges read the trail camp's props as "among
+## grass ... with no cleared footprint". A terrain-following trodden-earth disc
+## (every vertex samples the production ground) with a soft alpha rim, and a
+## grass-field clearing of the same radius. Visual only: no collider.
+func _build_camp_floor(into: Node3D, cfg: Dictionary) -> void:
+	var raw_at: Array = cfg.get("at", [])
+	if raw_at.size() < 2:
+		return
+	var centre := Vector2(float(raw_at[0]), float(raw_at[1]))
+	var radius := float(cfg.get("radius_m", 4.5))
+	var lift := float(cfg.get("lift_m", 0.03))
+	var rings := 8
+	var segments := 28
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var points: Array[PackedVector3Array] = []
+	var alphas: Array[PackedFloat32Array] = []
+	var feather := clampf(float(cfg.get("feather", 0.35)), 0.05, 0.95)
+	for ring in rings + 1:
+		var row := PackedVector3Array()
+		var row_alpha := PackedFloat32Array()
+		var t := float(ring) / float(rings)
+		for k in segments:
+			var a := TAU * float(k) / float(segments)
+			var wobble := 1.0 + 0.08 * sin(a * 3.0 + 1.3) + 0.05 * sin(a * 7.0)
+			var p := centre + Vector2(cos(a), sin(a)) * radius * t * wobble
+			var ground := _ground_height(p.x, p.y)
+			if is_nan(ground):
+				ground = 0.0
+			row.append(Vector3(p.x, ground + lift, p.y))
+			row_alpha.append(clampf((1.0 - t) / feather, 0.0, 1.0))
+		points.append(row)
+		alphas.append(row_alpha)
+	var colour := Color(str(cfg.get("colour", "#6b5640")))
+	for ring in rings:
+		for k in segments:
+			var n := (k + 1) % segments
+			for idx: Array in [[ring, k], [ring + 1, k], [ring + 1, n], [ring, k], [ring + 1, n], [ring, n]]:
+				var c := colour
+				c.a = alphas[idx[0]][idx[1]]
+				surface.set_color(c)
+				var v: Vector3 = points[idx[0]][idx[1]]
+				surface.set_uv(Vector2(v.x, v.z) * float(cfg.get("uv_per_m", 0.35)))
+				surface.add_vertex(v)
+	surface.generate_normals()
+	var material := StandardMaterial3D.new()
+	material.vertex_color_use_as_albedo = true
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.roughness = 1.0
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var texture_path := str(cfg.get("texture", ""))
+	if not texture_path.is_empty() and ResourceLoader.exists(texture_path):
+		material.albedo_texture = load(texture_path) as Texture2D
+	var floor_mesh := MeshInstance3D.new()
+	floor_mesh.name = "CampFloor"
+	floor_mesh.mesh = surface.commit()
+	floor_mesh.material_override = material
+	floor_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	into.add_child(floor_mesh)
+	var clear_m := float(cfg.get("clear_grass_m", radius * 0.9))
+	if clear_m > 0.0:
+		var marker := Node3D.new()
+		marker.name = "CampFloorClearing"
+		into.add_child(marker)
+		var ground := _ground_height(centre.x, centre.y)
+		var mark_at := Vector3(centre.x, 0.0 if is_nan(ground) else ground, centre.y)
+		if marker.is_inside_tree():
+			marker.global_position = mark_at
+		else:
+			marker.position = mark_at
+		marker.set_meta(GRASS_FIELD.CLEAR_RADIUS_META, clear_m)
+		marker.add_to_group(GRASS_FIELD.CLEAR_GROUP)
+		GRASS_FIELD.clearings_dirty = true
 
 
 ## How many authored camps stood up a working rest offer this run. Read by

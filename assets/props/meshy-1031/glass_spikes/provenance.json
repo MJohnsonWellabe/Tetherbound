@@ -1,0 +1,27 @@
+{
+ "asset": "P2-043 Glass Field spike bases (Stormwood 5.15)",
+ "status": "CANDIDATE_FLAG_OFF: not wired (.gdignore here)",
+ "date": "2026-10-31",
+ "license": "Existing Meshy account (owner Standing direction 1, 15 Oct 2026); no purchase",
+ "reference": {
+  "file": "reference.jpg",
+  "drafted_by": "coordinator via Meshy text-to-image (agent-drafted reference, owner-authorized)",
+  "t2i_task_id": "01a192ad-cf51-72f5-9008-8c119487455f",
+  "prompt": "a cluster of tall translucent pale-blue electric glass crystal spikes of varied heights growing out of a cracked dark grey rock base with moss, faint inner glow, natural irregular shards, painterly fantasy game concept art in the style of a Palworld and Valheim art board, single isolated object, three-quarter view from slightly above, centered, whole object visible, plain light grey background, soft even daylight, no text, no people, no creatures",
+  "inspected_before_submission": true
+ },
+ "model": {
+  "endpoint": "/openapi/v1/image-to-3d",
+  "task_id": "01a192af-34a6-7427-8856-b3e2ba063ec2",
+  "settings": {
+   "should_remesh": true,
+   "should_texture": true,
+   "enable_pbr": true,
+   "topology": "triangle",
+   "target_polycount": 20000,
+   "symmetry_mode": "auto"
+  },
+  "file": "glass_spikes.glb",
+  "sha256": "b4a83228f75c7c37f609b6ce0baa8bceaf2993d6494b27535b68ff44a134005f"
+ }
+}

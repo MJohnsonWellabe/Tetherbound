@@ -8,6 +8,7 @@ const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
 const ARCH_BUILD := preload("res://scripts/world/stormwood_arch_build_rules.gd")
 const RENEWABLE_SITES := preload("res://scripts/world/renewable_site_catalog.gd")
 const VOLTCAP_FINISH := preload("res://scripts/world/stormwood_voltcap_finish.gd")
+const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
 
 const DATA_PATH := "res://data/config/stormwood_harvests.json"
 const VEGETATION_PATH := "res://data/config/stormwood_vegetation.json"
@@ -237,10 +238,20 @@ static func add_material_cue(node: Node3D, item: String, cues: Dictionary,
 	var cue: Variant = cues.get(item, null)
 	if not cue is Dictionary or node.get_node_or_null(^"MaterialCue") != null:
 		return null
-	var spec := cue as Dictionary
+	var spec := (cue as Dictionary).duplicate(true)
+	# World dressing (P2-046, OFF until GPU judged): `hero.enabled` swaps the
+	# primitive cue for installed Meshy art and may override cue keys.
+	var hero: Dictionary = spec.get("hero", {}) as Dictionary
+	var hero_on := bool(hero.get("enabled", false))
+	if hero_on:
+		for key: String in (hero.get("overrides", {}) as Dictionary):
+			spec[key] = hero.overrides[key]
 	var root := Node3D.new()
 	root.name = "MaterialCue"
 	node.add_child(root)
+	if hero_on and _hero_models(node, root, hero, ground_height) and bool(hero.get("replace_model", false)):
+		spec["kind"] = ""
+		spec["replace_model"] = true
 	var glow := StandardMaterial3D.new()
 	var colour := Color(str(spec.get("colour", "#ffffff")))
 	# A darker body under a softer glow keeps the hue: albedo and emission both
@@ -343,6 +354,47 @@ static func add_material_cue(node: Node3D, item: String, cues: Dictionary,
 				visual.add_child(root)
 				root.transform = visual.transform.affine_inverse()
 	return root
+
+
+## Installed Meshy models for a material cue: each entry is fitted to its
+## height, seated on the sampled ground, optionally given the blue-vein glow
+## (crystal and bioluminescent texels only) and placed on a deterministic ring
+## so every peer builds the same node. Returns true when anything was placed.
+static func _hero_models(node: Node3D, root: Node3D, hero: Dictionary, ground_height: Callable) -> bool:
+	var placed := false
+	var seed_value := absi(str(node.name).hash()) % 1009
+	for raw: Variant in hero.get("models", []):
+		if not raw is Dictionary:
+			continue
+		var entry := raw as Dictionary
+		var count := maxi(1, int(entry.get("count", 1)))
+		var heights: Array = entry.get("height_m", [1.0, 1.0]) if entry.get("height_m") is Array else [float(entry.get("height_m", 1.0)), float(entry.get("height_m", 1.0))]
+		for index in count:
+			var model := HERO_PROP.load_model(str(entry.get("model", "")))
+			if model == null:
+				break
+			var t := float((index * 7 + seed_value) % 11) / 10.0
+			HERO_PROP.fit_height(model, lerpf(float(heights[0]), float(heights[1]), t), float(entry.get("sink_m", 0.05)))
+			if entry.has("glow_colour"):
+				HERO_PROP.glow(model, Color(str(entry.glow_colour)), float(entry.get("glow_energy", 1.0)))
+			var seat := Node3D.new()
+			seat.name = "HeroModel%d" % index
+			var ring := float(entry.get("ring_m", 0.0))
+			var angle := TAU * float(index) / float(count) + float(seed_value) * 0.37
+			var at := Vector3(cos(angle) * ring, 0.0, sin(angle) * ring) if count > 1 or ring > 0.0 else Vector3.ZERO
+			if ground_height.is_valid() and node.is_inside_tree():
+				var world_at := node.to_global(at)
+				var ground := float(ground_height.call(world_at.x, world_at.z))
+				if is_finite(ground):
+					at.y = node.to_local(Vector3(world_at.x, ground, world_at.z)).y
+			seat.position = at
+			seat.rotation.y = angle * 1.3 + float(entry.get("yaw_deg", 0.0)) * PI / 180.0
+			seat.add_child(model)
+			for mesh: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
+				mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if bool(entry.get("shadow", true)) else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			root.add_child(seat)
+			placed = true
+	return placed
 
 
 ## A closed-looking moss cap with its irregular rim embedded in the actual

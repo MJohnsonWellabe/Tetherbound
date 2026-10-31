@@ -1,0 +1,17 @@
+{
+  "_comment": "World dressing P2-011 (OFF until GPU judged; tb/world-dressing). GPU 4.85 (31 Oct): 'the signal spire is a small brown box on a grass hill, the drift arch a tiny distant hoop and the terraces the flat disc chain'. Installed Meshy families only (meshy-1020/1022, provenance beside each GLB), fitted, grounded and collided like every landmark model (scripts/world/water_landmark_models.gd). Positions screened on the CPU route_day frames: drift arch camera (-295.9, 200.4) facing (0.37, -0.91); signal spire camera (-74.0, 909.9) facing (0.14, -0.97); terraces camera (1114.3, 2218.4) facing (-0.86, 0.47).",
+  "enabled": false,
+  "height_overrides": [
+    {"landmark_id": "lantern_cove_drift_arch", "model_suffix": "tidewake_drift_arch.glb", "height_m": 8.5},
+    {"landmark_id": "lantern_cove_drift_arch", "model_suffix": "tidewake_signal_lantern_post.glb", "height_m": 3.2}
+  ],
+  "add": [
+    {"id": "wd_spire_signal_lantern", "landmark_id": "gull_rest_signal_spire", "offset_xz_m": [0.0, 0.0], "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb", "height_m": 3.0, "yaw_deg": 0.0, "sink_m": 0.0, "lift_m": 4.5},
+    {"id": "wd_spire_path_lantern", "position_xz_m": [-70.6, 903.4], "model": "res://assets/props/meshy-1020/tidewake_signal_lantern_post/tidewake_signal_lantern_post.glb", "height_m": 2.8, "yaw_deg": 200.0},
+    {"id": "wd_spire_net_rack", "position_xz_m": [-68.4, 900.6], "model": "res://assets/props/meshy-1020/tidewake_net_drying_rack/tidewake_net_drying_rack.glb", "height_m": 2.1, "yaw_deg": 75.0},
+    {"id": "wd_spire_crates", "position_xz_m": [-77.0, 901.8], "model": "res://assets/props/meshy-1020/tidewake_fish_crate_stack/tidewake_fish_crate_stack.glb", "height_m": 1.2, "yaw_deg": 20.0},
+    {"id": "wd_terrace_low", "position_xz_m": [1102.7, 2225.9], "model": "res://assets/props/meshy-1022/drowned_garden_terrace_wall/drowned_garden_terrace_wall.glb", "height_m": 3.0, "yaw_deg": -61.0, "sink_m": 0.3},
+    {"id": "wd_terrace_mid", "position_xz_m": [1097.0, 2225.6], "model": "res://assets/props/meshy-1022/drowned_garden_terrace_wall/drowned_garden_terrace_wall.glb", "height_m": 3.4, "yaw_deg": -61.0, "sink_m": 0.3},
+    {"id": "wd_terrace_high", "position_xz_m": [1091.3, 2225.3], "model": "res://assets/props/meshy-1022/drowned_garden_terrace_wall/drowned_garden_terrace_wall.glb", "height_m": 3.8, "yaw_deg": -61.0, "sink_m": 0.3}
+  ]
+}

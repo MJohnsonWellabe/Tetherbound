@@ -1,0 +1,15 @@
+{
+  "_comment": "World dressing P2-041 (OFF until GPU judged; coordinator Meshy Crown Arch, tb/props-r2 a2f81b50, assets/props/meshy-1031/crown_arch, provenance there). GPU 31 Oct 4.23 main / 4.56 octagonal landing; judges asked for a hero arch taller than the trainer with a crown keystone and crystal or copper accents, rooted in moss not on a slab. The Meshy arch replaces the visible arch at 5.5 m (3x the 1.80 m trainer); the old arch piece and slab mesh are hidden, not freed, so the 9x9 m footing collider, the 2.2x2.5 m passage trigger, the travel axis and placement are unchanged (scripts/world/stormwood_crown_arch_hero.gd). The grass clearance shrinks so moss grows to the pillars. Crystal texels get the blue-vein glow.",
+  "enabled": true,
+  "model": "res://assets/props/meshy-1031/crown_arch/crown_arch.glb",
+  "height_m": 5.5,
+  "sink_m": 0.15,
+  "yaw_deg": 0.0,
+  "min_outer_width_m": 4.2,
+  "hide_old_arch": true,
+  "hide_slab": false,
+  "slab_moss": {"albedo": "res://assets/props/meshy-1020/ground_wet_moss_floor/ground_wet_moss_floor_albedo_seamless.png", "tint": "#9fb6a4", "uv_per_m": 0.22},
+  "_why_slab": "Hiding the slab mesh would float the trainer 0.2 m on the unchanged footing collider; the slab is re-skinned with the Stormwood wet-moss ground texture instead so it reads as a raised moss bank.",
+  "glow_colour": "#a8dcff",
+  "glow_energy": 1.2
+}
