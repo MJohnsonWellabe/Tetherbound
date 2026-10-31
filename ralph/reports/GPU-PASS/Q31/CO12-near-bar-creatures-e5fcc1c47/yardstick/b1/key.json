@@ -1,0 +1,46 @@
+{
+ "Kf": {
+  "anchor": false,
+  "label": "CO12 thundertunnel Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-thundertunnel-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-thundertunnel-cand-Medium.png"
+ },
+ "Ra": {
+  "anchor": false,
+  "label": "CO12 cliffspike High cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-cliffspike-cand-High.png",
+  "B": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-cliffspike-ship-High.png"
+ },
+ "Ca": {
+  "anchor": true,
+  "A": "f36_0_npc:C1B",
+  "B": "f36_0_npc:C1A"
+ },
+ "Yb": {
+  "anchor": true,
+  "A": "f36_1_gpu:stormcapra_candidate",
+  "B": "f36_1_gpu:stormcapra_shipping"
+ },
+ "Hd": {
+  "anchor": false,
+  "label": "CO12 voltwig Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-voltwig-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-voltwig-cand-Medium.png"
+ },
+ "Os": {
+  "anchor": true,
+  "A": "p2_094_r4:X_before",
+  "B": "p2_094_r4:Y_after"
+ },
+ "Wo": {
+  "anchor": false,
+  "label": "CO12 cliffspike Medium cand|ship",
+  "A": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-cliffspike-ship-Medium.png",
+  "B": "D:\\tb-gpu-runs\\yard\\Q31CO12\\sides\\CO12-cliffspike-cand-Medium.png"
+ },
+ "Yf": {
+  "anchor": true,
+  "A": "f36_0_gap:C5B",
+  "B": "f36_0_gap:C5A"
+ }
+}

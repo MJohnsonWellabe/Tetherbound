@@ -1,0 +1,142 @@
+{
+ "sets": {
+  "Kf": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "the fur reads near-black and muddy, so the body's form and markings are lost": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the fur reads near-black and muddy, so the body's form and markings are lost": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The mole's fur on the grey stage has no rim light or key-light separation, so even B's lifted violet-grey fur reads as a dark lump next to Palworld's bright, well-lit creatures."
+  },
+  "Ra": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The quill detail and orange/blue colour come close to the style bar, but the faint end barely reads differently from standing, and B's hit react hops the body into the air, so the finish drops below a shipping game."
+  },
+  "Ca": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The appealing, readable old-villager face, the warm olive/green costume and a clean full-body silhouette carry it; only the flat studio lighting holds it short of Valheim-class mood."
+  },
+  "Yb": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's ram matches the Stormcapra bar and has clear hurt and faint reads, but B's faint mid/end frames tear into a contorted, half-floating mesh that no shipping game would show."
+  },
+  "Hd": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The gold-green mottled lizard with its frill has a strong, saturated read, but the airborne hit-react leap and the uniformly yellow material with no rim separation sink it."
+  },
+  "Os": {
+   "A": {
+    "bar_a": 3.5,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame with brace, shingle cap and stone footing finally reads as built, but the flat-shaded grey placeholder boulder, sparse meadow and flat midday grade fall short of Palworld's base-building density and Valheim's light."
+  },
+  "Wo": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The same quilled hedgehog reads well standing, but A's hit react throws the whole body off the stage and the faint end is nearly indistinguishable from standing, so it does not reach shipping finish."
+  },
+  "Yf": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.2,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's black-and-yellow banding reads far better than A's muddy dark mottling, but B's faint frames float the snake high above its own shadow and A's hit react barely differs from standing."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Lock creature roots and hips to the stage in hit-react and faint animations (foot/root IK, snap the faint pose to the ground, clamp the flinch to a tilt rather than a hop): this fixes the airborne hits in Ra-B, Wo-A and Hd-B, and the floating or torn faints in Yf-B and Yb-B.",
+   "kind": "scene"
+  },
+  {
+   "change": "Raise the albedo value of dark creature materials and add a rim/back light to the creature stage so dark fur and scale (Kf, Yf-A) separate from the ground with readable form and markings.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the flat-shaded low-poly grey boulder beside the homestead wall with a textured, rim-lit rock in the Meadows family, and give the wall infill a plaster or wattle surface texture.",
+   "kind": "new_art"
+  }
+ ]
+}

@@ -1,0 +1,144 @@
+{
+ "sets": {
+  "Jx": {
+   "A": {
+    "bar_a": 5.8,
+    "defects": {
+     "the aspect flame stays lit on the fainted body, so the faint does not read as knocked out": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.3,
+    "defects": {
+     "the aspect flame stays lit on the fainted body, so the faint does not read as knocked out": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The bulky bear silhouette and its scale against the trainer hold up, but the busy yellow-speckle-on-brown fur turns into one muddy mid-tone at small size, with no rim light to separate it."
+  },
+  "Le": {
+   "A": {
+    "bar_a": 6.8,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.9,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The white-fleece, dark-horn ram silhouette is the owner's own style-bar creature and reads like a Palworld pal, though in B the horns stretch into long black tubes in faint mid and faint end, which sinks that side."
+  },
+  "Qd": {
+   "A": {
+    "bar_a": 6.2,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.0,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "A's naturalistic furry boar comes close but its blotchy yellow pattern is noisy and it barely reaches the trainer's height, and B's smooth clay-toy pig with a sit-up faint end reads like a placeholder, not a shipping creature."
+  },
+  "Cj": {
+   "A": {
+    "bar_a": 4.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "PRESENT",
+     "the craft action hints are low-contrast and hard to find": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 6.8,
+    "defects": {
+     "recipe text in the craft panel is clipped or too small to read at a glance": "FIXED",
+     "the craft action hints are low-contrast and hard to find": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's larger, fully wrapped recipe text and the deep blue-grey panel read well, but the plain text-and-keycap hints with no teal interaction accent or controller-glyph buttons, over a murky dark scene, stop it short of Palworld-level UI finish."
+  },
+  "Hs": {
+   "A": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.0,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "A warm, expressive grandfather villager with a clear face and eyes and an earthy green-and-brown outfit that suits the cozy Meadows settlement, though its rounded cartoon face sits a little softer than the stylised-realism creatures."
+  },
+  "Hf": {
+   "A": {
+    "bar_a": 6.3,
+    "defects": {
+     "the aspect flame stays lit on the fainted body, so the faint does not read as knocked out": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 5.8,
+    "defects": {
+     "the aspect flame stays lit on the fainted body, so the faint does not read as knocked out": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same bear as Jx: strong mass and scale, but the speckled dark fur muddies the value read, and in B the flame stays lit on the fainted body."
+  },
+  "Wp": {
+   "A": {
+    "bar_a": 6.6,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "FIXED",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.0,
+    "defects": {
+     "the hit react barely differs from the standing pose, or the flinch lifts the body off the ground": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The gold-and-moss gecko with its leafy crest has an appealing, high-contrast silhouette and a visible face, which carries it, though it is low-slung and only about the trainer's height."
+  },
+  "Rw": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {
+     "the fur reads near-black and muddy, so the body's form and markings are lost": "PRESENT",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "B": {
+    "bar_a": 6.2,
+    "defects": {
+     "the fur reads near-black and muddy, so the body's form and markings are lost": "PARTIAL",
+     "the fainted body floats above the stage, with a gap between the body and its shadow": "FIXED"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The quills and pink snout and feet give a clear identity, but even B's lifted violet-grey fur stays a low-value mass with little rim light, so at small size the body reads as a dark blob next to Palworld's bright pals."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Creature material value pass: lift fur albedo on dark or speckled coats (Rw, the Jx/Hf bear, Qd A boar), calm the noisy yellow blotch patterns into readable markings, and add a rim or fresnel light term so bodies separate from the stage at 30% size.",
+   "kind": "scene"
+  },
+  {
+   "change": "Hurt/faint animation cleanup: put out the aspect flame on faint (Jx A, Hf B), keep the hit-react flinch grounded (Wp B), fix the horn skinning that stretches the horns into tubes during faint (Le B), and replace the Qd B sit-up faint end with a proper slump.",
+   "kind": "scene"
+  },
+  {
+   "change": "Replace the smooth clay-toy boar (Qd B) with a naturalistic fur-and-moss model that matches the Mudsnout colour board and the owner's creature style bar, and scale low creatures (Qd, Wp) so they stand clearly taller than the 1.80 m trainer.",
+   "kind": "new_art"
+  }
+ ]
+}
