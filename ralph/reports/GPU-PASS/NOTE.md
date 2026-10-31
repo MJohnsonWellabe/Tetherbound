@@ -1,5 +1,24 @@
 # GPU-PASS lane note (owner's Windows desktop, GTX 1060 3GB; 21–22 Oct 2026)
 
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-1, side-lie faints for Cragclaw and Skyrill
+
+- **Arms:** control main 3a0e1fa0d8446c5dffa3359a3c3543fa6ded18ca vs candidate `tb/co-f36-1-on` e5667aecd6e8cdcf66c9a33e9a69df049229b12e.
+  - The candidate is main plus one data change: the Cragclaw and Skyrill faint recipes in `data/creatures/f36_pose_candidates.json` roll the body 70 deg onto its side, back to the camera.
+  - water_cragclaw plays Cragclaw's recipe.
+- **Why:** GPU roster 24 Oct named these defects:
+  - Cragclaw 5.87: faint the same as standing.
+  - water_cragclaw 6.32: faint poses the same as standing.
+  - Skyrill 6.33: faint keeps head and sail up.
+- **CPU r2** (three judges, confirming, r 0.90): Cragclaw 5.71 -> 6.24, water_cragclaw 5.71 -> 6.24, Skyrill 6.00 -> 6.53 (+0.53 each). Skyrill's defect is FIXED x3; the crab's is PARTIAL x3 (it tips onto its shell edge).
+- **Verdict:** `ralph/reports/CREATURES-F36/r2/VERDICT.md` on `tb/creatures-f36`.
+- **Capture,** each arm at its own SHA on a clean tree, Medium and High, standard roster crop:
+  `godot --path . --rendering-method forward_plus --resolution 1920x1080 --script res://tools/art_pipeline/capture_f36_poses.gd -- --candidate --whole-body --context --species=cragclaw,water_cragclaw,skyrill --out=<fresh dir> --source-commit=<arm sha>`
+  - All three are in `enabled_species`, so `--candidate` installs.
+- **Report:**
+  - MET per form per preset.
+  - The faint defect calls.
+  - Whether the crab's shell-edge tip reads as grounded.
+
 ## READY (24 Oct): newest first
 
 - **F38#0 / F26#3 Meadows matrix on main 779422f10.** The matrix evidence is DELIVERED (High 354/528 and Medium 355/528 frames, plus the fight at 84/85). **F26#3 (Meadows) is REOPENED.**
