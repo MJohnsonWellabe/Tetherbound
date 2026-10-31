@@ -171,6 +171,9 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 			_pose_failures.append("%s: missing %s clip" % [id, role])
 			continue
 		var staged := _stage_role(role, body, measured_height, resting_bounds) if _context else {}
+		# The game puts a fainted creature's aspect flame out (creature_body.gd
+		# play_faint); this row plays the clip directly, so do the same here.
+		body.call("set_aspect_vfx_suspended", role == "faint")
 		for phase: float in phases:
 			if _scale_only:
 				body.rotation.y = deg_to_rad(phase * 180.0)

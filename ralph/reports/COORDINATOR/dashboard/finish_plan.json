@@ -424,16 +424,22 @@
  ],
  "in_flight": [
   {
+   "what": "ROSTER-1 near-bar F36 re-judge on current main",
+   "where": "main",
+   "state": "queued",
+   "detail": "About 22 species at 7.0-7.42 on the 24 Oct baseline; runs after UI-PAD"
+  },
+  {
    "what": "SW-P2-041 Crown Arch arm",
    "where": "tb/sw-crownarch-on",
-   "state": "queued",
-   "detail": "GPU job 1"
+   "state": "failed",
+   "detail": "GPU 31 Oct: 4.23 -> 4.56 (+0.33), not met; judges asked for new art. A Meshy hero arch is now with the world lane"
   },
   {
    "what": "CO12 four near-bar creatures",
    "where": "tb/co12-main-on",
-   "state": "queued",
-   "detail": "GPU job 2: Cliffspike, Voltwig, Nightburrow, Thundertunnel"
+   "state": "landed",
+   "detail": "GPU 31 Oct: all four gain (+0.44 to +0.98), floating faints fixed, none at 7.5 yet; landed"
   },
   {
    "what": "P2-095 craft recipe text close-out",
@@ -488,6 +494,18 @@
    "where": "tb/routes-f49",
    "state": "running",
    "detail": "Cloud session started 31 Oct; working the open seams in CHAIN_MANIFEST.md"
+  },
+  {
+   "what": "Creatures lane F36 close-out arms",
+   "where": "tb/creatures-f36",
+   "state": "running",
+   "detail": "CPU prep; arm 1: Ripplet belly, Aquaryn grounded hit, Breezetail harness"
+  },
+  {
+   "what": "World lane dressing and Meshy props",
+   "where": "tb/world-dressing",
+   "state": "running",
+   "detail": "Pickups, camp floor, camp bed and workbench, Glass Field, Glass Sink, Crown Arch hero"
   }
  ],
  "asks": [
