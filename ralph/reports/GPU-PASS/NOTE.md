@@ -165,6 +165,44 @@ Earlier on 26-27 Oct, all pushed (see each row's VERDICT.md):
 - **Overnight.** The owner leaves this machine on, so keep the queue running unattended through the night. Pick up the next job as each one ends, and push each verdict as it lands.
 - **Flag flips on one import.** When several arms differ only by data/config JSON, check out one tree that holds all their code (flags off), import it once, and flip one flag per capture. Record the flip in each verdict.
 
+## LANE ARMS (coordinator, 31 Oct 21:45 UTC): run these after CRAFT-R3b and Tanglevolt at Medium, BEFORE the hands-on jobs (POSE-1, HERO-1..3, HALL-1). Each has a CPU gain worth confirming. Full requests are in each lane branch's NOTE.md, at the SHAs below.
+
+16. **CO-F36-2 + CO-F36-1: creature pose arms from the creatures lane. Code and JSON only, no re-import; one tree for both.**
+    - **CO-F36-2, Sirenseal grounded hit:** `tb/co-f36-2-on` 505bc2e5f.
+      - Flip `candidate_role_flags.creatures_f36_sirenseal_grounded_hit.enabled`.
+      - CPU 5.90 to 7.14; ROSTER-1 High had 6.81.
+      - Species: sirenseal, with water_sirenseal as a no-change check.
+    - **CO-F36-1, side-lie faints for Cragclaw and Skyrill:** `tb/co-f36-1-on` e5667aecd. It changes only `f36_pose_candidates.json`.
+      - CPU +0.53 each.
+      - Species: cragclaw, water_cragclaw, skyrill.
+    - **Capture:** `capture_f36_poses.gd --candidate --whole-body --context`, High first.
+17. **WD2: world dressing batch, supersedes WD1.** `tb/world-2-on` 1bfc5d095 vs main a41e1b30e.
+    - **Import:** run one `--import` for `assets/props/meshy-1031/*`, then flip the flags listed in the request.
+    - **What it holds:**
+      - the Meshy Crown Arch hero (P2-041);
+      - the Meshy Glass Sink rim (P2-070);
+      - the Meshy Glass Field spikes (P2-043);
+      - Stormwood harvest cues (P2-046);
+      - pickup grounding (P2-045, P2-033);
+      - the Meadows trail camp floor (P2-035);
+      - the Meshy camp bed and workbench (P2-115, P2-116);
+      - mushrooms (P2-054).
+    - **CPU b2:**
+
+      | Item | Main | Candidate |
+      |---|---|---|
+      | P2-046 | 3.86 | 6.31 |
+      | P2-041 | 3.15 | 5.33 |
+      | P2-070 | 2.71 | 4.89 |
+      | P2-115 | 4.95 | 6.25 |
+      | P2-043 | 4.95 | 6.20 |
+      | P2-116 | 5.22 | 6.04 |
+      | P2-035 | 6.20 | 6.96 |
+      | P2-054 | 5.71 | 6.36 |
+
+    - **Capture:** the job.json frames listed in the request, High first.
+    - **Report:** per-item before/after and the defect calls. Per-flag attribution is not needed unless an item regresses.
+
 ## PRIORITY (coordinator, 31 Oct 17:15 UTC): ROSTER-1 runs next, right after queue 56 (CO12, P2-095, UI-PAD) and before DLG-1. It is the fastest way to close rows.
 
 **ROSTER-1: re-judge the near-bar F36 roster on current main. No arm, a plain verdict.**
