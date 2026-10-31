@@ -284,6 +284,16 @@ The per-item scores showed shared causes. The plan, in order: dialogue and catch
     - **Capture:** High first, P2-095's frames from job.json. If High reaches 7.5, add Medium. 7.5 on both closes F38#18.
     - **When:** it can ride the DLG-1 / UI-1 flag-flip session.
 
+14. **UI-R2: brighter, larger secondary text across every menu (P2-001, P2-004, P2-007, P2-031, P2-032, P2-096 and P2-114: the judges' shared UI-PAD ask). Script-only arm, no re-import.**
+    - **Arms:** main vs `tb/ui-r2-on` f6ee5c6d5, which changes only `scripts/ui/ui_tokens.gd`:
+      - TEXT_SECONDARY #B8C5C4 to #D2DCDB;
+      - TEXT_MUTED #7F9394 to #A2B3B4;
+      - FONT_TINY 19 to 21;
+      - FONT_LABEL 23 to 25.
+    - **Do:** on your imported tree, swap that one script for the candidate and capture. No import needed.
+    - **Capture:** the UI-PAD frames, with `--gamepad`, at High. Also watch for any clipped or overflowing text, which would be a regression to report.
+    - **Report:** the per-item score and any overflow.
+
 ## GPU LANE: ITEM SCORES DONE (28 Oct, ~01:40 CDT). The lane is idle; no GPU process is running.
 
 All four biomes are scored on main b7a6e8bbe and pushed here as `ralph/reports/VISUAL/item-scores/<biome>/{scores-gpu.json, VERDICT-gpu.md, _sheet_<biome>-gpu.jpg, yardstick/}`. None of the 103 scored items reaches 7.5 except Meadows P2-095 at 7.53.
