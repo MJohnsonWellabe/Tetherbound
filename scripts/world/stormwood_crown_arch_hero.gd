@@ -139,7 +139,7 @@ static func _skirt(arch: Node3D, slab: MeshInstance3D, cfg: Dictionary, ground_h
 			HERO_PROP.glow(model, Color(str(entry.glow_colour)), float(entry.get("glow_energy", 1.0)))
 		var perim := float(i) / float(count) * 4.0
 		var side_i := int(perim) % 4
-		var t2 := perim - floor(perim)
+		var t2 := perim - floorf(perim)
 		var corners := [Vector2(-1, -1), Vector2(1, -1), Vector2(1, 1), Vector2(-1, 1)]
 		var p2: Vector2 = (corners[side_i] as Vector2).lerp(corners[(side_i + 1) % 4], t2)
 		var at := p2 * (half + out * float(entry.get("at_fraction", 0.45)))
