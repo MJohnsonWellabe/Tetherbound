@@ -8,6 +8,17 @@
     "duskhush": 1.35,
     "brooktail": 1.4
    }
+  },
+  "creatures_f36_taller_than_trainer_2": {
+   "_why": "CREATURES-F36 height batch 2 (31 Oct). GPU roster 24 Oct R3 'scale above the 1.80 m trainer': sparkit 6.28 'below the trainer's height' (1.95 m bounds, mostly ears), pipwing 6.66 (1.9 m), paddlenewt 6.75 'chest-high to the trainer' and riftfrill 6.51 'back below the trainer's head' (2.15 m, shared mesh), glimmermoth 6.43 'barely trainer height' (3.1 m with wings). Grow the smaller side.",
+   "enabled": false,
+   "species": {
+    "sparkit": 1.6,
+    "pipwing": 1.6,
+    "paddlenewt": 1.4,
+    "riftfrill": 1.4,
+    "glimmermoth": 1.3
+   }
   }
  }
 }
