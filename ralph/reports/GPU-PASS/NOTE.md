@@ -310,7 +310,7 @@ Owner 31 Oct: Tidewake locations "too cluttered ... beach huts ... the focus". *
 - **Arms:**
   - Main: current origin/main (a41e1b30 or later).
   - On: `tb/tidewake-1-on` at 29ca0d23b45159a09ffb4ffa9e82716f9c61112b. This is the judged s2 state with `beach_scene_candidate` and `beach_declutter_candidate` removed from `sections_off`.
-  - Same tree, flags only: on any tree carrying the sections, `--tidewake-look-sections=beach_scene_candidate,beach_declutter_candidate` gives the same arm.
+  - Capture the on arm from that exact commit: later `tb/tidewake-look` commits change `beach_scene_candidate` for round 2.
 - **Import first:** the new Meshy 1031 set is under `assets/props/meshy-1031/tidewake/`. Its texture `.import` files are on `compress/mode=2`.
 - **Stands:** 12 location stands, day approach and close (24 frames per arm):
   ```

@@ -1580,18 +1580,18 @@
       "id": "beach_sluice_isle_14_0",
       "_where": "sluice_isle__14__sluice_channel_bridge",
       "position_xz_m": [
-        812.34,
-        3133.7
+        811.91,
+        3133.43
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 5.6,
       "yaw_deg": 172.3,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 5.0,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
@@ -1616,18 +1616,18 @@
       "id": "beach_lantern_cove_17_0",
       "_where": "lantern_cove__17__lantern_cove_drift_arch",
       "position_xz_m": [
-        -294.49,
-        183.63
+        -294.95,
+        183.44
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 5.6,
       "yaw_deg": -47.1,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 5.0,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
@@ -1739,24 +1739,6 @@
       ]
     },
     {
-      "id": "beach_gull_rest_20_1",
-      "_where": "gull_rest__20__gull_rest_beach",
-      "position_xz_m": [
-        -60.15,
-        807.2
-      ],
-      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
-      "height_m": 5.04,
-      "yaw_deg": -116.0,
-      "sink_m": 0.25,
-      "grass_clear_m": 4.5,
-      "collider_fraction": [
-        0.55,
-        1.0,
-        0.55
-      ]
-    },
-    {
       "id": "beach_gull_rest_20_plaza",
       "_where": "gull_rest__20__gull_rest_beach (clearing only)",
       "position_xz_m": [
@@ -1822,24 +1804,6 @@
       "yaw_deg": -144.0,
       "sink_m": 0.25,
       "grass_clear_m": 5.0,
-      "collider_fraction": [
-        0.55,
-        1.0,
-        0.55
-      ]
-    },
-    {
-      "id": "beach_drowned_garden_22_1",
-      "_where": "drowned_garden__22__drowned_garden_beach",
-      "position_xz_m": [
-        1046.87,
-        2263.9
-      ],
-      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
-      "height_m": 5.04,
-      "yaw_deg": -144.0,
-      "sink_m": 0.25,
-      "grass_clear_m": 4.5,
       "collider_fraction": [
         0.55,
         1.0,
@@ -1916,24 +1880,6 @@
         0.55,
         1.0,
         0.55
-      ]
-    },
-    {
-      "id": "beach_deep_watch_24_1",
-      "_where": "deep_watch__24__deep_watch_beach",
-      "position_xz_m": [
-        1252.37,
-        3400.18
-      ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": -0.4,
-      "sink_m": 0.25,
-      "grass_clear_m": 3.5,
-      "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
       ]
     },
     {
@@ -2298,799 +2244,727 @@
     },
     "drop_landmark_props": []
   },
-  "_why_beach_groups_candidate": "OFF in play (Tidewake look lane r2; r1 judges: 'lone huts perched on slopes ... give each location a clustered focal group'). Beside each beach_scene_candidate focal piece: a Meshy 1031 canoe rack on its outer side, a Meshy 1024 driftwood log in front and a Meshy 1020 dune shrub cluster at its foot, so each site reads as one small composed group rather than a lone building. Rack keeps a box collider; log and shrub have none. Needs beach_scene_candidate ON.",
+  "_why_beach_groups_candidate": "OFF in play (Tidewake look lane r2; r1 judges' top ask: 'give each named beach location a clustered focal hamlet ... instead of lone huts perched on slopes'). Beside each beach_scene_candidate focal piece, on its outer side away from the route line: a second, smaller Meshy 1031 beach hut behind it and a market stall (or a hut beside a bar, tower or stall) flanking it, so each site reads as a small hamlet of two or three buildings framed in both location views. Box colliders inside each footprint, grass_clear discs. Needs beach_scene_candidate ON.",
   "beach_groups_candidate": [
     {
       "id": "beach_first_shore_01_1",
       "_where": "first_shore__01__first_shore_welcome_beacon",
       "position_xz_m": [
-        30.68,
-        86.22
+        26.62,
+        83.77
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": 117.4,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": 87.4,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 4.25,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
       "id": "beach_first_shore_01_2",
       "_where": "first_shore__01__first_shore_welcome_beacon",
       "position_xz_m": [
-        33.76,
-        93.06
+        32.49,
+        80.47
       ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": 147.4,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
-    },
-    {
-      "id": "beach_first_shore_01_3",
-      "_where": "first_shore__01__first_shore_welcome_beacon",
-      "position_xz_m": [
-        29.87,
-        94.44
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": 102.4,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 5.04,
+      "yaw_deg": 122.4,
+      "sink_m": 0.25,
+      "grass_clear_m": 4.5,
+      "collider_fraction": [
+        0.55,
+        1.0,
+        0.55
+      ]
     },
     {
       "id": "beach_first_shore_02_1",
       "_where": "first_shore__02__first_shore_horizon_stones",
       "position_xz_m": [
-        -52.42,
-        84.04
+        -50.8,
+        88.5
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": -218.5,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": -188.5,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 4.25,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
       "id": "beach_first_shore_02_2",
       "_where": "first_shore__02__first_shore_horizon_stones",
       "position_xz_m": [
-        -58.53,
-        79.7
+        -46.43,
+        83.39
       ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": -108.5,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
-    },
-    {
-      "id": "beach_first_shore_02_3",
-      "_where": "first_shore__02__first_shore_horizon_stones",
-      "position_xz_m": [
-        -60.64,
-        83.26
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": -203.5,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/market_stall/market_stall.glb",
+      "height_m": 3.06,
+      "yaw_deg": -223.5,
+      "sink_m": 0.25,
+      "grass_clear_m": 3.6,
+      "collider_fraction": [
+        0.8,
+        0.6,
+        0.5
+      ]
     },
     {
       "id": "beach_reedhaven_03_1",
       "_where": "reedhaven__03__reedhaven_woven_hall",
       "position_xz_m": [
-        -43.48,
-        433.25
+        -38.74,
+        433.41
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": -150.4,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": -120.4,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 4.25,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
       "id": "beach_reedhaven_03_2",
       "_where": "reedhaven__03__reedhaven_woven_hall",
       "position_xz_m": [
-        -49.79,
-        437.3
+        -41.86,
+        427.45
       ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": -40.4,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
-    },
-    {
-      "id": "beach_reedhaven_03_3",
-      "_where": "reedhaven__03__reedhaven_woven_hall",
-      "position_xz_m": [
-        -47.28,
-        440.58
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": -135.4,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 5.04,
+      "yaw_deg": -155.4,
+      "sink_m": 0.25,
+      "grass_clear_m": 4.5,
+      "collider_fraction": [
+        0.55,
+        1.0,
+        0.55
+      ]
     },
     {
       "id": "beach_reedhaven_04_1",
       "_where": "reedhaven__04__reedhaven_root_walk",
       "position_xz_m": [
-        96.59,
-        510.51
+        98.76,
+        514.73
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": -94.4,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": -124.4,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 4.25,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
       "id": "beach_reedhaven_04_2",
       "_where": "reedhaven__04__reedhaven_root_walk",
       "position_xz_m": [
-        97.57,
-        503.07
+        92.04,
+        514.45
       ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": -64.4,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
-    },
-    {
-      "id": "beach_reedhaven_04_3",
-      "_where": "reedhaven__04__reedhaven_root_walk",
-      "position_xz_m": [
-        101.61,
-        503.95
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": -109.4,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/market_stall/market_stall.glb",
+      "height_m": 3.06,
+      "yaw_deg": -89.4,
+      "sink_m": 0.25,
+      "grass_clear_m": 3.6,
+      "collider_fraction": [
+        0.8,
+        0.6,
+        0.5
+      ]
     },
     {
       "id": "beach_brine_steps_05_1",
       "_where": "brine_steps__05__the_tidal_stairstones",
       "position_xz_m": [
-        343.39,
-        725.76
+        346.78,
+        729.08
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": -192.9,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": -162.9,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 4.25,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
       "id": "beach_brine_steps_05_2",
       "_where": "brine_steps__05__the_tidal_stairstones",
       "position_xz_m": [
-        336.0,
-        724.49
+        348.51,
+        722.58
       ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": -82.9,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
-    },
-    {
-      "id": "beach_brine_steps_05_3",
-      "_where": "brine_steps__05__the_tidal_stairstones",
-      "position_xz_m": [
-        335.64,
-        728.61
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": -177.9,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/market_stall/market_stall.glb",
+      "height_m": 3.06,
+      "yaw_deg": -197.9,
+      "sink_m": 0.25,
+      "grass_clear_m": 3.6,
+      "collider_fraction": [
+        0.8,
+        0.6,
+        0.5
+      ]
     },
     {
       "id": "beach_shellwatch_07_1",
       "_where": "shellwatch__07__shellwatch_rescue_jetty",
       "position_xz_m": [
-        262.94,
-        1019.64
+        264.32,
+        1024.18
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": -104.7,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": -134.7,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 4.25,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
       "id": "beach_shellwatch_07_2",
       "_where": "shellwatch__07__shellwatch_rescue_jetty",
       "position_xz_m": [
-        265.24,
-        1012.5
+        257.76,
+        1022.7
       ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": -74.7,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
-    },
-    {
-      "id": "beach_shellwatch_07_3",
-      "_where": "shellwatch__07__shellwatch_rescue_jetty",
-      "position_xz_m": [
-        269.06,
-        1014.09
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": -119.7,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 5.04,
+      "yaw_deg": -99.7,
+      "sink_m": 0.25,
+      "grass_clear_m": 4.5,
+      "collider_fraction": [
+        0.55,
+        1.0,
+        0.55
+      ]
     },
     {
       "id": "beach_tidal_cradle_09_1",
       "_where": "tidal_cradle__09__aquaryn_tidal_basin",
       "position_xz_m": [
-        600.84,
-        1403.32
+        603.27,
+        1407.39
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": -90.7,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": -120.7,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 4.25,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
       "id": "beach_tidal_cradle_09_2",
       "_where": "tidal_cradle__09__aquaryn_tidal_basin",
       "position_xz_m": [
-        601.34,
-        1395.83
+        596.54,
+        1407.54
       ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": -60.7,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
-    },
-    {
-      "id": "beach_tidal_cradle_09_3",
-      "_where": "tidal_cradle__09__aquaryn_tidal_basin",
-      "position_xz_m": [
-        605.43,
-        1396.45
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": -105.7,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 5.04,
+      "yaw_deg": -85.7,
+      "sink_m": 0.25,
+      "grass_clear_m": 4.5,
+      "collider_fraction": [
+        0.55,
+        1.0,
+        0.55
+      ]
     },
     {
       "id": "beach_tidal_cradle_10_1",
       "_where": "tidal_cradle__10__tidal_cradle_saddle_camp",
       "position_xz_m": [
-        828.53,
-        1594.8
+        824.46,
+        1597.24
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": 179.4,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": 149.4,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 4.25,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
       "id": "beach_tidal_cradle_10_2",
       "_where": "tidal_cradle__10__tidal_cradle_saddle_camp",
       "position_xz_m": [
-        836.01,
-        1595.28
+        824.3,
+        1590.52
       ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": 209.4,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
-    },
-    {
-      "id": "beach_tidal_cradle_10_3",
-      "_where": "tidal_cradle__10__tidal_cradle_saddle_camp",
-      "position_xz_m": [
-        835.41,
-        1599.37
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": 164.4,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/market_stall/market_stall.glb",
+      "height_m": 3.06,
+      "yaw_deg": 184.4,
+      "sink_m": 0.25,
+      "grass_clear_m": 3.6,
+      "collider_fraction": [
+        0.8,
+        0.6,
+        0.5
+      ]
     },
     {
       "id": "beach_salt_crown_11_1",
       "_where": "salt_crown__11__salt_crown_tide_shrine",
       "position_xz_m": [
-        204.97,
-        2320.53
+        206.54,
+        2316.06
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": -77.8,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": -47.8,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 4.25,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
       "id": "beach_salt_crown_11_2",
       "_where": "salt_crown__11__salt_crown_tide_shrine",
       "position_xz_m": [
-        206.95,
-        2327.76
+        199.92,
+        2317.25
       ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": 32.2,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
-    },
-    {
-      "id": "beach_salt_crown_11_3",
-      "_where": "salt_crown__11__salt_crown_tide_shrine",
-      "position_xz_m": [
-        210.84,
-        2326.35
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": -62.8,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/market_stall/market_stall.glb",
+      "height_m": 3.06,
+      "yaw_deg": -82.8,
+      "sink_m": 0.25,
+      "grass_clear_m": 3.6,
+      "collider_fraction": [
+        0.8,
+        0.6,
+        0.5
+      ]
     },
     {
       "id": "beach_salt_crown_12_1",
       "_where": "salt_crown__12__salt_crown_return_bell",
       "position_xz_m": [
-        289.83,
-        2241.85
+        291.87,
+        2246.13
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": -96.1,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": -126.1,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 4.25,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
       "id": "beach_salt_crown_12_2",
       "_where": "salt_crown__12__salt_crown_return_bell",
       "position_xz_m": [
-        291.03,
-        2234.45
+        285.16,
+        2245.66
       ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": -66.1,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
-    },
-    {
-      "id": "beach_salt_crown_12_3",
-      "_where": "salt_crown__12__salt_crown_return_bell",
-      "position_xz_m": [
-        295.04,
-        2235.44
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": -111.1,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 5.04,
+      "yaw_deg": -91.1,
+      "sink_m": 0.25,
+      "grass_clear_m": 4.5,
+      "collider_fraction": [
+        0.55,
+        1.0,
+        0.55
+      ]
     },
     {
       "id": "beach_sluice_isle_13_1",
       "_where": "sluice_isle__13__sluice_isle_twin_pumps",
       "position_xz_m": [
-        912.99,
-        2876.01
+        913.05,
+        2880.75
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": 122.3,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": 152.3,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 4.25,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
       "id": "beach_sluice_isle_13_2",
       "_where": "sluice_isle__13__sluice_isle_twin_pumps",
       "position_xz_m": [
-        908.64,
-        2869.9
+        918.86,
+        2877.36
       ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": 232.3,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/market_stall/market_stall.glb",
+      "height_m": 3.06,
+      "yaw_deg": 117.3,
+      "sink_m": 0.25,
+      "grass_clear_m": 3.6,
+      "collider_fraction": [
+        0.8,
+        0.6,
+        0.5
+      ]
     },
     {
-      "id": "beach_sluice_isle_13_3",
-      "_where": "sluice_isle__13__sluice_isle_twin_pumps",
+      "id": "beach_sluice_isle_14_1",
+      "_where": "sluice_isle__14__sluice_channel_bridge",
       "position_xz_m": [
-        905.48,
-        2872.56
+        803.2,
+        3134.97
       ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": 137.3,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": 157.3,
+      "sink_m": 0.25,
+      "grass_clear_m": 4.25,
+      "collider_fraction": [
+        0.55,
+        1.0,
+        0.55
+      ]
+    },
+    {
+      "id": "beach_sluice_isle_14_2",
+      "_where": "sluice_isle__14__sluice_channel_bridge",
+      "position_xz_m": [
+        802.12,
+        3128.33
+      ],
+      "model": "res://assets/props/meshy-1031/tidewake/market_stall/market_stall.glb",
+      "height_m": 3.06,
+      "yaw_deg": 192.3,
+      "sink_m": 0.25,
+      "grass_clear_m": 3.6,
+      "collider_fraction": [
+        0.8,
+        0.6,
+        0.5
+      ]
+    },
+    {
+      "id": "beach_lantern_cove_17_1",
+      "_where": "lantern_cove__17__lantern_cove_drift_arch",
+      "position_xz_m": [
+        -298.72,
+        175.44
+      ],
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": -32.1,
+      "sink_m": 0.25,
+      "grass_clear_m": 4.25,
+      "collider_fraction": [
+        0.55,
+        1.0,
+        0.55
+      ]
+    },
+    {
+      "id": "beach_lantern_cove_17_2",
+      "_where": "lantern_cove__17__lantern_cove_drift_arch",
+      "position_xz_m": [
+        -304.77,
+        178.38
+      ],
+      "model": "res://assets/props/meshy-1031/tidewake/market_stall/market_stall.glb",
+      "height_m": 3.06,
+      "yaw_deg": -67.1,
+      "sink_m": 0.25,
+      "grass_clear_m": 3.6,
+      "collider_fraction": [
+        0.8,
+        0.6,
+        0.5
+      ]
     },
     {
       "id": "beach_lantern_cove_18_1",
       "_where": "lantern_cove__18__lantern_cove_beach",
       "position_xz_m": [
-        -275.59,
-        139.65
+        -275.94,
+        144.38
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": -125.8,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": -155.8,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 4.25,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
       "id": "beach_lantern_cove_18_2",
       "_where": "lantern_cove__18__lantern_cove_beach",
       "position_xz_m": [
-        -270.87,
-        133.82
+        -281.53,
+        140.63
       ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": -95.8,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
-    },
-    {
-      "id": "beach_lantern_cove_18_3",
-      "_where": "lantern_cove__18__lantern_cove_beach",
-      "position_xz_m": [
-        -267.88,
-        136.67
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": -140.8,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 5.04,
+      "yaw_deg": -120.8,
+      "sink_m": 0.25,
+      "grass_clear_m": 4.5,
+      "collider_fraction": [
+        0.55,
+        1.0,
+        0.55
+      ]
     },
     {
       "id": "beach_gull_rest_19_1",
       "_where": "gull_rest__19__gull_rest_signal_spire",
       "position_xz_m": [
-        -83.15,
-        888.79
+        -84.01,
+        884.12
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": -48.1,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": -18.1,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 4.25,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
       "id": "beach_gull_rest_19_2",
       "_where": "gull_rest__19__gull_rest_signal_spire",
       "position_xz_m": [
-        -77.85,
-        894.09
+        -89.17,
+        888.44
       ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": 61.9,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 5.04,
+      "yaw_deg": -53.1,
+      "sink_m": 0.25,
+      "grass_clear_m": 4.5,
+      "collider_fraction": [
+        0.55,
+        1.0,
+        0.55
+      ]
     },
     {
-      "id": "beach_gull_rest_19_3",
-      "_where": "gull_rest__19__gull_rest_signal_spire",
+      "id": "beach_gull_rest_20_1",
+      "_where": "gull_rest__20__gull_rest_beach",
       "position_xz_m": [
-        -75.18,
-        890.93
+        -58.59,
+        805.94
       ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": -33.1,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": -131.0,
+      "sink_m": 0.25,
+      "grass_clear_m": 4.25,
+      "collider_fraction": [
+        0.55,
+        1.0,
+        0.55
+      ]
     },
     {
       "id": "beach_gull_rest_20_2",
       "_where": "gull_rest__20__gull_rest_beach",
       "position_xz_m": [
-        -60.26,
-        801.5
+        -65.24,
+        804.89
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": -101.0,
+      "model": "res://assets/props/meshy-1031/tidewake/market_stall/market_stall.glb",
+      "height_m": 3.06,
+      "yaw_deg": -96.0,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 3.6,
       "collider_fraction": [
-        0.85,
         0.8,
+        0.6,
         0.5
       ]
-    },
-    {
-      "id": "beach_gull_rest_20_3",
-      "_where": "gull_rest__20__gull_rest_beach",
-      "position_xz_m": [
-        -58.43,
-        794.23
-      ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": -71.0,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
-    },
-    {
-      "id": "beach_gull_rest_20_4",
-      "_where": "gull_rest__20__gull_rest_beach",
-      "position_xz_m": [
-        -54.52,
-        795.56
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": -116.0,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
     },
     {
       "id": "beach_drowned_garden_21_1",
       "_where": "drowned_garden__21__drowned_garden_terraces",
       "position_xz_m": [
-        1094.93,
-        2217.73
+        1090.26,
+        2218.6
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": 159.0,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": 129.0,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 4.25,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
       "id": "beach_drowned_garden_21_2",
       "_where": "drowned_garden__21__drowned_garden_terraces",
       "position_xz_m": [
-        1101.77,
-        2220.8
+        1092.46,
+        2212.24
       ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": 189.0,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/market_stall/market_stall.glb",
+      "height_m": 3.06,
+      "yaw_deg": 164.0,
+      "sink_m": 0.25,
+      "grass_clear_m": 3.6,
+      "collider_fraction": [
+        0.8,
+        0.6,
+        0.5
+      ]
     },
     {
-      "id": "beach_drowned_garden_21_3",
-      "_where": "drowned_garden__21__drowned_garden_terraces",
+      "id": "beach_drowned_garden_22_1",
+      "_where": "drowned_garden__22__drowned_garden_beach",
       "position_xz_m": [
-        1099.77,
-        2224.42
+        1048.83,
+        2263.52
       ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": 144.0,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": -159.0,
+      "sink_m": 0.25,
+      "grass_clear_m": 4.25,
+      "collider_fraction": [
+        0.55,
+        1.0,
+        0.55
+      ]
     },
     {
       "id": "beach_drowned_garden_22_2",
       "_where": "drowned_garden__22__drowned_garden_beach",
       "position_xz_m": [
-        1049.44,
-        2258.82
+        1043.46,
+        2259.47
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": -129.0,
+      "model": "res://assets/props/meshy-1031/tidewake/market_stall/market_stall.glb",
+      "height_m": 3.06,
+      "yaw_deg": -124.0,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 3.6,
       "collider_fraction": [
-        0.85,
         0.8,
+        0.6,
         0.5
       ]
-    },
-    {
-      "id": "beach_drowned_garden_22_3",
-      "_where": "drowned_garden__22__drowned_garden_beach",
-      "position_xz_m": [
-        1054.47,
-        2253.25
-      ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": -99.0,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
-    },
-    {
-      "id": "beach_drowned_garden_22_4",
-      "_where": "drowned_garden__22__drowned_garden_beach",
-      "position_xz_m": [
-        1057.3,
-        2256.27
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": -144.0,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
     },
     {
       "id": "beach_deep_watch_23_1",
       "_where": "deep_watch__23__deep_watch_lookout",
       "position_xz_m": [
-        1287.33,
-        3487.54
+        1284.1,
+        3484.07
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": -15.4,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": 14.6,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 4.25,
       "collider_fraction": [
-        0.85,
-        0.8,
-        0.5
+        0.55,
+        1.0,
+        0.55
       ]
     },
     {
       "id": "beach_deep_watch_23_2",
       "_where": "deep_watch__23__deep_watch_lookout",
       "position_xz_m": [
-        1294.66,
-        3489.14
+        1282.08,
+        3490.49
       ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": 94.6,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/market_stall/market_stall.glb",
+      "height_m": 3.06,
+      "yaw_deg": -20.4,
+      "sink_m": 0.25,
+      "grass_clear_m": 3.6,
+      "collider_fraction": [
+        0.8,
+        0.6,
+        0.5
+      ]
     },
     {
-      "id": "beach_deep_watch_23_3",
-      "_where": "deep_watch__23__deep_watch_lookout",
+      "id": "beach_deep_watch_24_1",
+      "_where": "deep_watch__24__deep_watch_beach",
       "position_xz_m": [
-        1295.21,
-        3485.04
+        1266.29,
+        3386.13
       ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": -0.4,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 4.76,
+      "yaw_deg": 34.6,
+      "sink_m": 0.25,
+      "grass_clear_m": 4.25,
+      "collider_fraction": [
+        0.55,
+        1.0,
+        0.55
+      ]
     },
     {
       "id": "beach_deep_watch_24_2",
       "_where": "deep_watch__24__deep_watch_beach",
       "position_xz_m": [
-        1266.79,
-        3390.84
+        1272.46,
+        3388.8
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
-      "height_m": 3.0,
-      "yaw_deg": 64.6,
+      "model": "res://assets/props/meshy-1031/tidewake/market_stall/market_stall.glb",
+      "height_m": 3.06,
+      "yaw_deg": 69.6,
       "sink_m": 0.25,
-      "grass_clear_m": 3.5,
+      "grass_clear_m": 3.6,
       "collider_fraction": [
-        0.85,
         0.8,
+        0.6,
         0.5
       ]
-    },
-    {
-      "id": "beach_deep_watch_24_3",
-      "_where": "deep_watch__24__deep_watch_beach",
-      "position_xz_m": [
-        1263.2,
-        3397.43
-      ],
-      "model": "res://assets/props/meshy-1024/tidewake_driftwood_log/tidewake_driftwood_log.glb",
-      "height_m": 0.8,
-      "yaw_deg": 94.6,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
-    },
-    {
-      "id": "beach_deep_watch_24_4",
-      "_where": "deep_watch__24__deep_watch_beach",
-      "position_xz_m": [
-        1259.75,
-        3395.16
-      ],
-      "model": "res://assets/props/meshy-1020/tidewake_dune_shrub_cluster/tidewake_dune_shrub_cluster.glb",
-      "height_m": 1.1,
-      "yaw_deg": 49.6,
-      "sink_m": 0.1,
-      "grass_clear_m": 0.0
     }
   ]
 }
