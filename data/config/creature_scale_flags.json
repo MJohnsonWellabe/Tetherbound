@@ -16,6 +16,15 @@
     "pipwing": 1.6,
     "sparkit": 1.6
    }
+  },
+  "creatures_f36_taller_than_trainer_3": {
+   "_why": "CREATURES-F36 height batch 3 (31 Oct). GPU roster 24 Oct R3: mudsnout (2.0 m bounds; its back at trainer height; stays under its evolution Tuskroot's 3.6 m at x1.5); paddlenewt 6.75 and riftfrill 6.51, whose x1.4 in r9 left the body line low (+0.25 / +0.14), so x1.8. CPU r10 (three judges, confirming, r 0.92): mudsnout 6.22 -> 7.02, paddlenewt 6.18 -> 6.94, riftfrill 6.13 -> 6.90.",
+   "enabled": false,
+   "species": {
+    "mudsnout": 1.5,
+    "paddlenewt": 1.8,
+    "riftfrill": 1.8
+   }
   }
  }
 }
