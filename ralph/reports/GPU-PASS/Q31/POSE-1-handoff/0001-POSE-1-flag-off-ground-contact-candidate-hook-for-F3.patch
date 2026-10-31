@@ -1,0 +1,93 @@
+From a7af3c2df6b62d5532d79c15f77a88a87233ff81 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 31 Oct 2026 10:52:08 -0500
+Subject: [PATCH 1/2] POSE-1: flag-off ground-contact candidate hook for F36
+ pose profiles
+
+data/config/pose_ground_candidate.json (enabled: false) can replace named
+roles of named F36 pose profiles before install. Off renders exactly as main.
+On, its clips (a new 'rest' role included) are grounded on the posed skin and
+key their own contact cache, and a profile that gains 'rest' makes
+CreatureBody.play_rest() hold that clip instead of the legacy rest roll.
+No profiles are filled yet.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ data/config/pose_ground_candidate.json        |  5 ++++
+ scripts/creatures/creature_pose_candidates.gd | 29 ++++++++++++++++++-
+ 2 files changed, 33 insertions(+), 1 deletion(-)
+ create mode 100644 data/config/pose_ground_candidate.json
+
+diff --git a/data/config/pose_ground_candidate.json b/data/config/pose_ground_candidate.json
+new file mode 100644
+index 000000000000..98becabe3fd0
+--- /dev/null
++++ b/data/config/pose_ground_candidate.json
+@@ -0,0 +1,5 @@
++{
++  "enabled": false,
++  "_comment": "POSE-1 creature ground contact candidate (GPU lane, 31 Oct; GPU item scores 28 Oct: P2-028 Riptusk faint upright crouch with head raised 5.61, P2-029 Riptusk rest belly-up with legs raised 5.32). OFF renders exactly as main. ON, creature_pose_candidates.gd replaces the named roles of the named F36 pose profiles with the clips below before installing them; every other role, species and the enabled_species list are untouched. A profile that gains a 'rest' role makes CreatureBody.play_rest() hold that grounded clip (camp, beds), instead of the legacy whole-body rest roll. Poses stay presentation only: no collision, catalogue, save or network change.",
++  "profiles": {}
++}
+diff --git a/scripts/creatures/creature_pose_candidates.gd b/scripts/creatures/creature_pose_candidates.gd
+index ee7a1769587d..dc6c28142dc2 100644
+--- a/scripts/creatures/creature_pose_candidates.gd
++++ b/scripts/creatures/creature_pose_candidates.gd
+@@ -5,11 +5,24 @@ extends RefCounted
+ ## The owner enabled the installed-roster poses for Phase 1 (2026-10-10).
+ ## Visual acceptance is separate; recipes still refuse a mismatched model/rig.
+ const PATH := "res://data/creatures/f36_pose_candidates.json"
++const GROUND_PATH := "res://data/config/pose_ground_candidate.json"
+ const LIBRARY := &"f36_candidate"
+ const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+ static var _data: Dictionary = {}
+ static var _hashes: Dictionary = {}
+ static var _contact_heights: Dictionary = {}
++static var _ground: Dictionary = {}
++
++
++## POSE-1 candidate profiles ({profile: {role: clip}}), empty while its flag is off.
++static func _ground_candidate() -> Dictionary:
++	if _ground.is_empty():
++		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(GROUND_PATH))
++		_ground = parsed if parsed is Dictionary else {"enabled": false}
++	if not bool(_ground.get("enabled", false)):
++		return {}
++	var profiles: Variant = _ground.get("profiles", {})
++	return profiles if profiles is Dictionary else {}
+ 
+ 
+ ## Build readiness for an evolution which needs authored runtime poses. This
+@@ -141,6 +154,20 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
+ 	var profile_scope := str(recipe.profile)
+ 	if not overrides.is_empty():
+ 		profile_scope += ":" + presentation_id
++	# POSE-1 ground-contact candidate: flag-off renders as main. When on, its
++	# roles replace this profile's before install (and key the contact cache).
++	var ground: Dictionary = _ground_candidate().get(str(recipe.profile), {})
++	for role: String in ground:
++		if not ground[role] is Dictionary:
++			return original
++		roles[role] = ground[role]
++	var grounded_roles: Array = recipe.get("grounded_roles", ["faint", "hit", "ride"]).duplicate()
++	if not ground.is_empty():
++		profile_scope += ":ground"
++		# Candidate clips (a new 'rest' included) are always grounded on the posed skin.
++		for role: String in ground:
++			if role not in grounded_roles:
++				grounded_roles.append(role)
+ 	var contact_key := "%s:%s:%s:%s" % [recipe.source_sha256, profile_scope,
+ 		pivot_before.basis, to_model]
+ 	var surfaces: Array[Dictionary] = []
+@@ -198,7 +225,7 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
+ 				rolled = pivot_before.basis * Basis(Quaternion.from_euler(
+ 					Vector3(float(degrees[0]), float(degrees[1]), float(degrees[2])) * PI / 180.0))
+ 			var position := pivot_before.origin
+-			if role in recipe.get("grounded_roles", ["faint", "hit", "ride"]):
++			if role in grounded_roles:
+ 				# The standing AABB includes unfolded legs/wings. Ground the
+ 				# actual skinned pose instead, without changing mesh or collision.
+ 				var sample := "%s:%s" % [role, frame.phase]
+-- 
+2.55.0.windows.5
+

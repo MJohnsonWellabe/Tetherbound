@@ -1,0 +1,1468 @@
+From bf374437f08f60b66d2317051fbb6515987548f0 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 31 Oct 2026 13:09:54 -0500
+Subject: [PATCH 2/2] POSE-1 Riptusk v1 candidate clips (flag still off)
+
+faint: bramblebun_quadruped_anatomical's faint verbatim (identical quadruped rig contract);
+ends lying on its side, pivot [0,0,90], legs slack. rest: stormursa_native_adult's rest
+(rig contract within 0.2), a settled half-lean with folded legs and the head lowered,
+retimed to settle by phase 0.4 and hold. Replaces P2-028's upright head-raised crouch and
+P2-029's legacy belly-up rest roll. Renders still to be judged.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ data/config/pose_ground_candidate.json | 1440 +++++++++++++++++++++++-
+ 1 file changed, 1439 insertions(+), 1 deletion(-)
+
+diff --git a/data/config/pose_ground_candidate.json b/data/config/pose_ground_candidate.json
+index 98becabe3fd0..48f06997c753 100644
+--- a/data/config/pose_ground_candidate.json
++++ b/data/config/pose_ground_candidate.json
+@@ -1,5 +1,1443 @@
+ {
+   "enabled": false,
+   "_comment": "POSE-1 creature ground contact candidate (GPU lane, 31 Oct; GPU item scores 28 Oct: P2-028 Riptusk faint upright crouch with head raised 5.61, P2-029 Riptusk rest belly-up with legs raised 5.32). OFF renders exactly as main. ON, creature_pose_candidates.gd replaces the named roles of the named F36 pose profiles with the clips below before installing them; every other role, species and the enabled_species list are untouched. A profile that gains a 'rest' role makes CreatureBody.play_rest() hold that grounded clip (camp, beds), instead of the legacy whole-body rest roll. Poses stay presentation only: no collision, catalogue, save or network change.",
+-  "profiles": {}
++  "profiles": {
++    "riptusk_quadruped_anatomical": {
++      "faint": {
++        "duration_s": 1.2,
++        "loop": false,
++        "frames": [
++          {
++            "phase": 0.0,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "head": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_lower_l": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_lower_l": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                0.0,
++                0.0,
++                0.0
++              ]
++            },
++            "pivot_roll_deg": 0,
++            "pivot_rotation_deg": [
++              0.0,
++              0.0,
++              0.0
++            ]
++          },
++          {
++            "phase": 0.125,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                3.5812,
++                11.2116,
++                -11.7681
++              ],
++              "head": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                1.9191,
++                4.2257,
++                -10.6987
++              ],
++              "front_lower_l": [
++                4.4643,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                4.4643,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -0.0338,
++                -0.9014,
++                -4.1895
++              ],
++              "rear_lower_l": [
++                -4.4643,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                -4.4643,
++                0.0,
++                0.0
++              ]
++            },
++            "pivot_roll_deg": 0,
++            "pivot_rotation_deg": [
++              0.0,
++              0.0,
++              16.0714
++            ]
++          },
++          {
++            "phase": 0.25,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                9.2244,
++                21.1701,
++                -23.1252
++              ],
++              "head": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                4.5846,
++                8.0306,
++                -21.2523
++              ],
++              "front_lower_l": [
++                8.9286,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                8.9286,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -0.1334,
++                -1.7979,
++                -8.3779
++              ],
++              "rear_lower_l": [
++                -8.9286,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                -8.9286,
++                0.0,
++                0.0
++              ]
++            },
++            "pivot_roll_deg": 0,
++            "pivot_rotation_deg": [
++              0.0,
++              0.0,
++              32.1429
++            ]
++          },
++          {
++            "phase": 0.375,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                16.4848,
++                29.6591,
++                -34.0412
++              ],
++              "head": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                7.8968,
++                11.3004,
++                -31.6661
++              ],
++              "front_lower_l": [
++                13.3929,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                13.3929,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -0.2981,
++                -2.6848,
++                -12.5643
++              ],
++              "rear_lower_l": [
++                -13.3929,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                -13.3929,
++                0.0,
++                0.0
++              ]
++            },
++            "pivot_roll_deg": 0,
++            "pivot_rotation_deg": [
++              0.0,
++              0.0,
++              48.2143
++            ]
++          },
++          {
++            "phase": 0.5,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                24.9099,
++                36.5641,
++                -44.7305
++              ],
++              "head": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                11.7398,
++                13.9406,
++                -41.9851
++              ],
++              "front_lower_l": [
++                17.8571,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                17.8571,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -0.5272,
++                -3.5573,
++                -16.7478
++              ],
++              "rear_lower_l": [
++                -17.8571,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                -17.8571,
++                0.0,
++                0.0
++              ]
++            },
++            "pivot_roll_deg": 0,
++            "pivot_rotation_deg": [
++              0.0,
++              0.0,
++              64.2857
++            ]
++          },
++          {
++            "phase": 0.625,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                34.0752,
++                41.7407,
++                -55.626
++              ],
++              "head": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                15.9861,
++                15.8684,
++                -52.2924
++              ],
++              "front_lower_l": [
++                22.3214,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                22.3214,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -0.8192,
++                -4.4109,
++                -20.9275
++              ],
++              "rear_lower_l": [
++                -22.3214,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                -22.3214,
++                0.0,
++                0.0
++              ]
++            },
++            "pivot_roll_deg": 0,
++            "pivot_rotation_deg": [
++              0.0,
++              0.0,
++              80.3571
++            ]
++          },
++          {
++            "phase": 0.75,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                39.7606,
++                43.8879,
++                -62.5384
++              ],
++              "head": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                18.6713,
++                16.6498,
++                -58.519
++              ],
++              "front_lower_l": [
++                25.0,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                25.0,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -1.0241,
++                -4.912,
++                -23.4333
++              ],
++              "rear_lower_l": [
++                -25.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                -25.0,
++                0.0,
++                0.0
++              ]
++            },
++            "pivot_roll_deg": 0,
++            "pivot_rotation_deg": [
++              0.0,
++              0.0,
++              90.0
++            ]
++          },
++          {
++            "phase": 0.875,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                39.7606,
++                43.8879,
++                -62.5384
++              ],
++              "head": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                18.6713,
++                16.6498,
++                -58.519
++              ],
++              "front_lower_l": [
++                25.0,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                25.0,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -1.0241,
++                -4.912,
++                -23.4333
++              ],
++              "rear_lower_l": [
++                -25.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                -25.0,
++                0.0,
++                0.0
++              ]
++            },
++            "pivot_roll_deg": 0,
++            "pivot_rotation_deg": [
++              0.0,
++              0.0,
++              90.0
++            ]
++          },
++          {
++            "phase": 1.0,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                39.7606,
++                43.8879,
++                -62.5384
++              ],
++              "head": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                18.6713,
++                16.6498,
++                -58.519
++              ],
++              "front_lower_l": [
++                25.0,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                25.0,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -1.0241,
++                -4.912,
++                -23.4333
++              ],
++              "rear_lower_l": [
++                -25.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                -25.0,
++                0.0,
++                0.0
++              ]
++            },
++            "pivot_roll_deg": 0,
++            "pivot_rotation_deg": [
++              0.0,
++              0.0,
++              90.0
++            ]
++          }
++        ]
++      },
++      "rest": {
++        "duration_s": 1.8,
++        "loop": false,
++        "frames": [
++          {
++            "phase": 0.0,
++            "pivot_roll_deg": -0.0,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "head": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                -0.0,
++                0.0,
++                0.0
++              ],
++              "front_lower_l": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -0.0,
++                0.0,
++                0.0
++              ],
++              "rear_lower_l": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                0.0,
++                0.0,
++                0.0
++              ]
++            }
++          },
++          {
++            "phase": 0.06,
++            "pivot_roll_deg": -10.399999999999999,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                2.8,
++                0.0,
++                0.0
++              ],
++              "head": [
++                3.9999999999999996,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                -4.8,
++                0.0,
++                0.0
++              ],
++              "front_lower_l": [
++                7.6,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                2.4,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                11.2,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -4.8,
++                0.0,
++                0.0
++              ],
++              "rear_lower_l": [
++                7.6,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                2.4,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                11.2,
++                0.0,
++                0.0
++              ]
++            }
++          },
++          {
++            "phase": 0.08,
++            "pivot_roll_deg": -13.866666666666667,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                3.7333333333333334,
++                0.0,
++                0.0
++              ],
++              "head": [
++                5.333333333333333,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                -6.4,
++                0.0,
++                0.0
++              ],
++              "front_lower_l": [
++                10.133333333333333,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                3.2,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                14.933333333333334,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -6.4,
++                0.0,
++                0.0
++              ],
++              "rear_lower_l": [
++                10.133333333333333,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                3.2,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                14.933333333333334,
++                0.0,
++                0.0
++              ]
++            }
++          },
++          {
++            "phase": 0.14,
++            "pivot_roll_deg": -24.266666666666666,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                6.533333333333332,
++                0.0,
++                0.0
++              ],
++              "head": [
++                9.333333333333332,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                -11.2,
++                0.0,
++                0.0
++              ],
++              "front_lower_l": [
++                17.73333333333333,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                5.6,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                26.13333333333333,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -11.2,
++                0.0,
++                0.0
++              ],
++              "rear_lower_l": [
++                17.73333333333333,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                5.6,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                26.13333333333333,
++                0.0,
++                0.0
++              ]
++            }
++          },
++          {
++            "phase": 0.24,
++            "pivot_roll_deg": -41.599999999999994,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                11.2,
++                0.0,
++                0.0
++              ],
++              "head": [
++                15.999999999999998,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                -19.2,
++                0.0,
++                0.0
++              ],
++              "front_lower_l": [
++                30.4,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                9.6,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                44.8,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -19.2,
++                0.0,
++                0.0
++              ],
++              "rear_lower_l": [
++                30.4,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                9.6,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                44.8,
++                0.0,
++                0.0
++              ]
++            }
++          },
++          {
++            "phase": 0.3,
++            "pivot_roll_deg": -52,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                14,
++                0.0,
++                0.0
++              ],
++              "head": [
++                20,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                -24,
++                0.0,
++                0.0
++              ],
++              "front_lower_l": [
++                38,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                12,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                56,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -24,
++                0.0,
++                0.0
++              ],
++              "rear_lower_l": [
++                38,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                12,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                56,
++                0.0,
++                0.0
++              ]
++            }
++          },
++          {
++            "phase": 0.4,
++            "pivot_roll_deg": -52,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                14,
++                0.0,
++                0.0
++              ],
++              "head": [
++                20,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                -24,
++                0.0,
++                0.0
++              ],
++              "front_lower_l": [
++                38,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                12,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                56,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -24,
++                0.0,
++                0.0
++              ],
++              "rear_lower_l": [
++                38,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                12,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                56,
++                0.0,
++                0.0
++              ]
++            }
++          },
++          {
++            "phase": 1.0,
++            "pivot_roll_deg": -52,
++            "bones": {
++              "root": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "pelvis": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "spine": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "neck": [
++                14,
++                0.0,
++                0.0
++              ],
++              "head": [
++                20,
++                0.0,
++                0.0
++              ],
++              "front_upper_l": [
++                -24,
++                0.0,
++                0.0
++              ],
++              "front_lower_l": [
++                38,
++                0.0,
++                0.0
++              ],
++              "front_upper_r": [
++                12,
++                0.0,
++                0.0
++              ],
++              "front_lower_r": [
++                56,
++                0.0,
++                0.0
++              ],
++              "tail_1": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "tail_2": [
++                0.0,
++                0.0,
++                0.0
++              ],
++              "rear_upper_l": [
++                -24,
++                0.0,
++                0.0
++              ],
++              "rear_lower_l": [
++                38,
++                0.0,
++                0.0
++              ],
++              "rear_upper_r": [
++                12,
++                0.0,
++                0.0
++              ],
++              "rear_lower_r": [
++                56,
++                0.0,
++                0.0
++              ]
++            }
++          }
++        ]
++      }
++    }
++  },
++  "_comment_riptusk_v1": "Riptusk v1 (31 Oct): faint = bramblebun_quadruped_anatomical's faint verbatim (identical quadruped rig contract, rig-diff 0.0; ends lying on its side, pivot [0,0,90], legs slack); rest = stormursa_native_adult's rest (rig-diff 0.2; a settled half-lean, pivot roll -52, legs folded, head lowered), retimed to settle by phase 0.4 and hold. Replaces the upright head-raised crouch (P2-028) and the legacy belly-up rest roll (P2-029)."
+ }
+-- 
+2.55.0.windows.5
+
