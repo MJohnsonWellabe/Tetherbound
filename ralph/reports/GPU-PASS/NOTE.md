@@ -175,15 +175,18 @@ The per-item scores showed shared causes. The plan, in order: dialogue and catch
 3. **P2-095 close-out (Meadows craft recipe text, 7.53 on the default renderer).**
    - **Capture:** P2-095's job.json frames on main at Medium and High.
    - **Report:** the one-sided yardstick score per preset. 7.5 or above on both closes F38#18.
-4. **DIAG-DLG: dialogue camera diagnosis. No judging; JSON only.**
-   - **Capture:** re-run `tools/phase2_capture_dialogue.gd` on main for the dialogue frames of P2-083, P2-074, P2-073, P2-075, P2-079, P2-078, P2-087, P2-086, P2-076, P2-077, P2-081 and P2-084 (repro commands in job.json).
-   - **Push:** each run's `manifest.json` to tb/gpu-pass under `ralph/reports/VISUAL/item-scores/diag-dialogue/<biome>/`, plus one contact sheet.
-   - **Why:** each record carries `conversation_camera_active`, `conversation_camera_fallback`, `conversation_camera_blend`, `conversation_camera_shot` and `camera_player_distance_m`. They separate two failures:
-     - the push-in never fired: the camera stays behind the player's back with no speaker in view;
-     - the push-in fired but was blocked: the camera is inside rock, or a creature or the player fills the frame.
-   - **If you can:** add a local, uncommitted print of the node `conversation_camera.gd::current_speaker()` returns and of the arbiter's `winning_provider()` at `begin()`, and paste those lines into a `speakers.txt` beside each manifest.
-   - The camera fix is written from this data, then comes back to you as an arm.
-5. **CR-BUG: Cloudreach arrival-gate candy (gameplay bug, for the fix arm later).** No capture now. When the fix arm arrives, re-run the c026 and c034 catch commands; P2-117 and P2-118 get their frames back.
+4. **DLG-1: dialogue camera arm, with its diagnosis (P2-083, P2-074, P2-073, P2-075, P2-079, P2-078, P2-087, P2-086, P2-076, P2-077, P2-081, P2-084).**
+   - **Arms:** control `tb/dialogue-cam` 57c9418e8 vs candidate `tb/dialogue-cam-on` 8486a5363. The control is main plus the new code with its flags OFF, so it renders as main. The candidate turns ON `camera.json` `conversation.sight_search_short_arm` and `conversation.speaker_frame_candidate_enabled`:
+     - a blocked shot in a rock-ringed post may take a shorter arm that sees the speaker;
+     - the speaker must also be inside the frame, not just unblocked.
+   - **Capture:** `tools/phase2_capture_dialogue.gd`, the dialogue frames of the 12 items above (repro commands in job.json), both arms, Medium and High.
+   - **Report:**
+     - the mapped score per item per preset, and the defect call;
+     - any frame where the candidate is worse;
+     - the overall dialogue mean, before vs after.
+   - **Push:** each capture's `manifest.json` (both arms) to `ralph/reports/VISUAL/item-scores/diag-dialogue/<biome>/{control,candidate}/`. Their `conversation_camera_*` fields separate "push-in never fired" from "push-in fired but blocked"; frames that stay bad on the candidate are diagnosed from them.
+   - **If you can:** a local, uncommitted print at `conversation_camera.gd::begin()` of the speaker node and the arbiter's `winning_provider()`, saved as `speakers.txt` beside each manifest.
+5. **CR-CANDY (capture only, no arm).** The c026/c034 catch commands stand nearer the candy than the wild pair, so the pickup wins the offer. In play the candy is one press, then the fight. If you re-run Cloudreach catch frames, start them after taking that candy.
 
 ## GPU LANE: ITEM SCORES DONE (28 Oct, ~01:40 CDT). The lane is idle; no GPU process is running.
 
