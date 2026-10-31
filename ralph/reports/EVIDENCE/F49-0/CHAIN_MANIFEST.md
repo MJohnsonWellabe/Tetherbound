@@ -3,7 +3,7 @@ Every piece must load its predecessor's saved end state; source changes alone do
 No recorded chain save has cooked a feast; empty feast_recipes and generated caught_tiers are not earned Master/feast proof.
 | Seam/piece | Input and actual status |
 |---|---|
-| Meadows opening_team → camp → bridge | Historical ordinary-input PASS receipts, cap10; Fights marks clean-tree bridge proof VOID (commit during run). Replay opening→camp→bridge2/2 on one source before earned acceptance; Systems Warrens gameplay PASS does not close supervisor diagnostics/P0. |
+| Meadows opening_team → camp → bridge | Historical ordinary-input PASS receipts opening_team/camp (eb8180ed) kept (owner 31 Oct: no reproving). Bridge re-proven 31 Oct on 818d2b5c from the committed camp save (pinned start, trained profile): PASS 3000 s, seam MATCH, `tests/fixtures/earned_saves/f49_mt_bridge` (tb/routes-meadows, `ralph/reports/ROUTES/meadows-1031/`). Systems Warrens gameplay PASS does not close supervisor diagnostics/P0. |
 | Meadows relay/hall profiles | Generated boundaries; later wins do not prove bridge → Warrens → relay → sigils → Hald → Field → Warden continuity. |
 | Tidewake 01 | Historical tidewake_arrival_generated L20/[1] remains unearned. Adapter verifies complete Meadows prefix, save hashes and loaded state; cross-cut input requires full reviewed manifest via --compatibility-manifests. Native seam pending. |
 | Tidewake 02–05 | Matching previous pieces, earned on generated arrival. |
