@@ -165,6 +165,22 @@ Earlier on 26-27 Oct, all pushed (see each row's VERDICT.md):
 - **Overnight.** The owner leaves this machine on, so keep the queue running unattended through the night. Pick up the next job as each one ends, and push each verdict as it lands.
 - **Flag flips on one import.** When several arms differ only by data/config JSON, check out one tree that holds all their code (flags off), import it once, and flip one flag per capture. Record the flip in each verdict.
 
+## OWNER DIRECTION (31 Oct, lane progress rules; docs/CRITERION_DELIVERY.md): THIS MACHINE JUDGES
+
+- **Moved to CPU lanes; drop them from this queue:**
+  - POSE-1 goes to the creatures lane. If you have local POSE-1 work (the flag hook, Riptusk's first-pass faint and rest), push it to `tb/pose-ground` so that lane can continue from it.
+  - HERO-1 (Stormheart) goes to the world lane.
+  - HERO-2 (Sky Aviary) goes to the Cloudreach lane.
+  - HERO-3 (Veilfall) goes to the Tidewake lane.
+- **Stays hands-on here:** HALL-1, because its light-shaft defect only shows on Forward+. It runs last, after every queued judging job.
+- **Order:**
+  1. finish DLG-1, UI-1, UI-R2, CRAFT-R3b and Tanglevolt at Medium;
+  2. the creatures one-tree (job 16);
+  3. WD2 (job 17);
+  4. TW-LOOK-1 (job 18);
+  5. any new lane arms I merge;
+  6. HALL-1.
+
 ## LANE ARMS (coordinator, 31 Oct 21:45 UTC): run these after CRAFT-R3b and Tanglevolt at Medium, BEFORE the hands-on jobs (POSE-1, HERO-1..3, HALL-1). Each has a CPU gain worth confirming. Full requests are in each lane branch's NOTE.md, at the SHAs below.
 
 16. **CREATURES ONE-TREE: every creatures-lane flag arm, CO-F36-1 to CO-F36-9.** This replaces the CO-F36-1/2 entry below.
