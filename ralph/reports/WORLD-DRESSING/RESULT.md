@@ -3,6 +3,7 @@
 Lane: tb/world-dressing (coordinator start, 31 Oct 2026). Scene dressing from installed asset families and the coordinator's Meshy batch (tb/props-r2 31592e46, a2f81b50), every change behind a flag-off key.
 
 ## Setup
+- Harness lessons: (1) run `godot --headless --check-only --script <file>` on every changed script before a capture (an r3 `floor()` type-inference error broke the arch runtime for one boot); (2) a landmark row with no authored heading takes `_route_forward(destination_index)`, and that index counts only the landmarks matched in the boot, so a landmark A/B must use the identical `--subset` list on both arms (b1/b2 P2-041 did not; see the NOTE correction).
 - Container: 19 GB free. Godot 4.7-stable installed from the CI URL; first `--import` about 2 h on this container.
 - Captures: CPU llvmpipe, Compatibility, 1280x720, the job.json repro tools with their own arguments (one boot per biome per tool, several `--subset`s). Baselines run on this branch with every new flag OFF (same behaviour as main d4d5b262).
 - Harness notes (added to the runbook list on landing): `phase2_capture_tidewake_camps.gd` and `phase2_capture_cloudreach_high_perch.gd` refuse output outside `ralph/reports/VISUAL/phase2/<biome>/`; stage there and move to `.artifacts/`. `pkill -f <pattern>` from a shell containing the pattern kills the shell (exit 144), as TECHNICAL 8.1 warns.

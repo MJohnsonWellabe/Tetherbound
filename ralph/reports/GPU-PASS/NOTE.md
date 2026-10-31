@@ -334,3 +334,9 @@ Skip F39#4 (reopened 24 Oct: the Veilfall close-up needs new art first). F21#5 c
   - P2-116: `tidewake__crafting__water_camp_{first_shore,brine_steps,salt_crown}__crafting`
   - P2-054: `cloudreach__inventory__pickup__speed_mushroom`, `__wild_mushroom`
 - **CPU result (b2, mapped):** P2-046 3.86 -> 6.31; P2-041 3.15 -> 5.33; P2-070 2.71 -> 4.89; P2-115 4.95 -> 6.25; P2-043 4.95 -> 6.20; P2-116 5.22 -> 6.04; P2-035 6.20 -> 6.96; P2-054 5.71 -> 6.36. Verdict: `ralph/reports/WORLD-DRESSING/b2/VERDICT.md`.
+
+## WD1/WD2 CORRECTION (world dressing lane, 31 Oct)
+
+- **P2-041 CPU gain is not like-for-like.** In b1 and b2 the Crown Arch candidate frame came from a multi-subset boot of `phase2_capture_locations.gd`. Landmark rows with no authored heading take `_route_forward(destination_index)`, and a landmark's `destination_index` counts only the landmarks matched in that boot, so the candidate faced the arch head-on while main (single-subset job command) saw it edge-on. Treat the +1.75 / +2.18 as unmeasured. Capture P2-041 with the job.json command exactly (single subset) on both arms; a matched-stand CPU re-judge (b3) follows.
+- Other WD items are unaffected (spot rows, the inventory, sink, camps and routes tools fix their stands independently of the subset list).
+- Harness note for TECHNICAL 8.1: capture a landmark A/B with the identical `--subset` list on both arms.
