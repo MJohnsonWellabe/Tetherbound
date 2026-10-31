@@ -1147,8 +1147,8 @@
       "id": "beach_first_shore_01_0",
       "_where": "first_shore__01__first_shore_welcome_beacon",
       "position_xz_m": [
-        25.53,
-        88.65
+        31.06,
+        91.42
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_bar/beach_bar.glb",
       "height_m": 4.4,
@@ -1171,11 +1171,20 @@
       "grass_clear_m": 7
     },
     {
+      "id": "beach_first_shore_01_approach_plaza",
+      "_where": "first_shore__01__first_shore_welcome_beacon approach foreground (clearing only)",
+      "position_xz_m": [
+        59.13,
+        103.35
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_first_shore_02_0",
       "_where": "first_shore__02__first_shore_horizon_stones",
       "position_xz_m": [
-        -55.27,
-        89.62
+        -57.45,
+        82.68
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
       "height_m": 5.6,
@@ -1198,11 +1207,20 @@
       "grass_clear_m": 8
     },
     {
+      "id": "beach_first_shore_02_approach_plaza",
+      "_where": "first_shore__02__first_shore_horizon_stones approach foreground (clearing only)",
+      "position_xz_m": [
+        -64.27,
+        51.85
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_reedhaven_03_0",
       "_where": "reedhaven__03__reedhaven_woven_hall",
       "position_xz_m": [
-        -43.47,
-        437.52
+        -46.63,
+        437.41
       ],
       "model": "res://assets/props/meshy-1031/tidewake/market_stall/market_stall.glb",
       "height_m": 3.4,
@@ -1225,11 +1243,20 @@
       "grass_clear_m": 8
     },
     {
+      "id": "beach_reedhaven_03_approach_plaza",
+      "_where": "reedhaven__03__reedhaven_woven_hall approach foreground (clearing only)",
+      "position_xz_m": [
+        -76.49,
+        431.62
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_reedhaven_04_0",
       "_where": "reedhaven__04__reedhaven_root_walk",
       "position_xz_m": [
-        102.62,
-        512.21
+        99.01,
+        505.88
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
       "height_m": 5.6,
@@ -1252,15 +1279,24 @@
       "grass_clear_m": 7
     },
     {
+      "id": "beach_reedhaven_04_approach_plaza",
+      "_where": "reedhaven__04__reedhaven_root_walk approach foreground (clearing only)",
+      "position_xz_m": [
+        81.05,
+        479.92
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_brine_steps_05_0",
       "_where": "brine_steps__05__the_tidal_stairstones",
       "position_xz_m": [
-        328.97,
-        737.08
+        338.26,
+        726.7
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
       "height_m": 5.6,
-      "yaw_deg": -127.9,
+      "yaw_deg": -177.9,
       "sink_m": 0.25,
       "collider_fraction": [
         0.55,
@@ -1279,6 +1315,15 @@
       "grass_clear_m": 7
     },
     {
+      "id": "beach_brine_steps_05_approach_plaza",
+      "_where": "brine_steps__05__the_tidal_stairstones approach foreground (clearing only)",
+      "position_xz_m": [
+        318.78,
+        701.85
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_brine_steps_06_plaza",
       "_where": "brine_steps__06__brine_steps_east_beach (clearing only)",
       "position_xz_m": [
@@ -1288,11 +1333,20 @@
       "grass_clear_m": 6
     },
     {
+      "id": "beach_brine_steps_06_approach_plaza",
+      "_where": "brine_steps__06__brine_steps_east_beach approach foreground (clearing only)",
+      "position_xz_m": [
+        396.59,
+        807.98
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_shellwatch_07_0",
       "_where": "shellwatch__07__shellwatch_rescue_jetty",
       "position_xz_m": [
-        268.23,
-        1020.19
+        266.16,
+        1015.53
       ],
       "model": "res://assets/props/meshy-1031/tidewake/fishing_shack/fishing_shack.glb",
       "height_m": 4.6,
@@ -1315,6 +1369,15 @@
       "grass_clear_m": 8
     },
     {
+      "id": "beach_shellwatch_07_approach_plaza",
+      "_where": "shellwatch__07__shellwatch_rescue_jetty approach foreground (clearing only)",
+      "position_xz_m": [
+        253.13,
+        986.77
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_shellwatch_08_plaza",
       "_where": "shellwatch__08__shellwatch_cradle_beach (clearing only)",
       "position_xz_m": [
@@ -1324,11 +1387,20 @@
       "grass_clear_m": 6
     },
     {
+      "id": "beach_shellwatch_08_approach_plaza",
+      "_where": "shellwatch__08__shellwatch_cradle_beach approach foreground (clearing only)",
+      "position_xz_m": [
+        418.82,
+        1230.4
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_tidal_cradle_09_0",
       "_where": "tidal_cradle__09__aquaryn_tidal_basin",
       "position_xz_m": [
-        606.1,
-        1402.57
+        602.96,
+        1398.55
       ],
       "model": "res://assets/props/meshy-1031/tidewake/lookout_tower/lookout_tower.glb",
       "height_m": 9.0,
@@ -1351,11 +1423,20 @@
       "grass_clear_m": 8
     },
     {
+      "id": "beach_tidal_cradle_09_approach_plaza",
+      "_where": "tidal_cradle__09__aquaryn_tidal_basin approach foreground (clearing only)",
+      "position_xz_m": [
+        583.39,
+        1373.77
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_tidal_cradle_10_0",
       "_where": "tidal_cradle__10__tidal_cradle_saddle_camp",
       "position_xz_m": [
-        828.26,
-        1600.49
+        833.3,
+        1596.91
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
       "height_m": 5.6,
@@ -1378,15 +1459,24 @@
       "grass_clear_m": 7
     },
     {
+      "id": "beach_tidal_cradle_10_approach_plaza",
+      "_where": "tidal_cradle__10__tidal_cradle_saddle_camp approach foreground (clearing only)",
+      "position_xz_m": [
+        856.99,
+        1577.7
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_salt_crown_11_0",
       "_where": "salt_crown__11__salt_crown_tide_shrine",
       "position_xz_m": [
-        212.11,
-        2317.85
+        219.1,
+        2330.86
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
       "height_m": 5.6,
-      "yaw_deg": -62.8,
+      "yaw_deg": -12.8,
       "sink_m": 0.25,
       "collider_fraction": [
         0.55,
@@ -1405,11 +1495,20 @@
       "grass_clear_m": 7
     },
     {
+      "id": "beach_salt_crown_11_approach_plaza",
+      "_where": "salt_crown__11__salt_crown_tide_shrine approach foreground (clearing only)",
+      "position_xz_m": [
+        196.37,
+        2351.19
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_salt_crown_12_0",
       "_where": "salt_crown__12__salt_crown_return_bell",
       "position_xz_m": [
-        295.14,
-        2241.6
+        292.39,
+        2237.3
       ],
       "model": "res://assets/props/meshy-1031/tidewake/lookout_tower/lookout_tower.glb",
       "height_m": 9.0,
@@ -1432,11 +1531,20 @@
       "grass_clear_m": 8
     },
     {
+      "id": "beach_salt_crown_12_approach_plaza",
+      "_where": "salt_crown__12__salt_crown_return_bell approach foreground (clearing only)",
+      "position_xz_m": [
+        275.2,
+        2210.82
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_sluice_isle_13_0",
       "_where": "sluice_isle__13__sluice_isle_twin_pumps",
       "position_xz_m": [
-        909.06,
-        2878.43
+        908.68,
+        2873.06
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
       "height_m": 5.6,
@@ -1459,11 +1567,20 @@
       "grass_clear_m": 8
     },
     {
+      "id": "beach_sluice_isle_13_approach_plaza",
+      "_where": "sluice_isle__13__sluice_isle_twin_pumps approach foreground (clearing only)",
+      "position_xz_m": [
+        912.41,
+        2841.7
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_sluice_isle_14_0",
       "_where": "sluice_isle__14__sluice_channel_bridge",
       "position_xz_m": [
-        809.33,
-        3136.53
+        812.34,
+        3133.7
       ],
       "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
       "height_m": 3.0,
@@ -1486,11 +1603,20 @@
       "grass_clear_m": 8
     },
     {
+      "id": "beach_sluice_isle_14_approach_plaza",
+      "_where": "sluice_isle__14__sluice_channel_bridge approach foreground (clearing only)",
+      "position_xz_m": [
+        832.76,
+        3111.16
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_lantern_cove_17_0",
       "_where": "lantern_cove__17__lantern_cove_drift_arch",
       "position_xz_m": [
-        -293.91,
-        179.55
+        -294.49,
+        183.63
       ],
       "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
       "height_m": 3.0,
@@ -1513,11 +1639,20 @@
       "grass_clear_m": 8
     },
     {
+      "id": "beach_lantern_cove_17_approach_plaza",
+      "_where": "lantern_cove__17__lantern_cove_drift_arch approach foreground (clearing only)",
+      "position_xz_m": [
+        -301.14,
+        213.31
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_lantern_cove_18_0",
       "_where": "lantern_cove__18__lantern_cove_beach",
       "position_xz_m": [
-        -271.09,
-        143.15
+        -271.11,
+        136.97
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_bar/beach_bar.glb",
       "height_m": 4.4,
@@ -1540,15 +1675,24 @@
       "grass_clear_m": 7
     },
     {
+      "id": "beach_lantern_cove_18_approach_plaza",
+      "_where": "lantern_cove__18__lantern_cove_beach approach foreground (clearing only)",
+      "position_xz_m": [
+        -273.13,
+        106.54
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_gull_rest_19_0",
       "_where": "gull_rest__19__gull_rest_signal_spire",
       "position_xz_m": [
-        -63.99,
-        888.99
+        -78.42,
+        890.98
       ],
       "model": "res://assets/props/meshy-1031/tidewake/lookout_tower/lookout_tower.glb",
       "height_m": 9.0,
-      "yaw_deg": 16.9,
+      "yaw_deg": -33.1,
       "sink_m": 0.25,
       "collider_fraction": [
         0.35,
@@ -1567,11 +1711,20 @@
       "grass_clear_m": 8
     },
     {
+      "id": "beach_gull_rest_19_approach_plaza",
+      "_where": "gull_rest__19__gull_rest_signal_spire approach foreground (clearing only)",
+      "position_xz_m": [
+        -76.0,
+        923.65
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_gull_rest_20_0",
       "_where": "gull_rest__20__gull_rest_beach",
       "position_xz_m": [
-        -54.71,
-        802.8
+        -57.32,
+        797.19
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
       "height_m": 5.6,
@@ -1588,8 +1741,8 @@
       "id": "beach_gull_rest_20_1",
       "_where": "gull_rest__20__gull_rest_beach",
       "position_xz_m": [
-        -57.0,
-        811.09
+        -60.15,
+        807.2
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
       "height_m": 5.04,
@@ -1612,15 +1765,24 @@
       "grass_clear_m": 6
     },
     {
+      "id": "beach_gull_rest_20_approach_plaza",
+      "_where": "gull_rest__20__gull_rest_beach approach foreground (clearing only)",
+      "position_xz_m": [
+        -71.94,
+        770.42
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_drowned_garden_21_0",
       "_where": "drowned_garden__21__drowned_garden_terraces",
       "position_xz_m": [
-        1098.84,
-        2236.14
+        1098.66,
+        2221.38
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
       "height_m": 5.6,
-      "yaw_deg": 94.0,
+      "yaw_deg": 144.0,
       "sink_m": 0.25,
       "collider_fraction": [
         0.55,
@@ -1639,11 +1801,20 @@
       "grass_clear_m": 7
     },
     {
+      "id": "beach_drowned_garden_21_approach_plaza",
+      "_where": "drowned_garden__21__drowned_garden_terraces approach foreground (clearing only)",
+      "position_xz_m": [
+        1126.45,
+        2211.7
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_drowned_garden_22_0",
       "_where": "drowned_garden__22__drowned_garden_beach",
       "position_xz_m": [
-        1053.74,
-        2262.56
+        1054.06,
+        2256.39
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
       "height_m": 5.6,
@@ -1660,8 +1831,8 @@
       "id": "beach_drowned_garden_22_1",
       "_where": "drowned_garden__22__drowned_garden_beach",
       "position_xz_m": [
-        1047.82,
-        2268.81
+        1046.87,
+        2263.9
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
       "height_m": 5.04,
@@ -1684,22 +1855,31 @@
       "grass_clear_m": 6
     },
     {
+      "id": "beach_drowned_garden_22_approach_plaza",
+      "_where": "drowned_garden__22__drowned_garden_beach approach foreground (clearing only)",
+      "position_xz_m": [
+        1053.73,
+        2225.89
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_deep_watch_23_0",
       "_where": "deep_watch__23__deep_watch_lookout",
       "position_xz_m": [
-        1301.38,
-        3476.18
+        1292.5,
+        3486.83
       ],
-      "model": "res://assets/props/meshy-1031/tidewake/lookout_tower/lookout_tower.glb",
-      "height_m": 9.0,
-      "yaw_deg": 49.6,
+      "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
+      "height_m": 5.6,
+      "yaw_deg": -0.4,
       "sink_m": 0.25,
       "collider_fraction": [
-        0.35,
+        0.55,
         1.0,
-        0.35
+        0.55
       ],
-      "grass_clear_m": 4.5
+      "grass_clear_m": 5.0
     },
     {
       "id": "beach_deep_watch_23_plaza",
@@ -1711,11 +1891,20 @@
       "grass_clear_m": 7
     },
     {
+      "id": "beach_deep_watch_23_approach_plaza",
+      "_where": "deep_watch__23__deep_watch_lookout approach foreground (clearing only)",
+      "position_xz_m": [
+        1309.97,
+        3511.83
+      ],
+      "grass_clear_m": 9.0
+    },
+    {
       "id": "beach_deep_watch_24_0",
       "_where": "deep_watch__24__deep_watch_beach",
       "position_xz_m": [
-        1261.7,
-        3389.32
+        1262.87,
+        3394.28
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
       "height_m": 5.6,
@@ -1732,8 +1921,8 @@
       "id": "beach_deep_watch_24_1",
       "_where": "deep_watch__24__deep_watch_beach",
       "position_xz_m": [
-        1250.21,
-        3397.87
+        1252.37,
+        3400.18
       ],
       "model": "res://assets/props/meshy-1031/tidewake/canoe_rack/canoe_rack.glb",
       "height_m": 3.0,
@@ -1754,6 +1943,15 @@
         3401.32
       ],
       "grass_clear_m": 6
+    },
+    {
+      "id": "beach_deep_watch_24_approach_plaza",
+      "_where": "deep_watch__24__deep_watch_beach approach foreground (clearing only)",
+      "position_xz_m": [
+        1270.29,
+        3424.97
+      ],
+      "grass_clear_m": 9.0
     }
   ],
   "_why_beach_declutter_candidate": "OFF in play (Tidewake look lane, owner 31 Oct 2026: 'too cluttered'). The inhabited-dock hamlets (Brine Steps east, Shellwatch cradle and the other mandatory landings) keep two Meshy 1031 beach huts on the hamlet's own spots instead of the mixed cottage and fisher-hut set, and only the dock shelter, net rack, one lamp torch and the lobster pots of their prop scatter (the pebbles, rocks, grass clumps, buckets, ropes, crates, benches and banners go). The pier deck keeps its bollards, one fish-crate stack and the lantern post. Dock residents, actions, barriers and colliders are untouched; huts keep a box collider. drop_landmark_props names landmark props to drop by id.",
