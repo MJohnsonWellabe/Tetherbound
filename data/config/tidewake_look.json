@@ -1471,12 +1471,12 @@
       "id": "beach_salt_crown_11_0",
       "_where": "salt_crown__11__salt_crown_tide_shrine",
       "position_xz_m": [
-        219.1,
-        2330.86
+        208.0,
+        2324.78
       ],
       "model": "res://assets/props/meshy-1031/tidewake/beach_hut/beach_hut.glb",
       "height_m": 5.6,
-      "yaw_deg": -12.8,
+      "yaw_deg": -62.8,
       "sink_m": 0.25,
       "collider_fraction": [
         0.55,
