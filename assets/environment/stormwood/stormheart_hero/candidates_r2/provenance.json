@@ -1,0 +1,41 @@
+{
+ "asset": "Stormheart hero tree, round 2 (P2-037, F41#1; Stormwood item score 4.41)",
+ "status": "CANDIDATES_FLAG_OFF: not wired; GPU lane places, scale-checks and judges",
+ "date": "2026-10-31",
+ "license": "Existing Meshy account (owner Standing direction 1, 15 Oct 2026); no purchase",
+ "reference": {
+  "source": "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png (owner art board)",
+  "crops": {
+   "ref_front.jpg": "FRONT VIEW panel, board px (633,106)-(840,272), 4x Lanczos",
+   "ref_side.jpg": "SIDE VIEW panel, board px (855,106)-(1063,272), 4x Lanczos"
+  },
+  "inspected_before_submission": true
+ },
+ "endpoint": "/openapi/v1/multi-image-to-3d",
+ "settings": {
+  "mode": "refine",
+  "prompt": "a colossal ancient living tree split down the middle into two massive gnarled trunks, deep furrowed bark, thick branching limbs, dense irregular rounded leaf canopy clusters, wooden platforms and rope walkways wrapped around the trunks, arched doorway at the base",
+  "negative_prompt": "flat leaf planes, paper sheets, torn plates, spiky shards, ground slab, mountains, background, low detail",
+  "should_remesh": true,
+  "should_texture": true,
+  "topology": "quad",
+  "target_polycount": 80000,
+  "symmetry_mode": "off"
+ },
+ "tasks": [
+  {
+   "candidate": "a",
+   "task_id": "01a1928c-1978-714f-aea6-8643297db0d5",
+   "file": "stormheart_a.glb",
+   "sha256": "3fb8851b5eedcec2ad24c5a64ece6b3cb41ee37e0fb82bdb9555752316582ec5"
+  },
+  {
+   "candidate": "b",
+   "task_id": "01a1928c-1f9b-73f9-9dcc-0a9db1414ce1",
+   "file": "stormheart_b.glb",
+   "sha256": "f36cf45fdd722a1bf06f02a152a7c8efda8390734994cb858af5b38ccacbe5dd"
+  }
+ ],
+ "first_look": "Volumetric rounded canopy clusters, split twin trunk, platforms and walkways (the round-1 defects were torn-sheet crown and stretched bark). Both carry baked base clutter from the board background (a: pines; b: rock mound) to trim; texture reads muted grey-green in Meshy's thumbnail light.",
+ "integration_notes": "The in-game tree keeps its hollow interior ascent, decks, rails, collision and entrance split. The candidate is exterior presentation only (distance silhouette and outer shell), reusing stormheart_hero.tscn/.gd and the bark/leaf shaders. Behind a flag, off until a GPU before/after passes P2-037."
+}
