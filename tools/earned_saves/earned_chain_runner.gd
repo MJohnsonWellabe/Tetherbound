@@ -847,9 +847,8 @@ func _generate_boundary_fixture() -> bool:
 	# receipts or previous PASS evidence for a generated chapter input.
 	# Independent Master boundaries: tier -> exactly the prior tiers' wins/recipes.
 	# tidewake_late_independent follows Tidewake's T3 loop: prior wins t1-t3.
-	# cloudreach_t4_arrival is the Cloudreach arrival a T1-T3-trained player reaches: prior wins t1-t3.
 	var prior_tier: int = {"meadows_t2_independent": 2, "tidewake_t3_ione_independent": 3, "tidewake_late_independent": 4,
-		"cloudreach_t4_aster_independent": 4, "cloudreach_t4_arrival": 4, "stormwood_t5_rowan_independent": 5}.get(segment, 0)
+		"cloudreach_t4_aster_independent": 4, "stormwood_t5_rowan_independent": 5}.get(segment, 0)
 	var prior_t3_setup := prior_tier > 0
 	var prior_wins: Array = []
 	var prior_recipes: Array = []
