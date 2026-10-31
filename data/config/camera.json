@@ -33,8 +33,8 @@
     "_why_require_speaker_sight": "F41 P2-083 (Stormwood dialogue frames: overhead geometry or the trainer hid the named speaker; Tamsin's challenge fell back to the 2.1 m shot with the lens inside dark geometry). A conversation shot whose line to the speaker is blocked swings round the pivot to the nearest reachable angle that sees them, the same tested search the aftermath profile already uses (camera_rig.gd _swing_for_sight). It acts only when the speaker is blocked.",
     "speaker_sight_meshes": true,
     "_why_speaker_sight_meshes": "F41 P2-083: the sight check above sweeps only what the camera arm collides with, and creatures are pass-through while the Team Tether banner has no collider, so a companion's flank or Marrow's banner filled the lens and still read as clear. With this on, a visible mesh other than the speaker's or the player's crossing the lens-to-speaker line also counts as blocked (camera_rig.gd `_speaker_hidden_by_meshes`).",
-    "sight_search_short_arm": false,
-    "speaker_frame_candidate_enabled": false,
+    "sight_search_short_arm": true,
+    "speaker_frame_candidate_enabled": true,
     "_why_sight_search_short_arm": "F38-F41 item scores (GPU 28 Oct): Marrow's banner and Nerissa's rock face filled the dialogue lens. Rock rings those posts, so the only swing with room for the full arm was the blocked one, and the sight search turned every other swing down. When on, a swing with room for at least min_distance is tried on the arm its own room allows (camera_rig.gd `_swing_for_sight`). Candidate: OFF until the GPU dialogue arm passes.",
     "_why_speaker_frame_candidate_enabled": "Same arm: the sight check passes a shot whose speaker stands outside the frame (several item-score frames showed only the player's back). When on, the search also requires the speaker's anchor inside an 82% safe area (camera_rig.gd `_speaker_in_frame`). Candidate: OFF until the GPU dialogue arm passes.",
 
