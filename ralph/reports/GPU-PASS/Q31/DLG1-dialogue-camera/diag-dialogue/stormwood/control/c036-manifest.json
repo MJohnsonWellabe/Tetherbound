@@ -1,0 +1,1181 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "stormwood",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 491605985515,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 9000.0,
+		"fov": 70.0,
+		"instance_id": 491622762734,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-31T21:26:33",
+	"capture_started_utc": "2026-10-31T21:24:10",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "captain_marrow",
+			"authored_source": "data/config/stormwood_npcs.json",
+			"band_display_name": "",
+			"band_id": "dynamo",
+			"biome_display_name": "Stormwood",
+			"biome_id": "stormwood",
+			"bytes": 450330,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76749229431152,
+			"camera_position": [
+				-89.0,
+				115.607749938965,
+				5457.12109375
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					1.0,
+					0.0,
+					0.000000000000000122460622147348
+				],
+				"basis_y": [
+					0.0000000000000000212650334560601,
+					0.984806180000305,
+					-0.173647925257683
+				],
+				"basis_z": [
+					-0.000000000000000120599981929806,
+					0.173647925257683,
+					0.984806180000305
+				],
+				"origin": [
+					-89.0,
+					114.704750061035,
+					5452.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					1.0,
+					0.000000000000000000000006139168,
+					0.000000000000000122460582442679
+				],
+				"basis_y": [
+					0.0000000000000000212651095566765,
+					0.984807670116425,
+					-0.173648670315742
+				],
+				"basis_z": [
+					-0.000000000000000120600127513594,
+					0.173648685216904,
+					0.984807670116425
+				],
+				"origin": [
+					-89.0,
+					115.607749938965,
+					5457.12109375
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Captain Marrow",
+			"destination_index": 1,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/stormwood/gpu-arms/DLG1F-ctl-High-c036/stormwood__inventory__character__captain_marrow.jpg",
+			"frame_id": "stormwood__inventory__character__captain_marrow",
+			"identity": "stormwood__inventory__character__captain_marrow",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284524978_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-138.847534179688,
+						108.667373657227,
+						5351.96044921875
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284524978_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-120.054718017578,
+						107.934181213379,
+						5333.6318359375
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284524983_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-60.1679801940918,
+						111.049690246582,
+						5394.291015625
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284524983_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-54.0658493041992,
+						112.721588134766,
+						5410.37060546875
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284525010_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-225.286422729492,
+						108.523765563965,
+						5422.7119140625
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284525010_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-235.237503051758,
+						109.144866943359,
+						5448.4990234375
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284525015_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-177.076690673828,
+						110.951332092285,
+						5483.33056640625
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284525015_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-229.869171142578,
+						108.442756652832,
+						5504.2060546875
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284525040_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						45.4966125488281,
+						110.484703063965,
+						5482.1240234375
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284524950_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-92.0112228393555,
+						105.94652557373,
+						5315.7685546875
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284524950_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-89.9779815673828,
+						107.529518127441,
+						5335.5830078125
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284524979_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						10.6701335906982,
+						113.818977355957,
+						5379.5927734375
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284524979_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						16.3616409301758,
+						109.439971923828,
+						5341.71435546875
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525007_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						61.8688011169434,
+						108.891540527344,
+						5433.646484375
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525011_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-154.580764770508,
+						111.965019226074,
+						5453.4794921875
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525011_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-201.764190673828,
+						110.200325012207,
+						5453.62451171875
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525012_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						25.3470039367676,
+						113.460655212402,
+						5434.3984375
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525012_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						17.9909858703613,
+						113.613349914551,
+						5454.3486328125
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525016_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-62.0733909606934,
+						110.534111022949,
+						5510.16064453125
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525016_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-70.7141494750977,
+						109.854148864746,
+						5518.53759765625
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525044_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-119.935417175293,
+						104.103759765625,
+						5577.4423828125
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525044_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-97.4793319702148,
+						107.572853088379,
+						5550.07080078125
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525045_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						32.5505561828613,
+						106.266479492188,
+						5552.79052734375
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525049_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-63.6811218261719,
+						106.547515869141,
+						5574.392578125
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_284524982_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-203.822769165039,
+						111.380096435547,
+						5378.81005859375
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_284524982_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-225.310333251953,
+						109.183441162109,
+						5410.78515625
+					],
+					"species_id": "thundertunnel"
+				}
+			],
+			"nearby_creatures_160m": 26,
+			"observed_clock": {
+				"elapsed_seconds": 200.214138666667,
+				"hour": 8.00856554666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"phase": "calm",
+			"player_character": "trainer",
+			"player_position": [
+				-89.0,
+				112.95475769043,
+				5452.0
+			],
+			"position_xz": [
+				-90.0,
+				5450.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 112.961854287066,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				-89.0,
+				5452.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 0.989341199398041,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-90.0,
+				5450.0
+			],
+			"terrain_ground_y": 112.961854287066,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 180.0,
+			"view_heading_xz": [
+				0.000000000000000122460635382238,
+				-1.0
+			],
+			"water_surface_y": null
+		},
+		{
+			"authored_id": "captain_marrow",
+			"authored_source": "data/config/stormwood_npcs.json",
+			"band_display_name": "",
+			"band_id": "dynamo",
+			"biome_display_name": "Stormwood",
+			"biome_id": "stormwood",
+			"bytes": 403321,
+			"camera_fov_degrees": 70.0,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76702404022217,
+			"camera_position": [
+				-89.0,
+				115.60767364502,
+				5457.12060546875
+			],
+			"camera_purpose": "dialogue",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					1.0,
+					0.0,
+					0.000000000000000122460635382238
+				],
+				"basis_y": [
+					0.0000000000000000212650268386152,
+					0.984805822372437,
+					-0.173647850751877
+				],
+				"basis_z": [
+					-0.000000000000000120599942225136,
+					0.173647850751877,
+					0.984805822372437
+				],
+				"origin": [
+					-89.0,
+					114.70475769043,
+					5452.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					1.0,
+					-0.00000000000000000000000075546369,
+					0.000000000000000122460555972899
+				],
+				"basis_y": [
+					0.0000000000000000212651145197602,
+					0.984807729721069,
+					-0.173648685216904
+				],
+				"basis_z": [
+					-0.000000000000000120600101043814,
+					0.173648685216904,
+					0.984807729721069
+				],
+				"origin": [
+					-89.0,
+					115.60767364502,
+					5457.12060546875
+				]
+			},
+			"conversation_camera_active": false,
+			"conversation_camera_blend": 0.0,
+			"conversation_camera_fallback": false,
+			"conversation_camera_shot": {},
+			"debug_travel": true,
+			"destination_display_name": "Captain Marrow",
+			"destination_index": 1,
+			"dialogue_id": "stormwood_captain_marrow_arrival",
+			"dialogue_portrait": "res://assets/ui/portraits/captain_a.png",
+			"dialogue_speaker": "Captain Marrow",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/stormwood/gpu-arms/DLG1F-ctl-High-c036/stormwood__inventory__character__captain_marrow__dialogue.jpg",
+			"frame_id": "stormwood__inventory__character__captain_marrow__dialogue",
+			"identity": "stormwood__inventory__character__captain_marrow__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284524978_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-138.847534179688,
+						108.667373657227,
+						5351.96044921875
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284524978_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-120.054718017578,
+						107.934181213379,
+						5333.6318359375
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284524983_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-60.1679801940918,
+						111.049690246582,
+						5394.291015625
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284524983_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-54.0658493041992,
+						112.721588134766,
+						5410.37060546875
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284525010_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-225.286422729492,
+						108.523765563965,
+						5422.7119140625
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284525010_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-235.237503051758,
+						109.144866943359,
+						5448.4990234375
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284525015_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-177.076690673828,
+						110.951332092285,
+						5483.33056640625
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284525015_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-229.869171142578,
+						108.442756652832,
+						5504.2060546875
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 1.95,
+					"body_radius_m": 0.660706,
+					"node_path": "Wild_sparkit_284525040_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						45.4966125488281,
+						110.484703063965,
+						5482.1240234375
+					],
+					"species_id": "sparkit"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284524950_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-92.0112228393555,
+						105.94652557373,
+						5315.7685546875
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284524950_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-89.9779815673828,
+						107.529518127441,
+						5335.5830078125
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284524979_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						10.6701335906982,
+						113.818977355957,
+						5379.5927734375
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284524979_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						16.3616409301758,
+						109.439971923828,
+						5341.71435546875
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525007_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						61.8688011169434,
+						108.891540527344,
+						5433.646484375
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525011_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-154.580764770508,
+						111.965019226074,
+						5453.4794921875
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525011_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-201.764190673828,
+						110.200325012207,
+						5453.62451171875
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525012_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						25.3470039367676,
+						113.460655212402,
+						5434.3984375
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525012_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						17.9909858703613,
+						113.613349914551,
+						5454.3486328125
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525016_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-62.0733909606934,
+						110.534111022949,
+						5510.16064453125
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525016_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-70.7141494750977,
+						109.854148864746,
+						5518.53759765625
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525044_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-119.935417175293,
+						104.103759765625,
+						5577.4423828125
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525044_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-97.4793319702148,
+						107.572853088379,
+						5550.07080078125
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525045_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						32.5505561828613,
+						106.266479492188,
+						5552.79052734375
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_tanglevolt_284525049_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-63.6811218261719,
+						106.547515869141,
+						5574.392578125
+					],
+					"species_id": "tanglevolt"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_284524982_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-203.822769165039,
+						111.380096435547,
+						5378.81005859375
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_284524982_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-225.310333251953,
+						109.183441162109,
+						5410.78515625
+					],
+					"species_id": "thundertunnel"
+				}
+			],
+			"nearby_creatures_160m": 26,
+			"observed_clock": {
+				"elapsed_seconds": 200.214138666667,
+				"hour": 8.00856554666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"phase": "calm",
+			"player_character": "trainer",
+			"player_position": [
+				-89.0,
+				112.95475769043,
+				5452.0
+			],
+			"position_xz": [
+				-90.0,
+				5450.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 112.961854287066,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				-89.0,
+				5452.0
+			],
+			"size": [
+				1920,
+				1080
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 0.989341199398041,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				-90.0,
+				5450.0
+			],
+			"terrain_ground_y": 112.961854287066,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 180.0,
+			"view_heading_xz": [
+				0.000000000000000122460635382238,
+				-1.0
+			],
+			"water_surface_y": null
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"stormwood__inventory__character__captain_marrow"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 9000.0,
+		"fov": 70.0,
+		"instance_id": 491622762734,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "forward_plus",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/stormwood.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": [
+		"stormwood__inventory__character__captain_marrow"
+	]
+}

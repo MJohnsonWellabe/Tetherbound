@@ -1,0 +1,348 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"biome_id": "cloudreach",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 522929047788,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 522945825007,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-31T23:23:52",
+	"capture_started_utc": "2026-10-31T23:16:01",
+	"captured_frame_count": 2,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"defeated_fixture": "Authored post-win text opened in production DialoguePanel at the trainer post. No battle was won and no defeat flag was changed; world-body aftermath remains a separate capture.",
+	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
+	"display_server": "Windows",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"authored_id": "captain_veyra",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 326418,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76704120635986,
+			"camera_position": [
+				99.0,
+				1162.78381347656,
+				5342.87939453125
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.000000026220096316365,
+					0.984805822372437,
+					0.173647850751877
+				],
+				"basis_z": [
+					0.000000148701545299446,
+					0.173647850751877,
+					-0.984805822372437
+				],
+				"origin": [
+					99.0,
+					1161.880859375,
+					5348.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000659187975201019,
+					-0.000000150995759895523
+				],
+				"basis_y": [
+					-0.0000000262202064504891,
+					0.984807670116425,
+					0.173648670315742
+				],
+				"basis_z": [
+					0.000000148701786883976,
+					0.173648685216904,
+					-0.984807729721069
+				],
+				"origin": [
+					99.0,
+					1162.78381347656,
+					5342.87939453125
+				]
+			},
+			"debug_travel": true,
+			"defeated_dialogue_id": "cloudreach_veyra_defeated",
+			"destination_display_name": "Captain Veyra",
+			"destination_index": 1,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/gpu-arms/DLG1F-cand-High-c025/cloudreach__inventory__character__captain_veyra__defeated.jpg",
+			"frame_id": "cloudreach__inventory__character__captain_veyra__defeated",
+			"identity": "cloudreach__inventory__character__captain_veyra",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.228290190476,
+				"hour": 8.00913160761905,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				99.0,
+				1160.130859375,
+				5348.0
+			],
+			"position_xz": [
+				100.0,
+				5350.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 1160.13000488281,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				99.0,
+				5348.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 1.0,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				100.0,
+				5350.0
+			],
+			"terrain_ground_y": 1160.13000488281,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": null
+		},
+		{
+			"authored_id": "captain_veyra",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "summit_final_stronghold",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 310991,
+			"camera_fov_degrees": 70.0,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76747512817383,
+			"camera_position": [
+				99.0,
+				1162.78381347656,
+				5342.87890625
+			],
+			"camera_purpose": "dialogue",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-1.0,
+					0.0,
+					-0.000000150995802528087
+				],
+				"basis_y": [
+					-0.000000026220096316365,
+					0.984805822372437,
+					0.173647850751877
+				],
+				"basis_z": [
+					0.000000148701531088591,
+					0.173647850751877,
+					-0.984805822372437
+				],
+				"origin": [
+					99.0,
+					1161.880859375,
+					5348.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-1.0,
+					0.00000000000000659187975201019,
+					-0.000000150995759895523
+				],
+				"basis_y": [
+					-0.0000000262202082268459,
+					0.984807729721069,
+					0.173648685216904
+				],
+				"basis_z": [
+					0.000000148701786883976,
+					0.173648685216904,
+					-0.984807729721069
+				],
+				"origin": [
+					99.0,
+					1162.78381347656,
+					5342.87890625
+				]
+			},
+			"conversation_camera_active": false,
+			"conversation_camera_blend": 0.0,
+			"conversation_camera_fallback": false,
+			"conversation_camera_shot": {},
+			"debug_travel": true,
+			"defeated_dialogue_id": "cloudreach_veyra_defeated",
+			"destination_display_name": "Captain Veyra",
+			"destination_index": 1,
+			"dialogue_id": "cloudreach_veyra_defeated",
+			"dialogue_portrait": "res://assets/ui/portraits/captain_b.png",
+			"dialogue_speaker": "Captain Veyra",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/gpu-arms/DLG1F-cand-High-c025/cloudreach__inventory__character__captain_veyra__defeated__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__captain_veyra__defeated__dialogue",
+			"identity": "cloudreach__inventory__character__captain_veyra__defeated__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.228290190476,
+				"hour": 8.00913160761905,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				99.0,
+				1160.130859375,
+				5348.0
+			],
+			"position_xz": [
+				100.0,
+				5350.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 1160.13000488281,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				99.0,
+				5348.0
+			],
+			"size": [
+				1920,
+				1080
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 1.0,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				100.0,
+				5350.0
+			],
+			"terrain_ground_y": 1160.13000488281,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 0.0,
+			"view_heading_xz": [
+				0.0,
+				1.0
+			],
+			"water_surface_y": null
+		}
+	],
+	"planned_frame_count": 1,
+	"planned_frame_ids": [
+		"cloudreach__inventory__character__captain_veyra__defeated"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 522945825007,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "forward_plus",
+	"requested_times": [
+		"day",
+		"golden",
+		"night"
+	],
+	"requested_views": [
+		"approach",
+		"close"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"seed": 2042,
+	"subsets": [
+		"cloudreach__inventory__character__captain_veyra"
+	]
+}
