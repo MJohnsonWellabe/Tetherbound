@@ -1,0 +1,102 @@
+{
+ "sets": {
+  "Fw": {
+   "A": {
+    "bar_a": 3.4,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 5.6,
+    "defects": {
+     "the placed wall reads as a flat, card-thin, pale panel with blown-out infill, no cap and a footing that merges with the infill, rather than a built homestead wall that belongs in the world": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's timber frame, diagonal brace, plank cap and stone footing finally read as built, but the infill is a flat unshaded beige card and the lone panel stands like a door or privy next to a low-poly grey boulder, nowhere near Palworld's base-building finish."
+  },
+  "Ot": {
+   "A": {
+    "bar_a": 2.9,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "The purple storm sky, rain and blue-green moss match the Stormwood board, but the landmark is a dark block with cyan corner lights, shorter than it should be and hidden behind the trainer, on a slab (hard-edged square in A, flatter octagon in B) that reads as a placeholder pad."
+  },
+  "Bc": {
+   "A": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 7.1,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "The elderly villager's clear face, readable eyes, layered moss-green vest and scarf and earthy browns give him finished-NPC appeal, though the soft cartoon face sits a step more toon than the naturalistic creature bar."
+  },
+  "Co": {
+   "A": {
+    "bar_a": 5.3,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 6.6,
+    "defects": {}
+   },
+   "bar_b": "yes",
+   "bar_b_note": "B's long blue water-dragon carries a clean, readable silhouette with coral-tipped fins, white belly and spot pattern held across all four poses, while A loses the read when its faint-end body goes to a desaturated grey-brown and faint mid lifts off its detached shadow."
+  },
+  "Ac": {
+   "A": {
+    "bar_a": 2.9,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PRESENT"
+    }
+   },
+   "B": {
+    "bar_a": 3.4,
+    "defects": {
+     "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it": "PARTIAL"
+    }
+   },
+   "bar_b": "no",
+   "bar_b_note": "Same frames as Ot: correct Stormwood storm grade and rain, sunk by a stubby dark block-with-cyan-lights standing in for the arch on a visible pad, with an empty grey horizon behind."
+  },
+  "Hv": {
+   "A": {
+    "bar_a": 4.5,
+    "defects": {}
+   },
+   "B": {
+    "bar_a": 5.7,
+    "defects": {}
+   },
+   "bar_b": "no",
+   "bar_b_note": "B's aftermaths are site-specific (freed captive beside the opened cage, smoke from the struck camp, torn banner on the ground), but smeared low-resolution ground, a flat tiled castle wall and flat noon light keep both sides well below Palworld and Valheim finish, and A leaves the oxblood banners standing after the win."
+  }
+ },
+ "top_changes": [
+  {
+   "change": "Build a real Crown Arch hero mesh: a two-legged stone arch taller than the trainer with a crown keystone, copper and crystal inlay, rooted into moss and roots with no visible slab pad, framed so the trainer does not cover it.",
+   "kind": "new_art"
+  },
+  {
+   "change": "Trainer-site aftermaths: always strike or topple the enemy oxblood banners and tents in after frames, give each site its own aftermath prop instead of reusing the same emblem stone, and raise the Meadows ground texture resolution so the camp ground is not a blurry smear.",
+   "kind": "scene"
+  },
+  {
+   "change": "Homestead wall material: give the panel visible thickness and shaded, textured wattle-and-daub infill with ambient occlusion at the frame, and snap it to neighbouring posts so it reads as part of a structure, not a lone door.",
+   "kind": "scene"
+  }
+ ]
+}
