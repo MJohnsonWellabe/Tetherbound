@@ -5,8 +5,8 @@ No recorded chain save has cooked a feast; empty feast_recipes and generated cau
 |---|---|
 | Meadows opening_team → camp → bridge | Historical ordinary-input PASS receipts, cap10; Fights marks clean-tree bridge proof VOID (commit during run). Replay opening→camp→bridge2/2 on one source before earned acceptance; Systems Warrens gameplay PASS does not close supervisor diagnostics/P0. |
 | Meadows relay/hall profiles | Generated boundaries; later wins do not prove bridge → Warrens → relay → sigils → Hald → Field → Warden continuity. |
-| Tidewake 01 | Historical tidewake_arrival_generated L20/[1] remains unearned. Adapter verifies complete Meadows prefix, save hashes and loaded state; cross-cut input requires full reviewed manifest via --compatibility-manifests. Native seam pending. |
-| Tidewake 02–05 | Matching previous pieces, earned on generated arrival. |
+| Tidewake 01 | **MATCH (31 Oct, routes-f49):** `01_opening` loaded the committed `f49_ms_tidewake_handoff` (earned_chain_runner Meadows lineage relay→sigils→hall→warden→handoff; all six predecessor receipt hashes equal the committed fixtures) → `f49_tw_01`, PASS 262 s at 838d96ee. Seam `ralph/reports/ROUTES/f49-1031/seams/ms_tidewake_handoff__tw_01.json`. Lineage remains generated-origin (Meadows `relay` profile; no Meadows training loop in this lineage). |
+| Tidewake 02–05 | **MATCH (31 Oct):** `f49_tw_02..05` each loaded the previous piece output (PASS 751/989/2017/942 s at a2e34527; Reedhaven needed the approved Satchel Drop, a2e34527). Seams `ralph/reports/ROUTES/f49-1031/seams/tw_0N__tw_0N+1.json`, all matches=true. The older fixtures `tidewake_01..05` remain earned on the generated arrival. |
 | Tidewake 07_human_late | Generated L44–45/[1–4] jump from tidewake_05. |
 | Tidewake 08 earned ending → 09 | Earned on the generated late input. |
 | Cloudreach 01 | cloudreach_arrival_generated, L31/[1–3]; does not load Tidewake 09. |
