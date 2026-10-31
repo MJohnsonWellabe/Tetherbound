@@ -22,7 +22,11 @@ const SHORT_SEGMENTS := {"07a1_departure": "departure", "07a2_salt_crossing": "s
 const SHORT_PREDECESSORS := {"07a1_departure": "05_tidal", "07a2_salt_crossing": "07a1_departure",
 	"07a3_salt_chart": "07a2_salt_crossing", "07a4_sluice_crossing": "07a3_salt_chart",
 	"07a5_bex": "07a4_sluice_crossing", "07a6_bex_recovery": "07a5_bex"}
-const SHORT_WATCHDOG_MS := 240000
+## Wall-clock watchdog per split piece (Time.get_ticks_msec). 240 s was measured on a
+## faster host; on the CPU cloud host the 07a1 spine walk alone takes ~620 s wall and
+## passes every waypoint (F49#0 routes, 31 Oct). 20 min stays inside the owner's
+## ~30-minute piece size (25 Oct); route assertions are unchanged.
+const SHORT_WATCHDOG_MS := 1200000
 var piece := "all"
 const BEX_FLAGS := ["water_dock_salt_crown_landing_charted", "water_sluice_west_disabled", "defeated_water_trainer_bex"]
 const CALDER_FLAGS := ["water_sluice_east_disabled", "water_dock_sluice_isle_both_controls_disabled", "defeated_water_trainer_calder"]
