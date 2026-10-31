@@ -294,6 +294,14 @@ The per-item scores showed shared causes. The plan, in order: dialogue and catch
     - **Capture:** the UI-PAD frames, with `--gamepad`, at High. Also watch for any clipped or overflowing text, which would be a regression to report.
     - **Report:** the per-item score and any overflow.
 
+15. **CRAFT-R3b: P2-095 round 3, the full combined fix judged on the pad path. After UI-R2.**
+    - **Arms:** control is main as-is. The candidate combines three changes:
+      - `tb/craft-r3` 489f6de20 with `readable_r3` ON (the bordered button, larger sub-lines, and now a 200 px item preview on its own plate in the centre column);
+      - the UI-R2 `ui_tokens.gd` (brighter, larger secondary text);
+      - `--gamepad`, so the hints show the Ally's pad buttons instead of the Esc keycap.
+    - **Capture:** P2-095's frames, `--gamepad` on both arms, High first.
+    - **Why:** the owner directs controller-first, so the pad path is the score that matters. The keyboard path's Esc keycap is a known keyboard-only defect.
+
 ## GPU LANE: ITEM SCORES DONE (28 Oct, ~01:40 CDT). The lane is idle; no GPU process is running.
 
 All four biomes are scored on main b7a6e8bbe and pushed here as `ralph/reports/VISUAL/item-scores/<biome>/{scores-gpu.json, VERDICT-gpu.md, _sheet_<biome>-gpu.jpg, yardstick/}`. None of the 103 scored items reaches 7.5 except Meadows P2-095 at 7.53.
