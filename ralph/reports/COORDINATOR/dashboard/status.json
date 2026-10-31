@@ -1,9 +1,11 @@
 {
- "updated": "2026-10-27T15:00:00Z (10:00 AM CT Tue 27 Oct)",
+ "updated": "10:40 AM CT Sat 31 Oct 2026",
  "headline": [
-  "WOUND DOWN 27 Oct (owner: usage). Board 260 of 467 criteria met. Every lane and the GPU judge are stopped; each wrote a handoff (lane notes and GPU-PASS/NOTE.md RESUME, all on main).",
-  "Landed since the 260 count (gains, none crossing 7.5): #769 Meadows relay yard flags (+1.43), #770 Stormwood Ashfoot storm room (+0.87; one-batch re-judge 6.76, 0.74 short), #771 Meadows stronghold keep + spire and courtyard (+0.53 / +0.71), #772 Terrapup ships as the large dog (owner decision; GPU 6.30 vs badger 7.22), Ripplet coat (+0.58 / +0.48), Mosshell faint, Solmane flinch, Stormwood P2-081 portraits and P2-083 conversation camera.",
-  "Nearest close-outs on restart: Ashfoot 6.76 (0.74), Ripplet 7.26 / 7.01, water_mosshell 7.10 / 7.67, Breezetail 6.77 / 6.89, Mirejaw (CO9 fill as a ride-along), Terrapup dog (path in CO10). Unjudged ready arm: tb/co12-on (Cliffspike, Voltwig, Nightburrow, Thundertunnel; CPU +0.5 to +1.1). Parked after two misses: Stormwood ground carpet, storm sky form, storm grade."
+  "Finish plan started (owner, 31 Oct): every open criterion is in a workstream with a phase and a date; see the Finish plan tab. Target: everything built and judged by 30 Nov.",
+  "GPU session back online with an 11-job queue: Crown Arch, four near-bar creatures, the P2-095 close-out, the dialogue camera fix, the catch-label plate, controller-glyph menus, creature ground contact and three Meshy hero landmarks.",
+  "Built and waiting on the GPU: dialogue camera short-arm sight search (unit-tested), catch-label backing plate, Crown Arch and CO12 rebuilt on main.",
+  "Meshy (existing account): Stormheart tree round 2, Sky Aviary and Veilfall candidates, 2 each, all referenced from the owner's boards, flag-off on tb/hero-landmarks-r2.",
+  "Route lane started for F49#0 and F19#5 (chained pieces, CPU only, tb/routes-f49)."
  ],
  "batches": [
   {
@@ -838,31 +840,25 @@
    "sandbox_mode": "danger-full-access"
   }
  ],
- "active_lanes_note": "Owner 25 Oct: three cloud lanes plus the GPU judge. Only candidates expected to gain more than 0.5 go to the GPU; small fixes ride inside them. Paused lanes (Tidewake, Cloudreach, Fights, Routes) are archived with handoffs at the top of their NOTE files; their work is on main via #747.",
+ "active_lanes_note": "Three workers per the finish plan: the GPU session (judge of record and hands-on look work), the coordinator (code, Meshy, landing) and one route lane.",
  "active_lanes": [
   {
-   "lane": "GPU judge · owner desktop (GTX 1060) · tb/gpu-pass",
-   "doing": "Stormwood run: ground, Ashfoot interior r25, Fallen Giant",
-   "criteria": "Every visual row (judge of record)",
-   "next": "Meadows keep + courtyard + relay yard, creature hit-flash, Mirejaw + Terrapup dog, Tidewake pumps and jetty"
+   "lane": "GPU session · owner desktop (GTX 1060) · tb/gpu-pass",
+   "doing": "Job 1 of 11: Crown Arch arm; then CO12, P2-095, dialogue camera, UI plate, controller menus",
+   "criteria": "Every visual row (judge of record); hands-on poses and hero placement",
+   "next": "READY line per job"
   },
   {
-   "lane": "Creatures · cloud session · tb/creatures-land",
-   "doing": "Tanglevolt arcs (thinner, brighter) and faint pose, plus Thundertunnel scale-up, as one candidate",
-   "criteria": "F36 (0) per asset, F36 (1) per pose subject",
-   "next": "Terrapup next step after the GPU dog verdict; Voltarach gold blotches"
+   "lane": "Coordinator · this session",
+   "doing": "Lands passing arms, runs Meshy, writes code fixes with tests, keeps this board",
+   "criteria": "All; Phase 2 Meshy batch next (creature models below 7.0, more landmarks)",
+   "next": "On each GPU verdict"
   },
   {
-   "lane": "Meadows · cloud session · tb/meadows",
-   "doing": "Relay yard round 2 (smaller flags, dirt and grass seams) while keep, courtyard and relay yard wait for GPU",
-   "criteria": "F38 per catalog item, F17#6, F04#6",
-   "next": "Next lowest Meadows view with a big-swing fix"
-  },
-  {
-   "lane": "Stormwood · cloud session · tb/stormwood",
-   "doing": "Stormheart round 2 (core column into a split vein-lit trunk), heartstone v01 framing, red-post check, Fallen Giant collider",
-   "criteria": "F41 per catalog item, F10#2",
-   "next": "Veilfall terrain (Tidewake F39#4) with a route walk check"
+   "lane": "Route lane · cloud session · tb/routes-f49",
+   "doing": "Earned four-biome pieces with matched handoff manifests",
+   "criteria": "F49#0, F19#5",
+   "next": "First seam receipt or a blocker note"
   }
  ]
 }

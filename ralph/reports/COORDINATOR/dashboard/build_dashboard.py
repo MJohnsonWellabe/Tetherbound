@@ -500,6 +500,70 @@ plan_html = render_gantt(HERE / "plan.json", "Delivery plan", "plan-h",
                          "Owner items (ROG Ally test, play pass, release) follow the lanes.")
 
 
+# ---- finish plan (owner 31 Oct: "Give me your plan for finishing all the outstanding
+# work ... update the board with the plan progress") ---------------------------------
+_fp = json.loads((HERE / "finish_plan.json").read_text(encoding="utf-8"))
+_crit_by_sel = {f'{r_["id"]}#{i_}': x_ for r_ in crit["rows"] for i_, x_ in enumerate(r_.get("criteria", []))}
+
+
+def _fp_met(sels):
+    return sum(1 for s_ in sels if norm(_crit_by_sel.get(s_, {}).get("status")) == "met")
+
+
+_FP_STATE = {"queued": ("not_started", "Queued"), "running": ("in_progress", "Running"),
+             "built": ("in_progress", "Built, awaiting GPU"), "passed": ("met", "Passed"),
+             "landed": ("met", "Landed"), "failed": ("failing", "Missed"), "parked": ("blocked", "Parked")}
+_fp_phase = {ph["id"]: ph for ph in _fp["phases"]}
+
+
+def _fp_chip(pid):
+    ph = _fp_phase[pid]
+    return f'<span class="pill s-in_progress" title="{E(ph["name"])}">{E(pid.replace("P", "Phase "))} · {E(ph["dates"])}</span>'
+
+
+_fp_ws = _fp["workstreams"]
+_fp_all = [s_ for w_ in _fp_ws for s_ in w_["sels"]] + [s_ for o_ in _fp["other"] for s_ in o_["sels"]]
+_fp_done = _fp_met(_fp_all)
+_fp_today = _fp.get("today", "")
+_fp_phase_rows = []
+for ph in _fp["phases"]:
+    state = "Done" if _fp_today > ph["end"] else "Now" if ph["start"] <= _fp_today <= ph["end"] else ("Next" if ph is next((q for q in _fp["phases"] if q["start"] > _fp_today), None) else "Upcoming")
+    sels = [s_ for w_ in _fp_ws if w_["phase"] == ph["id"] for s_ in w_["sels"]] + [s_ for o_ in _fp["other"] if o_["phase"] == ph["id"] for s_ in o_["sels"]]
+    m_ = _fp_met(sels)
+    p_ = round(100 * m_ / len(sels)) if sels else 0
+    _fp_phase_rows.append(f'<tr><td><b>{E(ph["id"].replace("P", "Phase "))}</b><div class="meta">{E(ph["dates"])}</div></td><td>{E(ph["name"])}</td>'
+                          f'<td>{E(state)}</td><td class="num">{m_} / {len(sels)}</td><td>{bar(p_)}</td></tr>')
+_fp_ws_rows = "".join(
+    f'<tr><td>{E(w_["name"])}</td><td class="num">{_fp_met(w_["sels"])} / {len(w_["sels"])}</td>'
+    f'<td>{bar(round(100 * _fp_met(w_["sels"]) / max(1, len(w_["sels"]))))}</td><td>{E(w_["fix"])}</td><td>{E(w_["who"])}</td><td>{_fp_chip(w_["phase"])}</td></tr>'
+    for w_ in _fp_ws)
+_fp_other_rows = "".join(
+    f'<tr><td>{E(o_["name"])}<div class="meta"><code>{E(", ".join(o_["sels"]))}</code></div></td>'
+    f'<td>{"".join(pill(_crit_by_sel.get(s_, {}).get("status")) for s_ in o_["sels"][:1])}</td><td>{E(o_["how"])}</td><td>{_fp_chip(o_["phase"])}</td></tr>'
+    for o_ in _fp["other"])
+_fp_flight_rows = "".join(
+    f'<tr><td>{E(f_["what"])}</td><td><span class="pill s-{_FP_STATE[f_["state"]][0]}">{E(_FP_STATE[f_["state"]][1])}</span></td>'
+    f'<td>{E(f_["detail"])}</td><td><code>{E(f_["where"])}</code></td></tr>' for f_ in _fp["in_flight"])
+finish_html = (
+    '<section class="panel" aria-labelledby="finish-h"><h2 id="finish-h">Finish plan</h2>'
+    f'<p class="note">Every open criterion as of 31 Oct, sorted into the workstream that fixes it, with live progress from this board. Target: everything built and judged by {E(_fp["target"])}; the owner\'s Ally test and play pass follow. The bar stays at a GPU mapped 7.5. '
+    '<a href="https://claude.ai/artifact/XNDPUdtXSbdGtDCk3WumCy">Full plan page</a>.</p>'
+    '<div class="kpis">'
+    f'<div class="kpi"><b>{_fp_done} / {len(_fp_all)}</b><span>Plan criteria closed since 31 Oct</span></div>'
+    f'<div class="kpi"><b>{sum(1 for f_ in _fp["in_flight"] if f_["state"] in ("queued", "built", "running"))}</b><span>Jobs in flight (built, queued or running)</span></div>'
+    f'<div class="kpi"><b>{sum(1 for f_ in _fp["in_flight"] if f_["state"] in ("passed", "landed"))}</b><span>Jobs passed or landed</span></div>'
+    '</div>'
+    '<h3>Phases</h3><div class="tbl"><table><thead><tr><th>Phase</th><th>Focus</th><th>State</th><th class="num">Closed</th><th>Progress</th></tr></thead>'
+    f'<tbody>{"".join(_fp_phase_rows)}</tbody></table></div>'
+    '<h3>In flight now</h3><div class="tbl"><table><thead><tr><th>Job</th><th>State</th><th>Detail</th><th>Where</th></tr></thead>'
+    f'<tbody>{_fp_flight_rows}</tbody></table></div>'
+    '<h3>Visual workstreams (193 criteria)</h3><div class="tbl"><table><thead><tr><th>Workstream</th><th class="num">Closed</th><th>Progress</th><th>What fixes it</th><th>Who</th><th>When</th></tr></thead>'
+    f'<tbody>{_fp_ws_rows}</tbody></table></div>'
+    '<h3>Non-visual criteria (14)</h3><div class="tbl"><table><thead><tr><th>Criterion</th><th>Status</th><th>How it closes</th><th>When</th></tr></thead>'
+    f'<tbody>{_fp_other_rows}</tbody></table></div>'
+    '<h3>Needs the owner</h3><ul class="plain">' + "".join(f"<li>{E(a_)}</li>" for a_ in _fp["asks"]) + '</ul></section>')
+
+
 # ---- visual catalog tab (owner 12 Oct) ----------------------------------------
 _VPILL = {"done": "met", "parked": "failing", "open": "not_started"}
 _VLABEL = {"done": "Done", "parked": "Parked", "open": "Open"}
@@ -903,8 +967,8 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
     <h1>Tetherbound Acceptance Board</h1>
     <p class="meta">Updated {E(crit.get("generated_at") or status.get("updated", ""))} · main <code>{E(crit.get("main_sha", ""))}</code> · batch in flight <code>{E(crit.get("batch4_sha", ""))}</code> · rebuilt hourly by the coordinator</p>
   </div>
-  <nav class="tabs" aria-label="Board views"><label for="tab-acc">Acceptance</label><label for="tab-vis">Visual catalogue</label><label for="tab-plan">Delivery plan</label><label for="tab-lanes">Active lanes</label></nav>
-  <div class="pane pane-plan">{plan_html}</div>
+  <nav class="tabs" aria-label="Board views"><label for="tab-acc">Acceptance</label><label for="tab-vis">Visual catalogue</label><label for="tab-plan">Finish plan</label><label for="tab-lanes">Active lanes</label></nav>
+  <div class="pane pane-plan">{finish_html}<details class="frow"><summary><span class="ftitle">Earlier delivery plan (sprint chart, superseded 31 Oct)</span></summary>{plan_html}</details></div>
   <div class="pane pane-lanes">{active_lanes_html}</div>
   <div class="pane pane-vis">{visual_tab_html}</div>
   <div class="pane pane-acc">
