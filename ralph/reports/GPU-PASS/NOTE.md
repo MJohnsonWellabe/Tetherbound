@@ -201,6 +201,16 @@ The per-item scores showed shared causes. The plan, in order: dialogue and catch
    - **Capture:** P2-031, P2-032, P2-096, P2-001, P2-007 and P2-004 from job.json with `--gamepad` added; every phase-2 UI tool takes it.
    - **Report:** the one-sided yardstick score with the pad, beside the keyboard score already on the board. The keyboard path's bracket labels stay a known keyboard defect; this does not replace that score.
 
+8. **POSE-1: creature ground contact. Hands-on work for this lane, because it needs a render after every change and the coordinator's container cannot render.** Work on a new branch `tb/pose-ground` from main. Each change goes behind a flag-off candidate, as before. Then judge main vs the candidate with code-blind judges (not you).
+   - **Defects** (GPU item scores, 28 Oct):
+     - **Riptusk:** its faint still sits in an upright crouch with its head raised (P2-028, 5.61); its rest lies belly-up with its legs raised at the waterline (P2-029, 5.32).
+     - **Veridian:** its faint reads upright (P2-015, 5.93).
+     - **Terrapup:** its faint is indistinguishable from its rest (P2-015).
+     - **Aquaryn** (mounted, P2-108, 4.97): it stands upright on the water with no splash or wake, and casts a hard shadow on the water. `water_mounts.json` `surface_origin_offset_m` sets how deep it sits.
+     - **The flying landing:** the bird lands still wings-up (P2-069, 5.88).
+   - **Where:** the faint and rest poses are per species in `data/creatures/f36_pose_candidates.json` (Mosshell's on-its-back faint in CO11 is the model); mounted swim is `scripts/world/water_mounted_swim.gd` with `water_mounts.json`.
+   - **Report:** each item's before/after per preset, and push the branch for the coordinator to land.
+
 ## GPU LANE: ITEM SCORES DONE (28 Oct, ~01:40 CDT). The lane is idle; no GPU process is running.
 
 All four biomes are scored on main b7a6e8bbe and pushed here as `ralph/reports/VISUAL/item-scores/<biome>/{scores-gpu.json, VERDICT-gpu.md, _sheet_<biome>-gpu.jpg, yardstick/}`. None of the 103 scored items reaches 7.5 except Meadows P2-095 at 7.53.
