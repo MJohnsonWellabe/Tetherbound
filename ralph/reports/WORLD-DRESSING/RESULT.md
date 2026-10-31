@@ -28,4 +28,12 @@ Lane: tb/world-dressing (coordinator start, 31 Oct 2026). Scene dressing from in
 | P2-094 placed wall | Meadows | 6.65 | build_wall_interior.json `meshy_wall.r8` | half-sunk fieldstone plinth, grime band, base tufts |
 
 ## Arms
-None pushed yet: candidate captures queued, then three-judge CPU batches.
+- **WD1** `tb/world-1-on` 0d7458fe (main a41e1b30 + lane 43c73100 + flags): P2-041, P2-070, P2-046, P2-045, P2-043, P2-033. CPU b1 mapped gains +1.75, +1.55, +1.40, +0.91, +0.56, +0.56 (`b1/VERDICT.md`). Arm request appended to `ralph/reports/GPU-PASS/NOTE.md` on this branch. Waiting on the GPU verdict.
+
+## Round 2 (r2 tweaks committed, flags OFF; captures queued)
+- P2-035 (+0.40 r1): ring 1.4x read as a pale blob; ring 1.15x, fire 0.6.
+- P2-034 (+0.28 r1): unchanged code; re-judge with the r2 Meadows set.
+- P2-094 (-0.12 r1): r8 plinth 0.6 m darker, grime 1.05 m at 0.92, taller tufts.
+- P2-038 r1 showed no new pools (flatness limit): per-pool relief 1.2 m.
+- P2-115/P2-116: bed reads; bench hidden behind the trainer, turned -39 deg and 2.6 m.
+- Arm-1 items get r2 follow-ups judged separately: glowmoss larger fungi; six spikes per scar; Glass Sink approach marker; darker crown slab moss.
