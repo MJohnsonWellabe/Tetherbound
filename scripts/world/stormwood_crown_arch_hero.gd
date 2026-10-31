@@ -53,6 +53,17 @@ static func apply(arch: Node3D, piece: Node3D, slab: MeshInstance3D, clearance: 
 		_hide_visuals(piece)
 	if slab != null and bool(cfg.get("hide_slab", true)):
 		slab.visible = false
+	elif slab != null and cfg.get("slab_moss") is Dictionary:
+		# The 9x9 m footing collider stands 0.2 m proud; hiding its mesh
+		# floated the trainer. Re-skin it as a raised moss bank instead.
+		var moss_cfg: Dictionary = cfg.slab_moss
+		var moss := StandardMaterial3D.new()
+		moss.albedo_texture = load(str(moss_cfg.get("albedo", ""))) as Texture2D
+		moss.albedo_color = Color(str(moss_cfg.get("tint", "#ffffff")))
+		moss.uv1_triplanar = true
+		moss.uv1_scale = Vector3.ONE * float(moss_cfg.get("uv_per_m", 0.25))
+		moss.roughness = 0.95
+		slab.material_override = moss
 	if clearance != null and cfg.has("grass_clear_radius_m"):
 		clearance.set_meta("grass_clear_radius", float(cfg.grass_clear_radius_m))
 	return true
