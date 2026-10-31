@@ -1203,21 +1203,47 @@ func _swing_for_sight(shot: Dictionary, cfg: Dictionary, room: float,
 		trainer_anchor: Vector3, speaker_anchor: Vector3, forward: Vector3,
 		require_sight: bool = true, require_frame: bool = false) -> Dictionary:
 	var base_swing := float(cfg.get("shoulder_yaw_deg", 0.0))
+	# Item scores (GPU, 28 Oct): rock rings Nerissa's and Marrow's posts, so the
+	# one swing with room for the full arm was the blocked one and every other
+	# swing was turned down for want of a full arm. With the flag, those swings
+	# are kept, with the room each measured, and tried on that shorter arm.
+	var short_arm := bool(cfg.get("sight_search_short_arm", false))
+	var floor_distance := float(cfg.get("min_distance", CONVERSATION.DEFAULTS["min_distance"]))
+	var shorter: Array = []
 	for extra: float in CONVERSATION.swing_search(cfg):
-		if is_zero_approx(extra):
-			continue
 		var candidate := cfg.duplicate()
 		candidate["shoulder_yaw_deg"] = base_swing + extra
 		var probe := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, candidate, room)
 		var probe_room := _free_distance_behind(probe["pivot"], probe["dir"], float(probe["distance"]))
 		if probe_room < float(probe["distance"]) - 0.01:
+			if short_arm and probe_room >= floor_distance:
+				shorter.append([candidate, probe_room])
 			continue
-		var visible := (not require_sight or _speaker_in_sight(probe, speaker_anchor)) \
-			and (not require_frame or _speaker_in_frame(probe, speaker_anchor))
-		if _camera_is_reachable(trainer_anchor, probe) and visible:
+		if is_zero_approx(extra):
+			continue
+		if _sees_from(probe, trainer_anchor, speaker_anchor, require_sight, require_frame):
 			probe["fallback"] = bool(shot.get("fallback", false))
 			return probe
+	# Nearest swing first, as above: the shorter arm closest to the framing
+	# asked for. A shorter arm also moves the lens past a banner or a flank
+	# standing between it and the speaker, so the unswung line is tried too.
+	for entry: Array in shorter:
+		var probe := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward,
+			entry[0] as Dictionary, float(entry[1]))
+		var probe_room := _free_distance_behind(probe["pivot"], probe["dir"], float(probe["distance"]))
+		if probe_room < float(probe["distance"]) - 0.01:
+			continue
+		if _sees_from(probe, trainer_anchor, speaker_anchor, require_sight, require_frame):
+			probe["fallback"] = true
+			return probe
 	return shot
+
+
+func _sees_from(probe: Dictionary, trainer_anchor: Vector3, speaker_anchor: Vector3,
+		require_sight: bool, require_frame: bool) -> bool:
+	var visible := (not require_sight or _speaker_in_sight(probe, speaker_anchor)) \
+		and (not require_frame or _speaker_in_frame(probe, speaker_anchor))
+	return visible and _camera_is_reachable(trainer_anchor, probe)
 
 
 ## Metres of clear space from `pivot` out along `dir`, capped at `limit`.

@@ -711,3 +711,69 @@ func test_a_conversation_shot_swings_off_a_creature_the_arm_passes_through() -> 
 	var look_end := swung_lens + (head - swung_lens).normalized() * ((head - swung_lens).length() - 0.3)
 	assert_false(_flank_blocks(swung_lens, look_end), "the swung lens sees the speaker past the creature")
 	assert_true(swung_lens.distance_to(lens) > 0.3, "the camera moved off the blocked line")
+
+
+## F38-F41 item scores (GPU, 28 Oct): the dialogue frames sank on blocked or
+## buried lenses (Marrow behind his banner, Nerissa's camera in the rock face).
+## Rock rings these posts, so the only full-length arm is the straight one, and
+## that one runs through the banner. Every other swing has room for a shorter
+## arm only, and a search that insists on the full arm turns them all down and
+## keeps the blocked shot. With `sight_search_short_arm`, a swing that sees the
+## speaker on the arm its own room allows is taken instead.
+var _open_dir := Vector3.INF
+
+
+func _tight_except_the_open_line(_pivot: Vector3, dir: Vector3, limit: float) -> float:
+	# The rock is behind the pair; the line toward the speaker stays open.
+	var planar := Vector3(dir.x, 0.0, dir.z).normalized()
+	if planar.dot(_open_dir) > 0.985 or planar.dot(_open_dir) <= 0.0:
+		return limit
+	return minf(1.6, limit)
+
+
+func _blocked_shot_fixture(cfg: Dictionary) -> Dictionary:
+	_rig.set_occlusion_probe_for_tests(_clear_room)
+	assert_true(_rig.enter_conversation(_speaker, cfg))
+	_settle_until_blended(1.0)
+	var straight: Dictionary = _rig.conversation_shot()
+	_rig.exit_conversation()
+	var dir := Vector3(straight["dir"])
+	_open_dir = Vector3(dir.x, 0.0, dir.z).normalized()
+	var lens: Vector3 = straight["pivot"] + dir * float(straight["distance"])
+	_flank = lens.lerp(CONVERSATION.speaker_anchor(_speaker, cfg), 0.35)
+	_rig.set_occlusion_probe_for_tests(_tight_except_the_open_line)
+	_rig.set_mesh_sight_probe_for_tests(_flank_blocks)
+	return straight
+
+
+func _sees_speaker(shot: Dictionary, cfg: Dictionary) -> bool:
+	var lens: Vector3 = shot["pivot"] + Vector3(shot["dir"]) * float(shot["distance"])
+	var head := CONVERSATION.speaker_anchor(_speaker, cfg)
+	var look_end := lens + (head - lens).normalized() * ((head - lens).length() - 0.3)
+	return not _flank_blocks(lens, look_end)
+
+
+func test_a_blocked_shot_in_a_tight_spot_takes_a_shorter_arm_that_sees_the_speaker() -> void:
+	var cfg := CONVERSATION.profile_config("conversation")
+	cfg["sight_search_short_arm"] = true
+	_blocked_shot_fixture(cfg)
+	assert_true(_rig.enter_conversation(_speaker, cfg))
+	_settle_until_blended(1.0)
+	var shot: Dictionary = _rig.conversation_shot()
+	assert_true(_sees_speaker(shot, cfg), "the lens sees the speaker past the banner")
+	assert_true(float(shot["distance"]) <= 1.6 + 0.01,
+		"the arm fits the room its own swing measured, not the open line's")
+	assert_true(float(shot["distance"]) >= float(cfg["min_distance"]) - 0.01,
+		"never shorter than the conversation's floor")
+
+
+func test_without_the_short_arm_search_the_tight_spot_keeps_the_old_shot() -> void:
+	# The flag is a candidate: off, the search is exactly what it was.
+	var cfg := CONVERSATION.profile_config("conversation")
+	cfg["sight_search_short_arm"] = false
+	var straight := _blocked_shot_fixture(cfg)
+	assert_true(_rig.enter_conversation(_speaker, cfg))
+	_settle_until_blended(1.0)
+	var shot: Dictionary = _rig.conversation_shot()
+	assert_almost_eq(Vector3(shot["dir"]).distance_to(Vector3(straight["dir"])), 0.0, 0.001,
+		"with the flag off no shorter swing is considered")
