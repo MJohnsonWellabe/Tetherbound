@@ -2,7 +2,7 @@
 
 - Renderer and method as b1 (CPU llvmpipe Compatibility 1280x720; control = all new flags OFF; candidate = flags ON via working-tree overlay; 2x2 sheets; standard prompt; `anchor_tiles.py --pairs 3 --include craft --seed 31208`; three fresh judges; `calibrate.py`).
 - Fit: linear, slope 1.63, intercept -3.83, r 0.99, anchor RMSE 0.24, top anchor 7.53 (confirming batch). Warning: some mains (Glass Sink, Crown Arch) lie outside the anchors' measured range.
-- Round-2 values (lane commit 97c8b3ab and follow-ups) for the WD1 items; first or second rounds for the rest. Round 1 and round 2 sit on different batch fits, so compare gains within a batch.
+- Round-2 values (lane commit df5e0a1c and follow-ups) for the WD1 items; first or second rounds for the rest. Round 1 and round 2 sit on different batch fits, so compare gains within a batch.
 
 | Item | Flag | Main | Candidate | Gain | Round | Disposition |
 |---|---|---|---|---|---|---|
