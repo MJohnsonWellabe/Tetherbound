@@ -167,15 +167,18 @@ Earlier on 26-27 Oct, all pushed (see each row's VERDICT.md):
 
 ## LANE ARMS (coordinator, 31 Oct 21:45 UTC): run these after CRAFT-R3b and Tanglevolt at Medium, BEFORE the hands-on jobs (POSE-1, HERO-1..3, HALL-1). Each has a CPU gain worth confirming. Full requests are in each lane branch's NOTE.md, at the SHAs below.
 
-16. **CO-F36-2 + CO-F36-1: creature pose arms from the creatures lane. Code and JSON only, no re-import; one tree for both.**
-    - **CO-F36-2, Sirenseal grounded hit:** `tb/co-f36-2-on` 505bc2e5f.
-      - Flip `candidate_role_flags.creatures_f36_sirenseal_grounded_hit.enabled`.
-      - CPU 5.90 to 7.14; ROSTER-1 High had 6.81.
-      - Species: sirenseal, with water_sirenseal as a no-change check.
-    - **CO-F36-1, side-lie faints for Cragclaw and Skyrill:** `tb/co-f36-1-on` e5667aecd. It changes only `f36_pose_candidates.json`.
-      - CPU +0.53 each.
-      - Species: cragclaw, water_cragclaw, skyrill.
-    - **Capture:** `capture_f36_poses.gd --candidate --whole-body --context`, High first.
+16. **CREATURES ONE-TREE: every creatures-lane flag arm, CO-F36-1 to CO-F36-9.** This replaces the CO-F36-1/2 entry below.
+    - **Tree:** check out `tb/co-f36-9-on` e8da58fe1 and import once (it adds seven coat textures). With every flag false it renders as main a41e1b30.
+    - **Arms:** flip one flag per arm, as tabled in the lane's CO-F36-8 request (tb/creatures-f36 NOTE.md):
+      - CO-F36-2: Sirenseal grounded hit, CPU 5.90 to 7.14.
+      - CO-F36-3: Duskhush and Brooktail taller than the trainer.
+      - CO-F36-4 and CO-F36-5: coat value lifts (Cindercub, Duskhush, Ashtusk, Thundertunnel, Shadelet, Stormtrail, Nightburrow).
+      - CO-F36-6: stronger grounded hit for Cindercub and Trailpup.
+      - CO-F36-7: matte finish for chrome and plastic creatures.
+      - CO-F36-8: Pipwing and Sparkit taller.
+      - CO-F36-9: Mudsnout, Paddlenewt and Riftfrill taller, CPU about +0.8 each, height FIXED x3.
+      - CO-F36-1: side-lie faints for Cragclaw and Skyrill. It changes only `f36_pose_candidates.json` at e5667aecd and can be checked out on the same tree.
+    - **Capture:** High first, with the species and flags per the lane's table.
 17. **WD2: world dressing batch, supersedes WD1.** `tb/world-2-on` 1bfc5d095 vs main a41e1b30e.
     - **Import:** run one `--import` for `assets/props/meshy-1031/*`, then flip the flags listed in the request.
     - **What it holds:**
@@ -202,6 +205,13 @@ Earlier on 26-27 Oct, all pushed (see each row's VERDICT.md):
 
     - **Capture:** the job.json frames listed in the request, High first.
     - **Report:** per-item before/after and the defect calls. Per-flag attribution is not needed unless an item regresses.
+
+    - **Correction from the world lane:** P2-041's CPU gain was not like-for-like. The landmark stand depends on the `--subset` list, so capture P2-041 with the identical `--subset` list on both arms.
+18. **TW-LOOK-1: Tidewake declutter with the Meshy beach focal pieces (owner feedback 31 Oct).** `tb/tidewake-1-on` 29ca0d23b vs main.
+    - **Import:** once, for `assets/props/meshy-1031/tidewake/`.
+    - **Capture:** 12 location stands, day approach and close, High. The request on tb/tidewake-look NOTE.md lists them.
+    - **Judge:** one 2x2 set per island.
+    - **CPU:** six islands, 5.35 to 5.99 mean (+0.64).
 
 ## PRIORITY (coordinator, 31 Oct 17:15 UTC): ROSTER-1 runs next, right after queue 56 (CO12, P2-095, UI-PAD) and before DLG-1. It is the fastest way to close rows.
 
