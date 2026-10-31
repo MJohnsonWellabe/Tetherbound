@@ -28,9 +28,13 @@ const BORDER := Color(Color("#58727A"), 0.70)
 
 # --- Text colors ----------------------------------------------------------
 
+## UI-R2 (GPU 31 Oct, UI-PAD: every menu item 6.1-6.8, judges ask for "bigger,
+## brighter secondary text everywhere"): secondary and muted text one step
+## brighter, FONT_TINY and FONT_LABEL one step larger. GPU arm candidate.
+
 const TEXT_PRIMARY := Color("#F2F5F2")
-const TEXT_SECONDARY := Color("#B8C5C4")
-const TEXT_MUTED := Color("#7F9394")
+const TEXT_SECONDARY := Color("#D2DCDB")
+const TEXT_MUTED := Color("#A2B3B4")
 
 # --- Accent / semantic colors ---------------------------------------------
 
@@ -148,8 +152,8 @@ const SHADOW_OFFSET := Vector2(1, 2)
 
 # --- Font sizes --------------------------------------------------------------
 
-const FONT_TINY := 19
-const FONT_LABEL := 23
+const FONT_TINY := 21
+const FONT_LABEL := 25
 const FONT_BODY := 26
 const FONT_BUTTON := 28
 const FONT_HEADING := 32
