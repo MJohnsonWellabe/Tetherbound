@@ -138,9 +138,28 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 		if not roles.has(role) or not overrides[role] is Dictionary:
 			return original
 		roles[role] = overrides[role]
+	# GPU arms (owner, 31 Oct): a candidate pose ships as a named flag in the
+	# recipe file, OFF by default, so the GPU can judge it on an imported tree by
+	# flipping `enabled` alone. An enabled flag replaces whole roles for the
+	# presentations it names, after the presentation overrides above.
+	var flagged: Array[String] = []
+	var flags: Dictionary = _data.get("candidate_role_flags", {})
+	for flag: String in flags:
+		var entry: Variant = flags[flag]
+		if not entry is Dictionary or not bool(entry.get("enabled", false)):
+			continue
+		var flag_roles: Dictionary = entry.get("presentations", {}).get(presentation_id, {})
+		for role: String in flag_roles:
+			if not roles.has(role) or not flag_roles[role] is Dictionary:
+				return original
+			roles[role] = flag_roles[role]
+		if not flag_roles.is_empty():
+			flagged.append(flag)
 	var profile_scope := str(recipe.profile)
 	if not overrides.is_empty():
 		profile_scope += ":" + presentation_id
+	if not flagged.is_empty():
+		profile_scope += ":" + presentation_id + ":" + ",".join(flagged)
 	var contact_key := "%s:%s:%s:%s" % [recipe.source_sha256, profile_scope,
 		pivot_before.basis, to_model]
 	var surfaces: Array[Dictionary] = []
