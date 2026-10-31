@@ -12,13 +12,17 @@ Rows served: F39#30, F39#32, P2-008, P2-011, P2-009, P2-026, P2-057; F13#5 (inha
   - `beach_scene_candidate`: one focal piece per site, with clearings.
   - `beach_declutter_candidate`: dock hamlets slimmed to two beach huts and a few working props.
 - `test_tidewake_look_profile` and `test_water_landmark_destinations` pass (8 tests, 280 assertions, 0 failed).
-- **GPU arm requested:** TW-look-1, `tb/tidewake-1-on` 29ca0d23b. Six islands at +0.64 CPU mapped. See GPU-PASS/NOTE.md.
+- **GPU arms requested** (see GPU-PASS/NOTE.md):
+  - TW-look-1 (`tb/tidewake-1-on`): superseded.
+  - **TW-look-2** (`tb/tidewake-2-on` 773118e1f): full stack, nine islands, +0.79 CPU mapped on those islands.
 
 ## Rounds (mapped CPU Bar A, three code-blind judges, standard prompt and anchors)
 
 | Round | Arm | Main | Arm | Delta | Notes |
 |---|---|---|---|---|---|
 | r1 | s2 (scene + declutter) | 5.59 | 6.03 | +0.45 | 10/11 islands up. Gull Rest +0.88, Salt Crown +0.75, Tidal Cradle +0.65, Drowned Garden +0.56, Lantern Cove +0.52, First Shore +0.49. Shellwatch -0.16. `r1/VERDICT.md` |
+| r2 | hamlet (`beach_groups_candidate`) vs s2 | 5.21 | 5.51 | +0.30 | Sluice +0.65; the other 10 islands under +0.5 (their first sub-0.5 round). Canoe racks dropped (they read as bones). `r2/VERDICT.md` |
+| r3 | full stack vs main (direct) | 5.11 | 5.79 | **+0.68** | 9/11 islands at or above +0.59. Brine Steps +0.32, Shellwatch -0.09. **GPU arm TW-look-2** (`tb/tidewake-2-on` 773118e1f), supersedes TW-look-1. `r3/VERDICT.md` |
 
 ## How (runbook for this lane; reuses TECHNICAL §8.1)
 - **Capture:** `phase2_capture_locations.gd --biome=water --times=day --views=approach,close --seed=2042`, one `--subset=water__<band>__<nn>` per site, `--tidewake-look-sections=...` for the arm, under xvfb at 1280x720. About 25 min for 22 sites.

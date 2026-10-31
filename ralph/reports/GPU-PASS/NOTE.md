@@ -333,3 +333,33 @@ Owner 31 Oct: Tidewake locations "too cluttered ... beach huts ... the focus". *
 
   All 11 islands: 5.59 → 6.03.
 - **Rows:** F39#30 / F39#32 Tidewake location frames, P2-011 named destinations, P2-008 shore; F13#5 inhabited docks (declutter section).
+
+## ARM REQUEST TW-look-2 (Tidewake look lane, 31 Oct 2026 evening CT). Supersedes TW-look-1; run this one instead.
+
+Same owner request and method as TW-look-1. **Judge High first.**
+
+- **Arms:**
+  - Main: current origin/main.
+  - On: `tb/tidewake-2-on` at 773118e1f499ac751baeec1aca3f34f38bebe3a3. This is the judged r2b state (8dfd1f4d2) with `beach_scene_candidate`, `beach_declutter_candidate` and `beach_groups_candidate` ON.
+  - Import first: the Meshy 1031 set.
+- **Stands:** 18 location stands, day approach and close (36 frames per arm). Use the TW-look-1 command with these subsets:
+  ```
+  --subset=water__gull_rest__19 --subset=water__gull_rest__20 --subset=water__tidal_cradle__09 --subset=water__tidal_cradle__10 --subset=water__lantern_cove__17 --subset=water__lantern_cove__18 --subset=water__salt_crown__11 --subset=water__salt_crown__12 --subset=water__reedhaven__03 --subset=water__reedhaven__04 --subset=water__sluice_isle__13 --subset=water__sluice_isle__14 --subset=water__first_shore__01 --subset=water__first_shore__02 --subset=water__deep_watch__23 --subset=water__deep_watch__24 --subset=water__drowned_garden__21 --subset=water__drowned_garden__22
+  ```
+- **Judge:** one set per island (2x2: its two sites, approach | close). Same recorded defects as TW-look-1.
+- **CPU result** (`ralph/reports/TIDEWAKE-LOOK/r3/VERDICT.md`, direct batch against main, confirming, r 0.97, RMSE 0.27):
+
+  | Island | Main | On |
+  |---|---|---|
+  | gull_rest | 4.73 | 5.72 |
+  | tidal_cradle | 4.55 | 5.54 |
+  | lantern_cove | 5.18 | 6.04 |
+  | salt_crown | 4.32 | 5.18 |
+  | reedhaven | 5.36 | 6.17 |
+  | sluice_isle | 5.09 | 5.90 |
+  | first_shore | 5.27 | 6.04 |
+  | deep_watch | 5.04 | 5.63 |
+  | drowned_garden | 5.36 | 5.95 |
+  | **Mean** | | **+0.79** |
+
+- **Rows:** F39#30 / F39#32 Tidewake location frames, P2-011 named destinations, P2-008 shore; F13#5 inhabited docks.
