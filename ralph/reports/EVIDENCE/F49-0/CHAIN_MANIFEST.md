@@ -11,10 +11,10 @@ No recorded chain save has cooked a feast; empty feast_recipes and generated cau
 | Tidewake 08 earned ending → 09 | Earned on the generated late input. |
 | Cloudreach 01 | cloudreach_arrival_generated, L31/[1–3]; does not load Tidewake 09. |
 | Cloudreach 02–04 | Earned on generated arrival. |
-| Cloudreach 05 | cloudreach_05_generated_veyra_boundary, L40/[1–3]; does not load 04. |
+| Cloudreach 05 | **MATCH (31 Oct, sky-storm):** `05_stronghold` loaded the committed `cloudreach_04_high_roost` save → `sk_cr05`, PASS 2266 s at d7a12a2e (L31→32). Seam `ralph/reports/ROUTES/sky-storm-1031/seams/cr04__cr05.json`. 05→06 OPEN: 06 from sk_cr05 stopped at the owner usage stop (no receipt). The old generated Veyra boundary no longer carries the 04→05 seam. |
 | Cloudreach 06 → 07 | Earned on generated 05. |
 | Stormwood arrival → crown wood/glass/arch → rootgate → dynamo → Marrow | Historical stormwood_07 accepts Stormheart L55 and releases original slot4: L40/40/40/40/55; original-five continuity ends. stormwood_09 is a separate generated rootgate_crown L50 branch. Neither proves retained-five training; legacy seams lack training snapshots. |
-| Homecoming | Prior Home Key stall; Systems source fix a3f79780 needs native proof. New source requires matched training and durable personal ending state before on-load dialogue; legacy receipts need a fresh predecessor export. |
+| Homecoming | Prior Home Key stall; fix a3f79780 is natively exercised: passing f49_s5b_home_key (3775f93b) and f49_s5b_home_credits (76aefce6) run source with PortalArrival.holds_training_row (sky-storm check, 31 Oct). Their lineage starts at generated stormwood_rootgate_crown; cross-cut f49_s3_return→f49_s5b_gen drafted, unreviewed. New source requires matched training and durable personal ending state before on-load dialogue; legacy receipts need a fresh predecessor export. |
 | Aster ground-return → visit → departure | Source-only06k→06l→06m→06n; optional06m_aster_duel_only then06p_aster_chest permit saved-win storage recovery. Ione has equivalent05j_ione_duel_only/05k_ione_chest. No passing receipts. |
 Closure requires matching saved seams, character-owned Master wins/recipes, actual Kitchen cooking/feeding per chapter, and no unexplained party/XP/cap edits.
 | Chapter | Required earned Master/feast/training loop (all native OPEN) |
