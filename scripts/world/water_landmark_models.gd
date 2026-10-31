@@ -25,10 +25,12 @@ func build(water_world: Node3D) -> void:
 	var specs: Array = (look.get("landmark_models", []) as Array) + (look.get("landmark_props_candidate", []) as Array) \
 		+ (look.get("veilfall_hero_candidate", []) as Array) + (look.get("veilfall_facade_candidate", []) as Array) \
 		+ (look.get("veilfall_mountain_candidate", []) as Array) + (look.get("veilfall_buttress_candidate", []) as Array) \
-		+ _destinations(look) + (look.get("lesson_clusters_candidate", []) as Array)
+		+ _destinations(look) + (look.get("lesson_clusters_candidate", []) as Array) \
+		+ (look.get("beach_scene_candidate", []) as Array)
 	_cladding(water_world, look.get("veilfall_cladding_candidate", {}))
 	# `first_shore_declutter_candidate` (OFF in play) drops named props by id.
-	var dropped: Array = (look.get("first_shore_declutter_candidate", {}) as Dictionary).get("drop_landmark_props", [])
+	var dropped: Array = ((look.get("first_shore_declutter_candidate", {}) as Dictionary).get("drop_landmark_props", []) as Array) \
+		+ ((look.get("beach_declutter_candidate", {}) as Dictionary).get("drop_landmark_props", []) as Array)
 	for raw: Variant in specs:
 		var spec := raw as Dictionary
 		if dropped.has(str(spec.get("id", ""))):
@@ -54,7 +56,7 @@ func build(water_world: Node3D) -> void:
 			continue
 		var factor := float(spec.get("height_m", 5.0)) / bounds.size.y
 		var holder := Node3D.new()
-		holder.name = "Landmark_%s" % str(spec.get("landmark_id", "prop"))
+		holder.name = "Landmark_%s" % str(spec.get("landmark_id", spec.get("id", "prop")))
 		# Optional `stretch_xz` widens a fitted model without changing its height
 		# (close-1024: the generated Veilfall crown is narrower than the cone).
 		var stretch: Array = spec.get("stretch_xz", [1.0, 1.0])
