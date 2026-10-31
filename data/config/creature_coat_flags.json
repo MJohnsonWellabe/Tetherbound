@@ -19,6 +19,36 @@
     "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_stormtrail.png": "res://assets/creatures/tetherbound/trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0_stormtrail_coat_lift.png",
     "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow.png": "res://assets/creatures/tetherbound/burrowback/candidate_nat1024/models/creature_burrowback_nat1024_Image_0_nightburrow_coat_lift.png"
    }
+  },
+  "creatures_f36_matte_finish": {
+   "_why": "CREATURES-F36 (31 Oct). GPU roster 24 Oct off-style materials (R4): skyrill 6.33 'chrome-mirror skin', voltarach 6.87 'chrome-gold statue shader', sparkit 6.28 'flat mustard material', reedwing 6.78 'decal-like', cragclaw 6.40 'plasticky salmon skin'. Probed live materials: skyrill, sparkit and reedwing render metallic 1.0 over their metallic maps; voltarach takes its gloss from its roughness map. Matte: metallic off, a constant fur/hide roughness, lower specular.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/skyrill/models/skyrill_extracted_base_color_vivid.png": {
+     "metallic": 0.0,
+     "roughness": 0.85,
+     "specular": 0.35
+    },
+    "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0.jpg": {
+     "metallic": 0.0,
+     "roughness": 0.8,
+     "specular": 0.35
+    },
+    "res://assets/creatures/tetherbound/sparkit/models/creature_sparkit_lod0_base_color.jpg": {
+     "metallic": 0.0,
+     "roughness": 0.85,
+     "specular": 0.35
+    },
+    "res://assets/creatures/tetherbound/reedwing/models/creature_reedwing_lod0_base_color_vivid.png": {
+     "metallic": 0.0,
+     "roughness": 0.85,
+     "specular": 0.35
+    },
+    "res://assets/creatures/tetherbound/cragclaw/models/cragclaw_extracted_base_color_vivid.png": {
+     "roughness": 0.92,
+     "specular": 0.25
+    }
+   }
   }
  }
 }
