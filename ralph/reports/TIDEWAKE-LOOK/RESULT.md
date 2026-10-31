@@ -6,6 +6,51 @@ Goal: each of the 22 non-Veilfall Tidewake named locations reads as one clean, c
 
 Rows served: F39#30, F39#32, P2-008, P2-011, P2-009, P2-026, P2-057; F13#5 (inhabited docks).
 
+## Handoff (31 Oct 2026, late evening CT)
+
+**State**
+- `tb/tidewake-look` carries three OFF sections in `data/config/tidewake_look.json`:
+  - `beach_scene_candidate`: one focal piece per site, with clearings.
+  - `beach_declutter_candidate`: dock hamlets slimmed to two huts and four working props.
+  - `beach_groups_candidate`: a two-to-three building hamlet per site.
+- Loader changes:
+  - `scripts/world/water_landmark_models.gd`: `grass_clear_m`, model-less clearings, the groups section and declutter drops.
+  - `scripts/world/water_dock_dressing.gd`: the declutter merge.
+- The Meshy 1031 set is imported.
+- Tests: `test_tidewake_look_profile` and `test_water_landmark_destinations` pass (8 tests, 283 assertions, 0 failed).
+- **GPU:** TW-look-2 is the live request (`tb/tidewake-2-on` 773118e1f, nine islands, +0.79 CPU on them). TW-look-1 is superseded.
+
+**Open candidates**
+- After the TW-look-2 capture, three small fixes landed:
+  - Salt Crown shrine hut lowered.
+  - Cropped Salt Crown bell-site hamlet removed.
+  - Drowned Garden beach second hut restored.
+  
+  Each is under 0.5 on its own; they ride along with the next arm.
+- **Parked by the stop rule** (two rounds under +0.5):
+  - Brine Steps: +0.13, +0.16.
+  - Shellwatch: -0.16, +0.35. The dock pump station fills the close view, and it is a dock action station.
+
+  New idea needed. The likely one is to keep main's cottages there and trim only the prop litter; it was not run, because its expected gain is under 0.5.
+- Veilfall is untouched (HERO-3, GPU lane).
+
+**What worked**
+- Focal pieces about 6 m past the spot, beside the route line.
+- Clearings in front of the approach stand.
+- Two-to-three building hamlets.
+- Judges consistently reward "a hut cluster at the named location" and penalise lone huts on slopes.
+
+**What didn't**
+- Pieces 12 m out vanish behind dunes.
+- Canoe racks read as white bones on CPU.
+- Driftwood and shrub groups are invisible at stand distance.
+
+**What still caps every island at about 6 (outside this lane)**
+- Flat pale sand with no value variation.
+- Untextured near-black dune faces.
+- Grass as even carpets instead of grouped edges.
+- No sea haze.
+
 ## Status (31 Oct, ~5 PM CT)
 - Meshy 1031 set imported on this branch (textures mode 2).
 - Two OFF sections in `data/config/tidewake_look.json`:
