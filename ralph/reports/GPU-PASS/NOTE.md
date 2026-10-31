@@ -1,5 +1,30 @@
 # GPU-PASS lane note (owner's Windows desktop, GTX 1060 3GB; 21–22 Oct 2026)
 
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-8, Pipwing and Sparkit taller, plus ONE TREE FOR EVERY CREATURES-F36 FLAG ARM (High first)
+
+- **One tree for all the flag arms:** check out `tb/co-f36-8-on` 4c13f7560ef4b01d88895b0cfdd592c2f42e9435 and import once (seven new coat textures).
+  - With every flag `false` it renders as main a41e1b30.
+  - Then flip one flag per arm:
+
+    | Arm | Flag | Species |
+    |---|---|---|
+    | CO-F36-2 | `data/creatures/f36_pose_candidates.json` `candidate_role_flags.creatures_f36_sirenseal_grounded_hit` | sirenseal, `--candidate` |
+    | CO-F36-3 | `data/config/creature_scale_flags.json` `creatures_f36_taller_than_trainer` | duskhush, brooktail, plain |
+    | CO-F36-4 | `data/config/creature_coat_flags.json` `creatures_f36_coat_lift` | cindercub, duskhush plain; ashtusk, thundertunnel `--candidate` |
+    | CO-F36-5 | `creatures_f36_coat_lift_2` | shadelet `--candidate`; stormtrail, nightburrow plain |
+    | CO-F36-6 | `data/config/creature_clip_flags.json` `creatures_f36_grounded_hit_remakes` | cindercub, trailpup, plain |
+    | CO-F36-7 | `creatures_f36_matte_finish` | skyrill, voltarach, cragclaw `--candidate`; sparkit, reedwing plain; GPU-only candidate |
+    | CO-F36-8 | `creatures_f36_taller_than_trainer_2` | pipwing, sparkit, plain |
+
+  - CO-F36-1 (Cragclaw and Skyrill side-lie faints) is the only arm that is not a flag; it stays on its own branch.
+- **CO-F36-8 itself:** pipwing x1.6 (1.9 -> 3.0 m) and sparkit x1.6 (1.95 -> 3.1 m). Height and collider radius grow together.
+  - GPU roster has pipwing at 6.66 and sparkit at 6.28 (R3 scale).
+  - CPU r9 (three judges, confirming, r 0.95): 5.67 -> 6.78, 5.62 -> 6.39.
+  - Verdict: `ralph/reports/CREATURES-F36/r9/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:** `capture_f36_poses.gd --whole-body --context --species=<list> --out=<fresh dir> --source-commit=4c13f7560ef4b01d88895b0cfdd592c2f42e9435`.
+  - Add `--candidate` for recipe species, as in the table.
+  - The control capture is the same tree with every flag `false`.
+
 ## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-7, matte finish for chrome and plastic creatures (flag, High first, GPU-only candidate)
 
 - **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-7-on` d2fa6f63c4a2af2962a980f038ef59cab690e405.
