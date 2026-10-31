@@ -9,6 +9,7 @@ Lane branch `tb/creatures-f36`. CPU capture on Mesa llvmpipe (Compatibility, 128
 | CO-F36-1 | `tb/co-f36-1-on` e5667aecd | main 3a0e1fa0d | Cragclaw, water_cragclaw, Skyrill (side-lie faint) | 5.71 -> 6.24, 5.71 -> 6.24, 6.00 -> 6.53 (+0.53 each) | GPU READY (`r2/VERDICT.md`) |
 | CO-F36-2 | `tb/co-f36-2-on` 505bc2e5f | main a41e1b30 | Sirenseal grounded hit (flag `creatures_f36_sirenseal_grounded_hit`, off by default) | 5.90 -> 7.14 (+1.24) | GPU READY (`r4/VERDICT.md`) |
 | CO-F36-3 | `tb/co-f36-3-on` d13f2db33 | main a41e1b30 | Duskhush x1.35, Brooktail x1.4 (flag `creatures_f36_taller_than_trainer`, off by default) | 5.81 -> 6.31, 5.81 -> 6.56 | GPU READY (`r5/VERDICT.md`) |
+| CO-F36-4 | `tb/co-f36-4-on` 529829e88 | main a41e1b30 | Coat value lift: Cindercub, Duskhush, Ashtusk, Thundertunnel (flag `creatures_f36_coat_lift`, off by default; 4 new textures to import) | 5.83 -> 6.93, 5.42 -> 6.56, 5.74 -> 6.79, 6.01 -> 6.70 | GPU READY (`r6/VERDICT.md`) |
 
 ## Rounds
 
@@ -28,6 +29,9 @@ Lane branch `tb/creatures-f36`. CPU capture on Mesa llvmpipe (Compatibility, 128
 - **r5** (`r5/VERDICT.md`), height above the trainer:
   - Brooktail 5.81 -> 6.56 and Duskhush 5.81 -> 6.31: CO-F36-3.
   - Bramblebun +0.15 and Trailpup +0.10: within noise, left out.
+- **r6** (`r6/VERDICT.md`), coat value lift: CO-F36-4.
+  - Cindercub +1.10, Duskhush +1.14, Ashtusk +1.05, Thundertunnel +0.69.
+  - Whole-coat value changes register at the roster crop; a belly-only change (r1 Ripplet) did not.
 
 ## Species parked or needing the coordinator
 

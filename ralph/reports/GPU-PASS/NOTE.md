@@ -1,5 +1,25 @@
 # GPU-PASS lane note (owner's Windows desktop, GTX 1060 3GB; 21–22 Oct 2026)
 
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-4, coat value lift for four dark creatures (flag, High first)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-4-on` 529829e882fee4ba71ff0a25f734af2da60051fc.
+  - The candidate is main plus a flag-off coat hook in `scripts/creatures/creature_body.gd`, `data/config/creature_coat_flags.json`, and four graded coat PNGs with their `.import` files.
+  - With the flag `false` it renders exactly as main.
+- **To judge:**
+  1. Run one import, for the four new textures.
+  2. Set `flags.creatures_f36_coat_lift.enabled` to `true`.
+- **Species:** cindercub 7.13, duskhush 6.77 and ashtusk 6.68 (ROSTER-1 "rim light and value lift"), plus thundertunnel 6.49 (CO12: "a dark mound with no readable face").
+- **CPU r6** (three judges, confirming, r 0.996): 5.83 -> 6.93, 5.42 -> 6.56, 5.74 -> 6.79, 6.01 -> 6.70. The dark-body defect goes from PRESENT to PARTIAL on all four.
+- **Verdict:** `ralph/reports/CREATURES-F36/r6/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first.** Same tool and flags as the other F36 arms:
+  - `capture_f36_poses.gd --whole-body --context --species=cindercub,duskhush --out=<fresh dir> --source-commit=<arm sha>`, plain.
+  - `capture_f36_poses.gd --candidate --whole-body --context --species=ashtusk,thundertunnel --out=<fresh dir> --source-commit=<arm sha>`; both play pose recipes.
+- **Combining arms:** CO-F36-3 (duskhush taller) and this arm are independent flags and can be enabled together on one tree.
+- **Report:**
+  - MET at High.
+  - The dark-body defect call.
+  - Any reserved-red read on Cindercub's embers.
+
 ## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-3, Duskhush and Brooktail taller than the trainer (flag, High first)
 
 - **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-3-on` d13f2db3345f8a72c809ab2c94c7f28062965c26.

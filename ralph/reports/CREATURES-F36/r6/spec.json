@@ -1,0 +1,38 @@
+[
+ {
+  "label": "ashtusk",
+  "a": "ashtusk-base.png",
+  "b": "ashtusk-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "A dark body value merges with the ground and backdrop, and the face does not read"
+  ]
+ },
+ {
+  "label": "thundertunnel",
+  "a": "thundertunnel-base.png",
+  "b": "thundertunnel-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "A dark body value merges with the ground and backdrop, and the face does not read"
+  ]
+ },
+ {
+  "label": "duskhush",
+  "a": "duskhush-base.png",
+  "b": "duskhush-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "A dark body value merges with the ground and backdrop, and the face does not read"
+  ]
+ },
+ {
+  "label": "cindercub",
+  "a": "cindercub-base.png",
+  "b": "cindercub-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "A dark body value merges with the ground and backdrop, and the face does not read"
+  ]
+ }
+]
