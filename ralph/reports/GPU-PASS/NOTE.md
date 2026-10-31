@@ -159,6 +159,34 @@ Earlier on 26-27 Oct, all pushed (see each row's VERDICT.md):
 
 ## Other lanes (31 Oct): the creatures lane (tb/creatures-f36, CPU) prepares F36 close-out arms and appends requests for them; the route lane (tb/routes-f49) needs no GPU.
 
+## PRIORITY (coordinator, 31 Oct 17:15 UTC): ROSTER-1 runs next, right after queue 56 (CO12, P2-095, UI-PAD) and before DLG-1. It is the fastest way to close rows.
+
+**ROSTER-1: re-judge the near-bar F36 roster on current main. No arm, a plain verdict.**
+- **Why:** your roster baseline was judged on main 124a7393c (24 Oct). Since then, creature changes have landed that the GPU has not judged, among them:
+  - Cindercub's ash-grey face mask;
+  - Trailpup's rim removed and its softer paw dust;
+  - Mudsnout's tusks;
+  - Nightburrow's chipped plate edges;
+  - Riverdrake and Mirejaw's gold edges (the red check);
+  - Tanglevolt's navy coat and arcs;
+  - Ripplet's matte countershaded coat;
+  - Mosshell's faint;
+  - Galecrest matte;
+  - the Cloudfang flinch;
+  - the Grandpa eyes.
+
+  About 22 rows sit at 7.0–7.42 and need under 0.5 each.
+- **Capture:** `capture_f36_poses.gd` on current main (d4d5b262f or later), the same whole-body context and standard crop as the 24 Oct roster run, Medium and High, for these species:
+  - aquaryn, bramblebun, brooktail, burrowback, cindercub, duskhush, ripplet, riverdrake, sirenseal;
+  - thundertunnel, torrentoad, trailpup, tanglevolt, ashtusk;
+  - water_aquaryn, water_cannonback, water_riptusk, water_riverdrake, water_sirenseal, water_tidecoil;
+  - terrapup, the shipped dog (its pose row was last judged on the badger mesh).
+
+  Species outside `enabled_species` are shot plain.
+- **Judge:** per species, mapped Bar A plus the pose defect calls, as the roster-base verdict did.
+- **Report:** a READY line listing each species' mapped score per preset. Any species at 7.5 or above on both presets, with no pose PRESENT, closes its F36 (1) row; the model rows for ripplet, tanglevolt and ashtusk close the same way.
+- **CO12 overlap:** its species (cliffspike, voltwig, nightburrow, thundertunnel) are being judged in CO12. For thundertunnel, take the CO12 candidate result.
+
 ## GPU QUEUE (coordinator, 31 Oct; owner: "Continue all this work. I'll start the remote session soon"). Run top to bottom.
 
 The per-item scores showed shared causes. The plan, in order: dialogue and catch cameras, the near-bar UI items, creature ground contact, Meshy hero art for the worst landmarks, then a bigger atmosphere change per biome. These jobs feed it. Work from origin/main d4d5b262f or later, and add `--source-commit=<sha>` to every capture.
