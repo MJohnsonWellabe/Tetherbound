@@ -38,6 +38,9 @@ static func spec_for(item_id: String, realm: String) -> Dictionary:
 	var families: Dictionary = cfg.get("families", {})
 	for family: String in families:
 		if item_id in ((families[family] as Dictionary).get("items", []) as Array):
+			# A realm dresses only the families it lists.
+			if not realm_cfg.has(family):
+				return {}
 			var merged: Dictionary = (families[family] as Dictionary).duplicate(true)
 			var per_realm: Dictionary = (realm_cfg.get(family, {}) as Dictionary)
 			for key: String in per_realm:
