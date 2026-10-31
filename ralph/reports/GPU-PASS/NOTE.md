@@ -1,5 +1,25 @@
 # GPU-PASS lane note (owner's Windows desktop, GTX 1060 3GB; 21–22 Oct 2026)
 
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-5, coat value lift batch 2 (flag, High first)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-5-on` c2b5851b4bcb1cfd45d891eb9a98842e3ea82ffc.
+  - The candidate is built on CO-F36-4 and contains it.
+  - With both coat flags `false` it renders exactly as main.
+- **To judge:**
+  1. Run one import, for the seven new coat textures across CO-F36-4 and -5.
+  2. Set `flags.creatures_f36_coat_lift_2.enabled` to `true`.
+  - This tree can also judge CO-F36-4 by flipping `creatures_f36_coat_lift` instead.
+- **Species:**
+  - shadelet 6.29: "near-black, no rim light".
+  - stormtrail 5.98: "flat black placeholder dog".
+  - nightburrow 6.67: CO12 "coat noisy".
+- **CPU r7** (three judges, confirming, r 0.98): 5.59 -> 6.63, 5.63 -> 6.88, 5.72 -> 6.30.
+- **Verdict:** `ralph/reports/CREATURES-F36/r7/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:**
+  - `capture_f36_poses.gd --candidate --whole-body --context --species=shadelet --out=<fresh dir> --source-commit=<arm sha>`
+  - `capture_f36_poses.gd --whole-body --context --species=stormtrail,nightburrow --out=<fresh dir> --source-commit=<arm sha>`
+- **Report:** MET at High and the dark-body defect call.
+
 ## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-4, coat value lift for four dark creatures (flag, High first)
 
 - **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-4-on` 529829e882fee4ba71ff0a25f734af2da60051fc.

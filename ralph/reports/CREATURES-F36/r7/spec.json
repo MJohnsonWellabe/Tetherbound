@@ -1,0 +1,29 @@
+[
+ {
+  "label": "shadelet",
+  "a": "shadelet-base.png",
+  "b": "shadelet-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "A dark body value merges with the ground and backdrop, and the face does not read"
+  ]
+ },
+ {
+  "label": "stormtrail",
+  "a": "stormtrail-base.png",
+  "b": "stormtrail-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "A dark body value merges with the ground and backdrop, and the face does not read"
+  ]
+ },
+ {
+  "label": "nightburrow",
+  "a": "nightburrow-base.png",
+  "b": "nightburrow-cand.png",
+  "brief": "One creature on a neutral stage beside a 1.80 m human ruler: standing, hit react, faint mid, faint end. Judge the creature's model and material as the game's real look - identity, silhouette, appeal, surface and colour, proportion and scale against the ruler. Judge poses only where they break the read.",
+  "defects": [
+   "A dark body value merges with the ground and backdrop, and the face does not read"
+  ]
+ }
+]

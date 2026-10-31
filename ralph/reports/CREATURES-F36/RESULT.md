@@ -10,6 +10,7 @@ Lane branch `tb/creatures-f36`. CPU capture on Mesa llvmpipe (Compatibility, 128
 | CO-F36-2 | `tb/co-f36-2-on` 505bc2e5f | main a41e1b30 | Sirenseal grounded hit (flag `creatures_f36_sirenseal_grounded_hit`, off by default) | 5.90 -> 7.14 (+1.24) | GPU READY (`r4/VERDICT.md`) |
 | CO-F36-3 | `tb/co-f36-3-on` d13f2db33 | main a41e1b30 | Duskhush x1.35, Brooktail x1.4 (flag `creatures_f36_taller_than_trainer`, off by default) | 5.81 -> 6.31, 5.81 -> 6.56 | GPU READY (`r5/VERDICT.md`) |
 | CO-F36-4 | `tb/co-f36-4-on` 529829e88 | main a41e1b30 | Coat value lift: Cindercub, Duskhush, Ashtusk, Thundertunnel (flag `creatures_f36_coat_lift`, off by default; 4 new textures to import) | 5.83 -> 6.93, 5.42 -> 6.56, 5.74 -> 6.79, 6.01 -> 6.70 | GPU READY (`r6/VERDICT.md`) |
+| CO-F36-5 | `tb/co-f36-5-on` c2b5851b4 (on CO-F36-4) | main a41e1b30 | Coat value lift batch 2: Stormtrail, Shadelet, Nightburrow (flag `creatures_f36_coat_lift_2`, off by default; 3 new textures to import) | 5.63 -> 6.88, 5.59 -> 6.63, 5.72 -> 6.30 | GPU READY (`r7/VERDICT.md`) |
 
 ## Rounds
 
@@ -32,6 +33,8 @@ Lane branch `tb/creatures-f36`. CPU capture on Mesa llvmpipe (Compatibility, 128
 - **r6** (`r6/VERDICT.md`), coat value lift: CO-F36-4.
   - Cindercub +1.10, Duskhush +1.14, Ashtusk +1.05, Thundertunnel +0.69.
   - Whole-coat value changes register at the roster crop; a belly-only change (r1 Ripplet) did not.
+- **r7** (`r7/VERDICT.md`), coat lift batch 2: CO-F36-5.
+  - Stormtrail +1.25, Shadelet +1.04, Nightburrow +0.58.
 
 ## Species parked or needing the coordinator
 
