@@ -1,0 +1,35 @@
+{
+ "_comment": "Candidate clip amplitude changes for species that play their own authored clips, OFF by default (scripts/creatures/creature_body.gd _apply_clip_flags). An enabled flag scales each named role's keys relative to the clip's first key: a number scales rotation and position alike, a {rotation, position} pair scales them apart (0..2). The GPU judges an arm by flipping enabled.",
+ "flags": {
+  "creatures_f36_grounded_hit_remakes": {
+   "_why": "CREATURES-F36 (31 Oct). GPU ROSTER-1 High (coordinator): hit react PARTIAL 3/3 for bramblebun 7.19 (its hit 'looks airborne, a hop'), cindercub 7.13, trailpup 7.00 and duskhush 6.77 ('barely differs from standing'). They play their own clips, so the recipe flinch cannot reach them. Bramblebun keeps its recoil and loses the hop; the others exaggerate their recoil with the feet kept planted.",
+   "enabled": false,
+   "species": {
+    "bramblebun": {
+     "hit": {
+      "rotation": 1.0,
+      "position": 0.2
+     }
+    },
+    "cindercub": {
+     "hit": {
+      "rotation": 1.6,
+      "position": 0.5
+     }
+    },
+    "trailpup": {
+     "hit": {
+      "rotation": 1.6,
+      "position": 0.5
+     }
+    },
+    "duskhush": {
+     "hit": {
+      "rotation": 1.6,
+      "position": 0.5
+     }
+    }
+   }
+  }
+ }
+}

@@ -866,6 +866,7 @@ func _build_animator(art: Node3D, look: Dictionary) -> void:
 		return
 	var player := players[0] as AnimationPlayer
 	var clips := POSE_CANDIDATES.install(self, _model, player, look, look.get("animations", {})).duplicate(true)
+	_apply_clip_flags(player, clips)
 	# This preview rig's keyed paw strike can wind up through the real tell.
 	# Ordinary Brooktail keeps its installed impact-time attack playback.
 	if not art_model_override.is_empty() and art_model_attack_contact_phase > 0.0 and art_model_attack_contact_phase < 1.0:
@@ -884,6 +885,81 @@ func _build_animator(art: Node3D, look: Dictionary) -> void:
 	if bool(get_meta("f36_pose_candidate_installed", false)):
 		_animator.call("bind_candidate_pivot", _model)
 	_animator.call("set_traversal_role", _traversal_pose_role)
+
+
+## GPU arms (owner, 31 Oct): a species that plays its own authored clips can
+## take a candidate amplitude change as a named flag in
+## data/config/creature_clip_flags.json, OFF by default. An enabled flag blends
+## each named role's keys relative to that clip's first (standing) key by its
+## factors: rotation and position apart, so a hop can be grounded while the
+## recoil stays, or a recoil that barely reads can be exaggerated. The clip is replaced under its own name in a
+## per-body copy of the library, so the shared imported resource is untouched.
+const CLIP_FLAGS_PATH := "res://data/config/creature_clip_flags.json"
+static var _clip_map: Dictionary = {}
+static var _clip_map_loaded := false
+
+
+static func _clip_flag_map() -> Dictionary:
+	if _clip_map_loaded:
+		return _clip_map
+	_clip_map_loaded = true
+	if not FileAccess.file_exists(CLIP_FLAGS_PATH):
+		return _clip_map
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CLIP_FLAGS_PATH))
+	if not parsed is Dictionary:
+		push_error("creature_clip_flags.json is not an object")
+		return _clip_map
+	var flags: Dictionary = (parsed as Dictionary).get("flags", {})
+	for flag: String in flags:
+		var entry: Variant = flags[flag]
+		if not entry is Dictionary or not bool(entry.get("enabled", false)):
+			continue
+		var species: Dictionary = entry.get("species", {})
+		for id: String in species:
+			var roles: Dictionary = _clip_map.get(id, {})
+			roles.merge(species[id], true)
+			_clip_map[id] = roles
+	return _clip_map
+
+
+func _apply_clip_flags(player: AnimationPlayer, clips: Dictionary) -> void:
+	var roles: Dictionary = _clip_flag_map().get(species_id, {})
+	if roles.is_empty() or not player.has_animation_library(&""):
+		return
+	var library := player.get_animation_library(&"").duplicate() as AnimationLibrary
+	var changed := false
+	for role: String in roles:
+		var clip := str(clips.get(role, ""))
+		if clip.is_empty() or clip.contains("/") or not library.has_animation(StringName(clip)):
+			continue
+		# A number scales rotation and position alike; a {rotation, position}
+		# pair scales them apart (keep a recoil, drop a hop). Factors above 1
+		# exaggerate a recoil that barely differs from standing.
+		var spec: Variant = roles[role]
+		var turn := clampf(float(spec.get("rotation", 1.0) if spec is Dictionary else spec), 0.0, 2.0)
+		var shift := clampf(float(spec.get("position", 1.0) if spec is Dictionary else spec), 0.0, 2.0)
+		var damped := library.get_animation(StringName(clip)).duplicate(true) as Animation
+		for track in damped.get_track_count():
+			var keys := damped.track_get_key_count(track)
+			if keys < 2:
+				continue
+			var kind := damped.track_get_type(track)
+			var first: Variant = damped.track_get_key_value(track, 0)
+			for key in range(1, keys):
+				var value: Variant = damped.track_get_key_value(track, key)
+				if kind == Animation.TYPE_ROTATION_3D:
+					var from := first as Quaternion
+					var delta := from.inverse() * (value as Quaternion)
+					var scaled := Quaternion(delta.get_axis().normalized(), delta.get_angle() * turn) if delta.get_angle() > 0.0001 else Quaternion.IDENTITY
+					damped.track_set_key_value(track, key, (from * scaled).normalized())
+				elif kind == Animation.TYPE_POSITION_3D:
+					damped.track_set_key_value(track, key, (first as Vector3).lerp(value as Vector3, shift))
+		library.remove_animation(StringName(clip))
+		library.add_animation(StringName(clip), damped)
+		changed = true
+	if changed:
+		player.remove_animation_library(&"")
+		player.add_animation_library(&"", library)
 
 
 ## Scale and centre an imported model so it stands on the node's origin at the
