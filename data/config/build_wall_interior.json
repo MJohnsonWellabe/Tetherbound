@@ -160,6 +160,13 @@
         "uv_per_m": 0.6
       },
       "_why_on": "P2-094 r7 ON as a CPU-provisional improvement, not a closure: mapped 6.50 vs shipping 6.05 on the snapped-run fixture (three code-blind judges, Low/Compatibility llvmpipe, ralph/reports/LOOK/close-1022/P2-094.md). Parked by the gain rule; a GPU pass decides."
+    },
+    "r8": {
+      "enabled": false,
+      "_scope": "World dressing r8 candidate (OFF until GPU judged; tb/world-dressing). GPU 6.65 (31 Oct): 'a clean flat freestanding slab with no weathering, ground contact or footing'. Layers on r7: a half-sunk fieldstone plinth course on both faces from the installed nature rocks, a damp mud-splash grime band fading up the lower 0.7 m, and installed grass tufts against the base. Presentation only; collider, grid, cost and save unchanged.",
+      "plinth": {"models": ["res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"], "stones_per_face": 5, "overlap": 1.3, "height_m": 0.36, "depth_m": 0.32, "sink_fraction": 0.4, "tint": "#c9c2b4"},
+      "grime": {"height_m": 0.75, "colour": "#3a2d20", "bottom_alpha": 0.78, "proud_m": 0.014},
+      "base_tufts": {"models": ["res://assets/environment/stylized_nature/Grass_Wide_Short.gltf", "res://assets/environment/stylized_nature/Grass_Common_Short.gltf", "res://assets/environment/stylized_nature/Clover_1.gltf"], "per_face": 4, "height_m": 0.42, "out_m": 0.5}
     }
   }
 }
