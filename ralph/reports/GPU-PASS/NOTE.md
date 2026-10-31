@@ -1,5 +1,25 @@
 # GPU-PASS lane note (owner's Windows desktop, GTX 1060 3GB; 21–22 Oct 2026)
 
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-7, matte finish for chrome and plastic creatures (flag, High first, GPU-only candidate)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-7-on` d2fa6f63c4a2af2962a980f038ef59cab690e405.
+  - The candidate is built on CO-F36-6, so it holds CO-F36-4 through -7. Each has its own flag; all are `false` by default.
+- **To judge:** set `flags.creatures_f36_matte_finish.enabled` to `true` (coat hook, `data/config/creature_coat_flags.json`).
+  - **Skyrill, Voltarach, Sparkit, Reedwing:** metallic goes to 0. The roughness map is replaced by a constant 0.8–0.85, and specular is 0.35.
+  - **Cragclaw:** roughness 0.92, specular 0.25.
+- **Why:** GPU roster 24 Oct, R4 "off-style materials":
+  - skyrill 6.33: "chrome-mirror skin"
+  - voltarach 6.87: "chrome-gold statue shader"
+  - sparkit 6.28: "flat mustard material"
+  - reedwing 6.78: "decal-like"
+  - cragclaw 6.40: "plasticky salmon skin"
+- **No CPU score:** CPU Compatibility renders no environment reflections, and the flag-on and flag-off CPU frames look the same. This is a GPU-only candidate, so please judge it only when the queue has room.
+- **Capture, High first:**
+  - `capture_f36_poses.gd --candidate --whole-body --context --species=skyrill,voltarach,cragclaw --out=<fresh dir> --source-commit=<arm sha>`
+  - `capture_f36_poses.gd --whole-body --context --species=sparkit,reedwing --out=<fresh dir> --source-commit=<arm sha>`
+- **Combining arms:** CO-F36-1's Cragclaw and Skyrill faints are a separate branch from main; they combine with this one at landing.
+- **Report:** MET at High and the chrome or plastic call.
+
 ## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-6, stronger grounded hit react for Cindercub and Trailpup (flag, High first)
 
 - **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-6-on` 66dc86a09e0d957c421cfa62a27a2da6c508a3b2.

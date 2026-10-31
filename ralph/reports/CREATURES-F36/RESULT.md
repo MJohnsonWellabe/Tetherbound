@@ -12,6 +12,7 @@ Lane branch `tb/creatures-f36`. CPU capture on Mesa llvmpipe (Compatibility, 128
 | CO-F36-4 | `tb/co-f36-4-on` 529829e88 | main a41e1b30 | Coat value lift: Cindercub, Duskhush, Ashtusk, Thundertunnel (flag `creatures_f36_coat_lift`, off by default; 4 new textures to import) | 5.83 -> 6.93, 5.42 -> 6.56, 5.74 -> 6.79, 6.01 -> 6.70 | GPU READY (`r6/VERDICT.md`) |
 | CO-F36-5 | `tb/co-f36-5-on` c2b5851b4 (on CO-F36-4) | main a41e1b30 | Coat value lift batch 2: Stormtrail, Shadelet, Nightburrow (flag `creatures_f36_coat_lift_2`, off by default; 3 new textures to import) | 5.63 -> 6.88, 5.59 -> 6.63, 5.72 -> 6.30 | GPU READY (`r7/VERDICT.md`) |
 | CO-F36-6 | `tb/co-f36-6-on` 66dc86a09 (on CO-F36-5) | main a41e1b30 | Stronger grounded hit react on own clips: Cindercub, Trailpup (flag `creatures_f36_grounded_hit_remakes`, off by default) | 6.69 -> 7.04, 6.69 -> 7.00 (near-bar close-out exception) | GPU READY (`r8/VERDICT.md`) |
+| CO-F36-7 | `tb/co-f36-7-on` d2fa6f63c (on CO-F36-6) | main a41e1b30 | Matte finish: Skyrill, Voltarach, Sparkit, Reedwing; Cragclaw softer sheen (flag `creatures_f36_matte_finish`, off by default) | not judgeable on CPU (no environment reflections in Compatibility) | GPU-ONLY CANDIDATE |
 
 ## Rounds
 
@@ -39,6 +40,9 @@ Lane branch `tb/creatures-f36`. CPU capture on Mesa llvmpipe (Compatibility, 128
 - **r8** (`r8/VERDICT.md`), clip flag on the remakes' hit react: CO-F36-6.
   - Cindercub +0.35 and Trailpup +0.31 (near-bar exception).
   - Bramblebun +0.11 and Duskhush +0.04: left out.
+- **Matte finish** (no round): Skyrill, Sparkit and Reedwing render metallic 1.0 over their metal maps, and Voltarach takes its gloss from its roughness map.
+  - The CPU captures show no visible change, because Compatibility on llvmpipe has no reflections.
+  - Shipped as a GPU-only candidate (CO-F36-7) on the same tree, labelled so.
 
 ## Species parked or needing the coordinator
 

@@ -1121,8 +1121,9 @@ func _apply_art_model_emission() -> void:
 ## GPU arms (owner, 31 Oct): a candidate coat ships as a graded texture plus a
 ## named flag in data/config/creature_coat_flags.json, OFF by default, so the
 ## GPU judges it by flipping `enabled`. An enabled flag maps an ordinary coat's
-## albedo path to its graded file; an emission slot that carried the same
-## painted image follows it. Shiny bodies keep their own colourway.
+## albedo path to its graded file (an emission slot that carried the same
+## painted image follows it) and/or to material values (metallic, roughness,
+## specular) for a matte finish. Shiny bodies keep their own colourway.
 const COAT_FLAGS_PATH := "res://data/config/creature_coat_flags.json"
 static var _coat_map: Dictionary = {}
 static var _coat_map_loaded := false
@@ -1146,11 +1147,18 @@ static func _coat_flag_map() -> Dictionary:
 			continue
 		var coats: Dictionary = entry.get("coats", {})
 		for from_path: String in coats:
-			var to_path := str(coats[from_path])
-			if ResourceLoader.exists(to_path):
-				_coat_map[from_path] = to_path
-			else:
+			# A string is a graded albedo path; a dictionary may also carry
+			# material values ({"albedo"?, "metallic"?, "roughness"?,
+			# "specular"?}), where a roughness value replaces the roughness map.
+			var spec: Variant = coats[from_path]
+			var resolved: Dictionary = spec.duplicate() if spec is Dictionary else {"albedo": str(spec)}
+			var to_path := str(resolved.get("albedo", ""))
+			if not to_path.is_empty() and not ResourceLoader.exists(to_path):
 				push_error("coat flag %s: %s is missing" % [flag, to_path])
+				continue
+			var merged: Dictionary = _coat_map.get(from_path, {})
+			merged.merge(resolved, true)
+			_coat_map[from_path] = merged
 	return _coat_map
 
 
@@ -1173,10 +1181,20 @@ func _apply_coat_flags() -> void:
 			var key := source.get_instance_id()
 			if not _coat_materials.has(key):
 				var copy := source.duplicate() as BaseMaterial3D
-				var graded := load(str(coats[from_path])) as Texture2D
-				copy.albedo_texture = graded
-				if copy.emission_texture != null and copy.emission_texture.resource_path == from_path:
-					copy.emission_texture = graded
+				var spec: Dictionary = coats[from_path]
+				var to_path := str(spec.get("albedo", ""))
+				if not to_path.is_empty():
+					var graded := load(to_path) as Texture2D
+					copy.albedo_texture = graded
+					if copy.emission_texture != null and copy.emission_texture.resource_path == from_path:
+						copy.emission_texture = graded
+				if spec.has("metallic"):
+					copy.metallic = clampf(float(spec.metallic), 0.0, 1.0)
+				if spec.has("roughness"):
+					copy.roughness_texture = null
+					copy.roughness = clampf(float(spec.roughness), 0.0, 1.0)
+				if spec.has("specular"):
+					copy.metallic_specular = clampf(float(spec.specular), 0.0, 1.0)
 				_coat_materials[key] = copy
 			instance.set_surface_override_material(surface, _coat_materials[key])
 
