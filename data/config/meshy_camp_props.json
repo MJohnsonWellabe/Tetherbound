@@ -11,8 +11,9 @@
   "workbench": {
     "enabled": false,
     "model": "res://assets/props/meshy-1031/camp_workbench/camp_workbench.glb",
-    "height_m": 2.3,
+    "height_m": 2.6,
     "sink_m": 0.03,
-    "yaw_deg": 0.0
+    "yaw_deg": -39.0,
+    "_why_yaw": "r2: the camp view stands at (+4, -5) from the bench and looks through the trainer; -39 deg turns the long axis across that view so the bench spans past the trainer."
   }
 }

@@ -8,7 +8,7 @@
   "min_outer_width_m": 4.2,
   "hide_old_arch": true,
   "hide_slab": false,
-  "slab_moss": {"albedo": "res://assets/props/meshy-1020/ground_wet_moss_floor/ground_wet_moss_floor_albedo_seamless.png", "tint": "#9fb6a4", "uv_per_m": 0.22},
+  "slab_moss": {"albedo": "res://assets/props/meshy-1020/ground_wet_moss_floor/ground_wet_moss_floor_albedo_seamless.png", "tint": "#5d7462", "uv_per_m": 0.22},
   "_why_slab": "Hiding the slab mesh would float the trainer 0.2 m on the unchanged footing collider; the slab is re-skinned with the Stormwood wet-moss ground texture instead so it reads as a raised moss bank.",
   "glow_colour": "#a8dcff",
   "glow_energy": 1.2

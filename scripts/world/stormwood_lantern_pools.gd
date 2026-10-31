@@ -88,7 +88,7 @@ static func install(world: Node3D) -> void:
 				var h := float(world.call("ground_height_at", p.x, p.y))
 				low = minf(low, h)
 				high = maxf(high, h)
-		if high - low > flat_limit:
+		if high - low > float(pool.get("max_relief_m", flat_limit)):
 			continue
 		# Level at mid-relief: the low rim sits a few centimetres proud, the
 		# high rim's ground covers the disc (filling only the hollow hid the
