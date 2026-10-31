@@ -28,7 +28,7 @@
   },
   "realms": {
     "meadows": {"candy": {"scale": 1.0}, "set_down": {"scale": 1.0}},
-    "stormwood": {"candy": {"scale": 1.6, "stone": {"models": ["res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf"], "across_m": 1.2, "height_m": 0.22, "exposed_m": 0.1, "tint": "#b9c4c4"}}},
+    "stormwood": {"candy": {"scale": 2.5, "shadow_m": 1.6, "stone": {"models": ["res://assets/environment/stylized_nature/RockPath_Round_Wide.gltf"], "across_m": 1.4, "height_m": 0.24, "exposed_m": 0.1, "tint": "#b9c4c4"}}},
     "cloudreach": {"mushroom": {}}
   }
 }
