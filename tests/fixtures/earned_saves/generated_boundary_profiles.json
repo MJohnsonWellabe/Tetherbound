@@ -253,6 +253,112 @@
       "world_portal_unlocks": ["tidewake"],
       "disclosure": "Independent F49 T3 proof boundary. Reedhaven departure pose, chapter flags, five template creatures at generated L29/cap30 with prior breakthrough tiers [1,2], prior T1/T2 Master wins and recipes, Meadows relic/portal progress, and five Tether Candy are generated setup, not earned play or transaction receipts. No Ione win, feast_t3 recipe, Altar payment, Kitchen cook, feed, or selected-piece PASS is granted. The selected Ione visit and every paid training/Kitchen action must happen through ordinary play and production save. The character's attachment_recipes carry exactly the tier blueprints the declared hung relics grant (the real relic_hang transaction's next_tier_blueprints), so tier-2+ station attachments can be placed."
     },
+    "cloudreach_t4_arrival": {
+      "boundary": "tidewake_settled",
+      "realm": "water",
+      "day": 12,
+      "clock_elapsed_seconds": 500.0,
+      "position": {
+        "water_dock": true
+      },
+      "party_levels": [
+        31,
+        31,
+        31,
+        31,
+        31
+      ],
+      "heal_party": true,
+      "world_flags": [
+        "relay_captain_defeated",
+        "captive_rescued",
+        "relay_disabled",
+        "mill_crossing_restored",
+        "defeated_captain_riverwatch",
+        "defeated_captain_field",
+        "defeated_captain_ridge",
+        "hall_approach_open",
+        "defeated_stronghold_patrol",
+        "defeated_stronghold_courtyard",
+        "defeated_stronghold_elite",
+        "defeated_warden",
+        "learned_legendary_is_the_source",
+        "legendary_freed",
+        "legendary_settled",
+        "realm_key_cloudreach",
+        "realm_heart_meadows_earned",
+        "water_aquaryn_resolved",
+        "water_dock_salt_crown_landing_charted",
+        "water_sluice_west_disabled",
+        "water_sluice_east_disabled",
+        "defeated_water_trainer_bex",
+        "defeated_water_trainer_calder",
+        "defeated_water_trainer_venn",
+        "water_dock_sluice_isle_both_controls_disabled",
+        "water_captain_nerissa_defeated",
+        "water_veilfall_intake_stopped",
+        "water_veilfall_return_opened",
+        "water_guardian_freed",
+        "water_tether_disabled",
+        "water_guardian_settled",
+        "water_currents_restored",
+        "realm_relic_water_earned",
+        "water_civilian_departure_complete",
+        "water_dock_reedhaven_repaired",
+        "water_swim_lesson_complete",
+        "defeated_water_trainer_tovin",
+        "water_dock_brine_steps_trial_won",
+        "defeated_water_trainer_solm",
+        "defeated_water_trainer_irva",
+        "water_shellwatch_residents_freed",
+        "water_shellwatch_pump_disabled",
+        "water_dock_shellwatch_residents_freed_and_pump_disabled"
+      ],
+      "personal_flags": [
+        "legendary_refused",
+        "water_chapter_started",
+        "water_cordage_recipe_gated",
+        "water_swim_lesson_briefed",
+        "water_swim_stone_earned",
+        "water:legendary_refused"
+      ],
+      "inventory_add": {
+        "cloudreach_portal_key": 1,
+        "tether_candy": 5,
+        "wood": 12,
+        "stone": 20,
+        "fiber": 2,
+        "rootstone": 18,
+        "ironwood": 10,
+        "sluice_metal": 12,
+        "reef_stone": 10
+      },
+      "character_fields": {
+        "portal_unlocks": [
+          "tidewake"
+        ],
+        "relics_held": [
+          "tidewake"
+        ],
+        "relics_hung": [
+          "meadows"
+        ],
+        "master_wins": [
+          "master_t1",
+          "master_t2",
+          "master_t3"
+        ],
+        "feast_recipes": [
+          "feast_t1",
+          "feast_t2",
+          "feast_t3"
+        ]
+      },
+      "world_portal_unlocks": [
+        "tidewake"
+      ],
+      "disclosure": "Trained F49 Cloudreach arrival (sky-storm route lane, 31 Oct 2026): the 'cloudreach' profile's generated restored-Tidewake dock boundary, unchanged, plus the T1-T3 history a player who trained through Meadows and Tidewake carries: prior T1/T2/T3 Master wins and feast recipes, five Tether Candy, and exactly the Kitchen tier-1/tier-2 and Forge build bill (Kitchen wood 8/stone 8/fiber 2; Forge stone 12/rootstone 6/wood 4; kitchen_meadows rootstone 8/ironwood 8 plus two rootiron ingots' rootstone 4/ironwood 2; kitchen_tidewake sluice_metal 8/reef_stone 8 plus two tidesteel ingots' sluice_metal 4/reef_stone 2), each well under the T1-T3 Master chests' preparation_supplies (masters.json). Kitchen and Forge themselves stay unbuilt: every station build, refine, Altar payment, Aster duel/chest, cook and feed must happen through ordinary play and production save. Levels L31/cap40/[1,2,3] are the 'cloudreach' profile's generated values. No Aster win, feast_t4 recipe, transaction receipt or selected-piece PASS is granted. This input claims no prior earned segment PASS or continuous lineage."
+    },
     "cloudreach_t4_aster_independent": {
       "boundary": "cloudreach_settled",
       "realm": "cloudreach",
