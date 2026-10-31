@@ -8,6 +8,7 @@ extends Node3D
 ## inside that footprint. No interaction, route, encounter or durable state.
 
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 
 
 func build(water_world: Node3D) -> void:
@@ -45,6 +46,16 @@ func build(water_world: Node3D) -> void:
 			continue
 		var offset: Array = spec.get("offset_xz_m", [0.0, 0.0])
 		var at := Vector2(float(at_raw[0]) + float(offset[0]), float(at_raw[2]) + float(offset[1]))
+		# A model-less entry is a clearing only: clean sand where the camera looks.
+		if str(spec.get("model", "")).is_empty() and float(spec.get("grass_clear_m", 0.0)) > 0.0:
+			var clearing := Node3D.new()
+			clearing.name = "Clearing_%s" % str(spec.get("id", "site"))
+			clearing.position = Vector3(at.x, 0.0, at.y)
+			clearing.add_to_group("grass_clear")
+			clearing.set_meta("grass_clear_radius", float(spec.grass_clear_m))
+			add_child(clearing)
+			GRASS_FIELD.clearings_dirty = true
+			continue
 		var model := _instantiate(str(spec.get("model", "")))
 		if model == null:
 			push_error("landmark model missing: %s" % spec.get("model", ""))
@@ -76,6 +87,13 @@ func build(water_world: Node3D) -> void:
 		if spec.has("float_y_m"):
 			holder.position.y = float(spec.float_y_m)
 		add_child(holder)
+		# `grass_clear_m` (beach_scene_candidate): the field's grass and loose
+		# stones step back from a placed building, so it stands on clean sand
+		# instead of a pebble-and-tuft carpet (grass_field.gd CLEAR_GROUP).
+		if float(spec.get("grass_clear_m", 0.0)) > 0.0:
+			holder.add_to_group("grass_clear")
+			holder.set_meta("grass_clear_radius", float(spec.grass_clear_m))
+			GRASS_FIELD.clearings_dirty = true
 		var box: Array = spec.get("collider_fraction", [])
 		if box.size() == 3:
 			var body := StaticBody3D.new()
