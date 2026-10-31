@@ -1,0 +1,13 @@
+{
+ "_comment": "Candidate creature scale-ups, OFF by default (scripts/creatures/creature_species.gd _apply_scale_flags). An enabled flag multiplies each named species' placeholder height and collider radius by its factor (>= 1: grow the smaller side, never shrink). The GPU judges an arm by flipping enabled; landing one is a separate gameplay check (bed fit, ride seats, spawn clearance).",
+ "flags": {
+  "creatures_f36_taller_than_trainer": {
+   "_why": "CREATURES-F36 (31 Oct). GPU ROSTER-1 High (31 Oct, coordinator): duskhush 6.77 and brooktail 6.84 stand at or barely above the 1.80 m trainer (bounding heights 2.3 / 2.1 m). Hard rule: creatures taller than the trainer; grow the smaller side. CPU r5 (three judges, confirming, r 0.98): duskhush x1.35 5.81 -> 6.31, brooktail x1.4 5.81 -> 6.56. Bramblebun x1.3 (+0.15) and trailpup x1.3 (+0.10) were within noise (their height already read FIXED) and are left out.",
+   "enabled": false,
+   "species": {
+    "duskhush": 1.35,
+    "brooktail": 1.4
+   }
+  }
+ }
+}

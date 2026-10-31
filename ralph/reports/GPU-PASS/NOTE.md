@@ -1,5 +1,23 @@
 # GPU-PASS lane note (owner's Windows desktop, GTX 1060 3GB; 21–22 Oct 2026)
 
+## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-3, Duskhush and Brooktail taller than the trainer (flag, High first)
+
+- **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-3-on` d13f2db3345f8a72c809ab2c94c7f28062965c26.
+  - The candidate is main plus a flag-off scale hook in `scripts/creatures/creature_species.gd` and `data/config/creature_scale_flags.json`.
+  - With the flag `false` it renders exactly as main.
+- **To judge:** set `flags.creatures_f36_taller_than_trainer.enabled` to `true`. No re-import is needed.
+  - Duskhush grows x1.35 (2.3 -> 3.1 m) and Brooktail x1.4 (2.1 -> 2.94 m).
+  - Height and collider radius grow together.
+- **Why:** ROSTER-1 High has duskhush at 6.77 and brooktail at 6.84; both stand barely above the trainer.
+- **CPU r5** (three judges, confirming, r 0.98): duskhush 5.81 -> 6.31, brooktail 5.81 -> 6.56. Both height defects go from PARTIAL x3 to FIXED x3.
+- **Verdict:** `ralph/reports/CREATURES-F36/r5/VERDICT.md` on `tb/creatures-f36`.
+- **Capture, High first:**
+  `godot --path . --rendering-method forward_plus --resolution 1920x1080 --script res://tools/art_pipeline/capture_f36_poses.gd -- --whole-body --context --species=duskhush,brooktail --out=<fresh dir> --source-commit=<arm sha>`
+  - Plain run, no `--candidate`: neither species plays a pose recipe.
+- **Report:**
+  - MET at High.
+  - The height defect call.
+
 ## GPU ARM REQUEST (CREATURES-F36 lane, 31 Oct): CO-F36-2, Sirenseal grounded hit (flag, High first)
 
 - **Arms:** control main a41e1b3061b27b21cb0c4add6e50b7fd95c95fb4 vs candidate `tb/co-f36-2-on` 505bc2e5ffad9bde51fa9919c2db7f8879af5fa1.
