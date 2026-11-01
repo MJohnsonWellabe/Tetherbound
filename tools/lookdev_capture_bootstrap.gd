@@ -31,7 +31,15 @@ static func prepare(tree: SceneTree, output_argument: String = "--output=") -> D
 			or sha_pattern.search(source) == null:
 		push_error("Look-dev matrix requires native renderer, named preset and source SHA")
 		return {}
-	if output.is_empty() or DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(output)):
+	# A batched phase2 launch (--jobs/--job) has one output per job; the
+	# capture base applies this same fresh-directory rule to each of them.
+	var batched := false
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--jobs=") or arg.begins_with("--job="):
+			batched = true
+	if batched and output.is_empty():
+		pass
+	elif output.is_empty() or DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(output)):
 		push_error("Look-dev matrix requires an explicit fresh output directory")
 		return {}
 	if not low_resolution.is_empty() and preset != "Low":

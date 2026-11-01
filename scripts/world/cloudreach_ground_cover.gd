@@ -42,6 +42,23 @@ var _profile_lines := 0
 var _profile_queries := 0
 var _profile_candidates := 0
 var _profile_linear_candidates := 0
+## Optional instance cache (capture-speed lane, 1 Nov 2026). See `cache_key()`.
+const CACHE_FORMAT := 1
+const CACHE_ARG := "--ground-cover-cache"
+const CACHE_DEFAULT_DIR := "user://ground_cover_cache"
+## Scripts whose code decides the generated transforms. Their source text is
+## part of the cache key, so editing any of them is a cache miss.
+const CACHE_CODE_PATHS: Array[String] = [
+	"res://scripts/world/cloudreach_ground_cover.gd",
+	"res://scripts/world/cloudreach_grass_roles.gd",
+	"res://scripts/world/cloudreach_cover_exclusion_index.gd",
+	"res://scripts/world/cloudreach_cover_buffer.gd",
+	"res://scripts/world/cloudreach_crown_surface.gd",
+]
+var _cache_hit: Dictionary = {}
+var _cache_record: Dictionary = {}
+var _cache_state := "off"
+static var _cache_unkeyable := false
 
 
 func build(patches: Array[Dictionary], config: Dictionary, exclusions: Array[Dictionary] = [],
@@ -83,10 +100,19 @@ func build(patches: Array[Dictionary], config: Dictionary, exclusions: Array[Dic
 		Color(str(config.get("bush_base", "#243b16"))),
 		Color(str(config.get("bush_tip", "#647a31"))), 0.055, 0.72, true)
 
+	var cache_path := _cache_path(patches, config, exclusions)
+	_cache_hit = {}
+	_cache_record = {}
+	_cache_state = "off"
+	if not cache_path.is_empty():
+		_cache_hit = load_cache(cache_path)
+		_cache_state = "hit" if not _cache_hit.is_empty() else "miss"
+		print("[cloudreach_cover] instance cache %s %s" % [_cache_state, cache_path])
 	for patch_index in patches.size():
 		await _breathe(build_budget)
 		var patch := patches[patch_index]
-		_active_exclusions = _nearby_exclusions(patch)
+		if _cache_state != "hit":
+			_active_exclusions = _nearby_exclusions(patch)
 		var patch_root := Node3D.new()
 		patch_root.name = "CoverPatch%03d" % patch_index
 		patch_root.position = _patch_origin(patch)
@@ -104,6 +130,15 @@ func build(patches: Array[Dictionary], config: Dictionary, exclusions: Array[Dic
 		var bush_count := mini(int(area * float(config.get("bush_density_per_m2", 0.0025))),
 			int(config.get("route_bush_patch_cap", 52) if is_route
 				else config.get("region_bush_patch_cap", 130)))
+		if _cache_state == "hit":
+			_grass_instances += await _emit_cached(patch_root, "Grass", patch_index, 0, grass_mesh,
+				dry_grass_material if bool(patch.get("dry", false)) else grass_material, config,
+				build_budget)
+			_flower_instances += await _emit_cached(patch_root, "Flowers", patch_index, 1,
+				flower_mesh, flower_material, config, build_budget)
+			_bush_instances += await _emit_cached(patch_root, "Understorey", patch_index, 2,
+				bush_mesh, bush_material, config, build_budget)
+			continue
 		_grass_instances += await _build_patch_tier(patch_root, "Grass", patch, grass_mesh,
 			dry_grass_material if bool(patch.get("dry", false)) else grass_material,
 			grass_count, float(config.get("grass_scale_min", 0.52)),
@@ -117,6 +152,16 @@ func build(patches: Array[Dictionary], config: Dictionary, exclusions: Array[Dic
 			bush_material, bush_count, float(config.get("bush_scale_min", 0.72)),
 			float(config.get("bush_scale_max", 1.18)), config, patch_index * 31 + 19, 2,
 			build_budget)
+	if _cache_state == "miss":
+		var error := save_cache(cache_path, _cache_record)
+		print("[cloudreach_cover] instance cache write %s %s" % [error_string(error), cache_path])
+	_cache_record = {}
+	_cache_hit = {}
+
+
+## "off", "hit" (transforms read from the cache) or "miss" (generated and written).
+func cache_state() -> String:
+	return _cache_state
 
 
 func grass_instance_count() -> int:
@@ -204,10 +249,125 @@ func _build_patch_tier(parent: Node3D, label: String, patch: Dictionary, mesh: A
 			continue
 		COVER_BUFFER.append(transforms, Transform3D(basis, at - origin))
 		accepted += 1
+	if _cache_state == "miss":
+		_cache_record[_cache_slot(parent, tier)] = transforms.duplicate()
 	if transforms.is_empty():
 		return 0
 	return await _emit_patch_tier(parent, label, mesh, material, transforms, config,
 		build_budget)
+
+
+func _cache_slot(parent: Node, tier: int) -> String:
+	return "%s:%d" % [str(parent.name), tier]
+
+
+## A cache hit uploads the exact float32 transforms a miss generated for this
+## patch and tier, through the same upload path, so the MultiMesh buffers,
+## counts, node names and order are identical.
+func _emit_cached(parent: Node3D, label: String, patch_index: int, tier: int, mesh: ArrayMesh,
+		material: ShaderMaterial, config: Dictionary, build_budget: RefCounted) -> int:
+	if mesh == null:
+		return 0
+	var cached: Variant = _cache_hit.get(_cache_slot(parent, tier), PackedFloat32Array())
+	var transforms: PackedFloat32Array = (cached as PackedFloat32Array).duplicate() \
+		if cached is PackedFloat32Array else PackedFloat32Array()
+	if transforms.is_empty():
+		return 0
+	return await _emit_patch_tier(parent, label, mesh, material, transforms, config,
+		build_budget)
+
+
+## The cache file for these exact inputs, or "" when the cache is off. On only
+## with `--ground-cover-cache` (or `--ground-cover-cache=<dir>`) on the
+## command line; capture tools pass it, ordinary play never does.
+func _cache_path(patches: Array[Dictionary], config: Dictionary,
+		exclusions: Array[Dictionary]) -> String:
+	var directory := ""
+	for arg: String in OS.get_cmdline_user_args():
+		if arg == CACHE_ARG:
+			directory = CACHE_DEFAULT_DIR
+		elif arg.begins_with(CACHE_ARG + "="):
+			directory = arg.trim_prefix(CACHE_ARG + "=").strip_edges()
+	if directory.is_empty():
+		return ""
+	var key := cache_key(patches, config, exclusions)
+	if key.is_empty():
+		push_warning("[cloudreach_cover] instance cache off: an input object has no fingerprint")
+		return ""
+	return "%s/cloudreach_cover_%s.bin" % [directory, key]
+
+
+## sha256 over everything that decides the generated transforms: the cache
+## format, engine version (FastNoiseLite, RNG), the generator scripts' source,
+## the ground-cover config, every patch (a crown-surface sampler by its exact
+## triangle bytes) and every exclusion, all as exact binary `var_to_bytes`.
+## Any change to any input is a different file; nothing is ever invalidated
+## in place.
+static func cache_key(patches: Array[Dictionary], config: Dictionary,
+		exclusions: Array[Dictionary]) -> String:
+	_cache_unkeyable = false
+	var hashing := HashingContext.new()
+	hashing.start(HashingContext.HASH_SHA256)
+	hashing.update(("format=%d engine=%s" % [CACHE_FORMAT, Engine.get_version_info().get("hash", "")]).to_utf8_buffer())
+	for path: String in CACHE_CODE_PATHS:
+		hashing.update(FileAccess.get_file_as_string(path).to_utf8_buffer())
+	hashing.update(var_to_bytes(_cache_plain(config)))
+	hashing.update(var_to_bytes(_cache_plain(patches)))
+	hashing.update(var_to_bytes(_cache_plain(exclusions)))
+	var digest := hashing.finish().hex_encode()
+	# An input object whose data cannot be fingerprinted makes the inputs
+	# unkeyable: never risk a stale hit, generate instead.
+	return "" if _cache_unkeyable else digest
+
+
+## Replace objects (crown-surface samplers) with a fingerprint of their data
+## so `var_to_bytes` never encodes an instance id.
+static func _cache_plain(value: Variant) -> Variant:
+	if value is Dictionary:
+		var out := {}
+		for key: Variant in (value as Dictionary):
+			out[key] = _cache_plain((value as Dictionary)[key])
+		return out
+	if value is Array:
+		var out := []
+		for item: Variant in (value as Array):
+			out.append(_cache_plain(item))
+		return out
+	if value is Object:
+		var object := value as Object
+		var triangles: Variant = object.get("_triangles") if is_instance_valid(object) else null
+		if triangles is PackedVector3Array:
+			return "sampler:" + (triangles as PackedVector3Array).to_byte_array().hex_encode().sha256_text()
+		_cache_unkeyable = true
+		return "object:" + (object.get_class() if is_instance_valid(object) else "freed")
+	return value
+
+
+static func load_cache(path: String) -> Dictionary:
+	if not FileAccess.file_exists(path):
+		return {}
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return {}
+	var stored: Variant = file.get_var()
+	file.close()
+	if not stored is Dictionary or int((stored as Dictionary).get("format", -1)) != CACHE_FORMAT:
+		return {}
+	var tiers: Variant = (stored as Dictionary).get("tiers", {})
+	return tiers as Dictionary if tiers is Dictionary else {}
+
+
+## Written to a temporary name and renamed, so a killed boot never leaves a
+## truncated file under the final key.
+static func save_cache(path: String, tiers: Dictionary) -> Error:
+	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+	var temporary := path + ".partial"
+	var file := FileAccess.open(temporary, FileAccess.WRITE)
+	if file == null:
+		return FileAccess.get_open_error()
+	file.store_var({"format": CACHE_FORMAT, "tiers": tiers})
+	file.close()
+	return DirAccess.rename_absolute(temporary, path)
 
 
 ## Upload one unchanged patch/tier batch. Drop the caller's temporary packed

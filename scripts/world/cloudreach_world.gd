@@ -439,6 +439,7 @@ func _ready() -> void:
 		if held_transition_player and is_instance_valid(_player):
 			_player.velocity = Vector3.ZERO
 			_player.process_mode = held_player_mode
+		_shell_build.call("end")
 		return
 	_shell_build.call("mark", "materials:begin")
 	_build_materials()

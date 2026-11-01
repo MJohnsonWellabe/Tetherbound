@@ -11,7 +11,7 @@ func _load_plan() -> bool:
 		return false
 	var start := 0
 	var count := -1
-	for arg: String in OS.get_cmdline_user_args():
+	for arg: String in _user_args():
 		if arg.begins_with("--start="):
 			start = maxi(0, int(arg.trim_prefix("--start=")))
 		elif arg.begins_with("--count="):
@@ -29,8 +29,18 @@ func _begin_manifest() -> void:
 	_manifest["dialogue_fixture"] = "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof."
 
 func _finish(_complete: bool) -> void:
+	super._finish(_job_complete())
+
+
+func _job_complete() -> bool:
 	# This pass deliberately records a post plus a conversation per plan row.
-	super._finish(_failures.is_empty() and _records.size() == _planned.size() * 2)
+	return _failures.is_empty() and _records.size() == _planned.size() * 2
+
+
+## Each row closes its conversation and eases the camera back to the ordinary
+## stand, so a later post is captured as its own launch would capture it.
+func _supports_jobs() -> bool:
+	return true
 
 func _dialogue_for(row: Dictionary) -> String:
 	var source := str(row.get("authored_source", ""))
