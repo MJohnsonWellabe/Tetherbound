@@ -1,0 +1,115 @@
+{
+ "_comment": "Candidate creature models, OFF by default (scripts/creatures/creature_species.gd _apply_model_flags). An enabled flag merges its per-species placeholder overrides (model, colourway_source_species, animations, ...) over species.json; keys starting with _ are notes. The GPU judges an arm by flipping enabled. Owner-picked remakes 1 Nov 2026: one flag per species so each closes on its own verdict.",
+ "flags": {
+  "remake_owner1101_terrapup": {
+   "_why": "Owner-picked remake 1 Nov 2026: lean rottweiler-like large dog, mossy stone plates on spine and head, jade eyes (Meshy 01a197b4-5a12-7537-a376-2d571177853a). Ground patch stripped, dog3 rig recipe at the established 3.20 m, dog3 clip author (every gameplay role), jade-eye emission. Provenance: assets/creatures/tetherbound/terrapup/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "terrapup": {
+     "model": "res://assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101.glb",
+     "colourway_source_species": "terrapup_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
+  },
+  "remake_owner1101_bramblebun": {
+   "_why": "Owner-picked remake 1 Nov 2026: four-legged hare, bark plates, glowing green veins and eyes (Meshy 01a197b7-3167-76f8-9c57-1ea6639fb9fc). No baked ground patch, dog3 rig recipe at the established 3.00 m, dog3 clip author (every gameplay role), emission on the concept's glow. Provenance: assets/creatures/tetherbound/bramblebun/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "bramblebun": {
+     "model": "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101.glb",
+     "colourway_source_species": "bramblebun_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
+  },
+  "remake_owner1101_trailpup": {
+   "_why": "Owner-picked remake 1 Nov 2026: nearly real coyote, glowing amber paws and eyes (Meshy 01a197b8-0e09-73e5-8c15-f5b00dfeb32b). Ground patch stripped, dog3 rig recipe at the established 3.10 m, dog3 clip author (every gameplay role), emission on the concept's glow. Provenance: assets/creatures/tetherbound/trailpup/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "trailpup": {
+     "model": "res://assets/creatures/tetherbound/trailpup/candidate_owner1101/models/creature_trailpup_owner1101.glb",
+     "colourway_source_species": "trailpup_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
+  },
+  "remake_owner1101_brooktail": {
+   "_why": "Owner-picked remake 1 Nov 2026: deep-river otter with glowing aqua spots (pick C) (Meshy 01a197bc-fe55-76c2-8485-fd85b35bd180). Grass tufts and patch stripped, dog3 rig recipe at the installed 2.10 m (creatures_f36_taller_than_trainer x1.4 still applies: 2.94 m in game), dog3 clip author (every gameplay role), emission on the concept's glow. Provenance: assets/creatures/tetherbound/brooktail/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "brooktail": {
+     "model": "res://assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101.glb",
+     "colourway_source_species": "brooktail_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
+  },
+  "remake_owner1101_pipwing": {
+   "_why": "Owner-picked remake 1 Nov 2026: lean adult owl, white and pale-blue feathers, ear tufts, glowing ice-blue eyes (Meshy 01a197bf-d61a-702c-b8a8-f82dfb3f9d58). No ground patch; rig_bird.py measured bird rig and its six clips with a shell-aware torso measurement (candidate_owner1101/source/prepare_pipwing_owner1101.py), folded wings, at the installed 1.90 m (creatures_f36_taller_than_trainer_2 x1.6 still applies: 3.04 m in game); eye emission. Provenance: assets/creatures/tetherbound/pipwing/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "pipwing": {
+     "model": "res://assets/creatures/tetherbound/pipwing/candidate_owner1101/models/creature_pipwing_owner1101.glb",
+     "colourway_source_species": "pipwing_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
+  }
+ }
+}

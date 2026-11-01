@@ -1,5 +1,5 @@
 {
- "_comment": "Storm-creature arc emission (tools/art_pipeline/arc_emission.py). Owner 25 Oct: glow only where natural to the element -- lightning arcs on storm creatures, never seams on fur or hide. Each entry builds an emissiveTexture from the albedo's painted arcs only.",
+ "_comment": "Storm-creature arc emission (tools/art_pipeline/arc_emission.py). Owner 25 Oct: glow only where natural to the element -- lightning arcs on storm creatures, never seams on fur or hide. Each entry builds an emissiveTexture from the albedo's painted arcs only. Owner-picked remakes (1 Nov 2026, flag-off candidates): the glowing eyes and the concept's glowing lines, veins or paws get the same albedo-derived emissive map.",
  "species": {
   "tanglevolt": {
    "_why": "Coordinator 25 Oct (order 4): Tanglevolt's lightning veins are painted into the albedo with no emissive map, so since the 24 Oct Forward+ emission-floor change they light like fur on Medium and High. Stormursa ships a real emissive map and is unaffected.",
@@ -13,6 +13,71 @@
    "blur_px": 6.0,
    "soften_px": 1.0,
    "gain": 1.6
+  },
+  "terrapup_owner1101": {
+   "_why": "Owner-picked remake 1 Nov (concept: jade eyes). Eyes only: the mossy stone plates sit at hue 60-100 and stay unlit.",
+   "model": "assets/creatures/tetherbound/terrapup/candidate_owner1101/models/creature_terrapup_owner1101.glb",
+   "hue": [
+    135,
+    175
+   ],
+   "sat_min": 0.35,
+   "lift": 0.05,
+   "blur_px": 8.0,
+   "soften_px": 2.0,
+   "gain": 3.0
+  },
+  "bramblebun_owner1101": {
+   "_why": "Owner-picked remake 1 Nov (concept: bark plates with glowing green veins, green eyes). The thin bright veins and eyes only; the broad leaf tail (yellower, no lift over its surroundings) stays unlit.",
+   "model": "assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101.glb",
+   "hue": [
+    115,
+    160
+   ],
+   "sat_min": 0.5,
+   "lift": 0.08,
+   "blur_px": 8.0,
+   "soften_px": 1.0,
+   "gain": 2.0
+  },
+  "trailpup_owner1101": {
+   "_why": "Owner-picked remake 1 Nov (concept: nearly real coyote, glowing amber paws and eyes). Paw pads and eyes; a wide blur so the broad pads still lift above the tan coat.",
+   "model": "assets/creatures/tetherbound/trailpup/candidate_owner1101/models/creature_trailpup_owner1101.glb",
+   "hue": [
+    15,
+    45
+   ],
+   "sat_min": 0.5,
+   "lift": 0.05,
+   "blur_px": 24.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "brooktail_owner1101": {
+   "_why": "Owner-picked remake 1 Nov (concept: deep-river otter with glowing aqua spots; owner 25 Oct: bioluminescence is natural on water creatures).",
+   "model": "assets/creatures/tetherbound/brooktail/candidate_owner1101/models/creature_brooktail_owner1101.glb",
+   "hue": [
+    160,
+    200
+   ],
+   "sat_min": 0.5,
+   "lift": 0.04,
+   "blur_px": 24.0,
+   "soften_px": 1.0,
+   "gain": 1.6
+  },
+  "pipwing_owner1101": {
+   "_why": "Owner-picked remake 1 Nov (concept: glowing ice-blue eyes and wing-feather edge lines). Eyes only: the feather edges sit at the same saturation as the pale-blue coat (median 0.34, 99th pct 0.44), so any mask that takes them lights the whole wing; left unlit rather than glow the coat (owner 25 Oct: no glowing seams on fur or hide).",
+   "model": "assets/creatures/tetherbound/pipwing/candidate_owner1101/models/creature_pipwing_owner1101.glb",
+   "hue": [
+    175,
+    215
+   ],
+   "sat_min": 0.45,
+   "lift": 0.06,
+   "blur_px": 8.0,
+   "soften_px": 1.5,
+   "gain": 2.5
   }
  }
 }

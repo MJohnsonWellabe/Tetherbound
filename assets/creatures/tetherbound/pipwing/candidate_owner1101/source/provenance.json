@@ -1,0 +1,47 @@
+{
+ "species": "pipwing",
+ "owner_direction": "1 Nov 2026 creature brainstorm pick (rule: believable adult animal, natural stance, one elemental trait, glowing eyes and lines, optional partial natural plates)",
+ "concept": "Pick A: lean adult owl-like bird, white and pale-blue feathers, ear tufts, glowing ice-blue eyes and wing-feather edge lines",
+ "reference": "ref_a.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image (nano-banana) on the existing licence, inspected by the coordinator and picked by the owner",
+ "meshy_image_to_3d_task": "01a197bf-d61a-702c-b8a8-f82dfb3f9d58",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "prepared candidate, flag-off: data/config/creature_model_flags.json remake_owner1101_pipwing (enabled false); awaiting GPU judging",
+ "prepared_model": "assets/creatures/tetherbound/pipwing/candidate_owner1101/models/creature_pipwing_owner1101.glb",
+ "preparation": {
+  "date": "2026-11-01",
+  "lane": "tb/creature-remakes (creature-remake lane)",
+  "steps": [
+   "assets/creatures/tetherbound/pipwing/candidate_owner1101/source/prepare_pipwing_owner1101.py (tools/art_pipeline/blender/rig_bird.py unchanged except a shell-aware torso_half_width; measured bird rig, folded wings, its six clips)",
+   "tools/art_pipeline/arc_emission.py (emissive map; rule in data/creatures/arc_emission.json)",
+   "tools/art_pipeline/texture_import_policy.py --apply (VRAM compressed, mode 2)"
+  ],
+  "commands": "blender --background --python assets/creatures/tetherbound/pipwing/candidate_owner1101/source/prepare_pipwing_owner1101.py -- assets/creatures/tetherbound/pipwing/candidate_owner1101/source/pipwing_a.glb --out rigged.glb --report prepare-report.json ; python3 tools/art_pipeline/arc_emission.py pipwing_owner1101",
+  "report": "assets/creatures/tetherbound/pipwing/candidate_owner1101/source/prepare-report.json",
+  "rig": {
+   "skeleton": "rig_bird 19 bones (root, pelvis, spine, neck, head, wing upper/fore/tip x2, tail_1-2, leg upper/lower/foot x2)",
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "hit",
+    "faint"
+   ],
+   "clips_match_installed": "the installed pipwing plays the same six roles",
+   "height_m": 1.9014,
+   "wings_folded": true,
+   "vertices": 15169
+  },
+  "emission_rule": "data/creatures/arc_emission.json species.pipwing_owner1101"
+ },
+ "flag": "data/config/creature_model_flags.json:remake_owner1101_pipwing",
+ "test": "tests/test_creature_model_flags.gd"
+}
