@@ -1,0 +1,27 @@
+{
+ "asset": "Tidewake beach focal piece: market_stall (owner 31 Oct: declutter the Tidewake locations, Meshy beach huts and a beach bar as their focus)",
+ "status": "CANDIDATE_FLAG_OFF: not wired (.gdignore here)",
+ "date": "2026-10-31",
+ "license": "Existing Meshy account (owner Standing direction 1, 15 Oct 2026); no purchase",
+ "reference": {
+  "file": "reference.jpg",
+  "drafted_by": "coordinator via Meshy text-to-image (agent-drafted reference, owner-authorized)",
+  "t2i_task_id": "01a1937f-088d-747c-bebd-f35820504ab4",
+  "prompt": "a seaside market stall: a wooden counter under a striped sand-and-teal canvas awning, baskets of fish, shells and fruit on display, hanging dried fish and a small hand-painted shell sign, for a tropical island fishing village in a creature-collecting adventure game, weathered pale driftwood, palm thatch, sun-bleached canvas in sand, teal and turquoise accents, rope and shells, painterly fantasy game concept art in the style of a Palworld and Valheim art board, single isolated object, three-quarter view from slightly above, centered, whole object visible, plain light grey background, soft even daylight, no red, no text, no people, no creatures",
+  "inspected_before_submission": true
+ },
+ "model": {
+  "endpoint": "/openapi/v1/image-to-3d",
+  "task_id": "01a1937f-92ca-7685-8f34-cbbfba4bd8a5",
+  "settings": {
+   "should_remesh": true,
+   "should_texture": true,
+   "enable_pbr": true,
+   "topology": "triangle",
+   "target_polycount": 30000,
+   "symmetry_mode": "auto"
+  },
+  "file": "market_stall.glb",
+  "sha256": "4c0326b55e8c38c64cc5306da335d2280c2c966af38d223ee3a56b01d314c0fc"
+ }
+}

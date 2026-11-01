@@ -1,0 +1,27 @@
+{
+ "asset": "Tidewake beach focal piece: fishing_shack (owner 31 Oct: declutter the Tidewake locations, Meshy beach huts and a beach bar as their focus)",
+ "status": "CANDIDATE_FLAG_OFF: not wired (.gdignore here)",
+ "date": "2026-10-31",
+ "license": "Existing Meshy account (owner Standing direction 1, 15 Oct 2026); no purchase",
+ "reference": {
+  "file": "reference.jpg",
+  "drafted_by": "coordinator via Meshy text-to-image (agent-drafted reference, owner-authorized)",
+  "t2i_task_id": "01a1937f-0750-70c7-b76c-fe6cb0fd3815",
+  "prompt": "a weathered fishermen's shack on a short plank jetty: plank walls and a tin-and-thatch roof, fishing nets hung to dry on poles, lobster pots and crates stacked by the door, a coil of rope and oars, for a tropical island fishing village in a creature-collecting adventure game, weathered pale driftwood, palm thatch, sun-bleached canvas in sand, teal and turquoise accents, rope and shells, painterly fantasy game concept art in the style of a Palworld and Valheim art board, single isolated object, three-quarter view from slightly above, centered, whole object visible, plain light grey background, soft even daylight, no red, no text, no people, no creatures",
+  "inspected_before_submission": true
+ },
+ "model": {
+  "endpoint": "/openapi/v1/image-to-3d",
+  "task_id": "01a1937f-8d95-7498-b25d-a9bc1df4b3c3",
+  "settings": {
+   "should_remesh": true,
+   "should_texture": true,
+   "enable_pbr": true,
+   "topology": "triangle",
+   "target_polycount": 30000,
+   "symmetry_mode": "auto"
+  },
+  "file": "fishing_shack.glb",
+  "sha256": "10715c5ed5d0ad88fc5fa18be4b576270d7afce7a9f37c9b23f0f46eb7d2f1c2"
+ }
+}

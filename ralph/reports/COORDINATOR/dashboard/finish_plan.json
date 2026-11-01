@@ -424,6 +424,18 @@
  ],
  "in_flight": [
   {
+   "what": "Cindercub coat lift Medium",
+   "where": "main",
+   "state": "landed",
+   "detail": "MET 7.51 High / 7.58 Medium; F36#39 closed"
+  },
+  {
+   "what": "TW-LOOK-1 Tidewake declutter with Meshy beach pieces",
+   "where": "tb/tidewake-1-on",
+   "state": "landed",
+   "detail": "GPU: six islands +0.67 to +0.98 (mean 5.34 -> 6.19)"
+  },
+  {
    "what": "ROSTER-1 near-bar F36 re-judge on current main",
    "where": "main",
    "state": "queued",
