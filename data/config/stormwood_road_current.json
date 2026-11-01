@@ -4,15 +4,15 @@
   "puddle_candidate": {
     "enabled": false,
     "scope": "client_presentation",
-    "_why": "P2-040 (GPU 5.63; judges: the charge reads as a gold decal on a flat brown path with no edge wear, puddles or wet glints). When enabled, stormwood_road_current.gd _build_puddles scatters soft-edged dark glossy puddles along every road (about one per spacing_m, offset across the lane, skipped where the ground under one is not level), so the rain-soaked road catches the sky and the gold current shows through. One MultiMesh per route; no collider; no bake input. Owner yellow current unchanged. OFF until GPU judged.",
+    "_why": "P2-040 (GPU 5.63; judges: the charge reads as a gold decal on a flat brown path with no edge wear, puddles or wet glints). When enabled, stormwood_road_current.gd _build_puddles scatters soft-edged dark glossy puddles along every road (about one per spacing_m, offset across the lane, skipped where the ground under one is not level), so the rain-soaked road catches the sky and the gold current shows through. One MultiMesh per route; no collider; no bake input. Owner yellow current unchanged. CPU r1 at lift 0.04 m showed nothing (buried under the coarser terrain mesh, like the ribbons before their 0.14 m lift); 0.13 m and a 0.25 m level check. OFF until GPU judged.",
     "spacing_m": 9.0,
     "radius_m": [0.7, 1.5],
-    "max_relief_m": 0.12,
+    "max_relief_m": 0.25,
     "colour": "#161922",
     "roughness": 0.06,
     "specular": 0.9,
     "alpha": 0.88,
-    "lift_m": 0.04
+    "lift_m": 0.13
   },
   "finish_candidate": {
     "enabled": true,
