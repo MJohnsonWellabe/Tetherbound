@@ -1140,26 +1140,73 @@ static func _coat_flag_map() -> Dictionary:
 	if not parsed is Dictionary:
 		push_error("creature_coat_flags.json is not an object")
 		return _coat_map
-	var flags: Dictionary = (parsed as Dictionary).get("flags", {})
+	_coat_map = parse_coat_flags(parsed as Dictionary)
+	return _coat_map
+
+
+## Resolve the enabled coat flags into {live albedo path: spec}. Public so the
+## flag shape is unit-tested without a model (tests/test_creature_coat_flags.gd).
+## A flag's `coats` must be a dictionary keyed by the live albedo path; any
+## other shape is an authoring error and says so instead of silently applying
+## nothing (CO-F36-7 was judged identical on the GPU and nothing was logged).
+static func parse_coat_flags(parsed: Dictionary) -> Dictionary:
+	var resolved_map: Dictionary = {}
+	var flags: Variant = parsed.get("flags", {})
+	if not flags is Dictionary:
+		push_error("creature_coat_flags.json: flags is not an object")
+		return resolved_map
 	for flag: String in flags:
 		var entry: Variant = flags[flag]
 		if not entry is Dictionary or not bool(entry.get("enabled", false)):
 			continue
-		var coats: Dictionary = entry.get("coats", {})
+		var coats_value: Variant = entry.get("coats", {})
+		if not coats_value is Dictionary:
+			push_error("coat flag %s: coats must map a live albedo path to a graded path or material values" % flag)
+			continue
+		var coats: Dictionary = coats_value
 		for from_path: String in coats:
 			# A string is a graded albedo path; a dictionary may also carry
 			# material values ({"albedo"?, "metallic"?, "roughness"?,
-			# "specular"?}), where a roughness value replaces the roughness map.
+			# "specular"?, "emission_scale"?}), where a roughness value replaces
+			# the roughness map and emission_scale multiplies a self-lit body's
+			# emission energy (so its form reads under the stage light).
 			var spec: Variant = coats[from_path]
-			var resolved: Dictionary = spec.duplicate() if spec is Dictionary else {"albedo": str(spec)}
+			if not (spec is Dictionary or spec is String):
+				push_error("coat flag %s: %s has neither a path nor material values" % [flag, from_path])
+				continue
+			var resolved: Dictionary = (spec as Dictionary).duplicate() if spec is Dictionary else {"albedo": str(spec)}
 			var to_path := str(resolved.get("albedo", ""))
 			if not to_path.is_empty() and not ResourceLoader.exists(to_path):
 				push_error("coat flag %s: %s is missing" % [flag, to_path])
 				continue
-			var merged: Dictionary = _coat_map.get(from_path, {})
+			var merged: Dictionary = resolved_map.get(from_path, {})
 			merged.merge(resolved, true)
-			_coat_map[from_path] = merged
-	return _coat_map
+			resolved_map[from_path] = merged
+	return resolved_map
+
+
+## The coated copy of one live material. It keeps the source's resource_name:
+## the field-brightness pass skips names ending "_field_bright", so a renamed
+## copy of a brightened coat would be brightened twice.
+static func coat_material(source: BaseMaterial3D, spec: Dictionary) -> BaseMaterial3D:
+	var copy := source.duplicate() as BaseMaterial3D
+	var from_path := source.albedo_texture.resource_path if source.albedo_texture != null else ""
+	var to_path := str(spec.get("albedo", ""))
+	if not to_path.is_empty():
+		var graded := load(to_path) as Texture2D
+		copy.albedo_texture = graded
+		if copy.emission_texture != null and copy.emission_texture.resource_path == from_path:
+			copy.emission_texture = graded
+	if spec.has("metallic"):
+		copy.metallic = clampf(float(spec.metallic), 0.0, 1.0)
+	if spec.has("roughness"):
+		copy.roughness_texture = null
+		copy.roughness = clampf(float(spec.roughness), 0.0, 1.0)
+	if spec.has("specular"):
+		copy.metallic_specular = clampf(float(spec.specular), 0.0, 1.0)
+	if spec.has("emission_scale"):
+		copy.emission_energy_multiplier *= clampf(float(spec.emission_scale), 0.0, 1.0)
+	return copy
 
 
 func _apply_coat_flags() -> void:
@@ -1180,22 +1227,7 @@ func _apply_coat_flags() -> void:
 				continue
 			var key := source.get_instance_id()
 			if not _coat_materials.has(key):
-				var copy := source.duplicate() as BaseMaterial3D
-				var spec: Dictionary = coats[from_path]
-				var to_path := str(spec.get("albedo", ""))
-				if not to_path.is_empty():
-					var graded := load(to_path) as Texture2D
-					copy.albedo_texture = graded
-					if copy.emission_texture != null and copy.emission_texture.resource_path == from_path:
-						copy.emission_texture = graded
-				if spec.has("metallic"):
-					copy.metallic = clampf(float(spec.metallic), 0.0, 1.0)
-				if spec.has("roughness"):
-					copy.roughness_texture = null
-					copy.roughness = clampf(float(spec.roughness), 0.0, 1.0)
-				if spec.has("specular"):
-					copy.metallic_specular = clampf(float(spec.specular), 0.0, 1.0)
-				_coat_materials[key] = copy
+				_coat_materials[key] = coat_material(source, coats[from_path])
 			instance.set_surface_override_material(surface, _coat_materials[key])
 
 
