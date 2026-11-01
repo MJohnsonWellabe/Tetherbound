@@ -198,7 +198,7 @@ const MATERIAL := """
 			coast_dune_face_shade_start_y, abs(dune_normal.y) + (patch - 0.5) * 0.06);
 		sand *= 1.0 - face_shade * coast_dune_face_shade_strength;
 		if (coast_dune_flank_strength > 0.0 || coast_dune_strata_strength > 0.0) {
-			float steep = 1.0 - smoothstep(0.5, 0.93, abs(dune_normal.y));
+			float steep = 1.0 - smoothstep(0.72, 0.985, abs(dune_normal.y));
 			vec2 across_dir = normalize(vec2(-dune_normal.z, dune_normal.x) + vec2(0.0001));
 			float across = dot(v_vertex.xz, across_dir);
 			float runnel = coast_noise(vec2(across * coast_dune_flank_scale, v_vertex.y * 0.05)) * 0.65
@@ -209,9 +209,9 @@ const MATERIAL := """
 			sand *= 1.0 - strata * coast_dune_strata_strength * steep;
 		}
 		if (coast_dune_scrub_strength > 0.0) {
-			float level = smoothstep(0.82, 0.95, abs(dune_normal.y));
+			float level = smoothstep(0.9, 0.985, abs(dune_normal.y));
 			float scrub = coast_noise(v_vertex.xz * coast_dune_scrub_scale) * coast_noise(v_vertex.xz * coast_dune_scrub_scale * 3.3 + vec2(7.1));
-			scrub = smoothstep(0.30, 0.46, scrub + (grain - 0.5) * 0.12) * level;
+			scrub = smoothstep(0.26, 0.40, scrub + (grain - 0.5) * 0.12) * level;
 			sand = mix(sand, coast_dune_scrub_colour * mix(0.82, 1.08, grain), scrub * coast_dune_scrub_strength);
 		}
 		// Sand caps the gentle ground; required steep banks expose the

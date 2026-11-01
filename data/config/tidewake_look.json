@@ -18,11 +18,11 @@
         "surfaces": {"water": {
           "shallow_colour": "#74c2b6", "mid_colour": "#2f8f9f", "mid_depth_m": 4.0, "depth_falloff": 16.0, "depth_band_break_m": 1.4,
           "foam_depth": 0.5, "surf_strength": 1.0, "surf_depth_m": 1.0, "surf_breakup": 0.32, "surf_vary": 0.6,
-          "haze_colour": "#a3c3ce", "haze_strength": 0.6, "haze_start_m": 50.0, "haze_full_m": 650.0,
+          "haze_colour": "#a3c3ce", "haze_strength": 0.3, "haze_start_m": 140.0, "haze_full_m": 1600.0,
           "slick_colour": "#5c97a6", "slick_strength": 0.35, "slick_scale": 0.006, "slick_calm": 0.75,
-          "cap_strength": 0.6, "cap_scale": 0.05, "cap_threshold": 0.42, "cap_far_m": 150.0
+          "cap_strength": 0.45, "cap_scale": 0.11, "cap_threshold": 0.5, "cap_far_m": 120.0
         }},
-        "offshore": {"deep_colour": "#15506c", "depth_start_m": 4.0, "depth_full_m": 42.0, "strength": 0.88, "variation_scale": 0.0055, "variation_strength": 0.3, "fresnel_multiplier": 0.35}
+        "offshore": {"deep_colour": "#15506c", "depth_start_m": 4.0, "depth_full_m": 42.0, "strength": 0.88, "variation_scale": 0.0055, "variation_strength": 0.3, "fresnel_multiplier": 0.18}
       }
     },
     "light": {
@@ -32,7 +32,7 @@
       "merge": {
         "cause_light_look": {"times": {"day": {
           "sky": {"top_colour": "#3a86bd", "horizon_colour": "#bcd5de", "ground_horizon_colour": "#bcd5de", "horizon_haze_colour": "#c4dae1", "horizon_haze_strength": 0.45, "horizon_haze_height": 0.13, "cloud_lit": "#fbfaf4"},
-          "environment": {"fog_colour": "#b4cfd8", "fog_density": 0.0006, "aerial_perspective": 0.9, "fog_sky_affect": 0.2, "adjustment_contrast": 1.08, "adjustment_saturation": 1.04}
+          "environment": {"fog_colour": "#b4cfd8", "fog_density": 0.00045, "aerial_perspective": 0.9, "fog_sky_affect": 0.2, "adjustment_contrast": 1.08, "adjustment_saturation": 1.04}
         }}}
       }
     },
@@ -41,7 +41,7 @@
       "enabled": false,
       "restore": ["dune_grass_candidate", "stones_candidate", "lesson_clusters_candidate"],
       "merge": {
-        "dunes": {"flank_strength": 0.22, "flank_scale": 0.3, "strata_strength": 0.08, "scrub_strength": 0.4, "scrub_scale": 0.06, "scrub_colour": "#7d7a5a", "face_shade_strength": 0.2}
+        "dunes": {"flank_strength": 0.35, "flank_scale": 0.3, "strata_strength": 0.1, "scrub_strength": 0.55, "scrub_scale": 0.06, "scrub_colour": "#7d7a5a", "face_shade_strength": 0.2}
       }
     }
   },
