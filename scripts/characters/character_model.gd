@@ -143,6 +143,7 @@ func build_from_config(cfg: Dictionary) -> bool:
 	_gait_speeds = cfg.get("gait_reference_speeds", {})
 	if not _build_art(str(cfg.get("model", ""))):
 		return false
+	_apply_idle_relax(cfg.get("idle_relax", {}))
 	_hide_placeholders()
 	_apply_palette(cfg)
 	_apply_hair(cfg)
@@ -171,11 +172,13 @@ static func config_for(key: String, appearance_variant: String = "",
 ## GPU arms (owner, 31 Oct): a candidate NPC body look ships as a named flag in
 ## data/config/character_body_flags.json, OFF by default, so the GPU judges it
 ## by flipping `enabled`. An enabled flag merges its per-character overrides
-## (only the body albedo override) over that character's art.json entry; the
+## (only the keys in BODY_FLAG_KEYS: a body albedo override, a daylight rim
+## {strength, tint}, an idle arm relax {arm_drop_deg, elbow_bend_deg}) over
+## that character's art.json entry; the
 ## rig, clips, palette and accessories are untouched. A later appearance variant
 ## still wins over the flag, so a variant keeps its own authored body.
 const BODY_FLAGS_PATH := "res://data/config/character_body_flags.json"
-const BODY_FLAG_KEYS := ["body_albedo_override"]
+const BODY_FLAG_KEYS := ["body_albedo_override", "day_rim", "idle_relax"]
 
 
 static func with_body_flags(cfg: Dictionary, key: String, flags_doc: Variant = null) -> Dictionary:
@@ -305,6 +308,46 @@ func _build_art(path: String) -> bool:
 ## hack removed the swing and kept the anatomical error. The clips are now
 ## authored on render-verified axes (animate_humanoid.py's AXES table) at
 ## the amplitude they ship at, and nothing corrects them at load.
+
+
+## Relaxed idle (body flag, OFF by default). The Meshy auto-rigs rest in an
+## A-pose and the authored idle only breathes around that rest, so judges read
+## "stiff A-pose". This lowers both upper arms about their own Z axis (the
+## arm's abduction axis in animate_humanoid.py's verified AXES; left and right
+## mirror) and adds a little elbow flexion (forearm -X), on a per-character copy
+## of the idle clip so the shared imported resource is untouched.
+func _apply_idle_relax(relax: Variant) -> void:
+	if not relax is Dictionary or (relax as Dictionary).is_empty() or _anim == null:
+		return
+	var drop := clampf(float((relax as Dictionary).get("arm_drop_deg", 0.0)), -60.0, 60.0)
+	var bend := clampf(float((relax as Dictionary).get("elbow_bend_deg", 0.0)), 0.0, 30.0)
+	var clip := StringName(clip_for("idle"))
+	for library_name: StringName in _anim.get_animation_library_list():
+		var library := _anim.get_animation_library(library_name)
+		if not library.has_animation(clip):
+			continue
+		var copy := library.duplicate() as AnimationLibrary
+		var idle := copy.get_animation(clip).duplicate(true) as Animation
+		var deltas := {
+			"LeftArm": Quaternion(Vector3.RIGHT, deg_to_rad(drop)),
+			"RightArm": Quaternion(Vector3.RIGHT, deg_to_rad(drop)),
+			"LeftForeArm": Quaternion(Vector3.RIGHT, deg_to_rad(-bend)),
+			"RightForeArm": Quaternion(Vector3.RIGHT, deg_to_rad(-bend)),
+		}
+		for track in idle.get_track_count():
+			if idle.track_get_type(track) != Animation.TYPE_ROTATION_3D:
+				continue
+			var bone := str(idle.track_get_path(track)).get_slice(":", 1)
+			if not deltas.has(bone):
+				continue
+			for k in idle.track_get_key_count(track):
+				var q := idle.track_get_key_value(track, k) as Quaternion
+				idle.track_set_key_value(track, k, (q * (deltas[bone] as Quaternion)).normalized())
+		copy.remove_animation(clip)
+		copy.add_animation(clip, idle)
+		_anim.remove_animation_library(library_name)
+		_anim.add_animation_library(library_name, copy)
+		return
 
 
 ## Pull clips from separate animation files onto this character.
@@ -583,9 +626,14 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 	var night_rim: Dictionary = _cfg.get("night_rim", {}) if body else {}
 	var rim_strength := clampf(float(night_rim.get("strength", 0.0)), 0.0, 1.0)
 	var rim_tint := clampf(float(night_rim.get("tint", 0.15)), 0.0, 1.0)
-	var key := "%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
+	# A daylight rim (body flag, OFF by default): a constant lit edge so a face
+	# and silhouette separate from the backdrop in close-ups and dialogue.
+	var day_rim: Dictionary = _cfg.get("day_rim", {}) if body else {}
+	var day_rim_strength := clampf(float(day_rim.get("strength", 0.0)), 0.0, 1.0)
+	var key := "%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s" % [str(_cfg.get("model", "")), name, colour.to_html(),
 		("" if finish.is_empty() else "%s/%s" % [finish.get("metallic", ""), finish.get("roughness", "")]),
-		str(body), body_albedo_path, body_emission_path, str(body_emission_enabled), emission_floor, rim_strength, rim_tint]
+		str(body), body_albedo_path, body_emission_path, str(body_emission_enabled), emission_floor, rim_strength, rim_tint,
+		"%.3f/%.3f" % [day_rim_strength, float(day_rim.get("tint", 0.3))]]
 	if _variant_materials.has(key):
 		return _variant_materials[key]
 	var material: BaseMaterial3D = (source.duplicate() as BaseMaterial3D) \
@@ -822,6 +870,10 @@ func _shared_variant_material(source: Material, name: String, colour: Color,
 		material.set_meta(PLAYER_RIM_STRENGTH_META, rim_strength)
 		material.set_meta(PLAYER_RIM_TINT_META, rim_tint)
 		_apply_player_character_rim(material)
+	elif body and day_rim_strength > 0.0:
+		material.rim_enabled = true
+		material.rim = day_rim_strength
+		material.rim_tint = clampf(float(day_rim.get("tint", 0.3)), 0.0, 1.0)
 	_variant_materials[key] = material
 	return material
 

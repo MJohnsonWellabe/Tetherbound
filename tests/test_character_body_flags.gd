@@ -45,3 +45,48 @@ func test_flag_touches_only_its_character_and_body_keys() -> void:
 	assert_false(base.has("body_albedo_override"), "the source entry is not mutated")
 	var off := {"flags": {"f": {"enabled": false, "characters": {"a": {"body_albedo_override": "res://x.png"}}}}}
 	assert_true(CHARACTER_MODEL.with_body_flags(base, "a", off) == base, "a disabled flag applies nothing")
+
+
+func _idle_arm_key(model: Node3D) -> Quaternion:
+	var player: AnimationPlayer = model.call("animation_player")
+	var clip := StringName(str(model.call("clip_for", "idle")))
+	for library_name: StringName in player.get_animation_library_list():
+		var library := player.get_animation_library(library_name)
+		if not library.has_animation(clip):
+			continue
+		var idle := library.get_animation(clip)
+		for track in idle.get_track_count():
+			if idle.track_get_type(track) == Animation.TYPE_ROTATION_3D \
+					and str(idle.track_get_path(track)).ends_with(":LeftArm"):
+				return idle.track_get_key_value(track, 0)
+	return Quaternion.IDENTITY
+
+
+func _build(cfg: Dictionary) -> Node3D:
+	var model := Node3D.new()
+	model.set_script(CHARACTER_MODEL)
+	model.call("build_from_config", cfg)
+	return model
+
+
+## A relaxed idle changes only this character's copy of the idle clip, and a
+## daylight rim lights only the flagged body's material.
+func test_idle_relax_and_day_rim_apply_per_character() -> void:
+	var base_cfg := CHARACTER_MODEL.config_for("innkeeper")
+	assert_true(not base_cfg.is_empty(), "innkeeper has an art.json entry")
+	var plain := _build(base_cfg)
+	var cfg := base_cfg.duplicate(true)
+	cfg["idle_relax"] = {"arm_drop_deg": 22.0, "elbow_bend_deg": 8.0}
+	cfg["day_rim"] = {"strength": 0.5, "tint": 0.3}
+	var relaxed := _build(cfg)
+	var before := _idle_arm_key(plain)
+	var after := _idle_arm_key(relaxed)
+	assert_true(before.angle_to(after) > deg_to_rad(15.0), "the relaxed idle lowers the upper arm")
+	var again := _build(base_cfg)
+	assert_true(_idle_arm_key(again).angle_to(before) < 0.001, "the shared idle clip is untouched for other bodies")
+	var lit := relaxed.call("body_material") as BaseMaterial3D
+	assert_true(lit != null and lit.rim_enabled and is_equal_approx(lit.rim, 0.5), "the daylight rim lights the flagged body")
+	var unlit := plain.call("body_material") as BaseMaterial3D
+	assert_false(unlit != null and unlit.rim_enabled, "an unflagged body keeps no rim")
+	for model: Node3D in [plain, relaxed, again]:
+		model.free()
