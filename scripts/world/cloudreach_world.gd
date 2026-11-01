@@ -128,10 +128,6 @@ var _visual_config: Dictionary = {}
 ## lower meadow crown cuts across, and never tucks under the crown. Flag: cloudreach_grounding.json
 ## "monotonic_walls" (default off); preview --cloudreach-walls-candidate.
 var _monotonic_walls := false
-## Same flag file, "skip_floating_shelves": wall shelves hanging over walkable
-## ground within this many metres are not built (0 = off).
-var _float_shelf_clear_m := 0.0
-var shelves_skipped_floating := 0
 var _surfaces: Array[Dictionary] = []
 var _cover_patches: Array[Dictionary] = []
 var _materials: Dictionary = {}
@@ -395,9 +391,6 @@ func _ready() -> void:
 	_visual_config = _read_json(VISUAL_CONFIG_PATH)
 	_monotonic_walls = bool(preload("res://scripts/world/cloudreach_grounding.gd").read_config().get(
 		"monotonic_walls", false)) or OS.get_cmdline_user_args().has("--cloudreach-walls-candidate")
-	var grounding_cfg: Dictionary = preload("res://scripts/world/cloudreach_grounding.gd").read_config()
-	if bool(grounding_cfg.get("skip_floating_shelves", false)) or OS.get_cmdline_user_args().has("--cloudreach-shelves-candidate"):
-		_float_shelf_clear_m = float(grounding_cfg.get("shelf_float_clear_m", 45.0))
 	_visual_config = preload("res://scripts/world/cloudreach_visual_candidate.gd").apply(_visual_config, "visual")
 	_visual_config = preload("res://scripts/world/cloudreach_biome_look.gd").apply_visual(_visual_config)
 	_visual_config = preload("res://scripts/world/cloudreach_settlement_life.gd").apply(_visual_config, "visual")
@@ -6595,15 +6588,6 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 				shelf_height):
 			shelves_skipped_for_routes += 1
 			continue
-		# Owner 31 Oct 2026 ("big cylinders that don't touch the ground"): a
-		# wall shelf whose underside hangs over a walkable road or crown reads
-		# from that ground as a rock drum floating overhead (stand
-		# vegetatedgeolog12_1). The grounding pass cannot seat it without
-		# planting rock on the road, so with the flag on it is not built.
-		if _float_shelf_clear_m > 0.0 and _shelf_floats_over_ground(parent.global_transform * shelf,
-				shelf_width * 0.5, shelf_height, _float_shelf_clear_m):
-			shelves_skipped_floating += 1
-			continue
 		_mesa(parent, "VegetatedGeologicalShelf%d" % i, shelf - Vector3.UP * shelf_height * 0.5,
 			Vector3(shelf_width, shelf_height, shelf_width * 0.78), _materials["cliff"], _materials["upland"],
 			i<3, seed_value + 131 + i)
@@ -6616,30 +6600,6 @@ func _build_embedded_rock_shelves(parent: Node3D, size: Vector3, seed_value: int
 			_apply_tree_palette(tree, seed_value + i)
 			parent.add_child(tree)
 			_set_geometry_visibility(tree, 1050.0)
-
-
-## Whether a wall shelf whose top centre is `top` (global) hangs in the air
-## over walkable ground: a road ribbon or registered surface within its radius
-## lies between a walker's headroom and `clear_m` below its underside.
-func _shelf_floats_over_ground(top: Vector3, radius: float, height: float, clear_m: float) -> bool:
-	if _all_route_lines.is_empty():
-		_collect_all_route_lines()
-	var bottom_y := top.y - height
-	var headroom := float(_visual_config.get("landmass", {}).get("route_shelf_headroom_m", 3.2))
-	for line: Dictionary in _lines_near(top.x - radius, top.x + radius, top.z - radius, top.z + radius):
-		var hit := _line_point_xz(line, top)
-		if float(hit["distance"]) > float(line["half_width"]) + radius:
-			continue
-		var gap := bottom_y - float(hit["height"])
-		if gap >= headroom and gap <= clear_m:
-			return true
-	for offset: Vector2 in [Vector2.ZERO, Vector2(0.6, 0.0), Vector2(-0.6, 0.0), Vector2(0.0, 0.6), Vector2(0.0, -0.6)]:
-		var ground := ground_height_at(top.x + offset.x * radius, top.z + offset.y * radius, bottom_y - clear_m * 0.5)
-		if is_finite(ground):
-			var gap := bottom_y - ground
-			if gap >= headroom and gap <= clear_m:
-				return true
-	return false
 
 
 ## Whether a colliding shelf whose top centre is `top` (global) would stand in
