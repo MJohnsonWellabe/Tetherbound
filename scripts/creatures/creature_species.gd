@@ -14,6 +14,12 @@ const WATER_CATALOGUE := preload("res://scripts/creatures/water_species_catalog.
 ## `enabled`. An enabled flag multiplies a species' placeholder height and
 ## collider radius by the same factor (grow the smaller side, never shrink).
 const SCALE_FLAGS_PATH := "res://data/config/creature_scale_flags.json"
+## Candidate creature models (owner-picked remakes, 1 Nov 2026) ship the same
+## way: a named flag, OFF by default, whose `species` map holds placeholder
+## overrides (model, colourway source, clip map). An enabled flag merges them
+## over the species' placeholder; the installed model stays the default.
+## Applied before the scale flags so a scale-up still multiplies the height.
+const MODEL_FLAGS_PATH := "res://data/config/creature_model_flags.json"
 
 static var _table: Dictionary = {}
 static var _fly_capabilities: Dictionary = {}
@@ -34,8 +40,44 @@ static func table() -> Dictionary:
 			_table = water.catalogue
 		else:
 			push_error("Water species registration failed: %s" % water.errors)
+		_apply_model_flags(_table)
 		_apply_scale_flags(_table)
 	return _table
+
+
+static func _apply_model_flags(rows: Dictionary) -> void:
+	if not FileAccess.file_exists(MODEL_FLAGS_PATH):
+		return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(MODEL_FLAGS_PATH))
+	if not parsed is Dictionary:
+		push_error("creature_model_flags.json is not an object")
+		return
+	merge_model_flags(rows, (parsed as Dictionary).get("flags", {}))
+
+
+## Merge every enabled flag's placeholder overrides into `rows`. Split from the
+## file read so a test can apply one flag as if it were enabled.
+static func merge_model_flags(rows: Dictionary, flags: Dictionary) -> void:
+	for flag: String in flags:
+		var entry: Variant = flags[flag]
+		if not entry is Dictionary or not bool(entry.get("enabled", false)):
+			continue
+		var overrides: Dictionary = entry.get("species", {})
+		for id: String in overrides:
+			var spec: Variant = overrides[id]
+			if not rows.has(id) or not spec is Dictionary:
+				push_error("model flag %s: %s needs a known species and an override object" % [flag, id])
+				continue
+			var model := str((spec as Dictionary).get("model", ""))
+			if not model.is_empty() and not ResourceLoader.exists(model):
+				push_error("model flag %s: %s is missing" % [flag, model])
+				continue
+			var row: Dictionary = rows[id]
+			var look: Dictionary = (row.get("placeholder", {}) as Dictionary).duplicate(true)
+			for key: String in spec:
+				if not key.begins_with("_"):
+					look[key] = (spec as Dictionary)[key]
+			row["placeholder"] = look
 
 
 static func _apply_scale_flags(rows: Dictionary) -> void:

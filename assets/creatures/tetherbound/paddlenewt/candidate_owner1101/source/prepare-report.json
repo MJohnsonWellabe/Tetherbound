@@ -1,0 +1,71 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 5513,
+    "spine": 7980,
+    "neck": 5174,
+    "head": 8286,
+    "front_upper_l": 243,
+    "front_lower_l": 270,
+    "front_upper_r": 259,
+    "front_lower_r": 271,
+    "tail_1": 153,
+    "tail_2": 71,
+    "rear_upper_l": 144,
+    "rear_lower_l": 34,
+    "rear_upper_r": 186,
+    "rear_lower_r": 21
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 14004,
+  "height_m": 2.1499,
+  "length_m": 3.7386,
+  "width_m": 2.0062,
+  "triangles": 27999,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.2942,
+      -0.2584,
+      0.1241
+    ],
+    "front_r": [
+      0.2947,
+      -0.2593,
+      0.124
+    ],
+    "rear_l": [
+      -0.0588,
+      0.1542,
+      0.2244
+    ],
+    "rear_r": [
+      0.0631,
+      0.2465,
+      0.2254
+    ]
+  },
+  "back_top_normalised": 0.7272,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": {
+    "patch_band_m_normalised": 0.0,
+    "patch_surface_z": 0.0,
+    "islands_only": true,
+    "columns": [],
+    "removed_vertices": 0,
+    "removed_islands": 0,
+    "removed_island_vertices": 0,
+    "regrounded_by": 0.0,
+    "auto_detect": {
+      "disc": false,
+      "base_over_leg_band_area": 0.504
+    }
+  },
+  "params": {
+    "species": "paddlenewt",
+    "height": 2.15
+  }
+}

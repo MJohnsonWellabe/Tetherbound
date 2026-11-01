@@ -1,0 +1,92 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 2110,
+    "spine": 2444,
+    "neck": 1107,
+    "head": 1505,
+    "front_upper_l": 178,
+    "front_lower_l": 100,
+    "front_upper_r": 180,
+    "front_lower_r": 123,
+    "tail_1": 143,
+    "tail_2": 151,
+    "rear_upper_l": 188,
+    "rear_lower_l": 59,
+    "rear_upper_r": 177,
+    "rear_lower_r": 93
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 3384,
+  "height_m": 3.1,
+  "length_m": 2.7216,
+  "width_m": 3.7317,
+  "triangles": 6672,
+  "bones": 15,
+  "legs_found_at_normalised": {
+    "front_l": [
+      -0.0754,
+      -0.1945,
+      0.123
+    ],
+    "front_r": [
+      0.1095,
+      -0.16,
+      0.1416
+    ],
+    "rear_l": [
+      -0.0773,
+      0.2085,
+      0.151
+    ],
+    "rear_r": [
+      0.0697,
+      0.1466,
+      0.1474
+    ]
+  },
+  "back_top_normalised": 0.4576,
+  "raised_head": true,
+  "ears": [],
+  "method": "measured_leg_columns_anatomical_regions_local_surface_diffusion",
+  "candidate_enabled": false,
+  "ground_patch": {
+    "patch_band_m_normalised": 0.1,
+    "patch_surface_z": 0.0359,
+    "islands_only": false,
+    "columns": [
+      [
+        -0.118,
+        0.069,
+        0.079
+      ],
+      [
+        0.018,
+        -0.155,
+        0.121
+      ],
+      [
+        -0.033,
+        0.293,
+        0.086
+      ],
+      [
+        0.091,
+        0.086,
+        0.082
+      ]
+    ],
+    "removed_vertices": 8975,
+    "removed_islands": 997,
+    "removed_island_vertices": 1763,
+    "regrounded_by": 0.0362,
+    "auto_detect": {
+      "disc": true,
+      "base_over_leg_band_area": 3.121
+    }
+  },
+  "params": {
+    "species": "glimmermoth",
+    "height": 3.1
+  }
+}
