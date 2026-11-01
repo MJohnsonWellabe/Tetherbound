@@ -287,6 +287,100 @@
       }
     }
   },
+  "hall_2": {
+    "_why": "HALL-2 (vis-meadows, 1 Nov, OFF until GPU-judged): the HALL-1 r2b judges' follow-ups (ralph/reports/GPU-PASS/Q31/HALL1-crossing-hall/VERDICT.md, Path to 7.5), layered over hall_1 by crossing_hall.gd apply_hall_layer. (1) the stone arch piers read as near-field posts: arch_facades.depth_scale 0.45 thins the surrounds' depth into the nave, width and opening unchanged; (2) plaster blows out in the shrine: day ambient 0.65 -> 0.52, window daylight 2.6 -> 2.0, plaster backdrop one step darker; (3) night reads close to day: night ambient 0.22 -> 0.12 with lantern night scale 1.8 -> 2.1 so the warm pools carry the room; (4) the altar blooms toward white: its emissive mask 1.6 -> 0.85, halo 1.5 -> 0.9 at strength 0.4, ShrineGlow 1.5 -> 1.0. Presentation only: no collision, portal, route, save or network change.",
+    "enabled": false,
+    "merge": {
+      "arch_facades": {
+        "depth_scale": 0.45
+      },
+      "interior_ambient": {
+        "day_ambient": 0.52,
+        "night_ambient": 0.12
+      },
+      "light": {
+        "night_energy_scale": 2.1
+      },
+      "daylight_windows": {
+        "energy": 2.0
+      },
+      "hall_waymark": {
+        "materials": {
+          "backdrop": {
+            "color": "#c9bfa8"
+          }
+        }
+      }
+    },
+    "remove": {
+      "hall_great_hall": {
+        "pieces": [
+          "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar.glb"
+        ]
+      },
+      "hall_dressing": {
+        "pieces": [
+          "ShrineGlow"
+        ]
+      }
+    },
+    "append": {
+      "hall_great_hall": {
+        "pieces": [
+          {
+            "model": "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar.glb",
+            "size_m": [
+              2.4,
+              1.4,
+              2.4
+            ],
+            "at": [
+              12,
+              0.37,
+              5.6
+            ],
+            "yaw_deg": 0,
+            "collider_radius_m": 1.3,
+            "collider_height_m": 1.2,
+            "halo": {
+              "at": [
+                0,
+                1.15,
+                0
+              ],
+              "radius_m": 0.7,
+              "colour": "#ffa848",
+              "strength": 0.4,
+              "range_m": 6.5,
+              "energy": 0.9
+            },
+            "emission_mask": "res://assets/props/meshy-1020/hall_shrine_altar/model_hall_shrine_altar/hall_shrine_altar_emissive_mask.png",
+            "emission_colour": "#ffb45e",
+            "emission_energy": 0.85
+          }
+        ]
+      },
+      "hall_dressing": {
+        "pieces": [
+          {
+            "name": "ShrineGlow",
+            "model": "res://assets/props/quaternius_fantasy/CandleStick_Stand.gltf",
+            "at": [
+              15.6,
+              0.06,
+              -3.0
+            ],
+            "light": {
+              "colour": "#ffb45e",
+              "energy": 1.0,
+              "range": 6.0,
+              "height": 1.6
+            }
+          }
+        ]
+      }
+    }
+  },
   "hall_hero_assets": {
     "_why_on_r8": "ON by owner wind-down direction (22 Oct). F17#6 r8, all five Hall candidates together: mapped 5.92 Bar A vs shipping 5.17 (three code-blind judges, F17-6 fixed camera set, Low/Compatibility llvmpipe; ralph/reports/LOOK/close-1022/F17-6.md). Below the 6.7 CPU bar: an improvement, not a closure.",
     "enabled": true,
