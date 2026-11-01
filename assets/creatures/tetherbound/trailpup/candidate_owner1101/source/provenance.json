@@ -1,0 +1,17 @@
+{
+ "species": "trailpup",
+ "owner_direction": "1 Nov 2026: owner picked this concept in a creature brainstorm (rule: believable adult animal, four-legged/natural stance, one elemental trait, glowing eyes and lines, optional partial natural plates)",
+ "concept": "Round 1 concept 1: nearly realistic coyote-like canine, glowing amber paw pads and paw prints, amber eyes",
+ "reference": "ref_1.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image (nano-banana) on the existing licence, inspected by the coordinator and picked by the owner",
+ "meshy_image_to_3d_task": "01a197b8-0e09-73e5-8c15-f5b00dfeb32b",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "raw Meshy candidate; not rigged, not imported, flag-off; .gdignore keeps it out of the import until the rig lane prepares it"
+}
