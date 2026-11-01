@@ -100,21 +100,38 @@
       "wild_once_3103"
     ],
     "items": {
-      "coin": 306,
+      "axe": 1,
+      "coin": 999,
+      "driftwood": 2,
+      "elixir_guard": 1,
+      "elixir_vigour": 1,
+      "essence_air": 52,
+      "fiber": 3,
+      "hammer": 1,
+      "hide_vest": 1,
       "home_key": 1,
-      "revive": 1
+      "knife": 1,
+      "orb_basic": 44,
+      "orb_greater": 7,
+      "pickaxe": 1,
+      "potion_large": 7,
+      "potion_small": 12,
+      "revive": 15,
+      "rootstone": 19,
+      "tm_earth_fist": 1,
+      "torch": 1
     },
     "party": [
       {
-        "fainted": false,
-        "hp": 256,
+        "fainted": true,
+        "hp": 0,
         "level": 20,
         "species": "terrapup",
         "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
       },
       {
         "fainted": false,
-        "hp": 170,
+        "hp": 213,
         "level": 20,
         "species": "bramblebun",
         "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
@@ -142,9 +159,9 @@
       }
     ],
     "player": [
-      383.642547607422,
-      5.29825830459595,
-      3823.130859375
+      383.645202636719,
+      5.29508018493652,
+      3823.12231445312
     ],
     "realm": "water",
     "training": {
@@ -451,7 +468,7 @@
       "creature-c576f15db4b7f3ecf487a80de0169177"
     ]
   },
-  "commit": "9846e94c54b6b4f98540029125818241c0f83798",
+  "commit": "02e8f4cbd7f10509427008ae5a13587d57bacdab",
   "disclosures": [
     "Pending owner deliveries settled after 2 save(s) before export"
   ],
@@ -472,8 +489,8 @@
         "sluice_isle_to_veilfall_sheltered rest shoal: idled 0.0 s to stamina 100/100",
         "Human sheltered crossing completed sluice_isle_to_veilfall_sheltered (6 rest shoals)",
         "Shellwatch camp recovered active creature before Venn",
-        "water_trainer_venn fight length 97.3 s sim",
-        "Hosted victory water_trainer_venn opponents=[\"water_cannonback\", \"water_riptusk\", \"water_riverdrake\"] hp=124.4/256.8",
+        "water_trainer_venn fight length 91.9 s sim",
+        "Hosted victory water_trainer_venn opponents=[\"water_cannonback\", \"water_riptusk\", \"water_riverdrake\"] hp=0.0/256.8",
         "Shellwatch camp recovered active creature after Venn"
       ],
       "segment": "human_late"
@@ -533,5 +550,5 @@
   "passed": true,
   "segment": "07c_venn",
   "swimmer_uid": "",
-  "wall_seconds": 2937.027
+  "wall_seconds": 1638.489
 }
