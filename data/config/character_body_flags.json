@@ -1,0 +1,584 @@
+{
+ "_comment": "Candidate NPC body looks, OFF by default (scripts/characters/character_model.gd with_body_flags). An enabled flag merges its per-character body_albedo_override over that character's art.json entry (rig, clips, palette, accessories untouched; an appearance variant still wins). The GPU judges an arm by flipping enabled.",
+ "flags": {
+  "npc_vis_body_wandering_trainer": {
+   "_why": "VIS-CREATURES (1 Nov). F36 (0) #26 5.80 installed / 5.93 face-material candidate on GPU frames (ralph/reports/CREATURES/close-1020/f36-0-ledger.md); the judges put the ceiling in the baked albedo: 'low-resolution eyes and mouths, blotches, chalky skin'. Same atlas and identity: skin loses its chalk and blotches, eyes/brows/mouth crisped by local contrast, darkest cloth lifted a step. Grade: tools/art_pipeline/grade_vis_npcs.py.",
+   "enabled": false,
+   "characters": {
+    "wandering_trainer": {
+     "body_albedo_override": "res://assets/characters/wandering_trainer/wandering_trainer_lod0_texture_0_vis1.png"
+    }
+   }
+  },
+  "npc_vis_body_young_trainer": {
+   "_why": "VIS-CREATURES (1 Nov). F36 (0) #28 5.97 on GPU frames (ralph/reports/CREATURES/close-1020/f36-0-ledger.md); the judges put the ceiling in the baked albedo: 'low-resolution eyes and mouths, blotches, chalky skin'. Same atlas and identity: skin loses its chalk and blotches, eyes/brows/mouth crisped by local contrast, darkest cloth lifted a step. Grade: tools/art_pipeline/grade_vis_npcs.py.",
+   "enabled": false,
+   "characters": {
+    "young_trainer": {
+     "body_albedo_override": "res://assets/characters/young_trainer/young_trainer_lod0_texture_0_vis1.png"
+    }
+   }
+  },
+  "npc_vis_body_trader": {
+   "_why": "VIS-CREATURES (1 Nov). F36 (0) #29 5.70 on GPU frames (ralph/reports/CREATURES/close-1020/f36-0-ledger.md); the judges put the ceiling in the baked albedo: 'low-resolution eyes and mouths, blotches, chalky skin'. Same atlas and identity: skin loses its chalk and blotches, eyes/brows/mouth crisped by local contrast, darkest cloth lifted a step. Grade: tools/art_pipeline/grade_vis_npcs.py.",
+   "enabled": false,
+   "characters": {
+    "trader": {
+     "body_albedo_override": "res://assets/characters/trader/trader_lod0_texture_0_vis1.png"
+    }
+   }
+  },
+  "npc_vis_body_innkeeper": {
+   "_why": "VIS-CREATURES (1 Nov). F36 (0) #30 5.90 on GPU frames (ralph/reports/CREATURES/close-1020/f36-0-ledger.md); the judges put the ceiling in the baked albedo: 'low-resolution eyes and mouths, blotches, chalky skin'. Same atlas and identity: skin loses its chalk and blotches, eyes/brows/mouth crisped by local contrast, darkest cloth lifted a step. Grade: tools/art_pipeline/grade_vis_npcs.py.",
+   "enabled": false,
+   "characters": {
+    "innkeeper": {
+     "body_albedo_override": "res://assets/characters/innkeeper/innkeeper_lod0_texture_0_vis1.png"
+    }
+   }
+  },
+  "npc_vis_look_kael": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue (this playable profile keeps its night rim instead); a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "kael": {
+     "body_albedo_override": "res://assets/characters/kael/kael_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_sera": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue (this playable profile keeps its night rim instead); a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "sera": {
+     "body_albedo_override": "res://assets/characters/sera/sera_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_lyra": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue (this playable profile keeps its night rim instead); a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "lyra": {
+     "body_albedo_override": "res://assets/characters/lyra/lyra_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_villager_farmer": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "villager_farmer": {
+     "body_albedo_override": "res://assets/characters/villager_female/villager_female_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_villager_keeper": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "villager_keeper": {
+     "body_albedo_override": "res://assets/characters/villager_male/villager_male_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_villager_smith": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "villager_smith": {
+     "body_albedo_override": "res://assets/characters/villager_female/villager_female_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_villager_quarryman": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "villager_quarryman": {
+     "body_albedo_override": "res://assets/characters/villager_male/villager_male_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_villager_ranger": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "villager_ranger": {
+     "body_albedo_override": "res://assets/characters/villager_female/villager_female_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_warden": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "warden": {
+     "body_albedo_override": "res://assets/characters/warden/warden_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_grunt": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "grunt": {
+     "body_albedo_override": "res://assets/characters/grunt/grunt_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_grunt_a": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "grunt_a": {
+     "body_albedo_override": "res://assets/characters/grunt_a/grunt_a_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_grunt_b": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "grunt_b": {
+     "body_albedo_override": "res://assets/characters/grunt_b/grunt_b_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_grunt_c": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "grunt_c": {
+     "body_albedo_override": "res://assets/characters/grunt_c/grunt_c_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_officer_a": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "officer_a": {
+     "body_albedo_override": "res://assets/characters/officer_a/officer_a_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_officer_b": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "officer_b": {
+     "body_albedo_override": "res://assets/characters/officer_b/officer_b_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_captain_a": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "captain_a": {
+     "body_albedo_override": "res://assets/characters/captain_a/captain_a_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_captain_b": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "captain_b": {
+     "body_albedo_override": "res://assets/characters/captain_b/captain_b_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_innkeeper": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "innkeeper": {
+     "body_albedo_override": "res://assets/characters/innkeeper/innkeeper_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_inn_helper": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "inn_helper": {
+     "body_albedo_override": "res://assets/characters/inn_helper/inn_helper_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_trader": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "trader": {
+     "body_albedo_override": "res://assets/characters/trader/trader_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_craftsperson": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "craftsperson": {
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_creature_caretaker": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "creature_caretaker": {
+     "body_albedo_override": "res://assets/characters/creature_caretaker/creature_caretaker_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_farmer": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "farmer": {
+     "body_albedo_override": "res://assets/characters/farmer/farmer_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_local_historian": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "local_historian": {
+     "body_albedo_override": "res://assets/characters/local_historian/local_historian_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_young_trainer": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "young_trainer": {
+     "body_albedo_override": "res://assets/characters/young_trainer/young_trainer_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_rival_trainer": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "rival_trainer": {
+     "body_albedo_override": "res://assets/characters/rival_trainer/rival_trainer_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_field_researcher": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "field_researcher": {
+     "body_albedo_override": "res://assets/characters/field_researcher/field_researcher_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_wandering_trainer": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "wandering_trainer": {
+     "body_albedo_override": "res://assets/characters/wandering_trainer/wandering_trainer_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_lost_traveler": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "lost_traveler": {
+     "body_albedo_override": "res://assets/characters/lost_traveler/lost_traveler_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_alpha_tracker": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "alpha_tracker": {
+     "body_albedo_override": "res://assets/characters/alpha_tracker/alpha_tracker_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_courier": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "courier": {
+     "body_albedo_override": "res://assets/characters/courier/courier_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  },
+  "npc_vis_look_former_tether_member": {
+   "_why": "VIS-CREATURES group 5 (1 Nov). Judges on the villager and grunt anchors (about 5.8-6.6): soft flat face with tiny dot eyes and no catchlight; no rim or key light; stiff A-pose; muddy low-contrast materials. Identity kept (same atlas, rig and palette): albedo grade (skin chalk and blotches evened, eyes/brows/mouth crisped, darkest cloth lifted a step with saturated red excluded, small eye catchlights; tools/art_pipeline/grade_vis_npcs.py); a daylight rim (0.25) so the face and silhouette separate in close-ups and dialogue; a relaxed idle (upper arms lowered 22 deg, elbows bent 8 deg) in place of the A-pose.",
+   "enabled": false,
+   "characters": {
+    "former_tether_member": {
+     "body_albedo_override": "res://assets/characters/former_tether_member/former_tether_member_lod0_texture_0_vis1.png",
+     "day_rim": {
+      "strength": 0.25,
+      "tint": 0.3
+     },
+     "idle_relax": {
+      "arm_drop_deg": 22.0,
+      "elbow_bend_deg": 8.0
+     }
+    }
+   }
+  }
+ }
+}
