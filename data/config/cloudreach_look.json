@@ -144,5 +144,130 @@
       "tower_banner_width_m": 2.2,
       "tower_banner_height_m": 4.4
     }
+  },
+  "dialogue_backdrops": {
+    "_comment": "P2-076 (GPU 6.92): the Kelm and Veyra dialogue frames looked onto a bare flat-dirt plaza. Installed Quaternius stone paving (Floor_UnevenBrick, 2 m slabs, visual only, no collision) under each backdrop and a few installed props behind the speaker, away from the camera side. Speakers, prompts and cameras are not moved; Veyra's props stand by the plaza wall (31-33 m), clear of the 24 m crown_lee cover, with no collision. scripts/world/cloudreach_dialogue_backdrops.gd. OFF until GPU judging.",
+    "enabled": false,
+    "paving_model": "res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf",
+    "sites": [
+      {
+        "id": "kelm",
+        "centre": [
+          -346.0,
+          830.0,
+          3975.0
+        ],
+        "paving": {
+          "offset": [
+            3.0,
+            0.0
+          ],
+          "half_extents_m": [
+            8.0,
+            7.0
+          ],
+          "seed": 761,
+          "rim_drop": 0.35,
+          "sink_m": -0.035
+        },
+        "props": [
+          {
+            "model": "res://assets/props/quaternius_fantasy/Barrel_Apples.gltf",
+            "offset": [
+              5.0,
+              -3.2
+            ],
+            "yaw_deg": 20.0
+          },
+          {
+            "model": "res://assets/props/quaternius_fantasy/FarmCrate_Apple.gltf",
+            "offset": [
+              4.6,
+              2.6
+            ],
+            "yaw_deg": -12.0
+          },
+          {
+            "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+            "offset": [
+              6.4,
+              3.4
+            ],
+            "yaw_deg": 35.0
+          },
+          {
+            "model": "res://assets/props/quaternius_fantasy/Bag.gltf",
+            "offset": [
+              4.1,
+              -1.6
+            ],
+            "yaw_deg": 70.0
+          },
+          {
+            "model": "res://assets/props/quaternius_fantasy/Barrel.gltf",
+            "offset": [
+              6.2,
+              -4.4
+            ],
+            "yaw_deg": 0.0
+          }
+        ]
+      },
+      {
+        "id": "veyra",
+        "centre": [
+          100.0,
+          1160.0,
+          5450.0
+        ],
+        "paving": {
+          "offset": [
+            0.0,
+            4.0
+          ],
+          "half_extents_m": [
+            14.0,
+            16.0
+          ],
+          "seed": 762,
+          "rim_drop": 0.3,
+          "sink_m": -0.035
+        },
+        "props": [
+          {
+            "model": "res://assets/props/quaternius_fantasy/Crate_Metal.gltf",
+            "offset": [
+              -10.0,
+              31.5
+            ],
+            "yaw_deg": 15.0
+          },
+          {
+            "model": "res://assets/props/quaternius_fantasy/Barrel.gltf",
+            "offset": [
+              -7.6,
+              32.4
+            ],
+            "yaw_deg": 0.0
+          },
+          {
+            "model": "res://assets/props/quaternius_fantasy/WeaponStand.gltf",
+            "offset": [
+              9.0,
+              32.0
+            ],
+            "yaw_deg": 180.0
+          },
+          {
+            "model": "res://assets/props/quaternius_fantasy/Crate_Metal.gltf",
+            "offset": [
+              11.6,
+              31.2
+            ],
+            "yaw_deg": -25.0
+          }
+        ]
+      }
+    ]
   }
 }

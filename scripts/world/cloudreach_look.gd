@@ -214,6 +214,13 @@ func dress(world: Node3D) -> void:
 	var settlement_life := preload("res://scripts/world/cloudreach_settlement_life.gd").new()
 	add_child(settlement_life)
 	settlement_life.dress(world, _materials)
+	# P2-076: paving and props behind the Kelm and Veyra dialogue speakers.
+	var backdrops_cfg: Dictionary = _cfg.get("dialogue_backdrops", {})
+	if bool(backdrops_cfg.get("enabled", false)):
+		var backdrops := preload("res://scripts/world/cloudreach_dialogue_backdrops.gd").new()
+		backdrops.name = "DialogueBackdrops"
+		add_child(backdrops)
+		backdrops.build(world, backdrops_cfg)
 	var landmark_lighting := LANDMARK_LIGHTING.new()
 	landmark_lighting.name = "LandmarkLighting"
 	add_child(landmark_lighting)
