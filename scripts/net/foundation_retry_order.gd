@@ -9,8 +9,16 @@ const WORLD := preload("res://autoload/world_state.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const PROGRESSION := ["master_win", "boss_relic", "combat_round_reward", "wild_defeat_share"]
 
+## Within progression, a Master win or boss hand-off (relic + portal key)
+## precedes round rewards and wild shares: a full Satchel otherwise gave every
+## freed slot to the boss's held coin/item/drop rewards and the hand-off that
+## unlocks the next chapter never arrived (F49#0 Cloudreach 07, 1 Nov). Those
+## rewards stay held and deliver as room appears, each on its own receipt.
+const HAND_OFF := ["master_win", "boss_relic"]
+
 static func ordered(deliveries: Dictionary, namespace_id: String, world_id: String) -> Array[Dictionary]:
 	var progression: Array[Dictionary] = []
+	var rewards: Array[Dictionary] = []
 	var ordinary: Array[Dictionary] = []
 	var accepted := {} # Canonical row checks cached only for this scan.
 	var absent := {}
@@ -25,8 +33,9 @@ static func ordered(deliveries: Dictionary, namespace_id: String, world_id: Stri
 					accepted[duty.character_id] = WORLD.training_row_valid(latest, namespace_id, world_id) \
 						and latest.character_id == duty.character_id and latest.status == "accepted"
 				if accepted[duty.character_id] or (duty.action in ["combat_round_reward", "wild_defeat_share"] and absent[duty.character_id]):
-					progression.append(work)
+					(progression if duty.action in HAND_OFF else rewards).append(work)
 					continue
 			ordinary.append(work)
+	progression.append_array(rewards)
 	progression.append_array(ordinary)
 	return progression

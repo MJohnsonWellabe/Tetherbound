@@ -103,6 +103,84 @@ static func apply(player: RefCounted, delivery: Dictionary) -> Dictionary:
 	return {"ok": true, "changed": true, "settled": true}
 
 
+## F49#0 (Cloudreach 07, coordinator-approved, 1 Nov): a held boss hand-off
+## (relic + next portal key, a boss_relic foundation duty refused with
+## boss_handoff_make_satchel_room) must not lose its slot to item grants that
+## were waiting for room too. A grant that fits but would leave fewer free
+## slots than the held hand-off needs stays held (no escrow change, no ACK)
+## and retries once the hand-off has landed or more room appears. A grant that
+## does not fit consumes nothing anyway (give_all is all-or-nothing).
+static func yields_to_hand_off(inventory: RefCounted, stacks: Array, world_deliveries: Dictionary,
+		redesign_character: Dictionary, character_id: String, world_namespace: String) -> bool:
+	var need := held_hand_off_slots(inventory, world_deliveries, redesign_character, character_id, world_namespace)
+	if need <= 0: return false
+	var after := free_slots_after(_bag_slots(inventory), stacks)
+	return after >= 0 and after < need
+
+
+## Free slots left after `stacks` were added to `slots` (partial stacks first,
+## then empty slots, as Inventory.add does), or -1 when they would not fit.
+static func free_slots_after(slots: Array, stacks: Array) -> int:
+	var bag: Array = slots.duplicate(true)
+	for raw: Variant in stacks:
+		if not raw is Dictionary: return -1
+		var id := str(raw.get("id", ""))
+		var left := int(raw.get("n", 0))
+		var maximum: int = maxi(1, int(RULES.db().call("stack_size", id)))
+		for i in bag.size():
+			if left <= 0: break
+			var held: Variant = bag[i]
+			if held is Dictionary and str(held.get("id", "")) == id and int(held.get("n", 0)) < maximum:
+				var put := mini(maximum - int(held.get("n", 0)), left)
+				held["n"] = int(held.get("n", 0)) + put
+				left -= put
+		for i in bag.size():
+			if left <= 0: break
+			if bag[i] == null:
+				var put := mini(maximum, left)
+				bag[i] = {"id": id, "n": put}
+				left -= put
+		if left > 0: return -1
+	var free := 0
+	for held: Variant in bag:
+		if held == null: free += 1
+	return free
+
+
+## New Satchel slots this character's held boss hand-offs still need: one per
+## undelivered portal key that has no carried stack to join. A hand-off is
+## delivered once its relic is held/hung or its boss receipt is recorded.
+static func held_hand_off_slots(inventory: RefCounted, world_deliveries: Dictionary,
+		redesign_character: Dictionary, character_id: String, world_namespace: String) -> int:
+	var receipts: Array = redesign_character.get("transaction_receipts", [])
+	var relics: Array = (redesign_character.get("relics_held", []) as Array) + (redesign_character.get("relics_hung", []) as Array)
+	var keys := {}
+	for raw: Variant in world_deliveries.values():
+		if not raw is Dictionary or raw.get("kind") != "foundation_event" or raw.get("status") != "retained": continue
+		for duty: Variant in raw.get("duties", []):
+			if not duty is Dictionary or duty.get("action") != "boss_relic" or duty.get("character_id") != character_id: continue
+			var intent: Dictionary = duty.get("intent", {})
+			var trainer := str(intent.get("trainer_id", ""))
+			if relics.has(intent.get("biome")) or receipts.has("defeat:boss_%s:%s" % [trainer, character_id]) \
+					or receipts.has(preload("res://scripts/net/foundation_actions.gd").boss_receipt(world_namespace, trainer, character_id)):
+				continue
+			var grant := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(trainer, str(duty.get("context", {}).get("realm", "")))
+			var key := str(grant.get("portal_key_item", ""))
+			if not key.is_empty(): keys[key] = true
+	var need := 0
+	for key: String in keys:
+		var maximum: int = maxi(1, int(RULES.db().call("stack_size", key)))
+		var joins := false
+		for held: Variant in _bag_slots(inventory):
+			if held is Dictionary and str(held.get("id", "")) == key and int(held.get("n", 0)) < maximum: joins = true
+		if not joins: need += 1
+	return need
+
+
+static func _bag_slots(inventory: RefCounted) -> Array:
+	return RULES.slots(inventory)
+
+
 static func pending_for_character(world: RefCounted, character_id: String) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var deliveries: Variant = world.get("reward_deliveries")

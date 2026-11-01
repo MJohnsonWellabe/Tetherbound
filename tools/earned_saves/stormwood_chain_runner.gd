@@ -357,6 +357,8 @@ func _play() -> void:
 	var script: GDScript = load(PIECES[segment])
 	match segment:
 		"arrival_prefix":
+			if not await _make_arrival_room(world):
+				return
 			helper_result = await script.Segment.new().run(self, world, game)
 		"named_detour", "named_capacitor_alpha", "named_hollows_alpha", "named_blackwater_elder", \
 				"named_old_rodfolk_hall_guardian", "named_glass_field_alpha":
@@ -725,3 +727,36 @@ func _finish(commit: String) -> void:
 		"failures": failures, "handoff": handoff, "flags_gained": gained,
 		"wall_seconds": receipt.wall_seconds, "frame_wall": receipt.frame_wall}))
 	quit(0 if passed else 1)
+
+
+## An earned Cloudreach Satchel reaches Stormwood full (F49#0 routes, 1 Nov:
+## f49_cr_07 is 24/24 after Veyra's rare_candy and skyplume), so the first
+## charged Stormglass node could not pay. The player first drops leftover
+## gathered materials through the approved Satchel Drop
+## (meadows_earned_team_segment), disclosed; kit, consumables and keys stay.
+const LEFTOVER_MATERIALS := ["skyplume", "gale_fiber", "cloudberry", "driftwood", "fiber", "wood", "rootstone", "berries"]
+
+func _make_arrival_room(world: Node3D) -> bool:
+	var inventory: RefCounted = game.get("inventory")
+	var free := func() -> int:
+		var n := 0
+		for i in int(inventory.call("slot_count")):
+			if (inventory.call("stack_at", i) as Dictionary).is_empty(): n += 1
+		return n
+	for id: String in LEFTOVER_MATERIALS:
+		while int(free.call()) < 2 and int(inventory.call("count", id)) > 0:
+			var room: RefCounted = load("res://tests/helpers/meadows_earned_team_segment.gd").new()
+			room._tree = self
+			room._world = world
+			room._game = game
+			room._menu = game.call("menu")
+			var slot := int(inventory.call("find_slot", id))
+			var n := int((inventory.call("stack_at", slot) as Dictionary).get("n", 0))
+			if not await room._drop_slot(slot):
+				failures.append("arrival_prefix: Satchel Drop of %s failed: %s" % [id, str(room.result().failures)])
+				return false
+			disclosures.append("arrival_prefix: DROPPED %s x%d through the Satchel to make room for Stormwood gathering" % [id, n])
+	if int(free.call()) < 1:
+		failures.append("arrival_prefix: no leftover gathered material to make Satchel room for Stormglass")
+		return false
+	return true

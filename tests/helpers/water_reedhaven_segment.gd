@@ -5,6 +5,11 @@ extends RefCounted
 ## and axe in from the preceding campaign. This helper never resets the game, moves an
 ## actor directly, or writes inventory/progression state.
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
+const ROOM := preload("res://tests/helpers/meadows_earned_team_segment.gd")
+## New stacks the four named gathers open. An earned Meadows lineage can arrive
+## with a nearly full Satchel; the player makes room first through the real
+## Satchel Drop (meadows_earned_team_segment.free_slots_for, coordinator-approved).
+const ROOM_FOR := [{"id": "reed_fiber"}, {"id": "driftwood"}]
 const PICKUP_DATA := "res://data/config/water_pickups.json"
 const REPAIR_FLAG := "water_dock_reedhaven_repaired"
 const LESSON_FLAG := "water_swim_lesson_complete"
@@ -60,6 +65,8 @@ func run() -> bool:
 			or not _player.is_on_floor() or _player.swim_controller.is_swimming():
 		return _fail("segment must begin dry at the earned lesson-east landing; player=%s expected=%s" % [
 			str(_player.global_position), str(lesson_east)])
+	if not await _make_room():
+		return false
 	if not await _walk_to(_anchor("first_shore_to_reedhaven_departure"),
 			"First Shore departure", 1.3):
 		return false
@@ -111,6 +118,20 @@ func run() -> bool:
 			str(before_repair), _count("reed_fiber"), _count("driftwood")])
 	_note("four named nodes yielded6 reed/6 drift; repair spent6 reed/4 drift")
 	_completed = true
+	return true
+
+
+func _make_room() -> bool:
+	var room: RefCounted = ROOM.new()
+	room._tree = _tree
+	room._world = _world
+	room._game = _game
+	room._menu = _game.call("menu")
+	if not await room.free_slots_for(ROOM_FOR):
+		return _fail("Satchel room for Reedhaven supplies failed: " + str(room.result().failures))
+	for row: Variant in (room.result().get("receipts", []) as Array):
+		if row is Dictionary and str((row as Dictionary).get("beat", "")) == "satchel_room_dropped":
+			_note("DROPPED %s x%s through the Satchel to make room (disclosed)" % [str(row.item), str(row.count)])
 	return true
 
 

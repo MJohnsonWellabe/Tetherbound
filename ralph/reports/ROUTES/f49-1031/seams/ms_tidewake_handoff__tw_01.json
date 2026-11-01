@@ -1,0 +1,134 @@
+{
+ "kind": "f49_cross_runner_seam",
+ "seam": "T1 f49_ms_tidewake_handoff (earned_chain_runner) -> f49_tw_01 (tidewake_piece_runner 01_opening)",
+ "producer": {
+  "fixture": "tests/fixtures/earned_saves/f49_ms_tidewake_handoff",
+  "commit": "ef27593524aeb8671d6407414d59be17b200f9dd"
+ },
+ "consumer": {
+  "fixture": "tests/fixtures/earned_saves/f49_tw_01",
+  "commit": "838d96eeeb5f23dac985c058941d8a6dd5f1bc85",
+  "from": "/home/user/rb/ms_root/tidewake_handoff",
+  "compatibility_transition": {
+   "consumer_commit": "838d96eeeb5f23dac985c058941d8a6dd5f1bc85",
+   "imported_boundary": "tidewake_handoff",
+   "kind": "f49_pinned_start",
+   "producer_commit": "ef27593524aeb8671d6407414d59be17b200f9dd"
+  },
+  "disclosures": [
+   "Pinned start: the Meadows tidewake_handoff save may come from an earlier commit; seam proven by its handoff manifest",
+   "Pending owner deliveries settled after 2 save(s) before export"
+  ]
+ },
+ "predecessor_receipt_hashes": [
+  {
+   "boundary": "warrens",
+   "consumer_recorded": "dd321679c0caf0811f0b765a0bc71c4d5c5a3697c2dfec081d45c958fb160a4c",
+   "committed_fixture": "tests/fixtures/earned_saves/f49_ms_relay/generated_input_warrens/receipt.json",
+   "committed_sha256": "dd321679c0caf0811f0b765a0bc71c4d5c5a3697c2dfec081d45c958fb160a4c",
+   "match": true
+  },
+  {
+   "boundary": "relay",
+   "consumer_recorded": "450a46a0dffc4fa96cba509299e453f7f1d2ac3d87215478a4247f3c44cdfd35",
+   "committed_fixture": "tests/fixtures/earned_saves/f49_ms_relay/receipt.json",
+   "committed_sha256": "450a46a0dffc4fa96cba509299e453f7f1d2ac3d87215478a4247f3c44cdfd35",
+   "match": true
+  },
+  {
+   "boundary": "sigils",
+   "consumer_recorded": "b9c7532b863f860f813e67d249015cdcc646f3bdae7c11de10e1e771981ef7b5",
+   "committed_fixture": "tests/fixtures/earned_saves/f49_ms_sigils/receipt.json",
+   "committed_sha256": "b9c7532b863f860f813e67d249015cdcc646f3bdae7c11de10e1e771981ef7b5",
+   "match": true
+  },
+  {
+   "boundary": "hall",
+   "consumer_recorded": "ae2e2cf02d36ecdf94454a81ca9e0d8e6c74308cf59d0c7748ca23b67fb77cb8",
+   "committed_fixture": "tests/fixtures/earned_saves/f49_ms_hall/receipt.json",
+   "committed_sha256": "ae2e2cf02d36ecdf94454a81ca9e0d8e6c74308cf59d0c7748ca23b67fb77cb8",
+   "match": true
+  },
+  {
+   "boundary": "warden",
+   "consumer_recorded": "b63636c3ad3d376bc7e6c647f6def3abce4a4fbe6b510d935375edc5d62546c8",
+   "committed_fixture": "tests/fixtures/earned_saves/f49_ms_warden/receipt.json",
+   "committed_sha256": "b63636c3ad3d376bc7e6c647f6def3abce4a4fbe6b510d935375edc5d62546c8",
+   "match": true
+  },
+  {
+   "boundary": "tidewake_handoff",
+   "consumer_recorded": "ea948654189726113c27a8da1a0b44944daac9598ead66a856815f783cf3418d",
+   "committed_fixture": "tests/fixtures/earned_saves/f49_ms_tidewake_handoff/receipt.json",
+   "committed_sha256": "ea948654189726113c27a8da1a0b44944daac9598ead66a856815f783cf3418d",
+   "match": true
+  }
+ ],
+ "producer_save_files_match_producer_receipt": {
+  "characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json": true,
+  "slot_0.json": true,
+  "worlds/slot-0/world.json": true
+ },
+ "consumer_loaded": {
+  "realm": "water",
+  "player": [
+   0.0,
+   1.87736189365387,
+   162.5
+  ],
+  "party": [
+   [
+    "terrapup",
+    20,
+    20,
+    [
+     1
+    ]
+   ],
+   [
+    "bramblebun",
+    20,
+    20,
+    [
+     1
+    ]
+   ],
+   [
+    "bramblebun",
+    20,
+    20,
+    [
+     1
+    ]
+   ],
+   [
+    "mudsnout",
+    20,
+    20,
+    [
+     1
+    ]
+   ],
+   [
+    "bramblebun",
+    20,
+    20,
+    [
+     1
+    ]
+   ]
+  ],
+  "master_wins": []
+ },
+ "lineage": {
+  "continuous_fresh_save": false,
+  "origins": [
+   "predecessor input_mode=generated_fixture",
+   "predecessor generated_origin={\"boundary\":\"warrens\",\"provenance\":{\"continuous_fresh_save\":false,\"generator\":\"tools/earned_saves/earned_chain_runner.gd:338849651e8c2d8997035d3c4c4a1f4d90ac3718f3c5fb1a632da499766100f8:relay\",\"owner_policy\":\"#5726060136810\",\"prior_earned_play\":false}}"
+  ],
+  "status": "generated",
+  "version": 1
+ },
+ "differences": [],
+ "matches": true
+}

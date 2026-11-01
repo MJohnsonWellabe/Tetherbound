@@ -184,6 +184,47 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		_log("optional_gather", {"id":id,"item":item,"gained":game.inventory.count(item)-before})
 		return _require(game.inventory.count(item)>before,"Optional arrival gather produced " + item)
 
+	## An earned Tidewake Satchel arrives nearly full (F49#0 routes, 1 Nov: 23/24
+	## from f49_tw_09; gale_fiber paid nothing). Before a gather that needs a new
+	## stack the player makes room through the ordinary Satchel: leftover Tidewake
+	## driftwood is dropped (approved Satchel Drop, meadows_earned_team_segment),
+	## then carried cloudberries are fed to the hungriest companion (nothing lost,
+	## as stormwood_crown_build_segment does with berries); only a stack that
+	## still will not go is dropped. Every step is logged and disclosed.
+	func _make_arrival_room(item: String) -> bool:
+		var inventory: RefCounted = game.inventory
+		var maximum := int(game.items.stack_size(item))
+		for i in int(inventory.slot_count()):
+			var stack: Dictionary = inventory.stack_at(i)
+			if str(stack.get("id", "")) == item and int(stack.get("n", 0)) < maximum: return true
+			if stack.is_empty(): return true
+		var room: RefCounted = load("res://tests/helpers/meadows_earned_team_segment.gd").new()
+		room._tree = _tree
+		room._world = world
+		room._game = game
+		room._menu = game.call("menu")
+		if int(inventory.count("driftwood")) > 0:
+			if not await room._drop_slot(int(inventory.find_slot("driftwood"))):
+				return _fail("Satchel Drop of leftover driftwood failed: " + str(room.result().failures))
+			_log("satchel_room", {"dropped": "driftwood", "for": item})
+			return true
+		for _bite in 12:
+			if int(inventory.count("cloudberry")) <= 0: break
+			var party: RefCounted = game.party
+			var hungriest := 0
+			for index in int(party.size()):
+				if float(party.at(index).get("nourishment")) < float(party.at(hungriest).get("nourishment")): hungriest = index
+			var care: Dictionary = await load("res://tests/helpers/meadows_earned_team_segment.gd").new().care_existing(_tree, world, game, "cloudberry", hungriest)
+			if not bool(care.get("passed", false)): break
+			_log("satchel_room", {"fed": "cloudberry", "party_index": hungriest, "for": item})
+		if int(inventory.count("cloudberry")) > 0:
+			if not await room._drop_slot(int(inventory.find_slot("cloudberry"))):
+				return _fail("Satchel Drop of carried cloudberry failed: " + str(room.result().failures))
+			_log("satchel_room", {"dropped": "cloudberry", "for": item})
+		for i in int(inventory.slot_count()):
+			if (inventory.stack_at(i) as Dictionary).is_empty(): return true
+		return _fail("Satchel still has no room for " + item)
+
 	func _arrival_gate() -> void:
 		_purpose("Orient in Cloudreach and learn why the routes are broken", "Take the authored arrival road, inspect its landmark, and gather useful preparation instead of beelining")
 		stage = "arrival_to_aila"
@@ -192,8 +233,10 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		if not await _walk(ruin.global_position + Vector3(0,-1,-2)): return
 		if not await _interact(ruin,"",false): return
 		if not await _walk(_vec(arrival.polyline[1])): return
+		if not await _make_arrival_room("cloudberry"): return
 		if not await _arrival_gather("cr_node_cloudberry_waycamp", "cloudberry"): return
 		if not await _walk(_vec(arrival.polyline[2])): return
+		if not await _make_arrival_room("gale_fiber"): return
 		if not await _arrival_gather("cr_node_gale_fiber_gate", "gale_fiber"): return
 		if not await _walk(_vec(arrival.polyline[3])): return
 		if not await _walk(Vector3(-280,180,508)): return
@@ -496,7 +539,8 @@ func _run() -> void:
 		# The handoff is the F49 portal leg tests/helpers/f49_campaign_journey.gd
 		# plays: Home Key -> hang the held Cloudreach relic -> Stormwood arch.
 		var travel := PORTAL.new(self, game)
-		var ok: bool = await travel.home_key()
+		var ok: bool = await _make_handoff_room("cloudreach", "stormwood_portal_key")
+		if ok: ok = await travel.home_key()
 		if ok: ok = await travel.hang_relic("cloudreach")
 		if ok:
 			# A successful hang opens the relic-power choice (crossing_hall.gd
@@ -681,3 +725,71 @@ func _finish(passed: bool) -> void:
 		"failures": failures, "flags_gained": gained, "position": after.get("position", []),
 		"realm": after.get("realm", ""), "helper": helper_summary}))
 	quit(0 if receipt.passed else 1)
+
+
+## A carried-full Satchel holds the chapter boss's coin payout and hand-off
+## (portal key + relic) as boss_handoff_make_satchel_room (Tidewake 09, 1 Nov:
+## the first freed slot goes to the coin payout). The player makes two slots
+## first: carried cloudberries are fed to the hungriest companion (nothing
+## lost), then leftover gathered materials go by the approved Satchel Drop.
+## Every step is disclosed; the held duty then delivers.
+func _make_handoff_room(biome: String, key_item: String) -> bool:
+	var world := current_scene as Node3D
+	var inventory: RefCounted = game.get("inventory")
+	var delivered := func() -> bool:
+		var now: Dictionary = game.local.get("redesign_character")
+		return ((now.get("relics_held", []) as Array).has(biome) or (now.get("relics_hung", []) as Array).has(biome)) \
+			and int(inventory.call("count", key_item)) > 0
+	if delivered.call(): return true
+	var team := load("res://tests/helpers/meadows_earned_team_segment.gd")
+	var free := func() -> int:
+		var n := 0
+		for i in int(inventory.call("slot_count")):
+			if (inventory.call("stack_at", i) as Dictionary).is_empty(): n += 1
+		return n
+	for _bite in 12:
+		if free.call() >= 2 or int(inventory.call("count", "cloudberry")) <= 0: break
+		# Food can only target a standing companion: a fainted row is disabled in
+		# the Satchel's care picker (attempt 2 picked fainted row 0 and the refusal
+		# left the picker open, so the following Drop could not focus a slot).
+		var party: RefCounted = game.get("party")
+		var hungriest := -1
+		for index in int(party.call("size")):
+			var member: RefCounted = party.call("at", index)
+			if bool(member.get("fainted")) or float(member.get("hp")) <= 0.0: continue
+			if hungriest < 0 or float(member.get("nourishment")) < float(party.call("at", hungriest).get("nourishment")): hungriest = index
+		if hungriest < 0: break
+		var care: Dictionary = await team.new().care_existing(self, world, game, "cloudberry", hungriest)
+		await _release_world_input()
+		if not bool(care.get("passed", false)): break
+		disclosures.append("Piece 07: fed a carried cloudberry to party row %d through the Satchel to make room for the held %s hand-off" % [hungriest, biome])
+	for id: String in ["gale_fiber", "cloudberry", "driftwood", "fiber", "wood", "rootstone", "berries"]:
+		while free.call() < 2 and int(inventory.call("count", id)) > 0:
+			await _release_world_input()
+			var room: RefCounted = team.new()
+			room._tree = self
+			room._world = world
+			room._game = game
+			room._menu = game.call("menu")
+			var slot := int(inventory.call("find_slot", id))
+			var n := int((inventory.call("stack_at", slot) as Dictionary).get("n", 0))
+			if not await room._drop_slot(slot):
+				failures.append("Piece 07: Satchel Drop of %s failed: %s" % [id, str(room.result().failures)])
+				return false
+			disclosures.append("Piece 07: DROPPED %s x%d through the Satchel to make room for the held %s hand-off" % [id, n, biome])
+	for _frame in 1800:
+		if delivered.call(): return true
+		await physics_frame
+	failures.append("Piece 07: held %s hand-off did not deliver after making Satchel room (free=%d)" % [biome, int(free.call())])
+	return false
+
+
+## Closes whatever menu or picker a care/drop step left open, with ordinary
+## menu_cancel presses, and waits until world input is free again.
+func _release_world_input() -> void:
+	var portal := PORTAL.new(self, game)
+	for _press in 6:
+		if INPUT_OWNER.current(self) == null: break
+		await portal.tap("menu_cancel")
+		for _i in 20: await process_frame
+	for _i in 30: await process_frame

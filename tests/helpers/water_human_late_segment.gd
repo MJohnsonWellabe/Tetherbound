@@ -22,7 +22,11 @@ const SHORT_SEGMENTS := {"07a1_departure": "departure", "07a2_salt_crossing": "s
 const SHORT_PREDECESSORS := {"07a1_departure": "05_tidal", "07a2_salt_crossing": "07a1_departure",
 	"07a3_salt_chart": "07a2_salt_crossing", "07a4_sluice_crossing": "07a3_salt_chart",
 	"07a5_bex": "07a4_sluice_crossing", "07a6_bex_recovery": "07a5_bex"}
-const SHORT_WATCHDOG_MS := 240000
+## Wall-clock watchdog per split piece (Time.get_ticks_msec). 240 s was measured on a
+## faster host; on the CPU cloud host the 07a1 spine walk alone takes ~620 s wall and
+## passes every waypoint (F49#0 routes, 31 Oct). 20 min stays inside the owner's
+## ~30-minute piece size (25 Oct); route assertions are unchanged.
+const SHORT_WATCHDOG_MS := 1200000
 var piece := "all"
 const BEX_FLAGS := ["water_dock_salt_crown_landing_charted", "water_sluice_west_disabled", "defeated_water_trainer_bex"]
 const CALDER_FLAGS := ["water_sluice_east_disabled", "water_dock_sluice_isle_both_controls_disabled", "defeated_water_trainer_calder"]
@@ -99,7 +103,11 @@ func run_human(selected: String = "all") -> bool:
 	# Reader-pace trainer fights (Calder median 214-329 s in C2) and the swum
 	# sheltered crossings need more than the mounted segment's bounds.
 	fight_bound_ms = 600000
-	watchdog_ms = 30 * 60 * 1000
+	# Wall clock (Time.get_ticks_msec). On the CPU cloud host 07c_venn (crossing,
+	# camp, the authored Veilfall exterior spine, Venn, recovery) passes in
+	# ~44 min wall with every waypoint reached (F49#0 routes, 31 Oct); 30 min
+	# fired mid-fight. Route and fight assertions are unchanged.
+	watchdog_ms = 60 * 60 * 1000
 	if piece in SHORT_SEGMENTS.values(): watchdog_ms = SHORT_WATCHDOG_MS
 	_swimmer = _game.local.party.active() if _game != null else null
 	_abort = func(_reason: String) -> void: pass
@@ -220,9 +228,14 @@ func _venn() -> bool:
 	var veilfall := _land_route("veilfall_exploration_spine")
 	if veilfall.size() < 3:
 		return _fail("Veilfall exploration spine is incomplete")
-	for index in range(1, veilfall.size() - 1):
-		if not await _walk_to(veilfall[index], "Veilfall exterior waypoint %d" % index):
-			return false
+	# Venn stands by the landing camp. Climbing the exterior spine first and then
+	# walking straight back down to Venn's stance walked off the plateau edge near
+	# (320,142,3881): a ~125 m fall killed the trainer and left the whole Satchel
+	# (knife included) in a death satchel, so 09 could not feed Cloudreach (F49#0
+	# routes, 1 Nov; same loss in the close-1020 07c receipt). The climb is walked
+	# by 07d (spine points 2..4 up to the cave), so 07c takes point 1 only.
+	if not await _walk_to(veilfall[1], "Veilfall exterior waypoint 1"):
+		return false
 	if not await _defeat_trainer("water_trainer_venn", "defeated_water_trainer_venn"):
 		return false
 	# Venn stands by the landing camp, not at the far end of the spine: walk
@@ -236,7 +249,18 @@ func _venn() -> bool:
 			return false
 	if not await _recover_at_camp("after Venn", "water_camp_veilfall"):
 		return false
+	if _dropped_satchel():
+		return _fail("Trainer died during Venn and left a death satchel")
 	return _same_party() and not _expired()
+
+
+## True when this world holds an openable death satchel: the trainer died and
+## its Satchel is lying in the world instead of being carried forward.
+func _dropped_satchel() -> bool:
+	for node: Node in _tree.get_nodes_in_group(&"death_satchel"):
+		if _world.is_ancestor_of(node) and node.has_method("can_open") and bool(node.call("can_open")):
+			return true
+	return false
 
 
 func _nerissa() -> bool:

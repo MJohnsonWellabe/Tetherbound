@@ -1,0 +1,170 @@
+{
+ "kind": "f49_piece_seam",
+ "from_piece": "02_reedhaven",
+ "from_commit": "a2e34527f49e424a2a0e291e596b24fc92256673",
+ "to_piece": "03_brine",
+ "to_commit": "a2e34527f49e424a2a0e291e596b24fc92256673",
+ "to_loaded_from": "/home/user/rb/tw_02",
+ "end_state": {
+  "realm": "water",
+  "position": [
+   140.68,
+   2.32,
+   512.73
+  ],
+  "flags": [
+   "alpha_pin_intro_seen",
+   "camp_hammer_given",
+   "captive_rescued",
+   "creature_bed_built",
+   "creature_bed_built_2",
+   "creature_bed_built_3",
+   "defeated_captain_field",
+   "defeated_captain_ridge",
+   "defeated_captain_riverwatch",
+   "defeated_south_bridge_grunt",
+   "defeated_stronghold_courtyard",
+   "defeated_stronghold_elite",
+   "defeated_stronghold_patrol",
+   "defeated_warden",
+   "hall_approach_open",
+   "harvest_node:order:14.0",
+   "home_built",
+   "home_key_given",
+   "home_materials_gathered",
+   "learned_legendary_is_the_source",
+   "legendary_answer_world:d3374d50ed084f0da03f42a78232f36b",
+   "legendary_freed",
+   "legendary_refused",
+   "legendary_resolution:live",
+   "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d",
+   "legendary_settled",
+   "mill_crossing_restored",
+   "mira_shop_open",
+   "opening:beat:choose",
+   "opening:beat:encounter",
+   "opening:beat:free_play",
+   "opening:beat:house",
+   "opening:beat:name",
+   "opening:beat:qualification",
+   "opening:beat:return_mira",
+   "opening:beat:return_starter",
+   "opening:beat:road",
+   "opening:beat:tournament_signup",
+   "opening:beat:visit_mira",
+   "opening:beat:wake",
+   "opening:beat:walk_out",
+   "opening:lesson:home_key",
+   "opening:lesson:trigger:home_return",
+   "opening:mira_visited",
+   "opening:starter_granted",
+   "opening:tournament_registered",
+   "oskar_trade_open",
+   "pickup:castle_gate_key",
+   "player_slept_at_home",
+   "realm_heart_meadows_earned",
+   "realm_key_cloudreach",
+   "recipe_orb_basic",
+   "recipe_saddle",
+   "relay_captain_defeated",
+   "relay_disabled",
+   "reward:trainer:warrens_cleared:xp:1",
+   "road_gate_open",
+   "south_bridge_open",
+   "tam_tools_given",
+   "tournament_entered",
+   "tournament_final_at_ring",
+   "tournament_quarter_at_ring",
+   "tournament_quarter_won",
+   "tournament_semi_at_ring",
+   "tournament_semi_won",
+   "tournament_team_ready",
+   "tournament_training_ready",
+   "tournament_won",
+   "warrens_cleared",
+   "water_chapter_started",
+   "water_claim:dock_paid:reedhaven_repair:character-cb1b88c682cd3219e5c3d8d63558473d:796751874a58fbcb073163efa664b72bddf41c5fc1f941b3b37b2fe53fea889b",
+   "water_cordage_recipe_gated",
+   "water_dock_reedhaven_repaired",
+   "water_swim_lesson_briefed",
+   "water_swim_lesson_complete",
+   "wild_once_3103"
+  ],
+  "inventory": {
+   "axe": 1,
+   "coin": 845,
+   "driftwood": 2,
+   "elixir_guard": 1,
+   "elixir_vigour": 1,
+   "essence_air": 52,
+   "fiber": 3,
+   "hammer": 1,
+   "hide_vest": 1,
+   "home_key": 1,
+   "knife": 1,
+   "orb_basic": 44,
+   "orb_greater": 7,
+   "pickaxe": 1,
+   "potion_small": 12,
+   "revive": 13,
+   "rootstone": 19,
+   "tm_earth_fist": 1,
+   "torch": 1
+  },
+  "party": [
+   {
+    "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+    "species": "terrapup",
+    "level": 20,
+    "cap_level": 20,
+    "breakthroughs": [
+     1
+    ]
+   },
+   {
+    "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+    "species": "bramblebun",
+    "level": 20,
+    "cap_level": 20,
+    "breakthroughs": [
+     1
+    ]
+   },
+   {
+    "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+    "species": "bramblebun",
+    "level": 20,
+    "cap_level": 20,
+    "breakthroughs": [
+     1
+    ]
+   },
+   {
+    "uid": "creature-afbd0d982b14221393f70c29863586a1",
+    "species": "mudsnout",
+    "level": 20,
+    "cap_level": 20,
+    "breakthroughs": [
+     1
+    ]
+   },
+   {
+    "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+    "species": "bramblebun",
+    "level": 20,
+    "cap_level": 20,
+    "breakthroughs": [
+     1
+    ]
+   }
+  ],
+  "master_wins": [],
+  "feast_recipes": []
+ },
+ "differences": [],
+ "matches": true,
+ "producer_save_tree_sha256_committed": "8b7bebb03530db20a9c56670419c55b7412b7d316a6f81a4ae59f175e5954ff7",
+ "producer_save_tree_sha256_loaded_dir": "8b7bebb03530db20a9c56670419c55b7412b7d316a6f81a4ae59f175e5954ff7",
+ "save_byte_identical": true,
+ "consumer_from": "/home/user/rb/tw_02"
+}

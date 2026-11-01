@@ -1191,6 +1191,10 @@ func _process_reward_delivery(delivery: Dictionary) -> void:
 	if delivery.get("source") == "home_key:grant:" + str(player.character_id):
 		game.get("session").call("_request_home_key_delivery", delivery)
 		return # Host-authored full inventory CAS; never generic reward.apply.
+	if REWARD_DELIVERY.yields_to_hand_off(player.get("inventory"), delivery.get("stacks", []) as Array,
+			game.get("world").reward_deliveries, player.get("redesign_character"), str(player.character_id),
+			str(game.get("world").reward_delivery_namespace)):
+		return # Held boss hand-off keeps its Satchel slot; this grant retries after it lands.
 	var before_slots := SATCHEL_RULES.slots(player.get("inventory"))
 	var flags: RefCounted = player.get("flags")
 	var before_flags: Dictionary = flags.call("save_data") if flags != null else {}
