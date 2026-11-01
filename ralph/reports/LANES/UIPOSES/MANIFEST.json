@@ -110,5 +110,59 @@
    "meadows__menu_backpack"
   ],
   "group": 1
+ },
+ {
+  "item": "P2-095",
+  "flag": "data/config/craft_presentation.json:readable_r3",
+  "camera_set": "pad",
+  "stands": [
+   "meadows__system__crafting"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-095",
+  "flag": "data/config/craft_presentation.json:rendered_item_icons",
+  "camera_set": "pad",
+  "stands": [
+   "meadows__system__crafting"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-095",
+  "flag": "data/config/craft_presentation.json:readable_r4",
+  "camera_set": "pad",
+  "stands": [
+   "meadows__system__crafting"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-096",
+  "flag": "data/config/craft_presentation.json:readable_r3",
+  "camera_set": "pad",
+  "stands": [
+   "meadows__system__crafting"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-096",
+  "flag": "data/config/craft_presentation.json:rendered_item_icons",
+  "camera_set": "pad",
+  "stands": [
+   "meadows__system__crafting"
+  ],
+  "group": 2
+ },
+ {
+  "item": "P2-096",
+  "flag": "data/config/craft_presentation.json:readable_r4",
+  "camera_set": "pad",
+  "stands": [
+   "meadows__system__crafting"
+  ],
+  "group": 2
  }
 ]

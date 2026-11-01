@@ -17,6 +17,18 @@
 
 Branch `tb/vis-ui-poses`. Coordinator update (1 Nov): no single-candidate READY lines; every candidate is listed in `MANIFEST.json` for the 18:00 UTC batch (tb/vis-batch1, all flags ON). Each flag is OFF on this branch and only touches its own keys.
 
+## Group 2 (rolling batches, coordinator 1 Nov): P2-095 / P2-096 craft round 4
+
+- **Built on:** tb/world-craft-icons, merged into this branch.
+- **Flags:** `craft_presentation.json` `readable_r3` + `rendered_item_icons` + `readable_r4`. All three must be ON; `readable_r4` is new.
+- **Judges' asks after 7.36, and what each became:**
+  - Controller face-button glyphs in a footer: a footer bar with the Craft and Leave pad prompts.
+  - 5+ visible rows: 92 px compact rows, 6 visible, one cost line each.
+  - Higher-contrast Missing tags: filled Ready/Missing chips (SUCCESS/DANGER fill, dark text).
+  - Higher-contrast button: the Missing materials button sits on a deep fill with a DANGER border and a light-orange label.
+- **CPU pad capture:** all four changes visible; no clipping. The sixth row's cost line ends in an ellipsis; the full list stays in the detail column.
+- **Test:** `tests/test_uiposes_craft_r4.gd`. `test_craft_rendered_icons` and the craft tests pass.
+
 ## Candidates in the batch (CPU sanity capture done for each unless noted; no CPU scores claimed)
 
 | Flag (default OFF) | Items | What changes | CPU check |
