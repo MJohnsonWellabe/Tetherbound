@@ -112,6 +112,14 @@ var _reopen_guard: int = 0
 ## The fight, found by capability rather than by path so this file holds no
 ## knowledge of another agent's scene layout. Re-found when it goes away.
 var _combat: Node = null
+## `_find_combat` walks the whole current scene. Without a cached combat node it
+## used to run every frame: during a world build that is every upload frame
+## (Cloudreach: about 62 ms of each one over 37k nodes, most of the 368 s
+## ground-cover step on the GPU rig). It now runs only when the scene changed
+## or a node answering `is_fighting()` entered the tree since the last walk,
+## so it returns exactly what the per-frame walk returned.
+var _combat_scan_dirty := true
+var _combat_scan_scene_id := 0
 
 ## The exploration HUD (`playground_hud.gd`), found by the same by-name
 ## convention `game_state.gd::_find_player()` and `playground_hud.gd`'s own
@@ -153,6 +161,7 @@ func _ready() -> void:
 	# The shell is a legitimate input owner too. This matters during handoffs:
 	# a panel closing after the shell opened must not unpause behind it.
 	add_to_group(INPUT_OWNER.GROUP)
+	get_tree().node_added.connect(_on_tree_node_added)
 	_config = _read_config()
 	_load_bindings()
 
@@ -1201,10 +1210,20 @@ func _shortcuts() -> Dictionary:
 ## a hard-coded path here would break silently the day it does.
 func _fight_in_progress() -> bool:
 	if _combat == null or not is_instance_valid(_combat):
-		_combat = _find_combat(get_tree().get_current_scene())
+		var scene := get_tree().get_current_scene()
+		var scene_id := scene.get_instance_id() if scene != null else 0
+		if _combat_scan_dirty or scene_id != _combat_scan_scene_id:
+			_combat_scan_dirty = false
+			_combat_scan_scene_id = scene_id
+			_combat = _find_combat(scene)
 	if _combat == null:
 		return false
 	return bool(_combat.call("is_fighting"))
+
+
+func _on_tree_node_added(node: Node) -> void:
+	if not _combat_scan_dirty and node.has_method("is_fighting"):
+		_combat_scan_dirty = true
 
 
 func _find_combat(node: Node) -> Node:

@@ -123,7 +123,7 @@ func _compile_exclusions() -> void:
 	for collection: String in ["npcs", "trainers"]:
 		for character: Dictionary in character_config.get(collection, []):
 			var island_id := str(character.get("island_id", ""))
-			var offset: Array = character.get("island_local_offset", [])
+			var offset: Array = preload("res://scripts/world/water_npc_placement.gd").offset(character)
 			if island_centres.has(island_id) and offset.size() >= 3:
 				_exclusion_points.append({"at": island_centres[island_id] + Vector2(float(offset[0]), float(offset[2])),
 					"radius": npc_clearance})

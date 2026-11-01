@@ -1,0 +1,56 @@
+[
+ {
+  "label": "P2-003",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-003_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-003_cand.jpg",
+  "brief": "Game frames of Team Tether stronghold: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The stronghold reads as a small dark ruin behind dominant pylons on approach and as a broad sparsely dressed stone room up close"
+  ]
+ },
+ {
+  "label": "P2-005",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-005_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-005_cand.jpg",
+  "brief": "Game frames of ground cover: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Thin grass and the same tall white flowers repeat over broad green slopes with few clustered color or rock breaks"
+  ]
+ },
+ {
+  "label": "P2-006",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-006_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-006_cand.jpg",
+  "brief": "Game frames of mill and settlements: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The mill water is a broad flat blue surface with abrupt sparse banks and nearby settlements have little concentrated visible activity"
+  ]
+ },
+ {
+  "label": "P2-012",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-012_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-012_cand.jpg",
+  "brief": "Game frames of Burrow Warrens hillside: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The hillside beside the Burrow entrance exposes a broad rectangular brown terrain face with straight edges and a dark cut"
+  ]
+ },
+ {
+  "label": "P2-064",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-064_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-064_cand.jpg",
+  "brief": "Game frames of Warden arena boundary: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "Thick straight turquoise rails outline the Warden floor and cross creature silhouettes like exposed guide geometry"
+  ]
+ },
+ {
+  "label": "P2-059",
+  "a": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-059_main.jpg",
+  "b": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/jb1/P2-059_cand.jpg",
+  "brief": "Game frames of catch sequence camera framing: 3 camera stand(s), stacked top to bottom, same stands on both sides.",
+  "defects": [
+   "The catch camera jumps from a wide aim view to a tight downward view that crops the companion and breaks the player-to-target spatial link"
+  ]
+ }
+]

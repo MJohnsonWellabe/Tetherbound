@@ -50,7 +50,7 @@ static func build(world_config: Dictionary, characters: Dictionary, encounters: 
 		var reuse_id := str(authored.get("npc_entity_id", ""))
 		var position_source: Dictionary = bodies.get(reuse_id, authored)
 		var island := str(position_source.get("island_id", ""))
-		var offset: Array = position_source.get("island_local_offset", [])
+		var offset: Array = preload("res://scripts/world/water_npc_placement.gd").offset(position_source)
 		if not centres.has(island) or offset.size() != 3:
 			errors.append("Trainer has invalid island placement: " + id)
 			continue

@@ -22,6 +22,7 @@ func mount(world: Node3D) -> void:
 	trainers.name = "StormwoodTrainers"
 	world.add_child(trainers)
 	trainers.build_authored(world.get_node("Player"))
+	preload("res://scripts/world/stormwood_character_rim.gd").attach(trainers)
 	var hub := preload("res://scripts/world/stormwood_encounter_hub.gd").new()
 	hub.name = "StormwoodEncounterHub"
 	world.add_child(hub)

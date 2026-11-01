@@ -151,7 +151,26 @@ static func config() -> Dictionary:
 	file.close()
 	if parsed is Dictionary:
 		_config = parsed
+		apply_meadows_ground_candidate(_config)
 	return _config
+
+
+## P2-005 (vis-meadows, OFF until GPU-judged): `meadows_ground_candidate`
+## layers onto the shipped Meadows field before anything reads it. `merge`
+## sets top-level keys (the ground-zone uniforms); `tiers` merges keys into the
+## `cover_tiers` row with that name. Realm profiles (configure_profile) never
+## pass through here, so other biomes are untouched.
+static func apply_meadows_ground_candidate(cfg: Dictionary) -> void:
+	var candidate: Dictionary = cfg.get("meadows_ground_candidate", {})
+	if not bool(candidate.get("enabled", false)):
+		return
+	var merge: Dictionary = candidate.get("merge", {})
+	for key: Variant in merge:
+		cfg[key] = merge[key].duplicate(true) if merge[key] is Dictionary or merge[key] is Array else merge[key]
+	var tiers: Dictionary = candidate.get("tiers", {})
+	for row: Variant in cfg.get("cover_tiers", []):
+		if row is Dictionary and tiers.has(str((row as Dictionary).get("name", ""))):
+			(row as Dictionary).merge(tiers[str(row.name)], true)
 
 
 ## Whether the field is on. Read by `vegetation.gd` as well as by this node, so

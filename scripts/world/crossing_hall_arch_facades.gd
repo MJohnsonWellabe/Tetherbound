@@ -37,7 +37,10 @@ static func build(hall: Node3D, cfg: Dictionary, arches: Dictionary) -> int:
 		# Bounds are the model's own (unscaled, unrotated) space, as for the
 		# locked doors in crossing_hall.gd; yaw is meant for 0 or 180.
 		var across := maxf(bounds.size.x, 0.001)
-		var fit := Vector3(float(size[0]) / across, float(size[1]) / bounds.size.y, float(size[0]) / across)
+		# `depth_scale` (HALL-2, default 1) thins the surround's depth into the
+		# room, so the piers stop reading as near-field posts down the nave.
+		var fit := Vector3(float(size[0]) / across, float(size[1]) / bounds.size.y,
+				float(size[0]) / across * float(cfg.get("depth_scale", 1.0)))
 		model.scale = fit
 		# Seat the back face on the wall plane and centre across the arch; a
 		# 180-degree yaw mirrors local x and z into slot space.

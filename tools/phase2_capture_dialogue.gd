@@ -11,7 +11,7 @@ func _load_plan() -> bool:
 		return false
 	var start := 0
 	var count := -1
-	for arg: String in OS.get_cmdline_user_args():
+	for arg: String in _user_args():
 		if arg.begins_with("--start="):
 			start = maxi(0, int(arg.trim_prefix("--start=")))
 		elif arg.begins_with("--count="):
@@ -29,8 +29,18 @@ func _begin_manifest() -> void:
 	_manifest["dialogue_fixture"] = "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof."
 
 func _finish(_complete: bool) -> void:
+	super._finish(_job_complete())
+
+
+func _job_complete() -> bool:
 	# This pass deliberately records a post plus a conversation per plan row.
-	super._finish(_failures.is_empty() and _records.size() == _planned.size() * 2)
+	return _failures.is_empty() and _records.size() == _planned.size() * 2
+
+
+## Each row closes its conversation and eases the camera back to the ordinary
+## stand, so a later post is captured as its own launch would capture it.
+func _supports_jobs() -> bool:
+	return true
 
 func _dialogue_for(row: Dictionary) -> String:
 	var source := str(row.get("authored_source", ""))
@@ -262,6 +272,14 @@ func _frame_speaker(row: Dictionary) -> String:
 					continue
 				var ground := resolve_capture_ground(_player, at.x, at.y, terrain)
 				if not is_finite(ground) or absf(ground - body.global_position.y) > 2.5:
+					# P2-083/P2-081 (GPU DLG-2): Captain Marrow stands on the
+					# Dynamo deck 260 m above the terrain, which the terrain and
+					# built-floor answers never see, so every stand was refused
+					# and the frame showed the player on the forest floor under
+					# the deck. A walkable collider within reach of the body's
+					# own height is the floor the player talks to him from.
+					ground = _deck_floor(at, body.global_position.y)
+				if not is_finite(ground) or absf(ground - body.global_position.y) > 2.5:
 					continue
 				_player.global_position = Vector3(at.x, ground, at.y)
 				_player.velocity = Vector3.ZERO
@@ -286,3 +304,20 @@ func _frame_speaker(row: Dictionary) -> String:
 		return "refused"
 	print("DLG_SPEAKER %s %s %s" % [str(row.frame_id), note, str(body.get_path())])
 	return note
+
+
+## The top of whatever collider lies under `at` within 2.5 m of `near_y`, or
+## NAN. Used only when the terrain and built-floor answers are far from the
+## speaker's own height (a raised deck no building registers).
+func _deck_floor(at: Vector2, near_y: float) -> float:
+	var space := _player.get_world_3d().direct_space_state if _player != null else null
+	if space == null:
+		return NAN
+	var query := PhysicsRayQueryParameters3D.create(
+		Vector3(at.x, near_y + 2.5, at.y), Vector3(at.x, near_y - 2.5, at.y))
+	if _player is CollisionObject3D:
+		query.exclude = [(_player as CollisionObject3D).get_rid()]
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		return NAN
+	return float((hit["position"] as Vector3).y)

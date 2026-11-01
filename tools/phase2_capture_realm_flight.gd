@@ -79,9 +79,11 @@ func _run() -> void:
 	_world = (load(SCENES[_biome]) as PackedScene).instantiate()
 	root.add_child(_world)
 	current_scene = _world
-	for i in 600:
-		if bool(_world.call("shell_build_complete")):
-			break
+	# Wait on the world's own ready flag with a time cap, not a frame
+	# count: GPU shells take minutes (Meadows ~140 s at High), far past
+	# any fixed frame budget (capture-speed lane, 1 Nov 2026).
+	var shell_deadline_ms := Time.get_ticks_msec() + 900000
+	while not bool(_world.call("shell_build_complete")) and Time.get_ticks_msec() < shell_deadline_ms:
 		await physics_frame
 	if not bool(_world.call("shell_build_complete")):
 		_failures.append("World shell did not build")

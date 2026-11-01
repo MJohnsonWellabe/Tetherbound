@@ -172,3 +172,8 @@ func _capture_row(row: Dictionary) -> void:
 	if str(record.get("dialogue_speaker","")) != str(row.expected_speaker):
 		_failures.append("%s: displayed speaker differs from registry"%row.frame_id)
 	_write_manifest()
+
+
+## Custom per-launch flow; not validated for batched --jobs launches.
+func _supports_jobs() -> bool:
+	return false
