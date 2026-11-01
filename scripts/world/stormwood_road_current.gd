@@ -301,6 +301,7 @@ func _build_puddles(routes: Array, surface: Dictionary, height_at: Callable) -> 
 	quad.size = Vector2(2.0, 2.0)
 	quad.material = material
 	var rng := RandomNumberGenerator.new()
+	var placed := 0
 	for route: Dictionary in routes:
 		if str(route.get("kind", "")) == "spur" or not carries_current(route, _config):
 			continue
@@ -342,9 +343,11 @@ func _build_puddles(routes: Array, surface: Dictionary, height_at: Callable) -> 
 		mm.instance_count = transforms.size()
 		for k in transforms.size():
 			mm.set_instance_transform(k, transforms[k])
+		placed += transforms.size()
 		var node := MultiMeshInstance3D.new()
 		node.name = "Puddles_%s" % str(route.id)
 		node.multimesh = mm
 		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		node.visibility_range_end = float(_config.draw_distance_m)
 		add_child(node)
+	print("[road_puddles] placed %d" % placed)
