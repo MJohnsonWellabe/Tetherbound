@@ -838,5 +838,122 @@
    "04-orb-resting"
   ],
   "group": 5
+ },
+ {
+  "item": "P2-045",
+  "flag": "data/config/pickup_grounding.json:tier_candidate.enabled",
+  "camera_set": "tools/phase2_capture_world_inventory.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__pickup__good_candy",
+   "stormwood__inventory__pickup__great_candy",
+   "stormwood__inventory__pickup__rare_candy"
+  ],
+  "group": 6
+ },
+ {
+  "item": "P2-046",
+  "flag": "data/config/stormwood_harvest_hero2.json:enabled",
+  "camera_set": "tools/phase2_capture_world_inventory.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__harvest__glowmoss",
+   "stormwood__inventory__harvest__stormglass",
+   "stormwood__inventory__harvest__stormglass_crown"
+  ],
+  "group": 6
+ },
+ {
+  "item": "SHARED-STORMWOOD-GROUND",
+  "flag": "data/config/stormwood_ground_finish.json:value_lift_candidate.enabled",
+  "camera_set": "tools/phase2_capture_locations.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__cinder_verge__01__the_struck_sentinel__day__approach",
+   "stormwood__deepwood__09__lantern_hollow__day__close",
+   "stormwood__deepwood__10__the_fallen_giant__day__close",
+   "stormwood__dynamo__12__the_stormheart_tree__day__approach",
+   "stormwood__dynamo__12__the_stormheart_tree__day__close",
+   "stormwood__glowmoss_hollows__03__the_lantern_pools__day__close",
+   "stormwood__glowmoss_hollows__04__crown_overlook__day__close",
+   "stormwood__landmark__crown_arch__day__close",
+   "stormwood__landmark__crown_heartstone__day__close",
+   "stormwood__landmark__dynamo_core__day__close",
+   "stormwood__landmark__glass_field__day__close",
+   "stormwood__landmark__lantern_hollow__night__close"
+  ],
+  "group": 6
+ },
+ {
+  "item": "SHARED-STORMWOOD-GROUND",
+  "flag": "data/config/stormwood_ground_finish.json:value_lift_candidate.enabled",
+  "camera_set": "tools/phase2_capture_stormwood_fights.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__fight__capacitor_alpha-i01",
+   "stormwood__fight__capacitor_alpha-tell1-a-start",
+   "stormwood__fight__capacitor_alpha-tell1-d-strike",
+   "stormwood__fight__capacitor_alpha-tell1-e-impact",
+   "stormwood__fight__hollows_aftermath__hollows_alpha-100-aftermath",
+   "stormwood__fight__hollows_alpha-tell1-e-impact",
+   "stormwood__fight__hollows_long__hollows_alpha-99-after",
+   "stormwood__fight__hollows_long__hollows_alpha-i13",
+   "stormwood__fight__hollows_win__hollows_alpha-99-after"
+  ],
+  "group": 6
+ },
+ {
+  "item": "SHARED-STORMWOOD-GROUND",
+  "flag": "data/config/stormwood_ground_finish.json:value_lift_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__ace_trainer_rook__dialogue",
+   "stormwood__inventory__character__captain_marrow__dialogue",
+   "stormwood__inventory__character__caretaker_lio__dialogue",
+   "stormwood__inventory__character__defector_sable",
+   "stormwood__inventory__character__elder_maud",
+   "stormwood__inventory__character__elder_maud__dialogue",
+   "stormwood__inventory__character__grunt_lieutenant_dace",
+   "stormwood__inventory__character__rodkeeper_hesk",
+   "stormwood__inventory__character__tether_lieutenant_varga",
+   "stormwood__inventory__character__trader_fenn__dialogue",
+   "stormwood__inventory__character__trader_oswin__dialogue",
+   "stormwood__inventory__character__warden_elect_bryn",
+   "stormwood__inventory__trainer__archivist_wen_crown_trial__dialogue",
+   "stormwood__inventory__trainer__archwright_senn_crown_footing__dialogue",
+   "stormwood__inventory__trainer__captain_marrow_dynamo_core__dialogue",
+   "stormwood__inventory__trainer__officer_nysa_deepwood_rod__dialogue"
+  ],
+  "group": 6
+ },
+ {
+  "item": "SHARED-STORMWOOD-GROUND",
+  "flag": "data/config/stormwood_ground_finish.json:value_lift_candidate.enabled",
+  "camera_set": "tools/phase2_capture_world_inventory.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__harvest__glowmoss",
+   "stormwood__inventory__harvest__stormglass",
+   "stormwood__inventory__harvest__stormglass_crown",
+   "stormwood__inventory__pickup__good_candy",
+   "stormwood__inventory__pickup__great_candy",
+   "stormwood__inventory__pickup__rare_candy"
+  ],
+  "group": 6
+ },
+ {
+  "item": "SHARED-STORMWOOD-GROUND",
+  "flag": "data/config/stormwood_ground_finish.json:value_lift_candidate.enabled",
+  "camera_set": "tools/phase2_capture_stormwood_glass_sink.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__landmark__glass_sink__day__approach",
+   "stormwood__landmark__glass_sink__day__close",
+   "stormwood__landmark__glass_sink__golden__approach"
+  ],
+  "group": 6
+ },
+ {
+  "item": "SHARED-STORMWOOD-GROUND",
+  "flag": "data/config/stormwood_ground_finish.json:value_lift_candidate.enabled",
+  "camera_set": "tools/phase2_capture_routes.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__dynamo__11__the_glass_field__walk_03_day"
+  ],
+  "group": 6
  }
 ]

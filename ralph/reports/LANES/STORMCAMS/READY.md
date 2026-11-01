@@ -21,6 +21,20 @@
 | SHARED-STORMWOOD-LIGHT (all Stormwood stands) | `data/config/stormwood_look.json` `light_pass_1101.enabled` | One switch for the Stormwood light and atmosphere pass: cooler stronger key, fixed purple storm sky, depth fog and aerial perspective, ambient lift for storm fill, contrast, copper/glass specular, a cool rim light opposite the sun, a soft fill. CPU (Compatibility): renders cleanly, slightly brighter and cooler with no breakage; the fog and rim are expected to show more on Forward+. In the manifest for every Stormwood stand in job.json. |
 | P2-059, P2-113 round 2 | `data/config/catching.json` `framed_camera.r2.enabled`, `data/config/hud.json` `message_clears_prompt.enabled` | Oblique catch resolve shot (pitch -30 -> -16, 7.2 m, fov 50); the verdict message hides the "Aim - N orbs" prompt instead of drawing over it. The judges' cyan ribbon reads as a real Meadows stream and the white blob as the orb's resting ring; neither is a camera fix, left. |
 
+## Group 6 (batch-1 verdict follow-ups, 18:40)
+| Item(s) | Flag | What it changes |
+|---|---|---|
+| SHARED-STORMWOOD-GROUND (all Stormwood stands) | `data/config/stormwood_ground_finish.json` `value_lift_candidate.enabled` | Grass, moss-bush and terrain tints rise out of near-black and the authored ground zones (loam, moss, still pools) switch on. CPU: ground clearly lighter with clearing/grove variation; the pools read dark. |
+| P2-045 | `data/config/pickup_grounding.json` `tier_candidate.enabled` | Batch 1 (5.70 -> 5.31) judged the old duplicate bug (oversized green copies). Copies are now made after the tier tint, smaller (0.72 / 0.66) and close. CPU: Great a blue pair, Rare a gold trio, no green copies. |
+| P2-046 | `data/config/stormwood_harvest_hero2.json` `enabled` | Glowmoss drops the flat decal disc for a squat moss-tinted rock mound carrying the fungi (round 3). |
+
+Batch-1 notes I could not fix in this lane:
+- **Kell (P2-078):** not placed in the captured world state: `village_npcs.json` places Kell only after `legendary_freed`, so the frame needs a post-game save, not a camera change.
+- **Quarry Foreman (P2-079):** framed and readable on CPU; what boxes him in is the quarry's own stretched rock faces and an overhang above the lens (scene art).
+- **Captain Marrow under the deck:** both Marrow rows stand on the Dynamo deck on CPU with this branch's capture fixture; a GPU run with main's copy of `tools/phase2_capture_dialogue.gd` still shoots him from below.
+- **Stormwood fight telegraphs:** the named-fight wind-ups come from per-pattern `cue_*` presentation in `combat.json` (fights lane). The canopy and trunk blackouts are covered by the shared occlusion fade, which runs on the fight camera too.
+- **Player head at close range:** fixed after batch 1 (key light moved off the trainer; wider swing for close pairs).
+
 ## Candidates on this branch (all flags OFF)
 | Item(s) | Flag | What it changes |
 |---|---|---|
