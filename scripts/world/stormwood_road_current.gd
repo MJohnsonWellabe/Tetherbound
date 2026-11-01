@@ -138,6 +138,7 @@ func build(world: Node3D, height_at: Callable = Callable()) -> void:
 		if half <= 0.0:
 			continue
 		_build_route(route, flow_points(route, _config), half, height_at)
+	_build_puddles(routes, surface, height_at)
 	var timer := Timer.new()
 	timer.name = "StormPoll"
 	timer.wait_time = float(_config.storm_intensity.poll_s)
@@ -266,3 +267,84 @@ func _build_route(route: Dictionary, points: Array[Vector2], half: float, height
 			add_child(chunk)
 			index += 1
 		run += length
+
+
+## P2-040 (GPU 5.63: "the 'charge' is still a gold decal ... no edge wear,
+## puddles or form under a flat grey-violet sky"). `puddle_candidate`, OFF by
+## default: soft-edged dark glossy puddles along every road, one MultiMesh
+## per route, so the rain-soaked lane catches the sky and the gold current
+## shows through them. Skipped where the ground under a puddle is not level.
+## Client presentation only: no collider, no bake input.
+func _build_puddles(routes: Array, surface: Dictionary, height_at: Callable) -> void:
+	var cfg: Variant = _config.get("puddle_candidate", {})
+	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)):
+		return
+	var spacing := maxf(float(cfg.get("spacing_m", 9.0)), 1.0)
+	var sizes: Array = cfg.get("radius_m", [0.7, 1.5])
+	var max_tilt := float(cfg.get("max_relief_m", 0.12))
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color(str(cfg.get("colour", "#161922")))
+	material.roughness = float(cfg.get("roughness", 0.06))
+	material.metallic_specular = float(cfg.get("specular", 0.9))
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	var fade := GradientTexture2D.new()
+	fade.fill = GradientTexture2D.FILL_RADIAL
+	fade.fill_from = Vector2(0.5, 0.5)
+	fade.fill_to = Vector2(1.0, 0.5)
+	var ramp := Gradient.new()
+	ramp.set_color(0, Color(1, 1, 1, float(cfg.get("alpha", 0.88))))
+	ramp.set_color(1, Color(1, 1, 1, 0.0))
+	ramp.add_point(0.72, Color(1, 1, 1, float(cfg.get("alpha", 0.88))))
+	fade.gradient = ramp
+	material.albedo_texture = fade
+	var quad := PlaneMesh.new()
+	quad.size = Vector2(2.0, 2.0)
+	quad.material = material
+	var rng := RandomNumberGenerator.new()
+	for route: Dictionary in routes:
+		if str(route.get("kind", "")) == "spur" or not carries_current(route, _config):
+			continue
+		var half := ribbon_half_width(str(route.kind), _config, surface)
+		if half <= 0.0:
+			continue
+		rng.seed = absi(str(route.id).hash())
+		var points := flow_points(route, _config)
+		var transforms: Array[Transform3D] = []
+		var carry := 0.0
+		for i in range(1, points.size()):
+			var a := points[i - 1]
+			var b := points[i]
+			var length := a.distance_to(b)
+			if length < 0.01:
+				continue
+			var along := (b - a) / length
+			var side := Vector2(-along.y, along.x)
+			var t := spacing - carry
+			while t < length:
+				var at := a + along * t + side * rng.randf_range(-0.6, 0.6) * half
+				var r := rng.randf_range(float(sizes[0]), float(sizes[1]))
+				var y := float(height_at.call(at.x, at.y))
+				var ok := is_finite(y)
+				for corner: Vector2 in [Vector2(r, 0), Vector2(-r, 0), Vector2(0, r), Vector2(0, -r)]:
+					var cy := float(height_at.call(at.x + corner.x, at.y + corner.y))
+					ok = ok and is_finite(cy) and absf(cy - y) <= max_tilt
+				if ok:
+					var basis := Basis(Vector3.UP, atan2(along.x, along.y) + rng.randf_range(-0.4, 0.4)) \
+						* Basis.from_scale(Vector3(r * rng.randf_range(0.6, 1.0), 1.0, r))
+					transforms.append(Transform3D(basis, Vector3(at.x, y + float(cfg.get("lift_m", 0.04)), at.y)))
+				t += spacing * rng.randf_range(0.7, 1.3)
+			carry = maxf(length - (t - spacing), 0.0)
+		if transforms.is_empty():
+			continue
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = quad
+		mm.instance_count = transforms.size()
+		for k in transforms.size():
+			mm.set_instance_transform(k, transforms[k])
+		var node := MultiMeshInstance3D.new()
+		node.name = "Puddles_%s" % str(route.id)
+		node.multimesh = mm
+		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		node.visibility_range_end = float(_config.draw_distance_m)
+		add_child(node)
