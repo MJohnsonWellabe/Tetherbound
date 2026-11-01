@@ -1,5 +1,38 @@
 # CAUSE-POSES lane (creature hurt and faint poses, roster-wide) — READY
 
+## Round 5 (owner, 1 Nov 2026): crumple instead of lying on the side
+
+> Owner: "For these animals that are going to look odd on their sides, just have them crumple over for their faint. Some of the creatures shouldn't go on their sides when they faint. They should just collapse onto the ground."
+
+**Use MANIFEST group 5.** It has the same 75 entries as group 4, judged with all remakes ON. The flag is unchanged: `creature_pose_settle.json:enabled`.
+
+- **Which species crumple:**
+  - **Rule, `faint.crumple`:** winged rigs and legless rigs crumple automatically.
+  - **Winged and legless remakes:** Aeriex, Duskhush, Galewisp, Pipwing, Reedwing, Ribbonray, Skyrill and Stormraven are winged; Aquaryn and Fulgocobra are legless.
+  - **Added by name** (shapes that look odd on their side):
+    - shelled: Mosshell, Cannonback, Cragclaw, Burrowback;
+    - many-legged: Voltarach;
+    - seal-like and sea creatures: Abyssal Guardian, Sirenseal, Ribbonray;
+    - amphibians and lizards: Mirejaw, Torrentoad, Paddlenewt, Riftfrill, Mangrove Monitor;
+    - Glimmermoth.
+  - **`keep_authored`:** Galecrest keeps its own liked wing-collapse.
+  - **Stays side-lying:** Tidecoil (the crumple sank its body below its tall fins) and every mammal and deer-like body (Terrapup, Trailpup, Veridian, Stormursa, Tanglevolt and the rest).
+- **What a crumple does:**
+  - No side roll. The legs go back under the body, which also rights a belly-up fall, and the body slumps 12° to one side.
+  - The legs fold out 55°, and the torso (the highest of pelvis or spine) sinks to 45% of its standing height over the second half of the clip. The legs pass into the ground, which reads as legs giving way.
+  - The body's top stays at least 30% of standing height above the ground, so a body is never buried.
+  - The head sinks to the ground through the joints below it.
+  - The trunk-levelling and `face_camera` steps still apply.
+- **Why the torso drop is needed:** auto-rigged remakes skin most leg mesh to the pelvis and spine, so ground contact alone left four-legged crumplers standing (CPU checks cr1–cr13 on the way).
+- **CPU, all remakes ON:**
+  - Collapse onto the ground: Mosshell, Cannonback, Cragclaw, Burrowback, Mirejaw, Paddlenewt, Riftfrill, Mangrove Monitor and Abyssal Guardian, plus every winged rig.
+  - Still weak: Sirenseal and Torrentoad end as a hunched crouch, and Voltarach in a curled-leg dead-spider pose. Glimmermoth's wings stay up.
+  - See `_sheet_cause_poses_cpu_r5.png`.
+- **Test:** `test_cause_poses_settle` passes with the committed flags (50 assertions) and with all remakes ON (51). It covers:
+  - Mosshell crumples, with its torso lowered and the body neither floating nor buried;
+  - Pipwing (winged) crumples;
+  - Veridian (deer) stays side-lying.
+
 > **Parked (two attempts):** Fulgocobra's raised hood at faint end. `faint.legless_head_drop` lowers the head through the three joints below it, by up to 90° in total, but the hood still stands part-way (CPU, remakes ON). It needs a different idea, such as re-authoring the snake's faint clip so the whole coil collapses. The partial drop stays in the arm.
 
 ## Round 3 (1 Nov 2026, ~23:00 UTC): remakes are the shipping models

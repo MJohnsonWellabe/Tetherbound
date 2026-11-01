@@ -150,7 +150,7 @@ func _width(points: PackedVector3Array) -> float:
 	return hi - lo
 
 
-func _upright_case() -> void:
+func _crumple_case() -> void:
 	SETTLE.set_config_for_test(_all_on())
 	var body := _spawn("mosshell")
 	var player := _player(body)
@@ -162,19 +162,45 @@ func _upright_case() -> void:
 	rig.measure_standing(player.get_animation(StringName(str(clips.get("idle", "")))))
 	var end := faint.length
 	var meta: Dictionary = faint.get_meta("settle_faint", {})
-	_check(absf(float(meta.get("roll_deg", 999.0))) < 0.001, "mosshell ON (upright species): never spun through a full turn (roll %s)" % str(meta.get("roll_deg")))
+	_check(bool(meta.get("crumple", false)), "mosshell ON: crumples instead of lying on its side")
+	var legs_end: Variant = rig.limb_direction(faint, end, rig.pivot_rotation(faint, end), rig.pivot_position(faint, end))
+	var from_down := rad_to_deg((legs_end as Vector3).angle_to(Vector3.DOWN)) if legs_end is Vector3 else 180.0
+	_check(from_down < 60.0, "mosshell ON: collapses legs-down onto the ground, belly-up fall righted (%.0f deg from down)" % from_down)
 	var settled := rig.posed(faint, end, rig.pivot_rotation(faint, end), rig.pivot_position(faint, end))
-	_check(_rests(rig, settled), "mosshell ON: faint end grounded")
+	var top := -INF
+	for p in settled:
+		top = maxf(top, p.y)
+	var torso_ok := true
+	for bone_name: String in rig.torso_heights:
+		var joint: Variant = rig.bone_point(faint, end, bone_name, rig.pivot_rotation(faint, end), rig.pivot_position(faint, end))
+		if joint is Vector3:
+			torso_ok = torso_ok and (joint as Vector3).y <= rig.ground_y + (float(rig.torso_heights[bone_name]) - rig.ground_y) * 0.6
+	_check(torso_ok, "mosshell ON: crumple lowers the torso toward the ground")
+	_check(SETTLE.Rig.min_y(settled) <= rig.ground_y + 0.01 and top >= rig.ground_y + rig.standing_height * 0.29,
+		"mosshell ON: crumpled body touches the ground without floating or being buried")
 	var original := player.get_animation(StringName(str(clips.get("rest_faint", ""))))
 	var installed := rig.posed(original, end, rig.pivot_rotation(original, end), rig.pivot_position(original, end))
 	_check(_width(settled) > _width(installed) * 1.03, "mosshell ON: limbs splay wider than the installed faint (%.2f vs %.2f m)" % [_width(settled), _width(installed)])
 	body.free()
 
 
+func _mode_case(species: String, expect_crumple: bool) -> void:
+	SETTLE.set_config_for_test(_all_on())
+	var body := _spawn(species)
+	var player := _player(body)
+	var faint := player.get_animation(StringName(_clip(body, "faint")))
+	var meta: Dictionary = faint.get_meta("settle_faint", {})
+	_check(bool(meta.get("crumple", not expect_crumple)) == expect_crumple,
+		"%s ON: %s" % [species, "winged rig crumples onto the ground" if expect_crumple else "mammal lies on its side, no crumple"])
+	body.free()
+
+
 func _run() -> void:
 	_case("frostclaw", true)
 	_case("veridian", false)
-	_upright_case()
+	_crumple_case()
+	_mode_case("pipwing", true)
+	_mode_case("veridian", false)
 	SETTLE.set_config_for_test(null)
 	await process_frame
 	print("CAUSE_POSES_RESULT=" + JSON.stringify({"assertions": assertions, "failures": failures}))

@@ -23,11 +23,14 @@ extends RefCounted
 ##                     its contact shadow.
 ##   faint.side_lie  - rolls about the body's forward axis until the legs lie
 ##                     out to the side, keeping the side a faint already fell
-##                     to; upright species settle legs-down, legless rigs keep
-##                     their authored fall.
+##                     to; legless rigs never roll by height.
 ##   faint.level_trunk - a trunk that ends sitting or standing up (pelvis to
 ##                     head steeper than 25 deg) pitches down first.
-##   faint.upright_splay - shelled/many-legged species splay their upper limbs.
+##   faint.crumple   - bodies that look odd on their side (owner, 1 Nov: winged,
+##                     legless, shelled, many-legged, seal/ray/serpent/amphibian
+##                     shapes) collapse onto the ground instead: legs back
+##                     under the body with a slight slump, legs folding out so
+##                     the belly drops, head sinking to the ground.
 ##   faint.head_lift - the neck lifts a head that ends buried or pointing down,
 ##                     so the face stays visible at faint end (limbed rigs).
 ##   faint.face_camera - at play_faint the collapse turns across the camera.
@@ -74,7 +77,7 @@ static func _section(cfg: Dictionary, role: String, part: String) -> Dictionary:
 static func any_enabled(cfg: Dictionary) -> bool:
 	if not bool(cfg.get("enabled", false)):
 		return false
-	for pair: Array in [["faint", "grounded"], ["faint", "side_lie"], ["faint", "head_lift"], ["faint", "face_camera"], ["faint", "upright_splay"], ["faint", "level_trunk"], ["faint", "legless_head_drop"],
+	for pair: Array in [["faint", "grounded"], ["faint", "side_lie"], ["faint", "head_lift"], ["faint", "face_camera"], ["faint", "crumple"], ["faint", "level_trunk"], ["faint", "legless_head_drop"],
 			["hit", "recoil"], ["hit", "grounded"]]:
 		if not _section(cfg, pair[0], pair[1]).is_empty():
 			return true
@@ -228,7 +231,7 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 	var grounded := _section(cfg, "faint", "grounded")
 	var side := _section(cfg, "faint", "side_lie")
 	var lift := _section(cfg, "faint", "head_lift")
-	if grounded.is_empty() and side.is_empty() and lift.is_empty() and _section(cfg, "faint", "upright_splay").is_empty():
+	if grounded.is_empty() and side.is_empty() and lift.is_empty() and _section(cfg, "faint", "crumple").is_empty():
 		return null
 	var animation := source.duplicate(true) as Animation
 	var times := _times(animation, rig, int(cfg.get("samples", 11)))
@@ -251,70 +254,57 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 			for i in times.size():
 				var r := _smooth((times[i] / end - start) / (finish - start))
 				rotations[i] = (Quaternion.IDENTITY.slerp(pitch, r) * rotations[i]).normalized()
+	var crumple := _section(cfg, "faint", "crumple")
+	var crumples := not crumple.is_empty() and crumples_species(rig, crumple)
+	var keep := _listed(side.get("exclude_species", []), rig.species_id) if not side.is_empty() else false
+	var legs: Variant = rig.limb_direction(animation, end, rotations[-1], positions[-1])
 	var roll := 0.0
-	var side_sign := 1.0
-	if not side.is_empty():
-		var legs: Variant = rig.limb_direction(animation, end, rotations[-1], positions[-1])
-		var reach := deg_to_rad(float(side.get("roll_deg", 78.0)))
-		side_sign = signf(float(side.get("roll_sign", 1.0)))
-		# Shelled and many-legged bodies collapse flat on their own legs: their
-		# target is legs-down, which also rights a belly-up turtle.
-		var upright := _listed(side.get("upright_species", []), rig.species_id)
-		if _listed(side.get("exclude_species", []), rig.species_id):
-			legs = null
-			upright = true
-		if legs is Vector3:
-			# Roll about the forward axis until the legs lie out to the side.
-			# A standing or crouched faint (legs down) takes `roll_sign`; a
-			# faint already on a side, or legs-up, keeps the side it fell to
-			# (never flipped over through upright); a near-side-lying faint is
-			# left alone.
-			var angle := rig.leg_angle(legs as Vector3)
-			if absf(angle) > deg_to_rad(float(side.get("keep_side_deg", 25.0))):
-				side_sign = signf(angle)
-			var target := 0.0 if upright else side_sign * reach
-			roll = wrapf(target - angle, -PI, PI)
-		# Legless rigs (snakes, rays, moths) keep their authored fall: a roll
-		# by posed height alone stood Fulgocobra's coil up on its side.
-		# Tiny corrections are noise; huge ones spin the body through a full
-		# turn mid-clip (a belly-up turtle righting itself), so keep those.
-		if absf(roll) < deg_to_rad(float(side.get("min_roll_deg", 10.0))) \
-				or absf(roll) > deg_to_rad(float(side.get("max_roll_deg", 120.0))):
+	var side_sign := signf(float(side.get("roll_sign", 1.0))) if not side.is_empty() else 1.0
+	if legs is Vector3 and not keep and (crumples or not side.is_empty()):
+		# Roll about the forward axis. Side-lying bodies: until the legs lie
+		# out to the side; a standing or crouched faint takes `roll_sign`, a
+		# faint already on a side (or legs-up) keeps the side it fell to.
+		# Crumpling bodies: legs back down under the body (a belly-up fall is
+		# righted), with only a slight natural slump to one side.
+		var angle := rig.leg_angle(legs as Vector3)
+		if absf(angle) > deg_to_rad(float(side.get("keep_side_deg", 25.0))):
+			side_sign = signf(angle)
+		var target := side_sign * deg_to_rad(float(side.get("roll_deg", 78.0)))
+		if crumples:
+			target = side_sign * deg_to_rad(float(crumple.get("slump_deg", 12.0)))
+		roll = wrapf(target - angle, -PI, PI)
+		# Tiny corrections are noise. A side-lying body never spins past
+		# `max_roll_deg`; a crumple may right a full belly-up fall, because its
+		# correction ramps in against the clip's own roll.
+		var limit := 180.0 if crumples else float(side.get("max_roll_deg", 120.0))
+		if absf(roll) < deg_to_rad(float(side.get("min_roll_deg", 10.0))) or absf(roll) > deg_to_rad(limit) + 0.001:
 			roll = 0.0
+	# Legless rigs (snakes, rays, moths) never roll by height alone: that stood
+	# Fulgocobra's coil up on its side.
 	if roll != 0.0:
 		var start := float(side.get("roll_start", 0.2))
 		var finish := maxf(start + 0.05, float(side.get("roll_end", 0.85)))
 		for i in times.size():
 			var r := _smooth((times[i] / end - start) / (finish - start))
 			rotations[i] = (Quaternion(rig.forward, roll * r) * rotations[i]).normalized()
-	var splay := _section(cfg, "faint", "upright_splay")
-	var upright_list: Variant = ((cfg.get("faint", {}) as Dictionary).get("side_lie", {}) as Dictionary).get("upright_species", [])
-	if not splay.is_empty() and _listed(upright_list, rig.species_id):
-		# An inverted body (legs above the trunk: a belly-up turtle) splays the
-		# other way; species without a reliable leg axis never count as one.
-		var after: Variant = rig.limb_direction(animation, end, rotations[-1], positions[-1])
-		var settings := splay.duplicate()
-		settings["_inverted"] = after is Vector3 and (after as Vector3).y > 0.0 \
-			and not _listed(((cfg.get("faint", {}) as Dictionary).get("side_lie", {}) as Dictionary).get("exclude_species", []), rig.species_id)
-		rig.splay_limbs(animation, end, rotations[-1], positions[-1], settings)
-	# Only limbed bodies lift the head; a legless body (a snake) whose head
-	# ends raised lowers it instead: a raised hood does not read as a faint.
-	var limbed := rig.limb_direction(animation, end, rotations[-1], positions[-1]) is Vector3
-	if not lift.is_empty() and limbed:
-		rig.lift_head(animation, end, rotations[-1], positions[-1], lift)
-	var drop := _section(cfg, "faint", "legless_head_drop")
-	if not drop.is_empty() and not limbed:
-		# The three joints below the head share the drop (the lowest first),
-		# so the raised neck curves down rather than kinking at the head.
-		var head_bone := rig.skeleton.find_bone("head")
-		var parent := rig.skeleton.get_bone_parent(head_bone) if head_bone >= 0 else -1
-		var grand := rig.skeleton.get_bone_parent(parent) if parent >= 0 else -1
-		var great := rig.skeleton.get_bone_parent(grand) if grand >= 0 else -1
-		var half := drop.duplicate()
-		half["max_drop_deg"] = float(drop.get("max_drop_deg", 90.0)) / 3.0
-		for joint: int in [great, grand, parent]:
-			if joint >= 0:
-				rig.lift_head(animation, end, rotations[-1], positions[-1], half, str(rig.skeleton.get_bone_name(joint)), true)
+	var limbed := legs is Vector3
+	if crumples:
+		# Collapse onto the ground: the legs fold out from under the body (it
+		# drops onto its belly once grounded) and the head sinks to the ground.
+		if limbed:
+			var fold := crumple.duplicate()
+			var after: Variant = rig.limb_direction(animation, end, rotations[-1], positions[-1])
+			fold["_inverted"] = after is Vector3 and (after as Vector3).y > 0.0 and not keep
+			rig.splay_limbs(animation, end, rotations[-1], positions[-1], fold)
+		_drop_head(rig, animation, end, rotations[-1], positions[-1], crumple, limbed)
+	else:
+		if not lift.is_empty() and limbed:
+			# The face stays visible on a side-lying body.
+			rig.lift_head(animation, end, rotations[-1], positions[-1], lift)
+		var drop := _section(cfg, "faint", "legless_head_drop")
+		if not drop.is_empty() and not limbed:
+			# A raised hood does not read as a faint.
+			_drop_head(rig, animation, end, rotations[-1], positions[-1], drop, false)
 	if not grounded.is_empty() or not side.is_empty():
 		var sink := rig.standing_height * float(grounded.get("sink_frac", 0.015)) if not grounded.is_empty() else 0.0
 		var centre := grounded.is_empty() or bool(grounded.get("recentre", true))
@@ -329,8 +319,36 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 			var raise := rig.ground_y - sink - Rig.min_y(points)
 			var trunk := rig.trunk_min_y(points)
 			if is_finite(trunk):
+				# A crumpling body's legs give way under it, so they may sink
+				# further and the belly reaches the ground.
+				var limb_sink := float(crumple.get("limb_sink_frac", 0.6)) if crumples else float(grounded.get("limb_sink_frac", 0.2))
 				raise = maxf(rig.ground_y - sink - trunk,
-					rig.ground_y - rig.standing_height * float(grounded.get("limb_sink_frac", 0.2)) - Rig.min_y(points))
+					rig.ground_y - rig.standing_height * limb_sink - Rig.min_y(points))
+			if crumples and not rig.torso_heights.is_empty():
+				# The legs give way: the torso (spine) sinks toward
+				# `torso_drop_ratio` of its standing height over the clip's
+				# second half; folded legs pass into the ground. Auto-rigged
+				# remakes skin most leg mesh to the trunk, so grounding alone
+				# would leave them standing.
+				# Each torso joint (pelvis, spine...) sinks toward the ratio of
+				# its own standing height; the most-raised joint (an arched
+				# hip) sets the drop.
+				var dropped := raise
+				var any := false
+				for bone_name: String in rig.torso_heights:
+					var joint: Variant = rig.bone_point(animation, times[i], bone_name, rotations[i], positions[i])
+					if joint is Vector3:
+						var target_y := rig.ground_y + (float(rig.torso_heights[bone_name]) - rig.ground_y) * float(crumple.get("torso_drop_ratio", 0.45))
+						dropped = minf(dropped, target_y - (joint as Vector3).y)
+						any = true
+				if any:
+					# Never bury the body: its top stays at least this high.
+					var top := -INF
+					for p in points:
+						top = maxf(top, p.y)
+					dropped = maxf(dropped, rig.ground_y + rig.standing_height * float(crumple.get("min_top_frac", 0.3)) - top)
+					var r := _smooth((times[i] / end - float(crumple.get("drop_start", 0.35))) / maxf(1.0 - float(crumple.get("drop_start", 0.35)), 0.05))
+					raise = lerpf(raise, dropped, r)
 			positions[i].y += raise
 			if centre:
 				var offset := rig.standing_centre - Rig.centre_xz(points)
@@ -341,7 +359,7 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 	animation.set_meta("settle_faint", {"forward": rig.forward,
 		"centre": Vector3(rig.standing_centre.x, 0.0, rig.standing_centre.y),
 		"rotations": rotations.duplicate(), "positions": positions.duplicate(), "times": times,
-		"roll_deg": rad_to_deg(roll), "side": side_sign})
+		"roll_deg": rad_to_deg(roll), "side": side_sign, "crumple": crumples})
 	return animation
 
 
@@ -399,6 +417,47 @@ static func face_camera(model: Node3D, player: AnimationPlayer, clip: String, ca
 	return rad_to_deg(yaw)
 
 
+## Crumpling bodies: the listed species, plus winged and legless rigs when
+## `winged_rigs` / `legless_rigs` are set, minus `keep_authored`.
+static func crumples_species(rig: Rig, crumple: Dictionary) -> bool:
+	if _listed(crumple.get("keep_authored", []), rig.species_id):
+		return false
+	if _listed(crumple.get("species", []), rig.species_id):
+		return true
+	var winged := false
+	var limbed := false
+	for bone in rig.skeleton.get_bone_count():
+		var name := str(rig.skeleton.get_bone_name(bone)).to_lower()
+		winged = winged or name.contains("wing")
+		limbed = limbed or (not name.contains("wing") and (name.contains("lower") or name.contains("foot") \
+			or name.contains("paw") or (name.begins_with("leg_") and name.ends_with("_3"))))
+	return (winged and bool(crumple.get("winged_rigs", true))) or (not limbed and bool(crumple.get("legless_rigs", true)))
+
+
+## Lower the head through the joints below it (limbed: neck then head's
+## parent chain of two; legless: three), the lowest joint first, so the neck
+## curves down rather than kinking at the head.
+static func _drop_head(rig: Rig, animation: Animation, end: float, rotation: Quaternion, position: Vector3,
+		cfg: Dictionary, limbed: bool) -> void:
+	var head := rig.skeleton.find_bone("head")
+	if head < 0:
+		return
+	var chain: Array[int] = []
+	var bone := rig.skeleton.get_bone_parent(head)
+	for n in (2 if limbed else 3):
+		if bone < 0:
+			break
+		chain.push_front(bone)
+		bone = rig.skeleton.get_bone_parent(bone)
+	if chain.is_empty():
+		return
+	var share := cfg.duplicate()
+	share["max_drop_deg"] = float(cfg.get("max_drop_deg", 90.0)) / float(chain.size())
+	share["max_elevation_deg"] = float(cfg.get("head_max_elevation_deg", cfg.get("max_elevation_deg", -15.0)))
+	for joint: int in chain:
+		rig.lift_head(animation, end, rotation, position, share, str(rig.skeleton.get_bone_name(joint)), true)
+
+
 ## Hit: a recoil when the authored hit barely moves, then planted samples.
 static func settle_hit(rig: Rig, source: Animation, cfg: Dictionary) -> Animation:
 	var recoil := _section(cfg, "hit", "recoil")
@@ -453,6 +512,7 @@ class Rig:
 	var standing_height := 0.0
 	var ground_y := 0.0
 	var standing_centre := Vector2.ZERO
+	var torso_heights := {}
 	var species_id := ""
 	var _animation_root: Node
 
@@ -522,7 +582,7 @@ class Rig:
 								dominant = bind_bones[bind]
 					if valid > 0.0:
 						kept.append(vertices[vertex])
-						limb_mask.append(1 if _is_limb(dominant) else 0)
+						limb_mask.append(1 if _is_limb(dominant) else (2 if _is_head(dominant) else 0))
 						for k in per:
 							var offset := vertex * per + k
 							var bind := int(bones[offset])
@@ -545,7 +605,15 @@ class Rig:
 				return true
 		return false
 
-	## Lowest posed point of the trunk alone (INF when the rig names no trunk).
+	## The head and neck: a sinking head must not count as the body resting.
+	func _is_head(bone: int) -> bool:
+		if bone < 0:
+			return false
+		var name := str(skeleton.get_bone_name(bone)).to_lower()
+		return name.contains("head") or name.contains("neck") or name.contains("jaw")
+
+	## Lowest posed point of the body core (root, pelvis, spine, tail: not
+	## limbs, head or neck); INF when the rig names none.
 	func trunk_min_y(points: PackedVector3Array) -> float:
 		var low := INF
 		for i in mini(points.size(), limb_mask.size()):
@@ -668,6 +736,10 @@ class Rig:
 		standing_height = Rig.height(points)
 		ground_y = Rig.min_y(points)
 		standing_centre = Rig.centre_xz(points)
+		for name: String in ["pelvis", "spine", "thorax", "abdomen", "spine_2"]:
+			var joint: Variant = bone_point(idle, 0.0, name, base.basis.get_rotation_quaternion(), base.origin)
+			if joint is Vector3:
+				torso_heights[name] = (joint as Vector3).y
 		# Combat faces every creature along +Z in the pivot's parent space
 		# (creature_body.gd applies the per-species model_yaw so the art does);
 		# a head-to-pelvis axis misreads curled necks (Galecrest).

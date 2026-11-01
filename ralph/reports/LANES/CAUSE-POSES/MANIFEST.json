@@ -6,7 +6,7 @@
   "stands": [
    "abyssal_guardian"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -17,7 +17,7 @@
   "stands": [
    "aeriex"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -28,7 +28,7 @@
   "stands": [
    "aquaryn"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -39,7 +39,7 @@
   "stands": [
    "ashtusk"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -50,7 +50,7 @@
   "stands": [
    "bramblebun"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -61,7 +61,7 @@
   "stands": [
    "breezetail"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -72,7 +72,7 @@
   "stands": [
    "brooktail"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -83,7 +83,7 @@
   "stands": [
    "burrowback"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -94,7 +94,7 @@
   "stands": [
    "cannonback"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -105,7 +105,7 @@
   "stands": [
    "cindercub"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -116,7 +116,7 @@
   "stands": [
    "cliffspike"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -127,7 +127,7 @@
   "stands": [
    "cloudfang"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -138,7 +138,7 @@
   "stands": [
    "cragclaw"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -149,7 +149,7 @@
   "stands": [
    "craghorn"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -160,7 +160,7 @@
   "stands": [
    "duskhush"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -171,7 +171,7 @@
   "stands": [
    "frostclaw"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -182,7 +182,7 @@
   "stands": [
    "fulgocobra"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -193,7 +193,7 @@
   "stands": [
    "galecrest"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "own-clip species (no remake): capture_f36_poses.gd --whole-body --context"
  },
@@ -204,7 +204,7 @@
   "stands": [
    "galewisp"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -215,7 +215,7 @@
   "stands": [
    "glimmermoth"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -226,7 +226,7 @@
   "stands": [
    "mangrove_monitor"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -237,7 +237,7 @@
   "stands": [
    "meadowhart"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -248,7 +248,7 @@
   "stands": [
    "mirejaw"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -259,7 +259,7 @@
   "stands": [
    "mosshell"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "own-clip species (no remake): capture_f36_poses.gd --whole-body --context"
  },
@@ -270,7 +270,7 @@
   "stands": [
    "mosshock"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -281,7 +281,7 @@
   "stands": [
    "mudsnout"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -292,7 +292,7 @@
   "stands": [
    "nightburrow"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "own-clip species (no remake): capture_f36_poses.gd --whole-body --context"
  },
@@ -303,7 +303,7 @@
   "stands": [
    "paddlenewt"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -314,7 +314,7 @@
   "stands": [
    "pebbik"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -325,7 +325,7 @@
   "stands": [
    "pipwing"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -336,7 +336,7 @@
   "stands": [
    "reedwing"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -347,7 +347,7 @@
   "stands": [
    "ribbonray"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -358,7 +358,7 @@
   "stands": [
    "riftfrill"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "own-clip species (no remake): capture_f36_poses.gd --whole-body --context"
  },
@@ -369,7 +369,7 @@
   "stands": [
    "ripplet"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -380,7 +380,7 @@
   "stands": [
    "riptusk"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -391,7 +391,7 @@
   "stands": [
    "riverdrake"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -402,7 +402,7 @@
   "stands": [
    "shadelet"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -413,7 +413,7 @@
   "stands": [
    "sirenseal"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -424,7 +424,7 @@
   "stands": [
    "skyrill"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -435,7 +435,7 @@
   "stands": [
    "solmane"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -446,7 +446,7 @@
   "stands": [
    "sparkit"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -457,7 +457,7 @@
   "stands": [
    "staticub"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -468,7 +468,7 @@
   "stands": [
    "stormbrush"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -479,7 +479,7 @@
   "stands": [
    "stormcapra"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "recipe species (no remake): capture_f36_poses.gd --whole-body --context --candidate"
  },
@@ -490,7 +490,7 @@
   "stands": [
    "stormraven"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -501,7 +501,7 @@
   "stands": [
    "stormtrail"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "own-clip species (no remake): capture_f36_poses.gd --whole-body --context"
  },
@@ -512,7 +512,7 @@
   "stands": [
    "stormursa"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "recipe species (no remake): capture_f36_poses.gd --whole-body --context --candidate"
  },
@@ -523,7 +523,7 @@
   "stands": [
    "tanglevolt"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "recipe species (no remake): capture_f36_poses.gd --whole-body --context --candidate"
  },
@@ -534,7 +534,7 @@
   "stands": [
    "tempestwing"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -545,7 +545,7 @@
   "stands": [
    "terrapup"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -556,7 +556,7 @@
   "stands": [
    "thundertunnel"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -567,7 +567,7 @@
   "stands": [
    "tidecoil"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -578,7 +578,7 @@
   "stands": [
    "torrentoad"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -589,7 +589,7 @@
   "stands": [
    "trailpup"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -600,7 +600,7 @@
   "stands": [
    "tuskroot"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -611,7 +611,7 @@
   "stands": [
    "veridian"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "own-clip species (no remake): capture_f36_poses.gd --whole-body --context"
  },
@@ -622,7 +622,7 @@
   "stands": [
    "voltarach"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -633,7 +633,7 @@
   "stands": [
    "voltwig"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -644,7 +644,7 @@
   "stands": [
    "water_abyssal_guardian"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -655,7 +655,7 @@
   "stands": [
    "water_aquaryn"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -666,7 +666,7 @@
   "stands": [
    "water_cannonback"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -677,7 +677,7 @@
   "stands": [
    "water_cragclaw"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -688,7 +688,7 @@
   "stands": [
    "water_mangrove_monitor"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -699,7 +699,7 @@
   "stands": [
    "water_mirejaw"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -710,7 +710,7 @@
   "stands": [
    "water_mosshell"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "own-clip species (no remake): capture_f36_poses.gd --whole-body --context"
  },
@@ -721,7 +721,7 @@
   "stands": [
    "water_riptusk"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -732,7 +732,7 @@
   "stands": [
    "water_riverdrake"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -743,7 +743,7 @@
   "stands": [
    "water_sirenseal"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -754,7 +754,7 @@
   "stands": [
    "water_tidecoil"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -765,7 +765,7 @@
   "stands": [
    "water_torrentoad"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
   "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
@@ -777,7 +777,7 @@
    "meadows__terrapup__fainted",
    "meadows__veridian__fainted"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)"
  },
  {
@@ -788,7 +788,7 @@
    "meadows__terrapup__hurt",
    "meadows__nightburrow__hurt"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)"
  },
  {
@@ -798,7 +798,7 @@
   "stands": [
    "meadows__mosshell__fainted"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)"
  },
  {
@@ -810,7 +810,7 @@
    "meadows__fights__south_bridge_grunt-03",
    "meadows__fights__south_bridge_grunt-05"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)"
  },
  {
@@ -822,7 +822,7 @@
    "tidewake__riptusk__fainted",
    "tidewake__aquaryn__fainted"
   ],
-  "group": 4,
+  "group": 5,
   "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)"
  }
 ]

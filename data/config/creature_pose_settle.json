@@ -1,5 +1,5 @@
 {
- "_comment": "CAUSE-POSES (1 Nov 2026): roster-wide hurt/faint settle for every rig (F36 recipes and own-clip/remake species), scripts/creatures/creature_pose_settle.gd. The master `enabled` (OFF) is the GPU arm; each section keeps its own switch (ON inside the arm) so an arm can drop one. faint.grounded: dense pivot keys plant every faint sample on the standing ground line and re-centre the posed body over its contact shadow. faint.side_lie: rolls about the body's forward axis until the legs lie out to the side; a standing or crouched faint takes roll_sign (+1 rolls the back toward the body's right), a faint already on a side or legs-up keeps its side. faint.head_lift: the neck lifts a buried or downward head at faint end (limbed bodies only). Legless rigs (snakes, rays, moths) keep their authored fall, grounded. faint.upright_splay: shelled and many-legged species splay their upper limbs so the body settles flat. faint.face_camera: at play_faint the settled collapse turns (ramped, about its standing centre) so the body lies across the camera's view with its back toward the camera (no end-on blob, belly away). hit.recoil: a hit that barely moves gains a held pivot recoil. hit.grounded: every hit sample is planted (no hop). Composes with f36_pose_candidates.json flags (including roster_pose_r1) and creature_clip_flags.json: it reads whatever clip those leave.",
+ "_comment": "CAUSE-POSES (1 Nov 2026): roster-wide hurt/faint settle for every rig (F36 recipes and own-clip/remake species), scripts/creatures/creature_pose_settle.gd. The master `enabled` (OFF) is the GPU arm; each section keeps its own switch (ON inside the arm) so an arm can drop one. faint.grounded: dense pivot keys plant every faint sample on the standing ground line and re-centre the posed body over its contact shadow. faint.side_lie: rolls about the body's forward axis until the legs lie out to the side; a standing or crouched faint takes roll_sign (+1 rolls the back toward the body's right), a faint already on a side or legs-up keeps its side. faint.head_lift: the neck lifts a buried or downward head at faint end (limbed bodies only). Legless rigs (snakes, rays, moths) keep their authored fall, grounded. faint.crumple (owner, 1 Nov): bodies that look odd on their side (winged and legless rigs, plus listed shelled, many-legged, seal, ray, serpent and amphibian shapes) collapse onto the ground instead: legs under the body with a slight slump, legs folding out so the belly drops, head sinking to the ground. faint.face_camera: at play_faint the settled collapse turns (ramped, about its standing centre) so the body lies across the camera's view with its back toward the camera (no end-on blob, belly away). hit.recoil: a hit that barely moves gains a held pivot recoil. hit.grounded: every hit sample is planted (no hop). Composes with f36_pose_candidates.json flags (including roster_pose_r1) and creature_clip_flags.json: it reads whatever clip those leave.",
  "enabled": false,
  "samples": 11,
  "sample_vertices": 1500,
@@ -30,37 +30,52 @@
    "max_roll_deg": 120.0,
    "keep_side_deg": 25.0,
    "_keep_side_why": "A faint already on a side or legs-up keeps the side it fell to (CPU stage: a fixed roll_sign flipped Mudsnout, Galecrest and Stormursa over through upright); roll_sign only orients standing or crouched faints.",
-   "_upright_why": "Shelled and many-legged bodies collapse flat on their own legs (CPU stage: Cragclaw stood on its shell rim when rolled; Mosshell's own faint lands belly-up): their target is legs-down.",
    "_exclude_why": "No roll at all: Voltarach's curled faint has no reliable leg axis (CPU probe: a 132 deg roll); Galecrest's own wing-collapse already lies on its side (creature_body.gd rest_roll_deg note).",
    "exclude_species": [
     "voltarach",
     "galecrest"
-   ],
-   "upright_species": [
-    "cragclaw",
-    "cannonback",
-    "mosshell",
-    "voltarach",
-    "burrowback"
    ]
+  },
+  "crumple": {
+   "enabled": true,
+   "_why": "Owner, 1 Nov 2026: 'Some of the creatures shouldn't go on their sides when they faint. They should just collapse onto the ground.' These bodies look odd on their side, so they crumple instead: legs back under the body (a belly-up fall is righted) with a slight slump to one side, legs folding out so the belly drops onto the ground, head sinking to the ground. Winged and legless rigs crumple automatically; the list adds shelled, many-legged, seal, ray, serpent and amphibian shapes. keep_authored never crumples (Galecrest's liked wing-collapse).",
+   "species": [
+    "abyssal_guardian",
+    "sirenseal",
+    "ribbonray",
+    "glimmermoth",
+    "mosshell",
+    "cannonback",
+    "cragclaw",
+    "voltarach",
+    "burrowback",
+    "mirejaw",
+    "torrentoad",
+    "paddlenewt",
+    "riftfrill",
+    "mangrove_monitor"
+   ],
+   "winged_rigs": true,
+   "legless_rigs": true,
+   "keep_authored": [
+    "galecrest"
+   ],
+   "slump_deg": 12.0,
+   "splay_deg": 55.0,
+   "ramp_start": 0.3,
+   "head_max_elevation_deg": -15.0,
+   "max_drop_deg": 60.0,
+   "limb_sink_frac": 0.6,
+   "_legs_why": "CPU (remakes ON): auto-rigged remakes skin most leg mesh to the pelvis and spine, so trunk grounding left four-legged crumplers standing. Their torso (spine) now sinks to torso_drop_ratio of its standing height over the clip's second half; legs fold out splay_deg and pass into the ground, reading as legs giving way.",
+   "torso_drop_ratio": 0.45,
+   "drop_start": 0.35,
+   "min_top_frac": 0.3,
+   "_tidecoil_why": "Tidecoil lies on its side (it reads well there, and its tall dorsal fins let a crumpled body sink out of sight)."
   },
   "head_lift": {
    "enabled": true,
    "min_elevation_deg": 10.0,
    "max_lift_deg": 35.0,
-   "ramp_start": 0.5
-  },
-  "upright_splay": {
-   "enabled": true,
-   "_why": "Upright species (side_lie.upright_species) collapse onto splayed legs: each upper limb swings outward about the forward axis, so the grounded body settles flat instead of reading as standing.",
-   "splay_deg": 32.0,
-   "ramp_start": 0.3
-  },
-  "legless_head_drop": {
-   "enabled": true,
-   "_why": "GPU (remakes, and the 24 Oct baseline): Fulgocobra's hood stays up in its faint. A legless rig whose head ends above max_elevation_deg (relative to the joint below it) lowers it through that joint, ramped in over the clip's second half.",
-   "max_elevation_deg": -15.0,
-   "max_drop_deg": 90.0,
    "ramp_start": 0.5
   },
   "face_camera": {
