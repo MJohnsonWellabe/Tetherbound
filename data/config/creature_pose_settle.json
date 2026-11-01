@@ -1,5 +1,5 @@
 {
- "_comment": "CAUSE-POSES (1 Nov 2026): roster-wide hurt/faint settle for every rig (F36 recipes and own-clip/remake species), scripts/creatures/creature_pose_settle.gd. The master `enabled` (OFF) is the GPU arm; each section keeps its own switch (ON inside the arm) so an arm can drop one. faint.grounded: dense pivot keys plant every faint sample on the standing ground line and re-centre the posed body over its contact shadow. faint.side_lie: rolls about the body's forward axis until the legs lie out to the side; a standing or crouched faint takes roll_sign (+1 rolls the back toward the body's right), a faint already on a side or legs-up keeps its side. faint.head_lift: the neck lifts a buried or downward head at faint end. faint.upright_splay: shelled and many-legged species splay their upper limbs so the body settles flat. faint.face_camera: at play_faint the settled collapse turns (ramped, about its standing centre) so the body lies across the camera's view with its back toward the camera (no end-on blob, belly away). hit.recoil: a hit that barely moves gains a held pivot recoil. hit.grounded: every hit sample is planted (no hop). Composes with f36_pose_candidates.json flags (including roster_pose_r1) and creature_clip_flags.json: it reads whatever clip those leave.",
+ "_comment": "CAUSE-POSES (1 Nov 2026): roster-wide hurt/faint settle for every rig (F36 recipes and own-clip/remake species), scripts/creatures/creature_pose_settle.gd. The master `enabled` (OFF) is the GPU arm; each section keeps its own switch (ON inside the arm) so an arm can drop one. faint.grounded: dense pivot keys plant every faint sample on the standing ground line and re-centre the posed body over its contact shadow. faint.side_lie: rolls about the body's forward axis until the legs lie out to the side; a standing or crouched faint takes roll_sign (+1 rolls the back toward the body's right), a faint already on a side or legs-up keeps its side. faint.head_lift: the neck lifts a buried or downward head at faint end (limbed bodies only). Legless rigs (snakes, rays, moths) keep their authored fall, grounded. faint.upright_splay: shelled and many-legged species splay their upper limbs so the body settles flat. faint.face_camera: at play_faint the settled collapse turns (ramped, about its standing centre) so the body lies across the camera's view with its back toward the camera (no end-on blob, belly away). hit.recoil: a hit that barely moves gains a held pivot recoil. hit.grounded: every hit sample is planted (no hop). Composes with f36_pose_candidates.json flags (including roster_pose_r1) and creature_clip_flags.json: it reads whatever clip those leave.",
  "enabled": false,
  "samples": 11,
  "sample_vertices": 1500,
@@ -9,11 +9,19 @@
    "enabled": true,
    "sink_frac": 0.015,
    "recentre": true,
-   "max_shift_frac": 0.6
+   "max_shift_frac": 0.6,
+   "limb_sink_frac": 0.2,
+   "_limb_sink_why": "The trunk rests on the ground and limbs may sink up to 20% of standing height: grounding on the single lowest vertex propped remake bodies up on one flipper or leg tip (CPU marker probe: Abyssal Guardian balanced on a fin)."
+  },
+  "level_trunk": {
+   "enabled": true,
+   "_why": "Remake faints that end sitting or standing up (GPU on remakes: Abyssal Guardian 'begging seal', Galewisp and Riverdrake upright, Ribbonray on its tail) pitch down until pelvis-to-head is no steeper than max_trunk_deg, before the side roll.",
+   "max_trunk_deg": 25.0,
+   "ramp_start": 0.2,
+   "ramp_end": 0.85
   },
   "side_lie": {
    "enabled": true,
-   "collapse_ratio": 0.62,
    "roll_deg": 78.0,
    "roll_sign": 1.0,
    "roll_start": 0.2,
@@ -57,7 +65,7 @@
  "hit": {
   "recoil": {
    "enabled": true,
-   "min_motion_frac": 0.04,
+   "min_motion_frac": 0.07,
    "pitch_deg": 7.0,
    "lean_deg": 6.0,
    "shove_frac": 0.08,

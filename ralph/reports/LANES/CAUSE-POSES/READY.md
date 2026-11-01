@@ -1,5 +1,34 @@
 # CAUSE-POSES lane (creature hurt and faint poses, roster-wide) — READY
 
+## Round 3 (1 Nov 2026, ~23:00 UTC): remakes are the shipping models
+
+**Use MANIFEST group 3.** It supersedes groups 1 and 2: 75 entries, each with a `baseline` field. Every entry is judged with all 49 `remake_owner1101_*` flags ON, as the coordinator directed (1 Nov). Each F36 row's `note` names its stage form:
+- remake rigs: no `--candidate` (60 rows, counting water forms);
+- recipe species that have no remake: `--candidate`.
+
+The flag is unchanged: `data/config/creature_pose_settle.json:enabled`.
+
+**What the remake checks found and fixed.** Each was checked by CPU capture with all remakes ON, arm OFF vs ON.
+- **The remakes' own faints sink below the floor.** The render marker probe was decisive: sampled vertices drawn as spheres sit on the mesh. Abyssal Guardian's own faint goes 1.36 m below the stage floor, which hides the sunk half. With the arm ON its lowest point sits 3 cm into the ground.
+- **Ground the trunk, not the lowest vertex** (`faint.grounded.limb_sink_frac` 0.2):
+  - The trunk (vertices bound mainly to root, spine, tail, neck or head) rests on the ground.
+  - Limbs may sink up to 20% of standing height.
+  - Grounding to the lowest vertex had balanced Abyssal Guardian on one fin tip and pushed Mirejaw up onto its legs.
+- **`faint.level_trunk`:** a faint that ends sitting or standing up pitches down until pelvis-to-head is at most 25°, before the roll. This answers the "begging seal" and "sits upright" notes. Ribbonray improves from vertical to diagonal but is not fixed.
+- **Legless rigs keep their authored fall:**
+  - No height-fallback roll: it stood Fulgocobra's coil up on its side.
+  - Head lift applies to limbed bodies only.
+- **Hit recoil threshold raised from 4% to 7% of height,** so Fulgocobra's 5% hit gains the recoil.
+  - The other named remake hits already move 16–34% of height and lift at most 0.11 m off the ground: Voltarach 17%, Bramblebun 16% (lift 0.01 m).
+  - So "barely differs" (Voltarach) and "airborne" (Bramblebun) are not a motion-amount problem the arm can fix blind. The long stage shadow makes grounded bodies look lifted.
+- **Remakes with the arm ON (CPU):** Terrapup, Bramblebun, Riverdrake, Mirejaw and Tanglevolt (recipe) lie low and grounded on their side. Abyssal Guardian lies low with one fin sunk.
+- **Still weak:**
+  - Fulgocobra's own faint keeps the hood raised (it needs a snake head-drop, not built).
+  - Ribbonray is diagonal.
+  - Glimmermoth's wings stay up.
+  - Galewisp ends as a puffed bird with its tail up.
+- **Test:** `test_cause_poses_settle` passes with the committed flags (46 assertions) and with all remakes ON (47). Its expectations follow whether a recipe actually installs, so the remake landing does not break it.
+
 ## Lane close-out (1 Nov 2026, ~22:40 UTC)
 
 - **State:** `tb/cause-poses` at its pushed head, with `origin/main` merged in after #792. **One GPU arm:** `data/config/creature_pose_settle.json:enabled`, shipped OFF. Use `MANIFEST.json` **group 2** (83 entries); it supersedes group 1.

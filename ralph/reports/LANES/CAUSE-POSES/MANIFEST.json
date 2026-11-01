@@ -6,8 +6,9 @@
   "stands": [
    "abyssal_guardian"
   ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 aeriex (hit react, faint)",
@@ -16,8 +17,9 @@
   "stands": [
    "aeriex"
   ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 aquaryn (hit react, faint)",
@@ -26,8 +28,9 @@
   "stands": [
    "aquaryn"
   ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 ashtusk (hit react, faint)",
@@ -36,448 +39,9 @@
   "stands": [
    "ashtusk"
   ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 breezetail (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "breezetail"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 brooktail (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "brooktail"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 cannonback (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "cannonback"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 cliffspike (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "cliffspike"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 cloudfang (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "cloudfang"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 cragclaw (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "cragclaw"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 craghorn (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "craghorn"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 frostclaw (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "frostclaw"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 fulgocobra (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "fulgocobra"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 galewisp (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "galewisp"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 glimmermoth (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "glimmermoth"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 mangrove_monitor (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "mangrove_monitor"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 mirejaw (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "mirejaw"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 mosshock (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "mosshock"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 ribbonray (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "ribbonray"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 riptusk (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "riptusk"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 riverdrake (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "riverdrake"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 shadelet (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "shadelet"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 sirenseal (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "sirenseal"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 skyrill (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "skyrill"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 solmane (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "solmane"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 sparkit (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "sparkit"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 staticub (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "staticub"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 stormbrush (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "stormbrush"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 stormcapra (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "stormcapra"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 stormursa (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "stormursa"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 tanglevolt (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "tanglevolt"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 tempestwing (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "tempestwing"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 thundertunnel (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "thundertunnel"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 tidecoil (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "tidecoil"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 torrentoad (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "torrentoad"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 tuskroot (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "tuskroot"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 voltarach (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "voltarach"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 voltwig (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "voltwig"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 water_abyssal_guardian (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "water_abyssal_guardian"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 water_aquaryn (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "water_aquaryn"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 water_cragclaw (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "water_cragclaw"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 water_mangrove_monitor (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "water_mangrove_monitor"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 water_mirejaw (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "water_mirejaw"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 water_riptusk (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "water_riptusk"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 water_riverdrake (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "water_riverdrake"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 water_sirenseal (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "water_sirenseal"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 water_tidecoil (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "water_tidecoil"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
- },
- {
-  "item": "F36#1 water_torrentoad (hit react, faint)",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "camera_set": "F36",
-  "stands": [
-   "water_torrentoad"
-  ],
-  "group": 2,
-  "note": "recipe species: capture_f36_poses.gd --whole-body --context --candidate"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 bramblebun (hit react, faint)",
@@ -486,8 +50,31 @@
   "stands": [
    "bramblebun"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 breezetail (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "breezetail"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 brooktail (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "brooktail"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 burrowback (hit react, faint)",
@@ -496,8 +83,20 @@
   "stands": [
    "burrowback"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 cannonback (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cannonback"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 cindercub (hit react, faint)",
@@ -506,8 +105,53 @@
   "stands": [
    "cindercub"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 cliffspike (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cliffspike"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 cloudfang (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cloudfang"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 cragclaw (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cragclaw"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 craghorn (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "craghorn"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 duskhush (hit react, faint)",
@@ -516,8 +160,31 @@
   "stands": [
    "duskhush"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 frostclaw (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "frostclaw"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 fulgocobra (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "fulgocobra"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 galecrest (hit react, faint)",
@@ -526,8 +193,42 @@
   "stands": [
    "galecrest"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "own-clip species (no remake): capture_f36_poses.gd --whole-body --context"
+ },
+ {
+  "item": "F36#1 galewisp (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "galewisp"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 glimmermoth (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "glimmermoth"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 mangrove_monitor (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mangrove_monitor"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 meadowhart (hit react, faint)",
@@ -536,8 +237,20 @@
   "stands": [
    "meadowhart"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 mirejaw (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mirejaw"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 mosshell (hit react, faint)",
@@ -546,8 +259,20 @@
   "stands": [
    "mosshell"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "own-clip species (no remake): capture_f36_poses.gd --whole-body --context"
+ },
+ {
+  "item": "F36#1 mosshock (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mosshock"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 mudsnout (hit react, faint)",
@@ -556,8 +281,9 @@
   "stands": [
    "mudsnout"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 nightburrow (hit react, faint)",
@@ -566,8 +292,9 @@
   "stands": [
    "nightburrow"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "own-clip species (no remake): capture_f36_poses.gd --whole-body --context"
  },
  {
   "item": "F36#1 paddlenewt (hit react, faint)",
@@ -576,8 +303,9 @@
   "stands": [
    "paddlenewt"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 pebbik (hit react, faint)",
@@ -586,8 +314,9 @@
   "stands": [
    "pebbik"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 pipwing (hit react, faint)",
@@ -596,8 +325,9 @@
   "stands": [
    "pipwing"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 reedwing (hit react, faint)",
@@ -606,8 +336,20 @@
   "stands": [
    "reedwing"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 ribbonray (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "ribbonray"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 riftfrill (hit react, faint)",
@@ -616,8 +358,9 @@
   "stands": [
    "riftfrill"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "own-clip species (no remake): capture_f36_poses.gd --whole-body --context"
  },
  {
   "item": "F36#1 ripplet (hit react, faint)",
@@ -626,8 +369,119 @@
   "stands": [
    "ripplet"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 riptusk (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "riptusk"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 riverdrake (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "riverdrake"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 shadelet (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "shadelet"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 sirenseal (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "sirenseal"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 skyrill (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "skyrill"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 solmane (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "solmane"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 sparkit (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "sparkit"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 staticub (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "staticub"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 stormbrush (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "stormbrush"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 stormcapra (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "stormcapra"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "recipe species (no remake): capture_f36_poses.gd --whole-body --context --candidate"
  },
  {
   "item": "F36#1 stormraven (hit react, faint)",
@@ -636,8 +490,9 @@
   "stands": [
    "stormraven"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 stormtrail (hit react, faint)",
@@ -646,8 +501,42 @@
   "stands": [
    "stormtrail"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "own-clip species (no remake): capture_f36_poses.gd --whole-body --context"
+ },
+ {
+  "item": "F36#1 stormursa (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "stormursa"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "recipe species (no remake): capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 tanglevolt (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tanglevolt"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "recipe species (no remake): capture_f36_poses.gd --whole-body --context --candidate"
+ },
+ {
+  "item": "F36#1 tempestwing (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tempestwing"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 terrapup (hit react, faint)",
@@ -656,8 +545,42 @@
   "stands": [
    "terrapup"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 thundertunnel (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "thundertunnel"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 tidecoil (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tidecoil"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 torrentoad (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "torrentoad"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 trailpup (hit react, faint)",
@@ -666,8 +589,20 @@
   "stands": [
    "trailpup"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 tuskroot (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tuskroot"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 veridian (hit react, faint)",
@@ -676,8 +611,53 @@
   "stands": [
    "veridian"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "own-clip species (no remake): capture_f36_poses.gd --whole-body --context"
+ },
+ {
+  "item": "F36#1 voltarach (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "voltarach"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 voltwig (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "voltwig"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 water_abyssal_guardian (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_abyssal_guardian"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 water_aquaryn (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_aquaryn"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 water_cannonback (hit react, faint)",
@@ -686,8 +666,42 @@
   "stands": [
    "water_cannonback"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 water_cragclaw (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_cragclaw"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 water_mangrove_monitor (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_mangrove_monitor"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 water_mirejaw (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_mirejaw"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "F36#1 water_mosshell (hit react, faint)",
@@ -696,8 +710,64 @@
   "stands": [
    "water_mosshell"
   ],
-  "group": 2,
-  "note": "own-clip species: capture_f36_poses.gd --whole-body --context (no --candidate)"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "own-clip species (no remake): capture_f36_poses.gd --whole-body --context"
+ },
+ {
+  "item": "F36#1 water_riptusk (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_riptusk"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 water_riverdrake (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_riverdrake"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 water_sirenseal (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_sirenseal"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 water_tidecoil (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_tidecoil"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
+ },
+ {
+  "item": "F36#1 water_torrentoad (hit react, faint)",
+  "flag": "data/config/creature_pose_settle.json:enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_torrentoad"
+  ],
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)",
+  "note": "remake rig: capture_f36_poses.gd --whole-body --context (no --candidate)"
  },
  {
   "item": "P2-015",
@@ -707,7 +777,8 @@
    "meadows__terrapup__fainted",
    "meadows__veridian__fainted"
   ],
-  "group": 2
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)"
  },
  {
   "item": "P2-016",
@@ -717,7 +788,8 @@
    "meadows__terrapup__hurt",
    "meadows__nightburrow__hurt"
   ],
-  "group": 2
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)"
  },
  {
   "item": "P2-020",
@@ -726,7 +798,8 @@
   "stands": [
    "meadows__mosshell__fainted"
   ],
-  "group": 2
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)"
  },
  {
   "item": "P2-063",
@@ -737,7 +810,8 @@
    "meadows__fights__south_bridge_grunt-03",
    "meadows__fights__south_bridge_grunt-05"
   ],
-  "group": 2
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)"
  },
  {
   "item": "P2-028",
@@ -748,94 +822,7 @@
    "tidewake__riptusk__fainted",
    "tidewake__aquaryn__fainted"
   ],
-  "group": 2
- },
- {
-  "item": "F36#1 terrapup remake (hit react, faint) with the settle arm",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "also_enable": "data/config/creature_model_flags.json:flags.remake_owner1101_terrapup.enabled",
-  "camera_set": "F36",
-  "stands": [
-   "terrapup"
-  ],
-  "group": 2,
-  "note": "own-clip remake rig: capture_f36_poses.gd --whole-body --context (no --candidate); judge against the remake flag alone"
- },
- {
-  "item": "F36#1 bramblebun remake (hit react, faint) with the settle arm",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "also_enable": "data/config/creature_model_flags.json:flags.remake_owner1101_bramblebun.enabled",
-  "camera_set": "F36",
-  "stands": [
-   "bramblebun"
-  ],
-  "group": 2,
-  "note": "own-clip remake rig: capture_f36_poses.gd --whole-body --context (no --candidate); judge against the remake flag alone"
- },
- {
-  "item": "F36#1 trailpup remake (hit react, faint) with the settle arm",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "also_enable": "data/config/creature_model_flags.json:flags.remake_owner1101_trailpup.enabled",
-  "camera_set": "F36",
-  "stands": [
-   "trailpup"
-  ],
-  "group": 2,
-  "note": "own-clip remake rig: capture_f36_poses.gd --whole-body --context (no --candidate); judge against the remake flag alone"
- },
- {
-  "item": "F36#1 brooktail remake (hit react, faint) with the settle arm",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "also_enable": "data/config/creature_model_flags.json:flags.remake_owner1101_brooktail.enabled",
-  "camera_set": "F36",
-  "stands": [
-   "brooktail"
-  ],
-  "group": 2,
-  "note": "own-clip remake rig: capture_f36_poses.gd --whole-body --context (no --candidate); judge against the remake flag alone"
- },
- {
-  "item": "F36#1 pipwing remake (hit react, faint) with the settle arm",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "also_enable": "data/config/creature_model_flags.json:flags.remake_owner1101_pipwing.enabled",
-  "camera_set": "F36",
-  "stands": [
-   "pipwing"
-  ],
-  "group": 2,
-  "note": "own-clip remake rig: capture_f36_poses.gd --whole-body --context (no --candidate); judge against the remake flag alone"
- },
- {
-  "item": "F36#1 galewisp remake (hit react, faint) with the settle arm",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "also_enable": "data/config/creature_model_flags.json:flags.remake_owner1101_galewisp.enabled",
-  "camera_set": "F36",
-  "stands": [
-   "galewisp"
-  ],
-  "group": 2,
-  "note": "own-clip remake rig: capture_f36_poses.gd --whole-body --context (no --candidate); judge against the remake flag alone"
- },
- {
-  "item": "F36#1 mudsnout remake (hit react, faint) with the settle arm",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "also_enable": "data/config/creature_model_flags.json:flags.remake_owner1101_mudsnout.enabled",
-  "camera_set": "F36",
-  "stands": [
-   "mudsnout"
-  ],
-  "group": 2,
-  "note": "own-clip remake rig: capture_f36_poses.gd --whole-body --context (no --candidate); judge against the remake flag alone"
- },
- {
-  "item": "F36#1 mirejaw remake (hit react, faint) with the settle arm",
-  "flag": "data/config/creature_pose_settle.json:enabled",
-  "also_enable": "data/config/creature_model_flags.json:flags.remake_owner1101_mirejaw.enabled",
-  "camera_set": "F36",
-  "stands": [
-   "mirejaw"
-  ],
-  "group": 2,
-  "note": "own-clip remake rig: capture_f36_poses.gd --whole-body --context (no --candidate); judge against the remake flag alone"
+  "group": 3,
+  "baseline": "all 49 creature_model_flags.json remake_owner1101_* flags ON (coordinator, 1 Nov: remakes are the shipping models)"
  }
 ]

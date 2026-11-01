@@ -69,6 +69,8 @@ func _case(species: String, recipe: bool) -> void:
 	_check(not bool(off.get_meta(SETTLE.META, false)), "%s OFF: settle not installed" % species)
 	var faint := _clip(off, "faint")
 	var off_faint_tracks := _pivot_tracks(off, faint)
+	# Recipe rigs key the pivot already; own-clip rigs (remakes) do not.
+	recipe = bool(off.get_meta("f36_pose_candidate_installed", false))
 	_check(off_faint_tracks == (2 if recipe else 0), "%s OFF: faint pivot tracks unchanged (%d)" % [species, off_faint_tracks])
 	_check(not (off.get("_animator").get("_clips") as Dictionary).has("pivot_clips"), "%s OFF: no pivot_clips" % species)
 	var off_keys := off_player.get_animation(StringName(faint)).track_get_key_count(0)
@@ -96,9 +98,7 @@ func _case(species: String, recipe: bool) -> void:
 	var legs: Variant = rig.limb_direction(animation, end, rig.pivot_rotation(animation, end), rig.pivot_position(animation, end))
 	var from_down := rad_to_deg((legs as Vector3).angle_to(Vector3.DOWN)) if legs is Vector3 else 0.0
 	_check(from_down > 45.0 and from_down < 120.0, "%s ON: faint ends side-lying, legs out to the side (%.0f deg from down)" % [species, from_down])
-	var low: float = SETTLE.Rig.min_y(points)
-	_check(absf(low - (rig.ground_y - rig.standing_height * 0.015)) < 0.03 * rig.standing_height,
-		"%s ON: faint end touches the ground line (%.3f vs %.3f)" % [species, low, rig.ground_y])
+	_check(_rests(rig, points), "%s ON: faint end rests on the ground (trunk on the line, limbs sink at most 20%%)" % species)
 	var mid_t := end * 0.5
 	var mid: PackedVector3Array = rig.posed(animation, mid_t, rig.pivot_rotation(animation, mid_t), rig.pivot_position(animation, mid_t))
 	_check(SETTLE.Rig.min_y(mid) < rig.ground_y + 0.03 * rig.standing_height, "%s ON: faint mid does not float" % species)
@@ -131,6 +131,16 @@ func _case(species: String, recipe: bool) -> void:
 	on.free()
 
 
+func _rests(rig, points: PackedVector3Array) -> bool:
+	var h: float = rig.standing_height
+	var line: float = rig.ground_y - h * 0.015
+	var low := SETTLE.Rig.min_y(points)
+	var trunk: float = rig.trunk_min_y(points)
+	var trunk_on := is_finite(trunk) and absf(trunk - line) < 0.03 * h
+	var limbs_capped := absf(low - (rig.ground_y - 0.2 * h)) < 0.03 * h
+	return low >= rig.ground_y - 0.21 * h and (trunk_on or limbs_capped or (not is_finite(trunk) and absf(low - line) < 0.03 * h))
+
+
 func _width(points: PackedVector3Array) -> float:
 	var lo := INF
 	var hi := -INF
@@ -154,8 +164,7 @@ func _upright_case() -> void:
 	var meta: Dictionary = faint.get_meta("settle_faint", {})
 	_check(absf(float(meta.get("roll_deg", 999.0))) < 0.001, "mosshell ON (upright species): never spun through a full turn (roll %s)" % str(meta.get("roll_deg")))
 	var settled := rig.posed(faint, end, rig.pivot_rotation(faint, end), rig.pivot_position(faint, end))
-	_check(absf(SETTLE.Rig.min_y(settled) - (rig.ground_y - rig.standing_height * 0.015)) < 0.03 * rig.standing_height,
-		"mosshell ON: faint end grounded")
+	_check(_rests(rig, settled), "mosshell ON: faint end grounded")
 	var original := player.get_animation(StringName(str(clips.get("rest_faint", ""))))
 	var installed := rig.posed(original, end, rig.pivot_rotation(original, end), rig.pivot_position(original, end))
 	_check(_width(settled) > _width(installed) * 1.03, "mosshell ON: limbs splay wider than the installed faint (%.2f vs %.2f m)" % [_width(settled), _width(installed)])

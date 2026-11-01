@@ -17,15 +17,20 @@ extends RefCounted
 ## rewrites the resolved faint and hit clips once per body, in a per-body copy
 ## of their library, under the clip's own name (stages that play a clip by name
 ## see the same result as the game):
-##   faint.grounded  - dense pivot keys: every sample's posed vertices touch
-##                     the standing ground line (a small bed-in sink) and the
-##                     posed body is re-centred over its contact shadow.
-##   faint.side_lie  - a faint whose final frame still stands (posed height
-##                     above `collapse_ratio` of standing) rolls onto its side
-##                     about the body's own forward axis; collapsed clips keep
+##   faint.grounded  - dense pivot keys: every sample's trunk rests on the
+##                     standing ground line (a small bed-in sink; limbs may
+##                     sink a little) and the posed body is re-centred over
+##                     its contact shadow.
+##   faint.side_lie  - rolls about the body's forward axis until the legs lie
+##                     out to the side, keeping the side a faint already fell
+##                     to; upright species settle legs-down, legless rigs keep
 ##                     their authored fall.
+##   faint.level_trunk - a trunk that ends sitting or standing up (pelvis to
+##                     head steeper than 25 deg) pitches down first.
+##   faint.upright_splay - shelled/many-legged species splay their upper limbs.
 ##   faint.head_lift - the neck lifts a head that ends buried or pointing down,
-##                     so the face stays visible at faint end.
+##                     so the face stays visible at faint end (limbed rigs).
+##   faint.face_camera - at play_faint the collapse turns across the camera.
 ##   hit.recoil      - a hit whose posed vertices barely move from its first
 ##                     frame gains a pivot recoil (nose up, lean, shove back),
 ##                     held through the clip's middle.
@@ -69,7 +74,7 @@ static func _section(cfg: Dictionary, role: String, part: String) -> Dictionary:
 static func any_enabled(cfg: Dictionary) -> bool:
 	if not bool(cfg.get("enabled", false)):
 		return false
-	for pair: Array in [["faint", "grounded"], ["faint", "side_lie"], ["faint", "head_lift"], ["faint", "face_camera"], ["faint", "upright_splay"],
+	for pair: Array in [["faint", "grounded"], ["faint", "side_lie"], ["faint", "head_lift"], ["faint", "face_camera"], ["faint", "upright_splay"], ["faint", "level_trunk"],
 			["hit", "recoil"], ["hit", "grounded"]]:
 		if not _section(cfg, pair[0], pair[1]).is_empty():
 			return true
@@ -233,8 +238,19 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 		rotations.append(rig.pivot_rotation(animation, t))
 		positions.append(rig.pivot_position(animation, t))
 	var end := animation.length
-	var final := rig.posed(animation, end, rotations[-1], positions[-1])
-	var final_height := Rig.height(final)
+	# Level a trunk that ends sitting or standing up (a seal begging, a ray on
+	# its tail): pitch the body down until pelvis-to-head is no steeper than
+	# `max_trunk_deg`, before rolling it onto its side.
+	var level := _section(cfg, "faint", "level_trunk")
+	if not level.is_empty():
+		var pitch: Variant = rig.trunk_pitch(animation, end, rotations[-1], positions[-1],
+			deg_to_rad(float(level.get("max_trunk_deg", 25.0))))
+		if pitch is Quaternion:
+			var start := float(level.get("ramp_start", 0.2))
+			var finish := maxf(start + 0.05, float(level.get("ramp_end", 0.85)))
+			for i in times.size():
+				var r := _smooth((times[i] / end - start) / (finish - start))
+				rotations[i] = (Quaternion.IDENTITY.slerp(pitch, r) * rotations[i]).normalized()
 	var roll := 0.0
 	var side_sign := 1.0
 	if not side.is_empty():
@@ -258,8 +274,8 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 				side_sign = signf(angle)
 			var target := 0.0 if upright else side_sign * reach
 			roll = wrapf(target - angle, -PI, PI)
-		elif not upright and final_height > rig.standing_height * float(side.get("collapse_ratio", 0.62)):
-			roll = side_sign * reach
+		# Legless rigs (snakes, rays, moths) keep their authored fall: a roll
+		# by posed height alone stood Fulgocobra's coil up on its side.
 		# Tiny corrections are noise; huge ones spin the body through a full
 		# turn mid-clip (a belly-up turtle righting itself), so keep those.
 		if absf(roll) < deg_to_rad(float(side.get("min_roll_deg", 10.0))) \
@@ -281,7 +297,9 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 		settings["_inverted"] = after is Vector3 and (after as Vector3).y > 0.0 \
 			and not _listed(((cfg.get("faint", {}) as Dictionary).get("side_lie", {}) as Dictionary).get("exclude_species", []), rig.species_id)
 		rig.splay_limbs(animation, end, rotations[-1], positions[-1], settings)
-	if not lift.is_empty():
+	# Only limbed bodies lift the head; a snake's lifted head reads as a raised
+	# hood, not a faint.
+	if not lift.is_empty() and rig.limb_direction(animation, end, rotations[-1], positions[-1]) is Vector3:
 		rig.lift_head(animation, end, rotations[-1], positions[-1], lift)
 	if not grounded.is_empty() or not side.is_empty():
 		var sink := rig.standing_height * float(grounded.get("sink_frac", 0.015)) if not grounded.is_empty() else 0.0
@@ -291,7 +309,15 @@ static func settle_faint(rig: Rig, source: Animation, cfg: Dictionary) -> Animat
 			var points := rig.posed(animation, times[i], rotations[i], positions[i])
 			if points.is_empty():
 				continue
-			positions[i].y += rig.ground_y - sink - Rig.min_y(points)
+			# Rest the trunk on the ground; limbs may sink up to `limb_sink_frac`
+			# of standing height (a flipper or leg pointing down must not prop
+			# the whole body up off the ground).
+			var raise := rig.ground_y - sink - Rig.min_y(points)
+			var trunk := rig.trunk_min_y(points)
+			if is_finite(trunk):
+				raise = maxf(rig.ground_y - sink - trunk,
+					rig.ground_y - rig.standing_height * float(grounded.get("limb_sink_frac", 0.2)) - Rig.min_y(points))
+			positions[i].y += raise
 			if centre:
 				var offset := rig.standing_centre - Rig.centre_xz(points)
 				offset = offset.limit_length(limit)
@@ -407,6 +433,7 @@ class Rig:
 	var to_model: Transform3D
 	var base: Transform3D
 	var surfaces: Array[Dictionary] = []
+	var limb_mask := PackedByteArray()
 	var bone_tracks: Dictionary = {}
 	var forward := Vector3.BACK
 	var standing_height := 0.0
@@ -466,20 +493,51 @@ class Rig:
 				var influence_weights := PackedFloat32Array()
 				var vertex := 0
 				while vertex < vertices.size():
-					kept.append(vertices[vertex])
 					var total_weight := 0.0
+					var valid := 0.0
+					var dominant := -1
+					var dominant_weight := 0.0
 					for k in per:
-						total_weight += maxf(float(weights[vertex * per + k]), 0.0)
-					for k in per:
-						var offset := vertex * per + k
-						var bind := int(bones[offset])
-						var weight := float(weights[offset])
-						var ok := weight > 0.0 and bind >= 0 and bind < bind_bones.size() and bind_bones[bind] >= 0 and total_weight > 0.0
-						influences.append(bind if ok else -1)
-						influence_weights.append(weight / total_weight if ok else 0.0)
+						var weight := float(weights[vertex * per + k])
+						var bind := int(bones[vertex * per + k])
+						total_weight += maxf(weight, 0.0)
+						if weight > 0.0 and bind >= 0 and bind < bind_bones.size() and bind_bones[bind] >= 0:
+							valid += weight
+							if weight > dominant_weight:
+								dominant_weight = weight
+								dominant = bind_bones[bind]
+					if valid > 0.0:
+						kept.append(vertices[vertex])
+						limb_mask.append(1 if _is_limb(dominant) else 0)
+						for k in per:
+							var offset := vertex * per + k
+							var bind := int(bones[offset])
+							var weight := float(weights[offset])
+							var ok := weight > 0.0 and bind >= 0 and bind < bind_bones.size() and bind_bones[bind] >= 0
+							influences.append(bind if ok else -1)
+							influence_weights.append(weight / total_weight if ok else 0.0)
 					vertex += stride
 				surfaces.append({"vertices": kept, "per": per, "bind_bones": bind_bones,
 					"bind_poses": bind_poses, "influences": influences, "weights": influence_weights})
+
+	## Limbs (legs, arms, wings, fins) may sink into the ground at a faint's
+	## end; the trunk (root, spine, tail, neck, head) is what rests on it.
+	func _is_limb(bone: int) -> bool:
+		if bone < 0:
+			return false
+		var name := str(skeleton.get_bone_name(bone)).to_lower()
+		for part: String in ["upper", "lower", "foot", "wing", "leg", "paw", "hand", "arm", "fin", "flipper"]:
+			if name.contains(part):
+				return true
+		return false
+
+	## Lowest posed point of the trunk alone (INF when the rig names no trunk).
+	func trunk_min_y(points: PackedVector3Array) -> float:
+		var low := INF
+		for i in mini(points.size(), limb_mask.size()):
+			if limb_mask[i] == 0:
+				low = minf(low, points[i].y)
+		return low
 
 	func _bone_tracks(animation: Animation) -> Dictionary:
 		var id := animation.get_instance_id()
@@ -628,6 +686,25 @@ class Rig:
 		if count == 0 or sum.length() < 0.001:
 			return null
 		return sum / float(count)
+
+	## The body-space rotation that pitches a too-steep pelvis-to-head axis
+	## down to `max_elevation` radians; null when level enough or unnamed.
+	func trunk_pitch(animation: Animation, t: float, rotation: Quaternion, position: Vector3, max_elevation: float) -> Variant:
+		var pelvis: Variant = bone_point(animation, t, "pelvis", rotation, position)
+		var head: Variant = bone_point(animation, t, "head", rotation, position)
+		if not (pelvis is Vector3 and head is Vector3):
+			return null
+		var d: Vector3 = (head as Vector3) - (pelvis as Vector3)
+		if d.length() < 0.001:
+			return null
+		var elevation := asin(clampf(d.normalized().y, -1.0, 1.0))
+		if elevation <= max_elevation:
+			return null
+		var axis := Vector3(d.x, 0.0, d.z).cross(Vector3.UP)
+		if axis.length() < 0.001:
+			axis = forward.cross(Vector3.UP)
+		# A +angle about (flat x up) raises the axis; lower it instead.
+		return Quaternion(axis.normalized(), -(elevation - max_elevation))
 
 	## Signed angle about `forward` from straight down to the legs' direction
 	## (projected across the body). A +roll about forward swings down toward
