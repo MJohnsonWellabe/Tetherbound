@@ -1,0 +1,41 @@
+{
+ "_comment": "Candidate NPC body looks, OFF by default (scripts/characters/character_model.gd with_body_flags). An enabled flag merges its per-character body_albedo_override over that character's art.json entry (rig, clips, palette, accessories untouched; an appearance variant still wins). The GPU judges an arm by flipping enabled.",
+ "flags": {
+  "npc_vis_body_wandering_trainer": {
+   "_why": "VIS-CREATURES (1 Nov). F36 (0) #26 5.80 installed / 5.93 face-material candidate on GPU frames (ralph/reports/CREATURES/close-1020/f36-0-ledger.md); the judges put the ceiling in the baked albedo: 'low-resolution eyes and mouths, blotches, chalky skin'. Same atlas and identity: skin loses its chalk and blotches, eyes/brows/mouth crisped by local contrast, darkest cloth lifted a step. Grade: tools/art_pipeline/grade_vis_npcs.py.",
+   "enabled": false,
+   "characters": {
+    "wandering_trainer": {
+     "body_albedo_override": "res://assets/characters/wandering_trainer/wandering_trainer_lod0_texture_0_vis1.png"
+    }
+   }
+  },
+  "npc_vis_body_young_trainer": {
+   "_why": "VIS-CREATURES (1 Nov). F36 (0) #28 5.97 on GPU frames (ralph/reports/CREATURES/close-1020/f36-0-ledger.md); the judges put the ceiling in the baked albedo: 'low-resolution eyes and mouths, blotches, chalky skin'. Same atlas and identity: skin loses its chalk and blotches, eyes/brows/mouth crisped by local contrast, darkest cloth lifted a step. Grade: tools/art_pipeline/grade_vis_npcs.py.",
+   "enabled": false,
+   "characters": {
+    "young_trainer": {
+     "body_albedo_override": "res://assets/characters/young_trainer/young_trainer_lod0_texture_0_vis1.png"
+    }
+   }
+  },
+  "npc_vis_body_trader": {
+   "_why": "VIS-CREATURES (1 Nov). F36 (0) #29 5.70 on GPU frames (ralph/reports/CREATURES/close-1020/f36-0-ledger.md); the judges put the ceiling in the baked albedo: 'low-resolution eyes and mouths, blotches, chalky skin'. Same atlas and identity: skin loses its chalk and blotches, eyes/brows/mouth crisped by local contrast, darkest cloth lifted a step. Grade: tools/art_pipeline/grade_vis_npcs.py.",
+   "enabled": false,
+   "characters": {
+    "trader": {
+     "body_albedo_override": "res://assets/characters/trader/trader_lod0_texture_0_vis1.png"
+    }
+   }
+  },
+  "npc_vis_body_innkeeper": {
+   "_why": "VIS-CREATURES (1 Nov). F36 (0) #30 5.90 on GPU frames (ralph/reports/CREATURES/close-1020/f36-0-ledger.md); the judges put the ceiling in the baked albedo: 'low-resolution eyes and mouths, blotches, chalky skin'. Same atlas and identity: skin loses its chalk and blotches, eyes/brows/mouth crisped by local contrast, darkest cloth lifted a step. Grade: tools/art_pipeline/grade_vis_npcs.py.",
+   "enabled": false,
+   "characters": {
+    "innkeeper": {
+     "body_albedo_override": "res://assets/characters/innkeeper/innkeeper_lod0_texture_0_vis1.png"
+    }
+   }
+  }
+ }
+}

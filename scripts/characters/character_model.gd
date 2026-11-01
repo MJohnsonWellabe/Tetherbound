@@ -163,8 +163,49 @@ static func config_for(key: String, appearance_variant: String = "",
 	if not parsed is Dictionary:
 		return {}
 	var entry: Variant = (parsed as Dictionary).get(key, {})
-	return with_appearance_variant(entry, key, appearance_variant, variant_settings) \
-		if entry is Dictionary else {}
+	if not entry is Dictionary:
+		return {}
+	return with_appearance_variant(with_body_flags(entry, key), key, appearance_variant, variant_settings)
+
+
+## GPU arms (owner, 31 Oct): a candidate NPC body look ships as a named flag in
+## data/config/character_body_flags.json, OFF by default, so the GPU judges it
+## by flipping `enabled`. An enabled flag merges its per-character overrides
+## (only the body albedo override) over that character's art.json entry; the
+## rig, clips, palette and accessories are untouched. A later appearance variant
+## still wins over the flag, so a variant keeps its own authored body.
+const BODY_FLAGS_PATH := "res://data/config/character_body_flags.json"
+const BODY_FLAG_KEYS := ["body_albedo_override"]
+
+
+static func with_body_flags(cfg: Dictionary, key: String, flags_doc: Variant = null) -> Dictionary:
+	var doc: Variant = flags_doc
+	if doc == null:
+		if not FileAccess.file_exists(BODY_FLAGS_PATH):
+			return cfg
+		doc = JSON.parse_string(FileAccess.get_file_as_string(BODY_FLAGS_PATH))
+	if not doc is Dictionary:
+		push_error("character_body_flags.json is not an object")
+		return cfg
+	var flags: Variant = (doc as Dictionary).get("flags", {})
+	if not flags is Dictionary:
+		return cfg
+	var out := cfg
+	for flag: String in flags:
+		var entry: Variant = flags[flag]
+		if not entry is Dictionary or not bool(entry.get("enabled", false)):
+			continue
+		var overrides: Variant = (entry.get("characters", {}) as Dictionary).get(key, null)
+		if not overrides is Dictionary:
+			continue
+		if out == cfg:
+			out = cfg.duplicate(true)
+		for field: String in overrides:
+			if field in BODY_FLAG_KEYS:
+				out[field] = overrides[field]
+			else:
+				push_error("character body flag %s: %s.%s is not a body-surface key" % [flag, key, field])
+	return out
 
 
 ## Apply after rank/base dressing so its palette and badges remain intact.
