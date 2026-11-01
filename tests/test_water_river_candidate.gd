@@ -34,3 +34,13 @@ func test_on_merges_river_only_and_converts_colours() -> void:
 	var shader := WATER.river_candidate_shader(cfg)
 	assert_true(shader.deep_colour is Color, "hex strings become colours")
 	assert_almost_eq(float(shader.wave_strength), 0.8)
+
+
+func test_r2_adds_bank_rocks_only_through_the_candidate() -> void:
+	var cfg := _shipping()
+	assert_false(cfg.river.has("bank_rocks"), "no river rocks while OFF")
+	cfg.river.surface_candidate.enabled = true
+	WATER.apply_river_candidate(cfg)
+	assert_true(cfg.river.has("bank_rocks"))
+	for model: Variant in cfg.river.bank_rocks.models:
+		assert_true(ResourceLoader.exists(str(model)), "rock model installed: " + str(model))

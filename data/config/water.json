@@ -256,11 +256,13 @@
     "flow_speed": 0.7,
     "flow_stretch": 0.7,
     "surface_candidate": {
+      "_why_r2": "P2-006 r2 (batch 1: -0.17, OFF): two of the three judged stands had the camera inside tree canopy; the judges asked for bank rocks, reeds and foam. r2 adds bank_rocks (water.gd places them with the same waterline band rule as the reeds) and asks to be judged on the stands that see the water (the old_mill_crossing close views and the landmark frames, not the canopy-blocked approach views).",
       "_why": "P2-006 (vis-meadows, 1 Nov, OFF until GPU-judged): GPU F38 river_lock_1 (Old Mill Crossing) and village_road PARTIAL, river_lock_0 PRESENT, catalog 'the mill water is a broad flat blue surface with abrupt sparse banks'. water.gd::apply_river_candidate merges `merge` into this river block (bank reeds 90 -> 130 clumps, scrub 70 -> 100, wider bands so the waterline is grown over, not a hard edge); river_candidate_shader sets `shader` on the river material only: finer, stronger ripples (wave_uv_scale 0.12 -> 0.2, strength 0.4 -> 0.8), a darker green-teal deep with a mid band so the channel has depth, more sky fresnel, and bank foam/surf so the edge reads as moving water. Pond and stream unchanged. Presentation only.",
       "enabled": false,
       "merge": {
         "reeds": {"clumps": 130, "per_clump": 16, "band_above": 0.7},
-        "bank_scrub": {"clumps": 100, "per_clump": 6, "band_below": -0.3}
+        "bank_scrub": {"clumps": 100, "per_clump": 6, "band_below": -0.3},
+        "bank_rocks": {"_why": "P2-006 r2: batch-1 judges asked for bank rocks at the river; the pond's own Rock_Medium family, half-sunk at the waterline in small groups.", "models": ["res://assets/environment/stylized_nature/Rock_Medium_1.gltf", "res://assets/environment/stylized_nature/Rock_Medium_2.gltf", "res://assets/environment/stylized_nature/Rock_Medium_3.gltf"], "tint": "#8f8d84", "clumps": 70, "per_clump": 3, "clump_radius": 2.2, "band_below": 0.45, "band_above": 0.6, "scale_min": 0.3, "scale_max": 0.75, "sink": 0.18, "max_bank_slope_deg": 50.0, "seed": 20261101}
       },
       "shader": {
         "deep_colour": "#123c3c",

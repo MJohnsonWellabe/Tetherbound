@@ -1024,6 +1024,10 @@ func _build_river() -> void:
 	_level = level
 	_stats["river_reeds"] = _build_plant_band(cfg.get("reeds", {}), bank_points)
 	_stats["river_scrub"] = _build_plant_band(cfg.get("bank_scrub", {}), bank_points, true)
+	# P2-006 r2 (water.json river.surface_candidate, OFF): rocks at the
+	# waterline, placed by the same band rule; absent key, nothing placed.
+	if cfg.has("bank_rocks"):
+		_stats["river_rocks"] = _build_plant_band(cfg.get("bank_rocks", {}), bank_points)
 	_level = previous
 	BOOT_LOG.phase("water: river bank bands (%d reeds, %d scrub)" % [
 		_stats["river_reeds"], _stats["river_scrub"]])
