@@ -4665,6 +4665,15 @@ func _build_conduits() -> void:
 		var b := _local_of((_chambers[to] as Dictionary).get("at", []))
 		var offset := float(spec.get("offset", 0.0))
 		var along_x := absf(b.x - a.x) >= absf(b.z - a.z)
+		# P2-064 (vis-meadows, OFF until GPU-judged): the centre-to-centre runs
+		# into the Warden arena cross its fight floor as "thick straight
+		# turquoise rails" through creature silhouettes. With
+		# `site.conduits_stop_at_arena_wall` they end at the arena's wall line.
+		if bool(_config.get("site", {}).get("conduits_stop_at_arena_wall", false)):
+			if from == "warden_arena":
+				a = _clip_to_chamber_wall(a, b, _chambers[from] as Dictionary, along_x)
+			if to == "warden_arena":
+				b = _clip_to_chamber_wall(b, a, _chambers[to] as Dictionary, along_x)
 		var mid := (a + b) * 0.5
 		var length := absf(b.x - a.x) if along_x else absf(b.z - a.z)
 		# VP8: 0.34 x 0.16 was JUDGE-6 defect 9's "hard-edged aliased emissive
@@ -4682,6 +4691,18 @@ func _build_conduits() -> void:
 		# (`_interior_live_material`), for the same three verdicts.
 		_box(size, Vector3(mid.x, _floor_y + 0.06, mid.z),
 			_exterior_live_material() if open_yard else _interior_live_material(), false)
+
+
+## Moves `inside` (a chamber centre) to that chamber's wall line along the
+## run's axis, on the side facing `toward`, so the run stops at the wall foot.
+func _clip_to_chamber_wall(inside: Vector3, toward: Vector3, chamber: Dictionary, along_x: bool) -> Vector3:
+	var half := _size_of(chamber.get("size", [])) * 0.5
+	var out := inside
+	if along_x:
+		out.x += signf(toward.x - inside.x) * half.x
+	else:
+		out.z += signf(toward.z - inside.z) * half.y
+	return out
 
 
 ## W-4 (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md sec5.2). CONTENT-0828B measured
