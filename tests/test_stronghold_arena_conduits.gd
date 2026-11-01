@@ -50,3 +50,18 @@ func test_p2_003_candidate_keeps_the_keep_front_face() -> void:
 	assert_almost_eq(float(spire.width_m), 57.0)
 	assert_eq(str(spire.path), str(shipped.companions[0].path), "unmentioned companion keys stay")
 	assert_eq(JSON.stringify(cfg.hero_gatehouse), JSON.stringify(shipped), "the shipped block is not mutated")
+
+
+## P2-087 (vis-meadows, OFF until GPU-judged): `p2_087_grade_candidate`
+## recolours lights matched by `at`, only when enabled.
+func test_p2_087_grade_candidate_matches_lights_by_at() -> void:
+	var cfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
+	assert_false(bool(cfg.p2_087_grade_candidate.get("enabled", true)), "P2-087 candidate ships OFF")
+	var fill: Dictionary = {"at": [0.0, 32.0], "colour": "#fff0d8", "energy": 10.0}
+	assert_eq(STRONGHOLD.p2_087_light(cfg, fill), fill, "OFF leaves every light alone")
+	cfg.p2_087_grade_candidate.enabled = true
+	var on := STRONGHOLD.p2_087_light(cfg, fill)
+	assert_eq(str(on.colour), "#d6e2f2")
+	assert_almost_eq(float(on.energy), 10.0)
+	var torch: Dictionary = {"at": [0.0, 60.0], "colour": "#7d8cab"}
+	assert_eq(STRONGHOLD.p2_087_light(cfg, torch), torch, "unmatched lights unchanged")

@@ -4693,6 +4693,21 @@ func _build_conduits() -> void:
 			_exterior_live_material() if open_yard else _interior_live_material(), false)
 
 
+## P2-087 (vis-meadows, OFF until GPU-judged): with `p2_087_grade_candidate`
+## enabled, each `lights` row whose `at` matches a light's own `at` merges its
+## `set` keys over that light (after the courtyard daylight merge).
+static func p2_087_light(config: Dictionary, spec: Dictionary) -> Dictionary:
+	var candidate: Dictionary = config.get("p2_087_grade_candidate", {})
+	if not bool(candidate.get("enabled", false)):
+		return spec
+	for row: Variant in candidate.get("lights", []):
+		if row is Dictionary and (row as Dictionary).get("at", []) == spec.get("at", []):
+			var out := spec.duplicate()
+			out.merge((row as Dictionary).get("set", {}) as Dictionary, true)
+			return out
+	return spec
+
+
 ## P2-003 (vis-meadows, OFF until GPU-judged): with `p2_003_candidate`
 ## enabled, its `keep` keys override the hero gatehouse's and each `companions`
 ## entry (by id) overrides that companion's, before anything is placed.
@@ -4846,6 +4861,7 @@ func _build_lights() -> void:
 		if not daylight.is_empty() and spec.get("at", []) == daylight.get("light_at", []):
 			spec = spec.duplicate()
 			spec.merge(daylight.get("light", {}) as Dictionary, true)
+		spec = p2_087_light(_config, spec)
 		var at := _local_of(spec.get("at", []))
 		var position := Vector3(at.x, _floor_y + float(spec.get("y", 5.0)), at.z)
 		var light: Light3D
