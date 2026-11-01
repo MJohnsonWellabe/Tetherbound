@@ -12,13 +12,15 @@ func _shipping() -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string(CONFIG)) as Dictionary
 
 
-func test_candidate_ships_off_and_off_changes_nothing() -> void:
+func test_candidate_ships_on_and_off_changes_nothing() -> void:
 	var cfg := _shipping()
 	assert_true(bool(cfg.meadows_ground_candidate.get("enabled", false)), "P2-005 candidate ships ON: cloud yardstick 1 Nov batch-1, 5.42 -> 6.09")
-	var applied := cfg.duplicate(true)
+	var off := cfg.duplicate(true)
+	off.meadows_ground_candidate.enabled = false
+	var applied := off.duplicate(true)
 	GRASS.apply_meadows_ground_candidate(applied)
-	assert_eq(JSON.stringify(applied), JSON.stringify(cfg))
-	assert_false(cfg.has("zone_strength"), "Meadows ships without ground zones")
+	assert_eq(JSON.stringify(applied), JSON.stringify(off), "OFF still changes nothing")
+	assert_false(off.has("zone_strength"), "OFF Meadows has no ground zones")
 
 
 func test_on_sets_zones_and_merges_named_flower_tiers_only() -> void:
