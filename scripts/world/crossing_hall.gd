@@ -114,9 +114,9 @@ func build(config: Dictionary) -> bool:
 ## over the shipped Hall. `merge` deep-merges into existing sections (nested
 ## dictionaries merge key by key, anything else replaces); `append` adds rows
 ## to a section's list, e.g. {"hall_furnishing": {"pieces": [...]}}; `remove`
-## drops a section's list rows by name, e.g. {"hall_timber_frame": {"pieces":
-## ["NavePost_-12_-1"]}}. Applied before any node is built, so the builders
-## see one ordinary config.
+## drops a section's list rows by name (or, for unnamed rows, by model path),
+## e.g. {"hall_timber_frame": {"pieces": ["NavePost_-12_-1"]}}. Applied before
+## any node is built, so the builders see one ordinary config.
 static func apply_hall_1(config: Dictionary) -> void:
 	var hall_1: Dictionary = config.get("hall_1", {})
 	if not bool(hall_1.get("enabled", false)):
@@ -128,7 +128,7 @@ static func apply_hall_1(config: Dictionary) -> void:
 		for key: String in remove[section]:
 			var names: Array = remove[section][key]
 			target[key] = (target.get(key, []) as Array).filter(func(row: Variant) -> bool:
-				return not (row is Dictionary and str(row.get("name", "")) in names))
+				return not (row is Dictionary and str(row.get("name", row.get("model", ""))) in names))
 	var append: Dictionary = hall_1.get("append", {})
 	for section: String in append:
 		var target: Dictionary = config.get(section, {})

@@ -36,6 +36,13 @@ func test_on_merges_nested_sections_appends_rows_and_removes_by_name() -> void:
 	assert_eq((cfg.hall_timber_frame.pieces as Array).map(func(r: Dictionary) -> String: return r.name), ["NavePost_b"])
 
 
+func test_remove_matches_unnamed_rows_by_model() -> void:
+	var cfg := {"hall_great_hall": {"pieces": [{"model": "res://a.glb"}, {"model": "res://b.glb"}]},
+		"hall_1": {"enabled": true, "remove": {"hall_great_hall": {"pieces": ["res://a.glb"]}}}}
+	HALL.apply_hall_1(cfg)
+	assert_eq(cfg.hall_great_hall.pieces, [{"model": "res://b.glb"}])
+
+
 func test_shipping_candidate_only_names_existing_sections_and_rows() -> void:
 	var cfg := _shipping()
 	var hall_1: Dictionary = cfg.get("hall_1", {})
@@ -44,7 +51,7 @@ func test_shipping_candidate_only_names_existing_sections_and_rows() -> void:
 			assert_true(cfg.has(section), "%s targets existing section %s" % [key, section])
 	for section: String in hall_1.get("remove", {}):
 		for list_key: String in hall_1.remove[section]:
-			var names: Array = (cfg[section].get(list_key, []) as Array).map(func(r: Variant) -> String: return str(r.get("name", "")) if r is Dictionary else "")
+			var names: Array = (cfg[section].get(list_key, []) as Array).map(func(r: Variant) -> String: return str(r.get("name", r.get("model", ""))) if r is Dictionary else "")
 			for name: String in hall_1.remove[section][list_key]:
 				assert_true(name in names, "remove names a real %s row: %s" % [section, name])
 	for section: String in hall_1.get("append", {}):
