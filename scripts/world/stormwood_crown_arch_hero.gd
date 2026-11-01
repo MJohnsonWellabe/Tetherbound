@@ -20,7 +20,9 @@ const NODE_NAME := "CrownArchHero"
 static func settings() -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG))
 	var cfg: Dictionary = parsed if parsed is Dictionary else {}
-	return with_round2(cfg)
+	# Cause lane LANDMARKS (hero_landmarks_1101.json crown_arch, OFF until GPU
+	# judged): the 1101 Meshy arch model over the round-2 settings.
+	return preload("res://scripts/world/hero_landmarks_1101.gd").crown_arch_overlay(with_round2(cfg))
 
 
 ## P2-041 round 2 (GPU WD2 1 Nov, 4.78: "neither side reads as an arch, and the
@@ -101,8 +103,10 @@ static func _dress_slab_edges(arch: Node3D, slab: MeshInstance3D, cfg: Dictionar
 			root.add_child(piece)
 
 
-static func apply(arch: Node3D, piece: Node3D, slab: MeshInstance3D, clearance: Node3D) -> bool:
-	var cfg := settings()
+## `override` (tests only) replaces the file settings; production passes none.
+static func apply(arch: Node3D, piece: Node3D, slab: MeshInstance3D, clearance: Node3D,
+		override: Dictionary = {}) -> bool:
+	var cfg := settings() if override.is_empty() else override
 	if not bool(cfg.get("enabled", false)) or arch == null or arch.has_node(NODE_NAME):
 		return false
 	var model := HERO_PROP.load_model(str(cfg.get("model", "")))
