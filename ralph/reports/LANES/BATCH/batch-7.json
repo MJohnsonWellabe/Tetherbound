@@ -1,0 +1,264 @@
+{
+ "batch": 7,
+ "base": "3ba3d3f14088aaf33df9814fe6f0dd4e2ee196a4",
+ "items": [
+  {
+   "item": "Character look: kael",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "30-kael-front",
+    "30-kael-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: sera",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "31-sera-front",
+    "31-sera-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: lyra",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "29-lyra-front",
+    "29-lyra-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: villager_farmer",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "05-villager-female-front",
+    "05-villager-female-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: villager_keeper",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "04-villager-male-front",
+    "04-villager-male-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: villager_smith",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "(not in the cast tool; villager_smith appears in-world)"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: villager_quarryman",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "(not in the cast tool; villager_quarryman appears in-world)"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: villager_ranger",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "(not in the cast tool; villager_ranger appears in-world)"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: warden",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "03-warden-front",
+    "03-warden-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: grunt",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "06-grunt-archetype-front",
+    "06-grunt-archetype-threequarter",
+    "32-rank-grunt-front"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: grunt_a",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "07-grunt-a-front",
+    "07-grunt-a-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: grunt_b",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "08-grunt-b-front",
+    "08-grunt-b-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: grunt_c",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "09-grunt-c-front",
+    "09-grunt-c-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: officer_a",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "10-officer-a-front",
+    "10-officer-a-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: officer_b",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "11-officer-b-front",
+    "11-officer-b-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: captain_a",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "12-captain-a-front",
+    "12-captain-a-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: captain_b",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "13-captain-b-front",
+    "13-captain-b-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: inn_helper",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "15-inn-helper-front",
+    "15-inn-helper-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: craftsperson",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "17-craftsperson-front",
+    "17-craftsperson-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: creature_caretaker",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "18-creature-caretaker-front",
+    "18-creature-caretaker-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: farmer",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "19-farmer-front",
+    "19-farmer-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: local_historian",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "20-local-historian-front",
+    "20-local-historian-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: rival_trainer",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "22-rival-trainer-front",
+    "22-rival-trainer-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: field_researcher",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "23-field-researcher-front",
+    "23-field-researcher-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: lost_traveler",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "25-lost-traveler-front",
+    "25-lost-traveler-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: alpha_tracker",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "26-alpha-tracker-front",
+    "26-alpha-tracker-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: courier",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "27-courier-front",
+    "27-courier-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character look: former_tether_member",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "28-former-tether-member-front",
+    "28-former-tether-member-threequarter"
+   ],
+   "lane": "CREATURES"
+  },
+  {
+   "item": "Character close-ups: dialogue key and rim light (all speakers)",
+   "camera_set": "dialogue (phase2_capture_dialogue.gd, the DLG1 command set)",
+   "stands": [
+    "every DLG1 dialogue frame"
+   ],
+   "lane": "CREATURES"
+  }
+ ]
+}
