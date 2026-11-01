@@ -1167,9 +1167,10 @@ static func parse_coat_flags(parsed: Dictionary) -> Dictionary:
 		for from_path: String in coats:
 			# A string is a graded albedo path; a dictionary may also carry
 			# material values ({"albedo"?, "metallic"?, "roughness"?,
-			# "specular"?, "emission_scale"?}), where a roughness value replaces
-			# the roughness map and emission_scale multiplies a self-lit body's
-			# emission energy (so its form reads under the stage light).
+			# "specular"?, "emission_scale"?, "emission"?, "emission_energy"?}),
+			# where a roughness value replaces the roughness map, emission_scale
+			# multiplies a self-lit body's emission energy (so its form reads
+			# under the stage light) and emission names a trait glow map.
 			var spec: Variant = coats[from_path]
 			if not (spec is Dictionary or spec is String):
 				push_error("coat flag %s: %s has neither a path nor material values" % [flag, from_path])
@@ -1178,6 +1179,10 @@ static func parse_coat_flags(parsed: Dictionary) -> Dictionary:
 			var to_path := str(resolved.get("albedo", ""))
 			if not to_path.is_empty() and not ResourceLoader.exists(to_path):
 				push_error("coat flag %s: %s is missing" % [flag, to_path])
+				continue
+			var glow_path := str(resolved.get("emission", ""))
+			if not glow_path.is_empty() and not ResourceLoader.exists(glow_path):
+				push_error("coat flag %s: glow %s is missing" % [flag, glow_path])
 				continue
 			var merged: Dictionary = resolved_map.get(from_path, {})
 			merged.merge(resolved, true)
@@ -1206,6 +1211,18 @@ static func coat_material(source: BaseMaterial3D, spec: Dictionary) -> BaseMater
 		copy.metallic_specular = clampf(float(spec.specular), 0.0, 1.0)
 	if spec.has("emission_scale"):
 		copy.emission_energy_multiplier *= clampf(float(spec.emission_scale), 0.0, 1.0)
+	# A trait glow map (a mostly-black mask: veins, fin edges, a stripe) lit the
+	# same way the aspect variants' synthesised glow is (multiply operator,
+	# white emission). It replaces a self-lit albedo copy in the emission slot.
+	var glow_path := str(spec.get("emission", ""))
+	if not glow_path.is_empty():
+		var glow := load(glow_path) as Texture2D
+		if glow != null:
+			copy.emission_enabled = true
+			copy.emission_operator = BaseMaterial3D.EMISSION_OP_MULTIPLY
+			copy.emission = Color.WHITE
+			copy.emission_texture = glow
+			copy.emission_energy_multiplier = clampf(float(spec.get("emission_energy", 1.0)), 0.0, 4.0)
 	return copy
 
 

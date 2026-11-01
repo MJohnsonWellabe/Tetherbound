@@ -34,8 +34,10 @@ func test_every_flag_resolves_when_enabled() -> void:
 		for from_path: String in coats:
 			assert_true(ResourceLoader.exists(from_path), "%s source %s exists" % [flag, from_path])
 			var spec: Dictionary = resolved.get(from_path, {})
+			if spec.has("emission"):
+				assert_true(ResourceLoader.exists(str(spec.emission)), "%s glow map %s exists" % [flag, spec.emission])
 			for key: String in spec:
-				assert_true(key in ["albedo", "metallic", "roughness", "specular", "emission_scale"],
+				assert_true(key in ["albedo", "metallic", "roughness", "specular", "emission_scale", "emission", "emission_energy"],
 					"%s %s uses a known key (%s)" % [flag, from_path, key])
 
 
@@ -76,3 +78,15 @@ func test_material_values_and_emission_scale_apply() -> void:
 	# Emission is only ever dimmed, never pushed past the source.
 	var bright: BaseMaterial3D = BODY.coat_material(source, {"emission_scale": 3.0})
 	assert_almost_eq(bright.emission_energy_multiplier, 2.0)
+
+
+func test_trait_glow_map_lights_the_copy() -> void:
+	var source := StandardMaterial3D.new()
+	source.emission_enabled = false
+	var glow_path := "res://icon.svg"
+	var copy: BaseMaterial3D = BODY.coat_material(source, {"emission": glow_path, "emission_energy": 0.8})
+	assert_true(copy.emission_enabled, "a glow map turns emission on")
+	assert_eq(copy.emission_operator, BaseMaterial3D.EMISSION_OP_MULTIPLY)
+	assert_true(copy.emission_texture != null and copy.emission_texture.resource_path == glow_path, "the glow map is bound")
+	assert_almost_eq(copy.emission_energy_multiplier, 0.8)
+	assert_false(source.emission_enabled, "the source material is untouched")
