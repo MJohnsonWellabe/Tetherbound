@@ -481,6 +481,29 @@
      }
     }
    }
+  },
+  "remake_owner1101_torrentoad": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Torrentoad, a large powerful toad with long jumping legs, olive-green and teal skin (Meshy 01a197f4-adb9-70a9-9a79-98ac4e375ade). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the aqua lines and eyes. Provenance: assets/creatures/tetherbound/torrentoad/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "torrentoad": {
+     "model": "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101.glb",
+     "colourway_source_species": "torrentoad_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
   }
  }
 }
