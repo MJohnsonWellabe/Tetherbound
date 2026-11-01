@@ -124,3 +124,12 @@ func test_road_puddles_ship_off() -> void:
 	var puddles: Dictionary = cfg.get("puddle_candidate", {})
 	assert_true(puddles.has("spacing_m"), "the P2-040 candidate must be declared")
 	assert_false(bool(puddles.get("enabled", true)), "the candidate ships OFF")
+
+
+func test_camera_occlusion_fade_ships_off_and_is_inert_off_tree() -> void:
+	var cfg := _json("res://data/config/camera.json")
+	var fade: Dictionary = cfg.get("occlusion_fade", {})
+	assert_true(fade.has("fade_transparency"), "the occlusion candidate must be declared")
+	assert_false(bool(fade.get("enabled", true)), "the candidate ships OFF")
+	var occ := preload("res://scripts/player/camera_occlusion.gd")
+	assert_true(occ.occluders(null, Vector3.ZERO, Vector3.ONE, []).is_empty(), "no world, no occluders")
