@@ -29,6 +29,15 @@
     "min_pair_separation": 0.6,
     "max_speaker_distance": 9.0,
     "min_distance": 1.2,
+    "twoshot_v2": {
+      "enabled": false,
+      "_why": "GPU DLG-2 (1 Nov, P2-073/P2-074/P2-076/P2-083): the speaker reads small and mid-ground while the player's back takes about a third of the frame. When enabled these keys replace the villager push-in's: the lens stands closer (2.9 m), leans further onto the speaker (0.86) and swings wider (26 deg) so the speaker fills about three quarters of frame height beside the panel and the trainer is a shoulder at the frame edge; the speaker-in-frame search keeps the named body inside the safe area. Aftermath profile keys still win. conversation_camera.gd with_twoshot_v2. TUNABLE.",
+      "distance": 2.9,
+      "speaker_bias": 0.86,
+      "shoulder_yaw_deg": 26.0,
+      "elevation_deg": 6.0,
+      "speaker_frame_candidate_enabled": true
+    },
     "require_speaker_sight": true,
     "_why_require_speaker_sight": "F41 P2-083 (Stormwood dialogue frames: overhead geometry or the trainer hid the named speaker; Tamsin's challenge fell back to the 2.1 m shot with the lens inside dark geometry). A conversation shot whose line to the speaker is blocked swings round the pivot to the nearest reachable angle that sees them, the same tested search the aftermath profile already uses (camera_rig.gd _swing_for_sight). It acts only when the speaker is blocked.",
     "speaker_sight_meshes": true,

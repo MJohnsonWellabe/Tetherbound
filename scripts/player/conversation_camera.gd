@@ -513,7 +513,34 @@ static func config() -> Dictionary:
 				_cached_config["fallback"] = merged
 			continue
 		_cached_config[key] = (block as Dictionary)[key]
+	_cached_config = with_twoshot_v2(_cached_config)
 	return _cached_config
+
+
+## P2-073 / P2-074 / P2-076 / P2-083 (GPU DLG-2, 1 Nov: "frame the speaker
+## medium-close beside the panel; the player's back takes about a third of the
+## frame"). `camera.json` conversation.twoshot_v2, OFF by default: when its
+## `enabled` is true its keys replace the villager push-in's own, so the lens
+## stands closer, leans further onto the speaker and swings wider, leaving the
+## trainer as a shoulder at the frame edge. Profiles (`aftermath`) still merge
+## over the result key by key. Keys starting with `_` and `enabled` are skipped.
+static func with_twoshot_v2(cfg: Dictionary) -> Dictionary:
+	var variant: Variant = cfg.get("twoshot_v2", {})
+	if not variant is Dictionary or not bool((variant as Dictionary).get("enabled", false)):
+		return cfg
+	var merged := cfg.duplicate(true)
+	for key: String in (variant as Dictionary):
+		if key == "enabled" or key.begins_with("_"):
+			continue
+		if key == "fallback" and (variant as Dictionary)[key] is Dictionary:
+			var inner: Dictionary = (merged.get("fallback", {}) as Dictionary).duplicate()
+			for k: String in ((variant as Dictionary)[key] as Dictionary):
+				if not k.begins_with("_"):
+					inner[k] = ((variant as Dictionary)[key] as Dictionary)[k]
+			merged["fallback"] = inner
+			continue
+		merged[key] = (variant as Dictionary)[key]
+	return merged
 
 
 ## The swings the cramped shot is allowed to try, as extra degrees added to the
