@@ -30,7 +30,8 @@
       "species": {
         "bramblebun": {
           "model": "res://assets/creatures/tetherbound/bramblebun/candidate_owner1101/models/creature_bramblebun_owner1101.glb",
-          "colourway_source_species": "bramblebun_owner1101",
+          "_comment_colourway": "Bramblebun's colourway rules stay the owner of its alpha and shiny (shiny_colourways.json `bramblebun`, via the shipped bramblebun_nat1022 source; tests/smoke_bramblebun_colourway_binding.gd). The textures themselves are repainted from this remake's own albedo and resolve beside it: candidate_owner1101/source/author_colourways.py.",
+          "colourway_source_species": "bramblebun_nat1022",
           "animations": {
             "idle": "idle",
             "walk": "walk",
