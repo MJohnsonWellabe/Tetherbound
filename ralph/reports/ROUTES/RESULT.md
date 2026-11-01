@@ -1,4 +1,4 @@
-# Routes lane (tb/routes-f49): Cloudreach result 1 Nov 2026, STOPPED on two failures at Cloudreach 06 -> 07
+# Routes lane (tb/routes-f49): Cloudreach result 1 Nov 2026, STOPPED at Cloudreach 06 -> 07 (third, coordinator-approved approach also failed)
 
 ## Cloudreach seams matched and pushed (saves `f49_cr_01..06`, seams `ralph/reports/ROUTES/f49-1031/seams/`)
 - **C1** Tidewake 09 → Cloudreach 01 (replaces `cloudreach_arrival_generated`), then 01 → 02 → 03 → 04.
@@ -8,6 +8,8 @@
 ## Blocker: Cloudreach 06 → 07 (failed twice; stopped)
 - Attempt 1 (1479767e): `07_stormward_handoff` "relic hanging produced no actual portable relics_hung state". `f49_cr_06` Satchel is 24/24 and the Veyra `boss_relic` duty is held as `boss_handoff_make_satchel_room` (coin payout + `stormwood_portal_key` need two slots, as at Tidewake 09).
 - Attempt 2 (0905b749, `_make_handoff_room`): feeding cloudberries ran first, then the approved Satchel Drop (`meadows_earned_team_segment._drop_slot`) of gale_fiber failed "Controller focus did not reach the satchel slot to drop". Likely cause: after the care/feed passes, Satchel focus is not on a slot button when `_focus_slot` starts (it navigates from the current focus owner), or the slot index moved after feeding. Next: open the Satchel, re-read `find_slot` after feeding, and wait for focus to land on a slot button before navigating (the Tidewake 09 drop of fiber/rootstone worked with no feed beforehand).
+- Attempt 3 (682837f7, coordinator-approved changed approach): feeding now targets standing companions only and menus are closed before each drop (attempt 2's real cause: the hungriest row 0 was fainted, the care picker refused it and stayed open). This worked: 4 cloudberries fed to row 4, gale_fiber x2 dropped, two slots free. But the two slots were immediately filled by other held Veyra rewards, `rare_candy` x1 and `skyplume` x18, so the portal key/relic hand-off still had no room (end free=0). The Veyra settlement holds at least three item rewards plus the coin payout; the remaining Satchel (axe, coin x2, elixirs, essence, hammer, hide_vest, home_key, knife, orbs x3, orb_greater, pickaxe, potions x3, revive x2, tm, torch, + the two new stacks) has no approved droppable material left.
+- Owner/coordinator decision needed: (a) a game change so an earned boss relic and portal key are not starved behind other held rewards when the Satchel is full (e.g. deliver relic/key ahead of item rewards, or into a key slot), or (b) approve a further player action for the route (store items at a homestead Storage Chest, teach the carried TM, or drop a named consumable). With (b) the piece would loop "make one slot, wait" until the hand-off delivers.
 - Input `f49_cr_06` is committed; nothing else needs rerunning.
 
 ## Tidewake result 1 Nov 2026 (resume): 08 -> 09 MATCHED; Tidewake late chain complete
