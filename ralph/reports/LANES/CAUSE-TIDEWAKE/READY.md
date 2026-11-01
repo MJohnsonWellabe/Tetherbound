@@ -1,5 +1,36 @@
 # CAUSE-TIDEWAKE lane (tb/cause-tidewake): Tidewake F39 water, light and shore
 
+## STOPPED 2 Nov 00:00 UTC (coordinator: owner direction, lane archived, branch lands flag-off)
+
+**Criteria closed: zero.** No GPU verdict was received. Every change is behind a flag that ships OFF.
+
+Five parts, each `data/config/tidewake_look.json:cause_tidewake.<part>.enabled` (all false). A capture can force any of them with `--tidewake-cause=<part>[,...]`.
+
+| Part | Group | Answers | CPU state |
+|---|---|---|---|
+| `sea` | 2 | flat navy water, hard cyan shallows band | Verified, beach and elevated views: turquoise → teal shelf → blue-teal deep, haze to the horizon, soft wind streaks, broken surf. |
+| `light` | 1 | flat light, no atmosphere | Verified: a pale haze horizon, far islands and the Veilfall recede. Day only; composes over watersky. |
+| `currents` | 2 | road-marking dashes; restored current changes nothing | Verified: no dashes, chevrons or dashed edges on restored lanes. A restored lane now reads very faint. |
+| `horizon` | 3 | empty horizons | Verified: distant sails and low islets from installed Meshy pieces, receding in haze. |
+| `dunes` | 1 | sheet-like dune walls, bare sand discs | Partly verified. The beach dune flanks read better. **The last edit (runnels on moderate flanks only, strength 0.28) is not CPU-verified**: the previous version striped P2-074's near-vertical passage wall, and the confirming recapture was stopped. Judge P2-074 with the dunes part before turning it on. |
+
+Shared files touched, with every new uniform defaulting to 0:
+- `shaders/water.gdshader`
+- `scripts/world/coastal_rock_material.gd`
+- `scripts/world/tidewake_look_profile.gd` (`resolve`, `cause_parts`)
+- `scripts/world/tidewake_world_look.gd` (one overlay)
+- `scripts/world/water_landmark_models.gd` (one list)
+
+Tests: `tests/test_tidewake_cause.gd` (7 tests). With the related Tidewake tests: 19 tests, 369 assertions, 0 failed.
+
+Open candidates:
+- GPU High judging of each part per `MANIFEST.json` (groups 1–3).
+- P2-067: the restored lane may need a visible calm-water read; it is very faint now.
+- The near-vertical dune walls (P2-074) need form, which likely means geometry or Meshy rather than a shader.
+
+Container note: 22 GB of `.git` was cut to a blob-filtered partial clone so the import fit. The first commit then lazily fetches HEAD's blobs (about 7 GB, one-off).
+
+
 ## STATUS
 
 - Criteria closed: zero (no GPU verdict yet). Every change is flag-off.
