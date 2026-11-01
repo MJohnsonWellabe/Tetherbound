@@ -71,3 +71,16 @@ func test_glass_field_rock_collar_ships_off() -> void:
 	var collar: Dictionary = cfg.get("rock_collar_candidate", {})
 	assert_true(collar.has("stones"), "the P2-043 candidate must be declared")
 	assert_false(bool(collar.get("enabled", true)), "the candidate ships OFF")
+
+
+func test_crown_arch_round2_ships_off_and_raises_the_arch_when_on() -> void:
+	var hero := preload("res://scripts/world/stormwood_crown_arch_hero.gd")
+	var cfg := _json("res://data/config/crown_arch_hero.json")
+	assert_false(bool((cfg["round2_candidate"] as Dictionary).get("enabled", true)), "ships OFF")
+	assert_eq(hero.with_round2(cfg)["height_m"], cfg["height_m"], "OFF leaves the landed arch")
+	var cand: Dictionary = (cfg["round2_candidate"] as Dictionary).duplicate(true)
+	cand["enabled"] = true
+	cfg["round2_candidate"] = cand
+	var on := hero.with_round2(cfg)
+	assert_true(float(on["height_m"]) > 5.5, "round 2 stands the arch taller")
+	assert_true(on.has("edge_dressing"), "round 2 dresses the slab edge")
