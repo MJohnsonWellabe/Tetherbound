@@ -225,6 +225,16 @@ func dress(world: Node3D) -> void:
 	grounding.name = "CloudreachGrounding"
 	add_child(grounding)
 	grounding.build(world)
+	# P2-025 (flag-off): no grass tufts through paved masonry tops.
+	var paved := preload("res://scripts/world/cloudreach_paved_grass.gd")
+	var grounding_cfg := preload("res://scripts/world/cloudreach_grounding.gd").read_config()
+	if paved.enabled(grounding_cfg) and world.get("_materials") is Dictionary:
+		var mats: Dictionary = world.get("_materials")
+		var paving: Array = []
+		for key: String in ["masonry", "masonry_trim", "path"]:
+			if mats.has(key):
+				paving.append(mats[key])
+		print("[cloudreach_paved_grass] cleared=", paved.clear(world, paving, grounding_cfg))
 
 
 func _dress_route_verges(config_data: Dictionary) -> void:
