@@ -93,10 +93,7 @@ func _physics_process(delta: float) -> void:
 
 func dismount() -> bool:
 	surface()
-	var ridden := mount_body()
 	var result := super.dismount()
-	if result:
-		_step_mount_into_view(ridden)
 	if result and water_world != null and _player != null:
 		var depth: float = water_world.water_depth_at(_player.global_position)
 		var swim: Node = _player.swim_controller
@@ -113,54 +110,3 @@ func dismount() -> bool:
 			else:
 				swim.state.leave_water()
 	return result
-
-
-## tb/vis-water-sky (flag-off, P2-109): after a dismount the mount stood where
-## the camera settles behind the trainer, so the rig's near-camera dither drew
-## it as a huge stippled ghost over the trainer with its shadow across the
-## foreground. With tidewake_look.json `watersky_dismount_candidate` on, the
-## mount steps `ahead_m` in front of the camera's view and `side_m` to its
-## right, onto the ground there, and keeps following from that spot.
-func _step_mount_into_view(body: Node3D) -> void:
-	if body == null or not is_instance_valid(body) or _player == null or _camera_rig == null \
-			or not is_instance_valid(_camera_rig) or not (_camera_rig is Node3D):
-		return
-	var cfg := dismount_candidate()
-	if cfg.is_empty():
-		return
-	var camera_basis := (_camera_rig as Node3D).global_transform.basis
-	var ahead := float(cfg.get("ahead_m", 4.5))
-	var side := float(cfg.get("side_m", 2.5))
-	var ground := _ground_height(_player.global_position + view_offset(camera_basis, ahead, side))
-	if water_world != null and is_finite(ground):
-		# Never onto the seabed: a spot over water stands the mount at the surface.
-		ground = maxf(ground, float(water_world.field.water_level()))
-	body.global_position = dismount_view_spot(_player.global_position, camera_basis, ahead, side, ground)
-
-
-static func dismount_candidate() -> Dictionary:
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/tidewake_look.json"))
-	if not parsed is Dictionary:
-		return {}
-	var cfg: Dictionary = (parsed as Dictionary).get("watersky_dismount_candidate", {})
-	if not bool(cfg.get("enabled", false)) and not OS.get_cmdline_user_args().has("--watersky-dismount-candidate"):
-		return {}
-	return cfg
-
-
-## Horizontal offset `ahead_m` along the camera's view and `side_m` to its right.
-static func view_offset(camera_basis: Basis, ahead_m: float, side_m: float) -> Vector3:
-	var forward := -camera_basis.z
-	forward.y = 0.0
-	var right := camera_basis.x
-	right.y = 0.0
-	if forward.length() < 0.01 or right.length() < 0.01:
-		return Vector3.ZERO
-	return forward.normalized() * ahead_m + right.normalized() * side_m
-
-
-static func dismount_view_spot(trainer: Vector3, camera_basis: Basis, ahead_m: float, side_m: float,
-		ground_y: float) -> Vector3:
-	var spot := trainer + view_offset(camera_basis, ahead_m, side_m)
-	spot.y = ground_y if is_finite(ground_y) else trainer.y
-	return spot
