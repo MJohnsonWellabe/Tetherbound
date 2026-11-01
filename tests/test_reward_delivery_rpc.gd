@@ -406,3 +406,45 @@ func test_zero_cost_chart_save_failure_and_invalid_dock_inputs_do_not_publish() 
 	assert_false(bool(missing.get("ok")))
 	assert_eq(str(missing.get("code", "")), "prerequisite")
 	assert_eq(saver.world_writes, 1)
+
+
+## F49#0 (Cloudreach 07, 1 Nov): two free slots, a held Veyra hand-off and two
+## held item rewards. The hand-off keeps the slot its portal key needs; the
+## item that would take it stays held, then arrives once room appears; nothing
+## is duplicated by later passes.
+func test_held_boss_hand_off_keeps_its_satchel_slot_from_item_grants() -> void:
+	var DELIVERY := preload("res://scripts/net/reward_delivery.gd")
+	var inventory: RefCounted = _game.local.inventory
+	assert_eq(inventory.add("knife", inventory.slot_count() - 2), 0, "fixture Satchel has exactly two free slots")
+	var hand_off := {"kind": "foundation_event", "status": "retained", "delivery_id": "veyra-hand-off", "duties": [{
+		"character_id": "host-a", "action": "boss_relic",
+		"intent": {"trainer_id": "captain_veyra_storm_anchor", "biome": "cloudreach", "encounter_id": "veyra"},
+		"context": {"realm": "cloudreach"}}]}
+	_game.world.reward_deliveries["veyra-hand-off"] = hand_off
+	var candy := DELIVERY.make_record(_game.world.world_id, "hand-off-world", "veyra:candy", "host-a", "rare_candy", 1)
+	var plume := DELIVERY.make_record(_game.world.world_id, "hand-off-world", "veyra:plume", "host-a", "skyplume", 18)
+	assert_false(candy.is_empty() or plume.is_empty())
+	_rpc.call("_process_reward_delivery", candy)
+	assert_eq(inventory.count("rare_candy"), 1, "a grant that leaves the key its slot still delivers")
+	_rpc.call("_process_reward_delivery", plume)
+	assert_eq(inventory.count("skyplume"), 0, "the grant that would take the key's last slot stays held")
+	assert_false(_game.local.satchel_escrow.has(plume.delivery_id), "held grant is untouched: no escrow row, no ACK")
+	assert_eq(DELIVERY.held_hand_off_slots(inventory, _game.world.reward_deliveries,
+		_game.local.redesign_character, "host-a", ""), 1)
+	# The hand-off lands (the boss_relic duty's own commit): key into the slot, relic held.
+	assert_eq(inventory.add("stormwood_portal_key", 1), 0)
+	_game.local.redesign_character.relics_held.append("cloudreach")
+	assert_eq(DELIVERY.held_hand_off_slots(inventory, _game.world.reward_deliveries,
+		_game.local.redesign_character, "host-a", ""), 0, "a delivered hand-off holds nothing back")
+	_rpc.call("_process_reward_delivery", plume)
+	assert_eq(inventory.count("skyplume"), 0, "no room yet: the reward waits in escrow, not lost")
+	assert_true(_game.local.satchel_escrow.has(plume.delivery_id))
+	assert_true(inventory.remove("knife", 1))
+	_rpc.call("_process_reward_delivery", _game.local.satchel_escrow[plume.delivery_id])
+	assert_eq(inventory.count("skyplume"), 18, "the held reward arrives once room appears")
+	for _pass in 2:
+		_rpc.call("_process_reward_delivery", candy)
+		_rpc.call("_process_reward_delivery", plume)
+	assert_eq(inventory.count("rare_candy"), 1, "no duplicate candy")
+	assert_eq(inventory.count("skyplume"), 18, "no duplicate plumes")
+	assert_eq(inventory.count("stormwood_portal_key"), 1)

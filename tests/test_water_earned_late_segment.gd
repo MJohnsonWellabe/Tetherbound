@@ -23,7 +23,7 @@ func test_short_late_boundaries_require_exact_before_and_after_milestones() -> v
 			assert_ne(HUMAN.short_exit_error(piece, ends[piece] + [future]), "", piece + " future " + future)
 	assert_ne(HUMAN.piece_entry_error("bex", won), "", "cannot credit a pre-won fight")
 	assert_ne(HUMAN.short_exit_error("bex", chart), "", "cannot save unfinished combat as victory")
-	assert_eq(HUMAN.SHORT_WATCHDOG_MS, 240000)
+	assert_eq(HUMAN.SHORT_WATCHDOG_MS, 1200000)
 
 
 func test_short_movement_handoff_requires_receipt_position_and_training() -> void:
