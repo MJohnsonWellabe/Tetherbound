@@ -458,6 +458,29 @@
      }
     }
    }
+  },
+  "remake_owner1101_tidecoil": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Tidecoil, a great sea serpent with frilled fins, teal-blue scales and pale violet fin frills (Meshy 01a197f4-a320-77c9-9475-98800042782b). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 5.5 m; emission on the aqua specks and eyes (water creature: bioluminescence is natural). Provenance: assets/creatures/tetherbound/tidecoil/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "tidecoil": {
+     "model": "res://assets/creatures/tetherbound/tidecoil/candidate_owner1101/models/creature_tidecoil_owner1101.glb",
+     "colourway_source_species": "tidecoil_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
   }
  }
 }
