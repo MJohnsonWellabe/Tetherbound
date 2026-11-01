@@ -617,6 +617,11 @@ func _play() -> void:
 		"09_cloudreach_handoff":
 			# As earned_chain_runner's tidewake_handoff, one chapter on: Home Key
 			# home, hang the earned Tidewake relic, Use/Enter the Cloudreach arch.
+			# A carried-full Satchel holds the Nerissa hand-off (portal key + relic)
+			# as boss_handoff_make_satchel_room; the player makes room first through
+			# the approved Satchel Drop, then the held duty delivers.
+			if not await _make_handoff_room(world):
+				return
 			var travel: RefCounted = load("res://tests/helpers/f20_portal_travel.gd").new(self, game)
 			var passed: bool = await travel.home_key() and await travel.hang_relic("tidewake") \
 				and await travel.enter("cloudreach", "cloudreach")
@@ -627,6 +632,31 @@ func _play() -> void:
 			if not passed:
 				failures.append_array(travel.failures)
 				if travel.failures.is_empty(): failures.append("cloudreach_handoff: portal travel failed without a receipt")
+
+
+func _make_handoff_room(world: Node3D) -> bool:
+	var held := func() -> bool:
+		var now: Dictionary = game.local.get("redesign_character")
+		return (now.get("relics_held", []) as Array).has("tidewake") or (now.get("relics_hung", []) as Array).has("tidewake")
+	if held.call():
+		return true
+	var room: RefCounted = load("res://tests/helpers/meadows_earned_team_segment.gd").new()
+	room._tree = self
+	room._world = world
+	room._game = game
+	room._menu = game.call("menu")
+	if not await room.free_slots_for([{"id": "cloudreach_portal_key"}]):
+		failures.append("cloudreach_handoff: Satchel room for the Nerissa hand-off failed: " + str(room.result().failures))
+		return false
+	for row: Variant in (room.result().get("receipts", []) as Array):
+		if row is Dictionary and str((row as Dictionary).get("beat", "")) == "satchel_room_dropped":
+			disclosures.append("cloudreach_handoff: DROPPED %s x%s through the Satchel to make room for the held hand-off" % [str(row.item), str(row.count)])
+	for _frame in 1800:
+		if held.call() and int(game.get("inventory").call("count", "cloudreach_portal_key")) > 0:
+			return true
+		await physics_frame
+	failures.append("cloudreach_handoff: held Nerissa hand-off did not deliver after making Satchel room")
+	return false
 
 
 func _setup_run(helper: RefCounted, world: Node3D, player: CharacterBody3D, rig: Node3D, label: String) -> void:
