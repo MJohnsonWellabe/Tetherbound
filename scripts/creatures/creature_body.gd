@@ -2567,8 +2567,21 @@ func _physics_process(delta: float) -> void:
 static func grass_clear_config() -> Dictionary:
 	if _grass_clear_cache.is_empty():
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(GRASS_CLEAR_PATH))
-		_grass_clear_cache = parsed if parsed is Dictionary else {"enabled": false}
+		_grass_clear_cache = with_grass_clear_candidate(parsed if parsed is Dictionary else {"enabled": false})
 	return _grass_clear_cache
+
+
+## P2-020 (vis-meadows, OFF until GPU-judged): `p2_020_candidate`'s keys
+## replace the shipped ones when enabled. Off: the shipped block exactly.
+static func with_grass_clear_candidate(cfg: Dictionary) -> Dictionary:
+	var candidate: Variant = cfg.get("p2_020_candidate", {})
+	if not candidate is Dictionary or not bool((candidate as Dictionary).get("enabled", false)):
+		return cfg
+	var out := cfg.duplicate(true)
+	for key: Variant in candidate:
+		if key != "enabled" and not str(key).begins_with("_"):
+			out[key] = (candidate as Dictionary)[key]
+	return out
 
 
 ## Join the grass clearing once settled on the floor for `settle_s`; leave on
