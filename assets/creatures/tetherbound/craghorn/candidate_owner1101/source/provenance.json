@@ -1,0 +1,17 @@
+{
+ "species": "craghorn",
+ "owner_direction": "1 Nov 2026 creature redesign under the owner's rule (believable adult animal, natural stance, one elemental trait, glowing eyes and lines, optional partial natural plates)",
+ "concept": "Coordinator pick a from two rule-following concepts: Craghorn, a mountain goat-ram with long curving horns, shaggy cream-white coat, a believable lean adult creature in its natural stance, mostly realistic fur, feathers or scales, glowing amber eyes, th",
+ "reference": "ref_a.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image (nano-banana) on the existing licence, inspected and picked by the coordinator under the owner's delegated rule",
+ "meshy_image_to_3d_task": "01a197e5-82ba-7355-a7b2-f34d4cb1c2e4",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "raw Meshy candidate; not rigged, not imported, flag-off"
+}

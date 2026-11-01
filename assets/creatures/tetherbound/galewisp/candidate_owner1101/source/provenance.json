@@ -1,0 +1,17 @@
+{
+ "species": "galewisp",
+ "owner_direction": "1 Nov 2026 creature redesign under the owner's rule (believable adult animal, natural stance, one elemental trait, glowing eyes and lines, optional partial natural plates)",
+ "concept": "Owner pick A: fox-eared feathered bird, cream/sky-blue/gold, glowing wing-edge lines and eyes",
+ "reference": "ref_a.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image (nano-banana) on the existing licence, inspected and picked by the coordinator under the owner's delegated rule",
+ "meshy_image_to_3d_task": "01a197c1-ad73-75bf-8ec7-8b92bbcffd5e",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "raw Meshy candidate; not rigged, not imported, flag-off"
+}
