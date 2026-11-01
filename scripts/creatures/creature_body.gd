@@ -26,7 +26,6 @@ const POSE_CANDIDATES := preload("res://scripts/creatures/creature_pose_candidat
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const VISUAL := preload("res://scripts/creatures/creature_visual.gd")
 const REST_VISUAL := preload("res://scripts/creatures/water_rest_pose_visual.gd")
-const FAINT_SIDE_LIE := preload("res://scripts/creatures/faint_side_lie.gd")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const BUILT_FLOOR := preload("res://scripts/world/built_floor.gd")
 const ALPHA_AURA := preload("res://scripts/creatures/alpha_aura.gd")
@@ -2764,34 +2763,6 @@ func play_faint() -> void:
 	set_aspect_vfx_suspended(true)
 	if _animator != null:
 		_animator.call("play_faint")
-	_apply_faint_side_lie()
-
-
-## P2-015/P2-028: creature_faint_presentation.json (OFF by default). See
-## faint_side_lie.gd. Visual pivot only; revive/rest restore it exactly.
-var _faint_side_lie_before: Variant = null
-
-
-func _apply_faint_side_lie() -> void:
-	if not _has_model or _model == null or _faint_side_lie_before != null or _rest_pose_active:
-		return
-	var row := FAINT_SIDE_LIE.recipe(species_id)
-	if row.is_empty():
-		return
-	_faint_side_lie_before = _model.transform
-	_model.transform = FAINT_SIDE_LIE.rolled_transform(_model.transform, row, _height, _radius)
-
-
-func _clear_faint_side_lie() -> void:
-	if _faint_side_lie_before == null:
-		return
-	if _model != null and is_instance_valid(_model):
-		_model.transform = _faint_side_lie_before
-	_faint_side_lie_before = null
-
-
-func faint_side_lie_active() -> bool:
-	return _faint_side_lie_before != null
 
 
 ## A rolled body's own rigid rotation dips one side below its own origin by
@@ -2828,7 +2799,6 @@ const REST_SINK_METERS := 0.12
 ## already-correct pose for a standing one.
 func play_rest() -> void:
 	ensure_visual_resident()
-	_clear_faint_side_lie()
 	if _rest_pose_active or _rest_pose_pending:
 		return
 	# Species with a generated, posed-vertex-grounded rest own their endpoint.
@@ -3362,7 +3332,6 @@ func rest_pose_receipt() -> Dictionary:
 
 func revive_animation() -> void:
 	ensure_visual_resident()
-	_clear_faint_side_lie()
 	set_aspect_vfx_suspended(false)
 	if _animator != null:
 		_animator.call("revive")
