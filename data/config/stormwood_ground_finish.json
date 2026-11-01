@@ -2,7 +2,16 @@
   "enabled": true,
   "scope": "client_presentation",
   "_comment": "P2-039 final source repair: rounded moss, three wet curled-leaf shapes, terrain-conforming wet soil and roots anchored to existing baked trees. Living canopy positions define cover islands and open clearings. Shared field shaders, terrain/control data, harvest identity, collision and actor scale are unchanged. Native matched evidence and Claude judgment remain pending.",
-  "ground_zones": {
+  "value_lift_candidate": {
+  "enabled": false,
+  "scope": "client_presentation",
+  "_why": "Owner priority 1 Nov; batch-1 judges: 'crushed near-black uniform carpet; lift values, add grove/clearing variation'. When enabled (stormwood_ground_zones.gd finish), these keys merge over this file's own: grass and moss-bush tints rise out of near-black, the terrain grass tint lightens, and the authored ground_zones field (bare loam, deep moss, still pools; r22 tuned on CPU, never GPU-judged) switches on for clearing and grove variation. Shader/tint inputs only; no bake input, collision or placement change. OFF until GPU judged.",
+  "grass": {"tint_base": "#2e5440", "tint_tip": "#6a9a76"},
+  "tiers": {"bushes": {"tint_base": "#3a4c2b", "tint_tip": "#72844a"}},
+  "terrain_materials": {"textures": {"grass": {"tint": "#d2c49e"}}},
+  "ground_zones": {"enabled": true}
+ },
+ "ground_zones": {
     "enabled": false,
     "scope": "client_presentation",
     "_candidate": "r20 authored ground (OFF until judged). GPU F41#0 gap 1 (25 Oct, PRESENT at every outdoor Stormwood stand): one grass/moss carpet. A world-space zone field (stormwood_ground_zones.gd) turns green terrain into bare dark loam where it runs low and deep moss where it runs high; the grass tufts read the same field (grass_field.gdshader zone_*), thinning out over loam and standing short and dark in moss. Paths, rock and the Glass Sink are untouched (green ground only). Presentation only.",

@@ -377,7 +377,7 @@ func _stand_up_ground_cover() -> void:
 	# The existing field also follows camera changes and player-built floors.
 	var cover := GROUND_COVER.new()
 	cover.name = "StormwoodGroundCover"
-	var finish: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_ground_finish.json"))
+	var finish: Dictionary = preload("res://scripts/world/stormwood_ground_zones.gd").finish()
 	var full_profile := bool(finish.get("enabled", false))
 	var understory: Dictionary = finish.get("understory_readability", {})
 	var low_shrubs := bool(understory.get("enabled", false))
@@ -444,7 +444,7 @@ func _model(parent: Node3D,path: String,at: Vector3,scale_factor: float,yaw: flo
 
 func _apply_ground_materials(budget: RefCounted) -> void:
 	var source: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
-	var finish: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_ground_finish.json"))
+	var finish: Dictionary = preload("res://scripts/world/stormwood_ground_zones.gd").finish()
 	var ground: Dictionary = finish.get("terrain_materials", {})
 	var overrides: Dictionary = ground.get("textures", {}) if bool(ground.get("enabled", false)) else {}
 	var look_profile := BIOME_LOOK.read_config()

@@ -161,3 +161,11 @@ func test_catch_framed_r2_and_hud_prompt_clear_ship_off() -> void:
 		"round 2 is a shallower resolve shot")
 	var hud := _json("res://data/config/hud.json")
 	assert_false(bool((hud["message_clears_prompt"] as Dictionary).get("enabled", true)), "the prompt clear ships OFF")
+
+
+func test_stormwood_value_lift_ships_off_and_lifts_when_on() -> void:
+	var zones := preload("res://scripts/world/stormwood_ground_zones.gd")
+	var raw := _json("res://data/config/stormwood_ground_finish.json")
+	assert_false(bool((raw["value_lift_candidate"] as Dictionary).get("enabled", true)), "ships OFF")
+	var off := zones.finish()
+	assert_eq(off["grass"]["tint_base"], raw["grass"]["tint_base"], "OFF leaves the tints")
