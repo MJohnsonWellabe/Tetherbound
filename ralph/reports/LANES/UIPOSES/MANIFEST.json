@@ -195,5 +195,16 @@
    "meadows__flying__landed"
   ],
   "group": 5
+ },
+ {
+  "item": "P2-065",
+  "flag": "data/config/npc_post_stances.json:beaten_trainer_stance.enabled",
+  "camera_set": "tools/phase2_capture_fights.gd --trainer=south_bridge_grunt,warden_aldis (job.json P2-065 repro)",
+  "stands": [
+   "meadows__fights__south_bridge_grunt-00-before",
+   "meadows__fights__south_bridge_grunt-a01",
+   "meadows__fights__south_bridge_grunt-99-after"
+  ],
+  "group": 6
  }
 ]

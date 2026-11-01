@@ -31,12 +31,29 @@ static func stance_for(npc_name: String, cfg: Dictionary = {}) -> Array:
 	return rows if rows is Array else []
 
 
+## P2-065: the stance a beaten trainer takes once their defeat reaction hands
+## off (npc_post_stances.json `beaten_trainer_stance`), or [] when off.
+static func beaten_stance(cfg: Dictionary = {}) -> Array:
+	var source := cfg if not cfg.is_empty() else config()
+	var block: Variant = source.get("beaten_trainer_stance", {})
+	if not block is Dictionary or not bool((block as Dictionary).get("enabled", false)):
+		return []
+	var rows: Variant = (source.get("stances", {}) as Dictionary).get(str((block as Dictionary).get("stance", "")), [])
+	return rows if rows is Array else []
+
+
 ## Attach under the NPC's one skeleton when it has a stance. Returns the
 ## modifier or null.
 static func attach(npc: Node, npc_name: String) -> Node:
-	var rows := stance_for(npc_name)
+	return attach_rows(npc, stance_for(npc_name))
+
+
+static func attach_rows(npc: Node, rows: Array) -> Node:
 	if rows.is_empty() or npc == null:
 		return null
+	var existing := npc.find_child("PostStance", true, false)
+	if existing != null:
+		existing.queue_free()
 	var skeletons := npc.find_children("*", "Skeleton3D", true, false)
 	if skeletons.size() != 1:
 		return null
