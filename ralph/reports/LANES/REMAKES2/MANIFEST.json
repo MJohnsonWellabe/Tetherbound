@@ -97,5 +97,14 @@
    "sparkit"
   ],
   "group": 11
+ },
+ {
+  "item": "F36 Staticub remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_staticub.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "staticub"
+  ],
+  "group": 12
  }
 ]

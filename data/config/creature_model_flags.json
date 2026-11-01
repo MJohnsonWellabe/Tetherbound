@@ -348,6 +348,29 @@
      }
     }
    }
+  },
+  "remake_owner1101_staticub": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Staticub, a young brown bear cub, the cub of the storm bear, warm brown fur (Meshy 01a197f0-825a-7574-825c-18eae9afbb13). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the electric-blue lightning lines and eyes (storm creature). Provenance: assets/creatures/tetherbound/staticub/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "staticub": {
+     "model": "res://assets/creatures/tetherbound/staticub/candidate_owner1101/models/creature_staticub_owner1101.glb",
+     "colourway_source_species": "staticub_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
   }
  }
 }
