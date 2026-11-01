@@ -184,6 +184,47 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		_log("optional_gather", {"id":id,"item":item,"gained":game.inventory.count(item)-before})
 		return _require(game.inventory.count(item)>before,"Optional arrival gather produced " + item)
 
+	## An earned Tidewake Satchel arrives nearly full (F49#0 routes, 1 Nov: 23/24
+	## from f49_tw_09; gale_fiber paid nothing). Before a gather that needs a new
+	## stack the player makes room through the ordinary Satchel: leftover Tidewake
+	## driftwood is dropped (approved Satchel Drop, meadows_earned_team_segment),
+	## then carried cloudberries are fed to the hungriest companion (nothing lost,
+	## as stormwood_crown_build_segment does with berries); only a stack that
+	## still will not go is dropped. Every step is logged and disclosed.
+	func _make_arrival_room(item: String) -> bool:
+		var inventory: RefCounted = game.inventory
+		var maximum := int(game.items.stack_size(item))
+		for i in int(inventory.slot_count()):
+			var stack: Dictionary = inventory.stack_at(i)
+			if str(stack.get("id", "")) == item and int(stack.get("n", 0)) < maximum: return true
+			if stack.is_empty(): return true
+		var room: RefCounted = load("res://tests/helpers/meadows_earned_team_segment.gd").new()
+		room._tree = _tree
+		room._world = world
+		room._game = game
+		room._menu = game.call("menu")
+		if int(inventory.count("driftwood")) > 0:
+			if not await room._drop_slot(int(inventory.find_slot("driftwood"))):
+				return _fail("Satchel Drop of leftover driftwood failed: " + str(room.result().failures))
+			_log("satchel_room", {"dropped": "driftwood", "for": item})
+			return true
+		for _bite in 12:
+			if int(inventory.count("cloudberry")) <= 0: break
+			var party: RefCounted = game.party
+			var hungriest := 0
+			for index in int(party.size()):
+				if float(party.at(index).get("nourishment")) < float(party.at(hungriest).get("nourishment")): hungriest = index
+			var care: Dictionary = await load("res://tests/helpers/meadows_earned_team_segment.gd").new().care_existing(_tree, world, game, "cloudberry", hungriest)
+			if not bool(care.get("passed", false)): break
+			_log("satchel_room", {"fed": "cloudberry", "party_index": hungriest, "for": item})
+		if int(inventory.count("cloudberry")) > 0:
+			if not await room._drop_slot(int(inventory.find_slot("cloudberry"))):
+				return _fail("Satchel Drop of carried cloudberry failed: " + str(room.result().failures))
+			_log("satchel_room", {"dropped": "cloudberry", "for": item})
+		for i in int(inventory.slot_count()):
+			if (inventory.stack_at(i) as Dictionary).is_empty(): return true
+		return _fail("Satchel still has no room for " + item)
+
 	func _arrival_gate() -> void:
 		_purpose("Orient in Cloudreach and learn why the routes are broken", "Take the authored arrival road, inspect its landmark, and gather useful preparation instead of beelining")
 		stage = "arrival_to_aila"
@@ -192,8 +233,10 @@ class Piece extends "res://tests/helpers/f49_cloudreach_chapter.gd":
 		if not await _walk(ruin.global_position + Vector3(0,-1,-2)): return
 		if not await _interact(ruin,"",false): return
 		if not await _walk(_vec(arrival.polyline[1])): return
+		if not await _make_arrival_room("cloudberry"): return
 		if not await _arrival_gather("cr_node_cloudberry_waycamp", "cloudberry"): return
 		if not await _walk(_vec(arrival.polyline[2])): return
+		if not await _make_arrival_room("gale_fiber"): return
 		if not await _arrival_gather("cr_node_gale_fiber_gate", "gale_fiber"): return
 		if not await _walk(_vec(arrival.polyline[3])): return
 		if not await _walk(Vector3(-280,180,508)): return
