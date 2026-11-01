@@ -124,7 +124,12 @@
       "run": "run",
       "attack": "attack",
       "hit": "hit",
-      "faint": "faint"
+      "faint": "faint",
+      "charged": "charged",
+      "fly_grip": "fly_grip",
+      "rest": "rest",
+      "swim": "swim",
+      "ride": "ride"
      }
     }
    }
@@ -211,7 +216,12 @@
       "run": "run",
       "attack": "attack",
       "hit": "hit",
-      "faint": "faint"
+      "faint": "faint",
+      "charged": "charged",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
      }
     }
    }
@@ -232,7 +242,9 @@
       "faint": "faint",
       "swim": "swim",
       "ride": "ride",
-      "fly_grip": "fly_grip"
+      "fly_grip": "fly_grip",
+      "charged": "charged",
+      "rest": "rest"
      }
     }
    }
@@ -250,7 +262,12 @@
       "run": "run",
       "attack": "attack",
       "hit": "hit",
-      "faint": "faint"
+      "faint": "faint",
+      "charged": "charged",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
      }
     }
    }
@@ -286,7 +303,12 @@
       "run": "run",
       "attack": "attack",
       "hit": "hit",
-      "faint": "faint"
+      "faint": "faint",
+      "charged": "charged",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
      }
     }
    }
@@ -304,7 +326,12 @@
       "run": "run",
       "attack": "attack",
       "hit": "hit",
-      "faint": "faint"
+      "faint": "faint",
+      "charged": "charged",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
      }
     }
    }
@@ -340,7 +367,12 @@
       "run": "run",
       "attack": "attack",
       "hit": "hit",
-      "faint": "faint"
+      "faint": "faint",
+      "charged": "charged",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
      }
     }
    }
@@ -358,13 +390,18 @@
       "run": "run",
       "attack": "attack",
       "hit": "hit",
-      "faint": "faint"
+      "faint": "faint",
+      "charged": "charged",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
      }
     }
    }
   },
   "remake_owner1101_cindercub": {
-   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Cindercub, a young wolf-like canine with dark charcoal fur and ember-orange markings, a believable lean adu (Meshy 01a197e3-7e7d-7342-8a32-1b9ef10b7273). dog3 quadruped rig at the installed 3.25 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: none. Provenance: assets/creatures/tetherbound/cindercub/candidate_owner1101/source/provenance.json.",
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Cindercub, a young wolf-like canine with dark charcoal fur and ember-orange markings, a believable lean adu (Meshy 01a197e3-7e7d-7342-8a32-1b9ef10b7273). dog3 quadruped rig at the installed 3.25 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: ember eyes and the brightest ember lines. Provenance: assets/creatures/tetherbound/cindercub/candidate_owner1101/source/provenance.json.",
    "enabled": false,
    "species": {
     "cindercub": {
@@ -387,7 +424,7 @@
    }
   },
   "remake_owner1101_cliffspike": {
-   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Cliffspike, a large porcupine-hedgehog creature with long pale quills, sandy grey, a believable lean adult  (Meshy 01a197e4-74b2-74b3-8afc-875b54b6ad0f). dog3 quadruped rig at the installed 3.25 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: none. Provenance: assets/creatures/tetherbound/cliffspike/candidate_owner1101/source/provenance.json.",
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Cliffspike, a large porcupine-hedgehog creature with long pale quills, sandy grey, a believable lean adult  (Meshy 01a197e4-74b2-74b3-8afc-875b54b6ad0f). dog3 quadruped rig at the installed 3.25 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: sky-blue eyes. Provenance: assets/creatures/tetherbound/cliffspike/candidate_owner1101/source/provenance.json.",
    "enabled": false,
    "species": {
     "cliffspike": {
@@ -399,7 +436,12 @@
       "run": "run",
       "attack": "attack",
       "hit": "hit",
-      "faint": "faint"
+      "faint": "faint",
+      "charged": "charged",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
      }
     }
    }
@@ -417,7 +459,12 @@
       "run": "run",
       "attack": "attack",
       "hit": "hit",
-      "faint": "faint"
+      "faint": "faint",
+      "charged": "charged",
+      "fly_grip": "fly_grip",
+      "rest": "rest",
+      "swim": "swim",
+      "ride": "ride"
      }
     }
    }
@@ -435,7 +482,12 @@
       "run": "run",
       "attack": "attack",
       "hit": "hit",
-      "faint": "faint"
+      "faint": "faint",
+      "charged": "charged",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
      }
     }
    }
@@ -453,7 +505,12 @@
       "run": "run",
       "attack": "attack",
       "hit": "hit",
-      "faint": "faint"
+      "faint": "faint",
+      "charged": "charged",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
      }
     }
    }
@@ -473,6 +530,98 @@
       "charged": "charged",
       "hit": "hit",
       "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
+  },
+  "remake_owner1101_meadowhart": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Meadowhart, a young deer with small antlers and a warm brown coat with cream belly, a believable lean adult (Meshy 01a197e9-39aa-7115-b628-0552e820bc04). dog3 quadruped rig at the installed 3.45 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing amber eyes. Provenance: assets/creatures/tetherbound/meadowhart/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "meadowhart": {
+     "model": "res://assets/creatures/tetherbound/meadowhart/candidate_owner1101/models/creature_meadowhart_owner1101.glb",
+     "colourway_source_species": "meadowhart_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
+  },
+  "remake_owner1101_mosshock": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Mosshock, a big toad with spiny back ridges, mossy green and yellow skin, a believable lean adult creature  (Meshy 01a197e9-f4b0-7398-9fd5-3147497e0f55). dog3 quadruped rig at the installed 3.6 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing electric-blue eyes. Provenance: assets/creatures/tetherbound/mosshock/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "mosshock": {
+     "model": "res://assets/creatures/tetherbound/mosshock/candidate_owner1101/models/creature_mosshock_owner1101.glb",
+     "colourway_source_species": "mosshock_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint",
+      "charged": "charged",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
+  },
+  "remake_owner1101_paddlenewt": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Paddlenewt, a big newt with a paddle tail and frilled cheeks, teal skin with cream belly, a believable lean (Meshy 01a197ea-004c-7252-aa57-ef9ac793ae83). dog3 quadruped rig at the installed 2.15 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing aqua accents and eyes. Provenance: assets/creatures/tetherbound/paddlenewt/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "paddlenewt": {
+     "model": "res://assets/creatures/tetherbound/paddlenewt/candidate_owner1101/models/creature_paddlenewt_owner1101.glb",
+     "colourway_source_species": "paddlenewt_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
+  },
+  "remake_owner1101_abyssal_guardian": {
+   "_why": "Remake 1 Nov 2026: Coordinator pick a from two rule-following concepts: Abyssal Guardian, a colossal long-necked plesiosaur-like sea guardian with four large flippers, deep blue a (Meshy 01a197e1-57f8-726e-8c91-db106f77a9e6). dog3 quadruped rig at the installed 7.2 m, clips idle, walk, run, attack, charged, hit, faint, rest, swim, fly_grip, ride; emission: glowing blue eyes and accents. Provenance: assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "abyssal_guardian": {
+     "model": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_owner1101/models/creature_abyssal_guardian_owner1101.glb",
+     "colourway_source_species": "abyssal_guardian_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint",
+      "charged": "charged",
       "rest": "rest",
       "swim": "swim",
       "fly_grip": "fly_grip",

@@ -1,6 +1,44 @@
 # Creature remakes: ready for GPU judging
 
-## Summary (1 Nov 2026, creature-remake lane, tb/creature-remakes)
+## Summary (1 Nov 2026, second round, creature-remake lane, tb/creature-remakes)
+
+**28 species are prepared, flag-off, and in `MANIFEST.json` (groups 1–28):** the first five
+(below) plus Galewisp, Mudsnout, Mirejaw, Abyssal Guardian, Aeriex, Aquaryn, Ashtusk,
+Breezetail, Burrowback, Cannonback, Cindercub, Cliffspike, Cloudfang, Cragclaw, Craghorn,
+Duskhush, Frostclaw, Fulgocobra, Glimmermoth, Mangrove Monitor, Meadowhart, Mosshock and
+Paddlenewt. I did not touch pebbik through voltwig; those are the second lane's.
+
+- **Rigs.** 21 quadrupeds use the dog3 recipe (`prepare_remake_quadruped.py`, with
+  `strip_ground_patch.auto` disc detection) and get 11 clips. Cragclaw, Glimmermoth, Mosshock and
+  Abyssal Guardian also go through it: legs measured, wings, shell and flippers riding the spine.
+  The four birds (Galewisp, Aeriex, Duskhush, Pipwing) use `rig_bird.py` via the shared wrapper
+  `pipwing/candidate_owner1101/source/prepare_pipwing_owner1101.py`. The wrapper now also authors
+  fly_grip (wings beating, legs tucked), charged, rest, swim and ride. The old models got those roles
+  from F36 pose recipes, which do not apply to a new mesh, so Galewisp's Fly carry needed them. The two
+  serpents (Aquaryn, Fulgocobra) use the new `tools/art_pipeline/blender/rig_serpent.py`: a measured
+  raised-column chain over a coil held on the root, with six clips.
+- **Proof.** `tests/test_creature_model_flags.gd` passes in groups for all 28 (the full suite cannot be
+  imported at once in this container). CPU F36 `--whole-body --context` captures exist for all 23 new
+  ones; see `_sheet_owner1101_f36_cpu_b2.png`. All of them load, stand above the 1.80 m trainer, and play
+  hit and faint. Galewisp also plays fly_grip, and the rideables play ride.
+- **Emission.** The albedo-derived map in `data/creatures/arc_emission.json` uses a hue band from the
+  concept. Saturation and lift were the first step that kept coverage between 0.004% and 3%. Hand-set
+  exceptions, each noted in its rule: Mudsnout (its roots are yellow-green), Cindercub (its ember lines
+  cover 6%; the brightest 0.9% is used), Cliffspike (pale eyes). Ember bands start at hue 18, clear of
+  Team Tether red. The coordinator's concept text was truncated in most provenance files, so glow colours
+  were read off the thumbnails.
+- **Known risks for the judges.**
+  - Fulgocobra's faint lowers the column but its hood still reads half-upright. Two attempts were made,
+    then parked.
+  - Aeriex's crane legs defeated the crotch scan, so its leg length (0.40) was read off the reference.
+  - Cragclaw (crab) and Abyssal Guardian (flippers) are approximations on the quadruped rig.
+  - Brooktail's head is turned in its source pose.
+- **Process note.** A capture-script restore overwrote four flag entries written by a parallel batch
+  (Meadowhart, Mosshock, Paddlenewt, Abyssal Guardian). They were rebuilt and re-verified before this
+  commit; the previous push f45aa4040 lacked them.
+
+
+## First round (1 Nov 2026)
 
 Five owner-picked Meshy candidates (1 Nov) are prepared, rigged, scaled, emission-masked
 and wired behind per-species flags, all **OFF**: Terrapup, Bramblebun, Trailpup, Brooktail

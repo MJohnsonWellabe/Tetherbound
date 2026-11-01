@@ -351,6 +351,32 @@
    "blur_px": 12.0,
    "soften_px": 1.5,
    "gain": 2.0
+  },
+  "cindercub_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing ember eyes and ember lines (owner 25 Oct: embers are natural on fire creatures). The lines cover about 6% of the albedo, above the batch's 3% cap, so the rule was set by hand to the brightest, most saturated ember (0.9%); hue from 18 keeps it clear of Team Tether red.",
+   "model": "assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101.glb",
+   "hue": [
+    18,
+    45
+   ],
+   "sat_min": 0.85,
+   "lift": 0.2,
+   "blur_px": 12.0,
+   "soften_px": 1.5,
+   "gain": 2.0
+  },
+  "cliffspike_owner1101": {
+   "_why": "Owner-rule remake 1 Nov: glowing sky-blue eyes. The eyes are pale (saturation about 0.2), below the batch's saturation steps, so the rule was set by hand: low saturation floor with a brightness lift over the surroundings.",
+   "model": "assets/creatures/tetherbound/cliffspike/candidate_owner1101/models/creature_cliffspike_owner1101.glb",
+   "hue": [
+    170,
+    230
+   ],
+   "sat_min": 0.2,
+   "lift": 0.08,
+   "blur_px": 8.0,
+   "soften_px": 1.5,
+   "gain": 2.0
   }
  }
 }

@@ -21,10 +21,10 @@
   "steps": [
    "tools/art_pipeline/blender/prepare_remake_quadruped.py (dog3 rig and skin recipe; strip_ground_patch.auto)",
    "assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py (clips, unchanged)",
-   "no emission: no mask in the concept hue band",
+   "tools/art_pipeline/arc_emission.py",
    "embedded textures re-encoded JPEG q88; tools/art_pipeline/texture_import_policy.py --apply"
   ],
-  "commands": "blender --background --python tools/art_pipeline/blender/prepare_remake_quadruped.py -- assets/creatures/tetherbound/cindercub/candidate_owner1101/source/cindercub_a.glb rigged.glb prepare-report.json '{\"species\":\"cindercub\",\"height\":3.25}' ; blender --background --python assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py -- rigged.glb assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101.glb",
+  "commands": "blender --background --python tools/art_pipeline/blender/prepare_remake_quadruped.py -- assets/creatures/tetherbound/cindercub/candidate_owner1101/source/cindercub_a.glb rigged.glb prepare-report.json '{\"species\":\"cindercub\",\"height\":3.25}' ; blender --background --python assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py -- rigged.glb assets/creatures/tetherbound/cindercub/candidate_owner1101/models/creature_cindercub_owner1101.glb ; python3 tools/art_pipeline/arc_emission.py cindercub_owner1101",
   "report": "assets/creatures/tetherbound/cindercub/candidate_owner1101/source/prepare-report.json",
   "rig": {
    "skeleton": "dog3 15-bone quadruped",
@@ -58,7 +58,7 @@
     "ride"
    ]
   },
-  "emission_rule": null
+  "emission_rule": "data/creatures/arc_emission.json species.cindercub_owner1101 (set by hand)"
  },
  "flag": "data/config/creature_model_flags.json:remake_owner1101_cindercub",
  "test": "tests/test_creature_model_flags.gd"

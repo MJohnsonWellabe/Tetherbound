@@ -176,8 +176,11 @@ for role, frames, loop in [('idle', 72, True), ('walk', 40, True), ('run', 26, T
                 turn(n, [(-FWD * 14 * e, X), (10 * e, Z)])
         if role == 'faint':
             ph = min(1, t / .8); ph = ph * ph * (3 - 2 * ph)
+            # CPU F36 b2: 32 degrees per bone still read as standing; the column
+            # now folds over to lie along the ground beside the coil.
             for k, n in enumerate(names):
-                turn(n, [(FWD * (32 if k < 3 else 18) * ph, X), (8 * ph, Z)])
+                turn(n, [(FWD * (48 if k == 0 else 38 if k < 3 else 14) * ph, X), (14 * ph, Z)])
+            # No root turn: pitching the root tips the planted coil into the air.
         bpy.context.view_layer.update()
         rb = rig.pose.bones['root']; rb.location = bases['root'].inverted() @ Vector((0, 0, -low()))
         bpy.context.view_layer.update()
