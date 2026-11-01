@@ -1,5 +1,20 @@
 # CAUSE-POSES lane (creature hurt and faint poses, roster-wide) — READY
 
+## STOPPED (coordinator, owner direction, 1 Nov 2026 ~23:45 UTC): lane archived
+
+- **Final head:** the tip of `tb/cause-poses`, with `origin/main` merged in after #792. Everything is flag-off: `data/config/creature_pose_settle.json:enabled` is `false`, so the branch can land as is.
+- **Tests:** `test_cause_poses_settle` passes with the committed flags and with all 49 remakes ON. The related creature tests passed earlier in the lane.
+- **GPU hand-off:** `MANIFEST.json` group 5 (75 entries), judged with all remakes ON.
+- **What is in the arm:**
+  - a grounded faint re-centred over its shadow, with the trunk resting on the ground;
+  - a side-lie for mammals; a crumple onto the ground for winged, legless, shelled, many-legged, seal and amphibian shapes (owner);
+  - trunk levelling, head lift or drop, and a `play_faint` turn across the camera;
+  - a held hit recoil when a hit barely moves, and planted hits.
+- **Open:**
+  - Sirenseal and Torrentoad crouch rather than lie flat; Voltarach ends curled legs-up; Glimmermoth's wings stay up.
+  - Fulgocobra's hood is parked; Ribbonray is improved but not fixed.
+  - The faint-texture blotches were never reproduced on CPU.
+
 ## Round 5 (owner, 1 Nov 2026): crumple instead of lying on the side
 
 > Owner: "For these animals that are going to look odd on their sides, just have them crumple over for their faint. Some of the creatures shouldn't go on their sides when they faint. They should just collapse onto the ground."
