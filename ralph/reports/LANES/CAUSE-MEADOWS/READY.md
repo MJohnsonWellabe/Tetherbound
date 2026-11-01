@@ -1,5 +1,20 @@
 # Cause lane: Meadows light, atmosphere and ground (tb/cause-meadows)
 
+**STOP SUMMARY (1 Nov, ~23:45 UTC).** The cause has nothing more I can build without a render. The branch is based on tb/land-vis-2. #792 was still open at stop, so origin/main is not merged in yet; merge it after #792 lands.
+- **Built, all OFF:**
+  - `cause_light` (groups 1 and 2: light, grade, aerial fog, character and creature rim, foliage backlight);
+  - `cause_ground` (group 1: terrain macro, mip and grain; grass zones and drifts; viewport anisotropic filtering and mip bias);
+  - `capture_stands.json buried_stand_guard` (P2-014 Warrens stands).
+- **The manifest is the contract:** 207 entries.
+- **Open candidates, not built:**
+  - **Groves and woodland edges** need tree placements moved. That is a scatter rebake (terrain_playground.json fingerprints it), not a runtime flag.
+  - **Low-resolution village wall and roof textures:** if the GPU frames still read as smeared with `cause_ground` on, the source textures are the cause. Fixing them means new textures (reference plus Meshy, coordinator).
+  - **Terrain normal depth stays as it is:** that file records stronger normals blacking out the near ground.
+- **What to check first on GPU:**
+  - blown sunlit paths with `cause_light` on (lit faces are about 20% brighter);
+  - whether the cooler, weaker fill crushes shade on Compatibility; if it does, raise `times.day.environment.ambient_energy` 1.3 → 1.5.
+
+
 **Group 2 (1 Nov, ~23:30 UTC): cause_light r2.** Same flag, `data/config/meadows_look.json:cause_light.enabled`. It adds `cause_light.foliage`: the Meadows scatter leaves and flowers get backlight 0.45 instead of 0.28, for the "card-like trees". This is backlight only. A leaf rim would make `foliage_standard_shader.gd`'s converter refuse those materials, and that would drop them out of the fight foliage fade. MANIFEST repeats every cause_light entry as `group: 2`; capture them on this head. The foliage logic was run headless, and the test case is in `tests/test_meadows_cause_flags.gd`.
 
 
