@@ -359,6 +359,8 @@ func _play() -> void:
 		"arrival_prefix":
 			if not await _make_arrival_room(world):
 				return
+			if not await _revive_fainted(world):
+				return
 			helper_result = await script.Segment.new().run(self, world, game)
 		"named_detour", "named_capacitor_alpha", "named_hollows_alpha", "named_blackwater_elder", \
 				"named_old_rodfolk_hall_guardian", "named_glass_field_alpha":
@@ -759,4 +761,33 @@ func _make_arrival_room(world: Node3D) -> bool:
 	if int(free.call()) < 1:
 		failures.append("arrival_prefix: no leftover gathered material to make Satchel room for Stormglass")
 		return false
+	return true
+
+
+## f49_cr_07 leaves Cloudreach with four of the five fainted (0 HP) after
+## Veyra; the lone standing companion then carried every Stormwood fight and
+## lost on the Rodline road (1 Nov). A player revives first: each fainted
+## companion gets a carried revive through the Satchel's care picker
+## (meadows_earned_team_segment.care_existing), then a potion_large tops up any
+## companion under half HP. Uses only carried stock; disclosed.
+func _revive_fainted(world: Node3D) -> bool:
+	var party: RefCounted = game.get("party")
+	var team := load("res://tests/helpers/meadows_earned_team_segment.gd")
+	for index in int(party.call("size")):
+		var member: RefCounted = party.call("at", index)
+		if not bool(member.get("fainted")) and float(member.get("hp")) > 0.0: continue
+		if int(game.get("inventory").call("count", "revive")) <= 0:
+			failures.append("arrival_prefix: party row %d is fainted and no revive is carried" % index)
+			return false
+		var care: Dictionary = await team.new().care_existing(self, world, game, "revive", index)
+		if not bool(care.get("passed", false)):
+			failures.append("arrival_prefix: revive on party row %d failed: %s" % [index, str(care.get("failures", []))])
+			return false
+		disclosures.append("arrival_prefix: used a carried revive on fainted party row %d through the Satchel" % index)
+	for index in int(party.call("size")):
+		var member: RefCounted = party.call("at", index)
+		if float(member.get("hp")) >= 0.5 * float(member.get("max_hp")) or int(game.get("inventory").call("count", "potion_large")) <= 0: continue
+		var care: Dictionary = await team.new().care_existing(self, world, game, "potion_large", index)
+		if bool(care.get("passed", false)):
+			disclosures.append("arrival_prefix: used a carried potion_large on party row %d through the Satchel" % index)
 	return true
