@@ -554,6 +554,7 @@ func _run() -> void:
 				await travel.tap("menu_cancel")
 				for _i in 30: await process_frame
 				disclosures.append("Piece 07: the relic-power choice panel that opens after the Cloudreach relic is hung was dismissed with the ordinary menu_cancel press; no power was chosen")
+		if ok: ok = await _stormwood_deposit()
 		if ok: ok = await travel.enter("stormwood", "stormwood")
 		helper_summary["portal_leg"] = {"ok": ok, "failures": travel.failures.duplicate()}
 		for line: Variant in travel.failures:
@@ -793,3 +794,26 @@ func _release_world_input() -> void:
 		await portal.tap("menu_cancel")
 		for _i in 20: await process_frame
 	for _i in 30: await process_frame
+
+
+## Coordinator decision (a), 1 Nov: a four-chapter Satchel reaches Stormwood
+## full (arrival_prefix failed twice: Stormglass, then glowmoss). While home
+## for the relic, the player stores surplus in the homestead Storage Chest
+## through the production panel (homestead_common.storage_trip: builds/funds
+## the chest if absent, stores every stack not kept). Kept: tools, Home Key and
+## keys (the helper forces those), the large-potion healing stack, revives,
+## coin, the worn hide vest and the torch. Nothing is dropped. Disclosed.
+const STORMWOOD_KEEP := ["potion_large", "revive", "coin", "hide_vest", "torch"]
+
+func _stormwood_deposit() -> bool:
+	var world := current_scene as Node3D
+	var result: Dictionary = await load("res://tools/earned_saves/wip_fights/storage_trip.gd").new().run(
+		self, world, game, {"keep": STORMWOOD_KEEP, "return": false})
+	for row: Variant in result.get("receipts", result.get("transcript", [])):
+		if row is Dictionary and str((row as Dictionary).get("beat", "")) == "storage_trip":
+			disclosures.append("Piece 07: Storage Chest deposit before Stormwood (stored %s; kept %s; free slots %s)" % [
+				str(row.get("stored")), str(row.get("kept")), str(row.get("free_slots"))])
+	if not bool(result.get("passed", false)):
+		failures.append("Piece 07: Storage Chest deposit failed: " + str(result.get("failures", [])))
+		return false
+	return true
