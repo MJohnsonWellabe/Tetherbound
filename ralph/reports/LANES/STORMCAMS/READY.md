@@ -14,6 +14,13 @@
 - **Checks:** every test file touching a changed script passes with all flags OFF (328 tests at 16:10, plus the later focused reruns, 0 failed).
 - **Not attempted (other lanes or new art):** P2-087's stronghold grade itself, P2-044 (creatures), P2-092 (fight spacing), P2-109/P2-112/P2-089/P2-062 (mount and fight cameras).
 
+## Group 5 (owner priority 1 Nov: shared fixes first)
+| Item(s) | Flag | What it changes |
+|---|---|---|
+| SHARED-CAM-OCCLUSION (every biome) | `data/config/camera.json` `occlusion_fade.enabled` | Gameplay, fight and dialogue cameras fade rendered geometry between the subject's chest and the lens: meshes go 80% see-through, tall scatter instances (trees, canopies) hide, restored once they stop blocking. Arm length and stands unchanged, so the capture tools' stands are not moved. CPU: on the Old Mill approach the trunk that hid the trainer in main's GPU frame is gone. |
+| SHARED-STORMWOOD-LIGHT (all Stormwood stands) | `data/config/stormwood_look.json` `light_pass_1101.enabled` | One switch for the Stormwood light and atmosphere pass: cooler stronger key, fixed purple storm sky, depth fog and aerial perspective, ambient lift for storm fill, contrast, copper/glass specular, a cool rim light opposite the sun, a soft fill. CPU check running; added to the manifest once it reads. |
+| P2-059, P2-113 round 2 | `data/config/catching.json` `framed_camera.r2.enabled`, `data/config/hud.json` `message_clears_prompt.enabled` | Oblique catch resolve shot (pitch -30 -> -16, 7.2 m, fov 50); the verdict message hides the "Aim - N orbs" prompt instead of drawing over it. The judges' cyan ribbon reads as a real Meadows stream and the white blob as the orb's resting ring; neither is a camera fix, left. |
+
 ## Candidates on this branch (all flags OFF)
 | Item(s) | Flag | What it changes |
 |---|---|---|
