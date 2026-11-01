@@ -17,6 +17,13 @@
 
 Branch `tb/vis-ui-poses`. Coordinator update (1 Nov): no single-candidate READY lines; every candidate is listed in `MANIFEST.json` for the 18:00 UTC batch (tb/vis-batch1, all flags ON). Each flag is OFF on this branch and only touches its own keys.
 
+## Group 9: P2-004 exploration HUD, pad path (6.45 to 6.75)
+
+- **Flag:** `hud.json:quiet_empty_slots.enabled`.
+- **Change:** on the pad, an unassigned quick slot keeps its binding glyph, so all five bindings stay visible (hard rule). The glyph is drawn at 28 px and 0.4 alpha, so only assigned slots read bright. This is the judges' "replace the placeholder white hotbar glyphs".
+- **CPU Meadows pad HUD:** the three empty slots show small muted d-pad glyphs; the two filled slots are unchanged.
+- **Smoke:** `smoke_hud_presentation_lifecycle` PASS (70 checks).
+
 ## Group 8: P2-071 surface swimming trainer (5.20)
 
 - **Flag:** `human_swim_visual.json:uiposes_stroke_candidates`.

@@ -226,5 +226,14 @@
    "tidewake__swimming__surface_mid"
   ],
   "group": 8
+ },
+ {
+  "item": "P2-004",
+  "flag": "data/config/hud.json:quiet_empty_slots.enabled",
+  "camera_set": "pad",
+  "stands": [
+   "meadows__exploration_hud"
+  ],
+  "group": 9
  }
 ]
