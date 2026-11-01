@@ -17,12 +17,12 @@
       "merge": {
         "surfaces": {"water": {
           "shallow_colour": "#74c2b6", "mid_colour": "#2f8f9f", "mid_depth_m": 4.0, "depth_falloff": 16.0, "depth_band_break_m": 1.4,
-          "foam_depth": 0.5, "surf_strength": 1.0, "surf_depth_m": 1.0, "surf_breakup": 0.32, "surf_vary": 0.6,
+          "foam_depth": 0.5, "surf_strength": 0.8, "surf_depth_m": 0.6, "surf_breakup": 0.32, "surf_vary": 0.6,
           "haze_colour": "#a3c3ce", "haze_strength": 0.3, "haze_start_m": 140.0, "haze_full_m": 1600.0,
           "slick_colour": "#5c97a6", "slick_strength": 0.35, "slick_scale": 0.006, "slick_calm": 0.75,
           "cap_strength": 0.45, "cap_scale": 0.11, "cap_threshold": 0.5, "cap_far_m": 120.0
         }},
-        "offshore": {"deep_colour": "#15506c", "depth_start_m": 4.0, "depth_full_m": 42.0, "strength": 0.88, "variation_scale": 0.0055, "variation_strength": 0.3, "fresnel_multiplier": 0.18}
+        "offshore": {"deep_colour": "#124862", "depth_start_m": 3.0, "depth_full_m": 24.0, "strength": 0.88, "variation_scale": 0.0055, "variation_strength": 0.3, "fresnel_multiplier": 0.18}
       }
     },
     "light": {
@@ -37,11 +37,11 @@
       }
     },
     "dunes": {
-      "_comment": "Judges 1 Nov: sheet-like vertical dune walls; bare sand discs. Steep sand gets wind-scoured runnels and faint cross-bedding (coastal_rock_material flank/strata), level sand gets sparse low scrub and wrack stains (scrub), and the existing unjudged dressing candidates come into play: random-keep dune grass with wider bare gaps, pebbles grouped at the tide line, and the swim-lesson dune clusters.",
+      "_comment": "Judges 1 Nov: sheet-like vertical dune walls; bare sand discs. Steep sand gets wind-scoured runnels (coastal_rock_material flank; strata stays 0: CPU r2 read it as contour lines on gentle slopes), level sand gets sparse low scrub and wrack stains (scrub), and the existing unjudged dressing candidates come into play: random-keep dune grass with wider bare gaps, pebbles grouped at the tide line, and the swim-lesson dune clusters.",
       "enabled": false,
       "restore": ["dune_grass_candidate", "stones_candidate", "lesson_clusters_candidate"],
       "merge": {
-        "dunes": {"flank_strength": 0.35, "flank_scale": 0.3, "strata_strength": 0.1, "scrub_strength": 0.55, "scrub_scale": 0.06, "scrub_colour": "#7d7a5a", "face_shade_strength": 0.2}
+        "dunes": {"flank_strength": 0.3, "flank_scale": 0.3, "strata_strength": 0.0, "scrub_strength": 0.55, "scrub_scale": 0.06, "scrub_colour": "#7d7a5a", "face_shade_strength": 0.2}
       }
     }
   },

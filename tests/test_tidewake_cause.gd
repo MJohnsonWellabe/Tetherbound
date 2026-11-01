@@ -37,7 +37,7 @@ func test_sea_part_applies_its_water_and_offshore_keys() -> void:
 		assert_eq(water[key], wanted[key], "sea sets surfaces.water.%s" % key)
 	# The shipping surface keys the part does not name survive.
 	assert_eq(water.roughness, _raw().surfaces.water.roughness)
-	assert_eq(on.offshore.deep_colour, "#15506c")
+	assert_eq(on.offshore.deep_colour, "#124862")
 	assert_eq(on.offshore.specular, _raw().offshore.specular)
 	assert_false(on.has("cause_light_look"), "sea does not touch light")
 
@@ -55,7 +55,7 @@ func test_dunes_part_restores_dressing_and_sets_dune_form() -> void:
 	for section: String in ["dune_grass_candidate", "stones_candidate", "lesson_clusters_candidate"]:
 		assert_false(off.has(section), "%s is out of play while dunes is off" % section)
 		assert_true(on.has(section), "%s comes into play with dunes" % section)
-	assert_eq(float(on.dunes.flank_strength), 0.35)
+	assert_eq(float(on.dunes.flank_strength), 0.3)
 	assert_eq(on.dunes.sand_colour, off.dunes.sand_colour, "sand colour is kept")
 	assert_false(on.has("surfaces_candidate"), "unlisted sections stay off")
 
