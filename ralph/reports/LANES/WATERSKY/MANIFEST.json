@@ -186,5 +186,15 @@
       "water__sluice_isle__14__sluice_channel_bridge__route_day"
     ],
     "group": 2
+  },
+  {
+    "item": "P2-074",
+    "flag": "data/config/water_npc_posts_candidate.json:enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd -- --biome=water --seed=2042 --subset=water__inventory__character__water_nalia",
+    "stands": [
+      "water__inventory__character__water_nalia",
+      "water__inventory__character__water_nalia__dialogue"
+    ],
+    "group": 3
   }
 ]
