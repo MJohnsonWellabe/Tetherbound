@@ -11,6 +11,15 @@
 - Manifest: `MANIFEST.json`.
   - Group 1: light and dunes.
   - Group 2: sea (retuned after an elevated-view check) and the new currents part.
+  - Group 3: the horizon part.
+
+## Group 3 (1 Nov, 23:35 UTC)
+
+- **New part, `horizon`:** `cause_tidewake.horizon.enabled`, for "empty horizons".
+  - It places 8 rocky islets (the installed current-wake rock cluster, fitted to 28–52 m) and 6 distant sails (the moored sloop at 7 m) in deep open water 400–1900 m off the islands.
+  - Each seat was chosen from a heightfield sample with ground below −6 m. No colliders; presentation only.
+  - It feeds `water_landmark_models.gd` through a new `cause_horizon_props` list (one line).
+  - CPU: a sail shows on the First Shore horizon, and low islets show on the far horizon of the current-state views, receding in the light part's haze. No errors.
 
 ## Group 2 (1 Nov, 23:20 UTC)
 
