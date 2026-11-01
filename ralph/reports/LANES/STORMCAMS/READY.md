@@ -1,5 +1,20 @@
 # STORMCAMS lane (tb/vis-storm-cams): status
 
+## Summary for the 18:00 batch (1 Nov, 16:10 UTC)
+- **Criteria closed: zero.** Nothing here is judged; every candidate is flag-OFF on this branch and listed in `MANIFEST.json` (29 item/flag rows) for `tb/vis-batch1`.
+- **Biggest swings (CPU sanity only, no scores):**
+  - Dialogue camera (11 items): `twoshot_v2` + `speaker_light_candidate`. Every dialogue frame captured on CPU now frames its speaker medium-close beside the panel (Marrow, Nysa, Nerissa, Nalia, Bex, Irva, Kelm, Veyra, Solene, Hald, Quarry Foreman).
+  - P2-083/P2-081 Marrow: fixed in the dialogue capture fixture (always on): it stood the player on the forest floor 150 m under Marrow's Dynamo deck. **Both GPU arms must use this branch's `tools/phase2_capture_dialogue.gd`** or the Marrow frames are not comparable.
+  - P2-074 Nalia: authored spot is up a sand wall with no stand; placement candidate moves her to the flat below.
+  - P2-041 Crown Arch: the catalogue camera (and the road) saw the Meshy arch edge-on; round 2 turns it to face the road and it reads as an arch.
+  - P2-076 plaza paving around Kelm and Veyra (anchored on their runtime bodies; Veyra's on the measured summit floor).
+  - P2-046 bigger harvest heroes, distinct crown silhouette; P2-043 rock collars at the spike feet.
+  - P2-113/P2-059: existing never-judged `catching.json framed_camera` (no change here).
+- **Parked:** P2-070 Glass Sink material (fog sets the floor colour at that depth; needs basin geometry), P2-045 candy tiers (copies failed three ways).
+- **Composability:** flag keys are new blocks inside existing configs; code hunks are local (`conversation_camera.gd`, `cloudreach_world.gd` route-detail loop, Water NPC placement reads via one helper). No overlap found with tb/vis-water-sky's `cloudreach_world.gd` hunks.
+- **Checks:** 328 focused unit tests (every test file touching a changed script, incl. flag scopes) pass, 0 failed, with all flags OFF.
+- **Not in scope / not attempted:** P2-087's stronghold orange grade itself (only the push-in and speaker light reach it), P2-056, P2-044 (creature lane), P2-038, P2-092, P2-040.
+
 Lane scope: Stormwood (F41) scene/material/placement items and every dialogue-camera item; camera-class items.
 Hand-off per coordinator update (1 Nov): no single-candidate READY lines; every candidate is listed in `MANIFEST.json` with its flag (all default OFF on this branch) for the 18:00 UTC `tb/vis-batch1` build.
 
