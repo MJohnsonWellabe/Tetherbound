@@ -4,6 +4,7 @@ extends RefCounted
 ## itself keeps ownership of interaction and claims; only its visual is dressed.
 const CONFIG := "res://data/config/candy_pickup_presentation.json"
 const TIERS := preload("res://scripts/world/band_pickups.gd")
+const GROUNDING := preload("res://scripts/world/pickup_grounding.gd")
 const SKILL_CONFIG := "res://data/config/water_crafting.json"
 
 
@@ -19,6 +20,11 @@ static func apply(pickup: Node3D, item_id: String, definition: Dictionary, place
 	var badge := Color(str(definition.get("colour", "#ffffff")))
 	TIERS.dress(pickup, item_id, badge, TIERS.spin_phase_for(placement_id))
 	_regional_tier(pickup, item_id, badge, parsed.get("regional_tiers", {}))
+	# P2-045 tier silhouettes (pickup_grounding.json tier_candidate, OFF by
+	# default): copied only now, after the tier tint and ring are applied.
+	var visual: Variant = pickup.get("_visual")
+	if visual is Node3D:
+		GROUNDING.tier_cluster_dressed(pickup, visual as Node3D, item_id)
 
 
 ## P2-045 judge round 1: at regional camera distance Good and Great read as

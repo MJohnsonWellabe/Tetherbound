@@ -1112,7 +1112,14 @@ func _speaker_hidden_by_meshes(lens: Vector3, end: Vector3) -> bool:
 	var world := get_world_3d()
 	if world == null:
 		return false
+	var check_multimesh := bool(_talk_cfg.get("speaker_sight_multimesh", false))
 	for id: int in RenderingServer.instances_cull_ray(lens, end, world.scenario):
+		if check_multimesh:
+			var scatter := instance_from_id(id) as MultiMeshInstance3D
+			if scatter != null:
+				if _multimesh_blocks(scatter, lens, end):
+					return true
+				continue
 		var mesh_node := instance_from_id(id) as MeshInstance3D
 		if mesh_node == null or mesh_node.mesh == null or not mesh_node.is_visible_in_tree():
 			continue
@@ -1138,6 +1145,48 @@ func _speaker_hidden_by_meshes(lens: Vector3, end: Vector3) -> bool:
 			continue
 		var to_local := mesh_node.global_transform.affine_inverse()
 		if not tris.intersect_segment(to_local * lens, to_local * end).is_empty():
+			return true
+	return false
+
+
+## twoshot_v2 `speaker_sight_multimesh` (CPU r1, Fenn: the push-in stood behind
+## a scattered Stormwood trunk and framed bark). Scatter is MultiMesh, which
+## the per-mesh test above never sees. Tall, shadow-casting scatter only (trees
+## and boulders, not grass or flowers); each instance near the segment is
+## tested against its mesh's triangles.
+static var _scatter_tris: Dictionary = {}
+
+
+func _multimesh_blocks(scatter: MultiMeshInstance3D, lens: Vector3, end: Vector3) -> bool:
+	var mm := scatter.multimesh
+	if mm == null or mm.mesh == null or not scatter.is_visible_in_tree() \
+			or scatter.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF \
+			or scatter.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY:
+		return false
+	var box := mm.mesh.get_aabb()
+	if box.size.y < float(_talk_cfg.get("speaker_sight_multimesh_min_height_m", 2.5)):
+		return false
+	var key := mm.mesh.get_instance_id()
+	if not _scatter_tris.has(key):
+		_scatter_tris[key] = mm.mesh.generate_triangle_mesh()
+	var tris: TriangleMesh = _scatter_tris[key]
+	if tris == null:
+		return false
+	var to_local := scatter.global_transform.affine_inverse()
+	var a := to_local * lens
+	var b := to_local * end
+	var reach := box.size.length() * 0.5
+	var seg := b - a
+	var length_sq := maxf(seg.length_squared(), 0.0001)
+	var count := mm.visible_instance_count if mm.visible_instance_count >= 0 else mm.instance_count
+	for i in mini(count, 20000):
+		var xf := mm.get_instance_transform(i)
+		var scale := xf.basis.get_scale().length() / sqrt(3.0)
+		var t := clampf((xf.origin - a).dot(seg) / length_sq, 0.0, 1.0)
+		if (a + seg * t).distance_to(xf.origin + xf.basis * box.get_center()) > reach * scale:
+			continue
+		var inv := xf.affine_inverse()
+		if not tris.intersect_segment(inv * a, inv * b).is_empty():
 			return true
 	return false
 
@@ -1203,20 +1252,28 @@ func _swing_for_sight(shot: Dictionary, cfg: Dictionary, room: float,
 		trainer_anchor: Vector3, speaker_anchor: Vector3, forward: Vector3,
 		require_sight: bool = true, require_frame: bool = false) -> Dictionary:
 	var base_swing := float(cfg.get("shoulder_yaw_deg", 0.0))
-	for extra: float in CONVERSATION.swing_search(cfg):
-		if is_zero_approx(extra):
-			continue
-		var candidate := cfg.duplicate()
-		candidate["shoulder_yaw_deg"] = base_swing + extra
-		var probe := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, candidate, room)
-		var probe_room := _free_distance_behind(probe["pivot"], probe["dir"], float(probe["distance"]))
-		if probe_room < float(probe["distance"]) - 0.01:
-			continue
-		var visible := (not require_sight or _speaker_in_sight(probe, speaker_anchor)) \
-			and (not require_frame or _speaker_in_frame(probe, speaker_anchor))
-		if _camera_is_reachable(trainer_anchor, probe) and visible:
-			probe["fallback"] = bool(shot.get("fallback", false))
-			return probe
+	# twoshot_v2 `speaker_sight_multimesh` (CPU r2, Fenn beside a giant trunk):
+	# when no swing at the full arm sees the speaker, try shorter arms too,
+	# nearest-first, before giving up on the blocked shot.
+	var scales: Array = [1.0]
+	if bool(cfg.get("speaker_sight_multimesh", false)):
+		scales = cfg.get("speaker_sight_arm_scales", [1.0, 0.72, 0.5])
+	for arm_scale: Variant in scales:
+		for extra: float in CONVERSATION.swing_search(cfg):
+			if is_zero_approx(extra) and is_equal_approx(float(arm_scale), 1.0):
+				continue
+			var candidate := cfg.duplicate()
+			candidate["shoulder_yaw_deg"] = base_swing + extra
+			candidate["distance"] = float(cfg.get("distance", 3.5)) * float(arm_scale)
+			var probe := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, candidate, room)
+			var probe_room := _free_distance_behind(probe["pivot"], probe["dir"], float(probe["distance"]))
+			if probe_room < float(probe["distance"]) - 0.01:
+				continue
+			var visible := (not require_sight or _speaker_in_sight(probe, speaker_anchor)) \
+				and (not require_frame or _speaker_in_frame(probe, speaker_anchor))
+			if _camera_is_reachable(trainer_anchor, probe) and visible:
+				probe["fallback"] = bool(shot.get("fallback", false))
+				return probe
 	return shot
 
 
