@@ -1,0 +1,21 @@
+# Queue 63 (coordinator NOTE.md jobs 19 and 20, 31 Oct; both before HALL-1). High first, one boot per biome (arm_run groups).
+# Tree M = local c3bad166e = main ade041d97 + tb/world-fix-menu-text 305ac709c, menu_text_floors OFF (renders as main). Not pushed.
+#  19 DLG-2: one arm, M with tools/phase2_capture_dialogue.gd from tb/world-fix-dialogue-capture c718cf325 (a tool change only);
+#     dialogue frames of P2-073, P2-074, P2-076, P2-083, P2-081, P2-087. Judged one-sided: the new score of record.
+#  20 MENU-1: ctl = M, cand = M with menu.json from local 3697edaa0 (only menu_text_floors.enabled flipped to true, text edit);
+#     the UI-PAD frames (P2-001, P2-004, P2-007, P2-031, P2-032), --gamepad.
+param([switch] $DryRun)
+$arm = "D:\tb-gpu-runs\tools\arm_run.ps1"
+$env:TB_GRADE_VARIANT = ""; $env:TB_FORCE_MATTE = ""; $env:TB_NL_OUT = ""; $env:TB_RUN_TIMEOUT_MIN = "30"
+$tree = "c3bad166e88b38a8d743e9e0b464ee10c17b022e"
+$dlg = "c718cf325ad0"; $dlg = (git -C D:\tb-gpu-pass rev-parse $dlg).Trim()
+$on = "3697edaa0e2faa9fb92c372d259a0197986b9d15"
+"== queue63 start $(Get-Date -Format 'dd MMM HH:mm')"
+if (-not (Test-Path "D:\tb-gpu-runs\arms\DLG2\_done")) {
+    & $arm -Job DLG2 -Items "P2-073", "P2-074", "P2-076", "P2-083", "P2-081", "P2-087" -Arms "dlg2=$tree|@$($dlg):tools/phase2_capture_dialogue.gd" -DryRun:$DryRun
+}
+if (-not (Test-Path "D:\tb-gpu-runs\arms\MENU1\_done")) {
+    & $arm -Job MENU1 -Items "P2-001", "P2-004", "P2-007", "P2-031", "P2-032" -Extra "--gamepad" `
+        -Arms "ctl=$tree", "cand=$tree|@$($on):data/config/menu.json" -DryRun:$DryRun
+}
+"queue63 done $(Get-Date -Format 'dd MMM HH:mm')"

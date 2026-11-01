@@ -1,0 +1,52 @@
+"""Match a catalogue frame id to a re-shot image file (shared by is_resolve.py and arm_resolve.py; local GPU-pass helper).
+
+Frame ids are '<biome>__[<category>__]<stem>'. The phase-2 tools write '<stem>.png|jpg', sometimes without the biome/category prefix,
+sometimes with a numeric prefix ('01-launch'), and fight tools write times with a dot ('t-023.02') where the ids use an underscore.
+"""
+import os
+import re
+
+
+def images(folder):
+    out = {}
+    for r, _, fs in os.walk(folder):
+        for f in fs:
+            if f.lower().endswith((".png", ".jpg")):
+                out[os.path.splitext(f)[0]] = os.path.join(r, f)
+    return out
+
+
+def match(fid, imgs):
+    """Return (path or None, rule) for frame id fid among imgs {stem: path}."""
+    segs = fid.split("__")
+    cands = [fid] + ["__".join(segs[k:]) for k in range(1, len(segs))]
+    cands += [re.sub(r"_(\d+)$", r".\1", c) for c in cands]
+    hit = next((imgs[c] for c in cands if c in imgs), None)
+    if hit:
+        return hit, "exact"
+    # The tool's own biome name can differ from the catalogue's (Tidewake ids 'tidewake__...', files 'water__...'):
+    # the same id after the first segment, unique.
+    tail = "__".join(segs[1:])
+    alias = [p for s, p in imgs.items() if "__" in s and s.split("__", 1)[1] == tail]
+    if tail and len(alias) == 1:
+        return alias[0], "biome-alias"
+    last = segs[-1]
+    m = [p for s, p in imgs.items() if s.endswith("-" + last) or s.endswith("_" + last)]
+    if len(m) == 1:
+        return m[0], "suffix"
+    # Same event label, nearest time within 0.5 s (fight frame times jitter by a frame or two). Seconds look like
+    # 't-023_02'; integer stamps like 'live-2430' are physics frames, so allow 30 of them (0.5 s at 60 Hz).
+    t = re.fullmatch(r"(.*)-(\d+)(?:[._](\d+))?", last)
+    if t:
+        secs = t.group(3) is not None
+        want = float(f"{t.group(2)}.{t.group(3)}") if secs else float(t.group(2))
+        tol = 0.5 if secs else 30
+        pat = re.escape(t.group(1)) + (r"-(\d+\.\d+)" if secs else r"-(\d+)")
+        near = []
+        for s, p in imgs.items():
+            u = re.fullmatch(pat, s)
+            if u and abs(float(u.group(1)) - want) <= tol:
+                near.append((abs(float(u.group(1)) - want), p))
+        if near:
+            return min(near)[1], "nearest"
+    return None, None

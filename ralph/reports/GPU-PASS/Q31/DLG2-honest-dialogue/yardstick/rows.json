@@ -1,0 +1,278 @@
+[
+ {
+  "batch": 1,
+  "code": "An",
+  "label": "DLG2 P2-073 High one-sided",
+  "side": "P2-073-dlg2-High",
+  "mapped": 6.83,
+  "judges": [
+   6.77,
+   6.86,
+   6.86
+  ],
+  "defects": [
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "An",
+  "label": "DLG2 P2-073 High one-sided",
+  "side": "P2-073-dlg2-High",
+  "mapped": 6.83,
+  "judges": [
+   6.77,
+   6.86,
+   6.86
+  ],
+  "defects": [
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "PARTIAL"
+   },
+   {
+    "At many named conversations the speaker is small and distant in a wide third-person view, leaving the dialogue panel detached from its speaker": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Yv",
+  "label": "DLG2 P2-081 High one-sided",
+  "side": "P2-081-dlg2-High",
+  "mapped": 6.62,
+  "judges": [
+   6.6,
+   6.42,
+   6.86
+  ],
+  "defects": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Yv",
+  "label": "DLG2 P2-081 High one-sided",
+  "side": "P2-081-dlg2-High",
+  "mapped": 6.62,
+  "judges": [
+   6.6,
+   6.42,
+   6.86
+  ],
+  "defects": [
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   },
+   {
+    "Every captured named trainer conversation repeats the same generic line and shows no portrait": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Kr",
+  "label": "DLG2 P2-083 High one-sided",
+  "side": "P2-083-dlg2-High",
+  "mapped": 5.52,
+  "judges": [
+   5.64,
+   5.55,
+   5.37
+  ],
+  "defects": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Kr",
+  "label": "DLG2 P2-083 High one-sided",
+  "side": "P2-083-dlg2-High",
+  "mapped": 5.52,
+  "judges": [
+   5.64,
+   5.55,
+   5.37
+  ],
+  "defects": [
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+   },
+   {
+    "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames": "PRESENT"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Sz",
+  "label": "DLG2 P2-087 High one-sided",
+  "side": "P2-087-dlg2-High",
+  "mapped": 6.94,
+  "judges": [
+   6.94,
+   6.77,
+   7.12
+  ],
+  "defects": [
+   {
+    "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+   },
+   {
+    "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+   },
+   {
+    "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Sz",
+  "label": "DLG2 P2-087 High one-sided",
+  "side": "P2-087-dlg2-High",
+  "mapped": 6.94,
+  "judges": [
+   6.94,
+   6.77,
+   7.12
+  ],
+  "defects": [
+   {
+    "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+   },
+   {
+    "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+   },
+   {
+    "Several named trainer dialogue views show only the player and terrain with no speaker visible": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ul",
+  "label": "DLG2 P2-076 High one-sided",
+  "side": "P2-076-dlg2-High",
+  "mapped": 6.92,
+  "judges": [
+   7.12,
+   6.6,
+   7.03
+  ],
+  "defects": [
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Ul",
+  "label": "DLG2 P2-076 High one-sided",
+  "side": "P2-076-dlg2-High",
+  "mapped": 6.92,
+  "judges": [
+   7.12,
+   6.6,
+   7.03
+  ],
+  "defects": [
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   },
+   {
+    "Named speaker is absent from the visible world view while the portrait and dialogue line remain on screen": "FIXED"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Wp",
+  "label": "DLG2 P2-074 High one-sided",
+  "side": "P2-074-dlg2-High",
+  "mapped": 5.78,
+  "judges": [
+   5.81,
+   5.64,
+   5.9
+  ],
+  "defects": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ]
+ },
+ {
+  "batch": 1,
+  "code": "Wp",
+  "label": "DLG2 P2-074 High one-sided",
+  "side": "P2-074-dlg2-High",
+  "mapped": 5.78,
+  "judges": [
+   5.81,
+   5.64,
+   5.9
+  ],
+  "defects": [
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   },
+   {
+    "Several named conversations show no identifiable speaker near the dialogue panel": "PARTIAL"
+   }
+  ]
+ }
+]
