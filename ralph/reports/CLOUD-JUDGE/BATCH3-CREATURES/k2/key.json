@@ -1,0 +1,59 @@
+{
+ "Sa": {
+  "anchor": true,
+  "A": "f04_6_r22:r22",
+  "B": "f04_6_r22:control"
+ },
+ "Ly": {
+  "anchor": false,
+  "label": "F36-riverdrake",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/rm/riverdrake_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/rm/riverdrake_main.jpg"
+ },
+ "Os": {
+  "anchor": true,
+  "A": "f36_0_npc:C4B",
+  "B": "f36_0_npc:C4A"
+ },
+ "Ml": {
+  "anchor": false,
+  "label": "F36-cannonback",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/rm/cannonback_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/rm/cannonback_main.jpg"
+ },
+ "Jg": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Cp": {
+  "anchor": false,
+  "label": "F36-brooktail",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/rm/brooktail_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/rm/brooktail_main.jpg"
+ },
+ "Vx": {
+  "anchor": false,
+  "label": "F36-mirejaw",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/rm/mirejaw_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/rm/mirejaw_main.jpg"
+ },
+ "Aj": {
+  "anchor": false,
+  "label": "F36-veridian",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/rm/veridian_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/rm/veridian_cand.jpg"
+ },
+ "Ay": {
+  "anchor": false,
+  "label": "F36-galewisp",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/rm/galewisp_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/rm/galewisp_main.jpg"
+ },
+ "Jn": {
+  "anchor": false,
+  "label": "F36-bramblebun",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/rm/bramblebun_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/e6039919-d431-5c01-b816-990ebb97933e/scratchpad/rm/bramblebun_main.jpg"
+ }
+}

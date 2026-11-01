@@ -1,0 +1,266 @@
+{
+ "bar": 7.0,
+ "fit": {
+  "n_points": 6,
+  "pearson_r": 0.8437,
+  "least_squares_slope": 1.1853,
+  "method": "linear",
+  "slope": 1.1853,
+  "intercept": -0.8919,
+  "fallback_reason": null
+ },
+ "anchor_rmse": 0.546,
+ "top_anchor_reference": 7.17,
+ "confirming_batch": false,
+ "anchors": {
+  "f10_2_r3_capacitor:control": {
+   "measured": 4.733,
+   "reference": 4.0,
+   "mapped": 4.718,
+   "residual": -0.718
+  },
+  "f10_2_r3_capacitor:candidate_r3": {
+   "measured": 5.433,
+   "reference": 6.53,
+   "mapped": 5.548,
+   "residual": 0.982
+  },
+  "f36_0_gap:C4A": {
+   "measured": 6.9,
+   "reference": 6.77,
+   "mapped": 7.287,
+   "residual": -0.517
+  },
+  "f36_0_gap:C4B": {
+   "measured": 6.633,
+   "reference": 7.17,
+   "mapped": 6.97,
+   "residual": 0.2
+  },
+  "f36_0_npc:C7B": {
+   "measured": 5.733,
+   "reference": 5.97,
+   "mapped": 5.904,
+   "residual": 0.066
+  },
+  "f36_0_npc:C7A": {
+   "measured": 5.8,
+   "reference": 5.97,
+   "mapped": 5.983,
+   "residual": -0.013
+  }
+ },
+ "candidates": {
+  "F36-solmane main": {
+   "measured_mean": 6.667,
+   "mapped_mean": 7.01,
+   "mapped_judges": [
+    6.93,
+    7.17,
+    6.93
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "F36-solmane cand": {
+   "measured_mean": 6.933,
+   "mapped_mean": 7.33,
+   "mapped_judges": [
+    7.29,
+    7.41,
+    7.29
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F36-fulgocobra main": {
+   "measured_mean": 6.367,
+   "mapped_mean": 6.65,
+   "mapped_judges": [
+    6.46,
+    6.81,
+    6.69
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36-fulgocobra cand": {
+   "measured_mean": 6.467,
+   "mapped_mean": 6.77,
+   "mapped_judges": [
+    6.58,
+    6.93,
+    6.81
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36-terrapup main": {
+   "measured_mean": 6.4,
+   "mapped_mean": 6.69,
+   "mapped_judges": [
+    6.69,
+    6.58,
+    6.81
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36-terrapup cand": {
+   "measured_mean": 6.133,
+   "mapped_mean": 6.38,
+   "mapped_judges": [
+    6.22,
+    5.75,
+    7.17
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36-voltarach main": {
+   "measured_mean": 6.633,
+   "mapped_mean": 6.97,
+   "mapped_judges": [
+    6.81,
+    7.17,
+    6.93
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36-voltarach cand": {
+   "measured_mean": 6.6,
+   "mapped_mean": 6.93,
+   "mapped_judges": [
+    6.69,
+    7.41,
+    6.69
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36-trailpup cand": {
+   "measured_mean": 6.667,
+   "mapped_mean": 7.01,
+   "mapped_judges": [
+    6.93,
+    7.05,
+    7.05
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "F36-trailpup main": {
+   "measured_mean": 6.933,
+   "mapped_mean": 7.33,
+   "mapped_judges": [
+    7.29,
+    7.29,
+    7.41
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F36-pipwing main": {
+   "measured_mean": 6.433,
+   "mapped_mean": 6.73,
+   "mapped_judges": [
+    7.05,
+    6.34,
+    6.81
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36-pipwing cand": {
+   "measured_mean": 6.667,
+   "mapped_mean": 7.01,
+   "mapped_judges": [
+    6.81,
+    6.81,
+    7.41
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": true
+  },
+  "F36-abyssal_guardian main": {
+   "measured_mean": 6.5,
+   "mapped_mean": 6.81,
+   "mapped_judges": [
+    6.69,
+    6.93,
+    6.81
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36-abyssal_guardian cand": {
+   "measured_mean": 6.5,
+   "mapped_mean": 6.81,
+   "mapped_judges": [
+    6.69,
+    6.93,
+    6.81
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": false,
+   "meets_bar": false
+  },
+  "F36-mudsnout cand": {
+   "measured_mean": 6.933,
+   "mapped_mean": 7.33,
+   "mapped_judges": [
+    7.52,
+    7.41,
+    7.05
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  },
+  "F36-mudsnout main": {
+   "measured_mean": 6.933,
+   "mapped_mean": 7.33,
+   "mapped_judges": [
+    7.29,
+    7.17,
+    7.52
+   ],
+   "clamped": false,
+   "outside_anchor_range": false,
+   "above_top_anchor": true,
+   "meets_bar": true
+  }
+ },
+ "warnings": [
+  "meets the bar only above the top anchor (7.17): F36-mudsnout cand, F36-mudsnout main, F36-solmane cand, F36-trailpup main; extrapolated, confirm in a batch whose anchors reach at least 7.35 (anchor_tiles.py --include craft or --include f36_0_npc:C1)"
+ ]
+}

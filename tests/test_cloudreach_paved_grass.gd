@@ -7,8 +7,9 @@ const PAVED := preload("res://scripts/world/cloudreach_paved_grass.gd")
 const GROUNDING := preload("res://scripts/world/cloudreach_grounding.gd")
 
 
-func test_flag_defaults_off() -> void:
-	assert_false(bool(GROUNDING.read_config().get("clear_paved_grass", true)))
+func test_flag_ships_on() -> void:
+	assert_true(bool(GROUNDING.read_config().get("clear_paved_grass", false)),
+		"clear_paved_grass ships ON: cloud yardstick 1 Nov batch-3, P2-025 5.75 -> 6.22")
 
 
 func test_paved_top_covers_only_tufts_on_or_through_it() -> void:

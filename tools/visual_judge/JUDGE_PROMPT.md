@@ -79,11 +79,16 @@ WHAT THE ART DIRECTION ASKS FOR
   unrelated asset packs.
 - Creatures are the highest-contrast subjects: instantly readable
   silhouettes with a visible face and eyes, values that separate from the
-  ground, and rim-lit materials. The owner's creature style is the
-  naturalistic one: grounded anatomy and real fur, feather, scale and plate
-  detail are on-style. Do not mark a creature down for being naturalistic
-  rather than cartoon-like; judge how well it reads, lights, poses and sits
-  in the scene. Every creature stands taller than the 1.80 m human
+  ground, and rim-lit materials. The owner's creature style is realistic
+  animals with fantasy elements: a believable adult animal (grounded
+  anatomy, real fur, feather and scale detail) carrying one elemental
+  trait, such as glowing eyes, glowing lines, veins or spots in its
+  element, or partial natural plates of stone or bark. That combination is
+  the target. Do not mark a creature down for being realistic, or for
+  carrying fantasy elements; judge whether those elements read clearly and
+  sit naturally on the animal, and how well the creature reads, lights,
+  poses and sits in the scene. Cartoon, chibi or mascot styling is off the
+  target. Every creature stands taller than the 1.80 m human
   trainer. Hurt and faint poses read without a label and stay grounded.
 - One coherent nature family, one village/architecture family, one prop
   family. Vegetation forms groves, edges and clearings, never a uniform carpet.

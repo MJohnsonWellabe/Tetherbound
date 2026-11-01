@@ -1,9 +1,10 @@
 extends "res://tests/test_case.gd"
 
 ## Owner-picked creature remakes (1 Nov 2026) ship behind named flags in
-## data/config/creature_model_flags.json, OFF by default. Every flag must leave
-## the installed model in place while off, swap the species' model when on, and
-## point at a model that plays every gameplay clip the installed one did.
+## data/config/creature_model_flags.json. Owner, 1 Nov 2026: "Turn on all the
+## remake creatures", so every flag ships ON and its model is the live one. Each
+## flag must swap the species' model, keep it taller than the trainer, never
+## shrink it, and point at a model that plays every gameplay clip.
 
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const TRAINER_HEIGHT := 1.80
@@ -39,14 +40,24 @@ func _clip_names(model_path: String) -> PackedStringArray:
 	return names
 
 
-func test_every_model_flag_is_off_and_leaves_the_installed_model() -> void:
+func test_every_owner_remake_ships_on_and_is_the_live_model() -> void:
 	var flags := _flags()
 	assert_true(not flags.is_empty(), "at least one model flag")
 	for flag: String in flags:
-		assert_false(bool(flags[flag].get("enabled", true)), "%s ships OFF" % flag)
+		assert_true(bool(flags[flag].get("enabled", false)), "%s ships ON (owner, 1 Nov 2026)" % flag)
 		for id: String in flags[flag].species:
 			var live := str(SPECIES.placeholder(id).get("model", ""))
-			assert_ne(live, str(flags[flag].species[id].model), "%s: %s keeps its installed model" % [flag, id])
+			assert_eq(live, str(flags[flag].species[id].model), "%s: %s plays the remake" % [flag, id])
+
+
+func test_a_disabled_flag_changes_nothing() -> void:
+	var flags := _flags()
+	for flag: String in flags:
+		var entry: Dictionary = (flags[flag] as Dictionary).duplicate(true)
+		entry.enabled = false
+		var rows := installed.duplicate(true)
+		SPECIES.merge_model_flags(rows, {flag: entry})
+		assert_eq(JSON.stringify(rows), JSON.stringify(installed), "%s OFF changes nothing" % flag)
 
 
 func test_an_enabled_flag_swaps_the_model_and_keeps_every_clip() -> void:
