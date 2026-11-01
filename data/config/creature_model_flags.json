@@ -284,6 +284,24 @@
      }
     }
    }
+  },
+  "remake_owner1101_skyrill": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Skyrill, a flying-squirrel glider with wide gliding membranes, sandy brown fur (Meshy 01a197ee-c4be-77b8-b29c-e2f42ec62ab5). No baked ground patch. rig_glider.py biped-glider rig (15 bones) and animate_quadruped.py glider clips (six) at the established 3.25 m; emission on the sky-blue eyes. Provenance: assets/creatures/tetherbound/skyrill/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "skyrill": {
+     "model": "res://assets/creatures/tetherbound/skyrill/candidate_owner1101/models/creature_skyrill_owner1101.glb",
+     "colourway_source_species": "skyrill_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
   }
  }
 }
