@@ -1,0 +1,121 @@
+{
+  "_comment": "Cause lane tb/cause-cloudreach (owner 1 Nov 2026: raise every F40 item by fixing shared causes). Four presentation-only parts, each OFF by default and switched independently: pale_strata (cliff/rock material), cloud_sea (cloud below the plateau edges, never cards on the meadow), light_grade (bright sky, pale stone, depth haze) and meadow_groves (break the uniform grass carpet into groves, clearings and outcrops). Read by scripts/world/cloudreach_cause.gd. No collider, route, save, RPC or creature change; every peer rebuilds the same dressing. Each part composes with the other lanes' flags: it merges LAST over cloudreach_visual.json, the F40 visual/items overlays and settlement life. Preview without editing this file: --cloudreach-cause-candidate (all parts) or --cloudreach-cause-<part> (one part, e.g. --cloudreach-cause-pale_strata).",
+  "schema_version": 1,
+  "_enabled_note": "Master switch: true turns on all four parts together (the GPU arm). Each part also has its own enabled key for a per-part arm.",
+  "enabled": false,
+  "pale_strata": {
+    "_why": "1 Nov GPU judges, many F40 items: 'huge flat untextured brown cliff masses', 'rusty ruined pillars clash with the pale stone'. The Sky Aviary board's cliffs are pale warm-grey limestone with vertical jointing and visible beds. Retints the shared geology (cliff walls, crown banks, rock sections, buttresses, distant spires) to pale warm stone, turns on the existing F26 metre-scale course surface (desaturated Rock030 grain, interrupted beds, tangent-only relief; shader globals, Compatibility-safe, no extra texture fetches) and pales the rusty #906955 'stone' and routes installed boulders onto the same shared geology. Pale but never white: stone_light stays near Rec.709 0.75 albedo.",
+    "enabled": false,
+    "visual": {
+      "geology": {
+        "stone_light": "#cbc4b3",
+        "stone_dark": "#7f7a6d",
+        "strata_ochre_tint": "#b09a76",
+        "strata_ochre_strength": 0.26,
+        "strata_strength": 0.22,
+        "strata_period_m": 6.5,
+        "ledge_moss_tint": "#5f7a40",
+        "ledge_moss_strength": 0.55,
+        "ledge_lighten": 0.12,
+        "crevice_strength": 0.32,
+        "crevice_scale": 0.11,
+        "normal_scale": 0.16,
+        "texture_scale": 0.08,
+        "rock_sections": {
+          "limestone_buttress_tint": "#b8b0a0",
+          "limestone_strata_strength": 0.75,
+          "haze_near_blend": 0.22,
+          "haze_far_blend": 0.4
+        }
+      },
+      "distant_relief": {
+        "haze_near_colour": "#b3b1a9",
+        "haze_far_colour": "#bcc2c4"
+      }
+    },
+    "rock_surface": {
+      "texture_scale": 0.3,
+      "course_height_m": 3.6,
+      "joint_strength": 0.26,
+      "joint_width_m": 0.08,
+      "course_warp_m": 0.9,
+      "stain_strength": 0.14,
+      "normal_strength": 0.3,
+      "texture_contrast": 0.3
+    },
+    "materials": {
+      "stone": "#b2aa99",
+      "stone_light": "#d2cab8",
+      "cliff_shadow": "#6e685d"
+    }
+  },
+  "cloud_sea": {
+    "_why": "1 Nov GPU judges: 'cloud banks standing on the grass horizon like cards'; the board's cloud sea is bright cumulus just below the plateau rims. (1) Every settlement cloud-ring card whose footprint meets walkable ground is pushed outward from its ring centre until it is over open air, then dropped below the rim it stood on; a card that finds no open air within max_push_m is hidden (the grounding pass's 1 Nov hide-only arm also removed good banks behind plateaus; this keeps them, below the rim). (2) The procedural cloud deck rises closer under the rims and turns from a grey-blue band into lit cloud with a cooler base, so the drop reads as a cloud sea.",
+    "enabled": false,
+    "card_clear_m": 30.0,
+    "push_step_m": 40.0,
+    "max_push_m": 640.0,
+    "drop_below_rim_m": [22.0, 60.0],
+    "visual": {
+      "cloud_sea": {
+        "drop_below_tier_m": 130.0,
+        "min_clearance_m": 60.0,
+        "upper_deck_offset_m": 45.0,
+        "lower_deck_offset_m": 240.0,
+        "billow_bank_count": 150,
+        "deck_colour": "#b9c9d6",
+        "deck_far_colour": "#7f97ab",
+        "billow_colour": "#e9eef3",
+        "billow_base_colour": "#8095aa"
+      }
+    }
+  },
+  "light_grade": {
+    "_why": "1 Nov GPU judges: 'flat noon light'. ART_DIRECTION Cloudreach: clear high blue, crisp warm stone/cool sky, haze separating stacked shelves, pale rock never white washout. Lower warmer sun for modelled faces, deeper blue zenith with a pale horizon, cooler ambient, a touch of contrast, and aerial haze that grows with distance so far shelves step back. Applied over this realm's own copy of the time presets after cloudreach_visual.json and the light candidate, before the (off) biome-look rig. Night is untouched.",
+    "enabled": false,
+    "time_overrides": {
+      "day": {
+        "sun": {"pitch_deg": -34.0, "yaw_deg": 128.0, "energy": 1.65, "colour": "#ffeccf"},
+        "sky": {"top_colour": "#3f78b3", "horizon_colour": "#c3d4dc", "ground_horizon_colour": "#c3d4dc", "horizon_haze_colour": "#c6d6de", "cloud_lit": "#fffaf0", "cloud_shade": "#9fb2c6"},
+        "environment": {"exposure": 0.64, "ambient_energy": 1.55, "ambient_colour": "#97aecb", "fog_colour": "#c3d4dc", "fog_density": 0.0008, "fog_sky_affect": 0.12, "aerial_perspective": 0.85, "aerial_fade_colour": "#a7bccb", "adjustment_enabled": true, "adjustment_contrast": 1.08, "adjustment_saturation": 1.0}
+      },
+      "golden": {
+        "environment": {"fog_density": 0.0008, "aerial_perspective": 0.8}
+      },
+      "dawn": {
+        "environment": {"fog_density": 0.0008, "aerial_perspective": 0.8}
+      }
+    }
+  },
+  "meadow_groves": {
+    "_why": "1 Nov GPU judges: 'uniform grass carpet of identical blades' (P2-021 'flat uniform lawn'). After every grass pass, a world-space field (about 90 m features) sorts the turf into meadow, groves and clearings: clearings keep short, thinner grass; grove cores get clumps of installed CommonTree/Bush pieces with longer grass at their fringe; a second field places installed Rock_Medium outcrops with the grass cleared beneath. Routes, settlements, landmark vistas and cover exclusions stay clear. One pass at build over the tuft buffers; no per-frame work.",
+    "enabled": false,
+    "seed": 40111,
+    "field_frequency": 0.011,
+    "outcrop_frequency": 0.019,
+    "clearing_below": -0.28,
+    "clearing_band": 0.14,
+    "grove_above": 0.34,
+    "grove_band": 0.12,
+    "clearing_height": 0.5,
+    "clearing_keep": 0.6,
+    "fringe_height": 1.3,
+    "site_spacing_m": 22.0,
+    "grove_site_chance": 0.55,
+    "trees_per_grove": [3, 6],
+    "bushes_per_grove": [2, 4],
+    "grove_radius_m": 9.0,
+    "tree_scale": [0.9, 1.45],
+    "bush_scale": [1.1, 1.8],
+    "outcrop_above": 0.52,
+    "outcrop_site_chance": 0.5,
+    "rocks_per_outcrop": [2, 4],
+    "rock_scale": [1.6, 3.6],
+    "rock_embed": 0.5,
+    "outcrop_clear_m": 3.5,
+    "route_clear_m": 6.0,
+    "max_groves": 260,
+    "max_outcrops": 200,
+    "visible_m": 950.0
+  }
+}
