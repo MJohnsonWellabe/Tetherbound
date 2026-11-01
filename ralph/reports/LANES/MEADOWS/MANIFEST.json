@@ -1,0 +1,212 @@
+[
+  {
+    "item": "F17#6",
+    "flag": "data/config/crossing_hall.json:hall_2.enabled",
+    "camera_set": "F17-6",
+    "stands": [
+      "hall-approach_day_clear",
+      "hall-approach_night_clear",
+      "nave-forward_day_clear",
+      "nave-forward_night_clear",
+      "nave-forward_day_rain",
+      "nave-arches-left_day_clear",
+      "nave-arches-left_night_clear",
+      "nave-arches-right_day_clear",
+      "nave-arches-right_night_clear",
+      "nave-reverse_day_clear",
+      "nave-reverse_night_clear",
+      "shrine-pedestals_day_clear",
+      "shrine-pedestals_night_clear",
+      "shrine-pedestals-reverse_day_clear",
+      "shrine-pedestals-reverse_night_clear"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-003",
+    "flag": "data/config/stronghold.json:p2_003_candidate.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd",
+    "stands": [
+      "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach",
+      "meadows__band5_stronghold_approach__09__stronghold_approach__day__close",
+      "meadows__band5_stronghold_approach__09__stronghold_approach__night__approach",
+      "meadows__band5_stronghold_approach__09__stronghold_approach__night__close",
+      "meadows__band5_stronghold_approach__09__stronghold_approach__route_day",
+      "meadows__band5_stronghold_approach__09__stronghold_approach__vista_dusk",
+      "meadows__band5_stronghold_approach__10__meadows_hall__day__approach",
+      "meadows__band5_stronghold_approach__10__meadows_hall__day__close",
+      "meadows__band5_stronghold_approach__10__meadows_hall__night__approach",
+      "meadows__band5_stronghold_approach__10__meadows_hall__night__close"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-005",
+    "flag": "data/config/grass_field.json:meadows_ground_candidate.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd",
+    "stands": [
+      "meadows__band1_lower_meadows__01__grandpas_village__route_day",
+      "meadows__band1_lower_meadows__02__the_south_bridge__route_day",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day",
+      "meadows__band3_the_river_lock__05__the_tether_relay__route_day",
+      "meadows__band3_the_river_lock__06__old_mill_crossing__route_day",
+      "meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__route_day",
+      "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__route_day",
+      "meadows__band5_stronghold_approach__09__stronghold_approach__route_day",
+      "meadows__band1_lower_meadows__01__grandpas_village__walk_01_day",
+      "meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__walk_01_day",
+      "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__walk_01_day",
+      "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-006",
+    "flag": "data/config/water.json:river.surface_candidate.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd",
+    "stands": [
+      "meadows__band3_the_river_lock__06__old_mill_crossing__day__approach",
+      "meadows__band3_the_river_lock__06__old_mill_crossing__day__close",
+      "meadows__band3_the_river_lock__06__old_mill_crossing__night__approach",
+      "meadows__band3_the_river_lock__06__old_mill_crossing__night__close",
+      "meadows__band3_the_river_lock__06__old_mill_crossing__route_day",
+      "meadows__band3_the_river_lock__06__old_mill_crossing__vista_dusk"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-012",
+    "flag": "data/config/burrow_warrens.json:bank.hill_shell.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd",
+    "stands": [
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__day__approach",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__day__close",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__night__approach",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__night__close",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__vista_dusk"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-064",
+    "flag": "data/config/stronghold.json:site.conduits_stop_at_arena_wall",
+    "camera_set": "tools/capture_f38_fight.gd --trainer=warden_aldis",
+    "stands": [
+      "meadows__fights__warden_aldis-00-before",
+      "meadows__fights__warden_aldis-02",
+      "meadows__fights__warden_aldis-04",
+      "meadows__fights__warden_aldis-06",
+      "meadows__fights__warden_aldis-a02",
+      "meadows__fights__warden_aldis-a04"
+    ],
+    "group": 1
+  },
+  {
+    "item": "P2-087",
+    "flag": "data/config/stronghold.json:p2_087_grade_candidate.enabled",
+    "camera_set": "tools/phase2_capture_dialogue.gd",
+    "stands": [
+      "meadows__inventory__trainer__stronghold_courtyard__dialogue",
+      "meadows__inventory__trainer__stronghold_elite__dialogue",
+      "meadows__inventory__trainer__stronghold_courtyard"
+    ],
+    "group": 2
+  },
+  {
+    "item": "P2-034",
+    "flag": "data/config/meadows_orb_reward_presentation.json:enabled",
+    "camera_set": "tools/phase2_capture_world_inventory.gd",
+    "stands": [
+      "meadows__inventory__harvest__orb_basic"
+    ],
+    "group": 2
+  },
+  {
+    "item": "F38 light (all exterior)",
+    "flag": "data/config/meadows_look.json:light_candidate.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd",
+    "stands": [
+      "meadows__band1_lower_meadows__01__grandpas_village__day__approach",
+      "meadows__band1_lower_meadows__01__grandpas_village__night__approach",
+      "meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__day__approach",
+      "meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__night__approach",
+      "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day__approach",
+      "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__night__approach",
+      "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach",
+      "meadows__band5_stronghold_approach__09__stronghold_approach__night__approach",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__day__approach",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__night__approach",
+      "meadows__band1_lower_meadows__01__grandpas_village__vista_dusk"
+    ],
+    "group": 3
+  },
+  {
+    "item": "P2-003",
+    "flag": "data/config/stronghold.json:p2_003_candidate.enabled",
+    "also_on": [
+      "data/config/stronghold.json:approach_pylons.p2_003_unlit_candidate_enabled"
+    ],
+    "camera_set": "tools/phase2_capture_locations.gd",
+    "stands": [
+      "meadows__band5_stronghold_approach__09__stronghold_approach__day__approach",
+      "meadows__band5_stronghold_approach__09__stronghold_approach__day__close",
+      "meadows__band5_stronghold_approach__09__stronghold_approach__night__approach",
+      "meadows__band5_stronghold_approach__09__stronghold_approach__night__close",
+      "meadows__band5_stronghold_approach__10__meadows_hall__day__approach",
+      "meadows__band5_stronghold_approach__10__meadows_hall__night__approach"
+    ],
+    "group": 3,
+    "note": "r2 supersedes the group-1 P2-003 entry"
+  },
+  {
+    "item": "P2-006",
+    "flag": "data/config/water.json:river.surface_candidate.enabled",
+    "camera_set": "tools/phase2_capture_locations.gd",
+    "stands": [
+      "meadows__band3_the_river_lock__06__old_mill_crossing__day__close",
+      "meadows__band3_the_river_lock__06__old_mill_crossing__night__close",
+      "meadows__landmark__old_mill_crossing__day__approach",
+      "meadows__landmark__old_mill_crossing__day__close",
+      "meadows__landmark__old_mill_crossing__night__close"
+    ],
+    "group": 3,
+    "note": "r2 supersedes the group-1 P2-006 entry; the old_mill_crossing day/night approach stands are inside tree canopy, so they are left out"
+  },
+  {
+    "item": "P2-012",
+    "flag": "data/config/burrow_warrens.json:bank.hill_shell.r2.enabled",
+    "also_on": [
+      "data/config/burrow_warrens.json:bank.hill_shell.enabled"
+    ],
+    "camera_set": "tools/phase2_capture_locations.gd",
+    "stands": [
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__day__approach",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__day__close",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__night__approach",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__night__close",
+      "meadows__band2_stone_and_root__04__the_burrow_warrens__route_day"
+    ],
+    "group": 3,
+    "note": "r2 over the landed group-1 shell"
+  },
+  {
+    "item": "P2-064",
+    "flag": "data/config/stronghold.json:p2_064_r2_candidate.enabled",
+    "also_on": [
+      "data/config/combat.json:arena.boundary_per_trainer_candidate.enabled",
+      "data/config/stronghold.json:site.conduits_stop_at_arena_wall"
+    ],
+    "camera_set": "tools/capture_f38_fight.gd --trainer=warden_aldis",
+    "stands": [
+      "meadows__fights__warden_aldis-00-before",
+      "meadows__fights__warden_aldis-02",
+      "meadows__fights__warden_aldis-04",
+      "meadows__fights__warden_aldis-06",
+      "meadows__fights__warden_aldis-a02",
+      "meadows__fights__warden_aldis-a04"
+    ],
+    "group": 3,
+    "note": "r2 over the landed group-1 conduits"
+  }
+]

@@ -1003,6 +1003,9 @@ func _build_river() -> void:
 	material.set_shader_parameter("flow_enabled", true)
 	material.set_shader_parameter("flow_speed", float(cfg.get("flow_speed", 0.7)))
 	material.set_shader_parameter("flow_stretch", float(cfg.get("flow_stretch", 0.7)))
+	var candidate_shader := river_candidate_shader(_water_cfg)
+	for key: String in candidate_shader:
+		material.set_shader_parameter(key, candidate_shader[key])
 	node.material_override = material
 	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(node)
@@ -1021,6 +1024,10 @@ func _build_river() -> void:
 	_level = level
 	_stats["river_reeds"] = _build_plant_band(cfg.get("reeds", {}), bank_points)
 	_stats["river_scrub"] = _build_plant_band(cfg.get("bank_scrub", {}), bank_points, true)
+	# P2-006 r2 (water.json river.surface_candidate, OFF): rocks at the
+	# waterline, placed by the same band rule; absent key, nothing placed.
+	if cfg.has("bank_rocks"):
+		_stats["river_rocks"] = _build_plant_band(cfg.get("bank_rocks", {}), bank_points)
 	_level = previous
 	BOOT_LOG.phase("water: river bank bands (%d reeds, %d scrub)" % [
 		_stats["river_reeds"], _stats["river_scrub"]])
@@ -1931,4 +1938,39 @@ func _load_config() -> Dictionary:
 		push_warning("water.json missing; water renders with shader defaults")
 		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
-	return parsed if parsed is Dictionary else {}
+	var cfg: Dictionary = parsed if parsed is Dictionary else {}
+	apply_river_candidate(cfg)
+	return cfg
+
+
+## P2-006 (vis-meadows, OFF until GPU-judged): `river.surface_candidate`
+## merges its `merge` block into the river's own config (bank reeds and scrub)
+## before anything is built; its `shader` block is applied to the river
+## material only, after the flow parameters, so the pond and stream are
+## untouched. Colours are "#rrggbb" strings.
+static func apply_river_candidate(cfg: Dictionary) -> void:
+	var river: Dictionary = cfg.get("river", {})
+	var candidate: Dictionary = river.get("surface_candidate", {})
+	if not bool(candidate.get("enabled", false)):
+		return
+	_merge_into(river, candidate.get("merge", {}))
+
+
+static func _merge_into(into: Dictionary, from: Dictionary) -> void:
+	for key: Variant in from:
+		if into.get(key) is Dictionary and from[key] is Dictionary:
+			_merge_into(into[key], from[key])
+		else:
+			into[key] = from[key].duplicate(true) if from[key] is Dictionary or from[key] is Array else from[key]
+
+
+static func river_candidate_shader(cfg: Dictionary) -> Dictionary:
+	var candidate: Dictionary = cfg.get("river", {}).get("surface_candidate", {})
+	if not bool(candidate.get("enabled", false)):
+		return {}
+	var out := {}
+	var shader: Dictionary = candidate.get("shader", {})
+	for key: String in shader:
+		var value: Variant = shader[key]
+		out[key] = Color(str(value)) if value is String and (value as String).begins_with("#") else value
+	return out
