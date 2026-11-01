@@ -1,18 +1,343 @@
 {
 	"adapter": "NVIDIA GeForce GTX 1060 3GB",
 	"biome_id": "cloudreach",
-	"capture_started_utc": "2026-10-31T20:29:26",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 522476062955,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 522492840174,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-11-01T00:11:48",
+	"capture_started_utc": "2026-11-01T00:03:50",
+	"captured_frame_count": 2,
 	"catalogue": "res://data/config/debug_teleport_spots.json",
-	"complete": false,
+	"complete": true,
 	"dialogue_fixture": "Production DialoguePanel started with an authored conversation at each character post. Visual state only; no normal interaction or progression proof.",
 	"display_server": "Windows",
 	"failures": [],
 	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
-	"frames": [],
+	"frames": [
+		{
+			"authored_id": "naturalist_sora",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "high_roost_sky_shrine",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 332989,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 5.76731061935425,
+			"camera_position": [
+				1092.87902832031,
+				1052.78356933594,
+				2951.0
+			],
+			"camera_purpose": "post",
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.0000000437113882867379,
+					0.0,
+					1.0
+				],
+				"basis_y": [
+					0.173647835850716,
+					0.984805822372437,
+					0.00000000759038787379041
+				],
+				"basis_z": [
+					-0.984805822372437,
+					0.173647835850716,
+					-0.0000000430472262280546
+				],
+				"origin": [
+					1098.0,
+					1051.88061523438,
+					2951.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.0000000437113811813106,
+					0.00000000000000313957462932664,
+					1.0
+				],
+				"basis_y": [
+					0.173648670315742,
+					0.984807729721069,
+					0.00000000759042073639193
+				],
+				"basis_z": [
+					-0.984807729721069,
+					0.173648670315742,
+					-0.0000000430473043877555
+				],
+				"origin": [
+					1092.87902832031,
+					1052.78356933594,
+					2951.0
+				]
+			},
+			"debug_travel": true,
+			"destination_display_name": "Sora",
+			"destination_index": 1,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/gpu-arms/DLG1F-ctl-High-c021/cloudreach__inventory__character__naturalist_sora.jpg",
+			"frame_id": "cloudreach__inventory__character__naturalist_sora",
+			"identity": "cloudreach__inventory__character__naturalist_sora",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.197948,
+				"hour": 8.00791792,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				1098.0,
+				1050.13073730469,
+				2951.0
+			],
+			"position_xz": [
+				1100.0,
+				2950.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 1050.1298828125,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				1098.0,
+				2951.0
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 1.0,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				1100.0,
+				2950.0
+			],
+			"terrain_ground_y": 1050.1298828125,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "post",
+			"view_heading_deg": 90.0,
+			"view_heading_xz": [
+				1.0,
+				0.0000000000000000612303176911189
+			],
+			"water_surface_y": null
+		},
+		{
+			"authored_id": "naturalist_sora",
+			"authored_source": "data/config/cloudreach_chapter.json",
+			"band_display_name": "",
+			"band_id": "high_roost_sky_shrine",
+			"biome_display_name": "Cloudreach",
+			"biome_id": "cloudreach",
+			"bytes": 356190,
+			"camera_fov_degrees": 49.29736328125,
+			"camera_pitch_deg": -10.0,
+			"camera_player_distance_m": 3.52991557121277,
+			"camera_position": [
+				1095.57275390625,
+				1052.17443847656,
+				2952.54663085938
+			],
+			"camera_purpose": "dialogue",
+			"camera_rig_spring_length": 4.02685070037842,
+			"camera_rig_transform": {
+				"basis_x": [
+					0.511349976062775,
+					0.0,
+					0.859372198581696
+				],
+				"basis_y": [
+					0.118557520210743,
+					0.990435481071472,
+					-0.0705449730157852
+				],
+				"basis_z": [
+					-0.851153373718262,
+					0.137958317995071,
+					0.506459593772888
+				],
+				"origin": [
+					1099.07653808594,
+					1051.60656738281,
+					2950.46166992188
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					0.511350214481354,
+					-0.0000000049551158731731,
+					0.859372437000275
+				],
+				"basis_y": [
+					0.1185582280159,
+					0.990437924861908,
+					-0.0705453976988792
+				],
+				"basis_z": [
+					-0.851155042648315,
+					0.137959063053131,
+					0.506460607051849
+				],
+				"origin": [
+					1095.57275390625,
+					1052.17443847656,
+					2952.54663085938
+				]
+			},
+			"conversation_camera_active": true,
+			"conversation_camera_blend": 0.62962962962963,
+			"conversation_camera_fallback": false,
+			"conversation_camera_shot": {
+				"dir": [
+					-0.707143723964691,
+					0.121869340538979,
+					0.69648814201355
+				],
+				"distance": 3.5,
+				"fallback": false,
+				"fov": 40.0,
+				"pitch": -0.12217304475191,
+				"pivot": [
+					1099.56005859375,
+					1051.4833984375,
+					2950.21997070313
+				],
+				"yaw": -0.792989453908225
+			},
+			"debug_travel": true,
+			"destination_display_name": "Sora",
+			"destination_index": 1,
+			"dialogue_id": "cloudreach_sora_shrine",
+			"dialogue_portrait": "res://assets/ui/portraits/maren.png",
+			"dialogue_speaker": "Sora",
+			"dialogue_visual_only": true,
+			"family_type": "character",
+			"file": "res://ralph/reports/VISUAL/phase2/cloudreach/gpu-arms/DLG1F-ctl-High-c021/cloudreach__inventory__character__naturalist_sora__dialogue.jpg",
+			"frame_id": "cloudreach__inventory__character__naturalist_sora__dialogue",
+			"identity": "cloudreach__inventory__character__naturalist_sora__dialogue",
+			"min_camera_player_distance_m": 1.8,
+			"nearby_creature_records_160m": [],
+			"nearby_creatures_160m": 0,
+			"observed_clock": {
+				"elapsed_seconds": 200.197948,
+				"hour": 8.00791792,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				1098.0,
+				1050.13073730469,
+				2951.0
+			],
+			"position_xz": [
+				1100.0,
+				2950.0
+			],
+			"rejected_stand_candidates": [],
+			"resolved_ground_y": 1050.1298828125,
+			"route_class": "main",
+			"selected_stand_lateral_m": 1.0,
+			"selected_stand_offset_m": 2.0,
+			"selected_stand_xz": [
+				1098.0,
+				2951.0
+			],
+			"size": [
+				1920,
+				1080
+			],
+			"spot_index_in_band": 0,
+			"stand_laterals_m": [
+				1.0,
+				-1.0,
+				2.0,
+				-2.0,
+				0.0,
+				-4.0,
+				4.0
+			],
+			"stand_offsets_m": [
+				2.0,
+				3.0,
+				5.0,
+				8.0
+			],
+			"surface_state": {
+				"dead": false,
+				"floor_normal_y": 1.0,
+				"on_floor": true
+			},
+			"swimming_stand": false,
+			"target_position_xz": [
+				1100.0,
+				2950.0
+			],
+			"terrain_ground_y": 1050.1298828125,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view": "dialogue",
+			"view_heading_deg": 90.0,
+			"view_heading_xz": [
+				1.0,
+				0.0000000000000000612303176911189
+			],
+			"water_surface_y": null
+		}
+	],
+	"planned_frame_count": 1,
 	"planned_frame_ids": [
 		"cloudreach__inventory__character__naturalist_sora"
 	],
 	"player_character": "trainer",
+	"production_camera": {
+		"far": 3500.0,
+		"fov": 70.0,
+		"instance_id": 522492840174,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
 	"rendering_method": "forward_plus",
 	"requested_times": [
 		"day",
