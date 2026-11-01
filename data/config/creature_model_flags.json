@@ -550,6 +550,29 @@
      }
     }
    }
+  },
+  "remake_owner1101_voltwig": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Voltwig, a lean chameleon-like lizard with twig-like spines, leaf-green and yellow skin (Meshy 01a197f7-1be6-707e-827a-286aeca1ac50). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 3.25 m; emission on the electric-blue eyes and spark points (storm creature). Provenance: assets/creatures/tetherbound/voltwig/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "voltwig": {
+     "model": "res://assets/creatures/tetherbound/voltwig/candidate_owner1101/models/creature_voltwig_owner1101.glb",
+     "colourway_source_species": "voltwig_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
   }
  }
 }

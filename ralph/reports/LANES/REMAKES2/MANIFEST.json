@@ -178,5 +178,14 @@
    "voltarach"
   ],
   "group": 20
+ },
+ {
+  "item": "F36 Voltwig remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_voltwig.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "voltwig"
+  ],
+  "group": 21
  }
 ]
