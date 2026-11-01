@@ -302,6 +302,29 @@
      }
     }
    }
+  },
+  "remake_owner1101_solmane": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Solmane, a legendary winged lion with a great mane, warm gold and cream coat with feathered wings (Meshy 01a197ef-0b4c-7024-a8e4-e3f9cda621ae). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 6.7 m; no glow pixel found in the albedo for the reference's pale-blue eyes and wisps; no emission added. Provenance: assets/creatures/tetherbound/solmane/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "solmane": {
+     "model": "res://assets/creatures/tetherbound/solmane/candidate_owner1101/models/creature_solmane_owner1101.glb",
+     "colourway_source_species": "solmane_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
   }
  }
 }

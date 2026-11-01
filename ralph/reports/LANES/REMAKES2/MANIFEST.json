@@ -79,5 +79,14 @@
    "skyrill"
   ],
   "group": 9
+ },
+ {
+  "item": "F36 Solmane remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_solmane.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "solmane"
+  ],
+  "group": 10
  }
 ]
