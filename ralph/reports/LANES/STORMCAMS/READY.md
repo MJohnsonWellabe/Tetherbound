@@ -1,7 +1,8 @@
 # STORMCAMS lane (tb/vis-storm-cams): status
 
-## Summary for the 18:00 batch (1 Nov, 16:10 UTC)
-- **Criteria closed: zero.** Nothing here is judged; every candidate is flag-OFF on this branch and listed in `MANIFEST.json` (29 item/flag rows) for `tb/vis-batch1`.
+## Summary (1 Nov, 16:15 UTC; rolling batches, coordinator sweeps every ~45 min)
+- **Criteria closed: zero.** Nothing here is judged; every candidate is flag-OFF on this branch and listed in `MANIFEST.json` (32 rows, one per item x flag x tool/biome; `group` 1 = dialogue camera + Nalia + plaza paving, `group` 2 = Stormwood scene + catch camera).
+- **Stand names** are the capture tools' own frame names: Tidewake dialogue frames are `water__...` (the tool's prefix; the catalogue says `tidewake__`), catch frames are the tool's file names (`03-strike`) under a per-biome camera set.
 - **Biggest swings (CPU sanity only, no scores):**
   - Dialogue camera (11 items): `twoshot_v2` + `speaker_light_candidate`. Every dialogue frame captured on CPU now frames its speaker medium-close beside the panel (Marrow, Nysa, Nerissa, Nalia, Bex, Irva, Kelm, Veyra, Solene, Hald, Quarry Foreman).
   - P2-083/P2-081 Marrow: fixed in the dialogue capture fixture (always on): it stood the player on the forest floor 150 m under Marrow's Dynamo deck. **Both GPU arms must use this branch's `tools/phase2_capture_dialogue.gd`** or the Marrow frames are not comparable.
