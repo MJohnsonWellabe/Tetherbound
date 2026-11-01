@@ -335,5 +335,60 @@
    "04-orb-resting"
   ],
   "group": 2
+ },
+ {
+  "item": "P2-045",
+  "flag": "data/config/pickup_grounding.json:tier_candidate.enabled",
+  "camera_set": "tools/phase2_capture_world_inventory.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__pickup__good_candy",
+   "stormwood__inventory__pickup__great_candy",
+   "stormwood__inventory__pickup__rare_candy"
+  ],
+  "group": 3
+ },
+ {
+  "item": "P2-082",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__ace_trainer_rook__dialogue",
+   "stormwood__inventory__character__caretaker_lio__dialogue",
+   "stormwood__inventory__character__elder_maud__dialogue"
+  ],
+  "group": 3
+ },
+ {
+  "item": "P2-082",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__ace_trainer_rook__dialogue",
+   "stormwood__inventory__character__caretaker_lio__dialogue",
+   "stormwood__inventory__character__elder_maud__dialogue"
+  ],
+  "group": 3
+ },
+ {
+  "item": "P2-084",
+  "flag": "data/config/camera.json:conversation.twoshot_v2.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__elder_maud__dialogue",
+   "stormwood__inventory__character__trader_fenn__dialogue",
+   "stormwood__inventory__character__trader_oswin__dialogue"
+  ],
+  "group": 3
+ },
+ {
+  "item": "P2-084",
+  "flag": "data/config/camera.json:conversation.speaker_light_candidate.enabled",
+  "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+  "stands": [
+   "stormwood__inventory__character__elder_maud__dialogue",
+   "stormwood__inventory__character__trader_fenn__dialogue",
+   "stormwood__inventory__character__trader_oswin__dialogue"
+  ],
+  "group": 3
  }
 ]

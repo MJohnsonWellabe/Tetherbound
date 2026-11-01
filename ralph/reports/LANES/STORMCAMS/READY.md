@@ -11,7 +11,7 @@
   - P2-076 plaza paving around Kelm and Veyra (anchored on their runtime bodies; Veyra's on the measured summit floor).
   - P2-046 bigger harvest heroes, distinct crown silhouette; P2-043 rock collars at the spike feet.
   - P2-113/P2-059: existing never-judged `catching.json framed_camera` (no change here).
-- **Parked:** P2-070 Glass Sink material (fog sets the floor colour at that depth; needs basin geometry), P2-045 candy tiers (copies failed three ways).
+- **Parked:** P2-070 Glass Sink material (fog sets the floor colour at that depth; needs basin geometry).
 - **Composability:** flag keys are new blocks inside existing configs; code hunks are local (`conversation_camera.gd`, `cloudreach_world.gd` route-detail loop, Water NPC placement reads via one helper). No overlap found with tb/vis-water-sky's `cloudreach_world.gd` hunks.
 - **Checks:** 328 focused unit tests (every test file touching a changed script, incl. flag scopes) pass, 0 failed, with all flags OFF.
 - **Not in scope / not attempted:** P2-087's stronghold orange grade itself (only the push-in and speaker light reach it), P2-056, P2-044 (creature lane), P2-038, P2-092, P2-040.
@@ -30,7 +30,8 @@ Hand-off per coordinator update (1 Nov): no single-candidate READY lines; every 
 | P2-070 (PARKED, not in manifest) | `data/config/stormwood_glass_sink.json` `dark_pool_candidate.enabled` | Darker obsidian floor and far fade. CPU r1/r2: barely visible; at the sink's depth the Stormwood distance fog sets the floor colour, not its material, so no >0.5 gain is expected. Needs the basin geometry the judges asked for (new art). |
 | P2-041 | `data/config/crown_arch_hero.json` `round2_candidate.enabled` | Arch visual turned 90 deg to face the road (the catalogue camera and every road approach saw it edge-on as a single pillar), 7.0 m tall; small rock dressing breaks the square slab edge. |
 | P2-043 | `data/config/stormwood_glass_field.json` `rock_collar_candidate.enabled` | Rock collar at each Meshy spike foot; flat scar patch hidden. |
-| P2-045 (PARKED, not in manifest) | `data/config/pickup_grounding.json` `tier_candidate.enabled` | Candy tiers as one / two / three sweets. CPU r1/r2: duplicated copies came back as oversized green sweets (both duplicate modes); r3 (copies from the pickup's own factory) produced no copies for the Stormwood candies. Two misses plus a changed approach: parked. Next idea: find which builder makes the Stormwood candy visual and add the tier copies there. |
+| P2-045 (group 3) | `data/config/pickup_grounding.json` `tier_candidate.enabled` | Candy tiers as one / two / three sweets with a size step. Un-parked with a new idea: `candy_pickup_presentation.gd` tints and rings the candy after the pickup builds it, so copies are now made at the end of that dress. CPU r4: Good one green sweet, Great a blue pair, Rare a gold trio. |
+| P2-082, P2-084 (group 3) | dialogue flags above | Stormwood dialogue items with the same fixture (Fenn's frame had no speaker on screen). |
 | P2-046 | `data/config/stormwood_harvest_hero2.json` `enabled` | Bigger harvest heroes; crown uses the tall glass-spike silhouette; grass clearings. Separate file so the scatter bake stays fresh. |
 | P2-113, P2-059 | `data/config/catching.json` `framed_camera.enabled` | Existing, never GPU-judged catch camera candidate (wider aim, stand-off resolve shot). No change on this branch. |
 
