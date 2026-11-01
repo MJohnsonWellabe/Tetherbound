@@ -118,6 +118,11 @@ var _began_ms := 0
 var _world_label := "world"
 var _profile_load := false
 var _profile_step_ms := 0
+## Cheap upload frames (capture-speed lane, 1 Nov 2026). See `_begin_cheap_frames()`.
+var _cheap_viewport: Viewport = null
+var _cheap_disable_3d_before := false
+var _cheap_vsync_before := -1
+var _cheap_active := false
 
 
 ## Decide whether this build is sliced at all, and how finely. `shell` is the
@@ -166,6 +171,8 @@ func begin(world: Node, shell: bool) -> void:
 			and DisplayServer.get_name() != "headless":
 		_forward_upload = true
 		_budget_ms = maxi(1, int(cfg.get("forward_build_budget_ms", FORWARD_BUILD_BUDGET_MS)))
+		if cfg.get("forward_build_cheap_frames", true) == true:
+			_begin_cheap_frames(world)
 	elif typeof(cfg.get("responsive_startup_cpu_slicing", false)) == TYPE_BOOL \
 			and cfg.get("responsive_startup_cpu_slicing", false) == true:
 		# An initial join is not multi-peer until admission; using that as
@@ -334,8 +341,58 @@ func _note_slice(slice_ms: int) -> void:
 		_worst_slice_step = _current_step
 
 
+## Forward+ solo releases one completed draw per 16 ms construction slice so
+## the Vulkan driver never queues a whole world's uploads in one frame. Those
+## draws used to render the half-built world through the 3D camera at the
+## capture preset, and the build waited for each one: on the GTX 1060 at
+## High, Cloudreach's 2.2 M ground-cover instances took about 368 s of a
+## 456 s build, most of it rendering frames nobody looks at, and every frame
+## also waited on vsync. While the build runs, the main window's 3D pass is
+## off and vsync does not hold the release; uploads still flush on every one
+## of those frames (the RenderingServer sync and the RenderingDevice staging
+## flush run with or without a 3D pass). The same instances, placements and
+## materials are built; `end()` restores the 3D pass and vsync exactly as they
+## were before the first frame of play. SubViewports are separate viewports
+## and keep rendering. `forward_build_cheap_frames: false` in
+## `data/config/performance.json` restores the previous rendered release.
+func _begin_cheap_frames(world: Node) -> void:
+	var viewport := world.get_viewport()
+	if viewport == null:
+		return
+	_cheap_viewport = viewport
+	_cheap_disable_3d_before = viewport.disable_3d
+	viewport.disable_3d = true
+	if viewport == world.get_tree().root:
+		_cheap_vsync_before = DisplayServer.window_get_vsync_mode()
+		if _cheap_vsync_before != DisplayServer.VSYNC_DISABLED:
+			DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+	_cheap_active = true
+	if not world.tree_exiting.is_connected(end):
+		world.tree_exiting.connect(end, CONNECT_ONE_SHOT)
+
+
+## The build is complete (or its world is leaving the tree): restore the
+## presentation state `begin()` changed. Idempotent; `summary()` calls it.
+func end() -> void:
+	if not _cheap_active:
+		return
+	_cheap_active = false
+	if is_instance_valid(_cheap_viewport):
+		_cheap_viewport.disable_3d = _cheap_disable_3d_before
+	if _cheap_vsync_before >= 0 and _cheap_vsync_before != DisplayServer.VSYNC_DISABLED:
+		DisplayServer.window_set_vsync_mode(_cheap_vsync_before as DisplayServer.VSyncMode)
+	_cheap_vsync_before = -1
+	_cheap_viewport = null
+
+
+## Whether `begin()` turned the main 3D pass off for this build.
+func uses_cheap_frames() -> bool:
+	return _cheap_active
+
+
 ## One line, printed by the world at the end of its own `_ready()`.
 func summary() -> String:
+	end()
 	if not _active:
 		return ""
 	return ("%.1f s wall, %d yields at %d ms/frame, %d indivisible slices given a "

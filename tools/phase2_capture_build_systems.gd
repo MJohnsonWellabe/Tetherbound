@@ -39,7 +39,17 @@ func _begin_manifest() -> void:
 
 
 func _finish(_complete: bool) -> void:
-	super._finish(_failures.is_empty() and _records.size() == 4)
+	super._finish(_job_complete())
+
+
+func _job_complete() -> bool:
+	return _failures.is_empty() and _records.size() == 4
+
+
+## Each suite clears every placed piece and closes the craft panel before the
+## next job, so a later job starts from the same open stand as a fresh launch.
+func _supports_jobs() -> bool:
+	return true
 
 
 func _capture_row(_row: Dictionary) -> void:
@@ -127,7 +137,8 @@ func _capture_row(_row: Dictionary) -> void:
 	if _place(placer, game, "campfire", anchor, active) == null:
 		return
 	await _settle()
-	if OS.get_cmdline_user_args().has("--gamepad"):
+	var gamepad_before: Variant = game.get("_last_input_was_gamepad")
+	if _has_user_flag("--gamepad"):
 		# Show what a pad player sees (glyphs follow the last device); no input
 		# is synthesised. Same switch as phase2_capture_ui.gd --gamepad.
 		game.set("_last_input_was_gamepad", true)
@@ -137,8 +148,10 @@ func _capture_row(_row: Dictionary) -> void:
 	if _craft_panel == null:
 		_failures.append("craft capture requires the production CraftPanel")
 		return
-	var readable_rows := OS.get_cmdline_user_args().has("--craft-readable-preview")
-	var readable_hints := OS.get_cmdline_user_args().has("--craft-hints-preview")
+	var readable_rows := _has_user_flag("--craft-readable-preview")
+	var readable_hints := _has_user_flag("--craft-hints-preview")
+	var rows_before: Variant = _craft_panel.get("_readable_recipe_rows")
+	var hints_before: Variant = _craft_panel.get("_readable_action_hints")
 	if readable_rows or readable_hints:
 		_craft_panel.call("close")
 		if readable_rows:
@@ -152,6 +165,20 @@ func _capture_row(_row: Dictionary) -> void:
 	await _settle()
 	await _shoot("crafting", "crafting", "campfire and production CraftPanel directly opened")
 	_write_manifest()
+	# Leave the stand as a fresh boot finds it for the next --jobs entry:
+	# panel closed with its own presentation flags, no placed pieces, the
+	# previous input device. A single launch quits right after this.
+	if is_instance_valid(_craft_panel):
+		if _craft_panel.has_method("close"):
+			_craft_panel.call("close")
+		if readable_rows or readable_hints:
+			_craft_panel.set("_readable_recipe_rows", rows_before)
+			_craft_panel.set("_readable_action_hints", hints_before)
+			_craft_panel.call("_build")
+		_craft_panel.visible = false
+	game.set("_last_input_was_gamepad", gamepad_before)
+	_clear(active)
+	await _settle()
 
 
 func _place(placer: Node, game: Node, id: String, at: Vector3, active: Array[Node3D]) -> Node3D:
