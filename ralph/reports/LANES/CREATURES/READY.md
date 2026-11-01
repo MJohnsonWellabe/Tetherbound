@@ -24,7 +24,7 @@ This follows the owner's settled creature rule, via the coordinator: a believabl
 
 **Conflict to rule on.** CLAUDE.md (owner, 25 Oct, delegated) says glow appears only where natural to the element and never as glowing seams on fur or hide. The newer owner rule, relayed by the coordinator, asks for glowing veins and markings. Both groups stay OFF until judged; the judging decides.
 
-**Removed from the manifest:** the Bramblebun and Trailpup flags (`creatures_vis_coat_bramblebun` does not exist; `creatures_vis_grounded_hit_bramblebun` and `creatures_vis_trait_bramblebun/trailpup` were removed). Both get Meshy remakes from the coordinator. The flags stay in the files, OFF.
+**Removed from the manifest:** the Bramblebun and Trailpup flags: `creatures_vis_grounded_hit_bramblebun`, `creatures_vis_trait_bramblebun` and `creatures_vis_trait_trailpup`. Both get Meshy remakes from the coordinator. The flags stay in the files, OFF.
 
 ## Group 3 (1 Nov, pushed): one natural-magic trait per plain species
 
