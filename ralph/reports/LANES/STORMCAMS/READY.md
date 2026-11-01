@@ -43,6 +43,8 @@ Hand-off per coordinator update (1 Nov): no single-candidate READY lines; every 
 - Tidewake dialogue, twoshot_v2 + speaker light: Nerissa pushed in medium-close and lit (GPU had her small in a dim wide shot); Bex and Irva read as over-the-shoulder two-shots with the trainer's shoulder at the left edge. Nalia: authored body refused by every stand (on the wall); with the placement candidate she is framed; moved 3.6 m out after r1 framed her against the wall.
 - Cloudreach dialogue: Kelm and Veyra framed medium-close; plaza paving anchors corrected to their runtime bodies (re-check queued).
 - Stormwood locations: Crown Arch seen edge-on by the catalogue camera (cause of "single tall pillar"); with round 2 turned to face the road, r2 reads clearly as an arch with its crown keystone (slab edge still hard; six stones per side after r2). Glass Field spikes sit on rock collars (lightened after r1).
+- Tidewake P2-075 with the close-pair swing: Adair and Iona framed with the trainer at the left edge in profile, no overlap on the speaker.
+- Stormwood P2-056 rim r2 (0.75 / 2.4): Varga and Dace show a cool edge against the ground in the post views. P2-082 Rook framed well with the corrected key light (r1's key blew the trainer's face white in close pairs).
 - Tidewake Nalia r2 (placement 3.6 m out): framed against a valley view to the shore instead of the sand wall.
 - Meadows: Quarry Foreman visible among the rock faces (P2-079); Warder Solene medium-close and lit in the courtyard (the stronghold's warm grade remains; P2-087 relies on the push-in and speaker light).
 - Stormwood inventory: harvest heroes larger, crown grade a tall spike cluster distinct from plain stormglass; candy tier copies failed three ways (see P2-045 row); parked.
