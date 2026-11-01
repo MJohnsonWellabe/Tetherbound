@@ -1,0 +1,16 @@
+{
+ "_comment": "CAUSE-POSES (1 Nov 2026): roster-wide hurt/faint settle for every rig (F36 recipes and own-clip/remake species), scripts/creatures/creature_pose_settle.gd. Each section is its own flag, OFF until GPU judging. faint.grounded: dense pivot keys plant every faint sample on the standing ground line and re-centre the posed body over its contact shadow. faint.side_lie: a faint that still stands at its end rolls onto its side about the body's forward axis (roll_sign +1 rolls the back toward the body's right). faint.head_lift: the neck lifts a buried or downward head at faint end. faint.face_camera: at play_faint the settled collapse turns (ramped, about its standing centre) so the body lies across the camera's view with its back toward the camera (no end-on blob, belly away). hit.recoil: a hit that barely moves gains a held pivot recoil. hit.grounded: every hit sample is planted (no hop). Composes with f36_pose_candidates.json flags (including roster_pose_r1) and creature_clip_flags.json: it reads whatever clip those leave.",
+ "samples": 11,
+ "sample_vertices": 2400,
+ "exclude_species": [],
+ "faint": {
+  "grounded": {"enabled": false, "sink_frac": 0.015, "recentre": true, "max_shift_frac": 0.6},
+  "side_lie": {"enabled": false, "collapse_ratio": 0.62, "roll_deg": 78.0, "roll_sign": 1.0, "roll_start": 0.2, "roll_end": 0.85},
+  "head_lift": {"enabled": false, "min_elevation_deg": 10.0, "max_lift_deg": 35.0, "ramp_start": 0.5},
+  "face_camera": {"enabled": false, "max_turn_deg": 110.0, "turn_end": 0.7}
+ },
+ "hit": {
+  "recoil": {"enabled": false, "min_motion_frac": 0.04, "pitch_deg": 7.0, "lean_deg": 6.0, "shove_frac": 0.08, "peak": 0.22, "hold_until": 0.6},
+  "grounded": {"enabled": false}
+ }
+}

@@ -137,7 +137,7 @@ func play_once(role: String) -> void:
 		return
 	_clear_telegraph_attack()
 	_hold = _player.get_animation(clip).length
-	if clip.begins_with("f36_candidate/") or (role == HIT and _has_impact_window()):
+	if _keys_pivot(clip) or (role == HIT and _has_impact_window()):
 		_current = ""
 	_play(role, false)
 	if role == HIT and _has_impact_window():
@@ -325,8 +325,9 @@ func _play(role: String, looping: bool, playback_speed: float = 1.0) -> void:
 	_current = clip
 	if role != HIT:
 		_stagger_left = 0.0
-	var leaving_candidate := _candidate_pose_active and not clip.begins_with("f36_candidate/")
-	if not clip.begins_with("f36_candidate/"):
+	var pivot_clip := _keys_pivot(clip)
+	var leaving_candidate := _candidate_pose_active and not pivot_clip
+	if not pivot_clip:
 		_restore_candidate_pivot()
 	else:
 		_candidate_pose_active = true
@@ -343,6 +344,12 @@ func _play(role: String, looping: bool, playback_speed: float = 1.0) -> void:
 	# after restoration. The installed clip starts from the restored rig.
 	var impact_pose := role == HIT and (clip.begins_with("f36_candidate/") or _has_impact_window())
 	_player.play(clip, 0.0 if leaving_candidate or impact_pose else 0.15)
+
+
+## Recipe clips and clips re-keyed by creature_pose_settle.gd (`pivot_clips`)
+## move the model pivot, so leaving them restores it.
+func _keys_pivot(clip: String) -> bool:
+	return clip.begins_with("f36_candidate/") or clip in (_clips.get("pivot_clips", []) as Array)
 
 
 ## An installed recipe hit, or a remake's own held hit that names its window
