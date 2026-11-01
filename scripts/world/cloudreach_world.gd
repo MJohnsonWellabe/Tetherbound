@@ -3195,7 +3195,9 @@ func _build_authored_route_details() -> void:
 				continue
 			var offset: Array = item.get("offset", [0.0, 0.0])
 			var at := anchor + right * float(offset[0]) + forward * float(offset[1])
-			var ground := _route_detail_ground(at)
+			# A pocket on a built floor (the summit arena) names its measured
+			# floor height instead of sampling the terrain beneath it.
+			var ground := anchor.y if bool(raw.get("ground_from_anchor", false)) else _route_detail_ground(at)
 			if is_nan(ground):
 				push_warning("Cloudreach detail %s/%s has no supporting surface" % [pocket.name, asset])
 				continue

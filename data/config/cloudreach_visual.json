@@ -656,9 +656,10 @@
         },
         {
           "id": "VeyraSummitPavingCandidate",
+          "ground_from_anchor": true,
           "anchor": [
             100.0,
-            1160.0,
+            1160.15,
             5450.0
           ],
           "forward": [
