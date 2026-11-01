@@ -12,9 +12,9 @@ func after_each() -> void:
 	MENU_TEXT.reset_for_tests()
 
 
-func test_the_flag_ships_off() -> void:
+func test_the_flag_ships_on() -> void:
 	MENU_TEXT.reset_for_tests()
-	assert_false(MENU_TEXT.on(), "menu_text_floors must ship OFF until its GPU judging passes")
+	assert_true(MENU_TEXT.on(), "menu_text_floors ships ON: GPU MENU-1 passed P2-031 (5.62 to 6.12 at High)")
 
 
 func test_off_keeps_every_authored_size() -> void:
