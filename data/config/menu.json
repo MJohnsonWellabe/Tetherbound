@@ -12,6 +12,14 @@
     "card_margin": 6,
     "status_near_top": true
   },
+  "satchel_focus": {
+    "_why": "P2-001 (UIPOSES lane, 1 Nov 2026). GPU UI-PAD High 6.84: the Satchel body is still a charcoal box with small grey text; judges ask for one emphasised element per panel with larger, brighter type. When on, the focused item's icon grows 112 -> 150 px on its own lit round plate, the detail name takes the warm heading accent at FONT_SECTION, and the description reads in TEXT_PRIMARY at the reading floor (tab_backpack.gd satchel_focus). PRESENTATION ONLY. OFF until GPU judging.",
+    "enabled": false,
+    "preview_icon_px": 150,
+    "plate_border_alpha": 0.55,
+    "name_px": 36,
+    "blurb_px": 27
+  },
   "menu_text_floors": {
     "_comment": "UI-R2 follow-up (GPU UI-R2 31 Oct 2026): settings/skills/satchel secondary text on the UITokens FONT_READ/FONT_PROMPT floors in TEXT_SECONDARY, the Satchel worn-equipment rows in their own focus-following scroll box, a short note_compact for long control-group notes and a 'More below' cue under the settings scroll. scripts/ui/menu_text_floors.gd. OFF until its GPU judging passes.",
     "enabled": true,

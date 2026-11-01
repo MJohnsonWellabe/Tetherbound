@@ -91,5 +91,13 @@
    "meadows__flying__launch",
    "meadows__flying__glide"
   ]
+ },
+ {
+  "item": "P2-001",
+  "flag": "data/config/menu.json:satchel_focus.enabled",
+  "camera_set": "tools/phase2_capture_ui.gd --biome=meadows --seed=2042 --gamepad",
+  "stands": [
+   "meadows__menu_backpack"
+  ]
  }
 ]

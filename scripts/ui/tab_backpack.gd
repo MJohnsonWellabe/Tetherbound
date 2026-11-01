@@ -699,7 +699,24 @@ func _build_preview() -> VBoxContainer:
 	_preview_icon.custom_minimum_size = Vector2(112, 112)
 	_preview_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_preview_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon_wrap.add_child(_preview_icon)
+	var focus := satchel_focus()
+	if not focus.is_empty():
+		# P2-001 (UIPOSES, menu.json `satchel_focus`): the focused item is the
+		# panel's one emphasised element, a larger icon on its own lit plate.
+		var px := float(focus.get("preview_icon_px", 150))
+		_preview_icon.custom_minimum_size = Vector2(px, px)
+		var plate := PanelContainer.new()
+		var box := StyleBoxFlat.new()
+		box.bg_color = UITokens.BG_PANEL_ALT
+		box.border_color = Color(UITokens.TEAL_SOFT, float(focus.get("plate_border_alpha", 0.55)))
+		box.set_border_width_all(2)
+		box.set_corner_radius_all(int(px * 0.5 + 18))
+		box.set_content_margin_all(18)
+		plate.add_theme_stylebox_override("panel", box)
+		plate.add_child(_preview_icon)
+		icon_wrap.add_child(plate)
+	else:
+		icon_wrap.add_child(_preview_icon)
 	panel.add_child(icon_wrap)
 
 	_preview_name = Label.new()
@@ -975,6 +992,14 @@ func _build_detail() -> Control:
 	_detail_blurb = Label.new()
 	_detail_blurb.add_theme_font_size_override("font_size", UITokens.FONT_BODY)
 	_detail_blurb.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	var focus := satchel_focus()
+	if not focus.is_empty():
+		# P2-001: the description is the thing being read; primary colour and
+		# the reading floor, and the item name in the warm heading accent.
+		_detail_blurb.add_theme_font_size_override("font_size", int(focus.get("blurb_px", UITokens.FONT_READ)))
+		_detail_blurb.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+		_detail_name.add_theme_font_size_override("font_size", int(focus.get("name_px", UITokens.FONT_SECTION)))
+		_detail_name.add_theme_color_override("font_color", UITokens.BUILD_ACCENT)
 	_detail_blurb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_detail_blurb.custom_minimum_size = Vector2(320, 0)
 	panel.add_child(_detail_blurb)
@@ -1003,6 +1028,13 @@ func _build_detail() -> Control:
 	panel.add_child(_detail_hint)
 
 	return panel
+
+
+## menu.json `satchel_focus` (P2-001, UIPOSES lane; OFF unless enabled).
+static func satchel_focus() -> Dictionary:
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	var entry: Variant = parsed.get("satchel_focus", {}) if parsed is Dictionary else {}
+	return entry if entry is Dictionary and entry.get("enabled") == true else {}
 
 
 func first_focus() -> Control:
