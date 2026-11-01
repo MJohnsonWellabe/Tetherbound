@@ -1,5 +1,36 @@
 # Cause lane: owner-rule remakes finish (tb/cause-remakes)
 
+## Terrapup and Riptusk: ready to turn ON (1 Nov, third coordinator request)
+
+No test was edited. They are MANIFEST groups 13 and 14. As before, the named tests have not
+run here: there is no Godot import and no game smoke in this container.
+
+- **Terrapup** (`remake_owner1101_terrapup`; CI failure: `tests/smoke_arena_contain.gd` "could
+  not engage the warrens wild creature").
+  - **Why admission sees only the box.** Combat admission sees a creature only through its
+    rendered mesh box (`RENDER_BOUNDS.measure`: corners, front extent, radial footprint), its
+    height and its radius.
+  - **The remake's box was not "longer".** It was 1.471 × 3.2 × 4.677 m: shorter than the
+    installed dog3's 1.221 × 3.2 × 4.896 m, but 0.25 m wider (the plated shoulders). In the
+    chamber-capped Warrens ring, that combination refused it.
+  - **The fix.** `terrapup/candidate_owner1101/source/fit_installed_footprint.py`
+    re-proportions the remake to exactly the installed box: x ×0.830, a leaner chest and
+    shoulders; z ×1.047; height unchanged at 3.20 m. Every admission computation therefore
+    matches the installed Terrapup's, which passes.
+  - **What else changed.** Bones keep their rest rotations, their rest positions move with the
+    mesh, and the skin is rebound; the rest-pose skin error is 4e-7. Translation keys keep
+    their per-bone offsets. Idle, walk, attack and faint keep their shapes inside the new box.
+    The silhouette still reads as the same lean dog. Plates, textures and glow are unchanged.
+  - **Height arm.** `remake_owner1101_judged_short` (terrapup ×1.15) would grow it past that
+    box again; its `_why` now says landing it needs the smoke re-run.
+- **Riptusk** (`remake_owner1101_riptusk`; CI failure: `tests/test_creature_rest_pose.gd`, the
+  water rest candidate).
+  - `water_rest_pose_visual.gd` now also binds the remake model for `riptusk` and
+    `water_riptusk`, as it already did for Torrentoad. The remake's faint clip role maps to its
+    own `faint` clip, which ends lying prone.
+  - The shipped allow list still keeps Riptusk on the legacy roll in play, until the remake's
+    endpoint is judged.
+
 ## Aspect variants, Ashtusk and Frostclaw: ready to turn ON (1 Nov, second coordinator request)
 
 No test was edited. The remake flags below are MANIFEST groups 8–12. The proof gap is the

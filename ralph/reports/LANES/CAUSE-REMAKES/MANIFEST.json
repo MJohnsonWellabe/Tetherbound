@@ -596,5 +596,23 @@
    "frostclaw"
   ],
   "group": 12
+ },
+ {
+  "item": "F36 Terrapup remake (fitted to the installed footprint for Warrens admission)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_terrapup.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "terrapup"
+  ],
+  "group": 13
+ },
+ {
+  "item": "F36 Riptusk remake (water rest binding)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_riptusk.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "riptusk"
+  ],
+  "group": 14
  }
 ]

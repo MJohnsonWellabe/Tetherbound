@@ -9,11 +9,14 @@ const EXPECTED_MODELS := {
 	"torrentoad": "res://assets/creatures/tetherbound/torrentoad/models/creature_torrentoad_lod0.glb",
 	"water_torrentoad": "res://assets/creatures/tetherbound/torrentoad/models/creature_torrentoad_lod0.glb",
 }
-## Owner-rule remake (1 Nov 2026, remake_owner1101_torrentoad): its dog3 faint
-## ends lying prone with the legs drawn in (the endpoint the dog3 faint judges
-## read as down), so the same no-op recipe finishes it. Exact path binding as
-## above; the riptusk ids stay installed-only.
+## Owner-rule remakes (1 Nov 2026, remake_owner1101_torrentoad / _riptusk):
+## their dog3 faint ends lying prone with the legs drawn in (the endpoint the
+## dog3 faint judges read as down), so the same no-op recipe finishes it. Exact
+## path binding as above. The config's species allow list still decides which
+## ids ship it (Riptusk stays on the legacy roll until judged on the remake).
 const REMAKE_MODELS := {
+	"riptusk": "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101.glb",
+	"water_riptusk": "res://assets/creatures/tetherbound/riptusk/candidate_owner1101/models/creature_riptusk_owner1101.glb",
 	"torrentoad": "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101.glb",
 	"water_torrentoad": "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101.glb",
 }
