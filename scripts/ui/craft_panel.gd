@@ -689,6 +689,10 @@ var _readable_action_hints := false
 ## ingredients are missing. Presentation only; OFF until judged.
 var _compact_rows := false
 var _craft_button_on := false
+## P2-095 GPU close-out (31 Oct, 7.43 vs 7.5): the compact rows' cost preview
+## and Ready/Missing tag one step up, and a greyed Craft button whose
+## "Missing materials" label and border read on the dark panel.
+var _readable_r3 := false
 var _craft_button: Button
 var _craft_button_label: RichTextLabel
 var _row_tags: Array[Label] = []
@@ -707,6 +711,7 @@ func _ready() -> void:
 	_readable_action_hints = bool(_presentation.get("readable_action_hints", false))
 	_compact_rows = _readable_recipe_rows and bool(_presentation.get("compact_rows", false))
 	_craft_button_on = bool(_presentation.get("craft_button", false))
+	_readable_r3 = bool(_presentation.get("readable_r3", false))
 	_build()
 	visible = false
 	# RG4: `input_owner.gd`'s own header has claimed since OW10 that this
@@ -1071,7 +1076,7 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 		name.max_lines_visible = 1
 		cost_label.max_lines_visible = 2
 		cost_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		cost_label.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+		cost_label.add_theme_font_size_override("font_size", UITokens.FONT_BODY if _readable_r3 else UITokens.FONT_LABEL)
 		text_col.alignment = BoxContainer.ALIGNMENT_CENTER
 	text_col.add_child(cost_label)
 	_cost_labels.append(cost_label)
@@ -1087,7 +1092,7 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 		var tag := Label.new()
 		tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tag.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		tag.add_theme_font_size_override("font_size", UITokens.FONT_LABEL)
+		tag.add_theme_font_size_override("font_size", UITokens.FONT_BODY if _readable_r3 else UITokens.FONT_LABEL)
 		name_row.add_child(tag)
 		text_col.add_child(name_row)
 		text_col.move_child(name_row, 0)
@@ -1117,7 +1122,24 @@ func _build_center_zone() -> Control:
 	_center_icon.custom_minimum_size = Vector2(CENTER_ICON_PX, CENTER_ICON_PX)
 	_center_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_center_icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	side.add_child(_center_icon)
+	if _readable_r3:
+		# GPU CRAFT-R3 (31 Oct): the centre column read empty around a small
+		# flat glyph. The focused item's preview fills it, on its own plate.
+		var px := float(_presentation.get("center_preview_px", 200))
+		_center_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_center_icon.custom_minimum_size = Vector2(px, px)
+		var plate := PanelContainer.new()
+		var box := UITokens.fill_box(Color(UITokens.BG_PANEL_ALT, 0.9))
+		box.set_corner_radius_all(UITokens.RADIUS)
+		box.set_border_width_all(2)
+		box.border_color = UITokens.BORDER
+		box.set_content_margin_all(18)
+		plate.add_theme_stylebox_override("panel", box)
+		plate.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		plate.add_child(_center_icon)
+		side.add_child(plate)
+	else:
+		side.add_child(_center_icon)
 
 	_center_name = Label.new()
 	_center_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -1194,6 +1216,9 @@ func _make_craft_button() -> Button:
 		box.set_corner_radius_all(10)
 		box.set_border_width_all(2)
 	on.border_color = UITokens.TEAL_SOFT
+	if _readable_r3:
+		off.border_color = UITokens.TEXT_SECONDARY
+		off.set_border_width_all(3)
 	for state: String in ["normal", "hover", "pressed", "focus"]:
 		_craft_button.add_theme_stylebox_override(state, on)
 	_craft_button.add_theme_stylebox_override("disabled", off)
@@ -1221,7 +1246,11 @@ func _refresh_craft_button(affordable: bool) -> void:
 	if affordable:
 		_craft_button_label.text = "%s  [color=#10191E]Craft[/color]" % INPUT_GLYPH.icon("confirm", px)
 	else:
-		_craft_button_label.text = "%s  [color=#B8C5C4]Missing materials[/color]" % INPUT_GLYPH.icon("confirm", px, Color(1, 1, 1, 0.35))
+		if _readable_r3:
+			_craft_button_label.text = "%s  [color=#%s]Missing materials[/color]" % [
+				INPUT_GLYPH.icon("confirm", px, Color(1, 1, 1, 0.6)), UITokens.TEXT_PRIMARY.to_html(false)]
+		else:
+			_craft_button_label.text = "%s  [color=#B8C5C4]Missing materials[/color]" % INPUT_GLYPH.icon("confirm", px, Color(1, 1, 1, 0.35))
 
 
 ## P2-096: an action hint as the bound button's prompt glyph plus its verb in
