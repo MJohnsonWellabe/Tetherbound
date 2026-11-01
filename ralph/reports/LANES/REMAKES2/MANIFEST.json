@@ -124,5 +124,14 @@
    "stormraven"
   ],
   "group": 14
+ },
+ {
+  "item": "F36 Tempestwing remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_tempestwing.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "tempestwing"
+  ],
+  "group": 15
  }
 ]

@@ -412,6 +412,29 @@
      }
     }
    }
+  },
+  "remake_owner1101_tempestwing": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Tempestwing, a large dragonfly creature with long translucent wings, pale gold and grey body (Meshy 01a197f3-2ad5-763e-85f5-a210bf02e8cf). No baked ground patch. dog3 rig recipe (tools/art_pipeline/blender/prepare_remake_quadruped.py), dog3 clip author (every gameplay role) at the established 4.15 m; emission on the cyan eyes and wisp lines. Provenance: assets/creatures/tetherbound/tempestwing/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "tempestwing": {
+     "model": "res://assets/creatures/tetherbound/tempestwing/candidate_owner1101/models/creature_tempestwing_owner1101.glb",
+     "colourway_source_species": "tempestwing_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "charged": "charged",
+      "hit": "hit",
+      "faint": "faint",
+      "rest": "rest",
+      "swim": "swim",
+      "fly_grip": "fly_grip",
+      "ride": "ride"
+     }
+    }
+   }
   }
  }
 }
