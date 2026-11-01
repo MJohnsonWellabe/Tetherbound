@@ -186,6 +186,83 @@
      "albedo": "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid_trait1.png"
     }
    }
+  },
+  "creatures_vis_glow_mudsnout": {
+   "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in amber (ground). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0.jpg": {
+     "albedo": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0_trait1.png",
+     "emission": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0_glow2.png",
+     "emission_energy": 1.4
+    }
+   }
+  },
+  "creatures_vis_glow_mirejaw": {
+   "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in cyan (water). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0.jpg": {
+     "albedo": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0_trait1.png",
+     "emission": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0_glow2.png",
+     "emission_energy": 1.4
+    }
+   }
+  },
+  "creatures_vis_glow_cannonback": {
+   "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in cyan (water). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid.png": {
+     "albedo": "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid_trait1.png",
+     "emission": "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid_glow2.png",
+     "emission_energy": 1.4
+    }
+   }
+  },
+  "creatures_vis_glow_fulgocobra": {
+   "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes in gold (electric), keeping its group-3 lightning rims. Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid.png": {
+     "albedo": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_trait1.png",
+     "emission": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_glow2.png",
+     "emission_energy": 2.0
+    }
+   }
+  },
+  "creatures_vis_glow_riverdrake": {
+   "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in cyan (water), keeping its group-3 frill rims. Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid.png": {
+     "albedo": "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid_trait1.png",
+     "emission": "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid_glow2.png",
+     "emission_energy": 2.0
+    }
+   }
+  },
+  "creatures_vis_glow_solmane": {
+   "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in pale sky (air). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid.png": {
+     "albedo": "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid_trait1.png",
+     "emission": "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid_glow2.png",
+     "emission_energy": 1.4
+    }
+   }
+  },
+  "creatures_vis_glow_voltarach": {
+   "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes in its board's blue eyes (electric). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
+   "enabled": false,
+   "coats": {
+    "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0.jpg": {
+     "albedo": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0_vis1.png",
+     "emission": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0_glow2.png",
+     "emission_energy": 1.6
+    }
+   }
   }
  }
 }
