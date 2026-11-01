@@ -208,5 +208,29 @@
     ],
     "group": 3,
     "note": "r2 over the landed group-1 conduits"
+  },
+  {
+    "item": "F17#6",
+    "flag": "data/config/crossing_hall.json:hall_3.enabled",
+    "camera_set": "F17-6",
+    "stands": [
+      "hall-approach_day_clear",
+      "hall-approach_night_clear",
+      "nave-forward_day_clear",
+      "nave-forward_night_clear",
+      "nave-forward_day_rain",
+      "nave-arches-left_day_clear",
+      "nave-arches-left_night_clear",
+      "nave-arches-right_day_clear",
+      "nave-arches-right_night_clear",
+      "nave-reverse_day_clear",
+      "nave-reverse_night_clear",
+      "shrine-pedestals_day_clear",
+      "shrine-pedestals_night_clear",
+      "shrine-pedestals-reverse_day_clear",
+      "shrine-pedestals-reverse_night_clear"
+    ],
+    "group": 4,
+    "note": "HALL-3 replaces HALL-2 (keep hall_2 OFF); layers over hall_1"
   }
 ]

@@ -1,5 +1,13 @@
 # Meadows visual lane (tb/vis-meadows), 1 Nov 2026
 
+**17:55 UTC, group 4: F17#6 HALL-3** (`crossing_hall.json:hall_3.enabled`; keep `hall_2` OFF). Built from the HALL-2 verdict's four asks, in its order:
+1. **Day/night interior light.** Root cause: the Meadows night exposure (1.2 vs 0.6 by day) brightened the room, because `hall_lantern_lighting` keeps full albedo at night. Night now halves the Hall's albedo, cuts ambient to 0.10 and the fills to under half, and gives the lanterns warm pools with falloff (×2.6 over 6.5 m). The four window spots stay on at night as cool moonlight; by day they're tighter and stronger for shaped sun pools.
+2. **Plaster:** MI_Plaster ×0.72 day and night, day ambient 0.55.
+3. **Piers:** cameras unchanged; every arch surround is set back into the wall (about 0.33 m proud instead of 1.2 m).
+4. **Rugs:** the runner and shrine rug are muted to warm dark wool.
+
+`crossing_hall.gd` passes `--check-only`.
+
 **16:50 UTC, group 3 (from the batch-1 verdicts):** five entries in MANIFEST.json, `group: 3`. Entries marked `also_on` need those flags on too (landed or companion flags).
 - **Meadows light** (`meadows_look.json:light_candidate.enabled`): the judges' common ask. A warmer, lower key sun, a character rim and about double the aerial fog with sky haze; at night, more ambient fill and exposure, a brighter moon, softer shadows and a tighter moon glow (the banded halo).
 - **P2-003 r2:** keep 150 → 170 m (front face still fixed), darker stone, hotter fire-orange windows (`stronghold_hero_gatehouse.gd emission_colour`); judge with the existing `approach_pylons.p2_003_unlit_candidate_enabled` so the pylon lamps stop carrying the eye.
