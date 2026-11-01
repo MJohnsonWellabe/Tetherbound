@@ -70,8 +70,9 @@ static func _dress_slab_edges(arch: Node3D, slab: MeshInstance3D, cfg: Dictionar
 				1: local = Vector2(t * half.x, -half.y)
 				2: local = Vector2(half.x, t * half.y)
 				3: local = Vector2(-half.x, t * half.y)
-			# The travel axis is arch local Z: leave the walkway ends open.
-			if side < 2 and absf(local.x) < keep_clear:
+			# Leave an opening in the middle of every edge: the travel axis is
+			# arch local Z and the road reaches the landing across it.
+			if (side < 2 and absf(local.x) < keep_clear) or (side >= 2 and absf(local.y) < keep_clear):
 				continue
 			var path := str(models[index % models.size()])
 			index += 1
