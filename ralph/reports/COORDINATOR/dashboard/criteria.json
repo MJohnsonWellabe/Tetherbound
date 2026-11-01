@@ -2636,7 +2636,7 @@
     {
      "text": "F36 (1) ashtusk: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): ashtusk mapped 6.36 (tier 6-7). CPU whole-roster round r3: mapped 6.68 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 5.97 -> 6.96, dark coat FIXED 3/3. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): ashtusk mapped 6.36 (tier 6-7). CPU whole-roster round r3: mapped 6.68 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2666,7 +2666,7 @@
     {
      "text": "F36 (1) brooktail: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): brooktail mapped 7.13 (tier 7-7.5). CPU whole-roster round r2: mapped 7.17 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): taller 6.39 -> 6.63, height FIXED 3/3. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): brooktail mapped 7.13 (tier 7-7.5). CPU whole-roster round r2: mapped 7.17 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2696,7 +2696,7 @@
     {
      "text": "F36 (1) cindercub: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): cindercub mapped 7.18 (tier 7-7.5). CPU whole-roster round r3: mapped 7.51 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 6.89 -> 7.51 (Medium queued), dark coat FIXED 3/3; stronger hit 6.50 -> 6.82. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): cindercub mapped 7.18 (tier 7-7.5). CPU whole-roster round r3: mapped 7.51 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2746,7 +2746,7 @@
     {
      "text": "F36 (1) duskhush: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): duskhush mapped 7.07 (tier 7-7.5). CPU whole-roster round r2: mapped 6.62 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 6.06 -> 6.85; taller 6.49 -> 6.84, height FIXED 3/3. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): duskhush mapped 7.07 (tier 7-7.5). CPU whole-roster round r2: mapped 6.62 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2856,7 +2856,7 @@
     {
      "text": "F36 (1) mudsnout: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): mudsnout mapped 6.96 (tier 6-7). CPU whole-roster round r1: mapped 7.76 (ralph/reports/CREATURES/close-1024/roster/r1/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): taller 7.11 -> 7.40. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): mudsnout mapped 6.96 (tier 6-7). CPU whole-roster round r1: mapped 7.76 (ralph/reports/CREATURES/close-1024/roster/r1/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2866,7 +2866,7 @@
     {
      "text": "F36 (1) nightburrow: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU Q31 CO12 31 Oct, judge of record (tb/gpu-pass d3f930b94, ralph/reports/GPU-PASS/Q31/CO12-near-bar-creatures-e5fcc1c47/VERDICT.md; main d4d5b262f vs tb/co12-main-on e5fcc1c47, Medium and High, yardstick): 6.23 -> 6.67 (+0.44) at Medium and High; flame-on-faint PRESENT -> FIXED 3/3. Next: noisy speckled coat; the faint ends in a crouch, not on its side. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): nightburrow mapped 6.59 (tier 6-7). CPU whole-roster round r2: mapped 7.44 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 5.66 -> 5.80. Landed. Earlier: GPU Q31 CO12 31 Oct, judge of record (tb/gpu-pass d3f930b94, ralph/reports/GPU-PASS/Q31/CO12-near-bar-creatures-e5fcc1c47/VERDICT.md; main d4d5b262f vs tb/co12-main-on e5fcc1c47, Medium and High, yardstick): 6.23 -> 6.67 (+0.44) at Medium and High; flame-on-faint PRESENT -> FIXED 3/3. Next: noisy speckled coat; the faint ends in a crouch, not on its side. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): nightburrow mapped 6.59 (tier 6-7). CPU whole-roster round r2: mapped 7.44 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2876,7 +2876,7 @@
     {
      "text": "F36 (1) paddlenewt: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): paddlenewt mapped 6.75 (tier 6-7). CPU whole-roster round r2: mapped 6.8 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): taller 6.49 -> 6.85. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): paddlenewt mapped 6.75 (tier 6-7). CPU whole-roster round r2: mapped 6.8 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2896,7 +2896,7 @@
     {
      "text": "F36 (1) pipwing: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): pipwing mapped 6.66 (tier 6-7). CPU whole-roster round r2: mapped 6.84 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): taller 6.71 -> 7.19, height FIXED 3/3. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): pipwing mapped 6.66 (tier 6-7). CPU whole-roster round r2: mapped 6.84 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2926,7 +2926,7 @@
     {
      "text": "F36 (1) riftfrill: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): riftfrill mapped 6.51 (tier 6-7). CPU whole-roster round r3: mapped 5.9 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): taller 6.04 -> 6.68. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): riftfrill mapped 6.51 (tier 6-7). CPU whole-roster round r3: mapped 5.9 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2966,7 +2966,7 @@
     {
      "text": "F36 (1) shadelet: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): shadelet mapped 6.29 (tier 6-7). CPU whole-roster round r3: mapped 6.73 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 6.06 -> 6.58. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): shadelet mapped 6.29 (tier 6-7). CPU whole-roster round r3: mapped 6.73 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -2976,7 +2976,7 @@
     {
      "text": "F36 (1) sirenseal: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): sirenseal mapped 7.2 (tier 7-7.5). CPU whole-roster round r4: mapped 6.89 (ralph/reports/CREATURES/close-1024/roster/r4/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): grounded hit 6.17 -> 7.07, airborne PRESENT -> PARTIAL. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): sirenseal mapped 7.2 (tier 7-7.5). CPU whole-roster round r4: mapped 6.89 (ralph/reports/CREATURES/close-1024/roster/r4/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -3006,7 +3006,7 @@
     {
      "text": "F36 (1) sparkit: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): sparkit mapped 6.28 (tier 6-7). CPU whole-roster round r3: mapped 6.36 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): taller 5.41 -> 5.83. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): sparkit mapped 6.28 (tier 6-7). CPU whole-roster round r3: mapped 6.36 (ralph/reports/CREATURES/close-1024/roster/r3/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -3056,7 +3056,7 @@
     {
      "text": "F36 (1) stormtrail: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): stormtrail mapped 5.98 (tier below 6). CPU whole-roster round r2: mapped 6.66 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 6.18 -> 6.82, FIXED 3/3. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): stormtrail mapped 5.98 (tier below 6). CPU whole-roster round r2: mapped 6.66 (ralph/reports/CREATURES/close-1024/roster/r2/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -3106,7 +3106,7 @@
     {
      "text": "F36 (1) thundertunnel: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU Q31 CO12 31 Oct, judge of record (tb/gpu-pass d3f930b94, ralph/reports/GPU-PASS/Q31/CO12-near-bar-creatures-e5fcc1c47/VERDICT.md; main d4d5b262f vs tb/co12-main-on e5fcc1c47, Medium and High, yardstick): Medium 5.73 -> 6.49 (+0.76), High 5.52 -> 6.50 (+0.98); near-black fur PRESENT -> PARTIAL; floating faint FIXED. Next: lift values further and add rim light; the faint barely differs from standing. Landed. Earlier: CPU whole-roster round r5: mapped 7.16 (ralph/reports/CREATURES/close-1024/roster/r5/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): coat lift 6.47 -> 6.82. Landed. Earlier: GPU Q31 CO12 31 Oct, judge of record (tb/gpu-pass d3f930b94, ralph/reports/GPU-PASS/Q31/CO12-near-bar-creatures-e5fcc1c47/VERDICT.md; main d4d5b262f vs tb/co12-main-on e5fcc1c47, Medium and High, yardstick): Medium 5.73 -> 6.49 (+0.76), High 5.52 -> 6.50 (+0.98); near-black fur PRESENT -> PARTIAL; floating faint FIXED. Next: lift values further and add rim light; the faint barely differs from standing. Landed. Earlier: CPU whole-roster round r5: mapped 7.16 (ralph/reports/CREATURES/close-1024/roster/r5/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
@@ -3136,7 +3136,7 @@
     {
      "text": "F36 (1) trailpup: hurt, faint/collapse and every applicable swim, fly-grip and ride pose read correctly.",
      "status": "in_progress",
-     "evidence": "GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): trailpup mapped 7.34 (tier 7-7.5). CPU whole-roster round r1: mapped 7.95 (ralph/reports/CREATURES/close-1024/roster/r1/; later b-rounds in roster/verdict.md).",
+     "evidence": "GPU Q31 CO16 creatures one-tree 1 Nov, judge of record (tb/gpu-pass e173f5346, ralph/reports/GPU-PASS/Q31/CO16-creatures-one-tree/; High, flag flips on tb/co-f36-9-on): stronger hit 6.64 -> 6.92. Landed. Earlier: GPU 24 Oct, judge of record (tb/gpu-pass 43d1e7ffa, ralph/reports/GPU-PASS/F36-1/roster-base-1e83cafa0/VERDICT.md; tb/creatures-land 1e83cafa0 = main 124a7393c plus the capture-stage fix; Medium and High, yardstick, confirming batches): trailpup mapped 7.34 (tier 7-7.5). CPU whole-roster round r1: mapped 7.95 (ralph/reports/CREATURES/close-1024/roster/r1/; later b-rounds in roster/verdict.md).",
      "gap": "GPU whole-body pose capture (standing, hit, faint, plus applicable swim/fly-grip/ride) at Medium and High; mapped >= 7.5 with no pose PRESENT closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F36#1",
