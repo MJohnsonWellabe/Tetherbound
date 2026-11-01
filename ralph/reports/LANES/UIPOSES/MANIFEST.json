@@ -7,7 +7,8 @@
    "meadows__catching__01-aiming-full-health",
    "meadows__catching__catch_low",
    "meadows__catching__catch_high"
-  ]
+  ],
+  "group": 1
  },
  {
   "item": "P2-114",
@@ -17,7 +18,8 @@
    "tidewake__catching__catch_low",
    "tidewake__catching__catch_high",
    "tidewake__catching__01-aiming-full-health"
-  ]
+  ],
+  "group": 1
  },
  {
   "item": "P2-117",
@@ -25,7 +27,8 @@
   "camera_set": "tools/phase2_capture_catch.gd --biome=cloudreach --seed=2042",
   "stands": [
    "cloudreach__catching__07-aiming-weakened"
-  ]
+  ],
+  "group": 1
  },
  {
   "item": "P2-117",
@@ -33,7 +36,8 @@
   "camera_set": "tools/phase2_capture_catch.gd --biome=cloudreach --seed=2042",
   "stands": [
    "cloudreach__catching__06-breakout"
-  ]
+  ],
+  "group": 1
  },
  {
   "item": "P2-061",
@@ -43,7 +47,8 @@
    "meadows__catching__06-breakout",
    "meadows__catching__08-caught-verdict",
    "meadows__catching__09-caught-banner"
-  ]
+  ],
+  "group": 1
  },
  {
   "item": "P2-028",
@@ -53,7 +58,8 @@
    "tidewake__ripplet__fainted",
    "tidewake__riptusk__fainted",
    "tidewake__aquaryn__fainted"
-  ]
+  ],
+  "group": 1
  },
  {
   "item": "P2-029",
@@ -62,7 +68,8 @@
   "stands": [
    "tidewake__riptusk__resting",
    "tidewake__torrentoad__resting"
-  ]
+  ],
+  "group": 1
  },
  {
   "item": "P2-103",
@@ -72,7 +79,8 @@
    "tidewake__fight__venn_resolve__win-141_53",
    "tidewake__fight__venn_resolve__aftermath-142_53",
    "tidewake__fight__nerissa_resolve__win-207_25"
-  ]
+  ],
+  "group": 1
  },
  {
   "item": "P2-111",
@@ -81,7 +89,8 @@
   "stands": [
    "stormwood__fight__hollows_win__hollows_alpha-99-after",
    "stormwood__fight__hollows_aftermath__hollows_alpha-100-aftermath"
-  ]
+  ],
+  "group": 1
  },
  {
   "item": "P2-119",
@@ -90,14 +99,16 @@
   "stands": [
    "meadows__flying__launch",
    "meadows__flying__glide"
-  ]
+  ],
+  "group": 1
  },
  {
   "item": "P2-001",
   "flag": "data/config/menu.json:satchel_focus.enabled",
-  "camera_set": "tools/phase2_capture_ui.gd --biome=meadows --seed=2042 --gamepad",
+  "camera_set": "pad",
   "stands": [
    "meadows__menu_backpack"
-  ]
+  ],
+  "group": 1
  }
 ]
