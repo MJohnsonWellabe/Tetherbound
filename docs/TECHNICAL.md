@@ -198,6 +198,7 @@ When a lane hits a new harness problem, it adds the problem, its cause and its f
   - `capture_tidewake_f13_5.gd` (`--camera-set=res://tools/visual_judge/camera_sets/<set>.json --views=… --preset=Low`)
   - `phase2_capture_locations.gd`
   - `capture_view_fallback.gd` re-seats approach views that fail; a view with no valid seat fails closed.
+  - `phase2_capture_locations.gd --spot=<id>@<x>,<z>@<heading_deg>` (repeatable) adds ad-hoc stands; pair it with `--subset=<no match>` to shoot only those. Cloudreach `--cloudreach-grounding-report` prints every floating drum/cylinder with a ground-level `view=` stand for it, and a `proof` line per seated piece.
 - **Fight tools:**
   - `art_pipeline/capture_named_fight.gd`
   - `capture_named_fights_f10_6.gd` (Stormwood; `--fixed-fps 20`)
