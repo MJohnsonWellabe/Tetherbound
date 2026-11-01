@@ -742,7 +742,7 @@ func test_a_conversation_shot_swings_off_a_creature_the_arm_passes_through() -> 
 ## --- twoshot_v2 (GPU DLG-2, P2-073/P2-074/P2-076/P2-083) ----------------------
 
 func _twoshot_v2_on() -> Dictionary:
-	var base := CONVERSATION.config().duplicate(true)
+	var base := CONVERSATION._plain_config().duplicate(true)
 	var variant: Dictionary = (base.get("twoshot_v2", {}) as Dictionary).duplicate(true)
 	variant["enabled"] = true
 	base["twoshot_v2"] = variant
@@ -750,7 +750,7 @@ func _twoshot_v2_on() -> Dictionary:
 
 
 func test_twoshot_v2_off_leaves_the_push_in_unchanged() -> void:
-	var base := CONVERSATION.config().duplicate(true)
+	var base := CONVERSATION._plain_config().duplicate(true)
 	var variant: Dictionary = (base.get("twoshot_v2", {}) as Dictionary).duplicate(true)
 	assert_true(variant.has("distance"), "camera.json must declare the twoshot_v2 candidate")
 	variant["enabled"] = false
@@ -763,8 +763,7 @@ func test_twoshot_v2_off_leaves_the_push_in_unchanged() -> void:
 func test_twoshot_v2_frames_the_speaker_closer_with_the_trainer_behind_the_lens() -> void:
 	var trainer_anchor := TRAINER_AT + Vector3.UP * 1.45
 	var speaker_anchor := SPEAKER_AT + Vector3.UP * SPEAKER_HEIGHT * 0.78
-	var base := CONVERSATION.config().duplicate(true)
-	base["twoshot_v2"] = {"enabled": false}
+	var base := CONVERSATION._plain_config().duplicate(true)
 	var on := _twoshot_v2_on()
 	assert_false(on.has("enabled"), "the candidate's own switch must not leak into the shot")
 	var old_shot := CONVERSATION.solve(trainer_anchor, speaker_anchor, Vector3.FORWARD, base)
@@ -806,7 +805,6 @@ func test_twoshot_v2_swings_further_for_a_close_pair_only() -> void:
 	var base := float(on["shoulder_yaw_deg"])
 	assert_almost_eq(CONVERSATION.shoulder_yaw_for(3.5, on), base, 0.001, "a normal gap keeps the swing")
 	assert_true(CONVERSATION.shoulder_yaw_for(1.6, on) > base + 10.0, "a close pair swings further")
-	var plain := CONVERSATION.config().duplicate(true)
-	plain.erase("close_shoulder_extra_deg")
+	var plain := CONVERSATION._plain_config().duplicate(true)
 	assert_almost_eq(CONVERSATION.shoulder_yaw_for(1.6, plain), float(plain["shoulder_yaw_deg"]), 0.001,
 		"without the candidate the swing is unchanged")
