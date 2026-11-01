@@ -40,26 +40,22 @@ SPECIES = {
         "albedo": C + "bramblebun/candidate_nat1022/models/creature_bramblebun_nat1022_Image_0.jpg",
         "overlays": [
             {"id": "bramble_back", "where": {"y_min": 0.5, "up_min": 0.15}, "mode": "grow",
-             "color": "#5b7d33", "shade": "#263f17", "coverage": 0.72, "grain": 6.0, "softness": 0.12},
-            {"id": "bramble_stems", "where": {"y_min": 0.55, "up_min": 0.2}, "mode": "grow",
-             "color": "#6a5634", "shade": "#33281a", "coverage": 0.08, "grain": 14.0, "softness": 0.08},
-            {"id": "leaf_ears", "where": {"y_min": 0.86, "radial_min": 0.08}, "mode": "grow",
-             "color": "#6a9a3a", "shade": "#2f4d1c", "coverage": 0.5, "grain": 7.0, "softness": 0.06},
+             "color": "#5b7d33", "shade": "#263f17", "coverage": 0.85, "grain": 6.0, "softness": 0.12},
         ],
     },
     "trailpup": {
         "glb": C + "trailpup/candidate_nat1024/models/creature_trailpup_nat1024.glb",
         "albedo": C + "trailpup/candidate_nat1024/models/creature_trailpup_nat1024_Image_0.jpg",
         "overlays": [
-            {"id": "earth_stripe", "where": {"y_min": 0.6, "up_min": 0.45}, "mode": "tint",
-             "color": "#b8823c", "coverage": 0.62, "grain": 5.0, "softness": 0.1, "strength": 0.85},
+            {"id": "earth_stripe", "where": {"y_min": 0.7, "up_min": 0.55}, "mode": "grow",
+             "color": "#c98a3a", "shade": "#6e4520", "coverage": 0.9, "grain": 5.0, "softness": 0.08},
         ],
         "glow": [
             {"id": "earth_stripe_glow", "where": {"y_min": 0.66, "up_min": 0.6}, "select": "match",
-             "sample": "albedo", "hue": [25, 45], "sat_min": 0.35, "val_min": 0.3,
-             "color": "#e8a04a", "intensity": 0.8, "clump_coverage": 0.45, "blur_px": 3.0},
+             "sample": "albedo", "hue": [22, 48], "sat_min": 0.3, "val_min": 0.3,
+             "color": "#f0a850", "intensity": 1.0, "clump_coverage": 0.6, "blur_px": 3.0},
         ],
-        "emission_energy": 0.5,
+        "emission_energy": 0.8,
     },
     "mudsnout": {
         "glb": C + "mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t.glb",
@@ -74,7 +70,7 @@ SPECIES = {
         "albedo": C + "mirejaw/candidate/models/creature_mirejaw_native_Image_0.jpg",
         "overlays": [
             {"id": "swamp_moss_back", "where": {"y_min": 0.55, "up_min": 0.4}, "mode": "grow",
-             "color": "#52713a", "shade": "#243819", "coverage": 0.5, "grain": 6.0, "softness": 0.12},
+             "color": "#52713a", "shade": "#243819", "coverage": 0.75, "grain": 6.0, "softness": 0.12},
         ],
     },
     "cannonback": {
@@ -92,11 +88,11 @@ SPECIES = {
         "glow": [
             {"id": "gold_veins", "where": {}, "select": "match", "sample": "albedo",
              "hue": [25, 50], "sat_min": 0.3, "val_min": 0.58,
-             "color": "#ffd25a", "intensity": 1.0, "clump_coverage": 0.8, "blur_px": 1.0},
+             "color": "#ffe27a", "intensity": 1.0, "clump_coverage": 0.85, "blur_px": 1.0},
         ],
         # Lightning runs along the pattern's edges, never across the hide.
-        "glow_edge_px": 4,
-        "emission_energy": 0.9,
+        "glow_edge_px": 6,
+        "emission_energy": 2.0,
     },
     "riverdrake": {
         "glb": C + "riverdrake/models/creature_riverdrake_lod0.glb",
@@ -105,11 +101,11 @@ SPECIES = {
         "glow": [
             {"id": "frill_biolume", "where": {"y_min": 0.68}, "select": "match", "sample": "albedo",
              "hue": [25, 55], "val_min": 0.68,
-             "color": "#7fe6ff", "intensity": 0.9, "clump_coverage": 0.85, "blur_px": 1.0},
+             "color": "#7fe6ff", "intensity": 1.0, "clump_coverage": 0.9, "blur_px": 1.0},
         ],
         # Bioluminescence along the crest and frill rims, not across the hide.
-        "glow_edge_px": 4,
-        "emission_energy": 0.8,
+        "glow_edge_px": 6,
+        "emission_energy": 2.0,
     },
     "solmane": {
         "glb": C + "solmane/models/creature_solmane_lod0.glb",
