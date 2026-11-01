@@ -1,0 +1,68 @@
+{
+  "per_bone": {
+    "root": 8889,
+    "spine_1": 1777,
+    "spine_2": 1609,
+    "spine_3": 1777,
+    "spine_4": 2598,
+    "head": 174
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 13944,
+  "height_m": 5.1999,
+  "triangles": 27990,
+  "bones": 6,
+  "chain_joints_normalised": [
+    [
+      -0.058,
+      -0.296,
+      0.24
+    ],
+    [
+      -0.052,
+      -0.158,
+      0.475
+    ],
+    [
+      -0.033,
+      -0.08,
+      0.675
+    ],
+    [
+      -0.037,
+      -0.16,
+      0.825
+    ],
+    [
+      -0.049,
+      -0.275,
+      0.975
+    ],
+    [
+      -0.062,
+      -0.518,
+      0.975
+    ]
+  ],
+  "coil_fraction": 0.3,
+  "ground_patch": {
+    "patch_band_m_normalised": 0.0,
+    "patch_surface_z": 0.0,
+    "islands_only": true,
+    "columns": [],
+    "removed_vertices": 0,
+    "removed_islands": 0,
+    "removed_island_vertices": 0,
+    "regrounded_by": 0.0,
+    "auto_detect": {
+      "disc": false,
+      "base_over_leg_band_area": 1.036
+    }
+  },
+  "params": {
+    "species": "fulgocobra",
+    "height": 5.2
+  },
+  "method": "measured_column_chain_coil_on_root",
+  "candidate_enabled": false
+}

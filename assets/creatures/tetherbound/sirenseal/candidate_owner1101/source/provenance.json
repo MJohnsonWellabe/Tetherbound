@@ -1,0 +1,17 @@
+{
+ "species": "sirenseal",
+ "owner_direction": "1 Nov 2026 creature redesign under the owner's rule (believable adult animal, natural stance, one elemental trait, glowing eyes and lines, optional partial natural plates)",
+ "concept": "Coordinator pick a from two rule-following concepts: Sirenseal, a large seal with long fin-like frills on its head and neck, pale grey-blue with darker blue spots, a believable lean adult creature in its natural stance, mostly realistic fur, feathers or",
+ "reference": "ref_a.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image (nano-banana) on the existing licence, inspected and picked by the coordinator under the owner's delegated rule",
+ "meshy_image_to_3d_task": "01a197ee-4383-70ad-9243-f2f8c3e6feff",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "raw Meshy candidate; not rigged, not imported, flag-off"
+}

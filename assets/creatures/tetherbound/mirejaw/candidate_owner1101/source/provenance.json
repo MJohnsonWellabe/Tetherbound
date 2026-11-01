@@ -1,0 +1,86 @@
+{
+ "species": "mirejaw",
+ "owner_direction": "1 Nov 2026 creature redesign under the owner's rule (believable adult animal, natural stance, one elemental trait, glowing eyes and lines, optional partial natural plates)",
+ "concept": "Owner pick B: long low axolotl-like swamp predator, glowing aqua spots, amber gill frills",
+ "reference": "ref_b.png",
+ "reference_origin": "agent-drafted via Meshy text-to-image (nano-banana) on the existing licence, inspected and picked by the coordinator under the owner's delegated rule",
+ "meshy_image_to_3d_task": "01a197c3-ce85-73b9-b972-626d6c3ad871",
+ "settings": {
+  "should_remesh": true,
+  "should_texture": true,
+  "enable_pbr": true,
+  "topology": "triangle",
+  "target_polycount": 30000,
+  "symmetry_mode": "auto"
+ },
+ "status": "prepared candidate, flag-off: data/config/creature_model_flags.json remake_owner1101_mirejaw (enabled false); awaiting GPU judging",
+ "prepared_model": "assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101.glb",
+ "preparation": {
+  "date": "2026-11-01",
+  "lane": "tb/creature-remakes",
+  "steps": [
+   "tools/art_pipeline/blender/prepare_remake_quadruped.py (dog3 rig and skin recipe; strip_ground_patch.auto)",
+   "assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py (clips, unchanged)",
+   "tools/art_pipeline/arc_emission.py",
+   "embedded textures re-encoded JPEG q88; tools/art_pipeline/texture_import_policy.py --apply"
+  ],
+  "commands": "blender --background --python tools/art_pipeline/blender/prepare_remake_quadruped.py -- assets/creatures/tetherbound/mirejaw/candidate_owner1101/source/mirejaw_b.glb rigged.glb prepare-report.json '{\"species\":\"mirejaw\",\"height\":2.8}' ; blender --background --python assets/creatures/tetherbound/terrapup/candidate_dog3/source/author_native_clips.py -- rigged.glb assets/creatures/tetherbound/mirejaw/candidate_owner1101/models/creature_mirejaw_owner1101.glb ; python3 tools/art_pipeline/arc_emission.py mirejaw_owner1101",
+  "report": "assets/creatures/tetherbound/mirejaw/candidate_owner1101/source/prepare-report.json",
+  "rig": {
+   "skeleton": "dog3 15-bone quadruped",
+   "height_m": 2.8,
+   "triangles": 7532,
+   "ground_patch": {
+    "patch_band_m_normalised": 0.1,
+    "patch_surface_z": 0.02,
+    "islands_only": false,
+    "columns": [
+     [
+      -0.228,
+      -0.523,
+      0.284
+     ],
+     [
+      0.276,
+      -0.177,
+      0.422
+     ],
+     [
+      -0.264,
+      0.037,
+      0.338
+     ],
+     [
+      -0.021,
+      1.183,
+      0.375
+     ]
+    ],
+    "removed_vertices": 7539,
+    "removed_islands": 1284,
+    "removed_island_vertices": 3376,
+    "regrounded_by": 0.02,
+    "auto_detect": {
+     "disc": true,
+     "base_over_leg_band_area": 1.997
+    }
+   },
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "charged",
+    "hit",
+    "faint",
+    "rest",
+    "swim",
+    "fly_grip",
+    "ride"
+   ]
+  },
+  "emission_rule": "data/creatures/arc_emission.json species.mirejaw_owner1101"
+ },
+ "flag": "data/config/creature_model_flags.json:remake_owner1101_mirejaw",
+ "test": "tests/test_creature_model_flags.gd"
+}
