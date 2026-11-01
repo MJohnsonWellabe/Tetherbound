@@ -32,6 +32,8 @@ Tried and not included:
 - `dune_grass_candidate`: strips the dune grass to bare sand, which is the P2-057 judges' complaint.
 - `shore_surf_candidate`: no visible change at First Shore.
 
+P2-026 stand check (drowned_garden_terraces route_day and walk_01_day, before/after `current_flow`): the dashed translucent lane strip across the shoal chain is gone. The disc chain itself remains: the rest shoals are baked terrain, so they are not fixed here. No regression.
+
 Regression check (sky_shrine 07, realm_gate_crag, three_bells_bridge approach, every manifest Cloudreach flag on): no visible change from the shelf, wall, grounding or paving passes at those stands.
 
 Tests (headless, `tests/run_tests.gd --only=test_cloudreach_monotonic_walls,test_cloudreach_paved_grass`): 4 tests, 0 failed.
