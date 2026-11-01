@@ -680,6 +680,12 @@ func _step_back_for_catch_focus() -> void:
 		if panel != null: panel.visible = false
 	if is_instance_valid(_system_overlay): _system_overlay.hide()
 	if _strip_fader != null: _strip_fader.visible = false
+	# camfx.json `catch_orb` (OFF): the whole fight HUD collapses under the
+	# verdict card: party strip, Tether meter, orb cluster and ultimate too (judges
+	# 1 Nov: "tiny illegible Caught text under full HUD").
+	if not preload("res://scripts/vfx/camfx.gd").block("catch_orb").is_empty():
+		for extra: Control in [_party_strip, _tether_meter, _orb_cluster, _ultimate_readout, _ultimate_meter]:
+			if is_instance_valid(extra): extra.visible = false
 
 
 func _layout_system_hints() -> void:

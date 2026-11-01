@@ -32,6 +32,8 @@ const CATCH := preload("res://scripts/combat/catch_math.gd")
 const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
+const CAMFX := preload("res://scripts/vfx/camfx.gd")
+const CAMFX_IMPACT := preload("res://scripts/vfx/camfx_impact.gd")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 ## W09-VFX (CL-A2): the hit spark, body flash, KO puff, catch sparkle and
 ## level-up flourish. One door; see scripts/vfx/combat_vfx.gd.
@@ -5928,13 +5930,17 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 	var drop := clampf(float(cfg.get("flash_drop", 0.0)), 0.0, 1.0)
 	if drop > 0.0 and is_instance_valid(struck):
 		flash_at = where.lerp(Vector3(where.x, struck.global_position.y + 0.15, where.z), drop)
+	# camfx.json `impact_fx` (OFF = 1.0): physical chips, crack and arcs carry
+	# the hit, so the flat flash disc shrinks.
+	var impact_fx := CAMFX.block("impact_fx")
+	var disc_scale := float(impact_fx.get("flash_scale", 1.0)) if not impact_fx.is_empty() else 1.0
 	FLASH.burst(
 		host,
 		flash_at,
 		colour,
-		float(spec.get("radius", 1.5)) * float(style.get("radius_scale", 1.0)),
+		float(spec.get("radius", 1.5)) * float(style.get("radius_scale", 1.0)) * disc_scale,
 		float(spec.get("duration", 0.34)) * float(style.get("duration_scale", 1.0)),
-		float(spec.get("strength", 1.0)) * float(style.get("strength_scale", 1.0)),
+		float(spec.get("strength", 1.0)) * float(style.get("strength_scale", 1.0)) * disc_scale,
 		# N14: the attack path reads the same opt-in key from `combat.json`'s own
 		# `impact.quick` / `impact.charged`. Neither sets it today, so every blow
 		# in the game draws exactly the spike it always has.
@@ -5952,6 +5958,8 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 	if ground is Dictionary and (ground as Dictionary).get("enabled") == true \
 			and (charged or (ground as Dictionary).get("quick") == true) and is_instance_valid(struck):
 		PATTERN_CUE.contact_burst(host, struck.global_position, ground)
+	if not impact_fx.is_empty():
+		CAMFX_IMPACT.spawn(host, struck, tint, charged)
 
 
 func _nudge_camera_on_landing(charged: bool) -> void:
@@ -6462,13 +6470,17 @@ func _catch_flash(key: String, at: Vector3) -> void:
 	if spec.is_empty():
 		return
 	var host: Node = _arena if _arena != null else _player.get_parent()
+	# camfx.json `catch_orb` (OFF = 1.0): smaller verdict flashes so the seal
+	# no longer veils the physical orb.
+	var orb_r2 := CAMFX.block("catch_orb")
+	var flash_scale := float(orb_r2.get("verdict_flash_scale", 1.0)) if not orb_r2.is_empty() else 1.0
 	FLASH.burst(
 		host,
 		at,
 		Color(str(spec.get("colour", "#ffd27a"))),
-		float(spec.get("radius", 1.2)),
+		float(spec.get("radius", 1.2)) * flash_scale,
 		float(spec.get("duration", 0.35)),
-		float(spec.get("strength", 1.0)),
+		float(spec.get("strength", 1.0)) * flash_scale,
 		# N14: opt-in, from the spec's own data. 0.0 (absent) is the flat spike
 		# every attack has always drawn -- see impact_flash.gd's `_spike_softness`.
 		float(spec.get("spike_softness", 0.0))
