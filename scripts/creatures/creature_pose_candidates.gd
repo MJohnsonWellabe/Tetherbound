@@ -143,14 +143,19 @@ static func install(body: Node3D, model: Node3D, player: AnimationPlayer,
 	# flipping `enabled` alone. An enabled flag replaces whole roles for the
 	# presentations it names, after the presentation overrides above.
 	var flagged: Array[String] = []
-	var flags: Dictionary = _data.get("candidate_role_flags", {})
+	var flags: Dictionary = (_data.get("candidate_role_flags", {}) as Dictionary).duplicate()
+	# Lane-owned flags live on their own key so parallel lanes merge cleanly.
+	flags.merge(_data.get("lane_role_flags", {}) as Dictionary)
 	for flag: String in flags:
 		var entry: Variant = flags[flag]
 		if not entry is Dictionary or not bool(entry.get("enabled", false)):
 			continue
 		var flag_roles: Dictionary = entry.get("presentations", {}).get(presentation_id, {})
+		# `adds_roles` lets a flag author a role the profile lacks (UIPOSES:
+		# Riptusk's prone rest); every other role must already exist.
+		var addable: Array = entry.get("adds_roles", [])
 		for role: String in flag_roles:
-			if not roles.has(role) or not flag_roles[role] is Dictionary:
+			if (not roles.has(role) and role not in addable) or not flag_roles[role] is Dictionary:
 				return original
 			roles[role] = flag_roles[role]
 		if not flag_roles.is_empty():
