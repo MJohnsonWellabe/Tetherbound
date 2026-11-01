@@ -118,3 +118,57 @@ static func install(terrain: Object, sink: Dictionary) -> void:
 	for key: String in ["far_specular", "far_roughness"]:
 		if config.has(key):
 			material.call("set_shader_param", "gs_" + key, float(config[key]))
+
+
+## World dressing P2-070 (meshy_rim, OFF until GPU judged; coordinator Meshy
+## batch 31 Oct, assets/props/meshy-1031/glass_sink, provenance there). GPU
+## 3.19: from the reachable Hollow Crown rim the sink reads as "a bare
+## tiled-moss ridge between pale lavender sheets ... no rim marker, copper or
+## black pool". The Meshy stone-and-copper ring of glass spikes stands at the
+## island lip (rim markers, seated on the sampled ground) and, scaled up, on
+## the sink floor below as basin dressing. Visual only: no collider.
+static func dress(world: Node3D, sink: Dictionary) -> Node3D:
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
+	var cfg: Dictionary = config.get("meshy_rim", {}) as Dictionary
+	if not bool(cfg.get("enabled", false)) or world == null:
+		return null
+	const HERO_PROP := preload("res://scripts/world/meshy_hero_prop.gd")
+	const BOUNDS := preload("res://scripts/characters/render_bounds.gd")
+	var centre := Vector2(float(sink.centre[0]), float(sink.centre[1]))
+	var root := Node3D.new()
+	root.name = "GlassSinkMeshyRim"
+	world.add_child(root)
+	var entries: Array = []
+	var lip := float(sink.island_radius) + float(cfg.get("rim_offset_m", -8.0))
+	for raw: Variant in cfg.get("rim", []):
+		var row := raw as Dictionary
+		var a := deg_to_rad(float(row.get("bearing_deg", 0.0)))
+		entries.append({"xz": centre + Vector2(sin(a), cos(a)) * (lip + float(row.get("out_m", 0.0))),
+			"across": float(row.get("across_m", 14.0)), "yaw": float(row.get("bearing_deg", 0.0))})
+	for raw: Variant in cfg.get("floor", []):
+		var row := raw as Dictionary
+		entries.append({"xz": Vector2(float(row.at[0]), float(row.at[1])),
+			"across": float(row.get("across_m", 60.0)), "yaw": float(row.get("yaw_deg", 0.0))})
+	var index := 0
+	for entry: Dictionary in entries:
+		var model := HERO_PROP.load_model(str(cfg.get("model", "")))
+		if model == null:
+			break
+		var bounds := BOUNDS.measure(model)
+		var factor := float(entry.across) / maxf(0.01, maxf(bounds.size.x, bounds.size.z))
+		model.scale = Vector3.ONE * factor
+		var sink_m := float(entry.across) * float(cfg.get("sink_fraction", 0.04))
+		model.position = Vector3(-bounds.get_center().x * factor, -bounds.position.y * factor - sink_m,
+			-bounds.get_center().z * factor)
+		if cfg.has("glow_colour"):
+			HERO_PROP.glow(model, Color(str(cfg.glow_colour)), float(cfg.get("glow_energy", 1.0)))
+		var seat := Node3D.new()
+		seat.name = "GlassSinkRim%02d" % index
+		var xz: Vector2 = entry.xz
+		var ground := float(world.call("ground_height_at", xz.x, xz.y))
+		seat.position = Vector3(xz.x, ground if is_finite(ground) else float(sink.floor_y), xz.y)
+		seat.rotation.y = deg_to_rad(float(entry.yaw))
+		seat.add_child(model)
+		root.add_child(seat)
+		index += 1
+	return root

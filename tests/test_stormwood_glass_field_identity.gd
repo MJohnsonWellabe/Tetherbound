@@ -19,7 +19,7 @@ func test_glass_field_builds_a_readable_non_colliding_strike_corridor() -> void:
 	field.build(world, false)
 	assert_eq(field.find_children("StormglassCluster_*", "Node3D", true, false).size(), 8,
 		"the approach lost its repeated stormglass field rhythm")
-	assert_true(field.find_children("GlassShard*", "MeshInstance3D", true, false).size() >= 48,
+	assert_true(_glass_pieces(field) >= 48,
 		"the field no longer reads as a stormglass event rather than ordinary grass")
 	assert_eq(field.find_children("FusedStrikeScar", "MeshInstance3D", true, false).size(), 8,
 		"each shard family needs a fused impact seat")
@@ -74,6 +74,14 @@ func test_glass_field_dressing_keeps_the_authored_route_and_encounter_clear() ->
 		"production Stormwood no longer mounts the Glass Field identity")
 
 
+## The primitive blades, or the Meshy glass spike clusters that replace them
+## when `meshy_spikes` is on (GPU WD2, 1 Nov: P2-043 +1.00). Either way the
+## field must carry at least 48 glass pieces.
+func _glass_pieces(field: Node) -> int:
+	return field.find_children("GlassShard*", "MeshInstance3D", true, false).size() \
+		+ field.find_children("MeshyGlassSpikes*", "Node3D", true, false).size()
+
+
 func _entry(entries: Array, wanted: String) -> Dictionary:
 	for raw: Variant in entries:
 		if raw is Dictionary and str((raw as Dictionary).get("id", "")) == wanted:
@@ -94,7 +102,7 @@ func test_scorched_scar_pass_builds_behind_its_flag() -> void:
 	for clearing: Node in field.find_children("ScarGrassClearance", "Node3D", true, false):
 		assert_true(clearing.is_in_group("grass_clear") and float(clearing.get_meta("grass_clear_radius", 0.0)) > 0.0)
 	assert_eq(field.find_children("FusedLump*", "Node3D", true, false).size(), 24)
-	assert_true(field.find_children("GlassShard*", "MeshInstance3D", true, false).size() >= 48)
+	assert_true(_glass_pieces(field) >= 48)
 	assert_true(field.find_children("*", "CollisionObject3D", true, false).is_empty(), "still non-colliding")
 	world.free()
 

@@ -504,8 +504,8 @@
   {
    "what": "World lane dressing and Meshy props",
    "where": "tb/world-dressing",
-   "state": "running",
-   "detail": "Pickups, camp floor, camp bed and workbench, Glass Field, Glass Sink, Crown Arch hero"
+   "state": "landed",
+   "detail": "GPU WD2: all 10 items gain (9 above +0.5; harvest +2.44, Glass Sink +1.74); landed"
   }
  ],
  "asks": [

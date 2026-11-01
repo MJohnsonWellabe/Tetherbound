@@ -1,0 +1,71 @@
+{
+ "Ow": {
+  "anchor": false,
+  "label": "P2-094",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-094_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-094_cand.jpg"
+ },
+ "Bs": {
+  "anchor": false,
+  "label": "P2-041",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-041_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-041_main.jpg"
+ },
+ "Xv": {
+  "anchor": false,
+  "label": "P2-043",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-043_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-043_main.jpg"
+ },
+ "Hu": {
+  "anchor": true,
+  "A": "f36_0_npc:C2B",
+  "B": "f36_0_npc:C2A"
+ },
+ "Bp": {
+  "anchor": false,
+  "label": "P2-045",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-045_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-045_main.jpg"
+ },
+ "Aw": {
+  "anchor": false,
+  "label": "P2-034",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-034_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-034_main.jpg"
+ },
+ "Qp": {
+  "anchor": true,
+  "A": "craft:before",
+  "B": "craft:after"
+ },
+ "Vj": {
+  "anchor": false,
+  "label": "P2-070",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-070_main.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-070_cand.jpg"
+ },
+ "Qf": {
+  "anchor": false,
+  "label": "P2-033",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-033_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-033_main.jpg"
+ },
+ "Xn": {
+  "anchor": true,
+  "A": "f36_0_gap:C1B",
+  "B": "f36_0_gap:C1A"
+ },
+ "Ex": {
+  "anchor": false,
+  "label": "P2-046",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-046_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-046_main.jpg"
+ },
+ "Of": {
+  "anchor": false,
+  "label": "P2-035",
+  "A": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-035_cand.jpg",
+  "B": "/tmp/claude-0/-home-user-Tetherbound/fdf2e801-6ea3-55fe-817a-6a8a68f79706/scratchpad/judge/b1_src/P2-035_main.jpg"
+ }
+}

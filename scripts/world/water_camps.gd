@@ -9,6 +9,7 @@ const BED := preload("res://scripts/build/creature_bed.gd")
 const PIECE := preload("res://scripts/build/build_piece.gd")
 const PLAYER_BED := preload("res://scripts/build/player_bed.gd")
 const WORKBENCH := "res://assets/props/quaternius_fantasy/Workbench.gltf"
+const MESHY_CAMP := preload("res://scripts/world/meshy_camp_props.gd")
 var camps: Dictionary = {}
 var world: Node3D
 
@@ -46,6 +47,7 @@ func build(owner_world: Node3D) -> void:
 		bench.build_real(WORKBENCH, {}, Vector3.ONE * float(tuning.workbench_scale))
 		if not world.simulation_only:
 			preload("res://scripts/world/water_camp_workbench_presentation.gd").attach(bench)
+			MESHY_CAMP.apply_workbench(bench)
 		rest.get_node("CraftInteractable").global_position = bench.global_position + Vector3.UP * 0.6
 		var fire := FIRE.new()
 		fire.name = str(row.id) + "_fire"
@@ -60,6 +62,8 @@ func build(owner_world: Node3D) -> void:
 		bed.global_position = _grounded(at + _offset(tuning.creature_bed_offset_xz))
 		bed.build_real(false)
 		preload("res://scripts/world/water_camp_bed_presentation.gd").attach(bed)
+		if not world.simulation_only:
+			MESHY_CAMP.apply_bed(bed)
 		bed.set_build_index(int(row.creature_bed_index))
 	if world.simulation_only:
 		visible = false

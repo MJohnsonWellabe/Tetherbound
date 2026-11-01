@@ -3561,7 +3561,7 @@
     {
      "text": "F38 (1) top-20 item P2-033 ground pickup identity: Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal came \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 80, lane tb/x04-meadows. Code-blind ground-level review across four biomes. Meadows candies/potions are small colored glows; Tidewake repeats a crate family; Cloudreach potion/revive can read as flowers; five progression-gate",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 5.37 -> 6.34 (+0.97). Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 80, lane tb/x04-meadows. Code-blind ground-level review across four biomes. Meadows candies/potions are small colored glows; Tidewake repeats a crate family; Cloudreach potion/revive can read as flowers; five progression-gate",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Counted once (owner 24 Oct board math): touches meadows, tidewake, cloudreach, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#1",
@@ -4350,7 +4350,7 @@
     {
      "text": "F38 (2) impact>12 item P2-035 camp and workshop prop legibility: Small camp and workshop props overlap nearby signs grass creatures or other tools so individual objects are difficult to pick out \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 27, lane tb/x04-meadows. The CAMP sign and workshop camera stands contribute to occlusion; reshoot side views before assigning every prop as a scene issue.",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 5.44 -> 5.68 (+0.24). Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 27, lane tb/x04-meadows. The CAMP sign and workshop camera stands contribute to occlusion; reshoot side views before assigning every prop as a scene issue.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F38#2",
@@ -4916,7 +4916,7 @@
     {
      "text": "F39 (2) impact>12 item P2-115 authored camp creature bed silhouette: The creature bed reads as a flat brown patch inside a dark oval curb and becomes a narrow ring when seen edge-on, with little bedding shape  \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "in_progress",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 48, lane tb/x04-tidewake. Code-blind review of three authored camp fixtures from the normal player camera. Camp tent and fire are clearly identifiable; no sleep interaction was performed. Salt Crown is most edge-on, so confirm",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 4.62 -> 5.23 (+0.61); reads as a pit. Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status candidate_off, impact 48, lane tb/x04-tidewake. Code-blind review of three authored camp fixtures from the normal player camera. Camp tent and fire are clearly identifiable; no sleep interaction was performed. Salt Crown is most edge-on, so confirm",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
@@ -4945,7 +4945,7 @@
     {
      "text": "F39 (2) impact>12 item P2-116 authored camp workbench identity: The craft station looks like a narrow plain wooden bench with no obvious tools or work surface cues, and in two camp views it is partly hidd \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 48, lane tb/x04-tidewake. Code-blind normal-camera review at three authored camps. This is the world station, distinct from CraftPanel text issues P2-095 and P2-096. At First Shore the fixture player appears to stand on the be",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 5.20 -> 6.08 (+0.88). Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 48, lane tb/x04-tidewake. Code-blind normal-camera review at three authored camps. This is the world station, distinct from CraftPanel text issues P2-095 and P2-096. At First Shore the fixture player appears to stand on the be",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F39#2",
@@ -5911,7 +5911,7 @@
     {
      "text": "F40 (2) impact>12 item P2-054 mushroom pickup variants: Speed Mushroom and Wild Mushroom use the same pale yellow mushroom cluster silhouette at normal camera distance \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status deferred, impact 18, lane tb/x04-cloudreach. Deferred: Source audit finds inconsistent mushroom dressing between BandPickups and ItemCachePickup. A shared, texture-preserving variant treatment still needs matched production-camera proof; changin",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 6.33 -> 6.92 (+0.59), FIXED 3. Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status deferred, impact 18, lane tb/x04-cloudreach. Deferred: Source audit finds inconsistent mushroom dressing between BandPickups and ItemCachePickup. A shared, texture-preserving variant treatment still needs matched production-camera proof; changin",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F40#2",
@@ -6265,7 +6265,7 @@
     {
      "text": "F41 (1) top-20 item P2-046 harvest resource identity: Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 48, lane tb/x04-stormwood. Voltcap is a stronger glowing node; the pictured stormglass rocks lack a glass read.",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 4.13 -> 6.57 (+2.44), FIXED 3. Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 48, lane tb/x04-stormwood. Voltcap is a stronger glowing node; the pictured stormglass rocks lack a glass read.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#1",
@@ -6294,7 +6294,7 @@
     {
      "text": "F41 (2) impact>12 item P2-070 Glass Sink landmark: The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do n \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 48, lane tb/x04-stormwood. Three camera passes from walkable rims failed to reveal a recognizable sink. The authored marker is inside nonwalkable terrain and both day and golden views show a sheer edge. Confirm intended landmar",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 2.89 -> 4.63 (+1.74). Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status needs_capture, impact 48, lane tb/x04-stormwood. Three camera passes from walkable rims failed to reveal a recognizable sink. The authored marker is inside nonwalkable terrain and both day and golden views show a sheer edge. Confirm intended landmar",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
@@ -6410,7 +6410,7 @@
     {
      "text": "F41 (2) impact>12 item P2-045 candy pickup tiers: Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-stormwood. The Tidewake skill candy I and II labels are tiny. Skill candy III was not isolated in its frame and needs a reshoot.",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 4.84 -> 5.92 (+1.08). Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 36, lane tb/x04-stormwood. The Tidewake skill candy I and II labels are tiny. Skill candy III was not isolated in its frame and needs a reshoot.",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Counted once (owner 24 Oct board math): touches tidewake, stormwood; closes when the GPU passes it in each. Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
@@ -6498,7 +6498,7 @@
     {
      "text": "F41 (2) impact>12 item P2-041 Crown Arch: The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 27, lane tb/x04-stormwood. The generic approach is tree-obstructed; close shot supports slab and silhouette concerns. Current native 1920x1080 baseline at 04ca924248 confirms the original close sighting: independent judge ident",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 3.96 -> 4.78 (+0.82); still reads as a pillar on a slab. Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 27, lane tb/x04-stormwood. The generic approach is tree-obstructed; close shot supports slab and silhouette concerns. Current native 1920x1080 baseline at 04ca924248 confirms the original close sighting: independent judge ident",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",
@@ -6556,7 +6556,7 @@
     {
      "text": "F41 (2) impact>12 item P2-043 Glass Field spike bases: Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster \u2014 fixed on main with a GPU before/after pass at the bar.",
      "status": "not_started",
-     "evidence": "Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 18, lane tb/x04-stormwood. Five native route pairs have exact camera-position parity and orientation within tolerance, including the original Walk 03 sighting. Fresh blind review finds partial improvement: cones/crossbar remove",
+     "evidence": "GPU Q31 WD2 1 Nov, judge of record (tb/gpu-pass 383198e08, ralph/reports/GPU-PASS/Q31/WD2-world-dressing/VERDICT.md; High): 4.75 -> 5.75 (+1.00). Landed. Earlier: Catalog ralph/reports/VISUAL/phase2/catalog.csv: status open, impact 18, lane tb/x04-stormwood. Five native route pairs have exact camera-position parity and orientation within tolerance, including the original Walk 03 sighting. Fresh blind review finds partial improvement: cones/crossbar remove",
      "gap": "Fix on main, then GPU before/after at Medium and High; mapped >= 7.5 with the defect gone closes it.",
      "note": "Split row (owner, 24 Oct 2026: \"switch to GPU judging and split the rows\"). Closes on its own GPU yardstick pass (Medium and High, mapped Bar A >= 7.5); bar unchanged.",
      "parent": "F41#2",

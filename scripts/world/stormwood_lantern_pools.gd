@@ -63,7 +63,18 @@ static func install(world: Node3D) -> void:
 	var vegetation := world.get_node_or_null("Vegetation")
 	var flat_limit := float(cfg.get("max_relief_m", 0.3))
 	var placed := 0
-	for entry: Variant in cfg.get("pools", []):
+	# World dressing P2-038 (arrival_pools, OFF until GPU judged): GPU 4.54
+	# "a dirt path through grass with no pool or lantern". Two pools beside the
+	# destination in the arrival view, and the installed Meshy lantern posts
+	# (lantern_model) in place of the black box posts.
+	var pools: Array = (cfg.get("pools", []) as Array).duplicate()
+	var arrival: Dictionary = cfg.get("arrival_pools", {}) as Dictionary
+	if bool(arrival.get("enabled", false)):
+		pools.append_array(arrival.get("pools", []) as Array)
+		if bool(arrival.get("with_lantern_model", false)) and cfg.get("lantern_model") is Dictionary:
+			cfg = cfg.duplicate(true)
+			(cfg.lantern_model as Dictionary)["enabled"] = true
+	for entry: Variant in pools:
 		var pool: Dictionary = entry
 		var at: Array = pool.get("at", [])
 		var radius := float(pool.get("radius_m", 3.0))
@@ -77,7 +88,7 @@ static func install(world: Node3D) -> void:
 				var h := float(world.call("ground_height_at", p.x, p.y))
 				low = minf(low, h)
 				high = maxf(high, h)
-		if high - low > flat_limit:
+		if high - low > float(pool.get("max_relief_m", flat_limit)):
 			continue
 		# Level at mid-relief: the low rim sits a few centimetres proud, the
 		# high rim's ground covers the disc (filling only the hollow hid the

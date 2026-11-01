@@ -1,0 +1,19 @@
+{
+  "_comment": "World dressing, coordinator Meshy batch 31 Oct (tb/props-r2 31592e46, assets/props/meshy-1031, provenance.json in each folder). OFF until GPU judged. P2-115 (Tidewake 4.59): forward-camp creature bed reads as a flat oval curb with no bedding; P2-116 (4.71): camp workbench is a small unreadable bench behind the trainer. Visible meshes only (scripts/world/meshy_camp_props.gd): old meshes hidden, not freed, so colliders, rest body, build index and craft offers are unchanged. Scale: the bed keeps the 4.8 m rim span creatures larger than the 1.80 m trainer rest in; the bench's lantern post stands 2.3 m so it reads above the trainer in the camp views.",
+  "bed": {
+    "enabled": true,
+    "model": "res://assets/props/meshy-1031/camp_bed/camp_bed.glb",
+    "across_m": 4.6,
+    "sink_m": 0.05,
+    "yaw_deg": 0.0,
+    "hide_children": ["WaterPaddedBolster"]
+  },
+  "workbench": {
+    "enabled": true,
+    "model": "res://assets/props/meshy-1031/camp_workbench/camp_workbench.glb",
+    "height_m": 2.6,
+    "sink_m": 0.03,
+    "yaw_deg": -39.0,
+    "_why_yaw": "r2: the camp view stands at (+4, -5) from the bench and looks through the trainer; -39 deg turns the long axis across that view so the bench spans past the trainer."
+  }
+}
