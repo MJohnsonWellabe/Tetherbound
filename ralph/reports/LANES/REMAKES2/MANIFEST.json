@@ -16,5 +16,14 @@
    "reedwing"
   ],
   "group": 2
+ },
+ {
+  "item": "F36 Ribbonray remake",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_ribbonray.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "ribbonray"
+  ],
+  "group": 3
  }
 ]

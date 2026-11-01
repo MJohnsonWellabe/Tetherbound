@@ -13,5 +13,38 @@
   "target_polycount": 30000,
   "symmetry_mode": "auto"
  },
- "status": "raw Meshy candidate; not rigged, not imported, flag-off"
+ "status": "prepared candidate, flag-off: data/config/creature_model_flags.json remake_owner1101_ribbonray (enabled false); awaiting GPU judging",
+ "prepared_model": "assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101.glb",
+ "preparation": {
+  "date": "2026-11-01",
+  "lane": "tb/creature-remakes-2 (second creature-remake lane)",
+  "steps": [
+   "tools/art_pipeline/blender/rig_bird.py (measured bird rig and its six clips, run unchanged)",
+   "texture re-encode: embedded PNG and oversized JPEG maps re-encoded to JPEG quality 88 at 2048 px (shift_reserved_red._read_glb/_write_glb), the size class of the first lane's models",
+   "tools/art_pipeline/arc_emission.py (emissive map; rule in data/creatures/arc_emission.json)",
+   "tools/art_pipeline/texture_import_policy.py --apply (VRAM compressed, mode 2)"
+  ],
+  "commands": "blender --background --python tools/art_pipeline/blender/rig_bird.py -- assets/creatures/tetherbound/ribbonray/candidate_owner1101/source/ribbonray_a.glb --out assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101.glb --report assets/creatures/tetherbound/ribbonray/candidate_owner1101/source/prepare-report.json ; (JPEG re-encode of the embedded maps) ; python3 tools/art_pipeline/arc_emission.py ribbonray_owner1101",
+  "report": "assets/creatures/tetherbound/ribbonray/candidate_owner1101/source/prepare-report.json",
+  "rig": {
+   "skeleton": "rig_bird 19-bone bird (two legs, three-segment wings, tail fan)",
+   "clips": [
+    "idle",
+    "walk",
+    "run",
+    "attack",
+    "hit",
+    "faint"
+   ],
+   "clips_match_installed": "the installed model's six clip roles",
+   "height_m": 3.7,
+   "unweighted_vertices": 0,
+   "vertices": 15613,
+   "scale_note": "rig_bird/rig_glider keep the source scale; creature_body._fit() fits the model to the species height at load (CPU capture measured the standing height)"
+  },
+  "emission_rule": "data/creatures/arc_emission.json species.ribbonray_owner1101"
+ },
+ "flag": "data/config/creature_model_flags.json:remake_owner1101_ribbonray",
+ "test": "tests/test_creature_model_flags.gd",
+ "cpu_capture": "ralph/reports/LANES/REMAKES2/_sheet_owner1101_f36_cpu.png (capture_f36_poses.gd --whole-body --context, flag ON locally, Low/Compatibility; local import used a 1024 px texture size limit for disk, sidecars ship at full size)"
 }

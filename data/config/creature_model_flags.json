@@ -151,6 +151,24 @@
      }
     }
    }
+  },
+  "remake_owner1101_ribbonray": {
+   "_why": "Owner remake 1 Nov 2026 (coordinator pick under the owner rule): Ribbonray, a large flying manta ray with long ribbon tail, lilac and pink-violet skin (Meshy 01a197eb-8359-76c8-9c5e-1e58ef8cf73e). No baked ground patch. rig_bird.py measured bird rig (19 bones) and its six clips (it stands on two legs; the ray wings rig as spread wings) at the established 3.7 m; emission on the sky-blue eyes. Provenance: assets/creatures/tetherbound/ribbonray/candidate_owner1101/source/provenance.json.",
+   "enabled": false,
+   "species": {
+    "ribbonray": {
+     "model": "res://assets/creatures/tetherbound/ribbonray/candidate_owner1101/models/creature_ribbonray_owner1101.glb",
+     "colourway_source_species": "ribbonray_owner1101",
+     "animations": {
+      "idle": "idle",
+      "walk": "walk",
+      "run": "run",
+      "attack": "attack",
+      "hit": "hit",
+      "faint": "faint"
+     }
+    }
+   }
   }
  }
 }
