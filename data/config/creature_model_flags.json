@@ -1013,6 +1013,8 @@
             "walk": "walk",
             "run": "run",
             "attack": "attack",
+            "_comment_attack_contact_phase": "Same timing as the installed Torrentoad: the remake attack clip is retimed (candidate_owner1101/source/retime_attack_contact.py) to 23 frame intervals (23/24 s) with the strike peak at frame 15 (0.625 s), so the phase is 15/23.",
+            "attack_contact_phase": 0.652174,
             "charged": "charged",
             "hit": "hit",
             "faint": "faint",

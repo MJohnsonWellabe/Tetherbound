@@ -9,6 +9,14 @@ const EXPECTED_MODELS := {
 	"torrentoad": "res://assets/creatures/tetherbound/torrentoad/models/creature_torrentoad_lod0.glb",
 	"water_torrentoad": "res://assets/creatures/tetherbound/torrentoad/models/creature_torrentoad_lod0.glb",
 }
+## Owner-rule remake (1 Nov 2026, remake_owner1101_torrentoad): its dog3 faint
+## ends lying prone with the legs drawn in (the endpoint the dog3 faint judges
+## read as down), so the same no-op recipe finishes it. Exact path binding as
+## above; the riptusk ids stay installed-only.
+const REMAKE_MODELS := {
+	"torrentoad": "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101.glb",
+	"water_torrentoad": "res://assets/creatures/tetherbound/torrentoad/candidate_owner1101/models/creature_torrentoad_owner1101.glb",
+}
 static var _config: Dictionary = {}
 
 
@@ -20,8 +28,9 @@ static func config() -> Dictionary:
 
 
 static func resolve(species_id: String, source: Dictionary) -> Dictionary:
+	var model := str(source.get("model", ""))
 	if not bool(config().get("enabled", false)) or not EXPECTED_MODELS.has(species_id) \
-			or str(source.get("model", "")) != str(EXPECTED_MODELS[species_id]):
+			or (model != str(EXPECTED_MODELS[species_id]) and model != str(REMAKE_MODELS.get(species_id, ""))):
 		return source
 	# Optional per-id allow list: an id whose installed faint endpoint does not
 	# read as rest (Riptusk stands head-down on straight front legs) keeps the

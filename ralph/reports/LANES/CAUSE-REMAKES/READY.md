@@ -1,5 +1,37 @@
 # Cause lane: owner-rule remakes finish (tb/cause-remakes)
 
+## Torrentoad and Meadowhart remakes: ready to turn ON (1 Nov, coordinator request after PR #793 CI)
+
+Both fixes are on this branch. No test was edited. They are MANIFEST groups 6 and 7.
+
+- **Torrentoad** (`remake_owner1101_torrentoad`). CI found a missing faint and a missing
+  `attack_contact_phase`.
+  - **Contact timing.** The flag's animation map replaced the installed map and dropped
+    `attack_contact_phase`. The remake's attack clip also ran 25/24 s, against the installed
+    23/24 s with contact at frame 15.
+    - The remake attack keys are retimed piecewise by
+      `torrentoad/candidate_owner1101/source/retime_attack_contact.py`. The wind-up now runs from
+      0 to the strike peak at 15/24 s, and the recovery ends at 23/24 s.
+    - The flag carries `attack_contact_phase: 0.652174` (15/23).
+    - No other clip changed.
+  - **Faint.** The rest test's empty faint came from `water_rest_pose_visual.gd`, which binds
+    exact model paths. It now also accepts the remake model for `torrentoad` and
+    `water_torrentoad`. The Riptusk ids stay bound to the installed model, so the
+    exact-model-binding check still holds. The remake's dog3 faint ends lying prone with the
+    legs drawn in.
+- **Meadowhart** (`remake_owner1101_meadowhart`). The test needs one skinned MeshInstance3D named
+  `MeadowhartBareBody`; `creature_body.meadowhart_bare_body_present()` uses the same name.
+  - The remake's single skinned mesh node was `Mesh_0`, so it is renamed in the GLB.
+  - The other conditions already held, measured from the GLB:
+    - foreleg geometry: 26–121 vertices per height band, against a minimum of 12;
+    - skin weights: 0 invalid of 8377;
+    - all six production clips present.
+- **Proof.**
+  - Measured from the GLB: attack length 0.958333 s, and 0.958333 × 0.652174 = 0.625 s.
+  - `water_rest_pose_visual.gd` passes `godot --check-only`.
+  - The three named test files have **not run here**: this container cannot fit a Godot
+    import. CI on the landing PR decides.
+
 ## Summary (1 Nov 2026)
 
 Zero criteria closed (GPU scoring is the coordinator's). Five flags, all **OFF**, all listed in

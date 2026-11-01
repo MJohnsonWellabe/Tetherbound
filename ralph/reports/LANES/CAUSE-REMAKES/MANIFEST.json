@@ -538,5 +538,23 @@
    "terrapup"
   ],
   "group": 5
+ },
+ {
+  "item": "F36 Torrentoad remake (rig fixed: attack contact 15/23, rest binding)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_torrentoad.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "torrentoad"
+  ],
+  "group": 6
+ },
+ {
+  "item": "F36 Meadowhart remake (rig fixed: MeadowhartBareBody skin)",
+  "flag": "data/config/creature_model_flags.json:flags.remake_owner1101_meadowhart.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "meadowhart"
+  ],
+  "group": 7
  }
 ]
