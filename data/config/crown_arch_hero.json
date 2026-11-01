@@ -1,5 +1,22 @@
 {
   "_comment": "World dressing P2-041 (OFF until GPU judged; coordinator Meshy Crown Arch, tb/props-r2 a2f81b50, assets/props/meshy-1031/crown_arch, provenance there). GPU 31 Oct 4.23 main / 4.56 octagonal landing; judges asked for a hero arch taller than the trainer with a crown keystone and crystal or copper accents, rooted in moss not on a slab. The Meshy arch replaces the visible arch at 5.5 m (3x the 1.80 m trainer); the old arch piece and slab mesh are hidden, not freed, so the 9x9 m footing collider, the 2.2x2.5 m passage trigger, the travel axis and placement are unchanged (scripts/world/stormwood_crown_arch_hero.gd). The grass clearance shrinks so moss grows to the pillars. Crystal texels get the blue-vein glow.",
+  "round2_candidate": {
+    "enabled": false,
+    "_why": "P2-041 round 2 (GPU WD2 1 Nov, 4.78: neither side reads as an arch; the square slab is still exposed). On: the hero arch visual turns 90 deg to face the road that reaches the landing (stormwood_arches.json e_crown yaw 90 sets the travel axis across the road, so every road approach and the catalogue view saw the arch edge-on as a single pillar; the near-square 2.2 x 2.5 m passage trigger and colliders are unchanged), stands 7.0 m (from 5.5) so it clears the trainer, and edge_dressing sets half-sunk installed rock-family stones (mossy grey) along the slab's four edges (each edge keeps a 4 m opening at its middle) so the square outline reads as a mossy stone landing. Visual only; footing collider, passage trigger and travel axis unchanged (stormwood_crown_arch_hero.gd with_round2/_dress_slab_edges). OFF until GPU judged.",
+    "height_m": 7.0,
+    "yaw_deg": 90.0,
+    "edge_dressing": {
+      "per_side": 6,
+      "height_m": [0.35, 0.75],
+      "keep_passage_clear_m": 2.0,
+      "models": [
+        "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+        "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+        "res://assets/environment/stylized_nature/Rock_Medium_2.gltf"
+      ],
+      "tint": "#5d6660"
+    }
+  },
   "enabled": true,
   "model": "res://assets/props/meshy-1031/crown_arch/crown_arch.glb",
   "height_m": 5.5,

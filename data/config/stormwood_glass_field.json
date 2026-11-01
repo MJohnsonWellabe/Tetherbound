@@ -25,7 +25,17 @@
   ],
   "_why_scorched_scars": "F10#4 scene-art pass (owner 5860380772): strike scars as terrain-following burnt glass-fused patches with the grass cleared, blackened rock-family lumps and low smoked-glass blades. Enabled for Phase 1b; the old spire clusters remain only as a legacy fallback.",
   "scorched_scars": true,
-  "meshy_spikes": {"enabled": true, "_candidate": "World dressing P2-043 (OFF until GPU judged; coordinator Meshy batch 31 Oct, assets/props/meshy-1031/glass_spikes, provenance there). GPU 5.15: a flat purple sheet with a few low blue shards. Per cluster one main spike cluster at 0.75 of the cluster height and three satellites, varied in scale and yaw, seated inside the cleared scar; the primitive blades are skipped. Crystal texels take the blue-vein glow.", "model": "res://assets/props/meshy-1031/glass_spikes/glass_spikes.glb", "per_cluster": 6, "main_height_fraction": 0.75, "satellite_height_fraction": [0.3, 0.6], "spread_fraction": 0.75, "sink_fraction": 0.06, "glow_colour": "#9fdcff", "glow_energy": 1.1},
+  "rock_collar_candidate": {
+  "enabled": false,
+  "_why": "P2-043 (GPU WD2 1 Nov, 5.75): the spike base is still a flat dark slab, not rooted in rock. On: five installed rock-family stones in cracked basalt grey ring each Meshy spike cluster's foot, half sunk (ring 0.16 and stone height 0.11 of the spike height), and the flat fused scar patch is hidden so the spikes break out of rock on cleared ground. Visual only, colliders removed (stormwood_glass_field.gd _add_rock_collar). OFF until GPU judged.",
+  "stones": 5,
+  "ring_fraction": 0.16,
+  "stone_height_fraction": 0.11,
+  "colour": "#6c7074",
+  "roughness": 0.88,
+  "hide_scar_patch": true
+ },
+ "meshy_spikes": {"enabled": true, "_candidate": "World dressing P2-043 (OFF until GPU judged; coordinator Meshy batch 31 Oct, assets/props/meshy-1031/glass_spikes, provenance there). GPU 5.15: a flat purple sheet with a few low blue shards. Per cluster one main spike cluster at 0.75 of the cluster height and three satellites, varied in scale and yaw, seated inside the cleared scar; the primitive blades are skipped. Crystal texels take the blue-vein glow.", "model": "res://assets/props/meshy-1031/glass_spikes/glass_spikes.glb", "per_cluster": 6, "main_height_fraction": 0.75, "satellite_height_fraction": [0.3, 0.6], "spread_fraction": 0.75, "sink_fraction": 0.06, "glow_colour": "#9fdcff", "glow_energy": 1.1},
   "scar_relief_candidate": {
     "enabled": true,
     "scope": "client_presentation",
