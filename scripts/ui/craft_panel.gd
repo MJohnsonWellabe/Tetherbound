@@ -1017,6 +1017,9 @@ func _make_row(id: String, recipe: Dictionary) -> Button:
 	icon.custom_minimum_size = Vector2(ROW_ICON_PX, ROW_ICON_PX)
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.texture = _icon_texture(str(output.get("id", "")))
+	if bool(_presentation.get("rendered_item_icons", false)):
+		# Rendered icons are baked large; draw them at the row's own size.
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	if _compact_rows:
 		var icon_px := float(_presentation.get("compact_icon_px", 56))
 		icon.custom_minimum_size = Vector2(icon_px, icon_px)
@@ -1440,6 +1443,13 @@ func _make_ingredient_row(item_id: String, need: int, have: int, enough: bool) -
 	icon.custom_minimum_size = Vector2(INGREDIENT_ICON_PX, INGREDIENT_ICON_PX)
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.texture = _icon_texture(item_id)
+	if bool(_presentation.get("rendered_item_icons", false)):
+		# Baked at 192 px: hold the ingredient line's icon slot, a step larger
+		# than the flat glyph so the rendered object reads.
+		var px := float(_presentation.get("rendered_ingredient_icon_px", 40))
+		icon.custom_minimum_size = Vector2(px, px)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(icon)
 
 	var db := _items()
@@ -1480,10 +1490,27 @@ func _icon_texture(id: String) -> Texture2D:
 	var db := _items()
 	if db == null or id.is_empty():
 		return null
-	var path := str(db.call("definition", id).get("icon", ""))
+	var path := icon_path_for(id, db.call("definition", id) as Dictionary,
+		bool(_presentation.get("rendered_item_icons", false)))
 	if path.is_empty() or not ResourceLoader.exists(path):
 		return null
 	return load(path) as Texture2D
+
+
+## P2-095 (GPU 7.31; judges asked for real item icons): with
+## craft_presentation.json `rendered_item_icons` on, an item with a PNG
+## rendered from its installed mesh by tools/bake_item_icons.gd
+## (data/config/craft_item_icons.json) shows that; every other item, and every
+## item with the flag off, keeps items.json's own `icon`.
+const RENDERED_ICON_DIR := "res://assets/ui/icons/items_rendered"
+
+static func icon_path_for(id: String, definition: Dictionary, rendered_on: bool,
+		rendered_dir: String = RENDERED_ICON_DIR) -> String:
+	if rendered_on and not id.is_empty():
+		var rendered := "%s/%s.png" % [rendered_dir, id]
+		if ResourceLoader.exists(rendered):
+			return rendered
+	return str(definition.get("icon", ""))
 
 
 func _items() -> RefCounted:
