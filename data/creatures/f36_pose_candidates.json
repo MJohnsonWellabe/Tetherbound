@@ -857,7 +857,7 @@
     },
     "uiposes_riptusk_side_faint_prone_rest": {
       "_why": "UIPOSES lane (1 Nov 2026). GPU item scores 28 Oct: Riptusk's faint sits in an upright crouch with its head raised (P2-028 5.61) and its rest lies belly-up with legs raised at the waterline (P2-029 5.32). faint: the same collapse rolling onto its side (pivot roll to 82 deg) with the neck and head dropped, grounded by the posed-vertex contact. rest (added role): a prone settle, legs folded under, head lowered, no roll. Land and Water Riptusk. Flip enabled to judge; nothing changes while it is false.",
-      "enabled": false,
+      "enabled": true,
       "adds_roles": [
         "rest"
       ],
@@ -2958,7 +2958,7 @@
     },
     "creatures_vis_galewisp_faint_away": {
       "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: galewisp 6.84, 'faint wing over the trainer' (R5 staging: stop faint bodies passing through the trainer). The recipe faint is mirrored in yaw (pivot y sign flipped on every frame), so Galewisp falls onto its side away from the trainer instead of across him; the pitch and the bones are unchanged and the pose is still grounded on its skinned contact. CPU check (capture_f36_poses.gd --candidate --whole-body --context, Low): the faint end lies on its side, face visible, clear of the trainer and in frame. Flip enabled to judge; nothing changes while it is false.",
-      "enabled": false,
+      "enabled": true,
       "presentations": {
         "galewisp": {
           "faint": {
@@ -3746,7 +3746,7 @@
     },
     "creatures_vis_mirejaw_tail_clear": {
       "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: mirejaw 6.52 'body through the trainer in faint end', water_mirejaw 6.45; CPU check: the tail fan swings over the trainer ruler in hit and faint, and creatures_vis_taller_mirejaw (x1.35) would hide him completely. The tail curls (tail_1/tail_2 +35 deg x, ramped with each role's own motion) so it lifts clear in the hit and lies curled beside the body in the faint; grounded on its skinned contact as before. Pair with creatures_vis_taller_mirejaw. Flip enabled to judge; nothing changes while it is false.",
-      "enabled": false,
+      "enabled": true,
       "presentations": {
         "mirejaw": {
           "hit": {

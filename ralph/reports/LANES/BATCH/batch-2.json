@@ -1,0 +1,217 @@
+{
+ "batch": 2,
+ "base": "bfe5f03e0a19cb9e4438f9ab1dcaf83e2c24ba05",
+ "items": [
+  {
+   "item": "P2-058",
+   "camera_set": "tools/phase2_capture_catch.gd --seed=2042",
+   "stands": [
+    "meadows__catching__01-aiming-full-health",
+    "meadows__catching__catch_low",
+    "meadows__catching__catch_high"
+   ]
+  },
+  {
+   "item": "P2-114",
+   "camera_set": "tools/phase2_capture_catch.gd --biome=tidewake --seed=2042",
+   "stands": [
+    "tidewake__catching__catch_low",
+    "tidewake__catching__catch_high",
+    "tidewake__catching__01-aiming-full-health"
+   ]
+  },
+  {
+   "item": "P2-117",
+   "camera_set": "tools/phase2_capture_catch.gd --biome=cloudreach --seed=2042",
+   "stands": [
+    "cloudreach__catching__07-aiming-weakened"
+   ]
+  },
+  {
+   "item": "P2-117",
+   "camera_set": "tools/phase2_capture_catch.gd --biome=cloudreach --seed=2042",
+   "stands": [
+    "cloudreach__catching__06-breakout"
+   ]
+  },
+  {
+   "item": "P2-061",
+   "camera_set": "tools/phase2_capture_catch.gd --seed=2042",
+   "stands": [
+    "meadows__catching__06-breakout",
+    "meadows__catching__08-caught-verdict",
+    "meadows__catching__09-caught-banner"
+   ]
+  },
+  {
+   "item": "P2-028",
+   "camera_set": "tools/phase2_capture_creatures.gd --biome=water --only=ripplet,riptusk,aquaryn --seed=2042",
+   "stands": [
+    "tidewake__ripplet__fainted",
+    "tidewake__riptusk__fainted",
+    "tidewake__aquaryn__fainted"
+   ]
+  },
+  {
+   "item": "P2-029",
+   "camera_set": "tools/phase2_capture_creatures.gd --biome=water --only=riptusk,torrentoad --seed=2042",
+   "stands": [
+    "tidewake__riptusk__resting",
+    "tidewake__torrentoad__resting"
+   ]
+  },
+  {
+   "item": "P2-103",
+   "camera_set": "tools/phase2_capture_tidewake_fights.gd (job.json P2-103 repro: venn, nerissa)",
+   "stands": [
+    "tidewake__fight__venn_resolve__win-141_53",
+    "tidewake__fight__venn_resolve__aftermath-142_53",
+    "tidewake__fight__nerissa_resolve__win-207_25"
+   ]
+  },
+  {
+   "item": "P2-111",
+   "camera_set": "tools/phase2_capture_stormwood_fights.gd --ids=hollows_alpha (job.json P2-111 repro)",
+   "stands": [
+    "stormwood__fight__hollows_win__hollows_alpha-99-after",
+    "stormwood__fight__hollows_aftermath__hollows_alpha-100-aftermath"
+   ]
+  },
+  {
+   "item": "P2-119",
+   "camera_set": "tools/phase2_capture_realm_flight.gd --biome=meadows --seed=2042",
+   "stands": [
+    "meadows__flying__launch",
+    "meadows__flying__glide"
+   ]
+  },
+  {
+   "item": "F36 (0) #2 Galewisp",
+   "camera_set": "F36",
+   "stands": [
+    "galewisp"
+   ]
+  },
+  {
+   "item": "F36 (0) #3 Mudsnout",
+   "camera_set": "F36",
+   "stands": [
+    "mudsnout"
+   ]
+  },
+  {
+   "item": "F36 (0) #4 Bramblebun",
+   "camera_set": "F36",
+   "stands": [
+    "bramblebun"
+   ]
+  },
+  {
+   "item": "F36 (0) #8 Mirejaw",
+   "camera_set": "F36",
+   "stands": [
+    "mirejaw",
+    "water_mirejaw"
+   ]
+  },
+  {
+   "item": "F36 (0) #8 Mirejaw",
+   "camera_set": "F36",
+   "stands": [
+    "mirejaw",
+    "water_mirejaw"
+   ]
+  },
+  {
+   "item": "F36 (0) #8 Mirejaw",
+   "camera_set": "F36",
+   "stands": [
+    "mirejaw",
+    "water_mirejaw"
+   ]
+  },
+  {
+   "item": "F36 (0) #13 Fulgocobra",
+   "camera_set": "F36",
+   "stands": [
+    "fulgocobra"
+   ]
+  },
+  {
+   "item": "F36 (0) #16 Cannonback",
+   "camera_set": "F36",
+   "stands": [
+    "cannonback",
+    "water_cannonback"
+   ]
+  },
+  {
+   "item": "F36 (0) #16 Cannonback",
+   "camera_set": "F36",
+   "stands": [
+    "water_cannonback"
+   ]
+  },
+  {
+   "item": "F36 (0) #19 Voltarach",
+   "camera_set": "F36",
+   "stands": [
+    "voltarach"
+   ]
+  },
+  {
+   "item": "F36 (0) #20 Veridian",
+   "camera_set": "F36",
+   "stands": [
+    "veridian"
+   ]
+  },
+  {
+   "item": "F36 (0) #21 Abyssal Guardian",
+   "camera_set": "F36",
+   "stands": [
+    "abyssal_guardian",
+    "water_abyssal_guardian"
+   ]
+  },
+  {
+   "item": "F36 (0) #22 Solmane",
+   "camera_set": "F36",
+   "stands": [
+    "solmane"
+   ]
+  },
+  {
+   "item": "F36 (0) #25 Wandering trainer body",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "24-wandering-trainer-front",
+    "24-wandering-trainer-threequarter"
+   ]
+  },
+  {
+   "item": "F36 (0) #27 Young trainer body",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "21-young-trainer-front",
+    "21-young-trainer-threequarter"
+   ]
+  },
+  {
+   "item": "F36 (0) #28 Trader body",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "16-trader-front",
+    "16-trader-threequarter"
+   ]
+  },
+  {
+   "item": "F36 (0) #29 Innkeeper body",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "14-innkeeper-front",
+    "14-innkeeper-threequarter"
+   ]
+  }
+ ]
+}
