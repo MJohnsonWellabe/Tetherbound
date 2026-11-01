@@ -23,13 +23,17 @@ func test_shipped_flags_are_off_and_resolve() -> void:
 			assert_true(not base.is_empty(), "%s names an art.json character (%s)" % [flag, key])
 			for field: String in characters[key]:
 				assert_true(field in CHARACTER_MODEL.BODY_FLAG_KEYS, "%s %s.%s is a body-surface key" % [flag, key, field])
-			var path := str((characters[key] as Dictionary).get("body_albedo_override", ""))
-			assert_true(ResourceLoader.exists(path), "%s override %s exists" % [flag, path])
-			# Forced on, the override lands on that character and the rest of its entry is unchanged.
 			var forced := {"flags": {flag: {"enabled": true, "characters": characters}}}
 			var merged := CHARACTER_MODEL.with_body_flags(base, key, forced)
-			assert_eq(str(merged.get("body_albedo_override", "")), path, "%s applies to %s when enabled" % [flag, key])
 			assert_eq(str(merged.get("model", "")), str(base.get("model", "")), "%s keeps %s's rig" % [flag, key])
+			for field: String in characters[key]:
+				assert_eq(merged.get(field), (characters[key] as Dictionary)[field], "%s applies %s to %s when enabled" % [flag, field, key])
+			# A flag without an albedo override (e.g. a character keeping its own
+			# authored cloth texture) leaves that texture alone.
+			if not (characters[key] as Dictionary).has("body_albedo_override"):
+				continue
+			var path := str((characters[key] as Dictionary).get("body_albedo_override", ""))
+			assert_true(ResourceLoader.exists(path), "%s override %s exists" % [flag, path])
 			# Off (as shipped), config_for is unchanged.
 			assert_false(base.get("body_albedo_override", "") == path, "%s does not apply while OFF" % flag)
 

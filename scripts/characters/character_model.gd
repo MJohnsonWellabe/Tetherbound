@@ -166,7 +166,26 @@ static func config_for(key: String, appearance_variant: String = "",
 	var entry: Variant = (parsed as Dictionary).get(key, {})
 	if not entry is Dictionary:
 		return {}
-	return with_appearance_variant(with_body_flags(entry, key), key, appearance_variant, variant_settings)
+	return with_clip_candidate(with_appearance_variant(with_body_flags(entry, key), key, appearance_variant, variant_settings))
+
+
+## P2-065 (vis-meadows, OFF until GPU-judged): a rig's `clip_candidate`
+## {enabled, animation_libraries, clips} borrows clips from a library built on
+## the same skeleton (e.g. grunt_a takes grunt's `defeated`). Off: unchanged.
+static func with_clip_candidate(cfg: Dictionary) -> Dictionary:
+	var candidate: Variant = cfg.get("clip_candidate", {})
+	if not candidate is Dictionary or not bool((candidate as Dictionary).get("enabled", false)):
+		return cfg
+	var out := cfg.duplicate(true)
+	var libraries: Array = (out.get("animation_libraries", []) as Array).duplicate()
+	for path: Variant in (candidate as Dictionary).get("animation_libraries", []):
+		if not path in libraries:
+			libraries.append(path)
+	out["animation_libraries"] = libraries
+	var clips: Dictionary = (out.get("clips", {}) as Dictionary).duplicate()
+	clips.merge((candidate as Dictionary).get("clips", {}) as Dictionary, true)
+	out["clips"] = clips
+	return out
 
 
 ## GPU arms (owner, 31 Oct): a candidate NPC body look ships as a named flag in

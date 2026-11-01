@@ -4,7 +4,7 @@
 
 ## Summary (1 Nov 2026, latest first)
 
-**Status.** Zero criteria closed. Nothing here is judged yet. Branch `tb/vis-creatures`; every change is behind a flag that ships OFF. `MANIFEST.json` holds 62 entries in six groups. Groups 1–4 are in the coordinator's GPU batch-3.
+**Status.** Zero criteria closed. Nothing here is judged yet. Branch `tb/vis-creatures`; every change is behind a flag that ships OFF. `MANIFEST.json` holds 61 entries in groups 1–5 (group 6 was withdrawn in favour of storm-cams' speaker lights). Groups 1–4 are in the coordinator's GPU batch-3.
 
 **Groups:**
 1. Coat grades, Mirejaw height, grounded hits, NPC body grades.
@@ -12,19 +12,15 @@
 3. One natural-magic trait per species (moss, weed, gold lightning rims, crest bioluminescence, sky wing tips).
 4. Glowing eyes and elemental veins.
 5. Human characters, 32 look flags: contrast, catchlights, daylight rim, relaxed idle.
-6. Dialogue key and rim light.
+6. Withdrawn: dialogue lights (storm-cams' version lands instead).
 
 **Redirect.** The coordinator moved this lane from creatures (now remade from Meshy models in two other lanes) to human characters at 17:32 UTC.
 
 **Open conflict for the owner.** Groups 3 and 4 glow veins and markings per the newer owner rule relayed by the coordinator. CLAUDE.md (25 Oct) says glow never appears as seams on fur or hide. Both stay OFF until judged.
 
-## Group 6 (1 Nov, pushed): key and rim light in dialogue close-ups
+## Group 6: withdrawn (coordinator, 1 Nov)
 
-This answers the judges' note "no rim or key light in close-ups" in game.
-- **What it does:** when the conversation camera pushes in, `conversation_camera.gd` adds a soft, shadowless key light in front of the speaker's face from the camera's side, and a fainter rim light behind them. Both are freed when the conversation ends.
-- **Flag:** `camera.json conversation.speaker_lights.enabled` (OFF). Energies 0.8 and 0.5, range 3.5 m.
-- **Test:** a new case in `tests/test_conversation_camera.gd` covers the placement and the OFF default, and the whole file passes (32/32).
-- **Not render-checked:** the dialogue capture (`phase2_capture_dialogue.gd`) boots the full world, which this container cannot import. Judge it on the DLG1 command set.
+The dialogue speaker key and rim lights collided with tb/vis-storm-cams' `speaker_light_candidate`, which judged as a gain and is landing ON. Group 6 is removed from this branch: code, the camera.json key and the test are back to main, and its manifest entry is gone. If the NPC faces need more light, that will be a follow-up key under `speaker_light_candidate`. `character_model.gd` now composes `with_clip_candidate(with_appearance_variant(with_body_flags(...)))`, with tb/vis-meadows' `with_clip_candidate` included verbatim.
 
 ## Group 5 (1 Nov, pushed): human characters, one look flag each
 
