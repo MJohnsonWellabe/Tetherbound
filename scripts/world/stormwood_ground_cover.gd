@@ -53,6 +53,29 @@ func _build_cover_tiers(cfg: Dictionary, radius: float) -> void:
 		var gloss: Dictionary = finish.get("wet_gloss", {})
 		if gloss.has("roughness"): mat.set_shader_parameter("wet_roughness", float(gloss.roughness))
 		if gloss.has("specular"): mat.set_shader_parameter("wet_specular", float(gloss.specular))
+		apply_moss_variation(mat, finish)
+
+
+## moss_variation_1101 (cause lane, OFF by default): the cover shader's sw_*
+## uniforms from stormwood_ground_finish.json. OFF sets nothing, so the
+## shader's zero defaults keep the shipped look byte-for-byte.
+static func moss_variation_params(finish: Dictionary) -> Dictionary:
+	var cfg: Variant = finish.get("moss_variation_1101", {})
+	if not cfg is Dictionary or not bool((cfg as Dictionary).get("enabled", false)):
+		return {}
+	var out := {}
+	for key: String in (cfg as Dictionary):
+		if not key.begins_with("sw_"):
+			continue
+		var value: Variant = (cfg as Dictionary)[key]
+		out[key] = Color(str(value)) if value is String else float(value)
+	return out
+
+
+static func apply_moss_variation(mat: ShaderMaterial, finish: Dictionary) -> void:
+	var params := moss_variation_params(finish)
+	for key: String in params:
+		mat.set_shader_parameter(key, params[key])
 
 
 func bind(terrain: Node, camera: Camera3D) -> void:

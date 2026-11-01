@@ -5,6 +5,128 @@
   "disabled_rod_calm_multiplier": 1.5,
   "disabled_rod_break_multiplier": 0.6,
   "presentation": {
+    "storm_sky_1101": {
+      "enabled": false,
+      "scope": "client_presentation",
+      "_why": "Cause lane tb/cause-stormwood (owner 1 Nov; judges: 'flat lilac/purple sky card', 'murky dark brown frames, little value range', 'no shafts or lightning drama'). OFF until GPU judged. The overlay deep-merges into presentation (stormwood_surge_rules.gd with_presentation_candidates): every phase keeps the fixed purple storm sky but its ceiling gains cloud form (contrast, definition, lit rims, thin-spot glow) and faint white-violet sheet glow even in Calm; the storm's sun and ambient cuts ease so the near-black ground and dark creatures separate (composes with stormwood_look.json light_pass_1101); the parked r22 skyline and r34 depth fog switch on for distance layers; and cheap additive light shafts (stormwood_storm_shafts.gd) break through the canopy. Strike, phase timing, shelter and saves are untouched.",
+      "overlay": {
+        "ceiling": {
+          "skyline": {
+            "enabled": true
+          },
+          "rim_colour": "#c4bcec"
+        },
+        "depth_fog": {
+          "enabled": true
+        },
+        "shafts": {
+          "enabled": true,
+          "colour": "#d4cdf2",
+          "intensity": 0.16,
+          "cell_m": 70.0,
+          "ring": 3,
+          "chance": 0.34,
+          "width_m": [
+            7.0,
+            16.0
+          ],
+          "height_m": [
+            90.0,
+            150.0
+          ],
+          "slant": 0.16,
+          "near_fade_m": [
+            16.0,
+            38.0
+          ],
+          "far_fade_m": [
+            240.0,
+            400.0
+          ],
+          "foot_below_camera_m": 24.0
+        },
+        "phases": {
+          "calm": {
+            "sun_energy_mult": 0.66,
+            "ambient_colour": "#a4a6c4",
+            "ambient_energy_mult": 0.84,
+            "ceiling_colour": "#6a6396",
+            "ceiling_contrast": 0.6,
+            "ceiling_definition": 0.6,
+            "ceiling_rim": 0.38,
+            "ceiling_thin_glow": 0.16,
+            "sheet_glow": 0.14,
+            "sheet_glow_rate": 0.16,
+            "shafts": 0.75
+          },
+          "building": {
+            "sun_energy_mult": 0.48,
+            "ambient_energy_mult": 0.7,
+            "ceiling_contrast": 0.7,
+            "ceiling_definition": 0.65,
+            "ceiling_rim": 0.3,
+            "ceiling_thin_glow": 0.1,
+            "sheet_glow": 0.32,
+            "shafts": 0.45
+          },
+          "break": {
+            "sun_energy_mult": 0.38,
+            "ambient_energy_mult": 0.72,
+            "ceiling_contrast": 0.75,
+            "ceiling_definition": 0.7,
+            "ceiling_rim": 0.26,
+            "ceiling_thin_glow": 0.08,
+            "shafts": 0.2
+          },
+          "fading": {
+            "sun_energy_mult": 0.62,
+            "ambient_energy_mult": 0.8,
+            "ceiling_contrast": 0.55,
+            "ceiling_definition": 0.55,
+            "ceiling_rim": 0.45,
+            "ceiling_thin_glow": 0.22,
+            "shafts": 1.0
+          }
+        },
+        "phase_readability_candidate": {
+          "phases": {
+            "building": {
+              "sun_energy_mult": 0.42,
+              "ambient_energy_mult": 0.7
+            }
+          }
+        }
+      }
+    },
+    "soft_rain_1101": {
+      "enabled": false,
+      "scope": "client_presentation",
+      "_why": "Cause lane tb/cause-stormwood (owner 1 Nov; judges: 'rain rendered as sparse white sticks'). OFF until GPU judged. Streaks become wider but soft-edged (the streak shader's soft_edge fades each one across its width by how squarely it faces the camera), longer, denser and tinted toward the storm's lilac-grey instead of white, so rain reads as soft motion-blurred streaks. Near-lens fade, roof suppression, hollow-tree mask and night tint are unchanged.",
+      "overlay": {
+        "rain": {
+          "soft_edge": 1.0,
+          "soft_edge_power": 1.8,
+          "radial_segments": 6,
+          "max_drops": 2200,
+          "streak_width_m": 0.034,
+          "streak_length_m": 1.15,
+          "colour": "#b4bad0",
+          "alpha": 0.42,
+          "scale_min": 0.6,
+          "far_layer": {
+            "max_drops": 2000,
+            "streak_width_m": 0.026,
+            "streak_length_m": 0.8,
+            "alpha": 0.18
+          },
+          "curtain_layer": {
+            "streak_width_m": 0.11,
+            "streak_length_m": 3.6,
+            "alpha": 0.12
+          }
+        }
+      }
+    },
     "phase_readability_candidate": {
       "enabled": true,
       "_comment": "P2-042 accepted round 2: a blue-green Building understory and Fading's low recovery mist distinguish all four phases at both original stands. Independent native and small-size review passed phase identity and readability preservation; see stormwood/fixes/P2-042/after-r2-verdict.md. The sky stays purple. No phase duration, strike, movement, flash cadence, aftermath or camera changes. Regional Bars A/B remain open.",

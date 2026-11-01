@@ -108,6 +108,8 @@ func build() -> void:
 	set_process(_core_material != null or _hero != null)
 	if _presentation_enabled("built_detail"):
 		_built_detail()
+	if _presentation_enabled("deck_light_1101"):
+		_deck_light(_presentation.get("deck_light_1101", {}))
 	if _presentation_enabled("deck_supports"):
 		_deck_supports(_presentation.get("deck_supports", {}))
 	if _presentation_enabled("hero_interior"):
@@ -720,6 +722,62 @@ func _visual_box(parent: Node3D, id: String, at: Vector3, size: Vector3,
 	visual.position = at
 	parent.add_child(visual)
 	return visual
+
+
+## deck_light_1101 (cause lane tb/cause-stormwood, OFF by default; judges 1
+## Nov: "untextured giant trunk walls and a bare plank deck", the Captain
+## Marrow deck and hollow read as one flat violet-grey). Warm lantern pools
+## along the OuterWorks lip and the DynamoCore deck, and one cool storm light
+## falling through the crown opening, give the bark relief and the decks a
+## warm/cool value range; the cut-wood planks gain board-to-board tone. Lights
+## only (no shadows) and one shader parameter: no floor, rail, collider or
+## save change. Compatibility-safe: omni/spot lights within the per-object cap.
+func _deck_light(settings: Dictionary) -> void:
+	var holder := Node3D.new()
+	holder.name = "DeckLight1101"
+	add_child(holder)
+	for ring: Dictionary in deck_light_poses(settings):
+		var lamp := OmniLight3D.new()
+		lamp.name = str(ring.name)
+		lamp.position = ring.position
+		lamp.light_color = Color(str(settings.get("lantern_colour", "#ffb874")))
+		lamp.light_energy = float(settings.get("lantern_energy", 2.2))
+		lamp.omni_range = float(settings.get("lantern_range_m", 20.0))
+		lamp.omni_attenuation = float(settings.get("lantern_attenuation", 1.2))
+		lamp.light_specular = 0.3
+		lamp.shadow_enabled = false
+		holder.add_child(lamp)
+	var crown: Dictionary = settings.get("crown_light", {})
+	if bool(crown.get("enabled", false)):
+		var spot := SpotLight3D.new()
+		spot.name = "CrownStormLight"
+		spot.position = Vector3(0.0, float(crown.get("height_m", 240.0)), 0.0)
+		spot.rotation_degrees = Vector3(-90.0, 0.0, 0.0)
+		spot.light_color = Color(str(crown.get("colour", "#c9ccff")))
+		spot.light_energy = float(crown.get("energy", 3.0))
+		spot.spot_range = float(crown.get("range_m", 110.0))
+		spot.spot_angle = float(crown.get("angle_deg", 28.0))
+		spot.spot_attenuation = float(crown.get("attenuation", 0.8))
+		spot.light_specular = 0.5
+		spot.shadow_enabled = false
+		holder.add_child(spot)
+	if _cut_wood != null and settings.has("board_variation"):
+		_cut_wood.set_shader_parameter("board_variation", float(settings.board_variation))
+
+
+## Tree-local lantern positions for deck_light_1101 (pure; tested).
+static func deck_light_poses(settings: Dictionary) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for ring: Dictionary in settings.get("rings", []):
+		var count := int(ring.get("count", 0))
+		var radius := float(ring.get("radius_m", 20.0))
+		var height := float(ring.get("height_m", 4.0))
+		var phase := deg_to_rad(float(ring.get("phase_deg", 0.0)))
+		for i in count:
+			var a := phase + TAU * float(i) / float(maxi(1, count))
+			out.append({"name": "%s_%d" % [str(ring.get("id", "ring")), i],
+				"position": Vector3(cos(a) * radius, height, sin(a) * radius)})
+	return out
 
 
 ## All construction here dresses existing floors/rails. Braces hang below the
