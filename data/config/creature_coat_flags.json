@@ -52,28 +52,28 @@
   },
   "creatures_vis_coat_fulgocobra": {
    "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct (F36-1/roster-base-1e83cafa0): fulgocobra 6.38, 'dark brown on stage' (R2 value and rim). Value lift as the landed coat lifts (CO16: +0.5 to +1.0 on dark coats). Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_vis1.png"
    }
   },
   "creatures_vis_coat_mirejaw": {
    "_why": "VIS-CREATURES (1 Nov). GPU CO9 27 Oct: mirejaw 6.39 / 6.23, water_mirejaw 6.28; roster 24 Oct 'dark faint blob; stretched dark bar on the tail'. Gentle lift of the darkest hide; rides with creatures_vis_taller_mirejaw. Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0.jpg": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0_vis1.png"
    }
   },
   "creatures_vis_coat_cannonback": {
    "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: cannonback 6.92, 'brass-gear machinery shell reads as kitbash' (R4 off-style material); water_cannonback 6.72 (ROSTER-1). The brass/olive plating loses most of its saturation toward weathered horn; blue plates and face keep their pixels. Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid_vis1.png"
    }
   },
   "creatures_vis_coat_abyssal_guardian": {
    "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: abyssal_guardian 6.91, 'glossy vinyl-blue skin with regular dots; toy-like' (R4); water form 6.63. Cyan dots blend most of the way into the hide, the blue is a little deeper, and the self-lit emission drops to 0.6 so the stage light models the form. Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0_base_color_r6.png": {
      "albedo": "res://assets/creatures/tetherbound/abyssal_guardian/candidate_installed_retex/models/creature_abyssal_guardian_installed_retex_r6_lod0_base_color_r6_vis1.png",
@@ -83,28 +83,28 @@
   },
   "creatures_vis_coat_veridian": {
    "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: veridian 6.63, 'moss noise'; GPU 1024: 'bone-white bands read as a skeleton'. White bands drop to warm ivory; moss smoothed (median) so it reads as growth. Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/veridian/candidate_nat1024/models/creature_veridian_nat1024_Image_0.jpg": "res://assets/creatures/tetherbound/veridian/candidate_nat1024/models/creature_veridian_nat1024_Image_0_vis1.png"
    }
   },
   "creatures_vis_coat_voltarach": {
    "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: voltarach 6.87 'chrome-gold statue shader; face lost'; CO34: 'a dark bronze/black base with thin gold arcs and readable blue eyes. Today the gold covers most of the body.' The gold halo darkens to bronze (arc cores keep their value), the black base lifts to dark bronze, the blue eyes brighten. Probed: its maps are already matte (metallic 0, roughness map mean 0.67), so the gold look is in the albedo, not the material values. Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0.jpg": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0_vis1.png"
    }
   },
   "creatures_vis_coat_mudsnout": {
    "_why": "VIS-CREATURES (1 Nov). GPU roster 24 Oct: mudsnout 6.96 'single tan value flattens the face'; CO16 7.40 with its height (0.10 short; faint reads alert). Local value contrast so muzzle, eyes and bristle blocks separate. Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0.jpg": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0_vis1.png"
    }
   },
   "creatures_vis_coat_solmane": {
    "_why": "VIS-CREATURES (1 Nov). GPU CO11 27 Oct: solmane 6.55 / 6.68. Pale washed tan at small size: modest local contrast and slightly darker highlights so the head reads; its faint pose is not touched here. Grade: tools/art_pipeline/grade_vis_creatures.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid.png": "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid_vis1.png"
    }
@@ -131,7 +131,7 @@
   },
   "creatures_vis_trait_mudsnout": {
    "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: a moss carpet over the shoulders and back (the original owner board: 'moss carpeting mudsnout's shoulders'). Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_mudsnout when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0.jpg": {
      "albedo": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0_trait1.png"
@@ -140,7 +140,7 @@
   },
   "creatures_vis_trait_mirejaw": {
    "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: swamp moss along the back (water/swamp). Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_mirejaw when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0.jpg": {
      "albedo": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0_trait1.png"
@@ -149,7 +149,7 @@
   },
   "creatures_vis_trait_cannonback": {
    "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: water-weed grown over the shell top, replacing the 'machinery' read (water). Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_cannonback when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid.png": {
      "albedo": "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid_trait1.png"
@@ -158,7 +158,7 @@
   },
   "creatures_vis_trait_fulgocobra": {
    "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: gold lightning running along its pattern's edges (electric; the boards' missing 'Fulgocobra gold veins', GPU P2 1022), lit as a thin rim, never across the hide. Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_fulgocobra when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid.png": {
      "albedo": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_trait1.png",
@@ -169,7 +169,7 @@
   },
   "creatures_vis_trait_riverdrake": {
    "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: bioluminescent cyan along the crest and frill rims (water). Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_riverdrake when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid.png": {
      "albedo": "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid_trait1.png",
@@ -180,7 +180,7 @@
   },
   "creatures_vis_trait_solmane": {
    "_why": "VIS-CREATURES group 3 (1 Nov). Owner style direction via the coordinator: a believable animal plus ONE bold natural-magic trait grown into the body and its material. Trait: sky-blue tips on the upper wing feathers (air), a tint with no glow. Built over the group-1 grade where one exists, so this flag supersedes creatures_vis_coat_solmane when both are on. Anatomy-placed with tools/creature_anatomy_maps.py + tools/creature_overlays.py; script tools/art_pipeline/grade_vis_traits.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid.png": {
      "albedo": "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid_trait1.png"
@@ -189,7 +189,7 @@
   },
   "creatures_vis_glow_mudsnout": {
    "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in amber (ground). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0.jpg": {
      "albedo": "res://assets/creatures/tetherbound/mudsnout/candidate_nat1024t/models/creature_mudsnout_nat1024t_Image_0_trait1.png",
@@ -200,7 +200,7 @@
   },
   "creatures_vis_glow_mirejaw": {
    "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in cyan (water). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0.jpg": {
      "albedo": "res://assets/creatures/tetherbound/mirejaw/candidate/models/creature_mirejaw_native_Image_0_trait1.png",
@@ -211,7 +211,7 @@
   },
   "creatures_vis_glow_cannonback": {
    "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in cyan (water). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid.png": {
      "albedo": "res://assets/creatures/tetherbound/cannonback/models/cannonback_extracted_base_color_vivid_trait1.png",
@@ -222,7 +222,7 @@
   },
   "creatures_vis_glow_fulgocobra": {
    "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes in gold (electric), keeping its group-3 lightning rims. Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid.png": {
      "albedo": "res://assets/creatures/tetherbound/fulgocobra/models/fulgocobra_extracted_base_color_vivid_trait1.png",
@@ -233,7 +233,7 @@
   },
   "creatures_vis_glow_riverdrake": {
    "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in cyan (water), keeping its group-3 frill rims. Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid.png": {
      "albedo": "res://assets/creatures/tetherbound/riverdrake/models/riverdrake_extracted_base_color_vivid_trait1.png",
@@ -244,7 +244,7 @@
   },
   "creatures_vis_glow_solmane": {
    "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes plus thin glowing vein markings over the back and shoulders in pale sky (air). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid.png": {
      "albedo": "res://assets/creatures/tetherbound/solmane/models/solmane_extracted_base_color_vivid_trait1.png",
@@ -255,7 +255,7 @@
   },
   "creatures_vis_glow_voltarach": {
    "_why": "VIS-CREATURES group 4 (1 Nov). Owner creature rule via the coordinator (settled 1 Nov): a believable adult animal plus ONE elemental trait, glowing eyes plus glowing lines, veins or markings in its element. glowing eyes in its board's blue eyes (electric). Albedo is the species' group-3 trait (or group-1 grade), so this flag supersedes both when on. Note: CLAUDE.md's 25 Oct line rules out glowing seams on fur or hide; the newer owner rule asks for glowing veins and markings, so this stays OFF until judged. Script tools/art_pipeline/grade_vis_glow.py.",
-   "enabled": false,
+   "enabled": true,
    "coats": {
     "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0.jpg": {
      "albedo": "res://assets/creatures/tetherbound/voltarach/candidate/models/creature_voltarach_native_Image_0_vis1.png",

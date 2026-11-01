@@ -257,7 +257,7 @@
     "flow_stretch": 0.7,
     "surface_candidate": {
       "_why": "P2-006 (vis-meadows, 1 Nov, OFF until GPU-judged): GPU F38 river_lock_1 (Old Mill Crossing) and village_road PARTIAL, river_lock_0 PRESENT, catalog 'the mill water is a broad flat blue surface with abrupt sparse banks'. water.gd::apply_river_candidate merges `merge` into this river block (bank reeds 90 -> 130 clumps, scrub 70 -> 100, wider bands so the waterline is grown over, not a hard edge); river_candidate_shader sets `shader` on the river material only: finer, stronger ripples (wave_uv_scale 0.12 -> 0.2, strength 0.4 -> 0.8), a darker green-teal deep with a mid band so the channel has depth, more sky fresnel, and bank foam/surf so the edge reads as moving water. Pond and stream unchanged. Presentation only.",
-      "enabled": false,
+      "enabled": true,
       "merge": {
         "reeds": {"clumps": 130, "per_clump": 16, "band_above": 0.7},
         "bank_scrub": {"clumps": 100, "per_clump": 6, "band_below": -0.3}

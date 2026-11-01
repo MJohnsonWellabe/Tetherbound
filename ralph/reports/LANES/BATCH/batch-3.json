@@ -1,0 +1,438 @@
+{
+ "batch": 3,
+ "supersedes": "batch-2",
+ "items": [
+  {
+   "item": "P2-087",
+   "camera_set": "tools/phase2_capture_dialogue.gd",
+   "stands": [
+    "meadows__inventory__trainer__stronghold_courtyard__dialogue",
+    "meadows__inventory__trainer__stronghold_elite__dialogue",
+    "meadows__inventory__trainer__stronghold_courtyard"
+   ]
+  },
+  {
+   "item": "P2-034",
+   "camera_set": "tools/phase2_capture_world_inventory.gd",
+   "stands": [
+    "meadows__inventory__harvest__orb_basic"
+   ]
+  },
+  {
+   "item": "OWNER-1031 Cloudreach floating cylinders/drums (P2-023)",
+   "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --times=day --views=approach,close --subset=zzznomatch --spot=<id>@x,z@heading (stand list: ralph/reports/CLOUDREACH-LOOK/grounding_proof.json view= fields)",
+   "stands": [
+    "ownerdrum@16.5,4313.2@56",
+    "vegetatedgeolog12_1@16.5,4313.2@56"
+   ]
+  },
+  {
+   "item": "OWNER-1031 Cloudreach floating cylinders/drums: shelf hanging over meadow (P2-023)",
+   "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --times=day --views=approach,close --subset=zzznomatch --spot=ownerdrum@16.5,4313.2@56",
+   "stands": [
+    "ownerdrum@16.5,4313.2@56"
+   ]
+  },
+  {
+   "item": "OWNER-1031 Cloudreach floating drums: cloud-ring cards standing on meadows (P2-023, P2-021)",
+   "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --times=day --views=approach,close --subset=zzznomatch --spot=ownerdrum@16.5,4313.2@56 (plus the F40 matrix stands; 45 cards hidden realm-wide)",
+   "stands": [
+    "ownerdrum@16.5,4313.2@56",
+    "cloudreach__high_roost_sky_shrine__07__sky_shrine",
+    "cloudreach__landmark__realm_gate_crag"
+   ]
+  },
+  {
+   "item": "OWNER-1031 Cloudreach cliff wall bulge over recess (P2-023)",
+   "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --times=day --views=approach,close --subset=high_roost_sky_shrine__07__sky_shrine --subset=landmark__three_bells_bridge",
+   "stands": [
+    "cloudreach__high_roost_sky_shrine__07__sky_shrine",
+    "cloudreach__landmark__three_bells_bridge",
+    "ownerdrum@16.5,4313.2@56"
+   ]
+  },
+  {
+   "item": "P2-025",
+   "camera_set": "tools/phase2_capture_locations.gd -- --biome=cloudreach --seed=2042 --times=day --subset=cloudreach__landmark__sky_shrine_heartstone --views=close ; --subset=cloudreach__high_roost_sky_shrine__08__the_high_perches --views=approach",
+   "stands": [
+    "cloudreach__landmark__sky_shrine_heartstone__day__close",
+    "cloudreach__high_roost_sky_shrine__08__the_high_perches__day__approach"
+   ]
+  },
+  {
+   "item": "P2-066",
+   "camera_set": "tools/phase2_capture_current_states.gd -- --seed=2042",
+   "stands": [
+    "tidewake__current_states__S1_live_t0",
+    "tidewake__current_states__S1_live_t1",
+    "tidewake__current_states__S2_live_t0"
+   ]
+  },
+  {
+   "item": "P2-067",
+   "camera_set": "tools/phase2_capture_current_states.gd -- --seed=2042",
+   "stands": [
+    "tidewake__current_states__S1_live_t0",
+    "tidewake__current_states__S1_restored_t0",
+    "tidewake__current_states__S2_live_t0"
+   ]
+  },
+  {
+   "item": "P2-026",
+   "camera_set": "tools/phase2_capture_routes.gd -- --biome=water --seed=2042 --subset=water__drowned_garden__21__drowned_garden_terraces ; --subset=water__sluice_isle__14__sluice_channel_bridge",
+   "stands": [
+    "tidewake__drowned_garden__21__drowned_garden_terraces__route_day",
+    "tidewake__drowned_garden__21__drowned_garden_terraces__walk_01_day",
+    "tidewake__sluice_isle__14__sluice_channel_bridge__route_day"
+   ]
+  },
+  {
+   "item": "P2-008",
+   "camera_set": "tools/phase2_capture_locations.gd -- --biome=water --seed=2042 --times=day --views=close --subset=water__first_shore__01__first_shore_welcome_beacon ; tools/phase2_capture_routes.gd -- --biome=water --seed=2042 --subset=water__first_shore__02__first_shore_horizon_stones",
+   "stands": [
+    "tidewake__first_shore__01__first_shore_welcome_beacon__day__close",
+    "tidewake__first_shore__02__first_shore_horizon_stones__route_day",
+    "tidewake__brine_steps__06__brine_steps_east_beach__walk_03_day"
+   ]
+  },
+  {
+   "item": "P2-074",
+   "camera_set": "tools/phase2_capture_dialogue.gd --biome=water (job.json repro)",
+   "stands": [
+    "water__inventory__character__water_nalia__dialogue",
+    "water__inventory__character__water_nerissa__dialogue",
+    "water__inventory__trainer__water_trainer_nerissa__dialogue"
+   ]
+  },
+  {
+   "item": "P2-073",
+   "camera_set": "tools/phase2_capture_dialogue.gd --biome=water (job.json repro)",
+   "stands": [
+    "water__inventory__trainer__water_trainer_bex__dialogue",
+    "water__inventory__trainer__water_trainer_daro__dialogue",
+    "water__inventory__trainer__water_trainer_irva__dialogue"
+   ]
+  },
+  {
+   "item": "P2-076",
+   "camera_set": "tools/phase2_capture_dialogue.gd --biome=cloudreach (job.json repro)",
+   "stands": [
+    "cloudreach__inventory__character__captain_veyra__dialogue",
+    "cloudreach__inventory__character__trader_kelm__dialogue"
+   ]
+  },
+  {
+   "item": "P2-076",
+   "camera_set": "tools/phase2_capture_defeated_dialogue.gd --biome=cloudreach (job.json repro)",
+   "stands": [
+    "cloudreach__inventory__character__captain_veyra__defeated__dialogue"
+   ]
+  },
+  {
+   "item": "P2-075",
+   "camera_set": "tools/phase2_capture_dialogue.gd --biome=water (job.json repro)",
+   "stands": [
+    "water__inventory__character__water_adair__dialogue",
+    "water__inventory__character__water_iona__dialogue",
+    "water__inventory__character__water_rowan__dialogue"
+   ]
+  },
+  {
+   "item": "P2-113",
+   "camera_set": "tools/phase2_capture_catch.gd --biome=tidewake (job.json repro)",
+   "stands": [
+    "02-orb-in-flight",
+    "03-absorbing",
+    "03-strike"
+   ]
+  },
+  {
+   "item": "P2-059",
+   "camera_set": "tools/phase2_capture_catch.gd --biome=meadows (job.json repro)",
+   "stands": [
+    "03-absorbing",
+    "03-strike",
+    "04-orb-resting"
+   ]
+  },
+  {
+   "item": "P2-082",
+   "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+   "stands": [
+    "stormwood__inventory__character__ace_trainer_rook__dialogue",
+    "stormwood__inventory__character__caretaker_lio__dialogue",
+    "stormwood__inventory__character__elder_maud__dialogue"
+   ]
+  },
+  {
+   "item": "P2-084",
+   "camera_set": "tools/phase2_capture_dialogue.gd --biome=stormwood (job.json repro)",
+   "stands": [
+    "stormwood__inventory__character__elder_maud__dialogue",
+    "stormwood__inventory__character__trader_fenn__dialogue",
+    "stormwood__inventory__character__trader_oswin__dialogue"
+   ]
+  },
+  {
+   "item": "P2-001",
+   "camera_set": "tools/phase2_capture_ui.gd --biome=meadows --seed=2042 --gamepad",
+   "stands": [
+    "meadows__menu_backpack"
+   ]
+  },
+  {
+   "item": "F36 (0) #9 Riverdrake",
+   "camera_set": "F36",
+   "stands": [
+    "riverdrake",
+    "water_riverdrake"
+   ]
+  },
+  {
+   "item": "F36 (0) #1 Terrapup",
+   "camera_set": "F36",
+   "stands": [
+    "terrapup"
+   ]
+  },
+  {
+   "item": "F36 (0) #5 Bramblebun",
+   "camera_set": "F36",
+   "stands": [
+    "bramblebun"
+   ]
+  },
+  {
+   "item": "F36 (1) Trailpup",
+   "camera_set": "F36",
+   "stands": [
+    "trailpup"
+   ]
+  },
+  {
+   "item": "F36 (1) Brooktail",
+   "camera_set": "F36",
+   "stands": [
+    "brooktail"
+   ]
+  },
+  {
+   "item": "F36 (1) Pipwing",
+   "camera_set": "F36",
+   "stands": [
+    "pipwing"
+   ]
+  },
+  {
+   "item": "P2-058",
+   "camera_set": "tools/phase2_capture_catch.gd --seed=2042",
+   "stands": [
+    "meadows__catching__01-aiming-full-health",
+    "meadows__catching__catch_low",
+    "meadows__catching__catch_high"
+   ]
+  },
+  {
+   "item": "P2-114",
+   "camera_set": "tools/phase2_capture_catch.gd --biome=tidewake --seed=2042",
+   "stands": [
+    "tidewake__catching__catch_low",
+    "tidewake__catching__catch_high",
+    "tidewake__catching__01-aiming-full-health"
+   ]
+  },
+  {
+   "item": "P2-117",
+   "camera_set": "tools/phase2_capture_catch.gd --biome=cloudreach --seed=2042",
+   "stands": [
+    "cloudreach__catching__07-aiming-weakened"
+   ]
+  },
+  {
+   "item": "P2-117",
+   "camera_set": "tools/phase2_capture_catch.gd --biome=cloudreach --seed=2042",
+   "stands": [
+    "cloudreach__catching__06-breakout"
+   ]
+  },
+  {
+   "item": "P2-061",
+   "camera_set": "tools/phase2_capture_catch.gd --seed=2042",
+   "stands": [
+    "meadows__catching__06-breakout",
+    "meadows__catching__08-caught-verdict",
+    "meadows__catching__09-caught-banner"
+   ]
+  },
+  {
+   "item": "P2-028",
+   "camera_set": "tools/phase2_capture_creatures.gd --biome=water --only=ripplet,riptusk,aquaryn --seed=2042",
+   "stands": [
+    "tidewake__ripplet__fainted",
+    "tidewake__riptusk__fainted",
+    "tidewake__aquaryn__fainted"
+   ]
+  },
+  {
+   "item": "P2-029",
+   "camera_set": "tools/phase2_capture_creatures.gd --biome=water --only=riptusk,torrentoad --seed=2042",
+   "stands": [
+    "tidewake__riptusk__resting",
+    "tidewake__torrentoad__resting"
+   ]
+  },
+  {
+   "item": "P2-103",
+   "camera_set": "tools/phase2_capture_tidewake_fights.gd (job.json P2-103 repro: venn, nerissa)",
+   "stands": [
+    "tidewake__fight__venn_resolve__win-141_53",
+    "tidewake__fight__venn_resolve__aftermath-142_53",
+    "tidewake__fight__nerissa_resolve__win-207_25"
+   ]
+  },
+  {
+   "item": "P2-111",
+   "camera_set": "tools/phase2_capture_stormwood_fights.gd --ids=hollows_alpha (job.json P2-111 repro)",
+   "stands": [
+    "stormwood__fight__hollows_win__hollows_alpha-99-after",
+    "stormwood__fight__hollows_aftermath__hollows_alpha-100-aftermath"
+   ]
+  },
+  {
+   "item": "P2-119",
+   "camera_set": "tools/phase2_capture_realm_flight.gd --biome=meadows --seed=2042",
+   "stands": [
+    "meadows__flying__launch",
+    "meadows__flying__glide"
+   ]
+  },
+  {
+   "item": "F36 (0) #2 Galewisp",
+   "camera_set": "F36",
+   "stands": [
+    "galewisp"
+   ]
+  },
+  {
+   "item": "F36 (0) #3 Mudsnout",
+   "camera_set": "F36",
+   "stands": [
+    "mudsnout"
+   ]
+  },
+  {
+   "item": "F36 (0) #4 Bramblebun",
+   "camera_set": "F36",
+   "stands": [
+    "bramblebun"
+   ]
+  },
+  {
+   "item": "F36 (0) #8 Mirejaw",
+   "camera_set": "F36",
+   "stands": [
+    "mirejaw",
+    "water_mirejaw"
+   ]
+  },
+  {
+   "item": "F36 (0) #8 Mirejaw",
+   "camera_set": "F36",
+   "stands": [
+    "mirejaw",
+    "water_mirejaw"
+   ]
+  },
+  {
+   "item": "F36 (0) #8 Mirejaw",
+   "camera_set": "F36",
+   "stands": [
+    "mirejaw",
+    "water_mirejaw"
+   ]
+  },
+  {
+   "item": "F36 (0) #13 Fulgocobra",
+   "camera_set": "F36",
+   "stands": [
+    "fulgocobra"
+   ]
+  },
+  {
+   "item": "F36 (0) #16 Cannonback",
+   "camera_set": "F36",
+   "stands": [
+    "cannonback",
+    "water_cannonback"
+   ]
+  },
+  {
+   "item": "F36 (0) #16 Cannonback",
+   "camera_set": "F36",
+   "stands": [
+    "water_cannonback"
+   ]
+  },
+  {
+   "item": "F36 (0) #19 Voltarach",
+   "camera_set": "F36",
+   "stands": [
+    "voltarach"
+   ]
+  },
+  {
+   "item": "F36 (0) #20 Veridian",
+   "camera_set": "F36",
+   "stands": [
+    "veridian"
+   ]
+  },
+  {
+   "item": "F36 (0) #21 Abyssal Guardian",
+   "camera_set": "F36",
+   "stands": [
+    "abyssal_guardian",
+    "water_abyssal_guardian"
+   ]
+  },
+  {
+   "item": "F36 (0) #22 Solmane",
+   "camera_set": "F36",
+   "stands": [
+    "solmane"
+   ]
+  },
+  {
+   "item": "F36 (0) #25 Wandering trainer body",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "24-wandering-trainer-front",
+    "24-wandering-trainer-threequarter"
+   ]
+  },
+  {
+   "item": "F36 (0) #27 Young trainer body",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "21-young-trainer-front",
+    "21-young-trainer-threequarter"
+   ]
+  },
+  {
+   "item": "F36 (0) #28 Trader body",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "16-trader-front",
+    "16-trader-threequarter"
+   ]
+  },
+  {
+   "item": "F36 (0) #29 Innkeeper body",
+   "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+   "stands": [
+    "14-innkeeper-front",
+    "14-innkeeper-threequarter"
+   ]
+  }
+ ]
+}

@@ -2,7 +2,7 @@
   "_comment": "World dressing (P2-033 Meadows ground pickups, P2-045 Stormwood candy tiers, P2-054 Cloudreach mushrooms; tb/world-dressing). OFF until a GPU pass judges it. GPU item notes (31 Oct): finds are 'pinhead-sized', 'small, weakly grounded props on flat grass', 'unreadable at gameplay distance'. Per realm and family: a size step, a soft contact shadow, a half-sunk flat find-stone from the installed rock-path family (set-down finds only, never mushrooms) and a few installed pebbles. Visual children of the pickup only (scripts/world/pickup_grounding.gd): no collider, claim, glow, flag or save change.",
   "enabled": true,
   "tier_candidate": {
-  "enabled": false,
+  "enabled": true,
   "_why": "P2-045 (GPU WD2 1 Nov, 5.92): Good and Great candy still share one form and scale and read only by glow colour. On: each tier its own silhouette from the installed model (scripts/world/pickup_grounding.gd tier_spec/_tier_cluster): Good one sweet at 0.85x, Great a leaning pair at 1.0x, Rare a stacked trio at 1.15x. Visual copies only; claim, collider and save unchanged. OFF until GPU judged.",
   "items": {
    "good_candy": {"scale_mult": 0.85, "count": 1},

@@ -33,7 +33,7 @@
   },
   "creatures_vis_grounded_hit_water_cannonback": {
    "_why": "VIS-CREATURES (1 Nov). GPU ROSTER-1 High: water_cannonback 6.72, hit react PARTIAL 3/3 (barely differs from standing); it plays its own clips. Recoil exaggerated (rotation x1.6) with the body kept on the water (position x0.5), as the landed cindercub/trailpup arm.",
-   "enabled": false,
+   "enabled": true,
    "species": {
     "water_cannonback": {
      "hit": {

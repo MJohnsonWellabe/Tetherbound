@@ -28,7 +28,7 @@
   "cull_tile_m": 16.0,
   "forbidden_ground": ["shore", "rock"],
   "_built_feather_note": "P2-008 (tb/vis-water-sky, flag-off): GPU judges read a hard grass-blade carpet edge at First Shore; the built-ground clearings (beach bars, plazas, camps, named posts) cut blades on a ruled circle. On: blades thin out over built_feather_m beyond each clearing; nothing grows inside one.",
-  "built_feather_enabled": false,
+  "built_feather_enabled": true,
   "built_feather_m": 3.0,
   "stones": {"enabled": true, "ground": ["shore", "rock"], "count": 26000, "stone_size": 0.16, "size_jitter": 0.8, "sink": 0.35, "density_gain": 0.9, "tint_stone": "#8a8073", "tint_jitter": 0.35, "contact_darken": 0.5, "reach_m": 30.0},
   "far_cover": {"enabled": false},

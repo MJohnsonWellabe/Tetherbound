@@ -1,6 +1,6 @@
 {
   "_comment": "P2-046 round 2 (GPU WD2 1 Nov, 6.57, defect FIXED 3; judges' path to 7.5: 'make the nodes bigger, give stormglass and stormglass_crown different silhouettes, add a grounding clearing in the uniform moss carpet'). When enabled, stormwood_harvest_runtime.gd add_material_cue uses these heroes instead of stormwood_harvests.json material_cues.*.hero (kept apart because that file is a scatter bake input). Stormglass: the glass-scar cluster at 2.0 m with a low satellite. Crown: the tall Meshy glass spikes (meshy-1031, the Glass Field family) at 3.0 m with two scar-crystal satellites, so it reads taller and spikier than plain stormglass. Glowmoss: larger fungi. Each opens a grass clearing. Visual only; no collider, stock, reward or placement change. OFF until GPU judged.",
-  "enabled": false,
+  "enabled": true,
   "items": {
     "stormglass": {
       "enabled": true,

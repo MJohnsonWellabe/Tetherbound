@@ -4,7 +4,7 @@
   "backing_enabled": true,
   "backing_opacity": 0.85,
   "backing_padding": 12.0,
-  "readout_side_enabled": false,
+  "readout_side_enabled": true,
   "side_gap": 36.0,
   "side_number_px_bonus": 6,
   "_why_side": "P2-058/P2-114 (GPU UI-1, 31 Oct: P2-114 6.12, P2-058 6.24 with the plate; judges: keep the plate, move the readout off the target). When on, the percentage and caption sit beside the ring instead of under it, on the target body (capture_reticle.gd side_readout_positions), and the number grows by side_number_px_bonus. UIPOSES lane candidate; OFF until GPU judging.",
