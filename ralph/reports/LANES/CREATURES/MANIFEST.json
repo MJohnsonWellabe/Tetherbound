@@ -1,0 +1,692 @@
+[
+ {
+  "item": "F36 (0) #2 Galewisp",
+  "flag": "data/creatures/f36_pose_candidates.json:candidate_role_flags.creatures_vis_galewisp_faint_away.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "galewisp"
+  ],
+  "group": 2,
+  "modes": {
+   "galewisp": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #3 Mudsnout",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_coat_mudsnout.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mudsnout"
+  ],
+  "group": 1,
+  "modes": {
+   "mudsnout": "plain"
+  }
+ },
+ {
+  "item": "F36 (0) #8 Mirejaw",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_coat_mirejaw.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mirejaw",
+   "water_mirejaw"
+  ],
+  "group": 1,
+  "modes": {
+   "mirejaw": "--candidate",
+   "water_mirejaw": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #8 Mirejaw",
+  "flag": "data/config/creature_scale_flags.json:flags.creatures_vis_taller_mirejaw.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mirejaw",
+   "water_mirejaw"
+  ],
+  "group": 1,
+  "modes": {
+   "mirejaw": "--candidate",
+   "water_mirejaw": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #8 Mirejaw",
+  "flag": "data/creatures/f36_pose_candidates.json:candidate_role_flags.creatures_vis_mirejaw_tail_clear.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mirejaw",
+   "water_mirejaw"
+  ],
+  "group": 2,
+  "modes": {
+   "mirejaw": "--candidate",
+   "water_mirejaw": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #13 Fulgocobra",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_coat_fulgocobra.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "fulgocobra"
+  ],
+  "group": 1,
+  "modes": {
+   "fulgocobra": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #16 Cannonback",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_coat_cannonback.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cannonback",
+   "water_cannonback"
+  ],
+  "group": 1,
+  "modes": {
+   "cannonback": "--candidate",
+   "water_cannonback": "plain"
+  }
+ },
+ {
+  "item": "F36 (0) #16 Cannonback",
+  "flag": "data/config/creature_clip_flags.json:flags.creatures_vis_grounded_hit_water_cannonback.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "water_cannonback"
+  ],
+  "group": 1,
+  "modes": {
+   "water_cannonback": "plain"
+  }
+ },
+ {
+  "item": "F36 (0) #19 Voltarach",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_coat_voltarach.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "voltarach"
+  ],
+  "group": 1,
+  "modes": {
+   "voltarach": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #20 Veridian",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_coat_veridian.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "veridian"
+  ],
+  "group": 1,
+  "modes": {
+   "veridian": "plain"
+  }
+ },
+ {
+  "item": "F36 (0) #21 Abyssal Guardian",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_coat_abyssal_guardian.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "abyssal_guardian",
+   "water_abyssal_guardian"
+  ],
+  "group": 1,
+  "modes": {
+   "abyssal_guardian": "--candidate",
+   "water_abyssal_guardian": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #22 Solmane",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_coat_solmane.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "solmane"
+  ],
+  "group": 1,
+  "modes": {
+   "solmane": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #25 Wandering trainer body",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_body_wandering_trainer.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "24-wandering-trainer-front",
+   "24-wandering-trainer-threequarter"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 (0) #27 Young trainer body",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_body_young_trainer.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "21-young-trainer-front",
+   "21-young-trainer-threequarter"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 (0) #28 Trader body",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_body_trader.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "16-trader-front",
+   "16-trader-threequarter"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 (0) #29 Innkeeper body",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_body_innkeeper.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "14-innkeeper-front",
+   "14-innkeeper-threequarter"
+  ],
+  "group": 1
+ },
+ {
+  "item": "F36 (0) #3 Mudsnout",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_trait_mudsnout.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mudsnout"
+  ],
+  "group": 3,
+  "modes": {
+   "mudsnout": "plain"
+  }
+ },
+ {
+  "item": "F36 (0) #8 Mirejaw",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_trait_mirejaw.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mirejaw",
+   "water_mirejaw"
+  ],
+  "group": 3,
+  "modes": {
+   "mirejaw": "--candidate",
+   "water_mirejaw": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #16 Cannonback",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_trait_cannonback.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cannonback",
+   "water_cannonback"
+  ],
+  "group": 3,
+  "modes": {
+   "cannonback": "--candidate",
+   "water_cannonback": "plain"
+  }
+ },
+ {
+  "item": "F36 (0) #13 Fulgocobra",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_trait_fulgocobra.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "fulgocobra"
+  ],
+  "group": 3,
+  "modes": {
+   "fulgocobra": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #9 Riverdrake",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_trait_riverdrake.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "riverdrake",
+   "water_riverdrake"
+  ],
+  "group": 3,
+  "modes": {
+   "riverdrake": "--candidate",
+   "water_riverdrake": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #22 Solmane",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_trait_solmane.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "solmane"
+  ],
+  "group": 3,
+  "modes": {
+   "solmane": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #3 Mudsnout",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_glow_mudsnout.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mudsnout"
+  ],
+  "group": 4,
+  "modes": {
+   "mudsnout": "plain"
+  }
+ },
+ {
+  "item": "F36 (0) #8 Mirejaw",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_glow_mirejaw.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "mirejaw",
+   "water_mirejaw"
+  ],
+  "group": 4,
+  "modes": {
+   "mirejaw": "--candidate",
+   "water_mirejaw": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #16 Cannonback",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_glow_cannonback.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "cannonback",
+   "water_cannonback"
+  ],
+  "group": 4,
+  "modes": {
+   "cannonback": "--candidate",
+   "water_cannonback": "plain"
+  }
+ },
+ {
+  "item": "F36 (0) #13 Fulgocobra",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_glow_fulgocobra.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "fulgocobra"
+  ],
+  "group": 4,
+  "modes": {
+   "fulgocobra": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #9 Riverdrake",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_glow_riverdrake.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "riverdrake",
+   "water_riverdrake"
+  ],
+  "group": 4,
+  "modes": {
+   "riverdrake": "--candidate",
+   "water_riverdrake": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #22 Solmane",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_glow_solmane.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "solmane"
+  ],
+  "group": 4,
+  "modes": {
+   "solmane": "--candidate"
+  }
+ },
+ {
+  "item": "F36 (0) #19 Voltarach",
+  "flag": "data/config/creature_coat_flags.json:flags.creatures_vis_glow_voltarach.enabled",
+  "camera_set": "F36",
+  "stands": [
+   "voltarach"
+  ],
+  "group": 4,
+  "modes": {
+   "voltarach": "--candidate"
+  }
+ },
+ {
+  "item": "Character look: kael",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_kael.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "30-kael-front",
+   "30-kael-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: sera",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_sera.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "31-sera-front",
+   "31-sera-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: lyra",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_lyra.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "29-lyra-front",
+   "29-lyra-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: villager_farmer",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_villager_farmer.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "05-villager-female-front",
+   "05-villager-female-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: villager_keeper",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_villager_keeper.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "04-villager-male-front",
+   "04-villager-male-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: villager_smith",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_villager_smith.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "(not in the cast tool; villager_smith appears in-world)"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: villager_quarryman",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_villager_quarryman.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "(not in the cast tool; villager_quarryman appears in-world)"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: villager_ranger",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_villager_ranger.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "(not in the cast tool; villager_ranger appears in-world)"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: warden",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_warden.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "03-warden-front",
+   "03-warden-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: grunt",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_grunt.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "06-grunt-archetype-front",
+   "06-grunt-archetype-threequarter",
+   "32-rank-grunt-front"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: grunt_a",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_grunt_a.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "07-grunt-a-front",
+   "07-grunt-a-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: grunt_b",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_grunt_b.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "08-grunt-b-front",
+   "08-grunt-b-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: grunt_c",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_grunt_c.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "09-grunt-c-front",
+   "09-grunt-c-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: officer_a",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_officer_a.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "10-officer-a-front",
+   "10-officer-a-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: officer_b",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_officer_b.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "11-officer-b-front",
+   "11-officer-b-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: captain_a",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_captain_a.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "12-captain-a-front",
+   "12-captain-a-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: captain_b",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_captain_b.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "13-captain-b-front",
+   "13-captain-b-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "F36 (0) #29 Innkeeper body",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_innkeeper.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "14-innkeeper-front",
+   "14-innkeeper-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: inn_helper",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_inn_helper.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "15-inn-helper-front",
+   "15-inn-helper-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "F36 (0) #28 Trader body",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_trader.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "16-trader-front",
+   "16-trader-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: craftsperson",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_craftsperson.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "17-craftsperson-front",
+   "17-craftsperson-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: creature_caretaker",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_creature_caretaker.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "18-creature-caretaker-front",
+   "18-creature-caretaker-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: farmer",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_farmer.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "19-farmer-front",
+   "19-farmer-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: local_historian",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_local_historian.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "20-local-historian-front",
+   "20-local-historian-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "F36 (0) #27 Young trainer body",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_young_trainer.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "21-young-trainer-front",
+   "21-young-trainer-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: rival_trainer",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_rival_trainer.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "22-rival-trainer-front",
+   "22-rival-trainer-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: field_researcher",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_field_researcher.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "23-field-researcher-front",
+   "23-field-researcher-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "F36 (0) #25 Wandering trainer body",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_wandering_trainer.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "24-wandering-trainer-front",
+   "24-wandering-trainer-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: lost_traveler",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_lost_traveler.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "25-lost-traveler-front",
+   "25-lost-traveler-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: alpha_tracker",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_alpha_tracker.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "26-alpha-tracker-front",
+   "26-alpha-tracker-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: courier",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_courier.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "27-courier-front",
+   "27-courier-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character look: former_tether_member",
+  "flag": "data/config/character_body_flags.json:flags.npc_vis_look_former_tether_member.enabled",
+  "camera_set": "F36-NPC (tools/_capture_character_cast.gd)",
+  "stands": [
+   "28-former-tether-member-front",
+   "28-former-tether-member-threequarter"
+  ],
+  "group": 5
+ },
+ {
+  "item": "Character close-ups: dialogue key and rim light (all speakers)",
+  "flag": "data/config/camera.json:conversation.speaker_lights.enabled",
+  "camera_set": "dialogue (phase2_capture_dialogue.gd, the DLG1 command set)",
+  "stands": [
+   "every DLG1 dialogue frame"
+  ],
+  "group": 6,
+  "note": "Not render-checked on CPU: the dialogue capture boots the full world, which this container cannot import. Placement is unit-tested."
+ }
+]
