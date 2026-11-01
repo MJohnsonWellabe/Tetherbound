@@ -9,10 +9,11 @@
   "catch_card": {
     "_why": "P2-061 (UI lane, 21 Oct 2026): catch breakout/success text competed with persistent creature cards, actions and same-species bodies. With this on, the verdict is one framed card in the upper third, clear of the creature: a large headline naming the individual over its traits (success, teal edge) or why it escaped (breakout, warning edge). On success the finished fight's cards and action grid step back while the card holds. PRESENTATION ONLY. Stays OFF until a code-blind PASS.",
     "enabled": false,
-    "headline_px": 40,
+    "headline_px": 52,
+    "_why_uiposes": "UIPOSES lane (1 Nov 2026): GPU UI-1 (31 Oct) P2-061 5.68 asks to hide the cards and action list during the result and show one large outcome banner. Headline 40 -> 52 px, card 380 -> 440 half width; the success card now clears the cards on its own first frame (combat_hud.gd _step_back_for_catch_focus).",
     "plate_alpha": 0.94,
     "accent_px": 8,
-    "card_half_width": 380.0,
+    "card_half_width": 440.0,
     "card_top": -380.0,
     "breakout_seconds": 1.8
   },
