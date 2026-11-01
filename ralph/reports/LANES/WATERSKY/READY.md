@@ -1,5 +1,12 @@
 # WATERSKY lane (tb/vis-water-sky): Tidewake F39 + Cloudreach F40 scene/material/placement
 
+## Group 3 (1 Nov; shared cause 2, the camera has no speaker): flag `data/config/water_npc_posts_candidate.json:enabled`
+
+A sweep of all 39 Tidewake dialogue posts on CPU (with the posts candidate) shows two-shot push-ins at almost every post. The two failures were NPCs standing on terrain slopes, out of reach of the stand-beside logic:
+- **Resident Nalia (P2-074, GPU 3.54):** her authored post sits about 13 m up Shellwatch's dune-passage wall. Reposted onto the measured passage floor (16.5 m, flat). Now she is in the post view and gets a full push-in in dialogue (CPU before/after checked).
+- **Trainer Rune:** stood about 5 m down the Gull Rest plateau edge. Reposted onto the flat plateau (29.1–29.4 m); CPU check pending.
+- Not fixed: Evi, Morra and Fennel read, but against dark Veilfall rock. Nerissa's post frame (the catalogue plan stands outside her interior) is a capture-plan issue, not a game one.
+
 ## Group 2 (1 Nov, rolling batches; coordinator: shared fixes first). All flags OFF; entries in MANIFEST.json with "group": 2
 
 | Fix | Flag (set true) | CPU check |
